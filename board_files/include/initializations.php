@@ -1,0 +1,120 @@
+<?php
+if (!defined (NELLIEL_VERSION))
+{
+    die ("NOPE.AVI");
+}
+
+//
+// Initialize a bunch of stuff here
+//
+
+$update_link_cache = FALSE;
+$template_loaded = array(
+        'admin_panel.tpl' => FALSE,
+        'ban_page.tpl' => FALSE,
+        'footer.tpl' => FALSE,
+        'header.tpl' => FALSE,
+        'manage_bans_panel.tpl' => FALSE,
+        'manage_login.tpl' => FALSE,
+        'manage_options.tpl' => FALSE,
+        'manage_thread_panel.tpl' => FALSE,
+        'op_post.tpl' => FALSE,
+        'posting_form.tpl' => FALSE,
+        'response_post.tpl' => FALSE,
+        'staff_panel.tpl' => FALSE );
+
+$rendervar = array();
+$post_files = array();
+$file_data = array();
+$dataforce = array();
+$dataforce['mode'] = (isset ($_POST['mode'])) ? $_POST['mode'] : NULL;
+$dataforce['mode_extra'] = (isset ($_POST['mode2'])) ? $_POST['mode2'] : NULL;
+$dataforce['admin_mode'] = (isset ($_POST['adminmode'])) ? $_POST['adminmode'] : NULL;
+$dataforce['name'] = (isset ($_POST['notanonymous'])) ? $_POST['notanonymous'] : '';
+$dataforce['email'] = (isset ($_POST['spamtarget'])) ? $_POST['spamtarget'] : '';
+$dataforce['subject'] = (isset ($_POST['verb'])) ? $_POST['verb'] : '';
+$dataforce['comment'] = (isset ($_POST['wordswordswords'])) ? $_POST['wordswordswords'] : '';
+$dataforce['fgsfds'] = (isset ($_POST['fgsfds'])) ? $_POST['fgsfds'] : NULL;
+$dataforce['file_source'] = (isset ($_POST['sauce'])) ? $_POST['sauce'] : NULL;
+$dataforce['file_license'] = (isset ($_POST['loldrama'])) ? $_POST['loldrama'] : NULL;
+
+$dataforce['pass'] = (isset ($_POST['sekrit'])) ? $_POST['sekrit'] : NULL;
+$dataforce['xzname'] = (isset ($_POST['xzname'])) ? $_POST['xzname'] : NULL;
+$dataforce['xzurl1'] = (isset ($_POST['xzurll1'])) ? $_POST['xzurl1'] : NULL;
+$dataforce['admin_pass'] = (isset ($_POST['super_sekrit'])) ? $_POST['super_sekrit'] : NULL;
+$dataforce['username'] = (isset ($_POST['username'])) ? $_POST['username'] : NULL;
+$dataforce['usrdel'] = (isset ($_POST['usrdel'])) ? $_POST['usrdel'] : NULL;
+$dataforce['expand_thread'] = (isset ($_POST['expand_thread'])) ? $_POST['expand_thread'] : NULL;
+$dataforce['banpost'] = (isset ($_POST['banpost'])) ? TRUE : FALSE;
+$dataforce['banid'] = (isset ($_POST['banid']) && is_numeric ($_POST['banid'])) ? (int) $_POST['banid'] : NULL;
+$dataforce['banreason'] = (isset ($_POST['banreason'])) ? $_POST['banreason'] : NULL;
+$dataforce['banip'] = (isset ($_POST['ban_ip'])) ? $_POST['ban_ip'] : NULL;
+$dataforce['timedays'] = (isset ($_POST['timedays'])) && is_numeric ($_POST['timedays']) ? (int) $_POST['timedays'] : NULL;
+$dataforce['timehours'] = (isset ($_POST['timehours'])) && is_numeric ($_POST['timehours']) ? (int) $_POST['timehours'] : NULL;
+$dataforce['only_delete_file'] = (isset ($_POST['onlyimgdel'])) ? TRUE : FALSE;
+$dataforce['name_trap'] = (!empty ($_POST['zname'])) ? 'WAHAHA' : NULL;
+$dataforce['url_trap'] = (!empty ($_POST['zurl'])) ? 'WAHAHA' : NULL;
+$dataforce['response_to'] = (isset ($_POST['response_to']) && is_numeric ($_POST['response_to'])) ? (int) $_POST['response_to'] : NULL;
+$dataforce['page_gen'] = 'main';
+
+$dataforce['mode2'] = (isset ($_GET['mode'])) ? $_GET['mode'] : NULL;
+$dataforce['current_page'] = (isset ($_GET['page'])) ? $_GET['page'] : NULL;
+$dataforce['expand'] = (isset ($_GET['expand'])) ? TRUE : FALSE;
+$dataforce['collapse'] = (isset ($_GET['collapse'])) ? TRUE : FALSE;
+$dataforce['response_id'] = (isset ($_GET['post']) && is_numeric ($_GET['post'])) ? (int) $_GET['post'] : NULL;
+$dataforce['archive_update'] = FALSE;
+
+$start_html = 0;
+$end_html = 0;
+$total_html = 0;
+
+$fgsfds = array(
+        'noko' => FALSE,
+        'noko_topic' => 0,
+        'sage' => FALSE,
+        'sticky' => FALSE );
+
+$link_resno = 0;
+
+// Load caching routines and handle current cache files
+require_once INCLUDE_PATH . 'cache-generation.php'; // I liek cache
+
+$enabled_types = array();
+
+// Cached settings
+if (!file_exists (CACHE_PATH . 'parameters.nelcache'))
+{
+    cache_settings ();
+}
+
+require_once CACHE_PATH . 'parameters.nelcache';
+$dataforce['max_pages'] = BS_PAGE_LIMIT;
+
+require_once INCLUDE_PATH . 'language-english.php'; // This relies on some of the cached parameters
+                                                    
+// Cached references for quote links
+if (!file_exists (CACHE_PATH . 'post_link_references.nelcache'))
+{
+    cache_post_links ();
+}
+
+require_once CACHE_PATH . 'post_link_references.nelcache';
+
+// Cached filetypes
+
+if (!file_exists (CACHE_PATH . 'rules.nelcache'))
+{
+    cache_rules ();
+}
+
+require_once CACHE_PATH . 'rules.nelcache';
+
+// Cached template info
+if (!file_exists (CACHE_PATH . 'template_info.nelcache'))
+{
+    cache_template_info ();
+}
+
+require_once CACHE_PATH . 'template_info.nelcache';
+
+?>
