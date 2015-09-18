@@ -178,10 +178,10 @@ function renderPost($dataforce, $authorized, $response, $partial, $gen_data, $tr
                         $rendervar['files'][$i]['preview_height'] = intval ($ratio * $rendervar['files'][$i]['preview_height']);
                     }
                 }
-                else if (BS1_USE_FILE_ICON && file_exists (BOARD_FILES . 'imagez/default/filetype/' . strtolower ($rendervar['files'][$i]['supertype']) . '/' . strtolower ($rendervar['files'][$i]['subtype']) . '.png'))
+                else if (BS1_USE_FILE_ICON && file_exists (BOARD_FILES . 'imagez/nelliel/filetype/' . strtolower ($rendervar['files'][$i]['supertype']) . '/' . strtolower ($rendervar['files'][$i]['subtype']) . '.png'))
                 {
                     $rendervar['files'][$i]['has_preview'] = TRUE;
-                    $rendervar['files'][$i]['preview_location'] = $temp_dot . BOARD_FILES . '/imagez/default/filetype/' . strtolower ($rendervar['files'][$i]['supertype']) . '/' . strtolower ($rendervar['files'][$i]['subtype']) . '.png';
+                    $rendervar['files'][$i]['preview_location'] = $temp_dot . BOARD_FILES . '/imagez/nelliel/filetype/' . strtolower ($rendervar['files'][$i]['supertype']) . '/' . strtolower ($rendervar['files'][$i]['subtype']) . '.png';
                     $rendervar['files'][$i]['preview_width'] = (BS_MAX_WIDTH < 64) ? BS_MAX_WIDTH : '128';
                     $rendervar['files'][$i]['preview_height'] = (BS_MAX_HEIGHT < 64) ? BS_MAX_HEIGHT : '128';
                 }

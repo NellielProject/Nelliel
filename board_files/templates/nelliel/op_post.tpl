@@ -19,7 +19,7 @@
 			{$rendervar['post_time']} No. <a href="{PAGE_DIR}{$rendervar['post_number']}/{$rendervar['post_number']}.html" class="post-link">{$rendervar['post_number']}</a>&nbsp;
 	{{ endif }}
 	{{ if $rendervar['sticky'] }}
-			<img src="{$rendervar['dotdot']}{BOARD_FILES}/imagez/default/{LANG_THREAD_STICKY_ICON}" width="22" height="22" alt="{LANG_THREAD_STICKY}">
+			<img src="{$rendervar['dotdot']}{BOARD_FILES}/imagez/nelliel/{LANG_THREAD_STICKY_ICON}" width="22" height="22" alt="{LANG_THREAD_STICKY}">
 	{{ endif }}
 	{{ if !$rendervar['response_id'] }}
 		{{ if $rendervar['logged_in'] }}
