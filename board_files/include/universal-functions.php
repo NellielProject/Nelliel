@@ -326,7 +326,7 @@ function about_screen()
         <div class="text-center">
         	<p><font color="blue" size="5">Nelliel Imageboard</font><br>
         	<font size="4">Version: ' . NELLIEL_VERSION . '</font></p>
-			<p><font size="4" class="text-center">Copyright (c) 2010-2014, <a href="http://www.nelliel.com">Nelliel Project</a><br> 
+			<p><font size="4" class="text-center">Copyright (c) 2010-2015, <a href="http://www.nelliel.com">Nelliel Project</a><br> 
 			All rights reserved.</font></p>
 			<div class="nelliel-license-div">
 			<p><font size="4">Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</font></p>
