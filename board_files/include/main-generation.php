@@ -1,5 +1,5 @@
 <?php
-if (!defined(NELLIEL_VERSION))
+if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
