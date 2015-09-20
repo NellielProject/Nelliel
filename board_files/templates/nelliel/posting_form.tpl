@@ -46,17 +46,17 @@
                     <tr class="posting-form-row none" id="file{$i}">
         {{ endif }}
                         <td class="posting-form-label"><label for="durrfile{$i}">{LANG_LABEL_FILE} #{$i}</label></td>
-                        <td class="posting-form-input"><input type="file" name="upfile{$i}" id="durrfile{$i}" size="45" onchange="addMoarInput('file{$j}',false)">&nbsp;
+                        <td class="posting-form-input"><input type="file" name="upfile{$i}" id="durrfile{$i}" onchange="addMoarInput('file{$j}',false)">&nbsp;
                         <input type="button" value="Add Source" id="addsrc{$i}" onClick="addMoarInput('src{$i}',true)">&nbsp;
                         <input type="button" value="Add License" id="addlcns{$i}" onClick="addMoarInput('lcns{$i}',true)"></td>
                     </tr>
                     <tr class="posting-form-row none" id="src{$i}">
                         <td class="posting-form-label"><label for="fs{$i}">{LANG_LABEL_SOURCE}</label></td>
-                        <td class="posting-form-input"><input type="text" name="sauce{$i}" id="fs{$i}" size="40" maxlength="{BS_MAX_SOURCE_LENGTH}"></td>
+                        <td class="posting-form-input"><input type="text" name="sauce{$i}" id="fs{$i}" maxlength="{BS_MAX_SOURCE_LENGTH}"></td>
                     </tr>
                     <tr class="posting-form-row none" id="lcns{$i}">
                         <td class="posting-form-label"><label for="lc{$i}">{LANG_LABEL_LICENSE}</label></td>
-                        <td class="posting-form-input"><input type="text" name="loldrama{$i}" id="lc{$i}" size="40" maxlength="{BS_MAX_LICENSE_LENGTH}"></td>
+                        <td class="posting-form-input"><input type="text" name="loldrama{$i}" id="lc{$i}" maxlength="{BS_MAX_LICENSE_LENGTH}"></td>
                     </tr>
     {{ endfor }}
 

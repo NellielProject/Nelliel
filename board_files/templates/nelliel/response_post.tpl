@@ -1,7 +1,7 @@
 {{ if $rendervar['omitted_posts'] }}
         <span class="omitted-posts">{$rendervar['omitted_count']}{LANG_TEXT_OMITTED_POSTS}</span><br>
 {{ endif }}
-            <a id="{$rendervar['post_number']}"></a>
+            <a id="p{$rendervar['post_number']}"></a>
             <div class="indents">&gt;&gt;</div>
             <div class="reply-post">
                 <input type="checkbox" name="thread_{$rendervar['post_number']}" value="deletethread_{$rendervar['post_number']}" title="Delete entire post"><span class="reply-subject">{$rendervar['subject']}</span>
@@ -15,7 +15,7 @@
     {{ if $rendervar['response_id'] }}
                 {$rendervar['post_time']} No. <a href="javascript:postQuote('{$rendervar['post_number']}')" class="post-link">{$rendervar['post_number']}</a>&nbsp;
     {{ else }}
-                {$rendervar['post_time']} No. <a href="{PAGE_DIR}{$rendervar['post_number']}/{$rendervar['post_number']}.html" class="post-link">{$rendervar['post_number']}</a>&nbsp;
+                {$rendervar['post_time']} No. <a href="{PAGE_DIR}{$rendervar['response_to']}/{$rendervar['response_to']}.html#p{$rendervar['post_number']}" class="post-link">{$rendervar['post_number']}</a>&nbsp;
     {{ endif }}
     {{ if $rendervar['sticky'] }}
                 <img src="{$rendervar['dotdot']}{BOARD_FILES}/imagez/nelliel/{LANG_THREAD_STICKY_ICON}" width="22" height="22" alt="{LANG_THREAD_STICKY}">

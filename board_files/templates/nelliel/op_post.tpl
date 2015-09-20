@@ -3,7 +3,7 @@
         <br>
         <hr class="clear">
 {{ else }}
-        <a id="{$rendervar['post_number']}"></a>
+        <a id="p{$rendervar['post_number']}"></a>
         <div class="op-post">
             <input type="checkbox" name="thread_{$rendervar['post_number']}" value="deletethread_{$rendervar['post_number']}" title="Delete entire post"><span class="op-subject">{$rendervar['subject']}</span>
             <span class="op-poster-name">

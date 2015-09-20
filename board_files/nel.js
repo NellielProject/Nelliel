@@ -108,7 +108,8 @@ function externalLinks()
     }
 }
 
-function clientSideInclude(id, id2, url, url2, link_text) {
+function clientSideInclude(id, id2, url, url2, link_text)
+{
     var req = false;
     var element = document.getElementById(id);
     var element2 = document.getElementById(id2);
