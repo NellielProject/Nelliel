@@ -47,7 +47,7 @@ define('LANG_LABEL_LICENSE', 'License'); // License field
 define('LANG_TEXT_REPLYMODE', 'Posting mode: Reply'); // Reply mode
 define('LANG_TEXT_THREADMODE', 'Posting mode: New thread'); // New thread mode
 define('LANG_TEXT_PASS_WAT', '(Password used for file deletion)'); // Explain wtf the password is for
-define('LANG_TEXT_SPAMBOT_TRAP', 'Normally you shouldn\'t be able to see this. NEVER EVER put anything in this text field or you\'ll get permb&amp;. Srsly.'); // Warning about the hidden spambot trap fields
+define('LANG_TEXT_SPAMBOT_TRAP', 'Never put anything in this field!'); // Warning about the hidden spambot trap fields
 define('LANG_TEXT_OMITTED_POSTS', ' posts omitted. Click Reply or Expand Post to view.'); // Prints text to be shown when replies are hidden
 define('LANG_FAKE_STAFF_ATTEMPT', 'I\'m a faggot'); // Attempts to imitate staff in name field are filtered to this
                                                      

@@ -34,6 +34,9 @@ function asdfg($input)
     return $trip;
 }
 
+define('LANG_TEXT_SPAMBOT_FIELD1', 'name'); // First anti-spambot hidden field
+define('LANG_TEXT_SPAMBOT_FIELD2', 'url'); // Second anti-spambot hidden field
+
 ignore_user_abort(TRUE);
 require_once INCLUDE_PATH . 'setup.php';
 setup_check();
@@ -55,7 +58,7 @@ require_once INCLUDE_PATH . 'snacks.php';
 
 session_start();
 
-if (BS1_USE_SPAMBOT_TRAP && (!is_null($dataforce['xzname']) || !is_null($dataforce['xzurl1'])))
+if (BS1_USE_SPAMBOT_TRAP && (!is_null($dataforce['sp_field1']) || !is_null($dataforce['sp_field2'])))
 {
     $dataforce['banreason'] = "Spambot. Nobody wants any. GTFO";
     $dataforce['bandays'] = 9001;

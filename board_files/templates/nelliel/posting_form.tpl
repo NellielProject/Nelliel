@@ -93,12 +93,12 @@
                     </tr>
 {{ if BS1_USE_SPAMBOT_TRAP }}
                     <tr class="none">
-                        <td><label for="xzname1">{LANG_TEXT_SPAMBOT_TRAP}</label></td>
-                        <td><input type="text" name="xzname" id="xzname1" size="30"></td>
+                        <td><label for="name1">{LANG_TEXT_SPAMBOT_TRAP}</label></td>
+                        <td><input type="text" name="{LANG_TEXT_SPAMBOT_FIELD1}" id="name1" size="30"></td>
                     </tr>
                     <tr class="none">
-                        <td><label for="xzurl1">{LANG_TEXT_SPAMBOT_TRAP}</label></td>
-                        <td><input type="text" name="xzurl1" id="xzurl1" size="60"></td>
+                        <td><label for="url1">{LANG_TEXT_SPAMBOT_TRAP}</label></td>
+                        <td><input type="text" name="{LANG_TEXT_SPAMBOT_FIELD2}" id="url1" size="60"></td>
                     </tr>
 {{ endif }}
                 </table>

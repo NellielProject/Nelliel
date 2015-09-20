@@ -39,8 +39,8 @@ $dataforce['file_source'] = (isset($_POST['sauce'])) ? $_POST['sauce'] : NULL;
 $dataforce['file_license'] = (isset($_POST['loldrama'])) ? $_POST['loldrama'] : NULL;
 
 $dataforce['pass'] = (isset($_POST['sekrit'])) ? $_POST['sekrit'] : NULL;
-$dataforce['xzname'] = (isset($_POST['xzname'])) ? $_POST['xzname'] : NULL;
-$dataforce['xzurl1'] = (isset($_POST['xzurll1'])) ? $_POST['xzurl1'] : NULL;
+$dataforce['sp_field1'] = (isset($_POST[LANG_TEXT_SPAMBOT_FIELD1])) ? $_POST[LANG_TEXT_SPAMBOT_FIELD1] : NULL;
+$dataforce['sp_field2'] = (isset($_POST[LANG_TEXT_SPAMBOT_FIELD2])) ? $_POST[LANG_TEXT_SPAMBOT_FIELD2] : NULL;
 $dataforce['admin_pass'] = (isset($_POST['super_sekrit'])) ? $_POST['super_sekrit'] : NULL;
 $dataforce['username'] = (isset($_POST['username'])) ? $_POST['username'] : NULL;
 $dataforce['usrdel'] = (isset($_POST['usrdel'])) ? $_POST['usrdel'] : NULL;
