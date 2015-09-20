@@ -1,7 +1,7 @@
 <?php
-if (!defined (NELLIEL_VERSION))
+if (!defined(NELLIEL_VERSION))
 {
-    die ("NOPE.AVI");
+    die("NOPE.AVI");
 }
 
 function thread_updates($dataforce)
@@ -16,41 +16,41 @@ function thread_updates($dataforce)
     foreach ($_POST as $input)
     {
         $push = NULL;
-        $sub = explode ('_', $input, 4);
+        $sub = explode('_', $input, 4);
         
         switch ($sub[0])
         {
             case 'deletefile':
-                delete_content ($dataforce, $sub, 'FILE');
+                delete_content($dataforce, $sub, 'FILE');
                 $push = $sub[1];
                 break;
             
             case 'deletethread':
-                delete_content ($dataforce, $sub, 'THREAD');
+                delete_content($dataforce, $sub, 'THREAD');
                 $push = $sub[1];
                 break;
             
             case 'deletepost':
-                delete_content ($dataforce, $sub, 'POST');
+                delete_content($dataforce, $sub, 'POST');
                 $push = $sub[2];
                 break;
             
             case 'sticky':
-                make_sticky ($dataforce, $sub);
+                make_sticky($dataforce, $sub);
                 $push = $sub[1];
                 break;
             
             case 'unsticky':
-                unsticky ($dataforce, $sub);
+                unsticky($dataforce, $sub);
                 $push = $sub[1];
                 break;
         }
         
         if ($push !== NULL)
         {
-            if (!in_array ($push, $returned_list))
+            if (!in_array($push, $returned_list))
             {
-                array_push ($returned_list, $push);
+                array_push($returned_list, $push);
             }
         }
     }
@@ -63,60 +63,60 @@ function make_sticky($dataforce, $sub)
     global $dbh;
     
     $id = $sub[1];
-    $result = $dbh->query ('SELECT response_to,has_file,post_time FROM ' . POSTTABLE . ' WHERE post_number=' . $id . '');
-    $post_data = $result->fetch (PDO::FETCH_ASSOC);
-    unset ($result);
+    $result = $dbh->query('SELECT response_to,has_file,post_time FROM ' . POSTTABLE . ' WHERE post_number=' . $id . '');
+    $post_data = $result->fetch(PDO::FETCH_ASSOC);
+    unset($result);
     
-    $dbh->query ('UPDATE ' . POSTTABLE . ' SET response_to=0, sticky=1, last_update=' . $post_data['post_time'] . ' WHERE post_number=' . $id . '');
-    create_thread_directories ($id);
+    $dbh->query('UPDATE ' . POSTTABLE . ' SET response_to=0, sticky=1, last_update=' . $post_data['post_time'] . ' WHERE post_number=' . $id . '');
+    create_thread_directories($id);
     
     if ($post_data['has_file'])
     {
-        $dbh->query ('UPDATE ' . FILETABLE . ' SET parent_thread=0 WHERE post_ref=' . $id . '');
-        $result = $dbh->query ('SELECT filename,extension,preview_name FROM ' . FILETABLE . ' WHERE post_ref=' . $id);
-        $file_data = $result->fetchAll (PDO::FETCH_ASSOC);
-        unset ($result);
+        $dbh->query('UPDATE ' . FILETABLE . ' SET parent_thread=0 WHERE post_ref=' . $id . '');
+        $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILETABLE . ' WHERE post_ref=' . $id);
+        $file_data = $result->fetchAll(PDO::FETCH_ASSOC);
+        unset($result);
         
-        $file_count = count ($file_data);
+        $file_count = count($file_data);
         $line = 0;
         
         while ($line < $file_count)
         {
-            move_file (SRC_PATH . $post_data['response_to'] . '/' . $file_data[$line]['filename'] . $file_data[$line]['extension'], SRC_PATH . $id . '/' . $file_data[$line]['filename'] . $file_data[$line]['extension']);
-            move_file (THUMB_PATH . $post_data['response_to'] . '/' . $file_data[$line]['preview_name'], THUMB_PATH . $id . '/' . $file_data[$line]['preview_name']);
+            move_file(SRC_PATH . $post_data['response_to'] . '/' . $file_data[$line]['filename'] . $file_data[$line]['extension'], SRC_PATH . $id . '/' . $file_data[$line]['filename'] . $file_data[$line]['extension']);
+            move_file(THUMB_PATH . $post_data['response_to'] . '/' . $file_data[$line]['preview_name'], THUMB_PATH . $id . '/' . $file_data[$line]['preview_name']);
             
             ++ $line;
         }
     }
     
-    $result = $dbh->query ('SELECT post_count FROM ' . POSTTABLE . ' WHERE post_number=' . $post_data['response_to'] . '');
-    $pcount = $result->fetch (PDO::FETCH_ASSOC);
-    unset ($result);
-    $result = $dbh->query ('SELECT post_number,post_time FROM ' . POSTTABLE . ' WHERE response_to=' . $post_data['response_to'] . ' ORDER BY post_number desc');
-    $ptimes = $result->fetchAll (PDO::FETCH_ASSOC);
-    unset ($result);
-    $dbh->query ('UPDATE ' . POSTTABLE . ' SET post_count=' . ($pcount['post_count'] - 1) . ', last_update=' . $ptimes[0]['post_time'] . ', last_response=' . $ptimes[0]['post_number'] . ' WHERE post_number=' . $post_data['response_to'] . '');
-    preg_replace ('#p' . $id . 't' . $post_data['response_to'] . '#', 'p' . $id . 't0', $post_link_reference);
+    $result = $dbh->query('SELECT post_count FROM ' . POSTTABLE . ' WHERE post_number=' . $post_data['response_to'] . '');
+    $pcount = $result->fetch(PDO::FETCH_ASSOC);
+    unset($result);
+    $result = $dbh->query('SELECT post_number,post_time FROM ' . POSTTABLE . ' WHERE response_to=' . $post_data['response_to'] . ' ORDER BY post_number desc');
+    $ptimes = $result->fetchAll(PDO::FETCH_ASSOC);
+    unset($result);
+    $dbh->query('UPDATE ' . POSTTABLE . ' SET post_count=' . ($pcount['post_count'] - 1) . ', last_update=' . $ptimes[0]['post_time'] . ', last_response=' . $ptimes[0]['post_number'] . ' WHERE post_number=' . $post_data['response_to'] . '');
+    preg_replace('#p' . $id . 't' . $post_data['response_to'] . '#', 'p' . $id . 't0', $post_link_reference);
     
-    update_archive_status ($dataforce);
+    update_archive_status($dataforce);
     
-    if (!empty ($_SESSION))
+    if (!empty($_SESSION))
     {
         $temp = $_SESSION['ignore_login'];
         $_SESSION['ignore_login'] = TRUE;
     }
     
-    if (!file_exists (PAGE_PATH . $id . '/' . $id . '.html'))
+    if (!file_exists(PAGE_PATH . $id . '/' . $id . '.html'))
     {
         $dataforce['response_id'] = $id;
-        regen ($dataforce, $dataforce['response_id'], 'thread', FALSE);
+        regen($dataforce, $dataforce['response_id'], 'thread', FALSE);
     }
     
-    cache_post_links ();
+    cache_post_links();
     $dataforce['archive_update'] = TRUE;
-    regen ($dataforce, NULL, 'main', FALSE);
+    regen($dataforce, NULL, 'main', FALSE);
     
-    if (!empty ($_SESSION))
+    if (!empty($_SESSION))
     {
         $_SESSION['ignore_login'] = $temp;
     }
@@ -126,27 +126,27 @@ function unsticky($dataforce, $sub)
 {
     global $dbh;
     $id = $sub[1];
-    $dbh->query ('UPDATE ' . POSTTABLE . ' SET sticky=0 WHERE post_number=' . $id . '');
+    $dbh->query('UPDATE ' . POSTTABLE . ' SET sticky=0 WHERE post_number=' . $id . '');
     
-    update_archive_status ($dataforce);
+    update_archive_status($dataforce);
     
-    if (!empty ($_SESSION))
+    if (!empty($_SESSION))
     {
         $temp = $_SESSION['ignore_login'];
         $_SESSION['ignore_login'] = TRUE;
     }
     
-    if (!file_exists (PAGE_PATH . $id . '/' . $id . '.html'))
+    if (!file_exists(PAGE_PATH . $id . '/' . $id . '.html'))
     {
         $dataforce['response_id'] = $id;
-        regen ($dataforce, $dataforce['response_id'], 'thread', FALSE);
+        regen($dataforce, $dataforce['response_id'], 'thread', FALSE);
     }
     
-    cache_post_links ();
+    cache_post_links();
     $dataforce['archive_update'] = TRUE;
-    regen ($dataforce, NULL, 'main', FALSE);
+    regen($dataforce, NULL, 'main', FALSE);
     
-    if (!empty ($_SESSION))
+    if (!empty($_SESSION))
     {
         $_SESSION['ignore_login'] = $temp;
     }
@@ -158,19 +158,19 @@ function delete_content($dataforce, $sub, $type)
     
     $id = $sub[1];
     
-    if (!is_numeric ($id))
+    if (!is_numeric($id))
     {
-        derp (13, LANG_ERROR_13, 'DELETE', array(), '');
+        derp(13, LANG_ERROR_13, 'DELETE', array(), '');
     }
     
     $flag = FALSE;
-    $hashed_pass = asdfg ($dataforce['pass']);
-    $hashed_pass = substr ($hashed_pass, 0, 16);
-    $result = $dbh->query ('SELECT post_number,password,response_to,mod_post FROM ' . POSTTABLE . ' WHERE post_number=' . $id . '');
-    $post_data = $result->fetch (PDO::FETCH_ASSOC);
-    unset ($result);
+    $hashed_pass = asdfg($dataforce['pass']);
+    $hashed_pass = substr($hashed_pass, 0, 16);
+    $result = $dbh->query('SELECT post_number,password,response_to,mod_post FROM ' . POSTTABLE . ' WHERE post_number=' . $id . '');
+    $post_data = $result->fetch(PDO::FETCH_ASSOC);
+    unset($result);
     
-    if (!empty ($_SESSION) && !$_SESSION['ignore_login'])
+    if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
         $temp = $_SESSION['ignore_login'];
         
@@ -211,96 +211,96 @@ function delete_content($dataforce, $sub, $type)
     {
         if ($type === 'THREAD')
         {
-            $result = $dbh->query ('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=' . $id . ' OR post_number=' . $id . '');
-            $content_refs = $result->fetchALL (PDO::FETCH_COLUMN, 0);
-            unset ($result);
+            $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=' . $id . ' OR post_number=' . $id . '');
+            $content_refs = $result->fetchALL(PDO::FETCH_COLUMN, 0);
+            unset($result);
             
             foreach ($content_refs as $ref)
             {
-                $dbh->query ('DELETE FROM ' . FILETABLE . ' WHERE post_ref=' . $ref . '');
-                $dbh->query ('DELETE FROM ' . POSTTABLE . ' WHERE post_number=' . $ref . '');
-                preg_replace ('#p([0-9]+)t' . $ref . '#', '', $post_link_reference);
+                $dbh->query('DELETE FROM ' . FILETABLE . ' WHERE post_ref=' . $ref . '');
+                $dbh->query('DELETE FROM ' . POSTTABLE . ' WHERE post_number=' . $ref . '');
+                preg_replace('#p([0-9]+)t' . $ref . '#', '', $post_link_reference);
             }
             
-            eraser_gun (PAGE_PATH . $id, NULL, TRUE);
-            eraser_gun (SRC_PATH . $id, NULL, TRUE);
-            eraser_gun (THUMB_PATH . $id, NULL, TRUE);
+            eraser_gun(PAGE_PATH . $id, NULL, TRUE);
+            eraser_gun(SRC_PATH . $id, NULL, TRUE);
+            eraser_gun(THUMB_PATH . $id, NULL, TRUE);
             
-            update_archive_status ($dataforce);
+            update_archive_status($dataforce);
         }
         else if ($type === 'POST')
         {
-            $result = $dbh->query ('SELECT filename,extension,preview_name FROM ' . FILETABLE . ' WHERE post_ref=' . $id . '');
-            $file_data = $result->fetchAll (PDO::FETCH_ASSOC);
-            unset ($result);
-            $dbh->query ('DELETE FROM ' . FILETABLE . ' WHERE post_ref=' . $id . '');
+            $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILETABLE . ' WHERE post_ref=' . $id . '');
+            $file_data = $result->fetchAll(PDO::FETCH_ASSOC);
+            unset($result);
+            $dbh->query('DELETE FROM ' . FILETABLE . ' WHERE post_ref=' . $id . '');
             
             foreach ($file_data as $refs)
             {
-                eraser_gun (SRC_PATH . $post_data['response_to'], $refs['filename'] . $refs['extension'], FALSE);
+                eraser_gun(SRC_PATH . $post_data['response_to'], $refs['filename'] . $refs['extension'], FALSE);
                 
                 if ($refs['preview_name'])
                 {
-                    eraser_gun (THUMB_PATH . $post_data['response_to'], $refs['preview_name'], FALSE);
+                    eraser_gun(THUMB_PATH . $post_data['response_to'], $refs['preview_name'], FALSE);
                 }
             }
             
             if ($dataforce['only_delete_file'])
             {
-                $dbh->query ('UPDATE ' . POSTTABLE . ' SET has_file=0 WHERE post_number=' . $id . '');
+                $dbh->query('UPDATE ' . POSTTABLE . ' SET has_file=0 WHERE post_number=' . $id . '');
             }
             else
             {
-                $dbh->query ('DELETE FROM ' . POSTTABLE . ' WHERE post_number=' . $id . '');
-                $result = $dbh->query ('SELECT post_count FROM ' . POSTTABLE . ' WHERE post_number=' . $post_data['response_to'] . '');
-                $pcount = $result->fetch (PDO::FETCH_ASSOC);
-                unset ($result);
-                $result = $dbh->query ('SELECT post_number,post_time FROM ' . POSTTABLE . ' WHERE response_to=' . $post_data['response_to'] . ' ORDER BY post_number desc');
-                $ptimes = $result->fetchAll (PDO::FETCH_ASSOC);
-                unset ($result);
-                $dbh->query ('UPDATE ' . POSTTABLE . ' SET post_count=' . ($pcount['post_count'] - 1) . ', last_update=' . $ptimes[0]['post_time'] . ', last_response=' . $ptimes[0]['post_number'] . ' WHERE post_number=' . $post_data['response_to'] . '');
-                preg_replace ('#p' . $id . 't([0-9]+)#', '', $post_link_reference);
+                $dbh->query('DELETE FROM ' . POSTTABLE . ' WHERE post_number=' . $id . '');
+                $result = $dbh->query('SELECT post_count FROM ' . POSTTABLE . ' WHERE post_number=' . $post_data['response_to'] . '');
+                $pcount = $result->fetch(PDO::FETCH_ASSOC);
+                unset($result);
+                $result = $dbh->query('SELECT post_number,post_time FROM ' . POSTTABLE . ' WHERE response_to=' . $post_data['response_to'] . ' ORDER BY post_number desc');
+                $ptimes = $result->fetchAll(PDO::FETCH_ASSOC);
+                unset($result);
+                $dbh->query('UPDATE ' . POSTTABLE . ' SET post_count=' . ($pcount['post_count'] - 1) . ', last_update=' . $ptimes[0]['post_time'] . ', last_response=' . $ptimes[0]['post_number'] . ' WHERE post_number=' . $post_data['response_to'] . '');
+                preg_replace('#p' . $id . 't([0-9]+)#', '', $post_link_reference);
             }
         }
         else if ($type === 'FILE')
         {
             // add check for updating post as no files if they're all gone
             $fnum = $sub[2];
-            $result = $dbh->query ('SELECT filename,extension,preview_name FROM ' . FILETABLE . ' WHERE post_ref=' . $id . ' AND ord=' . $fnum . '');
-            $file_data = $result->fetch (PDO::FETCH_ASSOC);
-            unset ($result);
+            $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILETABLE . ' WHERE post_ref=' . $id . ' AND ord=' . $fnum . '');
+            $file_data = $result->fetch(PDO::FETCH_ASSOC);
+            unset($result);
             
             if ($file_data !== FALSE)
             {
-                $dbh->query ('DELETE FROM ' . FILETABLE . ' WHERE post_ref=' . $id . ' AND ord=' . $fnum . '');
+                $dbh->query('DELETE FROM ' . FILETABLE . ' WHERE post_ref=' . $id . ' AND ord=' . $fnum . '');
                 
                 if ($post_data['response_to'] == 0)
                 {
-                    eraser_gun (SRC_PATH . $post_data['post_number'], $file_data['filename'] . $file_data['extension'], FALSE);
+                    eraser_gun(SRC_PATH . $post_data['post_number'], $file_data['filename'] . $file_data['extension'], FALSE);
                     if ($file_data['preview_name'])
                     {
-                        eraser_gun (THUMB_PATH . $post_data['post_number'], $file_data['preview_name'], FALSE);
+                        eraser_gun(THUMB_PATH . $post_data['post_number'], $file_data['preview_name'], FALSE);
                     }
                 }
                 else
                 {
-                    eraser_gun (SRC_PATH . $post_data['response_to'], $file_data['filename'] . $file_data['extension'], FALSE);
+                    eraser_gun(SRC_PATH . $post_data['response_to'], $file_data['filename'] . $file_data['extension'], FALSE);
                     if ($file_data['preview_name'])
                     {
-                        eraser_gun (THUMB_PATH . $post_data['response_to'], $file_data['preview_name'], FALSE);
+                        eraser_gun(THUMB_PATH . $post_data['response_to'], $file_data['preview_name'], FALSE);
                     }
                 }
             }
         }
         
-        cache_post_links ();
+        cache_post_links();
     }
     else
     {
-        derp (25, LANG_ERROR_25, 'DELETE', array(), '');
+        derp(25, LANG_ERROR_25, 'DELETE', array(), '');
     }
     
-    if (!empty ($_SESSION))
+    if (!empty($_SESSION))
     {
         $_SESSION['ignore_login'] = $temp;
     }

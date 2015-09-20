@@ -1,7 +1,7 @@
 <?php
-if (!defined (NELLIEL_VERSION))
+if (!defined(NELLIEL_VERSION))
 {
-    die ("NOPE.AVI");
+    die("NOPE.AVI");
 }
 
 //
@@ -9,7 +9,7 @@ if (!defined (NELLIEL_VERSION))
 //
 function write_file($filename, $output, $chmod)
 {
-    $fp = fopen ($filename, "w");
+    $fp = fopen($filename, "w");
     
     if (!$fp)
     {
@@ -18,11 +18,11 @@ function write_file($filename, $output, $chmod)
     }
     else
     {
-        set_file_buffer ($fp, 0);
-        rewind ($fp);
-        fputs ($fp, $output);
-        fclose ($fp);
-        chmod ($filename, $chmod);
+        set_file_buffer($fp, 0);
+        rewind($fp);
+        fputs($fp, $output);
+        fclose($fp);
+        chmod($filename, $chmod);
         return TRUE;
     }
 }
@@ -32,9 +32,9 @@ function write_file($filename, $output, $chmod)
 //
 function move_file($location, $destination)
 {
-    if (file_exists ($location))
+    if (file_exists($location))
     {
-        rename ($location, $destination);
+        rename($location, $destination);
     }
 }
 
@@ -43,20 +43,20 @@ function move_file($location, $destination)
 //
 function eraser_gun($path, $filename, $multi)
 {
-    if ($multi && file_exists ($path))
+    if ($multi && file_exists($path))
     {
-        $files = glob ($path . "/*.*");
+        $files = glob($path . "/*.*");
         
         foreach ($files as $file)
         {
-            unlink ($file);
+            unlink($file);
         }
         
-        rmdir ($path);
+        rmdir($path);
     }
-    else if (file_exists ($path . "/" . $filename))
+    else if (file_exists($path . "/" . $filename))
     {
-        unlink ($path . "/" . $filename);
+        unlink($path . "/" . $filename);
     }
 }
 
@@ -65,12 +65,12 @@ function eraser_gun($path, $filename, $multi)
 //
 function create_thread_directories($thread_id)
 {
-    var_dump ($thread_id);
-    mkdir (SRC_PATH . $thread_id, 0777);
-    chmod (SRC_PATH . $thread_id, 0777);
-    mkdir (THUMB_PATH . $thread_id, 0777);
-    chmod (THUMB_PATH . $thread_id, 0777);
-    mkdir (PAGE_PATH . $thread_id, 0777);
-    chmod (PAGE_PATH . $thread_id, 0777);
+    var_dump($thread_id);
+    mkdir(SRC_PATH . $thread_id, 0777);
+    chmod(SRC_PATH . $thread_id, 0777);
+    mkdir(THUMB_PATH . $thread_id, 0777);
+    chmod(THUMB_PATH . $thread_id, 0777);
+    mkdir(PAGE_PATH . $thread_id, 0777);
+    chmod(PAGE_PATH . $thread_id, 0777);
 }
 ?>

@@ -1,7 +1,7 @@
 <?php
-if (!defined (NELLIEL_VERSION))
+if (!defined(NELLIEL_VERSION))
 {
-    die ("NOPE.AVI");
+    die("NOPE.AVI");
 }
 
 //
@@ -9,19 +9,19 @@ if (!defined (NELLIEL_VERSION))
 //
 function cleanse_the_aids($string)
 {
-    if ($string === '' || preg_match ("#^\s*$#", $string))
+    if ($string === '' || preg_match("#^\s*$#", $string))
     {
         return '';
     }
     else
     {
-        if (get_magic_quotes_gpc ())
+        if (get_magic_quotes_gpc())
         {
-            $string = stripslashes ($string);
+            $string = stripslashes($string);
         }
         
-        $string = trim ($string);
-        $string = htmlspecialchars ($string);
+        $string = trim($string);
+        $string = htmlspecialchars($string);
         return $string;
     }
 }
@@ -31,9 +31,9 @@ function cleanse_the_aids($string)
 //
 function derp($error_id, $error_message, $error_location, $diagnostic, $file)
 {
-    if ($file !== '' && is_file ($file['dest']))
+    if ($file !== '' && is_file($file['dest']))
     {
-        unlink ($file['dest']);
+        unlink($file['dest']);
     }
     
     if ($error_location === 'SNACKS')
@@ -49,13 +49,13 @@ function derp($error_id, $error_message, $error_location, $diagnostic, $file)
         $extra_data = '';
     }
     
-    echo generate_header (array(), 'DERP', array());
+    echo generate_header(array(), 'DERP', array());
     echo '
         <div class="text-center"><font color="blue" size="5">' . LANG_ERROR_HEADER . '<br><br>' . $error_message . '<br>' . $extra_data . '<br><a href="' . PHP_SELF2 . PHP_EXT . '">' . LANG_LINK_RETURN . '</a></b></font></div>
         <br><br><hr>
 </body></html>';
     
-    die ();
+    die();
 }
 
 //
@@ -63,9 +63,9 @@ function derp($error_id, $error_message, $error_location, $diagnostic, $file)
 //
 function terminate_session()
 {
-    session_unset ();
-    session_destroy ();
-    setcookie ("PHPSESSID", "", time () - 3600, "/");
+    session_unset();
+    session_destroy();
+    setcookie("PHPSESSID", "", time() - 3600, "/");
 }
 
 //
@@ -73,18 +73,18 @@ function terminate_session()
 //
 function regen_session()
 {
-    $timeout = time () - $_SESSION['last_activity'];
+    $timeout = time() - $_SESSION['last_activity'];
     
-    if ($_COOKIE['PHPSESSID'] === session_id () && $timeout < 1800)
+    if ($_COOKIE['PHPSESSID'] === session_id() && $timeout < 1800)
     {
-        session_regenerate_id (true);
-        $_SESSION['last_activity'] = time ();
+        session_regenerate_id(true);
+        $_SESSION['last_activity'] = time();
         $_SESSION['ignore_login'] = FALSE;
     }
     else // Session timed out or doesn't match the cookie
     {
-        terminate_session ();
-        derp (35, LANG_ERROR_35, 'SEC', array(), '');
+        terminate_session();
+        derp(35, LANG_ERROR_35, 'SEC', array(), '');
     }
 }
 
@@ -98,15 +98,15 @@ function link_quote($matches)
     $found = FALSE;
     $back = ($link_resno === 0) ? PAGE_DIR : '../';
     $pattern = '#p' . $matches[1] . 't([0-9]+)#';
-    $isquoted = preg_match ($pattern, $post_link_reference, $matches2);
+    $isquoted = preg_match($pattern, $post_link_reference, $matches2);
     
     if ($isquoted === 0)
     {
-        $prepared = $dbh->prepare ('SELECT response_to FROM ' . POSTTABLE . ' WHERE post_number=:pnum');
-        $prepared->bindParam (':pnum', $matches[1], PDO::PARAM_STR);
-        $prepared->execute ();
-        $link = $prepared->fetch (PDO::FETCH_NUM);
-        unset ($prepared);
+        $prepared = $dbh->prepare('SELECT response_to FROM ' . POSTTABLE . ' WHERE post_number=:pnum');
+        $prepared->bindParam(':pnum', $matches[1], PDO::PARAM_STR);
+        $prepared->execute();
+        $link = $prepared->fetch(PDO::FETCH_NUM);
+        unset($prepared);
         $found = TRUE;
         $post_link_reference .= 'p' . $matches[1] . 't' . $link[0];
         return '>>' . $matches[1];
@@ -139,9 +139,9 @@ function update_archive_status($dataforce)
         return;
     }
     
-    $result = $dbh->query ('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=0 ORDER BY sticky desc,last_update desc');
-    $thread_list = $result->fetchALL (PDO::FETCH_COLUMN);
-    unset ($result);
+    $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=0 ORDER BY sticky desc,last_update desc');
+    $thread_list = $result->fetchALL(PDO::FETCH_COLUMN);
+    unset($result);
     $start_buffer = BS_THREADS_PER_PAGE * $dataforce['max_pages'];
     $end_buffer = BS_THREADS_PER_PAGE * BS_PAGE_BUFFER;
     
@@ -151,30 +151,30 @@ function update_archive_status($dataforce)
     }
     
     $line = 0;
-    $thread_count = count ($thread_list);
+    $thread_count = count($thread_list);
     
     while ($line < $thread_count) // fix undefined error
     {
         if ($line < $start_buffer && $thread_list[$line]['archive_status'] !== '0')
         {
-            $dbh->query ('UPDATE ' . POSTTABLE . ' SET archive_status=0 WHERE post_number=' . $thread_list[$line] . '');
+            $dbh->query('UPDATE ' . POSTTABLE . ' SET archive_status=0 WHERE post_number=' . $thread_list[$line] . '');
         }
         else if ($line >= $start_buffer && $line <= $end_buffer && $thread_list[$line]['archive_status'] !== '1')
         {
-            $dbh->query ('UPDATE ' . POSTTABLE . ' SET archive_status=1 WHERE post_number=' . $thread_list[$line] . '');
+            $dbh->query('UPDATE ' . POSTTABLE . ' SET archive_status=1 WHERE post_number=' . $thread_list[$line] . '');
         }
         else if ($line >= $end_buffer && $thread_list[$line]['archive_status'] !== '2')
         {
-            $dbh->query ('UPDATE ' . POSTTABLE . ' SET archive_status=2 WHERE post_number=' . $thread_list[$line] . '');
+            $dbh->query('UPDATE ' . POSTTABLE . ' SET archive_status=2 WHERE post_number=' . $thread_list[$line] . '');
         }
         ++ $line;
     }
     
     // Below does the shift to archive
-    $result = $dbh->query ('SELECT post_number FROM ' . POSTTABLE . ' WHERE archive_status=2');
-    $move_list = $result->fetchALL (PDO::FETCH_COLUMN);
-    unset ($result);
-    $total = count ($move_list);
+    $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE archive_status=2');
+    $move_list = $result->fetchALL(PDO::FETCH_COLUMN);
+    unset($result);
+    $total = count($move_list);
     
     if ($total !== 0)
     {
@@ -183,54 +183,54 @@ function update_archive_status($dataforce)
         {
             if (BS_OLD_THREADS === 'ARCHIVE')
             {
-                $result = $dbh->query ('SELECT * FROM ' . POSTTABLE . ' WHERE post_number=' . $move_list[$i] . ' UNION SELECT * FROM ' . POSTTABLE . ' WHERE response_to=' . $move_list[$i] . '');
-                $thread_ready = $result->fetchALL (PDO::FETCH_NUM);
-                unset ($result);
+                $result = $dbh->query('SELECT * FROM ' . POSTTABLE . ' WHERE post_number=' . $move_list[$i] . ' UNION SELECT * FROM ' . POSTTABLE . ' WHERE response_to=' . $move_list[$i] . '');
+                $thread_ready = $result->fetchALL(PDO::FETCH_NUM);
+                unset($result);
                 $w = 0;
-                $total_to_move = count ($thread_ready);
-                $arch_shift = $dbh->prepare ('INSERT INTO ' . ARCHIVETABLE . ' 
+                $total_to_move = count($thread_ready);
+                $arch_shift = $dbh->prepare('INSERT INTO ' . ARCHIVETABLE . ' 
 					(post_number,name,tripcode,secure_tripcode,email,subject,comment,host,password,post_time,has_file,last_update,response_to,last_response,post_count,sticky,mod_post,mod_comment,archive_status,locked)
 					VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
                 
                 while ($w < $total_to_move)
                 {
-                    $arch_shift->execute ($thread_ready[$w]);
+                    $arch_shift->execute($thread_ready[$w]);
                     ++ $w;
                 }
                 
-                $dbh->query ('DELETE FROM ' . POSTTABLE . ' WHERE response_to=' . $move_list[$i] . ' OR post_number=' . $move_list[$i] . '');
+                $dbh->query('DELETE FROM ' . POSTTABLE . ' WHERE response_to=' . $move_list[$i] . ' OR post_number=' . $move_list[$i] . '');
                 
-                $result = $dbh->query ('SELECT * FROM ' . FILETABLE . ' WHERE parent_thread=' . $move_list[$i] . '');
-                $file_ready = $result->fetchALL (PDO::FETCH_NUM);
-                unset ($result);
+                $result = $dbh->query('SELECT * FROM ' . FILETABLE . ' WHERE parent_thread=' . $move_list[$i] . '');
+                $file_ready = $result->fetchALL(PDO::FETCH_NUM);
+                unset($result);
                 $w = 0;
-                $total_to_move = count ($file_ready);
-                $arch_shift = $dbh->prepare ('INSERT INTO ' . ARCHIVEFILETABLE . ' 
+                $total_to_move = count($file_ready);
+                $arch_shift = $dbh->prepare('INSERT INTO ' . ARCHIVEFILETABLE . ' 
 					(parent_thread,post_ref,ord,supertype,subtype,mime,filename,extension,image_width,image_height,preview_name,preview_width,preview_height,filesize,md5,source,license)
 					VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
                 
                 while ($w < $total_to_move)
                 {
-                    $arch_shift->execute ($file_ready[$w]);
+                    $arch_shift->execute($file_ready[$w]);
                     ++ $w;
                 }
                 
-                $dbh->query ('DELETE FROM ' . FILETABLE . ' WHERE parent_thread=' . $move_list[$i] . '');
-                move_file (SRC_PATH . $move_list[$i], ARC_SRC_PATH . $move_list[$i]);
-                move_file (THUMB_PATH . $move_list[$i], ARC_THUMB_PATH . $move_list[$i]);
-                move_file (PAGE_PATH . $move_list[$i], ARC_PAGE_PATH . $move_list[$i]);
+                $dbh->query('DELETE FROM ' . FILETABLE . ' WHERE parent_thread=' . $move_list[$i] . '');
+                move_file(SRC_PATH . $move_list[$i], ARC_SRC_PATH . $move_list[$i]);
+                move_file(THUMB_PATH . $move_list[$i], ARC_THUMB_PATH . $move_list[$i]);
+                move_file(PAGE_PATH . $move_list[$i], ARC_PAGE_PATH . $move_list[$i]);
             }
             
             if (BS_OLD_THREADS === 'PRUNE')
             {
-                eraser_gun (PAGE_PATH . $move_list[$i], NULL, TRUE);
-                eraser_gun (SRC_PATH . $move_list[$i], NULL, TRUE);
-                eraser_gun (THUMB_PATH . $move_list[$i], NULL, TRUE);
+                eraser_gun(PAGE_PATH . $move_list[$i], NULL, TRUE);
+                eraser_gun(SRC_PATH . $move_list[$i], NULL, TRUE);
+                eraser_gun(THUMB_PATH . $move_list[$i], NULL, TRUE);
             }
             ++ $i;
         }
         
-        $dbh->query ('UPDATE ' . ARCHIVETABLE . ' SET archive_status=0 WHERE archive_status=2');
+        $dbh->query('UPDATE ' . ARCHIVETABLE . ' SET archive_status=0 WHERE archive_status=2');
     }
 }
 
@@ -246,17 +246,17 @@ function lol_html_timer($derp)
         $start_html = 0;
         $end_html = 0;
         $total_html = 0;
-        $mtime = microtime ();
-        $mtime = explode (' ', $mtime);
+        $mtime = microtime();
+        $mtime = explode(' ', $mtime);
         $start_html = $mtime[1] + $mtime[0];
         return;
     }
     else
     {
-        $mtime = microtime ();
-        $mtime = explode (" ", $mtime);
+        $mtime = microtime();
+        $mtime = explode(" ", $mtime);
         $end_html = $mtime[1] + $mtime[0];
-        $total_html = round (($end_html - $start_html), 4);
+        $total_html = round(($end_html - $start_html), 4);
         return;
     }
 }
@@ -265,7 +265,7 @@ function regen($dataforce, $id, $mode, $modmode)
 {
     global $dbh;
     
-    if (!empty ($_SESSION) && !$modmode)
+    if (!empty($_SESSION) && !$modmode)
     {
         $temp = $_SESSION['ignore_login'];
         $_SESSION['ignore_login'] = TRUE;
@@ -273,9 +273,9 @@ function regen($dataforce, $id, $mode, $modmode)
     
     if ($mode === 'full')
     {
-        unset ($GLOBALS['template_info']); // Make sure any template changes are included across the board
-        $result = $dbh->query ('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=0 AND archive_status=0');
-        $ids = $result->fetchAll (PDO::FETCH_COLUMN);
+        unset($GLOBALS['template_info']); // Make sure any template changes are included across the board
+        $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=0 AND archive_status=0');
+        $ids = $result->fetchAll(PDO::FETCH_COLUMN);
     }
     
     if ($mode === 'thread')
@@ -285,32 +285,32 @@ function regen($dataforce, $id, $mode, $modmode)
     
     if ($mode === 'main' || $mode === 'full')
     {
-        update_archive_status ($dataforce);
-        main_thread_generator ($dataforce);
+        update_archive_status($dataforce);
+        main_thread_generator($dataforce);
     }
     
     if ($mode === 'thread' || $mode === 'full')
     {
-        $threads = count ($ids);
+        $threads = count($ids);
         $i = 0;
         
         while ($i < $threads)
         {
             $dataforce['response_id'] = $ids[$i];
-            thread_generator ($dataforce);
+            thread_generator($dataforce);
             ++ $i;
         }
     }
     
     if ($mode === 'update_all_cache')
     {
-        cache_rules ();
-        cache_settings ();
-        cache_post_links ();
-        regen_template_cache ();
+        cache_rules();
+        cache_settings();
+        cache_post_links();
+        regen_template_cache();
     }
     
-    if (!empty ($_SESSION) && !$modmode)
+    if (!empty($_SESSION) && !$modmode)
     {
         $_SESSION['ignore_login'] = $temp;
     }
@@ -321,7 +321,7 @@ function regen($dataforce, $id, $mode, $modmode)
 //
 function about_screen()
 {
-    echo generate_header (array(), 'ABOUT', array());
+    echo generate_header(array(), 'ABOUT', array());
     echo '
         <div class="text-center">
         	<p><font color="blue" size="5">Nelliel Imageboard</font><br>

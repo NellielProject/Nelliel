@@ -1,7 +1,7 @@
 <?php
-if (!defined (NELLIEL_VERSION))
+if (!defined(NELLIEL_VERSION))
 {
-    die ("NOPE.AVI");
+    die("NOPE.AVI");
 }
 
 //
@@ -12,13 +12,13 @@ function banned_md5($md5, $file)
     $cancer = array(
             '',
             '' );
-    $total_cancer = count ($cancer);
+    $total_cancer = count($cancer);
     
     for ($i = 0; $i < $total_cancer; ++ $i)
     {
         if ($md5 === $cancer[$i])
         {
-            derp (20, LANG_ERROR_20, 'SNACKS', array(), $file);
+            derp(20, LANG_ERROR_20, 'SNACKS', array(), $file);
         }
     }
 }
@@ -31,13 +31,13 @@ function banned_name($name, $file)
     $cancer = array(
             '',
             '' );
-    $total_cancer = count ($cancer);
+    $total_cancer = count($cancer);
     
     for ($i = 0; $i < $total_cancer; ++ $i)
     {
         if ($cancer[$i] === $name)
         {
-            derp (21, LANG_ERROR_21, 'SNACKS', array(), $file);
+            derp(21, LANG_ERROR_21, 'SNACKS', array(), $file);
         }
     }
 }
@@ -50,19 +50,19 @@ function banned_text($text, $file)
     $cancer = array(
             'samefag',
             '' );
-    $total_cancer = count ($cancer);
+    $total_cancer = count($cancer);
     
     for ($i = 0; $i < $total_cancer; ++ $i)
     {
         if ($cancer[$i] !== '')
         {
-            $test = strpos ($text, $cancer[$i]);
+            $test = strpos($text, $cancer[$i]);
             
             if ($test !== FALSE)
             {
                 $bad = array(
                         'cancer' => $cancer[$i] );
-                derp (22, LANG_ERROR_22, 'SNACKS', $bad, $file);
+                derp(22, LANG_ERROR_22, 'SNACKS', $bad, $file);
             }
         }
     }
@@ -79,11 +79,11 @@ function word_filters($text)
     $chemo = array(
             '',
             '' );
-    $total_cancer = count ($cancer);
+    $total_cancer = count($cancer);
     
     for ($i = 0; $i < $total_cancer; ++ $i)
     {
-        $text = preg_replace ('#' . $cancer[$i] . '#', $chemo[$i], $text);
+        $text = preg_replace('#' . $cancer[$i] . '#', $chemo[$i], $text);
     }
     return $text;
 }
@@ -99,9 +99,9 @@ function applyBan($dataforce, $authorized)
     
     if ($dataforce['mode'] === 'banappeal')
     {
-        reset ($_POST);
+        reset($_POST);
         
-        while ($item = each ($_POST))
+        while ($item = each($_POST))
         {
             if ($item[0] === 'bawww')
             {
@@ -113,46 +113,46 @@ function applyBan($dataforce, $authorized)
             }
         }
         
-        $prepared = $dbh->prepare ('UPDATE ' . BANTABLE . ' SET appeal=:bawww, appeal_status=1 WHERE host=:host');
-        $prepared->bindParam (':bawww', $bawww, PDO::PARAM_STR);
-        $prepared->bindParam (':host', @inet_pton ($banned_ip), PDO::PARAM_STR);
-        $prepared->execute ();
-        unset ($prepared);
+        $prepared = $dbh->prepare('UPDATE ' . BANTABLE . ' SET appeal=:bawww, appeal_status=1 WHERE host=:host');
+        $prepared->bindParam(':bawww', $bawww, PDO::PARAM_STR);
+        $prepared->bindParam(':host', @inet_pton($banned_ip), PDO::PARAM_STR);
+        $prepared->execute();
+        unset($prepared);
     }
     
-    $prepared = $dbh->prepare ('SELECT * FROM ' . BANTABLE . ' WHERE host=:host');
-    $prepared->bindParam (':host', @inet_pton ($base_host), PDO::PARAM_STR);
-    $prepared->execute ();
-    $bandata = $prepared->fetch (PDO::FETCH_ASSOC);
-    unset ($prepared);
+    $prepared = $dbh->prepare('SELECT * FROM ' . BANTABLE . ' WHERE host=:host');
+    $prepared->bindParam(':host', @inet_pton($base_host), PDO::PARAM_STR);
+    $prepared->execute();
+    $bandata = $prepared->fetch(PDO::FETCH_ASSOC);
+    unset($prepared);
     
     $length_base = $bandata['length'] + $bandata['ban_time'];
     
-    if (time () >= $length_base)
+    if (time() >= $length_base)
     {
-        $prepared = $dbh->prepare ('DELETE FROM ' . BANTABLE . ' WHERE id=:banid');
-        $prepared->bindParam (':banid', $bandata['id'], PDO::PARAM_INT);
-        $prepared->execute ();
-        unset ($prepared);
+        $prepared = $dbh->prepare('DELETE FROM ' . BANTABLE . ' WHERE id=:banid');
+        $prepared->bindParam(':banid', $bandata['id'], PDO::PARAM_INT);
+        $prepared->execute();
+        unset($prepared);
         return;
     }
     else
     {
-        if (!empty ($_SESSION))
+        if (!empty($_SESSION))
         {
-            terminate_session ();
+            terminate_session();
         }
         
         $rendervar = $bandata;
         $rendervar['appeal_status'] = (int) $rendervar['appeal_status'];
-        $rendervar['format_length'] = date ("D F jS Y  H:i", $length_base);
-        $rendervar['format_time'] = date ("D F jS Y  H:i", $bandata['ban_time']);
-        $rendervar['host'] = @inet_ntop ($rendervar['host']) ? inet_ntop ($rendervar['host']) : 'Unknown';
-        lol_html_timer (0);
-        $dat = generate_header ($dataforce, 'BAN', array());
-        $dat .= parse_template ('ban_page.tpl', FALSE);
-        $dat .= footer ($authorized, FALSE, FALSE, FALSE, FALSE);
+        $rendervar['format_length'] = date("D F jS Y  H:i", $length_base);
+        $rendervar['format_time'] = date("D F jS Y  H:i", $bandata['ban_time']);
+        $rendervar['host'] = @inet_ntop($rendervar['host']) ? inet_ntop($rendervar['host']) : 'Unknown';
+        lol_html_timer(0);
+        $dat = generate_header($dataforce, 'BAN', array());
+        $dat .= parse_template('ban_page.tpl', FALSE);
+        $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
         echo $dat;
-        die ();
+        die();
     }
 }

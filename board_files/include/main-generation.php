@@ -1,7 +1,7 @@
 <?php
-if (!defined (NELLIEL_VERSION))
+if (!defined(NELLIEL_VERSION))
 {
-    die ("NOPE.AVI");
+    die("NOPE.AVI");
 }
 
 //
@@ -14,38 +14,38 @@ function main_thread_generator($dataforce)
     $page_output = '';
     $rendervar['dotdot'] = '';
     
-    $result = $dbh->query ('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=0 AND archive_status=0 ORDER BY sticky desc,last_update desc');
-    $front_page_list = $result->fetchALL (PDO::FETCH_COLUMN);
-    unset ($result);
+    $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=0 AND archive_status=0 ORDER BY sticky desc,last_update desc');
+    $front_page_list = $result->fetchALL(PDO::FETCH_COLUMN);
+    unset($result);
     $treeline = array(
             0 );
     
     // Finding the last entry number
-    $result = $dbh->query ('SELECT COUNT(post_number) FROM ' . POSTTABLE . ' WHERE response_to=0');
-    $row = $result->fetch ();
-    unset ($result);
+    $result = $dbh->query('SELECT COUNT(post_number) FROM ' . POSTTABLE . ' WHERE response_to=0');
+    $row = $result->fetch();
+    unset($result);
     
-    $counttree = count ($front_page_list);
+    $counttree = count($front_page_list);
     
     // Special handling when there's no content
     if ($counttree === 0)
     {
-        $page_output .= generate_header ($dataforce, 'NORMAL', $treeline);
-        $page_output .= form ($page_output, $dataforce, $authorized);
+        $page_output .= generate_header($dataforce, 'NORMAL', $treeline);
+        $page_output .= form($page_output, $dataforce, $authorized);
         $rendervar['main_page'] = TRUE;
         $rendervar['prev_nav'] = '';
         $rendervar['next_nav'] = '';
         $rendervar['page_nav'] = '';
-        $page_output .= footer ($authorized, FALSE, TRUE, TRUE, FALSE);
+        $page_output .= footer($authorized, FALSE, TRUE, TRUE, FALSE);
         
-        if (empty ($_SESSION) || $_SESSION['ignore_login'])
+        if (empty($_SESSION) || $_SESSION['ignore_login'])
         {
-            write_file (PHP_SELF2 . PHP_EXT, $page_output, 0644);
+            write_file(PHP_SELF2 . PHP_EXT, $page_output, 0644);
         }
         else
         {
             echo $page_output;
-            die ();
+            die();
         }
         return;
     }
@@ -59,8 +59,8 @@ function main_thread_generator($dataforce)
         $page_output = '';
         $dataforce['omitted_done'] = TRUE;
         $rendervar['page_title'] = BS_BOARD_NAME;
-        $page_output .= generate_header ($dataforce, 'NORMAL', $treeline);
-        $page_output .= form ($page_output, $dataforce, $authorized);
+        $page_output .= generate_header($dataforce, 'NORMAL', $treeline);
+        $page_output .= form($page_output, $dataforce, $authorized);
         $end_of_thread = FALSE;
         $sub_page_thread_counter = 0;
         
@@ -69,22 +69,22 @@ function main_thread_generator($dataforce)
         {
             if ($gen_data['post_counter'] === -1)
             {
-                $result = $dbh->query ('SELECT * FROM ' . POSTTABLE . ' WHERE post_number=' . $front_page_list[$thread_counter] . '');
-                $tree_op = $result->fetchALL (PDO::FETCH_ASSOC);
-                unset ($result);
+                $result = $dbh->query('SELECT * FROM ' . POSTTABLE . ' WHERE post_number=' . $front_page_list[$thread_counter] . '');
+                $tree_op = $result->fetchALL(PDO::FETCH_ASSOC);
+                unset($result);
                 
-                $result = $dbh->query ('SELECT * FROM ' . POSTTABLE . ' WHERE response_to=' . $front_page_list[$thread_counter] . ' ORDER BY post_number desc LIMIT ' . (BS_ABBREVIATE_THREAD - 1) . '');
-                $tree_replies = $result->fetchALL (PDO::FETCH_ASSOC);
-                unset ($result);
+                $result = $dbh->query('SELECT * FROM ' . POSTTABLE . ' WHERE response_to=' . $front_page_list[$thread_counter] . ' ORDER BY post_number desc LIMIT ' . (BS_ABBREVIATE_THREAD - 1) . '');
+                $tree_replies = $result->fetchALL(PDO::FETCH_ASSOC);
+                unset($result);
                 
-                $treeline = array_merge ($tree_op, array_reverse ($tree_replies));
+                $treeline = array_merge($tree_op, array_reverse($tree_replies));
                 $gen_data['post_count'] = $treeline[0]['post_count'];
                 $rendervar['expand_post'] = ($gen_data['post_count'] > BS_ABBREVIATE_THREAD) ? TRUE : FALSE;
                 $rendervar['last50'] = ($gen_data['post_count'] > 50) ? TRUE : FALSE;
                 $rendervar['first100'] = ($gen_data['post_count'] > 100) ? TRUE : FALSE;
             }
             
-            if (!empty ($treeline[$gen_data['post_counter']]) && !empty ($treeline[$gen_data['post_counter'] + 1]))
+            if (!empty($treeline[$gen_data['post_counter']]) && !empty($treeline[$gen_data['post_counter'] + 1]))
             {
                 ++ $gen_data['post_counter'];
             }
@@ -98,7 +98,7 @@ function main_thread_generator($dataforce)
                 $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? BS_THREADS_PER_PAGE : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
                 $rendervar['insert_hr'] = TRUE;
-                $page_output .= renderPost ($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline);
+                $page_output .= renderPost($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline);
                 $rendervar['insert_hr'] = FALSE;
             }
             
@@ -106,9 +106,9 @@ function main_thread_generator($dataforce)
             {
                 if ($treeline[$gen_data['post_counter']]['has_file'] == 1)
                 {
-                    $result = $dbh->query ('SELECT * FROM ' . FILETABLE . ' WHERE post_ref=' . $treeline[$gen_data['post_counter']]['post_number'] . ' ORDER BY ord asc');
-                    $rendervar['files'] = $result->fetchALL (PDO::FETCH_ASSOC);
-                    unset ($result);
+                    $result = $dbh->query('SELECT * FROM ' . FILETABLE . ' WHERE post_ref=' . $treeline[$gen_data['post_counter']]['post_number'] . ' ORDER BY ord asc');
+                    $rendervar['files'] = $result->fetchALL(PDO::FETCH_ASSOC);
+                    unset($result);
                 }
                 
                 if ($treeline[$gen_data['post_counter']]['response_to'] > 0)
@@ -121,17 +121,17 @@ function main_thread_generator($dataforce)
                     if ($gen_data['post_count'] > BS_ABBREVIATE_THREAD && $gen_data['post_counter'] === 1)
                     {
                         $dataforce['omitted_done'] = FALSE;
-                        $page_output .= renderPost ($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline);
+                        $page_output .= renderPost($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline);
                         $dataforce['omitted_done'] = TRUE;
                     }
                     else
                     {
-                        $page_output .= renderPost ($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline);
+                        $page_output .= renderPost($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline);
                     }
                 }
                 else
                 {
-                    $page_output .= renderPost ($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline);
+                    $page_output .= renderPost($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline);
                 }
             }
             else
@@ -146,7 +146,7 @@ function main_thread_generator($dataforce)
         $next = $page + 1;
         
         $rendervar['page_nav'] = ' ';
-        $page_count = (int) ceil ($counttree / BS_THREADS_PER_PAGE);
+        $page_count = (int) ceil($counttree / BS_THREADS_PER_PAGE);
         $rendervar['main_page'] = TRUE;
         
         if ($page === 1)
@@ -183,9 +183,9 @@ function main_thread_generator($dataforce)
             ++ $i;
         }
         
-        $page_output .= footer ($authorized, FALSE, TRUE, TRUE, FALSE);
+        $page_output .= footer($authorized, FALSE, TRUE, TRUE, FALSE);
         
-        if (!empty ($_SESSION) && !$_SESSION['ignore_login'])
+        if (!empty($_SESSION) && !$_SESSION['ignore_login'])
         {
             
             if ($page >= $dataforce['current_page'])
@@ -194,12 +194,12 @@ function main_thread_generator($dataforce)
             }
             
             echo $page_output;
-            die ();
+            die();
         }
         else
         {
             $logfilename = ($page === 1) ? PHP_SELF2 . PHP_EXT : PHP_SELF2 . ($page - 1) . PHP_EXT;
-            write_file ($logfilename, $page_output, 0644);
+            write_file($logfilename, $page_output, 0644);
         }
         
         ++ $page;

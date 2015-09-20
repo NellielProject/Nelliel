@@ -1,7 +1,7 @@
 <?php
-if (!defined (NELLIEL_VERSION))
+if (!defined(NELLIEL_VERSION))
 {
-    die ("NOPE.AVI");
+    die("NOPE.AVI");
 }
 
 //
@@ -18,38 +18,38 @@ function cache_rules()
     $rmode = '';
     $omode = '';
     
-    $result = $dbh->query ('SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type IN ("filetype_allow_g","filetype_allow_a","filetype_allow_o","filetype_allow_p","filetype_allow_d","filetype_allow_r")');
-    $config_list = $result->fetchALL (PDO::FETCH_ASSOC);
-    $result_count = count ($config_list);
+    $result = $dbh->query('SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type IN ("filetype_allow_g","filetype_allow_a","filetype_allow_o","filetype_allow_p","filetype_allow_d","filetype_allow_r")');
+    $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
+    $result_count = count($config_list);
     $config_list2 = array();
     
     foreach ($config_list as $array)
     {
-        if (array_search ('enable_graphics', $array) !== FALSE)
+        if (array_search('enable_graphics', $array) !== FALSE)
         {
             $config_list2['graphics'] = $array['setting'];
         }
-        else if (array_search ('enable_audio', $array) !== FALSE)
+        else if (array_search('enable_audio', $array) !== FALSE)
         {
             $config_list2['audio'] = $array['setting'];
         }
-        else if (array_search ('enable_video', $array) !== FALSE)
+        else if (array_search('enable_video', $array) !== FALSE)
         {
             $config_list2['video'] = $array['setting'];
         }
-        else if (array_search ('enable_other', $array) !== FALSE)
+        else if (array_search('enable_other', $array) !== FALSE)
         {
             $config_list2['other'] = $array['setting'];
         }
-        else if (array_search ('enable_package', $array) !== FALSE)
+        else if (array_search('enable_package', $array) !== FALSE)
         {
             $config_list2['package'] = $array['setting'];
         }
-        else if (array_search ('enable_document', $array) !== FALSE)
+        else if (array_search('enable_document', $array) !== FALSE)
         {
             $config_list2['document'] = $array['setting'];
         }
-        else if (array_search ('enable_archive', $array) !== FALSE)
+        else if (array_search('enable_archive', $array) !== FALSE)
         {
             $config_list2['archive'] = $array['setting'];
         }
@@ -59,7 +59,7 @@ function cache_rules()
     
     while ($i < $result_count)
     {
-        $t_element = str_replace ('enable_', '', $config_list[$i]['config_name']);
+        $t_element = str_replace('enable_', '', $config_list[$i]['config_name']);
         
         if ($config_list[$i]['setting'] !== '1')
         {
@@ -99,45 +99,45 @@ function cache_rules()
     
     if ($gmode !== '')
     {
-        $gmode = substr ($gmode, 0, -2);
-        $rule_list .= '<li>' . LANG_FILES_GRAPHICS . strtoupper ($gmode) . '</li>';
+        $gmode = substr($gmode, 0, -2);
+        $rule_list .= '<li>' . LANG_FILES_GRAPHICS . strtoupper($gmode) . '</li>';
     }
     if ($amode !== '')
     {
-        $amode = substr ($amode, 0, -2);
+        $amode = substr($amode, 0, -2);
         $rule_list .= '
-							<li>' . LANG_FILES_AUDIO . strtoupper ($amode) . '</li>';
+							<li>' . LANG_FILES_AUDIO . strtoupper($amode) . '</li>';
     }
     if ($vmode !== '')
     {
-        $vmode = substr ($vmode, 0, -2);
+        $vmode = substr($vmode, 0, -2);
         $rule_list .= '
-							<li>' . LANG_FILES_VIDEO . strtoupper ($vmode) . '</li>';
+							<li>' . LANG_FILES_VIDEO . strtoupper($vmode) . '</li>';
     }
     if ($dmode !== '')
     {
-        $dmode = substr ($dmode, 0, -2);
+        $dmode = substr($dmode, 0, -2);
         $rule_list .= '
-							<li>' . LANG_FILES_DOCUMENT . strtoupper ($dmode) . '</li>';
+							<li>' . LANG_FILES_DOCUMENT . strtoupper($dmode) . '</li>';
     }
     if ($rmode !== '')
     {
-        $rmode = substr ($rmode, 0, -2);
+        $rmode = substr($rmode, 0, -2);
         $rule_list .= '
-							<li>' . LANG_FILES_ARCHIVE . strtoupper ($rmode) . '</li>';
+							<li>' . LANG_FILES_ARCHIVE . strtoupper($rmode) . '</li>';
     }
     if ($omode !== '')
     {
-        $omode = substr ($omode, 0, -2);
+        $omode = substr($omode, 0, -2);
         $rule_list .= '
-							<li>' . LANG_FILES_OTHER . strtoupper ($omode) . '</li>';
+							<li>' . LANG_FILES_OTHER . strtoupper($omode) . '</li>';
     }
     
     $output = '<?php
 	$rule_list = \'' . $rule_list . '\';
 ?>';
     
-    write_file (CACHE_PATH . 'rules.nelcache', $output, 0644);
+    write_file(CACHE_PATH . 'rules.nelcache', $output, 0644);
     return $rule_list;
 }
 
@@ -149,11 +149,11 @@ function cache_settings()
     global $dbh;
     
     // Get true/false (1-bit) board settings
-    $result = $dbh->query ('SELECT config_name,setting FROM ' . CONFIGTABLE . ' WHERE config_type="board_setting_1bit"');
-    $config_list = $result->fetchALL (PDO::FETCH_ASSOC);
-    unset ($result);
+    $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIGTABLE . ' WHERE config_type="board_setting_1bit"');
+    $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
+    unset($result);
     
-    $result_count = count ($config_list);
+    $result_count = count($config_list);
     $i = 0;
     $vars1 = '
 ';
@@ -162,12 +162,12 @@ function cache_settings()
     {
         if ($config_list[$i]['setting'] === '1')
         {
-            $vars1 .= 'define(\'BS1_' . strtoupper ($config_list[$i]['config_name']) . '\', TRUE);
+            $vars1 .= 'define(\'BS1_' . strtoupper($config_list[$i]['config_name']) . '\', TRUE);
 ';
         }
         else
         {
-            $vars1 .= 'define(\'BS1_' . strtoupper ($config_list[$i]['config_name']) . '\', FALSE);
+            $vars1 .= 'define(\'BS1_' . strtoupper($config_list[$i]['config_name']) . '\', FALSE);
 ';
         }
         ++ $i;
@@ -176,11 +176,11 @@ function cache_settings()
     $rows = array();
     
     // Get other board settings
-    $result = $dbh->query ('SELECT config_name,setting FROM ' . CONFIGTABLE . ' WHERE config_type="board_setting"');
-    $config_list = $result->fetchALL (PDO::FETCH_ASSOC);
-    unset ($result);
+    $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIGTABLE . ' WHERE config_type="board_setting"');
+    $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
+    unset($result);
     
-    $result_count = count ($config_list);
+    $result_count = count($config_list);
     $i = 0;
     $vars2 = '
 ';
@@ -188,34 +188,34 @@ function cache_settings()
     while ($i < $result_count)
     {
         $rows[$config_list[$i]['config_name']] = $config_list[$i]['setting'];
-        if (is_numeric ($config_list[$i]['setting']))
+        if (is_numeric($config_list[$i]['setting']))
         {
-            $vars2 .= 'define(\'BS_' . strtoupper ($config_list[$i]['config_name']) . '\', ' . $config_list[$i]['setting'] . ');
+            $vars2 .= 'define(\'BS_' . strtoupper($config_list[$i]['config_name']) . '\', ' . $config_list[$i]['setting'] . ');
 ';
         }
         else
         {
-            $vars2 .= 'define(\'BS_' . strtoupper ($config_list[$i]['config_name']) . '\', \'' . $config_list[$i]['setting'] . '\');
+            $vars2 .= 'define(\'BS_' . strtoupper($config_list[$i]['config_name']) . '\', \'' . $config_list[$i]['setting'] . '\');
 ';
         }
         ++ $i;
     }
     
-    $result = $dbh->query ('SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_g" 
+    $result = $dbh->query('SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_g" 
 					UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_a"
 					UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_v"
 					UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_o"
 					UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_d"
 					UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_r"');
     
-    $config_list = $result->fetchALL (PDO::FETCH_ASSOC);
-    unset ($result);
+    $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
+    unset($result);
     
     $fvars = '
 	$enabled_types = array(
 	';
     
-    $result_count = count ($config_list);
+    $result_count = count($config_list);
     $i = 0;
     $rows = array();
     
@@ -235,13 +235,13 @@ function cache_settings()
         ++ $i;
     }
     
-    $fvars = substr ($fvars, 0, strlen ($fvars) - 4) . ');';
+    $fvars = substr($fvars, 0, strlen($fvars) - 4) . ');';
     $final_vars = '<?php' . $vars1 . $vars2 . $fvars . '
 ?>';
     
-    write_file (CACHE_PATH . 'parameters.nelcache', $final_vars, 0644);
+    write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, 0644);
     
-    unset ($rows);
+    unset($rows);
 }
 
 //
@@ -255,7 +255,7 @@ function cache_post_links()
 	$post_link_reference = \'' . $post_link_reference . '\';
 ?>';
     
-    write_file (CACHE_PATH . 'post_link_references.nelcache', $post_link_reference_php, 0644);
+    write_file(CACHE_PATH . 'post_link_references.nelcache', $post_link_reference_php, 0644);
 }
 
 //
@@ -265,10 +265,10 @@ function cache_template_info()
 {
     global $template_info;
     $info = '<?php
-	$template_info = ' . var_export ($template_info, TRUE) . ';
+	$template_info = ' . var_export($template_info, TRUE) . ';
 ?>';
     
-    write_file (CACHE_PATH . 'template_info.nelcache', $info, 0644);
+    write_file(CACHE_PATH . 'template_info.nelcache', $info, 0644);
 }
 
 //
@@ -278,27 +278,27 @@ function parse_template($template, $regen)
 {
     global $rendervar, $template_loaded, $template_info, $total_html;
     
-    $template_short = str_replace ('.tpl', '', $template);
+    $template_short = str_replace('.tpl', '', $template);
     
-    if (!isset ($template_loaded[$template]) || !$template_loaded[$template])
+    if (!isset($template_loaded[$template]) || !$template_loaded[$template])
     {
-        $md5 = md5_file (TEMPLATE_PATH . $template);
+        $md5 = md5_file(TEMPLATE_PATH . $template);
         
-        if (!isset ($template_info[$template]) || $md5 !== $template_info[$template] || !file_exists (CACHE_PATH . $template_short . '.nelcache'))
+        if (!isset($template_info[$template]) || $md5 !== $template_info[$template] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
         {
             $template_info[$template] = $md5;
-            $durr = file_get_contents (TEMPLATE_PATH . $template);
+            $durr = file_get_contents(TEMPLATE_PATH . $template);
             $lol = $durr;
-            $has_php = strstr ($durr, '{{');
-            $lol = preg_replace ('#(?<!\[|\')\'(?!\]|\')#', '\\\'', $lol);
+            $has_php = strstr($durr, '{{');
+            $lol = preg_replace('#(?<!\[|\')\'(?!\]|\')#', '\\\'', $lol);
             
             if ($has_php !== FALSE)
             {
-                $begins_php = preg_match ('#^\s*{{#', $lol);
+                $begins_php = preg_match('#^\s*{{#', $lol);
                 
                 if ($begins_php === 1)
                 {
-                    $lol = trim ($lol);
+                    $lol = trim($lol);
                     $begin = '<?php function render_' . $template_short . '() { global $rendervar,$total_html; $temp = \'';
                 }
                 else
@@ -307,9 +307,9 @@ function parse_template($template, $regen)
                 }
                 
                 $end = '\'; return $temp; } ?>';
-                $lol = preg_replace ('#[\r\n\t]*{{[ \t]*(if|elseif|foreach|for|while)[ \t]*([^{]*)}}#', '\'; $1( $2 ): $temp .= \'', $lol);
-                $lol = preg_replace ('#[\r\n\t]*{{[ \t]*else[ \t]*}}[ \t]*#', '\'; else: $temp .= \'', $lol);
-                $lol = preg_replace ('#[\r\n\t]*{{[ \t]*(endif|endforeach|endfor|endwhile)[ \t]*}}#', '\'; $1; $temp .= \'', $lol);
+                $lol = preg_replace('#[\r\n\t]*{{[ \t]*(if|elseif|foreach|for|while)[ \t]*([^{]*)}}#', '\'; $1( $2 ): $temp .= \'', $lol);
+                $lol = preg_replace('#[\r\n\t]*{{[ \t]*else[ \t]*}}[ \t]*#', '\'; else: $temp .= \'', $lol);
+                $lol = preg_replace('#[\r\n\t]*{{[ \t]*(endif|endforeach|endfor|endwhile)[ \t]*}}#', '\'; $1; $temp .= \'', $lol);
             }
             else
             {
@@ -317,10 +317,10 @@ function parse_template($template, $regen)
                 $end = '\'; return $temp; } ?>';
             }
             
-            $lol = preg_replace ('#{([^({)|(}]*)}#', "'.$1.'", $lol);
+            $lol = preg_replace('#{([^({)|(}]*)}#', "'.$1.'", $lol);
             $durr_out = $begin . $lol . $end;
-            write_file (CACHE_PATH . $template_short . '.nelcache', $durr_out, 0644);
-            cache_template_info ();
+            write_file(CACHE_PATH . $template_short . '.nelcache', $durr_out, 0644);
+            cache_template_info();
         }
         
         if (!$regen)
@@ -332,7 +332,7 @@ function parse_template($template, $regen)
     
     if (!$regen)
     {
-        $dat_temp = call_user_func ('render_' . $template_short);
+        $dat_temp = call_user_func('render_' . $template_short);
         return $dat_temp;
     }
 }
@@ -346,12 +346,12 @@ function regen_template_cache()
     
     $template_info = array();
     
-    foreach (glob (TEMPLATE_PATH . '*.tpl') as $template)
+    foreach (glob(TEMPLATE_PATH . '*.tpl') as $template)
     {
-        $template = basename ($template);
-        parse_template ($template, TRUE);
+        $template = basename($template);
+        parse_template($template, TRUE);
     }
     
-    cache_template_info ();
+    cache_template_info();
 }
 ?>
