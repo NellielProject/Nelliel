@@ -29,20 +29,31 @@ function cleanse_the_aids($string)
 //
 // Error Handling
 //
-function derp($error_id, $error_message, $error_location, $diagnostic, $file)
+function derp($error_id, $error_message, $diagnostic)
 {
-    if ($file !== '' && is_file($file['dest']))
+    $file_count = 0;
+    $extra_data = '';
+
+    if(array_key_exists(1, $diagnostic) && !is_null($diagnostic))
     {
-        unlink($file['dest']);
+        $file_count = count($diagnostic[1]);
+
+        foreach($diagnostic[1] as $file)
+        {
+            if ($file !== '' && is_file($file['dest']))
+            {
+                unlink($file['dest']);
+            }
+        }
     }
     
     if ($error_location === 'SNACKS')
     {
-        $extra_data = $diagnostic['cancer'];
+        $extra_data = $diagnostic[2];
     }
-    else if ($error_location === 'POST' && $file !== '')
+    else if ($error_location === 'POST' && $file_count === 1)
     {
-        $extra_data = $file['basic_filename'] . $file['ext'];
+        $extra_data = $diagnostic[1]['basic_filename'] . $diagnostic[1]['ext'];
     }
     else
     {
@@ -84,7 +95,7 @@ function regen_session()
     else // Session timed out or doesn't match the cookie
     {
         terminate_session();
-        derp(35, LANG_ERROR_35, 'SEC', array(), '');
+        derp(35, LANG_ERROR_35, array('SEC'));
     }
 }
 

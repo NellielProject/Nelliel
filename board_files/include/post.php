@@ -47,6 +47,25 @@ function new_post($dataforce, $authorized)
         $files_count = count($files);
         $there_is_no_spoon = FALSE;
     }
+    else
+    {
+        $files = array();
+    
+        if (!$dataforce['comment'])
+        {
+            derp(10, LANG_ERROR_10, array('POST', $files));
+        }
+    
+        if (BS1_REQUIRE_IMAGE_ALWAYS)
+        {
+            derp(8, LANG_ERROR_8, array('POST', $files));
+        }
+    
+        if (BS1_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
+        {
+            derp(9, LANG_ERROR_9, array('POST', $files));
+        }
+    }
     
     //
     // Start processing post data
@@ -56,7 +75,7 @@ function new_post($dataforce, $authorized)
     
     if (strlen(utf8_decode($dataforce['comment'])) > BS_MAX_COMMENT_LENGTH || strlen(utf8_decode($dataforce['name'])) > BS_MAX_NAME_LENGTH || strlen(utf8_decode($dataforce['email'])) > BS_MAX_EMAIL_LENGTH || strlen(utf8_decode($dataforce['subject'])) > BS_MAX_SUBJECT_LENGTH || strlen(utf8_decode($dataforce['file_source'])) > BS_MAX_SOURCE_LENGTH || strlen(utf8_decode($dataforce['file_license'])) > BS_MAX_LICENSE_LENGTH)
     {
-        derp(11, LANG_ERROR_11, 'POST', array(), $files);
+        derp(11, LANG_ERROR_11, array('POST', $files));
     }
     
     if (isset($dataforce['pass']))
@@ -71,12 +90,6 @@ function new_post($dataforce, $authorized)
     }
     
     // Text plastic surgery (rorororor) - wat.
-    
-    if ($dataforce['name'] !== '')
-    {
-        banned_name($dataforce['name'], $files);
-    }
-    
     $dataforce['email'] = cleanse_the_aids($dataforce['email']);
     $dataforce['subject'] = cleanse_the_aids($dataforce['subject']);
     
@@ -86,114 +99,110 @@ function new_post($dataforce, $authorized)
         $dataforce['comment'] = word_filters($dataforce['comment']);
         $dataforce['comment'] = cleanse_the_aids($dataforce['comment']);
     }
-    
-    // Cookies OM NOM NOM NOM
-    setcookie('pwd-' . CONF_BOARD_DIR, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
-    setcookie('name-' . CONF_BOARD_DIR, $dataforce['name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
-                                                                                             
+                                                                           
     // Name and tripcodes
     $modpostc = 0;
     $dataforce['tripcode'] = '';
     $dataforce['secure_tripcode'] = '';
+    $cookie_name = $dataforce['name'];
     
-    if ($dataforce['name'] !== '')
+    if ($dataforce['name'] !== '' && !BS1_FORCE_ANONYMOUS)
     {
-        if (BS1_FORCE_ANONYMOUS)
+        banned_name($dataforce['name'], $files);
+        
+        $faggotry = strpos($dataforce['name'], LANG_THREAD_MODPOST);
+        if ($faggotry)
         {
-            $dataforce['name'] = LANG_THREAD_NONAME;
-            $dataforce['email'] = '';
+            $dataforce['name'] = LANG_FAKE_STAFF_ATTEMPT;
         }
-        else
+        
+        $faggotry = strpos($dataforce['name'], LANG_THREAD_ADMINPOST);
+        if ($faggotry)
         {
-            $faggotry = strpos($dataforce['name'], LANG_THREAD_MODPOST);
-            if ($faggotry)
-            {
-                $dataforce['name'] = LANG_FAKE_STAFF_ATTEMPT;
-            }
+            $dataforce['name'] = LANG_FAKE_STAFF_ATTEMPT;
+        }
+        
+        $faggotry = strpos($dataforce['name'], LANG_THREAD_JANPOST);
+        if ($faggotry)
+        {
+            $dataforce['name'] = LANG_FAKE_STAFF_ATTEMPT;
+        }
+        
+        preg_match('/^([^#]*)(#(?!#))?([^#]*)(##)?(.*)$/', $dataforce['name'], $name_pieces);
+        $dataforce['name'] = cleanse_the_aids($name_pieces[1]);
+        
+        if ($name_pieces[5] !== '')
+        {
+            $num_auth = array_keys($authorized);
+            $auth_count = count($authorized);
+            $i = 0;
             
-            $faggotry = strpos($dataforce['name'], LANG_THREAD_ADMINPOST);
-            if ($faggotry)
+            while ($i < $auth_count)
             {
-                $dataforce['name'] = LANG_FAKE_STAFF_ATTEMPT;
-            }
-            
-            $faggotry = strpos($dataforce['name'], LANG_THREAD_JANPOST);
-            if ($faggotry)
-            {
-                $dataforce['name'] = LANG_FAKE_STAFF_ATTEMPT;
-            }
-            
-            preg_match('/^([^#]*)(#(?!#))?([^#]*)(##)?(.*)$/', $dataforce['name'], $name_pieces);
-            $dataforce['name'] = cleanse_the_aids($name_pieces[1]);
-            
-            if ($name_pieces[5] !== '')
-            {
-                $num_auth = array_keys($authorized);
-                $auth_count = count($authorized);
-                $i = 0;
-                
-                while ($i < $auth_count)
+                if ($name_pieces[5] === $authorized[$num_auth[$i]]['staff_trip'])
                 {
-                    if ($name_pieces[5] === $authorized[$num_auth[$i]]['staff_trip'])
+                    if ($authorized[$num_auth[$i]]['perm_post'])
                     {
-                        if ($authorized[$num_auth[$i]]['perm_post'])
+                        if ($authorized[$staff_id]['staff_type'] === 'admin')
                         {
-                            if ($authorized[$staff_id]['staff_type'] === 'admin')
-                            {
-                                $modpostc = 3;
-                            }
-                            else if ($authorized[$staff_id]['staff_type'] === 'moderator')
-                            {
-                                $modpostc = 2;
-                            }
-                            else if ($authorized[$staff_id]['staff_type'] === 'janitor')
-                            {
-                                $modpostc = 1;
-                            }
+                            $modpostc = 3;
                         }
-                        
-                        if ($authorized[$num_auth[$i]]['perm_sticky'] && strripos($dataforce['fgsfds'], 'sticky') !== FALSE)
+                        else if ($authorized[$staff_id]['staff_type'] === 'moderator')
                         {
-                            $fgsfds['sticky'] = TRUE;
+                            $modpostc = 2;
                         }
-                        
-                        if ($modpostc > 0)
+                        else if ($authorized[$staff_id]['staff_type'] === 'janitor')
                         {
-                            break;
+                            $modpostc = 1;
                         }
                     }
                     
-                    ++ $i;
+                    if ($authorized[$num_auth[$i]]['perm_sticky'] && strripos($dataforce['fgsfds'], 'sticky') !== FALSE)
+                    {
+                        $fgsfds['sticky'] = TRUE;
+                    }
+                    
+                    if ($modpostc > 0)
+                    {
+                        break;
+                    }
                 }
+                
+                ++ $i;
             }
-            
-            if ($name_pieces[3] !== '' && BS1_ALLOW_TRIPKEYS)
-            {
-                $cap = strtr($name_pieces[3], '&amp;', '&');
-                $cap = strtr($cap, '&#44;', ',');
-                $salt = substr($cap . 'H.', 1, 2);
-                $salt = preg_replace('#[^\.-z]#', '.#', $salt);
-                $salt = strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
-                $dataforce['tripcode'] = substr(crypt($cap, $salt), -10);
-            }
-            
-            if ($name_pieces[5] !== '' || $modpostc > 0)
-            {
-                $trip = asdfg($name_pieces[5]);
-                $dataforce['secure_tripcode'] = substr(crypt($trip, '42'), -12);
-            }
-            
-            if ($name_pieces[1] === '' || $authorized[$staff_id]['perm_post_anon'])
-            {
-                $dataforce['name'] = LANG_THREAD_NONAME;
-                $dataforce['email'] = '';
-            }
+        }
+        
+        if ($name_pieces[3] !== '' && BS1_ALLOW_TRIPKEYS)
+        {
+            $cap = strtr($name_pieces[3], '&amp;', '&');
+            $cap = strtr($cap, '&#44;', ',');
+            $salt = substr($cap . 'H.', 1, 2);
+            $salt = preg_replace('#[^\.-z]#', '.#', $salt);
+            $salt = strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
+            $dataforce['tripcode'] = substr(crypt($cap, $salt), -10);
+        }
+        
+        if ($name_pieces[5] !== '' || $modpostc > 0)
+        {
+            $trip = asdfg($name_pieces[5]);
+            $dataforce['secure_tripcode'] = substr(crypt($trip, '42'), -12);
+        }
+        
+        if ($name_pieces[1] === '' || $authorized[$staff_id]['perm_post_anon'])
+        {
+            $dataforce['name'] = LANG_THREAD_NONAME;
+            $dataforce['email'] = '';
         }
     }
     else
     {
         $dataforce['name'] = LANG_THREAD_NONAME;
+        $dataforce['email'] = '';
     }
+
+    // Cookies OM NOM NOM NOM
+    setcookie('pwd-' . CONF_BOARD_DIR, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
+    setcookie('name-' . CONF_BOARD_DIR, $cookie_name, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
     
     // Comment processing, mostly dealing with \n
     if ($dataforce['comment'] !== '')
@@ -250,7 +259,7 @@ function new_post($dataforce, $authorized)
                     
                     if ($same_thread > 0)
                     {
-                        derp(12, LANG_ERROR_12, 'POST', array(), $files[$i]);
+                        derp(12, LANG_ERROR_12, array('POST', $files[i]));
                     }
                 }
                 
@@ -544,7 +553,7 @@ function is_post_ok($dataforce, $time)
         
         if ($renzoku > 0)
         {
-            derp(1, LANG_ERROR_1, 'POST', array(), '');
+            derp(1, LANG_ERROR_1, array('POST'));
         }
         
         $post_count = 1;
@@ -560,17 +569,17 @@ function is_post_ok($dataforce, $time)
             {
                 if ($op_post['post_number'] === '')
                 {
-                    derp(2, LANG_ERROR_2, 'POST', array(), '');
+                    derp(2, LANG_ERROR_2, array('POST'));
                 }
                 
                 if ($op_post['locked'] === '1')
                 {
-                    derp(3, LANG_ERROR_3, 'POST', array(), '');
+                    derp(3, LANG_ERROR_3, array('POST'));
                 }
                 
                 if ($op_post['archive_status'] !== '0')
                 {
-                    derp(14, LANG_ERROR_14, 'POST', array(), '');
+                    derp(14, LANG_ERROR_14, array('POST'));
                 }
                 
                 $post_count = $op_post['post_count'];
@@ -590,12 +599,12 @@ function is_post_ok($dataforce, $time)
         
         if ($renzoku > 0)
         {
-            derp(1, LANG_ERROR_1, 'POST', array(), '');
+            derp(1, LANG_ERROR_1, array('POST'));
         }
         
         if ($post_count >= BS_MAX_POSTS)
         {
-            derp(4, LANG_ERROR_4, 'POST', array(), '');
+            derp(4, LANG_ERROR_4, array('POST'));
         }
     }
     
@@ -649,7 +658,7 @@ function file_info()
                 
                 if ($file['size'] > BS_MAX_FILESIZE * 1024)
                 {
-                    derp(24, LANG_ERROR_24, 'POST', array(), $files[$i]);
+                    derp(24, LANG_ERROR_24, array('POST', $files[i]));
                 }
                 
                 $files[$i]['dest'] = SRC_PATH . $file['name'] . '.tmp';
@@ -679,12 +688,12 @@ function file_info()
                 }
                 else
                 {
-                    derp(6, LANG_ERROR_6, 'POST', array(), $files[$i]);
+                    derp(6, LANG_ERROR_6, array('POST', $files[i]));
                 }
                 
                 if (!$file_good)
                 {
-                    derp(23, LANG_ERROR_23, 'POST', array(), $files[$i]);
+                    derp(23, LANG_ERROR_23, array('POST', $files[i]));
                 }
                 
                 $files[$i]['file_source'] = cleanse_the_aids($_POST['sauce' . ($i + 1)]);
@@ -699,27 +708,7 @@ function file_info()
         }
         else if ($file['error'] === UPLOAD_ERR_INI_SIZE)
         {
-            derp(24, LANG_ERROR_24, 'POST', array(), '');
-        }
-        
-        if ($there_is_no_spoon)
-        {
-            $files = array();
-            
-            if (!$dataforce['comment'])
-            {
-                derp(10, LANG_ERROR_10, 'POST', array(), $files);
-            }
-            
-            if (BS1_REQUIRE_IMAGE_ALWAYS)
-            {
-                derp(8, LANG_ERROR_8, 'POST', array(), $files);
-            }
-            
-            if (BS1_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
-            {
-                derp(9, LANG_ERROR_9, 'POST', array(), $files);
-            }
+            derp(24, LANG_ERROR_24, array('POST'));
         }
     }
     

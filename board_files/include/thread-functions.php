@@ -160,7 +160,7 @@ function delete_content($dataforce, $sub, $type)
     
     if (!is_numeric($id))
     {
-        derp(13, LANG_ERROR_13, 'DELETE', array(), '');
+        derp(13, LANG_ERROR_13, array('DELETE'));
     }
     
     $flag = FALSE;
@@ -297,7 +297,7 @@ function delete_content($dataforce, $sub, $type)
     }
     else
     {
-        derp(25, LANG_ERROR_25, 'DELETE', array(), '');
+        derp(25, LANG_ERROR_25, array('DELETE'));
     }
     
     if (!empty($_SESSION))

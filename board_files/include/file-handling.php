@@ -65,7 +65,6 @@ function eraser_gun($path, $filename, $multi)
 //
 function create_thread_directories($thread_id)
 {
-    var_dump($thread_id);
     mkdir(SRC_PATH . $thread_id, 0777);
     chmod(SRC_PATH . $thread_id, 0777);
     mkdir(THUMB_PATH . $thread_id, 0777);

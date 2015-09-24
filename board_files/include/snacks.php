@@ -18,7 +18,7 @@ function banned_md5($md5, $file)
     {
         if ($md5 === $cancer[$i])
         {
-            derp(20, LANG_ERROR_20, 'SNACKS', array(), $file);
+            derp(20, LANG_ERROR_20, array('SNACKS', $file));
         }
     }
 }
@@ -37,7 +37,7 @@ function banned_name($name, $file)
     {
         if ($cancer[$i] === $name)
         {
-            derp(21, LANG_ERROR_21, 'SNACKS', array(), $file);
+            derp(21, LANG_ERROR_21, array('SNACKS', $file));
         }
     }
 }
@@ -60,9 +60,7 @@ function banned_text($text, $file)
             
             if ($test !== FALSE)
             {
-                $bad = array(
-                        'cancer' => $cancer[$i] );
-                derp(22, LANG_ERROR_22, 'SNACKS', $bad, $file);
+                derp(22, LANG_ERROR_22, array('SNACKS', $file, $cancer[$i]));
             }
         }
     }
