@@ -658,7 +658,7 @@ function file_info()
                 
                 if ($file['size'] > BS_MAX_FILESIZE * 1024)
                 {
-                    derp(24, LANG_ERROR_24, array('POST', $files[i]));
+                    derp(19, LANG_ERROR_19, array('POST', $files[i]));
                 }
                 
                 $files[$i]['dest'] = SRC_PATH . $file['name'] . '.tmp';
@@ -693,7 +693,7 @@ function file_info()
                 
                 if (!$file_good)
                 {
-                    derp(23, LANG_ERROR_23, array('POST', $files[i]));
+                    derp(18, LANG_ERROR_18, array('POST', $files[i]));
                 }
                 
                 $files[$i]['file_source'] = cleanse_the_aids($_POST['sauce' . ($i + 1)]);
@@ -708,7 +708,7 @@ function file_info()
         }
         else if ($file['error'] === UPLOAD_ERR_INI_SIZE)
         {
-            derp(24, LANG_ERROR_24, array('POST'));
+            derp(19, LANG_ERROR_19, array('POST'));
         }
     }
     

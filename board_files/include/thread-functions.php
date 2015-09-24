@@ -297,7 +297,7 @@ function delete_content($dataforce, $sub, $type)
     }
     else
     {
-        derp(25, LANG_ERROR_25, array('DELETE'));
+        derp(20, LANG_ERROR_20, array('DELETE'));
     }
     
     if (!empty($_SESSION))

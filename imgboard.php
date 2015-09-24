@@ -108,7 +108,7 @@ else if (isset($dataforce['admin_mode']) && $dataforce['admin_mode'] === 'login'
     else
     {
         terminate_session();
-        derp(40, LANG_ERROR_40, 'SEC', array(), '');
+        derp(107, LANG_ERROR_107, array('LOGIN'));
     }
     
     valid($dataforce);
@@ -166,7 +166,7 @@ else
                     }
                     else
                     {
-                        derp(34, LANG_ERROR_34, 'MAIN', array(), '');
+                        derp(104, LANG_ERROR_104, array('MAIN'));
                     }
                 }
                 
@@ -268,7 +268,7 @@ else
                         }
                         else
                         {
-                            derp(34, LANG_ERROR_34, 'MAIN', array(), '');
+                            derp(104, LANG_ERROR_104, array('MAIN'));
                         }
                         break;
                     
@@ -321,7 +321,7 @@ else
                         break;
                     
                     default:
-                        derp(63, LANG_ERROR_63, 'MAIN', array(), '');
+                        derp(153, LANG_ERROR_153, 'ADMIN', array(), '');
                 }
             }
     }

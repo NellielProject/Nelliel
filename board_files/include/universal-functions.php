@@ -95,7 +95,7 @@ function regen_session()
     else // Session timed out or doesn't match the cookie
     {
         terminate_session();
-        derp(35, LANG_ERROR_35, array('SEC'));
+        derp(105, LANG_ERROR_105, array('SEC'));
     }
 }
 
