@@ -1,30 +1,8 @@
 <?php
-// Initialization routines
-// These all need to happen in roughly this order
-// Otherwise it asplode
-define('NELLIEL_VERSION', 'v0.9b'); // Version
+define('NELLIEL_VERSION', 'v0.9.1'); // Version
 define('BOARD_FILES', 'board_files/'); // Name of directory where the support and internal files go
 
 require_once BOARD_FILES . 'config.php';
-
-if (SQLTYPE === 'MYSQL')
-{
-    $dbh = new PDO('mysql:host=' . MYSQL_HOST . ';dbname=' . MYSQL_DB, MYSQL_USER, MYSQL_PASS);
-    $dbh->exec("SET CHARACTER SET utf8");
-}
-else if (SQLTYPE === 'SQLITE')
-{
-    $dbh = new PDO('sqlite:' . SQLITE_DB_LOCATION . SQLITE_DB_NAME);
-}
-else
-{
-    die('No database type specified in config. Can\'t do shit cap\'n!');
-}
-
-if (ini_get('date.timezone') === '')
-{
-    date_default_timezone_set('UTC');
-}
 
 // Mmm...sodium...
 function asdfg($input)
@@ -34,16 +12,6 @@ function asdfg($input)
     return $trip;
 }
 
-define('LANG_TEXT_SPAMBOT_FIELD1', 'name'); // First anti-spambot hidden field
-define('LANG_TEXT_SPAMBOT_FIELD2', 'url'); // Second anti-spambot hidden field
-
-ignore_user_abort(TRUE);
-require_once INCLUDE_PATH . 'setup.php';
-setup_check();
-generate_auth_file();
-
-require_once FILES_PATH . '/auth_data.nel.php';
-require_once INCLUDE_PATH . 'file-handling.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'archive.php';
 require_once INCLUDE_PATH . 'universal-functions.php';

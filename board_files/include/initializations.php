@@ -4,6 +4,33 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+if (SQLTYPE === 'MYSQL')
+{
+    $dbh = new PDO('mysql:host=' . MYSQL_HOST . ';dbname=' . MYSQL_DB, MYSQL_USER, MYSQL_PASS);
+    $dbh->exec("SET CHARACTER SET utf8");
+}
+else if (SQLTYPE === 'SQLITE')
+{
+    $dbh = new PDO('sqlite:' . SQLITE_DB_LOCATION . SQLITE_DB_NAME);
+}
+else
+{
+    die("No valid database type specified in config. Can't do shit cap'n!");
+}
+
+if (ini_get('date.timezone') === '')
+{
+    date_default_timezone_set('UTC');
+}
+
+ignore_user_abort(TRUE);
+require_once INCLUDE_PATH . 'setup.php';
+setup_check();
+generate_auth_file();
+
+require_once FILES_PATH . '/auth_data.nel.php';
+require_once INCLUDE_PATH . 'file-handling.php';
+
 //
 // Initialize a bunch of stuff here
 //
@@ -39,8 +66,6 @@ $dataforce['file_source'] = (isset($_POST['sauce'])) ? $_POST['sauce'] : NULL;
 $dataforce['file_license'] = (isset($_POST['loldrama'])) ? $_POST['loldrama'] : NULL;
 
 $dataforce['pass'] = (isset($_POST['sekrit'])) ? $_POST['sekrit'] : NULL;
-$dataforce['sp_field1'] = (isset($_POST[LANG_TEXT_SPAMBOT_FIELD1])) ? $_POST[LANG_TEXT_SPAMBOT_FIELD1] : NULL;
-$dataforce['sp_field2'] = (isset($_POST[LANG_TEXT_SPAMBOT_FIELD2])) ? $_POST[LANG_TEXT_SPAMBOT_FIELD2] : NULL;
 $dataforce['admin_pass'] = (isset($_POST['super_sekrit'])) ? $_POST['super_sekrit'] : NULL;
 $dataforce['username'] = (isset($_POST['username'])) ? $_POST['username'] : NULL;
 $dataforce['usrdel'] = (isset($_POST['usrdel'])) ? $_POST['usrdel'] : NULL;
@@ -91,6 +116,8 @@ require_once CACHE_PATH . 'parameters.nelcache';
 $dataforce['max_pages'] = BS_PAGE_LIMIT;
 
 require_once INCLUDE_PATH . 'language-english.php'; // This relies on some of the cached parameters
+$dataforce['sp_field1'] = (isset($_POST[LANG_TEXT_SPAMBOT_FIELD1])) ? $_POST[LANG_TEXT_SPAMBOT_FIELD1] : NULL;
+$dataforce['sp_field2'] = (isset($_POST[LANG_TEXT_SPAMBOT_FIELD2])) ? $_POST[LANG_TEXT_SPAMBOT_FIELD2] : NULL;
                                                     
 // Cached references for quote links
 if (!file_exists(CACHE_PATH . 'post_link_references.nelcache'))
