@@ -217,7 +217,7 @@ function update_archive_status($dataforce)
                 $w = 0;
                 $total_to_move = count($file_ready);
                 $arch_shift = $dbh->prepare('INSERT INTO ' . ARCHIVEFILETABLE . ' 
-					(parent_thread,post_ref,ord,supertype,subtype,mime,filename,extension,image_width,image_height,preview_name,preview_width,preview_height,filesize,md5,source,license)
+					(parent_thread,post_ref,file_order,supertype,subtype,mime,filename,extension,image_width,image_height,preview_name,preview_width,preview_height,filesize,md5,source,license)
 					VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
                 
                 while ($w < $total_to_move)

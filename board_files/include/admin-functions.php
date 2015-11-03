@@ -563,7 +563,7 @@ function thread_panel($dataforce, $mode)
     {
         if ($thread['has_file'] === '1')
         {
-            $result = $dbh->query('SELECT * FROM ' . FILETABLE . ' WHERE post_ref=' . $thread['post_number'] . ' ORDER BY ord asc');
+            $result = $dbh->query('SELECT * FROM ' . FILETABLE . ' WHERE post_ref=' . $thread['post_number'] . ' ORDER BY file_order asc');
             $thread['files'] = $result->fetchALL(PDO::FETCH_ASSOC);
             unset($result);
             $thread['filesize_total'] = 0;

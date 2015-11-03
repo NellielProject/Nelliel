@@ -106,7 +106,7 @@ function main_thread_generator($dataforce)
             {
                 if ($treeline[$gen_data['post_counter']]['has_file'] == 1)
                 {
-                    $result = $dbh->query('SELECT * FROM ' . FILETABLE . ' WHERE post_ref=' . $treeline[$gen_data['post_counter']]['post_number'] . ' ORDER BY ord asc');
+                    $result = $dbh->query('SELECT * FROM ' . FILETABLE . ' WHERE post_ref=' . $treeline[$gen_data['post_counter']]['post_number'] . ' ORDER BY file_order asc');
                     $rendervar['files'] = $result->fetchALL(PDO::FETCH_ASSOC);
                     unset($result);
                 }

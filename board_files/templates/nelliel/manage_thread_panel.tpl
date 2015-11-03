@@ -46,7 +46,7 @@
         <td>
         <table>
     {{ foreach $rendervar['files'] as $file }}
-        <tr><td><input type="checkbox" name="fileid{$rendervar['post_number']}_{$file['ord']}" value="deletefile_{$rendervar['post_number']}_{$file['ord']}" title="Delete file"></td>
+        <tr><td><input type="checkbox" name="fileid{$rendervar['post_number']}_{$file['file_order']}" value="deletefile_{$rendervar['post_number']}_{$file['file_order']}" title="Delete file"></td>
         {{ if $rendervar['response_to'] == 0 }}
         <td><a href="{SRC_DIR}{$rendervar['post_number']}/{$file['filename']}{$file['extension']}" rel="external">{$file['filename']}{$file['extension']}</a> ( {$file['filesize']} KB )<br>MD5: {$file['md5']}</td></tr>
         {{ else }}

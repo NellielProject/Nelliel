@@ -33,12 +33,12 @@
             {{ if $rendervar['multifile'] }}
                 <div class="reply-multiple-fileinfo">
                 {{ if BS1_USE_NEW_IMGDEL }}
-                    <input type="checkbox" name="fileid{$rendervar['post_number']}_{$file['ord']}" value="deletefile_{$rendervar['post_number']}_{$file['ord']}" title="Delete file" class="multi-file-delete-box">
+                    <input type="checkbox" name="fileid{$rendervar['post_number']}_{$file['file_order']}" value="deletefile_{$rendervar['post_number']}_{$file['file_order']}" title="Delete file" class="multi-file-delete-box">
                 {{ endif }}
                     <a href="{$file['file_location']}" rel="external">{$file['filename']}.{$file['extension']}</a>
                     <br>{{ if $file['img_dim'] }}{$file['image_width']} x {$file['image_height']}{{ endif }} ({$file['filesize']} KB)
-                    <br>[<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['ord']}','showimgmeta{$rendervar['post_number']}_{$file['ord']}','none','{LANG_THREAD_LESS_DATA}')" id="showimgmeta{$rendervar['post_number']}_{$file['ord']}">{LANG_THREAD_MOAR_DATA}</a>]
-                    <span id="imgmeta{$rendervar['post_number']}_{$file['ord']}" class="none">
+                    <br>[<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['file_order']}','showimgmeta{$rendervar['post_number']}_{$file['file_order']}','none','{LANG_THREAD_LESS_DATA}')" id="showimgmeta{$rendervar['post_number']}_{$file['file_order']}">{LANG_THREAD_MOAR_DATA}</a>]
+                    <span id="imgmeta{$rendervar['post_number']}_{$file['file_order']}" class="none">
                 {{ if $file['source'] != '' }}
                     <br><span class="source">Source: {$file['source']}</span>
                 {{ endif }}
@@ -55,12 +55,12 @@
             {{ else }}
                 <div class="reply-fileinfo">
                 {{ if BS1_USE_NEW_IMGDEL }}
-                    <span class="file-delete-box"><input type="checkbox" name="fileid{$rendervar['post_number']}_{$file['ord']}" value="deletefile_{$rendervar['post_number']}_{$file['ord']}" title="Delete file"></span>
+                    <span class="file-delete-box"><input type="checkbox" name="fileid{$rendervar['post_number']}_{$file['file_order']}" value="deletefile_{$rendervar['post_number']}_{$file['file_order']}" title="Delete file"></span>
                 {{ endif }}
                     <a href="{$file['file_location']}" rel="external">{$file['filename']}.{$file['extension']}</a> - 
                 {{ if $file['img_dim'] }}{$file['image_width']} x {$file['image_height']}{{ endif }} ({$file['filesize']} KB)
-                    [<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['ord']}','showimgmeta{$rendervar['post_number']}_{$file['ord']}','none','{LANG_THREAD_LESS_DATA}')" id="showimgmeta{$rendervar['post_number']}_{$file['ord']}">{LANG_THREAD_MOAR_DATA}</a>]
-                    <span id="imgmeta{$rendervar['post_number']}_{$file['ord']}" class="none">
+                    [<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['file_order']}','showimgmeta{$rendervar['post_number']}_{$file['file_order']}','none','{LANG_THREAD_LESS_DATA}')" id="showimgmeta{$rendervar['post_number']}_{$file['file_order']}">{LANG_THREAD_MOAR_DATA}</a>]
+                    <span id="imgmeta{$rendervar['post_number']}_{$file['file_order']}" class="none">
                 {{ if $file['source'] != '' }}
                     <br><span class="source">Source: {$file['source']}</span>
                 {{ endif }}

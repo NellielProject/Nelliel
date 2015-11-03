@@ -485,7 +485,7 @@ function new_post($dataforce, $authorized)
         while ($i < $files_count)
         {
             $dbh->query('UPDATE ' . POSTTABLE . ' SET has_file=1 WHERE post_number=' . $post_number . '');
-            $prepared = $dbh->prepare('INSERT INTO ' . FILETABLE . ' (parent_thread,post_ref,ord,supertype,subtype,mime,filename,extension,filesize,md5,source,license)
+            $prepared = $dbh->prepare('INSERT INTO ' . FILETABLE . ' (parent_thread,post_ref,file_order,supertype,subtype,mime,filename,extension,filesize,md5,source,license)
 				VALUES (' . '' . $parent_id . ',' . '' . $post_number . ',' . '"' . ($i + 1) . '",' . '"' . $files[$i]['supertype'] . '",' . '"' . $files[$i]['subtype'] . '",' . '"' . $files[$i]['mime'] . '",' . '"' . $files[$i]['basic_filename'] . '",' . '"' . $files[$i]['ext'] . '",' . '"' . $files[$i]['fsize'] . '",' . '"' . $files[$i]['md5'] . '",' . '"' . $files[$i]['file_source'] . '",' . '"' . $files[$i]['file_license'] . '")');
             
             $prepared->execute();
@@ -493,11 +493,11 @@ function new_post($dataforce, $authorized)
             
             if ($files[$i]['supertype'] === 'GRAPHICS')
             {
-                $dbh->query('UPDATE ' . FILETABLE . ' SET image_width=' . $files[$i]['im_x'] . ', image_height=' . $files[$i]['im_y'] . ', preview_name="' . $files[$i]['thumbfile'] . '", preview_width=' . $files[$i]['pre_x'] . ', preview_height=' . $files[$i]['pre_y'] . ', md5="' . $files[$i]['md5'] . '" WHERE post_ref=' . $post_number . ' AND ord=' . ($i + 1) . '');
+                $dbh->query('UPDATE ' . FILETABLE . ' SET image_width=' . $files[$i]['im_x'] . ', image_height=' . $files[$i]['im_y'] . ', preview_name="' . $files[$i]['thumbfile'] . '", preview_width=' . $files[$i]['pre_x'] . ', preview_height=' . $files[$i]['pre_y'] . ', md5="' . $files[$i]['md5'] . '" WHERE post_ref=' . $post_number . ' AND file_order=' . ($i + 1) . '');
             }
             else if ($files[$i]['subtype'] === 'SWF')
             {
-                $dbh->query('UPDATE ' . FILETABLE . ' SET image_width=' . $files[$i]['im_x'] . ', image_height=' . $files[$i]['im_y'] . ', md5="' . $files[$i]['md5'] . '" WHERE post_ref=' . $post_number . ' AND ord=' . ($i + 1) . '');
+                $dbh->query('UPDATE ' . FILETABLE . ' SET image_width=' . $files[$i]['im_x'] . ', image_height=' . $files[$i]['im_y'] . ', md5="' . $files[$i]['md5'] . '" WHERE post_ref=' . $post_number . ' AND file_order=' . ($i + 1) . '');
             }
             
             ++ $i;

@@ -266,13 +266,13 @@ function delete_content($dataforce, $sub, $type)
         {
             // add check for updating post as no files if they're all gone
             $fnum = $sub[2];
-            $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILETABLE . ' WHERE post_ref=' . $id . ' AND ord=' . $fnum . '');
+            $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILETABLE . ' WHERE post_ref=' . $id . ' AND file_order=' . $fnum . '');
             $file_data = $result->fetch(PDO::FETCH_ASSOC);
             unset($result);
             
             if ($file_data !== FALSE)
             {
-                $dbh->query('DELETE FROM ' . FILETABLE . ' WHERE post_ref=' . $id . ' AND ord=' . $fnum . '');
+                $dbh->query('DELETE FROM ' . FILETABLE . ' WHERE post_ref=' . $id . ' AND file_order=' . $fnum . '');
                 
                 if ($post_data['response_to'] == 0)
                 {

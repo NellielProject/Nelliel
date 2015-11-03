@@ -89,9 +89,9 @@ function setup_check()
     {
         echo 'Creating table ' . FILETABLE . '...<br>';
         $result = $dbh->query("create table if not exists " . FILETABLE . " (
-			parent_thread	int not null,
-			post_ref		int not null,
-			order		int not null,
+			parent_thread	int default null,
+			post_ref		int default null,
+			file_order		int not null default 1,
 			supertype varchar(12) default null,
 			subtype	varchar(12) default null,
 			mime	varchar(255) default null,
@@ -102,7 +102,7 @@ function setup_check()
 			preview_name	varchar(255) default null,
 			preview_width	smallint unsigned null,
 			preview_height	smallint unsigned null,
-			filesize	int unsigned not null,
+			filesize	int unsigned null,
 			md5		char(32) default null,
 			source	varchar(255) default null,
 			license	varchar(255) default null,
@@ -112,6 +112,7 @@ function setup_check()
         
         if (!$result)
         {
+            print_r($dbh->errorInfo());
             die('Creation of ' . FILETABLE . ' failed! Check database settings and config.php then retry installation.');
         }
         else
@@ -183,7 +184,7 @@ function setup_check()
         $result = $dbh->query("create table if not exists " . ARCHIVEFILETABLE . " (
 			parent_thread	int default null,
 			post_ref		int default null,
-			order		int default null,
+			file_order		int not null default 1,
 			supertype varchar(12) default null,
 			subtype	varchar(12) default null,
 			mime	varchar(255) default null,
@@ -194,7 +195,7 @@ function setup_check()
 			preview_name	varchar(255) default null,
 			preview_width	int default null,
 			preview_height	int default null,
-			filesize	int not null default 0,
+			filesize	int unsigned null,
 			md5		char(32) default null,
 			source	varchar(255) default null,
 			license	varchar(255) default null,
