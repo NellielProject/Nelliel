@@ -27,14 +27,7 @@ require_once INCLUDE_PATH . 'sessions.php';
 
 /* -----------Main------------- */
 
-if (BS1_USE_SPAMBOT_TRAP && (!is_null($dataforce['sp_field1']) || !is_null($dataforce['sp_field2'])))
-{
-    $dataforce['banreason'] = "Spambot. Nobody wants any. GTFO";
-    $dataforce['bandays'] = 9001;
-    $dataforce['banip'] = $_SERVER["REMOTE_ADDR"];
-    ban_hammer($dataforce);
-}
-
+ban_spambots($dataforce);
 applyBan($dataforce, $authorized);
 
 session_start();
@@ -68,11 +61,7 @@ if (isset($dataforce['mode2']))
     }
 }
 
-if (!isset($dataforce['mode']))
-{
-    // Just regen page?
-}
-else
+if (isset($dataforce['mode']))
 {
     switch ($dataforce['mode']) // Even moar modes
     {
