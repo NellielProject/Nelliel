@@ -258,7 +258,7 @@ function setup_check()
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting_1bit', 'force_anonymous', '')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting_1bit', 'show_title', '1')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting_1bit', 'show_favicon', '')");
-        $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting_1bit', 'show_logo', '1')");
+        $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting_1bit', 'show_logo', '')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting_1bit', 'use_thumb', '1')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting_1bit', 'use_magick', '')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting_1bit', 'use_file_icon', '1')");
@@ -273,8 +273,8 @@ function setup_check()
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'board_name', 'Nelliel-powered image board')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'board_favicon', '')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'board_logo', '')");
-        $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'thread_delay', '30')");
-        $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'reply_delay', '10')");
+        $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'thread_delay', '60')");
+        $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'reply_delay', '15')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'abbreviate_thread', '5')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'max_post_files', '3')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'max_files_row', '3')");

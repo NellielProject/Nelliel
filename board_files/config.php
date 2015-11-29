@@ -13,17 +13,17 @@ if (!defined('NELLIEL_VERSION'))
 define('SQLTYPE', 'SQLITE');
 
 // Set these if you plan to use MySQL
-define('MYSQL_DB', ''); // Name of database used by imageboard
-define('MYSQL_HOST', ''); // SQL server address
-define('MYSQL_USER', ''); // SQL user
-define('MYSQL_PASS', ''); // SQL user's password
+define('MYSQL_DB', 'database'); // Name of database used by imageboard
+define('MYSQL_HOST', 'localhost'); // SQL server address
+define('MYSQL_USER', 'username'); // SQL user
+define('MYSQL_PASS', 'password'); // SQL user's password
                            
 // Set this if you plan to use SQLite
 define('SQLITE_DB_NAME', 'nelliel.sqlite'); // Filename of SQLite database. Can be an absolute path if you want the database file somewhere else on the server
                                              
 // Be certain TABLEPREFIX and CONF_BOARD_DIR are unique for each board you set up!
-define('TABLEPREFIX', ''); // Prefix used for tables in the database
-define('CONF_BOARD_DIR', ''); // Name of the directory the imageboard is installed. Used for cookies and other things.
+define('TABLEPREFIX', 'nelliel'); // Prefix used for tables in the database
+define('CONF_BOARD_DIR', 'board'); // Name of the directory the imageboard is installed. Used for cookies and other things.
 define('HOME', '../'); // Site home directory (up one level by default). Can be a web-accessible directory or a URL
                         
 // If no auth file is found and these settings are not blank, it will use DEFAULTADMIN and DEFAULTADMIN_PASS to create a default admin.
@@ -34,7 +34,7 @@ define('DEFAULTADMIN_PASS', ''); // Password for default admin
                                   
 // Salt used for passwords and secure tripcodes. Include numbers, letters and funny symbols for best results.
 // Change this setting ONCE when you begin your board. Changing it again will break all the post passwords and alter secure tripcodes.
-define('HASH_SALT', '');
+define('HASH_SALT', 'sodiumz');
 
 /* * * * * * * * * * */
 // The settings below this point can be changed if you really want but it's probably just as well to leave them alone.

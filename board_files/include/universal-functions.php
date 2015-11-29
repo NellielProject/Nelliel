@@ -70,36 +70,6 @@ function derp($error_id, $error_message, $diagnostic)
 }
 
 //
-// End and delete session
-//
-function terminate_session()
-{
-    session_unset();
-    session_destroy();
-    setcookie("PHPSESSID", "", time() - 3600, "/");
-}
-
-//
-// Regenerate session (Swiper no swiping!)
-//
-function regen_session()
-{
-    $timeout = time() - $_SESSION['last_activity'];
-    
-    if ($_COOKIE['PHPSESSID'] === session_id() && $timeout < 1800)
-    {
-        session_regenerate_id(true);
-        $_SESSION['last_activity'] = time();
-        $_SESSION['ignore_login'] = FALSE;
-    }
-    else // Session timed out or doesn't match the cookie
-    {
-        terminate_session();
-        derp(105, LANG_ERROR_105, array('SEC'));
-    }
-}
-
-//
 // Parse quotelinks
 //
 function link_quote($matches)
