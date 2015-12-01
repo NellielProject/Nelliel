@@ -12,6 +12,8 @@ function asdfg($input)
     return $trip;
 }
 
+$hooks = array();
+
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'archive.php';
 require_once INCLUDE_PATH . 'universal-functions.php';
@@ -22,10 +24,9 @@ require_once INCLUDE_PATH . 'main-generation.php';
 require_once INCLUDE_PATH . 'html-generation.php';
 require_once INCLUDE_PATH . 'snacks.php';
 require_once INCLUDE_PATH . 'sessions.php';
+require_once INCLUDE_PATH . 'plugins.php';
 
-// Initialization done. GO TIME!
-
-/* -----------Main------------- */
+// Initialization done. IT'S GO TIME!
 
 ban_spambots($dataforce);
 applyBan($dataforce, $authorized);
@@ -33,12 +34,12 @@ applyBan($dataforce, $authorized);
 session_start();
 initialize_session($dataforce, $authorized);
 
+// This handles the GET requests
 if (isset($dataforce['mode2']))
 {
     switch ($dataforce['mode2']) // Moar modes
     {
         case 'display':
-            
             if (!empty($_SESSION)) // For expanding a thread
             {
                 if (is_null($dataforce['response_id']))
@@ -61,6 +62,7 @@ if (isset($dataforce['mode2']))
     }
 }
 
+// This is for the POST requests
 if (isset($dataforce['mode']))
 {
     switch ($dataforce['mode']) // Even moar modes

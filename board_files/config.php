@@ -64,8 +64,10 @@ define('BASE_PATH', realpath('./')); // Base path for script
 define('SQLITE_DB_LOCATION', BASE_PATH . '/' . BOARD_FILES); // Base SQLite DB location
 define('FILES_PATH', BASE_PATH . '/' . BOARD_FILES); // Base cache path
 define('INCLUDE_PATH', BASE_PATH . '/' . BOARD_FILES . 'include/'); // Base cache path
+define('PLUGINS_PATH', BASE_PATH . '/' . BOARD_FILES . 'plugins/'); // Base cache path
 define('TEMPLATE_PATH', BASE_PATH . '/' . BOARD_FILES . 'templates/nelliel/'); // Base template path
 define('CSSDIR', BOARD_FILES . 'css/'); // location of the css files
+define('JSDIR', BOARD_FILES . 'js/'); // location of the javascript files
 define('CACHE_DIR', 'cache/'); // Cache directory, only used internally by Nelliel
 define('CACHE_PATH', FILES_PATH . '/' . CACHE_DIR); // Base cache path
 define('SRC_PATH', BASE_PATH . '/' . SRC_DIR); // Base src path
