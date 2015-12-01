@@ -33,6 +33,8 @@ function new_post($dataforce, $authorized)
         {
             $fgsfds['sage'] = TRUE;
         }
+        
+        $return = plugin_hook('fgsfds_field', array($fgsfds));
     }
     
     //
@@ -41,6 +43,14 @@ function new_post($dataforce, $authorized)
     
     $files = file_info();
     $there_is_no_spoon = TRUE;
+
+    $poster_info = array(
+            'name' => $dataforce['name'],
+            'email' => $dataforce['email'],
+            'subject' => $dataforce['subject'],
+            'comment' => $dataforce['comment'],
+            'tripcode' => '',
+            'secure_tripcode' => '');
     
     if (!empty($files))
     {
@@ -51,7 +61,7 @@ function new_post($dataforce, $authorized)
     {
         $files = array();
     
-        if (!$dataforce['comment'])
+        if (!$poster_info['comment'])
         {
             derp(10, LANG_ERROR_10, array('POST', $files));
         }
@@ -72,8 +82,9 @@ function new_post($dataforce, $authorized)
     //
     
     // Cancer-fighting tools and lulz
+    $poster_info = plugin_hook('before-info-process', TRUE, $poster_info);
     
-    if (strlen(utf8_decode($dataforce['comment'])) > BS_MAX_COMMENT_LENGTH || strlen(utf8_decode($dataforce['name'])) > BS_MAX_NAME_LENGTH || strlen(utf8_decode($dataforce['email'])) > BS_MAX_EMAIL_LENGTH || strlen(utf8_decode($dataforce['subject'])) > BS_MAX_SUBJECT_LENGTH || strlen(utf8_decode($dataforce['file_source'])) > BS_MAX_SOURCE_LENGTH || strlen(utf8_decode($dataforce['file_license'])) > BS_MAX_LICENSE_LENGTH)
+    if (strlen(utf8_decode($poster_info['comment'])) > BS_MAX_COMMENT_LENGTH || strlen(utf8_decode($poster_info['name'])) > BS_MAX_NAME_LENGTH || strlen(utf8_decode($poster_info['email'])) > BS_MAX_EMAIL_LENGTH || strlen(utf8_decode($poster_info['subject'])) > BS_MAX_SUBJECT_LENGTH || strlen(utf8_decode($dataforce['file_source'])) > BS_MAX_SOURCE_LENGTH || strlen(utf8_decode($dataforce['file_license'])) > BS_MAX_LICENSE_LENGTH)
     {
         derp(11, LANG_ERROR_11, array('POST', $files));
     }
@@ -90,46 +101,45 @@ function new_post($dataforce, $authorized)
     }
     
     // Text plastic surgery (rorororor) - wat.
-    $dataforce['email'] = cleanse_the_aids($dataforce['email']);
-    $dataforce['subject'] = cleanse_the_aids($dataforce['subject']);
+
+    $poster_info['email'] = cleanse_the_aids($poster_info['email']);
+    $poster_info['subject'] = cleanse_the_aids($poster_info['subject']);
     
-    if ($dataforce['comment'] !== '')
+    if ($poster_info['comment'] !== '')
     {
-        banned_text($dataforce['comment'], $files);
-        $dataforce['comment'] = word_filters($dataforce['comment']);
-        $dataforce['comment'] = cleanse_the_aids($dataforce['comment']);
+        banned_text($poster_info['comment'], $files);
+        $poster_info['comment'] = word_filters($poster_info['comment']);
+        $poster_info['comment'] = cleanse_the_aids($poster_info['comment']);
     }
                                                                            
     // Name and tripcodes
     $modpostc = 0;
-    $dataforce['tripcode'] = '';
-    $dataforce['secure_tripcode'] = '';
-    $cookie_name = $dataforce['name'];
+    $cookie_name = $poster_info['name'];
     
-    if ($dataforce['name'] !== '' && !BS1_FORCE_ANONYMOUS)
+    if ($poster_info['name'] !== '' && !BS1_FORCE_ANONYMOUS)
     {
-        banned_name($dataforce['name'], $files);
+        banned_name($poster_info['name'], $files);
         
-        $faggotry = strpos($dataforce['name'], LANG_THREAD_MODPOST);
+        $faggotry = strpos($poster_info['name'], LANG_THREAD_MODPOST);
         if ($faggotry)
         {
-            $dataforce['name'] = LANG_FAKE_STAFF_ATTEMPT;
+            $poster_info['name'] = LANG_FAKE_STAFF_ATTEMPT;
         }
         
-        $faggotry = strpos($dataforce['name'], LANG_THREAD_ADMINPOST);
+        $faggotry = strpos($poster_info['name'], LANG_THREAD_ADMINPOST);
         if ($faggotry)
         {
-            $dataforce['name'] = LANG_FAKE_STAFF_ATTEMPT;
+            $poster_info['name'] = LANG_FAKE_STAFF_ATTEMPT;
         }
         
-        $faggotry = strpos($dataforce['name'], LANG_THREAD_JANPOST);
+        $faggotry = strpos($poster_info['name'], LANG_THREAD_JANPOST);
         if ($faggotry)
         {
-            $dataforce['name'] = LANG_FAKE_STAFF_ATTEMPT;
+            $poster_info['name'] = LANG_FAKE_STAFF_ATTEMPT;
         }
         
-        preg_match('/^([^#]*)(#(?!#))?([^#]*)(##)?(.*)$/', $dataforce['name'], $name_pieces);
-        $dataforce['name'] = cleanse_the_aids($name_pieces[1]);
+        preg_match('/^([^#]*)(#(?!#))?([^#]*)(##)?(.*)$/', $poster_info['name'], $name_pieces);
+        $poster_info['name'] = cleanse_the_aids($name_pieces[1]);
         
         if ($name_pieces[5] !== '')
         {
@@ -179,25 +189,25 @@ function new_post($dataforce, $authorized)
             $salt = substr($cap . 'H.', 1, 2);
             $salt = preg_replace('#[^\.-z]#', '.#', $salt);
             $salt = strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
-            $dataforce['tripcode'] = substr(crypt($cap, $salt), -10);
+            $poster_info['tripcode'] = substr(crypt($cap, $salt), -10);
         }
         
         if ($name_pieces[5] !== '' || $modpostc > 0)
         {
             $trip = asdfg($name_pieces[5]);
-            $dataforce['secure_tripcode'] = substr(crypt($trip, '42'), -12);
+            $poster_info['secure_tripcode'] = substr(crypt($trip, '42'), -12);
         }
         
         if ($name_pieces[1] === '' || $authorized[$staff_id]['perm_post_anon'])
         {
-            $dataforce['name'] = LANG_THREAD_NONAME;
-            $dataforce['email'] = '';
+            $poster_info['name'] = LANG_THREAD_NONAME;
+            $poster_info['email'] = '';
         }
     }
     else
     {
-        $dataforce['name'] = LANG_THREAD_NONAME;
-        $dataforce['email'] = '';
+        $poster_info['name'] = LANG_THREAD_NONAME;
+        $poster_info['email'] = '';
     }
 
     // Cookies OM NOM NOM NOM
@@ -205,25 +215,27 @@ function new_post($dataforce, $authorized)
     setcookie('name-' . CONF_BOARD_DIR, $cookie_name, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
     
     // Comment processing, mostly dealing with \n
-    if ($dataforce['comment'] !== '')
+    if ($poster_info['comment'] !== '')
     {
         // Set up comment field with proper newlines, etc
-        $dataforce['comment'] = str_replace("\r", "\n", $dataforce['comment']);
+        $poster_info['comment'] = str_replace("\r", "\n", $poster_info['comment']);
         
         if (substr_count($dataforce['comment'], "\n") < BS_MAX_COMMENT_LINES)
         {
-            $dataforce['comment'] = str_replace("\n\n", "<br>", $dataforce['comment']);
-            $dataforce['comment'] = str_replace("\n", "<br>", $dataforce['comment']);
+            $poster_info['comment'] = str_replace("\n\n", "<br>", $poster_info['comment']);
+            $poster_info['comment'] = str_replace("\n", "<br>", $poster_info['comment']);
         }
         else
         {
-            $dataforce['comment'] = str_replace("\n", "", $dataforce['comment']); // \n is erased
+            $poster_info['comment'] = str_replace("\n", "", $poster_info['comment']); // \n is erased
         }
     }
     else
     {
-        $dataforce['comment'] = LANG_THREAD_NOTEXT;
+        $poster_info['comment'] = LANG_THREAD_NOTEXT;
     }
+    
+    $poster_info = plugin_hook('after-info-process', TRUE, $poster_info);
     
     $i = 0;
     
@@ -277,29 +289,29 @@ function new_post($dataforce, $authorized)
 	(name, tripcode, secure_tripcode, email, subject, comment, host, password, post_time, last_update, response_to, last_response, post_count, sticky, mod_post, mod_comment, archive_status, locked) VALUES 
 	(:name, :tripcode, :secure_tripcode, :email, :subject, :comment, :host, :password, :time, :last_update, :respto, 0, 1, :sticky, :modpost, :mcomment, 0, 0)');
     
-    $prepared->bindValue(':name', $dataforce['name'], PDO::PARAM_STR);
+    $prepared->bindValue(':name', $poster_info['name'], PDO::PARAM_STR);
     
-    if ($dataforce['tripcode'] === '')
+    if ($poster_info['tripcode'] === '')
     {
         $prepared->bindValue(':tripcode', NULL, PDO::PARAM_NULL);
     }
     else
     {
-        $prepared->bindValue(':tripcode', $dataforce['tripcode'], PDO::PARAM_STR);
+        $prepared->bindValue(':tripcode', $poster_info['tripcode'], PDO::PARAM_STR);
     }
     
-    if ($dataforce['secure_tripcode'] === '')
+    if ($poster_info['secure_tripcode'] === '')
     {
         $prepared->bindValue(':secure_tripcode', NULL, PDO::PARAM_NULL);
     }
     else
     {
-        $prepared->bindValue(':secure_tripcode', $dataforce['secure_tripcode'], PDO::PARAM_STR);
+        $prepared->bindValue(':secure_tripcode', $poster_info['secure_tripcode'], PDO::PARAM_STR);
     }
     
-    $prepared->bindValue(':email', $dataforce['email'], PDO::PARAM_STR);
-    $prepared->bindValue(':subject', $dataforce['subject'], PDO::PARAM_STR);
-    $prepared->bindValue(':comment', $dataforce['comment'], PDO::PARAM_STR);
+    $prepared->bindValue(':email', $poster_info['email'], PDO::PARAM_STR);
+    $prepared->bindValue(':subject', $poster_info['subject'], PDO::PARAM_STR);
+    $prepared->bindValue(':comment', $poster_info['comment'], PDO::PARAM_STR);
     $prepared->bindValue(':host', @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
     $prepared->bindValue(':password', $dataforce['pass'], PDO::PARAM_STR);
     $prepared->bindValue(':time', $time, PDO::PARAM_STR);

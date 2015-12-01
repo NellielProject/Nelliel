@@ -1,15 +1,17 @@
 <?php
 
-$hooks['sample'][] = 'samplefunc';
-$hooks['sample'][] = 'samplefunc2';
+$hooks['before-info-process'][] = 'samplefunc';
+$hooks['after-info-process'][] = 'samplefunc2';
 
 function samplefunc($input)
 {
-    echo "AWESOME";
+    var_dump($input);
+    echo "AWESOME  " . $input['email'];
 }
 
 function samplefunc2($input)
 {
-    echo $input;
+    var_dump($input);
+    echo $input['name'];
     die();
 }

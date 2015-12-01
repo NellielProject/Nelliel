@@ -7,7 +7,7 @@ foreach($plugin_files as $file)
     require_once $file;
 }
 
-function plugin_hook($hook, $inputs)
+function plugin_hook($hook, $pass_input_array, $input)
 {
     global $hooks;
 
@@ -17,9 +17,18 @@ function plugin_hook($hook, $inputs)
         {
             if(function_exists($function))
             {
-                call_user_func_array($function, $inputs);
+                if($pass_input_array)
+                {
+                    $return = call_user_func($function, $input);
+                }
+                else
+                {
+                    $return = call_user_func_array($function, $input);
+                }
             }
         }
     }
+    
+    return $return;
 }
 ?>
