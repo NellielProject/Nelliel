@@ -1,7 +1,7 @@
 <?php
 if (!defined('NELLIEL_VERSION'))
 {
-    die(NELLIEL_VERSION);
+    die("NOPE.AVI");
 }
 
 function valid($dataforce)

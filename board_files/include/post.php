@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function new_post($dataforce, $authorized)
 {
-    global $enabled_types, $fgsfds, $dbh;
+    global $enabled_types, $fgsfds, $dbh, $plugins;
     
     $new_thread_dir = '';
     
@@ -34,7 +34,7 @@ function new_post($dataforce, $authorized)
             $fgsfds['sage'] = TRUE;
         }
         
-        $return = plugin_hook('fgsfds_field', array($fgsfds));
+        $return = $plugins->plugin_hook('fgsfds_field', FALSE, array($fgsfds));
     }
     
     //
@@ -82,8 +82,8 @@ function new_post($dataforce, $authorized)
     //
     
     // Cancer-fighting tools and lulz
-    $poster_info = plugin_hook('before-info-process', TRUE, $poster_info);
-    
+    $poster_info = $plugins->plugin_hook('before-info-processing', TRUE, array($poster_info));
+
     if (strlen(utf8_decode($poster_info['comment'])) > BS_MAX_COMMENT_LENGTH || strlen(utf8_decode($poster_info['name'])) > BS_MAX_NAME_LENGTH || strlen(utf8_decode($poster_info['email'])) > BS_MAX_EMAIL_LENGTH || strlen(utf8_decode($poster_info['subject'])) > BS_MAX_SUBJECT_LENGTH || strlen(utf8_decode($dataforce['file_source'])) > BS_MAX_SOURCE_LENGTH || strlen(utf8_decode($dataforce['file_license'])) > BS_MAX_LICENSE_LENGTH)
     {
         derp(11, LANG_ERROR_11, array('POST', $files));
@@ -235,7 +235,8 @@ function new_post($dataforce, $authorized)
         $poster_info['comment'] = LANG_THREAD_NOTEXT;
     }
     
-    $poster_info = plugin_hook('after-info-process', TRUE, $poster_info);
+    $poster_info = $plugins->plugin_hook('after-info-processing', TRUE, array($poster_info));
+    die();
     
     $i = 0;
     
