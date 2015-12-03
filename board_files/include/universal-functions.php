@@ -153,7 +153,14 @@ function regen($dataforce, $id, $mode, $modmode)
     
     if ($mode === 'thread')
     {
-        $ids = $id;
+        if(is_array($id))
+        {
+            $ids = $id;
+        }
+        else
+        {
+            $ids[0] = $id;
+        }
     }
     
     if ($mode === 'main' || $mode === 'full')
