@@ -29,12 +29,6 @@ class plugin_handler
         }
 
         $this->sort_hooks();
-
-        echo '<pre>';
-        print_r(self::$hooks);
-        print_r(self::$plugins);
-        echo '</pre>';
-        //die();
         self::$loaded = TRUE;
         return TRUE;
     }
@@ -113,7 +107,7 @@ class plugin_handler
     public function plugin_hook($hook_name, $return_input, $input)
     {
         $hooks = self::$hooks;
-        $return = NULL;
+        $return = $input[0];
 
         if(isset($hooks[$hook_name]))
         {
@@ -129,11 +123,6 @@ class plugin_handler
                     }
                 }
             }
-        }
-
-        if(is_null($return) && $return_input)
-        {
-            $return = $input;
         }
 
         return $return;

@@ -236,7 +236,6 @@ function new_post($dataforce, $authorized)
     }
     
     $poster_info = $plugins->plugin_hook('after-info-processing', TRUE, array($poster_info));
-    die();
     
     $i = 0;
     

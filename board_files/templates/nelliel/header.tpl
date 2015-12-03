@@ -8,7 +8,7 @@
     <link rel="alternate stylesheet" type="text/css" href="{$rendervar['dotdot']}{CSSDIR}nigra.css" title="Nigra">
     <link rel="alternate stylesheet" type="text/css" href="{$rendervar['dotdot']}{CSSDIR}futaba.css" title="Futaba">
     <link rel="alternate stylesheet" type="text/css" href="{$rendervar['dotdot']}{CSSDIR}burichan.css" title="Burichan">
-    <script type="text/javascript" src="{$rendervar['dotdot']}{BOARD_FILES}{JSDIR}nel.js"></script>
+    <script type="text/javascript" src="{$rendervar['dotdot']}{JSDIR}nel.js"></script>
     <script type="text/javascript">processCookie("style-{CONF_BOARD_DIR}");
         window.onload = function doImportantStuff()
         {
