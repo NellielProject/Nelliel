@@ -55,19 +55,26 @@ class plugin_handler
         return ($a['priority'] < $b['priority']) ? -1 : 1;
     }
 
-    // Returns a unique plugin id (integer)
+    // Returns a plugin id hash or FALSE if plugin already registered
     public function register_plugin($name, $author, $version)
     {
         $plugins = self::$plugins;
-        $plugin_id = 0;
+        $plugin_id = $this->plugin_id_hash($name, $author, $version);
 
-        while(in_array($plugin_id, $plugins, TRUE) || $plugin_id === 0)
+        if(!in_array($plugin_id, $plugins, TRUE))
         {
-            $plugin_id = mt_rand();
+            self::$plugins[$plugin_id] = array($name, $author, $version);
+            return $plugin_id;
         }
-
-        self::$plugins[$plugin_id] = array($name, $author, $version);
-        return $plugin_id;
+        else
+        {
+            return FALSE;
+        }
+    }
+    
+    public function plugin_id_hash($a, $b, $c)
+    {
+        return md5($a . $b . $c);
     }
     
     public function register_hook_function($hook_name, $function_name, $priority, $plugin_id)
@@ -88,6 +95,7 @@ class plugin_handler
         self::$hooks = $hooks;
     }
     
+    // Returns TRUE is successful, FALSE if not
     public function unregister_hook_function($hook_name, $function_name, $priority, $plugin_id)
     {
         $hooks = self::$hooks;
@@ -96,12 +104,20 @@ class plugin_handler
         {
             if(in_array($function_name, $hooks[$hook_name][$key], TRUE))
             {
-                unset($hooks[$hook_name][$key]);
+                if(in_array($plugin_id, $hooks[$hook_name][$key], TRUE))
+                {
+                    unset($hooks[$hook_name][$key]);
+                }
+                else
+                {
+                    return FALSE;
+                }
             }
         }
         
         self::$hooks = $hooks;
         $this->sort_hooks();
+        return TRUE;
     }
     
     public function plugin_hook($hook_name, $return_input, $input)
@@ -113,7 +129,7 @@ class plugin_handler
         {
             foreach($hooks[$hook_name] as $hook_function)
             {
-                if(function_exists($hook_function['function']))
+                if(function_exists($hook_function['function']) || method_exists($hook_function['function'][0], $hook_function['function'][1]))
                 {
                     $return = call_user_func_array($hook_function['function'], $input);
 

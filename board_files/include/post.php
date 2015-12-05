@@ -82,7 +82,6 @@ function new_post($dataforce, $authorized)
     //
     
     // Cancer-fighting tools and lulz
-    $poster_info = $plugins->plugin_hook('before-info-processing', TRUE, array($poster_info));
 
     if (strlen(utf8_decode($poster_info['comment'])) > BS_MAX_COMMENT_LENGTH || strlen(utf8_decode($poster_info['name'])) > BS_MAX_NAME_LENGTH || strlen(utf8_decode($poster_info['email'])) > BS_MAX_EMAIL_LENGTH || strlen(utf8_decode($poster_info['subject'])) > BS_MAX_SUBJECT_LENGTH || strlen(utf8_decode($dataforce['file_source'])) > BS_MAX_SOURCE_LENGTH || strlen(utf8_decode($dataforce['file_license'])) > BS_MAX_LICENSE_LENGTH)
     {
@@ -101,6 +100,8 @@ function new_post($dataforce, $authorized)
     }
     
     // Text plastic surgery (rorororor) - wat.
+    $poster_info = $plugins->plugin_hook('before-post-info-processing', TRUE, array($poster_info));
+    $poster_info = $plugins->plugin_hook('post-info-processing', TRUE, array($poster_info));
 
     $poster_info['email'] = cleanse_the_aids($poster_info['email']);
     $poster_info['subject'] = cleanse_the_aids($poster_info['subject']);
@@ -111,11 +112,32 @@ function new_post($dataforce, $authorized)
         $poster_info['comment'] = word_filters($poster_info['comment']);
         $poster_info['comment'] = cleanse_the_aids($poster_info['comment']);
     }
-                                                                           
+
+    // Comment processing, mostly dealing with \n
+    if ($poster_info['comment'] !== '')
+    {
+        // Set up comment field with proper newlines, etc
+        $poster_info['comment'] = str_replace("\r", "\n", $poster_info['comment']);
+    
+        if (substr_count($dataforce['comment'], "\n") < BS_MAX_COMMENT_LINES)
+        {
+            $poster_info['comment'] = str_replace("\n\n", "<br>", $poster_info['comment']);
+            $poster_info['comment'] = str_replace("\n", "<br>", $poster_info['comment']);
+        }
+        else
+        {
+            $poster_info['comment'] = str_replace("\n", "", $poster_info['comment']); // \n is erased
+        }
+    }
+    else
+    {
+        $poster_info['comment'] = LANG_THREAD_NOTEXT;
+    }
+
     // Name and tripcodes
     $modpostc = 0;
     $cookie_name = $poster_info['name'];
-    
+
     if ($poster_info['name'] !== '' && !BS1_FORCE_ANONYMOUS)
     {
         banned_name($poster_info['name'], $files);
@@ -140,7 +162,7 @@ function new_post($dataforce, $authorized)
         
         preg_match('/^([^#]*)(#(?!#))?([^#]*)(##)?(.*)$/', $poster_info['name'], $name_pieces);
         $poster_info['name'] = cleanse_the_aids($name_pieces[1]);
-        
+
         if ($name_pieces[5] !== '')
         {
             $num_auth = array_keys($authorized);
@@ -181,23 +203,10 @@ function new_post($dataforce, $authorized)
                 ++ $i;
             }
         }
-        
-        if ($name_pieces[3] !== '' && BS1_ALLOW_TRIPKEYS)
-        {
-            $cap = strtr($name_pieces[3], '&amp;', '&');
-            $cap = strtr($cap, '&#44;', ',');
-            $salt = substr($cap . 'H.', 1, 2);
-            $salt = preg_replace('#[^\.-z]#', '.#', $salt);
-            $salt = strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
-            $poster_info['tripcode'] = substr(crypt($cap, $salt), -10);
-        }
-        
-        if ($name_pieces[5] !== '' || $modpostc > 0)
-        {
-            $trip = asdfg($name_pieces[5]);
-            $poster_info['secure_tripcode'] = substr(crypt($trip, '42'), -12);
-        }
-        
+
+        $poster_info = $plugins->plugin_hook('tripcode-processing', TRUE, array($poster_info, $name_pieces));
+        $poster_info = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($poster_info, $name_pieces, $modpostc));
+
         if ($name_pieces[1] === '' || $authorized[$staff_id]['perm_post_anon'])
         {
             $poster_info['name'] = LANG_THREAD_NONAME;
@@ -214,28 +223,7 @@ function new_post($dataforce, $authorized)
     setcookie('pwd-' . CONF_BOARD_DIR, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
     setcookie('name-' . CONF_BOARD_DIR, $cookie_name, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
     
-    // Comment processing, mostly dealing with \n
-    if ($poster_info['comment'] !== '')
-    {
-        // Set up comment field with proper newlines, etc
-        $poster_info['comment'] = str_replace("\r", "\n", $poster_info['comment']);
-        
-        if (substr_count($dataforce['comment'], "\n") < BS_MAX_COMMENT_LINES)
-        {
-            $poster_info['comment'] = str_replace("\n\n", "<br>", $poster_info['comment']);
-            $poster_info['comment'] = str_replace("\n", "<br>", $poster_info['comment']);
-        }
-        else
-        {
-            $poster_info['comment'] = str_replace("\n", "", $poster_info['comment']); // \n is erased
-        }
-    }
-    else
-    {
-        $poster_info['comment'] = LANG_THREAD_NOTEXT;
-    }
-    
-    $poster_info = $plugins->plugin_hook('after-info-processing', TRUE, array($poster_info));
+    $poster_info = $plugins->plugin_hook('after-post-info-processing', TRUE, array($poster_info));
     
     $i = 0;
     
