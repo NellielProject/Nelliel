@@ -164,7 +164,7 @@ function delete_content($dataforce, $sub, $type)
     }
     
     $flag = FALSE;
-    $hashed_pass = asdfg($dataforce['pass']);
+    $hashed_pass = salt_hash($dataforce['pass']);
     $hashed_pass = substr($hashed_pass, 0, 16);
     $result = $dbh->query('SELECT post_number,password,response_to,mod_post FROM ' . POSTTABLE . ' WHERE post_number=' . $id . '');
     $post_data = $result->fetch(PDO::FETCH_ASSOC);

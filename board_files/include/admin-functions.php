@@ -195,7 +195,7 @@ function staff_panel($dataforce, $mode)
         {
             if ($key === 'staff_password')
             {
-                $new_pass = asdfg($val);
+                $new_pass = salt_hash($val);
             }
             
             if ($key === 'change_pass')

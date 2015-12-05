@@ -3,16 +3,30 @@ define('NELLIEL_VERSION', 'v0.9.1'); // Version
 define('BOARD_FILES', 'board_files/'); // Name of directory where the support and internal files go
 
 require_once BOARD_FILES . 'config.php';
+require_once INCLUDE_PATH . 'plugins.php';
+define('SHA256_AVAILABLE', in_array('sha256', hash_algos()));
 
 // Mmm...sodium...
-function asdfg($input)
+function salt_hash($input)
 {
+    global $plugins;
+    $methods = array('sha256', 'md5', FALSE);
+    $methods = $plugins->plugin_hook('change-salted-hash-algorithms', TRUE, array($methods));
     $half_salt = substr(HASH_SALT, 0, (strlen(HASH_SALT) / 2));
-    $trip = md5($half_salt . md5(HASH_SALT . $input));
-    return $trip;
-}
+    
+    // In case there is a need for something older
+    if($methods[2] || !SHA256_AVAILABLE)
+    {
+        $hash = hash($methods[1], $half_salt . md5(HASH_SALT . $input));
 
-$hooks = array();
+    }
+    else
+    {
+        $hash = hash($methods[0], $half_salt . md5(HASH_SALT . $input));
+    }
+
+    return $hash;
+}
 
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'archive.php';
@@ -24,7 +38,7 @@ require_once INCLUDE_PATH . 'main-generation.php';
 require_once INCLUDE_PATH . 'html-generation.php';
 require_once INCLUDE_PATH . 'snacks.php';
 require_once INCLUDE_PATH . 'sessions.php';
-require_once INCLUDE_PATH . 'plugins.php';
+
 
 // Initialization done. IT'S GO TIME!
 

@@ -525,7 +525,7 @@ function generate_auth_file()
             echo 'Creating auth file...';
             $new_auth = '<?php
 $authorized = array(
-	\'' . DEFAULTADMIN . '\' => array(\'staff_password\' => \'' . asdfg(DEFAULTADMIN_PASS) . '\',
+	\'' . DEFAULTADMIN . '\' => array(\'staff_password\' => \'' . salt_hash(DEFAULTADMIN_PASS) . '\',
 		\'staff_type\' => \'admin\',
 		\'staff_trip\' => \'\',
 		\'perm_config\' => TRUE,

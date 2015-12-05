@@ -68,7 +68,7 @@ function initialize_session($dataforce, $authorized)
     }
     else if (isset($dataforce['admin_mode']) && $dataforce['admin_mode'] === 'login') // No existing session but this may be a login attempt
     {
-        if ($dataforce['username'] !== '' && asdfg($dataforce['admin_pass']) === $authorized[$dataforce['username']]['staff_password'])
+        if ($dataforce['username'] !== '' && salt_hash($dataforce['admin_pass']) === $authorized[$dataforce['username']]['staff_password'])
         {
             // We set up the session here
             $_SESSION['ignore_login'] = FALSE;

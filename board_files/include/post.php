@@ -91,7 +91,7 @@ function new_post($dataforce, $authorized)
     if (isset($dataforce['pass']))
     {
         $cpass = $dataforce['pass'];
-        $hashed_pass = asdfg($dataforce['pass']);
+        $hashed_pass = salt_hash($dataforce['pass']);
         $dataforce['pass'] = substr($hashed_pass, 0, 16);
     }
     else

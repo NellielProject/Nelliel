@@ -25,11 +25,12 @@ if (ini_get('date.timezone') === '')
 
 ignore_user_abort(TRUE);
 require_once INCLUDE_PATH . 'setup.php';
+require_once INCLUDE_PATH . 'file-handling.php';
 setup_check();
 generate_auth_file();
 
 require_once FILES_PATH . '/auth_data.nel.php';
-require_once INCLUDE_PATH . 'file-handling.php';
+
 
 //
 // Initialize a bunch of stuff here

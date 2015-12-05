@@ -33,7 +33,7 @@ class nelliel_post_handling
     {
         if ($name_pieces[5] !== '' || $modpostc > 0)
         {
-            $trip = asdfg($name_pieces[5]);
+            $trip = salt_hash($name_pieces[5]);
             $poster_info['secure_tripcode'] = substr(crypt($trip, '42'), -12);
         }
     
