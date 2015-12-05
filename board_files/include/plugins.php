@@ -72,11 +72,13 @@ class plugin_handler
         }
     }
     
+    // Returns plugin id hash
     public function plugin_id_hash($a, $b, $c)
     {
         return md5($a . $b . $c);
     }
     
+    // Register hook functions here
     public function register_hook_function($hook_name, $function_name, $priority, $plugin_id)
     {
         $hooks = self::$hooks;
@@ -95,7 +97,7 @@ class plugin_handler
         self::$hooks = $hooks;
     }
     
-    // Returns TRUE is successful, FALSE if not
+    // Unregister hookk functions here. Returns TRUE is successful, FALSE if not
     public function unregister_hook_function($hook_name, $function_name, $priority, $plugin_id)
     {
         $hooks = self::$hooks;
@@ -112,6 +114,10 @@ class plugin_handler
                 {
                     return FALSE;
                 }
+            }
+            else
+            {
+                return FALSE;
             }
         }
         
