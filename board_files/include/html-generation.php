@@ -70,10 +70,10 @@ function generate_header($dataforce, $render_mode, $treeline)
 //
 function form(&$dat, $dataforce, $authorized)
 {
-    global $rendervar, $rule_list;
+    global $rendervar;
     
     $rendervar['response_id'] = (is_null($dataforce['response_id'])) ? '0' : $dataforce['response_id'];
-    $rendervar['rules'] = $rule_list;
+    $rendervar['rules'] = RULES_LIST;
     $rendervar['form_submit_url'] = $rendervar['dotdot'] . PHP_SELF;
     
     if (BS1_ALLOW_MULTIFILE)

@@ -134,7 +134,7 @@ function cache_rules()
     }
     
     $output = '<?php
-	$rule_list = \'' . $rule_list . '\';
+	define(\'RULES_LIST\', \'' . $rule_list . '\');
 ?>';
     
     write_file(CACHE_PATH . 'rules.nelcache', $output, 0644);

@@ -340,7 +340,7 @@ function clear_auth_settings(&$item1, $key)
 //
 function admin_control($dataforce, $mode)
 {
-    global $dbh, $rendervar, $rule_list, $authorized;
+    global $dbh, $rendervar, $authorized;
     
     $rendervar['dotdot'] = '';
     $update = FALSE;
@@ -374,7 +374,7 @@ function admin_control($dataforce, $mode)
             }
         }
         
-        $rule_list = cache_rules();
+        cache_rules();
         cache_settings();
         regen($dataforce, NULL, 'full', FALSE);
     }
