@@ -7,9 +7,9 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Genrerates the main thread listings
 //
-function main_thread_generator($dataforce)
+function main_thread_generator($dataforce, $authorized)
 {
-    global $rendervar, $dbh, $authorized;
+    global $rendervar, $dbh;
     $rendervar['insert_hr'] = FALSE;
     $page_output = '';
     $rendervar['dotdot'] = '';
@@ -17,8 +17,7 @@ function main_thread_generator($dataforce)
     $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=0 AND archive_status=0 ORDER BY sticky desc,last_update desc');
     $front_page_list = $result->fetchALL(PDO::FETCH_COLUMN);
     unset($result);
-    $treeline = array(
-            0 );
+    $treeline = array(0);
     
     // Finding the last entry number
     $result = $dbh->query('SELECT COUNT(post_number) FROM ' . POSTTABLE . ' WHERE response_to=0');

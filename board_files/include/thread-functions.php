@@ -4,9 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function thread_updates($dataforce)
+function thread_updates($dataforce, $authorized)
 {
-    global $post_link_reference, $dbh, $authorized;
+    global $post_link_reference, $dbh;
     
     $threadlist = array();
     $postlist = array();
@@ -21,17 +21,17 @@ function thread_updates($dataforce)
         switch ($sub[0])
         {
             case 'deletefile':
-                delete_content($dataforce, $sub, 'FILE');
+                delete_content($dataforce, $authorized, $sub, 'FILE');
                 $push = $sub[1];
                 break;
             
             case 'deletethread':
-                delete_content($dataforce, $sub, 'THREAD');
+                delete_content($dataforce, $authorized, $sub, 'THREAD');
                 $push = $sub[1];
                 break;
             
             case 'deletepost':
-                delete_content($dataforce, $sub, 'POST');
+                delete_content($dataforce, $authorized, $sub, 'POST');
                 $push = $sub[2];
                 break;
             
@@ -109,12 +109,12 @@ function make_sticky($dataforce, $sub)
     if (!file_exists(PAGE_PATH . $id . '/' . $id . '.html'))
     {
         $dataforce['response_id'] = $id;
-        regen($dataforce, $dataforce['response_id'], 'thread', FALSE);
+        regen($dataforce, $authorized, $dataforce['response_id'], 'thread', FALSE);
     }
     
     cache_post_links();
     $dataforce['archive_update'] = TRUE;
-    regen($dataforce, NULL, 'main', FALSE);
+    regen($dataforce, $authorized, NULL, 'main', FALSE);
     
     if (!empty($_SESSION))
     {
@@ -139,12 +139,12 @@ function unsticky($dataforce, $sub)
     if (!file_exists(PAGE_PATH . $id . '/' . $id . '.html'))
     {
         $dataforce['response_id'] = $id;
-        regen($dataforce, $dataforce['response_id'], 'thread', FALSE);
+        regen($dataforce, $authorized, $dataforce['response_id'], 'thread', FALSE);
     }
     
     cache_post_links();
     $dataforce['archive_update'] = TRUE;
-    regen($dataforce, NULL, 'main', FALSE);
+    regen($dataforce, $authorized, NULL, 'main', FALSE);
     
     if (!empty($_SESSION))
     {
@@ -152,9 +152,9 @@ function unsticky($dataforce, $sub)
     }
 }
 
-function delete_content($dataforce, $sub, $type)
+function delete_content($dataforce, $authorized, $sub, $type)
 {
-    global $dbh, $authorized, $post_link_reference;
+    global $dbh, $post_link_reference;
     
     $id = $sub[1];
     
@@ -164,7 +164,7 @@ function delete_content($dataforce, $sub, $type)
     }
     
     $flag = FALSE;
-    $hashed_pass = salt_hash($dataforce['pass']);
+    $hashed_pass = nel_hash($dataforce['pass']);
     $hashed_pass = substr($hashed_pass, 0, 16);
     $result = $dbh->query('SELECT post_number,password,response_to,mod_post FROM ' . POSTTABLE . ' WHERE post_number=' . $id . '');
     $post_data = $result->fetch(PDO::FETCH_ASSOC);

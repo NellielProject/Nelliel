@@ -525,7 +525,7 @@ function generate_auth_file()
             echo 'Creating auth file...';
             $new_auth = '<?php
 $authorized = array(
-	\'' . DEFAULTADMIN . '\' => array(\'staff_password\' => \'' . salt_hash(DEFAULTADMIN_PASS) . '\',
+	\'' . DEFAULTADMIN . '\' => array(\'staff_password\' => \'' . nel_hash(DEFAULTADMIN_PASS) . '\',
 		\'staff_type\' => \'admin\',
 		\'staff_trip\' => \'\',
 		\'perm_config\' => TRUE,
@@ -554,7 +554,8 @@ $authorized = array(
         }
         else
         {
-            die('ERROR: Could not create auth file due to invalid/missing admin info. Check your config then retry installation.');
+            $stuff_done = TRUE;
+            echo 'ERROR: Could not create auth file due to invalid or missing admin info. The board will probably work but you will have no administrative abilities. Check your config.php then retry installation.';
         }
     }
 }

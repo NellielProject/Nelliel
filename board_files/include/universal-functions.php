@@ -5,40 +5,18 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 //
-// Clean up user input
-//
-function cleanse_the_aids($string)
-{
-    if ($string === '' || preg_match("#^\s*$#", $string))
-    {
-        return '';
-    }
-    else
-    {
-        if (get_magic_quotes_gpc())
-        {
-            $string = stripslashes($string);
-        }
-        
-        $string = trim($string);
-        $string = htmlspecialchars($string);
-        return $string;
-    }
-}
-
-//
 // Error Handling
 //
 function derp($error_id, $error_message, $diagnostic)
 {
     $file_count = 0;
     $extra_data = '';
-
-    if(array_key_exists(1, $diagnostic) && !is_null($diagnostic))
+    
+    if (array_key_exists(1, $diagnostic) && !is_null($diagnostic))
     {
         $file_count = count($diagnostic[1]);
-
-        foreach($diagnostic[1] as $file)
+        
+        foreach ($diagnostic[1] as $file)
         {
             if ($file !== '' && is_file($file['dest']))
             {
@@ -134,7 +112,7 @@ function lol_html_timer($derp)
     }
 }
 
-function regen($dataforce, $id, $mode, $modmode)
+function regen($dataforce, $authorized, $id, $mode, $modmode)
 {
     global $dbh;
     
@@ -153,7 +131,7 @@ function regen($dataforce, $id, $mode, $modmode)
     
     if ($mode === 'thread')
     {
-        if(is_array($id))
+        if (is_array($id))
         {
             $ids = $id;
         }
@@ -166,7 +144,7 @@ function regen($dataforce, $id, $mode, $modmode)
     if ($mode === 'main' || $mode === 'full')
     {
         update_archive_status($dataforce);
-        main_thread_generator($dataforce);
+        main_thread_generator($dataforce, $authorized);
     }
     
     if ($mode === 'thread' || $mode === 'full')
@@ -177,7 +155,7 @@ function regen($dataforce, $id, $mode, $modmode)
         while ($i < $threads)
         {
             $dataforce['response_id'] = $ids[$i];
-            thread_generator($dataforce);
+            thread_generator($dataforce, $authorized);
             ++ $i;
         }
     }

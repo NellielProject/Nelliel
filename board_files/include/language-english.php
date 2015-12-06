@@ -15,7 +15,7 @@ define('LANG_LINK_ABOUT', 'About'); // About page link
 define('LANG_LINK_RETURN', 'Return'); // Return to main page link
 define('LANG_LINK_REPLY', 'Reply'); // Reply to a post
 define('LANG_LINK_EXPAND', 'Expand thread'); // Expand thread
-                                              
+                                             
 // Form buttons
 define('LANG_FORM_SUBMIT', 'Submit'); // Submit button
 define('LANG_FORM_RESET', 'Clear form'); // Clear form button
@@ -32,7 +32,7 @@ define('LANG_FORM_MOD_BAN', 'Modify ban'); // Modify ban
 define('LANG_FORM_REMOVE_BAN', 'Remove ban'); // Remove ban
 define('LANG_FORM_ADD_BAN', 'Add new ban'); // Add ban
 define('LANG_DELETE_FILES_ONLY', 'Delete File Only'); // Prints text next to checkbox for file deletion (right)
-                                                       
+                                                      
 // Label text
 define('LANG_LABEL_NAME', 'Name'); // Name field
 define('LANG_LABEL_EMAIL', 'E-mail'); // E-mail field
@@ -42,7 +42,7 @@ define('LANG_LABEL_FILE', 'File'); // File upload
 define('LANG_LABEL_PASS', 'Password'); // Password for deleting post
 define('LANG_LABEL_SOURCE', 'Source'); // Source field
 define('LANG_LABEL_LICENSE', 'License'); // License field
-                                          
+                                         
 // Other text
 define('LANG_TEXT_REPLYMODE', 'Posting mode: Reply'); // Reply mode
 define('LANG_TEXT_THREADMODE', 'Posting mode: New thread'); // New thread mode
@@ -52,7 +52,7 @@ define('LANG_TEXT_SPAMBOT_FIELD1', 'thename1'); // First anti-spambot hidden fie
 define('LANG_TEXT_SPAMBOT_FIELD2', 'theurl1'); // Second anti-spambot hidden field
 define('LANG_TEXT_OMITTED_POSTS', ' posts omitted. Click Reply or Expand Post to view.'); // Prints text to be shown when replies are hidden
 define('LANG_FAKE_STAFF_ATTEMPT', 'I\'m a faggot'); // Attempts to imitate staff in name field are filtered to this
-                                                     
+                                                    
 // Thread info
 define('LANG_THREAD_ADMINPOST', '## Admin ##'); // Admin capcode
 define('LANG_THREAD_MODPOST', '## Moderator ##'); // Mod capcode
@@ -65,7 +65,7 @@ define('LANG_THREAD_STICKY_ICON', 'sticky.png'); // Sticky icon
 define('LANG_THREAD_EXPAND', 'Expand Thread'); // Expand thread
 define('LANG_THREAD_MOAR_DATA', 'Show more file info'); // Moar info
 define('LANG_THREAD_LESS_DATA', 'Show less file info'); // Less info
-                                                         
+                                                        
 // Errors
 define('LANG_ERROR_HEADER', 'Oh god how did this get here.'); // Header for error page
 define('LANG_ERROR_0', 'I just don\'t know what went wrong!'); // Error 0: No fucking clue
@@ -101,7 +101,7 @@ define('LANG_ERROR_150', 'Staff member does not exist.'); // Error 60: Invalid s
 define('LANG_ERROR_151', 'Invalid staff type.'); // Error 61: Invalid staff type
 define('LANG_ERROR_152', 'No staff information available. Also could not create default authorization files.'); // Error 62: No staff info
 define('LANG_ERROR_153', 'Invalid option.'); // Error 63: Invalid option
-                                                                  
+                                             
 // Management
 define('LANG_MANAGE_MODE', 'Management Mode'); // Management
 define('LANG_MANAGE_OPTIONS', 'Options'); // Options
@@ -118,7 +118,7 @@ define('LANG_MANAGE_OPT_THREAD', 'Thread management'); // Threads
 define('LANG_MANAGE_OPT_MMODE', 'Enter Mod mode'); // Threads
 define('LANG_MANAGE_UPDATE_WARN', 'Forces an update of all pages. May cause heavy server load.'); // May cause high load
 define('LANG_MANAGE_UPDATE_CACHE_WARN', 'Regenerates all the internal caches.'); // May cause high load
-                                                                                  
+                                                                                 
 // Manage bans
 define('LANG_MANAGE_BAN_ID', 'Ban ID'); // Ban ID
 define('LANG_MANAGE_BAN_BOARD', 'Board'); // Ban board
@@ -142,7 +142,7 @@ define('LANG_MANAGE_BANMOD_APPLRES', 'Appeal response:'); // Appeal response
 define('LANG_MANAGE_BANMOD_MRKAPPL', 'Mark appeal as reviewed'); // Mark appeal as reviews
 define('LANG_MANAGE_BANMOD_DAY', 'Days:'); // Mark appeal as reviews
 define('LANG_MANAGE_BANMOD_HOUR', 'Hours:'); // Mark appeal as reviews
-                                              
+                                             
 // Manage threads
 define('LANG_MANAGE_THREAD_EXPAND', 'Expand'); // Expand
 define('LANG_MANAGE_THREAD_POST_NUM', 'Post no.'); // Post #
@@ -155,7 +155,7 @@ define('LANG_MANAGE_THREAD_NAME', 'Name'); // Name
 define('LANG_MANAGE_THREAD_COMMENT', 'Comment'); // Comment
 define('LANG_MANAGE_THREAD_HOST', 'Host'); // Host
 define('LANG_MANAGE_THREAD_FILE', 'Filename (Filesize [Bytes])<br>md5'); // File info
-                                                                          
+                                                                         
 // Manage staff
 define('LANG_MANAGE_STAFF_UNAME', 'Username'); // Username
 define('LANG_MANAGE_STAFF_PASS', 'New password (leave blank to keep current password)'); // Password
@@ -182,7 +182,7 @@ define('LANG_MANAGE_STAFF_TMOD', 'Moderator'); // Moderator
 define('LANG_MANAGE_STAFF_TJAN', 'Janitor'); // Janitor
 define('LANG_MANAGE_STAFF_ADD', 'Username of staff to add'); // Add staff
 define('LANG_MANAGE_STAFF_EDIT', 'Username of staff to edit'); // Edit staff
-                                                                
+                                                               
 // Manage board settings
 define('LANG_MANAGE_SET_BOARD_NAME', 'Board Name'); // Board name
 define('LANG_MANAGE_SET_SHOW_NAME', 'Show board name at top'); // Board name at top
@@ -238,7 +238,7 @@ define('LANG_MANAGE_SET_FORCEANON', 'Force Anonymous posting'); // Forced anonym
 define('LANG_MANAGE_SET_GFORMAT', 'Enable/disable graphics files'); // Enable graphics
 define('LANG_MANAGE_SET_FGSFDS', 'Use FGSFDS field for commands (noko, sage, etc) instead of the e-mail field'); // Use the FGSFDS field
 define('LANG_MANAGE_SET_FGSFDS_NAME', 'Name of the FGSFDS field'); // Name of the FGSFDS field
-                                                                    
+                                                                   
 // Manage filetypes
 define('LANG_MANAGE_SET_ALW_GF', 'Graphics files'); // Allow graphics files
 define('LANG_MANAGE_SET_ALW_JPEG', 'JPEG - .jpg, .jpe, .jpeg'); // JPEG
@@ -299,7 +299,7 @@ define('LANG_MANAGE_SET_ALW_STUFFIT', 'StuffIt - .sit'); // StuffIt
 define('LANG_MANAGE_SET_ALW_ISO', 'CD Image - .iso'); // ISO/CD
 define('LANG_MANAGE_SET_ALW_DMG', 'Disk Image - .dmg'); // Disk Image
 define('LANG_MANAGE_FORM_UPDSET', 'Update board settings'); // Update settings
-                                                             
+                                                            
 // Rules and posting limits
 define('LANG_FILES_GRAPHICS', 'Supported graphics types: '); // Prints graphics filetypes supported
 define('LANG_FILES_AUDIO', 'Supported audio types: '); // Prints audio filetypes supported
@@ -309,7 +309,7 @@ define('LANG_FILES_ARCHIVE', 'Supported archive types: '); // Prints archive fil
 define('LANG_FILES_OTHER', 'Other supported file types: '); // Prints other filetypes supported
 define('LANG_POSTING_RULES1', 'Maximum file size allowed is ' . BS_MAX_FILESIZE . ' KB.'); // Rules 1
 define('LANG_POSTING_RULES2', 'Images greater than ' . BS_MAX_WIDTH . 'x' . BS_MAX_HEIGHT . ' pixels will be thumbnailed.'); // Rules 2
-                                                                                                                              
+                                                                                                                             
 // Ban page
 define('LANG_BAN_APPEAL_RESPONSE', 'This is the response to your appeal: '); // Response to appealed ban
 define('LANG_BAN_NO_RESPONSE', 'No response has been given.'); // No response yet
@@ -317,7 +317,7 @@ define('LANG_BAN_RESPONSE_PENDING', 'You have already appealed this ban but the 
 define('LANG_ABOUT_APPEALS', 'If you wish, you may appeal this ban. Enter your reason(s) why you should get unbanned in the box below. A staff member will (probably) review it.'); // Message about appealing a ban
 define('LANG_APPEAL_REVIEWED', 'You appeal has been reviewed. You cannot appeal again.'); // Appeal has been reviewed
 define('LANG_BAN_ALTERED', 'Your appeal has been reviewed and the ban has been altered.'); // Appeal accepted but ban changed, not removed
-                                                                                            
+                                                                                           
 // These are holdovers from the original Nelliel that are still in use. I need to clean them up.
 define('S_FOOT', '- <a href="http://www.1chan.net/futallaby/" rel="external">futallaby</a> + <a href="http://www.nelliel.com" rel="external" title="Nelliel Imageboard Software">Nelliel ' . NELLIEL_VERSION . '</a> -'); // Prints footer (leave these credits)
 define('S_DELPICONLY', 'Delete File Only'); // Prints text next to checkbox for file deletion (right)

@@ -43,14 +43,9 @@ function new_post($dataforce, $authorized)
     
     $files = file_info();
     $there_is_no_spoon = TRUE;
-
-    $poster_info = array(
-            'name' => $dataforce['name'],
-            'email' => $dataforce['email'],
-            'subject' => $dataforce['subject'],
-            'comment' => $dataforce['comment'],
-            'tripcode' => '',
-            'secure_tripcode' => '');
+    
+    $poster_info = array('name' => $dataforce['name'], 'email' => $dataforce['email'], 'subject' => $dataforce['subject'], 'comment' => $dataforce['comment'], 'tripcode' => '', 
+                        'secure_tripcode' => '');
     
     if (!empty($files))
     {
@@ -60,17 +55,17 @@ function new_post($dataforce, $authorized)
     else
     {
         $files = array();
-    
+        
         if (!$poster_info['comment'])
         {
             derp(10, LANG_ERROR_10, array('POST', $files));
         }
-    
+        
         if (BS1_REQUIRE_IMAGE_ALWAYS)
         {
             derp(8, LANG_ERROR_8, array('POST', $files));
         }
-    
+        
         if (BS1_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
         {
             derp(9, LANG_ERROR_9, array('POST', $files));
@@ -82,7 +77,7 @@ function new_post($dataforce, $authorized)
     //
     
     // Cancer-fighting tools and lulz
-
+    
     if (strlen(utf8_decode($poster_info['comment'])) > BS_MAX_COMMENT_LENGTH || strlen(utf8_decode($poster_info['name'])) > BS_MAX_NAME_LENGTH || strlen(utf8_decode($poster_info['email'])) > BS_MAX_EMAIL_LENGTH || strlen(utf8_decode($poster_info['subject'])) > BS_MAX_SUBJECT_LENGTH || strlen(utf8_decode($dataforce['file_source'])) > BS_MAX_SOURCE_LENGTH || strlen(utf8_decode($dataforce['file_license'])) > BS_MAX_LICENSE_LENGTH)
     {
         derp(11, LANG_ERROR_11, array('POST', $files));
@@ -91,7 +86,7 @@ function new_post($dataforce, $authorized)
     if (isset($dataforce['pass']))
     {
         $cpass = $dataforce['pass'];
-        $hashed_pass = salt_hash($dataforce['pass']);
+        $hashed_pass = nel_hash($dataforce['pass']);
         $dataforce['pass'] = substr($hashed_pass, 0, 16);
     }
     else
@@ -102,7 +97,7 @@ function new_post($dataforce, $authorized)
     // Text plastic surgery (rorororor) - wat.
     $poster_info = $plugins->plugin_hook('before-post-info-processing', TRUE, array($poster_info));
     $poster_info = $plugins->plugin_hook('post-info-processing', TRUE, array($poster_info));
-
+    
     $poster_info['email'] = cleanse_the_aids($poster_info['email']);
     $poster_info['subject'] = cleanse_the_aids($poster_info['subject']);
     
@@ -112,13 +107,13 @@ function new_post($dataforce, $authorized)
         $poster_info['comment'] = word_filters($poster_info['comment']);
         $poster_info['comment'] = cleanse_the_aids($poster_info['comment']);
     }
-
+    
     // Comment processing, mostly dealing with \n
     if ($poster_info['comment'] !== '')
     {
         // Set up comment field with proper newlines, etc
         $poster_info['comment'] = str_replace("\r", "\n", $poster_info['comment']);
-    
+        
         if (substr_count($dataforce['comment'], "\n") < BS_MAX_COMMENT_LINES)
         {
             $poster_info['comment'] = str_replace("\n\n", "<br>", $poster_info['comment']);
@@ -133,11 +128,11 @@ function new_post($dataforce, $authorized)
     {
         $poster_info['comment'] = LANG_THREAD_NOTEXT;
     }
-
+    
     // Name and tripcodes
     $modpostc = 0;
     $cookie_name = $poster_info['name'];
-
+    
     if ($poster_info['name'] !== '' && !BS1_FORCE_ANONYMOUS)
     {
         banned_name($poster_info['name'], $files);
@@ -162,7 +157,7 @@ function new_post($dataforce, $authorized)
         
         preg_match('/^([^#]*)(#(?!#))?([^#]*)(##)?(.*)$/', $poster_info['name'], $name_pieces);
         $poster_info['name'] = cleanse_the_aids($name_pieces[1]);
-
+        
         if ($name_pieces[5] !== '')
         {
             $num_auth = array_keys($authorized);
@@ -203,10 +198,10 @@ function new_post($dataforce, $authorized)
                 ++ $i;
             }
         }
-
+        
         $poster_info = $plugins->plugin_hook('tripcode-processing', TRUE, array($poster_info, $name_pieces));
         $poster_info = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($poster_info, $name_pieces, $modpostc));
-
+        
         if ($name_pieces[1] === '' || $authorized[$staff_id]['perm_post_anon'])
         {
             $poster_info['name'] = LANG_THREAD_NONAME;
@@ -218,7 +213,7 @@ function new_post($dataforce, $authorized)
         $poster_info['name'] = LANG_THREAD_NONAME;
         $poster_info['email'] = '';
     }
-
+    
     // Cookies OM NOM NOM NOM
     setcookie('pwd-' . CONF_BOARD_DIR, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
     setcookie('name-' . CONF_BOARD_DIR, $cookie_name, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
@@ -521,10 +516,10 @@ function new_post($dataforce, $authorized)
     }
     
     $return_res = ($dataforce['response_to'] === 0) ? $new_thread_dir : $dataforce['response_to'];
-    regen($dataforce, $return_res, 'thread', FALSE);
+    regen($dataforce, $authorized, $return_res, 'thread', FALSE);
     cache_post_links();
     $dataforce['archive_update'] = TRUE;
-    regen($dataforce, NULL, 'main', FALSE);
+    regen($dataforce, $authorized, NULL, 'main', FALSE);
     
     if (!empty($_SESSION))
     {
@@ -532,6 +527,28 @@ function new_post($dataforce, $authorized)
     }
     
     return $return_res;
+}
+
+//
+// Clean up user input
+//
+function cleanse_the_aids($string)
+{
+    if ($string === '' || preg_match("#^\s*$#", $string))
+    {
+        return '';
+    }
+    else
+    {
+        if (get_magic_quotes_gpc())
+        {
+            $string = stripslashes($string);
+        }
+        
+        $string = trim($string);
+        $string = htmlspecialchars($string);
+        return $string;
+    }
 }
 
 function is_post_ok($dataforce, $time)

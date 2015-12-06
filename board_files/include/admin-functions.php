@@ -4,9 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function valid($dataforce)
+function valid($dataforce, $authorized)
 {
-    global $rendervar, $authorized;
+    global $rendervar;
     
     $dat = '';
     $rendervar['dotdot'] = '';
@@ -34,9 +34,9 @@ function valid($dataforce)
 //
 // Update ban info
 //
-function update_ban($dataforce, $mode)
+function update_ban($dataforce, $authorized, $mode)
 {
-    global $dbh, $authorized;
+    global $dbh;
     
     if ($authorized[$_SESSION['username']]['perm_ban_panel'])
     {
@@ -47,14 +47,7 @@ function update_ban($dataforce, $mode)
         
         if ($mode === 'update')
         {
-            $ban_input = array(
-                    'days' => 0,
-                    'hours' => 0,
-                    'reason' => '',
-                    'response' => '',
-                    'review' => FALSE,
-                    'status' => 0,
-                    'length' => '' );
+            $ban_input = array('days' => 0, 'hours' => 0, 'reason' => '', 'response' => '', 'review' => FALSE, 'status' => 0, 'length' => '');
             
             foreach ($_POST as $key => $val)
             {
@@ -122,9 +115,9 @@ function update_ban($dataforce, $mode)
 // /
 
 // This whole section is messy but works. Will clean up later. Really.
-function staff_panel($dataforce, $mode)
+function staff_panel($dataforce, $authorized, $mode)
 {
-    global $dbh, $rendervar, $authorized;
+    global $dbh, $rendervar;
     
     $rendervar['dotdot'] = '';
     $rendervar['enter_staff'] = TRUE;
@@ -154,7 +147,7 @@ function staff_panel($dataforce, $mode)
             
             if (!isset($authorized[$rendervar['staff_name']]))
             {
-                gen_new_staff($rendervar['staff_name'], $rendervar['staff_type']);
+                gen_new_staff($rendervar['staff_name'], $rendervar['staff_type'], $authorized);
             }
         }
         else if ($mode === 'edit')
@@ -195,7 +188,7 @@ function staff_panel($dataforce, $mode)
         {
             if ($key === 'staff_password')
             {
-                $new_pass = salt_hash($val);
+                $new_pass = nel_hash($val);
             }
             
             if ($key === 'change_pass')
@@ -246,66 +239,25 @@ $authorized = ' . var_export($authorized, TRUE) . '?>';
     die();
 }
 
-function gen_new_staff($new_name, $new_type)
+function gen_new_staff($new_name, $new_type, $authorized)
 {
-    global $authorized;
-    
     if ($new_type === 'admin')
     {
-        $authorized[$new_name] = array(
-                'staff_password' => '',
-                'staff_type' => 'admin',
-                'staff_trip' => '',
-                'perm_config' => TRUE,
-                'perm_staff_panel' => TRUE,
-                'perm_ban_panel' => TRUE,
-                'perm_thread_panel' => TRUE,
-                'perm_mod_mode' => TRUE,
-                'perm_ban' => TRUE,
-                'perm_delete' => TRUE,
-                'perm_post' => TRUE,
-                'perm_post_anon' => FALSE,
-                'perm_sticky' => TRUE,
-                'perm_update_pages' => TRUE,
-                'perm_update_cache' => TRUE );
+        $authorized[$new_name] = array('staff_password' => '', 'staff_type' => 'admin', 'staff_trip' => '', 'perm_config' => TRUE, 'perm_staff_panel' => TRUE, 'perm_ban_panel' => TRUE, 
+                                    'perm_thread_panel' => TRUE, 'perm_mod_mode' => TRUE, 'perm_ban' => TRUE, 'perm_delete' => TRUE, 'perm_post' => TRUE, 'perm_post_anon' => FALSE, 
+                                    'perm_sticky' => TRUE, 'perm_update_pages' => TRUE, 'perm_update_cache' => TRUE);
     }
     else if ($new_type === 'moderator')
     {
-        $authorized[$new_name] = array(
-                'staff_password' => '',
-                'staff_type' => 'moderator',
-                'staff_trip' => '',
-                'perm_config' => FALSE,
-                'perm_staff_panel' => FALSE,
-                'perm_ban_panel' => TRUE,
-                'perm_thread_panel' => TRUE,
-                'perm_mod_mode' => TRUE,
-                'perm_ban' => TRUE,
-                'perm_delete' => TRUE,
-                'perm_post' => TRUE,
-                'perm_post_anon' => TRUE,
-                'perm_sticky' => TRUE,
-                'perm_update_pages' => FALSE,
-                'perm_update_cache' => FALSE );
+        $authorized[$new_name] = array('staff_password' => '', 'staff_type' => 'moderator', 'staff_trip' => '', 'perm_config' => FALSE, 'perm_staff_panel' => FALSE, 'perm_ban_panel' => TRUE, 
+                                    'perm_thread_panel' => TRUE, 'perm_mod_mode' => TRUE, 'perm_ban' => TRUE, 'perm_delete' => TRUE, 'perm_post' => TRUE, 'perm_post_anon' => TRUE, 
+                                    'perm_sticky' => TRUE, 'perm_update_pages' => FALSE, 'perm_update_cache' => FALSE);
     }
     else if ($new_type === 'janitor')
     {
-        $authorized[$new_name] = array(
-                'staff_password' => '',
-                'staff_type' => 'janitor',
-                'staff_trip' => '',
-                'perm_config' => FALSE,
-                'perm_staff_panel' => FALSE,
-                'perm_ban_panel' => FALSE,
-                'perm_thread_panel' => FALSE,
-                'perm_mod_mode' => TRUE,
-                'perm_ban' => FALSE,
-                'perm_delete' => TRUE,
-                'perm_post' => FALSE,
-                'perm_post_anon' => TRUE,
-                'perm_sticky' => FALSE,
-                'perm_update_pages' => FALSE,
-                'perm_update_cache' => FALSE );
+        $authorized[$new_name] = array('staff_password' => '', 'staff_type' => 'janitor', 'staff_trip' => '', 'perm_config' => FALSE, 'perm_staff_panel' => FALSE, 'perm_ban_panel' => FALSE, 
+                                    'perm_thread_panel' => FALSE, 'perm_mod_mode' => TRUE, 'perm_ban' => FALSE, 'perm_delete' => TRUE, 'perm_post' => FALSE, 'perm_post_anon' => TRUE, 
+                                    'perm_sticky' => FALSE, 'perm_update_pages' => FALSE, 'perm_update_cache' => FALSE);
     }
     else
     {
@@ -338,9 +290,9 @@ function clear_auth_settings(&$item1, $key)
 //
 // Board settings
 //
-function admin_control($dataforce, $mode)
+function admin_control($dataforce, $authorized, $mode)
 {
-    global $dbh, $rendervar, $authorized;
+    global $dbh, $rendervar;
     
     $rendervar['dotdot'] = '';
     $update = FALSE;
@@ -376,7 +328,7 @@ function admin_control($dataforce, $mode)
         
         cache_rules();
         cache_settings();
-        regen($dataforce, NULL, 'full', FALSE);
+        regen($dataforce, $authorized, NULL, 'full', FALSE);
     }
     
     $nolink = FALSE;
@@ -386,13 +338,7 @@ function admin_control($dataforce, $mode)
     
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
-    $board_settings = array(
-            'iso' => '',
-            'com' => '',
-            'us' => '',
-            'archive' => '',
-            'prune' => '',
-            'nothing' => '' );
+    $board_settings = array('iso' => '', 'com' => '', 'us' => '', 'archive' => '', 'prune' => '', 'nothing' => '');
     
     foreach ($rows as $config_line)
     {
@@ -453,9 +399,9 @@ function admin_control($dataforce, $mode)
 //
 // Ban control panel
 //
-function ban_control($dataforce, $mode)
+function ban_control($dataforce, $authorized, $mode)
 {
-    global $dbh, $rendervar, $authorized;
+    global $dbh, $rendervar;
     
     $rendervar['dotdot'] = '';
     
@@ -517,9 +463,9 @@ function ban_control($dataforce, $mode)
 //
 // Thread management panel
 //
-function thread_panel($dataforce, $mode)
+function thread_panel($dataforce, $authorized, $mode)
 {
-    global $dbh, $rendervar, $authorized;
+    global $dbh, $rendervar;
     
     // $rendervar['dotdot'] = '';
     $rendervar['expand_thread'] = FALSE;
@@ -531,9 +477,9 @@ function thread_panel($dataforce, $mode)
     
     if ($mode === 'update')
     {
-        $updates = thread_updates($dataforce);
-        regen($dataforce, $updates, 'thread', FALSE);
-        regen($dataforce, NULL, 'main', FALSE);
+        $updates = thread_updates($dataforce, $authorized);
+        regen($dataforce, $authorized, $updates, 'thread', FALSE);
+        regen($dataforce, $authorized, NULL, 'main', FALSE);
     }
     
     $dat = generate_header($dataforce, 'ADMIN', array());
@@ -591,9 +537,9 @@ function thread_panel($dataforce, $mode)
 //
 // Apply b&hammer
 //
-function ban_hammer($dataforce)
+function ban_hammer($dataforce, $authorized)
 {
-    global $dbh, $authorized;
+    global $dbh;
     
     $ban_input = array();
     
@@ -635,14 +581,7 @@ function ban_hammer($dataforce)
             }
             
             $current_num = $item[1];
-            $ban_input[$i] = array(
-                    'num' => $item[1],
-                    'days' => 0,
-                    'hours' => 0,
-                    'message' => '',
-                    'reason' => '',
-                    'name' => '',
-                    'host' => '' );
+            $ban_input[$i] = array('num' => $item[1], 'days' => 0, 'hours' => 0, 'message' => '', 'reason' => '', 'name' => '', 'host' => '');
         }
         
         if ($item[0] === 'timedays' . $current_num)

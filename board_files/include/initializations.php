@@ -29,27 +29,15 @@ require_once INCLUDE_PATH . 'file-handling.php';
 setup_check();
 generate_auth_file();
 
-require_once FILES_PATH . '/auth_data.nel.php';
-
+include_once FILES_PATH . '/auth_data.nel.php';
 
 //
 // Initialize a bunch of stuff here
 //
 
 $update_link_cache = FALSE;
-$template_loaded = array(
-        'admin_panel.tpl' => FALSE,
-        'ban_page.tpl' => FALSE,
-        'footer.tpl' => FALSE,
-        'header.tpl' => FALSE,
-        'manage_bans_panel.tpl' => FALSE,
-        'manage_login.tpl' => FALSE,
-        'manage_options.tpl' => FALSE,
-        'manage_thread_panel.tpl' => FALSE,
-        'op_post.tpl' => FALSE,
-        'posting_form.tpl' => FALSE,
-        'response_post.tpl' => FALSE,
-        'staff_panel.tpl' => FALSE );
+$template_loaded = array('admin_panel.tpl' => FALSE, 'ban_page.tpl' => FALSE, 'footer.tpl' => FALSE, 'header.tpl' => FALSE, 'manage_bans_panel.tpl' => FALSE, 'manage_login.tpl' => FALSE, 
+                        'manage_options.tpl' => FALSE, 'manage_thread_panel.tpl' => FALSE, 'op_post.tpl' => FALSE, 'posting_form.tpl' => FALSE, 'response_post.tpl' => FALSE, 'staff_panel.tpl' => FALSE);
 
 $rendervar = array();
 $post_files = array();
@@ -94,11 +82,7 @@ $start_html = 0;
 $end_html = 0;
 $total_html = 0;
 
-$fgsfds = array(
-        'noko' => FALSE,
-        'noko_topic' => 0,
-        'sage' => FALSE,
-        'sticky' => FALSE );
+$fgsfds = array('noko' => FALSE, 'noko_topic' => 0, 'sage' => FALSE, 'sticky' => FALSE);
 
 $link_resno = 0;
 
@@ -119,7 +103,7 @@ $dataforce['max_pages'] = BS_PAGE_LIMIT;
 require_once INCLUDE_PATH . 'language-english.php'; // This relies on some of the cached parameters
 $dataforce['sp_field1'] = (isset($_POST[LANG_TEXT_SPAMBOT_FIELD1])) ? $_POST[LANG_TEXT_SPAMBOT_FIELD1] : NULL;
 $dataforce['sp_field2'] = (isset($_POST[LANG_TEXT_SPAMBOT_FIELD2])) ? $_POST[LANG_TEXT_SPAMBOT_FIELD2] : NULL;
-                                                    
+
 // Cached references for quote links
 if (!file_exists(CACHE_PATH . 'post_link_references.nelcache'))
 {

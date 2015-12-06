@@ -4,9 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function thread_generator($dataforce)
+function thread_generator($dataforce, $authorized)
 {
-    global $rendervar, $dbh, $authorized;
+    global $rendervar, $dbh;
     
     $rendervar['insert_hr'] = FALSE;
     $rendervar['dotdot'] = '';

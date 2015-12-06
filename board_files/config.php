@@ -17,28 +17,28 @@ define('MYSQL_DB', 'database'); // Name of database used by imageboard
 define('MYSQL_HOST', 'localhost'); // SQL server address
 define('MYSQL_USER', 'username'); // SQL user
 define('MYSQL_PASS', 'password'); // SQL user's password
-                           
+                                  
 // Set this if you plan to use SQLite
 define('SQLITE_DB_NAME', 'nelliel.sqlite'); // Filename of SQLite database. Can be an absolute path if you want the database file somewhere else on the server
-                                             
+                                            
 // Be certain TABLEPREFIX and CONF_BOARD_DIR are unique for each board you set up!
 define('TABLEPREFIX', 'nelliel'); // Prefix used for tables in the database
 define('CONF_BOARD_DIR', 'board'); // Name of the directory the imageboard is installed. Used for cookies and other things.
 define('HOME', '../'); // Site home directory (up one level by default). Can be a web-accessible directory or a URL
-                        
+                       
 // If no auth file is found and these settings are not blank, it will use DEFAULTADMIN and DEFAULTADMIN_PASS to create a default admin.
-// Once able to login you can then set up other staff and even delete the default user if desired.
-// It is strongly recommended to set these two variables back to '' once you have an admin set up.
+                       // Once able to login you can then set up other staff and even delete the default user if desired.
+                       // Once the default admin account is created, make sure to set both of these back to ''
 define('DEFAULTADMIN', ''); // Sets a default admin with all permissions
 define('DEFAULTADMIN_PASS', ''); // Password for default admin
-                                  
+                                 
 // Salt used for passwords and secure tripcodes. Include numbers, letters and funny symbols for best results.
-// Change this setting ONCE when you begin your board. Changing it again will break all the post passwords and alter secure tripcodes.
+                                 // Change this setting ONCE when you begin your board. Changing it again will break all the post passwords and alter secure tripcodes.
 define('HASH_SALT', 'sodiumz');
 
-/* * * * * * * * * * */
+/* * * * * * */
 // The settings below this point can be changed if you really want but it's probably just as well to leave them alone.
-/* * * * * * * * * * */
+/* * * * * * */
 
 define('SRC_DIR', 'src/'); // Image directory
 define('THUMB_DIR', 'thumb/'); // Thumbnail directory
@@ -55,10 +55,10 @@ define('ARCHIVETABLE', TABLEPREFIX . '_archive'); // Stores archived threads
 define('ARCHIVEFILETABLE', TABLEPREFIX . '_archive_file'); // Stores archived file data
 define('BANTABLE', TABLEPREFIX . '_ban'); // Table containing ban info
 
-/* * * * * * * * * * */
+/* * * * * * */
 // Leave everything below this point alone unless you have a good reason to mess with it.
 // It's just internal stuff used in the code.
-/* * * * * * * * * * */
+/* * * * * * */
 
 define('BASE_PATH', realpath('./')); // Base path for script
 define('SQLITE_DB_LOCATION', BASE_PATH . '/' . BOARD_FILES); // Base SQLite DB location

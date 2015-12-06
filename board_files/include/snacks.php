@@ -14,7 +14,7 @@ function ban_spambots($dataforce)
         $dataforce['banreason'] = "Spambot. Nobody wants any. GTFO";
         $dataforce['bandays'] = 9001;
         $dataforce['banip'] = $_SERVER["REMOTE_ADDR"];
-        ban_hammer($dataforce);
+        ban_hammer($dataforce, $authorized);
     }
 }
 
@@ -23,9 +23,7 @@ function ban_spambots($dataforce)
 //
 function banned_md5($md5, $file)
 {
-    $cancer = array(
-            '',
-            '' );
+    $cancer = array('', '');
     $total_cancer = count($cancer);
     
     for ($i = 0; $i < $total_cancer; ++ $i)
@@ -42,9 +40,7 @@ function banned_md5($md5, $file)
 //
 function banned_name($name, $file)
 {
-    $cancer = array(
-            '',
-            '' );
+    $cancer = array('', '');
     $total_cancer = count($cancer);
     
     for ($i = 0; $i < $total_cancer; ++ $i)
@@ -61,9 +57,7 @@ function banned_name($name, $file)
 //
 function banned_text($text, $file)
 {
-    $cancer = array(
-            'samefag',
-            '' );
+    $cancer = array('samefag', '');
     $total_cancer = count($cancer);
     
     for ($i = 0; $i < $total_cancer; ++ $i)
@@ -85,12 +79,8 @@ function banned_text($text, $file)
 //
 function word_filters($text)
 {
-    $cancer = array(
-            '',
-            '' );
-    $chemo = array(
-            '',
-            '' );
+    $cancer = array('', '');
+    $chemo = array('', '');
     $total_cancer = count($cancer);
     
     for ($i = 0; $i < $total_cancer; ++ $i)

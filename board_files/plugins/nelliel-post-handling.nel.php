@@ -1,11 +1,9 @@
 <?php
-
 $nelliel_post_handling = new nelliel_post_handling();
-
 class nelliel_post_handling
 {
     static $plugin_id;
-    
+
     public function __construct()
     {
         global $plugins;
@@ -25,18 +23,18 @@ class nelliel_post_handling
             $salt = strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
             $poster_info['tripcode'] = substr(crypt($cap, $salt), -10);
         }
-
+        
         return $poster_info;
     }
-    
+
     public function nel_secure_tripcode($poster_info, $name_pieces, $modpostc)
     {
         if ($name_pieces[5] !== '' || $modpostc > 0)
         {
-            $trip = salt_hash($name_pieces[5]);
+            $trip = nel_hash($name_pieces[5]);
             $poster_info['secure_tripcode'] = substr(crypt($trip, '42'), -12);
         }
-    
+        
         return $poster_info;
     }
 }
