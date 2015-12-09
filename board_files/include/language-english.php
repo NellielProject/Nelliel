@@ -83,24 +83,24 @@ define('LANG_ERROR_11', 'Post is too long. Try looking up the word concise.'); /
 define('LANG_ERROR_12', 'Duplicate file detected: '); // Error 12: Duplicate file
 define('LANG_ERROR_13', 'Id of thread or post was non-numeric. How did you even do that?'); // Error 13: Non-numeric id
 define('LANG_ERROR_14', 'Thread is currently inaccessible or gone.'); // Error 14: Thread inaccessible or gone
-define('LANG_ERROR_15', 'That file is banned.'); // Error 20: Banned file
-define('LANG_ERROR_16', 'That name is banned.'); // Error 21: Banned name
-define('LANG_ERROR_17', 'Cancer detected in post: '); // Error 22: Banned text
-define('LANG_ERROR_18', 'Incorrect file type detected (does not match extension). Possible Hax.'); // Error 23: filetype/extension mismatch
-define('LANG_ERROR_19', 'Spoon is too big.'); // Error 24: File too big
-define('LANG_ERROR_20', 'Password is wrong or you are not allowed to delete that.'); // Error 25: Can't delete file/post/thread
-define('LANG_ERROR_100', 'Username or password is incorrect.'); // Error 30: Wrong password
-define('LANG_ERROR_101', 'You are not allowed to modify or remove bans.'); // Error 31: Not allowed to edit bans
-define('LANG_ERROR_102', 'You are not allowed to edit board settings.'); // Error 32: Not allowed to edit settings
-define('LANG_ERROR_103', 'You are not allowed to edit threads'); // Error 33: Not allowed to modify threads
-define('LANG_ERROR_104', 'You are not allowed to ban users.'); // Error 34: Not allowed to ban
-define('LANG_ERROR_105', 'Session expired. Go get a new one.'); // Error 35: Session expired
-define('LANG_ERROR_106', 'Password for file deletion is incorrect.'); // Error 36: Bad password for file deletion
-define('LANG_ERROR_107', 'Not authorized. GTFO'); // Error 40: Not authorized
-define('LANG_ERROR_150', 'Staff member does not exist.'); // Error 60: Invalid staff name
-define('LANG_ERROR_151', 'Invalid staff type.'); // Error 61: Invalid staff type
-define('LANG_ERROR_152', 'No staff information available. Also could not create default authorization files.'); // Error 62: No staff info
-define('LANG_ERROR_153', 'Invalid option.'); // Error 63: Invalid option
+define('LANG_ERROR_15', 'That file is banned.'); // Error 15: Banned file
+define('LANG_ERROR_16', 'That name is banned.'); // Error 16: Banned name
+define('LANG_ERROR_17', 'Cancer detected in post: '); // Error 17: Banned text
+define('LANG_ERROR_18', 'Incorrect file type detected (does not match extension). Possible Hax.'); // Error 18: filetype/extension mismatch
+define('LANG_ERROR_19', 'Spoon is too big.'); // Error 19: File too big
+define('LANG_ERROR_20', 'Password is wrong or you are not allowed to delete that.'); // Error 20: Can't delete file/post/thread
+define('LANG_ERROR_100', 'Username or password is incorrect.'); // Error 100: Wrong password
+define('LANG_ERROR_101', 'You are not allowed to modify or remove bans.'); // Error 101: Not allowed to edit bans
+define('LANG_ERROR_102', 'You are not allowed to edit board settings.'); // Error 102: Not allowed to edit settings
+define('LANG_ERROR_103', 'You are not allowed to edit threads'); // Error 103: Not allowed to modify threads
+define('LANG_ERROR_104', 'You are not allowed to ban users.'); // Error 104: Not allowed to ban
+define('LANG_ERROR_105', 'Session expired. Go get a new one.'); // Error 105: Session expired
+define('LANG_ERROR_106', 'Password for file deletion is incorrect.'); // Error 106: Bad password for file deletion
+define('LANG_ERROR_107', 'Not authorized. GTFO'); // Error 107: Not authorized
+define('LANG_ERROR_150', 'Staff member does not exist.'); // Error 150: Invalid staff name
+define('LANG_ERROR_151', 'Invalid staff type.'); // Error 151: Invalid staff type
+define('LANG_ERROR_152', 'No staff information available. Also could not create default authorization files.'); // Error 152: No staff info
+define('LANG_ERROR_153', 'Invalid option.'); // Error 153: Invalid option
                                              
 // Management
 define('LANG_MANAGE_MODE', 'Management Mode'); // Management

@@ -36,9 +36,9 @@ define('DEFAULTADMIN_PASS', ''); // Password for default admin
                                  // Change this setting ONCE when you begin your board. Changing it again will break all the post passwords and alter secure tripcodes.
 define('HASH_SALT', 'sodiumz');
 
-/* * * * * * */
+/* * * */
 // The settings below this point can be changed if you really want but it's probably just as well to leave them alone.
-/* * * * * * */
+/* * * */
 
 define('SRC_DIR', 'src/'); // Image directory
 define('THUMB_DIR', 'thumb/'); // Thumbnail directory
@@ -55,10 +55,10 @@ define('ARCHIVETABLE', TABLEPREFIX . '_archive'); // Stores archived threads
 define('ARCHIVEFILETABLE', TABLEPREFIX . '_archive_file'); // Stores archived file data
 define('BANTABLE', TABLEPREFIX . '_ban'); // Table containing ban info
 
-/* * * * * * */
+/* * * */
 // Leave everything below this point alone unless you have a good reason to mess with it.
 // It's just internal stuff used in the code.
-/* * * * * * */
+/* * * */
 
 define('BASE_PATH', realpath('./')); // Base path for script
 define('SQLITE_DB_LOCATION', BASE_PATH . '/' . BOARD_FILES); // Base SQLite DB location

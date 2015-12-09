@@ -26,7 +26,7 @@ if (ini_get('date.timezone') === '')
 ignore_user_abort(TRUE);
 require_once INCLUDE_PATH . 'setup.php';
 require_once INCLUDE_PATH . 'file-handling.php';
-setup_check();
+setup_check($dbh);
 generate_auth_file();
 
 include_once FILES_PATH . '/auth_data.nel.php';
@@ -35,9 +35,10 @@ include_once FILES_PATH . '/auth_data.nel.php';
 // Initialize a bunch of stuff here
 //
 
-$update_link_cache = FALSE;
-$template_loaded = array('admin_panel.tpl' => FALSE, 'ban_page.tpl' => FALSE, 'footer.tpl' => FALSE, 'header.tpl' => FALSE, 'manage_bans_panel.tpl' => FALSE, 'manage_login.tpl' => FALSE, 
-                        'manage_options.tpl' => FALSE, 'manage_thread_panel.tpl' => FALSE, 'op_post.tpl' => FALSE, 'posting_form.tpl' => FALSE, 'response_post.tpl' => FALSE, 'staff_panel.tpl' => FALSE);
+$template_loaded = array('admin_panel.tpl' => FALSE, 'ban_page.tpl' => FALSE, 'footer.tpl' => FALSE, 'header.tpl' => FALSE, 
+                        'manage_bans_panel.tpl' => FALSE, 'manage_login.tpl' => FALSE, 'manage_options.tpl' => FALSE, 
+                        'manage_thread_panel.tpl' => FALSE, 'op_post.tpl' => FALSE, 'posting_form.tpl' => FALSE, 
+                        'response_post.tpl' => FALSE, 'staff_panel.tpl' => FALSE);
 
 $rendervar = array();
 $post_files = array();
@@ -77,6 +78,10 @@ $dataforce['expand'] = (isset($_GET['expand'])) ? TRUE : FALSE;
 $dataforce['collapse'] = (isset($_GET['collapse'])) ? TRUE : FALSE;
 $dataforce['response_id'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? (int) $_GET['post'] : NULL;
 $dataforce['archive_update'] = FALSE;
+$dataforce['post_links'] = '';
+$dataforce['rules'] = '';
+
+$template_info = array();
 
 $start_html = 0;
 $end_html = 0;
@@ -94,7 +99,7 @@ $enabled_types = array();
 // Cached settings
 if (!file_exists(CACHE_PATH . 'parameters.nelcache'))
 {
-    cache_settings();
+    cache_settings($dbh);
 }
 
 require_once CACHE_PATH . 'parameters.nelcache';
@@ -105,28 +110,15 @@ $dataforce['sp_field1'] = (isset($_POST[LANG_TEXT_SPAMBOT_FIELD1])) ? $_POST[LAN
 $dataforce['sp_field2'] = (isset($_POST[LANG_TEXT_SPAMBOT_FIELD2])) ? $_POST[LANG_TEXT_SPAMBOT_FIELD2] : NULL;
 
 // Cached references for quote links
-if (!file_exists(CACHE_PATH . 'post_link_references.nelcache'))
+if (!file_exists(CACHE_PATH . 'multi-cache.nelcache'))
 {
-    cache_post_links();
+    write_multi_cache($dataforce, $template_info);
 }
 
-require_once CACHE_PATH . 'post_link_references.nelcache';
-
-// Cached filetypes
-
-if (!file_exists(CACHE_PATH . 'rules.nelcache'))
-{
-    cache_rules();
-}
-
-require_once CACHE_PATH . 'rules.nelcache';
-
-// Cached template info
-if (!file_exists(CACHE_PATH . 'template_info.nelcache'))
-{
-    cache_template_info();
-}
-
-require_once CACHE_PATH . 'template_info.nelcache';
+require_once CACHE_PATH . 'multi-cache.nelcache';
+$link_updates = $dataforce['post_links'];
+/*
+ * // Cached references for quote links if (!file_exists(CACHE_PATH . 'post_link_references.nelcache')) { cache_post_links($dataforce['post_links']); } require_once CACHE_PATH . 'post_link_references.nelcache'; // Cached filetypes if (!file_exists(CACHE_PATH . 'rules.nelcache')) { cache_rules($dbh); } require_once CACHE_PATH . 'rules.nelcache'; // Cached template info if (!file_exists(CACHE_PATH . 'template_info.nelcache')) { cache_template_info(); } require_once CACHE_PATH . 'template_info.nelcache';
+ */
 
 ?>

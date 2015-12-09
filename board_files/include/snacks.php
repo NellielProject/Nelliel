@@ -7,15 +7,16 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Auto-ban on Spambot detection
 //
-function ban_spambots($dataforce)
+function ban_spambots($dataforce, $dbh)
 {
     if (BS1_USE_SPAMBOT_TRAP && (!is_null($dataforce['sp_field1']) || !is_null($dataforce['sp_field2'])))
     {
         $dataforce['banreason'] = "Spambot. Nobody wants any. GTFO";
         $dataforce['bandays'] = 9001;
         $dataforce['banip'] = $_SERVER["REMOTE_ADDR"];
-        ban_hammer($dataforce, $authorized);
+        ban_hammer($dataforce, $authorized, $dbh);
     }
+
 }
 
 //
@@ -33,6 +34,7 @@ function banned_md5($md5, $file)
             derp(15, LANG_ERROR_15, array('SNACKS', $file));
         }
     }
+
 }
 
 //
@@ -50,6 +52,7 @@ function banned_name($name, $file)
             derp(16, LANG_ERROR_16, array('SNACKS', $file));
         }
     }
+
 }
 
 //
@@ -72,6 +75,7 @@ function banned_text($text, $file)
             }
         }
     }
+
 }
 
 //
@@ -88,14 +92,15 @@ function word_filters($text)
         $text = preg_replace('#' . $cancer[$i] . '#', $chemo[$i], $text);
     }
     return $text;
+
 }
 
 //
 // Apply b&hammer
 //
-function applyBan($dataforce, $authorized)
+function applyBan($dataforce, $authorized, $dbh)
 {
-    global $dbh, $rendervar;
+    global $rendervar;
     
     $base_host = $_SERVER["REMOTE_ADDR"];
     
@@ -157,4 +162,5 @@ function applyBan($dataforce, $authorized)
         echo $dat;
         die();
     }
+
 }

@@ -8,10 +8,8 @@ if (!defined('NELLIEL_VERSION'))
 // First run - checks for database, directories
 // If anything does not exist yet, create it
 //
-function table_exists($table)
+function table_exists($table, $dbh)
 {
-    global $dbh;
-    
     if (SQLTYPE === 'SQLITE')
     {
         $result = $dbh->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $table . "'");
@@ -32,14 +30,14 @@ function table_exists($table)
     {
         return FALSE;
     }
+
 }
 
-function setup_check()
+function setup_check($dbh)
 {
-    global $dbh;
     $stuff_done = FALSE;
     
-    if (!table_exists(POSTTABLE))
+    if (!table_exists(POSTTABLE, $dbh))
     {
         echo 'Creating table ' . POSTTABLE . '...<br>';
         $result = $dbh->query("create table if not exists " . POSTTABLE . " (
@@ -85,7 +83,7 @@ function setup_check()
         }
     }
     
-    if (!table_exists(FILETABLE))
+    if (!table_exists(FILETABLE, $dbh))
     {
         echo 'Creating table ' . FILETABLE . '...<br>';
         $result = $dbh->query("create table if not exists " . FILETABLE . " (
@@ -131,7 +129,7 @@ function setup_check()
         }
     }
     
-    if (!table_exists(ARCHIVETABLE))
+    if (!table_exists(ARCHIVETABLE, $dbh))
     {
         echo 'Creating table ' . ARCHIVETABLE . '...<br>';
         $result = $dbh->query("create table if not exists " . ARCHIVETABLE . " (
@@ -178,7 +176,7 @@ function setup_check()
         }
     }
     
-    if (!table_exists(ARCHIVEFILETABLE))
+    if (!table_exists(ARCHIVEFILETABLE, $dbh))
     {
         echo 'Creating table ' . ARCHIVEFILETABLE . '...<br>';
         $result = $dbh->query("create table if not exists " . ARCHIVEFILETABLE . " (
@@ -223,7 +221,7 @@ function setup_check()
         }
     }
     
-    if (!table_exists(CONFIGTABLE))
+    if (!table_exists(CONFIGTABLE, $dbh))
     {
         echo 'Creating table ' . CONFIGTABLE . '...<br>';
         $result = $dbh->query("create table if not exists " . CONFIGTABLE . " (
@@ -357,7 +355,7 @@ function setup_check()
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('filetype_allow_r', 'enable_dmg', '')");
     }
     
-    if (!table_exists(BANTABLE))
+    if (!table_exists(BANTABLE, $dbh))
     {
         echo 'Creating table ' . BANTABLE . '...<br>';
         $result = $dbh->query("create table if not exists " . BANTABLE . " (
@@ -514,6 +512,7 @@ function setup_check()
     {
         define('STUFF_DONE', FALSE);
     }
+
 }
 
 function generate_auth_file()
@@ -558,5 +557,6 @@ $authorized = array(
             echo 'ERROR: Could not create auth file due to invalid or missing admin info. The board will probably work but you will have no administrative abilities. Check your config.php then retry installation.';
         }
     }
+
 }
 ?>

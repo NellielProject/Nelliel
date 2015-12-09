@@ -30,6 +30,7 @@ class plugin_handler
         $this->sort_hooks();
         self::$loaded = TRUE;
         return TRUE;
+    
     }
 
     private function sort_hooks()
@@ -42,6 +43,7 @@ class plugin_handler
         }
         
         self::$hooks = $hooks;
+    
     }
 
     private function sort_by_priority($a, $b)
@@ -52,6 +54,7 @@ class plugin_handler
         }
         
         return ($a['priority'] < $b['priority']) ? -1 : 1;
+    
     }
     
     // Returns a plugin id hash or FALSE if plugin already registered
@@ -69,12 +72,14 @@ class plugin_handler
         {
             return FALSE;
         }
+    
     }
     
     // Returns plugin id hash
     public function plugin_id_hash($a, $b, $c)
     {
         return md5($a . $b . $c);
+    
     }
     
     // Register hook functions here
@@ -92,8 +97,10 @@ class plugin_handler
             $next_index = key($hooks[$hook_name]) + 1;
         }
         
-        $hooks[$hook_name][] = array('function' => $function_name, 'priority' => $priority, 'index' => $next_index, 'plugin' => $plugin_id);
+        $hooks[$hook_name][] = array('function' => $function_name, 'priority' => $priority, 'index' => $next_index, 
+                                    'plugin' => $plugin_id);
         self::$hooks = $hooks;
+    
     }
     
     // Unregister hookk functions here. Returns TRUE is successful, FALSE if not
@@ -123,6 +130,7 @@ class plugin_handler
         self::$hooks = $hooks;
         $this->sort_hooks();
         return TRUE;
+    
     }
 
     public function plugin_hook($hook_name, $return_input, $input)
@@ -147,6 +155,7 @@ class plugin_handler
         }
         
         return $return;
+    
     }
 }
 ?>

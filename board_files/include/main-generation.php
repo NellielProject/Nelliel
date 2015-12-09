@@ -7,9 +7,9 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Genrerates the main thread listings
 //
-function main_thread_generator($dataforce, $authorized)
+function main_thread_generator(&$dataforce, $authorized, $dbh)
 {
-    global $rendervar, $dbh;
+    global $rendervar;
     $rendervar['insert_hr'] = FALSE;
     $page_output = '';
     $rendervar['dotdot'] = '';
@@ -97,7 +97,7 @@ function main_thread_generator($dataforce, $authorized)
                 $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? BS_THREADS_PER_PAGE : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
                 $rendervar['insert_hr'] = TRUE;
-                $page_output .= renderPost($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline);
+                $page_output .= render_post($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline, $dbh);
                 $rendervar['insert_hr'] = FALSE;
             }
             
@@ -120,17 +120,17 @@ function main_thread_generator($dataforce, $authorized)
                     if ($gen_data['post_count'] > BS_ABBREVIATE_THREAD && $gen_data['post_counter'] === 1)
                     {
                         $dataforce['omitted_done'] = FALSE;
-                        $page_output .= renderPost($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline);
+                        $page_output .= render_post($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline, $dbh);
                         $dataforce['omitted_done'] = TRUE;
                     }
                     else
                     {
-                        $page_output .= renderPost($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline);
+                        $page_output .= render_post($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline, $dbh);
                     }
                 }
                 else
                 {
-                    $page_output .= renderPost($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline);
+                    $page_output .= render_post($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline, $dbh);
                 }
             }
             else
@@ -203,6 +203,7 @@ function main_thread_generator($dataforce, $authorized)
         
         ++ $page;
     }
+
 }
 
 ?>

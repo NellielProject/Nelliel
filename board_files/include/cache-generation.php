@@ -7,10 +7,8 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Cache the posting rules
 //
-function cache_rules()
+function cache_rules($dbh)
 {
-    global $dbh;
-    
     $gmode = '';
     $amode = '';
     $vmode = '';
@@ -133,21 +131,34 @@ function cache_rules()
 							<li>' . LANG_FILES_OTHER . strtoupper($omode) . '</li>';
     }
     
-    $output = '<?php
-	define(\'RULES_LIST\', \'' . $rule_list . '\');
-?>';
-    
-    write_file(CACHE_PATH . 'rules.nelcache', $output, 0644);
+    /*
+     * $output = '<?php define(\'RULES_LIST\', \'' . $rule_list . '\'); ?>'; write_file(CACHE_PATH . 'rules.nelcache', $output, 0644);
+     */
     return $rule_list;
+
 }
 
 //
+// Write out rules, post links and template info cache
+//
+function write_multi_cache($dataforce)
+{
+    global $template_info;
+    
+    $cache = '<?php
+$dataforce[\'post_links\'] = \'' . $dataforce['post_links'] . '\';
+$dataforce[\'rules_list\'] = \'' . $dataforce['rules_list'] . '\';
+$template_info = ' . var_export($template_info, TRUE) . ';
+?>';
+    
+    write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, 0644);
+
+}
+//
 // Cache the board settings
 //
-function cache_settings()
+function cache_settings($dbh)
 {
-    global $dbh;
-    
     // Get true/false (1-bit) board settings
     $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIGTABLE . ' WHERE config_type="board_setting_1bit"');
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
@@ -242,34 +253,12 @@ function cache_settings()
     write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, 0644);
     
     unset($rows);
+
 }
 
-//
-// Cache the post links
-// This helps immensely in terms of speed
-//
-function cache_post_links()
-{
-    global $post_link_reference;
-    $post_link_reference_php = '<?php
-	$post_link_reference = \'' . $post_link_reference . '\';
-?>';
-    
-    write_file(CACHE_PATH . 'post_link_references.nelcache', $post_link_reference_php, 0644);
-}
-
-//
-// Cache the template files
-//
-function cache_template_info()
-{
-    global $template_info;
-    $info = '<?php
-	$template_info = ' . var_export($template_info, TRUE) . ';
-?>';
-    
-    write_file(CACHE_PATH . 'template_info.nelcache', $info, 0644);
-}
+/*
+ * // // Cache the post links // This helps immensely in terms of speed // function cache_post_links($post_link_reference) { $post_link_reference_php = '<?php $post_link_reference = \'' . $post_link_reference . '\'; ?>'; //write_file(CACHE_PATH . 'post_link_references.nelcache', $post_link_reference_php, 0644); return $post_link_reference_php; } // // Cache the template files // function cache_template_info() { global $template_info; $info = '<?php $template_info = ' . var_export($template_info, TRUE) . '; ?>'; write_file(CACHE_PATH . 'template_info.nelcache', $info, 0644); }
+ */
 
 //
 // Parse the templates into code form
@@ -287,40 +276,17 @@ function parse_template($template, $regen)
         if (!isset($template_info[$template]) || $md5 !== $template_info[$template] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
         {
             $template_info[$template] = $md5;
-            $durr = file_get_contents(TEMPLATE_PATH . $template);
-            $lol = $durr;
-            $has_php = strstr($durr, '{{');
-            $lol = preg_replace('#(?<!\[|\')\'(?!\]|\')#', '\\\'', $lol);
-            
-            if ($has_php !== FALSE)
-            {
-                $begins_php = preg_match('#^\s*{{#', $lol);
-                
-                if ($begins_php === 1)
-                {
-                    $lol = trim($lol);
-                    $begin = '<?php function render_' . $template_short . '() { global $rendervar,$total_html; $temp = \'';
-                }
-                else
-                {
-                    $begin = '<?php function render_' . $template_short . '() { global $rendervar,$total_html; $temp = \'\'; $temp .= \'';
-                }
-                
-                $end = '\'; return $temp; } ?>';
-                $lol = preg_replace('#[\r\n\t]*{{[ \t]*(if|elseif|foreach|for|while)[ \t]*([^{]*)}}#', '\'; $1( $2 ): $temp .= \'', $lol);
-                $lol = preg_replace('#[\r\n\t]*{{[ \t]*else[ \t]*}}[ \t]*#', '\'; else: $temp .= \'', $lol);
-                $lol = preg_replace('#[\r\n\t]*{{[ \t]*(endif|endforeach|endfor|endwhile)[ \t]*}}#', '\'; $1; $temp .= \'', $lol);
-            }
-            else
-            {
-                $begin = '<?php function render_' . $template_short . '() { global $rendervar,$total_html; $temp = \'\'; $temp .= \'';
-                $end = '\'; return $temp; } ?>';
-            }
-            
-            $lol = preg_replace('#{([^({)|(}]*)}#', "'.$1.'", $lol);
-            $durr_out = $begin . $lol . $end;
-            write_file(CACHE_PATH . $template_short . '.nelcache', $durr_out, 0644);
-            cache_template_info();
+            $lol = file_get_contents(TEMPLATE_PATH . $template);
+            $lol = preg_replace('#(?<!\[|\')\'(?!\]|\')#', '\\\'', $lol); // Keep escaped characters intact
+            $lol = trim($lol);
+            $begin = '<?php function render_' . $template_short . '() { global $rendervar, $total_html; $temp = \''; // Start of the cached template
+            $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*(if|elseif|foreach|for|while)[ \r\n\t]*([^{]*)}}#', '\'; $1( $2 ): $temp .= \'', $lol); // Opening control statements
+            $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*else[ \r\n\t]*}}[ \t]*#', '\'; else: $temp .= \'', $lol); // Else
+            $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*(endif|endforeach|endfor|endwhile)[ \r\n\t]*}}#', '\'; $1; $temp .= \'', $lol); // Closing control statements
+            $lol = preg_replace('#{([^({)|(}]*)}#', "'.$1.'", $lol); // Variables and constants
+            $end = '\'; return $temp; } ?>'; // End of the caches template
+            $lol_out = $begin . $lol . $end;
+            write_file(CACHE_PATH . $template_short . '.nelcache', $lol_out, 0644);
         }
         
         if (!$regen)
@@ -335,6 +301,7 @@ function parse_template($template, $regen)
         $dat_temp = call_user_func('render_' . $template_short);
         return $dat_temp;
     }
+
 }
 
 //
@@ -352,6 +319,6 @@ function regen_template_cache()
         parse_template($template, TRUE);
     }
     
-    cache_template_info();
+    // cache_template_info();
 }
 ?>

@@ -63,6 +63,7 @@ function generate_header($dataforce, $render_mode, $treeline)
     $rendervar['page_ref1'] = (!empty($_SESSION) && !$_SESSION['ignore_login']) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT;
     $dat_temp = parse_template('header.tpl', FALSE);
     return $dat_temp;
+
 }
 
 //
@@ -114,12 +115,13 @@ function form(&$dat, $dataforce, $authorized)
     $rendervar['max_files'] = 3;
     $dat_temp = parse_template('posting_form.tpl', FALSE);
     return $dat_temp;
+
 }
 
 //
 // Render posts
 //
-function renderPost($dataforce, $authorized, $response, $partial, $gen_data, $treeline)
+function render_post($dataforce, $authorized, $response, $partial, $gen_data, $treeline, $dbh)
 {
     global $rendervar, $link_resno;
     
@@ -131,12 +133,21 @@ function renderPost($dataforce, $authorized, $response, $partial, $gen_data, $tr
     
     $rendervar_first = $rendervar;
     $rendervar = array_merge($rendervar, (array) $treeline[$gen_data['post_counter']]);
-    $link_resno = $dataforce['response_id'];
+    
+    if ($partial)
+    {
+        $link_resno = 0;
+    }
+    else
+    {
+        $link_resno = $dataforce['response_id'];
+    }
+    
     $rendervar['response_id'] = $dataforce['response_id'];
     $rendervar['tripcode'] = (isset($rendervar['tripcode']) && $rendervar['tripcode'] !== '') ? BS_TRIPKEY_MARKER . $rendervar['tripcode'] : '';
     $rendervar['secure_tripcode'] = (isset($rendervar['secure_tripcode']) && $rendervar['secure_tripcode'] !== '') ? BS_TRIPKEY_MARKER . BS_TRIPKEY_MARKER . $rendervar['secure_tripcode'] : '';
     $rendervar['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $rendervar['comment']);
-    $rendervar['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'link_quote', $rendervar['comment']);
+    $rendervar['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'parse_links', $rendervar['comment']);
     $rendervar['comment-part'] = str_replace('>><a href="../"', '>><a href="', $rendervar['comment']);
     $rendervar['sticky'] = (bool) $rendervar['sticky'];
     $temp_dot = ($partial) ? '' : $rendervar['dotdot'];
@@ -261,6 +272,7 @@ function renderPost($dataforce, $authorized, $response, $partial, $gen_data, $tr
     $dat_temp = ($response ? parse_template('response_post.tpl', FALSE) : parse_template('op_post.tpl', FALSE));
     $rendervar = $rendervar_first;
     return $dat_temp;
+
 }
 
 //
@@ -297,6 +309,7 @@ function footer($authorized, $link, $styles, $del, $response)
     lol_html_timer(1);
     $dat_temp = parse_template('footer.tpl', FALSE);
     return $dat_temp;
+
 }
 
 //
@@ -392,6 +405,7 @@ function generate_thread_panel($dataforce, $thread_data, $mode)
     
     $dat_temp = parse_template('manage_thread_panel.tpl', FALSE);
     return $dat_temp;
+
 }
 
 //
@@ -461,5 +475,6 @@ function generate_ban_panel($dataforce, $baninfo, $mode)
     
     $dat_temp = parse_template('manage_bans_panel.tpl', FALSE);
     return $dat_temp;
+
 }
 ?>

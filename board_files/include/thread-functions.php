@@ -4,10 +4,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function thread_updates($dataforce, $authorized)
+function thread_updates($dataforce, $authorized, $dbh)
 {
-    global $post_link_reference, $dbh;
-    
     $threadlist = array();
     $postlist = array();
     $filelist = array();
@@ -21,27 +19,27 @@ function thread_updates($dataforce, $authorized)
         switch ($sub[0])
         {
             case 'deletefile':
-                delete_content($dataforce, $authorized, $sub, 'FILE');
+                delete_content($dataforce, $authorized, $sub, 'FILE', $dbh);
                 $push = $sub[1];
                 break;
             
             case 'deletethread':
-                delete_content($dataforce, $authorized, $sub, 'THREAD');
+                delete_content($dataforce, $authorized, $sub, 'THREAD', $dbh);
                 $push = $sub[1];
                 break;
             
             case 'deletepost':
-                delete_content($dataforce, $authorized, $sub, 'POST');
+                delete_content($dataforce, $authorized, $sub, 'POST', $dbh);
                 $push = $sub[2];
                 break;
             
             case 'sticky':
-                make_sticky($dataforce, $sub);
+                make_sticky($dataforce, $sub, $dbh);
                 $push = $sub[1];
                 break;
             
             case 'unsticky':
-                unsticky($dataforce, $sub);
+                unsticky($dataforce, $sub, $dbh);
                 $push = $sub[1];
                 break;
         }
@@ -56,12 +54,11 @@ function thread_updates($dataforce, $authorized)
     }
     
     return $returned_list;
+
 }
 
-function make_sticky($dataforce, $sub)
+function make_sticky($dataforce, $sub, $dbh)
 {
-    global $dbh;
-    
     $id = $sub[1];
     $result = $dbh->query('SELECT response_to,has_file,post_time FROM ' . POSTTABLE . ' WHERE post_number=' . $id . '');
     $post_data = $result->fetch(PDO::FETCH_ASSOC);
@@ -96,9 +93,9 @@ function make_sticky($dataforce, $sub)
     $ptimes = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
     $dbh->query('UPDATE ' . POSTTABLE . ' SET post_count=' . ($pcount['post_count'] - 1) . ', last_update=' . $ptimes[0]['post_time'] . ', last_response=' . $ptimes[0]['post_number'] . ' WHERE post_number=' . $post_data['response_to'] . '');
-    preg_replace('#p' . $id . 't' . $post_data['response_to'] . '#', 'p' . $id . 't0', $post_link_reference);
+    preg_replace('#p' . $id . 't' . $post_data['response_to'] . '#', 'p' . $id . 't0', $dataforce['post_links']);
     
-    update_archive_status($dataforce);
+    update_archive_status($dataforce, $dbh);
     
     if (!empty($_SESSION))
     {
@@ -109,26 +106,26 @@ function make_sticky($dataforce, $sub)
     if (!file_exists(PAGE_PATH . $id . '/' . $id . '.html'))
     {
         $dataforce['response_id'] = $id;
-        regen($dataforce, $authorized, $dataforce['response_id'], 'thread', FALSE);
+        regen($dataforce, $authorized, $dataforce['response_id'], 'thread', FALSE, $dbh);
     }
     
     cache_post_links();
     $dataforce['archive_update'] = TRUE;
-    regen($dataforce, $authorized, NULL, 'main', FALSE);
+    regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
     
     if (!empty($_SESSION))
     {
         $_SESSION['ignore_login'] = $temp;
     }
+
 }
 
-function unsticky($dataforce, $sub)
+function unsticky($dataforce, $sub, $dbh)
 {
-    global $dbh;
     $id = $sub[1];
     $dbh->query('UPDATE ' . POSTTABLE . ' SET sticky=0 WHERE post_number=' . $id . '');
     
-    update_archive_status($dataforce);
+    update_archive_status($dataforce, $dbh);
     
     if (!empty($_SESSION))
     {
@@ -139,23 +136,22 @@ function unsticky($dataforce, $sub)
     if (!file_exists(PAGE_PATH . $id . '/' . $id . '.html'))
     {
         $dataforce['response_id'] = $id;
-        regen($dataforce, $authorized, $dataforce['response_id'], 'thread', FALSE);
+        regen($dataforce, $authorized, $dataforce['response_id'], 'thread', FALSE, $dbh);
     }
     
     cache_post_links();
     $dataforce['archive_update'] = TRUE;
-    regen($dataforce, $authorized, NULL, 'main', FALSE);
+    regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
     
     if (!empty($_SESSION))
     {
         $_SESSION['ignore_login'] = $temp;
     }
+
 }
 
-function delete_content($dataforce, $authorized, $sub, $type)
+function delete_content($dataforce, $authorized, $sub, $type, $dbh)
 {
-    global $dbh, $post_link_reference;
-    
     $id = $sub[1];
     
     if (!is_numeric($id))
@@ -219,14 +215,14 @@ function delete_content($dataforce, $authorized, $sub, $type)
             {
                 $dbh->query('DELETE FROM ' . FILETABLE . ' WHERE post_ref=' . $ref . '');
                 $dbh->query('DELETE FROM ' . POSTTABLE . ' WHERE post_number=' . $ref . '');
-                preg_replace('#p([0-9]+)t' . $ref . '#', '', $post_link_reference);
+                preg_replace('#p([0-9]+)t' . $ref . '#', '', $dataforce['post_links']);
             }
             
             eraser_gun(PAGE_PATH . $id, NULL, TRUE);
             eraser_gun(SRC_PATH . $id, NULL, TRUE);
             eraser_gun(THUMB_PATH . $id, NULL, TRUE);
             
-            update_archive_status($dataforce);
+            update_archive_status($dataforce, $dbh);
         }
         else if ($type === 'POST')
         {
@@ -259,7 +255,7 @@ function delete_content($dataforce, $authorized, $sub, $type)
                 $ptimes = $result->fetchAll(PDO::FETCH_ASSOC);
                 unset($result);
                 $dbh->query('UPDATE ' . POSTTABLE . ' SET post_count=' . ($pcount['post_count'] - 1) . ', last_update=' . $ptimes[0]['post_time'] . ', last_response=' . $ptimes[0]['post_number'] . ' WHERE post_number=' . $post_data['response_to'] . '');
-                preg_replace('#p' . $id . 't([0-9]+)#', '', $post_link_reference);
+                preg_replace('#p' . $id . 't([0-9]+)#', '', $dataforce['post_links']);
             }
         }
         else if ($type === 'FILE')
@@ -304,6 +300,7 @@ function delete_content($dataforce, $authorized, $sub, $type)
     {
         $_SESSION['ignore_login'] = $temp;
     }
+
 }
 
 ?>

@@ -12,6 +12,7 @@ function terminate_session()
     session_unset();
     session_destroy();
     setcookie("PHPSESSID", "", time() - 3600, "/");
+
 }
 
 //
@@ -32,6 +33,7 @@ function regen_session()
         terminate_session();
         derp(105, LANG_ERROR_105, array('SEC'));
     }
+
 }
 
 //
@@ -53,7 +55,8 @@ function initialize_session($dataforce, $authorized)
             else if ($dataforce['mode2'] === 'admin')
             {
                 regen_session();
-                valid($dataforce);
+                valid($dataforce, $authorized);
+                die();
             }
         }
         else if (isset($dataforce['admin_mode']))
@@ -82,11 +85,13 @@ function initialize_session($dataforce, $authorized)
             derp(107, LANG_ERROR_107, array('LOGIN'));
         }
         
-        valid($dataforce);
+        valid($dataforce, $authorized);
+        die();
     }
     else
     {
         terminate_session();
     }
+
 }
 ?>

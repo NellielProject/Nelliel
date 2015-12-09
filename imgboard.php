@@ -19,7 +19,7 @@ function nel_hash($input)
     {
         $half_salt1 = substr(HASH_SALT, 0, (strlen(HASH_SALT) / 2));
         $half_salt2 = substr(HASH_SALT, (strlen(HASH_SALT) / 2), strlen(HASH_SALT));
-    
+        
         // In case there is a need for something older
         if ($methods[2] || !SHA256_AVAILABLE)
         {
@@ -32,6 +32,7 @@ function nel_hash($input)
     }
     
     return $hash;
+
 }
 
 require_once INCLUDE_PATH . 'initializations.php';
@@ -42,31 +43,44 @@ require_once INCLUDE_PATH . 'admin-functions.php';
 require_once INCLUDE_PATH . 'thread-generation.php';
 require_once INCLUDE_PATH . 'main-generation.php';
 require_once INCLUDE_PATH . 'html-generation.php';
+require_once INCLUDE_PATH . 'post.php';
 require_once INCLUDE_PATH . 'snacks.php';
 
 // Initialization done. IT'S GO TIME!
 
-ban_spambots($dataforce);
-applyBan($dataforce, $authorized);
+ban_spambots($dataforce, $dbh);
 
 session_start();
 require_once INCLUDE_PATH . 'sessions.php';
 initialize_session($dataforce, $authorized);
 
 require_once INCLUDE_PATH . 'central_dispatch.php';
-nel_process_get($dataforce, $authorized);
-nel_process_post($dataforce, $authorized);
+nel_process_get($dataforce, $authorized, $dbh);
+nel_process_post($dataforce, $authorized, $dbh);
+regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
+clean_exit($dataforce, $template_info, FALSE);
 
-regen($dataforce, NULL, 'main', FALSE);
-
-if (STUFF_DONE)
+function clean_exit($dataforce, $die)
 {
-    echo '<meta http-equiv="refresh" content="10;URL=' . PHP_SELF2 . PHP_EXT . '">';
-}
-else
-{
-    echo '<meta http-equiv="refresh" content="0;URL=' . PHP_SELF2 . PHP_EXT . '">';
-}
+    global $template_info;
+    
+    write_multi_cache($dataforce);
+    
+    if ($die)
+    {
+        die();
+    }
+    
+    if (STUFF_DONE)
+    {
+        echo '<meta http-equiv="refresh" content="10;URL=' . PHP_SELF2 . PHP_EXT . '">';
+    }
+    else
+    {
+        echo '<meta http-equiv="refresh" content="0;URL=' . PHP_SELF2 . PHP_EXT . '">';
+    }
+    
+    die();
 
-$dbh = NULL;
+}
 ?>

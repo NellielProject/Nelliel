@@ -10,6 +10,7 @@ class nelliel_post_handling
         self::$plugin_id = $plugins->register_plugin('Default Post Handling', 'Nelliel', 'v1.0');
         $plugins->register_hook_function('tripcode-processing', array($this, 'nel_standard_tripcode'), 10, self::$plugin_id);
         $plugins->register_hook_function('secure-tripcode-processing', array($this, 'nel_secure_tripcode'), 10, self::$plugin_id);
+    
     }
 
     public function nel_standard_tripcode($poster_info, $name_pieces)
@@ -25,6 +26,7 @@ class nelliel_post_handling
         }
         
         return $poster_info;
+    
     }
 
     public function nel_secure_tripcode($poster_info, $name_pieces, $modpostc)
@@ -36,6 +38,7 @@ class nelliel_post_handling
         }
         
         return $poster_info;
+    
     }
 }
 ?>

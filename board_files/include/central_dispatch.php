@@ -3,7 +3,7 @@
 //
 // This handles the GET requests
 //
-function nel_process_get($dataforce, $authorized)
+function nel_process_get($dataforce, $authorized, $dbh)
 {
     if (isset($dataforce['mode2']))
     {
@@ -14,16 +14,18 @@ function nel_process_get($dataforce, $authorized)
                 {
                     if (is_null($dataforce['response_id']))
                     {
-                        regen($dataforce, $authorized, NULL, 'main', TRUE);
+                        regen($dataforce, $authorized, NULL, 'main', TRUE, $dbh);
                     }
                     else
                     {
-                        regen($dataforce, $authorized, $dataforce['response_id'], 'thread', TRUE);
+                        regen($dataforce, $authorized, $dataforce['response_id'], 'thread', TRUE, $dbh);
                     }
                 }
+                
+                die();
             
             case 'admin':
-                valid($dataforce);
+                valid($dataforce, $authorized);
                 die();
             
             case 'about':
@@ -31,12 +33,13 @@ function nel_process_get($dataforce, $authorized)
                 die();
         }
     }
+
 }
 
 //
 // This handles the POST requests
 //
-function nel_process_post($dataforce, $authorized)
+function nel_process_post($dataforce, $authorized, $dbh)
 {
     if (isset($dataforce['mode']))
     {
@@ -50,7 +53,7 @@ function nel_process_post($dataforce, $authorized)
                     {
                         if ($authorized[$_SESSION['username']]['perm_ban'])
                         {
-                            ban_hammer($dataforce, $authorized);
+                            ban_hammer($dataforce, $authorized, $dbh);
                         }
                         else
                         {
@@ -59,21 +62,20 @@ function nel_process_post($dataforce, $authorized)
                     }
                     
                     $updates = thread_updates($dataforce, $authorized);
-                    regen($dataforce, $authorized, $updates, 'thread', FALSE);
-                    regen($dataforce, $authorized, NULL, 'main', FALSE);
+                    regen($dataforce, $authorized, $updates, 'thread', FALSE, $dbh);
+                    regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
                     
                     echo '<meta http-equiv="refresh" content="0;URL=' . PHP_SELF . '?mode=display&page=0">';
-                    die();
+                    clean_exit($dataforce, TRUE);
                 }
                 
                 $updates = thread_updates($dataforce, $authorized);
-                regen($dataforce, $authorized, $updates, 'thread', FALSE);
-                regen($dataforce, $authorized, NULL, 'main', FALSE);
-                break;
+                regen($dataforce, $authorized, $updates, 'thread', FALSE, $dbh);
+                regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
+                clean_exit($dataforce, FALSE);
             
             case 'new_post':
-                require_once INCLUDE_PATH . 'post.php';
-                new_post($dataforce, $authorized);
+                new_post($dataforce, $authorized, $dbh);
                 
                 if ($fgsfds['noko'])
                 {
@@ -85,8 +87,6 @@ function nel_process_post($dataforce, $authorized)
                     {
                         echo '<meta http-equiv="refresh" content="0;URL=' . PAGE_DIR . $fgsfds['noko_topic'] . '/' . $fgsfds['noko_topic'] . '.html">';
                     }
-                    
-                    die();
                 }
                 else
                 {
@@ -98,9 +98,9 @@ function nel_process_post($dataforce, $authorized)
                     {
                         echo '<meta http-equiv="refresh" content="0;URL=' . PHP_SELF2 . PHP_EXT . '">';
                     }
-                    
-                    die();
                 }
+                
+                clean_exit($dataforce, TRUE);
             
             case 'admin':
                 if (!empty($_SESSION) && isset($dataforce['admin_mode']))
@@ -109,104 +109,106 @@ function nel_process_post($dataforce, $authorized)
                     {
                         // Options list (done)
                         case 'admincontrol':
-                            admin_control($dataforce, $authorized, 'null');
-                            break;
+                            admin_control($dataforce, $authorized, 'null', $dbh);
+                            die();
                         
                         case 'bancontrol':
-                            ban_control($dataforce, $authorized, 'list');
-                            break;
+                            ban_control($dataforce, $authorized, 'list', $dbh);
+                            die();
                         
                         case 'modcontrol':
-                            thread_panel($dataforce, $authorized, 'list');
-                            break;
+                            thread_panel($dataforce, $authorized, 'list', $dbh);
+                            die();
                         
                         case 'staff':
-                            staff_panel($dataforce, $authorized, 'staff');
-                            break;
+                            staff_panel($dataforce, $authorized, 'staff', $dbh);
+                            die();
                         
                         case 'modmode':
                             echo '<meta http-equiv="refresh" content="0;URL=' . PHP_SELF . '?mode=display&page=0">';
                             die();
                         
                         case 'fullupdate':
-                            regen($dataforce, $authorized, NULL, 'full', FALSE);
-                            valid($dataforce);
-                            break;
+                            regen($dataforce, $authorized, NULL, 'full', FALSE, $dbh);
+                            valid($dataforce, $authorized);
+                            clean_exit($dataforce, TRUE);
                         
                         case 'updatecache':
-                            regen($dataforce, $authorized, NULL, 'update_all_cache', FALSE);
-                            valid($dataforce);
-                            break;
+                            regen($dataforce, $authorized, NULL, 'update_all_cache', FALSE, $dbh);
+                            valid($dataforce, $authorized);
+                            clean_exit($dataforce, TRUE);
                         
                         // Settings panel
                         case 'changesettings':
-                            admin_control($dataforce, $authorized, 'set');
-                            break;
+                            admin_control($dataforce, $authorized, 'set', $dbh);
+                            die();
                         
                         // Bans panel (done)
                         case 'newban':
-                            ban_control($dataforce, $authorized, 'new');
-                            break;
+                            ban_control($dataforce, $authorized, 'new', $dbh);
+                            die();
                         
                         case 'addban':
                             if ($authorized[$_SESSION['username']]['perm_ban'])
                             {
-                                ban_hammer($dataforce, $authorized);
-                                ban_control($dataforce, $authorized, 'list');
+                                ban_hammer($dataforce, $authorized, $dbh);
+                                ban_control($dataforce, $authorized, 'list', $dbh);
                             }
                             else
                             {
                                 derp(104, LANG_ERROR_104, array('MAIN'));
                             }
-                            break;
+                            
+                            die();
                         
                         case 'modifyban':
-                            ban_control($dataforce, $authorized, 'modify');
-                            ban_control($dataforce, $authorized, 'list');
-                            break;
+                            ban_control($dataforce, $authorized, 'modify', $dbh);
+                            ban_control($dataforce, $authorized, 'list', $dbh);
+                            die();
                         
                         case 'removeban':
-                            update_ban($dataforce, $authorized, 'remove');
-                            ban_control($dataforce, $authorized, 'list');
-                            break;
+                            update_ban($dataforce, $authorized, 'remove', $dbh);
+                            ban_control($dataforce, $authorized, 'list', $dbh);
+                            die();
                         
                         case 'changeban':
-                            update_ban($dataforce, $authorized, 'update');
-                            ban_control($dataforce, $authorized, 'list');
-                            break;
+                            update_ban($dataforce, $authorized, 'update', $dbh);
+                            ban_control($dataforce, $authorized, 'list', $dbh);
+                            die();
                         
                         // Staff panel (done)
                         case 'updatestaff':
-                            staff_panel($dataforce, $authorized, 'update');
-                            break;
+                            staff_panel($dataforce, $authorized, 'update', $dbh);
+                            die();
                         
                         case 'deletestaff':
-                            staff_panel($dataforce, $authorized, 'delete');
-                            break;
+                            staff_panel($dataforce, $authorized, 'delete', $dbh);
+                            die();
                         
                         case 'addstaff':
-                            staff_panel($dataforce, $authorized, 'add');
-                            break;
+                            staff_panel($dataforce, $authorized, 'add', $dbh);
+                            die();
                         
                         case 'editstaff':
-                            staff_panel($dataforce, $authorized, 'edit');
-                            break;
+                            staff_panel($dataforce, $authorized, 'edit', $dbh);
+                            die();
                         
                         // Thread panel (done)
                         case 'updatethread':
                             if (isset($dataforce['expand_thread']))
                             {
-                                thread_panel($dataforce, $authorized, 'expand');
+                                thread_panel($dataforce, $authorized, 'expand', $dbh);
                             }
                             else
                             {
-                                thread_panel($dataforce, $authorized, 'update');
+                                thread_panel($dataforce, $authorized, 'update', $dbh);
                             }
-                            break;
+                            
+                            die();
                         
                         case 'returnthreadlist':
-                            thread_panel($dataforce, $authorized, 'return');
-                            break;
+                            thread_panel($dataforce, $authorized, 'return', $dbh);
+                            die();
                         
                         default:
                             derp(153, LANG_ERROR_153, 'ADMIN', array(), '');
@@ -214,6 +216,7 @@ function nel_process_post($dataforce, $authorized)
                 }
         }
     }
+
 }
 
 ?>

@@ -4,9 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function new_post($dataforce, $authorized)
+function new_post($dataforce, $authorized, $dbh)
 {
-    global $enabled_types, $fgsfds, $dbh, $plugins;
+    global $enabled_types, $fgsfds, $plugins;
     
     $new_thread_dir = '';
     
@@ -17,7 +17,7 @@ function new_post($dataforce, $authorized)
     //
     // Check if post is ok
     //
-    $post_count = is_post_ok($dataforce, $time);
+    $post_count = is_post_ok($dataforce, $time, $dbh);
     
     //
     // Process FGSFDS
@@ -44,8 +44,8 @@ function new_post($dataforce, $authorized)
     $files = file_info();
     $there_is_no_spoon = TRUE;
     
-    $poster_info = array('name' => $dataforce['name'], 'email' => $dataforce['email'], 'subject' => $dataforce['subject'], 'comment' => $dataforce['comment'], 'tripcode' => '', 
-                        'secure_tripcode' => '');
+    $poster_info = array('name' => $dataforce['name'], 'email' => $dataforce['email'], 'subject' => $dataforce['subject'], 
+                        'comment' => $dataforce['comment'], 'tripcode' => '', 'secure_tripcode' => '');
     
     if (!empty($files))
     {
@@ -503,7 +503,7 @@ function new_post($dataforce, $authorized)
     // Run the archiving routine if this is a new thread or deleted/expired thread
     //
     
-    update_archive_status($dataforce);
+    update_archive_status($dataforce, $dbh);
     
     //
     // Generate response page if it doesn't exist, otherwise update
@@ -516,10 +516,10 @@ function new_post($dataforce, $authorized)
     }
     
     $return_res = ($dataforce['response_to'] === 0) ? $new_thread_dir : $dataforce['response_to'];
-    regen($dataforce, $authorized, $return_res, 'thread', FALSE);
-    cache_post_links();
+    regen($dataforce, $authorized, $return_res, 'thread', FALSE, $dbh);
+    // cache_post_links($post_link_reference);
     $dataforce['archive_update'] = TRUE;
-    regen($dataforce, $authorized, NULL, 'main', FALSE);
+    regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
     
     if (!empty($_SESSION))
     {
@@ -527,6 +527,7 @@ function new_post($dataforce, $authorized)
     }
     
     return $return_res;
+
 }
 
 //
@@ -549,12 +550,11 @@ function cleanse_the_aids($string)
         $string = htmlspecialchars($string);
         return $string;
     }
+
 }
 
-function is_post_ok($dataforce, $time)
+function is_post_ok($dataforce, $time, $dbh)
 {
-    global $dbh;
-    
     $thread_delay = $time - (BS_THREAD_DELAY * 1000);
     
     // Check for flood
@@ -626,6 +626,7 @@ function is_post_ok($dataforce, $time)
     }
     
     return $post_count;
+
 }
 
 function file_info()
@@ -730,6 +731,7 @@ function file_info()
     }
     
     return $files;
+
 }
 
 ?>

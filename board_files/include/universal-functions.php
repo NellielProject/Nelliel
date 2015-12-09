@@ -45,19 +45,16 @@ function derp($error_id, $error_message, $diagnostic)
 </body></html>';
     
     die();
+
 }
 
-//
-// Parse quotelinks
-//
-function link_quote($matches)
+function parse_links($matches)
 {
-    global $link_resno, $post_link_reference, $dbh;
+    global $link_resno, $link_updates, $dbh;
     
-    $found = FALSE;
     $back = ($link_resno === 0) ? PAGE_DIR : '../';
     $pattern = '#p' . $matches[1] . 't([0-9]+)#';
-    $isquoted = preg_match($pattern, $post_link_reference, $matches2);
+    $isquoted = preg_match($pattern, $link_updates, $matches2);
     
     if ($isquoted === 0)
     {
@@ -66,8 +63,7 @@ function link_quote($matches)
         $prepared->execute();
         $link = $prepared->fetch(PDO::FETCH_NUM);
         unset($prepared);
-        $found = TRUE;
-        $post_link_reference .= 'p' . $matches[1] . 't' . $link[0];
+        $link_updates .= 'p' . $matches[1] . 't' . $link[0];
         return '>>' . $matches[1];
     }
     else
@@ -83,6 +79,7 @@ function link_quote($matches)
             return '<a href="' . $back . $link . '/' . $link . '.html#' . $matches[1] . '" class="link_quote">>>' . $matches[1] . '</a>';
         }
     }
+
 }
 
 //
@@ -110,11 +107,12 @@ function lol_html_timer($derp)
         $total_html = round(($end_html - $start_html), 4);
         return;
     }
+
 }
 
-function regen($dataforce, $authorized, $id, $mode, $modmode)
+function regen(&$dataforce, $authorized, $id, $mode, $modmode, $dbh)
 {
-    global $dbh;
+    global $link_resno, $link_updates, $template_info;
     
     if (!empty($_SESSION) && !$modmode)
     {
@@ -124,7 +122,7 @@ function regen($dataforce, $authorized, $id, $mode, $modmode)
     
     if ($mode === 'full')
     {
-        unset($GLOBALS['template_info']); // Make sure any template changes are included across the board
+        // unset($GLOBALS['template_info']); // Make sure any template changes are included across the board
         $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=0 AND archive_status=0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
     }
@@ -143,8 +141,10 @@ function regen($dataforce, $authorized, $id, $mode, $modmode)
     
     if ($mode === 'main' || $mode === 'full')
     {
-        update_archive_status($dataforce);
-        main_thread_generator($dataforce, $authorized);
+        update_archive_status($dataforce, $dbh);
+        $dataforce['response_id'] = 0;
+        $link_resno = 0;
+        main_thread_generator($dataforce, $authorized, $dbh);
     }
     
     if ($mode === 'thread' || $mode === 'full')
@@ -155,16 +155,17 @@ function regen($dataforce, $authorized, $id, $mode, $modmode)
         while ($i < $threads)
         {
             $dataforce['response_id'] = $ids[$i];
-            thread_generator($dataforce, $authorized);
+            thread_generator($dataforce, $authorized, $dbh);
             ++ $i;
         }
     }
     
     if ($mode === 'update_all_cache')
     {
-        cache_rules();
-        cache_settings();
-        cache_post_links();
+        $dataforce['rules_list'] = cache_rules($dbh);
+        cache_settings($dbh);
+        $dataforce['post_links'] = $link_updates;
+        // cache_post_links();
         regen_template_cache();
     }
     
@@ -172,6 +173,9 @@ function regen($dataforce, $authorized, $id, $mode, $modmode)
     {
         $_SESSION['ignore_login'] = $temp;
     }
+    
+    $dataforce['post_links'] = $link_updates;
+
 }
 
 //
@@ -206,6 +210,7 @@ function about_screen()
 		</div>
 		<br><br><hr>
 </body></html>';
+
 }
 
 ?>
