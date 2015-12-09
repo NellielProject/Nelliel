@@ -74,7 +74,7 @@ function form(&$dat, $dataforce, $authorized)
     global $rendervar;
     
     $rendervar['response_id'] = (is_null($dataforce['response_id'])) ? '0' : $dataforce['response_id'];
-    $rendervar['rules'] = RULES_LIST;
+    $rendervar['rules_list'] = $dataforce['rules_list'];
     $rendervar['form_submit_url'] = $rendervar['dotdot'] . PHP_SELF;
     
     if (BS1_ALLOW_MULTIFILE)
@@ -475,6 +475,71 @@ function generate_ban_panel($dataforce, $baninfo, $mode)
     
     $dat_temp = parse_template('manage_bans_panel.tpl', FALSE);
     return $dat_temp;
+
+}
+
+//
+// Parse links in posts and update a cache to avoid a potential assload of database hits during rendering
+//
+function parse_links($matches)
+{
+    global $link_resno, $link_updates, $dbh;
+
+    $back = ($link_resno === 0) ? PAGE_DIR : '../';
+    $pattern = '#p' . $matches[1] . 't([0-9]+)#';
+    $isquoted = preg_match($pattern, $link_updates, $matches2);
+
+    if ($isquoted === 0)
+    {
+        $prepared = $dbh->prepare('SELECT response_to FROM ' . POSTTABLE . ' WHERE post_number=:pnum');
+        $prepared->bindParam(':pnum', $matches[1], PDO::PARAM_STR);
+        $prepared->execute();
+        $link = $prepared->fetch(PDO::FETCH_NUM);
+        unset($prepared);
+        $link_updates .= 'p' . $matches[1] . 't' . $link[0];
+        return '>>' . $matches[1];
+    }
+    else
+    {
+        $link = $matches2[1];
+
+        if ($link[0] == '0')
+        {
+            return '<a href="' . $back . $matches[1] . '/' . $matches[1] . '.html" class="link_quote">>>' . $matches[1] . '</a>';
+        }
+        else
+        {
+            return '<a href="' . $back . $link . '/' . $link . '.html#' . $matches[1] . '" class="link_quote">>>' . $matches[1] . '</a>';
+        }
+    }
+
+}
+
+//
+// Start/end timer
+//
+function lol_html_timer($derp)
+{
+    global $start_html, $end_html, $total_html;
+
+    if ($derp === 0)
+    {
+        $start_html = 0;
+        $end_html = 0;
+        $total_html = 0;
+        $mtime = microtime();
+        $mtime = explode(' ', $mtime);
+        $start_html = $mtime[1] + $mtime[0];
+        return;
+    }
+    else
+    {
+        $mtime = microtime();
+        $mtime = explode(" ", $mtime);
+        $end_html = $mtime[1] + $mtime[0];
+        $total_html = round(($end_html - $start_html), 4);
+        return;
+    }
 
 }
 ?>

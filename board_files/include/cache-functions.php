@@ -4,6 +4,22 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+// Cached settings
+if (!file_exists(CACHE_PATH . 'parameters.nelcache'))
+{
+    cache_settings($dbh);
+}
+
+require_once CACHE_PATH . 'parameters.nelcache';
+
+// Cached rules, post links and template info cache
+if (!file_exists(CACHE_PATH . 'multi-cache.nelcache'))
+{
+    write_multi_cache($dataforce, $template_info);
+}
+
+require_once CACHE_PATH . 'multi-cache.nelcache';
+
 //
 // Cache the posting rules
 //
@@ -130,30 +146,10 @@ function cache_rules($dbh)
         $rule_list .= '
 							<li>' . LANG_FILES_OTHER . strtoupper($omode) . '</li>';
     }
-    
-    /*
-     * $output = '<?php define(\'RULES_LIST\', \'' . $rule_list . '\'); ?>'; write_file(CACHE_PATH . 'rules.nelcache', $output, 0644);
-     */
+
     return $rule_list;
-
 }
 
-//
-// Write out rules, post links and template info cache
-//
-function write_multi_cache($dataforce)
-{
-    global $template_info;
-    
-    $cache = '<?php
-$dataforce[\'post_links\'] = \'' . $dataforce['post_links'] . '\';
-$dataforce[\'rules_list\'] = \'' . $dataforce['rules_list'] . '\';
-$template_info = ' . var_export($template_info, TRUE) . ';
-?>';
-    
-    write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, 0644);
-
-}
 //
 // Cache the board settings
 //
@@ -166,20 +162,17 @@ function cache_settings($dbh)
     
     $result_count = count($config_list);
     $i = 0;
-    $vars1 = '
-';
+    $vars1 = '';
     
     while ($i < $result_count)
     {
         if ($config_list[$i]['setting'] === '1')
         {
-            $vars1 .= 'define(\'BS1_' . strtoupper($config_list[$i]['config_name']) . '\', TRUE);
-';
+            $vars1 .= 'define(\'BS1_' . strtoupper($config_list[$i]['config_name']) . '\',TRUE);';
         }
         else
         {
-            $vars1 .= 'define(\'BS1_' . strtoupper($config_list[$i]['config_name']) . '\', FALSE);
-';
+            $vars1 .= 'define(\'BS1_' . strtoupper($config_list[$i]['config_name']) . '\',FALSE);';
         }
         ++ $i;
     }
@@ -193,21 +186,18 @@ function cache_settings($dbh)
     
     $result_count = count($config_list);
     $i = 0;
-    $vars2 = '
-';
+    $vars2 = '';
     
     while ($i < $result_count)
     {
         $rows[$config_list[$i]['config_name']] = $config_list[$i]['setting'];
         if (is_numeric($config_list[$i]['setting']))
         {
-            $vars2 .= 'define(\'BS_' . strtoupper($config_list[$i]['config_name']) . '\', ' . $config_list[$i]['setting'] . ');
-';
+            $vars2 .= 'define(\'BS_' . strtoupper($config_list[$i]['config_name']) . '\',' . $config_list[$i]['setting'] . ');';
         }
         else
         {
-            $vars2 .= 'define(\'BS_' . strtoupper($config_list[$i]['config_name']) . '\', \'' . $config_list[$i]['setting'] . '\');
-';
+            $vars2 .= 'define(\'BS_' . strtoupper($config_list[$i]['config_name']) . '\',\'' . $config_list[$i]['setting'] . '\');';
         }
         ++ $i;
     }
@@ -222,9 +212,7 @@ function cache_settings($dbh)
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
     unset($result);
     
-    $fvars = '
-	$enabled_types = array(
-	';
+    $fvars = '$enabled_types = array(';
     
     $result_count = count($config_list);
     $i = 0;
@@ -234,31 +222,24 @@ function cache_settings($dbh)
     {
         if ($config_list[$i]['setting'] === '1')
         {
-            $fvars .= '\'' . $config_list[$i]['config_name'] . '\' => TRUE,
-	';
+            $fvars .= '\'' . $config_list[$i]['config_name'] . '\'=>TRUE,';
         }
         else
         {
-            $fvars .= '\'' . $config_list[$i]['config_name'] . '\' => FALSE,
-	';
+            $fvars .= '\'' . $config_list[$i]['config_name'] . '\'=>FALSE,';
         }
         
         ++ $i;
     }
     
     $fvars = substr($fvars, 0, strlen($fvars) - 4) . ');';
-    $final_vars = '<?php' . $vars1 . $vars2 . $fvars . '
-?>';
+    $final_vars = '<?php ' . $vars1 . $vars2 . $fvars . ' ?>';
     
     write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, 0644);
     
     unset($rows);
 
 }
-
-/*
- * // // Cache the post links // This helps immensely in terms of speed // function cache_post_links($post_link_reference) { $post_link_reference_php = '<?php $post_link_reference = \'' . $post_link_reference . '\'; ?>'; //write_file(CACHE_PATH . 'post_link_references.nelcache', $post_link_reference_php, 0644); return $post_link_reference_php; } // // Cache the template files // function cache_template_info() { global $template_info; $info = '<?php $template_info = ' . var_export($template_info, TRUE) . '; ?>'; write_file(CACHE_PATH . 'template_info.nelcache', $info, 0644); }
- */
 
 //
 // Parse the templates into code form
@@ -318,7 +299,23 @@ function regen_template_cache()
         $template = basename($template);
         parse_template($template, TRUE);
     }
-    
-    // cache_template_info();
+}
+
+
+//
+// Write out rules, post links and template info cache
+//
+function write_multi_cache($dataforce)
+{
+    global $template_info;
+
+    $cache = '<?php
+$dataforce[\'post_links\'] = \'' . $dataforce['post_links'] . '\';
+$dataforce[\'rules_list\'] = \'' . $dataforce['rules_list'] . '\';
+$template_info = ' . var_export($template_info, TRUE) . ';
+?>';
+
+    write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, 0644);
+
 }
 ?>

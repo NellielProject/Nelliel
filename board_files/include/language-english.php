@@ -307,8 +307,10 @@ define('LANG_FILES_VIDEO', 'Supported video types: '); // Prints video filetypes
 define('LANG_FILES_DOCUMENT', 'Supported document types: '); // Prints document filetypes supported
 define('LANG_FILES_ARCHIVE', 'Supported archive types: '); // Prints archive filetypes supported
 define('LANG_FILES_OTHER', 'Other supported file types: '); // Prints other filetypes supported
-define('LANG_POSTING_RULES1', 'Maximum file size allowed is ' . BS_MAX_FILESIZE . ' KB.'); // Rules 1
-define('LANG_POSTING_RULES2', 'Images greater than ' . BS_MAX_WIDTH . 'x' . BS_MAX_HEIGHT . ' pixels will be thumbnailed.'); // Rules 2
+define('LANG_POSTING_RULES1_1', 'Maximum file size allowed is '); // Rules line 1 first half
+define('LANG_POSTING_RULES1_2', ' KB.'); // Rules line 1 second half
+define('LANG_POSTING_RULES2_1', 'Images greater than '); // Rules line 2 first half
+define('LANG_POSTING_RULES2_2', ' pixels will be thumbnailed.'); // Rules line 2 second half
                                                                                                                              
 // Ban page
 define('LANG_BAN_APPEAL_RESPONSE', 'This is the response to your appeal: '); // Response to appealed ban

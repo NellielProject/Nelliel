@@ -85,9 +85,9 @@
                     <tr class="posting-form-row">
                         <td colspan="2" class="rules">
                             <ul>
-                            {$rendervar['rules']}
-                            <li>{LANG_POSTING_RULES1}</li>
-                            <li>{LANG_POSTING_RULES2}</li>
+                                {$rendervar['rules_list']}
+                                <li>{LANG_POSTING_RULES1_1}{BS_MAX_FILESIZE}{LANG_POSTING_RULES1_2}</li>
+                                <li>{LANG_POSTING_RULES2_1}{BS_MAX_WIDTH} x {BS_MAX_HEIGHT}{LANG_POSTING_RULES2_2}</li>
                             </ul>
                         </td>
                     </tr>
