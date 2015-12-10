@@ -69,7 +69,7 @@ function generate_header($dataforce, $render_mode, $treeline)
 //
 // Generate reply form
 //
-function form(&$dat, $dataforce, $authorized)
+function form($dataforce, $authorized)
 {
     global $rendervar;
     
@@ -115,7 +115,6 @@ function form(&$dat, $dataforce, $authorized)
     $rendervar['max_files'] = 3;
     $dat_temp = parse_template('posting_form.tpl', FALSE);
     return $dat_temp;
-
 }
 
 //
@@ -272,7 +271,6 @@ function render_post($dataforce, $authorized, $response, $partial, $gen_data, $t
     $dat_temp = ($response ? parse_template('response_post.tpl', FALSE) : parse_template('op_post.tpl', FALSE));
     $rendervar = $rendervar_first;
     return $dat_temp;
-
 }
 
 //
@@ -512,7 +510,6 @@ function parse_links($matches)
             return '<a href="' . $back . $link . '/' . $link . '.html#' . $matches[1] . '" class="link_quote">>>' . $matches[1] . '</a>';
         }
     }
-
 }
 
 //

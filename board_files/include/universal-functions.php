@@ -50,7 +50,7 @@ function derp($error_id, $error_message, $diagnostic)
 
 function regen(&$dataforce, $authorized, $id, $mode, $modmode, $dbh)
 {
-    global $link_resno, $link_updates, $template_info;
+    global $link_resno, $link_updates;
     
     if (!empty($_SESSION) && !$modmode)
     {
@@ -60,7 +60,6 @@ function regen(&$dataforce, $authorized, $id, $mode, $modmode, $dbh)
     
     if ($mode === 'full')
     {
-        // unset($GLOBALS['template_info']); // Make sure any template changes are included across the board
         $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=0 AND archive_status=0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
     }
@@ -113,7 +112,6 @@ function regen(&$dataforce, $authorized, $id, $mode, $modmode, $dbh)
     }
     
     $dataforce['post_links'] = $link_updates;
-
 }
 
 //

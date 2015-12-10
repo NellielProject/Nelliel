@@ -232,7 +232,7 @@ $authorized = ' . var_export($authorized, TRUE) . '?>';
     }
     
     $dat = generate_header($dataforce, 'ADMIN', array());
-    $dat .= parse_template('staff_panel.tpl', FALSE);
+    $dat .= parse_template('manage_staff_panel.tpl', FALSE);
     $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
     echo $dat;
 

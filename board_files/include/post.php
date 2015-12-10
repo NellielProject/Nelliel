@@ -13,15 +13,11 @@ function new_post($dataforce, $authorized, $dbh)
     // Get time
     $time = floor(microtime(TRUE) * 1000);
     $reply_delay = $time - (BS_REPLY_DELAY * 1000);
-    
-    //
+
     // Check if post is ok
-    //
     $post_count = is_post_ok($dataforce, $time, $dbh);
     
-    //
     // Process FGSFDS
-    //
     if (isset($dataforce['fgsfds']))
     {
         if (strripos($dataforce['fgsfds'], 'noko') !== FALSE)
@@ -36,11 +32,8 @@ function new_post($dataforce, $authorized, $dbh)
         
         $return = $plugins->plugin_hook('fgsfds_field', FALSE, array($fgsfds));
     }
-    
-    //
+
     // Start collecting file info
-    //
-    
     $files = file_info();
     $there_is_no_spoon = TRUE;
     
@@ -71,11 +64,7 @@ function new_post($dataforce, $authorized, $dbh)
             derp(9, LANG_ERROR_9, array('POST', $files));
         }
     }
-    
-    //
-    // Start processing post data
-    //
-    
+
     // Cancer-fighting tools and lulz
     
     if (strlen(utf8_decode($poster_info['comment'])) > BS_MAX_COMMENT_LENGTH || strlen(utf8_decode($poster_info['name'])) > BS_MAX_NAME_LENGTH || strlen(utf8_decode($poster_info['email'])) > BS_MAX_EMAIL_LENGTH || strlen(utf8_decode($poster_info['subject'])) > BS_MAX_SUBJECT_LENGTH || strlen(utf8_decode($dataforce['file_source'])) > BS_MAX_SOURCE_LENGTH || strlen(utf8_decode($dataforce['file_license'])) > BS_MAX_LICENSE_LENGTH)

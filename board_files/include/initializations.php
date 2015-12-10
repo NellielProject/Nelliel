@@ -28,23 +28,13 @@ require_once INCLUDE_PATH . 'setup.php';
 require_once INCLUDE_PATH . 'file-handling.php';
 setup_check($dbh);
 generate_auth_file();
-
 include_once FILES_PATH . '/auth_data.nel.php';
-require_once INCLUDE_PATH . 'language-english.php'; // This relies on some of the cached parameters
+require_once INCLUDE_PATH . 'language-english.php';
 
-//
-// Initialize a bunch of stuff here
-//
-
-$template_loaded = array('admin_panel.tpl' => FALSE, 'ban_page.tpl' => FALSE, 'footer.tpl' => FALSE, 'header.tpl' => FALSE, 
-                        'manage_bans_panel.tpl' => FALSE, 'manage_login.tpl' => FALSE, 'manage_options.tpl' => FALSE, 
-                        'manage_thread_panel.tpl' => FALSE, 'op_post.tpl' => FALSE, 'posting_form.tpl' => FALSE, 
-                        'response_post.tpl' => FALSE, 'staff_panel.tpl' => FALSE);
-
+$template_info = array();
 $rendervar = array();
-$post_files = array();
-$file_data = array();
 $dataforce = array();
+$enabled_types = array();
 
 $dataforce['mode'] = (isset($_POST['mode'])) ? $_POST['mode'] : NULL;
 $dataforce['mode_extra'] = (isset($_POST['mode2'])) ? $_POST['mode2'] : NULL;
@@ -68,8 +58,6 @@ $dataforce['banip'] = (isset($_POST['ban_ip'])) ? $_POST['ban_ip'] : NULL;
 $dataforce['timedays'] = (isset($_POST['timedays'])) && is_numeric($_POST['timedays']) ? (int) $_POST['timedays'] : NULL;
 $dataforce['timehours'] = (isset($_POST['timehours'])) && is_numeric($_POST['timehours']) ? (int) $_POST['timehours'] : NULL;
 $dataforce['only_delete_file'] = (isset($_POST['onlyimgdel'])) ? TRUE : FALSE;
-$dataforce['name_trap'] = (!empty($_POST['zname'])) ? 'WAHAHA' : NULL;
-$dataforce['url_trap'] = (!empty($_POST['zurl'])) ? 'WAHAHA' : NULL;
 $dataforce['response_to'] = (isset($_POST['response_to']) && is_numeric($_POST['response_to'])) ? (int) $_POST['response_to'] : NULL;
 $dataforce['page_gen'] = 'main';
 $dataforce['mode2'] = (isset($_GET['mode'])) ? $_GET['mode'] : NULL;
@@ -78,14 +66,10 @@ $dataforce['expand'] = (isset($_GET['expand'])) ? TRUE : FALSE;
 $dataforce['collapse'] = (isset($_GET['collapse'])) ? TRUE : FALSE;
 $dataforce['response_id'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? (int) $_GET['post'] : NULL;
 $dataforce['archive_update'] = FALSE;
-$dataforce['post_links'] = '';
-$dataforce['rules'] = '';
 $dataforce['sp_field1'] = (isset($_POST[LANG_TEXT_SPAMBOT_FIELD1])) ? $_POST[LANG_TEXT_SPAMBOT_FIELD1] : NULL;
 $dataforce['sp_field2'] = (isset($_POST[LANG_TEXT_SPAMBOT_FIELD2])) ? $_POST[LANG_TEXT_SPAMBOT_FIELD2] : NULL;
 
-$link_updates = $dataforce['post_links'];
-$template_info = array();
-$enabled_types = array();
+$link_updates = '';
 $start_html = 0;
 $end_html = 0;
 $total_html = 0;

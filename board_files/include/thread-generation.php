@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function thread_generator(&$dataforce, $authorized, $dbh)
+function thread_generator($dataforce, $authorized, $dbh)
 {
     global $rendervar;
     
@@ -48,7 +48,7 @@ function thread_generator(&$dataforce, $authorized, $dbh)
         if ($gen_data['post_counter'] === 0)
         {
             $page_output .= generate_header($dataforce, 'NORMAL', $treeline);
-            $page_output .= form($page_output, $dataforce, $authorized);
+            $page_output .= form($dataforce, $authorized);
         }
         
         if ($partlimit === 100)
@@ -130,7 +130,6 @@ function thread_generator(&$dataforce, $authorized, $dbh)
         write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-expand.html', $page_output_expand, 0644);
         write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-collapse.html', $page_output_collapse, 0644);
     }
-
 }
 
 ?>

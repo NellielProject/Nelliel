@@ -62,8 +62,7 @@ clean_exit($dataforce, $template_info, FALSE);
 
 function clean_exit($dataforce, $die)
 {
-    global $template_info;
-    
+    $dataforce['post_links'] = cache_links($dataforce['post_links']);
     write_multi_cache($dataforce);
     
     if ($die)

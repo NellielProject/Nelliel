@@ -6,7 +6,6 @@ if (!defined('NELLIEL_VERSION'))
 
 //
 // Check for threads that need archive status changed
-// Such as being moved back to the active pages when threads are deleted
 //
 function update_archive_status($dataforce, $dbh)
 {

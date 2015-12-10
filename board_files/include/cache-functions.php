@@ -246,17 +246,17 @@ function cache_settings($dbh)
 //
 function parse_template($template, $regen)
 {
-    global $rendervar, $template_loaded, $template_info, $total_html;
+    global $rendervar, $template_info, $total_html;
     
     $template_short = str_replace('.tpl', '', $template);
-    
-    if (!isset($template_loaded[$template]) || !$template_loaded[$template])
+
+    if (!$template_info[$template]['loaded'])
     {
         $md5 = md5_file(TEMPLATE_PATH . $template);
         
         if (!isset($template_info[$template]) || $md5 !== $template_info[$template] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
         {
-            $template_info[$template] = $md5;
+            $template_info[$template]['md5'] = $md5;
             $lol = file_get_contents(TEMPLATE_PATH . $template);
             $lol = preg_replace('#(?<!\[|\')\'(?!\]|\')#', '\\\'', $lol); // Keep escaped characters intact
             $lol = trim($lol);
@@ -269,31 +269,33 @@ function parse_template($template, $regen)
             $lol_out = $begin . $lol . $end;
             write_file(CACHE_PATH . $template_short . '.nelcache', $lol_out, 0644);
         }
-        
-        if (!$regen)
-        {
-            include (CACHE_PATH . $template_short . '.nelcache');
-            $template_loaded[$template] = TRUE;
-        }
     }
     
     if (!$regen)
     {
+        include (CACHE_PATH . $template_short . '.nelcache');
+        $template_info[$template]['loaded'] = TRUE;
         $dat_temp = call_user_func('render_' . $template_short);
         return $dat_temp;
     }
-
 }
+
+//
+// Cache post links
+//
+function cache_links($links)
+{
+    global $link_updates;
+
+    return $links . $link_updates;
+}
+
 
 //
 // Regenerate the template cache
 //
 function regen_template_cache()
 {
-    global $template_info;
-    
-    $template_info = array();
-    
     foreach (glob(TEMPLATE_PATH . '*.tpl') as $template)
     {
         $template = basename($template);
@@ -301,7 +303,15 @@ function regen_template_cache()
     }
 }
 
-
+function reset_template_status()
+{
+    global $template_info;
+    
+    foreach ($template_info as $key => $value)
+    {
+        $template_info[$key]['loaded'] = FALSE;
+    }
+}
 //
 // Write out rules, post links and template info cache
 //
@@ -309,6 +319,7 @@ function write_multi_cache($dataforce)
 {
     global $template_info;
 
+    reset_template_status();
     $cache = '<?php
 $dataforce[\'post_links\'] = \'' . $dataforce['post_links'] . '\';
 $dataforce[\'rules_list\'] = \'' . $dataforce['rules_list'] . '\';
