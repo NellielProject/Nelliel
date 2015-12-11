@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function new_post($dataforce, $authorized, $dbh)
+function new_post($dataforce, $authorized, $lang, $dbh)
 {
     global $enabled_types, $fgsfds, $plugins;
     
@@ -13,7 +13,7 @@ function new_post($dataforce, $authorized, $dbh)
     // Get time
     $time = floor(microtime(TRUE) * 1000);
     $reply_delay = $time - (BS_REPLY_DELAY * 1000);
-
+    
     // Check if post is ok
     $post_count = is_post_ok($dataforce, $time, $dbh);
     
@@ -32,7 +32,7 @@ function new_post($dataforce, $authorized, $dbh)
         
         $return = $plugins->plugin_hook('fgsfds_field', FALSE, array($fgsfds));
     }
-
+    
     // Start collecting file info
     $files = file_info();
     $there_is_no_spoon = TRUE;
@@ -51,25 +51,25 @@ function new_post($dataforce, $authorized, $dbh)
         
         if (!$poster_info['comment'])
         {
-            derp(10, LANG_ERROR_10, array('POST', $files));
+            derp($lang, 10, $lang['ERROR_10'], array('POST', $files));
         }
         
         if (BS1_REQUIRE_IMAGE_ALWAYS)
         {
-            derp(8, LANG_ERROR_8, array('POST', $files));
+            derp($lang, 8, $lang['ERROR_8'], array('POST', $files));
         }
         
         if (BS1_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
         {
-            derp(9, LANG_ERROR_9, array('POST', $files));
+            derp($lang, 9, $lang['ERROR_9'], array('POST', $files));
         }
     }
-
+    
     // Cancer-fighting tools and lulz
     
     if (strlen(utf8_decode($poster_info['comment'])) > BS_MAX_COMMENT_LENGTH || strlen(utf8_decode($poster_info['name'])) > BS_MAX_NAME_LENGTH || strlen(utf8_decode($poster_info['email'])) > BS_MAX_EMAIL_LENGTH || strlen(utf8_decode($poster_info['subject'])) > BS_MAX_SUBJECT_LENGTH || strlen(utf8_decode($dataforce['file_source'])) > BS_MAX_SOURCE_LENGTH || strlen(utf8_decode($dataforce['file_license'])) > BS_MAX_LICENSE_LENGTH)
     {
-        derp(11, LANG_ERROR_11, array('POST', $files));
+        derp($lang, 11, $lang['ERROR_11'], array('POST', $files));
     }
     
     if (isset($dataforce['pass']))
@@ -115,7 +115,7 @@ function new_post($dataforce, $authorized, $dbh)
     }
     else
     {
-        $poster_info['comment'] = LANG_THREAD_NOTEXT;
+        $poster_info['comment'] = $lang['THREAD_NOTEXT'];
     }
     
     // Name and tripcodes
@@ -126,22 +126,22 @@ function new_post($dataforce, $authorized, $dbh)
     {
         banned_name($poster_info['name'], $files);
         
-        $faggotry = strpos($poster_info['name'], LANG_THREAD_MODPOST);
+        $faggotry = strpos($poster_info['name'], $lang['THREAD_MODPOST']);
         if ($faggotry)
         {
-            $poster_info['name'] = LANG_FAKE_STAFF_ATTEMPT;
+            $poster_info['name'] = $lang['FAKE_STAFF_ATTEMPT'];
         }
         
-        $faggotry = strpos($poster_info['name'], LANG_THREAD_ADMINPOST);
+        $faggotry = strpos($poster_info['name'], $lang['THREAD_ADMINPOST']);
         if ($faggotry)
         {
-            $poster_info['name'] = LANG_FAKE_STAFF_ATTEMPT;
+            $poster_info['name'] = $lang['FAKE_STAFF_ATTEMPT'];
         }
         
-        $faggotry = strpos($poster_info['name'], LANG_THREAD_JANPOST);
+        $faggotry = strpos($poster_info['name'], $lang['THREAD_JANPOST']);
         if ($faggotry)
         {
-            $poster_info['name'] = LANG_FAKE_STAFF_ATTEMPT;
+            $poster_info['name'] = $lang['FAKE_STAFF_ATTEMPT'];
         }
         
         preg_match('/^([^#]*)(#(?!#))?([^#]*)(##)?(.*)$/', $poster_info['name'], $name_pieces);
@@ -193,13 +193,13 @@ function new_post($dataforce, $authorized, $dbh)
         
         if ($name_pieces[1] === '' || $authorized[$staff_id]['perm_post_anon'])
         {
-            $poster_info['name'] = LANG_THREAD_NONAME;
+            $poster_info['name'] = $lang['THREAD_NONAME'];
             $poster_info['email'] = '';
         }
     }
     else
     {
-        $poster_info['name'] = LANG_THREAD_NONAME;
+        $poster_info['name'] = $lang['THREAD_NONAME'];
         $poster_info['email'] = '';
     }
     
@@ -243,7 +243,7 @@ function new_post($dataforce, $authorized, $dbh)
                     
                     if ($same_thread > 0)
                     {
-                        derp(12, LANG_ERROR_12, array('POST', $files[i]));
+                        derp($lang, 12, $lang['ERROR_12'], array('POST', $files[i]));
                     }
                 }
                 
@@ -505,10 +505,10 @@ function new_post($dataforce, $authorized, $dbh)
     }
     
     $return_res = ($dataforce['response_to'] === 0) ? $new_thread_dir : $dataforce['response_to'];
-    regen($dataforce, $authorized, $return_res, 'thread', FALSE, $dbh);
+    regen($dataforce, $authorized, $lang, $return_res, 'thread', FALSE, $dbh);
     // cache_post_links($post_link_reference);
     $dataforce['archive_update'] = TRUE;
-    regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
+    regen($dataforce, $authorized, $lang, NULL, 'main', FALSE, $dbh);
     
     if (!empty($_SESSION))
     {
@@ -559,7 +559,7 @@ function is_post_ok($dataforce, $time, $dbh)
         
         if ($renzoku > 0)
         {
-            derp(1, LANG_ERROR_1, array('POST'));
+            derp($lang, 1, $lang['ERROR_1'], array('POST'));
         }
         
         $post_count = 1;
@@ -575,17 +575,17 @@ function is_post_ok($dataforce, $time, $dbh)
             {
                 if ($op_post['post_number'] === '')
                 {
-                    derp(2, LANG_ERROR_2, array('POST'));
+                    derp($lang, 2, $lang['ERROR_2'], array('POST'));
                 }
                 
                 if ($op_post['locked'] === '1')
                 {
-                    derp(3, LANG_ERROR_3, array('POST'));
+                    derp($lang, 3, $lang['ERROR_3'], array('POST'));
                 }
                 
                 if ($op_post['archive_status'] !== '0')
                 {
-                    derp(14, LANG_ERROR_14, array('POST'));
+                    derp($lang, 14, $lang['ERROR_14'], array('POST'));
                 }
                 
                 $post_count = $op_post['post_count'];
@@ -605,12 +605,12 @@ function is_post_ok($dataforce, $time, $dbh)
         
         if ($renzoku > 0)
         {
-            derp(1, LANG_ERROR_1, array('POST'));
+            derp($lang, 1, $lang['ERROR_1'], array('POST'));
         }
         
         if ($post_count >= BS_MAX_POSTS)
         {
-            derp(4, LANG_ERROR_4, array('POST'));
+            derp($lang, 4, $lang['ERROR_4'], array('POST'));
         }
     }
     
@@ -665,7 +665,7 @@ function file_info()
                 
                 if ($file['size'] > BS_MAX_FILESIZE * 1024)
                 {
-                    derp(19, LANG_ERROR_19, array('POST', $files[i]));
+                    derp($lang, 19, $lang['ERROR_19'], array('POST', $files[i]));
                 }
                 
                 $files[$i]['dest'] = SRC_PATH . $file['name'] . '.tmp';
@@ -695,12 +695,12 @@ function file_info()
                 }
                 else
                 {
-                    derp(6, LANG_ERROR_6, array('POST', $files[i]));
+                    derp($lang, 6, $lang['ERROR_6'], array('POST', $files[i]));
                 }
                 
                 if (!$file_good)
                 {
-                    derp(18, LANG_ERROR_18, array('POST', $files[i]));
+                    derp($lang, 18, $lang['ERROR_18'], array('POST', $files[i]));
                 }
                 
                 $files[$i]['file_source'] = cleanse_the_aids($_POST['sauce' . ($i + 1)]);
@@ -715,7 +715,7 @@ function file_info()
         }
         else if ($file['error'] === UPLOAD_ERR_INI_SIZE)
         {
-            derp(19, LANG_ERROR_19, array('POST'));
+            derp($lang, 19, $lang['ERROR_19'], array('POST'));
         }
     }
     

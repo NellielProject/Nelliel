@@ -8,7 +8,7 @@
     <link rel="alternate stylesheet" type="text/css" href="{$rendervar['dotdot']}{CSSDIR}nigra.css" title="Nigra">
     <link rel="alternate stylesheet" type="text/css" href="{$rendervar['dotdot']}{CSSDIR}futaba.css" title="Futaba">
     <link rel="alternate stylesheet" type="text/css" href="{$rendervar['dotdot']}{CSSDIR}burichan.css" title="Burichan">
-    <script type="text/javascript" src="{$rendervar['dotdot']}{BOARD_FILES}{JSDIR}nel.js"></script>
+    <script type="text/javascript" src="{$rendervar['dotdot']}{JSDIR}nel.js"></script>
     <script type="text/javascript">processCookie("style-{CONF_BOARD_DIR}");
         window.onload = function doImportantStuff()
         {
@@ -24,7 +24,7 @@
 
 <body>
     <div class="text-center">
-        {S_SHORT_MENU}
+        {$lang['S_SHORT_MENU']}
     </div>
     <div>
     <span class="top_styles">
@@ -36,9 +36,9 @@
     </span>
     <span class="admin-bar">
         {$rendervar['log_out']}
-        [<a href="{$rendervar['dotdot']}{HOME}" rel="home">{LANG_LINK_HOME}</a>]
-        [<a href="{$rendervar['dotdot']}{PHP_SELF}?mode=admin">{LANG_LINK_MANAGE}</a>]
-        [<a href="{$rendervar['dotdot']}{PHP_SELF}?mode=about">{LANG_LINK_ABOUT}</a>]
+        [<a href="{$rendervar['dotdot']}{HOME}" rel="home">{$lang['LINK_HOME']}</a>]
+        [<a href="{$rendervar['dotdot']}{PHP_SELF}?mode=admin">{$lang['LINK_MANAGE']}</a>]
+        [<a href="{$rendervar['dotdot']}{PHP_SELF}?mode=about">{$lang['LINK_ABOUT']}</a>]
     </span>
     </div>
     

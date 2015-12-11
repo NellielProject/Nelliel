@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Error Handling
 //
-function derp($error_id, $error_message, $diagnostic)
+function derp($lang, $error_id, $error_message, $diagnostic)
 {
     $file_count = 0;
     $extra_data = '';
@@ -38,9 +38,9 @@ function derp($error_id, $error_message, $diagnostic)
         $extra_data = '';
     }
     
-    echo generate_header(array(), 'DERP', array());
+    echo generate_header(array(), $lang, 'DERP', array());
     echo '
-        <div class="text-center"><font color="blue" size="5">' . LANG_ERROR_HEADER . '<br><br>' . $error_message . '<br>' . $extra_data . '<br><a href="' . PHP_SELF2 . PHP_EXT . '">' . LANG_LINK_RETURN . '</a></b></font></div>
+        <div class="text-center"><font color="blue" size="5">' . $lang['ERROR_HEADER'] . '<br><br>' . $error_message . '<br>' . $extra_data . '<br><a href="' . PHP_SELF2 . PHP_EXT . '">' . $lang['LINK_RETURN'] . '</a></b></font></div>
         <br><br><hr>
 </body></html>';
     
@@ -48,7 +48,7 @@ function derp($error_id, $error_message, $diagnostic)
 
 }
 
-function regen(&$dataforce, $authorized, $id, $mode, $modmode, $dbh)
+function regen($dataforce, $authorized, $lang, $id, $mode, $modmode, $dbh)
 {
     global $link_resno, $link_updates;
     
@@ -99,7 +99,7 @@ function regen(&$dataforce, $authorized, $id, $mode, $modmode, $dbh)
     
     if ($mode === 'update_all_cache')
     {
-        $dataforce['rules_list'] = cache_rules($dbh);
+        $dataforce['rules_list'] = cache_rules($lang, $dbh);
         cache_settings($dbh);
         $dataforce['post_links'] = $link_updates;
         // cache_post_links();
@@ -112,14 +112,15 @@ function regen(&$dataforce, $authorized, $id, $mode, $modmode, $dbh)
     }
     
     $dataforce['post_links'] = $link_updates;
+
 }
 
 //
 // The content this function presents must remain intact and be accessible to users
 //
-function about_screen()
+function about_screen($lang)
 {
-    echo generate_header(array(), 'ABOUT', array());
+    echo generate_header(array(), $lang, 'ABOUT', array());
     echo '
         <div class="text-center">
         	<p><font color="blue" size="5">Nelliel Imageboard</font><br>
@@ -141,7 +142,7 @@ function about_screen()
 			NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</font></p>
         	<hr>
         	<p><font size="4" >Default filetype icons are from the Soft Scraps pack made by <a href="http://deleket.deviantart.com/" title="Deleket">Deleket</a></font></p>
-			<p class="text-center"><font size="4"><a href="' . PHP_SELF2 . PHP_EXT . '">' . LANG_LINK_RETURN . '</a></b></font></p>
+			<p class="text-center"><font size="4"><a href="' . PHP_SELF2 . PHP_EXT . '">' . $lang['LINK_RETURN'] . '</a></b></font></p>
 			</div>
 		</div>
 		<br><br><hr>

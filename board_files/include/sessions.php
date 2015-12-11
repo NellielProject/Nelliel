@@ -18,7 +18,7 @@ function terminate_session()
 //
 // Regenerate session (Swiper no swiping!)
 //
-function regen_session()
+function regen_session($lang)
 {
     $timeout = time() - $_SESSION['last_activity'];
     
@@ -31,16 +31,15 @@ function regen_session()
     else // Session timed out or doesn't match the cookie
     {
         terminate_session();
-        derp(105, LANG_ERROR_105, array('SEC'));
+        derp($lang, 105, $lang['ERROR_105'], array('SEC'));
     }
-
 }
 
 //
 // Check for existing session and process
 // If no session exists, confirm login info and set up a new one
 //
-function initialize_session($dataforce, $authorized)
+function initialize_session($dataforce, $authorized, $lang)
 {
     if (!empty($_SESSION))
     {
@@ -54,14 +53,14 @@ function initialize_session($dataforce, $authorized)
             }
             else if ($dataforce['mode2'] === 'admin')
             {
-                regen_session();
+                regen_session($lang);
                 valid($dataforce, $authorized);
                 die();
             }
         }
         else if (isset($dataforce['admin_mode']))
         {
-            regen_session();
+            regen_session($lang);
         }
         else
         {
@@ -82,7 +81,7 @@ function initialize_session($dataforce, $authorized)
         else
         {
             terminate_session();
-            derp(107, LANG_ERROR_107, array('LOGIN'));
+            derp($lang, 107, $lang['ERROR_107'], array('LOGIN'));
         }
         
         valid($dataforce, $authorized);

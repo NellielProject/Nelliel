@@ -23,7 +23,7 @@ require_once CACHE_PATH . 'multi-cache.nelcache';
 //
 // Cache the posting rules
 //
-function cache_rules($dbh)
+function cache_rules($lang, $dbh)
 {
     $gmode = '';
     $amode = '';
@@ -40,7 +40,7 @@ function cache_rules($dbh)
     foreach ($config_list as $array)
     {
         if (array_search('enable_graphics', $array) !== FALSE)
-        {
+        {   
             $config_list2['graphics'] = $array['setting'];
         }
         else if (array_search('enable_audio', $array) !== FALSE)
@@ -114,40 +114,41 @@ function cache_rules($dbh)
     if ($gmode !== '')
     {
         $gmode = substr($gmode, 0, -2);
-        $rule_list .= '<li>' . LANG_FILES_GRAPHICS . strtoupper($gmode) . '</li>';
+        $rule_list .= '<li>' . $lang['FILES_GRAPHICS'] . strtoupper($gmode) . '</li>';
     }
     if ($amode !== '')
     {
         $amode = substr($amode, 0, -2);
         $rule_list .= '
-							<li>' . LANG_FILES_AUDIO . strtoupper($amode) . '</li>';
+							<li>' . $lang['FILES_AUDIO'] . strtoupper($amode) . '</li>';
     }
     if ($vmode !== '')
     {
         $vmode = substr($vmode, 0, -2);
         $rule_list .= '
-							<li>' . LANG_FILES_VIDEO . strtoupper($vmode) . '</li>';
+							<li>' . $lang['FILES_VIDEO'] . strtoupper($vmode) . '</li>';
     }
     if ($dmode !== '')
     {
         $dmode = substr($dmode, 0, -2);
         $rule_list .= '
-							<li>' . LANG_FILES_DOCUMENT . strtoupper($dmode) . '</li>';
+							<li>' . $lang['FILES_DOCUMENT'] . strtoupper($dmode) . '</li>';
     }
     if ($rmode !== '')
     {
         $rmode = substr($rmode, 0, -2);
         $rule_list .= '
-							<li>' . LANG_FILES_ARCHIVE . strtoupper($rmode) . '</li>';
+							<li>' . $lang['FILES_ARCHIVE'] . strtoupper($rmode) . '</li>';
     }
     if ($omode !== '')
     {
         $omode = substr($omode, 0, -2);
         $rule_list .= '
-							<li>' . LANG_FILES_OTHER . strtoupper($omode) . '</li>';
+							<li>' . $lang['FILES_OTHER'] . strtoupper($omode) . '</li>';
     }
-
+    
     return $rule_list;
+
 }
 
 //
@@ -249,7 +250,7 @@ function parse_template($template, $regen)
     global $rendervar, $template_info, $total_html;
     
     $template_short = str_replace('.tpl', '', $template);
-
+    
     if (!$template_info[$template]['loaded'])
     {
         $md5 = md5_file(TEMPLATE_PATH . $template);
@@ -260,7 +261,7 @@ function parse_template($template, $regen)
             $lol = file_get_contents(TEMPLATE_PATH . $template);
             $lol = preg_replace('#(?<!\[|\')\'(?!\]|\')#', '\\\'', $lol); // Keep escaped characters intact
             $lol = trim($lol);
-            $begin = '<?php function render_' . $template_short . '() { global $rendervar, $total_html; $temp = \''; // Start of the cached template
+            $begin = '<?php function render_' . $template_short . '() { global $lang, $rendervar, $total_html; $temp = \''; // Start of the cached template
             $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*(if|elseif|foreach|for|while)[ \r\n\t]*([^{]*)}}#', '\'; $1( $2 ): $temp .= \'', $lol); // Opening control statements
             $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*else[ \r\n\t]*}}[ \t]*#', '\'; else: $temp .= \'', $lol); // Else
             $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*(endif|endforeach|endfor|endwhile)[ \r\n\t]*}}#', '\'; $1; $temp .= \'', $lol); // Closing control statements
@@ -269,15 +270,17 @@ function parse_template($template, $regen)
             $lol_out = $begin . $lol . $end;
             write_file(CACHE_PATH . $template_short . '.nelcache', $lol_out, 0644);
         }
+        
+        include (CACHE_PATH . $template_short . '.nelcache');
+        $template_info[$template]['loaded'] = TRUE;
     }
     
     if (!$regen)
     {
-        include (CACHE_PATH . $template_short . '.nelcache');
-        $template_info[$template]['loaded'] = TRUE;
         $dat_temp = call_user_func('render_' . $template_short);
         return $dat_temp;
     }
+
 }
 
 //
@@ -286,10 +289,10 @@ function parse_template($template, $regen)
 function cache_links($links)
 {
     global $link_updates;
-
+    
     return $links . $link_updates;
-}
 
+}
 
 //
 // Regenerate the template cache
@@ -301,6 +304,7 @@ function regen_template_cache()
         $template = basename($template);
         parse_template($template, TRUE);
     }
+
 }
 
 function reset_template_status()
@@ -311,6 +315,7 @@ function reset_template_status()
     {
         $template_info[$key]['loaded'] = FALSE;
     }
+
 }
 //
 // Write out rules, post links and template info cache
@@ -318,14 +323,14 @@ function reset_template_status()
 function write_multi_cache($dataforce)
 {
     global $template_info;
-
+    
     reset_template_status();
     $cache = '<?php
 $dataforce[\'post_links\'] = \'' . $dataforce['post_links'] . '\';
 $dataforce[\'rules_list\'] = \'' . $dataforce['rules_list'] . '\';
 $template_info = ' . var_export($template_info, TRUE) . ';
 ?>';
-
+    
     write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, 0644);
 
 }

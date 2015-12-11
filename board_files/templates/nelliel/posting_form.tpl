@@ -1,6 +1,6 @@
 {{ if $rendervar['response_id'] }}
         <div>
-            [<a href="{$rendervar['dotdot']}{$rendervar['page_ref1']}">{LANG_LINK_RETURN}</a>]
+            [<a href="{$rendervar['dotdot']}{$rendervar['page_ref1']}">{$lang['LINK_RETURN']}</a>]
         </div>
 {{ endif }}
     <div>
@@ -23,20 +23,20 @@
                     </tr>
 {{ if !BS1_FORCE_ANONYMOUS }}
                     <tr class="posting-form-row">
-                        <td class="posting-form-label"><label for="durrname">{LANG_LABEL_NAME}</label></td>
+                        <td class="posting-form-label"><label for="durrname">{$lang['LABEL_NAME']}</label></td>
                         <td class="posting-form-input"><input type="text" name="notanonymous" id="durrname" size="40" maxlength="{BS_MAX_NAME_LENGTH}"></td>
                     </tr>
                     <tr class="posting-form-row">
-                        <td class="posting-form-label"><label for="durrmail">{LANG_LABEL_EMAIL}</label></td>
+                        <td class="posting-form-label"><label for="durrmail">{$lang['LABEL_EMAIL']}</label></td>
                         <td class="posting-form-input"><input type="text" name="spamtarget" id="durrmail" size="40" maxlength="{BS_MAX_EMAIL_LENGTH}"></td>
                     </tr>
 {{ endif }}
                     <tr class="posting-form-row">
-                        <td class="posting-form-label"><label for="durrsubject">{LANG_LABEL_SUBJECT}</label></td>
+                        <td class="posting-form-label"><label for="durrsubject">{$lang['LABEL_SUBJECT']}</label></td>
                         <td class="posting-form-input"><input type="text" name="verb" id="durrsubject" size="40" maxlength="{BS_MAX_SUBJECT_LENGTH}"></td>
                     </tr>
                     <tr class="posting-form-row">
-                        <td class="posting-form-label"><label for="durrwords">{LANG_LABEL_COMMENT}</label></td>
+                        <td class="posting-form-label"><label for="durrwords">{$lang['LABEL_COMMENT']}</label></td>
                         <td class="posting-form-input"><textarea name="wordswordswords" id="durrwords" cols="48" rows="6"></textarea></td>
                     </tr>
     {{ for $i = 1, $j = 2; $i <= BS_MAX_POST_FILES; ++$i, ++$j }}
@@ -45,17 +45,17 @@
         {{ else }}
                     <tr class="posting-form-row none" id="file{$i}">
         {{ endif }}
-                        <td class="posting-form-label"><label for="durrfile{$i}">{LANG_LABEL_FILE} #{$i}</label></td>
+                        <td class="posting-form-label"><label for="durrfile{$i}">{$lang['LABEL_FILE']} #{$i}</label></td>
                         <td class="posting-form-input"><input type="file" name="upfile{$i}" id="durrfile{$i}" onchange="addMoarInput('file{$j}',false)">&nbsp;
                         <input type="button" value="Add Source" id="addsrc{$i}" onClick="addMoarInput('src{$i}',true)">&nbsp;
                         <input type="button" value="Add License" id="addlcns{$i}" onClick="addMoarInput('lcns{$i}',true)"></td>
                     </tr>
                     <tr class="posting-form-row none" id="src{$i}">
-                        <td class="posting-form-label"><label for="fs{$i}">{LANG_LABEL_SOURCE}</label></td>
+                        <td class="posting-form-label"><label for="fs{$i}">{$lang['LABEL_SOURCE']}</label></td>
                         <td class="posting-form-input"><input type="text" name="sauce{$i}" id="fs{$i}" maxlength="{BS_MAX_SOURCE_LENGTH}"></td>
                     </tr>
                     <tr class="posting-form-row none" id="lcns{$i}">
-                        <td class="posting-form-label"><label for="lc{$i}">{LANG_LABEL_LICENSE}</label></td>
+                        <td class="posting-form-label"><label for="lc{$i}">{$lang['LABEL_LICENSE']}</label></td>
                         <td class="posting-form-input"><input type="text" name="loldrama{$i}" id="lc{$i}" maxlength="{BS_MAX_LICENSE_LENGTH}"></td>
                     </tr>
     {{ endfor }}
@@ -68,37 +68,37 @@
 {{ endif }}
 
                     <tr class="posting-form-row">
-                        <td class="posting-form-label"><label for="durrpass">{LANG_LABEL_PASS}</label></td>
-                        <td class="posting-form-input"><input type="password" name="sekrit" id="durrpass" size="12" maxlength="16" value="">&nbsp;&nbsp;{LANG_TEXT_PASS_WAT}</td>
+                        <td class="posting-form-label"><label for="durrpass">{$lang['LABEL_PASS']}</label></td>
+                        <td class="posting-form-input"><input type="password" name="sekrit" id="durrpass" size="12" maxlength="16" value="">&nbsp;&nbsp;{$lang['TEXT_PASS_WAT']}</td>
                     </tr>
                     <tr class="posting-form-row">
                         <td class="posting-form-label"></td>
-                        <td class="posting-form-input"><input type="submit" value="{LANG_FORM_SUBMIT}">&nbsp;&nbsp;&nbsp;&nbsp;<input type="reset" value="{LANG_FORM_RESET}"></td>
+                        <td class="posting-form-input"><input type="submit" value="{$lang['FORM_SUBMIT']}">&nbsp;&nbsp;&nbsp;&nbsp;<input type="reset" value="{$lang['FORM_RESET']}"></td>
                     </tr>
                     <tr class="posting-form-row">
 {{ if $rendervar['response_id'] > 0 }}
-                        <td class="posting-form-label"></td><td class="posting-form-input">{LANG_TEXT_REPLYMODE}</td>
+                        <td class="posting-form-label"></td><td class="posting-form-input">{$lang['TEXT_REPLYMODE']}</td>
 {{ else }}
-                        <td class="posting-form-label"></td><td class="posting-form-input">{LANG_TEXT_THREADMODE}</td>
+                        <td class="posting-form-label"></td><td class="posting-form-input">{$lang['TEXT_THREADMODE']}</td>
 {{ endif }}
                     </tr>
                     <tr class="posting-form-row">
                         <td colspan="2" class="rules">
                             <ul>
                                 {$rendervar['rules_list']}
-                                <li>{LANG_POSTING_RULES1_1}{BS_MAX_FILESIZE}{LANG_POSTING_RULES1_2}</li>
-                                <li>{LANG_POSTING_RULES2_1}{BS_MAX_WIDTH} x {BS_MAX_HEIGHT}{LANG_POSTING_RULES2_2}</li>
+                                <li>{$lang['POSTING_RULES1_1']}{BS_MAX_FILESIZE}{$lang['POSTING_RULES1_2']}</li>
+                                <li>{$lang['POSTING_RULES2_1']}{BS_MAX_WIDTH} x {BS_MAX_HEIGHT}{$lang['POSTING_RULES2_2']}</li>
                             </ul>
                         </td>
                     </tr>
 {{ if BS1_USE_SPAMBOT_TRAP }}
                     <tr class="none">
-                        <td><label for="thename1">{LANG_TEXT_SPAMBOT_TRAP}</label></td>
-                        <td><input type="text" name="{LANG_TEXT_SPAMBOT_FIELD1}" id="thename1" size="30"></td>
+                        <td><label for="thename1">{$lang['TEXT_SPAMBOT_TRAP']}</label></td>
+                        <td><input type="text" name="{$lang['TEXT_SPAMBOT_FIELD1']}" id="thename1" size="30"></td>
                     </tr>
                     <tr class="none">
-                        <td><label for="theurl1">{LANG_TEXT_SPAMBOT_TRAP}</label></td>
-                        <td><input type="text" name="{LANG_TEXT_SPAMBOT_FIELD2}" id="theurl1" size="60"></td>
+                        <td><label for="theurl1">{$lang['TEXT_SPAMBOT_TRAP']}</label></td>
+                        <td><input type="text" name="{$lang['TEXT_SPAMBOT_FIELD2']}" id="theurl1" size="60"></td>
                     </tr>
 {{ endif }}
                 </table>

@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function thread_updates($dataforce, $authorized, $dbh)
+function thread_updates($dataforce, $authorized, $lang, $dbh)
 {
     $threadlist = array();
     $postlist = array();
@@ -57,7 +57,7 @@ function thread_updates($dataforce, $authorized, $dbh)
 
 }
 
-function make_sticky($dataforce, $sub, $dbh)
+function make_sticky($dataforce, $lang, $sub, $dbh)
 {
     $id = $sub[1];
     $result = $dbh->query('SELECT response_to,has_file,post_time FROM ' . POSTTABLE . ' WHERE post_number=' . $id . '');
@@ -106,12 +106,12 @@ function make_sticky($dataforce, $sub, $dbh)
     if (!file_exists(PAGE_PATH . $id . '/' . $id . '.html'))
     {
         $dataforce['response_id'] = $id;
-        regen($dataforce, $authorized, $dataforce['response_id'], 'thread', FALSE, $dbh);
+        regen($dataforce, $authorized, $lang, $dataforce['response_id'], 'thread', FALSE, $dbh);
     }
     
     cache_post_links();
     $dataforce['archive_update'] = TRUE;
-    regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
+    regen($dataforce, $authorized, $lang, NULL, 'main', FALSE, $dbh);
     
     if (!empty($_SESSION))
     {
@@ -120,7 +120,7 @@ function make_sticky($dataforce, $sub, $dbh)
 
 }
 
-function unsticky($dataforce, $sub, $dbh)
+function unsticky($dataforce, $lang, $sub, $dbh)
 {
     $id = $sub[1];
     $dbh->query('UPDATE ' . POSTTABLE . ' SET sticky=0 WHERE post_number=' . $id . '');
@@ -136,12 +136,12 @@ function unsticky($dataforce, $sub, $dbh)
     if (!file_exists(PAGE_PATH . $id . '/' . $id . '.html'))
     {
         $dataforce['response_id'] = $id;
-        regen($dataforce, $authorized, $dataforce['response_id'], 'thread', FALSE, $dbh);
+        regen($dataforce, $authorized, $lang, $dataforce['response_id'], 'thread', FALSE, $dbh);
     }
     
     cache_post_links();
     $dataforce['archive_update'] = TRUE;
-    regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
+    regen($dataforce, $authorized, $lang, NULL, 'main', FALSE, $dbh);
     
     if (!empty($_SESSION))
     {
@@ -150,13 +150,13 @@ function unsticky($dataforce, $sub, $dbh)
 
 }
 
-function delete_content($dataforce, $authorized, $sub, $type, $dbh)
+function delete_content($dataforce, $authorized, $lang, $sub, $type, $dbh)
 {
     $id = $sub[1];
     
     if (!is_numeric($id))
     {
-        derp(13, LANG_ERROR_13, array('DELETE'));
+        derp($lang, 13, $lang['ERROR_13'], array('DELETE'));
     }
     
     $flag = FALSE;
@@ -293,7 +293,7 @@ function delete_content($dataforce, $authorized, $sub, $type, $dbh)
     }
     else
     {
-        derp(20, LANG_ERROR_20, array('DELETE'));
+        derp($lang, 20, $lang['ERROR_20'], array('DELETE'));
     }
     
     if (!empty($_SESSION))

@@ -13,6 +13,7 @@ foreach ($plugin_files as $file)
 }
 
 $plugins->activate();
+
 class plugin_handler
 {
     private static $hooks = array();

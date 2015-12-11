@@ -1,5 +1,5 @@
 {{ if $rendervar['omitted_posts'] }}
-        <span class="omitted-posts">{$rendervar['omitted_count']}{LANG_TEXT_OMITTED_POSTS}</span><br>
+        <span class="omitted-posts">{$rendervar['omitted_count']}{$lang['TEXT_OMITTED_POSTS']}</span><br>
 {{ endif }}
             <a id="p{$rendervar['post_number']}"></a>
             <div class="indents">&gt;&gt;</div>
@@ -18,7 +18,7 @@
                 {$rendervar['post_time']} No. <a href="{PAGE_DIR}{$rendervar['response_to']}/{$rendervar['response_to']}.html#p{$rendervar['post_number']}" class="post-link">{$rendervar['post_number']}</a>&nbsp;
     {{ endif }}
     {{ if $rendervar['sticky'] }}
-                <img src="{$rendervar['dotdot']}{BOARD_FILES}/imagez/nelliel/{LANG_THREAD_STICKY_ICON}" width="22" height="22" alt="{LANG_THREAD_STICKY}">
+                <img src="{$rendervar['dotdot']}{BOARD_FILES}/imagez/nelliel/{$lang['THREAD_STICKY_ICON']}" width="22" height="22" alt="{$lang['THREAD_STICKY']}">
     {{ endif }}
                 <br>
     {{ if $rendervar['logged_in'] }}
@@ -37,7 +37,7 @@
                 {{ endif }}
                     <a href="{$file['file_location']}" rel="external">{$file['filename']}.{$file['extension']}</a>
                     <br>{{ if $file['img_dim'] }}{$file['image_width']} x {$file['image_height']}{{ endif }} ({$file['filesize']} KB)
-                    <br>[<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['file_order']}','showimgmeta{$rendervar['post_number']}_{$file['file_order']}','none','{LANG_THREAD_LESS_DATA}')" id="showimgmeta{$rendervar['post_number']}_{$file['file_order']}">{LANG_THREAD_MOAR_DATA}</a>]
+                    <br>[<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['file_order']}','showimgmeta{$rendervar['post_number']}_{$file['file_order']}','none','{$lang['THREAD_LESS_DATA']}')" id="showimgmeta{$rendervar['post_number']}_{$file['file_order']}">{$lang['THREAD_MOAR_DATA']}</a>]
                     <span id="imgmeta{$rendervar['post_number']}_{$file['file_order']}" class="none">
                 {{ if $file['source'] != '' }}
                     <br><span class="source">Source: {$file['source']}</span>
@@ -59,7 +59,7 @@
                 {{ endif }}
                     <a href="{$file['file_location']}" rel="external">{$file['filename']}.{$file['extension']}</a> - 
                 {{ if $file['img_dim'] }}{$file['image_width']} x {$file['image_height']}{{ endif }} ({$file['filesize']} KB)
-                    [<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['file_order']}','showimgmeta{$rendervar['post_number']}_{$file['file_order']}','none','{LANG_THREAD_LESS_DATA}')" id="showimgmeta{$rendervar['post_number']}_{$file['file_order']}">{LANG_THREAD_MOAR_DATA}</a>]
+                    [<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['file_order']}','showimgmeta{$rendervar['post_number']}_{$file['file_order']}','none','{$lang['THREAD_LESS_DATA']}')" id="showimgmeta{$rendervar['post_number']}_{$file['file_order']}">{$lang['THREAD_MOAR_DATA']}</a>]
                     <span id="imgmeta{$rendervar['post_number']}_{$file['file_order']}" class="none">
                 {{ if $file['source'] != '' }}
                     <br><span class="source">Source: {$file['source']}</span>

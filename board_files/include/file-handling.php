@@ -74,5 +74,6 @@ function create_thread_directories($thread_id)
     chmod(THUMB_PATH . $thread_id, 0777);
     mkdir(PAGE_PATH . $thread_id, 0777);
     chmod(PAGE_PATH . $thread_id, 0777);
+
 }
 ?>

@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Generate the header
 //
-function generate_header($dataforce, $render_mode, $treeline)
+function generate_header($dataforce, $lang, $render_mode, $treeline)
 {
     global $rendervar;
     lol_html_timer(0);
@@ -115,12 +115,13 @@ function form($dataforce, $authorized)
     $rendervar['max_files'] = 3;
     $dat_temp = parse_template('posting_form.tpl', FALSE);
     return $dat_temp;
+
 }
 
 //
 // Render posts
 //
-function render_post($dataforce, $authorized, $response, $partial, $gen_data, $treeline, $dbh)
+function render_post($dataforce, $authorized, $lang, $response, $partial, $gen_data, $treeline, $dbh)
 {
     global $rendervar, $link_resno;
     
@@ -234,17 +235,17 @@ function render_post($dataforce, $authorized, $response, $partial, $gen_data, $t
     switch ($rendervar['mod_post'])
     {
         case '1':
-            $rendervar['staff_post'] = LANG_THREAD_JANPOST;
+            $rendervar['staff_post'] = $lang['THREAD_JANPOST'];
             $rendervar['secure_tripcode'] = '';
             break;
         
         case '2':
-            $rendervar['staff_post'] = LANG_THREAD_MODPOST;
+            $rendervar['staff_post'] = $lang['THREAD_MODPOST'];
             $rendervar['secure_tripcode'] = '';
             break;
         
         case '3':
-            $rendervar['staff_post'] = LANG_THREAD_ADMINPOST;
+            $rendervar['staff_post'] = $lang['THREAD_ADMINPOST'];
             $rendervar['secure_tripcode'] = '';
             break;
         
@@ -271,6 +272,7 @@ function render_post($dataforce, $authorized, $response, $partial, $gen_data, $t
     $dat_temp = ($response ? parse_template('response_post.tpl', FALSE) : parse_template('op_post.tpl', FALSE));
     $rendervar = $rendervar_first;
     return $dat_temp;
+
 }
 
 //
@@ -473,7 +475,6 @@ function generate_ban_panel($dataforce, $baninfo, $mode)
     
     $dat_temp = parse_template('manage_bans_panel.tpl', FALSE);
     return $dat_temp;
-
 }
 
 //
@@ -482,7 +483,7 @@ function generate_ban_panel($dataforce, $baninfo, $mode)
 function parse_links($matches)
 {
     global $link_resno, $link_updates, $dbh;
-
+    
     $back = ($link_resno === 0) ? PAGE_DIR : '../';
     $pattern = '#p' . $matches[1] . 't([0-9]+)#';
     $isquoted = preg_match($pattern, $link_updates, $matches2);
@@ -500,7 +501,7 @@ function parse_links($matches)
     else
     {
         $link = $matches2[1];
-
+        
         if ($link[0] == '0')
         {
             return '<a href="' . $back . $matches[1] . '/' . $matches[1] . '.html" class="link_quote">>>' . $matches[1] . '</a>';
@@ -518,7 +519,7 @@ function parse_links($matches)
 function lol_html_timer($derp)
 {
     global $start_html, $end_html, $total_html;
-
+    
     if ($derp === 0)
     {
         $start_html = 0;

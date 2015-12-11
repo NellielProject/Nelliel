@@ -11,7 +11,7 @@
     {{ if $rendervar['appeal_status'] === 0 }}
     <form accept-charset="utf-8" name="postingform" action="{$rendervar['dotdot']}{PHP_SELF}" method="post" enctype="multipart/form-data">
         <div>
-        <p>{LANG_ABOUT_APPEALS}</p>
+        <p>{$lang['ABOUT_APPEALS']}</p>
         <input type="hidden" name="mode" value="banappeal">
         <input type="hidden" name="banned_ip" value="{$rendervar['host']}">
         <input type="hidden" name="banned_board" value="{$rendervar['board']}">
@@ -21,22 +21,22 @@
     </form>
 </div>
 {{ elseif $rendervar['appeal_status'] === 1 }}
-<p>{LANG_BAN_RESPONSE_PENDING}</p>
+<p>{$lang['BAN_RESPONSE_PENDING']}</p>
 {{ elseif $rendervar['appeal_status'] === 2 }}
-<p>{LANG_APPEAL_REVIEWED}<br>
+<p>{$lang['APPEAL_REVIEWED']}<br>
     {{ if isset($rendervar['appeal_response']) }}
-{LANG_BAN_APPEAL_RESPONSE}</p>
+{$lang['BAN_APPEAL_RESPONSE']}</p>
 <p>{$rendervar['appeal_response']}</p>
     {{ else }}
-<p>{LANG_BAN_NO_RESPONSE}</p>
+<p>{$lang['BAN_NO_RESPONSE']}</p>
     {{ endif }}
 {{ elseif $rendervar['appeal_status'] === 3 }}
-<p>{LANG_BAN_ALTERED}<br>
+<p>{$lang['BAN_ALTERED']}<br>
     {{ if isset($rendervar['appeal_response']) }}
-{LANG_BAN_APPEAL_RESPONSE}</p>
+{$lang['BAN_APPEAL_RESPONSE']}</p>
 <p>{$rendervar['appeal_response']}</p>
     {{ else }}
-<p>{LANG_BAN_NO_RESPONSE}</p>
+<p>{$lang['BAN_NO_RESPONSE']}</p>
     {{ endif }}
 {{ endif }}
 <hr class="clear">

@@ -1,25 +1,25 @@
 {{ if $rendervar['thread_panel_form'] }}
-<div class="pass-valid">{LANG_MANAGE_MODE}</div>
-<div class="del-list">{LANG_MANAGE_THREADS}</div>
+<div class="pass-valid">{$lang['MANAGE_MODE']}</div>
+<div class="del-list">{$lang['MANAGE_THREADS']}</div>
 <form accept-charset="utf-8" action="imgboard.php" method="post" enctype"multipart/form-data">
 <input type="hidden" name="mode" value="admin">
 <input type="hidden" name="adminmode" value="updatethread">
 <table class="post-lists">
     <tr class="manage-header">
     {{ if !$rendervar['expand_thread'] }}
-        <th>{LANG_MANAGE_THREAD_EXPAND}</th>
+        <th>{$lang['MANAGE_THREAD_EXPAND']}</th>
     {{ else }}
         <th></th>
     {{ endif }}
-        <th>{LANG_MANAGE_THREAD_POST_NUM}</th><th>{LANG_MANAGE_THREAD_DELETE}<th>{LANG_MANAGE_THREAD_STICKY}</th>
-        <th>{LANG_MANAGE_THREAD_UNSTICKY}</th><th>{LANG_MANAGE_THREAD_TIME}</th><th>{LANG_MANAGE_THREAD_SUBJECT}</th><th>{LANG_MANAGE_THREAD_NAME}</th>
-        <th>{LANG_MANAGE_THREAD_COMMENT}</th><th>{LANG_MANAGE_THREAD_HOST}</th><th>{LANG_MANAGE_THREAD_FILE}</th>
+        <th>{$lang['MANAGE_THREAD_POST_NUM']}</th><th>{$lang['MANAGE_THREAD_DELETE']}<th>{$lang['MANAGE_THREAD_STICKY']}</th>
+        <th>{$lang['MANAGE_THREAD_UNSTICKY']}</th><th>{$lang['MANAGE_THREAD_TIME']}</th><th>{$lang['MANAGE_THREAD_SUBJECT']}</th><th>{$lang['MANAGE_THREAD_NAME']}</th>
+        <th>{$lang['MANAGE_THREAD_COMMENT']}</th><th>{$lang['MANAGE_THREAD_HOST']}</th><th>{$lang['MANAGE_THREAD_FILE']}</th>
     </tr>
 {{ endif }}
 {{ if $rendervar['thread_panel_loop'] }}
     <tr class="{$rendervar['bg_class']}">
     {{ if !$rendervar['expand_thread'] }}
-        <td><input type="submit" name="expand_thread" value="{LANG_FORM_EXPAND} {$rendervar['post_number']}"></form>
+        <td><input type="submit" name="expand_thread" value="{$lang['FORM_EXPAND']} {$rendervar['post_number']}"></form>
         </td>
     {{ else }}
         <td></td>
@@ -62,13 +62,13 @@
 {{ endif }}
 {{ if $rendervar['thread_panel_end'] }}
 </table>
-<div>[ <b>{LANG_MANAGE_FILESIZE_TOTAL} {$rendervar['all_filesize']}</b> KB ]</div><br><input type="submit" name="dostuff" value="Update">&nbsp;&nbsp;<input type=reset value="{LANG_FORM_RESET}"></div>
+<div>[ <b>{$lang['MANAGE_FILESIZE_TOTAL']} {$rendervar['all_filesize']}</b> KB ]</div><br><input type="submit" name="dostuff" value="Update">&nbsp;&nbsp;<input type=reset value="{$lang['FORM_RESET']}"></div>
 </form><br>
     {{ if $rendervar['expand_thread'] }}
 <form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
     <input type="hidden" name="mode" value="admin">
     <input type="hidden" name="adminmode" value="returnthreadlist">
-    <input type="submit" value="{LANG_FORM_RETURN_THREAD}">
+    <input type="submit" value="{$lang['FORM_RETURN_THREAD']}">
 </form>
     {{ endif }}
 {{ endif }}

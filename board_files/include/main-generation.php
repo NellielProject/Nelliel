@@ -29,7 +29,7 @@ function main_thread_generator($dataforce, $authorized, $dbh)
     // Special handling when there's no content
     if ($counttree === 0)
     {
-        $page_output .= generate_header($dataforce, 'NORMAL', $treeline);
+        $page_output .= generate_header($dataforce, $lang, 'NORMAL', $treeline);
         $page_output .= form($dataforce, $authorized);
         $rendervar['main_page'] = TRUE;
         $rendervar['prev_nav'] = '';
@@ -58,7 +58,7 @@ function main_thread_generator($dataforce, $authorized, $dbh)
         $page_output = '';
         $dataforce['omitted_done'] = TRUE;
         $rendervar['page_title'] = BS_BOARD_NAME;
-        $page_output .= generate_header($dataforce, 'NORMAL', $treeline);
+        $page_output .= generate_header($dataforce, $lang, 'NORMAL', $treeline);
         $page_output .= form($dataforce, $authorized);
         $end_of_thread = FALSE;
         $sub_page_thread_counter = 0;
@@ -97,7 +97,7 @@ function main_thread_generator($dataforce, $authorized, $dbh)
                 $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? BS_THREADS_PER_PAGE : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
                 $rendervar['insert_hr'] = TRUE;
-                $page_output .= render_post($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline, $dbh);
+                $page_output .= render_post($dataforce, $authorized, $lang, FALSE, FALSE, $gen_data, $treeline, $dbh);
                 $rendervar['insert_hr'] = FALSE;
             }
             
@@ -120,17 +120,17 @@ function main_thread_generator($dataforce, $authorized, $dbh)
                     if ($gen_data['post_count'] > BS_ABBREVIATE_THREAD && $gen_data['post_counter'] === 1)
                     {
                         $dataforce['omitted_done'] = FALSE;
-                        $page_output .= render_post($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline, $dbh);
+                        $page_output .= render_post($dataforce, $authorized, $lang, TRUE, TRUE, $gen_data, $treeline, $dbh);
                         $dataforce['omitted_done'] = TRUE;
                     }
                     else
                     {
-                        $page_output .= render_post($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline, $dbh);
+                        $page_output .= render_post($dataforce, $authorized, $lang, TRUE, TRUE, $gen_data, $treeline, $dbh);
                     }
                 }
                 else
                 {
-                    $page_output .= render_post($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline, $dbh);
+                    $page_output .= render_post($dataforce, $authorized, $lang, FALSE, FALSE, $gen_data, $treeline, $dbh);
                 }
             }
             else

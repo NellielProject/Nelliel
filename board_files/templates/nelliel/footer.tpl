@@ -16,13 +16,13 @@
     {{ endif }}
             <input type="hidden" name="mode" value="update">
     {{ if !BS1_USE_NEW_IMGDEL }}
-            <input type="checkbox" name="onlyimgdel" id="delfbox" value="on"><label for="delfbox">{LANG_DELETE_FILES_ONLY}</label><br>
+            <input type="checkbox" name="onlyimgdel" id="delfbox" value="on"><label for="delfbox">{$lang['DELETE_FILES_ONLY']}</label><br>
     {{ endif }}
     {{ if $rendervar['logged_in'] }}
-            <input type="submit" value="{LANG_FORM_SUBMIT}">
+            <input type="submit" value="{$lang['FORM_SUBMIT']}">
     {{ else }}
-            <label for="delpass">{LANG_LABEL_PASS}</label><input type="password" name="sekrit" id="delpass" size="12" maxlength="16" value="">
-            <input type="submit" value="{LANG_FORM_SUBMIT}">
+            <label for="delpass">{$lang['LABEL_PASS']}</label><input type="password" name="sekrit" id="delpass" size="12" maxlength="16" value="">
+            <input type="submit" value="{$lang['FORM_SUBMIT']}">
     {{ endif }}
             
             </td>
@@ -51,7 +51,7 @@
     </p>
 {{ endif }}
 <div>
-{S_FOOT}
+{$lang['S_FOOT']}
 </div>
     This page was created in {$total_html} seconds.<br>
 </div>
