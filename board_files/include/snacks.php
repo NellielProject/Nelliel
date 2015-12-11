@@ -157,7 +157,7 @@ function applyBan($dataforce, $authorized, $lang, $dbh)
         $rendervar['host'] = @inet_ntop($rendervar['host']) ? inet_ntop($rendervar['host']) : 'Unknown';
         lol_html_timer(0);
         $dat = generate_header($dataforce, $lang, 'BAN', array());
-        $dat .= parse_template('ban_page.tpl', FALSE);
+        $dat .= parse_template($lang, 'ban_page.tpl', FALSE);
         $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
         echo $dat;
         die();

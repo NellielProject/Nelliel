@@ -81,7 +81,7 @@ function regen($dataforce, $authorized, $lang, $id, $mode, $modmode, $dbh)
         update_archive_status($dataforce, $dbh);
         $dataforce['response_id'] = 0;
         $link_resno = 0;
-        main_thread_generator($dataforce, $authorized, $dbh);
+        main_thread_generator($dataforce, $authorized, $lang, $dbh);
     }
     
     if ($mode === 'thread' || $mode === 'full')
@@ -92,7 +92,7 @@ function regen($dataforce, $authorized, $lang, $id, $mode, $modmode, $dbh)
         while ($i < $threads)
         {
             $dataforce['response_id'] = $ids[$i];
-            thread_generator($dataforce, $authorized, $dbh);
+            thread_generator($dataforce, $authorized, $lang, $dbh);
             ++ $i;
         }
     }
@@ -103,7 +103,7 @@ function regen($dataforce, $authorized, $lang, $id, $mode, $modmode, $dbh)
         cache_settings($dbh);
         $dataforce['post_links'] = $link_updates;
         // cache_post_links();
-        regen_template_cache();
+        regen_template_cache($lang);
     }
     
     if (!empty($_SESSION) && !$modmode)

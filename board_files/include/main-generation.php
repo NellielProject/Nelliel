@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Genrerates the main thread listings
 //
-function main_thread_generator($dataforce, $authorized, $dbh)
+function main_thread_generator($dataforce, $authorized, $lang, $dbh)
 {
     global $rendervar;
     $rendervar['insert_hr'] = FALSE;
@@ -30,7 +30,7 @@ function main_thread_generator($dataforce, $authorized, $dbh)
     if ($counttree === 0)
     {
         $page_output .= generate_header($dataforce, $lang, 'NORMAL', $treeline);
-        $page_output .= form($dataforce, $authorized);
+        $page_output .= form($dataforce, $authorized, $lang);
         $rendervar['main_page'] = TRUE;
         $rendervar['prev_nav'] = '';
         $rendervar['next_nav'] = '';
@@ -59,7 +59,7 @@ function main_thread_generator($dataforce, $authorized, $dbh)
         $dataforce['omitted_done'] = TRUE;
         $rendervar['page_title'] = BS_BOARD_NAME;
         $page_output .= generate_header($dataforce, $lang, 'NORMAL', $treeline);
-        $page_output .= form($dataforce, $authorized);
+        $page_output .= form($dataforce, $authorized, $lang);
         $end_of_thread = FALSE;
         $sub_page_thread_counter = 0;
         

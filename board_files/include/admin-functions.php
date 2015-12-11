@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function valid($dataforce, $authorized)
+function valid($dataforce, $authorized, $lang)
 {
     global $rendervar;
     
@@ -15,7 +15,7 @@ function valid($dataforce, $authorized)
         
         $dat .= generate_header($dataforce, $lang, 'ADMIN', array());
         $rendervar = array_merge($rendervar, (array) $authorized[$_SESSION['username']]);
-        $dat .= parse_template('manage_options.tpl', FALSE);
+        $dat .= parse_template($lang, 'manage_options.tpl', FALSE);
         $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
         echo $dat;
     }
@@ -23,7 +23,7 @@ function valid($dataforce, $authorized)
     {
         
         $dat .= generate_header($dataforce, $lang, 'ADMIN', array());
-        $dat .= parse_template('manage_login.tpl', FALSE);
+        $dat .= parse_template($lang, 'manage_login.tpl', FALSE);
         $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
         echo $dat;
     }
@@ -232,7 +232,7 @@ $authorized = ' . var_export($authorized, TRUE) . '?>';
     }
     
     $dat = generate_header($dataforce, $lang, 'ADMIN', array());
-    $dat .= parse_template('manage_staff_panel.tpl', FALSE);
+    $dat .= parse_template($lang, 'manage_staff_panel.tpl', FALSE);
     $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
     echo $dat;
 
@@ -398,7 +398,7 @@ function admin_control($dataforce, $authorized, $lang, $mode, $dbh)
     $rendervar = array_merge($rendervar, (array) $board_settings);
     
     $dat = generate_header($dataforce, $lang, 'ADMIN', array());
-    $dat .= parse_template('admin_panel.tpl', FALSE);
+    $dat .= parse_template($lang, 'admin_panel.tpl', FALSE);
     $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
     echo $dat;
 
@@ -423,7 +423,7 @@ function ban_control($dataforce, $authorized, $lang, $mode, $dbh)
     if ($mode === 'list')
     {
         $dat .= generate_header($dataforce, $lang, 'ADMIN', array());
-        $dat .= generate_ban_panel($dataforce, array(), 'HEAD');
+        $dat .= generate_ban_panel($dataforce, $lang, array(), 'HEAD');
         $result = $dbh->query('SELECT * FROM ' . BANTABLE . ' ORDER BY id DESC');
         
         $j = 0;
@@ -436,13 +436,13 @@ function ban_control($dataforce, $authorized, $lang, $mode, $dbh)
             else
             {
                 $dataforce['j_increment'] = $j;
-                $dat .= generate_ban_panel($dataforce, $baninfo, 'LIST');
+                $dat .= generate_ban_panel($dataforce, $lang, $baninfo, 'LIST');
             }
             ++ $j;
         }
         
         unset($result);
-        $dat .= generate_ban_panel($dataforce, array(), 'END');
+        $dat .= generate_ban_panel($dataforce, $lang, array(), 'END');
         $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
         echo $dat;
     }
@@ -453,14 +453,14 @@ function ban_control($dataforce, $authorized, $lang, $mode, $dbh)
         unset($result);
         
         $dat .= generate_header($dataforce, $lang, 'ADMIN', array());
-        $dat .= generate_ban_panel($dataforce, $baninfo, 'MODIFY');
+        $dat .= generate_ban_panel($dataforce, $lang, $baninfo, 'MODIFY');
         $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
         echo $dat;
     }
     else if ($mode === 'new')
     {
         $dat .= generate_header($dataforce, $lang, 'ADMIN', array());
-        $dat .= generate_ban_panel($dataforce, array(), 'ADD');
+        $dat .= generate_ban_panel($dataforce, $lang, array(), 'ADD');
         $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
         echo $dat;
     }
@@ -490,7 +490,7 @@ function thread_panel($dataforce, $authorized, $lang, $mode, $dbh)
     }
     
     $dat = generate_header($dataforce, $lang, 'ADMIN', array());
-    $dat .= generate_thread_panel($dataforce, array(), 'FORM');
+    $dat .= generate_thread_panel($dataforce, $lang, array(), 'FORM');
     
     if ($mode === 'expand')
     {
@@ -530,12 +530,12 @@ function thread_panel($dataforce, $authorized, $lang, $mode, $dbh)
         }
         
         $dataforce['j_increment'] = $j;
-        $dat .= generate_thread_panel($dataforce, $thread, 'THREAD');
+        $dat .= generate_thread_panel($dataforce, $lang, $thread, 'THREAD');
         $j ++;
     }
     
     $dataforce['all_filesize'] = (int) ($all / 1024);
-    $dat .= generate_thread_panel($dataforce, $thread_data, 'END');
+    $dat .= generate_thread_panel($dataforce, $lang, $thread_data, 'END');
     $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
     echo $dat;
 

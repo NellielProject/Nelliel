@@ -54,7 +54,7 @@ function initialize_session($dataforce, $authorized, $lang)
             else if ($dataforce['mode2'] === 'admin')
             {
                 regen_session($lang);
-                valid($dataforce, $authorized);
+                valid($dataforce, $authorized, $lang);
                 die();
             }
         }
@@ -84,7 +84,7 @@ function initialize_session($dataforce, $authorized, $lang)
             derp($lang, 107, $lang['ERROR_107'], array('LOGIN'));
         }
         
-        valid($dataforce, $authorized);
+        valid($dataforce, $authorized, $lang);
         die();
     }
     else

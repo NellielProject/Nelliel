@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function thread_generator($dataforce, $authorized, $dbh)
+function thread_generator($dataforce, $authorized, $lang, $dbh)
 {
     global $rendervar;
     
@@ -48,7 +48,7 @@ function thread_generator($dataforce, $authorized, $dbh)
         if ($gen_data['post_counter'] === 0)
         {
             $page_output .= generate_header($dataforce, $lang, 'NORMAL', $treeline);
-            $page_output .= form($dataforce, $authorized);
+            $page_output .= form($dataforce, $authorized, $lang);
         }
         
         if ($partlimit === 100)

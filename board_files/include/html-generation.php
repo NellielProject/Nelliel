@@ -61,7 +61,7 @@ function generate_header($dataforce, $lang, $render_mode, $treeline)
     
     $rendervar['log_out'] = (!empty($_SESSION) && !$_SESSION['ignore_login']) ? '[<a href="' . $rendervar['dotdot'] . PHP_SELF . '?mode=log_out">Log Out</a>]' : '';
     $rendervar['page_ref1'] = (!empty($_SESSION) && !$_SESSION['ignore_login']) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT;
-    $dat_temp = parse_template('header.tpl', FALSE);
+    $dat_temp = parse_template($lang, 'header.tpl', FALSE);
     return $dat_temp;
 
 }
@@ -69,7 +69,7 @@ function generate_header($dataforce, $lang, $render_mode, $treeline)
 //
 // Generate reply form
 //
-function form($dataforce, $authorized)
+function form($dataforce, $authorized, $lang)
 {
     global $rendervar;
     
@@ -113,7 +113,7 @@ function form($dataforce, $authorized)
     }
     
     $rendervar['max_files'] = 3;
-    $dat_temp = parse_template('posting_form.tpl', FALSE);
+    $dat_temp = parse_template($lang, 'posting_form.tpl', FALSE);
     return $dat_temp;
 
 }
@@ -127,7 +127,7 @@ function render_post($dataforce, $authorized, $lang, $response, $partial, $gen_d
     
     if ($rendervar['insert_hr'])
     {
-        $dat_temp = parse_template('op_post.tpl', FALSE);
+        $dat_temp = parse_template($lang, 'op_post.tpl', FALSE);
         return $dat_temp;
     }
     
@@ -269,7 +269,7 @@ function render_post($dataforce, $authorized, $lang, $response, $partial, $gen_d
         $rendervar['page_ref2'] = '';
     }
     
-    $dat_temp = ($response ? parse_template('response_post.tpl', FALSE) : parse_template('op_post.tpl', FALSE));
+    $dat_temp = ($response ? parse_template($lang, 'response_post.tpl', FALSE) : parse_template($lang, 'op_post.tpl', FALSE));
     $rendervar = $rendervar_first;
     return $dat_temp;
 
@@ -315,7 +315,7 @@ function footer($authorized, $link, $styles, $del, $response)
 //
 // Generate HTML for Mod control panel
 //
-function generate_thread_panel($dataforce, $thread_data, $mode)
+function generate_thread_panel($dataforce, $lang, $thread_data, $mode)
 {
     global $rendervar;
     
@@ -403,7 +403,7 @@ function generate_thread_panel($dataforce, $thread_data, $mode)
         $rendervar['thread_panel_end'] = TRUE;
     }
     
-    $dat_temp = parse_template('manage_thread_panel.tpl', FALSE);
+    $dat_temp = parse_template($lang, 'manage_thread_panel.tpl', FALSE);
     return $dat_temp;
 
 }
@@ -411,7 +411,7 @@ function generate_thread_panel($dataforce, $thread_data, $mode)
 //
 // Ban modification form
 //
-function generate_ban_panel($dataforce, $baninfo, $mode)
+function generate_ban_panel($dataforce, $lang, $baninfo, $mode)
 {
     global $rendervar;
     
@@ -473,7 +473,7 @@ function generate_ban_panel($dataforce, $baninfo, $mode)
         $rendervar['ban_panel_add'] = TRUE;
     }
     
-    $dat_temp = parse_template('manage_bans_panel.tpl', FALSE);
+    $dat_temp = parse_template($lang, 'manage_bans_panel.tpl', FALSE);
     return $dat_temp;
 }
 
@@ -511,6 +511,48 @@ function parse_links($matches)
             return '<a href="' . $back . $link . '/' . $link . '.html#' . $matches[1] . '" class="link_quote">>>' . $matches[1] . '</a>';
         }
     }
+}
+
+
+//
+// Parse the templates into code form
+//
+function parse_template($lang, $template, $regen)
+{
+    global $rendervar, $template_info, $total_html;
+
+    $template_short = str_replace('.tpl', '', $template);
+
+    if (!$template_info[$template]['loaded'])
+    {
+        $md5 = md5_file(TEMPLATE_PATH . $template);
+
+        if (!isset($template_info[$template]) || $md5 !== $template_info[$template] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
+        {
+            $template_info[$template]['md5'] = $md5;
+            $lol = file_get_contents(TEMPLATE_PATH . $template);
+            $lol = preg_replace('#(?<!\[|\')\'(?!\]|\')#', '\\\'', $lol); // Keep escaped characters intact
+            $lol = trim($lol);
+            $begin = '<?php function render_' . $template_short . '($lang) { global $rendervar, $total_html; $temp = \''; // Start of the cached template
+            $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*(if|elseif|foreach|for|while)[ \r\n\t]*([^{]*)}}#', '\'; $1( $2 ): $temp .= \'', $lol); // Opening control statements
+            $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*else[ \r\n\t]*}}[ \t]*#', '\'; else: $temp .= \'', $lol); // Else
+            $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*(endif|endforeach|endfor|endwhile)[ \r\n\t]*}}#', '\'; $1; $temp .= \'', $lol); // Closing control statements
+            $lol = preg_replace('#{([^({)|(}]*)}#', "'.$1.'", $lol); // Variables and constants
+            $end = '\'; return $temp; } ?>'; // End of the caches template
+            $lol_out = $begin . $lol . $end;
+            write_file(CACHE_PATH . $template_short . '.nelcache', $lol_out, 0644);
+        }
+
+        include (CACHE_PATH . $template_short . '.nelcache');
+        $template_info[$template]['loaded'] = TRUE;
+    }
+
+    if (!$regen)
+    {
+        $dat_temp = call_user_func('render_' . $template_short, $lang);
+        return $dat_temp;
+    }
+
 }
 
 //

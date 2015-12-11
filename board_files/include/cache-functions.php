@@ -243,47 +243,6 @@ function cache_settings($dbh)
 }
 
 //
-// Parse the templates into code form
-//
-function parse_template($template, $regen)
-{
-    global $rendervar, $template_info, $total_html;
-    
-    $template_short = str_replace('.tpl', '', $template);
-    
-    if (!$template_info[$template]['loaded'])
-    {
-        $md5 = md5_file(TEMPLATE_PATH . $template);
-        
-        if (!isset($template_info[$template]) || $md5 !== $template_info[$template] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
-        {
-            $template_info[$template]['md5'] = $md5;
-            $lol = file_get_contents(TEMPLATE_PATH . $template);
-            $lol = preg_replace('#(?<!\[|\')\'(?!\]|\')#', '\\\'', $lol); // Keep escaped characters intact
-            $lol = trim($lol);
-            $begin = '<?php function render_' . $template_short . '() { global $lang, $rendervar, $total_html; $temp = \''; // Start of the cached template
-            $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*(if|elseif|foreach|for|while)[ \r\n\t]*([^{]*)}}#', '\'; $1( $2 ): $temp .= \'', $lol); // Opening control statements
-            $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*else[ \r\n\t]*}}[ \t]*#', '\'; else: $temp .= \'', $lol); // Else
-            $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*(endif|endforeach|endfor|endwhile)[ \r\n\t]*}}#', '\'; $1; $temp .= \'', $lol); // Closing control statements
-            $lol = preg_replace('#{([^({)|(}]*)}#', "'.$1.'", $lol); // Variables and constants
-            $end = '\'; return $temp; } ?>'; // End of the caches template
-            $lol_out = $begin . $lol . $end;
-            write_file(CACHE_PATH . $template_short . '.nelcache', $lol_out, 0644);
-        }
-        
-        include (CACHE_PATH . $template_short . '.nelcache');
-        $template_info[$template]['loaded'] = TRUE;
-    }
-    
-    if (!$regen)
-    {
-        $dat_temp = call_user_func('render_' . $template_short);
-        return $dat_temp;
-    }
-
-}
-
-//
 // Cache post links
 //
 function cache_links($links)
@@ -297,12 +256,12 @@ function cache_links($links)
 //
 // Regenerate the template cache
 //
-function regen_template_cache()
+function regen_template_cache($lang)
 {
     foreach (glob(TEMPLATE_PATH . '*.tpl') as $template)
     {
         $template = basename($template);
-        parse_template($template, TRUE);
+        parse_template($lang, $template, TRUE);
     }
 
 }

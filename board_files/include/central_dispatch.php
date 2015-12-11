@@ -25,7 +25,7 @@ function nel_process_get($dataforce, $authorized, $lang, $dbh)
                 die();
             
             case 'admin':
-                valid($dataforce, $authorized);
+                valid($dataforce, $authorized, $lang);
                 die();
             
             case 'about':
@@ -130,12 +130,12 @@ function nel_process_post($dataforce, $authorized, $lang, $dbh)
                         
                         case 'fullupdate':
                             regen($dataforce, $authorized, $lang, NULL, 'full', FALSE, $dbh);
-                            valid($dataforce, $authorized);
+                            valid($dataforce, $authorized, $lang);
                             clean_exit($dataforce, TRUE);
                         
                         case 'updatecache':
                             regen($dataforce, $authorized, $lang, NULL, 'update_all_cache', FALSE, $dbh);
-                            valid($dataforce, $authorized);
+                            valid($dataforce, $authorized, $lang);
                             clean_exit($dataforce, TRUE);
                         
                         // Settings panel
