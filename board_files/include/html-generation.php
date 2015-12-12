@@ -63,7 +63,6 @@ function generate_header($dataforce, $lang, $render_mode, $treeline)
     $rendervar['page_ref1'] = (!empty($_SESSION) && !$_SESSION['ignore_login']) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT;
     $dat_temp = parse_template($lang, 'header.tpl', FALSE);
     return $dat_temp;
-
 }
 
 //
@@ -115,7 +114,6 @@ function form($dataforce, $authorized, $lang)
     $rendervar['max_files'] = 3;
     $dat_temp = parse_template($lang, 'posting_form.tpl', FALSE);
     return $dat_temp;
-
 }
 
 //
@@ -272,7 +270,6 @@ function render_post($dataforce, $authorized, $lang, $response, $partial, $gen_d
     $dat_temp = ($response ? parse_template($lang, 'response_post.tpl', FALSE) : parse_template($lang, 'op_post.tpl', FALSE));
     $rendervar = $rendervar_first;
     return $dat_temp;
-
 }
 
 //
@@ -309,7 +306,6 @@ function footer($authorized, $link, $styles, $del, $response)
     lol_html_timer(1);
     $dat_temp = parse_template('footer.tpl', FALSE);
     return $dat_temp;
-
 }
 
 //
@@ -405,7 +401,6 @@ function generate_thread_panel($dataforce, $lang, $thread_data, $mode)
     
     $dat_temp = parse_template($lang, 'manage_thread_panel.tpl', FALSE);
     return $dat_temp;
-
 }
 
 //
@@ -487,7 +482,7 @@ function parse_links($matches)
     $back = ($link_resno === 0) ? PAGE_DIR : '../';
     $pattern = '#p' . $matches[1] . 't([0-9]+)#';
     $isquoted = preg_match($pattern, $link_updates, $matches2);
-
+    
     if ($isquoted === 0)
     {
         $prepared = $dbh->prepare('SELECT response_to FROM ' . POSTTABLE . ' WHERE post_number=:pnum');
@@ -513,20 +508,19 @@ function parse_links($matches)
     }
 }
 
-
 //
 // Parse the templates into code form
 //
 function parse_template($lang, $template, $regen)
 {
     global $rendervar, $template_info, $total_html;
-
+    
     $template_short = str_replace('.tpl', '', $template);
-
+    
     if (!$template_info[$template]['loaded'])
     {
         $md5 = md5_file(TEMPLATE_PATH . $template);
-
+        
         if (!isset($template_info[$template]) || $md5 !== $template_info[$template] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
         {
             $template_info[$template]['md5'] = $md5;
@@ -542,17 +536,16 @@ function parse_template($lang, $template, $regen)
             $lol_out = $begin . $lol . $end;
             write_file(CACHE_PATH . $template_short . '.nelcache', $lol_out, 0644);
         }
-
+        
         include (CACHE_PATH . $template_short . '.nelcache');
         $template_info[$template]['loaded'] = TRUE;
     }
-
+    
     if (!$regen)
     {
         $dat_temp = call_user_func('render_' . $template_short, $lang);
         return $dat_temp;
     }
-
 }
 
 //
@@ -580,6 +573,5 @@ function lol_html_timer($derp)
         $total_html = round(($end_html - $start_html), 4);
         return;
     }
-
 }
 ?>

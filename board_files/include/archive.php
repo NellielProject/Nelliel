@@ -107,5 +107,4 @@ function update_archive_status($dataforce, $dbh)
         
         $dbh->query('UPDATE ' . ARCHIVETABLE . ' SET archive_status=0 WHERE archive_status=2');
     }
-
 }

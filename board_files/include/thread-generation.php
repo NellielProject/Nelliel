@@ -130,7 +130,6 @@ function thread_generator($dataforce, $authorized, $lang, $dbh)
         write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-expand.html', $page_output_expand, 0644);
         write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-collapse.html', $page_output_collapse, 0644);
     }
-
 }
 
 ?>

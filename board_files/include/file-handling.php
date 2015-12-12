@@ -25,7 +25,6 @@ function write_file($filename, $output, $chmod)
         chmod($filename, $chmod);
         return TRUE;
     }
-
 }
 
 //
@@ -37,7 +36,6 @@ function move_file($location, $destination)
     {
         rename($location, $destination);
     }
-
 }
 
 //
@@ -60,7 +58,6 @@ function eraser_gun($path, $filename, $multi)
     {
         unlink($path . "/" . $filename);
     }
-
 }
 
 //
@@ -74,6 +71,5 @@ function create_thread_directories($thread_id)
     chmod(THUMB_PATH . $thread_id, 0777);
     mkdir(PAGE_PATH . $thread_id, 0777);
     chmod(PAGE_PATH . $thread_id, 0777);
-
 }
 ?>

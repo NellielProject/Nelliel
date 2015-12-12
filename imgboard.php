@@ -32,7 +32,6 @@ function nel_hash($input)
     }
     
     return $hash;
-
 }
 
 require_once INCLUDE_PATH . 'initializations.php';
@@ -80,6 +79,5 @@ function clean_exit($dataforce, $die)
     }
     
     die();
-
 }
 ?>

@@ -30,7 +30,6 @@ function table_exists($table, $dbh)
     {
         return FALSE;
     }
-
 }
 
 function setup_check($dbh)
@@ -512,7 +511,6 @@ function setup_check($dbh)
     {
         define('STUFF_DONE', FALSE);
     }
-
 }
 
 function generate_auth_file()
@@ -557,6 +555,5 @@ $authorized = array(
             echo 'ERROR: Could not create auth file due to invalid or missing admin info. The board will probably work but you will have no administrative abilities. Check your config.php then retry installation.';
         }
     }
-
 }
 ?>

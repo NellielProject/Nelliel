@@ -54,7 +54,6 @@ function thread_updates($dataforce, $authorized, $lang, $dbh)
     }
     
     return $returned_list;
-
 }
 
 function make_sticky($dataforce, $lang, $sub, $dbh)
@@ -117,7 +116,6 @@ function make_sticky($dataforce, $lang, $sub, $dbh)
     {
         $_SESSION['ignore_login'] = $temp;
     }
-
 }
 
 function unsticky($dataforce, $lang, $sub, $dbh)
@@ -147,7 +145,6 @@ function unsticky($dataforce, $lang, $sub, $dbh)
     {
         $_SESSION['ignore_login'] = $temp;
     }
-
 }
 
 function delete_content($dataforce, $authorized, $lang, $sub, $type, $dbh)
@@ -300,7 +297,6 @@ function delete_content($dataforce, $authorized, $lang, $sub, $type, $dbh)
     {
         $_SESSION['ignore_login'] = $temp;
     }
-
 }
 
 ?>

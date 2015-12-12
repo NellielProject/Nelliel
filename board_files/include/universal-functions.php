@@ -45,7 +45,6 @@ function derp($lang, $error_id, $error_message, $diagnostic)
 </body></html>';
     
     die();
-
 }
 
 function regen($dataforce, $authorized, $lang, $id, $mode, $modmode, $dbh)
@@ -112,7 +111,6 @@ function regen($dataforce, $authorized, $lang, $id, $mode, $modmode, $dbh)
     }
     
     $dataforce['post_links'] = $link_updates;
-
 }
 
 //
@@ -147,7 +145,6 @@ function about_screen($lang)
 		</div>
 		<br><br><hr>
 </body></html>';
-
 }
 
 ?>

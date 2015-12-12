@@ -30,7 +30,7 @@ function new_post($dataforce, $authorized, $lang, $dbh)
             $fgsfds['sage'] = TRUE;
         }
         
-        $return = $plugins->plugin_hook('fgsfds_field', FALSE, array($fgsfds));
+        $fgsfds = $plugins->plugin_hook('fgsfds_field', FALSE, array($fgsfds));
     }
     
     // Start collecting file info
@@ -516,7 +516,6 @@ function new_post($dataforce, $authorized, $lang, $dbh)
     }
     
     return $return_res;
-
 }
 
 //
@@ -539,7 +538,6 @@ function cleanse_the_aids($string)
         $string = htmlspecialchars($string);
         return $string;
     }
-
 }
 
 function is_post_ok($dataforce, $time, $dbh)
@@ -615,7 +613,6 @@ function is_post_ok($dataforce, $time, $dbh)
     }
     
     return $post_count;
-
 }
 
 function file_info()
@@ -720,7 +717,6 @@ function file_info()
     }
     
     return $files;
-
 }
 
 ?>

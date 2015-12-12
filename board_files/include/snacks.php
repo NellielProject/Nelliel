@@ -16,7 +16,6 @@ function ban_spambots($dataforce, $dbh)
         $dataforce['banip'] = $_SERVER["REMOTE_ADDR"];
         ban_hammer($dataforce, $authorized, $dbh);
     }
-
 }
 
 //
@@ -34,7 +33,6 @@ function banned_md5($md5, $file)
             derp($lang, 15, $lang['ERROR_15'], array('SNACKS', $file));
         }
     }
-
 }
 
 //
@@ -52,7 +50,6 @@ function banned_name($name, $file)
             derp($lang, 16, $lang['ERROR_16'], array('SNACKS', $file));
         }
     }
-
 }
 
 //
@@ -75,7 +72,6 @@ function banned_text($text, $file)
             }
         }
     }
-
 }
 
 //
@@ -92,7 +88,6 @@ function word_filters($text)
         $text = preg_replace('#' . $cancer[$i] . '#', $chemo[$i], $text);
     }
     return $text;
-
 }
 
 //
@@ -162,5 +157,4 @@ function applyBan($dataforce, $authorized, $lang, $dbh)
         echo $dat;
         die();
     }
-
 }

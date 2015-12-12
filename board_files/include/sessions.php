@@ -12,7 +12,6 @@ function terminate_session()
     session_unset();
     session_destroy();
     setcookie("PHPSESSID", "", time() - 3600, "/");
-
 }
 
 //
@@ -91,6 +90,5 @@ function initialize_session($dataforce, $authorized, $lang)
     {
         terminate_session();
     }
-
 }
 ?>

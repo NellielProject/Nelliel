@@ -40,7 +40,7 @@ function cache_rules($lang, $dbh)
     foreach ($config_list as $array)
     {
         if (array_search('enable_graphics', $array) !== FALSE)
-        {   
+        {
             $config_list2['graphics'] = $array['setting'];
         }
         else if (array_search('enable_audio', $array) !== FALSE)
@@ -148,7 +148,6 @@ function cache_rules($lang, $dbh)
     }
     
     return $rule_list;
-
 }
 
 //
@@ -239,7 +238,6 @@ function cache_settings($dbh)
     write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, 0644);
     
     unset($rows);
-
 }
 
 //
@@ -250,7 +248,6 @@ function cache_links($links)
     global $link_updates;
     
     return $links . $link_updates;
-
 }
 
 //
@@ -263,7 +260,6 @@ function regen_template_cache($lang)
         $template = basename($template);
         parse_template($lang, $template, TRUE);
     }
-
 }
 
 function reset_template_status()
@@ -274,7 +270,6 @@ function reset_template_status()
     {
         $template_info[$key]['loaded'] = FALSE;
     }
-
 }
 //
 // Write out rules, post links and template info cache
@@ -291,6 +286,5 @@ $template_info = ' . var_export($template_info, TRUE) . ';
 ?>';
     
     write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, 0644);
-
 }
 ?>

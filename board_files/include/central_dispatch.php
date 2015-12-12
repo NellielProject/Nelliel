@@ -33,7 +33,6 @@ function nel_process_get($dataforce, $authorized, $lang, $dbh)
                 die();
         }
     }
-
 }
 
 //
@@ -216,7 +215,6 @@ function nel_process_post($dataforce, $authorized, $lang, $dbh)
                 }
         }
     }
-
 }
 
 ?>

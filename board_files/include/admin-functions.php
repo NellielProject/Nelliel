@@ -27,7 +27,6 @@ function valid($dataforce, $authorized, $lang)
         $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
         echo $dat;
     }
-
 }
 
 //
@@ -106,7 +105,6 @@ function update_ban($dataforce, $authorized, $lang, $mode, $dbh)
     {
         derp($lang, 101, $lang['ERROR_101'], array('ADMIN'));
     }
-
 }
 
 //
@@ -235,7 +233,6 @@ $authorized = ' . var_export($authorized, TRUE) . '?>';
     $dat .= parse_template($lang, 'manage_staff_panel.tpl', FALSE);
     $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
     echo $dat;
-
 }
 
 function gen_new_staff($new_name, $new_type, $authorized, $lang)
@@ -274,7 +271,6 @@ function gen_new_staff($new_name, $new_type, $authorized, $lang)
 $authorized = ' . var_export($authorized, TRUE) . '?>';
     write_file(FILES_PATH . '/auth_data.nel.php', $new_auth, 0644);
     return $authorized;
-
 }
 
 function change_true_false(&$item1, $key)
@@ -283,7 +279,6 @@ function change_true_false(&$item1, $key)
     {
         $item1 = FALSE;
     }
-
 }
 
 function clear_auth_settings(&$item1, $key)
@@ -292,7 +287,6 @@ function clear_auth_settings(&$item1, $key)
     {
         $item1 = '';
     }
-
 }
 
 //
@@ -401,7 +395,6 @@ function admin_control($dataforce, $authorized, $lang, $mode, $dbh)
     $dat .= parse_template($lang, 'admin_panel.tpl', FALSE);
     $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
     echo $dat;
-
 }
 
 //
@@ -464,7 +457,6 @@ function ban_control($dataforce, $authorized, $lang, $mode, $dbh)
         $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
         echo $dat;
     }
-
 }
 
 //
@@ -538,7 +530,6 @@ function thread_panel($dataforce, $authorized, $lang, $mode, $dbh)
     $dat .= generate_thread_panel($dataforce, $lang, $thread_data, 'END');
     $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
     echo $dat;
-
 }
 
 //
@@ -694,6 +685,5 @@ function ban_hammer($dataforce, $authorized, $lang, $dbh)
             ++ $i;
         }
     }
-
 }
 ?>

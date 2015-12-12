@@ -203,7 +203,6 @@ function main_thread_generator($dataforce, $authorized, $lang, $dbh)
         
         ++ $page;
     }
-
 }
 
 ?>
