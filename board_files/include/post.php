@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function new_post($dataforce, $authorized, $lang, $dbh)
+function new_post($dataforce, $authorized, $dbh)
 {
     global $enabled_types, $fgsfds, $plugins;
     
@@ -37,8 +37,7 @@ function new_post($dataforce, $authorized, $lang, $dbh)
     $files = file_info();
     $there_is_no_spoon = TRUE;
     
-    $poster_info = array('name' => $dataforce['name'], 'email' => $dataforce['email'], 'subject' => $dataforce['subject'], 
-                        'comment' => $dataforce['comment'], 'tripcode' => '', 'secure_tripcode' => '');
+    $poster_info = array('name' => $dataforce['name'], 'email' => $dataforce['email'], 'subject' => $dataforce['subject'], 'comment' => $dataforce['comment'], 'tripcode' => '', 'secure_tripcode' => '');
     
     if (!empty($files))
     {
@@ -51,25 +50,26 @@ function new_post($dataforce, $authorized, $lang, $dbh)
         
         if (!$poster_info['comment'])
         {
-            derp($lang, 10, $lang['ERROR_10'], array('POST', $files));
+            derp(10, stext('ERROR_10'), array('POST', $files));
         }
         
         if (BS1_REQUIRE_IMAGE_ALWAYS)
         {
-            derp($lang, 8, $lang['ERROR_8'], array('POST', $files));
+            derp(8, stext('ERROR_8'), array('POST', $files));
         }
         
         if (BS1_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
         {
-            derp($lang, 9, $lang['ERROR_9'], array('POST', $files));
+            derp(9, stext('ERROR_9'), array('POST', $files));
         }
     }
     
     // Cancer-fighting tools and lulz
     
+
     if (strlen(utf8_decode($poster_info['comment'])) > BS_MAX_COMMENT_LENGTH || strlen(utf8_decode($poster_info['name'])) > BS_MAX_NAME_LENGTH || strlen(utf8_decode($poster_info['email'])) > BS_MAX_EMAIL_LENGTH || strlen(utf8_decode($poster_info['subject'])) > BS_MAX_SUBJECT_LENGTH || strlen(utf8_decode($dataforce['file_source'])) > BS_MAX_SOURCE_LENGTH || strlen(utf8_decode($dataforce['file_license'])) > BS_MAX_LICENSE_LENGTH)
     {
-        derp($lang, 11, $lang['ERROR_11'], array('POST', $files));
+        derp(11, stext('ERROR_11'), array('POST', $files));
     }
     
     if (isset($dataforce['pass']))
@@ -115,7 +115,7 @@ function new_post($dataforce, $authorized, $lang, $dbh)
     }
     else
     {
-        $poster_info['comment'] = $lang['THREAD_NOTEXT'];
+        $poster_info['comment'] = stext('THREAD_NOTEXT');
     }
     
     // Name and tripcodes
@@ -126,22 +126,22 @@ function new_post($dataforce, $authorized, $lang, $dbh)
     {
         banned_name($poster_info['name'], $files);
         
-        $faggotry = strpos($poster_info['name'], $lang['THREAD_MODPOST']);
+        $faggotry = strpos($poster_info['name'], stext('THREAD_MODPOST'));
         if ($faggotry)
         {
-            $poster_info['name'] = $lang['FAKE_STAFF_ATTEMPT'];
+            $poster_info['name'] = stext('FAKE_STAFF_ATTEMPT');
         }
         
-        $faggotry = strpos($poster_info['name'], $lang['THREAD_ADMINPOST']);
+        $faggotry = strpos($poster_info['name'], stext('THREAD_ADMINPOST'));
         if ($faggotry)
         {
-            $poster_info['name'] = $lang['FAKE_STAFF_ATTEMPT'];
+            $poster_info['name'] = stext('FAKE_STAFF_ATTEMPT');
         }
         
-        $faggotry = strpos($poster_info['name'], $lang['THREAD_JANPOST']);
+        $faggotry = strpos($poster_info['name'], stext('THREAD_JANPOST'));
         if ($faggotry)
         {
-            $poster_info['name'] = $lang['FAKE_STAFF_ATTEMPT'];
+            $poster_info['name'] = stext('FAKE_STAFF_ATTEMPT');
         }
         
         preg_match('/^([^#]*)(#(?!#))?([^#]*)(##)?(.*)$/', $poster_info['name'], $name_pieces);
@@ -193,13 +193,13 @@ function new_post($dataforce, $authorized, $lang, $dbh)
         
         if ($name_pieces[1] === '' || $authorized[$staff_id]['perm_post_anon'])
         {
-            $poster_info['name'] = $lang['THREAD_NONAME'];
+            $poster_info['name'] = stext('THREAD_NONAME');
             $poster_info['email'] = '';
         }
     }
     else
     {
-        $poster_info['name'] = $lang['THREAD_NONAME'];
+        $poster_info['name'] = stext('THREAD_NONAME');
         $poster_info['email'] = '';
     }
     
@@ -207,6 +207,7 @@ function new_post($dataforce, $authorized, $lang, $dbh)
     setcookie('pwd-' . CONF_BOARD_DIR, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
     setcookie('name-' . CONF_BOARD_DIR, $cookie_name, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
     
+
     $poster_info = $plugins->plugin_hook('after-post-info-processing', TRUE, array($poster_info));
     
     $i = 0;
@@ -243,7 +244,7 @@ function new_post($dataforce, $authorized, $lang, $dbh)
                     
                     if ($same_thread > 0)
                     {
-                        derp($lang, 12, $lang['ERROR_12'], array('POST', $files[i]));
+                        derp(12, stext('ERROR_12'), array('POST', $files[i]));
                     }
                 }
                 
@@ -256,7 +257,7 @@ function new_post($dataforce, $authorized, $lang, $dbh)
     //
     // Go ahead and put post into database
     //
-    
+
     $prepared = $dbh->prepare('INSERT INTO ' . POSTTABLE . ' 
 	(name, tripcode, secure_tripcode, email, subject, comment, host, password, post_time, last_update, response_to, last_response, post_count, sticky, mod_post, mod_comment, archive_status, locked) VALUES 
 	(:name, :tripcode, :secure_tripcode, :email, :subject, :comment, :host, :password, :time, :last_update, :respto, 0, 1, :sticky, :modpost, :mcomment, 0, 0)');
@@ -280,7 +281,7 @@ function new_post($dataforce, $authorized, $lang, $dbh)
     {
         $prepared->bindValue(':secure_tripcode', $poster_info['secure_tripcode'], PDO::PARAM_STR);
     }
-    
+
     $prepared->bindValue(':email', $poster_info['email'], PDO::PARAM_STR);
     $prepared->bindValue(':subject', $poster_info['subject'], PDO::PARAM_STR);
     $prepared->bindValue(':comment', $poster_info['comment'], PDO::PARAM_STR);
@@ -298,16 +299,14 @@ function new_post($dataforce, $authorized, $lang, $dbh)
     {
         $prepared->bindValue(':sticky', 0, PDO::PARAM_INT);
     }
-    
+
     $prepared->bindValue(':modpost', $modpostc, PDO::PARAM_INT);
     $prepared->bindValue(':mcomment', NULL, PDO::PARAM_NULL);
     $prepared->execute();
     unset($prepared);
-    
+
     $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE post_time=' . $time . ' AND response_to=' . $dataforce['response_to'] . '');
-    
     $row = $result->fetch();
-    
     $post_number = $row[0];
     unset($result);
     
@@ -330,6 +329,7 @@ function new_post($dataforce, $authorized, $lang, $dbh)
     // Make thumbnails and do final file processing
     //
     
+
     $i = 0;
     while ($i < $files_count)
     {
@@ -445,6 +445,7 @@ function new_post($dataforce, $authorized, $lang, $dbh)
     // Update post info and add file data if applicable
     //
     
+
     if ($dataforce['response_to'] === 0)
     {
         $parent_id = $post_number;
@@ -471,7 +472,6 @@ function new_post($dataforce, $authorized, $lang, $dbh)
             $dbh->query('UPDATE ' . POSTTABLE . ' SET has_file=1 WHERE post_number=' . $post_number . '');
             $prepared = $dbh->prepare('INSERT INTO ' . FILETABLE . ' (parent_thread,post_ref,file_order,supertype,subtype,mime,filename,extension,filesize,md5,source,license)
 				VALUES (' . '' . $parent_id . ',' . '' . $post_number . ',' . '"' . ($i + 1) . '",' . '"' . $files[$i]['supertype'] . '",' . '"' . $files[$i]['subtype'] . '",' . '"' . $files[$i]['mime'] . '",' . '"' . $files[$i]['basic_filename'] . '",' . '"' . $files[$i]['ext'] . '",' . '"' . $files[$i]['fsize'] . '",' . '"' . $files[$i]['md5'] . '",' . '"' . $files[$i]['file_source'] . '",' . '"' . $files[$i]['file_license'] . '")');
-            
             $prepared->execute();
             unset($prepared);
             
@@ -492,12 +492,14 @@ function new_post($dataforce, $authorized, $lang, $dbh)
     // Run the archiving routine if this is a new thread or deleted/expired thread
     //
     
+
     update_archive_status($dataforce, $dbh);
     
     //
     // Generate response page if it doesn't exist, otherwise update
     //
     
+
     if (!empty($_SESSION))
     {
         $temp = $_SESSION['ignore_login'];
@@ -505,10 +507,10 @@ function new_post($dataforce, $authorized, $lang, $dbh)
     }
     
     $return_res = ($dataforce['response_to'] === 0) ? $new_thread_dir : $dataforce['response_to'];
-    regen($dataforce, $authorized, $lang, $return_res, 'thread', FALSE, $dbh);
+    regen($dataforce, $authorized, $return_res, 'thread', FALSE, $dbh);
     // cache_post_links($post_link_reference);
     $dataforce['archive_update'] = TRUE;
-    regen($dataforce, $authorized, $lang, NULL, 'main', FALSE, $dbh);
+    regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
     
     if (!empty($_SESSION))
     {
@@ -547,6 +549,7 @@ function is_post_ok($dataforce, $time, $dbh)
     // Check for flood
     // If post is a reply, check if the thread still exists
     
+
     if ($dataforce['response_to'] === 0)
     {
         $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POSTTABLE . ' WHERE post_time > ' . $thread_delay . ' AND host = :host');
@@ -557,7 +560,7 @@ function is_post_ok($dataforce, $time, $dbh)
         
         if ($renzoku > 0)
         {
-            derp($lang, 1, $lang['ERROR_1'], array('POST'));
+            derp(1, stext('ERROR_1'), array('POST'));
         }
         
         $post_count = 1;
@@ -573,17 +576,17 @@ function is_post_ok($dataforce, $time, $dbh)
             {
                 if ($op_post['post_number'] === '')
                 {
-                    derp($lang, 2, $lang['ERROR_2'], array('POST'));
+                    derp(2, stext('ERROR_2'), array('POST'));
                 }
                 
                 if ($op_post['locked'] === '1')
                 {
-                    derp($lang, 3, $lang['ERROR_3'], array('POST'));
+                    derp(3, stext('ERROR_3'), array('POST'));
                 }
                 
                 if ($op_post['archive_status'] !== '0')
                 {
-                    derp($lang, 14, $lang['ERROR_14'], array('POST'));
+                    derp(14, stext('ERROR_14'), array('POST'));
                 }
                 
                 $post_count = $op_post['post_count'];
@@ -603,12 +606,12 @@ function is_post_ok($dataforce, $time, $dbh)
         
         if ($renzoku > 0)
         {
-            derp($lang, 1, $lang['ERROR_1'], array('POST'));
+            derp(1, stext('ERROR_1'), array('POST'));
         }
         
         if ($post_count >= BS_MAX_POSTS)
         {
-            derp($lang, 4, $lang['ERROR_4'], array('POST'));
+            derp(4, stext('ERROR_4'), array('POST'));
         }
     }
     
@@ -662,7 +665,7 @@ function file_info()
                 
                 if ($file['size'] > BS_MAX_FILESIZE * 1024)
                 {
-                    derp($lang, 19, $lang['ERROR_19'], array('POST', $files[i]));
+                    derp(19, stext('ERROR_19'), array('POST', $files[i]));
                 }
                 
                 $files[$i]['dest'] = SRC_PATH . $file['name'] . '.tmp';
@@ -692,12 +695,12 @@ function file_info()
                 }
                 else
                 {
-                    derp($lang, 6, $lang['ERROR_6'], array('POST', $files[i]));
+                    derp(6, stext('ERROR_6'), array('POST', $files[i]));
                 }
                 
                 if (!$file_good)
                 {
-                    derp($lang, 18, $lang['ERROR_18'], array('POST', $files[i]));
+                    derp(18, stext('ERROR_18'), array('POST', $files[i]));
                 }
                 
                 $files[$i]['file_source'] = cleanse_the_aids($_POST['sauce' . ($i + 1)]);
@@ -712,7 +715,7 @@ function file_info()
         }
         else if ($file['error'] === UPLOAD_ERR_INI_SIZE)
         {
-            derp($lang, 19, $lang['ERROR_19'], array('POST'));
+            derp(19, stext('ERROR_19'), array('POST'));
         }
     }
     

@@ -48,15 +48,14 @@ require_once INCLUDE_PATH . 'snacks.php';
 // Initialization done. IT'S GO TIME!
 
 ban_spambots($dataforce, $dbh);
-
 session_start();
 require_once INCLUDE_PATH . 'sessions.php';
-initialize_session($dataforce, $authorized, $lang);
+initialize_session($dataforce, $authorized);
 
 require_once INCLUDE_PATH . 'central_dispatch.php';
-nel_process_get($dataforce, $authorized, $lang, $dbh);
-nel_process_post($dataforce, $authorized, $lang, $dbh);
-regen($dataforce, $authorized, $lang, NULL, 'main', FALSE, $dbh);
+nel_process_get($dataforce, $authorized, $dbh);
+nel_process_post($dataforce, $authorized, $dbh);
+regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
 clean_exit($dataforce, $template_info, FALSE);
 
 function clean_exit($dataforce, $die)

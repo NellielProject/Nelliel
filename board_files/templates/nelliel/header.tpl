@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta http-equiv="content-type"  content="text/html;charset=utf-8">
     <meta name="robots" content="noarchive">
@@ -21,31 +20,26 @@
     <![endif]-->
     <title>{$rendervar['page_title']}</title>
 </head>
-
 <body>
     <div class="text-center">
-        {$lang['S_SHORT_MENU']}
+        {stext('S_SHORT_MENU')}
     </div>
     <div>
-    <span class="top_styles">
+        <span class="top_styles">
         Styles:
         [<a href="#" onclick="changeCSS('Nelliel','style-{CONF_BOARD_DIR}'); return false;">Nelliel</a>]
         [<a href="#" onclick="changeCSS('Futaba','style-{CONF_BOARD_DIR}'); return false;">Futaba</a>]
         [<a href="#" onclick="changeCSS('Burichan','style-{CONF_BOARD_DIR}'); return false;">Burichan</a>]
         [<a href="#" onclick="changeCSS('Nigra','style-{CONF_BOARD_DIR}'); return false;">Nigra</a>]
-    </span>
-    <span class="admin-bar">
+        </span>
+        <span class="admin-bar">
         {$rendervar['log_out']}
-        [<a href="{$rendervar['dotdot']}{HOME}" rel="home">{$lang['LINK_HOME']}</a>]
-        [<a href="{$rendervar['dotdot']}{PHP_SELF}?mode=admin">{$lang['LINK_MANAGE']}</a>]
-        [<a href="{$rendervar['dotdot']}{PHP_SELF}?mode=about">{$lang['LINK_ABOUT']}</a>]
-    </span>
+        [<a href="{$rendervar['dotdot']}{HOME}" rel="home">{stext('LINK_HOME')}</a>]
+        [<a href="{$rendervar['dotdot']}{PHP_SELF}?mode=admin">{stext('LINK_MANAGE')}</a>]
+        [<a href="{$rendervar['dotdot']}{PHP_SELF}?mode=about">{stext('LINK_ABOUT')}</a>]
+        </span>
     </div>
-    
     <div class="logo">
         {$rendervar['titlepart']}
     </div>
-    
     <hr>
-
-

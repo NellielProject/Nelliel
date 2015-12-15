@@ -3,7 +3,7 @@ if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
-
+$dbh;
 if (SQLTYPE === 'MYSQL')
 {
     $dbh = new PDO('mysql:host=' . MYSQL_HOST . ';dbname=' . MYSQL_DB, MYSQL_USER, MYSQL_PASS);
@@ -29,7 +29,7 @@ require_once INCLUDE_PATH . 'file-handling.php';
 setup_check($dbh);
 generate_auth_file();
 include_once FILES_PATH . '/auth_data.nel.php';
-require_once INCLUDE_PATH . 'language-english.php';
+require_once INCLUDE_PATH . 'language.php';
 
 $template_info = array();
 $rendervar = array();
@@ -66,8 +66,9 @@ $dataforce['expand'] = (isset($_GET['expand'])) ? TRUE : FALSE;
 $dataforce['collapse'] = (isset($_GET['collapse'])) ? TRUE : FALSE;
 $dataforce['response_id'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? (int) $_GET['post'] : NULL;
 $dataforce['archive_update'] = FALSE;
-$dataforce['sp_field1'] = (isset($_POST[$lang['TEXT_SPAMBOT_FIELD1']])) ? $_POST[$lang['TEXT_SPAMBOT_FIELD1']] : NULL;
-$dataforce['sp_field2'] = (isset($_POST[$lang['TEXT_SPAMBOT_FIELD2']])) ? $_POST[$lang['TEXT_SPAMBOT_FIELD2']] : NULL;
+$dataforce['sp_field1'] = (isset($_POST[stext('TEXT_SPAMBOT_FIELD1')])) ? $_POST[stext('TEXT_SPAMBOT_FIELD1')] : NULL;
+$dataforce['sp_field2'] = (isset($_POST[stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[stext('TEXT_SPAMBOT_FIELD2')] : NULL;
+$dataforce['post_links'] = '';
 
 $link_updates = '';
 $start_html = 0;
@@ -78,6 +79,5 @@ $link_resno = 0;
 
 // Load caching routines and handle current cache files
 require_once INCLUDE_PATH . 'cache-functions.php'; // I liek cache
-$link_updates = $dataforce['post_links'];
 $dataforce['max_pages'] = BS_PAGE_LIMIT;
 ?>

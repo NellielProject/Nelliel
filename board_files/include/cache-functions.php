@@ -23,7 +23,7 @@ require_once CACHE_PATH . 'multi-cache.nelcache';
 //
 // Cache the posting rules
 //
-function cache_rules($lang, $dbh)
+function cache_rules($dbh)
 {
     $gmode = '';
     $amode = '';
@@ -31,7 +31,7 @@ function cache_rules($lang, $dbh)
     $dmode = '';
     $rmode = '';
     $omode = '';
-    
+
     $result = $dbh->query('SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type IN ("filetype_allow_g","filetype_allow_a","filetype_allow_o","filetype_allow_p","filetype_allow_d","filetype_allow_r")');
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
     $result_count = count($config_list);
@@ -114,37 +114,37 @@ function cache_rules($lang, $dbh)
     if ($gmode !== '')
     {
         $gmode = substr($gmode, 0, -2);
-        $rule_list .= '<li>' . $lang['FILES_GRAPHICS'] . strtoupper($gmode) . '</li>';
+        $rule_list .= '<li>' . stext('FILES_GRAPHICS') . strtoupper($gmode) . '</li>';
     }
     if ($amode !== '')
     {
         $amode = substr($amode, 0, -2);
         $rule_list .= '
-							<li>' . $lang['FILES_AUDIO'] . strtoupper($amode) . '</li>';
+							<li>' . stext('FILES_AUDIO') . strtoupper($amode) . '</li>';
     }
     if ($vmode !== '')
     {
         $vmode = substr($vmode, 0, -2);
         $rule_list .= '
-							<li>' . $lang['FILES_VIDEO'] . strtoupper($vmode) . '</li>';
+							<li>' . stext('FILES_VIDEO') . strtoupper($vmode) . '</li>';
     }
     if ($dmode !== '')
     {
         $dmode = substr($dmode, 0, -2);
         $rule_list .= '
-							<li>' . $lang['FILES_DOCUMENT'] . strtoupper($dmode) . '</li>';
+							<li>' . stext('FILES_DOCUMENT') . strtoupper($dmode) . '</li>';
     }
     if ($rmode !== '')
     {
         $rmode = substr($rmode, 0, -2);
         $rule_list .= '
-							<li>' . $lang['FILES_ARCHIVE'] . strtoupper($rmode) . '</li>';
+							<li>' . stext('FILES_ARCHIVE') . strtoupper($rmode) . '</li>';
     }
     if ($omode !== '')
     {
         $omode = substr($omode, 0, -2);
         $rule_list .= '
-							<li>' . $lang['FILES_OTHER'] . strtoupper($omode) . '</li>';
+							<li>' . stext('FILES_OTHER') . strtoupper($omode) . '</li>';
     }
     
     return $rule_list;
@@ -243,22 +243,20 @@ function cache_settings($dbh)
 //
 // Cache post links
 //
-function cache_links($links)
+function cache_links()
 {
-    global $link_updates;
-    
-    return $links . $link_updates;
+    return parse_links(TRUE);
 }
 
 //
 // Regenerate the template cache
 //
-function regen_template_cache($lang)
+function regen_template_cache()
 {
     foreach (glob(TEMPLATE_PATH . '*.tpl') as $template)
     {
         $template = basename($template);
-        parse_template($lang, $template, TRUE);
+        parse_template($template, TRUE);
     }
 }
 

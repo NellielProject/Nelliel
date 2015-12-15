@@ -30,7 +30,7 @@ function banned_md5($md5, $file)
     {
         if ($md5 === $cancer[$i])
         {
-            derp($lang, 15, $lang['ERROR_15'], array('SNACKS', $file));
+            derp(15, stext('ERROR_15'), array('SNACKS', $file));
         }
     }
 }
@@ -47,7 +47,7 @@ function banned_name($name, $file)
     {
         if ($cancer[$i] === $name)
         {
-            derp($lang, 16, $lang['ERROR_16'], array('SNACKS', $file));
+            derp(16, stext('ERROR_16'), array('SNACKS', $file));
         }
     }
 }
@@ -68,7 +68,7 @@ function banned_text($text, $file)
             
             if ($test !== FALSE)
             {
-                derp($lang, 17, $lang['ERROR_17'], array('SNACKS', $file, $cancer[$i]));
+                derp(17, stext('ERROR_17'), array('SNACKS', $file, $cancer[$i]));
             }
         }
     }
@@ -93,7 +93,7 @@ function word_filters($text)
 //
 // Apply b&hammer
 //
-function applyBan($dataforce, $authorized, $lang, $dbh)
+function applyBan($dataforce, $authorized, $dbh)
 {
     global $rendervar;
     
@@ -151,8 +151,8 @@ function applyBan($dataforce, $authorized, $lang, $dbh)
         $rendervar['format_time'] = date("D F jS Y  H:i", $bandata['ban_time']);
         $rendervar['host'] = @inet_ntop($rendervar['host']) ? inet_ntop($rendervar['host']) : 'Unknown';
         lol_html_timer(0);
-        $dat = generate_header($dataforce, $lang, 'BAN', array());
-        $dat .= parse_template($lang, 'ban_page.tpl', FALSE);
+        $dat = generate_header($dataforce, 'BAN', array());
+        $dat .= parse_template('ban_page.tpl', FALSE);
         $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
         echo $dat;
         die();

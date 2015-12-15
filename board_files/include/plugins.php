@@ -92,8 +92,7 @@ class plugin_handler
             $next_index = key($hooks[$hook_name]) + 1;
         }
         
-        $hooks[$hook_name][] = array('function' => $function_name, 'priority' => $priority, 'index' => $next_index, 
-                                    'plugin' => $plugin_id);
+        $hooks[$hook_name][] = array('function' => $function_name, 'priority' => $priority, 'index' => $next_index, 'plugin' => $plugin_id);
         self::$hooks = $hooks;
     }
     

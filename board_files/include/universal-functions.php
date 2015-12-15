@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Error Handling
 //
-function derp($lang, $error_id, $error_message, $diagnostic)
+function derp($error_id, $error_message, $diagnostic)
 {
     $file_count = 0;
     $extra_data = '';
@@ -38,16 +38,16 @@ function derp($lang, $error_id, $error_message, $diagnostic)
         $extra_data = '';
     }
     
-    echo generate_header(array(), $lang, 'DERP', array());
+    echo generate_header(array(), 'DERP', array());
     echo '
-        <div class="text-center"><font color="blue" size="5">' . $lang['ERROR_HEADER'] . '<br><br>' . $error_message . '<br>' . $extra_data . '<br><a href="' . PHP_SELF2 . PHP_EXT . '">' . $lang['LINK_RETURN'] . '</a></b></font></div>
+        <div class="text-center"><font color="blue" size="5">' . stext('ERROR_HEADER') . '<br><br>' . $error_message . '<br>' . $extra_data . '<br><a href="' . PHP_SELF2 . PHP_EXT . '">' . stext('LINK_RETURN') . '</a></b></font></div>
         <br><br><hr>
 </body></html>';
     
     die();
 }
 
-function regen($dataforce, $authorized, $lang, $id, $mode, $modmode, $dbh)
+function regen(&$dataforce, $authorized, $id, $mode, $modmode, $dbh)
 {
     global $link_resno, $link_updates;
     
@@ -80,7 +80,7 @@ function regen($dataforce, $authorized, $lang, $id, $mode, $modmode, $dbh)
         update_archive_status($dataforce, $dbh);
         $dataforce['response_id'] = 0;
         $link_resno = 0;
-        main_thread_generator($dataforce, $authorized, $lang, $dbh);
+        main_thread_generator($dataforce, $authorized, $dbh);
     }
     
     if ($mode === 'thread' || $mode === 'full')
@@ -91,18 +91,18 @@ function regen($dataforce, $authorized, $lang, $id, $mode, $modmode, $dbh)
         while ($i < $threads)
         {
             $dataforce['response_id'] = $ids[$i];
-            thread_generator($dataforce, $authorized, $lang, $dbh);
+            thread_generator($dataforce, $authorized, $dbh);
             ++ $i;
         }
     }
     
     if ($mode === 'update_all_cache')
     {
-        $dataforce['rules_list'] = cache_rules($lang, $dbh);
+        $dataforce['rules_list'] = cache_rules($dbh);
         cache_settings($dbh);
         $dataforce['post_links'] = $link_updates;
         // cache_post_links();
-        regen_template_cache($lang);
+        regen_template_cache();
     }
     
     if (!empty($_SESSION) && !$modmode)
@@ -116,9 +116,9 @@ function regen($dataforce, $authorized, $lang, $id, $mode, $modmode, $dbh)
 //
 // The content this function presents must remain intact and be accessible to users
 //
-function about_screen($lang)
+function about_screen()
 {
-    echo generate_header(array(), $lang, 'ABOUT', array());
+    echo generate_header(array(), 'ABOUT', array());
     echo '
         <div class="text-center">
         	<p><font color="blue" size="5">Nelliel Imageboard</font><br>
@@ -140,7 +140,7 @@ function about_screen($lang)
 			NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</font></p>
         	<hr>
         	<p><font size="4" >Default filetype icons are from the Soft Scraps pack made by <a href="http://deleket.deviantart.com/" title="Deleket">Deleket</a></font></p>
-			<p class="text-center"><font size="4"><a href="' . PHP_SELF2 . PHP_EXT . '">' . $lang['LINK_RETURN'] . '</a></b></font></p>
+			<p class="text-center"><font size="4"><a href="' . PHP_SELF2 . PHP_EXT . '">' . stext('LINK_RETURN') . '</a></b></font></p>
 			</div>
 		</div>
 		<br><br><hr>
