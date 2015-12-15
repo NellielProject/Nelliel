@@ -16,17 +16,17 @@ function get_language($language, $form, $text)
 
 function stext($text)
 {
-    return get_language('en-us', 'singular', $text);
+    return get_language(BOARD_LANGUAGE, 'singular', $text);
 }
 
 function ptext($text, $num)
 {
     if ($num <= 1)
     {
-        return get_language('en-us', 'singular', $text);
+        return get_language(BOARD_LANGUAGE, 'singular', $text);
     }
     else if ($num > 1)
     {
-        return get_language('en-us', 'plural', $text);
+        return get_language(BOARD_LANGUAGE, 'plural', $text);
     }
 }

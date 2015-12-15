@@ -298,7 +298,6 @@ function setup_check($dbh)
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'old_threads', 'ARCHIVE')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'date_separator', '/')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'fgsfds_name', 'FGSFDS')");
-        $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting', 'language', 'en-us')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('filetype_allow_g', 'enable_graphics', '1')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('filetype_allow_g', 'enable_jpeg', '1')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('filetype_allow_g', 'enable_gif', '1')");

@@ -70,14 +70,6 @@
             </tr>
             <tr>
                 <td>
-                    <label for="lang">{stext('MANAGE_SET_LANGUAGE')}</label>
-                </td>
-                <td>
-                    <input type="text" name="language" id="lang" size="8" value="{$rendervar['language']}">
-                </td>
-            </tr>
-            <tr>
-                <td>
                     <label for="datesep">{stext('MANAGE_SET_DATE_SEPARATOR')}</label>
                 </td>
                 <td>
