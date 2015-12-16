@@ -38,7 +38,7 @@ function regen_session()
 // Check for existing session and process
 // If no session exists, confirm login info and set up a new one
 //
-function initialize_session($dataforce, $authorized)
+function initialize_session($dataforce)
 {
     if (!empty($_SESSION))
     {
@@ -53,7 +53,7 @@ function initialize_session($dataforce, $authorized)
             else if ($dataforce['mode2'] === 'admin')
             {
                 regen_session();
-                valid($dataforce, $authorized);
+                valid($dataforce);
                 die();
             }
         }
@@ -68,7 +68,7 @@ function initialize_session($dataforce, $authorized)
     }
     else if (isset($dataforce['admin_mode']) && $dataforce['admin_mode'] === 'login') // No existing session but this may be a login attempt
     {
-        if ($dataforce['username'] !== '' && nel_hash($dataforce['admin_pass']) === $authorized[$dataforce['username']]['staff_password'])
+        if ($dataforce['username'] !== '' && nel_hash($dataforce['admin_pass']) === get_user_setting($dataforce['username'], 'staff_password'))
         {
             // We set up the session here
             $_SESSION['ignore_login'] = FALSE;
@@ -83,7 +83,7 @@ function initialize_session($dataforce, $authorized)
             derp(107, stext('ERROR_107'), array('LOGIN'));
         }
         
-        valid($dataforce, $authorized);
+        valid($dataforce);
         die();
     }
     else

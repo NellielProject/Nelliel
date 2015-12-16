@@ -131,7 +131,7 @@ $filetypes['lzh'] = array('supertype' => 'ARCHIVE', 'subtype' => 'LZH', 'mime' =
 
 $filetypes['lha'] = $filetypes['lzh'];
 
-$filetypes['zip'] = array('supertype' => 'ARCHIVE', 'subtype' => 'ZIP', 'mime' => 'application/zip', 'id_regex' => '^(PK\x03\x04|.{29152}WinZip)');
+$filetypes['zip'] = array('supertype' => 'ARCHIVE', 'subtype' => 'ZIP', 'mime' => 'application/zip', 'id_regex' => '^(PK\x03\x04|PK\x05\x06|PK\x07\x08|.{29152}WinZip)');
 
 $filetypes['rar'] = array('supertype' => 'ARCHIVE', 'subtype' => 'RAR', 'mime' => 'application/x-rar-compressed', 'id_regex' => '^Rar!\x1A\x07\x00');
 

@@ -14,7 +14,7 @@ function ban_spambots($dataforce, $dbh)
         $dataforce['banreason'] = "Spambot. Nobody wants any. GTFO";
         $dataforce['bandays'] = 9001;
         $dataforce['banip'] = $_SERVER["REMOTE_ADDR"];
-        ban_hammer($dataforce, $authorized, $dbh);
+        ban_hammer($dataforce, $dbh);
     }
 }
 
@@ -93,7 +93,7 @@ function word_filters($text)
 //
 // Apply b&hammer
 //
-function applyBan($dataforce, $authorized, $dbh)
+function applyBan($dataforce, $dbh)
 {
     global $rendervar;
     
@@ -153,7 +153,7 @@ function applyBan($dataforce, $authorized, $dbh)
         lol_html_timer(0);
         $dat = generate_header($dataforce, 'BAN', array());
         $dat .= parse_template('ban_page.tpl', FALSE);
-        $dat .= footer($authorized, FALSE, FALSE, FALSE, FALSE);
+        $dat .= footer(FALSE, FALSE, FALSE, FALSE);
         echo $dat;
         die();
     }

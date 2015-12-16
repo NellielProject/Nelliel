@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function thread_updates($dataforce, $authorized, $dbh)
+function thread_updates($dataforce, $dbh)
 {
     $threadlist = array();
     $postlist = array();
@@ -19,17 +19,17 @@ function thread_updates($dataforce, $authorized, $dbh)
         switch ($sub[0])
         {
             case 'deletefile':
-                delete_content($dataforce, $authorized, $sub, 'FILE', $dbh);
+                delete_content($dataforce, $sub, 'FILE', $dbh);
                 $push = $sub[1];
                 break;
             
             case 'deletethread':
-                delete_content($dataforce, $authorized, $sub, 'THREAD', $dbh);
+                delete_content($dataforce, $sub, 'THREAD', $dbh);
                 $push = $sub[1];
                 break;
             
             case 'deletepost':
-                delete_content($dataforce, $authorized, $sub, 'POST', $dbh);
+                delete_content($dataforce, $sub, 'POST', $dbh);
                 $push = $sub[2];
                 break;
             
@@ -105,12 +105,12 @@ function make_sticky($dataforce, $sub, $dbh)
     if (!file_exists(PAGE_PATH . $id . '/' . $id . '.html'))
     {
         $dataforce['response_id'] = $id;
-        regen($dataforce, $authorized, $dataforce['response_id'], 'thread', FALSE, $dbh);
+        regen($dataforce, $dataforce['response_id'], 'thread', FALSE, $dbh);
     }
     
     cache_links();
     $dataforce['archive_update'] = TRUE;
-    regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
+    regen($dataforce, NULL, 'main', FALSE, $dbh);
     
     if (!empty($_SESSION))
     {
@@ -134,12 +134,12 @@ function unsticky($dataforce, $sub, $dbh)
     if (!file_exists(PAGE_PATH . $id . '/' . $id . '.html'))
     {
         $dataforce['response_id'] = $id;
-        regen($dataforce, $authorized, $dataforce['response_id'], 'thread', FALSE, $dbh);
+        regen($dataforce, $dataforce['response_id'], 'thread', FALSE, $dbh);
     }
     
     cache_post_links();
     $dataforce['archive_update'] = TRUE;
-    regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
+    regen($dataforce, NULL, 'main', FALSE, $dbh);
     
     if (!empty($_SESSION))
     {
@@ -147,7 +147,7 @@ function unsticky($dataforce, $sub, $dbh)
     }
 }
 
-function delete_content($dataforce, $authorized, $sub, $type, $dbh)
+function delete_content($dataforce, $sub, $type, $dbh)
 {
     $id = $sub[1];
     
@@ -167,7 +167,7 @@ function delete_content($dataforce, $authorized, $sub, $type, $dbh)
     {
         $temp = $_SESSION['ignore_login'];
         
-        if ($authorized[$_SESSION['username']]['perm_delete'])
+        if (is_authorized($_SESSION['username'], 'perm_delete'))
         {
             if ($post_data['mod_post'] === '0')
             {
@@ -175,7 +175,7 @@ function delete_content($dataforce, $authorized, $sub, $type, $dbh)
             }
             else
             {
-                $staff_type = $authorized[$_SESSION['username']]['staff_type'];
+                $staff_type = get_user_setting($_SESSION['username'], 'staff_type');
                 
                 if ($post_data['mod_post'] === '3' && $staff_type === 'admin')
                 {
@@ -286,7 +286,7 @@ function delete_content($dataforce, $authorized, $sub, $type, $dbh)
             }
         }
         
-        cache_post_links();
+        cache_links();
     }
     else
     {

@@ -70,7 +70,7 @@ function generate_header($dataforce, $render_mode, $treeline)
 //
 // Generate reply form
 //
-function form($dataforce, $authorized)
+function form($dataforce)
 {
     global $rendervar;
     
@@ -121,7 +121,7 @@ function form($dataforce, $authorized)
 //
 // Render posts
 //
-function render_post($dataforce, $authorized, $response, $partial, $gen_data, $treeline, $dbh)
+function render_post($dataforce, $response, $partial, $gen_data, $treeline, $dbh)
 {
     global $rendervar, $link_resno;
     
@@ -257,7 +257,7 @@ function render_post($dataforce, $authorized, $response, $partial, $gen_data, $t
     {
         $rendervar['logged_in'] = TRUE;
         $rendervar['host'] = (@inet_ntop($rendervar['host'])) ? inet_ntop($rendervar['host']) : 'Unknown';
-        $rendervar['perm_ban'] = $authorized[$_SESSION['username']]['perm_ban'];
+        $rendervar['perm_ban'] = get_user_setting($_SESSION['username'], 'perm_ban');
         $rendervar['page_ref1'] = PHP_SELF . '?mode=display&page=0';
         $rendervar['page_ref2'] = PHP_SELF . '?page=';
         $rendervar['the_session'] = session_id();
@@ -277,7 +277,7 @@ function render_post($dataforce, $authorized, $response, $partial, $gen_data, $t
 //
 // Footer
 //
-function footer($authorized, $link, $styles, $del, $response)
+function footer($link, $styles, $del, $response)
 {
     global $total_html, $total_script, $rendervar;
     
@@ -291,7 +291,7 @@ function footer($authorized, $link, $styles, $del, $response)
         $rendervar['logged_in'] = TRUE;
         $rendervar['main_page'] = FALSE;
         
-        if ($authorized[$_SESSION['username']]['perm_ban'])
+        if (get_user_setting($_SESSION['username'], 'perm_ban'))
         {
             $rendervar['perm_ban'] = TRUE;
         }

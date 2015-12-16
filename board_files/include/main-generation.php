@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Genrerates the main thread listings
 //
-function main_thread_generator($dataforce, $authorized, $dbh)
+function main_thread_generator($dataforce, $dbh)
 {
     global $rendervar;
     $rendervar['insert_hr'] = FALSE;
@@ -30,12 +30,12 @@ function main_thread_generator($dataforce, $authorized, $dbh)
     if ($counttree === 0)
     {
         $page_output .= generate_header($dataforce, 'NORMAL', $treeline);
-        $page_output .= form($dataforce, $authorized);
+        $page_output .= form($dataforce);
         $rendervar['main_page'] = TRUE;
         $rendervar['prev_nav'] = '';
         $rendervar['next_nav'] = '';
         $rendervar['page_nav'] = '';
-        $page_output .= footer($authorized, FALSE, TRUE, TRUE, FALSE);
+        $page_output .= footer(FALSE, TRUE, TRUE, FALSE);
         
         if (empty($_SESSION) || $_SESSION['ignore_login'])
         {
@@ -59,7 +59,7 @@ function main_thread_generator($dataforce, $authorized, $dbh)
         $dataforce['omitted_done'] = TRUE;
         $rendervar['page_title'] = BS_BOARD_NAME;
         $page_output .= generate_header($dataforce, 'NORMAL', $treeline);
-        $page_output .= form($dataforce, $authorized);
+        $page_output .= form($dataforce);
         $end_of_thread = FALSE;
         $sub_page_thread_counter = 0;
         
@@ -97,7 +97,7 @@ function main_thread_generator($dataforce, $authorized, $dbh)
                 $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? BS_THREADS_PER_PAGE : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
                 $rendervar['insert_hr'] = TRUE;
-                $page_output .= render_post($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline, $dbh);
+                $page_output .= render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
                 $rendervar['insert_hr'] = FALSE;
             }
             
@@ -120,17 +120,17 @@ function main_thread_generator($dataforce, $authorized, $dbh)
                     if ($gen_data['post_count'] > BS_ABBREVIATE_THREAD && $gen_data['post_counter'] === 1)
                     {
                         $dataforce['omitted_done'] = FALSE;
-                        $page_output .= render_post($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline, $dbh);
+                        $page_output .= render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh);
                         $dataforce['omitted_done'] = TRUE;
                     }
                     else
                     {
-                        $page_output .= render_post($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline, $dbh);
+                        $page_output .= render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh);
                     }
                 }
                 else
                 {
-                    $page_output .= render_post($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline, $dbh);
+                    $page_output .= render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
                 }
             }
             else
@@ -182,7 +182,7 @@ function main_thread_generator($dataforce, $authorized, $dbh)
             ++ $i;
         }
         
-        $page_output .= footer($authorized, FALSE, TRUE, TRUE, FALSE);
+        $page_output .= footer(FALSE, TRUE, TRUE, FALSE);
         
         if (!empty($_SESSION) && !$_SESSION['ignore_login'])
         {

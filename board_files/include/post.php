@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function new_post($dataforce, $authorized, $dbh)
+function new_post($dataforce, $dbh)
 {
     global $enabled_types, $fgsfds, $plugins;
     
@@ -149,31 +149,31 @@ function new_post($dataforce, $authorized, $dbh)
         
         if ($name_pieces[5] !== '')
         {
-            $num_auth = array_keys($authorized);
-            $auth_count = count($authorized);
+            $full_auth = array_keys(nel_authorization(NULL, NULL, NULL, NULL));
+            $auth_count = count($full_auth);
             $i = 0;
             
             while ($i < $auth_count)
             {
-                if ($name_pieces[5] === $authorized[$num_auth[$i]]['staff_trip'])
+                if ($name_pieces[5] === get_user_setting($full_auth[$i], 'staff_trip'))
                 {
-                    if ($authorized[$num_auth[$i]]['perm_post'])
+                    if (is_authorized($full_auth[$i], 'perm_post'))
                     {
-                        if ($authorized[$staff_id]['staff_type'] === 'admin')
+                        if (get_user_setting($staff_id, 'staff_type') === 'admin')
                         {
                             $modpostc = 3;
                         }
-                        else if ($authorized[$staff_id]['staff_type'] === 'moderator')
+                        else if (get_user_setting($staff_id, 'staff_type') === 'moderator')
                         {
                             $modpostc = 2;
                         }
-                        else if ($authorized[$staff_id]['staff_type'] === 'janitor')
+                        else if (get_user_setting($staff_id, 'staff_type') === 'janitor')
                         {
                             $modpostc = 1;
                         }
                     }
                     
-                    if ($authorized[$num_auth[$i]]['perm_sticky'] && strripos($dataforce['fgsfds'], 'sticky') !== FALSE)
+                    if (is_authorized($full_auth[$i], 'perm_sticky') && strripos($dataforce['fgsfds'], 'sticky') !== FALSE)
                     {
                         $fgsfds['sticky'] = TRUE;
                     }
@@ -191,7 +191,7 @@ function new_post($dataforce, $authorized, $dbh)
         $poster_info = $plugins->plugin_hook('tripcode-processing', TRUE, array($poster_info, $name_pieces));
         $poster_info = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($poster_info, $name_pieces, $modpostc));
         
-        if ($name_pieces[1] === '' || $authorized[$staff_id]['perm_post_anon'])
+        if ($name_pieces[1] === '' || is_authorized($staff_id, 'perm_post_anon'))
         {
             $poster_info['name'] = stext('THREAD_NONAME');
             $poster_info['email'] = '';
@@ -507,10 +507,10 @@ function new_post($dataforce, $authorized, $dbh)
     }
     
     $return_res = ($dataforce['response_to'] === 0) ? $new_thread_dir : $dataforce['response_to'];
-    regen($dataforce, $authorized, $return_res, 'thread', FALSE, $dbh);
+    regen($dataforce, $return_res, 'thread', FALSE, $dbh);
     // cache_post_links($post_link_reference);
     $dataforce['archive_update'] = TRUE;
-    regen($dataforce, $authorized, NULL, 'main', FALSE, $dbh);
+    regen($dataforce, NULL, 'main', FALSE, $dbh);
     
     if (!empty($_SESSION))
     {
@@ -683,7 +683,7 @@ function file_info()
                     if ($enabled_types['enable_' . strtolower($filetypes[$test_ext]['subtype'])] && $enabled_types['enable_' . strtolower($filetypes[$test_ext]['supertype'])])
                     {
                         $file_allowed = TRUE;
-                        
+
                         if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test))
                         {
                             $files[$i]['supertype'] = $filetypes[$test_ext]['supertype'];
@@ -693,11 +693,12 @@ function file_info()
                         }
                     }
                 }
-                else
+                
+                if(!$file_allowed)
                 {
                     derp(6, stext('ERROR_6'), array('POST', $files[i]));
                 }
-                
+
                 if (!$file_good)
                 {
                     derp(18, stext('ERROR_18'), array('POST', $files[i]));

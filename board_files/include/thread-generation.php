@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function thread_generator($dataforce, $authorized, $dbh)
+function thread_generator($dataforce, $dbh)
 {
     global $rendervar;
     
@@ -48,16 +48,16 @@ function thread_generator($dataforce, $authorized, $dbh)
         if ($gen_data['post_counter'] === 0)
         {
             $page_output .= generate_header($dataforce, 'NORMAL', $treeline);
-            $page_output .= form($dataforce, $authorized);
+            $page_output .= form($dataforce);
         }
         
         if ($partlimit === 100)
         {
             $page_output2 = $page_output;
             $rendervar['insert_hr'] = TRUE;
-            $page_output2 .= render_post($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline, $dbh);
+            $page_output2 .= render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
             $rendervar['insert_hr'] = FALSE;
-            $page_output2 .= footer($authorized, FALSE, TRUE, TRUE, TRUE);
+            $page_output2 .= footer(FALSE, TRUE, TRUE, TRUE);
             write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-0-100.html', $page_output2, 0644);
         }
         
@@ -70,10 +70,10 @@ function thread_generator($dataforce, $authorized, $dbh)
             
             $resid = $dataforce['response_id'];
             
-            $page_output_tmp = render_post($dataforce, $authorized, TRUE, FALSE, $gen_data, $treeline, $dbh); // for thread
+            $page_output_tmp = render_post($dataforce, TRUE, FALSE, $gen_data, $treeline, $dbh); // for thread
             $dataforce['response_id'] = 0;
-            $page_output_tmp2 = render_post($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
-            $page_output_tmp3 = render_post($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline, $dbh); // for expand
+            $page_output_tmp2 = render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
+            $page_output_tmp3 = render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for expand
             $dataforce['response_id'] = $resid;
             
             if ($gen_data['post_count'] > BS_ABBREVIATE_THREAD)
@@ -86,7 +86,7 @@ function thread_generator($dataforce, $authorized, $dbh)
                 if ($gen_data['post_counter'] === ($gen_data['post_count'] - BS_ABBREVIATE_THREAD))
                 {
                     $dataforce['omitted_done'] = FALSE;
-                    $page_output_tmp2 = render_post($dataforce, $authorized, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
+                    $page_output_tmp2 = render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
                     $dataforce['omitted_done'] = TRUE;
                     $page_output_collapse = $page_output_tmp2;
                 }
@@ -97,7 +97,7 @@ function thread_generator($dataforce, $authorized, $dbh)
         }
         else
         {
-            $page_output .= render_post($dataforce, $authorized, FALSE, FALSE, $gen_data, $treeline, $dbh);
+            $page_output .= render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
         }
         
         ++ $partlimit;
@@ -105,7 +105,7 @@ function thread_generator($dataforce, $authorized, $dbh)
     }
     
     $rendervar['main_page'] = FALSE;
-    $page_output .= footer($authorized, FALSE, TRUE, TRUE, TRUE);
+    $page_output .= footer(FALSE, TRUE, TRUE, TRUE);
     
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {

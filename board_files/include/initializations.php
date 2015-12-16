@@ -28,7 +28,8 @@ require_once INCLUDE_PATH . 'setup.php';
 require_once INCLUDE_PATH . 'file-handling.php';
 setup_check($dbh);
 generate_auth_file();
-include_once FILES_PATH . '/auth_data.nel.php';
+//include_once FILES_PATH . '/auth_data.nel.php';
+require_once INCLUDE_PATH . 'authorize.php';
 require_once INCLUDE_PATH . 'language.php';
 
 $template_info = array();

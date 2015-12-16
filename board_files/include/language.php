@@ -1,4 +1,8 @@
 <?php
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
 
 function get_language($language, $form, $text)
 {
@@ -6,7 +10,7 @@ function get_language($language, $form, $text)
 
     if (!isset($lang_arrays[$language]))
     {
-        include INCLUDE_PATH . 'lang.' . $language . '.php';
+        include LANGUAGE_PATH . 'lang.' . $language . '.php';
         $lang_arrays[$language]['singular'] = $lang_singular;
         $lang_arrays[$language]['plural'] = $lang_plural;
     }

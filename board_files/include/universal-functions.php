@@ -47,7 +47,7 @@ function derp($error_id, $error_message, $diagnostic)
     die();
 }
 
-function regen(&$dataforce, $authorized, $id, $mode, $modmode, $dbh)
+function regen(&$dataforce, $id, $mode, $modmode, $dbh)
 {
     global $link_resno, $link_updates;
     
@@ -80,7 +80,7 @@ function regen(&$dataforce, $authorized, $id, $mode, $modmode, $dbh)
         update_archive_status($dataforce, $dbh);
         $dataforce['response_id'] = 0;
         $link_resno = 0;
-        main_thread_generator($dataforce, $authorized, $dbh);
+        main_thread_generator($dataforce, $dbh);
     }
     
     if ($mode === 'thread' || $mode === 'full')
@@ -91,7 +91,7 @@ function regen(&$dataforce, $authorized, $id, $mode, $modmode, $dbh)
         while ($i < $threads)
         {
             $dataforce['response_id'] = $ids[$i];
-            thread_generator($dataforce, $authorized, $dbh);
+            thread_generator($dataforce, $dbh);
             ++ $i;
         }
     }

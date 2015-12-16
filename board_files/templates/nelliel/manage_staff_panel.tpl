@@ -63,6 +63,7 @@
     {{ else }}
                     <option value="janitor">{stext('MANAGE_STAFF_TJAN')}</option>
     {{ endif }}
+                    </select>
                 </td>
             </tr>
             <tr>
