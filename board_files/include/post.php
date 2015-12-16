@@ -50,17 +50,17 @@ function new_post($dataforce, $dbh)
         
         if (!$poster_info['comment'])
         {
-            derp(10, stext('ERROR_10'), array('POST', $files));
+            derp(10, array('POST', $files));
         }
         
         if (BS1_REQUIRE_IMAGE_ALWAYS)
         {
-            derp(8, stext('ERROR_8'), array('POST', $files));
+            derp(8, array('POST', $files));
         }
         
         if (BS1_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
         {
-            derp(9, stext('ERROR_9'), array('POST', $files));
+            derp(9, array('POST', $files));
         }
     }
     
@@ -69,7 +69,7 @@ function new_post($dataforce, $dbh)
 
     if (strlen(utf8_decode($poster_info['comment'])) > BS_MAX_COMMENT_LENGTH || strlen(utf8_decode($poster_info['name'])) > BS_MAX_NAME_LENGTH || strlen(utf8_decode($poster_info['email'])) > BS_MAX_EMAIL_LENGTH || strlen(utf8_decode($poster_info['subject'])) > BS_MAX_SUBJECT_LENGTH || strlen(utf8_decode($dataforce['file_source'])) > BS_MAX_SOURCE_LENGTH || strlen(utf8_decode($dataforce['file_license'])) > BS_MAX_LICENSE_LENGTH)
     {
-        derp(11, stext('ERROR_11'), array('POST', $files));
+        derp(11, array('POST', $files));
     }
     
     if (isset($dataforce['pass']))
@@ -244,7 +244,7 @@ function new_post($dataforce, $dbh)
                     
                     if ($same_thread > 0)
                     {
-                        derp(12, stext('ERROR_12'), array('POST', $files[i]));
+                        derp(12, array('POST', $files[i]));
                     }
                 }
                 
@@ -560,7 +560,7 @@ function is_post_ok($dataforce, $time, $dbh)
         
         if ($renzoku > 0)
         {
-            derp(1, stext('ERROR_1'), array('POST'));
+            derp(1, array('POST'));
         }
         
         $post_count = 1;
@@ -576,17 +576,17 @@ function is_post_ok($dataforce, $time, $dbh)
             {
                 if ($op_post['post_number'] === '')
                 {
-                    derp(2, stext('ERROR_2'), array('POST'));
+                    derp(2, array('POST'));
                 }
                 
                 if ($op_post['locked'] === '1')
                 {
-                    derp(3, stext('ERROR_3'), array('POST'));
+                    derp(3, array('POST'));
                 }
                 
                 if ($op_post['archive_status'] !== '0')
                 {
-                    derp(14, stext('ERROR_14'), array('POST'));
+                    derp(14, array('POST'));
                 }
                 
                 $post_count = $op_post['post_count'];
@@ -606,12 +606,12 @@ function is_post_ok($dataforce, $time, $dbh)
         
         if ($renzoku > 0)
         {
-            derp(1, stext('ERROR_1'), array('POST'));
+            derp(1, array('POST'));
         }
         
         if ($post_count >= BS_MAX_POSTS)
         {
-            derp(4, stext('ERROR_4'), array('POST'));
+            derp(4, array('POST'));
         }
     }
     
@@ -665,7 +665,7 @@ function file_info()
                 
                 if ($file['size'] > BS_MAX_FILESIZE * 1024)
                 {
-                    derp(19, stext('ERROR_19'), array('POST', $files[i]));
+                    derp(19, array('POST', $files[i]));
                 }
                 
                 $files[$i]['dest'] = SRC_PATH . $file['name'] . '.tmp';
@@ -696,12 +696,12 @@ function file_info()
                 
                 if(!$file_allowed)
                 {
-                    derp(6, stext('ERROR_6'), array('POST', $files[i]));
+                    derp(6, array('POST', $files[i]));
                 }
 
                 if (!$file_good)
                 {
-                    derp(18, stext('ERROR_18'), array('POST', $files[i]));
+                    derp(18, array('POST', $files[i]));
                 }
                 
                 $files[$i]['file_source'] = cleanse_the_aids($_POST['sauce' . ($i + 1)]);
@@ -716,7 +716,7 @@ function file_info()
         }
         else if ($file['error'] === UPLOAD_ERR_INI_SIZE)
         {
-            derp(19, stext('ERROR_19'), array('POST'));
+            derp(19, array('POST'));
         }
     }
     

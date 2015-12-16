@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Error Handling
 //
-function derp($error_id, $error_message, $diagnostic)
+function derp($error_id, $diagnostic)
 {
     $file_count = 0;
     $extra_data = '';

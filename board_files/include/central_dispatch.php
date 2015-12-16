@@ -58,7 +58,7 @@ function nel_process_post($dataforce, $dbh)
                         }
                         else
                         {
-                            derp(104, stext('ERROR_104'), array('MAIN'));
+                            derp(104, array('MAIN'));
                         }
                     }
                     
@@ -157,7 +157,7 @@ function nel_process_post($dataforce, $dbh)
                             }
                             else
                             {
-                                derp(104, stext('ERROR_104'), array('MAIN'));
+                                derp(104, array('MAIN'));
                             }
                             
                             die();
@@ -212,7 +212,7 @@ function nel_process_post($dataforce, $dbh)
                             die();
                         
                         default:
-                            derp(153, stext('ERROR_153'), 'ADMIN', array(), '');
+                            derp(153, 'ADMIN', array(), '');
                     }
                 }
         }

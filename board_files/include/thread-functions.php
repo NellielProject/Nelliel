@@ -153,7 +153,7 @@ function delete_content($dataforce, $sub, $type, $dbh)
     
     if (!is_numeric($id))
     {
-        derp(13, stext('ERROR_13'), array('DELETE'));
+        derp(13, array('DELETE'));
     }
     
     $flag = FALSE;
@@ -290,7 +290,7 @@ function delete_content($dataforce, $sub, $type, $dbh)
     }
     else
     {
-        derp(20, stext('ERROR_20'), array('DELETE'));
+        derp(20, array('DELETE'));
     }
     
     if (!empty($_SESSION))
