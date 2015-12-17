@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function get_language($language, $form, $text)
+function nel_get_language($language, $form, $text)
 {
     static $lang_arrays;
 
@@ -20,17 +20,17 @@ function get_language($language, $form, $text)
 
 function stext($text)
 {
-    return get_language(BOARD_LANGUAGE, 'singular', $text);
+    return nel_get_language(BOARD_LANGUAGE, 'singular', $text);
 }
 
 function ptext($text, $num)
 {
     if ($num <= 1)
     {
-        return get_language(BOARD_LANGUAGE, 'singular', $text);
+        return nel_get_language(BOARD_LANGUAGE, 'singular', $text);
     }
     else if ($num > 1)
     {
-        return get_language(BOARD_LANGUAGE, 'plural', $text);
+        return nel_get_language(BOARD_LANGUAGE, 'plural', $text);
     }
 }

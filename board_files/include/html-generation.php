@@ -534,19 +534,21 @@ function parse_template($template, $regen)
     
     if (!$template_info[$template]['loaded'])
     {
-        $md5 = md5_file(TEMPLATE_PATH . $template);
+        clearstatcache();
+        $modify_time = filemtime(TEMPLATE_PATH . $template);
         
-        if (!isset($template_info[$template]) || $md5 !== $template_info[$template] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
+        if (!isset($template_info[$template]) || $modify_time !== $template_info[$template]['modify_time'] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
         {
             $template_info[$template]['md5'] = $md5;
+            $template_info[$template]['modify-time'] = $modify_time;
             $lol = file_get_contents(TEMPLATE_PATH . $template);
-            $lol = preg_replace('#(?<!\[|\'|stext\(|ptext\()\'(?!\]|\'|\)})#', '\\\'', $lol); // Keep escaped characters intact
+            $lol = preg_replace('#(?<!\[|\')\'(?!\]|\'|\)})#', '\\\'', $lol); // Keep escaped characters intact
             $lol = trim($lol);
             $begin = '<?php function render_' . $template_short . '() { global $rendervar, $total_html; $temp = \''; // Start of the cached template
             $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*(if|elseif|foreach|for|while)[ \r\n\t]*([^{]*)}}#', '\'; $1( $2 ): $temp .= \'', $lol); // Opening control statements
             $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*else[ \r\n\t]*}}#', '\'; else: $temp .= \'', $lol); // Else
             $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*(endif|endforeach|endfor|endwhile)[ \r\n\t]*}}#', '\'; $1; $temp .= \'', $lol); // Closing control statements
-            $lol = preg_replace('#{(stext\(.*?\)|ptext\(.*?\))}#', "'.$1.'", $lol); // Inline function calls
+            $lol = preg_replace('#{([\w]*?\(.*?\))}#', "'.$1.'", $lol); // Inline function calls
             $lol = preg_replace('#{([^({)|(}]*)}#', "'.$1.'", $lol); // Variables and constants
             $end = '\'; return $temp; } ?>'; // End of the caches template
             $lol_out = $begin . $lol . $end;

@@ -7,44 +7,51 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Error Handling
 //
-function derp($error_id, $diagnostic)
+function derp($error_id, $error_data)
 {
-    $file_count = 0;
-    $extra_data = '';
-    
-    if (array_key_exists(1, $diagnostic) && !is_null($diagnostic))
+    static $diagnostic;
+
+    if($error_id === 'retrieve')
     {
-        $file_count = count($diagnostic[1]);
+        return $diagnostic[$error_data];
+    }
+    
+    if($error_id === 'update')
+    {
+        $diagnostic[$error_data[0]] = $error_data[1];
+        return;
+    }
+
+    $diagnostic['error-id'] = $error_id;
+    $diagnostic['error-message'] = stext('ERROR_' . $error_id);
+    $diagnostic['origin'] = $error_data['origin'];
+
+    if (!is_null($error_data['files']))
+    {
+        $diagnostic['bad-filename'] = $error_data['bad-filename'];
+        $diagnostic['files'] = $error_data['files'];
         
-        foreach ($diagnostic[1] as $file)
+        foreach($diagnostic['files'] as $file)
         {
-            if ($file !== '' && is_file($file['dest']))
-            {
-                unlink($file['dest']);
-            }
+            unlink($file['dest']);
         }
     }
     
-    if ($error_location === 'SNACKS')
-    {
-        $extra_data = $diagnostic[2];
-    }
-    else if ($error_location === 'POST' && $file_count === 1)
-    {
-        $extra_data = $diagnostic[1]['basic_filename'] . $diagnostic[1]['ext'];
-    }
-    else
-    {
-        $extra_data = '';
-    }
-    
-    echo generate_header(array(), 'DERP', array());
-    echo '
-        <div class="text-center"><font color="blue" size="5">' . stext('ERROR_HEADER') . '<br><br>' . $error_message . '<br>' . $extra_data . '<br><a href="' . PHP_SELF2 . PHP_EXT . '">' . stext('LINK_RETURN') . '</a></b></font></div>
-        <br><br><hr>
-</body></html>';
-    
+    $dat = generate_header(array(), 'DERP', array());
+    $dat .= parse_template('derp.tpl', FALSE);
+    $dat .= footer(FALSE, FALSE, FALSE, FALSE);
+    echo $dat;
     die();
+}
+
+function get_derp($which_data)
+{
+    return derp('retrieve', $which_data);
+}
+
+function update_derp($which_data, $update)
+{
+    derp('update', array($which_data, $update));
 }
 
 function regen(&$dataforce, $id, $mode, $modmode, $dbh)

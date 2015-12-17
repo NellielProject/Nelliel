@@ -50,17 +50,17 @@ function new_post($dataforce, $dbh)
         
         if (!$poster_info['comment'])
         {
-            derp(10, array('POST', $files));
+            derp(10, array('origin' => 'POST'));
         }
         
         if (BS1_REQUIRE_IMAGE_ALWAYS)
         {
-            derp(8, array('POST', $files));
+            derp(8, array('origin' => 'POST'));
         }
         
         if (BS1_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
         {
-            derp(9, array('POST', $files));
+            derp(9, array('origin' => 'POST'));
         }
     }
     
@@ -69,7 +69,7 @@ function new_post($dataforce, $dbh)
 
     if (strlen(utf8_decode($poster_info['comment'])) > BS_MAX_COMMENT_LENGTH || strlen(utf8_decode($poster_info['name'])) > BS_MAX_NAME_LENGTH || strlen(utf8_decode($poster_info['email'])) > BS_MAX_EMAIL_LENGTH || strlen(utf8_decode($poster_info['subject'])) > BS_MAX_SUBJECT_LENGTH || strlen(utf8_decode($dataforce['file_source'])) > BS_MAX_SOURCE_LENGTH || strlen(utf8_decode($dataforce['file_license'])) > BS_MAX_LICENSE_LENGTH)
     {
-        derp(11, array('POST', $files));
+        derp(11, array('origin' => 'POST'));
     }
     
     if (isset($dataforce['pass']))
@@ -244,7 +244,7 @@ function new_post($dataforce, $dbh)
                     
                     if ($same_thread > 0)
                     {
-                        derp(12, array('POST', $files[i]));
+                        derp(12, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => $files));
                     }
                 }
                 
@@ -560,7 +560,7 @@ function is_post_ok($dataforce, $time, $dbh)
         
         if ($renzoku > 0)
         {
-            derp(1, array('POST'));
+            derp(1, array('origin' => 'POST'));
         }
         
         $post_count = 1;
@@ -576,17 +576,17 @@ function is_post_ok($dataforce, $time, $dbh)
             {
                 if ($op_post['post_number'] === '')
                 {
-                    derp(2, array('POST'));
+                    derp(2, array('origin' => 'POST'));
                 }
                 
                 if ($op_post['locked'] === '1')
                 {
-                    derp(3, array('POST'));
+                    derp(3, array('origin' => 'POST'));
                 }
                 
                 if ($op_post['archive_status'] !== '0')
                 {
-                    derp(14, array('POST'));
+                    derp(14, array('origin' => 'POST'));
                 }
                 
                 $post_count = $op_post['post_count'];
@@ -606,12 +606,12 @@ function is_post_ok($dataforce, $time, $dbh)
         
         if ($renzoku > 0)
         {
-            derp(1, array('POST'));
+            derp(1, array('origin' => 'POST'));
         }
         
         if ($post_count >= BS_MAX_POSTS)
         {
-            derp(4, array('POST'));
+            derp(4, array('origin' => 'POST'));
         }
     }
     
@@ -665,7 +665,7 @@ function file_info()
                 
                 if ($file['size'] > BS_MAX_FILESIZE * 1024)
                 {
-                    derp(19, array('POST', $files[i]));
+                    derp(19, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
                 }
                 
                 $files[$i]['dest'] = SRC_PATH . $file['name'] . '.tmp';
@@ -696,12 +696,12 @@ function file_info()
                 
                 if(!$file_allowed)
                 {
-                    derp(6, array('POST', $files[i]));
+                    derp(6, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
                 }
 
                 if (!$file_good)
                 {
-                    derp(18, array('POST', $files[i]));
+                    derp(18, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
                 }
                 
                 $files[$i]['file_source'] = cleanse_the_aids($_POST['sauce' . ($i + 1)]);
@@ -716,7 +716,7 @@ function file_info()
         }
         else if ($file['error'] === UPLOAD_ERR_INI_SIZE)
         {
-            derp(19, array('POST'));
+            derp(19, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
         }
     }
     

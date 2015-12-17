@@ -35,7 +35,7 @@ function update_ban($dataforce, $mode, $dbh)
 {
     if (!is_authorized($_SESSION['username'], 'perm_ban_panel'))
     {
-        derp(101, array('ADMIN'));
+        derp(101, array('origin' => 'ADMIN'));
     }
 
     if ($mode === 'remove')
@@ -119,7 +119,7 @@ function staff_panel($dataforce, $mode, $dbh)
     
     if (!is_authorized($_SESSION['username'], 'perm_staff_panel'))
     {
-        derp(102, array('ADMIN'));
+        derp(102, array('origin' => 'ADMIN'));
     }
     
     if ($mode === 'edit' || $mode === 'add')
@@ -156,7 +156,7 @@ function staff_panel($dataforce, $mode, $dbh)
             
             if (!get_user_auth($rendervar['staff_name']))
             {
-                derp(150, array('ADMIN'));
+                derp(150, array('origin' => 'ADMIN'));
             }
         }
         
@@ -273,7 +273,7 @@ function gen_new_staff($new_name, $new_type)
     }
     else
     {
-        derp(151, array('ADMIN'));
+        derp(151, array('origin' => 'ADMIN'));
     }
 
     write_auth_file();
@@ -307,7 +307,7 @@ function admin_control($dataforce, $mode, $dbh)
     
     if (!is_authorized($_SESSION['username'], 'perm_config'))
     {
-        derp(102, array('ADMIN'));
+        derp(102, array('origin' => 'ADMIN'));
     }
     
     if ($mode === 'set')
@@ -413,7 +413,7 @@ function ban_control($dataforce, $mode, $dbh)
     
     if (!is_authorized($_SESSION['username'], 'perm_ban_panel'))
     {
-        derp(101, array('ADMIN'));
+        derp(101, array('origin' => 'ADMIN'));
     }
     
     $dat = '';
@@ -476,7 +476,7 @@ function thread_panel($dataforce, $mode, $dbh)
     
     if (!is_authorized($_SESSION['username'], 'perm_thread_panel'))
     {
-        derp(103, array('ADMIN'));
+        derp(103, array('origin' => 'ADMIN'));
     }
     
     if ($mode === 'update')

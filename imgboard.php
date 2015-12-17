@@ -56,7 +56,8 @@ require_once INCLUDE_PATH . 'central_dispatch.php';
 nel_process_get($dataforce, $dbh);
 nel_process_post($dataforce, $dbh);
 regen($dataforce, NULL, 'main', FALSE, $dbh);
-clean_exit($dataforce, $template_info, FALSE);
+echo "wur";
+clean_exit($dataforce, FALSE);
 
 function clean_exit($dataforce, $die)
 {
@@ -65,8 +66,10 @@ function clean_exit($dataforce, $die)
     
     if ($die)
     {
+        echo "wat";
         die();
     }
+    echo "yay";
     
     if (STUFF_DONE)
     {
@@ -74,7 +77,7 @@ function clean_exit($dataforce, $die)
     }
     else
     {
-        echo '<meta http-equiv="refresh" content="0;URL=' . PHP_SELF2 . PHP_EXT . '">';
+        echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF2 . PHP_EXT . '">';
     }
     
     die();

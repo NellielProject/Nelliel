@@ -30,7 +30,7 @@ function regen_session()
     else // Session timed out or doesn't match the cookie
     {
         terminate_session();
-        derp(105, array('SEC'));
+        derp(105, array('origin' => 'SESSION_REGEN'));
     }
 }
 
@@ -80,7 +80,7 @@ function initialize_session($dataforce)
         else
         {
             terminate_session();
-            derp(107, array('LOGIN'));
+            derp(107, array('origin' => 'SESSION_INIT'));
         }
         
         valid($dataforce);

@@ -80,15 +80,17 @@ function thread_generator($dataforce, $dbh)
             {
                 if ($gen_data['post_counter'] > ($gen_data['post_count'] - BS_ABBREVIATE_THREAD))
                 {
-                    $page_output_collapse .= $page_output_tmp2;
-                }
-                
-                if ($gen_data['post_counter'] === ($gen_data['post_count'] - BS_ABBREVIATE_THREAD))
-                {
-                    $dataforce['omitted_done'] = FALSE;
-                    $page_output_tmp2 = render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
-                    $dataforce['omitted_done'] = TRUE;
-                    $page_output_collapse = $page_output_tmp2;
+                    if($page_output_collapse === '')
+                    {
+                        $dataforce['omitted_done'] = FALSE;
+                        $page_output_tmp2 = render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
+                        $dataforce['omitted_done'] = TRUE;
+                        $page_output_collapse = $page_output_tmp2;
+                    }
+                    else
+                    {
+                        $page_output_collapse .= $page_output_tmp2;
+                    }
                 }
             }
             
