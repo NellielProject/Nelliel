@@ -3,6 +3,7 @@ if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
+
 $dbh;
 if (SQLTYPE === 'MYSQL')
 {

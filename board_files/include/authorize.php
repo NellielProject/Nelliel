@@ -4,6 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+//
+// Handle all the authorization functions
+//
 function nel_authorization($user, $setting, $is_update, $new_data)
 {
     static $authorized;

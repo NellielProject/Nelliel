@@ -72,7 +72,7 @@
                 {{ if BS1_USE_NEW_IMGDEL }}
                     <span class="file-delete-box"><input type="checkbox" name="fileid{$rendervar['post_number']}_{$file['file_order']}" value="deletefile_{$rendervar['post_number']}_{$file['file_order']}" title="Delete file"></span>
                 {{ endif }}
-                    <a href="{$file['file_location']}" rel="external">{$file['filename']}.{$file['extension']}</a> - 
+                    <a href="{$file['file_location']}" rel="external">{$file['filename']}.{$file['extension']}</a> -&nbsp;
                 {{ if $file['img_dim'] }}{$file['image_width']} x {$file['image_height']}{{ endif }} ({$file['filesize']} KB)
                     [<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['file_order']}','showimgmeta{$rendervar['post_number']}_{$file['file_order']}','none','{nel_stext('THREAD_LESS_DATA')}')" id="showimgmeta{$rendervar['post_number']}_{$file['file_order']}">{nel_stext('THREAD_MOAR_DATA')}</a>]
                     <span id="imgmeta{$rendervar['post_number']}_{$file['file_order']}" class="none">

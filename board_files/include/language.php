@@ -4,6 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+//
+// Handles language functions
+//
 function nel_get_language($language, $form, $text)
 {
     static $lang_arrays;

@@ -8,7 +8,6 @@ if (!defined('NELLIEL_VERSION'))
 // Filetype data
 //
 
-
 $filetypes['jpg'] = array('supertype' => 'GRAPHICS', 'subtype' => 'JPEG', 'mime' => 'image/jpeg', 'id_regex' => '^\xFF\xD8\xFF');
 
 $filetypes['jpeg'] = $filetypes['jpg'];

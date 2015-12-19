@@ -36,6 +36,7 @@ function nel_hash($input)
 
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'archive.php';
+require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'universal-functions.php'; // Someday this shall be no more
 require_once INCLUDE_PATH . 'thread-functions.php';
 require_once INCLUDE_PATH . 'admin-functions.php';

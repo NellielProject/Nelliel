@@ -269,6 +269,7 @@ function nel_reset_template_status()
         $template_info[$key]['loaded'] = FALSE;
     }
 }
+
 //
 // Write out rules, post links and template info cache
 //
