@@ -1,9 +1,9 @@
 {{ if $rendervar['thread_panel_form'] }}
     <div class="pass-valid">
-    	{stext('MANAGE_MODE')}
+    	{nel_stext('MANAGE_MODE')}
     </div>
     <div class="del-list">
-    	{stext('MANAGE_THREADS')}
+    	{nel_stext('MANAGE_THREADS')}
     </div>
     <form accept-charset="utf-8" action="imgboard.php" method="post" enctype"multipart/form-data">
     	<input type="hidden" name="mode" value="admin">
@@ -11,27 +11,27 @@
     	<table class="post-lists">
         	<tr class="manage-header">
         {{ if !$rendervar['expand_thread'] }}
-            	<th>{stext('MANAGE_THREAD_EXPAND')}</th>
+            	<th>{nel_stext('MANAGE_THREAD_EXPAND')}</th>
         {{ else }}
             	<th></th>
         {{ endif }}
-            	<th>{stext('MANAGE_THREAD_POST_NUM')}</th>
-            	<th>{stext('MANAGE_THREAD_DELETE')}</th>
-            	<th>{stext('MANAGE_THREAD_STICKY')}</th>
-            	<th>{stext('MANAGE_THREAD_UNSTICKY')}</th>
-            	<th>{stext('MANAGE_THREAD_TIME')}</th>
-            	<th>{stext('MANAGE_THREAD_SUBJECT')}</th>
-            	<th>{stext('MANAGE_THREAD_NAME')}</th>
-            	<th>{stext('MANAGE_THREAD_COMMENT')}</th>
-            	<th>{stext('MANAGE_THREAD_HOST')}</th>
-            	<th>{stext('MANAGE_THREAD_FILE')}</th>
+            	<th>{nel_stext('MANAGE_THREAD_POST_NUM')}</th>
+            	<th>{nel_stext('MANAGE_THREAD_DELETE')}</th>
+            	<th>{nel_stext('MANAGE_THREAD_STICKY')}</th>
+            	<th>{nel_stext('MANAGE_THREAD_UNSTICKY')}</th>
+            	<th>{nel_stext('MANAGE_THREAD_TIME')}</th>
+            	<th>{nel_stext('MANAGE_THREAD_SUBJECT')}</th>
+            	<th>{nel_stext('MANAGE_THREAD_NAME')}</th>
+            	<th>{nel_stext('MANAGE_THREAD_COMMENT')}</th>
+            	<th>{nel_stext('MANAGE_THREAD_HOST')}</th>
+            	<th>{nel_stext('MANAGE_THREAD_FILE')}</th>
         	</tr>
     {{ endif }}
     {{ if $rendervar['thread_panel_loop'] }}
         	<tr class="{$rendervar['bg_class']}">
         {{ if !$rendervar['expand_thread'] }}
             	<td>
-            		<input type="submit" name="expand_thread" value="{stext('FORM_EXPAND')} {$rendervar['post_number']}">
+            		<input type="submit" name="expand_thread" value="{nel_stext('FORM_EXPAND')} {$rendervar['post_number']}">
             	</td>
         {{ else }}
             	<td>
@@ -104,18 +104,18 @@
     {{ if $rendervar['thread_panel_end'] }}
         </table>
         <div>
-            [ <b>{stext('MANAGE_FILESIZE_TOTAL')} {$rendervar['all_filesize']}</b> KB ]
+            [ <b>{nel_stext('MANAGE_FILESIZE_TOTAL')} {$rendervar['all_filesize']}</b> KB ]
         </div>
         <div>
             <input type="submit" name="dostuff" value="Update">&nbsp;
-            <input type=reset value="{stext('FORM_RESET')}">
+            <input type=reset value="{nel_stext('FORM_RESET')}">
 	   </div>
     </form>
     {{ if $rendervar['expand_thread'] }}
     <form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
         <input type="hidden" name="mode" value="admin">
         <input type="hidden" name="adminmode" value="returnthreadlist">
-        <input type="submit" value="{stext('FORM_RETURN_THREAD')}">
+        <input type="submit" value="{nel_stext('FORM_RETURN_THREAD')}">
     </form>
     {{ endif }}
 {{ endif }}

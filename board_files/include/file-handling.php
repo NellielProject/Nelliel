@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Write files
 //
-function write_file($filename, $output, $chmod)
+function nel_write_file($filename, $output, $chmod)
 {
     $fp = fopen($filename, "w");
     
@@ -30,7 +30,7 @@ function write_file($filename, $output, $chmod)
 //
 // Move files
 //
-function move_file($location, $destination)
+function nel_move_file($location, $destination)
 {
     if (file_exists($location))
     {
@@ -41,7 +41,7 @@ function move_file($location, $destination)
 //
 // Delete files
 //
-function eraser_gun($path, $filename, $multi)
+function nel_eraser_gun($path, $filename, $multi)
 {
     if ($multi && file_exists($path))
     {
@@ -63,7 +63,7 @@ function eraser_gun($path, $filename, $multi)
 //
 // Create default directories for a thread
 //
-function create_thread_directories($thread_id)
+function nel_create_thread_directories($thread_id)
 {
     mkdir(SRC_PATH . $thread_id, 0777);
     chmod(SRC_PATH . $thread_id, 0777);

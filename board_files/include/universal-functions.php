@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Error Handling
 //
-function derp($error_id, $error_data)
+function nel_derp($error_id, $error_data)
 {
     static $diagnostic;
 
@@ -23,7 +23,7 @@ function derp($error_id, $error_data)
     }
 
     $diagnostic['error-id'] = $error_id;
-    $diagnostic['error-message'] = stext('ERROR_' . $error_id);
+    $diagnostic['error-message'] = nel_stext('ERROR_' . $error_id);
     $diagnostic['origin'] = $error_data['origin'];
 
     if (!is_null($error_data['files']))
@@ -37,24 +37,24 @@ function derp($error_id, $error_data)
         }
     }
     
-    $dat = generate_header(array(), 'DERP', array());
-    $dat .= parse_template('derp.tpl', FALSE);
-    $dat .= footer(FALSE, FALSE, FALSE, FALSE);
+    $dat = nel_render_header(array(), 'DERP', array());
+    $dat .= nel_parse_template('derp.tpl', FALSE);
+    $dat .= nel_render_footer(FALSE, FALSE, FALSE, FALSE);
     echo $dat;
     die();
 }
 
-function get_derp($which_data)
+function nel_get_derp($which_data)
 {
-    return derp('retrieve', $which_data);
+    return nel_derp('retrieve', $which_data);
 }
 
-function update_derp($which_data, $update)
+function nel_update_derp($which_data, $update)
 {
-    derp('update', array($which_data, $update));
+    nel_derp('update', array($which_data, $update));
 }
 
-function regen(&$dataforce, $id, $mode, $modmode, $dbh)
+function nel_regen(&$dataforce, $id, $mode, $modmode, $dbh)
 {
     global $link_resno, $link_updates;
     
@@ -84,10 +84,10 @@ function regen(&$dataforce, $id, $mode, $modmode, $dbh)
     
     if ($mode === 'main' || $mode === 'full')
     {
-        update_archive_status($dataforce, $dbh);
+        nel_update_archive_status($dataforce, $dbh);
         $dataforce['response_id'] = 0;
         $link_resno = 0;
-        main_thread_generator($dataforce, $dbh);
+        nel_main_nel_thread_generator($dataforce, $dbh);
     }
     
     if ($mode === 'thread' || $mode === 'full')
@@ -98,18 +98,18 @@ function regen(&$dataforce, $id, $mode, $modmode, $dbh)
         while ($i < $threads)
         {
             $dataforce['response_id'] = $ids[$i];
-            thread_generator($dataforce, $dbh);
+            nel_thread_generator($dataforce, $dbh);
             ++ $i;
         }
     }
     
     if ($mode === 'update_all_cache')
     {
-        $dataforce['rules_list'] = cache_rules($dbh);
-        cache_settings($dbh);
+        $dataforce['rules_list'] = nel_cache_rules($dbh);
+        nel_cache_settings($dbh);
         $dataforce['post_links'] = $link_updates;
         // cache_post_links();
-        regen_template_cache();
+        nel_regen_template_cache();
     }
     
     if (!empty($_SESSION) && !$modmode)
@@ -125,7 +125,7 @@ function regen(&$dataforce, $id, $mode, $modmode, $dbh)
 //
 function about_screen()
 {
-    echo generate_header(array(), 'ABOUT', array());
+    echo nel_render_header(array(), 'ABOUT', array());
     echo '
         <div class="text-center">
         	<p><font color="blue" size="5">Nelliel Imageboard</font><br>
@@ -147,7 +147,7 @@ function about_screen()
 			NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</font></p>
         	<hr>
         	<p><font size="4" >Default filetype icons are from the Soft Scraps pack made by <a href="http://deleket.deviantart.com/" title="Deleket">Deleket</a></font></p>
-			<p class="text-center"><font size="4"><a href="' . PHP_SELF2 . PHP_EXT . '">' . stext('LINK_RETURN') . '</a></b></font></p>
+			<p class="text-center"><font size="4"><a href="' . PHP_SELF2 . PHP_EXT . '">' . nel_stext('LINK_RETURN') . '</a></b></font></p>
 			</div>
 		</div>
 		<br><br><hr>

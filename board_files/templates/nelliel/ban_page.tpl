@@ -43,7 +43,7 @@
         <form accept-charset="utf-8" name="postingform" action="{$rendervar['dotdot']}{PHP_SELF}" method="post" enctype="multipart/form-data">
             <div>
                 <p>
-                    {stext('ABOUT_APPEALS')}
+                    {nel_stext('ABOUT_APPEALS')}
                 </p>
                 <input type="hidden" name="mode" value="banappeal">
                 <input type="hidden" name="banned_ip" value="{$rendervar['host']}">
@@ -55,34 +55,34 @@
     </div>
     {{ elseif $rendervar['appeal_status'] === 1 }}
     <p>
-        {stext('BAN_RESPONSE_PENDING')}
+        {nel_stext('BAN_RESPONSE_PENDING')}
     </p>
     {{ elseif $rendervar['appeal_status'] === 2 }}
     <p>
-        {stext('APPEAL_REVIEWED')}<br>
+        {nel_stext('APPEAL_REVIEWED')}<br>
         {{ if isset($rendervar['appeal_response']) }}
-        {stext('BAN_APPEAL_RESPONSE')}
+        {nel_stext('BAN_APPEAL_RESPONSE')}
     </p>
     <p>
         {$rendervar['appeal_response']}
     </p>
         {{ else }}
     <p>
-        {stext('BAN_NO_RESPONSE')}
+        {nel_stext('BAN_NO_RESPONSE')}
     </p>
         {{ endif }}
     {{ elseif $rendervar['appeal_status'] === 3 }}
     <p>
-        {stext('BAN_ALTERED')}<br>
+        {nel_stext('BAN_ALTERED')}<br>
         {{ if isset($rendervar['appeal_response']) }}
-        {stext('BAN_APPEAL_RESPONSE')}
+        {nel_stext('BAN_APPEAL_RESPONSE')}
     </p>
     <p>
         {$rendervar['appeal_response']}
     </p>
         {{ else }}
     <p>
-        {stext('BAN_NO_RESPONSE')}
+        {nel_stext('BAN_NO_RESPONSE')}
     </p>
         {{ endif }}
     {{ endif }}

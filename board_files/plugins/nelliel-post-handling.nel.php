@@ -1,5 +1,6 @@
 <?php
 $nelliel_post_handling = new nelliel_post_handling();
+
 class nelliel_post_handling
 {
     static $plugin_id;

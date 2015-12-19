@@ -67,8 +67,8 @@ $dataforce['expand'] = (isset($_GET['expand'])) ? TRUE : FALSE;
 $dataforce['collapse'] = (isset($_GET['collapse'])) ? TRUE : FALSE;
 $dataforce['response_id'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? (int) $_GET['post'] : NULL;
 $dataforce['archive_update'] = FALSE;
-$dataforce['sp_field1'] = (isset($_POST[stext('TEXT_SPAMBOT_FIELD1')])) ? $_POST[stext('TEXT_SPAMBOT_FIELD1')] : NULL;
-$dataforce['sp_field2'] = (isset($_POST[stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[stext('TEXT_SPAMBOT_FIELD2')] : NULL;
+$dataforce['sp_field1'] = (isset($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD1')] : NULL;
+$dataforce['sp_field2'] = (isset($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD2')] : NULL;
 $dataforce['post_links'] = '';
 
 $link_updates = '';

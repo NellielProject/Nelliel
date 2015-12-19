@@ -540,7 +540,7 @@ $authorized = array(
 		),
 	); ?>';
             
-            if (write_file(FILES_PATH . 'auth_data.nel.php', $new_auth, 0644))
+            if (nel_write_file(FILES_PATH . 'auth_data.nel.php', $new_auth, 0644))
             {
                 $stuff_done = TRUE;
             }

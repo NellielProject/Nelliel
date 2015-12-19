@@ -58,37 +58,37 @@ function nel_authorization($user, $setting, $is_update, $new_data)
     }
 }
 
-function get_user_auth($user)
+function nel_get_user_auth($user)
 {
     return nel_authorization($user, NULL, FALSE, NULL);
 }
 
-function get_user_setting($user, $setting)
+function nel_get_user_setting($user, $setting)
 {
     return nel_authorization($user, $setting, FALSE, NULL);
 }
 
-function update_user_auth($user, $update)
+function nel_update_user_auth($user, $update)
 {
     nel_authorization($user, NULL, TRUE, $update);
 }
 
-function update_user_setting($user, $setting, $update)
+function nel_update_user_setting($user, $setting, $update)
 {
     nel_authorization($user, $setting, TRUE, $update);
 }
 
-function is_authorized($user, $perm)
+function nel_is_authorized($user, $perm)
 {
     return nel_authorization($user, $perm, FALSE, NULL);
 }
 
-function remove_user_auth($user)
+function nel_remove_user_auth($user)
 {
     nel_authorization($user, NULL, TRUE, NULL);
 }
 
-function get_blank_settings()
+function nel_get_blank_settings()
 {
     return array('staff_password' => '',
 		'staff_type' => '',
@@ -107,10 +107,10 @@ function get_blank_settings()
 		'perm_update_cache' => FALSE);
 }
 
-function write_auth_file()
+function nel_write_auth_file()
 {
     $new_auth = '<?php $authorized = ' . var_export(nel_authorization(NULL, NULL, NULL, NULL), TRUE) . '?>';
-    write_file(FILES_PATH . '/auth_data.nel.php', $new_auth, 0644);
+    nel_write_file(FILES_PATH . '/auth_data.nel.php', $new_auth, 0644);
 }
 
 ?>

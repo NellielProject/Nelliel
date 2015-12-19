@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 // Cached settings
 if (!file_exists(CACHE_PATH . 'parameters.nelcache'))
 {
-    cache_settings($dbh);
+    nel_cache_settings($dbh);
 }
 
 require_once CACHE_PATH . 'parameters.nelcache';
@@ -15,7 +15,7 @@ require_once CACHE_PATH . 'parameters.nelcache';
 // Cached rules, post links and template info cache
 if (!file_exists(CACHE_PATH . 'multi-cache.nelcache'))
 {
-    write_multi_cache($dataforce, $template_info);
+    nel_write_multi_cache($dataforce, $template_info);
 }
 
 require_once CACHE_PATH . 'multi-cache.nelcache';
@@ -23,7 +23,7 @@ require_once CACHE_PATH . 'multi-cache.nelcache';
 //
 // Cache the posting rules
 //
-function cache_rules($dbh)
+function nel_cache_rules($dbh)
 {
     $gmode = '';
     $amode = '';
@@ -114,37 +114,37 @@ function cache_rules($dbh)
     if ($gmode !== '')
     {
         $gmode = utf8_substr($gmode, 0, -2);
-        $rule_list .= '<li>' . stext('FILES_GRAPHICS') . utf8_strtoupper($gmode) . '</li>';
+        $rule_list .= '<li>' . nel_stext('FILES_GRAPHICS') . utf8_strtoupper($gmode) . '</li>';
     }
     if ($amode !== '')
     {
         $amode = utf8_substr($amode, 0, -2);
         $rule_list .= '
-							<li>' . stext('FILES_AUDIO') . utf8_strtoupper($amode) . '</li>';
+							<li>' . nel_stext('FILES_AUDIO') . utf8_strtoupper($amode) . '</li>';
     }
     if ($vmode !== '')
     {
         $vmode = utf8_substr($vmode, 0, -2);
         $rule_list .= '
-							<li>' . stext('FILES_VIDEO') . utf8_strtoupper($vmode) . '</li>';
+							<li>' . nel_stext('FILES_VIDEO') . utf8_strtoupper($vmode) . '</li>';
     }
     if ($dmode !== '')
     {
         $dmode = utf8_substr($dmode, 0, -2);
         $rule_list .= '
-							<li>' . stext('FILES_DOCUMENT') . utf8_strtoupper($dmode) . '</li>';
+							<li>' . nel_stext('FILES_DOCUMENT') . utf8_strtoupper($dmode) . '</li>';
     }
     if ($rmode !== '')
     {
         $rmode = utf8_substr($rmode, 0, -2);
         $rule_list .= '
-							<li>' . stext('FILES_ARCHIVE') . utf8_strtoupper($rmode) . '</li>';
+							<li>' . nel_stext('FILES_ARCHIVE') . utf8_strtoupper($rmode) . '</li>';
     }
     if ($omode !== '')
     {
         $omode = utf8_substr($omode, 0, -2);
         $rule_list .= '
-							<li>' . stext('FILES_OTHER') . utf8_strtoupper($omode) . '</li>';
+							<li>' . nel_stext('FILES_OTHER') . utf8_strtoupper($omode) . '</li>';
     }
     
     return $rule_list;
@@ -153,7 +153,7 @@ function cache_rules($dbh)
 //
 // Cache the board settings
 //
-function cache_settings($dbh)
+function nel_cache_settings($dbh)
 {
     // Get true/false (1-bit) board settings
     $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIGTABLE . ' WHERE config_type="board_setting_1bit"');
@@ -235,7 +235,7 @@ function cache_settings($dbh)
     $fvars = utf8_substr($fvars, 0, utf8_strlen($fvars) - 4) . ');';
     $final_vars = '<?php ' . $vars1 . $vars2 . $fvars . ' ?>';
     
-    write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, 0644);
+    nel_write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, 0644);
     
     unset($rows);
 }
@@ -243,24 +243,24 @@ function cache_settings($dbh)
 //
 // Cache post links
 //
-function cache_links()
+function nel_cache_links()
 {
-    return parse_links(TRUE);
+    return nel_parse_links(TRUE);
 }
 
 //
 // Regenerate the template cache
 //
-function regen_template_cache()
+function nel_regen_template_cache()
 {
     foreach (glob(TEMPLATE_PATH . '*.tpl') as $template)
     {
         $template = basename($template);
-        parse_template($template, TRUE);
+        nel_parse_template($template, TRUE);
     }
 }
 
-function reset_template_status()
+function nel_reset_template_status()
 {
     global $template_info;
     
@@ -272,17 +272,17 @@ function reset_template_status()
 //
 // Write out rules, post links and template info cache
 //
-function write_multi_cache($dataforce)
+function nel_write_multi_cache($dataforce)
 {
     global $template_info;
     
-    reset_template_status();
+    nel_reset_template_status();
     $cache = '<?php
 $dataforce[\'post_links\'] = \'' . $dataforce['post_links'] . '\';
 $dataforce[\'rules_list\'] = \'' . $dataforce['rules_list'] . '\';
 $template_info = ' . var_export($template_info, TRUE) . ';
 ?>';
     
-    write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, 0644);
+    nel_write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, 0644);
 }
 ?>

@@ -12,7 +12,7 @@ function nel_hash($input)
 {
     global $plugins;
     $methods = array('sha256', 'md5', FALSE, FALSE);
-    $methods = $plugins->plugin_hook('change-hash-algorithms', TRUE, array($methods));
+    $methods = $plugins->plugin_hook('hash-algorithms', TRUE, array($methods));
     
     // If set to TRUE by a plugin, default method will not be used
     if (!$methods[3])
@@ -47,21 +47,21 @@ require_once INCLUDE_PATH . 'snacks.php';
 
 // Initialization done. IT'S GO TIME!
 
-ban_spambots($dataforce, $dbh);
+nel_ban_spambots($dataforce, $dbh);
 session_start();
 require_once INCLUDE_PATH . 'sessions.php';
-initialize_session($dataforce);
+nel_initialize_session($dataforce);
 
 require_once INCLUDE_PATH . 'central_dispatch.php';
 nel_process_get($dataforce, $dbh);
 nel_process_post($dataforce, $dbh);
-regen($dataforce, NULL, 'main', FALSE, $dbh);
-clean_exit($dataforce, FALSE);
+nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
+nel_clean_exit($dataforce, FALSE);
 
-function clean_exit($dataforce, $die)
+function nel_clean_exit($dataforce, $die)
 {
-    $dataforce['post_links'] = cache_links($dataforce['post_links']);
-    write_multi_cache($dataforce);
+    $dataforce['post_links'] = nel_cache_links($dataforce['post_links']);
+    nel_write_multi_cache($dataforce);
     
     if ($die)
     {

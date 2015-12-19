@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function thread_generator($dataforce, $dbh)
+function nel_thread_generator($dataforce, $dbh)
 {
     global $rendervar;
     
@@ -48,18 +48,18 @@ function thread_generator($dataforce, $dbh)
         
         if ($gen_data['post_counter'] === 0)
         {
-            $page_output .= generate_header($dataforce, 'NORMAL', $treeline);
-            $page_output .= form($dataforce);
+            $page_output .= nel_render_header($dataforce, 'NORMAL', $treeline);
+            $page_output .= nel_render_posting_form($dataforce);
         }
         
         if ($partlimit === 100)
         {
             $page_output2 = $page_output;
             $rendervar['insert_hr'] = TRUE;
-            $page_output2 .= render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
+            $page_output2 .= nel_render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
             $rendervar['insert_hr'] = FALSE;
-            $page_output2 .= footer(FALSE, TRUE, TRUE, TRUE);
-            write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-0-100.html', $page_output2, 0644);
+            $page_output2 .= nel_render_footer(FALSE, TRUE, TRUE, TRUE);
+            nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-0-100.html', $page_output2, 0644);
         }
         
         if ($treeline[$gen_data['post_counter']]['response_to'] > 0)
@@ -71,10 +71,10 @@ function thread_generator($dataforce, $dbh)
             
             $resid = $dataforce['response_id'];
             
-            $page_output_tmp = render_post($dataforce, TRUE, FALSE, $gen_data, $treeline, $dbh); // for thread
+            $page_output_tmp = nel_render_post($dataforce, TRUE, FALSE, $gen_data, $treeline, $dbh); // for thread
             $dataforce['response_id'] = 0;
-            $page_output_tmp2 = render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
-            $page_output_tmp3 = render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for expand
+            $page_output_tmp2 = nel_render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
+            $page_output_tmp3 = nel_render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for expand
             $dataforce['response_id'] = $resid;
 
             if ($gen_data['post_count'] > BS_ABBREVIATE_THREAD)
@@ -82,7 +82,7 @@ function thread_generator($dataforce, $dbh)
                 if ($page_output_collapse === '')
                 {
                     $dataforce['omitted_done'] = FALSE;
-                    $page_output_tmp2 = render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
+                    $page_output_tmp2 = nel_render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
                     $dataforce['omitted_done'] = TRUE;
                 }
 
@@ -97,7 +97,7 @@ function thread_generator($dataforce, $dbh)
         }
         else
         {
-            $page_output .= render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
+            $page_output .= nel_render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
         }
         
         ++ $partlimit;
@@ -105,7 +105,7 @@ function thread_generator($dataforce, $dbh)
     }
     
     $rendervar['main_page'] = FALSE;
-    $page_output .= footer(FALSE, TRUE, TRUE, TRUE);
+    $page_output .= nel_render_footer(FALSE, TRUE, TRUE, TRUE);
     
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
@@ -126,9 +126,9 @@ function thread_generator($dataforce, $dbh)
     }
     else
     {
-        write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '.html', $page_output, 0644);
-        write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-expand.html', $page_output_expand, 0644);
-        write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-collapse.html', $page_output_collapse, 0644);
+        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '.html', $page_output, 0644);
+        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-expand.html', $page_output_expand, 0644);
+        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-collapse.html', $page_output_collapse, 0644);
     }
 }
 

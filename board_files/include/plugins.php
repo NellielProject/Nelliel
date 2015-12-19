@@ -5,7 +5,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 $plugin_files = glob(PLUGINS_PATH . '*.nel.php');
-$plugins = new plugin_handler();
+$plugins = new nel_plugin_handler();
 
 foreach ($plugin_files as $file)
 {
@@ -13,7 +13,7 @@ foreach ($plugin_files as $file)
 }
 
 $plugins->activate();
-class plugin_handler
+class nel_plugin_handler
 {
     private static $hooks = array();
     private static $plugins = array();

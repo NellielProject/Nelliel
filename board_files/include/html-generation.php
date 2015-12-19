@@ -4,12 +4,12 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-parse_links($dataforce['post_links']);
+nel_parse_links($dataforce['post_links']);
 
 //
 // Generate the header
 //
-function generate_header($dataforce, $render_mode, $treeline)
+function nel_render_header($dataforce, $render_mode, $treeline)
 {
     global $rendervar;
     lol_html_timer(0);
@@ -63,14 +63,14 @@ function generate_header($dataforce, $render_mode, $treeline)
     
     $rendervar['log_out'] = (!empty($_SESSION) && !$_SESSION['ignore_login']) ? '[<a href="' . $rendervar['dotdot'] . PHP_SELF . '?mode=log_out">Log Out</a>]' : '';
     $rendervar['page_ref1'] = (!empty($_SESSION) && !$_SESSION['ignore_login']) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT;
-    $dat_temp = parse_template('header.tpl', FALSE);
+    $dat_temp = nel_parse_template('header.tpl', FALSE);
     return $dat_temp;
 }
 
 //
 // Generate reply form
 //
-function form($dataforce)
+function nel_render_posting_form($dataforce)
 {
     global $rendervar;
     
@@ -114,20 +114,20 @@ function form($dataforce)
     }
     
     $rendervar['max_files'] = 3;
-    $dat_temp = parse_template('posting_form.tpl', FALSE);
+    $dat_temp = nel_parse_template('posting_form.tpl', FALSE);
     return $dat_temp;
 }
 
 //
 // Render posts
 //
-function render_post($dataforce, $response, $partial, $gen_data, $treeline, $dbh)
+function nel_render_post($dataforce, $response, $partial, $gen_data, $treeline, $dbh)
 {
     global $rendervar, $link_resno;
     
     if ($rendervar['insert_hr'])
     {
-        $dat_temp = parse_template('op_post.tpl', FALSE);
+        $dat_temp = nel_parse_template('op_post.tpl', FALSE);
         return $dat_temp;
     }
     
@@ -235,17 +235,17 @@ function render_post($dataforce, $response, $partial, $gen_data, $treeline, $dbh
     switch ($rendervar['mod_post'])
     {
         case '1':
-            $rendervar['staff_post'] = stext('THREAD_JANPOST');
+            $rendervar['staff_post'] = nel_stext('THREAD_JANPOST');
             $rendervar['secure_tripcode'] = '';
             break;
         
         case '2':
-            $rendervar['staff_post'] = stext('THREAD_MODPOST');
+            $rendervar['staff_post'] = nel_stext('THREAD_MODPOST');
             $rendervar['secure_tripcode'] = '';
             break;
         
         case '3':
-            $rendervar['staff_post'] = stext('THREAD_ADMINPOST');
+            $rendervar['staff_post'] = nel_stext('THREAD_ADMINPOST');
             $rendervar['secure_tripcode'] = '';
             break;
         
@@ -257,7 +257,7 @@ function render_post($dataforce, $response, $partial, $gen_data, $treeline, $dbh
     {
         $rendervar['logged_in'] = TRUE;
         $rendervar['host'] = (@inet_ntop($rendervar['host'])) ? inet_ntop($rendervar['host']) : 'Unknown';
-        $rendervar['perm_ban'] = get_user_setting($_SESSION['username'], 'perm_ban');
+        $rendervar['perm_ban'] = nel_get_user_setting($_SESSION['username'], 'perm_ban');
         $rendervar['page_ref1'] = PHP_SELF . '?mode=display&page=0';
         $rendervar['page_ref2'] = PHP_SELF . '?page=';
         $rendervar['the_session'] = session_id();
@@ -269,7 +269,7 @@ function render_post($dataforce, $response, $partial, $gen_data, $treeline, $dbh
         $rendervar['page_ref2'] = '';
     }
     
-    $dat_temp = ($response ? parse_template('response_post.tpl', FALSE) : parse_template('op_post.tpl', FALSE));
+    $dat_temp = ($response ? nel_parse_template('response_post.tpl', FALSE) : nel_parse_template('op_post.tpl', FALSE));
     $rendervar = $rendervar_first;
     return $dat_temp;
 }
@@ -277,7 +277,7 @@ function render_post($dataforce, $response, $partial, $gen_data, $treeline, $dbh
 //
 // Footer
 //
-function footer($link, $styles, $del, $response)
+function nel_render_footer($link, $styles, $del, $response)
 {
     global $total_html, $total_script, $rendervar;
     
@@ -291,7 +291,7 @@ function footer($link, $styles, $del, $response)
         $rendervar['logged_in'] = TRUE;
         $rendervar['main_page'] = FALSE;
         
-        if (get_user_setting($_SESSION['username'], 'perm_ban'))
+        if (nel_get_user_setting($_SESSION['username'], 'perm_ban'))
         {
             $rendervar['perm_ban'] = TRUE;
         }
@@ -306,14 +306,14 @@ function footer($link, $styles, $del, $response)
     $rendervar['del'] = $del;
     $rendervar['response'] = $response;
     lol_html_timer(1);
-    $dat_temp = parse_template('footer.tpl', FALSE);
+    $dat_temp = nel_parse_template('footer.tpl', FALSE);
     return $dat_temp;
 }
 
 //
 // Generate HTML for Mod control panel
 //
-function generate_thread_panel($dataforce, $thread_data, $mode)
+function nel_render_thread_panel($dataforce, $thread_data, $mode)
 {
     global $rendervar;
     
@@ -401,14 +401,14 @@ function generate_thread_panel($dataforce, $thread_data, $mode)
         $rendervar['thread_panel_end'] = TRUE;
     }
     
-    $dat_temp = parse_template('manage_thread_panel.tpl', FALSE);
+    $dat_temp = nel_parse_template('manage_thread_panel.tpl', FALSE);
     return $dat_temp;
 }
 
 //
 // Ban modification form
 //
-function generate_ban_panel($dataforce, $baninfo, $mode)
+function nel_render_ban_panel($dataforce, $baninfo, $mode)
 {
     global $rendervar;
     
@@ -470,14 +470,14 @@ function generate_ban_panel($dataforce, $baninfo, $mode)
         $rendervar['ban_panel_add'] = TRUE;
     }
     
-    $dat_temp = parse_template('manage_bans_panel.tpl', FALSE);
+    $dat_temp = nel_parse_template('manage_bans_panel.tpl', FALSE);
     return $dat_temp;
 }
 
 //
 // Parse links in posts and update a cache to avoid a potential assload of database hits during rendering
 //
-function parse_links($matches)
+function nel_parse_links($matches)
 {
     global $link_resno, $dbh;
     static $links;
@@ -526,7 +526,8 @@ function parse_links($matches)
 //
 // Parse the templates into code form
 //
-function parse_template($template, $regen)
+// TODO: Split into caching function and parse which calls caching if needed
+function nel_parse_template($template, $regen)
 {
     global $rendervar, $template_info, $total_html;
     
@@ -559,7 +560,7 @@ function parse_template($template, $regen)
             $lol = preg_replace('#{([^({)|(}]*)}#', "'.$1.'", $lol); // Variables and constants
             $end = '\'; return $temp; } ?>'; // End of the caches template
             $lol_out = $begin . $lol . $end;
-            write_file(CACHE_PATH . $template_short . '.nelcache', $lol_out, 0644);
+            nel_write_file(CACHE_PATH . $template_short . '.nelcache', $lol_out, 0644);
         }
         
         include (CACHE_PATH . $template_short . '.nelcache');

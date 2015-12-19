@@ -18,19 +18,19 @@
                 {$rendervar['post_time']} No. <a href="{PAGE_DIR}{$rendervar['post_number']}/{$rendervar['post_number']}.html" class="post-link">{$rendervar['post_number']}</a>&nbsp;
     {{ endif }}
     {{ if $rendervar['sticky'] }}
-                <img src="{$rendervar['dotdot']}{BOARD_FILES}/imagez/nelliel/{stext('THREAD_STICKY_ICON')}" width="22" height="22" alt="{stext('THREAD_STICKY')}">
+                <img src="{$rendervar['dotdot']}{BOARD_FILES}/imagez/nelliel/{nel_stext('THREAD_STICKY_ICON')}" width="22" height="22" alt="{nel_stext('THREAD_STICKY')}">
     {{ endif }}
     {{ if !$rendervar['response_id'] }}
         {{ if $rendervar['logged_in'] }}
-                [<a href="{PHP_SELF}?mode=display&post={$rendervar['post_number']}">{stext('LINK_REPLY')}</a>]
+                [<a href="{PHP_SELF}?mode=display&post={$rendervar['post_number']}">{nel_stext('LINK_REPLY')}</a>]
         {{ else }}
-                [<a href="{PAGE_DIR}{$rendervar['post_number']}/{$rendervar['post_number']}.html">{stext('LINK_REPLY')}</a>]
+                [<a href="{PAGE_DIR}{$rendervar['post_number']}/{$rendervar['post_number']}.html">{nel_stext('LINK_REPLY')}</a>]
         {{ endif }}
     {{ endif }}
     {{ if $rendervar['expand_post'] && $rendervar['logged_in'] }}
-                [<a href="javascript:clientSideInclude('expand{$rendervar['post_number']}', 'expLink{$rendervar['post_number']}', '{PHP_SELF}?mode=display&post={$rendervar['post_number']}&expand=TRUE', '{PHP_SELF}?mode=display&post={$rendervar['post_number']}&collapse=TRUE', 'Collapse thread')" id="expLink{$rendervar['post_number']}">{stext('THREAD_EXPAND')}</a>]
+                [<a href="javascript:clientSideInclude('expand{$rendervar['post_number']}', 'expLink{$rendervar['post_number']}', '{PHP_SELF}?mode=display&post={$rendervar['post_number']}&expand=TRUE', '{PHP_SELF}?mode=display&post={$rendervar['post_number']}&collapse=TRUE', 'Collapse thread')" id="expLink{$rendervar['post_number']}">{nel_stext('THREAD_EXPAND')}</a>]
     {{ elseif $rendervar['expand_post'] && !$rendervar['logged_in'] }}
-                [<a href="javascript:clientSideInclude('expand{$rendervar['post_number']}', 'expLink{$rendervar['post_number']}', '{PAGE_DIR}{$rendervar['post_number']}/{$rendervar['post_number']}-expand.html', '{PAGE_DIR}{$rendervar['post_number']}/{$rendervar['post_number']}-collapse.html', 'Collapse thread')" id="expLink{$rendervar['post_number']}">{stext('THREAD_EXPAND')}</a>]
+                [<a href="javascript:clientSideInclude('expand{$rendervar['post_number']}', 'expLink{$rendervar['post_number']}', '{PAGE_DIR}{$rendervar['post_number']}/{$rendervar['post_number']}-expand.html', '{PAGE_DIR}{$rendervar['post_number']}/{$rendervar['post_number']}-collapse.html', 'Collapse thread')" id="expLink{$rendervar['post_number']}">{nel_stext('THREAD_EXPAND')}</a>]
     {{ endif }}
     {{ if $rendervar['first100'] }}
                 [<a href="{PAGE_DIR}{$rendervar['post_number']}/{$rendervar['post_number']}-0-100.html">First 100 Posts</a>]
@@ -52,7 +52,7 @@
                 {{ endif }}
                     <a href="{$file['file_location']}" rel="external">{$file['filename']}.{$file['extension']}</a>
                     <br>{{ if $file['img_dim'] }}{$file['image_width']} x {$file['image_height']}{{ endif }} ({$file['filesize']} KB)
-                    <br>[<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['file_order']}','showimgmeta{$rendervar['post_number']}_{$file['file_order']}','none','{stext('THREAD_LESS_DATA')}')" id="showimgmeta{$rendervar['post_number']}_{$file['file_order']}">{stext('THREAD_MOAR_DATA')}</a>]
+                    <br>[<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['file_order']}','showimgmeta{$rendervar['post_number']}_{$file['file_order']}','none','{nel_stext('THREAD_LESS_DATA')}')" id="showimgmeta{$rendervar['post_number']}_{$file['file_order']}">{nel_stext('THREAD_MOAR_DATA')}</a>]
                     <span id="imgmeta{$rendervar['post_number']}_{$file['file_order']}" class="none">
                 {{ if $file['source'] != '' }}
                     <br><span class="source">Source: {$file['source']}</span>
@@ -74,7 +74,7 @@
                 {{ endif }}
                     <a href="{$file['file_location']}" rel="external">{$file['filename']}.{$file['extension']}</a> - 
                 {{ if $file['img_dim'] }}{$file['image_width']} x {$file['image_height']}{{ endif }} ({$file['filesize']} KB)
-                    [<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['file_order']}','showimgmeta{$rendervar['post_number']}_{$file['file_order']}','none','{stext('THREAD_LESS_DATA')}')" id="showimgmeta{$rendervar['post_number']}_{$file['file_order']}">{stext('THREAD_MOAR_DATA')}</a>]
+                    [<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['file_order']}','showimgmeta{$rendervar['post_number']}_{$file['file_order']}','none','{nel_stext('THREAD_LESS_DATA')}')" id="showimgmeta{$rendervar['post_number']}_{$file['file_order']}">{nel_stext('THREAD_MOAR_DATA')}</a>]
                     <span id="imgmeta{$rendervar['post_number']}_{$file['file_order']}" class="none">
                 {{ if $file['source'] != '' }}
                     <br><span class="source">Source: {$file['source']}</span>

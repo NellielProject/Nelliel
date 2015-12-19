@@ -18,12 +18,12 @@ function nel_get_language($language, $form, $text)
     return $lang_arrays[$language][$form][$text];
 }
 
-function stext($text)
+function nel_stext($text)
 {
     return nel_get_language(BOARD_LANGUAGE, 'singular', $text);
 }
 
-function ptext($text, $num)
+function nel_ptext($text, $num)
 {
     if ($num <= 1)
     {

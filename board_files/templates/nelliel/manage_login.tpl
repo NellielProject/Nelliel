@@ -1,5 +1,5 @@
     <div class="pass-valid">
-        {stext('MANAGE_LOGIN')}
+        {nel_stext('MANAGE_LOGIN')}
     </div>
     <form accept-charset="utf-8" action="{PHP_SELF}" method="post">
         <div>
@@ -8,7 +8,7 @@
                 Password: <input type="password" name="super_sekrit" size="16"><br>
                 <input type="hidden" name="mode" value="admin">
                 <input type="hidden" name="adminmode" value="login">
-                <input type="submit" value="{stext('FORM_SUBMIT')}">
+                <input type="submit" value="{nel_stext('FORM_SUBMIT')}">
             </div>
         </div>
     </form>

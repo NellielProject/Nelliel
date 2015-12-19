@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // End and delete session
 //
-function terminate_session()
+function nel_terminate_session()
 {
     session_unset();
     session_destroy();
@@ -17,7 +17,7 @@ function terminate_session()
 //
 // Regenerate session (Swiper no swiping!)
 //
-function regen_session()
+function nel_regen_session()
 {
     $timeout = time() - $_SESSION['last_activity'];
     
@@ -29,8 +29,8 @@ function regen_session()
     }
     else // Session timed out or doesn't match the cookie
     {
-        terminate_session();
-        derp(105, array('origin' => 'SESSION_REGEN'));
+        nel_terminate_session();
+        nel_derp(105, array('origin' => 'SESSION_REGEN'));
     }
 }
 
@@ -38,7 +38,7 @@ function regen_session()
 // Check for existing session and process
 // If no session exists, confirm login info and set up a new one
 //
-function initialize_session($dataforce)
+function nel_initialize_session($dataforce)
 {
     if (!empty($_SESSION))
     {
@@ -46,20 +46,20 @@ function initialize_session($dataforce)
         {
             if ($dataforce['mode2'] === 'log_out')
             {
-                terminate_session();
+                nel_terminate_session();
                 echo '<meta http-equiv="refresh" content="0;URL=' . PHP_SELF2 . PHP_EXT . '">';
                 die();
             }
             else if ($dataforce['mode2'] === 'admin')
             {
-                regen_session();
-                valid($dataforce);
+                nel_regen_session();
+                nel_valid($dataforce);
                 die();
             }
         }
         else if (isset($dataforce['admin_mode']))
         {
-            regen_session();
+            nel_regen_session();
         }
         else
         {
@@ -68,7 +68,7 @@ function initialize_session($dataforce)
     }
     else if (isset($dataforce['admin_mode']) && $dataforce['admin_mode'] === 'login') // No existing session but this may be a login attempt
     {
-        if ($dataforce['username'] !== '' && nel_hash($dataforce['admin_pass']) === get_user_setting($dataforce['username'], 'staff_password'))
+        if ($dataforce['username'] !== '' && nel_hash($dataforce['admin_pass']) === nel_get_user_setting($dataforce['username'], 'staff_password'))
         {
             // We set up the session here
             $_SESSION['ignore_login'] = FALSE;
@@ -79,16 +79,16 @@ function initialize_session($dataforce)
         }
         else
         {
-            terminate_session();
-            derp(107, array('origin' => 'SESSION_INIT'));
+            nel_terminate_session();
+            nel_derp(107, array('origin' => 'SESSION_INIT'));
         }
         
-        valid($dataforce);
+        nel_valid($dataforce);
         die();
     }
     else
     {
-        terminate_session();
+        nel_terminate_session();
     }
 }
 ?>

@@ -19,13 +19,13 @@
     {{ endif }}
                 <input type="hidden" name="mode" value="update">
     {{ if !BS1_USE_NEW_IMGDEL }}
-                    <input type="checkbox" name="onlyimgdel" id="delfbox" value="on"><label for="delfbox">{stext('DELETE_FILES_ONLY')}</label><br>
+                    <input type="checkbox" name="onlyimgdel" id="delfbox" value="on"><label for="delfbox">{nel_stext('DELETE_FILES_ONLY')}</label><br>
     {{ endif }}
     {{ if $rendervar['logged_in'] }}
-                    <input type="submit" value="{stext('FORM_SUBMIT')}">
+                    <input type="submit" value="{nel_stext('FORM_SUBMIT')}">
     {{ else }}
-                    <label for="delpass">{stext('LABEL_PASS')}</label><input type="password" name="sekrit" id="delpass" size="12" maxlength="16" value="">
-                    <input type="submit" value="{stext('FORM_SUBMIT')}">
+                    <label for="delpass">{nel_stext('LABEL_PASS')}</label><input type="password" name="sekrit" id="delpass" size="12" maxlength="16" value="">
+                    <input type="submit" value="{nel_stext('FORM_SUBMIT')}">
     {{ endif }}
                 </td>
             </tr>
@@ -53,7 +53,7 @@
         </p>
 {{ endif }}
         <div>
-            {stext('S_FOOT')}
+            {nel_stext('S_FOOT')}
         </div>
         This page was created in {$total_html} seconds.<br>
     </div>

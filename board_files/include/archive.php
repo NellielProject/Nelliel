@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Check for threads that need archive status changed
 //
-function update_archive_status($dataforce, $dbh)
+function nel_update_archive_status($dataforce, $dbh)
 {
     if (BS_OLD_THREADS === 'NOTHING')
     {
@@ -91,16 +91,16 @@ function update_archive_status($dataforce, $dbh)
                 }
                 
                 $dbh->query('DELETE FROM ' . FILETABLE . ' WHERE parent_thread=' . $move_list[$i] . '');
-                move_file(SRC_PATH . $move_list[$i], ARC_SRC_PATH . $move_list[$i]);
-                move_file(THUMB_PATH . $move_list[$i], ARC_THUMB_PATH . $move_list[$i]);
-                move_file(PAGE_PATH . $move_list[$i], ARC_PAGE_PATH . $move_list[$i]);
+                nel_move_file(SRC_PATH . $move_list[$i], ARC_SRC_PATH . $move_list[$i]);
+                nel_move_file(THUMB_PATH . $move_list[$i], ARC_THUMB_PATH . $move_list[$i]);
+                nel_move_file(PAGE_PATH . $move_list[$i], ARC_PAGE_PATH . $move_list[$i]);
             }
             
             if (BS_OLD_THREADS === 'PRUNE')
             {
-                eraser_gun(PAGE_PATH . $move_list[$i], NULL, TRUE);
-                eraser_gun(SRC_PATH . $move_list[$i], NULL, TRUE);
-                eraser_gun(THUMB_PATH . $move_list[$i], NULL, TRUE);
+                nel_eraser_gun(PAGE_PATH . $move_list[$i], NULL, TRUE);
+                nel_eraser_gun(SRC_PATH . $move_list[$i], NULL, TRUE);
+                nel_eraser_gun(THUMB_PATH . $move_list[$i], NULL, TRUE);
             }
             ++ $i;
         }

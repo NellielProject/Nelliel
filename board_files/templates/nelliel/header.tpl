@@ -22,7 +22,7 @@
 </head>
 <body>
     <div class="text-center">
-        {stext('S_SHORT_MENU')}
+        {nel_stext('S_SHORT_MENU')}
     </div>
     <div>
         <span class="top_styles">
@@ -34,9 +34,9 @@
         </span>
         <span class="admin-bar">
         {$rendervar['log_out']}
-        [<a href="{$rendervar['dotdot']}{HOME}" rel="home">{stext('LINK_HOME')}</a>]
-        [<a href="{$rendervar['dotdot']}{PHP_SELF}?mode=admin">{stext('LINK_MANAGE')}</a>]
-        [<a href="{$rendervar['dotdot']}{PHP_SELF}?mode=about">{stext('LINK_ABOUT')}</a>]
+        [<a href="{$rendervar['dotdot']}{HOME}" rel="home">{nel_stext('LINK_HOME')}</a>]
+        [<a href="{$rendervar['dotdot']}{PHP_SELF}?mode=admin">{nel_stext('LINK_MANAGE')}</a>]
+        [<a href="{$rendervar['dotdot']}{PHP_SELF}?mode=about">{nel_stext('LINK_ABOUT')}</a>]
         </span>
     </div>
     <div class="logo">

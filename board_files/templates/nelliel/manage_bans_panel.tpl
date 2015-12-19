@@ -1,23 +1,23 @@
 {{ if $rendervar['ban_panel_head'] }}
     <div class="pass-valid">
-        {stext('MANAGE_MODE')}
+        {nel_stext('MANAGE_MODE')}
     </div>
     <div class="del-list">
-        {stext('MANAGE_BANS')}
+        {nel_stext('MANAGE_BANS')}
     </div>
     <table class="post-lists">
         <tr class="manage-header">
-            <th>{stext('MANAGE_BAN_ID')}</th>
-            <th>{stext('MANAGE_BAN_TYPE')}</th>
-            <th>{stext('MANAGE_BAN_HOST')}</th>
-            <th>{stext('MANAGE_BAN_NAME')}</th>
-            <th>{stext('MANAGE_BAN_REASON')}</th>
-            <th>{stext('MANAGE_BAN_EXPIRE')}</th>
-            <th>{stext('MANAGE_BAN_APPEAL')}</th>
-            <th>{stext('MANAGE_BAN_APPEAL_RESPONSE')}</th>
-            <th>{stext('MANAGE_BAN_STATUS')}</th>
-            <th>{stext('MANAGE_BAN_MODIFY')}</th>
-            <th>{stext('MANAGE_BAN_REMOVE')}</th>
+            <th>{nel_stext('MANAGE_BAN_ID')}</th>
+            <th>{nel_stext('MANAGE_BAN_TYPE')}</th>
+            <th>{nel_stext('MANAGE_BAN_HOST')}</th>
+            <th>{nel_stext('MANAGE_BAN_NAME')}</th>
+            <th>{nel_stext('MANAGE_BAN_REASON')}</th>
+            <th>{nel_stext('MANAGE_BAN_EXPIRE')}</th>
+            <th>{nel_stext('MANAGE_BAN_APPEAL')}</th>
+            <th>{nel_stext('MANAGE_BAN_APPEAL_RESPONSE')}</th>
+            <th>{nel_stext('MANAGE_BAN_STATUS')}</th>
+            <th>{nel_stext('MANAGE_BAN_MODIFY')}</th>
+            <th>{nel_stext('MANAGE_BAN_REMOVE')}</th>
         </tr>
 {{ endif }}
 {{ if $rendervar['ban_panel_loop'] }}
@@ -55,7 +55,7 @@
                         <input type="hidden" name="mode" value="admin">
                         <input type="hidden" name="adminmode" value="modifyban">
                         <input type="hidden" name="banid" value="{$rendervar['id']}">
-                        <input type="submit" value="{stext('FORM_MOD_BAN')}">
+                        <input type="submit" value="{nel_stext('FORM_MOD_BAN')}">
                     </div>
                 </form>
             </td>
@@ -65,7 +65,7 @@
                         <input type="hidden" name="mode" value="admin">
                         <input type="hidden" name="adminmode" value="removeban">
                         <input type="hidden" name="banid" value="{$rendervar['id']}">
-                        <input type="submit" value="{stext('FORM_REMOVE_BAN')}">
+                        <input type="submit" value="{nel_stext('FORM_REMOVE_BAN')}">
                     </div>
                 </form>
             </td>
@@ -81,7 +81,7 @@
                     <div>
                         <input type="hidden" name="mode" value="admin">
                         <input type="hidden" name="adminmode" value="newban">
-                        <input type="submit" value="{stext('FORM_ADD_BAN')}">
+                        <input type="submit" value="{nel_stext('FORM_ADD_BAN')}">
                     </div>
                 </form>
             </td>
@@ -93,25 +93,25 @@
         <table>
             <tr>
                 <td>
-                    {stext('MANAGE_BANMOD_GEN')} {$rendervar['ban_time']}
+                    {nel_stext('MANAGE_BANMOD_GEN')} {$rendervar['ban_time']}
                 </td>
             </tr>
             <tr>
                 <td>
-                    {stext('MANAGE_BANMOD_EXP')} {$rendervar['ban_expire']}
+                    {nel_stext('MANAGE_BANMOD_EXP')} {$rendervar['ban_expire']}
                 </td>
             </tr>
             <tr>
                 <td>
-                    {stext('MANAGE_BANMOD_LENGTH')} 
+                    {nel_stext('MANAGE_BANMOD_LENGTH')} 
                 </td>
                 <td>
-                    {stext('MANAGE_BANMOD_DAY')} <input type="text" name="timedays" size="4" maxlength="4" value="{$rendervar['ban_length_days']}"> &nbsp;&nbsp;&nbsp; {stext('MANAGE_BANMOD_HOUR')} <input type="text" name="timehours" size="4" maxlength="4" value="{$rendervar['ban_length_hours']}">
+                    {nel_stext('MANAGE_BANMOD_DAY')} <input type="text" name="timedays" size="4" maxlength="4" value="{$rendervar['ban_length_days']}"> &nbsp;&nbsp;&nbsp; {nel_stext('MANAGE_BANMOD_HOUR')} <input type="text" name="timehours" size="4" maxlength="4" value="{$rendervar['ban_length_hours']}">
                 </td>
             </tr>
             <tr>
                 <td>
-                    {stext('MANAGE_BANMOD_NAME')} {$rendervar['name']}
+                    {nel_stext('MANAGE_BANMOD_NAME')} {$rendervar['name']}
                 </td>
             </tr>
             <tr>
@@ -124,7 +124,7 @@
             </tr>
             <tr>
                 <td>
-                    {stext('MANAGE_BANMOD_RSN')} 
+                    {nel_stext('MANAGE_BANMOD_RSN')} 
                 </td>
                 <td>
                     <textarea name="banreason" cols="32" rows="3">{$rendervar['reason']}</textarea>
@@ -142,7 +142,7 @@
         {{ endif }}
             <tr>
                 <td>
-                    {stext('MANAGE_BAN_APPEAL_RESPONSE')} 
+                    {nel_stext('MANAGE_BAN_APPEAL_RESPONSE')} 
                 </td>
                 <td>
                     <textarea name="appealresponse" cols="32" rows="3">{$rendervar['appeal_response']}</textarea>
@@ -150,12 +150,12 @@
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="appealreview" value=1 {$rendervar['appeal_check']}>{stext('MANAGE_BANMOD_MRKAPPL')}
+                    <input type="checkbox" name="appealreview" value=1 {$rendervar['appeal_check']}>{nel_stext('MANAGE_BANMOD_MRKAPPL')}
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="submit" value="{stext('FORM_UPDATE')}">
+                    <input type="submit" value="{nel_stext('FORM_UPDATE')}">
                 </td>
             </tr>
         </table>
@@ -166,7 +166,7 @@
         <table>
             <tr>
                 <td>
-                    {stext('MANAGE_BANMOD_IP')} 
+                    {nel_stext('MANAGE_BANMOD_IP')} 
                 </td>
                 <td>
                     <input type="text" name="banhost" size="24" maxlength="50" value="">
@@ -174,10 +174,10 @@
             </tr>
             <tr>
                 <td>
-                    {stext('MANAGE_BANMOD_LENGTH')} 
+                    {nel_stext('MANAGE_BANMOD_LENGTH')} 
                 </td>
                 <td>
-                    {stext('MANAGE_BANMOD_DAY')} <input type="text" name="timedays" size="4" maxlength="4" value="0"> &nbsp;&nbsp;&nbsp; {stext('MANAGE_BANMOD_HOUR')} <input type="text" name="timehours" size="4" maxlength="4" value="0">
+                    {nel_stext('MANAGE_BANMOD_DAY')} <input type="text" name="timedays" size="4" maxlength="4" value="0"> &nbsp;&nbsp;&nbsp; {nel_stext('MANAGE_BANMOD_HOUR')} <input type="text" name="timehours" size="4" maxlength="4" value="0">
                 </td>
             </tr>
             <tr>
@@ -188,7 +188,7 @@
             </tr>
             <tr>
                 <td>
-                    {stext('MANAGE_BANMOD_RSN')} 
+                    {nel_stext('MANAGE_BANMOD_RSN')} 
                 </td>
                 <td>
                     <textarea name="banreason" cols="32" rows="3"></textarea>
@@ -196,7 +196,7 @@
             </tr>
             <tr>
                 <td>
-                    <input type="submit" value="{stext('FORM_UPDATE')}">
+                    <input type="submit" value="{nel_stext('FORM_UPDATE')}">
                 </td>
             </tr>
         </table>

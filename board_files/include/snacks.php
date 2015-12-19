@@ -7,21 +7,21 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Auto-ban on Spambot detection
 //
-function ban_spambots($dataforce, $dbh)
+function nel_ban_spambots($dataforce, $dbh)
 {
     if (BS1_USE_SPAMBOT_TRAP && (!is_null($dataforce['sp_field1']) || !is_null($dataforce['sp_field2'])))
     {
         $dataforce['banreason'] = "Spambot. Nobody wants any. GTFO";
         $dataforce['bandays'] = 9001;
         $dataforce['banip'] = $_SERVER["REMOTE_ADDR"];
-        ban_hammer($dataforce, $dbh);
+        nel_ban_hammer($dataforce, $dbh);
     }
 }
 
 //
 // Banned md5 hashes
 //
-function banned_md5($md5, $file)
+function nel_banned_md5($md5, $file)
 {
     $cancer = array('', '');
     $total_cancer = count($cancer);
@@ -30,7 +30,7 @@ function banned_md5($md5, $file)
     {
         if ($md5 === $cancer[$i])
         {
-            derp(15, array('origin' => 'SNACKS', 'bad-filename' => $file['basic_filename'] . $file['ext'], 'files' => array($file)));
+            nel_derp(15, array('origin' => 'SNACKS', 'bad-filename' => $file['basic_filename'] . $file['ext'], 'files' => array($file)));
         }
     }
 }
@@ -38,7 +38,7 @@ function banned_md5($md5, $file)
 //
 // Banned poster names
 //
-function banned_name($name, $file)
+function nel_banned_name($name, $file)
 {
     $cancer = array('', '');
     $total_cancer = count($cancer);
@@ -47,7 +47,7 @@ function banned_name($name, $file)
     {
         if ($cancer[$i] === $name)
         {
-            derp(16, array('origin' => 'SNACKS'));
+            nel_derp(16, array('origin' => 'SNACKS'));
         }
     }
 }
@@ -55,7 +55,7 @@ function banned_name($name, $file)
 //
 // Banned text in comments
 //
-function banned_text($text, $file)
+function nel_banned_text($text, $file)
 {
     $cancer = array('samefag', '');
     $total_cancer = count($cancer);
@@ -68,7 +68,7 @@ function banned_text($text, $file)
             
             if ($test !== FALSE)
             {
-                derp(17, array('origin' => 'SNACKS', 'cancer' => $cancer[$i]));
+                nel_derp(17, array('origin' => 'SNACKS', 'cancer' => $cancer[$i]));
             }
         }
     }
@@ -77,7 +77,7 @@ function banned_text($text, $file)
 //
 // General wordfilters
 //
-function word_filters($text)
+function nel_word_filters($text)
 {
     $cancer = array('', '');
     $chemo = array('', '');
@@ -93,7 +93,7 @@ function word_filters($text)
 //
 // Apply b&hammer
 //
-function applyBan($dataforce, $dbh)
+function nel_apply_ban($dataforce, $dbh)
 {
     global $rendervar;
     
@@ -142,7 +142,7 @@ function applyBan($dataforce, $dbh)
     {
         if (!empty($_SESSION))
         {
-            terminate_session();
+            nel_terminate_session();
         }
         
         $rendervar = $bandata;
@@ -151,9 +151,9 @@ function applyBan($dataforce, $dbh)
         $rendervar['format_time'] = date("D F jS Y  H:i", $bandata['ban_time']);
         $rendervar['host'] = @inet_ntop($rendervar['host']) ? inet_ntop($rendervar['host']) : 'Unknown';
         lol_html_timer(0);
-        $dat = generate_header($dataforce, 'BAN', array());
-        $dat .= parse_template('ban_page.tpl', FALSE);
-        $dat .= footer(FALSE, FALSE, FALSE, FALSE);
+        $dat = nel_render_header($dataforce, 'BAN', array());
+        $dat .= nel_parse_template('ban_page.tpl', FALSE);
+        $dat .= nel_render_footer(FALSE, FALSE, FALSE, FALSE);
         echo $dat;
         die();
     }

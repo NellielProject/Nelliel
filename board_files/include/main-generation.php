@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Genrerates the main thread listings
 //
-function main_thread_generator($dataforce, $dbh)
+function nel_main_nel_thread_generator($dataforce, $dbh)
 {
     global $rendervar;
     $rendervar['insert_hr'] = FALSE;
@@ -29,17 +29,17 @@ function main_thread_generator($dataforce, $dbh)
     // Special handling when there's no content
     if ($counttree === 0)
     {
-        $page_output .= generate_header($dataforce, 'NORMAL', $treeline);
-        $page_output .= form($dataforce);
+        $page_output .= nel_render_header($dataforce, 'NORMAL', $treeline);
+        $page_output .= nel_render_posting_form($dataforce);
         $rendervar['main_page'] = TRUE;
         $rendervar['prev_nav'] = '';
         $rendervar['next_nav'] = '';
         $rendervar['page_nav'] = '';
-        $page_output .= footer(FALSE, TRUE, TRUE, FALSE);
+        $page_output .= nel_render_footer(FALSE, TRUE, TRUE, FALSE);
         
         if (empty($_SESSION) || $_SESSION['ignore_login'])
         {
-            write_file(PHP_SELF2 . PHP_EXT, $page_output, 0644);
+            nel_write_file(PHP_SELF2 . PHP_EXT, $page_output, 0644);
         }
         else
         {
@@ -58,8 +58,8 @@ function main_thread_generator($dataforce, $dbh)
         $page_output = '';
         $dataforce['omitted_done'] = TRUE;
         $rendervar['page_title'] = BS_BOARD_NAME;
-        $page_output .= generate_header($dataforce, 'NORMAL', $treeline);
-        $page_output .= form($dataforce);
+        $page_output .= nel_render_header($dataforce, 'NORMAL', $treeline);
+        $page_output .= nel_render_posting_form($dataforce);
         $end_of_thread = FALSE;
         $sub_page_thread_counter = 0;
         
@@ -97,7 +97,7 @@ function main_thread_generator($dataforce, $dbh)
                 $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? BS_THREADS_PER_PAGE : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
                 $rendervar['insert_hr'] = TRUE;
-                $page_output .= render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
+                $page_output .= nel_render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
                 $rendervar['insert_hr'] = FALSE;
             }
             
@@ -120,17 +120,17 @@ function main_thread_generator($dataforce, $dbh)
                     if ($gen_data['post_count'] > BS_ABBREVIATE_THREAD && $gen_data['post_counter'] === 1)
                     {
                         $dataforce['omitted_done'] = FALSE;
-                        $page_output .= render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh);
+                        $page_output .= nel_render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh);
                         $dataforce['omitted_done'] = TRUE;
                     }
                     else
                     {
-                        $page_output .= render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh);
+                        $page_output .= nel_render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh);
                     }
                 }
                 else
                 {
-                    $page_output .= render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
+                    $page_output .= nel_render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
                 }
             }
             else
@@ -182,7 +182,7 @@ function main_thread_generator($dataforce, $dbh)
             ++ $i;
         }
         
-        $page_output .= footer(FALSE, TRUE, TRUE, FALSE);
+        $page_output .= nel_render_footer(FALSE, TRUE, TRUE, FALSE);
         
         if (!empty($_SESSION) && !$_SESSION['ignore_login'])
         {
@@ -198,7 +198,7 @@ function main_thread_generator($dataforce, $dbh)
         else
         {
             $logfilename = ($page === 1) ? PHP_SELF2 . PHP_EXT : PHP_SELF2 . ($page - 1) . PHP_EXT;
-            write_file($logfilename, $page_output, 0644);
+            nel_write_file($logfilename, $page_output, 0644);
         }
         
         ++ $page;
