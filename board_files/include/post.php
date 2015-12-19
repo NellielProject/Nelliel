@@ -20,12 +20,12 @@ function new_post($dataforce, $dbh)
     // Process FGSFDS
     if (isset($dataforce['fgsfds']))
     {
-        if (strripos($dataforce['fgsfds'], 'noko') !== FALSE)
+        if (utf8_strripos($dataforce['fgsfds'], 'noko') !== FALSE)
         {
             $fgsfds['noko'] = TRUE;
         }
         
-        if (strripos($dataforce['fgsfds'], 'sage') !== FALSE)
+        if (utf8_strripos($dataforce['fgsfds'], 'sage') !== FALSE)
         {
             $fgsfds['sage'] = TRUE;
         }
@@ -67,7 +67,9 @@ function new_post($dataforce, $dbh)
     // Cancer-fighting tools and lulz
     
 
-    if (strlen(utf8_decode($poster_info['comment'])) > BS_MAX_COMMENT_LENGTH || strlen(utf8_decode($poster_info['name'])) > BS_MAX_NAME_LENGTH || strlen(utf8_decode($poster_info['email'])) > BS_MAX_EMAIL_LENGTH || strlen(utf8_decode($poster_info['subject'])) > BS_MAX_SUBJECT_LENGTH || strlen(utf8_decode($dataforce['file_source'])) > BS_MAX_SOURCE_LENGTH || strlen(utf8_decode($dataforce['file_license'])) > BS_MAX_LICENSE_LENGTH)
+    if (utf8_strlen($poster_info['comment']) > BS_MAX_COMMENT_LENGTH || utf8_strlen($poster_info['name']) > BS_MAX_NAME_LENGTH
+        || utf8_strlen($poster_info['email']) > BS_MAX_EMAIL_LENGTH || utf8_strlen($poster_info['subject']) > BS_MAX_SUBJECT_LENGTH
+        || utf8_strlen($dataforce['file_source']) > BS_MAX_SOURCE_LENGTH || utf8_strlen($dataforce['file_license']) > BS_MAX_LICENSE_LENGTH)
     {
         derp(11, array('origin' => 'POST'));
     }
@@ -76,11 +78,11 @@ function new_post($dataforce, $dbh)
     {
         $cpass = $dataforce['pass'];
         $hashed_pass = nel_hash($dataforce['pass']);
-        $dataforce['pass'] = substr($hashed_pass, 0, 16);
+        $dataforce['pass'] = utf8_substr($hashed_pass, 0, 16);
     }
     else
     {
-        $cpass = substr(rand(), 0, 8);
+        $cpass = utf8_substr(rand(), 0, 8);
     }
     
     // Text plastic surgery (rorororor) - wat.
@@ -101,16 +103,16 @@ function new_post($dataforce, $dbh)
     if ($poster_info['comment'] !== '')
     {
         // Set up comment field with proper newlines, etc
-        $poster_info['comment'] = str_replace("\r", "\n", $poster_info['comment']);
+        $poster_info['comment'] = utf8_str_replace("\r", "\n", $poster_info['comment']);
         
-        if (substr_count($dataforce['comment'], "\n") < BS_MAX_COMMENT_LINES)
+        if (utf8_substr_count($dataforce['comment'], "\n") < BS_MAX_COMMENT_LINES)
         {
-            $poster_info['comment'] = str_replace("\n\n", "<br>", $poster_info['comment']);
-            $poster_info['comment'] = str_replace("\n", "<br>", $poster_info['comment']);
+            $poster_info['comment'] = utf8_str_replace("\n\n", "<br>", $poster_info['comment']);
+            $poster_info['comment'] = utf8_str_replace("\n", "<br>", $poster_info['comment']);
         }
         else
         {
-            $poster_info['comment'] = str_replace("\n", "", $poster_info['comment']); // \n is erased
+            $poster_info['comment'] = utf8_str_replace("\n", "", $poster_info['comment']); // \n is erased
         }
     }
     else
@@ -126,19 +128,19 @@ function new_post($dataforce, $dbh)
     {
         banned_name($poster_info['name'], $files);
         
-        $faggotry = strpos($poster_info['name'], stext('THREAD_MODPOST'));
+        $faggotry = utf8_strpos($poster_info['name'], stext('THREAD_MODPOST'));
         if ($faggotry)
         {
             $poster_info['name'] = stext('FAKE_STAFF_ATTEMPT');
         }
         
-        $faggotry = strpos($poster_info['name'], stext('THREAD_ADMINPOST'));
+        $faggotry = utf8_strpos($poster_info['name'], stext('THREAD_ADMINPOST'));
         if ($faggotry)
         {
             $poster_info['name'] = stext('FAKE_STAFF_ATTEMPT');
         }
         
-        $faggotry = strpos($poster_info['name'], stext('THREAD_JANPOST'));
+        $faggotry = utf8_strpos($poster_info['name'], stext('THREAD_JANPOST'));
         if ($faggotry)
         {
             $poster_info['name'] = stext('FAKE_STAFF_ATTEMPT');
@@ -173,7 +175,7 @@ function new_post($dataforce, $dbh)
                         }
                     }
                     
-                    if (is_authorized($full_auth[$i], 'perm_sticky') && strripos($dataforce['fgsfds'], 'sticky') !== FALSE)
+                    if (is_authorized($full_auth[$i], 'perm_sticky') && utf8_strripos($dataforce['fgsfds'], 'sticky') !== FALSE)
                     {
                         $fgsfds['sticky'] = TRUE;
                     }
@@ -435,7 +437,7 @@ function new_post($dataforce, $dbh)
         }
         else
         {
-            $files[$i]['basic_filename'] = "cc" . substr($time, -4) . "--" . $files[$i]['basic_filename'];
+            $files[$i]['basic_filename'] = "cc" . utf8_substr($time, -4) . "--" . $files[$i]['basic_filename'];
             rename($files[$i]['dest'], $srcpath . $files[$i]['basic_filename'] . '.' . $files[$i]['ext']);
         }
         ++ $i;
@@ -640,11 +642,11 @@ function file_info()
                 
                 // Grab/strip the file extension
                 $files[$i]['ext'] = ltrim(strrchr($file['name'], '.'), '.');
-                $files[$i]['basic_filename'] = str_replace('.' . $files[$i]['ext'], "", $file['name']);
+                $files[$i]['basic_filename'] = utf8_str_replace('.' . $files[$i]['ext'], "", $file['name']);
                 
                 $max_upload = ini_get('upload_max_filesize');
-                $size_unit = strtolower(substr($max_upload, -1, 1));
-                $max_upload = strtolower(substr($max_upload, 0, -1));
+                $size_unit = utf8_strtolower(utf8_substr($max_upload, -1, 1));
+                $max_upload = utf8_strtolower(utf8_substr($max_upload, 0, -1));
                 
                 if ($size_unit === 'g')
                 {
@@ -672,7 +674,7 @@ function file_info()
                 move_uploaded_file($file['tmp_name'], $files[$i]['dest']);
                 chmod($files[$i]['dest'], 0644);
                 $files[$i]['fsize'] = filesize($files[$i]['dest']);
-                $test_ext = strtolower($files[$i]['ext']);
+                $test_ext = utf8_strtolower($files[$i]['ext']);
                 $file_test = file_get_contents($files[$i]['dest'], NULL, NULL, 0, 65535);
                 $file_good = FALSE;
                 $file_allowed = FALSE;
@@ -680,7 +682,7 @@ function file_info()
                 // Graphics
                 if (array_key_exists($test_ext, $filetypes))
                 {
-                    if ($enabled_types['enable_' . strtolower($filetypes[$test_ext]['subtype'])] && $enabled_types['enable_' . strtolower($filetypes[$test_ext]['supertype'])])
+                    if ($enabled_types['enable_' . utf8_strtolower($filetypes[$test_ext]['subtype'])] && $enabled_types['enable_' . utf8_strtolower($filetypes[$test_ext]['supertype'])])
                     {
                         $file_allowed = TRUE;
 

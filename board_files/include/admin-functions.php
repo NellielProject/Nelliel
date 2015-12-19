@@ -491,7 +491,7 @@ function thread_panel($dataforce, $mode, $dbh)
     
     if ($mode === 'expand')
     {
-        $thread_id = str_replace('Expand ', '', $_POST['expand_thread']);
+        $thread_id = utf8_str_replace('Expand ', '', $_POST['expand_thread']);
         $rendervar['expand_thread'] = TRUE;
         $prepared = $dbh->prepare('SELECT * FROM ' . POSTTABLE . ' WHERE response_to=:threadid OR post_number=:threadid2 ORDER BY post_number ASC');
         $prepared->bindParam(':threadid', $thread_id, PDO::PARAM_INT);

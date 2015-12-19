@@ -64,7 +64,7 @@ function banned_text($text, $file)
     {
         if ($cancer[$i] !== '')
         {
-            $test = strpos($text, $cancer[$i]);
+            $test = utf8_strpos($text, $cancer[$i]);
             
             if ($test !== FALSE)
             {

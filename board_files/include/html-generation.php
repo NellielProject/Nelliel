@@ -148,7 +148,7 @@ function render_post($dataforce, $response, $partial, $gen_data, $treeline, $dbh
     $rendervar['secure_tripcode'] = (isset($rendervar['secure_tripcode']) && $rendervar['secure_tripcode'] !== '') ? BS_TRIPKEY_MARKER . BS_TRIPKEY_MARKER . $rendervar['secure_tripcode'] : '';
     $rendervar['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $rendervar['comment']);
     $rendervar['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'parse_links', $rendervar['comment']);
-    $rendervar['comment-part'] = str_replace('>><a href="../"', '>><a href="', $rendervar['comment']);
+    $rendervar['comment-part'] = utf8_str_replace('>><a href="../"', '>><a href="', $rendervar['comment']);
     $rendervar['sticky'] = (bool) $rendervar['sticky'];
     $temp_dot = ($partial) ? '' : $rendervar['dotdot'];
     $post_id = ($response) ? $rendervar['response_to'] : $rendervar['post_number'];
@@ -189,10 +189,10 @@ function render_post($dataforce, $response, $partial, $gen_data, $treeline, $dbh
                         $rendervar['files'][$i]['preview_height'] = intval($ratio * $rendervar['files'][$i]['preview_height']);
                     }
                 }
-                else if (BS1_USE_FILE_ICON && file_exists(BOARD_FILES . 'imagez/nelliel/filetype/' . strtolower($rendervar['files'][$i]['supertype']) . '/' . strtolower($rendervar['files'][$i]['subtype']) . '.png'))
+                else if (BS1_USE_FILE_ICON && file_exists(BOARD_FILES . 'imagez/nelliel/filetype/' . utf8_strtolower($rendervar['files'][$i]['supertype']) . '/' . utf8_strtolower($rendervar['files'][$i]['subtype']) . '.png'))
                 {
                     $rendervar['files'][$i]['has_preview'] = TRUE;
-                    $rendervar['files'][$i]['preview_location'] = $temp_dot . BOARD_FILES . '/imagez/nelliel/filetype/' . strtolower($rendervar['files'][$i]['supertype']) . '/' . strtolower($rendervar['files'][$i]['subtype']) . '.png';
+                    $rendervar['files'][$i]['preview_location'] = $temp_dot . BOARD_FILES . '/imagez/nelliel/filetype/' . utf8_strtolower($rendervar['files'][$i]['supertype']) . '/' . utf8_strtolower($rendervar['files'][$i]['subtype']) . '.png';
                     $rendervar['files'][$i]['preview_width'] = (BS_MAX_WIDTH < 64) ? BS_MAX_WIDTH : '128';
                     $rendervar['files'][$i]['preview_height'] = (BS_MAX_HEIGHT < 64) ? BS_MAX_HEIGHT : '128';
                 }
@@ -345,14 +345,14 @@ function generate_thread_panel($dataforce, $thread_data, $mode)
                 break;
         }
         
-        if (strlen($thread_data['name']) > 12)
+        if (utf8_strlen($thread_data['name']) > 12)
         {
-            $rendervar['post_name'] = substr($rendervar['name'], 0, 11) . "...";
+            $rendervar['post_name'] = utf8_substr($rendervar['name'], 0, 11) . "...";
         }
         
-        if (strlen($thread_data['subject']) > 12)
+        if (utf8_strlen($thread_data['subject']) > 12)
         {
-            $rendervar['subject'] = substr($rendervar['subject'], 0, 11) . "...";
+            $rendervar['subject'] = utf8_substr($rendervar['subject'], 0, 11) . "...";
         }
         
         if ($thread_data['email'])
@@ -360,12 +360,12 @@ function generate_thread_panel($dataforce, $thread_data, $mode)
             $rendervar['post_name'] = '"<a href="mailto:' . $rendervar['email'] . '">' . $rendervar['name'] . '</a>';
         }
         
-        $rendervar['comment'] = str_replace("<br>", " ", $rendervar['comment']);
+        $rendervar['comment'] = utf8_str_replace("<br>", " ", $rendervar['comment']);
         $rendervar['comment'] = htmlspecialchars($rendervar['comment']);
         
-        if (strlen($thread_data['comment']) > 20)
+        if (utf8_strlen($thread_data['comment']) > 20)
         {
-            $rendervar['comment'] = substr($rendervar['comment'], 0, 19) . "...";
+            $rendervar['comment'] = utf8_substr($rendervar['comment'], 0, 19) . "...";
         }
         
         $rendervar['host'] = (@inet_ntop($rendervar['host'])) ? inet_ntop($rendervar['host']) : 'Unknown';
@@ -530,7 +530,7 @@ function parse_template($template, $regen)
 {
     global $rendervar, $template_info, $total_html;
     
-    $template_short = str_replace('.tpl', '', $template);
+    $template_short = utf8_str_replace('.tpl', '', $template);
     
     if (!$template_info[$template]['loaded'])
     {
@@ -539,10 +539,17 @@ function parse_template($template, $regen)
         
         if (!isset($template_info[$template]) || $modify_time !== $template_info[$template]['modify_time'] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
         {
-            $template_info[$template]['md5'] = $md5;
+            $functions = get_defined_functions();
+            $function_list = '';
+            
+            foreach($functions['user'] as $function)
+            {
+                $function_list .= '|' . $function . '\(';
+            }
+
             $template_info[$template]['modify-time'] = $modify_time;
             $lol = file_get_contents(TEMPLATE_PATH . $template);
-            $lol = preg_replace('#(?<!\[|\')\'(?!\]|\'|\)})#', '\\\'', $lol); // Keep escaped characters intact
+            $lol = preg_replace('#(?<!\[|\'' . $function_list . ')\'(?!\]|\'|\)})#', '\\\'', $lol); // Do some escaping
             $lol = trim($lol);
             $begin = '<?php function render_' . $template_short . '() { global $rendervar, $total_html; $temp = \''; // Start of the cached template
             $lol = preg_replace('#[ \r\n\t]*{{[ \r\n\t]*(if|elseif|foreach|for|while)[ \r\n\t]*([^{]*)}}#', '\'; $1( $2 ): $temp .= \'', $lol); // Opening control statements

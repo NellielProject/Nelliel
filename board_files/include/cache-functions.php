@@ -73,7 +73,7 @@ function cache_rules($dbh)
     
     while ($i < $result_count)
     {
-        $t_element = str_replace('enable_', '', $config_list[$i]['config_name']);
+        $t_element = utf8_str_replace('enable_', '', $config_list[$i]['config_name']);
         
         if ($config_list[$i]['setting'] !== '1')
         {
@@ -113,38 +113,38 @@ function cache_rules($dbh)
     
     if ($gmode !== '')
     {
-        $gmode = substr($gmode, 0, -2);
-        $rule_list .= '<li>' . stext('FILES_GRAPHICS') . strtoupper($gmode) . '</li>';
+        $gmode = utf8_substr($gmode, 0, -2);
+        $rule_list .= '<li>' . stext('FILES_GRAPHICS') . utf8_strtoupper($gmode) . '</li>';
     }
     if ($amode !== '')
     {
-        $amode = substr($amode, 0, -2);
+        $amode = utf8_substr($amode, 0, -2);
         $rule_list .= '
-							<li>' . stext('FILES_AUDIO') . strtoupper($amode) . '</li>';
+							<li>' . stext('FILES_AUDIO') . utf8_strtoupper($amode) . '</li>';
     }
     if ($vmode !== '')
     {
-        $vmode = substr($vmode, 0, -2);
+        $vmode = utf8_substr($vmode, 0, -2);
         $rule_list .= '
-							<li>' . stext('FILES_VIDEO') . strtoupper($vmode) . '</li>';
+							<li>' . stext('FILES_VIDEO') . utf8_strtoupper($vmode) . '</li>';
     }
     if ($dmode !== '')
     {
-        $dmode = substr($dmode, 0, -2);
+        $dmode = utf8_substr($dmode, 0, -2);
         $rule_list .= '
-							<li>' . stext('FILES_DOCUMENT') . strtoupper($dmode) . '</li>';
+							<li>' . stext('FILES_DOCUMENT') . utf8_strtoupper($dmode) . '</li>';
     }
     if ($rmode !== '')
     {
-        $rmode = substr($rmode, 0, -2);
+        $rmode = utf8_substr($rmode, 0, -2);
         $rule_list .= '
-							<li>' . stext('FILES_ARCHIVE') . strtoupper($rmode) . '</li>';
+							<li>' . stext('FILES_ARCHIVE') . utf8_strtoupper($rmode) . '</li>';
     }
     if ($omode !== '')
     {
-        $omode = substr($omode, 0, -2);
+        $omode = utf8_substr($omode, 0, -2);
         $rule_list .= '
-							<li>' . stext('FILES_OTHER') . strtoupper($omode) . '</li>';
+							<li>' . stext('FILES_OTHER') . utf8_strtoupper($omode) . '</li>';
     }
     
     return $rule_list;
@@ -168,11 +168,11 @@ function cache_settings($dbh)
     {
         if ($config_list[$i]['setting'] === '1')
         {
-            $vars1 .= 'define(\'BS1_' . strtoupper($config_list[$i]['config_name']) . '\',TRUE);';
+            $vars1 .= 'define(\'BS1_' . utf8_strtoupper($config_list[$i]['config_name']) . '\',TRUE);';
         }
         else
         {
-            $vars1 .= 'define(\'BS1_' . strtoupper($config_list[$i]['config_name']) . '\',FALSE);';
+            $vars1 .= 'define(\'BS1_' . utf8_strtoupper($config_list[$i]['config_name']) . '\',FALSE);';
         }
         ++ $i;
     }
@@ -193,11 +193,11 @@ function cache_settings($dbh)
         $rows[$config_list[$i]['config_name']] = $config_list[$i]['setting'];
         if (is_numeric($config_list[$i]['setting']))
         {
-            $vars2 .= 'define(\'BS_' . strtoupper($config_list[$i]['config_name']) . '\',' . $config_list[$i]['setting'] . ');';
+            $vars2 .= 'define(\'BS_' . utf8_strtoupper($config_list[$i]['config_name']) . '\',' . $config_list[$i]['setting'] . ');';
         }
         else
         {
-            $vars2 .= 'define(\'BS_' . strtoupper($config_list[$i]['config_name']) . '\',\'' . $config_list[$i]['setting'] . '\');';
+            $vars2 .= 'define(\'BS_' . utf8_strtoupper($config_list[$i]['config_name']) . '\',\'' . $config_list[$i]['setting'] . '\');';
         }
         ++ $i;
     }
@@ -232,7 +232,7 @@ function cache_settings($dbh)
         ++ $i;
     }
     
-    $fvars = substr($fvars, 0, strlen($fvars) - 4) . ');';
+    $fvars = utf8_substr($fvars, 0, utf8_strlen($fvars) - 4) . ');';
     $final_vars = '<?php ' . $vars1 . $vars2 . $fvars . ' ?>';
     
     write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, 0644);

@@ -17,8 +17,8 @@ function nel_hash($input)
     // If set to TRUE by a plugin, default method will not be used
     if (!$methods[3])
     {
-        $half_salt1 = substr(HASH_SALT, 0, (strlen(HASH_SALT) / 2));
-        $half_salt2 = substr(HASH_SALT, (strlen(HASH_SALT) / 2), strlen(HASH_SALT));
+        $half_salt1 = utf8_substr(HASH_SALT, 0, (utf8_strlen(HASH_SALT) / 2));
+        $half_salt2 = utf8_substr(HASH_SALT, (utf8_strlen(HASH_SALT) / 2), utf8_strlen(HASH_SALT));
         
         // In case there is a need for something older
         if ($methods[2] || !SHA256_AVAILABLE)
@@ -56,7 +56,6 @@ require_once INCLUDE_PATH . 'central_dispatch.php';
 nel_process_get($dataforce, $dbh);
 nel_process_post($dataforce, $dbh);
 regen($dataforce, NULL, 'main', FALSE, $dbh);
-echo "wur";
 clean_exit($dataforce, FALSE);
 
 function clean_exit($dataforce, $die)
@@ -66,10 +65,8 @@ function clean_exit($dataforce, $die)
     
     if ($die)
     {
-        echo "wat";
         die();
     }
-    echo "yay";
     
     if (STUFF_DONE)
     {

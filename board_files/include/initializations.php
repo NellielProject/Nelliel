@@ -24,11 +24,11 @@ if (ini_get('date.timezone') === '')
 }
 
 ignore_user_abort(TRUE);
+require_once BASE_PATH . '/' . BOARD_FILES . 'libraries/portable-utf8.php';
 require_once INCLUDE_PATH . 'setup.php';
 require_once INCLUDE_PATH . 'file-handling.php';
 setup_check($dbh);
 generate_auth_file();
-//include_once FILES_PATH . '/auth_data.nel.php';
 require_once INCLUDE_PATH . 'authorize.php';
 require_once INCLUDE_PATH . 'language.php';
 

@@ -32,6 +32,7 @@ function thread_generator($dataforce, $dbh)
     $page_output = '';
     $page_output_expand = '';
     $page_output_collapse = '';
+    $rendervar['expand_post'] = FALSE;
     $dataforce['omitted_done'] = TRUE;
     $partlimit = 1;
     $rendervar['first100'] = FALSE;
@@ -75,22 +76,19 @@ function thread_generator($dataforce, $dbh)
             $page_output_tmp2 = render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
             $page_output_tmp3 = render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for expand
             $dataforce['response_id'] = $resid;
-            
+
             if ($gen_data['post_count'] > BS_ABBREVIATE_THREAD)
             {
-                if ($gen_data['post_counter'] > ($gen_data['post_count'] - BS_ABBREVIATE_THREAD))
+                if ($page_output_collapse === '')
                 {
-                    if($page_output_collapse === '')
-                    {
-                        $dataforce['omitted_done'] = FALSE;
-                        $page_output_tmp2 = render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
-                        $dataforce['omitted_done'] = TRUE;
-                        $page_output_collapse = $page_output_tmp2;
-                    }
-                    else
-                    {
-                        $page_output_collapse .= $page_output_tmp2;
-                    }
+                    $dataforce['omitted_done'] = FALSE;
+                    $page_output_tmp2 = render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
+                    $dataforce['omitted_done'] = TRUE;
+                }
+
+                if($gen_data['post_counter'] > $gen_data['post_count'] - BS_ABBREVIATE_THREAD)
+                {
+                    $page_output_collapse .= $page_output_tmp2;
                 }
             }
             

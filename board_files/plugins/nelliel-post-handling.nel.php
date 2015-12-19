@@ -16,12 +16,12 @@ class nelliel_post_handling
     {
         if ($name_pieces[3] !== '' && BS1_ALLOW_TRIPKEYS)
         {
-            $cap = strtr($name_pieces[3], '&amp;', '&');
-            $cap = strtr($cap, '&#44;', ',');
-            $salt = substr($cap . 'H.', 1, 2);
+            $cap = utf8_strtr($name_pieces[3], '&amp;', '&');
+            $cap = utf8_strtr($cap, '&#44;', ',');
+            $salt = utf8_substr($cap . 'H.', 1, 2);
             $salt = preg_replace('#[^\.-z]#', '.#', $salt);
-            $salt = strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
-            $poster_info['tripcode'] = substr(crypt($cap, $salt), -10);
+            $salt = utf8_strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
+            $poster_info['tripcode'] = utf8_substr(crypt($cap, $salt), -10);
         }
         
         return $poster_info;
@@ -32,7 +32,7 @@ class nelliel_post_handling
         if ($name_pieces[5] !== '' || $modpostc > 0)
         {
             $trip = nel_hash($name_pieces[5]);
-            $poster_info['secure_tripcode'] = substr(crypt($trip, '42'), -12);
+            $poster_info['secure_tripcode'] = utf8_substr(crypt($trip, '42'), -12);
         }
         
         return $poster_info;
