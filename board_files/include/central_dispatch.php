@@ -29,6 +29,7 @@ function nel_process_get($dataforce, $dbh)
                 die();
             
             case 'about':
+                include INCLUDE_PATH . 'about.php';
                 about_screen();
                 die();
         }
@@ -41,7 +42,7 @@ function nel_process_get($dataforce, $dbh)
 function nel_process_post($dataforce, $dbh)
 {
     global $fgsfds;
-
+    
     if (isset($dataforce['mode']))
     {
         switch ($dataforce['mode']) // Even moar modes

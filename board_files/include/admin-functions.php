@@ -10,7 +10,7 @@ function nel_valid($dataforce)
     
     $dat = '';
     $rendervar['dotdot'] = '';
-
+    
     if (!empty($_SESSION))
     {
         $dat .= nel_render_header($dataforce, 'ADMIN', array());
@@ -37,61 +37,61 @@ function nel_update_ban($dataforce, $mode, $dbh)
     {
         nel_derp(101, array('origin' => 'ADMIN'));
     }
-
+    
     if ($mode === 'remove')
     {
         $dbh->query('DELETE FROM ' . BANTABLE . ' WHERE id=' . $dataforce['banid'] . '');
     }
-
+    
     if ($mode === 'update')
     {
         $ban_input = array('days' => 0, 'hours' => 0, 'reason' => '', 'response' => '', 'review' => FALSE, 'status' => 0, 'length' => '');
-    
+        
         foreach ($_POST as $key => $val)
         {
             if ($key === 'timedays')
             {
                 $ban_input['days'] = $val * 86400;
             }
-    
+            
             if ($key === 'timehours')
             {
                 $ban_input['hours'] = $val * 3600;
             }
-    
+            
             if ($key === 'banreason')
             {
                 $ban_input['reason'] = $val;
             }
-    
+            
             if ($key === 'appealresponse')
             {
                 $ban_input['response'] = $val;
             }
-    
+            
             if ($key === 'appealreview')
             {
                 $ban_input['review'] = TRUE;
             }
-    
+            
             if ($key === 'appealstatus')
             {
                 $ban_input['status'] = $val;
             }
-    
+            
             if ($key === 'original')
             {
                 $ban_input['length'] = $val;
             }
         }
-
+        
         $bantotal = (int) $ban_input['days'] + (int) $ban_input['hours'];
-
+        
         if ($ban_input['review'])
         {
             $ban_input['status'] = ((int) $ban_input['length'] !== $bantotal) ? 3 : 2;
         }
-
+        
         $prepared = $dbh->prepare('UPDATE ' . BANTABLE . ' SET reason=:reason, length=:length, appeal_response=:response, appeal_status=:status WHERE id=:banid');
         $prepared->bindParam(':reason', $ban_input['reason'], PDO::PARAM_STR);
         $prepared->bindParam(':length', $bantotal, PDO::PARAM_INT);
@@ -275,7 +275,7 @@ function nel_gen_new_staff($new_name, $new_type)
     {
         nel_derp(151, array('origin' => 'ADMIN'));
     }
-
+    
     nel_write_auth_file();
 }
 

@@ -10,17 +10,17 @@ if (!defined('NELLIEL_VERSION'))
 function nel_authorization($user, $setting, $is_update, $new_data)
 {
     static $authorized;
-
+    
     if (!isset($authorized))
     {
         include BOARD_FILES . 'auth_data.nel.php';
     }
-
-    if(!is_null($user) && is_null($setting))
+    
+    if (!is_null($user) && is_null($setting))
     {
-        if($is_update)
+        if ($is_update)
         {
-            if(is_null($new_data))
+            if (is_null($new_data))
             {
                 unset($authorized[$user]);
             }
@@ -31,27 +31,27 @@ function nel_authorization($user, $setting, $is_update, $new_data)
         }
         else
         {
-            if(!isset($authorized[$user]))
+            if (!isset($authorized[$user]))
             {
                 return FALSE;
             }
-
+            
             return $authorized[$user];
         }
     }
-    else if(!is_null($user) && !is_null($setting))
+    else if (!is_null($user) && !is_null($setting))
     {
-        if($is_update)
+        if ($is_update)
         {
             $authorized[$user][$setting] = $new_data;
         }
         else
         {
-            if(!isset($authorized[$user]) || !isset($authorized[$user][$setting]))
+            if (!isset($authorized[$user]) || !isset($authorized[$user][$setting]))
             {
                 return FALSE;
             }
-
+            
             return $authorized[$user][$setting];
         }
     }
@@ -93,21 +93,7 @@ function nel_remove_user_auth($user)
 
 function nel_get_blank_settings()
 {
-    return array('staff_password' => '',
-		'staff_type' => '',
-		'staff_trip' => '',
-		'perm_config' => FALSE,
-		'perm_staff_panel' => FALSE,
-		'perm_ban_panel' => FALSE,
-		'perm_thread_panel' => FALSE,
-		'perm_mod_mode' => FALSE,
-		'perm_ban' => FALSE,
-		'perm_delete' => FALSE,
-		'perm_post' => FALSE,
-		'perm_post_anon' => FALSE,
-		'perm_sticky' => FALSE,
-		'perm_update_pages' => FALSE,
-		'perm_update_cache' => FALSE);
+    return array('staff_password' => '', 'staff_type' => '', 'staff_trip' => '', 'perm_config' => FALSE, 'perm_staff_panel' => FALSE, 'perm_ban_panel' => FALSE, 'perm_thread_panel' => FALSE, 'perm_mod_mode' => FALSE, 'perm_ban' => FALSE, 'perm_delete' => FALSE, 'perm_post' => FALSE, 'perm_post_anon' => FALSE, 'perm_sticky' => FALSE, 'perm_update_pages' => FALSE, 'perm_update_cache' => FALSE);
 }
 
 function nel_write_auth_file()

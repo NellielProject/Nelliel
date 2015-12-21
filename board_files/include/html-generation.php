@@ -171,7 +171,8 @@ function nel_render_post($dataforce, $response, $partial, $gen_data, $treeline, 
         
         while ($i < $filecount)
         {
-            $rendervar['files'][$i]['img_dim'] = (!is_null($rendervar['files'][$i]['image_width']) && !is_null($rendervar['files'][$i]['image_height'])) ? TRUE : FALSE;
+            $rendervar['files'][$i]['img_dim'] = (!is_null($rendervar['files'][$i]['image_width'])
+                                                && !is_null($rendervar['files'][$i]['image_height'])) ? TRUE : FALSE;
             $rendervar['files'][$i]['file_location'] = $temp_dot . SRC_DIR . $post_id . '/' . $rendervar['files'][$i]['filename'] . "." . $rendervar['files'][$i]['extension'];
             $rendervar['files'][$i]['filesize'] = round(((int) $rendervar['files'][$i]['filesize'] / 1024), 2);
             
@@ -182,11 +183,15 @@ function nel_render_post($dataforce, $response, $partial, $gen_data, $treeline, 
                     $rendervar['files'][$i]['has_preview'] = TRUE;
                     $rendervar['files'][$i]['preview_location'] = $temp_dot . THUMB_DIR . $post_id . '/' . $rendervar['files'][$i]['preview_name'];
                     
-                    if (($rendervar['files'][$i]['preview_width'] > BS_MAX_MULTI_WIDTH && $rendervar['files'][$i]['preview_width'] != 0) || ($rendervar['files'][$i]['preview_height'] > BS_MAX_MULTI_HEIGHT && $rendervar['files'][$i]['preview_width'] != 0))
+                    if($rendervar['files'][$i]['preview_width'] != 0)
                     {
-                        $ratio = min((BS_MAX_MULTI_HEIGHT / $rendervar['files'][$i]['preview_height']), (BS_MAX_MULTI_WIDTH / $rendervar['files'][$i]['preview_width']));
-                        $rendervar['files'][$i]['preview_width'] = intval($ratio * $rendervar['files'][$i]['preview_width']);
-                        $rendervar['files'][$i]['preview_height'] = intval($ratio * $rendervar['files'][$i]['preview_height']);
+                        if ($rendervar['files'][$i]['preview_width'] > BS_MAX_MULTI_WIDTH
+                            || $rendervar['files'][$i]['preview_height'] > BS_MAX_MULTI_HEIGHT)
+                        {
+                            $ratio = min((BS_MAX_MULTI_HEIGHT / $rendervar['files'][$i]['preview_height']), (BS_MAX_MULTI_WIDTH / $rendervar['files'][$i]['preview_width']));
+                            $rendervar['files'][$i]['preview_width'] = intval($ratio * $rendervar['files'][$i]['preview_width']);
+                            $rendervar['files'][$i]['preview_height'] = intval($ratio * $rendervar['files'][$i]['preview_height']);
+                        }
                     }
                 }
                 else if (BS1_USE_FILE_ICON && file_exists(BOARD_FILES . 'imagez/nelliel/filetype/' . utf8_strtolower($rendervar['files'][$i]['supertype']) . '/' . utf8_strtolower($rendervar['files'][$i]['subtype']) . '.png'))
@@ -220,15 +225,21 @@ function nel_render_post($dataforce, $response, $partial, $gen_data, $treeline, 
     switch (BS_DATE_FORMAT)
     {
         case 'ISO':
-            $rendervar['post_time'] = date("Y", $curr_time) . BS_DATE_SEPARATOR . date("m", $curr_time) . BS_DATE_SEPARATOR . date("d (D) H:i:s", $curr_time);
+            $rendervar['post_time'] = date("Y", $curr_time)
+                                    . BS_DATE_SEPARATOR . date("m", $curr_time)
+                                    . BS_DATE_SEPARATOR . date("d (D) H:i:s", $curr_time);
             break;
         
         case 'US':
-            $rendervar['post_time'] = date("m", $curr_time) . BS_DATE_SEPARATOR . date("d", $curr_time) . BS_DATE_SEPARATOR . date("Y (D) H:i:s", $curr_time);
+            $rendervar['post_time'] = date("m", $curr_time) . BS_DATE_SEPARATOR 
+                                    . date("d", $curr_time) . BS_DATE_SEPARATOR
+                                    . date("Y (D) H:i:s", $curr_time);
             break;
         
         case 'COM':
-            $rendervar['post_time'] = date("d", $curr_time) . BS_DATE_SEPARATOR . date("m", $curr_time) . BS_DATE_SEPARATOR . date("Y (D) H:i:s", $curr_time);
+            $rendervar['post_time'] = date("d", $curr_time)
+                                    . BS_DATE_SEPARATOR . date("m", $curr_time)
+                                    . BS_DATE_SEPARATOR . date("Y (D) H:i:s", $curr_time);
             break;
     }
     
@@ -482,9 +493,9 @@ function nel_parse_links($matches)
     global $link_resno, $dbh;
     static $links;
     
-    if(!is_array($matches))
+    if (!is_array($matches))
     {
-        if($matches === TRUE)
+        if ($matches === TRUE)
         {
             return $links;
         }
@@ -543,11 +554,11 @@ function nel_parse_template($template, $regen)
             $functions = get_defined_functions();
             $function_list = '';
             
-            foreach($functions['user'] as $function)
+            foreach ($functions['user'] as $function)
             {
                 $function_list .= '|' . $function . '\(';
             }
-
+            
             $template_info[$template]['modify-time'] = $modify_time;
             $lol = file_get_contents(TEMPLATE_PATH . $template);
             $lol = preg_replace('#(?<!\[|\'' . $function_list . ')\'(?!\]|\'|\)})#', '\\\'', $lol); // Do some escaping

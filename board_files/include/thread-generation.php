@@ -76,7 +76,7 @@ function nel_thread_generator($dataforce, $dbh)
             $page_output_tmp2 = nel_render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
             $page_output_tmp3 = nel_render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for expand
             $dataforce['response_id'] = $resid;
-
+            
             if ($gen_data['post_count'] > BS_ABBREVIATE_THREAD)
             {
                 if ($page_output_collapse === '')
@@ -85,8 +85,8 @@ function nel_thread_generator($dataforce, $dbh)
                     $page_output_tmp2 = nel_render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
                     $dataforce['omitted_done'] = TRUE;
                 }
-
-                if($gen_data['post_counter'] > $gen_data['post_count'] - BS_ABBREVIATE_THREAD)
+                
+                if ($gen_data['post_counter'] > $gen_data['post_count'] - BS_ABBREVIATE_THREAD)
                 {
                     $page_output_collapse .= $page_output_tmp2;
                 }

@@ -37,7 +37,9 @@ function nel_process_new_post($dataforce, $dbh)
     $files = nel_process_file_info();
     $there_is_no_spoon = TRUE;
     
-    $poster_info = array('name' => $dataforce['name'], 'email' => $dataforce['email'], 'subject' => $dataforce['subject'], 'comment' => $dataforce['comment'], 'tripcode' => '', 'secure_tripcode' => '');
+    $poster_info = array('name' => $dataforce['name'], 'email' => $dataforce['email'],
+                        'subject' => $dataforce['subject'], 'comment' => $dataforce['comment'],
+                        'tripcode' => '', 'secure_tripcode' => '');
     
     if (!empty($files))
     {
@@ -67,9 +69,12 @@ function nel_process_new_post($dataforce, $dbh)
     // Cancer-fighting tools and lulz
     
 
-    if (utf8_strlen($poster_info['comment']) > BS_MAX_COMMENT_LENGTH || utf8_strlen($poster_info['name']) > BS_MAX_NAME_LENGTH
-        || utf8_strlen($poster_info['email']) > BS_MAX_EMAIL_LENGTH || utf8_strlen($poster_info['subject']) > BS_MAX_SUBJECT_LENGTH
-        || utf8_strlen($dataforce['file_source']) > BS_MAX_SOURCE_LENGTH || utf8_strlen($dataforce['file_license']) > BS_MAX_LICENSE_LENGTH)
+    if (utf8_strlen($poster_info['comment']) > BS_MAX_COMMENT_LENGTH
+        || utf8_strlen($poster_info['name']) > BS_MAX_NAME_LENGTH
+        || utf8_strlen($poster_info['email']) > BS_MAX_EMAIL_LENGTH
+        || utf8_strlen($poster_info['subject']) > BS_MAX_SUBJECT_LENGTH
+        || utf8_strlen($dataforce['file_source']) > BS_MAX_SOURCE_LENGTH
+        || utf8_strlen($dataforce['file_license']) > BS_MAX_LICENSE_LENGTH)
     {
         nel_derp(11, array('origin' => 'POST'));
     }
@@ -259,6 +264,7 @@ function nel_process_new_post($dataforce, $dbh)
     //
     // Go ahead and put post into database
     //
+    
 
     $prepared = $dbh->prepare('INSERT INTO ' . POSTTABLE . ' 
 	(name, tripcode, secure_tripcode, email, subject, comment, host, password, post_time, last_update, response_to, last_response, post_count, sticky, mod_post, mod_comment, archive_status, locked) VALUES 
@@ -283,7 +289,7 @@ function nel_process_new_post($dataforce, $dbh)
     {
         $prepared->bindValue(':secure_tripcode', $poster_info['secure_tripcode'], PDO::PARAM_STR);
     }
-
+    
     $prepared->bindValue(':email', $poster_info['email'], PDO::PARAM_STR);
     $prepared->bindValue(':subject', $poster_info['subject'], PDO::PARAM_STR);
     $prepared->bindValue(':comment', $poster_info['comment'], PDO::PARAM_STR);
@@ -301,12 +307,12 @@ function nel_process_new_post($dataforce, $dbh)
     {
         $prepared->bindValue(':sticky', 0, PDO::PARAM_INT);
     }
-
+    
     $prepared->bindValue(':modpost', $modpostc, PDO::PARAM_INT);
     $prepared->bindValue(':mcomment', NULL, PDO::PARAM_NULL);
     $prepared->execute();
     unset($prepared);
-
+    
     $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE post_time=' . $time . ' AND response_to=' . $dataforce['response_to'] . '');
     $row = $result->fetch();
     $post_number = $row[0];
@@ -685,7 +691,7 @@ function nel_process_file_info()
                     if ($enabled_types['enable_' . utf8_strtolower($filetypes[$test_ext]['subtype'])] && $enabled_types['enable_' . utf8_strtolower($filetypes[$test_ext]['supertype'])])
                     {
                         $file_allowed = TRUE;
-
+                        
                         if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test))
                         {
                             $files[$i]['supertype'] = $filetypes[$test_ext]['supertype'];
@@ -696,11 +702,11 @@ function nel_process_file_info()
                     }
                 }
                 
-                if(!$file_allowed)
+                if (!$file_allowed)
                 {
                     nel_derp(6, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
                 }
-
+                
                 if (!$file_good)
                 {
                     nel_derp(18, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));

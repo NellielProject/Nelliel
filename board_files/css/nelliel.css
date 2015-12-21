@@ -245,7 +245,7 @@ a.mailto-name:visited {
 /* OP post formatting */
 .op-post {
     min-width: 15em;
-    max-width: 80em;
+    max-width: 60em;
     height: 100%;
     padding-bottom: 6px;
     padding-left: 20px;
@@ -291,7 +291,7 @@ a.mailto-name:visited {
     float: left;
     padding: 5px;
     min-width: 15em;
-    max-width: 80em;
+    max-width: 60em;
     height: 100%;
     margin: 5px;
 }
@@ -364,7 +364,8 @@ a.mailto-name:visited {
 }
 
 .nelliel-license-div {
+    font-size: 1.0em;
     text-align: left;
     margin: auto;
-    max-width: 80em;
+    max-width: 60em;
 }

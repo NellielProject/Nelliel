@@ -70,38 +70,4 @@ function nel_regen(&$dataforce, $id, $mode, $modmode, $dbh)
     $dataforce['post_links'] = $link_updates;
 }
 
-//
-// The content this function presents must remain intact and be accessible to users
-//
-function about_screen()
-{
-    echo nel_render_header(array(), 'ABOUT', array());
-    echo '
-        <div class="text-center">
-        	<p><font color="blue" size="5">Nelliel Imageboard</font><br>
-        	<font size="4">Version: ' . NELLIEL_VERSION . '</font></p>
-			<p><font size="4" class="text-center">Copyright (c) 2010-2015, <a href="http://www.nelliel.com">Nelliel Project</a><br> 
-			All rights reserved.</font></p>
-			<div class="nelliel-license-div">
-			<p><font size="4">Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:</font></p>
-			<p><font size="4">1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.</font></p>
-			<p><font size="4">2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation 
-			and/or other materials provided with the distribution.</font></p>
-			<p><font size="4">3) Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without 
-			specific prior written permission.</font></p>
-        	<img src="board_files/imagez/luna_canterlot_disclaimer.png" width="320" height="180" style="float: left; padding-right: 8px;">
-			<p style="margin-left: 330px;"><font size="4">THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, 
-			THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE 
-			FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
-			LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
-			NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</font></p>
-        	<hr>
-        	<p><font size="4" >Default filetype icons are from the Soft Scraps pack made by <a href="http://deleket.deviantart.com/" title="Deleket">Deleket</a></font></p>
-			<p class="text-center"><font size="4"><a href="' . PHP_SELF2 . PHP_EXT . '">' . nel_stext('LINK_RETURN') . '</a></b></font></p>
-			</div>
-		</div>
-		<br><br><hr>
-</body></html>';
-}
-
 ?>
