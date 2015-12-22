@@ -32,6 +32,20 @@ function nel_regen_session()
         nel_terminate_session();
         nel_derp(105, array('origin' => 'SESSION_REGEN'));
     }
+    
+    nel_set_session_cookie();
+}
+
+function nel_set_session_cookie()
+{
+    if(version_compare(PHP_VERSION, '5.2.0', '<'))
+    {
+        setcookie(session_name(), session_id(), 0, '/', '; HttpOnly');
+    }
+    else
+    {
+        setcookie(session_name(), session_id(), 0, '/', '', NULL, TRUE );
+    }
 }
 
 //
@@ -40,6 +54,8 @@ function nel_regen_session()
 //
 function nel_initialize_session($dataforce, $plugins, $authorize)
 {
+    session_start();
+
     if (!empty($_SESSION))
     {
         if (isset($dataforce['mode2']))
@@ -86,6 +102,7 @@ function nel_initialize_session($dataforce, $plugins, $authorize)
             nel_derp(107, array('origin' => 'SESSION_INIT'));
         }
         
+        nel_set_session_cookie();
         nel_valid($dataforce);
         die();
     }

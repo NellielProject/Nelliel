@@ -59,7 +59,6 @@ require_once INCLUDE_PATH . 'snacks.php';
 // Initialization done. IT'S GO TIME!
 
 nel_ban_spambots($dataforce, $dbh);
-session_start();
 require_once INCLUDE_PATH . 'sessions.php';
 nel_initialize_session($dataforce, $plugins, $authorize);
 
