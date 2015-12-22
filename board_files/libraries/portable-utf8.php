@@ -1358,7 +1358,15 @@
         {
             //mb_strrpos returns wrong position if invalid characters are found in $haystack before $needle
             
-            return mb_strrpos( $haystack , $needle , $offset , 'UTF-8' );
+            // Nelliel: Change to accomodate < 5.2.0
+            if(version_compare(PHP_VERSION, '5.2.0', '<'))
+            {
+                return mb_strrpos( $haystack , $needle , 'UTF-8' );
+            }
+            else
+            {
+                return mb_strrpos( $haystack , $needle , $offset , 'UTF-8' );
+            }
         }
         
         if( iconv_loaded( ) && $offset === 0 )

@@ -38,7 +38,7 @@ function nel_regen_session()
 // Check for existing session and process
 // If no session exists, confirm login info and set up a new one
 //
-function nel_initialize_session($dataforce)
+function nel_initialize_session($dataforce, $plugins, $authorize)
 {
     if (!empty($_SESSION))
     {
@@ -68,7 +68,7 @@ function nel_initialize_session($dataforce)
     }
     else if (isset($dataforce['admin_mode']) && $dataforce['admin_mode'] === 'login') // No existing session but this may be a login attempt
     {
-        if ($dataforce['username'] !== '' && nel_hash($dataforce['admin_pass']) === nel_get_user_setting($dataforce['username'], 'staff_password'))
+        if ($dataforce['username'] !== '' && nel_hash($dataforce['admin_pass'], $plugins) === $authorize->get_user_setting($dataforce['username'], 'staff_password'))
         {
             // We set up the session here
             $_SESSION['ignore_login'] = FALSE;
@@ -76,6 +76,9 @@ function nel_initialize_session($dataforce)
             $_SESSION['password'] = $dataforce['admin_pass'];
             $_SESSION['login_time'] = time();
             $_SESSION['last_activity'] = time();
+            $user_auth = $authorize->get_user_auth($dataforce['username']);
+            $_SESSION['perms'] = $user_auth['perms'];
+            $_SESSION['settings'] = $user_auth['settings'];
         }
         else
         {

@@ -513,7 +513,7 @@ function setup_check($dbh)
     }
 }
 
-function generate_auth_file()
+function generate_auth_file($plugins)
 {
     if (!file_exists(FILES_PATH . '/auth_data.nel.php'))
     {
@@ -522,22 +522,25 @@ function generate_auth_file()
             echo 'Creating auth file...';
             $new_auth = '<?php
 $authorized = array(
-	\'' . DEFAULTADMIN . '\' => array(\'staff_password\' => \'' . nel_hash(DEFAULTADMIN_PASS) . '\',
-		\'staff_type\' => \'admin\',
-		\'staff_trip\' => \'\',
-		\'perm_config\' => TRUE,
-		\'perm_staff_panel\' => TRUE,
-		\'perm_ban_panel\' => TRUE,
-		\'perm_thread_panel\' => TRUE,
-		\'perm_mod_mode\' => TRUE,
-		\'perm_ban\' => TRUE,
-		\'perm_delete\' => TRUE,
-		\'perm_post\' => TRUE,
-		\'perm_post_anon\' => TRUE,
-		\'perm_sticky\' => TRUE,
-		\'perm_update_pages\' => TRUE,
-		\'perm_update_cache\' => TRUE
-		),
+	\'' . DEFAULTADMIN . '\' => array(
+        \'settings\' => array(
+            \'staff_password\' => \'' . nel_hash(DEFAULTADMIN_PASS, $plugins) . '\',
+            \'staff_type\' => \'admin\',
+            \'staff_trip\' => \'\'),
+	    \'perms\' => array(
+            \'perm_config\' => TRUE,
+            \'perm_staff_panel\' => TRUE,
+            \'perm_ban_panel\' => TRUE,
+            \'perm_thread_panel\' => TRUE,
+            \'perm_mod_mode\' => TRUE,
+            \'perm_ban\' => TRUE,
+            \'perm_delete\' => TRUE,
+            \'perm_post\' => TRUE,
+            \'perm_post_anon\' => TRUE,
+            \'perm_sticky\' => TRUE,
+            \'perm_update_pages\' => TRUE,
+            \'perm_update_cache\' => TRUE
+		)),
 	); ?>';
             
             if (nel_write_file(FILES_PATH . 'auth_data.nel.php', $new_auth, 0644))

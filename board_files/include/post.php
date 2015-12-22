@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_process_new_post($dataforce, $dbh)
+function nel_process_new_post($dataforce, $plugins, $dbh)
 {
     global $enabled_types, $fgsfds, $plugins;
     
@@ -18,7 +18,7 @@ function nel_process_new_post($dataforce, $dbh)
     $post_count = nel_is_post_ok($dataforce, $time, $dbh);
     
     // Process FGSFDS
-    if (isset($dataforce['fgsfds']))
+    if (!is_null($dataforce['fgsfds']))
     {
         if (utf8_strripos($dataforce['fgsfds'], 'noko') !== FALSE)
         {
@@ -82,7 +82,7 @@ function nel_process_new_post($dataforce, $dbh)
     if (isset($dataforce['pass']))
     {
         $cpass = $dataforce['pass'];
-        $hashed_pass = nel_hash($dataforce['pass']);
+        $hashed_pass = nel_hash($dataforce['pass'], $plugins);
         $dataforce['pass'] = utf8_substr($hashed_pass, 0, 16);
     }
     else
@@ -156,49 +156,40 @@ function nel_process_new_post($dataforce, $dbh)
         
         if ($name_pieces[5] !== '')
         {
-            $full_auth = array_keys(nel_authorization(NULL, NULL, NULL, NULL));
-            $auth_count = count($full_auth);
-            $i = 0;
-            
-            while ($i < $auth_count)
+            if ($name_pieces[5] === $_SESSION['settings']['staff_trip'])
             {
-                if ($name_pieces[5] === nel_get_user_setting($full_auth[$i], 'staff_trip'))
+                if ($_SESSION['perms']['perm_post'])
                 {
-                    if (nel_is_authorized($full_auth[$i], 'perm_post'))
+                    if ($_SESSION['settings']['staff_type'] === 'admin')
                     {
-                        if (nel_get_user_setting($staff_id, 'staff_type') === 'admin')
-                        {
-                            $modpostc = 3;
-                        }
-                        else if (nel_get_user_setting($staff_id, 'staff_type') === 'moderator')
-                        {
-                            $modpostc = 2;
-                        }
-                        else if (nel_get_user_setting($staff_id, 'staff_type') === 'janitor')
-                        {
-                            $modpostc = 1;
-                        }
+                        $modpostc = 3;
                     }
-                    
-                    if (nel_is_authorized($full_auth[$i], 'perm_sticky') && utf8_strripos($dataforce['fgsfds'], 'sticky') !== FALSE)
+                    else if ($_SESSION['settings']['staff_type'] === 'moderator')
                     {
-                        $fgsfds['sticky'] = TRUE;
+                        $modpostc = 2;
                     }
-                    
-                    if ($modpostc > 0)
+                    else if ($_SESSION['settings']['staff_type'] === 'janitor')
                     {
-                        break;
+                        $modpostc = 1;
                     }
                 }
-                
-                ++ $i;
+            
+                if ($_SESSION['perms']['perm_sticky'] && utf8_strripos($dataforce['fgsfds'], 'sticky') !== FALSE)
+                {
+                    $fgsfds['sticky'] = TRUE;
+                }
+            
+                if ($modpostc > 0)
+                {
+                    break;
+                }
             }
         }
         
         $poster_info = $plugins->plugin_hook('tripcode-processing', TRUE, array($poster_info, $name_pieces));
         $poster_info = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($poster_info, $name_pieces, $modpostc));
         
-        if ($name_pieces[1] === '' || nel_is_authorized($staff_id, 'perm_post_anon'))
+        if ($name_pieces[1] === '' || $_SESSION['perms']['perm_post_anon'])
         {
             $poster_info['name'] = nel_stext('THREAD_NONAME');
             $poster_info['email'] = '';

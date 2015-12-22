@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_thread_updates($dataforce, $dbh)
+function nel_thread_updates($dataforce, $plugins, $dbh)
 {
     $threadlist = array();
     $postlist = array();
@@ -19,17 +19,17 @@ function nel_thread_updates($dataforce, $dbh)
         switch ($sub[0])
         {
             case 'deletefile':
-                nel_delete_content($dataforce, $sub, 'FILE', $dbh);
+                nel_delete_content($dataforce, $sub, 'FILE', $plugins, $dbh);
                 $push = $sub[1];
                 break;
             
             case 'deletethread':
-                nel_delete_content($dataforce, $sub, 'THREAD', $dbh);
+                nel_delete_content($dataforce, $sub, 'THREAD', $plugins, $dbh);
                 $push = $sub[1];
                 break;
             
             case 'deletepost':
-                nel_delete_content($dataforce, $sub, 'POST', $dbh);
+                nel_delete_content($dataforce, $sub, 'POST', $plugins, $dbh);
                 $push = $sub[2];
                 break;
             
@@ -147,7 +147,7 @@ function nel_unsticky_thread($dataforce, $sub, $dbh)
     }
 }
 
-function nel_delete_content($dataforce, $sub, $type, $dbh)
+function nel_delete_content($dataforce, $sub, $type, $plugins, $dbh)
 {
     $id = $sub[1];
     
@@ -157,7 +157,7 @@ function nel_delete_content($dataforce, $sub, $type, $dbh)
     }
     
     $flag = FALSE;
-    $hashed_pass = nel_hash($dataforce['pass']);
+    $hashed_pass = nel_hash($dataforce['pass'], $plugins);
     $hashed_pass = utf8_substr($hashed_pass, 0, 16);
     $result = $dbh->query('SELECT post_number,password,response_to,mod_post FROM ' . POSTTABLE . ' WHERE post_number=' . $id . '');
     $post_data = $result->fetch(PDO::FETCH_ASSOC);
@@ -167,7 +167,7 @@ function nel_delete_content($dataforce, $sub, $type, $dbh)
     {
         $temp = $_SESSION['ignore_login'];
         
-        if (nel_is_authorized($_SESSION['username'], 'perm_delete'))
+        if ($_SESSION['perms']['perm_delete'])
         {
             if ($post_data['mod_post'] === '0')
             {
@@ -175,7 +175,7 @@ function nel_delete_content($dataforce, $sub, $type, $dbh)
             }
             else
             {
-                $staff_type = nel_get_user_setting($_SESSION['username'], 'staff_type');
+                $staff_type = $_SESSION['settings']['staff_type'];
                 
                 if ($post_data['mod_post'] === '3' && $staff_type === 'admin')
                 {

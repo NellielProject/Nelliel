@@ -4,13 +4,23 @@ define('BOARD_FILES', 'board_files/'); // Name of directory where the support an
 
 require_once BOARD_FILES . 'config.php';
 require_once INCLUDE_PATH . 'plugins.php';
+
+$plugin_files = glob(PLUGINS_PATH . '*.nel.php');
+$plugins = new nel_plugin_handler();
+
+foreach ($plugin_files as $file)
+{
+    require_once $file;
+}
+
+$plugins->activate();
+
 define('SHA256_AVAILABLE', in_array('sha256', hash_algos()));
 
 // This hashing is probably fine for most imageboards
 // If you need something stronger, it can be replaced by a plugin method
-function nel_hash($input)
+function nel_hash($input, $plugins)
 {
-    global $plugins;
     $methods = array('sha256', 'md5', FALSE, FALSE);
     $methods = $plugins->plugin_hook('hash-algorithms', TRUE, array($methods));
     
@@ -51,11 +61,11 @@ require_once INCLUDE_PATH . 'snacks.php';
 nel_ban_spambots($dataforce, $dbh);
 session_start();
 require_once INCLUDE_PATH . 'sessions.php';
-nel_initialize_session($dataforce);
+nel_initialize_session($dataforce, $plugins, $authorize);
 
 require_once INCLUDE_PATH . 'central_dispatch.php';
-nel_process_get($dataforce, $dbh);
-nel_process_post($dataforce, $dbh);
+nel_process_get($dataforce, $authorize, $dbh);
+nel_process_post($dataforce, $plugins, $authorize, $dbh);
 nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
 nel_clean_exit($dataforce, FALSE);
 

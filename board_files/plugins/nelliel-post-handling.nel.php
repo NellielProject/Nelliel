@@ -1,16 +1,15 @@
 <?php
-$nelliel_post_handling = new nelliel_post_handling();
+$nelliel_post_handling = new nelliel_post_handling($plugins);
 
 class nelliel_post_handling
 {
-    static $plugin_id;
+    private $plugin_id;
 
-    public function __construct()
+    public function __construct($plugins)
     {
-        global $plugins;
-        self::$plugin_id = $plugins->register_plugin('Default Post Handling', 'Nelliel', 'v1.0');
-        $plugins->register_hook_function('tripcode-processing', array($this, 'nel_standard_tripcode'), 10, self::$plugin_id);
-        $plugins->register_hook_function('secure-tripcode-processing', array($this, 'nel_secure_tripcode'), 10, self::$plugin_id);
+        $this->plugin_id = $plugins->register_plugin($this, 'Default Post Handling', 'Nelliel', 'v1.0');
+        $plugins->register_hook_function('tripcode-processing', array($this, 'nel_standard_tripcode'), 10, $this->plugin_id);
+        $plugins->register_hook_function('secure-tripcode-processing', array($this, 'nel_secure_tripcode'), 10, $this->plugin_id);
     }
 
     public function nel_standard_tripcode($poster_info, $name_pieces)

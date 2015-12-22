@@ -4,44 +4,35 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-$plugin_files = glob(PLUGINS_PATH . '*.nel.php');
-$plugins = new nel_plugin_handler();
-
-foreach ($plugin_files as $file)
-{
-    require_once $file;
-}
-
-$plugins->activate();
 class nel_plugin_handler
 {
-    private static $hooks = array();
-    private static $plugins = array();
-    private static $loaded = FALSE;
+    private $hooks = array();
+    private $plugins = array();
+    private $loaded = FALSE;
     
     // Returns TRUE if activation successful, FALSE if not (usually because activation was already done)
     public function activate()
     {
-        if (self::$loaded)
+        if ($this->loaded)
         {
             return FALSE;
         }
-        
+
         $this->sort_hooks();
-        self::$loaded = TRUE;
+        $this->loaded = TRUE;
         return TRUE;
     }
 
     private function sort_hooks()
     {
-        $hooks = self::$hooks;
+        $hooks = $this->hooks;
         
         foreach ($hooks as $key => $value)
         {
             usort($hooks[$key], array($this, 'sort_by_priority'));
         }
         
-        self::$hooks = $hooks;
+        $this->hooks = $hooks;
     }
 
     private function sort_by_priority($a, $b)
@@ -55,14 +46,16 @@ class nel_plugin_handler
     }
     
     // Returns a plugin id hash or FALSE if plugin already registered
-    public function register_plugin($name, $author, $version)
+    public function register_plugin($instance, $name, $author, $version)
     {
-        $plugins = self::$plugins;
         $plugin_id = $this->plugin_id_hash($name, $author, $version);
         
-        if (!in_array($plugin_id, $plugins, TRUE))
+        if (!in_array($plugin_id, $this->plugins, TRUE))
         {
-            self::$plugins[$plugin_id] = array($name, $author, $version);
+            $this->plugins[$plugin_id] = array('instance' => $instance,
+                                                'name' => $name,
+                                                'author' => $author,
+                                                'version' => $version);
             return $plugin_id;
         }
         else
@@ -80,7 +73,7 @@ class nel_plugin_handler
     // Register hook functions here
     public function register_hook_function($hook_name, $function_name, $priority, $plugin_id)
     {
-        $hooks = self::$hooks;
+        $hooks = $this->hooks;
         
         if (!isset($hooks[$hook_name]))
         {
@@ -93,13 +86,13 @@ class nel_plugin_handler
         }
         
         $hooks[$hook_name][] = array('function' => $function_name, 'priority' => $priority, 'index' => $next_index, 'plugin' => $plugin_id);
-        self::$hooks = $hooks;
+        $this->hooks = $hooks;
     }
     
     // Unregister hookk functions here. Returns TRUE is successful, FALSE if not
     public function unregister_hook_function($hook_name, $function_name, $priority, $plugin_id)
     {
-        $hooks = self::$hooks;
+        $hooks = $this->hooks;
         
         foreach ($hooks[$hook_name] as $key => $value)
         {
@@ -120,14 +113,14 @@ class nel_plugin_handler
             }
         }
         
-        self::$hooks = $hooks;
+        $this->hooks = $hooks;
         $this->sort_hooks();
         return TRUE;
     }
 
     public function plugin_hook($hook_name, $return_input, $input)
     {
-        $hooks = self::$hooks;
+        $hooks = $this->hooks;
         $return = $input[0];
         
         if (isset($hooks[$hook_name]))

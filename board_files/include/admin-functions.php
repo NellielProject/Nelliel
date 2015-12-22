@@ -14,7 +14,7 @@ function nel_valid($dataforce)
     if (!empty($_SESSION))
     {
         $dat .= nel_render_header($dataforce, 'ADMIN', array());
-        $rendervar = array_merge($rendervar, nel_get_user_auth($_SESSION['username']));
+        $rendervar = array_merge($rendervar, $_SESSION['perms']);
         $dat .= nel_parse_template('manage_options.tpl', FALSE);
         $dat .= nel_render_footer(FALSE, FALSE, FALSE, FALSE);
         echo $dat;
@@ -33,7 +33,7 @@ function nel_valid($dataforce)
 //
 function nel_update_ban($dataforce, $mode, $dbh)
 {
-    if (!nel_is_authorized($_SESSION['username'], 'perm_ban_panel'))
+    if (!$_SESSION['perms']['perm_ban_panel'])
     {
         nel_derp(101, array('origin' => 'ADMIN'));
     }
@@ -109,7 +109,7 @@ function nel_update_ban($dataforce, $mode, $dbh)
 
 
 // This whole section is messy but works. Will clean up later. Really.
-function nel_staff_panel($dataforce, $mode, $dbh)
+function nel_staff_panel($dataforce, $mode, $plugins, $authorize, $dbh)
 {
     global $rendervar;
     
@@ -117,7 +117,7 @@ function nel_staff_panel($dataforce, $mode, $dbh)
     $rendervar['enter_staff'] = TRUE;
     $rendervar['edit_staff'] = FALSE;
     
-    if (!nel_is_authorized($_SESSION['username'], 'perm_staff_panel'))
+    if (!$_SESSION['perms']['perm_staff_panel'])
     {
         nel_derp(102, array('origin' => 'ADMIN'));
     }
@@ -139,7 +139,7 @@ function nel_staff_panel($dataforce, $mode, $dbh)
                 }
             }
             
-            if (!nel_get_user_auth($rendervar['staff_name']))
+            if (!$authorize->get_user_auth($rendervar['staff_name']))
             {
                 nel_gen_new_staff($rendervar['staff_name'], $rendervar['staff_type']);
             }
@@ -154,15 +154,15 @@ function nel_staff_panel($dataforce, $mode, $dbh)
                 }
             }
             
-            if (!nel_get_user_auth($rendervar['staff_name']))
+            if (!$authorize->get_user_auth($rendervar['staff_name']))
             {
                 nel_derp(150, array('origin' => 'ADMIN'));
             }
         }
         
-        $temp_auth = nel_get_user_auth($rendervar['staff_name']);
-        array_walk($temp_auth, create_function('&$item1', '$item1 = is_bool($item1) ? $item1 === TRUE ? "checked" : "" : $item1;'));
-        $rendervar = array_merge($rendervar, $temp_auth);
+        $temp_auth = $authorize->get_user_auth($rendervar['staff_name']);
+        array_walk($temp_auth['perms'], create_function('&$item1', '$item1 = is_bool($item1) ? $item1 === TRUE ? "checked" : "" : $item1;'));
+        $rendervar = array_merge($rendervar, $temp_auth['perms']);
         $rendervar['edit_staff'] = TRUE;
         $rendervar['enter_staff'] = FALSE;
     }
@@ -171,19 +171,15 @@ function nel_staff_panel($dataforce, $mode, $dbh)
         $rendervar['enter_staff'] = TRUE;
         $rendervar['edit_staff'] = FALSE;
         $staff_name = $_POST['staff_name'];
-        $old_pass = nel_get_user_setting($staff_name, 'staff_password');
+        $old_pass = $authorize->get_user_setting($staff_name, 'staff_password');
         $new_pass = '';
-        //array_walk($authorized[$staff_name], 'nel_change_true_false');
-        //array_walk($authorized[$staff_name], 'clear_auth_settings');
-        //$authorized[$staff_name]['staff_password'] = $old_pass;
-        //$change_pass = FALSE;
-        $new_auth = nel_get_blank_settings();
+        $new_auth = $authorize->get_blank_settings();
         
         foreach ($_POST as $key => $val)
         {
             if ($key === 'staff_password')
             {
-                $new_pass = nel_hash($val);
+                $new_pass = nel_hash($val, $plugins);
             }
             
             if ($key === 'change_pass' && $new_pass != '')
@@ -203,17 +199,17 @@ function nel_staff_panel($dataforce, $mode, $dbh)
                 }
             }
             
-            nel_update_user_auth($staff_name, $new_auth);
+            $authorize->update_user_auth($staff_name, $new_auth, $authorize);
         }
         
-        nel_write_auth_file();
+        $authorize->write_auth_file();
     }
     else if ($mode === 'delete')
     {
         $rendervar['enter_staff'] = TRUE;
         $rendervar['edit_staff'] = FALSE;
-        nel_remove_user_auth($_POST['staff_name']);
-        nel_write_auth_file();
+        $authorize->remove_user_auth($_POST['staff_name']);
+        $authorize->write_auth_file();
     }
     
     $dat = nel_render_header($dataforce, 'ADMIN', array());
@@ -222,61 +218,61 @@ function nel_staff_panel($dataforce, $mode, $dbh)
     echo $dat;
 }
 
-function nel_gen_new_staff($new_name, $new_type)
+function nel_gen_new_staff($new_name, $new_type, $authorize)
 {
-    $new_auth = nel_get_blank_settings();
+    $new_auth = $authorize->get_blank_settings();
     
     if ($new_type === 'admin')
     {
-        nel_update_user_setting($new_name, 'perm_config', TRUE);
-        nel_update_user_setting($new_name, 'perm_staff_panel', TRUE);
-        nel_update_user_setting($new_name, 'perm_ban_panel', TRUE);
-        nel_update_user_setting($new_name, 'perm_thread_panel', TRUE);
-        nel_update_user_setting($new_name, 'perm_mod_mode', TRUE);
-        nel_update_user_setting($new_name, 'perm_ban', TRUE);
-        nel_update_user_setting($new_name, 'perm_delete', TRUE);
-        nel_update_user_setting($new_name, 'perm_post', TRUE);
-        nel_update_user_setting($new_name, 'perm_post_anon', TRUE);
-        nel_update_user_setting($new_name, 'perm_sticky', TRUE);
-        nel_update_user_setting($new_name, 'perm_update_pages', TRUE);
-        nel_update_user_setting($new_name, 'perm_update_cache', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_config', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_staff_panel', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_ban_panel', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_thread_panel', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_mod_mode', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_ban', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_delete', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_post', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_post_anon', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_sticky', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_update_pages', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_update_cache', TRUE);
     }
     else if ($new_type === 'moderator')
     {
-        nel_update_user_setting($new_name, 'perm_config', FALSE);
-        nel_update_user_setting($new_name, 'perm_staff_panel', FALSE);
-        nel_update_user_setting($new_name, 'perm_ban_panel', TRUE);
-        nel_update_user_setting($new_name, 'perm_thread_panel', TRUE);
-        nel_update_user_setting($new_name, 'perm_mod_mode', TRUE);
-        nel_update_user_setting($new_name, 'perm_ban', TRUE);
-        nel_update_user_setting($new_name, 'perm_delete', TRUE);
-        nel_update_user_setting($new_name, 'perm_post', TRUE);
-        nel_update_user_setting($new_name, 'perm_post_anon', TRUE);
-        nel_update_user_setting($new_name, 'perm_sticky', TRUE);
-        nel_update_user_setting($new_name, 'perm_update_pages', FALSE);
-        nel_update_user_setting($new_name, 'perm_update_cache', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_config', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_staff_panel', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_ban_panel', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_thread_panel', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_mod_mode', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_ban', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_delete', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_post', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_post_anon', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_sticky', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_update_pages', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_update_cache', FALSE);
     }
     else if ($new_type === 'janitor')
     {
-        nel_update_user_setting($new_name, 'perm_config', FALSE);
-        nel_update_user_setting($new_name, 'perm_staff_panel', FALSE);
-        nel_update_user_setting($new_name, 'perm_ban_panel', FALSE);
-        nel_update_user_setting($new_name, 'perm_thread_panel', FALSE);
-        nel_update_user_setting($new_name, 'perm_mod_mode', TRUE);
-        nel_update_user_setting($new_name, 'perm_ban', FALSE);
-        nel_update_user_setting($new_name, 'perm_delete', TRUE);
-        nel_update_user_setting($new_name, 'perm_post', FALSE);
-        nel_update_user_setting($new_name, 'perm_post_anon', FALSE);
-        nel_update_user_setting($new_name, 'perm_sticky', FALSE);
-        nel_update_user_setting($new_name, 'perm_update_pages', FALSE);
-        nel_update_user_setting($new_name, 'perm_update_cache', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_config', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_staff_panel', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_ban_panel', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_thread_panel', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_mod_mode', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_ban', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_delete', TRUE);
+        $authorize->update_user_setting($new_name, 'perm_post', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_post_anon', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_sticky', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_update_pages', FALSE);
+        $authorize->update_user_setting($new_name, 'perm_update_cache', FALSE);
     }
     else
     {
         nel_derp(151, array('origin' => 'ADMIN'));
     }
     
-    nel_write_auth_file();
+    $authorize->write_auth_file();
 }
 
 function nel_change_true_false(&$item1, $key)
@@ -297,7 +293,7 @@ function nel_admin_control($dataforce, $mode, $dbh)
     $rendervar['dotdot'] = '';
     $update = FALSE;
     
-    if (!nel_is_authorized($_SESSION['username'], 'perm_config'))
+    if (!$_SESSION['perms']['perm_config'])
     {
         nel_derp(102, array('origin' => 'ADMIN'));
     }
@@ -403,7 +399,7 @@ function nel_ban_control($dataforce, $mode, $dbh)
     
     $rendervar['dotdot'] = '';
     
-    if (!nel_is_authorized($_SESSION['username'], 'perm_ban_panel'))
+    if (!$_SESSION['perms']['perm_ban_panel'])
     {
         nel_derp(101, array('origin' => 'ADMIN'));
     }
@@ -466,7 +462,7 @@ function nel_thread_panel($dataforce, $mode, $dbh)
     // $rendervar['dotdot'] = '';
     $rendervar['expand_thread'] = FALSE;
     
-    if (!nel_is_authorized($_SESSION['username'], 'perm_thread_panel'))
+    if (!$_SESSION['perms']['perm_thread_panel'])
     {
         nel_derp(103, array('origin' => 'ADMIN'));
     }

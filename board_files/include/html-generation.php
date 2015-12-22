@@ -147,7 +147,7 @@ function nel_render_post($dataforce, $response, $partial, $gen_data, $treeline, 
     $rendervar['tripcode'] = (isset($rendervar['tripcode']) && $rendervar['tripcode'] !== '') ? BS_TRIPKEY_MARKER . $rendervar['tripcode'] : '';
     $rendervar['secure_tripcode'] = (isset($rendervar['secure_tripcode']) && $rendervar['secure_tripcode'] !== '') ? BS_TRIPKEY_MARKER . BS_TRIPKEY_MARKER . $rendervar['secure_tripcode'] : '';
     $rendervar['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $rendervar['comment']);
-    $rendervar['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'parse_links', $rendervar['comment']);
+    $rendervar['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'nel_parse_links', $rendervar['comment']);
     $rendervar['comment-part'] = utf8_str_replace('>><a href="../"', '>><a href="', $rendervar['comment']);
     $rendervar['sticky'] = (bool) $rendervar['sticky'];
     $temp_dot = ($partial) ? '' : $rendervar['dotdot'];
@@ -268,7 +268,7 @@ function nel_render_post($dataforce, $response, $partial, $gen_data, $treeline, 
     {
         $rendervar['logged_in'] = TRUE;
         $rendervar['host'] = (@inet_ntop($rendervar['host'])) ? inet_ntop($rendervar['host']) : 'Unknown';
-        $rendervar['perm_ban'] = nel_get_user_setting($_SESSION['username'], 'perm_ban');
+        $rendervar['perm_ban'] = $_SESSION['perms']['perm_ban'];
         $rendervar['page_ref1'] = PHP_SELF . '?mode=display&page=0';
         $rendervar['page_ref2'] = PHP_SELF . '?page=';
         $rendervar['the_session'] = session_id();
@@ -302,7 +302,7 @@ function nel_render_footer($link, $styles, $del, $response)
         $rendervar['logged_in'] = TRUE;
         $rendervar['main_page'] = FALSE;
         
-        if (nel_get_user_setting($_SESSION['username'], 'perm_ban'))
+        if ($_SESSION['perms']['perm_ban'])
         {
             $rendervar['perm_ban'] = TRUE;
         }

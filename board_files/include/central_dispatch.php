@@ -3,7 +3,7 @@
 //
 // This handles the GET requests
 //
-function nel_process_get($dataforce, $dbh)
+function nel_process_get($dataforce, $authorize, $dbh)
 {
     if (isset($dataforce['mode2']))
     {
@@ -39,7 +39,7 @@ function nel_process_get($dataforce, $dbh)
 //
 // This handles the POST requests
 //
-function nel_process_post($dataforce, $dbh)
+function nel_process_post($dataforce, $plugins, $authorize, $dbh)
 {
     global $fgsfds;
     
@@ -53,7 +53,7 @@ function nel_process_post($dataforce, $dbh)
                 {
                     if ($dataforce['banpost'])
                     {
-                        if (nel_is_authorized($_SESSION['username'], 'perm_ban'))
+                        if ($_SESSION['perms']['perm_ban'])
                         {
                             nel_ban_hammer($dataforce, $dbh);
                         }
@@ -63,7 +63,7 @@ function nel_process_post($dataforce, $dbh)
                         }
                     }
                     
-                    $updates = nel_thread_updates($dataforce, $dbh);
+                    $updates = nel_thread_updates($dataforce, $plugins, $dbh);
                     nel_regen($dataforce, $updates, 'thread', FALSE, $dbh);
                     nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
                     
@@ -71,13 +71,13 @@ function nel_process_post($dataforce, $dbh)
                     nel_clean_exit($dataforce, TRUE);
                 }
                 
-                $updates = nel_thread_updates($dataforce, $dbh);
+                $updates = nel_thread_updates($dataforce, $plugins, $dbh);
                 nel_regen($dataforce, $updates, 'thread', FALSE, $dbh);
                 nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
                 nel_clean_exit($dataforce, FALSE);
             
             case 'new_post':
-                nel_process_new_post($dataforce, $dbh);
+                nel_process_new_post($dataforce, $plugins, $dbh);
                 
                 if ($fgsfds['noko'])
                 {
@@ -123,7 +123,7 @@ function nel_process_post($dataforce, $dbh)
                             die();
                         
                         case 'staff':
-                            nel_staff_panel($dataforce, 'staff', $dbh);
+                            nel_staff_panel($dataforce, 'staff', $plugins, $authorize, $dbh);
                             die();
                         
                         case 'modmode':
@@ -151,7 +151,7 @@ function nel_process_post($dataforce, $dbh)
                             die();
                         
                         case 'addban':
-                            if (nel_is_authorized($_SESSION['username'], 'perm_ban'))
+                            if ($_SESSION['perms']['perm_ban'])
                             {
                                 nel_ban_hammer($dataforce, $dbh);
                                 nel_ban_control($dataforce, 'list', $dbh);
@@ -180,19 +180,19 @@ function nel_process_post($dataforce, $dbh)
                         
                         // Staff panel (done)
                         case 'updatestaff':
-                            nel_staff_panel($dataforce, 'update', $dbh);
+                            nel_staff_panel($dataforce, 'update', $plugins, $authorize, $dbh);
                             die();
                         
                         case 'deletestaff':
-                            nel_staff_panel($dataforce, 'delete', $dbh);
+                            nel_staff_panel($dataforce, 'delete', $plugins, $authorize, $dbh);
                             die();
                         
                         case 'addstaff':
-                            nel_staff_panel($dataforce, 'add', $dbh);
+                            nel_staff_panel($dataforce, 'add', $plugins, $authorize, $dbh);
                             die();
                         
                         case 'editstaff':
-                            nel_staff_panel($dataforce, 'edit', $dbh);
+                            nel_staff_panel($dataforce, 'edit', $plugins, $authorize, $dbh);
                             die();
                         
                         // Thread panel (done)

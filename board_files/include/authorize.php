@@ -7,99 +7,111 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Handle all the authorization functions
 //
-function nel_authorization($user, $setting, $is_update, $new_data)
+class nel_authorization
 {
-    static $authorized;
-    
-    if (!isset($authorized))
+    private $authorized = array();
+
+    function __construct()
     {
         include BOARD_FILES . 'auth_data.nel.php';
+        $this->authorized = $authorized;
     }
     
-    if (!is_null($user) && is_null($setting))
+    private function key_exists($key)
     {
-        if ($is_update)
+        return array_key_exists($key, $this->authorized);
+    }
+    
+    public function is_authorized($user, $setting)
+    {
+        if(is_boolean($this->authorized[$user][$setting]))
         {
-            if (is_null($new_data))
-            {
-                unset($authorized[$user]);
-            }
-            else
-            {
-                $authorized[$user] = $new_data;
-            }
+            return $this->authorized[$user][$setting];
         }
-        else
+        
+        return FALSE;
+    }
+
+    public function get_user_auth($user)
+    {
+        if($this->key_exists($user))
         {
-            if (!isset($authorized[$user]))
-            {
-                return FALSE;
-            }
-            
-            return $authorized[$user];
+            return $this->authorized[$user];
+        }
+        
+        return FALSE;
+    }
+    
+    public function get_user_setting($user, $setting)
+    {
+        if($this->key_exists($user))
+        {
+            return $this->authorized[$user]['settings'][$setting];
+        }
+    
+        return FALSE;
+    }
+    
+    public function get_user_perm($user, $perm)
+    {
+        if($this->key_exists($user))
+        {
+            return $this->authorized[$user]['perms'][$perm];
+        }
+    
+        return FALSE;
+    }
+    
+    public function update_user_auth($user, $update)
+    {
+        $this->authorized[$user] = $update;
+    }
+    
+    public function update_user_setting($user, $setting, $update)
+    {
+        return $this->authorized[$user]['settings'][$setting] = $update;
+    }
+    
+    public function update_user_perm($user, $perm, $update)
+    {
+        return $this->authorized[$user]['perms'][$perm] = $update;
+    }
+    
+    public function remove_user_auth($user)
+    {
+        if($this->key_exists($user))
+        {
+            unset($this->authorized[$user]);
         }
     }
-    else if (!is_null($user) && !is_null($setting))
+    
+    public function get_blank_settings()
     {
-        if ($is_update)
-        {
-            $authorized[$user][$setting] = $new_data;
-        }
-        else
-        {
-            if (!isset($authorized[$user]) || !isset($authorized[$user][$setting]))
-            {
-                return FALSE;
-            }
-            
-            return $authorized[$user][$setting];
-        }
+        return array(
+            'settings' => array(
+                'staff_password' => '',
+                'staff_type' => '',
+                'staff_trip' => ''),
+            'perms' => array(
+                'perm_config' => FALSE,
+                'perm_staff_panel' => FALSE,
+                'perm_ban_panel' => FALSE,
+                'perm_thread_panel' => FALSE,
+                'perm_mod_mode' => FALSE,
+                'perm_ban' => FALSE,
+                'perm_delete' => FALSE,
+                'perm_post' => FALSE,
+                'perm_post_anon' => FALSE,
+                'perm_sticky' => FALSE,
+                'perm_update_pages' => FALSE,
+                'perm_update_cache' => FALSE));
     }
-    else
+    
+    public function write_auth_file()
     {
-        return $authorized;
+        $new_auth = '<?php $authorized = ' . var_export($this->authorized) . '?>';
+        nel_write_file(FILES_PATH . '/auth_data.nel.php', $new_auth, 0644);
     }
-}
-
-function nel_get_user_auth($user)
-{
-    return nel_authorization($user, NULL, FALSE, NULL);
-}
-
-function nel_get_user_setting($user, $setting)
-{
-    return nel_authorization($user, $setting, FALSE, NULL);
-}
-
-function nel_update_user_auth($user, $update)
-{
-    nel_authorization($user, NULL, TRUE, $update);
-}
-
-function nel_update_user_setting($user, $setting, $update)
-{
-    nel_authorization($user, $setting, TRUE, $update);
-}
-
-function nel_is_authorized($user, $perm)
-{
-    return nel_authorization($user, $perm, FALSE, NULL);
-}
-
-function nel_remove_user_auth($user)
-{
-    nel_authorization($user, NULL, TRUE, NULL);
-}
-
-function nel_get_blank_settings()
-{
-    return array('staff_password' => '', 'staff_type' => '', 'staff_trip' => '', 'perm_config' => FALSE, 'perm_staff_panel' => FALSE, 'perm_ban_panel' => FALSE, 'perm_thread_panel' => FALSE, 'perm_mod_mode' => FALSE, 'perm_ban' => FALSE, 'perm_delete' => FALSE, 'perm_post' => FALSE, 'perm_post_anon' => FALSE, 'perm_sticky' => FALSE, 'perm_update_pages' => FALSE, 'perm_update_cache' => FALSE);
-}
-
-function nel_write_auth_file()
-{
-    $new_auth = '<?php $authorized = ' . var_export(nel_authorization(NULL, NULL, NULL, NULL), TRUE) . '?>';
-    nel_write_file(FILES_PATH . '/auth_data.nel.php', $new_auth, 0644);
 }
 
 ?>
