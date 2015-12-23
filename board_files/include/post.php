@@ -185,8 +185,25 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
                 }
             }
         }
-        
+
+        if ($name_pieces[3] !== '' && BS1_ALLOW_TRIPKEYS)
+        {
+            $cap = utf8_strtr($name_pieces[3], '&amp;', '&');
+            $cap = utf8_strtr($cap, '&#44;', ',');
+            $salt = utf8_substr($cap . 'H.', 1, 2);
+            $salt = preg_replace('#[^\.-z]#', '.#', $salt);
+            $salt = utf8_strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
+            $poster_info['tripcode'] = utf8_substr(crypt($cap, $salt), -10);
+        }
+
         $poster_info = $plugins->plugin_hook('tripcode-processing', TRUE, array($poster_info, $name_pieces));
+        
+        if ($name_pieces[5] !== '' || $modpostc > 0)
+        {
+            $trip = nel_hash($name_pieces[5]);
+            $poster_info['secure_tripcode'] = utf8_substr(crypt($trip, '42'), -12);
+        }
+        
         $poster_info = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($poster_info, $name_pieces, $modpostc));
         
         if ($name_pieces[1] === '' || $_SESSION['perms']['perm_post_anon'])

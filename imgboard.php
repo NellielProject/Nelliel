@@ -15,6 +15,9 @@ foreach ($plugin_files as $file)
 
 $plugins->activate();
 
+// A demo point. Does nothing, really
+$example_result = $plugins->plugin_hook('plugin-example', TRUE, array(5));
+
 define('SHA256_AVAILABLE', in_array('sha256', hash_algos()));
 
 // This hashing is probably fine for most imageboards
