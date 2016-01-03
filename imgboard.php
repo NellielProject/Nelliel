@@ -53,9 +53,9 @@ require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'universal-functions.php'; // Someday this shall be no more
 require_once INCLUDE_PATH . 'thread-functions.php';
 require_once INCLUDE_PATH . 'admin-functions.php';
-require_once INCLUDE_PATH . 'thread-generation.php';
-require_once INCLUDE_PATH . 'main-generation.php';
-require_once INCLUDE_PATH . 'html-generation.php';
+require_once INCLUDE_PATH . 'output-generation/thread-generation.php';
+require_once INCLUDE_PATH . 'output-generation/main-generation.php';
+require_once INCLUDE_PATH . 'output-generation/html-generation.php';
 require_once INCLUDE_PATH . 'post.php';
 require_once INCLUDE_PATH . 'snacks.php';
 

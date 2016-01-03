@@ -69,7 +69,7 @@ function nel_initialize_session($dataforce, $plugins, $authorize)
             else if ($dataforce['mode2'] === 'admin')
             {
                 nel_regen_session();
-                nel_valid($dataforce);
+                nel_valid($dataforce, $authorize);
                 die();
             }
         }
@@ -89,7 +89,6 @@ function nel_initialize_session($dataforce, $plugins, $authorize)
             // We set up the session here
             $_SESSION['ignore_login'] = FALSE;
             $_SESSION['username'] = $dataforce['username'];
-            $_SESSION['password'] = $dataforce['admin_pass'];
             $_SESSION['login_time'] = time();
             $_SESSION['last_activity'] = time();
             $user_auth = $authorize->get_user_auth($dataforce['username']);
@@ -103,7 +102,7 @@ function nel_initialize_session($dataforce, $plugins, $authorize)
         }
         
         nel_set_session_cookie();
-        nel_valid($dataforce);
+        nel_valid($dataforce, $authorize);
         die();
     }
     else

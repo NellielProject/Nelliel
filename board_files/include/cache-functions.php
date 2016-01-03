@@ -238,7 +238,7 @@ function nel_cache_settings($dbh)
         ++ $i;
     }
     
-    $fvars = utf8_substr($fvars, 0, utf8_strlen($fvars) - 4) . ');';
+    $fvars = utf8_substr($fvars, 0, utf8_strlen($fvars) - 1) . ');';
     $final_vars = '<?php ' . $vars1 . $vars2 . $fvars . ' ?>';
     
     nel_write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, 0644);
@@ -262,7 +262,7 @@ function nel_regen_template_cache()
     foreach (glob(TEMPLATE_PATH . '*.tpl') as $template)
     {
         $template = basename($template);
-        nel_parse_template($template, TRUE);
+        nel_parse_template($template, '', TRUE);
     }
 }
 
@@ -281,7 +281,7 @@ function nel_reset_template_status()
 //
 function nel_write_multi_cache($dataforce)
 {
-    global $template_info;
+    $template_info = nel_template_info(NULL, NULL, NULL, TRUE);
     
     nel_reset_template_status();
     $cache = '<?php

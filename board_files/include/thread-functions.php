@@ -157,6 +157,7 @@ function nel_delete_content($dataforce, $sub, $type, $plugins, $dbh)
     }
     
     $flag = FALSE;
+    //nel_render_in('main_page', FALSE);
     $hashed_pass = nel_hash($dataforce['pass'], $plugins);
     $hashed_pass = utf8_substr($hashed_pass, 0, 16);
     $result = $dbh->query('SELECT post_number,password,response_to,mod_post FROM ' . POSTTABLE . ' WHERE post_number=' . $id . '');

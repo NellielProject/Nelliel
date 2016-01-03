@@ -33,45 +33,56 @@ generate_auth_file($plugins);
 require_once INCLUDE_PATH . 'authorize.php';
 $authorize = new nel_authorization();
 require_once INCLUDE_PATH . 'language.php';
+require_once INCLUDE_PATH . 'template.php';
+require_once INCLUDE_PATH . 'render.php';
 
+nel_render_add_default('dotdot', '');
 $template_info = array();
-$rendervar = array();
 $dataforce = array();
 $enabled_types = array();
 
-$dataforce['mode'] = (isset($_POST['mode'])) ? $_POST['mode'] : NULL;
-$dataforce['mode_extra'] = (isset($_POST['mode2'])) ? $_POST['mode2'] : NULL;
-$dataforce['admin_mode'] = (isset($_POST['adminmode'])) ? $_POST['adminmode'] : NULL;
-$dataforce['name'] = (!empty($_POST['notanonymous'])) ? $_POST['notanonymous'] : '';
-$dataforce['email'] = (!empty($_POST['spamtarget'])) ? $_POST['spamtarget'] : '';
-$dataforce['subject'] = (!empty($_POST['verb'])) ? $_POST['verb'] : '';
-$dataforce['comment'] = (!empty($_POST['wordswordswords'])) ? $_POST['wordswordswords'] : '';
-$dataforce['fgsfds'] = (!empty($_POST['fgsfds'])) ? $_POST['fgsfds'] : NULL;
-$dataforce['file_source'] = (!empty($_POST['sauce'])) ? $_POST['sauce'] : NULL;
-$dataforce['file_license'] = (!empty($_POST['loldrama'])) ? $_POST['loldrama'] : NULL;
-$dataforce['pass'] = (isset($_POST['sekrit'])) ? $_POST['sekrit'] : NULL;
-$dataforce['admin_pass'] = (isset($_POST['super_sekrit'])) ? $_POST['super_sekrit'] : NULL;
-$dataforce['username'] = (isset($_POST['username'])) ? $_POST['username'] : NULL;
-$dataforce['usrdel'] = (isset($_POST['usrdel'])) ? $_POST['usrdel'] : NULL;
-$dataforce['expand_thread'] = (isset($_POST['expand_thread'])) ? $_POST['expand_thread'] : NULL;
-$dataforce['banpost'] = (isset($_POST['banpost'])) ? TRUE : FALSE;
-$dataforce['banid'] = (isset($_POST['banid']) && is_numeric($_POST['banid'])) ? (int) $_POST['banid'] : NULL;
-$dataforce['banreason'] = (isset($_POST['banreason'])) ? $_POST['banreason'] : NULL;
-$dataforce['banip'] = (isset($_POST['ban_ip'])) ? $_POST['ban_ip'] : NULL;
-$dataforce['timedays'] = (isset($_POST['timedays'])) && is_numeric($_POST['timedays']) ? (int) $_POST['timedays'] : NULL;
-$dataforce['timehours'] = (isset($_POST['timehours'])) && is_numeric($_POST['timehours']) ? (int) $_POST['timehours'] : NULL;
-$dataforce['only_delete_file'] = (isset($_POST['onlyimgdel'])) ? TRUE : FALSE;
-$dataforce['response_to'] = (isset($_POST['response_to']) && is_numeric($_POST['response_to'])) ? (int) $_POST['response_to'] : NULL;
 $dataforce['page_gen'] = 'main';
-$dataforce['mode2'] = (isset($_GET['mode'])) ? $_GET['mode'] : NULL;
-$dataforce['current_page'] = (isset($_GET['page'])) ? $_GET['page'] : NULL;
-$dataforce['expand'] = (isset($_GET['expand'])) ? TRUE : FALSE;
-$dataforce['collapse'] = (isset($_GET['collapse'])) ? TRUE : FALSE;
-$dataforce['response_id'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? (int) $_GET['post'] : NULL;
 $dataforce['archive_update'] = FALSE;
-$dataforce['sp_field1'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD1')] : NULL;
-$dataforce['sp_field2'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD2')] : NULL;
 $dataforce['post_links'] = '';
+
+if(!empty($_POST))
+{
+    $dataforce['mode'] = (isset($_POST['mode'])) ? $_POST['mode'] : NULL;
+    $dataforce['mode_extra'] = (isset($_POST['mode2'])) ? $_POST['mode2'] : NULL;
+    $dataforce['admin_mode'] = (isset($_POST['adminmode'])) ? $_POST['adminmode'] : NULL;
+    $dataforce['name'] = (!empty($_POST['notanonymous'])) ? $_POST['notanonymous'] : '';
+    $dataforce['email'] = (!empty($_POST['spamtarget'])) ? $_POST['spamtarget'] : '';
+    $dataforce['subject'] = (!empty($_POST['verb'])) ? $_POST['verb'] : '';
+    $dataforce['comment'] = (!empty($_POST['wordswordswords'])) ? $_POST['wordswordswords'] : '';
+    $dataforce['fgsfds'] = (!empty($_POST['fgsfds'])) ? $_POST['fgsfds'] : NULL;
+    $dataforce['file_source'] = (!empty($_POST['sauce'])) ? $_POST['sauce'] : NULL;
+    $dataforce['file_license'] = (!empty($_POST['loldrama'])) ? $_POST['loldrama'] : NULL;
+    $dataforce['pass'] = (isset($_POST['sekrit'])) ? $_POST['sekrit'] : NULL;
+    $dataforce['admin_pass'] = (isset($_POST['super_sekrit'])) ? $_POST['super_sekrit'] : NULL;
+    $dataforce['username'] = (isset($_POST['username'])) ? $_POST['username'] : NULL;
+    $dataforce['usrdel'] = (isset($_POST['usrdel'])) ? $_POST['usrdel'] : NULL;
+    $dataforce['expand_thread'] = (isset($_POST['expand_thread'])) ? $_POST['expand_thread'] : NULL;
+    $dataforce['delpost'] = (isset($_POST['delpost'])) ? TRUE : FALSE;
+    $dataforce['banpost'] = (isset($_POST['banpost'])) ? TRUE : FALSE;
+    $dataforce['banid'] = (isset($_POST['banid']) && is_numeric($_POST['banid'])) ? (int) $_POST['banid'] : NULL;
+    $dataforce['banreason'] = (isset($_POST['banreason'])) ? $_POST['banreason'] : NULL;
+    $dataforce['banip'] = (isset($_POST['ban_ip'])) ? $_POST['ban_ip'] : NULL;
+    $dataforce['timedays'] = (isset($_POST['timedays'])) && is_numeric($_POST['timedays']) ? (int) $_POST['timedays'] : NULL;
+    $dataforce['timehours'] = (isset($_POST['timehours'])) && is_numeric($_POST['timehours']) ? (int) $_POST['timehours'] : NULL;
+    $dataforce['response_to'] = (isset($_POST['response_to']) && is_numeric($_POST['response_to'])) ? (int) $_POST['response_to'] : NULL;
+    $dataforce['only_delete_file'] = (isset($_POST['onlyimgdel'])) ? TRUE : FALSE;
+    $dataforce['sp_field1'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD1')] : NULL;
+    $dataforce['sp_field2'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD2')] : NULL;
+}
+
+if(!empty($_GET))
+{
+    $dataforce['mode2'] = (isset($_GET['mode'])) ? $_GET['mode'] : NULL;
+    $dataforce['current_page'] = (isset($_GET['page'])) ? $_GET['page'] : NULL;
+    $dataforce['expand'] = (isset($_GET['expand'])) ? TRUE : FALSE;
+    $dataforce['collapse'] = (isset($_GET['collapse'])) ? TRUE : FALSE;
+    $dataforce['response_id'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? (int) $_GET['post'] : NULL;
+}
 
 $link_updates = '';
 $start_html = 0;

@@ -1,44 +1,44 @@
-{{ if $rendervar['omitted_posts'] }}
-                <span class="omitted-posts">{$rendervar['omitted_count']}{nel_stext('TEXT_OMITTED_POSTS')}</span><br>
+{{ if nel_render_out('omitted_posts') }}
+                <span class="omitted-posts">{nel_render_out('omitted_count')}{nel_stext('TEXT_OMITTED_POSTS')}</span><br>
 {{ endif }}
-                <a id="p{$rendervar['post_number']}"></a>
+                <a id="p{nel_render_out('post_number')}"></a>
                 <div class="indents">&gt;&gt;</div>
                 <div class="reply-post">
-                    <input type="checkbox" name="thread_{$rendervar['post_number']}" value="deletethread_{$rendervar['post_number']}" title="Delete entire post"><span class="reply-subject">{$rendervar['subject']}</span>
+                    <input type="checkbox" name="thread_{nel_render_out('post_number')}" value="deletethread_{nel_render_out('post_number')}" title="Delete entire post"><span class="reply-subject">{nel_render_out('subject')}</span>
                     <span class="reply-poster-name">
-{{ if $rendervar['email'] }}
-                    <a href="mailto:{$rendervar['email']}" class="mailto-name">{$rendervar['name']}</a>{$rendervar['tripcode']}{$rendervar['secure_tripcode']}&nbsp;&nbsp;{$rendervar['staff_post']}
+{{ if nel_render_out('email') }}
+                    <a href="mailto:{nel_render_out('email')}" class="mailto-name">{nel_render_out('name')}</a>{nel_render_out('tripcode')}{nel_render_out('secure_tripcode')}&nbsp;&nbsp;{nel_render_out('staff_post')}
 {{ else }}
-                    {$rendervar['name']}{$rendervar['tripcode']}{$rendervar['secure_tripcode']}&nbsp;&nbsp;{$rendervar['staff_post']}
+                    {nel_render_out('name')}{nel_render_out('tripcode')}{nel_render_out('secure_tripcode')}&nbsp;&nbsp;{nel_render_out('staff_post')}
 {{ endif }}
                     </span>
-{{ if $rendervar['response_id'] }}
-                    {$rendervar['post_time']} No. <a href="javascript:postQuote('{$rendervar['post_number']}')" class="post-link">{$rendervar['post_number']}</a>&nbsp;
+{{ if nel_render_out('response_id') }}
+                    {nel_render_out('post_time')} No. <a href="javascript:postQuote('{nel_render_out('post_number')}')" class="post-link">{nel_render_out('post_number')}</a>&nbsp;
 {{ else }}
-                    {$rendervar['post_time']} No. <a href="{PAGE_DIR}{$rendervar['response_to']}/{$rendervar['response_to']}.html#p{$rendervar['post_number']}" class="post-link">{$rendervar['post_number']}</a>&nbsp;
+                    {nel_render_out('post_time')} No. <a href="{PAGE_DIR}{nel_render_out('response_to')}/{nel_render_out('response_to')}.html#p{nel_render_out('post_number')}" class="post-link">{nel_render_out('post_number')}</a>&nbsp;
 {{ endif }}
-{{ if $rendervar['sticky'] }}
-                    <img src="{$rendervar['dotdot']}{BOARD_FILES}/imagez/nelliel/{nel_stext('THREAD_STICKY_ICON')}" width="22" height="22" alt="{nel_stext('THREAD_STICKY')}">
+{{ if nel_render_out('sticky') }}
+                    <img src="{nel_render_out('dotdot')}{BOARD_FILES}/imagez/nelliel/{nel_stext('THREAD_STICKY_ICON')}" width="22" height="22" alt="{nel_stext('THREAD_STICKY')}">
 {{ endif }}
                     <br>
-{{ if $rendervar['logged_in'] }}
-                    <br>IP: <b>{$rendervar['host']}</b>
-    {{ if $rendervar['perm_ban'] }}
-                    <input type="button" onClick="addBanDetails('ban{$rendervar['post_number']}', '{$rendervar['post_number']}', '{$rendervar['name']}', '{$rendervar['host']}')" value="Set Ban Details">
+{{ if nel_render_out('logged_in') }}
+                    <br>IP: <b>{nel_render_out('host')}</b>
+    {{ if $_SESSION['perms']['perm_ban'] }}
+                    <input type="button" onClick="addBanDetails('ban{nel_render_out('post_number')}', '{nel_render_out('post_number')}', '{nel_render_out('name')}', '{nel_render_out('host')}')" value="Set Ban Details">
     {{ endif }}
 {{ endif }}
                     <div class="clear"></div>
-{{ if $rendervar['has_file'] }}
-    {{ foreach $rendervar['files'] as $file }}
-        {{ if $rendervar['multifile'] }}
+{{ if nel_render_out('has_file') }}
+    {{ foreach nel_render_out('files') as $file }}
+        {{ if nel_render_out('multifile') }}
                         <div class="reply-multiple-fileinfo">
             {{ if BS1_USE_NEW_IMGDEL }}
-                        <input type="checkbox" name="fileid{$rendervar['post_number']}_{$file['file_order']}" value="deletefile_{$rendervar['post_number']}_{$file['file_order']}" title="Delete file" class="multi-file-delete-box">
+                        <input type="checkbox" name="fileid{nel_render_out('post_number')}_{$file['file_order']}" value="deletefile_{nel_render_out('post_number')}_{$file['file_order']}" title="Delete file" class="multi-file-delete-box">
             {{ endif }}
                         <a href="{$file['file_location']}" rel="external">{$file['filename']}.{$file['extension']}</a>
                         <br>{{ if $file['img_dim'] }}{$file['image_width']} x {$file['image_height']}{{ endif }} ({$file['filesize']} KB)
-                        <br>[<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['file_order']}','showimgmeta{$rendervar['post_number']}_{$file['file_order']}','none','{nel_stext('THREAD_LESS_DATA')}')" id="showimgmeta{$rendervar['post_number']}_{$file['file_order']}">{nel_stext('THREAD_MOAR_DATA')}</a>]
-                        <span id="imgmeta{$rendervar['post_number']}_{$file['file_order']}" class="none">
+                        <br>[<a href="javascript:displayImgMeta('imgmeta{nel_render_out('post_number')}_{$file['file_order']}','showimgmeta{nel_render_out('post_number')}_{$file['file_order']}','none','{nel_stext('THREAD_LESS_DATA')}')" id="showimgmeta{nel_render_out('post_number')}_{$file['file_order']}">{nel_stext('THREAD_MOAR_DATA')}</a>]
+                        <span id="imgmeta{nel_render_out('post_number')}_{$file['file_order']}" class="none">
             {{ if $file['source'] != '' }}
                         <br><span class="source">Source: {$file['source']}</span>
             {{ endif }}
@@ -55,12 +55,12 @@
         {{ else }}
                     <div class="reply-fileinfo">
             {{ if BS1_USE_NEW_IMGDEL }}
-                        <span class="file-delete-box"><input type="checkbox" name="fileid{$rendervar['post_number']}_{$file['file_order']}" value="deletefile_{$rendervar['post_number']}_{$file['file_order']}" title="Delete file"></span>
+                        <span class="file-delete-box"><input type="checkbox" name="fileid{nel_render_out('post_number')}_{$file['file_order']}" value="deletefile_{nel_render_out('post_number')}_{$file['file_order']}" title="Delete file"></span>
             {{ endif }}
                         <a href="{$file['file_location']}" rel="external">{$file['filename']}.{$file['extension']}</a> - 
             {{ if $file['img_dim'] }}{$file['image_width']} x {$file['image_height']}{{ endif }} ({$file['filesize']} KB)
-                        [<a href="javascript:displayImgMeta('imgmeta{$rendervar['post_number']}_{$file['file_order']}','showimgmeta{$rendervar['post_number']}_{$file['file_order']}','none','{nel_stext('THREAD_LESS_DATA')}')" id="showimgmeta{$rendervar['post_number']}_{$file['file_order']}">{nel_stext('THREAD_MOAR_DATA')}</a>]
-                        <span id="imgmeta{$rendervar['post_number']}_{$file['file_order']}" class="none">
+                        [<a href="javascript:displayImgMeta('imgmeta{nel_render_out('post_number')}_{$file['file_order']}','showimgmeta{nel_render_out('post_number')}_{$file['file_order']}','none','{nel_stext('THREAD_LESS_DATA')}')" id="showimgmeta{nel_render_out('post_number')}_{$file['file_order']}">{nel_stext('THREAD_MOAR_DATA')}</a>]
+                        <span id="imgmeta{nel_render_out('post_number')}_{$file['file_order']}" class="none">
             {{ if $file['source'] != '' }}
                         <br><span class="source">Source: {$file['source']}</span>
             {{ endif }}
@@ -78,9 +78,9 @@
     {{ endforeach }}
 {{ endif }}
                     <p class="reply-post-text clear">
-                        {$rendervar['comment']}
-                        <span class="mod-comment"><b>{$rendervar['mod_comment']}</b></span>
+                        {nel_render_out('comment')}
+                        <span class="mod-comment"><b>{nel_render_out('mod_comment')}</b></span>
                     </p>
-                    <div id="ban{$rendervar['post_number']}"></div>
+                    <div id="ban{nel_render_out('post_number')}"></div>
                 </div>
                 <div class="clear"></div>

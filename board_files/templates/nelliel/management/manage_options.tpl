@@ -7,26 +7,26 @@
     <form action="imgboard.php" method="post" enctype="multipart/form-data">
         <div>
             <input type="hidden" name="mode" value="admin">
-{{ if $rendervar['perm_config'] }}
+{{ if $_SESSION['perms']['perm_config'] }}
             <input type="radio" name="adminmode" id="admin" value="admincontrol"><label for="admin">{nel_stext('MANAGE_OPT_SETTINGS')}</label><br>
 {{ endif }}
-{{ if $rendervar['perm_ban_panel'] }}
+{{ if $_SESSION['perms']['perm_ban_panel'] }}
             <input type="radio" name="adminmode" id="ban" value="bancontrol"><label for="ban">{nel_stext('MANAGE_OPT_BAN')}</label><br>
 {{ endif }}
-{{ if $rendervar['perm_thread_panel'] }}
+{{ if $_SESSION['perms']['perm_thread_panel'] }}
             <input type="radio" name="adminmode" id="mod" value="modcontrol"><label for="mod">{nel_stext('MANAGE_OPT_THREAD')}</label><br>
 {{ endif }}
-{{ if $rendervar['perm_staff_panel'] }}
+{{ if $_SESSION['perms']['perm_staff_panel'] }}
             <input type="radio" name="adminmode" id="staff" value="staff"><label for="staff">{nel_stext('MANAGE_OPT_STAFF')}</label><br>
 {{ endif }}
-{{ if $rendervar['perm_mod_mode'] }}
+{{ if $_SESSION['perms']['perm_mod_mode'] }}
             <input type="radio" name="adminmode" id="mmode" value="modmode"><label for="mmode">{nel_stext('MANAGE_OPT_MMODE')}</label><br>
 {{ endif }}
             <input type="submit" value="{nel_stext('FORM_SUBMIT')}">
         </div>
     </form>
     <hr>
-{{ if $rendervar['perm_update_pages'] }}
+{{ if $_SESSION['perms']['perm_update_pages'] }}
     <form action="imgboard.php" method="post" enctype="multipart/form-data">
         <div>
             <input type="hidden" name="mode" value="admin">
@@ -36,7 +36,7 @@
         </div>
     </form>
 {{ endif }}
-{{ if $rendervar['perm_update_cache'] }}
+{{ if $_SESSION['perms']['perm_update_cache'] }}
     <form action="imgboard.php" method="post" enctype="multipart/form-data">
         <div>
             <input type="hidden" name="mode" value="admin">

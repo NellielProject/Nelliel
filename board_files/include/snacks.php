@@ -95,8 +95,6 @@ function nel_word_filters($text)
 //
 function nel_apply_ban($dataforce, $dbh)
 {
-    global $rendervar;
-    
     $base_host = $_SERVER["REMOTE_ADDR"];
     
     if ($dataforce['mode'] === 'banappeal')
@@ -128,9 +126,9 @@ function nel_apply_ban($dataforce, $dbh)
     $bandata = $prepared->fetch(PDO::FETCH_ASSOC);
     unset($prepared);
     
-    $length_base = $bandata['length'] + $bandata['ban_time'];
+    $bandata['length_base'] = $bandata['length'] + $bandata['ban_time'];
     
-    if (time() >= $length_base)
+    if (time() >= $bandata['length_base'])
     {
         $prepared = $dbh->prepare('DELETE FROM ' . BANTABLE . ' WHERE id=:banid');
         $prepared->bindParam(':banid', $bandata['id'], PDO::PARAM_INT);
@@ -145,15 +143,7 @@ function nel_apply_ban($dataforce, $dbh)
             nel_terminate_session();
         }
         
-        $rendervar = $bandata;
-        $rendervar['appeal_status'] = (int) $rendervar['appeal_status'];
-        $rendervar['format_length'] = date("D F jS Y  H:i", $length_base);
-        $rendervar['format_time'] = date("D F jS Y  H:i", $bandata['ban_time']);
-        $rendervar['host'] = @inet_ntop($rendervar['host']) ? inet_ntop($rendervar['host']) : 'Unknown';
-        lol_html_timer(0);
-        $dat = nel_render_header($dataforce, 'BAN', array());
-        $dat .= nel_parse_template('ban_page.tpl', FALSE);
-        $dat .= nel_render_footer(FALSE, FALSE, FALSE, FALSE);
+        $dat = nel_render_ban_page($dataforce, $bandata);
         echo $dat;
         die();
     }

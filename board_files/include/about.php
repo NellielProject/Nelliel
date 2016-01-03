@@ -44,6 +44,9 @@ function about_screen()
             <p>
                 Default filetype icons are from the Soft Scraps pack made by <a href="http://deleket.deviantart.com/" title="Deleket">Deleket</a>
             </p>
+            <p>
+                <a href="http://pageconfig.com/post/portable-utf8" title="Portable UTF-8">Portable UTF-8</a> library created by <a href="http://pageconfig.com">Hamid Sarfraz</a>.
+            </p>
             <p class="text-center">
                 <a href="' . PHP_SELF2 . PHP_EXT . '">' . nel_stext('LINK_RETURN') . '</a>
             </p>

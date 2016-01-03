@@ -25,7 +25,7 @@ function nel_process_get($dataforce, $authorize, $dbh)
                 die();
             
             case 'admin':
-                nel_valid($dataforce);
+                nel_valid($dataforce, $authorize);
                 die();
             
             case 'about':
@@ -48,12 +48,13 @@ function nel_process_post($dataforce, $plugins, $authorize, $dbh)
         switch ($dataforce['mode']) // Even moar modes
         {
             case 'update':
-                
+                $updates = 0;
+
                 if (!empty($_SESSION) && isset($dataforce['admin_mode']) && $dataforce['admin_mode'] === 'modmode')
                 {
                     if ($dataforce['banpost'])
                     {
-                        if ($_SESSION['perms']['perm_ban'])
+                        if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban'))
                         {
                             nel_ban_hammer($dataforce, $dbh);
                         }
@@ -63,7 +64,18 @@ function nel_process_post($dataforce, $plugins, $authorize, $dbh)
                         }
                     }
                     
-                    $updates = nel_thread_updates($dataforce, $plugins, $dbh);
+                    if($dataforce['delpost'])
+                    {
+                        if ($authorize->get_user_perm($_SESSION['username'], 'perm_delete'))
+                        {
+                            $updates = nel_thread_updates($dataforce, $plugins, $dbh);
+                        }
+                        else
+                        {
+                            nel_derp(108, array('origin' => 'DISPATCH'));
+                        }
+                    }
+
                     nel_regen($dataforce, $updates, 'thread', FALSE, $dbh);
                     nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
                     
@@ -111,15 +123,15 @@ function nel_process_post($dataforce, $plugins, $authorize, $dbh)
                     {
                         // Options list (done)
                         case 'admincontrol':
-                            nel_admin_control($dataforce, 'null', $dbh);
+                            nel_admin_control($dataforce, 'null', $authorize, $dbh);
                             die();
                         
                         case 'bancontrol':
-                            nel_ban_control($dataforce, 'list', $dbh);
+                            nel_ban_control($dataforce, 'list', $authorize, $dbh);
                             die();
                         
                         case 'modcontrol':
-                            nel_thread_panel($dataforce, 'list', $dbh);
+                            nel_thread_panel($dataforce, 'list', $authorize, $dbh);
                             die();
                         
                         case 'staff':
@@ -132,17 +144,17 @@ function nel_process_post($dataforce, $plugins, $authorize, $dbh)
                         
                         case 'fullupdate':
                             nel_regen($dataforce, NULL, 'full', FALSE, $dbh);
-                            nel_valid($dataforce);
+                            nel_valid($dataforce, $authorize);
                             nel_clean_exit($dataforce, TRUE);
                         
                         case 'updatecache':
                             nel_regen($dataforce, NULL, 'update_all_cache', FALSE, $dbh);
-                            nel_valid($dataforce);
+                            nel_valid($dataforce, $authorize);
                             nel_clean_exit($dataforce, TRUE);
                         
                         // Settings panel
                         case 'changesettings':
-                            nel_admin_control($dataforce, 'set', $dbh);
+                            nel_admin_control($dataforce, 'set', $authorize, $dbh);
                             die();
                         
                         // Bans panel (done)
@@ -151,10 +163,10 @@ function nel_process_post($dataforce, $plugins, $authorize, $dbh)
                             die();
                         
                         case 'addban':
-                            if ($_SESSION['perms']['perm_ban'])
+                            if ($authorize->get_user_setting($_SESSION['username'], 'perm_ban'))
                             {
                                 nel_ban_hammer($dataforce, $dbh);
-                                nel_ban_control($dataforce, 'list', $dbh);
+                                nel_ban_control($dataforce, 'list', $authorize, $dbh);
                             }
                             else
                             {
@@ -164,18 +176,18 @@ function nel_process_post($dataforce, $plugins, $authorize, $dbh)
                             die();
                         
                         case 'modifyban':
-                            nel_ban_control($dataforce, 'modify', $dbh);
-                            nel_ban_control($dataforce, 'list', $dbh);
+                            nel_ban_control($dataforce, 'modify', $authorize, $dbh);
+                            nel_ban_control($dataforce, 'list', $authorize, $dbh);
                             die();
                         
                         case 'removeban':
-                            nel_update_ban($dataforce, 'remove', $dbh);
-                            nel_ban_control($dataforce, 'list', $dbh);
+                            nel_update_ban($dataforce, 'remove', $authorize, $dbh);
+                            nel_ban_control($dataforce, 'list', $authorize, $dbh);
                             die();
                         
                         case 'changeban':
-                            nel_update_ban($dataforce, 'update', $dbh);
-                            nel_ban_control($dataforce, 'list', $dbh);
+                            nel_update_ban($dataforce, 'update', $authorize, $dbh);
+                            nel_ban_control($dataforce, 'list', $authorize, $dbh);
                             die();
                         
                         // Staff panel (done)
@@ -199,17 +211,17 @@ function nel_process_post($dataforce, $plugins, $authorize, $dbh)
                         case 'updatethread':
                             if (isset($dataforce['expand_thread']))
                             {
-                                nel_thread_panel($dataforce, 'expand', $dbh);
+                                nel_thread_panel($dataforce, 'expand', $authorize, $dbh);
                             }
                             else
                             {
-                                nel_thread_panel($dataforce, 'update', $dbh);
+                                nel_thread_panel($dataforce, 'update', $authorize, $dbh);
                             }
                             
                             die();
                         
                         case 'returnthreadlist':
-                            nel_thread_panel($dataforce, 'return', $dbh);
+                            nel_thread_panel($dataforce, 'return', $authorize, $dbh);
                             die();
                         
                         default:

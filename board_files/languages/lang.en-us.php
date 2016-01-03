@@ -25,9 +25,12 @@ $lang_singular = array(
 
 
 'FORM_SUBMIT' => 'Submit', // Submit button
+'FORM_DELETE' => 'Delete', // Delete button
 'FORM_RESET' => 'Clear form', // Clear form button
 'FORM_UPDATE' => 'Update', // Update button
 'FORM_EXPAND' => 'Expand', // Expand button
+'FORM_DELETE_POSTS' => 'Delete selected content', // Delete content
+'FORM_BAN_POSTS' => 'Ban selected posts', // Ban content
 'FORM_UPDATE_PAGES' => 'Update all pages', // Update pages
 'FORM_UPDATE_CACHE' => 'Regenerate all caches', // Regenerate caches
 'FORM_ADD_STAFF' => 'Add staff', // Add staff
@@ -100,10 +103,12 @@ $lang_singular = array(
 'ERROR_105' => 'Session expired. Go get a new one.', // Error 105: Session expired
 'ERROR_106' => 'Password for file deletion is incorrect.', // Error 106: Bad password for file deletion
 'ERROR_107' => 'Not authorized. GTFO', // Error 107: Not authorized
+'ERROR_108' => 'You are not allowed to delete posts.', // Error 108: Not allowed to dellete posts
 'ERROR_150' => 'Staff member does not exist.', // Error 150: Invalid staff name
 'ERROR_151' => 'Invalid staff type.', // Error 151: Invalid staff type
 'ERROR_152' => 'No staff information available. Also could not create default authorization files.', // Error 152: No staff info
 'ERROR_153' => 'Invalid option.', // Error 153: Invalid option
+'ERROR_154' => 'Staff member already exists.', // Error 154: Staff member already exists
 
 
 'MANAGE_MODE' => 'Management Mode', // Management

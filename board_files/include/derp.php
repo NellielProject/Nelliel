@@ -36,10 +36,9 @@ function nel_derp($error_id, $error_data)
             unlink($file['dest']);
         }
     }
-    
-    $dat = nel_render_header(array(), 'DERP', array());
-    $dat .= nel_parse_template('derp.tpl', FALSE);
-    $dat .= nel_render_footer(FALSE, FALSE, FALSE, FALSE);
+
+    require_once INCLUDE_PATH . 'output-generation/error-page-generation.php';
+    $dat = nel_render_derp($diagnostic);
     echo $dat;
     die();
 }
@@ -48,10 +47,4 @@ function nel_get_derp($which_data)
 {
     return nel_derp('retrieve', $which_data);
 }
-
-function nel_update_derp($which_data, $update)
-{
-    nel_derp('update', array($which_data, $update));
-}
-
 ?>

@@ -9,10 +9,10 @@ if (!defined('NELLIEL_VERSION'))
 //
 function nel_main_nel_thread_generator($dataforce, $dbh)
 {
-    global $rendervar;
-    $rendervar['insert_hr'] = FALSE;
     $page_output = '';
-    $rendervar['dotdot'] = '';
+    $gen_data = array();
+    $gen_data['insert_hr'] = FALSE;
+    $dataforce['dotdot'] = '';
     
     $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=0 AND archive_status=0 ORDER BY sticky desc,last_update desc');
     $front_page_list = $result->fetchALL(PDO::FETCH_COLUMN);
@@ -31,11 +31,10 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
     {
         $page_output .= nel_render_header($dataforce, 'NORMAL', $treeline);
         $page_output .= nel_render_posting_form($dataforce);
-        $rendervar['main_page'] = TRUE;
-        $rendervar['prev_nav'] = '';
-        $rendervar['next_nav'] = '';
-        $rendervar['page_nav'] = '';
-        $page_output .= nel_render_footer(FALSE, TRUE, TRUE, FALSE);
+        nel_render_in('prev_nav', '');
+        nel_render_in('next_nav', '');
+        nel_render_in('page_nav', '');
+        $page_output .= nel_render_footer(FALSE, TRUE, TRUE, FALSE, TRUE);
         
         if (empty($_SESSION) || $_SESSION['ignore_login'])
         {
@@ -57,13 +56,14 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
     {
         $page_output = '';
         $dataforce['omitted_done'] = TRUE;
-        $rendervar['page_title'] = BS_BOARD_NAME;
+        nel_render_in('page_title', BS_BOARD_NAME);
         $page_output .= nel_render_header($dataforce, 'NORMAL', $treeline);
         $page_output .= nel_render_posting_form($dataforce);
         $end_of_thread = FALSE;
         $sub_page_thread_counter = 0;
         
-        $rendervar['first100'] = FALSE;
+        $gen_data['last50'] = FALSE;
+        $gen_data['first100'] = FALSE;
         while ($sub_page_thread_counter < BS_THREADS_PER_PAGE)
         {
             if ($gen_data['post_counter'] === -1)
@@ -78,9 +78,9 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
                 
                 $treeline = array_merge($tree_op, array_reverse($tree_replies));
                 $gen_data['post_count'] = $treeline[0]['post_count'];
-                $rendervar['expand_post'] = ($gen_data['post_count'] > BS_ABBREVIATE_THREAD) ? TRUE : FALSE;
-                $rendervar['last50'] = ($gen_data['post_count'] > 50) ? TRUE : FALSE;
-                $rendervar['first100'] = ($gen_data['post_count'] > 100) ? TRUE : FALSE;
+                $gen_data['expand_post'] = ($gen_data['post_count'] > BS_ABBREVIATE_THREAD) ? TRUE : FALSE;
+                $gen_data['last50'] = ($gen_data['post_count'] > 50) ? TRUE : FALSE;
+                $gen_data['first100'] = ($gen_data['post_count'] > 100) ? TRUE : FALSE;
             }
             
             if (!empty($treeline[$gen_data['post_counter']]) && !empty($treeline[$gen_data['post_counter'] + 1]))
@@ -96,18 +96,23 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
                 $end_of_thread = TRUE;
                 $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? BS_THREADS_PER_PAGE : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
-                $rendervar['insert_hr'] = TRUE;
+                $gen_data['insert_hr'] = TRUE;
                 $page_output .= nel_render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
-                $rendervar['insert_hr'] = FALSE;
+                $gen_data['insert_hr'] = FALSE;
             }
             
             if (!$end_of_thread)
             {
                 if ($treeline[$gen_data['post_counter']]['has_file'] == 1)
                 {
+                    $gen_data['has_file'] = TRUE;
                     $result = $dbh->query('SELECT * FROM ' . FILETABLE . ' WHERE post_ref=' . $treeline[$gen_data['post_counter']]['post_number'] . ' ORDER BY file_order asc');
-                    $rendervar['files'] = $result->fetchALL(PDO::FETCH_ASSOC);
+                    $gen_data['files'] = $result->fetchALL(PDO::FETCH_ASSOC);
                     unset($result);
+                }
+                else
+                {
+                    $gen_data['has_file'] = FALSE;
                 }
                 
                 if ($treeline[$gen_data['post_counter']]['response_to'] > 0)
@@ -144,45 +149,45 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
         $prev = $page - 1;
         $next = $page + 1;
         
-        $rendervar['page_nav'] = ' ';
+        nel_render_in('page_nav', ' ');
         $page_count = (int) ceil($counttree / BS_THREADS_PER_PAGE);
-        $rendervar['main_page'] = TRUE;
+        nel_render_in('main_page', TRUE);
         
         if ($page === 1)
         {
-            $rendervar['prev_nav'] = 'Previous';
+            nel_render_in('prev_nav', 'Previous');
         }
         else if ($page === 2)
         {
-            $rendervar['prev_nav'] = '<a href="' . PHP_SELF2 . PHP_EXT . '">Previous</a> ';
+            nel_render_in('prev_nav', '<a href="' . PHP_SELF2 . PHP_EXT . '">Previous</a> ');
         }
         else
         {
-            $rendervar['prev_nav'] = '<a href="' . PHP_SELF2 . ($page - 2) . PHP_EXT . '">Previous</a>';
+            nel_render_in('prev_nav', '<a href="' . PHP_SELF2 . ($page - 2) . PHP_EXT . '">Previous</a>');
         }
         
-        $rendervar['next_nav'] = ($page === $page_count || $dataforce['max_pages'] === 1) ? 'Next' : '<a href="' . PHP_SELF2 . ($page) . PHP_EXT . '">Next</a>';
+        nel_render_in('next_nav', ($page === $page_count || $dataforce['max_pages'] === 1) ? 'Next' : '<a href="' . PHP_SELF2 . ($page) . PHP_EXT . '">Next</a>');
         $i = 0;
         
         while ($i < $page_count)
         {
             if ($i === 0)
             {
-                $rendervar['page_nav'] .= ($page > 1) ? '[<a href="' . PHP_SELF2 . PHP_EXT . '">0</a>] ' : '[0] ';
+                nel_render_in('page_nav', nel_render_out('page_nav') . (($page > 1) ? '[<a href="' . PHP_SELF2 . PHP_EXT . '">0</a>] ' : '[0] '));
             }
             else if ($i === ($page - 1) || $dataforce['max_pages'] === 1)
             {
-                $rendervar['page_nav'] .= '[' . ($i) . '] ';
+                nel_render_in('page_nav', nel_render_out('page_nav') . '[' . ($i) . '] ');
             }
             else
             {
-                $rendervar['page_nav'] .= '[<a href="' . PHP_SELF2 . ($i) . PHP_EXT . '">' . ($i) . '</a>] ';
+                nel_render_in('page_nav', nel_render_out('page_nav') . '[<a href="' . PHP_SELF2 . ($i) . PHP_EXT . '">' . ($i) . '</a>] ');
             }
             
             ++ $i;
         }
         
-        $page_output .= nel_render_footer(FALSE, TRUE, TRUE, FALSE);
+        $page_output .= nel_render_footer(FALSE, TRUE, TRUE, FALSE, TRUE);
         
         if (!empty($_SESSION) && !$_SESSION['ignore_login'])
         {
