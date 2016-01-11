@@ -1,59 +1,59 @@
-{{ if nel_render_out('insert_hr') }}
+{{ if $render->retrieve_data('insert_hr') }}
             </div>
             <hr class="clear">
 {{ else }}
-            <a id="p{ nel_render_out('post_number') }"></a>
+            <a id="p{ $render->retrieve_data('post_number') }"></a>
             <div class="op-post">
-                <input type="checkbox" name="thread_{ nel_render_out('post_number') }" value="deletethread_{ nel_render_out('post_number') }" title="Delete entire post"><span class="op-subject">{ nel_render_out('subject') }</span>
+                <input type="checkbox" name="thread_{ $render->retrieve_data('post_number') }" value="selectthread_{ $render->retrieve_data('post_number') }" title="Delete entire post"><span class="op-subject">{ $render->retrieve_data('subject') }</span>
                 <span class="op-poster-name">
-    {{ if nel_render_out('email') }}
-                <a href="mailto:{ nel_render_out('email') }" class="mailto-name">{ nel_render_out('name') }</a>{ nel_render_out('tripcode') }{ nel_render_out('secure_tripcode') }&nbsp;&nbsp;{ nel_render_out('staff_post') }
+    {{ if $render->retrieve_data('email') }}
+                <a href="mailto:{ $render->retrieve_data('email') }" class="mailto-name">{ $render->retrieve_data('name') }</a>{ $render->retrieve_data('tripcode') }{ $render->retrieve_data('secure_tripcode') }&nbsp;&nbsp;{ $render->retrieve_data('staff_post') }
     {{ else }}
-                { nel_render_out('name') }{ nel_render_out('tripcode') }{ nel_render_out('secure_tripcode') }&nbsp;&nbsp;{ nel_render_out('staff_post') }
+                { $render->retrieve_data('name') }{ $render->retrieve_data('tripcode') }{ $render->retrieve_data('secure_tripcode') }&nbsp;&nbsp;{ $render->retrieve_data('staff_post') }
     {{ endif }}
                 </span>
-    {{ if nel_render_out('response_id') }}
-                { nel_render_out('post_time') } No. <a href="javascript:postQuote('{ nel_render_out('post_number') }')" class="post-link">{ nel_render_out('post_number') }</a>&nbsp;
+    {{ if $render->retrieve_data('response_id') }}
+                { $render->retrieve_data('post_time') } No. <a href="javascript:postQuote('{ $render->retrieve_data('post_number') }')" class="post-link">{ $render->retrieve_data('post_number') }</a>&nbsp;
     {{ else }}
-                { nel_render_out('post_time') } No. <a href="{ PAGE_DIR }{ nel_render_out('post_number') }/{ nel_render_out('post_number') }.html" class="post-link">{ nel_render_out('post_number') }</a>&nbsp;
+                { $render->retrieve_data('post_time') } No. <a href="{ PAGE_DIR }{ $render->retrieve_data('post_number') }/{ $render->retrieve_data('post_number') }.html" class="post-link">{ $render->retrieve_data('post_number') }</a>&nbsp;
     {{ endif }}
-    {{ if nel_render_out('sticky') }}
-                <img src="{ nel_render_out('dotdot') }{ BOARD_FILES }/imagez/nelliel/{ nel_stext('THREAD_STICKY_ICON') }" width="22" height="22" alt="{ nel_stext('THREAD_STICKY') }">
+    {{ if $render->retrieve_data('sticky') }}
+                <img src="{ $render->retrieve_data('dotdot') }{ BOARD_FILES }/imagez/nelliel/{ nel_stext('THREAD_STICKY_ICON') }" width="22" height="22" alt="{ nel_stext('THREAD_STICKY') }">
     {{ endif }}
-    {{ if !nel_render_out('response_id') }}
-        {{ if nel_render_out('logged_in') }}
-                [<a href="{ PHP_SELF }?mode=display&post={ nel_render_out('post_number') }">{ nel_stext('LINK_REPLY') }</a>]
+    {{ if !$render->retrieve_data('response_id') }}
+        {{ if $render->retrieve_data('logged_in') }}
+                [<a href="{ PHP_SELF }?mode=display&post={ $render->retrieve_data('post_number') }">{ nel_stext('LINK_REPLY') }</a>]
         {{ else }}
-                [<a href="{ PAGE_DIR }{ nel_render_out('post_number') }/{ nel_render_out('post_number') }.html">{ nel_stext('LINK_REPLY') }</a>]
+                [<a href="{ PAGE_DIR }{ $render->retrieve_data('post_number') }/{ $render->retrieve_data('post_number') }.html">{ nel_stext('LINK_REPLY') }</a>]
         {{ endif }}
     {{ endif }}
-    {{ if nel_render_out('expand_post') && nel_render_out('logged_in') }}
-                [<a href="javascript:clientSideInclude('expand{ nel_render_out('post_number') }', 'expLink{ nel_render_out('post_number') }', '{ PHP_SELF }?mode=display&post={ nel_render_out('post_number') }&expand=TRUE', '{ PHP_SELF }?mode=display&post={ nel_render_out('post_number') }&collapse=TRUE', 'Collapse thread')" id="expLink{ nel_render_out('post_number') }">{ nel_stext('THREAD_EXPAND') }</a>]
-    {{ elseif nel_render_out('expand_post') && !nel_render_out('logged_in') }}
-                [<a href="javascript:clientSideInclude('expand{ nel_render_out('post_number') }', 'expLink{ nel_render_out('post_number') }', '{ PAGE_DIR }{ nel_render_out('post_number') }/{ nel_render_out('post_number') }-expand.html', '{ PAGE_DIR }{ nel_render_out('post_number') }/{ nel_render_out('post_number') }-collapse.html', 'Collapse thread')" id="expLink{ nel_render_out('post_number') }">{ nel_stext('THREAD_EXPAND') }</a>]
+    {{ if $render->retrieve_data('expand_post') && $render->retrieve_data('logged_in') }}
+                [<a href="javascript:clientSideInclude('expand{ $render->retrieve_data('post_number') }', 'expLink{ $render->retrieve_data('post_number') }', '{ PHP_SELF }?mode=display&post={ $render->retrieve_data('post_number') }&expand=TRUE', '{ PHP_SELF }?mode=display&post={ $render->retrieve_data('post_number') }&collapse=TRUE', 'Collapse thread')" id="expLink{ $render->retrieve_data('post_number') }">{ nel_stext('THREAD_EXPAND') }</a>]
+    {{ elseif $render->retrieve_data('expand_post') && !$render->retrieve_data('logged_in') }}
+                [<a href="javascript:clientSideInclude('expand{ $render->retrieve_data('post_number') }', 'expLink{ $render->retrieve_data('post_number') }', '{ PAGE_DIR }{ $render->retrieve_data('post_number') }/{ $render->retrieve_data('post_number') }-expand.html', '{ PAGE_DIR }{ $render->retrieve_data('post_number') }/{ $render->retrieve_data('post_number') }-collapse.html', 'Collapse thread')" id="expLink{ $render->retrieve_data('post_number') }">{ nel_stext('THREAD_EXPAND') }</a>]
     {{ endif }}
-    {{ if nel_render_out('first100') }}
-                [<a href="{ PAGE_DIR }{ nel_render_out('post_number') }/{ nel_render_out('post_number') }-0-100.html">First 100 Posts</a>]
+    {{ if $render->retrieve_data('first100') }}
+                [<a href="{ PAGE_DIR }{ $render->retrieve_data('post_number') }/{ $render->retrieve_data('post_number') }-0-100.html">First 100 Posts</a>]
     {{ endif }}
                 <br>
-    {{ if nel_render_out('logged_in') }}
-                <br>IP: <b>{ nel_render_out('host') }</b>
+    {{ if $render->retrieve_data('logged_in') }}
+                <br>IP: <b>{ $render->retrieve_data('host') }</b>
         {{ if $_SESSION['perms']['perm_ban'] }}
-                <input type="button" onClick="addBanDetails('ban{ nel_render_out('post_number') }', '{ nel_render_out('post_number') }', '{ nel_render_out('name') }', '{ nel_render_out('host') }')" value="Set Ban Details">
+                <input type="button" onClick="addBanDetails('ban{ $render->retrieve_data('post_number') }', '{ $render->retrieve_data('post_number') }', '{ $render->retrieve_data('name') }', '{ $render->retrieve_data('host') }')" value="Set Ban Details">
         {{ endif }}
     {{ endif }}
                 <div class="clear"></div>
-    {{ if nel_render_out('has_file') }}
-        {{ foreach nel_render_out('files') as $file }}
-            {{ if nel_render_out('multifile') }}
+    {{ if $render->retrieve_data('has_file') }}
+        {{ foreach $render->retrieve_data('files') as $file }}
+            {{ if $render->retrieve_data('multifile') }}
                 <div class="op-multiple-fileinfo">
                 {{ if BS1_USE_NEW_IMGDEL }}
-                    <input type="checkbox" name="fileid{ nel_render_out('post_number') }_{ $file['file_order'] }" value="deletefile_{ nel_render_out('post_number') }_{ $file['file_order'] }" title="Delete file" class="multi-file-delete-box">
+                    <input type="checkbox" name="fileid{ $render->retrieve_data('post_number') }_{ $file['file_order'] }" value="deletefile_{ $render->retrieve_data('post_number') }_{ $file['file_order'] }" title="Delete file" class="multi-file-delete-box">
                 {{ endif }}
                     <a href="{ $file['file_location'] }" rel="external">{ $file['filename'] }.{ $file['extension'] }</a>
                     <br>{{ if $file['img_dim'] }}{ $file['image_width'] } x { $file['image_height'] }{{ endif }} ({ $file['filesize'] } KB)
-                    <br>[<a href="javascript:displayImgMeta('imgmeta{ nel_render_out('post_number') }_{ $file['file_order'] }','showimgmeta{ nel_render_out('post_number') }_{ $file['file_order'] }','none','{ nel_stext('THREAD_LESS_DATA') }')" id="showimgmeta{ nel_render_out('post_number') }_{ $file['file_order'] }">{ nel_stext('THREAD_MOAR_DATA') }</a>]
-                    <span id="imgmeta{ nel_render_out('post_number') }_{ $file['file_order'] }" class="none">
+                    <br>[<a href="javascript:displayImgMeta('imgmeta{ $render->retrieve_data('post_number') }_{ $file['file_order'] }','showimgmeta{ $render->retrieve_data('post_number') }_{ $file['file_order'] }','none','{ nel_stext('THREAD_LESS_DATA') }')" id="showimgmeta{ $render->retrieve_data('post_number') }_{ $file['file_order'] }">{ nel_stext('THREAD_MOAR_DATA') }</a>]
+                    <span id="imgmeta{ $render->retrieve_data('post_number') }_{ $file['file_order'] }" class="none">
                 {{ if $file['source'] != '' }}
                     <br><span class="source">Source: { $file['source'] }</span>
                 {{ endif }}
@@ -70,12 +70,12 @@
             {{ else }}
                 <div class="op-fileinfo">
                 {{ if BS1_USE_NEW_IMGDEL }}
-                    <span class="file-delete-box"><input type="checkbox" name="fileid{ nel_render_out('post_number') }_{ $file['file_order'] }" value="deletefile_{ nel_render_out('post_number') }_{ $file['file_order'] }" title="Delete file"></span>
+                    <span class="file-delete-box"><input type="checkbox" name="fileid{ $render->retrieve_data('post_number') }_{ $file['file_order'] }" value="deletefile_{ $render->retrieve_data('post_number') }_{ $file['file_order'] }" title="Delete file"></span>
                 {{ endif }}
                     <a href="{ $file['file_location'] }" rel="external">{ $file['filename'] }.{ $file['extension'] }</a> -&nbsp;
                 {{ if $file['img_dim'] }}{ $file['image_width'] } x { $file['image_height'] }{{ endif }} ({ $file['filesize'] } KB)
-                    [<a href="javascript:displayImgMeta('imgmeta{ nel_render_out('post_number') }_{ $file['file_order'] }','showimgmeta{ nel_render_out('post_number') }_{ $file['file_order'] }','none','{ nel_stext('THREAD_LESS_DATA') }')" id="showimgmeta{ nel_render_out('post_number') }_{ $file['file_order'] }">{ nel_stext('THREAD_MOAR_DATA') }</a>]
-                    <span id="imgmeta{ nel_render_out('post_number') }_{ $file['file_order'] }" class="none">
+                    [<a href="javascript:displayImgMeta('imgmeta{ $render->retrieve_data('post_number') }_{ $file['file_order'] }','showimgmeta{ $render->retrieve_data('post_number') }_{ $file['file_order'] }','none','{ nel_stext('THREAD_LESS_DATA') }')" id="showimgmeta{ $render->retrieve_data('post_number') }_{ $file['file_order'] }">{ nel_stext('THREAD_MOAR_DATA') }</a>]
+                    <span id="imgmeta{ $render->retrieve_data('post_number') }_{ $file['file_order'] }" class="none">
                 {{ if $file['source'] != '' }}
                     <br><span class="source">Source: { $file['source'] }</span>
                 {{ endif }}
@@ -93,10 +93,10 @@
         {{ endforeach }}
     {{ endif }}
                 <p class="op-post-text">
-            	   { nel_render_out('comment') }
-            	   <span class="mod-comment"><b>{ nel_render_out('mod_comment') }</b></span>
+            	   { $render->retrieve_data('comment') }
+            	   <span class="mod-comment"><b>{ $render->retrieve_data('mod_comment') }</b></span>
                 </p>
-                <div id="ban{ nel_render_out('post_number') }"></div>
+                <div id="ban{ $render->retrieve_data('post_number') }"></div>
             </div>
-            <div id="expand{ nel_render_out('post_number') }">
+            <div id="expand{ $render->retrieve_data('post_number') }">
 {{ endif }}

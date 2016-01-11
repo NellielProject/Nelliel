@@ -9,129 +9,111 @@ nel_parse_links($dataforce['post_links']);
 //
 // Generate the header
 //
-function nel_render_header($dataforce, $render_mode, $treeline)
+function nel_render_header($dataforce, $render, $treeline)
 {
-    nel_render_init(TRUE);
-    $dat = '';
     lol_html_timer(0);
-    
-    nel_render_in('titlepart', '');
-    nel_render_in('dotdot', $dataforce['dotdot']);
+    $title = '';
+    $render->add_data('dotdot', $dataforce['dotdot']);
     
     if (BS1_SHOW_LOGO)
     {
-        nel_render_in('titlepart', nel_render_out('titlepart') . '<img src="' . BS_BOARD_LOGO . '" alt="' . BS_BOARD_NAME . '" class="logo-alt-text">');
+        $title .= '<img src="' . BS_BOARD_LOGO . '" alt="' . BS_BOARD_NAME . '" class="logo-alt-text">';
     }
     
     if (BS1_SHOW_TITLE)
     {
-        nel_render_in('titlepart', nel_render_out('titlepart') . '<h1>' . BS_BOARD_NAME . '</h1>');
+        $title .= '<h1>' . BS_BOARD_NAME . '</h1>';
     }
-    
-    switch ($render_mode)
+
+    $render->add_data('titlepart', $title);
+
+    switch ($render->output('header_type'))
     {
-        case 'ADMIN':
-            nel_render_in('page_title', BS_BOARD_NAME);
-            break;
-        
-        case 'DERP':
-            nel_render_in('page_title', BS_BOARD_NAME);
-            break;
-        
-        case 'BAN':
-            nel_render_in('page_title', BS_BOARD_NAME);
-            break;
-        
         case 'ABOUT':
-            nel_render_in('page_title', 'About Nelliel Imageboard');
+            $render->add_data('page_title', 'About Nelliel Imageboard');
             break;
         
         case 'NORMAL':
             if ($dataforce['page_gen'] == 'main')
             {
-                nel_render_in('page_title', BS_BOARD_NAME);
+                $render->add_data('page_title', BS_BOARD_NAME);
             }
             else
             {
-                nel_render_in('page_title', ($treeline[0]['subject'] === '') ? BS_BOARD_NAME . ' > Thread #' . $treeline[0]['post_number'] : BS_BOARD_NAME . ' > ' . $treeline[0]['subject']);
+                $render->add_data('page_title', ($treeline[0]['subject'] === '') ? BS_BOARD_NAME . ' > Thread #' . $treeline[0]['post_number'] : BS_BOARD_NAME . ' > ' . $treeline[0]['subject']);
             }
             
             break;
+
+        default:
+            $render->add_data('page_title', BS_BOARD_NAME);
+            break;
     }
     
-    nel_render_in('log_out', (!empty($_SESSION) && !$_SESSION['ignore_login']) ? '[<a href="' . nel_render_out('dotdot') . PHP_SELF . '?mode=log_out">Log Out</a>]' : '');
-    nel_render_in('page_ref1', (!empty($_SESSION) && !$_SESSION['ignore_login']) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT);
-    $dat .= nel_parse_template('header.tpl', '', '', FALSE);
-    return $dat;
+    $render->add_data('log_out', (!empty($_SESSION) && !$_SESSION['ignore_login']) ? '[<a href="' . $render->retrieve_data('dotdot') . PHP_SELF . '?mode=log_out">Log Out</a>]' : '');
+    $render->add_data('page_ref1', (!empty($_SESSION) && !$_SESSION['ignore_login']) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT);
+    $render->input(nel_parse_template('header.tpl', '', $render, FALSE));
 }
 
 //
 // Generate reply form
 //
-function nel_render_posting_form($dataforce)
+function nel_render_posting_form($dataforce, $render)
 {
-    nel_render_in('response_id', (is_null($dataforce['response_id'])) ? '0' : $dataforce['response_id']);
-    nel_render_in('rules_list', $dataforce['rules_list']);
-    nel_render_in('form_submit_url', $dataforce['dotdot'] . PHP_SELF);
+    $render->add_data('response_id', (is_null($dataforce['response_id'])) ? '0' : $dataforce['response_id']);
+    $render->add_data('rules_list', $dataforce['rules_list']);
+    $render->add_data('form_submit_url', $dataforce['dotdot'] . PHP_SELF);
     
     if (BS1_ALLOW_MULTIFILE)
     {
-        if (nel_render_out('response_id'))
+        if ($render->retrieve_data('response_id'))
         {
-            nel_render_in('allow_multifile', TRUE);
+            $render->add_data('allow_multifile', TRUE);
         }
-        else if (!nel_render_out('response_id') && BS1_ALLOW_OP_MULTIFILE)
+        else if (!$render->retrieve_data('response_id') && BS1_ALLOW_OP_MULTIFILE)
         {
-            nel_render_in('response_id', '0');
-            nel_render_in('allow_multifile', TRUE);
+            $render->add_data('response_id', '0');
+            $render->add_data('allow_multifile', TRUE);
         }
         else
         {
-            nel_render_in('allow_multifile', FALSE);
+            $render->add_data('allow_multifile', FALSE);
         }
     }
     else
     {
-        nel_render_out('allow_multifile', FALSE);
+        $render->retrieve_data('allow_multifile', FALSE);
     }
     
-    nel_render_in('modmode', (nel_render_out('mode2') === 'display') ? TRUE : FALSE);
+    $render->add_data('modmode', ($render->retrieve_data('mode2') === 'display') ? TRUE : FALSE);
     
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
-        nel_render_in('logged_in', TRUE);
-        nel_render_in('page_ref1', PHP_SELF . '?mode=display&page=0');
-        nel_render_in('page_ref2', PHP_SELF . '?page=');
+        $render->add_data('logged_in', TRUE);
+        $render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
+        $render->add_data('page_ref2', PHP_SELF . '?page=');
     }
     else
     {
-        nel_render_in('logged_in', FALSE);
-        nel_render_in('page_ref1', PHP_SELF2 . PHP_EXT);
+        $render->add_data('logged_in', FALSE);
+        $render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
     }
     
-    nel_render_in('max_files', 3);
-    $dat_temp = nel_parse_template('posting_form.tpl', '', FALSE);
-    return $dat_temp;
+    $render->add_data('max_files', 3);
+    $render->input(nel_parse_template('posting_form.tpl', '', $render, FALSE));
 }
 
 //
 // Render posts
 //
-function nel_render_post($dataforce, $response, $partial, $gen_data, $treeline, $dbh)
+function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline, $dbh)
 {
     global $link_resno;
-    nel_render_init(TRUE);
-    $dat = '';
-    
-    if ($gen_data['insert_hr'])
-    {
-        nel_render_in('insert_hr', $gen_data['insert_hr']);
-        $dat .= nel_parse_template('op_post.tpl', '', '', FALSE);
-        return $dat;
-    }
-    
+
+    $render->add_data('insert_hr', $gen_data['insert_hr']);
+    nel_parse_template('op_post.tpl', '', $render, FALSE);
     $post_data = $treeline[$gen_data['post_counter']];
-    nel_render_multiple_in($post_data);
+    $render->add_multiple_data($post_data);
     
     if ($partial)
     {
@@ -142,35 +124,35 @@ function nel_render_post($dataforce, $response, $partial, $gen_data, $treeline, 
         $link_resno = $dataforce['response_id'];
     }
 
-    nel_render_in('expand_post', $gen_data['expand_post']);
-    nel_render_in('last50', $gen_data['last50']);
-    nel_render_in('first100', $gen_data['first100']);
-    nel_render_in('response_id', $dataforce['response_id']);
-    nel_render_in('tripcode', (!is_null($post_data['tripcode'])) ? BS_TRIPKEY_MARKER . $post_data['tripcode'] : '');
-    nel_render_in('secure_tripcode', (!is_null($post_data['secure_tripcode'])) ? BS_TRIPKEY_MARKER . BS_TRIPKEY_MARKER . $post_data['secure_tripcode'] : '');
+    $render->add_data('expand_post', $gen_data['expand_post']);
+    $render->add_data('last50', $gen_data['last50']);
+    $render->add_data('first100', $gen_data['first100']);
+    $render->add_data('response_id', $dataforce['response_id']);
+    $render->add_data('tripcode', (!is_null($post_data['tripcode'])) ? BS_TRIPKEY_MARKER . $post_data['tripcode'] : '');
+    $render->add_data('secure_tripcode', (!is_null($post_data['secure_tripcode'])) ? BS_TRIPKEY_MARKER . BS_TRIPKEY_MARKER . $post_data['secure_tripcode'] : '');
     $post_data['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $post_data['comment']);
     $post_data['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'nel_parse_links', $post_data['comment']);
-    nel_render_in('comment-part', utf8_str_replace('>><a href="../"', '>><a href="', $post_data['comment']));
-    nel_render_in('comment', $post_data['comment']);
-    nel_render_in('sticky', (bool) $post_data['sticky']);
+    $render->add_data('comment-part', utf8_str_replace('>><a href="../"', '>><a href="', $post_data['comment']));
+    $render->add_data('comment', $post_data['comment']);
+    $render->add_data('sticky', (bool) $post_data['sticky']);
     $temp_dot = ($partial) ? '' : $dataforce['dotdot'];
     $post_id = ($response) ? $post_data['response_to'] : $post_data['post_number'];
     
     if (!$dataforce['omitted_done'])
     {
-        nel_render_in('omitted_count', $gen_data['post_count'] - BS_ABBREVIATE_THREAD);
-        nel_render_in('omitted_posts', TRUE);
+        $render->add_data('omitted_count', $gen_data['post_count'] - BS_ABBREVIATE_THREAD);
+        $render->add_data('omitted_posts', TRUE);
     }
     else
     {
-        nel_render_in('omitted_posts',  FALSE);
+        $render->add_data('omitted_posts',  FALSE);
     }
     
     if ($gen_data['has_file'])
     {
-        nel_render_in('has_file', TRUE);
+        $render->add_data('has_file', TRUE);
         $filecount = count($gen_data['files']);
-        nel_render_in('multifile', ($filecount > 1) ? TRUE : FALSE);
+        $render->add_data('multifile', ($filecount > 1) ? TRUE : FALSE);
         $i = 0;
         
         $files = $gen_data['files'];
@@ -221,158 +203,143 @@ function nel_render_post($dataforce, $response, $partial, $gen_data, $treeline, 
             ++ $i;
         }
         
-        nel_render_in('files', $files);
+        $render->add_data('files', $files);
     }
     else
     {
-        nel_render_in('multifile', FALSE);
+        $render->add_data('multifile', FALSE);
     }
     
-    $curr_time = floor(nel_render_out('post_time') / 1000);
+    $curr_time = floor($render->retrieve_data('post_time') / 1000);
     
     switch (BS_DATE_FORMAT)
     {
         case 'ISO':
-            nel_render_in('post_time', date("Y", $curr_time)
+            $render->add_data('post_time', date("Y", $curr_time)
                                     . BS_DATE_SEPARATOR . date("m", $curr_time)
                                     . BS_DATE_SEPARATOR . date("d (D) H:i:s", $curr_time));
             break;
         
         case 'US':
-            nel_render_in('post_time', date("m", $curr_time) . BS_DATE_SEPARATOR 
+            $render->add_data('post_time', date("m", $curr_time) . BS_DATE_SEPARATOR 
                                     . date("d", $curr_time) . BS_DATE_SEPARATOR
                                     . date("Y (D) H:i:s", $curr_time));
             break;
         
         case 'COM':
-            nel_render_in('post_time', date("d", $curr_time)
+            $render->add_data('post_time', date("d", $curr_time)
                                     . BS_DATE_SEPARATOR . date("m", $curr_time)
                                     . BS_DATE_SEPARATOR . date("Y (D) H:i:s", $curr_time));
             break;
     }
     
-    switch (nel_render_out('mod_post'))
+    switch ($render->retrieve_data('mod_post'))
     {
         case '1':
-            nel_render_in('staff_post', nel_stext('THREAD_JANPOST'));
-            nel_render_in('secure_tripcode', '');
+            $render->add_data('staff_post', nel_stext('THREAD_JANPOST'));
+            $render->add_data('secure_tripcode', '');
             break;
         
         case '2':
-            nel_render_in('staff_post', nel_stext('THREAD_MODPOST'));
-            nel_render_in('secure_tripcode', '');
+            $render->add_data('staff_post', nel_stext('THREAD_MODPOST'));
+            $render->add_data('secure_tripcode', '');
             break;
         
         case '3':
-            nel_render_in('staff_post', nel_stext('THREAD_ADMINPOST'));
-            nel_render_in('secure_tripcode', '');
+            $render->add_data('staff_post', nel_stext('THREAD_ADMINPOST'));
+            $render->add_data('secure_tripcode', '');
             break;
         
         default:
-            nel_render_in('staff_post', '');
+            $render->add_data('staff_post', '');
     }
     
-    nel_render_in('logged_in', FALSE);
-    nel_render_in('page_ref1', PHP_SELF2 . PHP_EXT);
-    nel_render_in('page_ref2', '');
+    $render->add_data('logged_in', FALSE);
+    $render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
+    $render->add_data('page_ref2', '');
 
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
-        nel_render_in('logged_in', TRUE);
-        nel_render_in('host', (@inet_ntop(nel_render_out('host'))) ? inet_ntop(nel_render_out('host')) : 'Unknown');
-        nel_render_in('perm_ban', $_SESSION['perms']['perm_ban']);
-        nel_render_in('page_ref1', PHP_SELF . '?mode=display&page=0');
-        nel_render_in('page_ref2', PHP_SELF . '?page=');
-        nel_render_in('the_session', session_id());
+        $render->add_data('logged_in', TRUE);
+        $render->add_data('host', (@inet_ntop($render->retrieve_data('host'))) ? inet_ntop($render->retrieve_data('host')) : 'Unknown');
+        $render->add_data('perm_ban', $_SESSION['perms']['perm_ban']);
+        $render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
+        $render->add_data('page_ref2', PHP_SELF . '?page=');
+        $render->add_data('the_session', session_id());
     }
     
-    $dat .= ($response ? nel_parse_template('response_post.tpl', '', FALSE) : nel_parse_template('op_post.tpl', '', FALSE));
-    return $dat;
+    $render->input(($response ? nel_parse_template('response_post.tpl', '', $render, FALSE) : nel_parse_template('op_post.tpl', '', $render, FALSE)));
 }
 
 //
 // Footer
 //
-function nel_render_basic_footer()
+function nel_render_basic_footer($render)
 {
     global $total_html, $total_script;
-    nel_render_init(TRUE);
-    $dat = '';
 
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
-        nel_render_in('logged_in', TRUE);
-        nel_render_in('main_page', FALSE);
+        $render->add_data('logged_in', TRUE);
+        $render->add_data('main_page', FALSE);
         
         if ($_SESSION['perms']['perm_ban'])
         {
-            nel_render_in('perm_ban', TRUE);
+            $render->add_data('perm_ban', TRUE);
         }
     }
     else
     {
-        nel_render_in('logged_in', FALSE);
+        $render->add_data('logged_in', FALSE);
     }
 
     lol_html_timer(1);
-    $dat = nel_parse_template('footer.tpl', '', '', FALSE);
-    return $dat;
+    $render->input(nel_parse_template('footer.tpl', '', $render, FALSE));
 }
 
-function nel_render_footer($link, $styles, $del, $response, $main_page)
+function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
 {
     global $total_html, $total_script;
 
-    if(!$main_page)
-    {
-        nel_render_init(TRUE);
-        $dat = '';
-        nel_render_in('main_page', FALSE);
-    }
-    else
-    {
-        nel_render_in('main_page', TRUE);
-    }
+    $render->add_data('main_page', $main_page);
 
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
-        nel_render_in('logged_in', TRUE);
-        nel_render_in('main_page', FALSE);
+        $render->add_data('logged_in', TRUE);
+        $render->add_data('main_page', FALSE);
 
         if ($_SESSION['perms']['perm_ban'])
         {
-            nel_render_in('perm_ban', TRUE);
+            $render->add_data('perm_ban', TRUE);
         }
     }
     else
     {
-        nel_render_in('logged_in', FALSE);
+        $render->add_data('logged_in', FALSE);
     }
 
-    nel_render_in('link', $link);
-    nel_render_in('styles_link', $styles);
-    nel_render_in('del', $del);
-    nel_render_in('response', $response);
-    nel_render_in('main_page', $main_page);
+    $render->add_data('link', $link);
+    $render->add_data('styles_link', $styles);
+    $render->add_data('del', $del);
+    $render->add_data('response', $response);
+    $render->add_data('main_page', $main_page);
     lol_html_timer(1);
-    $dat_temp = nel_parse_template('footer.tpl', '', '', FALSE);
-    return $dat_temp;
+    $render->input(nel_parse_template('footer.tpl', '', $render, FALSE));
 }
 
 function nel_render_ban_page($dataforce, $bandata)
 {
-    nel_render_init(TRUE);
-    $dat = '';
-    nel_render_multiple_in($bandata);
-    nel_render_in('appeal_status', (int) $bandata['appeal_status']);
-    nel_render_in('format_length', date("D F jS Y  H:i", $bandata['length_base']));
-    nel_render_in('format_time', date("D F jS Y  H:i", $bandata['ban_time']));
-    nel_render_in('host', @inet_ntop($bandata['host']) ? inet_ntop($bandata['host']) : 'Unknown');
+    $render = new nel_render();
+    $render->add_multiple_data($bandata);
+    $render->add_data('appeal_status', (int) $bandata['appeal_status']);
+    $render->add_data('format_length', date("D F jS Y  H:i", $bandata['length_base']));
+    $render->add_data('format_time', date("D F jS Y  H:i", $bandata['ban_time']));
+    $render->add_data('host', @inet_ntop($bandata['host']) ? inet_ntop($bandata['host']) : 'Unknown');
     lol_html_timer(0);
-    $dat .= nel_render_header($dataforce, 'BAN', array());
-    $dat .= nel_parse_template('ban_page.tpl', '', FALSE);
-    $dat .= nel_render_basic_footer();
-    return $dat;
+    nel_render_header($dataforce, $render, array());
+    $render->input(nel_parse_template('ban_page.tpl', '', $render, FALSE));
+    nel_render_basic_footer($render);
+    echo $render->output();
 }
 
 //

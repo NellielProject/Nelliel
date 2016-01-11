@@ -262,7 +262,7 @@ function nel_regen_template_cache()
     foreach (glob(TEMPLATE_PATH . '*.tpl') as $template)
     {
         $template = basename($template);
-        nel_parse_template($template, '', TRUE);
+        nel_parse_template($template, '', NULL, TRUE);
     }
 }
 

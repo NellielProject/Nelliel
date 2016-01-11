@@ -157,7 +157,6 @@ function nel_delete_content($dataforce, $sub, $type, $plugins, $dbh)
     }
     
     $flag = FALSE;
-    //nel_render_in('main_page', FALSE);
     $hashed_pass = nel_hash($dataforce['pass'], $plugins);
     $hashed_pass = utf8_substr($hashed_pass, 0, 16);
     $result = $dbh->query('SELECT post_number,password,response_to,mod_post FROM ' . POSTTABLE . ' WHERE post_number=' . $id . '');
@@ -263,14 +262,15 @@ function nel_delete_content($dataforce, $sub, $type, $plugins, $dbh)
             $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILETABLE . ' WHERE post_ref=' . $id . ' AND file_order=' . $fnum . '');
             $file_data = $result->fetch(PDO::FETCH_ASSOC);
             unset($result);
-            
+
             if ($file_data !== FALSE)
             {
                 $dbh->query('DELETE FROM ' . FILETABLE . ' WHERE post_ref=' . $id . ' AND file_order=' . $fnum . '');
-                
+
                 if ($post_data['response_to'] == 0)
                 {
                     nel_eraser_gun(SRC_PATH . $post_data['post_number'], $file_data['filename'] . $file_data['extension'], FALSE);
+
                     if ($file_data['preview_name'])
                     {
                         nel_eraser_gun(THUMB_PATH . $post_data['post_number'], $file_data['preview_name'], FALSE);
@@ -279,6 +279,7 @@ function nel_delete_content($dataforce, $sub, $type, $plugins, $dbh)
                 else
                 {
                     nel_eraser_gun(SRC_PATH . $post_data['response_to'], $file_data['filename'] . $file_data['extension'], FALSE);
+
                     if ($file_data['preview_name'])
                     {
                         nel_eraser_gun(THUMB_PATH . $post_data['response_to'], $file_data['preview_name'], FALSE);
@@ -286,14 +287,14 @@ function nel_delete_content($dataforce, $sub, $type, $plugins, $dbh)
                 }
             }
         }
-        
+
         nel_cache_links();
     }
     else
     {
         nel_derp(20, array('origin' => 'DELETE'));
     }
-    
+
     if (!empty($_SESSION))
     {
         $_SESSION['ignore_login'] = $temp;

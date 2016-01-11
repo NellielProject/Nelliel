@@ -22,7 +22,7 @@ function nel_parse_template($template, $subdirectory, $render, $regen)
             $info[$template]['modify-time'] = $modify_time;
             $lol = file_get_contents(TEMPLATE_PATH . $subdirectory . $template);
             $lol = trim($lol);
-            $begin = '<?php function nel_template_render_' . $template_short . '() { $total_html; $temp = \''; // Start of the cached template
+            $begin = '<?php function nel_template_render_' . $template_short . '($render) { $total_html; $temp = \''; // Start of the cached template
             $lol = preg_replace_callback('#({{.*?}})|({(.*?)})|(\')#', 'nel_escape_single_quotes', $lol); // Do escaping and variable parse
             $lol = preg_replace('#(})\s*?({)#', '$1$2', $lol); // Clear white space between control statements
             $lol = preg_replace('#{{\s*?(if|elseif|foreach|for|while)\s*?(.*?)}}#', '\'; $1($2): $temp .= \'', $lol); // Parse opening control statements
@@ -40,7 +40,7 @@ function nel_parse_template($template, $subdirectory, $render, $regen)
 
     if (!$regen)
     {
-        $dat_temp = call_user_func('nel_template_render_' . $template_short);
+        $dat_temp = call_user_func('nel_template_render_' . $template_short, $render);
         return $dat_temp;
     }
 }

@@ -5,7 +5,10 @@
 //
 function about_screen()
 {
-    echo nel_render_header(array(), 'ABOUT', array());
+    $render = new nel_render();
+    $render->add_data('header_type', 'ABOUT');
+    nel_render_header(array(), $render, array());
+    echo $render->output();
     echo '
     <div class="text-center">
         <p>

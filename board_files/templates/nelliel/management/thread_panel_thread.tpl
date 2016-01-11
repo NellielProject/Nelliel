@@ -1,64 +1,64 @@
-            <tr class="{nel_render_out('bg_class')}">
-{{ if !nel_render_out('expand_thread') }}
+            <tr class="{$render->retrieve_data('bg_class')}">
+{{ if !$render->retrieve_data('expand_thread') }}
                 <td>
-                    <input type="submit" name="expand_thread" value="{nel_stext('FORM_EXPAND')} {nel_render_out('post_number')}">
+                    <input type="submit" name="expand_thread" value="{nel_stext('FORM_EXPAND')} {$render->retrieve_data('post_number')}">
                 </td>
 {{ else }}
                 <td>
                 </td>
 {{ endif }}
-                <td>{nel_render_out('post_number')}</td>
+                <td>{$render->retrieve_data('post_number')}</td>
                 <td>
-{{ if nel_render_out('is_op') }}
-                    <input type="checkbox" name="thread_{nel_render_out('post_number')}" value="deletethread_{nel_render_out('post_number')}" title="Delete entire post">(OP)
+{{ if $render->retrieve_data('is_op') }}
+                    <input type="checkbox" name="thread_{$render->retrieve_data('post_number')}" value="deletethread_{$render->retrieve_data('post_number')}" title="Delete entire post">(OP)
 {{ else }}
-                    <input type="checkbox" name="post_{nel_render_out('post_number')}_{nel_render_out('response_to')}" value="deletepost_{nel_render_out('post_number')}_{nel_render_out('response_to')}" title="Delete entire post">
+                    <input type="checkbox" name="post_{$render->retrieve_data('post_number')}_{$render->retrieve_data('response_to')}" value="deletepost_{$render->retrieve_data('post_number')}_{$render->retrieve_data('response_to')}" title="Delete entire post">
 {{ endif }}
                 </td>
-{{ if nel_render_out('sticky') }}
+{{ if $render->retrieve_data('sticky') }}
                 <td>
                 </td>
                 <td>
-                    <input type="checkbox" name="{nel_render_out('post_number')}" value="unsticky_{nel_render_out('post_number')}">
+                    <input type="checkbox" name="{$render->retrieve_data('post_number')}" value="unsticky_{$render->retrieve_data('post_number')}">
                 </td>
 {{ else }}
                 <td>
-                    <input type="checkbox" name="{nel_render_out('post_number')}" value="sticky_{nel_render_out('post_number')}">
+                    <input type="checkbox" name="{$render->retrieve_data('post_number')}" value="sticky_{$render->retrieve_data('post_number')}">
                 </td>
                 <td>
                 </td>
 {{ endif }}
                 <td>
-                    {nel_render_out('post_time')}
+                    {$render->retrieve_data('post_time')}
                 </td>
                 <td>
-                    <a href="{PAGE_DIR}{nel_render_out('post_number')}/{nel_render_out('post_number')}.html" rel="external">{nel_render_out('subject')}</a>
+                    <a href="{PAGE_DIR}{$render->retrieve_data('post_number')}/{$render->retrieve_data('post_number')}.html" rel="external">{$render->retrieve_data('subject')}</a>
                 </td>
                 <td>
-                    {nel_render_out('name')}
+                    {$render->retrieve_data('name')}
                 </td>
                 <td>
-                    {nel_render_out('comment')}
+                    {$render->retrieve_data('comment')}
                 </td>
                 <td>
-                    {nel_render_out('host')}
+                    {$render->retrieve_data('host')}
                 </td>
-{{ if nel_render_out('has_file') }}
+{{ if $render->retrieve_data('has_file') }}
                 <td>
                     <table>
-    {{ foreach nel_render_out('files') as $file }}
+    {{ foreach $render->retrieve_data('files') as $file }}
                         <tr>
                             <td>
-                                <input type="checkbox" name="fileid{nel_render_out('post_number')}_{$file['file_order']}" value="deletefile_{nel_render_out('post_number')}_{$file['file_order']}" title="Delete file">
+                                <input type="checkbox" name="fileid{$render->retrieve_data('post_number')}_{$file['file_order']}" value="deletefile_{$render->retrieve_data('post_number')}_{$file['file_order']}" title="Delete file">
                             </td>
-        {{ if nel_render_out('response_to') == 0 }}
+        {{ if $render->retrieve_data('response_to') == 0 }}
                             <td>
-                                <a href="{SRC_DIR}{nel_render_out('post_number')}/{$file['filename']}{$file['extension']}" rel="external">{$file['filename']}{$file['extension']}</a> ( {$file['filesize']} KB )<br>MD5: {$file['md5']}
+                                <a href="{SRC_DIR}{$render->retrieve_data('post_number')}/{$file['filename']}{$file['extension']}" rel="external">{$file['filename']}{$file['extension']}</a> ( {$file['filesize']} KB )<br>MD5: {$file['md5']}
                             </td>
                         </tr>
         {{ else }}
                             <td>
-                                <a href="{SRC_DIR}{nel_render_out('response_to')}/{$file['filename']}{$file['extension']}" rel="external">{$file['filename']}{$file['extension']}</a> ( {$file['filesize']} KB )<br>MD5: {$file['md5']}
+                                <a href="{SRC_DIR}{$render->retrieve_data('response_to')}/{$file['filename']}{$file['extension']}" rel="external">{$file['filename']}{$file['extension']}</a> ( {$file['filesize']} KB )<br>MD5: {$file['md5']}
                             </td>
                         </tr>
         {{ endif }}

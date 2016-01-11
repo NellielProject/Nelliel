@@ -1,47 +1,47 @@
-        <tr class={nel_render_out('bg_class')}>
+        <tr class={$render->retrieve_data('bg_class')}>
             <td>
-                {nel_render_out('id')}
+                {$render->retrieve_data('id')}
             </td>
             <td>
-                {nel_render_out('type')}
+                {$render->retrieve_data('type')}
             </td>
             <td>
-                {nel_render_out('host')}
+                {$render->retrieve_data('host')}
             </td>
             <td>
-               {nel_render_out('name')}
+               {$render->retrieve_data('name')}
             </td>
             <td>
-                {nel_render_out('reason')}
+                {$render->retrieve_data('reason')}
             </td>
             <td>
-                {nel_render_out('ban_expire')}
+                {$render->retrieve_data('ban_expire')}
             </td>
             <td>
-               {nel_render_out('appeal')}
+               {$render->retrieve_data('appeal')}
             </td>
             <td>
-                {nel_render_out('appeal_response')}
+                {$render->retrieve_data('appeal_response')}
             </td>
             <td>
-                    {nel_render_out('appeal_status')}
+                    {$render->retrieve_data('appeal_status')}
             </td>
             <td>
-                <form accept-charset="utf-8" action="{nel_render_out('dotdot')}{PHP_SELF}" method="post">
+                <form accept-charset="utf-8" action="{$render->retrieve_data('dotdot')}{PHP_SELF}" method="post">
                     <div>
                         <input type="hidden" name="mode" value="admin">
                         <input type="hidden" name="adminmode" value="modifyban">
-                        <input type="hidden" name="banid" value="{nel_render_out('id')}">
+                        <input type="hidden" name="banid" value="{$render->retrieve_data('id')}">
                         <input type="submit" value="{nel_stext('FORM_MOD_BAN')}">
                     </div>
                 </form>
             </td>
             <td>
-                <form accept-charset="utf-8" action="{nel_render_out('dotdot')}{PHP_SELF}" method="post">
+                <form accept-charset="utf-8" action="{$render->retrieve_data('dotdot')}{PHP_SELF}" method="post">
                     <div>
                         <input type="hidden" name="mode" value="admin">
                         <input type="hidden" name="adminmode" value="removeban">
-                        <input type="hidden" name="banid" value="{nel_render_out('id')}">
+                        <input type="hidden" name="banid" value="{$render->retrieve_data('id')}">
                         <input type="submit" value="{nel_stext('FORM_REMOVE_BAN')}">
                     </div>
                 </form>

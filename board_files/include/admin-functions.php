@@ -6,24 +6,23 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_valid($dataforce, $authorize)
 {
-    $dat = '';
-    
+    $render = new nel_render();
+    $render->add_data('dotdot', '');
+    $render->input(nel_render_header($dataforce, $render, array()));
+
     if (!empty($_SESSION))
     {
         $user_auth = $authorize->get_user_auth($_SESSION['username']);
-        nel_render_multiple_in($user_auth['perms']);
-        $dat .= nel_render_header($dataforce, 'ADMIN', array());
-        $dat .= nel_parse_template('manage_options.tpl', 'management', '', FALSE);
-        $dat .= nel_render_basic_footer();
-        echo $dat;
+        $render->add_multiple_data($user_auth['perms']);
+        $render->input(nel_parse_template('manage_options.tpl', 'management', $render, FALSE));
     }
     else
     {
-        $dat .= nel_render_header($dataforce, 'ADMIN', array());
-        $dat .= nel_parse_template('manage_login.tpl', 'management', '', FALSE);
-        $dat .= nel_render_basic_footer();
-        echo $dat;
+        $render->input(nel_parse_template('manage_login.tpl', 'management', $render, FALSE));
     }
+    
+    $render->input(nel_render_basic_footer($render));
+    echo $render->output();
 }
 
 //
@@ -110,14 +109,13 @@ function nel_update_ban($dataforce, $mode, $authorize, $dbh)
 function nel_staff_panel($dataforce, $mode, $plugins, $authorize, $dbh)
 {
     $temp_auth = array();
-    $dat = '';
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_staff_panel'))
     {
         nel_derp(102, array('origin' => 'ADMIN'));
     }
     
-    require_once INCLUDE_PATH . 'output-generation/staff-panel-generation.php';
+    require_once INCLUDE_PATH . 'output/staff-panel-generation.php';
     
     if(isset($_POST['staff_name']))
     {
@@ -133,7 +131,7 @@ function nel_staff_panel($dataforce, $mode, $plugins, $authorize, $dbh)
 
         if ($mode === 'add')
         {
-            if ($authorize->get_user_auth(nel_render_out('staff_name')))
+            if ($authorize->get_user_auth($_POST['staff_name']))
             {
                 nel_derp(154, array('origin' => 'ADMIN'));
             }
@@ -149,7 +147,7 @@ function nel_staff_panel($dataforce, $mode, $plugins, $authorize, $dbh)
         }
         
         $temp_auth = $authorize->get_user_auth($staff_name);
-        $dat = nel_render_staff_panel_edit($dataforce, $temp_auth);
+        nel_render_staff_panel_edit($dataforce, $temp_auth);
     }
     else if ($mode === 'update')
     {
@@ -186,19 +184,18 @@ function nel_staff_panel($dataforce, $mode, $plugins, $authorize, $dbh)
         }
         
         $authorize->write_auth_file();
-        $dat = nel_render_staff_panel_add($dataforce, $temp_auth);
+        nel_render_staff_panel_add($dataforce, $temp_auth);
     }
     else if ($mode === 'delete')
     {
         $authorize->remove_user_auth($staff_name);
         $authorize->write_auth_file();
+        nel_render_staff_panel_add($dataforce, $temp_auth);
     }
     else
     {
-        $dat = nel_render_staff_panel_add($dataforce, $temp_auth);
+        nel_render_staff_panel_add($dataforce, $temp_auth);
     }
-
-    echo $dat;
 }
 
 function nel_gen_new_staff($new_name, $new_type, $authorize)
@@ -276,7 +273,7 @@ function nel_admin_control($dataforce, $mode, $authorize, $dbh)
         nel_derp(102, array('origin' => 'ADMIN'));
     }
 
-    require_once INCLUDE_PATH . 'output-generation/admin-panel-generation.php';
+    require_once INCLUDE_PATH . 'output/admin-panel-generation.php';
     $update = FALSE;
 
     if ($mode === 'set')
@@ -307,8 +304,7 @@ function nel_admin_control($dataforce, $mode, $authorize, $dbh)
         nel_regen($dataforce, NULL, 'full', FALSE, $dbh);
     }
 
-    $dat = nel_render_admin_panel($dataforce, $dbh);
-    echo $dat;
+    nel_render_admin_panel($dataforce, $dbh);
 }
 
 //
@@ -321,22 +317,20 @@ function nel_ban_control($dataforce, $mode, $authorize, $dbh)
         nel_derp(101, array('origin' => 'ADMIN'));
     }
 
-    require_once INCLUDE_PATH . 'output-generation/ban-panel-generation.php';
+    require_once INCLUDE_PATH . 'output/ban-panel-generation.php';
 
-    if ($mode === 'list')
+    if ($mode === 'modify')
     {
-        $dat = nel_render_ban_panel_list($dataforce, $dbh);
-    }
-    else if ($mode === 'modify')
-    {
-        $dat = nel_render_ban_panel_modify($dataforce, $dbh);
+        nel_render_ban_panel_modify($dataforce, $dbh);
     }
     else if ($mode === 'new')
     {
-        $dat = nel_render_ban_panel_add($dataforce, $dbh);
+        nel_render_ban_panel_add($dataforce);
     }
-
-    echo $dat;
+    else
+    {
+        nel_render_ban_panel_list($dataforce, $dbh);
+    }
 }
 
 //
@@ -349,7 +343,7 @@ function nel_thread_panel($dataforce, $mode, $authorize, $dbh)
         nel_derp(103, array('origin' => 'ADMIN'));
     }
     
-    require_once INCLUDE_PATH . 'output-generation/thread-panel-generation.php';
+    require_once INCLUDE_PATH . 'output/thread-panel-generation.php';
 
     if ($mode === 'update')
     {
@@ -358,8 +352,7 @@ function nel_thread_panel($dataforce, $mode, $authorize, $dbh)
         nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
     }
 
-    $dat = nel_render_thread_panel($dataforce, $expand, $dbh);
-    echo $dat;
+    nel_render_thread_panel($dataforce, $expand, $dbh);
 }
 
 //
@@ -367,6 +360,11 @@ function nel_thread_panel($dataforce, $mode, $authorize, $dbh)
 //
 function nel_ban_hammer($dataforce, $dbh)
 {
+    if (!$authorize->get_user_setting($_SESSION['username'], 'perm_ban'))
+    {
+        nel_derp(104, array('origin' => 'ADMIN'));
+    }
+
     $ban_input = array();
 
     if ($dataforce['admin_mode'] === 'add_ban')

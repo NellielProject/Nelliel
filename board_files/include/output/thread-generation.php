@@ -27,9 +27,9 @@ function nel_thread_generator($dataforce, $dbh)
     $gen_data['post_count'] = $treeline[0]['post_count'];
     $page = 1;
     $gen_data['post_counter'] = 0;
-    $page_output = '';
-    $page_output_expand = '';
-    $page_output_collapse = '';
+    $render = new nel_render();
+    $render_expand = new nel_render();
+    $render_collapse = new nel_render();
     $gen_data['expand_post'] = FALSE;
     $dataforce['omitted_done'] = TRUE;
     $partlimit = 1;
@@ -51,18 +51,20 @@ function nel_thread_generator($dataforce, $dbh)
         
         if ($gen_data['post_counter'] === 0)
         {
-            $page_output .= nel_render_header($dataforce, 'NORMAL', $treeline);
-            $page_output .= nel_render_posting_form($dataforce);
+            $render->add_data('header_type', 'NORMAL');
+            nel_render_header($dataforce, $render, $treeline);
+            nel_render_posting_form($dataforce, $render);
         }
         
         if ($partlimit === 100)
         {
-            $page_output2 = $page_output;
+            $render_temp = clone $render;
             $gen_data['insert_hr'] = TRUE;
-            $page_output2 .= nel_render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
+            nel_render_post($dataforce, $render_temp, FALSE, FALSE, $gen_data, $treeline, $dbh);
             $gen_data['insert_hr'] = FALSE;
-            $page_output2 .= nel_render_footer(FALSE, TRUE, TRUE, TRUE, FALSE);
-            nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-0-100.html', $page_output2, 0644);
+            nel_render_footer($render_temp, FALSE, TRUE, TRUE, TRUE, FALSE);
+            nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-0-100.html', $render_temp->output(), 0644);
+            unset($render_temp);
         }
         
         if ($treeline[$gen_data['post_counter']]['response_to'] > 0)
@@ -74,63 +76,70 @@ function nel_thread_generator($dataforce, $dbh)
             
             $resid = $dataforce['response_id'];
             
-            $page_output_tmp = nel_render_post($dataforce, TRUE, FALSE, $gen_data, $treeline, $dbh); // for thread
+            $render_temp = new nel_render();
+            $render_temp2 = new nel_render();
+            $render_temp3 = new nel_render();
+            
+            nel_render_post($dataforce, $render_temp, TRUE, FALSE, $gen_data, $treeline, $dbh); // for thread
             $dataforce['response_id'] = 0;
-            $page_output_tmp2 = nel_render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
-            $page_output_tmp3 = nel_render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for expand
+            nel_render_post($dataforce, $render_temp2, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
+            nel_render_post($dataforce, $render_temp3, TRUE, TRUE, $gen_data, $treeline, $dbh); // for expand
             $dataforce['response_id'] = $resid;
             
             if ($gen_data['post_count'] > BS_ABBREVIATE_THREAD)
             {
-                if ($page_output_collapse === '')
+                if ($render_collapse->output() === '')
                 {
                     $dataforce['omitted_done'] = FALSE;
-                    $page_output_tmp2 = nel_render_post($dataforce, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
+                    nel_render_post($dataforce, $render_temp2, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
                     $dataforce['omitted_done'] = TRUE;
                 }
                 
                 if ($gen_data['post_counter'] > $gen_data['post_count'] - BS_ABBREVIATE_THREAD)
                 {
-                    $page_output_collapse .= $page_output_tmp2;
+                    $render_collapse->input($render_temp2->output());
                 }
             }
             
-            $page_output .= $page_output_tmp;
-            $page_output_expand .= $page_output_tmp3;
+            $render->input($render_temp->output());
+            $render_expand->input($render_temp3->output());
         }
         else
         {
-            $page_output .= nel_render_post($dataforce, FALSE, FALSE, $gen_data, $treeline, $dbh);
+            nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dbh);
         }
         
         ++ $partlimit;
         ++ $gen_data['post_counter'];
+        unset($render_temp);
+        unset($render_temp2);
+        unset($render_temp3);
     }
 
-    $page_output .= nel_render_footer(FALSE, TRUE, TRUE, TRUE, FALSE);
+    nel_render_footer($render, FALSE, TRUE, TRUE, TRUE, FALSE);
     
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
         if ($dataforce['expand'])
         {
-            echo $page_output_expand;
+            echo $render_expand->output();
         }
         else if ($dataforce['collapse'])
         {
-            echo $page_output_collapse;
+            echo $render_collapse->output();
         }
         else
         {
-            echo $page_output;
+            echo $render->output();
         }
         
         die();
     }
     else
     {
-        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '.html', $page_output, 0644);
-        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-expand.html', $page_output_expand, 0644);
-        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-collapse.html', $page_output_collapse, 0644);
+        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '.html', $render->output(), 0644);
+        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-expand.html', $render_expand->output(), 0644);
+        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-collapse.html', $render_collapse->output(), 0644);
     }
 }
 

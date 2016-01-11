@@ -143,8 +143,7 @@ function nel_apply_ban($dataforce, $dbh)
             nel_terminate_session();
         }
         
-        $dat = nel_render_ban_page($dataforce, $bandata);
-        echo $dat;
+        nel_render_ban_page($dataforce, $bandata);
         die();
     }
 }

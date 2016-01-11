@@ -37,9 +37,8 @@ function nel_derp($error_id, $error_data)
         }
     }
 
-    require_once INCLUDE_PATH . 'output-generation/error-page-generation.php';
-    $dat = nel_render_derp($diagnostic);
-    echo $dat;
+    require_once INCLUDE_PATH . 'output/error-page-generation.php';
+    nel_render_derp($diagnostic);
     die();
 }
 

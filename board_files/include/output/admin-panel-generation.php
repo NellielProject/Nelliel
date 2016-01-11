@@ -2,10 +2,8 @@
 
 function nel_render_admin_panel($dataforce, $dbh)
 {
-    nel_render_init(TRUE);
-    $dat = '';
-    $dat .= nel_render_header($dataforce, 'ADMIN', array());
-
+    $render = new nel_render();
+    $render->input(nel_render_header($dataforce, $render, array()));
     $result = $dbh->query('SELECT * FROM ' . CONFIGTABLE . '');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
@@ -58,9 +56,9 @@ function nel_render_admin_panel($dataforce, $dbh)
         }
     }
 
-    nel_render_multiple_in($board_settings);
-    $dat .= nel_parse_template('admin_panel.tpl', 'management', '', FALSE);
-    $dat .= nel_render_basic_footer();
-    return $dat;
+    $render->add_multiple_data($board_settings);
+    $render->parse('admin_panel.tpl', 'management');
+    $render->input(nel_render_basic_footer($render));
+    echo $render->output();
 }
 ?>
