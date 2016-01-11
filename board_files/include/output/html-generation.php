@@ -52,7 +52,7 @@ function nel_render_header($dataforce, $render, $treeline)
     
     $render->add_data('log_out', (!empty($_SESSION) && !$_SESSION['ignore_login']) ? '[<a href="' . $render->retrieve_data('dotdot') . PHP_SELF . '?mode=log_out">Log Out</a>]' : '');
     $render->add_data('page_ref1', (!empty($_SESSION) && !$_SESSION['ignore_login']) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT);
-    $render->input(nel_parse_template('header.tpl', '', $render, FALSE));
+    $render->parse('header.tpl', '');
 }
 
 //
@@ -100,7 +100,7 @@ function nel_render_posting_form($dataforce, $render)
     }
     
     $render->add_data('max_files', 3);
-    $render->input(nel_parse_template('posting_form.tpl', '', $render, FALSE));
+    $render->parse('posting_form.tpl', '', $render, FALSE);
 }
 
 //
@@ -111,7 +111,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     global $link_resno;
 
     $render->add_data('insert_hr', $gen_data['insert_hr']);
-    nel_parse_template('op_post.tpl', '', $render, FALSE);
+    $render->parse('op_post.tpl', '');
     $post_data = $treeline[$gen_data['post_counter']];
     $render->add_multiple_data($post_data);
     
@@ -268,7 +268,14 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $render->add_data('the_session', session_id());
     }
     
-    $render->input(($response ? nel_parse_template('response_post.tpl', '', $render, FALSE) : nel_parse_template('op_post.tpl', '', $render, FALSE)));
+    if($response)
+    {
+        $render->parse('response_post.tpl', '');
+    }
+    else
+    {
+        $render->parse('op_post.tpl', '');
+    }
 }
 
 //
@@ -294,7 +301,7 @@ function nel_render_basic_footer($render)
     }
 
     lol_html_timer(1);
-    $render->input(nel_parse_template('footer.tpl', '', $render, FALSE));
+    $render->parse('footer.tpl', '');
 }
 
 function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
@@ -324,7 +331,7 @@ function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
     $render->add_data('response', $response);
     $render->add_data('main_page', $main_page);
     lol_html_timer(1);
-    $render->input(nel_parse_template('footer.tpl', '', $render, FALSE));
+    $render->parse('footer.tpl', '');
 }
 
 function nel_render_ban_page($dataforce, $bandata)
@@ -337,7 +344,7 @@ function nel_render_ban_page($dataforce, $bandata)
     $render->add_data('host', @inet_ntop($bandata['host']) ? inet_ntop($bandata['host']) : 'Unknown');
     lol_html_timer(0);
     nel_render_header($dataforce, $render, array());
-    $render->input(nel_parse_template('ban_page.tpl', '', $render, FALSE));
+    $render->parse('ban_page.tpl', '');
     nel_render_basic_footer($render);
     echo $render->output();
 }

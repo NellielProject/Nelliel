@@ -14,11 +14,11 @@ function nel_valid($dataforce, $authorize)
     {
         $user_auth = $authorize->get_user_auth($_SESSION['username']);
         $render->add_multiple_data($user_auth['perms']);
-        $render->input(nel_parse_template('manage_options.tpl', 'management', $render, FALSE));
+        $render->parse('manage_options.tpl', 'management');
     }
     else
     {
-        $render->input(nel_parse_template('manage_login.tpl', 'management', $render, FALSE));
+        $render->parse('manage_login.tpl', 'management');
     }
     
     $render->input(nel_render_basic_footer($render));

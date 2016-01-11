@@ -1,7 +1,7 @@
 <?php
 function nel_render_ban_panel_top($dataforce, $render)
 {
-    $render->input(nel_parse_template('bans_panel_top.tpl', 'management', $render, FALSE));
+    $render->parse('bans_panel_top.tpl', 'management');
 }
 
 function nel_render_ban_panel_list($dataforce, $dbh)
@@ -30,7 +30,7 @@ function nel_render_ban_panel_list($dataforce, $dbh)
             $bgclass = 'row1';
         }
 
-        $render->input(nel_parse_template('bans_panel_list_bans.tpl', 'management', $render, FALSE));
+        $render->parse('bans_panel_list_bans.tpl', 'management');
     }
 
     unset($result);
@@ -44,7 +44,7 @@ function nel_render_ban_panel_add($dataforce)
 {
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
-    $render->input(nel_parse_template('bans_panel_add_ban.tpl', 'management', $render, FALSE));
+    $render->parse('bans_panel_add_ban.tpl', 'management');
     nel_render_basic_footer($render);
     echo $render->output();
 }
@@ -76,13 +76,13 @@ function nel_render_ban_panel_modify($dataforce, $dbh)
         $render->add_data('appeal_check', 'checked');
     }
 
-    $render->input(nel_parse_template('bans_panel_modify_ban.tpl', 'management', $render, FALSE));
+    $render->parse('bans_panel_modify_ban.tpl', 'management');
     nel_render_basic_footer($render);
     echo $render->output();
 }
 
 function nel_render_ban_panel_bottom($dataforce, $render)
 {
-    $render->input(nel_parse_template('bans_panel_bottom.tpl', 'management', $render, FALSE));
+    $render->parse('bans_panel_bottom.tpl', 'management');
 }
 ?>

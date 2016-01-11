@@ -119,18 +119,18 @@ function nel_render_thread_panel_thread($dataforce, $render, $thread_data)
     }
 
     $render->add_data('bg_class', ($dataforce['j_increment'] % 2) ? 'row1' : 'row2');
-    $render->input(nel_parse_template('thread_panel_thread.tpl', 'management', $render, FALSE));
+    $render->parse('thread_panel_thread.tpl', 'management');
 }
 
 function nel_render_thread_panel_form($dataforce, $render)
 {
-    $render->input(nel_parse_template('thread_panel_form.tpl', 'management', $render, FALSE));
+    $render->parse('thread_panel_form.tpl', 'management');
 }
 
 function nel_render_thread_panel_bottom($dataforce, $render, $thread_data)
 {
     $render->add_multiple_data($thread_data);
     $render->add_data('all_filesize', $dataforce['all_filesize']);
-    $render->input(nel_parse_template('thread_panel_bottom.tpl', 'management', $render, FALSE));
+    $render->parse('thread_panel_bottom.tpl', 'management');
 }
 ?>
