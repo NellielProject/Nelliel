@@ -36,7 +36,7 @@ function nel_derp($error_id, $error_data)
             unlink($file['dest']);
         }
     }
-
+    
     require_once INCLUDE_PATH . 'output/error-page-generation.php';
     nel_render_derp($diagnostic);
     die();

@@ -1,4 +1,5 @@
 <?php
+
 function nel_render_staff_panel_add($dataforce, $auth)
 {
     $render = new nel_render();

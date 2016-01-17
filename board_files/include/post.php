@@ -37,9 +37,9 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     $files = nel_process_file_info();
     $there_is_no_spoon = TRUE;
     
-    $poster_info = array('name' => $dataforce['name'], 'email' => $dataforce['email'],
-                        'subject' => $dataforce['subject'], 'comment' => $dataforce['comment'],
-                        'tripcode' => '', 'secure_tripcode' => '');
+    $poster_info = array('name' => $dataforce['name'], 'email' => $dataforce['email'], 
+        'subject' => $dataforce['subject'], 'comment' => $dataforce['comment'], 'tripcode' => '', 
+        'secure_tripcode' => '');
     
     if (!empty($files))
     {
@@ -69,12 +69,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     // Cancer-fighting tools and lulz
     
 
-    if (utf8_strlen($poster_info['comment']) > BS_MAX_COMMENT_LENGTH
-        || utf8_strlen($poster_info['name']) > BS_MAX_NAME_LENGTH
-        || utf8_strlen($poster_info['email']) > BS_MAX_EMAIL_LENGTH
-        || utf8_strlen($poster_info['subject']) > BS_MAX_SUBJECT_LENGTH
-        || utf8_strlen($dataforce['file_source']) > BS_MAX_SOURCE_LENGTH
-        || utf8_strlen($dataforce['file_license']) > BS_MAX_LICENSE_LENGTH)
+    if (utf8_strlen($poster_info['comment']) > BS_MAX_COMMENT_LENGTH || utf8_strlen($poster_info['name']) > BS_MAX_NAME_LENGTH || utf8_strlen($poster_info['email']) > BS_MAX_EMAIL_LENGTH || utf8_strlen($poster_info['subject']) > BS_MAX_SUBJECT_LENGTH || utf8_strlen($dataforce['file_source']) > BS_MAX_SOURCE_LENGTH || utf8_strlen($dataforce['file_license']) > BS_MAX_LICENSE_LENGTH)
     {
         nel_derp(11, array('origin' => 'POST'));
     }
@@ -173,19 +168,19 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
                         $modpostc = 1;
                     }
                 }
-            
+                
                 if ($_SESSION['perms']['perm_sticky'] && utf8_strripos($dataforce['fgsfds'], 'sticky') !== FALSE)
                 {
                     $fgsfds['sticky'] = TRUE;
                 }
-            
+                
                 if ($modpostc > 0)
                 {
                     break;
                 }
             }
         }
-
+        
         if ($name_pieces[3] !== '' && BS1_ALLOW_TRIPKEYS)
         {
             $cap = utf8_strtr($name_pieces[3], '&amp;', '&');
@@ -195,7 +190,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
             $salt = utf8_strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
             $poster_info['tripcode'] = utf8_substr(crypt($cap, $salt), -10);
         }
-
+        
         $poster_info = $plugins->plugin_hook('tripcode-processing', TRUE, array($poster_info, $name_pieces));
         
         if ($name_pieces[5] !== '' || $modpostc > 0)
@@ -204,7 +199,8 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
             $poster_info['secure_tripcode'] = utf8_substr(crypt($trip, '42'), -12);
         }
         
-        $poster_info = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($poster_info, $name_pieces, $modpostc));
+        $poster_info = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($poster_info, $name_pieces, 
+            $modpostc));
         
         if ($name_pieces[1] === '' || $_SESSION['perms']['perm_post_anon'])
         {
@@ -259,7 +255,8 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
                     
                     if ($same_thread > 0)
                     {
-                        nel_derp(12, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => $files));
+                        nel_derp(12, array('origin' => 'POST', 
+                            'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => $files));
                     }
                 }
                 
@@ -681,7 +678,8 @@ function nel_process_file_info()
                 
                 if ($file['size'] > BS_MAX_FILESIZE * 1024)
                 {
-                    nel_derp(19, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
+                    nel_derp(19, array('origin' => 'POST', 
+                        'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
                 }
                 
                 $files[$i]['dest'] = SRC_PATH . $file['name'] . '.tmp';
@@ -712,12 +710,14 @@ function nel_process_file_info()
                 
                 if (!$file_allowed)
                 {
-                    nel_derp(6, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
+                    nel_derp(6, array('origin' => 'POST', 
+                        'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
                 }
                 
                 if (!$file_good)
                 {
-                    nel_derp(18, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
+                    nel_derp(18, array('origin' => 'POST', 
+                        'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
                 }
                 
                 $files[$i]['file_source'] = nel_cleanse_the_aids($_POST['sauce' . ($i + 1)]);
@@ -732,7 +732,8 @@ function nel_process_file_info()
         }
         else if ($file['error'] === UPLOAD_ERR_INI_SIZE)
         {
-            nel_derp(19, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
+            nel_derp(19, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 
+                'files' => array($files[$i])));
         }
     }
     

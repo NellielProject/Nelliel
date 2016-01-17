@@ -3,7 +3,6 @@ if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
-
 class nel_plugin_handler
 {
     private $hooks = array();
@@ -17,7 +16,7 @@ class nel_plugin_handler
         {
             return FALSE;
         }
-
+        
         $this->sort_hooks();
         $this->loaded = TRUE;
         return TRUE;
@@ -52,10 +51,8 @@ class nel_plugin_handler
         
         if (!in_array($plugin_id, $this->plugins, TRUE))
         {
-            $this->plugins[$plugin_id] = array('instance' => $instance,
-                                                'name' => $name,
-                                                'author' => $author,
-                                                'version' => $version);
+            $this->plugins[$plugin_id] = array('instance' => $instance, 'name' => $name, 'author' => $author, 
+                'version' => $version);
             return $plugin_id;
         }
         else
@@ -85,7 +82,8 @@ class nel_plugin_handler
             $next_index = key($hooks[$hook_name]) + 1;
         }
         
-        $hooks[$hook_name][] = array('function' => $function_name, 'priority' => $priority, 'index' => $next_index, 'plugin' => $plugin_id);
+        $hooks[$hook_name][] = array('function' => $function_name, 'priority' => $priority, 'index' => $next_index, 
+            'plugin' => $plugin_id);
         $this->hooks = $hooks;
     }
     
@@ -127,12 +125,11 @@ class nel_plugin_handler
         {
             foreach ($hooks[$hook_name] as $hook_function)
             {
-                if(is_object($hook_function['function'][0])
-                    && method_exists($hook_function['function'][0], $hook_function['function'][1]))
+                if (is_object($hook_function['function'][0]) && method_exists($hook_function['function'][0], $hook_function['function'][1]))
                 {
                     $return = call_user_func_array(array($hook_function['function'][0], $hook_function['function'][1]), $input);
                 }
-                else if(function_exists($hook_function['function'][1]))
+                else if (function_exists($hook_function['function'][1]))
                 {
                     $return = call_user_func_array($hook_function['function'][1], $input);
                     

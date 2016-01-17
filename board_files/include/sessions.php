@@ -38,13 +38,13 @@ function nel_regen_session()
 
 function nel_set_session_cookie()
 {
-    if(version_compare(PHP_VERSION, '5.2.0', '<'))
+    if (version_compare(PHP_VERSION, '5.2.0', '<'))
     {
         setcookie(session_name(), session_id(), 0, '/', '; HttpOnly');
     }
     else
     {
-        setcookie(session_name(), session_id(), 0, '/', '', NULL, TRUE );
+        setcookie(session_name(), session_id(), 0, '/', '', NULL, TRUE);
     }
 }
 
@@ -55,7 +55,7 @@ function nel_set_session_cookie()
 function nel_initialize_session($dataforce, $plugins, $authorize)
 {
     session_start();
-
+    
     if (!empty($_SESSION))
     {
         if (isset($dataforce['get_mode']))

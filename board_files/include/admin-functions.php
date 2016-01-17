@@ -9,7 +9,7 @@ function nel_valid($dataforce, $authorize)
     $render = new nel_render();
     $render->add_data('dotdot', '');
     nel_render_header($dataforce, $render, array());
-
+    
     if (!empty($_SESSION))
     {
         $user_auth = $authorize->get_user_auth($_SESSION['username']);
@@ -39,15 +39,15 @@ function nel_change_true_false(&$item1, $key)
 function nel_admin_control($dataforce, $authorize, $dbh)
 {
     $mode = $dataforce['mode_action'];
-
+    
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config'))
     {
         nel_derp(102, array('origin' => 'ADMIN'));
     }
-
+    
     require_once INCLUDE_PATH . 'output/admin-panel-generation.php';
     $update = FALSE;
-
+    
     if ($mode === 'update')
     {
         // Apply settings from admin panel
@@ -75,7 +75,7 @@ function nel_admin_control($dataforce, $authorize, $dbh)
         nel_cache_settings($dbh);
         nel_regen($dataforce, NULL, 'full', FALSE, $dbh);
     }
-
+    
     nel_render_admin_panel($dataforce, $dbh);
 }
 
@@ -92,19 +92,19 @@ function nel_thread_panel($dataforce, $mode, $authorize, $dbh)
     }
     
     require_once INCLUDE_PATH . 'output/thread-panel-generation.php';
-
+    
     if ($mode === 'update')
     {
         if (isset($dataforce['expand_thread']))
         {
             $expand = TRUE;
         }
-
+        
         $updates = nel_thread_updates($dataforce, $dbh);
         nel_regen($dataforce, $updates, 'thread', FALSE, $dbh);
         nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
     }
-
+    
     nel_render_thread_panel($dataforce, $expand, $dbh);
 }
 

@@ -24,9 +24,9 @@ function nel_render_header($dataforce, $render, $treeline)
     {
         $title .= '<h1>' . BS_BOARD_NAME . '</h1>';
     }
-
+    
     $render->add_data('titlepart', $title);
-
+    
     switch ($render->output('header_type'))
     {
         case 'ABOUT':
@@ -44,7 +44,7 @@ function nel_render_header($dataforce, $render, $treeline)
             }
             
             break;
-
+        
         default:
             $render->add_data('page_title', BS_BOARD_NAME);
             break;
@@ -109,7 +109,7 @@ function nel_render_posting_form($dataforce, $render)
 function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline, $dbh)
 {
     global $link_resno;
-
+    
     $render->add_data('insert_hr', $gen_data['insert_hr']);
     $post_data = $treeline[$gen_data['post_counter']];
     $render->add_multiple_data($post_data);
@@ -122,7 +122,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     {
         $link_resno = $dataforce['response_id'];
     }
-
+    
     $render->add_data('expand_post', $gen_data['expand_post']);
     $render->add_data('first100', $gen_data['first100']);
     $render->add_data('response_id', $dataforce['response_id']);
@@ -143,7 +143,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     }
     else
     {
-        $render->add_data('omitted_posts',  FALSE);
+        $render->add_data('omitted_posts', FALSE);
     }
     
     if ($gen_data['has_file'])
@@ -157,8 +157,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         
         while ($i < $filecount)
         {
-            $files[$i]['img_dim'] = (!is_null($files[$i]['image_width'])
-                                                && !is_null($files[$i]['image_height'])) ? TRUE : FALSE;
+            $files[$i]['img_dim'] = (!is_null($files[$i]['image_width']) && !is_null($files[$i]['image_height'])) ? TRUE : FALSE;
             $files[$i]['file_location'] = $temp_dot . SRC_DIR . $post_id . '/' . $files[$i]['filename'] . "." . $files[$i]['extension'];
             $files[$i]['filesize'] = round(((int) $files[$i]['filesize'] / 1024), 2);
             
@@ -169,10 +168,9 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                     $files[$i]['has_preview'] = TRUE;
                     $files[$i]['preview_location'] = $temp_dot . THUMB_DIR . $post_id . '/' . $files[$i]['preview_name'];
                     
-                    if($files[$i]['preview_width'] != 0)
+                    if ($files[$i]['preview_width'] != 0)
                     {
-                        if ($files[$i]['preview_width'] > BS_MAX_MULTI_WIDTH
-                            || $files[$i]['preview_height'] > BS_MAX_MULTI_HEIGHT)
+                        if ($files[$i]['preview_width'] > BS_MAX_MULTI_WIDTH || $files[$i]['preview_height'] > BS_MAX_MULTI_HEIGHT)
                         {
                             $ratio = min((BS_MAX_MULTI_HEIGHT / $files[$i]['preview_height']), (BS_MAX_MULTI_WIDTH / $files[$i]['preview_width']));
                             $files[$i]['preview_width'] = intval($ratio * $files[$i]['preview_width']);
@@ -213,21 +211,15 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     switch (BS_DATE_FORMAT)
     {
         case 'ISO':
-            $render->add_data('post_time', date("Y", $curr_time)
-                                    . BS_DATE_SEPARATOR . date("m", $curr_time)
-                                    . BS_DATE_SEPARATOR . date("d (D) H:i:s", $curr_time));
+            $render->add_data('post_time', date("Y", $curr_time) . BS_DATE_SEPARATOR . date("m", $curr_time) . BS_DATE_SEPARATOR . date("d (D) H:i:s", $curr_time));
             break;
         
         case 'US':
-            $render->add_data('post_time', date("m", $curr_time) . BS_DATE_SEPARATOR 
-                                    . date("d", $curr_time) . BS_DATE_SEPARATOR
-                                    . date("Y (D) H:i:s", $curr_time));
+            $render->add_data('post_time', date("m", $curr_time) . BS_DATE_SEPARATOR . date("d", $curr_time) . BS_DATE_SEPARATOR . date("Y (D) H:i:s", $curr_time));
             break;
         
         case 'COM':
-            $render->add_data('post_time', date("d", $curr_time)
-                                    . BS_DATE_SEPARATOR . date("m", $curr_time)
-                                    . BS_DATE_SEPARATOR . date("Y (D) H:i:s", $curr_time));
+            $render->add_data('post_time', date("d", $curr_time) . BS_DATE_SEPARATOR . date("m", $curr_time) . BS_DATE_SEPARATOR . date("Y (D) H:i:s", $curr_time));
             break;
     }
     
@@ -255,7 +247,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $render->add_data('logged_in', FALSE);
     $render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
     $render->add_data('page_ref2', '');
-
+    
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
         $render->add_data('logged_in', TRUE);
@@ -266,7 +258,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $render->add_data('the_session', session_id());
     }
     
-    if($response)
+    if ($response)
     {
         $render->parse('response_post.tpl', '');
     }
@@ -282,7 +274,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 function nel_render_basic_footer($render)
 {
     global $total_html, $total_script;
-
+    
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
         $render->add_data('logged_in', TRUE);
@@ -297,7 +289,7 @@ function nel_render_basic_footer($render)
     {
         $render->add_data('logged_in', FALSE);
     }
-
+    
     lol_html_timer(1);
     $render->parse('footer.tpl', '');
 }
@@ -305,14 +297,14 @@ function nel_render_basic_footer($render)
 function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
 {
     global $total_html, $total_script;
-
+    
     $render->add_data('main_page', $main_page);
-
+    
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
         $render->add_data('logged_in', TRUE);
         $render->add_data('main_page', FALSE);
-
+        
         if ($_SESSION['perms']['perm_ban'])
         {
             $render->add_data('perm_ban', TRUE);
@@ -322,7 +314,7 @@ function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
     {
         $render->add_data('logged_in', FALSE);
     }
-
+    
     $render->add_data('link', $link);
     $render->add_data('styles_link', $styles);
     $render->add_data('del', $del);
@@ -398,17 +390,17 @@ function nel_parse_links($matches)
 
 function nel_escape_single_quotes($matches)
 {
-    if($matches[1] !== '')
+    if ($matches[1] !== '')
     {
         return $matches[1];
     }
-    else if($matches[2] !== '')
+    else if ($matches[2] !== '')
     {
         return '\'.' . $matches[3] . '.\'';
     }
     else
     {
-        return '\\' .$matches[4];
+        return '\\' . $matches[4];
     }
 }
 

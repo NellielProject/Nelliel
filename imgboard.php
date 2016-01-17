@@ -2,6 +2,7 @@
 define('NELLIEL_VERSION', 'v0.9.1'); // Version
 define('BOARD_FILES', 'board_files/'); // Name of directory where the support and internal files go
 
+
 require_once BOARD_FILES . 'config.php';
 require_once INCLUDE_PATH . 'plugins.php';
 
@@ -60,6 +61,7 @@ require_once INCLUDE_PATH . 'post.php';
 require_once INCLUDE_PATH . 'snacks.php';
 
 // Initialization done. IT'S GO TIME!
+
 
 nel_ban_spambots($dataforce, $dbh);
 require_once INCLUDE_PATH . 'sessions.php';

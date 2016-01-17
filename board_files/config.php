@@ -23,6 +23,7 @@ define('MYSQL_PASS', 'password'); // SQL user's password
 // Set this if you plan to use SQLite
 define('SQLITE_DB_NAME', 'nelliel.sqlite'); // Filename of SQLite database. Can be an absolute path if you want the database file somewhere else on the server
 
+
 // Set the language; the corresponding file should be named lang.<language code>.php
 // Default Nelliel language files follow the IETF codes
 define('BOARD_LANGUAGE', 'en-us');

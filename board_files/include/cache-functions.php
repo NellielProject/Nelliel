@@ -81,33 +81,27 @@ function nel_cache_rules($dbh)
             continue;
         }
         
-        if ($config_list[$i]['config_type'] === 'filetype_allow_g' && $t_element !== 'graphics'
-            && $config_list2['graphics'] === '1')
+        if ($config_list[$i]['config_type'] === 'filetype_allow_g' && $t_element !== 'graphics' && $config_list2['graphics'] === '1')
         {
             $gmode = $gmode . $t_element . ', ';
         }
-        else if ($config_list[$i]['config_type'] === 'filetype_allow_a' && $t_element !== 'audio'
-            && $config_list2['audio'] === '1')
+        else if ($config_list[$i]['config_type'] === 'filetype_allow_a' && $t_element !== 'audio' && $config_list2['audio'] === '1')
         {
             $amode = $amode . $t_element . ', ';
         }
-        else if ($config_list[$i]['config_type'] === 'filetype_allow_v' && $t_element !== 'video'
-            && $config_list2['video'] === '1')
+        else if ($config_list[$i]['config_type'] === 'filetype_allow_v' && $t_element !== 'video' && $config_list2['video'] === '1')
         {
             $vmode = $vmode . $t_element . ', ';
         }
-        else if ($config_list[$i]['config_type'] === 'filetype_allow_o' && $t_element !== 'other'
-            && $config_list2['other'] === '1')
+        else if ($config_list[$i]['config_type'] === 'filetype_allow_o' && $t_element !== 'other' && $config_list2['other'] === '1')
         {
             $omode = $omode . $t_element . ', ';
         }
-        else if ($config_list[$i]['config_type'] === 'filetype_allow_d' && $t_element !== 'document'
-            && $config_list2['document'] === '1')
+        else if ($config_list[$i]['config_type'] === 'filetype_allow_d' && $t_element !== 'document' && $config_list2['document'] === '1')
         {
             $dmode = $dmode . $t_element . ', ';
         }
-        else if ($config_list[$i]['config_type'] === 'filetype_allow_r' && $t_element !== 'archive'
-            && $config_list2['archive'] === '1')
+        else if ($config_list[$i]['config_type'] === 'filetype_allow_r' && $t_element !== 'archive' && $config_list2['archive'] === '1')
         {
             $rmode = $rmode . $t_element . ', ';
         }

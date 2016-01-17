@@ -45,7 +45,7 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
         {
             echo $render->output();
         }
-
+        
         return;
     }
     
@@ -63,7 +63,7 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
         $end_of_thread = FALSE;
         $sub_page_thread_counter = 0;
         $gen_data['first100'] = FALSE;
-
+        
         while ($sub_page_thread_counter < BS_THREADS_PER_PAGE)
         {
             if ($gen_data['post_counter'] === -1)

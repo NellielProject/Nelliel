@@ -4,22 +4,22 @@ class nel_render
     private $variables;
     private $defaults;
     private $output;
-    
+
     function __construct()
     {
         $this->defaults = array();
         $this->variables = array();
         $this->output = '';
     }
-    
+
     public function add_data($setting, $input)
     {
         $this->variables[$setting] = $input;
     }
-    
+
     public function add_multiple_data($input)
     {
-        foreach($input as $key => $value)
+        foreach ($input as $key => $value)
         {
             $this->add_data($key, $value);
         }
@@ -34,12 +34,12 @@ class nel_render
     {
         unset($this->variables[$setting]);
     }
-    
+
     public function add_defaults($setting, $input)
     {
-        if(is_null($setting))
+        if (is_null($setting))
         {
-            foreach($input as $key => $value)
+            foreach ($input as $key => $value)
             {
                 $this->defaults[$key] = $value;
             }
@@ -49,12 +49,12 @@ class nel_render
             $this->defaults[$setting] = $input;
         }
     }
-    
+
     public function remove_defaults($setting, $input)
     {
-        if(is_null($setting))
+        if (is_null($setting))
         {
-            foreach($input as $key)
+            foreach ($input as $key)
             {
                 unset($this->defaults[$key]);
             }
@@ -64,10 +64,10 @@ class nel_render
             unset($this->defaults[$setting]);
         }
     }
-    
+
     public function reset($use_defaults)
     {
-        if($use_defaults)
+        if ($use_defaults)
         {
             $this->variables = $this->defaults;
         }
@@ -78,7 +78,7 @@ class nel_render
         
         $this->output = '';
     }
-    
+
     public function input($input)
     {
         $this->output .= $input;

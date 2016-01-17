@@ -3,20 +3,20 @@
 function nel_parse_template($template, $subdirectory, $render, $regen)
 {
     global $total_html;
-
-    if(!empty($subdirectory))
+    
+    if (!empty($subdirectory))
     {
         $subdirectory .= '/';
     }
-
+    
     $template_short = utf8_str_replace('.tpl', '', $template);
     $info = nel_template_info($template, NULL, NULL, TRUE);
-
+    
     if ($info['loaded'] === FALSE || $info['loaded'] === NULL)
     {
         clearstatcache();
         $modify_time = filemtime(TEMPLATE_PATH . $subdirectory . $template);
-
+        
         if ($modify_time !== $info[$template]['modify_time'] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
         {
             $info['modify-time'] = $modify_time;
@@ -33,12 +33,12 @@ function nel_parse_template($template, $subdirectory, $render, $regen)
             $lol_out = $begin . $lol . $end;
             nel_write_file(CACHE_PATH . $template_short . '.nelcache', $lol_out, 0644);
         }
-
+        
         include (CACHE_PATH . $template_short . '.nelcache');
         $info['loaded'] = TRUE;
         nel_template_info($template, NULL, $info, FALSE);
     }
-
+    
     if (!$regen)
     {
         $dat_temp = call_user_func('nel_template_render_' . $template_short, $render);
@@ -50,13 +50,13 @@ function nel_template_info($template, $parameter, $update, $return)
 {
     static $info;
     
-    if(!$return)
+    if (!$return)
     {
-        if(is_null($template))
+        if (is_null($template))
         {
             $info = $update;
         }
-        else if(is_null($parameter))
+        else if (is_null($parameter))
         {
             $info[$template] = $update;
         }
@@ -64,15 +64,14 @@ function nel_template_info($template, $parameter, $update, $return)
         {
             $info[$template][$parameter] = $update;
         }
-
     }
     else
     {
-        if(is_null($template))
+        if (is_null($template))
         {
             return $info;
         }
-        else if(is_null($parameter))
+        else if (is_null($parameter))
         {
             return $info[$template];
         }

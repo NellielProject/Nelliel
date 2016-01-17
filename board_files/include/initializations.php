@@ -47,9 +47,9 @@ $dataforce['post_links'] = '';
 $dataforce['sp_field1'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD1')] : NULL;
 $dataforce['sp_field2'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD2')] : NULL;
 
-if(!empty($_POST))
+if (!empty($_POST))
 {
-    if(isset($_POST['mode']))
+    if (isset($_POST['mode']))
     {
         $mode = explode('->', $_POST['mode']);
     }
@@ -57,7 +57,7 @@ if(!empty($_POST))
     {
         $mode = array();
     }
-        
+    
     $dataforce['mode'] = (isset($mode[0])) ? $mode[0] : NULL;
     $dataforce['sub_mode'] = (isset($mode[1])) ? $mode[1] : NULL;
     $dataforce['mode_action'] = (isset($mode[2])) ? $mode[2] : NULL;
@@ -86,7 +86,7 @@ if(!empty($_POST))
     $dataforce['only_delete_file'] = (isset($_POST['onlyimgdel'])) ? TRUE : FALSE;
 }
 
-if(!empty($_GET))
+if (!empty($_GET))
 {
     $dataforce['current_page'] = (isset($_GET['page'])) ? $_GET['page'] : NULL;
     $dataforce['expand'] = (isset($_GET['expand'])) ? TRUE : FALSE;

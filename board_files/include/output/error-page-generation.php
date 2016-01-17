@@ -1,4 +1,5 @@
 <?php
+
 function nel_render_derp($diagnostic)
 {
     $render = new nel_render();

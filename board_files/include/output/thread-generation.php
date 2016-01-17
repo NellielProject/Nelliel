@@ -9,7 +9,7 @@ function nel_thread_generator($dataforce, $dbh)
     $gen_data['insert_hr'] = FALSE;
     $dataforce['dotdot'] = '';
     $write_id = ($dataforce['response_to'] === 0 || is_null($dataforce['response_to'])) ? $dataforce['response_id'] : $dataforce['response_to'];
-
+    
     if (empty($_SESSION) || $_SESSION['ignore_login'])
     {
         $dataforce['dotdot'] = '../../';
@@ -115,7 +115,7 @@ function nel_thread_generator($dataforce, $dbh)
         unset($render_temp2);
         unset($render_temp3);
     }
-
+    
     nel_render_footer($render, FALSE, TRUE, TRUE, TRUE, FALSE);
     
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
