@@ -26,8 +26,7 @@
             <tr>
                 <td>
                     <input type="hidden" name="banid" value="{$render->retrieve_data('id')}">
-                    <input type="hidden" name="mode" value="admin">
-                    <input type="hidden" name="adminmode" value="changeban">
+                    <input type="hidden" name="mode" value="admin->ban->change">
                     <input type="hidden" name="original" value="{$render->retrieve_data('length')}">
                 </td>
             </tr>

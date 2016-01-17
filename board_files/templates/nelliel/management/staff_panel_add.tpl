@@ -8,8 +8,7 @@
         <table>
             <tr>
                 <td>
-                    <input type="hidden" name="mode" value="admin">
-                    <input type="hidden" name="adminmode" value="editstaff">
+                    <input type="hidden" name="mode" value="admin->staff->edit">
                 </td>
             </tr>
             <tr>
@@ -32,8 +31,7 @@
         <table>
             <tr>
                 <td>
-                    <input type="hidden" name="mode" value="admin">
-                    <input type="hidden" name="adminmode" value="addstaff">
+                    <input type="hidden" name="mode" value="admin->staff->add">
                 </td>
             </tr>
             <tr>

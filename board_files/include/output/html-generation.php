@@ -85,7 +85,7 @@ function nel_render_posting_form($dataforce, $render)
         $render->retrieve_data('allow_multifile', FALSE);
     }
     
-    $render->add_data('modmode', ($render->retrieve_data('mode2') === 'display') ? TRUE : FALSE);
+    $render->add_data('modmode', ($dataforce['get_mode'] === 'display') ? TRUE : FALSE);
     
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
@@ -111,7 +111,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     global $link_resno;
 
     $render->add_data('insert_hr', $gen_data['insert_hr']);
-    $render->parse('op_post.tpl', '');
     $post_data = $treeline[$gen_data['post_counter']];
     $render->add_multiple_data($post_data);
     
@@ -125,7 +124,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     }
 
     $render->add_data('expand_post', $gen_data['expand_post']);
-    $render->add_data('last50', $gen_data['last50']);
     $render->add_data('first100', $gen_data['first100']);
     $render->add_data('response_id', $dataforce['response_id']);
     $render->add_data('tripcode', (!is_null($post_data['tripcode'])) ? BS_TRIPKEY_MARKER . $post_data['tripcode'] : '');

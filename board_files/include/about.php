@@ -1,4 +1,8 @@
 <?php
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
 
 //
 // The content this function presents must remain intact and be accessible to users

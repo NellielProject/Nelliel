@@ -266,14 +266,14 @@ function nel_regen_template_cache()
     }
 }
 
-function nel_reset_template_status()
+function nel_reset_template_status($template_info)
 {
-    global $template_info;
-    
     foreach ($template_info as $key => $value)
     {
         $template_info[$key]['loaded'] = FALSE;
     }
+    
+    return $template_info;
 }
 
 //
@@ -282,12 +282,12 @@ function nel_reset_template_status()
 function nel_write_multi_cache($dataforce)
 {
     $template_info = nel_template_info(NULL, NULL, NULL, TRUE);
-    
-    nel_reset_template_status();
+    $template_info = nel_reset_template_status($template_info);
     $cache = '<?php
 $dataforce[\'post_links\'] = \'' . $dataforce['post_links'] . '\';
 $dataforce[\'rules_list\'] = \'' . $dataforce['rules_list'] . '\';
 $template_info = ' . var_export($template_info, TRUE) . ';
+nel_template_info(NULL, NULL, $template_info, FALSE);
 ?>';
     
     nel_write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, 0644);

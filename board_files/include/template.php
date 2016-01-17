@@ -12,14 +12,14 @@ function nel_parse_template($template, $subdirectory, $render, $regen)
     $template_short = utf8_str_replace('.tpl', '', $template);
     $info = nel_template_info($template, NULL, NULL, TRUE);
 
-    if ($info['loaded'] === FALSE || $info === NULL)
+    if ($info['loaded'] === FALSE || $info['loaded'] === NULL)
     {
         clearstatcache();
         $modify_time = filemtime(TEMPLATE_PATH . $subdirectory . $template);
 
         if ($modify_time !== $info[$template]['modify_time'] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
         {
-            $info[$template]['modify-time'] = $modify_time;
+            $info['modify-time'] = $modify_time;
             $lol = file_get_contents(TEMPLATE_PATH . $subdirectory . $template);
             $lol = trim($lol);
             $begin = '<?php function nel_template_render_' . $template_short . '($render) { $total_html; $temp = \''; // Start of the cached template
@@ -35,6 +35,7 @@ function nel_parse_template($template, $subdirectory, $render, $regen)
         }
 
         include (CACHE_PATH . $template_short . '.nelcache');
+        $info['loaded'] = TRUE;
         nel_template_info($template, NULL, $info, FALSE);
     }
 
@@ -51,7 +52,11 @@ function nel_template_info($template, $parameter, $update, $return)
     
     if(!$return)
     {
-        if(is_null($parameter))
+        if(is_null($template))
+        {
+            $info = $update;
+        }
+        else if(is_null($parameter))
         {
             $info[$template] = $update;
         }

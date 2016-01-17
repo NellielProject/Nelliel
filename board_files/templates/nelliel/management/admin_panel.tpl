@@ -8,8 +8,7 @@
         <table>
             <tr>
                 <td>
-                    <input type="hidden" name="mode" value="admin">
-                    <input type="hidden" name="adminmode" value="changesettings">
+                    <input type="hidden" name="mode" value="admin->settings->update">
                 </td>
             </tr>
             <tr>

@@ -14,6 +14,7 @@ function nel_ban_spambots($dataforce, $dbh)
         $dataforce['banreason'] = "Spambot. Nobody wants any. GTFO";
         $dataforce['bandays'] = 9001;
         $dataforce['banip'] = $_SERVER["REMOTE_ADDR"];
+        $dataforce['snacks'] = 'addban';
         nel_ban_hammer($dataforce, $dbh);
     }
 }

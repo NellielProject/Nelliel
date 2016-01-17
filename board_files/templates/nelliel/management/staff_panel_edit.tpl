@@ -8,8 +8,7 @@
         <table>
             <tr>
                 <td>
-                    <input type="hidden" name="mode" value="admin">
-                    <input type="hidden" name="adminmode" value="updatestaff">
+                    <input type="hidden" name="mode" value="admin->staff->update">
                 </td>
             </tr>
             <tr>
@@ -137,8 +136,7 @@
         <table>
             <tr>
                 <td>
-                    <input type="hidden" name="mode" value="admin">
-                    <input type="hidden" name="adminmode" value="deletestaff">
+                    <input type="hidden" name="mode" value="admin->staff->delete">
                     <input type="hidden" name="staff_name" value="{$render->retrieve_data('staff_name')}">
                 </td>
             </tr>

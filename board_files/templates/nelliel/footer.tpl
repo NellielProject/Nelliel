@@ -17,7 +17,7 @@
     {{ if $render->retrieve_data('logged_in') }}
                     <input type="checkbox" name="delpost" id="dpost"><label for="dpost">{nel_stext('FORM_DELETE_POSTS')}</label><br>
                     <input type="checkbox" name="banpost" id="bpost"><label for="bpost">{nel_stext('FORM_BAN_POSTS')}</label><br>
-                    <input type="hidden" name="adminmode" value="modmode">
+                    <input type="hidden" name="mode" value="admin->modmode">
     {{ endif }}
     {{ if !BS1_USE_NEW_IMGDEL }}
                     <input type="checkbox" name="onlyimgdel" id="delfbox" value="on"><label for="delfbox">{nel_stext('DELETE_FILES_ONLY')}</label><br>
@@ -25,7 +25,7 @@
     {{ if $render->retrieve_data('logged_in') }}
                     <input type="submit" value="{nel_stext('FORM_SUBMIT')}">
     {{ else }}
-                    <label for="delpass">{nel_stext('LABEL_PASS')}</label><input type="password" name="sekrit" id="delpass" size="12" maxlength="16" value="">
+                    <label for="delpass">{nel_stext('FORM_LABEL_PASS')}</label><input type="password" name="sekrit" id="delpass" size="12" maxlength="16" value="">
                     <input type="submit" value="{nel_stext('FORM_DELETE')}">
     {{ endif }}
                 </td>

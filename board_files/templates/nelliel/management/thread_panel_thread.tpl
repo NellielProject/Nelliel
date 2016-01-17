@@ -1,6 +1,7 @@
             <tr class="{$render->retrieve_data('bg_class')}">
 {{ if !$render->retrieve_data('expand_thread') }}
                 <td>
+                    <input t
                     <input type="submit" name="expand_thread" value="{nel_stext('FORM_EXPAND')} {$render->retrieve_data('post_number')}">
                 </td>
 {{ else }}

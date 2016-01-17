@@ -29,8 +29,7 @@
             <td>
                 <form accept-charset="utf-8" action="{$render->retrieve_data('dotdot')}{PHP_SELF}" method="post">
                     <div>
-                        <input type="hidden" name="mode" value="admin">
-                        <input type="hidden" name="adminmode" value="modifyban">
+                        <input type="hidden" name="mode" value="admin->ban->modify">
                         <input type="hidden" name="banid" value="{$render->retrieve_data('id')}">
                         <input type="submit" value="{nel_stext('FORM_MOD_BAN')}">
                     </div>
@@ -39,8 +38,7 @@
             <td>
                 <form accept-charset="utf-8" action="{$render->retrieve_data('dotdot')}{PHP_SELF}" method="post">
                     <div>
-                        <input type="hidden" name="mode" value="admin">
-                        <input type="hidden" name="adminmode" value="removeban">
+                        <input type="hidden" name="mode" value="admin->ban->remove">
                         <input type="hidden" name="banid" value="{$render->retrieve_data('id')}">
                         <input type="submit" value="{nel_stext('FORM_REMOVE_BAN')}">
                     </div>

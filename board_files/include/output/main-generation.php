@@ -62,7 +62,6 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
         nel_render_posting_form($dataforce, $render);
         $end_of_thread = FALSE;
         $sub_page_thread_counter = 0;
-        $gen_data['last50'] = FALSE;
         $gen_data['first100'] = FALSE;
 
         while ($sub_page_thread_counter < BS_THREADS_PER_PAGE)
@@ -80,7 +79,6 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
                 $treeline = array_merge($tree_op, array_reverse($tree_replies));
                 $gen_data['post_count'] = $treeline[0]['post_count'];
                 $gen_data['expand_post'] = ($gen_data['post_count'] > BS_ABBREVIATE_THREAD) ? TRUE : FALSE;
-                $gen_data['last50'] = ($gen_data['post_count'] > 50) ? TRUE : FALSE;
                 $gen_data['first100'] = ($gen_data['post_count'] > 100) ? TRUE : FALSE;
             }
             

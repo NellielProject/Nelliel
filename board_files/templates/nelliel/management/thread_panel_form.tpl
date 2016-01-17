@@ -5,8 +5,7 @@
         {nel_stext('MANAGE_THREADS')}
     </div>
     <form accept-charset="utf-8" action="imgboard.php" method="post" enctype"multipart/form-data">
-        <input type="hidden" name="mode" value="admin">
-        <input type="hidden" name="adminmode" value="updatethread">
+        <input type="hidden" name="mode" value="admin->thread->update">
         <table class="post-lists">
             <tr class="manage-header">
 {{ if !$render->retrieve_data('expand_thread') }}

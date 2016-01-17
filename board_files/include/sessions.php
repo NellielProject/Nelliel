@@ -58,15 +58,15 @@ function nel_initialize_session($dataforce, $plugins, $authorize)
 
     if (!empty($_SESSION))
     {
-        if (isset($dataforce['mode2']))
+        if (isset($dataforce['get_mode']))
         {
-            if ($dataforce['mode2'] === 'log_out')
+            if ($dataforce['get_mode'] === 'log_out')
             {
                 nel_terminate_session();
-                echo '<meta http-equiv="refresh" content="0;URL=' . PHP_SELF2 . PHP_EXT . '">';
+                echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF2 . PHP_EXT . '">';
                 die();
             }
-            else if ($dataforce['mode2'] === 'admin')
+            else if ($dataforce['get_mode'] === 'admin')
             {
                 nel_regen_session();
                 nel_valid($dataforce, $authorize);

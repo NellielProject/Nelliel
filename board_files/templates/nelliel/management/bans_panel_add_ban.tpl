@@ -18,8 +18,7 @@
             </tr>
             <tr>
                 <td>
-                    <input type="hidden" name="mode" value="admin">
-                    <input type="hidden" name="adminmode" value="addban">
+                    <input type="hidden" name="mode" value="admin->ban->add">
                 </td>
             </tr>
             <tr>

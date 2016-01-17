@@ -44,10 +44,23 @@ $enabled_types = array();
 $dataforce['page_gen'] = 'main';
 $dataforce['archive_update'] = FALSE;
 $dataforce['post_links'] = '';
+$dataforce['sp_field1'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD1')] : NULL;
+$dataforce['sp_field2'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD2')] : NULL;
 
 if(!empty($_POST))
 {
-    $dataforce['mode'] = (isset($_POST['mode'])) ? $_POST['mode'] : NULL;
+    if(isset($_POST['mode']))
+    {
+        $mode = explode('->', $_POST['mode']);
+    }
+    else
+    {
+        $mode = array();
+    }
+        
+    $dataforce['mode'] = (isset($mode[0])) ? $mode[0] : NULL;
+    $dataforce['sub_mode'] = (isset($mode[1])) ? $mode[1] : NULL;
+    $dataforce['mode_action'] = (isset($mode[2])) ? $mode[2] : NULL;
     $dataforce['mode_extra'] = (isset($_POST['mode2'])) ? $_POST['mode2'] : NULL;
     $dataforce['admin_mode'] = (isset($_POST['adminmode'])) ? $_POST['adminmode'] : NULL;
     $dataforce['name'] = (!empty($_POST['notanonymous'])) ? $_POST['notanonymous'] : '';
@@ -71,17 +84,15 @@ if(!empty($_POST))
     $dataforce['timehours'] = (isset($_POST['timehours'])) && is_numeric($_POST['timehours']) ? (int) $_POST['timehours'] : NULL;
     $dataforce['response_to'] = (isset($_POST['response_to']) && is_numeric($_POST['response_to'])) ? (int) $_POST['response_to'] : NULL;
     $dataforce['only_delete_file'] = (isset($_POST['onlyimgdel'])) ? TRUE : FALSE;
-    $dataforce['sp_field1'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD1')] : NULL;
-    $dataforce['sp_field2'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD2')] : NULL;
 }
 
 if(!empty($_GET))
 {
-    $dataforce['mode2'] = (isset($_GET['mode'])) ? $_GET['mode'] : NULL;
     $dataforce['current_page'] = (isset($_GET['page'])) ? $_GET['page'] : NULL;
     $dataforce['expand'] = (isset($_GET['expand'])) ? TRUE : FALSE;
     $dataforce['collapse'] = (isset($_GET['collapse'])) ? TRUE : FALSE;
     $dataforce['response_id'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? (int) $_GET['post'] : NULL;
+    $dataforce['get_mode'] = (isset($_GET['mode'])) ? $_GET['mode'] : NULL;
 }
 
 $link_updates = '';

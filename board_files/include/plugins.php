@@ -127,10 +127,14 @@ class nel_plugin_handler
         {
             foreach ($hooks[$hook_name] as $hook_function)
             {
-                if (function_exists($hook_function['function'])
-                    || method_exists($hook_function['function'][0], $hook_function['function'][1]))
+                if(is_object($hook_function['function'][0])
+                    && method_exists($hook_function['function'][0], $hook_function['function'][1]))
                 {
-                    $return = call_user_func_array($hook_function['function'], $input);
+                    $return = call_user_func_array(array($hook_function['function'][0], $hook_function['function'][1]), $input);
+                }
+                else if(function_exists($hook_function['function'][1]))
+                {
+                    $return = call_user_func_array($hook_function['function'][1], $input);
                     
                     if (!is_null($return) && $return_input)
                     {

@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_regen(&$dataforce, $id, $mode, $modmode, $dbh)
+function nel_regen(&$dataforce, $mode, $id, $modmode, $dbh)
 {
     global $link_resno, $link_updates;
     
@@ -53,7 +53,7 @@ function nel_regen(&$dataforce, $id, $mode, $modmode, $dbh)
         }
     }
     
-    if ($mode === 'update_all_cache')
+    if ($mode === 'cache')
     {
         $dataforce['rules_list'] = nel_cache_rules($dbh);
         nel_cache_settings($dbh);
