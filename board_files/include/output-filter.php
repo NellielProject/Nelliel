@@ -1,4 +1,9 @@
 <?php
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
+
 function nel_cleanse_the_aids($string)
 {
     if ($string === '' || preg_match("#^\s*$#", $string))

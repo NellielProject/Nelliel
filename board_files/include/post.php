@@ -665,9 +665,7 @@ function nel_process_file_info()
                     nel_derp(18, array('origin' => 'POST', 
                         'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
                 }
-                
-                $files[$i]['file_source'] = nel_cleanse_the_aids($_POST['sauce' . ($i + 1)]);
-                $files[$i]['file_license'] = nel_cleanse_the_aids($_POST['loldrama' . ($i + 1)]);
+
                 ++ $i;
             }
             

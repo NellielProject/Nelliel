@@ -1,4 +1,8 @@
 <?php
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
 
 function nel_parse_template($template, $subdirectory, $render, $regen)
 {

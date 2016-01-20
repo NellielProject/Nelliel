@@ -1,5 +1,6 @@
 <?php
 $plugin_example_class = new plugin_example_class($plugins);
+
 class plugin_example_class
 {
     private $plugin_id;

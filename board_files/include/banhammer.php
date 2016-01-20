@@ -1,4 +1,9 @@
 <?php
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
+
 //
 // Apply b&hammer
 //

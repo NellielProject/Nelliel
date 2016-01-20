@@ -1,4 +1,9 @@
 <?php
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
+
 function nel_login($dataforce, $authorize)
 {
     $render = new nel_render();

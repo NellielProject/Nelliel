@@ -208,6 +208,9 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             {
                 $files[$i]['has_preview'] = FALSE;
             }
+
+            $files[$i]['source'] = nel_cleanse_the_aids($files[$i]['source']);
+            $files[$i]['license'] = nel_cleanse_the_aids($files[$i]['license']);
             
             $files[$i]['endline'] = (($i + 1) % BS_MAX_FILES_ROW == 0) ? TRUE : FALSE;
             ++ $i;

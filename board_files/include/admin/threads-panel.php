@@ -1,4 +1,9 @@
 <?php
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
+
 function nel_thread_panel($dataforce, $authorize, $plugins, $dbh)
 {
     $mode = $dataforce['mode_action'];

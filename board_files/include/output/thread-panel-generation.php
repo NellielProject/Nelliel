@@ -1,4 +1,8 @@
 <?php
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
 
 function nel_render_thread_panel($dataforce, $expand, $dbh)
 {

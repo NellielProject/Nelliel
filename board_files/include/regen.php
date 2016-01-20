@@ -1,4 +1,9 @@
 <?php
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
+
 function nel_regen(&$dataforce, $id, $mode, $modmode, $dbh)
 {
     global $link_resno, $link_updates;

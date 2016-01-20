@@ -3,6 +3,7 @@ if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
+
 class nel_plugin_handler
 {
     private $hooks = array();
