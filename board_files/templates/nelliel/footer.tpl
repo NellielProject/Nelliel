@@ -56,7 +56,9 @@
         <div>
             {nel_stext('S_FOOT')}
         </div>
-        This page was created in {$total_html} seconds.<br>
+{{ if $render->retrieve_data('output_timer') }}
+        This page was created in {$render->get_timer(4)} seconds.<br>
+{{ endif }}
     </div>
 </body>
 </html>

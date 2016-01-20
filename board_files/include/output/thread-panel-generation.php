@@ -23,7 +23,7 @@ function nel_render_thread_panel($dataforce, $expand, $dbh)
     
     $j = 0;
     $all = 0;
-    $thread_data = $prepared->fetchALL(PDO::FETCH_ASSOC);
+    $thread_data = $prepared->fetchAll(PDO::FETCH_ASSOC);
     unset($prepared);
     
     foreach ($thread_data as $thread)
@@ -54,6 +54,7 @@ function nel_render_thread_panel($dataforce, $expand, $dbh)
 function nel_render_thread_panel_thread($dataforce, $render, $thread_data)
 {
     $render->add_data('has_file', $thread_data['has_file']);
+    $render->add_multiple_data($thread_data);
     
     switch (BS_DATE_FORMAT)
     {

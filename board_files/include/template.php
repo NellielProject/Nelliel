@@ -2,8 +2,6 @@
 
 function nel_parse_template($template, $subdirectory, $render, $regen)
 {
-    global $total_html;
-    
     if (!empty($subdirectory))
     {
         $subdirectory .= '/';
@@ -12,17 +10,17 @@ function nel_parse_template($template, $subdirectory, $render, $regen)
     $template_short = utf8_str_replace('.tpl', '', $template);
     $info = nel_template_info($template, NULL, NULL, TRUE);
     
-    if ($info['loaded'] === FALSE || $info['loaded'] === NULL)
+    if (is_null($info) || $info['loaded'] === FALSE || $info['loaded'] === NULL)
     {
         clearstatcache();
         $modify_time = filemtime(TEMPLATE_PATH . $subdirectory . $template);
         
-        if ($modify_time !== $info[$template]['modify_time'] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
+        if (!isset($info['modify_time']) || $modify_time !== $info['modify_time'] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
         {
             $info['modify-time'] = $modify_time;
             $lol = file_get_contents(TEMPLATE_PATH . $subdirectory . $template);
             $lol = trim($lol);
-            $begin = '<?php function nel_template_render_' . $template_short . '($render) { $total_html; $temp = \''; // Start of the cached template
+            $begin = '<?php function nel_template_render_' . $template_short . '($render) { $temp = \''; // Start of the cached template
             $lol = preg_replace_callback('#({{.*?}})|({(.*?)})|(\')#', 'nel_escape_single_quotes', $lol); // Do escaping and variable parse
             $lol = preg_replace('#(})\s*?({)#', '$1$2', $lol); // Clear white space between control statements
             $lol = preg_replace('#{{\s*?(if|elseif|foreach|for|while)\s*?(.*?)}}#', '\'; $1($2): $temp .= \'', $lol); // Parse opening control statements
@@ -73,12 +71,20 @@ function nel_template_info($template, $parameter, $update, $return)
         }
         else if (is_null($parameter))
         {
-            return $info[$template];
+            if(isset($info[$template]))
+            {
+                return $info[$template];
+            }
         }
         else
         {
-            return $info[$template][$parameter];
+            if(isset($info[$template]['parameter']))
+            {
+                return $info[$template][$parameter];
+            }
         }
+        
+        return NULL;
     }
 }
 

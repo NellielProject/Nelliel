@@ -49,6 +49,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     else
     {
         $files = array();
+        $files_count = 0;
         
         if (!$poster_info['comment'])
         {
@@ -84,42 +85,9 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     {
         $cpass = utf8_substr(rand(), 0, 8);
     }
-    
-    // Text plastic surgery (rorororor) - wat.
-    $poster_info = $plugins->plugin_hook('before-post-info-processing', TRUE, array($poster_info));
-    $poster_info = $plugins->plugin_hook('post-info-processing', TRUE, array($poster_info));
-    
-    $poster_info['email'] = nel_cleanse_the_aids($poster_info['email']);
-    $poster_info['subject'] = nel_cleanse_the_aids($poster_info['subject']);
-    
-    if ($poster_info['comment'] !== '')
-    {
-        nel_banned_text($poster_info['comment'], $files);
-        $poster_info['comment'] = nel_word_filters($poster_info['comment']);
-        $poster_info['comment'] = nel_cleanse_the_aids($poster_info['comment']);
-    }
-    
-    // Comment processing, mostly dealing with \n
-    if ($poster_info['comment'] !== '')
-    {
-        // Set up comment field with proper newlines, etc
-        $poster_info['comment'] = utf8_str_replace("\r", "\n", $poster_info['comment']);
-        
-        if (utf8_substr_count($dataforce['comment'], "\n") < BS_MAX_COMMENT_LINES)
-        {
-            $poster_info['comment'] = utf8_str_replace("\n\n", "<br>", $poster_info['comment']);
-            $poster_info['comment'] = utf8_str_replace("\n", "<br>", $poster_info['comment']);
-        }
-        else
-        {
-            $poster_info['comment'] = utf8_str_replace("\n", "", $poster_info['comment']); // \n is erased
-        }
-    }
-    else
-    {
-        $poster_info['comment'] = nel_stext('THREAD_NOTEXT');
-    }
-    
+
+    nel_banned_text($poster_info['comment'], $files);
+
     // Name and tripcodes
     $modpostc = 0;
     $cookie_name = $poster_info['name'];
@@ -147,7 +115,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
         }
         
         preg_match('/^([^#]*)(#(?!#))?([^#]*)(##)?(.*)$/', $poster_info['name'], $name_pieces);
-        $poster_info['name'] = nel_cleanse_the_aids($name_pieces[1]);
+        $poster_info['name'] = $name_pieces[1];
         
         if ($name_pieces[5] !== '')
         {
@@ -195,14 +163,14 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
         
         if ($name_pieces[5] !== '' || $modpostc > 0)
         {
-            $trip = nel_hash($name_pieces[5]);
+            $trip = nel_hash($name_pieces[5], $plugins);
             $poster_info['secure_tripcode'] = utf8_substr(crypt($trip, '42'), -12);
         }
         
         $poster_info = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($poster_info, $name_pieces, 
             $modpostc));
         
-        if ($name_pieces[1] === '' || $_SESSION['perms']['perm_post_anon'])
+        if ($name_pieces[1] === '' || (!empty($_SESSION) && $_SESSION['perms']['perm_post_anon']))
         {
             $poster_info['name'] = nel_stext('THREAD_NONAME');
             $poster_info['email'] = '';
@@ -516,7 +484,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     if (!empty($_SESSION))
     {
         $temp = $_SESSION['ignore_login'];
-        $_SESSION['ignore_login'] = TRUE;
+        //$_SESSION['ignore_login'] = TRUE;
     }
     
     $return_res = ($dataforce['response_to'] === 0) ? $new_thread_dir : $dataforce['response_to'];
@@ -531,28 +499,6 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     }
     
     return $return_res;
-}
-
-//
-// Clean up user input
-//
-function nel_cleanse_the_aids($string)
-{
-    if ($string === '' || preg_match("#^\s*$#", $string))
-    {
-        return '';
-    }
-    else
-    {
-        if (get_magic_quotes_gpc())
-        {
-            $string = stripslashes($string);
-        }
-        
-        $string = trim($string);
-        $string = htmlspecialchars($string);
-        return $string;
-    }
 }
 
 function nel_is_post_ok($dataforce, $time, $dbh)

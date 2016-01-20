@@ -6,15 +6,12 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_thread_generator($dataforce, $dbh)
 {
+    $render = new nel_render();
+    $render_expand = new nel_render();
+    $render_collapse = new nel_render();
     $gen_data['insert_hr'] = FALSE;
     $dataforce['dotdot'] = '';
     $write_id = ($dataforce['response_to'] === 0 || is_null($dataforce['response_to'])) ? $dataforce['response_id'] : $dataforce['response_to'];
-    
-    if (empty($_SESSION) || $_SESSION['ignore_login'])
-    {
-        $dataforce['dotdot'] = '../../';
-    }
-    
     $result = $dbh->query('SELECT * FROM ' . POSTTABLE . ' WHERE post_number=' . $write_id . ' UNION SELECT * FROM ' . POSTTABLE . ' WHERE response_to=' . $write_id . ' ORDER BY post_number asc');
     $treeline = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
@@ -24,17 +21,19 @@ function nel_thread_generator($dataforce, $dbh)
         return;
     }
     
+    if (empty($_SESSION) || $_SESSION['ignore_login'])
+    {
+        $dataforce['dotdot'] = '../../';
+    }
+
     $gen_data['post_count'] = $treeline[0]['post_count'];
     $page = 1;
     $gen_data['post_counter'] = 0;
-    $render = new nel_render();
-    $render_expand = new nel_render();
-    $render_collapse = new nel_render();
     $gen_data['expand_post'] = FALSE;
     $dataforce['omitted_done'] = TRUE;
     $partlimit = 1;
     $gen_data['first100'] = FALSE;
-    
+
     while ($gen_data['post_counter'] < $gen_data['post_count'])
     {
         if ($treeline[$gen_data['post_counter']]['has_file'] == 1)

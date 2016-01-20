@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Staff control panel
 //
-function nel_staff_panel($dataforce, $plugins, $authorize, $dbh)
+function nel_staff_panel($dataforce, $authorize, $plugins, $dbh)
 {
     $temp_auth = array();
     $mode = $dataforce['mode_action'];

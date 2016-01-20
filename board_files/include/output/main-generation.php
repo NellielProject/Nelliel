@@ -190,7 +190,6 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
         
         if (!empty($_SESSION) && !$_SESSION['ignore_login'])
         {
-            
             if ($page >= $dataforce['current_page'])
             {
                 $page = $counttree;

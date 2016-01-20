@@ -16,15 +16,13 @@ function nel_write_file($filename, $output, $chmod)
         echo 'Failed to open file for writing. Check permissions.';
         return FALSE;
     }
-    else
-    {
-        set_file_buffer($fp, 0);
-        rewind($fp);
-        fputs($fp, $output);
-        fclose($fp);
-        chmod($filename, $chmod);
-        return TRUE;
-    }
+    
+    set_file_buffer($fp, 0);
+    rewind($fp);
+    fputs($fp, $output);
+    fclose($fp);
+    chmod($filename, $chmod);
+    return TRUE;
 }
 
 //

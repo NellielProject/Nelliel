@@ -77,22 +77,6 @@ function nel_banned_text($text, $file)
 }
 
 //
-// General wordfilters
-//
-function nel_word_filters($text)
-{
-    $cancer = array('', '');
-    $chemo = array('', '');
-    $total_cancer = count($cancer);
-    
-    for ($i = 0; $i < $total_cancer; ++ $i)
-    {
-        $text = preg_replace('#' . $cancer[$i] . '#', $chemo[$i], $text);
-    }
-    return $text;
-}
-
-//
 // Apply b&hammer
 //
 function nel_apply_ban($dataforce, $dbh)

@@ -27,7 +27,6 @@ if (ini_get('date.timezone') === '')
 ignore_user_abort(TRUE);
 require_once BASE_PATH . '/' . BOARD_FILES . 'libraries/portable-utf8.php';
 require_once INCLUDE_PATH . 'setup.php';
-require_once INCLUDE_PATH . 'file-handling.php';
 setup_check($dbh);
 generate_auth_file($plugins);
 require_once INCLUDE_PATH . 'authorize.php';
@@ -46,6 +45,8 @@ $dataforce['archive_update'] = FALSE;
 $dataforce['post_links'] = '';
 $dataforce['sp_field1'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD1')] : NULL;
 $dataforce['sp_field2'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD2')] : NULL;
+$dataforce['mode'] = NULL;
+$dataforce['get_mode'] = NULL;
 
 if (!empty($_POST))
 {
@@ -88,17 +89,14 @@ if (!empty($_POST))
 
 if (!empty($_GET))
 {
+    $dataforce['get_mode'] = (isset($_GET['mode'])) ? $_GET['mode'] : NULL;
     $dataforce['current_page'] = (isset($_GET['page'])) ? $_GET['page'] : NULL;
     $dataforce['expand'] = (isset($_GET['expand'])) ? TRUE : FALSE;
     $dataforce['collapse'] = (isset($_GET['collapse'])) ? TRUE : FALSE;
     $dataforce['response_id'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? (int) $_GET['post'] : NULL;
-    $dataforce['get_mode'] = (isset($_GET['mode'])) ? $_GET['mode'] : NULL;
 }
 
 $link_updates = '';
-$start_html = 0;
-$end_html = 0;
-$total_html = 0;
 $fgsfds = array('noko' => FALSE, 'noko_topic' => 0, 'sage' => FALSE, 'sticky' => FALSE);
 $link_resno = 0;
 

@@ -55,6 +55,7 @@ function nel_set_session_cookie()
 function nel_initialize_session($dataforce, $plugins, $authorize)
 {
     session_start();
+    require_once INCLUDE_PATH . 'admin/login.php';
     
     if (!empty($_SESSION))
     {
@@ -69,7 +70,7 @@ function nel_initialize_session($dataforce, $plugins, $authorize)
             else if ($dataforce['get_mode'] === 'admin')
             {
                 nel_regen_session();
-                nel_valid($dataforce, $authorize);
+                nel_login($dataforce, $authorize);
                 die();
             }
         }
@@ -79,7 +80,7 @@ function nel_initialize_session($dataforce, $plugins, $authorize)
         }
         else
         {
-            $_SESSION['ignore_login'] = TRUE;
+
         }
     }
     else if (isset($dataforce['admin_mode']) && $dataforce['admin_mode'] === 'login') // No existing session but this may be a login attempt
@@ -102,7 +103,7 @@ function nel_initialize_session($dataforce, $plugins, $authorize)
         }
         
         nel_set_session_cookie();
-        nel_valid($dataforce, $authorize);
+        nel_login($dataforce, $authorize);
         die();
     }
     else

@@ -11,9 +11,16 @@ nel_parse_links($dataforce['post_links']);
 //
 function nel_render_header($dataforce, $render, $treeline)
 {
-    lol_html_timer(0);
     $title = '';
-    $render->add_data('dotdot', $dataforce['dotdot']);
+    
+    if(isset($dataforce['dotdot']))
+    {
+        $render->add_data('dotdot', $dataforce['dotdot']);
+    }
+    else
+    {
+        $render->add_data('dotdot', '');
+    }
     
     if (BS1_SHOW_LOGO)
     {
@@ -130,8 +137,15 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $render->add_data('secure_tripcode', (!is_null($post_data['secure_tripcode'])) ? BS_TRIPKEY_MARKER . BS_TRIPKEY_MARKER . $post_data['secure_tripcode'] : '');
     $post_data['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $post_data['comment']);
     $post_data['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'nel_parse_links', $post_data['comment']);
-    $render->add_data('comment-part', utf8_str_replace('>><a href="../"', '>><a href="', $post_data['comment']));
-    $render->add_data('comment', $post_data['comment']);
+    if(clear_whitespace($post_data['comment']) === '')
+    {
+        $poster_data['comment'] = nel_stext('THREAD_NOTEXT');
+    }
+    $render->add_sanitized_data('comment-part', utf8_str_replace('>><a href="../"', '>><a href="', $post_data['comment']));
+    $render->add_sanitized_data('comment', $post_data['comment']);
+    $render->add_sanitized_data('name', $post_data['name']);
+    $render->add_sanitized_data('email', $post_data['email']);
+    $render->add_sanitized_data('subject', $post_data['subject']);
     $render->add_data('sticky', (bool) $post_data['sticky']);
     $temp_dot = ($partial) ? '' : $dataforce['dotdot'];
     $post_id = ($response) ? $post_data['response_to'] : $post_data['post_number'];
@@ -273,8 +287,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 //
 function nel_render_basic_footer($render)
 {
-    global $total_html, $total_script;
-    
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
         $render->add_data('logged_in', TRUE);
@@ -289,15 +301,12 @@ function nel_render_basic_footer($render)
     {
         $render->add_data('logged_in', FALSE);
     }
-    
-    lol_html_timer(1);
+
     $render->parse('footer.tpl', '');
 }
 
 function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
 {
-    global $total_html, $total_script;
-    
     $render->add_data('main_page', $main_page);
     
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
@@ -320,7 +329,6 @@ function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
     $render->add_data('del', $del);
     $render->add_data('response', $response);
     $render->add_data('main_page', $main_page);
-    lol_html_timer(1);
     $render->parse('footer.tpl', '');
 }
 
@@ -332,7 +340,6 @@ function nel_render_ban_page($dataforce, $bandata)
     $render->add_data('format_length', date("D F jS Y  H:i", $bandata['length_base']));
     $render->add_data('format_time', date("D F jS Y  H:i", $bandata['ban_time']));
     $render->add_data('host', @inet_ntop($bandata['host']) ? inet_ntop($bandata['host']) : 'Unknown');
-    lol_html_timer(0);
     nel_render_header($dataforce, $render, array());
     $render->parse('ban_page.tpl', '');
     nel_render_basic_footer($render);
@@ -401,33 +408,6 @@ function nel_escape_single_quotes($matches)
     else
     {
         return '\\' . $matches[4];
-    }
-}
-
-//
-// Start/end timer
-//
-function lol_html_timer($derp)
-{
-    global $start_html, $end_html, $total_html;
-    
-    if ($derp === 0)
-    {
-        $start_html = 0;
-        $end_html = 0;
-        $total_html = 0;
-        $mtime = microtime();
-        $mtime = explode(' ', $mtime);
-        $start_html = $mtime[1] + $mtime[0];
-        return;
-    }
-    else
-    {
-        $mtime = microtime();
-        $mtime = explode(" ", $mtime);
-        $end_html = $mtime[1] + $mtime[0];
-        $total_html = round(($end_html - $start_html), 4);
-        return;
     }
 }
 ?>
