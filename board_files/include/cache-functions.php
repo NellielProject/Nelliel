@@ -31,12 +31,12 @@ function nel_cache_rules($dbh)
     $dmode = '';
     $rmode = '';
     $omode = '';
-    
+
     $result = $dbh->query('SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type IN ("filetype_allow_g","filetype_allow_a","filetype_allow_o","filetype_allow_p","filetype_allow_d","filetype_allow_r")');
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
     $result_count = count($config_list);
     $config_list2 = array();
-    
+
     foreach ($config_list as $array)
     {
         if (array_search('enable_graphics', $array) !== FALSE)
@@ -68,19 +68,19 @@ function nel_cache_rules($dbh)
             $config_list2['archive'] = $array['setting'];
         }
     }
-    
+
     $i = 0;
-    
+
     while ($i < $result_count)
     {
         $t_element = utf8_str_replace('enable_', '', $config_list[$i]['config_name']);
-        
+
         if ($config_list[$i]['setting'] !== '1')
         {
             ++ $i;
             continue;
         }
-        
+
         if ($config_list[$i]['config_type'] === 'filetype_allow_g' && $t_element !== 'graphics' && $config_list2['graphics'] === '1')
         {
             $gmode = $gmode . $t_element . ', ';
@@ -105,12 +105,12 @@ function nel_cache_rules($dbh)
         {
             $rmode = $rmode . $t_element . ', ';
         }
-        
+
         ++ $i;
     }
-    
+
     $rule_list = '';
-    
+
     if ($gmode !== '')
     {
         $gmode = utf8_substr($gmode, 0, -2);
@@ -146,7 +146,7 @@ function nel_cache_rules($dbh)
         $rule_list .= '
 							<li>' . nel_stext('FILES_OTHER') . utf8_strtoupper($omode) . '</li>';
     }
-    
+
     return $rule_list;
 }
 
@@ -159,11 +159,11 @@ function nel_cache_settings($dbh)
     $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIGTABLE . ' WHERE config_type="board_setting_1bit"');
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
     unset($result);
-    
+
     $result_count = count($config_list);
     $i = 0;
     $vars1 = '';
-    
+
     while ($i < $result_count)
     {
         if ($config_list[$i]['setting'] === '1')
@@ -176,18 +176,18 @@ function nel_cache_settings($dbh)
         }
         ++ $i;
     }
-    
+
     $rows = array();
-    
+
     // Get other board settings
     $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIGTABLE . ' WHERE config_type="board_setting"');
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
     unset($result);
-    
+
     $result_count = count($config_list);
     $i = 0;
     $vars2 = '';
-    
+
     while ($i < $result_count)
     {
         $rows[$config_list[$i]['config_name']] = $config_list[$i]['setting'];
@@ -201,23 +201,23 @@ function nel_cache_settings($dbh)
         }
         ++ $i;
     }
-    
+
     $result = $dbh->query('SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_g" 
 					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_a"
 					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_v"
 					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_o"
 					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_d"
 					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_r"');
-    
+
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
     unset($result);
-    
+
     $fvars = '$enabled_types = array(';
-    
+
     $result_count = count($config_list);
     $i = 0;
     $rows = array();
-    
+
     while ($i < $result_count)
     {
         if ($config_list[$i]['setting'] === '1')
@@ -228,15 +228,15 @@ function nel_cache_settings($dbh)
         {
             $fvars .= '\'' . $config_list[$i]['config_name'] . '\'=>FALSE,';
         }
-        
+
         ++ $i;
     }
-    
+
     $fvars = utf8_substr($fvars, 0, utf8_strlen($fvars) - 1) . ');';
     $final_vars = '<?php ' . $vars1 . $vars2 . $fvars . ' ?>';
-    
+
     nel_write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, 0644);
-    
+
     unset($rows);
 }
 
@@ -266,7 +266,7 @@ function nel_reset_template_status($template_info)
     {
         $template_info[$key]['loaded'] = FALSE;
     }
-    
+
     return $template_info;
 }
 
@@ -283,7 +283,7 @@ $dataforce[\'rules_list\'] = \'' . $dataforce['rules_list'] . '\';
 $template_info = ' . var_export($template_info, TRUE) . ';
 nel_template_info(NULL, NULL, $template_info, FALSE);
 ?>';
-    
+
     nel_write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, 0644);
 }
 ?>

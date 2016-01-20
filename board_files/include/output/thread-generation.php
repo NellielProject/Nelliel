@@ -15,12 +15,12 @@ function nel_thread_generator($dataforce, $dbh)
     $result = $dbh->query('SELECT * FROM ' . POSTTABLE . ' WHERE post_number=' . $write_id . ' UNION SELECT * FROM ' . POSTTABLE . ' WHERE response_to=' . $write_id . ' ORDER BY post_number asc');
     $treeline = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
-    
+
     if (empty($treeline))
     {
         return;
     }
-    
+
     if (empty($_SESSION) || $_SESSION['ignore_login'])
     {
         $dataforce['dotdot'] = '../../';
@@ -47,14 +47,14 @@ function nel_thread_generator($dataforce, $dbh)
         {
             $gen_data['has_file'] = FALSE;
         }
-        
+
         if ($gen_data['post_counter'] === 0)
         {
             $render->add_data('header_type', 'NORMAL');
             nel_render_header($dataforce, $render, $treeline);
             nel_render_posting_form($dataforce, $render);
         }
-        
+
         if ($partlimit === 100)
         {
             $render_temp = clone $render;
@@ -65,26 +65,26 @@ function nel_thread_generator($dataforce, $dbh)
             nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-0-100.html', $render_temp->output(), 0644);
             unset($render_temp);
         }
-        
+
         if ($treeline[$gen_data['post_counter']]['response_to'] > 0)
         {
             if (!$treeline[$gen_data['post_counter']]['post_number'])
             {
                 break;
             }
-            
+
             $resid = $dataforce['response_id'];
-            
+
             $render_temp = new nel_render();
             $render_temp2 = new nel_render();
             $render_temp3 = new nel_render();
-            
+
             nel_render_post($dataforce, $render_temp, TRUE, FALSE, $gen_data, $treeline, $dbh); // for thread
             $dataforce['response_id'] = 0;
             nel_render_post($dataforce, $render_temp2, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
             nel_render_post($dataforce, $render_temp3, TRUE, TRUE, $gen_data, $treeline, $dbh); // for expand
             $dataforce['response_id'] = $resid;
-            
+
             if ($gen_data['post_count'] > BS_ABBREVIATE_THREAD)
             {
                 if ($render_collapse->output() === '')
@@ -93,13 +93,13 @@ function nel_thread_generator($dataforce, $dbh)
                     nel_render_post($dataforce, $render_temp2, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
                     $dataforce['omitted_done'] = TRUE;
                 }
-                
+
                 if ($gen_data['post_counter'] > $gen_data['post_count'] - BS_ABBREVIATE_THREAD)
                 {
                     $render_collapse->input($render_temp2->output());
                 }
             }
-            
+
             $render->input($render_temp->output());
             $render_expand->input($render_temp3->output());
         }
@@ -107,16 +107,16 @@ function nel_thread_generator($dataforce, $dbh)
         {
             nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dbh);
         }
-        
+
         ++ $partlimit;
         ++ $gen_data['post_counter'];
         unset($render_temp);
         unset($render_temp2);
         unset($render_temp3);
     }
-    
+
     nel_render_footer($render, FALSE, TRUE, TRUE, TRUE, FALSE);
-    
+
     if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
         if ($dataforce['expand'])
@@ -131,7 +131,7 @@ function nel_thread_generator($dataforce, $dbh)
         {
             echo $render->output();
         }
-        
+
         die();
     }
     else

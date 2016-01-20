@@ -85,9 +85,9 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     {
         $cpass = utf8_substr(rand(), 0, 8);
     }
-
+    
     nel_banned_text($poster_info['comment'], $files);
-
+    
     // Name and tripcodes
     $modpostc = 0;
     $cookie_name = $poster_info['name'];
@@ -665,7 +665,7 @@ function nel_process_file_info()
                     nel_derp(18, array('origin' => 'POST', 
                         'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
                 }
-
+                
                 ++ $i;
             }
             

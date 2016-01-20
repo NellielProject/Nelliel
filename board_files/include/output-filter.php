@@ -38,10 +38,10 @@ function nel_word_filters($text)
 
 function newline_cleanup($string)
 {
-    if(clear_whitespace($string) !== '')
+    if (clear_whitespace($string) !== '')
     {
         $string = utf8_str_replace("\r", "\n", $string);
-        
+
         if (utf8_substr_count($string, "\n") < BS_MAX_COMMENT_LINES)
         {
             $string = utf8_str_replace("\n\n", "<br>", $string);
@@ -52,13 +52,13 @@ function newline_cleanup($string)
             $string = utf8_str_replace("\n", "", $string); // \n is erased
         }
     }
-    
+
     return $string;
 }
 
 function clear_whitespace($string)
 {
-    if(ctype_space($string))
+    if (ctype_space($string))
     {
         return '';
     }

@@ -28,7 +28,7 @@ class nel_authorization
         {
             return $this->authorized[$user][$setting];
         }
-        
+
         return FALSE;
     }
 
@@ -38,7 +38,7 @@ class nel_authorization
         {
             return $this->authorized[$user];
         }
-        
+
         return FALSE;
     }
 
@@ -48,7 +48,7 @@ class nel_authorization
         {
             return $this->authorized[$user]['settings'][$setting];
         }
-        
+
         return FALSE;
     }
 
@@ -58,7 +58,7 @@ class nel_authorization
         {
             return $this->authorized[$user]['perms'][$perm];
         }
-        
+
         return FALSE;
     }
 
@@ -87,8 +87,7 @@ class nel_authorization
 
     public function get_blank_settings()
     {
-        return array(
-            'settings' => array('staff_password' => '', 'staff_type' => '', 'staff_trip' => ''), 
+        return array('settings' => array('staff_password' => '', 'staff_type' => '', 'staff_trip' => ''), 
             'perms' => array('perm_config' => FALSE, 'perm_staff_panel' => FALSE, 'perm_ban_panel' => FALSE, 
                 'perm_thread_panel' => FALSE, 'perm_mod_mode' => FALSE, 'perm_ban' => FALSE, 'perm_delete' => FALSE, 
                 'perm_post' => FALSE, 'perm_post_anon' => FALSE, 'perm_sticky' => FALSE, 'perm_update_pages' => FALSE, 

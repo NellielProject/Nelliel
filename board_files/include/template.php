@@ -10,15 +10,15 @@ function nel_parse_template($template, $subdirectory, $render, $regen)
     {
         $subdirectory .= '/';
     }
-    
+
     $template_short = utf8_str_replace('.tpl', '', $template);
     $info = nel_template_info($template, NULL, NULL, TRUE);
-    
+
     if (is_null($info) || $info['loaded'] === FALSE || $info['loaded'] === NULL)
     {
         clearstatcache();
         $modify_time = filemtime(TEMPLATE_PATH . $subdirectory . $template);
-        
+
         if (!isset($info['modify_time']) || $modify_time !== $info['modify_time'] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
         {
             $info['modify-time'] = $modify_time;
@@ -35,12 +35,12 @@ function nel_parse_template($template, $subdirectory, $render, $regen)
             $lol_out = $begin . $lol . $end;
             nel_write_file(CACHE_PATH . $template_short . '.nelcache', $lol_out, 0644);
         }
-        
+
         include (CACHE_PATH . $template_short . '.nelcache');
         $info['loaded'] = TRUE;
         nel_template_info($template, NULL, $info, FALSE);
     }
-    
+
     if (!$regen)
     {
         $dat_temp = call_user_func('nel_template_render_' . $template_short, $render);
@@ -51,7 +51,7 @@ function nel_parse_template($template, $subdirectory, $render, $regen)
 function nel_template_info($template, $parameter, $update, $return)
 {
     static $info;
-    
+
     if (!$return)
     {
         if (is_null($template))
@@ -75,19 +75,19 @@ function nel_template_info($template, $parameter, $update, $return)
         }
         else if (is_null($parameter))
         {
-            if(isset($info[$template]))
+            if (isset($info[$template]))
             {
                 return $info[$template];
             }
         }
         else
         {
-            if(isset($info[$template]['parameter']))
+            if (isset($info[$template]['parameter']))
             {
                 return $info[$template][$parameter];
             }
         }
-        
+
         return NULL;
     }
 }

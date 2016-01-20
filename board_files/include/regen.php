@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_regen(&$dataforce, $id, $mode, $modmode, $dbh)
 {
     global $link_resno, $link_updates;
-    
+
     require_once INCLUDE_PATH . 'output-filter.php';
 
     if (!empty($_SESSION) && !$modmode)

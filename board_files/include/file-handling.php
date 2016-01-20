@@ -10,13 +10,13 @@ if (!defined('NELLIEL_VERSION'))
 function nel_write_file($filename, $output, $chmod)
 {
     $fp = fopen($filename, "w");
-    
+
     if (!$fp)
     {
         echo 'Failed to open file for writing. Check permissions.';
         return FALSE;
     }
-    
+
     set_file_buffer($fp, 0);
     rewind($fp);
     fputs($fp, $output);
@@ -44,12 +44,12 @@ function nel_eraser_gun($path, $filename, $multi)
     if ($multi && file_exists($path))
     {
         $files = glob($path . "/*.*");
-        
+
         foreach ($files as $file)
         {
             unlink($file);
         }
-        
+
         rmdir($path);
     }
     else if (file_exists($path . "/" . $filename))

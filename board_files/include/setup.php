@@ -14,14 +14,14 @@ function table_exists($table, $dbh)
     {
         $result = $dbh->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $table . "'");
     }
-    
+
     if (SQLTYPE === 'MYSQL')
     {
         $result = $dbh->query("SHOW TABLES FROM `" . SQLDB . "` LIKE '" . $table . "'");
     }
-    
+
     $test = $result->fetch(PDO::FETCH_NUM);
-    
+
     if ($test[0] == $table)
     {
         return TRUE;
@@ -35,7 +35,7 @@ function table_exists($table, $dbh)
 function setup_check($dbh)
 {
     $stuff_done = FALSE;
-    
+
     if (!table_exists(POSTTABLE, $dbh))
     {
         echo 'Creating table ' . POSTTABLE . '...<br>';
@@ -61,7 +61,7 @@ function setup_check($dbh)
 			archive_status tinyint(1) not null default 0,
 			locked tinyint(1) not null default 0
 		)");
-        
+
         if (!$result)
         {
             die('Creation of ' . POSTTABLE . ' failed! Check database settings and config.php then retry installation.');
@@ -72,16 +72,16 @@ function setup_check($dbh)
             {
                 ;
             }
-            
+
             if (SQLTYPE === 'MYSQL')
             {
                 $result = $dbh->query("ALTER TABLE '" . POSTTABLE . "' CONVERT TO CHARACTER SET utf8");
             }
-            
+
             $stuff_done = TRUE;
         }
     }
-    
+
     if (!table_exists(FILETABLE, $dbh))
     {
         echo 'Creating table ' . FILETABLE . '...<br>';
@@ -106,7 +106,7 @@ function setup_check($dbh)
 			exif	text default null,
 			extra_meta	text default null
 			)");
-        
+
         if (!$result)
         {
             print_r($dbh->errorInfo());
@@ -118,16 +118,16 @@ function setup_check($dbh)
             {
                 ;
             }
-            
+
             if (SQLTYPE === 'MYSQL')
             {
                 $result = $dbh->query("ALTER TABLE '" . FILETABLE . "' CONVERT TO CHARACTER SET utf8");
             }
-            
+
             $stuff_done = TRUE;
         }
     }
-    
+
     if (!table_exists(ARCHIVETABLE, $dbh))
     {
         echo 'Creating table ' . ARCHIVETABLE . '...<br>';
@@ -154,7 +154,7 @@ function setup_check($dbh)
 			locked tinyint(1) not null default 0,
 			primary key(post_number)
 			)");
-        
+
         if (!$result)
         {
             die('Creation of ' . ARCHIVETABLE . ' failed! Check database settings and config.php then retry installation.');
@@ -165,16 +165,16 @@ function setup_check($dbh)
             {
                 ;
             }
-            
+
             if (SQLTYPE === 'MYSQL')
             {
                 $result = $dbh->query("ALTER TABLE '" . ARCHIVETABLE . "' CONVERT TO CHARACTER SET utf8");
             }
-            
+
             $stuff_done = TRUE;
         }
     }
-    
+
     if (!table_exists(ARCHIVEFILETABLE, $dbh))
     {
         echo 'Creating table ' . ARCHIVEFILETABLE . '...<br>';
@@ -199,7 +199,7 @@ function setup_check($dbh)
 			exif	text default null,
 			extra_meta	text default null
 			)");
-        
+
         if (!$result)
         {
             die('Creation of ' . ARCHIVEFILETABLE . ' failed! Check database settings and config.php then retry installation.');
@@ -210,16 +210,16 @@ function setup_check($dbh)
             {
                 ;
             }
-            
+
             if (SQLTYPE === 'MYSQL')
             {
                 $result = $dbh->query("ALTER TABLE '" . ARCHIVEFILETABLE . "' CONVERT TO CHARACTER SET utf8");
             }
-            
+
             $stuff_done = TRUE;
         }
     }
-    
+
     if (!table_exists(CONFIGTABLE, $dbh))
     {
         echo 'Creating table ' . CONFIGTABLE . '...<br>';
@@ -229,7 +229,7 @@ function setup_check($dbh)
 			setting		varchar(255),
 			primary key(config_name)
 			)");
-        
+
         if (!$result)
         {
             die('Creation of ' . CONFIGTABLE . ' failed! Check database settings and config.php then retry installation.');
@@ -240,15 +240,15 @@ function setup_check($dbh)
             {
                 ;
             }
-            
+
             if (SQLTYPE === 'MYSQL')
             {
                 $result = $dbh->query("ALTER TABLE '" . CONFIGTABLE . "' CONVERT TO CHARACTER SET utf8");
             }
-            
+
             $stuff_done = TRUE;
         }
-        
+
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('technical', 'original_database_version', '001')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('technical', 'current_database_version', '001')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('board_setting_1bit', 'allow_tripkeys', '1')");
@@ -353,7 +353,7 @@ function setup_check($dbh)
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('filetype_allow_r', 'enable_iso', '')");
         $dbh->query("INSERT INTO `" . CONFIGTABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('filetype_allow_r', 'enable_dmg', '')");
     }
-    
+
     if (!table_exists(BANTABLE, $dbh))
     {
         echo 'Creating table ' . BANTABLE . '...<br>';
@@ -369,7 +369,7 @@ function setup_check($dbh)
 			appeal_response	text default null,
 			appeal_status	tinyint not null default 0
 			)");
-        
+
         if (!$result)
         {
             die('Creation of ' . BANTABLE . ' failed! Check database settings and config.php then retry installation.');
@@ -380,16 +380,16 @@ function setup_check($dbh)
             {
                 ;
             }
-            
+
             if (SQLTYPE === 'MYSQL')
             {
                 $result = $dbh->query("ALTER TABLE '" . BANTABLE . "' CONVERT TO CHARACTER SET utf8");
             }
-            
+
             $stuff_done = TRUE;
         }
     }
-    
+
     if (!file_exists(SRC_PATH))
     {
         echo 'Creating directory ' . SRC_DIR . '<br>';
@@ -403,7 +403,7 @@ function setup_check($dbh)
             die('Could not create ' . SRC_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(THUMB_PATH))
     {
         echo 'Creating directory ' . THUMB_DIR . '<br>';
@@ -417,7 +417,7 @@ function setup_check($dbh)
             die('Could not create ' . THUMB_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(PAGE_PATH))
     {
         echo 'Creating directory ' . PAGE_DIR . '<br>';
@@ -431,7 +431,7 @@ function setup_check($dbh)
             die('Could not create ' . PAGE_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(CACHE_PATH))
     {
         echo 'Creating directory ' . CACHE_DIR . '<br>';
@@ -445,7 +445,7 @@ function setup_check($dbh)
             die('Could not create ' . CACHE_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(ARCHIVE_PATH))
     {
         echo 'Creating directory ' . ARCHIVE_DIR . '<br>';
@@ -459,7 +459,7 @@ function setup_check($dbh)
             die('Could not create ' . ARCHIVE_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(ARC_SRC_PATH))
     {
         echo 'Creating directory ' . ARCHIVE_DIR . SRC_DIR . '<br>';
@@ -473,7 +473,7 @@ function setup_check($dbh)
             die('Could not create ' . ARCHIVE_DIR . SRC_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(ARC_THUMB_PATH))
     {
         echo 'Creating directory ' . ARCHIVE_DIR . THUMB_DIR . '<br>';
@@ -487,7 +487,7 @@ function setup_check($dbh)
             die('Could not create ' . ARCHIVE_DIR . THUMB_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(ARC_PAGE_PATH))
     {
         echo 'Creating directory ' . ARCHIVE_DIR . PAGE_DIR . '<br>';
@@ -501,7 +501,7 @@ function setup_check($dbh)
             die('Could not create ' . ARCHIVE_DIR . PAGE_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if ($stuff_done)
     {
         define('STUFF_DONE', TRUE);
@@ -542,7 +542,7 @@ $authorized = array(
             \'perm_update_cache\' => TRUE
 		)),
 	); ?>';
-            
+
             if (nel_write_file(FILES_PATH . 'auth_data.nel.php', $new_auth, 0644))
             {
                 $stuff_done = TRUE;

@@ -26,7 +26,7 @@ function nel_banned_md5($md5, $file)
 {
     $cancer = array('', '');
     $total_cancer = count($cancer);
-    
+
     for ($i = 0; $i < $total_cancer; ++ $i)
     {
         if ($md5 === $cancer[$i])
@@ -44,7 +44,7 @@ function nel_banned_name($name, $file)
 {
     $cancer = array('', '');
     $total_cancer = count($cancer);
-    
+
     for ($i = 0; $i < $total_cancer; ++ $i)
     {
         if ($cancer[$i] === $name)
@@ -61,13 +61,13 @@ function nel_banned_text($text, $file)
 {
     $cancer = array('samefag', '');
     $total_cancer = count($cancer);
-    
+
     for ($i = 0; $i < $total_cancer; ++ $i)
     {
         if ($cancer[$i] !== '')
         {
             $test = utf8_strpos($text, $cancer[$i]);
-            
+
             if ($test !== FALSE)
             {
                 nel_derp(17, array('origin' => 'SNACKS', 'cancer' => $cancer[$i]));
@@ -82,11 +82,11 @@ function nel_banned_text($text, $file)
 function nel_apply_ban($dataforce, $dbh)
 {
     $base_host = $_SERVER["REMOTE_ADDR"];
-    
+
     if ($dataforce['mode'] === 'banappeal')
     {
         reset($_POST);
-        
+
         while ($item = each($_POST))
         {
             if ($item[0] === 'bawww')
@@ -98,22 +98,22 @@ function nel_apply_ban($dataforce, $dbh)
                 $banned_ip = $item[1];
             }
         }
-        
+
         $prepared = $dbh->prepare('UPDATE ' . BANTABLE . ' SET appeal=:bawww, appeal_status=1 WHERE host=:host');
         $prepared->bindParam(':bawww', $bawww, PDO::PARAM_STR);
         $prepared->bindParam(':host', @inet_pton($banned_ip), PDO::PARAM_STR);
         $prepared->execute();
         unset($prepared);
     }
-    
+
     $prepared = $dbh->prepare('SELECT * FROM ' . BANTABLE . ' WHERE host=:host');
     $prepared->bindParam(':host', @inet_pton($base_host), PDO::PARAM_STR);
     $prepared->execute();
     $bandata = $prepared->fetch(PDO::FETCH_ASSOC);
     unset($prepared);
-    
+
     $bandata['length_base'] = $bandata['length'] + $bandata['ban_time'];
-    
+
     if (time() >= $bandata['length_base'])
     {
         $prepared = $dbh->prepare('DELETE FROM ' . BANTABLE . ' WHERE id=:banid');
@@ -128,7 +128,7 @@ function nel_apply_ban($dataforce, $dbh)
         {
             nel_terminate_session();
         }
-        
+
         nel_render_ban_page($dataforce, $bandata);
         die();
     }

@@ -53,7 +53,7 @@ function nel_ban_hammer($dataforce, $dbh)
             }
 
             $current_num = $item[1];
-            $ban_input[$i] = array('num' => $item[1], 'days' => 0, 'hours' => 0, 'message' => '', 'reason' => '',
+            $ban_input[$i] = array('num' => $item[1], 'days' => 0, 'hours' => 0, 'message' => '', 'reason' => '', 
                 'name' => '', 'host' => '');
         }
 

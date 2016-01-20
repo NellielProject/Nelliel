@@ -12,7 +12,7 @@ function nel_render_admin_panel($dataforce, $dbh)
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
     $board_settings = array('iso' => '', 'com' => '', 'us' => '', 'archive' => '', 'prune' => '', 'nothing' => '');
-    
+
     foreach ($rows as $config_line)
     {
         if ($config_line['config_type'] !== 'board_setting')
@@ -33,33 +33,33 @@ function nel_render_admin_panel($dataforce, $dbh)
                 case 'ISO':
                     $board_settings['iso'] = 'checked';
                     break;
-                
+
                 case 'COM':
                     $board_settings['com'] = 'checked';
                     break;
-                
+
                 case 'US':
                     $board_settings['us'] = 'checked';
                     break;
-                
+
                 case 'ARCHIVE':
                     $board_settings['archive'] = 'checked';
                     break;
-                
+
                 case 'PRUNE':
                     $board_settings['prune'] = 'checked';
                     break;
-                
+
                 case 'NOTHING':
                     $board_settings['nothing'] = 'checked';
                     break;
-                
+
                 default:
                     $board_settings[$config_line['config_name']] = $config_line['setting'];
             }
         }
     }
-    
+
     $render->add_multiple_data($board_settings);
     $render->parse('admin_panel.tpl', 'management');
     $render->input(nel_render_basic_footer($render));
