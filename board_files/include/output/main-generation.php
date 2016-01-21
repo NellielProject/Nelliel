@@ -39,11 +39,11 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
 
         if (empty($_SESSION) || $_SESSION['ignore_login'])
         {
-            nel_write_file(PHP_SELF2 . PHP_EXT, $render->output(), 0644);
+            nel_write_file(PHP_SELF2 . PHP_EXT, $render->output(FALSE), 0644);
         }
         else
         {
-            echo $render->output();
+            $render->output(TRUE);
         }
 
         return;
@@ -195,13 +195,13 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
                 $page = $counttree;
             }
 
-            echo $render->output();
+            $render->output(TRUE);
             die();
         }
         else
         {
             $logfilename = ($page === 1) ? PHP_SELF2 . PHP_EXT : PHP_SELF2 . ($page - 1) . PHP_EXT;
-            nel_write_file($logfilename, $render->output(), 0644);
+            nel_write_file($logfilename, $render->output(FALSE), 0644);
         }
 
         ++ $page;

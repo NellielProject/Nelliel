@@ -63,6 +63,6 @@ function nel_render_admin_panel($dataforce, $dbh)
     $render->add_multiple_data($board_settings);
     $render->parse('admin_panel.tpl', 'management');
     $render->input(nel_render_basic_footer($render));
-    echo $render->output();
+    $render->output(TRUE);
 }
 ?>

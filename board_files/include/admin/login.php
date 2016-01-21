@@ -22,6 +22,6 @@ function nel_login($dataforce, $authorize)
     }
 
     nel_render_basic_footer($render);
-    echo $render->output();
+    $render->output(TRUE);
 }
 ?>

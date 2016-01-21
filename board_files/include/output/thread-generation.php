@@ -121,24 +121,24 @@ function nel_thread_generator($dataforce, $dbh)
     {
         if ($dataforce['expand'])
         {
-            echo $render_expand->output();
+            $render_expand->output(TRUE);
         }
         else if ($dataforce['collapse'])
         {
-            echo $render_collapse->output();
+            $render_collapse->output(TRUE);
         }
         else
         {
-            echo $render->output();
+            $render->output(TRUE);
         }
 
         die();
     }
     else
     {
-        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '.html', $render->output(), 0644);
-        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-expand.html', $render_expand->output(), 0644);
-        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-collapse.html', $render_collapse->output(), 0644);
+        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '.html', $render->output(FALSE), 0644);
+        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-expand.html', $render_expand->output(FALSE), 0644);
+        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-collapse.html', $render_collapse->output(FALSE), 0644);
     }
 }
 

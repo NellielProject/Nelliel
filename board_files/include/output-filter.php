@@ -36,9 +36,9 @@ function nel_word_filters($text)
     return $text;
 }
 
-function newline_cleanup($string)
+function nel_newline_cleanup($string)
 {
-    if (clear_whitespace($string) !== '')
+    if (nel_clear_whitespace($string) !== '')
     {
         $string = utf8_str_replace("\r", "\n", $string);
 
@@ -56,7 +56,7 @@ function newline_cleanup($string)
     return $string;
 }
 
-function clear_whitespace($string)
+function nel_clear_whitespace($string)
 {
     if (ctype_space($string))
     {

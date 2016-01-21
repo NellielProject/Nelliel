@@ -62,7 +62,6 @@ function nel_regen(&$dataforce, $id, $mode, $modmode, $dbh)
         $dataforce['rules_list'] = nel_cache_rules($dbh);
         nel_cache_settings($dbh);
         $dataforce['post_links'] = $link_updates;
-        // cache_post_links();
         nel_regen_template_cache();
     }
 

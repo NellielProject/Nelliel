@@ -103,9 +103,14 @@ class nel_render
         $this->output .= $input;
     }
 
-    public function output()
+    public function output($echo)
     {
-        return $this->output;
+        if($echo === FALSE)
+        {
+            return $this->output;
+        }
+        
+        echo $this->output;
     }
 
     public function parse($template, $subdirectory)

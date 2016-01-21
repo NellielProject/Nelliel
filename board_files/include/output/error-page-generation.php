@@ -10,6 +10,6 @@ function nel_render_derp($diagnostic)
     nel_render_header(array(), $render, array());
     $render->parse('derp.tpl', '');
     nel_render_basic_footer($render);
-    echo $render->output();
+    $render->output(TRUE);
 }
 ?>

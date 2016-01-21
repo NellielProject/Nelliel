@@ -34,7 +34,7 @@ function nel_render_header($dataforce, $render, $treeline)
 
     $render->add_data('titlepart', $title);
 
-    switch ($render->output('header_type'))
+    switch ($render->retrieve_data('header_type'))
     {
         case 'ABOUT':
             $render->add_data('page_title', 'About Nelliel Imageboard');
@@ -135,11 +135,12 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $render->add_data('response_id', $dataforce['response_id']);
     $render->add_data('tripcode', (!is_null($post_data['tripcode'])) ? BS_TRIPKEY_MARKER . $post_data['tripcode'] : '');
     $render->add_data('secure_tripcode', (!is_null($post_data['secure_tripcode'])) ? BS_TRIPKEY_MARKER . BS_TRIPKEY_MARKER . $post_data['secure_tripcode'] : '');
+    $post_data['comment'] = nel_newline_cleanup($post_data['comment']);
     $post_data['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $post_data['comment']);
     $post_data['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'nel_parse_links', $post_data['comment']);
-    if (clear_whitespace($post_data['comment']) === '')
+    if (nel_clear_whitespace($post_data['comment']) === '')
     {
-        $poster_data['comment'] = nel_stext('THREAD_NOTEXT');
+        $post_data['comment'] = nel_stext('THREAD_NOTEXT');
     }
     $render->add_sanitized_data('comment-part', utf8_str_replace('>><a href="../"', '>><a href="', $post_data['comment']));
     $render->add_sanitized_data('comment', $post_data['comment']);
@@ -346,7 +347,7 @@ function nel_render_ban_page($dataforce, $bandata)
     nel_render_header($dataforce, $render, array());
     $render->parse('ban_page.tpl', '');
     nel_render_basic_footer($render);
-    echo $render->output();
+    $render->output(TRUE);
 }
 
 //

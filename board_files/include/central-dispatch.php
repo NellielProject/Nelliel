@@ -111,7 +111,7 @@ function nel_process_post($dataforce, $plugins, $authorize, $dbh)
                 }
                 else
                 {
-                    echo '<meta http-equiv="refresh" content="1e;URL=' . PHP_SELF2 . PHP_EXT . '">';
+                    echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF2 . PHP_EXT . '">';
                 }
             }
 

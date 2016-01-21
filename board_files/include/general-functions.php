@@ -54,12 +54,4 @@ function nel_clean_exit($dataforce, $die)
 
     die();
 }
-
-function nel_change_true_false(&$item1, $key)
-{
-    if (is_bool($item1))
-    {
-        $item1 = FALSE;
-    }
-}
 ?>

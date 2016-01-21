@@ -10,7 +10,7 @@ function nel_render_staff_panel_add($dataforce, $auth)
     nel_render_header($dataforce, $render, array());
     $render->parse('staff_panel_add.tpl', 'management');
     nel_render_footer($render, FALSE, FALSE, FALSE, FALSE, FALSE);
-    echo $render->output();
+    $render->output(TRUE);
 }
 
 function nel_render_staff_panel_edit($dataforce, $auth)
@@ -21,6 +21,6 @@ function nel_render_staff_panel_edit($dataforce, $auth)
     nel_render_header($dataforce, $render, array());
     $render->parse('staff_panel_edit.tpl', 'management');
     nel_render_footer($render, FALSE, FALSE, FALSE, FALSE, FALSE);
-    echo $render->output();
+    $render->output(TRUE);
 }
 ?>

@@ -52,7 +52,7 @@ function nel_render_thread_panel($dataforce, $expand, $dbh)
     $dataforce['all_filesize'] = (int) ($all / 1024);
     nel_render_thread_panel_bottom($dataforce, $render, $thread_data);
     nel_render_basic_footer($render);
-    echo $render->output();
+    $render->output(TRUE);
 }
 
 function nel_render_thread_panel_thread($dataforce, $render, $thread_data)
