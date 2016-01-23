@@ -74,11 +74,9 @@ function nel_thread_generator($dataforce, $dbh)
             }
 
             $resid = $dataforce['response_id'];
-
             $render_temp = new nel_render();
             $render_temp2 = new nel_render();
             $render_temp3 = new nel_render();
-
             nel_render_post($dataforce, $render_temp, TRUE, FALSE, $gen_data, $treeline, $dbh); // for thread
             $dataforce['response_id'] = 0;
             nel_render_post($dataforce, $render_temp2, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse

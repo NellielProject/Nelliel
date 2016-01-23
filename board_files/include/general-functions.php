@@ -54,4 +54,12 @@ function nel_clean_exit($dataforce, $die)
 
     die();
 }
+
+function ignore_login()
+{
+    if (!empty($_SESSION))
+    {
+        $temp = $_SESSION['ignore_login'];
+    }
+}
 ?>

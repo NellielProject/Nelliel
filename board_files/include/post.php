@@ -484,12 +484,10 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     if (!empty($_SESSION))
     {
         $temp = $_SESSION['ignore_login'];
-        //$_SESSION['ignore_login'] = TRUE;
     }
     
     $return_res = ($dataforce['response_to'] === 0) ? $new_thread_dir : $dataforce['response_to'];
     nel_regen($dataforce, $return_res, 'thread', FALSE, $dbh);
-    // cache_post_links($post_link_reference);
     $dataforce['archive_update'] = TRUE;
     nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
     

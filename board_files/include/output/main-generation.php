@@ -102,16 +102,14 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
 
             if (!$end_of_thread)
             {
+                $gen_data['has_file'] = FALSE;
+
                 if ($treeline[$gen_data['post_counter']]['has_file'] == 1)
                 {
                     $gen_data['has_file'] = TRUE;
                     $result = $dbh->query('SELECT * FROM ' . FILETABLE . ' WHERE post_ref=' . $treeline[$gen_data['post_counter']]['post_number'] . ' ORDER BY file_order asc');
                     $gen_data['files'] = $result->fetchALL(PDO::FETCH_ASSOC);
                     unset($result);
-                }
-                else
-                {
-                    $gen_data['has_file'] = FALSE;
                 }
 
                 if ($treeline[$gen_data['post_counter']]['response_to'] > 0)
