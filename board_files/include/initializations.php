@@ -58,7 +58,7 @@ if (!empty($_POST))
     {
         $mode = array();
     }
-
+    
     $dataforce['mode'] = (isset($mode[0])) ? $mode[0] : NULL;
     $dataforce['sub_mode'] = (isset($mode[1])) ? $mode[1] : NULL;
     $dataforce['mode_action'] = (isset($mode[2])) ? $mode[2] : NULL;

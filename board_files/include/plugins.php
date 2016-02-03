@@ -3,12 +3,13 @@ if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
+
 class nel_plugin_handler
 {
     private $hooks = array();
     private $plugins = array();
     private $loaded = FALSE;
-
+    
     // Returns TRUE if activation successful, FALSE if not (usually because activation was already done)
     public function activate()
     {
@@ -16,7 +17,7 @@ class nel_plugin_handler
         {
             return FALSE;
         }
-
+        
         $this->sort_hooks();
         $this->loaded = TRUE;
         return TRUE;
@@ -25,12 +26,12 @@ class nel_plugin_handler
     private function sort_hooks()
     {
         $hooks = $this->hooks;
-
+        
         foreach ($hooks as $key => $value)
         {
             usort($hooks[$key], array($this, 'sort_by_priority'));
         }
-
+        
         $this->hooks = $hooks;
     }
 
@@ -40,19 +41,18 @@ class nel_plugin_handler
         {
             return $a['index'] - $b['index'];
         }
-
+        
         return ($a['priority'] < $b['priority']) ? -1 : 1;
     }
-
+    
     // Returns a plugin id hash or FALSE if plugin already registered
     public function register_plugin($instance, $name, $author, $version)
     {
         $plugin_id = $this->plugin_id_hash($name, $author, $version);
-
+        
         if (!in_array($plugin_id, $this->plugins, TRUE))
         {
-            $this->plugins[$plugin_id] = array('instance' => $instance, 'name' => $name, 'author' => $author, 
-                'version' => $version);
+            $this->plugins[$plugin_id] = array('instance' => $instance, 'name' => $name, 'author' => $author, 'version' => $version);
             return $plugin_id;
         }
         else
@@ -60,18 +60,18 @@ class nel_plugin_handler
             return FALSE;
         }
     }
-
+    
     // Returns plugin id hash
     public function plugin_id_hash($a, $b, $c)
     {
         return md5($a . $b . $c);
     }
-
+    
     // Register hook functions here
     public function register_hook_function($hook_name, $function_name, $priority, $plugin_id)
     {
         $hooks = $this->hooks;
-
+        
         if (!isset($hooks[$hook_name]))
         {
             $next_index = 0;
@@ -81,17 +81,16 @@ class nel_plugin_handler
             end($hooks[$hook_name]);
             $next_index = key($hooks[$hook_name]) + 1;
         }
-
-        $hooks[$hook_name][] = array('function' => $function_name, 'priority' => $priority, 'index' => $next_index, 
-            'plugin' => $plugin_id);
+        
+        $hooks[$hook_name][] = array('function' => $function_name, 'priority' => $priority, 'index' => $next_index, 'plugin' => $plugin_id);
         $this->hooks = $hooks;
     }
-
+    
     // Unregister hookk functions here. Returns TRUE is successful, FALSE if not
     public function unregister_hook_function($hook_name, $function_name, $priority, $plugin_id)
     {
         $hooks = $this->hooks;
-
+        
         foreach ($hooks[$hook_name] as $key => $value)
         {
             if (in_array($function_name, $hooks[$hook_name][$key], TRUE))
@@ -110,7 +109,7 @@ class nel_plugin_handler
                 return FALSE;
             }
         }
-
+        
         $this->hooks = $hooks;
         $this->sort_hooks();
         return TRUE;
@@ -120,7 +119,7 @@ class nel_plugin_handler
     {
         $hooks = $this->hooks;
         $return = $input[0];
-
+        
         if (isset($hooks[$hook_name]))
         {
             foreach ($hooks[$hook_name] as $hook_function)
@@ -132,7 +131,7 @@ class nel_plugin_handler
                 else if (function_exists($hook_function['function'][1]))
                 {
                     $return = call_user_func_array($hook_function['function'][1], $input);
-
+                    
                     if (!is_null($return) && $return_input)
                     {
                         $input = array($return);
@@ -140,7 +139,7 @@ class nel_plugin_handler
                 }
             }
         }
-
+        
         return $return;
     }
 }

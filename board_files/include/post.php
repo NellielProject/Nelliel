@@ -11,7 +11,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     $new_thread_dir = '';
     
     // Get time
-    $time = floor(microtime(TRUE) * 1000);
+    $time = get_millisecond_time();
     $reply_delay = $time - (BS_REPLY_DELAY * 1000);
     
     // Check if post is ok
@@ -37,9 +37,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     $files = nel_process_file_info();
     $there_is_no_spoon = TRUE;
     
-    $poster_info = array('name' => $dataforce['name'], 'email' => $dataforce['email'], 
-        'subject' => $dataforce['subject'], 'comment' => $dataforce['comment'], 'tripcode' => '', 
-        'secure_tripcode' => '');
+    $poster_info = array('name' => $dataforce['name'], 'email' => $dataforce['email'], 'subject' => $dataforce['subject'], 'comment' => $dataforce['comment'], 'tripcode' => '', 'secure_tripcode' => '');
     
     if (!empty($files))
     {
@@ -167,8 +165,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
             $poster_info['secure_tripcode'] = utf8_substr(crypt($trip, '42'), -12);
         }
         
-        $poster_info = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($poster_info, $name_pieces, 
-            $modpostc));
+        $poster_info = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($poster_info, $name_pieces, $modpostc));
         
         if ($name_pieces[1] === '' || (!empty($_SESSION) && $_SESSION['perms']['perm_post_anon']))
         {
@@ -223,8 +220,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
                     
                     if ($same_thread > 0)
                     {
-                        nel_derp(12, array('origin' => 'POST', 
-                            'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => $files));
+                        nel_derp(12, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => $files));
                     }
                 }
                 
@@ -622,8 +618,7 @@ function nel_process_file_info()
                 
                 if ($file['size'] > BS_MAX_FILESIZE * 1024)
                 {
-                    nel_derp(19, array('origin' => 'POST', 
-                        'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
+                    nel_derp(19, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
                 }
                 
                 $files[$i]['dest'] = SRC_PATH . $file['name'] . '.tmp';
@@ -654,14 +649,12 @@ function nel_process_file_info()
                 
                 if (!$file_allowed)
                 {
-                    nel_derp(6, array('origin' => 'POST', 
-                        'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
+                    nel_derp(6, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
                 }
                 
                 if (!$file_good)
                 {
-                    nel_derp(18, array('origin' => 'POST', 
-                        'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
+                    nel_derp(18, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
                 }
                 
                 ++ $i;
@@ -674,8 +667,7 @@ function nel_process_file_info()
         }
         else if ($file['error'] === UPLOAD_ERR_INI_SIZE)
         {
-            nel_derp(19, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 
-                'files' => array($files[$i])));
+            nel_derp(19, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
         }
     }
     
