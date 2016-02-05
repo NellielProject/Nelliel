@@ -40,6 +40,7 @@ function nel_render_thread_panel($dataforce, $expand, $dbh)
             
             foreach ($thread['files'] as $file)
             {
+                $thread['files'] = bin2hex($file['md5']);
                 $all += $file['filesize'];
             }
         }

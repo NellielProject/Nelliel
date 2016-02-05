@@ -175,6 +175,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             $files[$i]['img_dim'] = (!is_null($files[$i]['image_width']) && !is_null($files[$i]['image_height'])) ? TRUE : FALSE;
             $files[$i]['file_location'] = $temp_dot . SRC_DIR . $post_id . '/' . $files[$i]['filename'] . "." . $files[$i]['extension'];
             $files[$i]['filesize'] = round(((int) $files[$i]['filesize'] / 1024), 2);
+            $files[$i]['md5'] = bin2hex($files[$i]['md5']);
             
             if (BS1_USE_THUMB)
             {

@@ -149,12 +149,14 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
         
         if ($name_pieces[3] !== '' && BS1_ALLOW_TRIPKEYS)
         {
-            $cap = utf8_strtr($name_pieces[3], '&amp;', '&');
-            $cap = utf8_strtr($cap, '&#44;', ',');
-            $salt = utf8_substr($cap . 'H.', 1, 2);
+            $raw_trip = iconv('UTF-8', 'CP932//IGNORE', $name_pieces[3]);
+            $cap = strtr($raw_trip, '&amp;', '&');
+            $cap = strtr($cap, '&#44;', ',');
+            $salt = substr($cap . 'H.', 1, 2);
             $salt = preg_replace('#[^\.-z]#', '.#', $salt);
-            $salt = utf8_strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
-            $poster_info['tripcode'] = utf8_substr(crypt($cap, $salt), -10);
+            $salt = strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
+            $final_trip = substr(crypt($cap, $salt), -10);
+            $poster_info['tripcode'] = iconv('CP932//IGNORE', 'UTF-8', $final_trip);
         }
         
         $poster_info = $plugins->plugin_hook('tripcode-processing', TRUE, array($poster_info, $name_pieces));
@@ -192,8 +194,8 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     {
         if (file_exists($files[$i]['dest']))
         {
-            $files[$i]['md5'] = md5_file($files[$i]['dest']);
-            nel_banned_md5($files[$i]['md5'], $files[$i]);
+            $files[$i]['md5'] = md5_file($files[$i]['dest'], TRUE);
+            nel_banned_md5(bin2hex($files[$i]['md5']), $files[$i]);
             $prepared = $dbh->prepare('SELECT post_ref FROM ' . FILETABLE . ' WHERE md5=:md5 LIMIT 1');
             $prepared->bindParam(':md5', $files[$i]['md5'], PDO::PARAM_STR);
             
