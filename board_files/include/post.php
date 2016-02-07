@@ -149,22 +149,25 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
         
         if ($name_pieces[3] !== '' && BS1_ALLOW_TRIPKEYS)
         {
-            $raw_trip = iconv('UTF-8', 'CP932//IGNORE', $name_pieces[3]);
+            $raw_trip = iconv('UTF-8', 'SHIFT_JIS//IGNORE', $name_pieces[3]);
             $cap = strtr($raw_trip, '&amp;', '&');
             $cap = strtr($cap, '&#44;', ',');
             $salt = substr($cap . 'H.', 1, 2);
             $salt = preg_replace('#[^\.-z]#', '.#', $salt);
             $salt = strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
             $final_trip = substr(crypt($cap, $salt), -10);
-            $poster_info['tripcode'] = iconv('CP932//IGNORE', 'UTF-8', $final_trip);
+            $poster_info['tripcode'] = iconv('SHIFT_JIS//IGNORE', 'UTF-8', $final_trip);
         }
         
         $poster_info = $plugins->plugin_hook('tripcode-processing', TRUE, array($poster_info, $name_pieces));
         
         if ($name_pieces[5] !== '' || $modpostc > 0)
         {
-            $trip = nel_hash($name_pieces[5], $plugins);
-            $poster_info['secure_tripcode'] = utf8_substr(crypt($trip, '42'), -12);
+            $raw_trip = iconv('UTF-8', 'SHIFT_JIS//IGNORE', $name_pieces[5]);
+            $trip = nel_hash($raw_trip, $plugins);
+            $trip = base64_encode(pack("H*",$trip));
+            $final_trip = substr($trip, -12);
+            $poster_info['secure_tripcode'] = iconv('SHIFT_JIS//IGNORE', 'UTF-8', $final_trip);
         }
         
         $poster_info = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($poster_info, $name_pieces, $modpostc));
