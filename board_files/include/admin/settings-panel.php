@@ -19,7 +19,7 @@ function nel_settings_control($dataforce, $authorize, $dbh)
     if ($mode === 'update')
     {
         // Apply settings from admin panel
-        $dbh->query('UPDATE ' . CONFIGTABLE . ' SET setting=""');
+        $dbh->query('UPDATE ' . CONFIG_TABLE . ' SET setting=""');
         
         while ($item = each($_POST))
         {
@@ -35,7 +35,7 @@ function nel_settings_control($dataforce, $authorize, $dbh)
                     $dataforce['max_pages'] = (int) $item[1];
                 }
                 
-                $dbh->query('UPDATE ' . CONFIGTABLE . ' SET setting="' . $item[1] . '" WHERE config_name="' . $item[0] . '"');
+                $dbh->query('UPDATE ' . CONFIG_TABLE . ' SET setting="' . $item[1] . '" WHERE config_name="' . $item[0] . '"');
             }
         }
         

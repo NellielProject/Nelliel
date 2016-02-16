@@ -19,7 +19,7 @@
                     <input type="checkbox" name="banpost" id="bpost"><label for="bpost">{nel_stext('FORM_BAN_POSTS')}</label><br>
                     <input type="hidden" name="mode" value="admin->modmode">
     {{ endif }}
-    {{ if !BS1_USE_NEW_IMGDEL }}
+    {{ if !BS_BOOL_USE_NEW_IMGDEL }}
                     <input type="checkbox" name="onlyimgdel" id="delfbox" value="on"><label for="delfbox">{nel_stext('DELETE_FILES_ONLY')}</label><br>
     {{ endif }}
     {{ if $render->retrieve_data('logged_in') }}

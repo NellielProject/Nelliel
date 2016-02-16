@@ -32,7 +32,7 @@ function nel_cache_rules($dbh)
     $rmode = '';
     $omode = '';
     
-    $result = $dbh->query('SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type IN ("filetype_allow_g","filetype_allow_a","filetype_allow_o","filetype_allow_p","filetype_allow_d","filetype_allow_r")');
+    $result = $dbh->query('SELECT * FROM ' . CONFIG_TABLE . ' WHERE config_type IN ("filetype_allow_g","filetype_allow_a","filetype_allow_o","filetype_allow_p","filetype_allow_d","filetype_allow_r")');
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
     $result_count = count($config_list);
     $config_list2 = array();
@@ -156,7 +156,7 @@ function nel_cache_rules($dbh)
 function nel_cache_settings($dbh)
 {
     // Get true/false (1-bit) board settings
-    $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIGTABLE . ' WHERE config_type="board_setting_1bit"');
+    $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIG_TABLE . ' WHERE config_type="board_setting_bool"');
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
     unset($result);
     
@@ -168,11 +168,11 @@ function nel_cache_settings($dbh)
     {
         if ($config_list[$i]['setting'] === '1')
         {
-            $vars1 .= 'define(\'BS1_' . utf8_strtoupper($config_list[$i]['config_name']) . '\',TRUE);';
+            $vars1 .= 'define(\'BS_BOOL_' . utf8_strtoupper($config_list[$i]['config_name']) . '\',TRUE);';
         }
         else
         {
-            $vars1 .= 'define(\'BS1_' . utf8_strtoupper($config_list[$i]['config_name']) . '\',FALSE);';
+            $vars1 .= 'define(\'BS_BOOL_' . utf8_strtoupper($config_list[$i]['config_name']) . '\',FALSE);';
         }
         ++ $i;
     }
@@ -180,7 +180,7 @@ function nel_cache_settings($dbh)
     $rows = array();
     
     // Get other board settings
-    $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIGTABLE . ' WHERE config_type="board_setting"');
+    $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIG_TABLE . ' WHERE config_type="board_setting"');
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
     unset($result);
     
@@ -202,12 +202,12 @@ function nel_cache_settings($dbh)
         ++ $i;
     }
     
-    $result = $dbh->query('SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_g" 
-					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_a"
-					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_v"
-					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_o"
-					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_d"
-					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_r"');
+    $result = $dbh->query('SELECT * FROM ' . CONFIG_TABLE . ' WHERE config_type="filetype_allow_g" 
+					       UNION SELECT * FROM ' . CONFIG_TABLE . ' WHERE config_type="filetype_allow_a"
+					       UNION SELECT * FROM ' . CONFIG_TABLE . ' WHERE config_type="filetype_allow_v"
+					       UNION SELECT * FROM ' . CONFIG_TABLE . ' WHERE config_type="filetype_allow_o"
+					       UNION SELECT * FROM ' . CONFIG_TABLE . ' WHERE config_type="filetype_allow_d"
+					       UNION SELECT * FROM ' . CONFIG_TABLE . ' WHERE config_type="filetype_allow_r"');
     
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
     unset($result);

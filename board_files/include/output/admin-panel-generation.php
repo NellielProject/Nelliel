@@ -8,7 +8,7 @@ function nel_render_admin_panel($dataforce, $dbh)
 {
     $render = new nel_render();
     $render->input(nel_render_header($dataforce, $render, array()));
-    $result = $dbh->query('SELECT * FROM ' . CONFIGTABLE . '');
+    $result = $dbh->query('SELECT * FROM ' . CONFIG_TABLE . '');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
     $board_settings = array('iso' => '', 'com' => '', 'us' => '', 'archive' => '', 'prune' => '', 'nothing' => '');

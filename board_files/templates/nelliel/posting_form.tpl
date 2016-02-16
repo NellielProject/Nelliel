@@ -22,7 +22,7 @@
                             <input class="none" type="password" name="fuckoffmozilla" size="1">
                         </td>
                     </tr>
-{{ if !BS1_FORCE_ANONYMOUS }}
+{{ if !BS_BOOL_FORCE_ANONYMOUS }}
                     <tr class="posting-form-row">
                         <td class="posting-form-label">
                             <label for="durrname">{nel_stext('FORM_LABEL_NAME')}</label>
@@ -87,7 +87,7 @@
                         </td>
                     </tr>
     {{ endfor }}
-{{ if BS1_USE_FGSFDS }}
+{{ if BS_BOOL_USE_FGSFDS }}
                     <tr class="posting-form-row">
                         <td class="posting-form-label">
                             <label for="lolwut">{BS_FGSFDS_NAME}</label>
@@ -133,7 +133,7 @@
                             </ul>
                         </td>
                     </tr>
-{{ if BS1_USE_SPAMBOT_TRAP }}
+{{ if BS_BOOL_USE_SPAMBOT_TRAP }}
                     <tr class="none">
                         <td>
                             <label for="thename1">{nel_stext('TEXT_SPAMBOT_TRAP')}</label>

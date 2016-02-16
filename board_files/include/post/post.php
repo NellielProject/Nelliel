@@ -4,6 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'post/file-functions.php';
+require_once INCLUDE_PATH . 'post/database-functions.php';
+
 function nel_process_new_post($dataforce, $plugins, $dbh)
 {
     global $enabled_types, $fgsfds, $plugins;
@@ -36,7 +39,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     // Start collecting file info
     $files = nel_process_file_info();
     $there_is_no_spoon = TRUE;
-    
+    $files_count = 0;
     $poster_info = array('name' => $dataforce['name'], 'email' => $dataforce['email'], 'subject' => $dataforce['subject'], 'comment' => $dataforce['comment'], 'tripcode' => '', 'secure_tripcode' => '');
     
     if (!empty($files))
@@ -47,19 +50,18 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     else
     {
         $files = array();
-        $files_count = 0;
         
         if (!$poster_info['comment'])
         {
             nel_derp(10, array('origin' => 'POST'));
         }
         
-        if (BS1_REQUIRE_IMAGE_ALWAYS)
+        if (BS_BOOL_REQUIRE_IMAGE_ALWAYS)
         {
             nel_derp(8, array('origin' => 'POST'));
         }
         
-        if (BS1_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
+        if (BS_BOOL_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
         {
             nel_derp(9, array('origin' => 'POST'));
         }
@@ -77,7 +79,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     {
         $cpass = $dataforce['pass'];
         $hashed_pass = nel_hash($dataforce['pass'], $plugins);
-        $dataforce['pass'] = utf8_substr($hashed_pass, 0, 16);
+        $poster_info['pass'] = utf8_substr($hashed_pass, 0, 16);
     }
     else
     {
@@ -87,10 +89,10 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     nel_banned_text($poster_info['comment'], $files);
     
     // Name and tripcodes
-    $modpostc = 0;
+    $poster_info['modpost'] = 0;
     $cookie_name = $poster_info['name'];
     
-    if ($poster_info['name'] !== '' && !BS1_FORCE_ANONYMOUS)
+    if ($poster_info['name'] !== '' && !BS_BOOL_FORCE_ANONYMOUS)
     {
         nel_banned_name($poster_info['name'], $files);
         
@@ -115,7 +117,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
         preg_match('/^([^#]*)(#(?!#))?([^#]*)(##)?(.*)$/', $poster_info['name'], $name_pieces);
         $poster_info['name'] = $name_pieces[1];
         
-        if ($name_pieces[5] !== '')
+        if (!nel_session_ignored() && $name_pieces[5] !== '')
         {
             if ($name_pieces[5] === $_SESSION['settings']['staff_trip'])
             {
@@ -123,15 +125,15 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
                 {
                     if ($_SESSION['settings']['staff_type'] === 'admin')
                     {
-                        $modpostc = 3;
+                        $poster_info['modpost'] = 3;
                     }
                     else if ($_SESSION['settings']['staff_type'] === 'moderator')
                     {
-                        $modpostc = 2;
+                        $poster_info['modpost'] = 2;
                     }
                     else if ($_SESSION['settings']['staff_type'] === 'janitor')
                     {
-                        $modpostc = 1;
+                        $poster_info['modpost'] = 1;
                     }
                 }
                 
@@ -140,14 +142,14 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
                     $fgsfds['sticky'] = TRUE;
                 }
                 
-                if ($modpostc > 0)
+                if ($poster_info['modpost'] > 0)
                 {
                     break;
                 }
             }
         }
         
-        if ($name_pieces[3] !== '' && BS1_ALLOW_TRIPKEYS)
+        if ($name_pieces[3] !== '' && BS_BOOL_ALLOW_TRIPKEYS)
         {
             $raw_trip = iconv('UTF-8', 'SHIFT_JIS//IGNORE', $name_pieces[3]);
             $cap = strtr($raw_trip, '&amp;', '&');
@@ -161,7 +163,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
         
         $poster_info = $plugins->plugin_hook('tripcode-processing', TRUE, array($poster_info, $name_pieces));
         
-        if ($name_pieces[5] !== '' || $modpostc > 0)
+        if ($name_pieces[5] !== '' || $poster_info['modpost'] > 0)
         {
             $raw_trip = iconv('UTF-8', 'SHIFT_JIS//IGNORE', $name_pieces[5]);
             $trip = nel_hash($raw_trip, $plugins);
@@ -170,7 +172,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
             $poster_info['secure_tripcode'] = iconv('SHIFT_JIS//IGNORE', 'UTF-8', $final_trip);
         }
         
-        $poster_info = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($poster_info, $name_pieces, $modpostc));
+        $poster_info = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($poster_info, $name_pieces, $poster_info['modpost']));
         
         if ($name_pieces[1] === '' || (!empty($_SESSION) && $_SESSION['perms']['perm_post_anon']))
         {
@@ -199,7 +201,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
         {
             $files[$i]['md5'] = md5_file($files[$i]['dest'], TRUE);
             nel_banned_md5(bin2hex($files[$i]['md5']), $files[$i]);
-            $prepared = $dbh->prepare('SELECT post_ref FROM ' . FILETABLE . ' WHERE md5=:md5 LIMIT 1');
+            $prepared = $dbh->prepare('SELECT post_ref FROM ' . FILE_TABLE . ' WHERE md5=:md5 LIMIT 1');
             $prepared->bindParam(':md5', $files[$i]['md5'], PDO::PARAM_STR);
             
             if ($prepared->execute())
@@ -209,14 +211,13 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
                 
                 if ($dataforce['response_to'] === 0)
                 {
-                    $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POSTTABLE . ' WHERE post_number=:postref AND response_to=0');
+                    $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE post_number=:postref');
                     $prepared->bindParam(':postref', $post_ref, PDO::PARAM_INT);
                 }
                 else
                 {
-                    $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POSTTABLE . ' WHERE post_number=:postref AND response_to=:respto');
+                    $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE post_number=:postref');
                     $prepared->bindParam(':postref', $post_ref, PDO::PARAM_INT);
-                    $prepared->bindParam(':respto', $dataforce['response_to'], PDO::PARAM_INT);
                 }
                 
                 if ($prepared->execute())
@@ -238,64 +239,39 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     //
     // Go ahead and put post into database
     //
-    
 
-    $prepared = $dbh->prepare('INSERT INTO ' . POSTTABLE . ' 
-	(name, tripcode, secure_tripcode, email, subject, comment, host, password, post_time, last_update, response_to, last_response, post_count, sticky, mod_post, mod_comment, archive_status, locked) VALUES 
-	(:name, :tripcode, :secure_tripcode, :email, :subject, :comment, :host, :password, :time, :last_update, :respto, 0, 1, :sticky, :modpost, :mcomment, 0, 0)');
-    
-    $prepared->bindValue(':name', $poster_info['name'], PDO::PARAM_STR);
-    
-    if ($poster_info['tripcode'] === '')
+    if($dataforce['response_to'] === 0)
     {
-        $prepared->bindValue(':tripcode', NULL, PDO::PARAM_NULL);
+        $poster_info['op'] = 1;
     }
     else
     {
-        $prepared->bindValue(':tripcode', $poster_info['tripcode'], PDO::PARAM_STR);
+        $poster_info['op'] = 0;
     }
-    
-    if ($poster_info['secure_tripcode'] === '')
-    {
-        $prepared->bindValue(':secure_tripcode', NULL, PDO::PARAM_NULL);
-    }
-    else
-    {
-        $prepared->bindValue(':secure_tripcode', $poster_info['secure_tripcode'], PDO::PARAM_STR);
-    }
-    
-    $prepared->bindValue(':email', $poster_info['email'], PDO::PARAM_STR);
-    $prepared->bindValue(':subject', $poster_info['subject'], PDO::PARAM_STR);
-    $prepared->bindValue(':comment', $poster_info['comment'], PDO::PARAM_STR);
-    $prepared->bindValue(':host', @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
-    $prepared->bindValue(':password', $dataforce['pass'], PDO::PARAM_STR);
-    $prepared->bindValue(':time', $time, PDO::PARAM_STR);
-    $prepared->bindValue(':last_update', $time, PDO::PARAM_STR);
-    $prepared->bindValue(':respto', $dataforce['response_to'], PDO::PARAM_INT);
-    
-    if ($fgsfds['sticky'])
-    {
-        $prepared->bindValue(':sticky', 1, PDO::PARAM_INT);
-    }
-    else
-    {
-        $prepared->bindValue(':sticky', 0, PDO::PARAM_INT);
-    }
-    
-    $prepared->bindValue(':modpost', $modpostc, PDO::PARAM_INT);
-    $prepared->bindValue(':mcomment', NULL, PDO::PARAM_NULL);
-    $prepared->execute();
-    unset($prepared);
-    
-    $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE post_time=' . $time . ' AND response_to=' . $dataforce['response_to'] . '');
-    $row = $result->fetch();
-    $post_number = $row[0];
+    nel_db_insert_initial_post($time, $poster_info, $dbh);
+    $result = $dbh->query('SELECT * FROM ' . POST_TABLE . ' WHERE post_time=' . $time . ' LIMIT 1');
+    $new_post_info = $result->fetch(PDO::FETCH_ASSOC);
+    $post_count = 1;
     unset($result);
-    
+
+    if($dataforce['response_to'] === 0)
+    {
+        $dbh->query('UPDATE ' . POST_TABLE .' SET parent_thread=' . $new_post_info['post_number'] . ' WHERE post_time=' . $time);
+        nel_db_insert_new_thread($time, $new_post_info, $files_count, $dbh);
+    }
+    else
+    {
+        $dbh->query('UPDATE ' . POST_TABLE .' SET parent_thread=' . $dataforce['response_to'] . ' WHERE post_time=' . $time);
+        $result = $dbh->query('SELECT post_count FROM ' . THREAD_TABLE . ' WHERE thread_id=' . $dataforce['response_to'] . ' LIMIT 1');
+        $dd = $result->fetch(PDO::FETCH_ASSOC);
+        $post_count = $dd['post_count'];
+        unset($result);
+    }
+
     if ($dataforce['response_to'] === 0)
     {
-        $fgsfds['noko_topic'] = $post_number;
-        $new_thread_dir = $post_number;
+        $fgsfds['noko_topic'] = $new_post_info['post_number'];
+        $new_thread_dir = $new_post_info['post_number'];
         nel_create_thread_directories($new_thread_dir);
     }
     else
@@ -320,7 +296,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
         $files[$i]['pre_x'] = 0;
         $files[$i]['pre_y'] = 0;
         
-        if ($files[$i]['subtype'] === 'SWF' || ($files[$i]['supertype'] === 'GRAPHICS' && !BS1_USE_MAGICK))
+        if ($files[$i]['subtype'] === 'SWF' || ($files[$i]['supertype'] === 'GRAPHICS' && !BS_BOOL_USE_MAGICK))
         {
             $dim = getimagesize($files[$i]['dest']);
             $files[$i]['im_x'] = $dim[0];
@@ -330,11 +306,11 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
             $files[$i]['pre_y'] = ($files[$i]['im_y'] > BS_MAX_HEIGHT) ? intval($ratio * $files[$i]['im_y']) : $files[$i]['im_y'];
         }
         
-        if (BS1_USE_THUMB && $files[$i]['supertype'] === 'GRAPHICS')
+        if (BS_BOOL_USE_THUMB && $files[$i]['supertype'] === 'GRAPHICS')
         {
             exec("convert -version", $out, $rescode);
             
-            if ($rescode === 0 && BS1_USE_MAGICK)
+            if ($rescode === 0 && BS_BOOL_USE_MAGICK)
             {
                 $cmd_getinfo = 'identify -format "%wx%h" ' . escapeshellarg($files[$i]['dest'] . '[0]');
                 exec($cmd_getinfo, $res);
@@ -357,7 +333,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
                 }
                 else
                 {
-                    if (BS1_USE_PNG_THUMB)
+                    if (BS_BOOL_USE_PNG_THUMB)
                     {
                         $files[$i]['thumbfile'] = $files[$i]['basic_filename'] . '-preview.png';
                         $cmd_resize = 'convert ' . escapeshellarg($files[$i]['dest']) . ' -resize ' . BS_MAX_WIDTH . 'x' . BS_MAX_HEIGHT . '\> -quality 00 -sharpen 0x0.5 ' . escapeshellarg($thumbpath . $files[$i]['thumbfile']);
@@ -399,7 +375,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
                 $files[$i]['thumbnail'] = imagecreatetruecolor($files[$i]['pre_x'], $files[$i]['pre_y']);
                 $files[$i]['thumbfile'] = $files[$i]['basic_filename'] . '-preview.jpg';
                 imagecopyresampled($files[$i]['thumbnail'], $image, 0, 0, 0, 0, $files[$i]['pre_x'], $files[$i]['pre_y'], $files[$i]['im_x'], $files[$i]['im_y']);
-                if (BS1_USE_PNG_THUMB)
+                if (BS_BOOL_USE_PNG_THUMB)
                 {
                     imagepng($files[$i]['thumbnail'], $thumbpath . $files[$i]['thumbfile'], -1); // Quality
                 }
@@ -430,40 +406,79 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
 
     if ($dataforce['response_to'] === 0)
     {
-        $parent_id = $post_number;
+        $parent_id = $new_post_info['post_number'];
     }
     else
     {
         $parent_id = $dataforce['response_to'];
     }
     
-    if ($dataforce['response_to'] !== 0 && !$fgsfds['sage'] && $post_count < BS_MAX_BUMPS)
+    if ($dataforce['response_to'] !== 0)
     {
-        ++ $post_count;
-        $dbh->query('UPDATE ' . POSTTABLE . ' SET last_update=' . $time . ', last_response=' . $post_number . ', post_count=' . $post_count . ' WHERE post_number=' . $dataforce['response_to'] . '');
-        $dbh->query('UPDATE ' . POSTTABLE . ' SET last_update=0 WHERE post_number=' . $post_number . '');
-        $parent_id = $dataforce['response_to'];
+        $post_count = $post_count + 1;
+        $dbh->query('UPDATE ' . THREAD_TABLE . ' SET 
+        last_post=' . $new_post_info['post_number'] . ',
+        post_count=' . $post_count . ' 
+        WHERE thread_id=' . $dataforce['response_to'] . '');
+        
+        if(!$fgsfds['sage'] && $post_count < BS_MAX_BUMPS)
+        {
+            $dbh->query('UPDATE ' . THREAD_TABLE . ' SET last_update=' . $time .' WHERE thread_id=' . $dataforce['response_to']);
+        }
     }
     
     if (!$there_is_no_spoon)
     {
         $i = 0;
-        
+
         while ($i < $files_count)
         {
-            $dbh->query('UPDATE ' . POSTTABLE . ' SET has_file=1 WHERE post_number=' . $post_number . '');
-            $prepared = $dbh->prepare('INSERT INTO ' . FILETABLE . ' (parent_thread,post_ref,file_order,supertype,subtype,mime,filename,extension,filesize,md5,source,license)
-				VALUES (' . '' . $parent_id . ',' . '' . $post_number . ',' . '"' . ($i + 1) . '",' . '"' . $files[$i]['supertype'] . '",' . '"' . $files[$i]['subtype'] . '",' . '"' . $files[$i]['mime'] . '",' . '"' . $files[$i]['basic_filename'] . '",' . '"' . $files[$i]['ext'] . '",' . '"' . $files[$i]['fsize'] . '",' . '"' . $files[$i]['md5'] . '",' . '"' . $files[$i]['file_source'] . '",' . '"' . $files[$i]['file_license'] . '")');
+            $dbh->query('UPDATE ' . POST_TABLE . ' SET has_file=1 WHERE post_number=' . $new_post_info['post_number'] . '');
+            $prepared = $dbh->prepare('INSERT INTO ' . FILE_TABLE . ' (
+                parent_thread,
+                post_ref,
+                file_order,
+                supertype,
+                subtype,
+                mime,
+                filename,
+                extension,
+                filesize,
+                source,
+                license)
+            VALUES (' . '
+                ' . $parent_id . ',
+                ' . '' . $new_post_info['post_number'] . ',
+                ' . '"' . ($i + 1) . '",
+                ' . '"' . $files[$i]['supertype'] . '",
+                ' . '"' . $files[$i]['subtype'] . '",
+                ' . '"' . $files[$i]['mime'] . '",
+                ' . '"' . $files[$i]['basic_filename'] . '",
+                ' . '"' . $files[$i]['ext'] . '",
+                ' . '"' . $files[$i]['fsize'] . '",
+                ' . '"' . $files[$i]['file_source'] . '",
+                ' . '"' . $files[$i]['file_license'] . '")');
             $prepared->execute();
             unset($prepared);
             
+            $dbh->query('UPDATE ' . FILE_TABLE . ' SET md5="' . $files[$i]['md5'] . '" WHERE post_ref=' . $new_post_info['post_number'] . '');
+            
             if ($files[$i]['supertype'] === 'GRAPHICS')
             {
-                $dbh->query('UPDATE ' . FILETABLE . ' SET image_width=' . $files[$i]['im_x'] . ', image_height=' . $files[$i]['im_y'] . ', preview_name="' . $files[$i]['thumbfile'] . '", preview_width=' . $files[$i]['pre_x'] . ', preview_height=' . $files[$i]['pre_y'] . ', md5="' . $files[$i]['md5'] . '" WHERE post_ref=' . $post_number . ' AND file_order=' . ($i + 1) . '');
+                $dbh->query('UPDATE ' . FILE_TABLE . ' SET 
+                    image_width=' . $files[$i]['im_x'] . ',
+                    image_height=' . $files[$i]['im_y'] . ',
+                    preview_name="' . $files[$i]['thumbfile'] . '",
+                    preview_width=' . $files[$i]['pre_x'] . ',
+                    preview_height=' . $files[$i]['pre_y'] . ' 
+                WHERE post_ref=' . $new_post_info['post_number'] . ' AND file_order=' . ($i + 1) . '');
             }
             else if ($files[$i]['subtype'] === 'SWF')
             {
-                $dbh->query('UPDATE ' . FILETABLE . ' SET image_width=' . $files[$i]['im_x'] . ', image_height=' . $files[$i]['im_y'] . ', md5="' . $files[$i]['md5'] . '" WHERE post_ref=' . $post_number . ' AND file_order=' . ($i + 1) . '');
+                $dbh->query('UPDATE ' . FILE_TABLE . ' SET 
+                    image_width=' . $files[$i]['im_x'] . ',
+                    image_height=' . $files[$i]['im_y'] . ' 
+                WHERE post_ref=' . $new_post_info['post_number'] . ' AND file_order=' . ($i + 1) . '');
             }
             
             ++ $i;
@@ -473,29 +488,19 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     //
     // Run the archiving routine if this is a new thread or deleted/expired thread
     //
-    
+    unset($result);
+    unset($prepared);
 
     nel_update_archive_status($dataforce, $dbh);
     
     //
     // Generate response page if it doesn't exist, otherwise update
     //
-    
 
-    if (!empty($_SESSION))
-    {
-        $temp = $_SESSION['ignore_login'];
-    }
-    
     $return_res = ($dataforce['response_to'] === 0) ? $new_thread_dir : $dataforce['response_to'];
     nel_regen($dataforce, $return_res, 'thread', FALSE, $dbh);
     $dataforce['archive_update'] = TRUE;
     nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
-    
-    if (!empty($_SESSION))
-    {
-        $_SESSION['ignore_login'] = $temp;
-    }
     
     return $return_res;
 }
@@ -503,50 +508,50 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
 function nel_is_post_ok($dataforce, $time, $dbh)
 {
     $thread_delay = $time - (BS_THREAD_DELAY * 1000);
-    
+
     // Check for flood
     // If post is a reply, check if the thread still exists
-    
+
 
     if ($dataforce['response_to'] === 0)
     {
-        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POSTTABLE . ' WHERE post_time > ' . $thread_delay . ' AND host = :host');
+        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE post_time > ' . $thread_delay . ' AND host = :host');
         $prepared->bindParam(':host', @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
         $prepared->execute();
         $renzoku = $prepared->fetchColumn();
         unset($prepared);
-        
+
         if ($renzoku > 0)
         {
             nel_derp(1, array('origin' => 'POST'));
         }
-        
+
         $post_count = 1;
     }
     else
     {
-        $result = $dbh->query('SELECT post_number,post_count,archive_status,locked FROM ' . POSTTABLE . ' WHERE post_number=' . $dataforce['response_to'] . ' LIMIT 1');
-        
+        $result = $dbh->query('SELECT thread_id,post_count,archive_status,locked FROM ' . THREAD_TABLE . ' WHERE thread_id=' . $dataforce['response_to'] . ' LIMIT 1');
+
         if ($result !== FALSE)
         {
             $op_post = $result->fetch(PDO::FETCH_ASSOC);
             if (!empty($op_post))
             {
-                if ($op_post['post_number'] === '')
+                if ($op_post['thread_id'] === '')
                 {
                     nel_derp(2, array('origin' => 'POST'));
                 }
-                
+
                 if ($op_post['locked'] === '1')
                 {
                     nel_derp(3, array('origin' => 'POST'));
                 }
-                
+
                 if ($op_post['archive_status'] !== '0')
                 {
                     nel_derp(14, array('origin' => 'POST'));
                 }
-                
+
                 $post_count = $op_post['post_count'];
             }
             else
@@ -554,129 +559,25 @@ function nel_is_post_ok($dataforce, $time, $dbh)
                 $post_count = 1;
             }
         }
-        
+
         unset($result);
-        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POSTTABLE . ' WHERE post_time > ' . $thread_delay . ' AND host = :host LIMIT 1');
+        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE post_time > ' . $thread_delay . ' AND host = :host LIMIT 1');
         $prepared->bindParam(':host', @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
         $result = $prepared->execute();
         $renzoku = $prepared->fetchColumn();
         unset($prepared);
-        
+
         if ($renzoku > 0)
         {
             nel_derp(1, array('origin' => 'POST'));
         }
-        
+
         if ($post_count >= BS_MAX_POSTS)
         {
             nel_derp(4, array('origin' => 'POST'));
         }
     }
-    
+
     return $post_count;
 }
-
-function nel_process_file_info()
-{
-    global $enabled_types;
-    
-    $files = array();
-    $i = 0;
-    $filetypes_loaded = FALSE;
-    
-    foreach ($_FILES as $file)
-    {
-        if ($file['error'] === UPLOAD_ERR_OK)
-        {
-            if (!empty($file['name']))
-            {
-                if (!$filetypes_loaded)
-                {
-                    include INCLUDE_PATH . 'filetype.php';
-                    $filetypes_loaded = TRUE;
-                }
-                
-                // Grab/strip the file extension
-                $files[$i]['ext'] = ltrim(strrchr($file['name'], '.'), '.');
-                $files[$i]['basic_filename'] = utf8_str_replace('.' . $files[$i]['ext'], "", $file['name']);
-                
-                $max_upload = ini_get('upload_max_filesize');
-                $size_unit = utf8_strtolower(utf8_substr($max_upload, -1, 1));
-                $max_upload = utf8_strtolower(utf8_substr($max_upload, 0, -1));
-                
-                if ($size_unit === 'g')
-                {
-                    $max_upload = $max_upload * 1024 * 1024 * 1024;
-                }
-                else if ($size_unit === 'm')
-                {
-                    $max_upload = $max_upload * 1024 * 1024;
-                }
-                else if ($size_unit === 'k')
-                {
-                    $max_upload = $max_upload * 1024;
-                }
-                else
-                {
-                    ; // Already in bytes
-                }
-                
-                if ($file['size'] > BS_MAX_FILESIZE * 1024)
-                {
-                    nel_derp(19, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
-                }
-                
-                $files[$i]['dest'] = SRC_PATH . $file['name'] . '.tmp';
-                move_uploaded_file($file['tmp_name'], $files[$i]['dest']);
-                chmod($files[$i]['dest'], 0644);
-                $files[$i]['fsize'] = filesize($files[$i]['dest']);
-                $test_ext = utf8_strtolower($files[$i]['ext']);
-                $file_test = file_get_contents($files[$i]['dest'], NULL, NULL, 0, 65535);
-                $file_good = FALSE;
-                $file_allowed = FALSE;
-                
-                // Graphics
-                if (array_key_exists($test_ext, $filetypes))
-                {
-                    if ($enabled_types['enable_' . utf8_strtolower($filetypes[$test_ext]['subtype'])] && $enabled_types['enable_' . utf8_strtolower($filetypes[$test_ext]['supertype'])])
-                    {
-                        $file_allowed = TRUE;
-                        
-                        if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test))
-                        {
-                            $files[$i]['supertype'] = $filetypes[$test_ext]['supertype'];
-                            $files[$i]['subtype'] = $filetypes[$test_ext]['subtype'];
-                            $files[$i]['mime'] = $filetypes[$test_ext]['mime'];
-                            $file_good = TRUE;
-                        }
-                    }
-                }
-                
-                if (!$file_allowed)
-                {
-                    nel_derp(6, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
-                }
-                
-                if (!$file_good)
-                {
-                    nel_derp(18, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
-                }
-                
-                ++ $i;
-            }
-            
-            if ($files_count == BS_MAX_POST_FILES)
-            {
-                break;
-            }
-        }
-        else if ($file['error'] === UPLOAD_ERR_INI_SIZE)
-        {
-            nel_derp(19, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
-        }
-    }
-    
-    return $files;
-}
-
 ?>

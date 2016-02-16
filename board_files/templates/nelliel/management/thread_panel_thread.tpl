@@ -12,18 +12,18 @@
 {{ if $render->retrieve_data('is_op') }}
                     <input type="checkbox" name="thread_{$render->retrieve_data('post_number')}" value="deletethread_{$render->retrieve_data('post_number')}" title="Delete entire post">(OP)
 {{ else }}
-                    <input type="checkbox" name="post_{$render->retrieve_data('post_number')}_{$render->retrieve_data('response_to')}" value="deletepost_{$render->retrieve_data('post_number')}_{$render->retrieve_data('response_to')}" title="Delete entire post">
+                    <input type="checkbox" name="post_{$render->retrieve_data('post_number')}_{$render->retrieve_data('response_to')}" value="deletepost_{$render->retrieve_data('post_number')}_{$render->retrieve_data('parent_thread')}" title="Delete entire post">
 {{ endif }}
                 </td>
 {{ if $render->retrieve_data('sticky') }}
                 <td>
                 </td>
                 <td>
-                    <input type="checkbox" name="{$render->retrieve_data('post_number')}" value="unsticky_{$render->retrieve_data('post_number')}">
+                    <input type="checkbox" name="{$render->retrieve_data('post_number')}" value="threadunsticky_{$render->retrieve_data('post_number')}">
                 </td>
 {{ else }}
                 <td>
-                    <input type="checkbox" name="{$render->retrieve_data('post_number')}" value="sticky_{$render->retrieve_data('post_number')}">
+                    <input type="checkbox" name="{$render->retrieve_data('post_number')}" value="threadsticky_{$render->retrieve_data('post_number')}">
                 </td>
                 <td>
                 </td>

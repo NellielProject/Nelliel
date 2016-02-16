@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 function nel_ban_spambots($dataforce, $dbh)
 {
-    if (BS1_USE_SPAMBOT_TRAP && (!is_null($dataforce['sp_field1']) || !is_null($dataforce['sp_field2'])))
+    if (BS_BOOL_USE_SPAMBOT_TRAP && (!is_null($dataforce['sp_field1']) || !is_null($dataforce['sp_field2'])))
     {
         $dataforce['banreason'] = "Spambot. Nobody wants any. GTFO";
         $dataforce['bandays'] = 9001;
@@ -98,14 +98,14 @@ function nel_apply_ban($dataforce, $dbh)
             }
         }
         
-        $prepared = $dbh->prepare('UPDATE ' . BANTABLE . ' SET appeal=:bawww, appeal_status=1 WHERE host=:host');
+        $prepared = $dbh->prepare('UPDATE ' . BAN_TABLE . ' SET appeal=:bawww, appeal_status=1 WHERE host=:host');
         $prepared->bindParam(':bawww', $bawww, PDO::PARAM_STR);
         $prepared->bindParam(':host', @inet_pton($banned_ip), PDO::PARAM_STR);
         $prepared->execute();
         unset($prepared);
     }
     
-    $prepared = $dbh->prepare('SELECT * FROM ' . BANTABLE . ' WHERE host=:host');
+    $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE host=:host');
     $prepared->bindParam(':host', @inet_pton($base_host), PDO::PARAM_STR);
     $prepared->execute();
     $bandata = $prepared->fetch(PDO::FETCH_ASSOC);
@@ -115,7 +115,7 @@ function nel_apply_ban($dataforce, $dbh)
     
     if (time() >= $bandata['length_base'])
     {
-        $prepared = $dbh->prepare('DELETE FROM ' . BANTABLE . ' WHERE id=:banid');
+        $prepared = $dbh->prepare('DELETE FROM ' . BAN_TABLE . ' WHERE id=:banid');
         $prepared->bindParam(':banid', $bandata['id'], PDO::PARAM_INT);
         $prepared->execute();
         unset($prepared);

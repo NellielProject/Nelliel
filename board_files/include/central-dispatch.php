@@ -89,7 +89,7 @@ function nel_process_post($dataforce, $plugins, $authorize, $dbh)
             nel_clean_exit($dataforce, FALSE);
         
         case 'new_post':
-            require_once INCLUDE_PATH . 'post.php';
+            require_once INCLUDE_PATH . 'post/post.php';
             nel_process_new_post($dataforce, $plugins, $dbh);
             
             if ($fgsfds['noko'])

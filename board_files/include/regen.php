@@ -10,15 +10,11 @@ function nel_regen(&$dataforce, $id, $mode, $modmode, $dbh)
     
     require_once INCLUDE_PATH . 'output-filter.php';
     
-    if (!empty($_SESSION) && !$modmode)
-    {
-        $temp = $_SESSION['ignore_login'];
-        $_SESSION['ignore_login'] = TRUE;
-    }
+    nel_toggle_session();
     
     if ($mode === 'full')
     {
-        $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=0 AND archive_status=0');
+        $result = $dbh->query('SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
     }
     
@@ -65,11 +61,7 @@ function nel_regen(&$dataforce, $id, $mode, $modmode, $dbh)
         nel_regen_template_cache();
     }
     
-    if (!empty($_SESSION) && !$modmode)
-    {
-        $_SESSION['ignore_login'] = $temp;
-    }
-    
+    nel_toggle_session();
     $dataforce['post_links'] = $link_updates;
 }
 ?>

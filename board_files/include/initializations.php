@@ -8,7 +8,7 @@ $dbh;
 if (SQLTYPE === 'MYSQL')
 {
     $dbh = new PDO('mysql:host=' . MYSQL_HOST . ';dbname=' . MYSQL_DB, MYSQL_USER, MYSQL_PASS);
-    $dbh->exec("SET CHARACTER SET utf8");
+    $dbh->exec("SET names utf8");
 }
 else if (SQLTYPE === 'SQLITE')
 {
@@ -26,7 +26,7 @@ if (ini_get('date.timezone') === '')
 
 ignore_user_abort(TRUE);
 require_once BASE_PATH . '/' . BOARD_FILES . 'libraries/portable-utf8.php';
-require_once INCLUDE_PATH . 'setup.php';
+require_once INCLUDE_PATH . 'setup/setup.php';
 setup_check($dbh);
 generate_auth_file($plugins);
 require_once INCLUDE_PATH . 'authorize.php';

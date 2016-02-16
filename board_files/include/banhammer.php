@@ -16,8 +16,8 @@ function nel_ban_hammer($dataforce, $dbh)
     
     if ($dataforce['snacks'] === 'addban')
     {
-        $prepared = $dbh->prepare('INSERT INTO ' . BANTABLE . ' (board,type,host,name,reason,length,ban_time)
-								VALUES ("' . POSTTABLE . '",NULL,NULL,NULL,:reason,:length,' . time() . ')');
+        $prepared = $dbh->prepare('INSERT INTO ' . BAN_TABLE . ' (board,type,host,name,reason,length,ban_time)
+								VALUES ("' . POST_TABLE . '",NULL,NULL,NULL,:reason,:length,' . time() . ')');
         $prepared->bindParam(':host', @inet_pton($dataforce['banip']), PDO::PARAM_STR);
         $prepared->bindParam(':reason', $dataforce['banreason'], PDO::PARAM_STR);
         $prepared->bindParam(':length', (($dataforce['timedays'] * 86400) + ($dataforce['timehours'] * 3600)), PDO::PARAM_INT);
@@ -94,7 +94,7 @@ function nel_ban_hammer($dataforce, $dbh)
     {
         if (!$manual)
         {
-            $prepared = $dbh->prepare('SELECT host,mod_comment FROM ' . POSTTABLE . ' WHERE post_number=:bannum');
+            $prepared = $dbh->prepare('SELECT host,mod_comment FROM ' . POST_TABLE . ' WHERE post_number=:bannum');
             $prepared->bindParam(':bannum', $ban_input[$i]['num'], PDO::PARAM_INT);
             $prepared->execute();
             $baninfo1 = $prepared->fetch(PDO::FETCH_ASSOC);
@@ -102,7 +102,7 @@ function nel_ban_hammer($dataforce, $dbh)
             
             if (!empty($baninfo1))
             {
-                $prepared = $dbh->prepare('SELECT * FROM ' . BANTABLE . ' WHERE host=:host');
+                $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE host=:host');
                 $prepared->bindParam(':host', @inet_ntop($ban_input[$i]['host']), PDO::PARAM_STR);
                 $result = $prepared->execute();
                 
@@ -112,7 +112,7 @@ function nel_ban_hammer($dataforce, $dbh)
                     
                     if ($baninfo2['id'] && $baninfo2['board'] === TABLEPREFIX)
                     {
-                        $dbh->query('DELETE FROM ' . BANTABLE . ' WHERE id=' . $baninfo2['id'] . '');
+                        $dbh->query('DELETE FROM ' . BAN_TABLE . ' WHERE id=' . $baninfo2['id'] . '');
                     }
                 }
                 
@@ -123,7 +123,7 @@ function nel_ban_hammer($dataforce, $dbh)
             if ($ban_input[$i]['message'] !== '')
             {
                 $mod_comment = $baninfo1['mod_comment'] . '<br>(' . $ban_input[$i]['message'] . ')';
-                $prepared = $dbh->prepare('UPDATE ' . POSTTABLE . ' SET mod_comment=:mcomment WHERE post_number=:bannum');
+                $prepared = $dbh->prepare('UPDATE ' . POST_TABLE . ' SET mod_comment=:mcomment WHERE post_number=:bannum');
                 $prepared->bindParam(':mcomment', $mod_comment, PDO::PARAM_STR);
                 $prepared->bindParam(':bannum', $ban_input[$i]['num'], PDO::PARAM_INT);
                 $prepared->execute();
@@ -132,7 +132,7 @@ function nel_ban_hammer($dataforce, $dbh)
         }
         
         $banlength = $ban_input[$i]['days'] + $ban_input[$i]['hours'];
-        $prepared = $dbh->prepare('INSERT INTO ' . BANTABLE . ' (type,host,name,reason,length,ban_time) //same
+        $prepared = $dbh->prepare('INSERT INTO ' . BAN_TABLE . ' (type,host,name,reason,length,ban_time) //same
 									VALUES (NULL,:host,:name,:reason,:length,:time)');
         $prepared->bindParam(':host', @inet_pton($ban_input[$i]['host']), PDO::PARAM_STR);
         

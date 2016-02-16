@@ -47,7 +47,7 @@
         {{ foreach $render->retrieve_data('files') as $file }}
             {{ if $render->retrieve_data('multifile') }}
                 <div class="op-multiple-fileinfo">
-                {{ if BS1_USE_NEW_IMGDEL }}
+                {{ if BS_BOOL_USE_NEW_IMGDEL }}
                     <input type="checkbox" name="fileid{ $render->retrieve_data('post_number') }_{ $file['file_order'] }" value="deletefile_{ $render->retrieve_data('post_number') }_{ $file['file_order'] }" title="Delete file" class="multi-file-delete-box">
                 {{ endif }}
                     <a href="{ $file['file_location'] }" rel="external">{ $file['filename'] }.{ $file['extension'] }</a>
@@ -69,7 +69,7 @@
                 </div>
             {{ else }}
                 <div class="op-fileinfo">
-                {{ if BS1_USE_NEW_IMGDEL }}
+                {{ if BS_BOOL_USE_NEW_IMGDEL }}
                     <span class="file-delete-box"><input type="checkbox" name="fileid{ $render->retrieve_data('post_number') }_{ $file['file_order'] }" value="deletefile_{ $render->retrieve_data('post_number') }_{ $file['file_order'] }" title="Delete file"></span>
                 {{ endif }}
                     <a href="{ $file['file_location'] }" rel="external">{ $file['filename'] }.{ $file['extension'] }</a> -&nbsp;
@@ -98,5 +98,8 @@
                 </p>
                 <div id="ban{ $render->retrieve_data('post_number') }"></div>
             </div>
+    {{ if $render->retrieve_data('omitted_posts') }}
+                <span class="omitted-posts">{$render->retrieve_data('omitted_count')}{nel_stext('TEXT_OMITTED_POSTS')}</span><br>
+    {{ endif }}
             <div id="expand{ $render->retrieve_data('post_number') }">
 {{ endif }}

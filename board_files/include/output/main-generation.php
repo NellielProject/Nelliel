@@ -13,16 +13,10 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
     $gen_data['insert_hr'] = FALSE;
     $dataforce['dotdot'] = '';
     
-    $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=0 AND archive_status=0 ORDER BY sticky desc,last_update desc');
-    $front_page_list = $result->fetchALL(PDO::FETCH_COLUMN);
+    $result = $dbh->query('SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0 ORDER BY sticky desc, last_update desc');
+    $front_page_list = $result->fetchAll(PDO::FETCH_COLUMN);
     unset($result);
     $treeline = array(0);
-    
-    // Finding the last entry number
-    $result = $dbh->query('SELECT COUNT(post_number) FROM ' . POSTTABLE . ' WHERE response_to=0');
-    $row = $result->fetch();
-    unset($result);
-    
     $counttree = count($front_page_list);
     
     // Special handling when there's no content
@@ -37,7 +31,7 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
         $render->add_data('page_nav', '');
         nel_render_footer($render, FALSE, TRUE, TRUE, FALSE, TRUE);
         
-        if (empty($_SESSION) || $_SESSION['ignore_login'])
+        if (nel_session_ignored())
         {
             nel_write_file(PHP_SELF2 . PHP_EXT, $render->output(FALSE), 0644);
         }
@@ -60,75 +54,43 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
         $render->add_data('header_type', 'NORMAL');
         nel_render_header($dataforce, $render, $treeline);
         nel_render_posting_form($dataforce, $render);
-        $end_of_thread = FALSE;
         $sub_page_thread_counter = 0;
         $gen_data['first100'] = FALSE;
         
         while ($sub_page_thread_counter < BS_THREADS_PER_PAGE)
         {
+
             if ($gen_data['post_counter'] === -1)
             {
-                $result = $dbh->query('SELECT * FROM ' . POSTTABLE . ' WHERE post_number=' . $front_page_list[$thread_counter] . '');
-                $tree_op = $result->fetchALL(PDO::FETCH_ASSOC);
+                $result = $dbh->query('SELECT * FROM ' . THREAD_TABLE . ' WHERE thread_id=' . $front_page_list[$thread_counter]);
+                $gen_data['thread'] = $result->fetch(PDO::FETCH_ASSOC);
                 unset($result);
-                
-                $result = $dbh->query('SELECT * FROM ' . POSTTABLE . ' WHERE response_to=' . $front_page_list[$thread_counter] . ' ORDER BY post_number desc LIMIT ' . (BS_ABBREVIATE_THREAD - 1) . '');
-                $tree_replies = $result->fetchALL(PDO::FETCH_ASSOC);
+                $result = $dbh->query('SELECT * FROM ' . POST_TABLE . ' WHERE parent_thread=' . $front_page_list[$thread_counter] . ' ORDER BY post_number asc');
+                $treeline = $result->fetchAll(PDO::FETCH_ASSOC);
                 unset($result);
-                
-                $treeline = array_merge($tree_op, array_reverse($tree_replies));
-                $gen_data['post_count'] = $treeline[0]['post_count'];
-                $gen_data['expand_post'] = ($gen_data['post_count'] > BS_ABBREVIATE_THREAD) ? TRUE : FALSE;
-                $gen_data['first100'] = ($gen_data['post_count'] > 100) ? TRUE : FALSE;
-            }
-            
-            if (!empty($treeline[$gen_data['post_counter']]) && !empty($treeline[$gen_data['post_counter'] + 1]))
-            {
-                ++ $gen_data['post_counter'];
-            }
-            else if ($gen_data['post_counter'] === -1)
-            {
+                $gen_data['thread']['expand_post'] = ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD) ? TRUE : FALSE;
+                $gen_data['thread']['first100'] = ($gen_data['thread']['post_count'] > 100) ? TRUE : FALSE;
                 $gen_data['post_counter'] = 0;
             }
-            else
+
+            $gen_data['post'] = $treeline[$gen_data['post_counter']];
+
+            if ($gen_data['post']['has_file'] == 1)
             {
-                $end_of_thread = TRUE;
-                $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? BS_THREADS_PER_PAGE : ++ $sub_page_thread_counter;
-                ++ $thread_counter;
-                $gen_data['insert_hr'] = TRUE;
-                nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dbh);
-                $gen_data['insert_hr'] = FALSE;
+                $result = $dbh->query('SELECT * FROM ' . FILE_TABLE . ' WHERE post_ref=' . $gen_data['post']['post_number'] . ' ORDER BY file_order asc');
+                $gen_data['files'] = $result->fetchAll(PDO::FETCH_ASSOC);
+                unset($result);
             }
-            
-            if (!$end_of_thread)
+
+            if ($gen_data['post']['op'] == 1)
             {
-                $gen_data['has_file'] = FALSE;
-                
-                if ($treeline[$gen_data['post_counter']]['has_file'] == 1)
+                if ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD)
                 {
-                    $gen_data['has_file'] = TRUE;
-                    $result = $dbh->query('SELECT * FROM ' . FILETABLE . ' WHERE post_ref=' . $treeline[$gen_data['post_counter']]['post_number'] . ' ORDER BY file_order asc');
-                    $gen_data['files'] = $result->fetchALL(PDO::FETCH_ASSOC);
-                    unset($result);
-                }
-                
-                if ($treeline[$gen_data['post_counter']]['response_to'] > 0)
-                {
-                    if (!$treeline[$gen_data['post_counter']]['post_number'])
-                    {
-                        break;
-                    }
-                    
-                    if ($gen_data['post_count'] > BS_ABBREVIATE_THREAD && $gen_data['post_counter'] === 1)
-                    {
-                        $dataforce['omitted_done'] = FALSE;
-                        nel_render_post($dataforce, $render, TRUE, TRUE, $gen_data, $treeline, $dbh);
-                        $dataforce['omitted_done'] = TRUE;
-                    }
-                    else
-                    {
-                        nel_render_post($dataforce, $render, TRUE, TRUE, $gen_data, $treeline, $dbh);
-                    }
+                    $gen_data['post_counter'] = $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD;
+                    echo "hh " . $gen_data['post_counter'];
+                    $dataforce['omitted_done'] = FALSE;
+                    nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dbh);
+                    $dataforce['omitted_done'] = TRUE;
                 }
                 else
                 {
@@ -137,8 +99,21 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
             }
             else
             {
-                $end_of_thread = FALSE;
+                nel_render_post($dataforce, $render, TRUE, TRUE, $gen_data, $treeline, $dbh);
+            }
+            
+            if (empty($treeline[$gen_data['post_counter'] + 1]))
+            {
+                $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? BS_THREADS_PER_PAGE : ++ $sub_page_thread_counter;
+                ++ $thread_counter;
+                $gen_data['insert_hr'] = TRUE;
+                nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dbh);
+                $gen_data['insert_hr'] = FALSE;
                 $gen_data['post_counter'] = -1;
+            }
+            else
+            {
+                ++ $gen_data['post_counter'];
             }
         }
         
@@ -186,7 +161,7 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
         
         nel_render_footer($render, FALSE, TRUE, TRUE, FALSE, TRUE);
         
-        if (!empty($_SESSION) && !$_SESSION['ignore_login'])
+        if (!nel_session_ignored())
         {
             if ($page >= $dataforce['current_page'])
             {

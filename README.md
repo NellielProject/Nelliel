@@ -19,6 +19,7 @@ Required:
 - GD 2.0.28+
 - PDO with MySQL or SQLite drivers
 - MySQL 5.0.95+ or SQLite 3.3.6+
+- iconv
 
 ## Optional Requirements ##
 These are optional things that Nelliel or one of its libraries can utilize for extra features or performance increases. They are not
@@ -26,12 +27,16 @@ These are optional things that Nelliel or one of its libraries can utilize for e
 
 - ImageMagick
 - mbstring
-- iconv
+
+## Development Stage ##
+Nelliel is currently considered beta software. It is functional but somewhat buggy and likely subject to major changes that
+ may break existing content. Try it out if you like but don't use it for anything serious just yet.
 
 ## Plugin API ##
-Nelliel has recently been given an API for making plugins. This will allow extension of the software without having to worry about
+Nelliel has recently been given a very basic API for making plugins. This will allow extension of the software without having to worry about
  mods that can be easily broken during updates or having to mess with core code. At present there are only a couple of hooks but a
- rather extensive list is planned for the future as well as documentation and guidelines for making plugins.
+ rather extensive list is planned for the future as well as documentation and guidelines for making plugins. It is not recommended to use
+ the plugin system yet, however.
 
 ## License ##
 Nelliel is released under the Modified BSD license. This can be viewed in LICENSE.txt or the imageboard's About page.

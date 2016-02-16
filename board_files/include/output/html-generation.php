@@ -22,12 +22,12 @@ function nel_render_header($dataforce, $render, $treeline)
         $render->add_data('dotdot', '');
     }
     
-    if (BS1_SHOW_LOGO)
+    if (BS_BOOL_SHOW_LOGO)
     {
         $title .= '<img src="' . BS_BOARD_LOGO . '" alt="' . BS_BOARD_NAME . '" class="logo-alt-text">';
     }
     
-    if (BS1_SHOW_TITLE)
+    if (BS_BOOL_SHOW_TITLE)
     {
         $title .= '<h1>' . BS_BOARD_NAME . '</h1>';
     }
@@ -57,8 +57,8 @@ function nel_render_header($dataforce, $render, $treeline)
             break;
     }
     
-    $render->add_data('log_out', (!empty($_SESSION) && !$_SESSION['ignore_login']) ? '[<a href="' . $render->retrieve_data('dotdot') . PHP_SELF . '?mode=log_out">Log Out</a>]' : '');
-    $render->add_data('page_ref1', (!empty($_SESSION) && !$_SESSION['ignore_login']) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT);
+    $render->add_data('log_out', (!nel_session_ignored()) ? '[<a href="' . $render->retrieve_data('dotdot') . PHP_SELF . '?mode=log_out">Log Out</a>]' : '');
+    $render->add_data('page_ref1', (!nel_session_ignored()) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT);
     $render->parse('header.tpl', '');
 }
 
@@ -71,13 +71,13 @@ function nel_render_posting_form($dataforce, $render)
     $render->add_data('rules_list', $dataforce['rules_list']);
     $render->add_data('form_submit_url', $dataforce['dotdot'] . PHP_SELF);
     
-    if (BS1_ALLOW_MULTIFILE)
+    if (BS_BOOL_ALLOW_MULTIFILE)
     {
         if ($render->retrieve_data('response_id'))
         {
             $render->add_data('allow_multifile', TRUE);
         }
-        else if (!$render->retrieve_data('response_id') && BS1_ALLOW_OP_MULTIFILE)
+        else if (!$render->retrieve_data('response_id') && BS_BOOL_ALLOW_OP_MULTIFILE)
         {
             $render->add_data('response_id', '0');
             $render->add_data('allow_multifile', TRUE);
@@ -94,7 +94,7 @@ function nel_render_posting_form($dataforce, $render)
     
     $render->add_data('modmode', ($dataforce['get_mode'] === 'display') ? TRUE : FALSE);
     
-    if (!empty($_SESSION) && !$_SESSION['ignore_login'])
+    if (!nel_session_ignored())
     {
         $render->add_data('logged_in', TRUE);
         $render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
@@ -118,9 +118,10 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     global $link_resno;
     
     $render->add_data('insert_hr', $gen_data['insert_hr']);
-    $post_data = $treeline[$gen_data['post_counter']];
-    $render->add_multiple_data($post_data);
-    
+    $post_data = $gen_data['post'];
+    $render->add_multiple_data($gen_data['post']);
+    $render->add_multiple_data($gen_data['thread']);
+
     if ($partial)
     {
         $link_resno = 0;
@@ -129,9 +130,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     {
         $link_resno = $dataforce['response_id'];
     }
-    
-    $render->add_data('expand_post', $gen_data['expand_post']);
-    $render->add_data('first100', $gen_data['first100']);
+
     $render->add_data('response_id', $dataforce['response_id']);
     $render->add_data('tripcode', (!is_null($post_data['tripcode'])) ? BS_TRIPKEY_MARKER . $post_data['tripcode'] : '');
     $render->add_data('secure_tripcode', (!is_null($post_data['secure_tripcode'])) ? BS_TRIPKEY_MARKER . BS_TRIPKEY_MARKER . $post_data['secure_tripcode'] : '');
@@ -147,13 +146,12 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $render->add_sanitized_data('name', $post_data['name']);
     $render->add_sanitized_data('email', $post_data['email']);
     $render->add_sanitized_data('subject', $post_data['subject']);
-    $render->add_data('sticky', (bool) $post_data['sticky']);
     $temp_dot = ($partial) ? '' : $dataforce['dotdot'];
-    $post_id = ($response) ? $post_data['response_to'] : $post_data['post_number'];
+    $post_id = ($response) ? $post_data['parent_thread'] : $post_data['post_number'];
     
     if (!$dataforce['omitted_done'])
     {
-        $render->add_data('omitted_count', $gen_data['post_count'] - BS_ABBREVIATE_THREAD);
+        $render->add_data('omitted_count', $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD);
         $render->add_data('omitted_posts', TRUE);
     }
     else
@@ -161,7 +159,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $render->add_data('omitted_posts', FALSE);
     }
     
-    if ($gen_data['has_file'])
+    if ($post_data['has_file'] == 1)
     {
         $render->add_data('has_file', TRUE);
         $filecount = count($gen_data['files']);
@@ -177,7 +175,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             $files[$i]['filesize'] = round(((int) $files[$i]['filesize'] / 1024), 2);
             $files[$i]['md5'] = bin2hex($files[$i]['md5']);
             
-            if (BS1_USE_THUMB)
+            if (BS_BOOL_USE_THUMB)
             {
                 if (isset($files[$i]['preview_name']))
                 {
@@ -194,7 +192,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                         }
                     }
                 }
-                else if (BS1_USE_FILE_ICON && file_exists(BOARD_FILES . 'imagez/nelliel/filetype/' . utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($files[$i]['subtype']) . '.png'))
+                else if (BS_BOOL_USE_FILE_ICON && file_exists(BOARD_FILES . 'imagez/nelliel/filetype/' . utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($files[$i]['subtype']) . '.png'))
                 {
                     $files[$i]['has_preview'] = TRUE;
                     $files[$i]['preview_location'] = $temp_dot . BOARD_FILES . '/imagez/nelliel/filetype/' . utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($files[$i]['subtype']) . '.png';
@@ -225,7 +223,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $render->add_data('multifile', FALSE);
     }
     
-    $curr_time = floor($render->retrieve_data('post_time') / 1000);
+    $curr_time = floor($gen_data['post']['post_time'] / 1000);
     
     switch (BS_DATE_FORMAT)
     {
@@ -267,7 +265,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
     $render->add_data('page_ref2', '');
     
-    if (!empty($_SESSION) && !$_SESSION['ignore_login'])
+    if (!nel_session_ignored())
     {
         $render->add_data('logged_in', TRUE);
         $render->add_data('host', (@inet_ntop($render->retrieve_data('host'))) ? inet_ntop($render->retrieve_data('host')) : 'Unknown');
@@ -292,11 +290,11 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 //
 function nel_render_basic_footer($render)
 {
-    if (!empty($_SESSION) && !$_SESSION['ignore_login'])
+    if (!nel_session_ignored())
     {
         $render->add_data('logged_in', TRUE);
         $render->add_data('main_page', FALSE);
-        
+
         if ($_SESSION['perms']['perm_ban'])
         {
             $render->add_data('perm_ban', TRUE);
@@ -314,7 +312,7 @@ function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
 {
     $render->add_data('main_page', $main_page);
     
-    if (!empty($_SESSION) && !$_SESSION['ignore_login'])
+    if (!nel_session_ignored())
     {
         $render->add_data('logged_in', TRUE);
         $render->add_data('main_page', FALSE);
@@ -377,7 +375,7 @@ function nel_parse_links($matches)
     if ($cached === 0)
     {
         $isquoted2 = preg_match($pattern, $link_updates, $matches2);
-        $prepared = $dbh->prepare('SELECT response_to FROM ' . POSTTABLE . ' WHERE post_number=:pnum');
+        $prepared = $dbh->prepare('SELECT response_to FROM ' . POST_TABLE . ' WHERE post_number=:pnum');
         $prepared->bindParam(':pnum', $matches[1], PDO::PARAM_STR);
         $prepared->execute();
         $link = $prepared->fetch(PDO::FETCH_NUM);

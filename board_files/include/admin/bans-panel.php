@@ -60,7 +60,7 @@ function nel_update_ban($dataforce, $authorize, $dbh)
             $ban_input['status'] = ((int) $ban_input['length'] !== $bantotal) ? 3 : 2;
         }
         
-        $prepared = $dbh->prepare('UPDATE ' . BANTABLE . ' SET reason=:reason, length=:length, appeal_response=:response, appeal_status=:status WHERE id=:banid');
+        $prepared = $dbh->prepare('UPDATE ' . BAN_TABLE . ' SET reason=:reason, length=:length, appeal_response=:response, appeal_status=:status WHERE id=:banid');
         $prepared->bindParam(':reason', $ban_input['reason'], PDO::PARAM_STR);
         $prepared->bindParam(':length', $bantotal, PDO::PARAM_INT);
         $prepared->bindParam(':response', $ban_input['response'], PDO::PARAM_STR);
@@ -100,7 +100,7 @@ function nel_ban_control($dataforce, $authorize, $dbh)
     }
     else if ($mode === 'remove')
     {
-        $dbh->query('DELETE FROM ' . BANTABLE . ' WHERE id=' . $dataforce['banid'] . '');
+        $dbh->query('DELETE FROM ' . BAN_TABLE . ' WHERE id=' . $dataforce['banid'] . '');
         nel_update_ban($dataforce, $authorize, $dbh);
     }
     else if ($mode === 'update')

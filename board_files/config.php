@@ -58,12 +58,16 @@ define('PHP_SELF2', 'imgboard'); // Name of main html file
 define('PHP_EXT', '.html'); // Extension used for board pages
 
 
-define('POSTTABLE', TABLEPREFIX . '_post'); // Table used for file data
-define('FILETABLE', TABLEPREFIX . '_file'); // Table used for file data
-define('CONFIGTABLE', TABLEPREFIX . '_config'); // Table to store board configuration. Best to leave it as-is unless you really need to change it
-define('ARCHIVETABLE', TABLEPREFIX . '_archive'); // Stores archived threads
-define('ARCHIVEFILETABLE', TABLEPREFIX . '_archive_file'); // Stores archived file data
-define('BANTABLE', TABLEPREFIX . '_ban'); // Table containing ban info
+define('POST_TABLE', TABLEPREFIX . '_post'); // Table used for post data
+define('THREAD_TABLE', TABLEPREFIX . '_thread'); // Table used for thread data
+define('FILE_TABLE', TABLEPREFIX . '_file'); // Table used for file data
+define('EXTERNAL_TABLE', TABLEPREFIX . '_external'); // Table used for external content
+define('ARCHIVE_POST_TABLE', TABLEPREFIX . '_archive_post'); // Stores archived threads
+define('ARCHIVE_THREAD_TABLE', TABLEPREFIX . '_archive_thread'); // Stores archived thread data
+define('ARCHIVE_FILE_TABLE', TABLEPREFIX . '_archive_file'); // Stores archived file data
+define('ARCHIVE_EXTERNAL_TABLE', TABLEPREFIX . '_archive_external'); // Stores archived external content
+define('CONFIG_TABLE', TABLEPREFIX . '_config'); // Table to store board configuration. Best to leave it as-is unless you really need to change it
+define('BAN_TABLE', TABLEPREFIX . '_ban'); // Table containing ban info
 
 
 /* */

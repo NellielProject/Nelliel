@@ -110,4 +110,41 @@ function nel_initialize_session($dataforce, $plugins, $authorize)
         nel_terminate_session();
     }
 }
+
+function nel_toggle_session()
+{
+    static $session_status;
+    
+    if (empty($_SESSION))
+    {
+        return;
+    }
+    
+    if(!isset($ignored))
+    {
+        $ignored = FALSE;
+    }
+
+    if($_SESSION['ignore_login'])
+    {
+        $_SESSION['ignore_login'] = $session_status;
+    }
+    else
+    {
+        $session_status = $_SESSION['ignore_login'];
+        $_SESSION['ignore_login'] = TRUE;
+    }
+}
+
+function nel_session_ignored()
+{
+    if(!empty($_SESSION) && !$_SESSION['ignore_login'])
+    {
+        return FALSE;
+    }
+    else
+    {
+        return TRUE;
+    }
+}
 ?>

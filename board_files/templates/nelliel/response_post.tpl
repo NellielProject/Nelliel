@@ -1,6 +1,3 @@
-{{ if $render->retrieve_data('omitted_posts') }}
-                <span class="omitted-posts">{$render->retrieve_data('omitted_count')}{nel_stext('TEXT_OMITTED_POSTS')}</span><br>
-{{ endif }}
                 <a id="p{$render->retrieve_data('post_number')}"></a>
                 <div class="indents">&gt;&gt;</div>
                 <div class="reply-post">
@@ -17,9 +14,6 @@
 {{ else }}
                     {$render->retrieve_data('post_time')} No. <a href="{PAGE_DIR}{$render->retrieve_data('response_to')}/{$render->retrieve_data('response_to')}.html#p{$render->retrieve_data('post_number')}" class="post-link">{$render->retrieve_data('post_number')}</a>&nbsp;
 {{ endif }}
-{{ if $render->retrieve_data('sticky') }}
-                    <img src="{$render->retrieve_data('dotdot')}{BOARD_FILES}/imagez/nelliel/{nel_stext('THREAD_STICKY_ICON')}" width="22" height="22" alt="{nel_stext('THREAD_STICKY')}">
-{{ endif }}
                     <br>
 {{ if $render->retrieve_data('logged_in') }}
                     <br>IP: <b>{$render->retrieve_data('host')}</b>
@@ -32,7 +26,7 @@
     {{ foreach $render->retrieve_data('files') as $file }}
         {{ if $render->retrieve_data('multifile') }}
                         <div class="reply-multiple-fileinfo">
-            {{ if BS1_USE_NEW_IMGDEL }}
+            {{ if BS_BOOL_USE_NEW_IMGDEL }}
                         <input type="checkbox" name="fileid{$render->retrieve_data('post_number')}_{$file['file_order']}" value="deletefile_{$render->retrieve_data('post_number')}_{$file['file_order']}" title="Delete file" class="multi-file-delete-box">
             {{ endif }}
                         <a href="{$file['file_location']}" rel="external">{$file['filename']}.{$file['extension']}</a>
@@ -54,7 +48,7 @@
                     </div>
         {{ else }}
                     <div class="reply-fileinfo">
-            {{ if BS1_USE_NEW_IMGDEL }}
+            {{ if BS_BOOL_USE_NEW_IMGDEL }}
                         <span class="file-delete-box"><input type="checkbox" name="fileid{$render->retrieve_data('post_number')}_{$file['file_order']}" value="deletefile_{$render->retrieve_data('post_number')}_{$file['file_order']}" title="Delete file"></span>
             {{ endif }}
                         <a href="{$file['file_location']}" rel="external">{$file['filename']}.{$file['extension']}</a> - 

@@ -55,25 +55,10 @@ function nel_clean_exit($dataforce, $die)
     die();
 }
 
-function ignore_login()
-{
-    if (!empty($_SESSION))
-    {
-        $temp = $_SESSION['ignore_login'];
-    }
-}
-
 function get_millisecond_time()
 {
-    $time = microtime(TRUE);
-    
-    if ($time < 0)
-    {
-        return ceil($time * 1000);
-    }
-    else
-    {
-        return floor($time * 1000);
-    }
+    $time = explode(' ', microtime());
+    $time[0] = str_pad(round($time[0] * 1000), 3, '0', STR_PAD_LEFT);
+    return $time[1] . $time[0];
 }
 ?>
