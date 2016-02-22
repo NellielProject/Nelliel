@@ -120,12 +120,12 @@ function nel_toggle_session()
         return;
     }
     
-    if(!isset($ignored))
+    if (!isset($ignored))
     {
         $ignored = FALSE;
     }
-
-    if($_SESSION['ignore_login'])
+    
+    if ($_SESSION['ignore_login'])
     {
         $_SESSION['ignore_login'] = $session_status;
     }
@@ -138,7 +138,7 @@ function nel_toggle_session()
 
 function nel_session_ignored()
 {
-    if(!empty($_SESSION) && !$_SESSION['ignore_login'])
+    if (!empty($_SESSION) && !$_SESSION['ignore_login'])
     {
         return FALSE;
     }

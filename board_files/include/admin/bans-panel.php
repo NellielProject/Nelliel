@@ -67,7 +67,7 @@ function nel_update_ban($dataforce, $authorize, $dbh)
         $prepared->bindParam(':status', $ban_input['status'], PDO::PARAM_INT);
         $prepared->bindParam(':banid', $dataforce['banid'], PDO::PARAM_INT);
         $prepared->execute();
-        unset($prepared);
+        $prepared->closeCursor();
     }
 }
 

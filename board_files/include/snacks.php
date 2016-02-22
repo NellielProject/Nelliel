@@ -98,37 +98,35 @@ function nel_apply_ban($dataforce, $dbh)
             }
         }
         
-        $prepared = $dbh->prepare('UPDATE ' . BAN_TABLE . ' SET appeal=:bawww, appeal_status=1 WHERE host=:host');
-        $prepared->bindParam(':bawww', $bawww, PDO::PARAM_STR);
-        $prepared->bindParam(':host', @inet_pton($banned_ip), PDO::PARAM_STR);
+        $prepared = $dbh->prepare('UPDATE ' . BAN_TABLE . ' SET appeal=:bawww, appeal_status=? WHERE host=?');
+        $prepared->bindParam(1, $bawww, PDO::PARAM_STR);
+        $prepared->bindParam(2, @inet_pton($banned_ip), PDO::PARAM_STR);
         $prepared->execute();
-        unset($prepared);
+        $prepared->closeCursor();
     }
     
-    $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE host=:host');
-    $prepared->bindParam(':host', @inet_pton($base_host), PDO::PARAM_STR);
+    $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE host=?');
+    $prepared->bindParam(1, @inet_pton($base_host), PDO::PARAM_STR);
     $prepared->execute();
     $bandata = $prepared->fetch(PDO::FETCH_ASSOC);
-    unset($prepared);
+    $prepared->closeCursor();
     
     $bandata['length_base'] = $bandata['length'] + $bandata['ban_time'];
     
     if (time() >= $bandata['length_base'])
     {
-        $prepared = $dbh->prepare('DELETE FROM ' . BAN_TABLE . ' WHERE id=:banid');
-        $prepared->bindParam(':banid', $bandata['id'], PDO::PARAM_INT);
+        $prepared = $dbh->prepare('DELETE FROM ' . BAN_TABLE . ' WHERE id=?');
+        $prepared->bindParam(1, $bandata['id'], PDO::PARAM_INT);
         $prepared->execute();
-        unset($prepared);
+        $prepared->closeCursor();
         return;
     }
-    else
+    
+    if (!empty($_SESSION))
     {
-        if (!empty($_SESSION))
-        {
-            nel_terminate_session();
-        }
-        
-        nel_render_ban_page($dataforce, $bandata);
-        die();
+        nel_terminate_session();
     }
+    
+    nel_render_ban_page($dataforce, $bandata);
+    die();
 }

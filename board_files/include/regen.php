@@ -16,6 +16,7 @@ function nel_regen(&$dataforce, $id, $mode, $modmode, $dbh)
     {
         $result = $dbh->query('SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
+        $result->closeCursor();
     }
     
     if ($mode === 'thread')

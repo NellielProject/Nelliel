@@ -9,49 +9,57 @@ function nel_render_thread_panel($dataforce, $expand, $dbh)
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
     nel_render_thread_panel_form($dataforce, $render);
-    unset($result);
-
+    
     if ($expand)
     {
         $render->add_data('expand_thread', TRUE);
         $thread_id = utf8_str_replace('Expand ', '', $_POST['expand_thread']);
-        $result = $dbh->query('SELECT * FROM ' . POST_TABLE . ' WHERE parent_thread=' . $thread_id . ' ORDER BY post_number ASC');
+        
+        $prepared = $dbh->prepare('SELECT * FROM ' . POST_TABLE . ' WHERE parent_thread=? ORDER BY post_number asc');
+        $prepared->bindValue(1, $thread_id, PDO::PARAM_INT);
+        $prepared->execute();
+        $thread_data = $prepared->fetchAll(PDO::FETCH_ASSOC);
+        $prepared->closeCursor();
     }
     else
     {
         $render->add_data('expand_thread', FALSE);
         $result = $dbh->query('SELECT * FROM ' . THREAD_TABLE . ' ORDER BY thread_id DESC');
+        $thread_data = $result->fetchAll(PDO::FETCH_ASSOC);
+        $result->closeCursor();
     }
     
     $j = 0;
     $all = 0;
-    $thread_data = $result->fetchAll(PDO::FETCH_ASSOC);
-    unset($result);
-
+    
     foreach ($thread_data as $thread)
     {
-        if(!$expand)
+        if (!$expand)
         {
             $thread_id = $thread['thread_id'];
             $thread['post_number'] = $thread['thread_id'];
         }
         
-        $result = $dbh->query('SELECT * FROM ' . POST_TABLE . ' WHERE post_number=' . $thread_id);
-        $post = $result->fetch(PDO::FETCH_ASSOC);
-        unset($result);
-
+        $prepared = $dbh->prepare('SELECT * FROM ' . POST_TABLE . ' WHERE post_number=?');
+        $prepared->bindValue(1, $thread_id, PDO::PARAM_INT);
+        $prepared->execute();
+        $post = $prepared->fetch(PDO::FETCH_ASSOC);
+        $prepared->closeCursor();
+        
         if ($post['has_file'] === '1')
         {
-            $result = $dbh->query('SELECT * FROM ' . FILE_TABLE . ' WHERE post_ref=' . $thread['post_number'] . ' ORDER BY file_order asc');
-            $thread['files'] = $result->fetchAll(PDO::FETCH_ASSOC);
-            unset($result);
+            $prepared = $dbh->prepare('SELECT * FROM ' . FILE_TABLE . ' WHERE post_ref=? ORDER BY file_order asc');
+            $prepared->bindValue(1, $thread['post_number'], PDO::PARAM_INT);
+            $prepared->execute();
+            $thread['files'] = $prepared->fetchAll(PDO::FETCH_ASSOC);
+            $prepared->closeCursor();
             
             foreach ($thread['files'] as $file)
             {
                 $all += $file['filesize'];
             }
         }
-
+        
         $dataforce['j_increment'] = $j;
         nel_render_thread_panel_thread($dataforce, $render, $thread, $post);
         $j ++;

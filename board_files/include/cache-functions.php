@@ -32,8 +32,15 @@ function nel_cache_rules($dbh)
     $rmode = '';
     $omode = '';
     
-    $result = $dbh->query('SELECT * FROM ' . CONFIG_TABLE . ' WHERE config_type IN ("filetype_allow_g","filetype_allow_a","filetype_allow_o","filetype_allow_p","filetype_allow_d","filetype_allow_r")');
+    $result = $dbh->query('SELECT * FROM ' . CONFIG_TABLE . ' WHERE config_type IN (
+                        "filetype_allow_g",
+                        "filetype_allow_a",
+                        "filetype_allow_o",
+                        "filetype_allow_p",
+                        "filetype_allow_d",
+                        "filetype_allow_r")');
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
+    $result->closeCursor();
     $result_count = count($config_list);
     $config_list2 = array();
     
@@ -158,7 +165,7 @@ function nel_cache_settings($dbh)
     // Get true/false (1-bit) board settings
     $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIG_TABLE . ' WHERE config_type="board_setting_bool"');
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
-    unset($result);
+    $result->closeCursor();
     
     $result_count = count($config_list);
     $i = 0;
@@ -182,7 +189,7 @@ function nel_cache_settings($dbh)
     // Get other board settings
     $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIG_TABLE . ' WHERE config_type="board_setting"');
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
-    unset($result);
+    $result->closeCursor();
     
     $result_count = count($config_list);
     $i = 0;
@@ -210,13 +217,12 @@ function nel_cache_settings($dbh)
 					       UNION SELECT * FROM ' . CONFIG_TABLE . ' WHERE config_type="filetype_allow_r"');
     
     $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
-    unset($result);
+    $result->closeCursor();
     
     $fvars = '$enabled_types = array(';
     
     $result_count = count($config_list);
     $i = 0;
-    $rows = array();
     
     while ($i < $result_count)
     {
@@ -236,8 +242,6 @@ function nel_cache_settings($dbh)
     $final_vars = '<?php ' . $vars1 . $vars2 . $fvars . ' ?>';
     
     nel_write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, 0644);
-    
-    unset($rows);
 }
 
 //

@@ -10,7 +10,7 @@ function nel_render_admin_panel($dataforce, $dbh)
     $render->input(nel_render_header($dataforce, $render, array()));
     $result = $dbh->query('SELECT * FROM ' . CONFIG_TABLE . '');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-    unset($result);
+    $result->closeCursor();
     $board_settings = array('iso' => '', 'com' => '', 'us' => '', 'archive' => '', 'prune' => '', 'nothing' => '');
     
     foreach ($rows as $config_line)

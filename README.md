@@ -1,17 +1,16 @@
 # Nelliel Imageboard #
 
 A lightweight and fast imageboard. Designed with a focus on being a full-featured single board that is easy to set up and will work
- on virtually any halfway-sane hosting.
+ on any halfway-sane hosting.
 
 Nelliel was originally a modified version of Futallaby made to host Nigrachan. The software had good potential and was split off to
  independent development. While retaining an interface similar to Futallaby (and many other imageboards) it has been rewritten and
  expanded into a fully unique codebase.
 
 ## Minimum Requirements ##
-Nelliel's minimum requirements are kept to the lowest reasonable level while also remaining forward compatible. This tends to
- correspond with the oldest version of Red Hat Enterprise Linux still in [Production 3/Maintenance](https://access.redhat.com/support/policy/updates/errata#Production_3_Phase)
- phase; at present that is RHEL 5/CentOS 5, which can satisfy all dependencies for Nelliel. Most testing is in fact done on said OS,
- with some additional testing on later versions of PHP.
+Nelliel's minimum requirements are kept to the lowest reasonable level while also remaining forward compatible. Presently this
+ is what's included with the base RHEL 5/CentOS 5, which can satisfy all dependencies for Nelliel. These are only minimum requirements
+ for Nelliel to function. It is strongly recommended to use the latest software versions available.
 
 Required:
 
@@ -20,6 +19,9 @@ Required:
 - PDO with MySQL or SQLite drivers
 - MySQL 5.0.95+ or SQLite 3.3.6+
 - iconv
+
+Once RHEL 5 leaves [Production 3/Maintenance](https://access.redhat.com/support/policy/updates/errata#Production_3_Phase)
+ phase the minimum requirements will likely be upped to RHEL 6 equivalents.
 
 ## Optional Requirements ##
 These are optional things that Nelliel or one of its libraries can utilize for extra features or performance increases. They are not
@@ -36,7 +38,7 @@ Nelliel is currently considered beta software. It is functional but somewhat bug
 Nelliel has recently been given a very basic API for making plugins. This will allow extension of the software without having to worry about
  mods that can be easily broken during updates or having to mess with core code. At present there are only a couple of hooks but a
  rather extensive list is planned for the future as well as documentation and guidelines for making plugins. It is not recommended to use
- the plugin system yet, however.
+ the plugin system yet.
 
 ## License ##
 Nelliel is released under the Modified BSD license. This can be viewed in LICENSE.txt or the imageboard's About page.

@@ -8,7 +8,6 @@ if (!defined('NELLIEL_VERSION'))
 // First run - checks for database, directories
 // If anything does not exist yet, create it
 //
-
 function nel_table_fail($table)
 {
     die('Creation of ' . $table . ' failed! Check database settings and config.php then retry installation.');
@@ -41,22 +40,22 @@ function table_exists($table, $dbh)
 function check_engines($dbh, $engine)
 {
     static $engines;
-
-    if(!isset($engines))
+    
+    if (!isset($engines))
     {
         $result = $dbh->query("SHOW ENGINES");
         $list = $result->fetchAll(PDO::FETCH_ASSOC);
-         
-        foreach($list as $entry)
+        
+        foreach ($list as $entry)
         {
-            if($entry['Support'] === 'DEFAULT' || $entry['Support'] === 'YES')
+            if ($entry['Support'] === 'DEFAULT' || $entry['Support'] === 'YES')
             {
                 $engines[$entry['Engine']] = TRUE;
             }
         }
     }
-
-    if(array_key_exists($engine, $engines))
+    
+    if (array_key_exists($engine, $engines))
     {
         return TRUE;
     }
@@ -77,10 +76,10 @@ function get_tables($dbh, $tables)
     {
         $result = $dbh->query("select table_name from information_schema.tables where table_schema = '" . MYSQL_DB . "'");
     }
-
+    
     $table_list = $result->fetchAll(PDO::FETCH_COLUMN);
-
-    foreach($table_list as $table)
+    
+    foreach ($table_list as $table)
     {
         $tables[$table] = TRUE;
     }
@@ -91,26 +90,15 @@ function get_tables($dbh, $tables)
 function setup_check($dbh)
 {
     $stuff_done = FALSE;
-    $tables = array(
-        POST_TABLE => FALSE,
-        THREAD_TABLE => FALSE,
-        FILE_TABLE => FALSE,
-        EXTERNAL_TABLE => FALSE,
-        ARCHIVE_POST_TABLE => FALSE,
-        ARCHIVE_THREAD_TABLE => FALSE,
-        ARCHIVE_FILE_TABLE => FALSE,
-        ARCHIVE_EXTERNAL_TABLE => FALSE,
-        CONFIG_TABLE => FALSE,
-        BAN_TABLE => FALSE
-        );
-
+    $tables = array(POST_TABLE => FALSE, THREAD_TABLE => FALSE, FILE_TABLE => FALSE, EXTERNAL_TABLE => FALSE, ARCHIVE_POST_TABLE => FALSE, ARCHIVE_THREAD_TABLE => FALSE, ARCHIVE_FILE_TABLE => FALSE, ARCHIVE_EXTERNAL_TABLE => FALSE, CONFIG_TABLE => FALSE, BAN_TABLE => FALSE);
+    
     $tables = get_tables($dbh, $tables);
-
-    if(SQLTYPE === 'MYSQL')
+    
+    if (SQLTYPE === 'MYSQL')
     {
         require_once INCLUDE_PATH . '/setup/mysql-tables.php';
     }
-    else if(SQLTYPE === 'SQLITE')
+    else if (SQLTYPE === 'SQLITE')
     {
         require_once INCLUDE_PATH . '/setup/sqlite-tables.php';
     }

@@ -121,7 +121,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $post_data = $gen_data['post'];
     $render->add_multiple_data($gen_data['post']);
     $render->add_multiple_data($gen_data['thread']);
-
+    
     if ($partial)
     {
         $link_resno = 0;
@@ -130,7 +130,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     {
         $link_resno = $dataforce['response_id'];
     }
-
+    
     $render->add_data('response_id', $dataforce['response_id']);
     $render->add_data('tripcode', (!is_null($post_data['tripcode'])) ? BS_TRIPKEY_MARKER . $post_data['tripcode'] : '');
     $render->add_data('secure_tripcode', (!is_null($post_data['secure_tripcode'])) ? BS_TRIPKEY_MARKER . BS_TRIPKEY_MARKER . $post_data['secure_tripcode'] : '');
@@ -294,7 +294,7 @@ function nel_render_basic_footer($render)
     {
         $render->add_data('logged_in', TRUE);
         $render->add_data('main_page', FALSE);
-
+        
         if ($_SESSION['perms']['perm_ban'])
         {
             $render->add_data('perm_ban', TRUE);
@@ -375,11 +375,11 @@ function nel_parse_links($matches)
     if ($cached === 0)
     {
         $isquoted2 = preg_match($pattern, $link_updates, $matches2);
-        $prepared = $dbh->prepare('SELECT response_to FROM ' . POST_TABLE . ' WHERE post_number=:pnum');
-        $prepared->bindParam(':pnum', $matches[1], PDO::PARAM_STR);
+        $prepared = $dbh->prepare('SELECT response_to FROM ' . POST_TABLE . ' WHERE post_number=?');
+        $prepared->bindParam(1, $matches[1], PDO::PARAM_INT);
         $prepared->execute();
         $link = $prepared->fetch(PDO::FETCH_NUM);
-        unset($prepared);
+        $prepared->closeCursor();
         $links .= 'p' . $matches[1] . 't' . $link[0];
         return '>>' . $matches[1];
     }

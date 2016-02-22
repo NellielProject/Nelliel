@@ -15,7 +15,8 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
     
     $result = $dbh->query('SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0 ORDER BY sticky desc, last_update desc');
     $front_page_list = $result->fetchAll(PDO::FETCH_COLUMN);
-    unset($result);
+    $result->closeCursor();
+    
     $treeline = array(0);
     $counttree = count($front_page_list);
     
@@ -59,29 +60,35 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
         
         while ($sub_page_thread_counter < BS_THREADS_PER_PAGE)
         {
-
+            
             if ($gen_data['post_counter'] === -1)
             {
-                $result = $dbh->query('SELECT * FROM ' . THREAD_TABLE . ' WHERE thread_id=' . $front_page_list[$thread_counter]);
-                $gen_data['thread'] = $result->fetch(PDO::FETCH_ASSOC);
-                unset($result);
-                $result = $dbh->query('SELECT * FROM ' . POST_TABLE . ' WHERE parent_thread=' . $front_page_list[$thread_counter] . ' ORDER BY post_number asc');
-                $treeline = $result->fetchAll(PDO::FETCH_ASSOC);
-                unset($result);
+                $prepared = $dbh->prepare('SELECT * FROM ' . THREAD_TABLE . ' WHERE thread_id=?');
+                $prepared->bindValue(1, $front_page_list[$thread_counter], PDO::PARAM_INT);
+                $prepared->execute();
+                $gen_data['thread'] = $prepared->fetch(PDO::FETCH_ASSOC);
+                $prepared->closeCursor();
+                
+                $prepared = $dbh->prepare('SELECT * FROM ' . POST_TABLE . ' WHERE parent_thread=? ORDER BY post_number asc');
+                $prepared->bindValue(1, $front_page_list[$thread_counter], PDO::PARAM_INT);
+                $prepared->execute();
+                $treeline = $prepared->fetchAll(PDO::FETCH_ASSOC);
+                $prepared->closeCursor();
+                
                 $gen_data['thread']['expand_post'] = ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD) ? TRUE : FALSE;
                 $gen_data['thread']['first100'] = ($gen_data['thread']['post_count'] > 100) ? TRUE : FALSE;
                 $gen_data['post_counter'] = 0;
             }
-
+            
             $gen_data['post'] = $treeline[$gen_data['post_counter']];
-
+            
             if ($gen_data['post']['has_file'] == 1)
             {
                 $result = $dbh->query('SELECT * FROM ' . FILE_TABLE . ' WHERE post_ref=' . $gen_data['post']['post_number'] . ' ORDER BY file_order asc');
                 $gen_data['files'] = $result->fetchAll(PDO::FETCH_ASSOC);
-                unset($result);
+                $result->closeCursor();
             }
-
+            
             if ($gen_data['post']['op'] == 1)
             {
                 if ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD)

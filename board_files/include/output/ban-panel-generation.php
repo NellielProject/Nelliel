@@ -38,7 +38,7 @@ function nel_render_ban_panel_list($dataforce, $dbh)
         $render->parse('bans_panel_list_bans.tpl', 'management');
     }
     
-    unset($result);
+    $result->closeCursor();
     
     nel_render_ban_panel_bottom($dataforce, $render);
     nel_render_basic_footer($render);
@@ -60,7 +60,7 @@ function nel_render_ban_panel_modify($dataforce, $dbh)
     nel_render_header($dataforce, $render, array());
     $result = $dbh->query('SELECT * FROM ' . BAN_TABLE . ' WHERE id=' . $dataforce['banid'] . '');
     $baninfo = $result->fetch(PDO::FETCH_ASSOC);
-    unset($result);
+    $result->closeCursor();
     $render->add_data('appeal_check', '');
     $render->add_data('ban_expire', date("D F jS Y  H:i:s", $bandinfo['length'] + $baninfo['ban_time']));
     $render->add_data('ban_time', date("D F jS Y  H:i:s", $baninfo['ban_time']));

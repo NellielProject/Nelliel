@@ -1,4 +1,5 @@
 <?php
+
 function nel_create_post_table($dbh, $tables)
 {
     if ($tables[POST_TABLE] === TRUE)
@@ -32,9 +33,9 @@ function nel_create_post_table($dbh, $tables)
     {
         nel_table_fail($tables[POST_TABLE]);
     }
-
+    
     $result = $dbh->query('ALTER TABLE ' . POST_TABLE . ' CONVERT TO CHARACTER SET utf8');
-        
+    
     if (check_engines($dbh, 'InnoDB') === TRUE)
     {
         $result = $dbh->query('ALTER TABLE ' . POST_TABLE . ' ENGINE=InnoDB');
@@ -68,7 +69,7 @@ function nel_create_thread_table($dbh, $tables)
     }
     
     $result = $dbh->query('ALTER TABLE ' . THREAD_TABLE . ' CONVERT TO CHARACTER SET utf8');
-        
+    
     if (check_engines($dbh, 'InnoDB') === TRUE)
     {
         $result = $dbh->query('ALTER TABLE ' . THREAD_TABLE . ' ENGINE=InnoDB');
@@ -113,7 +114,7 @@ function nel_create_file_table($dbh, $tables)
     }
     
     $result = $dbh->query('ALTER TABLE ' . FILE_TABLE . ' CONVERT TO CHARACTER SET utf8');
-        
+    
     if (check_engines($dbh, 'InnoDB') === TRUE)
     {
         $result = $dbh->query('ALTER TABLE ' . FILE_TABLE . ' ENGINE=InnoDB');
@@ -126,7 +127,7 @@ function nel_create_external_content_table($dbh, $tables)
     {
         return;
     }
-
+    
     echo 'Creating table ' . EXTERNAL_TABLE . '...<br>';
     $result = $dbh->query('create table if not exists ' . EXTERNAL_TABLE . ' (
             auto_key        int unsigned not null auto_increment primary key,
@@ -138,14 +139,14 @@ function nel_create_external_content_table($dbh, $tables)
             source          varchar(255) default null,
             license         varchar(255) default null
             )');
-
+    
     if (!$result)
     {
         nel_table_fail($tables[EXTERNAL_TABLE]);
     }
-
+    
     $result = $dbh->query('ALTER TABLE ' . EXTERNAL_TABLE . ' CONVERT TO CHARACTER SET utf8');
-
+    
     if (check_engines($dbh, 'InnoDB') === TRUE)
     {
         $result = $dbh->query('ALTER TABLE ' . EXTERNAL_TABLE . ' ENGINE=InnoDB');
@@ -187,7 +188,7 @@ function nel_create_archive_post_table($dbh, $tables)
     }
     
     $result = $dbh->query('ALTER TABLE ' . ARCHIVE_POST_TABLE . ' CONVERT TO CHARACTER SET utf8');
-        
+    
     if (check_engines($dbh, 'InnoDB') === TRUE)
     {
         $result = $dbh->query('ALTER TABLE ' . ARCHIVE_POST_TABLE . ' ENGINE=InnoDB');
@@ -221,7 +222,7 @@ function nel_create_archive_thread_table($dbh, $tables)
     }
     
     $result = $dbh->query('ALTER TABLE ' . ARCHIVE_THREAD_TABLE . ' CONVERT TO CHARACTER SET utf8');
-        
+    
     if (check_engines($dbh, 'InnoDB') === TRUE)
     {
         $result = $dbh->query('ALTER TABLE ' . ARCHIVE_THREAD_TABLE . ' ENGINE=InnoDB');
@@ -234,7 +235,7 @@ function nel_create_archive_file_table($dbh, $tables)
     {
         return;
     }
-
+    
     echo 'Creating table ' . ARCHIVE_FILE_TABLE . '...<br>';
     $result = $dbh->query('create table if not exists ' . ARCHIVE_FILE_TABLE . ' (
             auto_key        int unsigned not null primary key,
@@ -259,14 +260,14 @@ function nel_create_archive_file_table($dbh, $tables)
             exif            text default null,
             extra_meta      text default null
             )');
-
+    
     if (!$result)
     {
         nel_table_fail($tables[ARCHIVE_FILE_TABLE]);
     }
-
+    
     $result = $dbh->query('ALTER TABLE ' . ARCHIVE_FILE_TABLE . ' CONVERT TO CHARACTER SET utf8');
-        
+    
     if (check_engines($dbh, 'InnoDB') === TRUE)
     {
         $result = $dbh->query('ALTER TABLE ' . ARCHIVE_FILE_TABLE . ' ENGINE=InnoDB');
@@ -279,7 +280,7 @@ function nel_create_archive_external_content_table($dbh, $tables)
     {
         return;
     }
-
+    
     echo 'Creating table ' . ARCHIVE_EXTERNAL_TABLE . '...<br>';
     $result = $dbh->query('create table if not exists ' . ARCHIVE_EXTERNAL_TABLE . ' (
             auto_key        int unsigned not null primary key,
@@ -291,14 +292,14 @@ function nel_create_archive_external_content_table($dbh, $tables)
             source          varchar(255) default null,
             license         varchar(255) default null
             )');
-
+    
     if (!$result)
     {
         nel_table_fail($tables[ARCHIVE_EXTERNAL_TABLE]);
     }
-
+    
     $result = $dbh->query('ALTER TABLE ' . ARCHIVE_EXTERNAL_TABLE . ' CONVERT TO CHARACTER SET utf8');
-
+    
     if (check_engines($dbh, 'InnoDB') === TRUE)
     {
         $result = $dbh->query('ALTER TABLE ' . ARCHIVE_EXTERNAL_TABLE . ' ENGINE=InnoDB');
@@ -311,7 +312,7 @@ function nel_create_ban_table($dbh, $tables)
     {
         return;
     }
-
+    
     echo 'Creating table ' . BAN_TABLE . '...<br>';
     $result = $dbh->query('create table if not exists ' . BAN_TABLE . ' (
             ban_id              int unsigned not null auto_increment primary key,
@@ -325,12 +326,12 @@ function nel_create_ban_table($dbh, $tables)
             appeal_response     text default null,
             appeal_status       tinyint not null default 0
             )');
-
+    
     if (!$result)
     {
         nel_table_fail($tables[BAN_TABLE]);
     }
-
+    
     $result = $dbh->query('ALTER TABLE ' . BAN_TABLE . ' CONVERT TO CHARACTER SET utf8');
 }
 
@@ -340,7 +341,7 @@ function nel_create_config_table($dbh, $tables)
     {
         return;
     }
-
+    
     echo 'Creating table ' . CONFIG_TABLE . '...<br>';
     $result = $dbh->query("create table if not exists " . CONFIG_TABLE . " (
             auto_key        int unsigned not null auto_increment primary key,
@@ -353,7 +354,7 @@ function nel_create_config_table($dbh, $tables)
     {
         nel_table_fail($tables[CONFIG_TABLE]);
     }
-
+    
     $result = $dbh->query('ALTER TABLE ' . CONFIG_TABLE . ' CONVERT TO CHARACTER SET utf8');
     
     $dbh->query("INSERT INTO `" . CONFIG_TABLE . "` (`config_type`, `config_name`, `setting`) VALUES ('technical', 'original_database_version', '002')");

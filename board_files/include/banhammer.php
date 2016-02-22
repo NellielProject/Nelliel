@@ -22,7 +22,7 @@ function nel_ban_hammer($dataforce, $dbh)
         $prepared->bindParam(':reason', $dataforce['banreason'], PDO::PARAM_STR);
         $prepared->bindParam(':length', (($dataforce['timedays'] * 86400) + ($dataforce['timehours'] * 3600)), PDO::PARAM_INT);
         $prepared->execute();
-        unset($prepared);
+        $prepared->closeCursor();
         return;
     }
     
@@ -94,19 +94,18 @@ function nel_ban_hammer($dataforce, $dbh)
     {
         if (!$manual)
         {
-            $prepared = $dbh->prepare('SELECT host,mod_comment FROM ' . POST_TABLE . ' WHERE post_number=:bannum');
-            $prepared->bindParam(':bannum', $ban_input[$i]['num'], PDO::PARAM_INT);
+            $prepared = $dbh->prepare('SELECT host,mod_comment FROM ' . POST_TABLE . ' WHERE post_number=?');
+            $prepared->bindParam(1, $ban_input[$i]['num'], PDO::PARAM_INT);
             $prepared->execute();
             $baninfo1 = $prepared->fetch(PDO::FETCH_ASSOC);
-            unset($prepared);
+            $prepared->closeCursor();
             
             if (!empty($baninfo1))
             {
-                $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE host=:host');
-                $prepared->bindParam(':host', @inet_ntop($ban_input[$i]['host']), PDO::PARAM_STR);
-                $result = $prepared->execute();
+                $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE host=?');
+                $prepared->bindParam(1, @inet_ntop($ban_input[$i]['host']), PDO::PARAM_STR);
                 
-                if ($result != FALSE)
+                if ($prepared->execute() != FALSE)
                 {
                     $baninfo2 = $prepared->fetch(PDO::FETCH_ASSOC);
                     
@@ -116,18 +115,18 @@ function nel_ban_hammer($dataforce, $dbh)
                     }
                 }
                 
-                unset($prepared);
+                $prepared->closeCursor();
             }
             
             // Append mod ban message to post if it was given
             if ($ban_input[$i]['message'] !== '')
             {
                 $mod_comment = $baninfo1['mod_comment'] . '<br>(' . $ban_input[$i]['message'] . ')';
-                $prepared = $dbh->prepare('UPDATE ' . POST_TABLE . ' SET mod_comment=:mcomment WHERE post_number=:bannum');
-                $prepared->bindParam(':mcomment', $mod_comment, PDO::PARAM_STR);
-                $prepared->bindParam(':bannum', $ban_input[$i]['num'], PDO::PARAM_INT);
+                $prepared = $dbh->prepare('UPDATE ' . POST_TABLE . ' SET mod_comment=? WHERE post_number=?');
+                $prepared->bindParam(1, $mod_comment, PDO::PARAM_STR);
+                $prepared->bindParam(2, $ban_input[$i]['num'], PDO::PARAM_INT);
                 $prepared->execute();
-                unset($prepared);
+                $prepared->closeCursor();
             }
         }
         
@@ -149,7 +148,7 @@ function nel_ban_hammer($dataforce, $dbh)
         $prepared->bindParam(':length', $banlength, PDO::PARAM_INT);
         $prepared->bindParam(':time', time(), PDO::PARAM_INT);
         $prepared->execute();
-        unset($prepared);
+        $prepared->closeCursor();
         ++ $i;
     }
 }
