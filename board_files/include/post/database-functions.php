@@ -29,9 +29,9 @@ function nel_db_insert_initial_post($time, $poster_info, $dbh)
         :op,
         :sage,
         :modpost)');
-    
+
     $prepared->bindValue(':name', $poster_info['name'], PDO::PARAM_STR);
-    
+
     if ($poster_info['tripcode'] === '')
     {
         $prepared->bindValue(':tripcode', NULL, PDO::PARAM_NULL);
@@ -40,7 +40,7 @@ function nel_db_insert_initial_post($time, $poster_info, $dbh)
     {
         $prepared->bindValue(':tripcode', $poster_info['tripcode'], PDO::PARAM_STR);
     }
-    
+
     if ($poster_info['secure_tripcode'] === '')
     {
         $prepared->bindValue(':secure_tripcode', NULL, PDO::PARAM_NULL);
@@ -49,7 +49,7 @@ function nel_db_insert_initial_post($time, $poster_info, $dbh)
     {
         $prepared->bindValue(':secure_tripcode', $poster_info['secure_tripcode'], PDO::PARAM_STR);
     }
-    
+
     $prepared->bindValue(':email', $poster_info['email'], PDO::PARAM_STR);
     $prepared->bindValue(':subject', $poster_info['subject'], PDO::PARAM_STR);
     $prepared->bindValue(':comment', $poster_info['comment'], PDO::PARAM_STR);
@@ -65,13 +65,13 @@ function nel_db_insert_initial_post($time, $poster_info, $dbh)
     {
         $prepared->bindValue(':sage', 0, PDO::PARAM_INT);
     }
-    
+
     $prepared->bindValue(':modpost', $poster_info['modpost'], PDO::PARAM_INT);
     $prepared->execute();
     $prepared->closeCursor();
 }
 
-function nel_db_insert_new_thread($time, $new_post_info, $files_count, $dbh)
+function nel_db_insert_new_thread($thread_info, $files_count, $dbh)
 {
     $prepared = $dbh->prepare('INSERT INTO ' . THREAD_TABLE . ' (
         thread_id,
@@ -87,13 +87,24 @@ function nel_db_insert_new_thread($time, $new_post_info, $files_count, $dbh)
         :files,
         :time,
         :posts)');
-    
-    $prepared->bindValue(':id', $new_post_info['post_number'], PDO::PARAM_INT);
-    $prepared->bindValue(':first', $new_post_info['post_number'], PDO::PARAM_INT);
-    $prepared->bindValue(':last', $new_post_info['post_number'], PDO::PARAM_INT);
+
+    $prepared->bindValue(':id', $thread_info['id'], PDO::PARAM_INT);
+    $prepared->bindValue(':first', $thread_info['id'], PDO::PARAM_INT);
+    $prepared->bindValue(':last', $thread_info['id'], PDO::PARAM_INT);
     $prepared->bindValue(':files', $files_count, PDO::PARAM_INT);
-    $prepared->bindValue(':time', $time);
+    $prepared->bindValue(':time', $thread_info['last_update']);
     $prepared->bindValue(':posts', 1, PDO::PARAM_INT);
+    $prepared->execute();
+    $prepared->closeCursor();
+}
+
+function nel_db_update_thread($new_post_info, $thread_info)
+{
+    $prepared = $dbh->prepare('UPDATE ' . THREAD_TABLE . ' SET last_post=?, last_update=?, post_count=? WHERE thread_id=?');
+    $prepared->bindParam(1, $new_post_info['post_number'], PDO::PARAM_INT);
+    $prepared->bindParam(2, $thread_info['last_update'], PDO::PARAM_INT);
+    $prepared->bindParam(3, $thread_info['post_count'], PDO::PARAM_INT);
+    $prepared->bindParam(4, $thread_info['id'], PDO::PARAM_INT);
     $prepared->execute();
     $prepared->closeCursor();
 }
@@ -101,7 +112,7 @@ function nel_db_insert_new_thread($time, $new_post_info, $files_count, $dbh)
 function nel_db_insert_new_files($parent_id, $new_post_info, $files)
 {
     $i = 1;
-    
+
     foreach ($files as $file)
     {
         $dbh->query('UPDATE ' . POST_TABLE . ' SET has_file=1 WHERE post_number=' . $new_post_info['post_number'] . '');
