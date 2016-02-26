@@ -28,7 +28,7 @@ class nel_authorization
         {
             return $this->authorized[$user][$setting];
         }
-        
+
         return FALSE;
     }
 
@@ -38,7 +38,7 @@ class nel_authorization
         {
             return $this->authorized[$user];
         }
-        
+
         return FALSE;
     }
 
@@ -48,7 +48,7 @@ class nel_authorization
         {
             return $this->authorized[$user]['settings'][$setting];
         }
-        
+
         return FALSE;
     }
 
@@ -58,7 +58,7 @@ class nel_authorization
         {
             return $this->authorized[$user]['perms'][$perm];
         }
-        
+
         return FALSE;
     }
 

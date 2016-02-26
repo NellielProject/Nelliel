@@ -13,21 +13,21 @@ function nel_update_archive_status($dataforce, $dbh)
     {
         return;
     }
-    
+
     // Need to fetch moar data like archive status
     $result = $dbh->query('SELECT thread_id, archive_status FROM ' . THREAD_TABLE . ' ORDER BY sticky desc, last_update desc');
     $thread_list = $result->fetchAll(PDO::FETCH_ASSOC);
-    $result->closeCursor();
+    unset($result);
     $start_buffer = BS_THREADS_PER_PAGE * $dataforce['max_pages'];
     $end_buffer = BS_THREADS_PER_PAGE * BS_PAGE_BUFFER;
-    
+
     if ($end_buffer == 0)
     {
         $end_buffer = $start_buffer;
     }
-    
+
     $line = 0;
-    
+
     foreach ($thread_list as $thread)
     {
         if ($line < $start_buffer && $thread['archive_status'] !== '0')
@@ -44,12 +44,12 @@ function nel_update_archive_status($dataforce, $dbh)
         }
         ++ $line;
     }
-    
+
     // Below does the shift to archive
     $result = $dbh->query('SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=2');
     $move_list = $result->fetchAll(PDO::FETCH_COLUMN);
-    $result->closeCursor();
-    
+    unset($result);
+
     foreach ($move_list as $thread)
     {
         if (BS_OLD_THREADS === 'ARCHIVE')
@@ -73,7 +73,7 @@ function nel_update_archive_status($dataforce, $dbh)
             nel_eraser_gun(SRC_PATH . $thread, NULL, TRUE);
             nel_eraser_gun(THUMB_PATH . $thread, NULL, TRUE);
         }
-        
+
         $dbh->query('UPDATE ' . ARCHIVE_THREAD_TABLE . ' SET archive_status=0 WHERE archive_status=2');
     }
 }

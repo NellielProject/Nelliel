@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 function nel_ban_spambots($dataforce, $dbh)
 {
-    if (BS_BOOL_USE_SPAMBOT_TRAP && (!is_null($dataforce['sp_field1']) || !is_null($dataforce['sp_field2'])))
+    if (BS_USE_SPAMBOT_TRAP && (!is_null($dataforce['sp_field1']) || !is_null($dataforce['sp_field2'])))
     {
         $dataforce['banreason'] = "Spambot. Nobody wants any. GTFO";
         $dataforce['bandays'] = 9001;
@@ -26,7 +26,7 @@ function nel_banned_md5($md5, $file)
 {
     $cancer = array('', '');
     $total_cancer = count($cancer);
-    
+
     for ($i = 0; $i < $total_cancer; ++ $i)
     {
         if ($md5 === $cancer[$i])
@@ -43,7 +43,7 @@ function nel_banned_name($name, $file)
 {
     $cancer = array('', '');
     $total_cancer = count($cancer);
-    
+
     for ($i = 0; $i < $total_cancer; ++ $i)
     {
         if ($cancer[$i] === $name)
@@ -60,13 +60,13 @@ function nel_banned_text($text, $file)
 {
     $cancer = array('samefag', '');
     $total_cancer = count($cancer);
-    
+
     for ($i = 0; $i < $total_cancer; ++ $i)
     {
         if ($cancer[$i] !== '')
         {
             $test = utf8_strpos($text, $cancer[$i]);
-            
+
             if ($test !== FALSE)
             {
                 nel_derp(17, array('origin' => 'SNACKS', 'cancer' => $cancer[$i]));
@@ -81,11 +81,11 @@ function nel_banned_text($text, $file)
 function nel_apply_ban($dataforce, $dbh)
 {
     $base_host = $_SERVER["REMOTE_ADDR"];
-    
+
     if ($dataforce['mode'] === 'banappeal')
     {
         reset($_POST);
-        
+
         while ($item = each($_POST))
         {
             if ($item[0] === 'bawww')
@@ -97,22 +97,22 @@ function nel_apply_ban($dataforce, $dbh)
                 $banned_ip = $item[1];
             }
         }
-        
+
         $prepared = $dbh->prepare('UPDATE ' . BAN_TABLE . ' SET appeal=:bawww, appeal_status=? WHERE host=?');
         $prepared->bindParam(1, $bawww, PDO::PARAM_STR);
         $prepared->bindParam(2, @inet_pton($banned_ip), PDO::PARAM_STR);
         $prepared->execute();
         $prepared->closeCursor();
     }
-    
+
     $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE host=?');
     $prepared->bindParam(1, @inet_pton($base_host), PDO::PARAM_STR);
     $prepared->execute();
     $bandata = $prepared->fetch(PDO::FETCH_ASSOC);
     $prepared->closeCursor();
-    
+
     $bandata['length_base'] = $bandata['length'] + $bandata['ban_time'];
-    
+
     if (time() >= $bandata['length_base'])
     {
         $prepared = $dbh->prepare('DELETE FROM ' . BAN_TABLE . ' WHERE id=?');
@@ -121,12 +121,12 @@ function nel_apply_ban($dataforce, $dbh)
         $prepared->closeCursor();
         return;
     }
-    
+
     if (!empty($_SESSION))
     {
         nel_terminate_session();
     }
-    
+
     nel_render_ban_page($dataforce, $bandata);
     die();
 }

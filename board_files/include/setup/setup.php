@@ -19,14 +19,14 @@ function table_exists($table, $dbh)
     {
         $result = $dbh->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $table . "'");
     }
-    
+
     if (SQLTYPE === 'MYSQL')
     {
         $result = $dbh->query("SHOW TABLES FROM `" . SQLDB . "` LIKE '" . $table . "'");
     }
-    
+
     $test = $result->fetch(PDO::FETCH_NUM);
-    
+
     if ($test[0] == $table)
     {
         return TRUE;
@@ -40,12 +40,12 @@ function table_exists($table, $dbh)
 function check_engines($dbh, $engine)
 {
     static $engines;
-    
+
     if (!isset($engines))
     {
         $result = $dbh->query("SHOW ENGINES");
         $list = $result->fetchAll(PDO::FETCH_ASSOC);
-        
+
         foreach ($list as $entry)
         {
             if ($entry['Support'] === 'DEFAULT' || $entry['Support'] === 'YES')
@@ -54,7 +54,7 @@ function check_engines($dbh, $engine)
             }
         }
     }
-    
+
     if (array_key_exists($engine, $engines))
     {
         return TRUE;
@@ -71,29 +71,39 @@ function get_tables($dbh, $tables)
     {
         $result = $dbh->query("SELECT name FROM sqlite_master WHERE type = 'table'");
     }
-    
+
     if (SQLTYPE === 'MYSQL')
     {
         $result = $dbh->query("select table_name from information_schema.tables where table_schema = '" . MYSQL_DB . "'");
     }
-    
+
     $table_list = $result->fetchAll(PDO::FETCH_COLUMN);
-    
+
     foreach ($table_list as $table)
     {
         $tables[$table] = TRUE;
     }
-    
+
     return $tables;
 }
 
 function setup_check($dbh)
 {
     $stuff_done = FALSE;
-    $tables = array(POST_TABLE => FALSE, THREAD_TABLE => FALSE, FILE_TABLE => FALSE, EXTERNAL_TABLE => FALSE, ARCHIVE_POST_TABLE => FALSE, ARCHIVE_THREAD_TABLE => FALSE, ARCHIVE_FILE_TABLE => FALSE, ARCHIVE_EXTERNAL_TABLE => FALSE, CONFIG_TABLE => FALSE, BAN_TABLE => FALSE);
-    
+    $tables = array(
+        POST_TABLE => FALSE,
+        THREAD_TABLE => FALSE,
+        FILE_TABLE => FALSE,
+        EXTERNAL_TABLE => FALSE,
+        ARCHIVE_POST_TABLE => FALSE,
+        ARCHIVE_THREAD_TABLE => FALSE,
+        ARCHIVE_FILE_TABLE => FALSE,
+        ARCHIVE_EXTERNAL_TABLE => FALSE,
+        CONFIG_TABLE => FALSE,
+        BAN_TABLE => FALSE);
+
     $tables = get_tables($dbh, $tables);
-    
+
     if (SQLTYPE === 'MYSQL')
     {
         require_once INCLUDE_PATH . '/setup/mysql-tables.php';
@@ -102,7 +112,7 @@ function setup_check($dbh)
     {
         require_once INCLUDE_PATH . '/setup/sqlite-tables.php';
     }
-    
+
     nel_create_post_table($dbh, $tables);
     nel_create_thread_table($dbh, $tables);
     nel_create_file_table($dbh, $tables);
@@ -113,7 +123,7 @@ function setup_check($dbh)
     nel_create_archive_external_content_table($dbh, $tables);
     nel_create_config_table($dbh, $tables);
     nel_create_ban_table($dbh, $tables);
-    
+
     if (!file_exists(SRC_PATH))
     {
         echo 'Creating directory ' . SRC_DIR . '<br>';
@@ -127,7 +137,7 @@ function setup_check($dbh)
             die('Could not create ' . SRC_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(THUMB_PATH))
     {
         echo 'Creating directory ' . THUMB_DIR . '<br>';
@@ -141,7 +151,7 @@ function setup_check($dbh)
             die('Could not create ' . THUMB_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(PAGE_PATH))
     {
         echo 'Creating directory ' . PAGE_DIR . '<br>';
@@ -155,7 +165,7 @@ function setup_check($dbh)
             die('Could not create ' . PAGE_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(CACHE_PATH))
     {
         echo 'Creating directory ' . CACHE_DIR . '<br>';
@@ -169,7 +179,7 @@ function setup_check($dbh)
             die('Could not create ' . CACHE_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(ARCHIVE_PATH))
     {
         echo 'Creating directory ' . ARCHIVE_DIR . '<br>';
@@ -183,7 +193,7 @@ function setup_check($dbh)
             die('Could not create ' . ARCHIVE_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(ARC_SRC_PATH))
     {
         echo 'Creating directory ' . ARCHIVE_DIR . SRC_DIR . '<br>';
@@ -197,7 +207,7 @@ function setup_check($dbh)
             die('Could not create ' . ARCHIVE_DIR . SRC_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(ARC_THUMB_PATH))
     {
         echo 'Creating directory ' . ARCHIVE_DIR . THUMB_DIR . '<br>';
@@ -211,7 +221,7 @@ function setup_check($dbh)
             die('Could not create ' . ARCHIVE_DIR . THUMB_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if (!file_exists(ARC_PAGE_PATH))
     {
         echo 'Creating directory ' . ARCHIVE_DIR . PAGE_DIR . '<br>';
@@ -225,7 +235,7 @@ function setup_check($dbh)
             die('Could not create ' . ARCHIVE_DIR . PAGE_DIR . ' directory. Check permissions and config.php settings then retry installation.');
         }
     }
-    
+
     if ($stuff_done)
     {
         define('STUFF_DONE', TRUE);
@@ -266,7 +276,7 @@ $authorized = array(
             \'perm_update_cache\' => TRUE
         )),
     ); ?>';
-            
+
             if (nel_write_file(FILES_PATH . 'auth_data.nel.php', $new_auth, 0644))
             {
                 $stuff_done = TRUE;

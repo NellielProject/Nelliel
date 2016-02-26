@@ -55,12 +55,12 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
             nel_derp(10, array('origin' => 'POST'));
         }
 
-        if (BS_BOOL_REQUIRE_IMAGE_ALWAYS)
+        if (BS_REQUIRE_IMAGE_ALWAYS)
         {
             nel_derp(8, array('origin' => 'POST'));
         }
 
-        if (BS_BOOL_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
+        if (BS_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
         {
             nel_derp(9, array('origin' => 'POST'));
         }
@@ -89,7 +89,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     $poster_info['modpost'] = 0;
     $cookie_name = $poster_info['name'];
 
-    if ($poster_info['name'] !== '' && !BS_BOOL_FORCE_ANONYMOUS)
+    if ($poster_info['name'] !== '' && !BS_FORCE_ANONYMOUS)
     {
         nel_banned_name($poster_info['name'], $files);
 
@@ -146,7 +146,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
             }
         }
 
-        if ($name_pieces[3] !== '' && BS_BOOL_ALLOW_TRIPKEYS)
+        if ($name_pieces[3] !== '' && BS_ALLOW_TRIPKEYS)
         {
             $raw_trip = iconv('UTF-8', 'SHIFT_JIS//IGNORE', $name_pieces[3]);
             $cap = strtr($raw_trip, '&amp;', '&');
@@ -224,7 +224,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     nel_db_insert_initial_post($time, $poster_info, $dbh);
     $result = $dbh->query('SELECT * FROM ' . POST_TABLE . ' WHERE post_time=' . $time . ' LIMIT 1');
     $new_post_info = $result->fetch(PDO::FETCH_ASSOC);
-    $result->closeCursor();
+    unset($result);
 
     $thread_info = array();
 
@@ -241,7 +241,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
         $thread_info['id'] = $dataforce['response_to'];
         $result = $dbh->query('SELECT * FROM ' . THREAD_TABLE . ' WHERE thread_id=' . $thread_info['id'] . ' LIMIT 1');
         $current_thread = $result->fetch(PDO::FETCH_ASSOC);
-        $result->closeCursor();
+        unset($result);
         $thread_info['last_update'] = $current_thread['last_update'];
         $thread_info['post_count'] = $current_thread['post_count'] + 1;
         nel_db_update_thread($new_post_info, $thread_info);

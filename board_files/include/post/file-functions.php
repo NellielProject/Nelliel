@@ -21,8 +21,6 @@ function nel_process_file_info()
                 }
 
                 // Grab/strip the file extension
-
-
                 $files[$i]['ext'] = ltrim(strrchr($file['name'], '.'), '.');
                 $files[$i]['basic_filename'] = utf8_str_replace('.' . $files[$i]['ext'], "", $file['name']);
 
@@ -49,7 +47,10 @@ function nel_process_file_info()
 
                 if ($file['size'] > BS_MAX_FILESIZE * 1024)
                 {
-                    nel_derp(19, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
+                    nel_derp(19, array(
+                                        'origin' => 'POST',
+                                        'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'],
+                                        'files' => array($files[$i])));
                 }
 
                 $files[$i]['dest'] = SRC_PATH . $file['name'] . '.tmp';
@@ -61,10 +62,9 @@ function nel_process_file_info()
                 $file_good = FALSE;
                 $file_allowed = FALSE;
 
-                // Graphics
                 if (array_key_exists($test_ext, $filetypes))
                 {
-                    if ($enabled_types['enable_' . utf8_strtolower($filetypes[$test_ext]['subtype'])] && $enabled_types['enable_' . utf8_strtolower($filetypes[$test_ext]['supertype'])])
+                    if ($enabled_types[$filetypes[$test_ext]['supertype']] && $enabled_types[$filetypes[$test_ext]['subtype']])
                     {
                         $file_allowed = TRUE;
 
@@ -80,12 +80,17 @@ function nel_process_file_info()
 
                 if (!$file_allowed)
                 {
-                    nel_derp(6, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
+                    nel_derp(6, array(
+                                    'origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'],
+                                    'files' => array($files[$i])));
                 }
 
                 if (!$file_good)
                 {
-                    nel_derp(18, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
+                    nel_derp(18, array(
+                                        'origin' => 'POST',
+                                        'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'],
+                                        'files' => array($files[$i])));
                 }
 
                 ++ $i;
@@ -98,7 +103,9 @@ function nel_process_file_info()
         }
         else if ($file['error'] === UPLOAD_ERR_INI_SIZE)
         {
-            nel_derp(19, array('origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'], 'files' => array($files[$i])));
+            nel_derp(19, array(
+                                'origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'],
+                                'files' => array($files[$i])));
         }
     }
 
@@ -117,7 +124,7 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
         $files[$i]['pre_y'] = null;
         $files[$i]['thumbfile'] = null;
 
-        if ($files[$i]['subtype'] === 'SWF' || ($files[$i]['supertype'] === 'GRAPHICS' && !BS_BOOL_USE_MAGICK))
+        if ($files[$i]['subtype'] === 'SWF' || ($files[$i]['supertype'] === 'GRAPHICS' && !BS_USE_MAGICK))
         {
             $dim = getimagesize($files[$i]['dest']);
             $files[$i]['im_x'] = $dim[0];
@@ -127,11 +134,11 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
             $files[$i]['pre_y'] = ($files[$i]['im_y'] > BS_MAX_HEIGHT) ? intval($ratio * $files[$i]['im_y']) : $files[$i]['im_y'];
         }
 
-        if (BS_BOOL_USE_THUMB && $files[$i]['supertype'] === 'GRAPHICS')
+        if (BS_USE_THUMB && $files[$i]['supertype'] === 'GRAPHICS')
         {
             exec("convert -version", $out, $rescode);
 
-            if ($rescode === 0 && BS_BOOL_USE_MAGICK)
+            if ($rescode === 0 && BS_USE_MAGICK)
             {
                 $cmd_getinfo = 'identify -format "%wx%h" ' . escapeshellarg($files[$i]['dest'] . '[0]');
                 exec($cmd_getinfo, $res);
@@ -154,7 +161,7 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
                 }
                 else
                 {
-                    if (BS_BOOL_USE_PNG_THUMB)
+                    if (BS_USE_PNG_THUMB)
                     {
                         $files[$i]['thumbfile'] = $files[$i]['basic_filename'] . '-preview.png';
                         $cmd_resize = 'convert ' . escapeshellarg($files[$i]['dest']) . ' -resize ' . BS_MAX_WIDTH . 'x' . BS_MAX_HEIGHT . '\> -quality 00 -sharpen 0x0.5 ' . escapeshellarg($thumbpath . $files[$i]['thumbfile']);
@@ -197,7 +204,7 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
                 $files[$i]['thumbfile'] = $files[$i]['basic_filename'] . '-preview.jpg';
                 imagecopyresampled($files[$i]['thumbnail'], $image, 0, 0, 0, 0, $files[$i]['pre_x'], $files[$i]['pre_y'], $files[$i]['im_x'], $files[$i]['im_y']);
 
-                if (BS_BOOL_USE_PNG_THUMB)
+                if (BS_USE_PNG_THUMB)
                 {
                     imagepng($files[$i]['thumbnail'], $thumbpath . $files[$i]['thumbfile'], -1); // Quality
                 }
