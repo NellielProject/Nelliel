@@ -7,8 +7,10 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Check for threads that need archive status changed
 //
-function nel_update_archive_status($dataforce, $dbh)
+function nel_update_archive_status($dataforce)
 {
+    $dbh = nel_get_db_handle();
+
     if (BS_OLD_THREADS === 'NOTHING')
     {
         return;

@@ -9,7 +9,7 @@ function nel_create_post_table($dbh, $tables)
 
     echo 'Creating table ' . POST_TABLE . '...<br>';
     $result = $dbh->query('create table if not exists ' . POST_TABLE . ' (
-            post_number         integer primary key autoincrement,
+            post_number         integer primary key,
             parent_thread       int unsigned not null default 0,
             name                varchar(255) default null,
             password            varchar(255) default null,
@@ -20,10 +20,12 @@ function nel_create_post_table($dbh, $tables)
             comment             text default null,
             host                varbinary(16) default null,
             post_time           bigint not null default 0,
-            external_content    tinyint not null default 0,
-            content_url         varchar(2048) default null,
             has_file            tinyint not null default 0,
             file_count          tinyint unsigned not null default 0,
+            external_content    tinyint not null default 0,
+            external_count      tinyint unsigned not null default 0,
+            license             varchar(255) default null,
+            op                  tinyint not null default 0,
             sage                tinyint not null default 0,
             mod_post            tinyint not null default 0,
             mod_comment         varchar(255) default null
@@ -48,6 +50,7 @@ function nel_create_thread_table($dbh, $tables)
             first_post          int unsigned not null default 0,
             last_post           int unsigned not null default 0,
             total_files         tinyint unsigned not null default 0,
+            total_external      tinyint unsigned not null default 0,
             last_update         bigint not null default 0,
             post_count          int not null default 0,
             thread_sage         tinyint not null default 0,
@@ -183,10 +186,12 @@ function nel_create_archive_post_table($dbh, $tables)
             comment             text default null,
             host                varbinary(16) default null,
             post_time           bigint not null default 0,
-            external_content    tinyint not null default 0,
-            content_url         varchar(2048) default null,
             has_file            tinyint not null default 0,
             file_count          tinyint unsigned not null default 0,
+            external_content    tinyint not null default 0,
+            external_count      tinyint unsigned not null default 0,
+            license             varchar(255) default null,
+            op                  tinyint not null default 0,
             sage                tinyint not null default 0,
             mod_post            tinyint not null default 0,
             mod_comment         varchar(255) default null
@@ -211,6 +216,7 @@ function nel_create_archive_thread_table($dbh, $tables)
             first_post          int unsigned not null default 0,
             last_post           int unsigned not null default 0,
             total_files         tinyint unsigned not null default 0,
+            total_external      tinyint unsigned not null default 0,
             last_update         bigint not null default 0,
             post_count          int not null default 0,
             thread_sage         tinyint not null default 0,
@@ -251,7 +257,7 @@ function nel_create_archive_file_table($dbh, $tables)
             filesize        int unsigned default 0,
             md5             binary(16) default null,
             sha1            binary(20) default null,
-            source          varchar(255) default null,
+            source          varchar(512) default null,
             license         varchar(255) default null,
             exif            text default null,
             extra_meta      text default null

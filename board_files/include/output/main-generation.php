@@ -7,8 +7,9 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Genrerates the main thread listings
 //
-function nel_main_nel_thread_generator($dataforce, $dbh)
+function nel_main_nel_thread_generator($dataforce)
 {
+    $dbh = nel_get_db_handle();
     $gen_data = array();
     $gen_data['insert_hr'] = FALSE;
     $dataforce['dotdot'] = '';
@@ -97,17 +98,17 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
                 {
                     $gen_data['post_counter'] = $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD;
                     $dataforce['omitted_done'] = FALSE;
-                    nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dbh);
+                    nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline);
                     $dataforce['omitted_done'] = TRUE;
                 }
                 else
                 {
-                    nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dbh);
+                    nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline);
                 }
             }
             else
             {
-                nel_render_post($dataforce, $render, TRUE, TRUE, $gen_data, $treeline, $dbh);
+                nel_render_post($dataforce, $render, TRUE, TRUE, $gen_data, $treeline);
             }
 
             if (empty($treeline[$gen_data['post_counter'] + 1]))
@@ -115,7 +116,7 @@ function nel_main_nel_thread_generator($dataforce, $dbh)
                 $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? BS_THREADS_PER_PAGE : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
                 $gen_data['insert_hr'] = TRUE;
-                nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dbh);
+                nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline);
                 $gen_data['insert_hr'] = FALSE;
                 $gen_data['post_counter'] = -1;
             }

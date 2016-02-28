@@ -4,8 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_admin_panel($dataforce, $dbh)
+function nel_render_admin_panel($dataforce)
 {
+    $dbh = nel_get_db_handle();
     $render = new nel_render();
     $render->input(nel_render_header($dataforce, $render, array()));
     $result = $dbh->query('SELECT * FROM ' . CONFIG_TABLE . '');

@@ -6,10 +6,10 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'post/file-functions.php';
 
-function nel_process_new_post($dataforce, $plugins, $dbh)
+function nel_process_new_post($dataforce, $plugins)
 {
     global $enabled_types, $fgsfds, $plugins;
-
+    $dbh = nel_get_db_handle();
     $new_thread_dir = '';
 
     // Get time
@@ -17,7 +17,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     $reply_delay = $time - (BS_REPLY_DELAY * 1000);
 
     // Check if post is ok
-    $post_count = nel_is_post_ok($dataforce, $time, $dbh);
+    $post_count = nel_is_post_ok($dataforce, $time);
 
     // Process FGSFDS
     if (!is_null($dataforce['fgsfds']))
@@ -221,7 +221,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     {
         $poster_info['op'] = 0;
     }
-    nel_db_insert_initial_post($time, $poster_info, $dbh);
+    nel_db_insert_initial_post($time, $poster_info);
     $result = $dbh->query('SELECT * FROM ' . POST_TABLE . ' WHERE post_time=' . $time . ' LIMIT 1');
     $new_post_info = $result->fetch(PDO::FETCH_ASSOC);
     unset($result);
@@ -233,7 +233,7 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
         $thread_info['last_update'] = $time;
         $thread_info['post_count'] = 1;
         $thread_info['id'] = $new_post_info['post_number'];
-        nel_db_insert_new_thread($thread_info, $files_count, $dbh);
+        nel_db_insert_new_thread($thread_info, $files_count);
         nel_create_thread_directories($thread_info['id']);
     }
     else
@@ -269,16 +269,16 @@ function nel_process_new_post($dataforce, $plugins, $dbh)
     }
 
     // Run the archiving routine if this is a new thread or deleted/expired thread
-    nel_update_archive_status($dataforce, $dbh);
+    nel_update_archive_status($dataforce);
 
     // Generate response page if it doesn't exist, otherwise update
-    nel_regen($dataforce, $parent_thread, 'thread', FALSE, $dbh);
+    nel_regen($dataforce, $parent_thread, 'thread', FALSE);
     $dataforce['archive_update'] = TRUE;
-    nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
+    nel_regen($dataforce, NULL, 'main', FALSE);
     return $parent_thread;
 }
 
-function nel_is_post_ok($dataforce, $time, $dbh)
+function nel_is_post_ok($dataforce, $time)
 {
     // Check for flood
     // If post is a reply, also check if the thread still exists

@@ -8,99 +8,22 @@ if (!defined('NELLIEL_VERSION'))
 // First run - checks for database, directories
 // If anything does not exist yet, create it
 //
-function nel_table_fail($table)
+
+function setup_check()
 {
-    die('Creation of ' . $table . ' failed! Check database settings and config.php then retry installation.');
-}
-
-function table_exists($table, $dbh)
-{
-    if (SQLTYPE === 'SQLITE')
-    {
-        $result = $dbh->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $table . "'");
-    }
-
-    if (SQLTYPE === 'MYSQL')
-    {
-        $result = $dbh->query("SHOW TABLES FROM `" . SQLDB . "` LIKE '" . $table . "'");
-    }
-
-    $test = $result->fetch(PDO::FETCH_NUM);
-
-    if ($test[0] == $table)
-    {
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
-}
-
-function check_engines($dbh, $engine)
-{
-    static $engines;
-
-    if (!isset($engines))
-    {
-        $result = $dbh->query("SHOW ENGINES");
-        $list = $result->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($list as $entry)
-        {
-            if ($entry['Support'] === 'DEFAULT' || $entry['Support'] === 'YES')
-            {
-                $engines[$entry['Engine']] = TRUE;
-            }
-        }
-    }
-
-    if (array_key_exists($engine, $engines))
-    {
-        return TRUE;
-    }
-    else
-    {
-        return FALSE;
-    }
-}
-
-function get_tables($dbh, $tables)
-{
-    if (SQLTYPE === 'SQLITE')
-    {
-        $result = $dbh->query("SELECT name FROM sqlite_master WHERE type = 'table'");
-    }
-
-    if (SQLTYPE === 'MYSQL')
-    {
-        $result = $dbh->query("select table_name from information_schema.tables where table_schema = '" . MYSQL_DB . "'");
-    }
-
-    $table_list = $result->fetchAll(PDO::FETCH_COLUMN);
-
-    foreach ($table_list as $table)
-    {
-        $tables[$table] = TRUE;
-    }
-
-    return $tables;
-}
-
-function setup_check($dbh)
-{
+    $dbh = nel_get_db_handle();
     $stuff_done = FALSE;
     $tables = array(
-        POST_TABLE => FALSE,
-        THREAD_TABLE => FALSE,
-        FILE_TABLE => FALSE,
-        EXTERNAL_TABLE => FALSE,
-        ARCHIVE_POST_TABLE => FALSE,
-        ARCHIVE_THREAD_TABLE => FALSE,
-        ARCHIVE_FILE_TABLE => FALSE,
-        ARCHIVE_EXTERNAL_TABLE => FALSE,
-        CONFIG_TABLE => FALSE,
-        BAN_TABLE => FALSE);
+    POST_TABLE => FALSE,
+    THREAD_TABLE => FALSE,
+    FILE_TABLE => FALSE,
+    EXTERNAL_TABLE => FALSE,
+    ARCHIVE_POST_TABLE => FALSE,
+    ARCHIVE_THREAD_TABLE => FALSE,
+    ARCHIVE_FILE_TABLE => FALSE,
+    ARCHIVE_EXTERNAL_TABLE => FALSE,
+    CONFIG_TABLE => FALSE,
+    BAN_TABLE => FALSE);
 
     $tables = get_tables($dbh, $tables);
 
@@ -245,6 +168,85 @@ function setup_check($dbh)
     {
         define('STUFF_DONE', FALSE);
     }
+}
+
+function nel_table_fail($table)
+{
+    die('Creation of ' . $table . ' failed! Check database settings and config.php then retry installation.');
+}
+
+function table_exists($table, $dbh)
+{
+    if (SQLTYPE === 'SQLITE')
+    {
+        $result = $dbh->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $table . "'");
+    }
+
+    if (SQLTYPE === 'MYSQL')
+    {
+        $result = $dbh->query("SHOW TABLES FROM `" . SQLDB . "` LIKE '" . $table . "'");
+    }
+
+    $test = $result->fetch(PDO::FETCH_NUM);
+
+    if ($test[0] == $table)
+    {
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+
+function check_engines($dbh, $engine)
+{
+    static $engines;
+
+    if (!isset($engines))
+    {
+        $result = $dbh->query("SHOW ENGINES");
+        $list = $result->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($list as $entry)
+        {
+            if ($entry['Support'] === 'DEFAULT' || $entry['Support'] === 'YES')
+            {
+                $engines[$entry['Engine']] = TRUE;
+            }
+        }
+    }
+
+    if (array_key_exists($engine, $engines))
+    {
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+
+function get_tables($dbh, $tables)
+{
+    if (SQLTYPE === 'SQLITE')
+    {
+        $result = $dbh->query("SELECT name FROM sqlite_master WHERE type = 'table'");
+    }
+
+    if (SQLTYPE === 'MYSQL')
+    {
+        $result = $dbh->query("select table_name from information_schema.tables where table_schema = '" . MYSQL_DB . "'");
+    }
+
+    $table_list = $result->fetchAll(PDO::FETCH_COLUMN);
+
+    foreach ($table_list as $table)
+    {
+        $tables[$table] = TRUE;
+    }
+
+    return $tables;
 }
 
 function generate_auth_file($plugins)

@@ -20,9 +20,11 @@ function nel_create_post_table($dbh, $tables)
             comment             text default null,
             host                varbinary(16) default null,
             post_time           bigint not null default 0,
-            external_content    tinyint not null default 0,
             has_file            tinyint not null default 0,
             file_count          tinyint unsigned not null default 0,
+            external_content    tinyint not null default 0,
+            external_count      tinyint unsigned not null default 0,
+            license             varchar(255) default null,
             op                  tinyint not null default 0,
             sage                tinyint not null default 0,
             mod_post            tinyint not null default 0,
@@ -55,6 +57,7 @@ function nel_create_thread_table($dbh, $tables)
             first_post          int unsigned not null default 0,
             last_post           int unsigned not null default 0,
             total_files         tinyint unsigned not null default 0,
+            total_external      tinyint unsigned not null default 0,
             last_update         bigint not null default 0,
             post_count          int not null default 0,
             thread_sage         tinyint not null default 0,
@@ -102,7 +105,7 @@ function nel_create_file_table($dbh, $tables)
             filesize        int unsigned default 0,
             md5             binary(16) default null,
             sha1            binary(20) default null,
-            source          varchar(255) default null,
+            source          varchar(512) default null,
             license         varchar(255) default null,
             exif            text default null,
             extra_meta      text default null
@@ -173,10 +176,11 @@ function nel_create_archive_post_table($dbh, $tables)
             comment             text default null,
             host                varbinary(16) default null,
             post_time           bigint not null default 0,
-            external_content    tinyint not null default 0,
-            content_url         varchar(2048) default null,
             has_file            tinyint not null default 0,
             file_count          tinyint unsigned not null default 0,
+            external_content    tinyint not null default 0,
+            external_count      tinyint unsigned not null default 0,
+            license             varchar(255) default null,
             sage                tinyint not null default 0,
             mod_post            tinyint not null default 0,
             mod_comment         varchar(255) default null
@@ -208,6 +212,7 @@ function nel_create_archive_thread_table($dbh, $tables)
             first_post          int unsigned not null default 0,
             last_post           int unsigned not null default 0,
             total_files         tinyint unsigned not null default 0,
+            total_external      tinyint unsigned not null default 0,
             last_update         bigint not null default 0,
             post_count          int not null default 0,
             thread_sage         tinyint not null default 0,
@@ -255,7 +260,7 @@ function nel_create_archive_file_table($dbh, $tables)
             filesize        int unsigned default 0,
             md5             binary(16) default null,
             sha1            binary(20) default null,
-            source          varchar(255) default null,
+            source          varchar(512) default null,
             license         varchar(255) default null,
             exif            text default null,
             extra_meta      text default null
@@ -288,8 +293,8 @@ function nel_create_archive_external_content_table($dbh, $tables)
             post_ref        int unsigned default null,
             content_order   tinyint unsigned not null default 1,
             content_type    varchar(255) default null,
-            content_url     varchar(2048) default null,
-            source          varchar(255) default null,
+            content_uri     varchar(2048) default null,
+            source          varchar(512) default null,
             license         varchar(255) default null
             )');
 
@@ -358,8 +363,10 @@ function nel_create_config_table($dbh, $tables)
 
     $dbh->query('ALTER TABLE ' . CONFIG_TABLE . ' CONVERT TO CHARACTER SET utf8');
 
-    $dbh->query("INSERT INTO " . CONFIG_TABLE . " (config_type, data_type, config_name, setting) VALUES ('technical', '2', 'initial_schema', '002')");
-    $dbh->query("INSERT INTO " . CONFIG_TABLE . " (config_type, data_type, config_name, setting) VALUES ('technical', '2', 'current_schema', '002')");
+    $dbh->query("INSERT INTO " . CONFIG_TABLE . " (config_type, data_type, config_name, setting) VALUES ('internal', '2', 'initial_schema', '002')");
+    $dbh->query("INSERT INTO " . CONFIG_TABLE . " (config_type, data_type, config_name, setting) VALUES ('internal', '2', 'current_schema', '002')");
+    $dbh->query("INSERT INTO " . CONFIG_TABLE . " (config_type, data_type, config_name, setting) VALUES ('internal', '2', 'initial_config', '002')");
+    $dbh->query("INSERT INTO " . CONFIG_TABLE . " (config_type, data_type, config_name, setting) VALUES ('internal', '2', 'current_config', '002')");
     $dbh->query("INSERT INTO " . CONFIG_TABLE . " (config_type, data_type, config_name, setting) VALUES ('board_setting', '1', 'allow_tripkeys', '1')");
     $dbh->query("INSERT INTO " . CONFIG_TABLE . " (config_type, data_type, config_name, setting) VALUES ('board_setting', '1', 'force_anonymous', '0')");
     $dbh->query("INSERT INTO " . CONFIG_TABLE . " (config_type, data_type, config_name, setting) VALUES ('board_setting', '1', 'show_title', '1')");

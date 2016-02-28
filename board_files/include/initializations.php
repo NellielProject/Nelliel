@@ -4,30 +4,10 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-$dbh;
-if (SQLTYPE === 'MYSQL')
-{
-    $dbh = new PDO('mysql:host=' . MYSQL_HOST . ';dbname=' . MYSQL_DB, MYSQL_USER, MYSQL_PASS);
-    $dbh->exec("SET names utf8");
-}
-else if (SQLTYPE === 'SQLITE')
-{
-    $dbh = new PDO('sqlite:' . SQLITE_DB_LOCATION . SQLITE_DB_NAME);
-}
-else
-{
-    die("No valid database type specified in config. Can't do shit cap'n!");
-}
-
-if (ini_get('date.timezone') === '')
-{
-    date_default_timezone_set('UTC');
-}
-
 ignore_user_abort(TRUE);
 require_once BASE_PATH . '/' . BOARD_FILES . 'libraries/portable-utf8.php';
 require_once INCLUDE_PATH . 'setup/setup.php';
-setup_check($dbh);
+setup_check();
 generate_auth_file($plugins);
 require_once INCLUDE_PATH . 'authorize.php';
 $authorize = new nel_authorization();
@@ -58,7 +38,7 @@ if (!empty($_POST))
     {
         $mode = array();
     }
-    
+
     $dataforce['mode'] = (isset($mode[0])) ? $mode[0] : NULL;
     $dataforce['sub_mode'] = (isset($mode[1])) ? $mode[1] : NULL;
     $dataforce['mode_action'] = (isset($mode[2])) ? $mode[2] : NULL;

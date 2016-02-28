@@ -16,6 +16,7 @@ $plugins->activate();
 // A demo point. Does nothing, really
 $example_result = $plugins->plugin_hook('plugin-example', TRUE, array(5));
 
+require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'general-functions.php';
 require_once INCLUDE_PATH . 'file-handling.php';
 require_once INCLUDE_PATH . 'initializations.php';
@@ -28,12 +29,12 @@ require_once INCLUDE_PATH . 'banhammer.php';
 require_once INCLUDE_PATH . 'snacks.php';
 
 // IT'S GO TIME!
-nel_ban_spambots($dataforce, $dbh);
+nel_ban_spambots($dataforce);
 require_once INCLUDE_PATH . 'sessions.php';
 nel_initialize_session($dataforce, $plugins, $authorize);
 require_once INCLUDE_PATH . 'central-dispatch.php';
-nel_process_get($dataforce, $authorize, $dbh);
-nel_process_post($dataforce, $plugins, $authorize, $dbh);
-nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
+nel_process_get($dataforce, $authorize);
+nel_process_post($dataforce, $plugins, $authorize);
+nel_regen($dataforce, NULL, 'main', FALSE);
 nel_clean_exit($dataforce, FALSE);
 ?>

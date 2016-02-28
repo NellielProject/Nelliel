@@ -15,6 +15,8 @@ $lang_singular = array(
     'LANG_CODE' => 'en-us',  // Language code
     'LANG_NAME' => 'United States English',  // Full language name
     'LANG_FORM' => 'singular',
+
+
     'LINK_HOME' => 'Home',  // Home page link
     'LINK_MANAGE' => 'Manage',  // Management page link
     'LINK_ABOUT' => 'About',  // About page link

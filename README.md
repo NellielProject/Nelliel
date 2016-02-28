@@ -21,7 +21,7 @@ Required:
 - iconv
 
 Once RHEL 5 leaves [Production 3/Maintenance](https://access.redhat.com/support/policy/updates/errata#Production_3_Phase)
- phase the minimum requirements will likely be upped to RHEL 6 equivalents.
+ phase the minimum requirements will likely be increased.
 
 ## Optional Requirements ##
 These are optional things that Nelliel or one of its libraries can utilize for extra features or performance increases. They are not

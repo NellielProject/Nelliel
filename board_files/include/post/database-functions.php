@@ -1,8 +1,9 @@
 <?php
 
-function nel_db_insert_initial_post($time, $poster_info, $dbh)
+function nel_db_insert_initial_post($time, $poster_info)
 {
     global $fgsfds;
+    $dbh = nel_get_db_handle();
     $prepared = $dbh->prepare('INSERT INTO ' . POST_TABLE . ' (
         name,
         password,
@@ -71,8 +72,9 @@ function nel_db_insert_initial_post($time, $poster_info, $dbh)
     $prepared->closeCursor();
 }
 
-function nel_db_insert_new_thread($thread_info, $files_count, $dbh)
+function nel_db_insert_new_thread($thread_info, $files_count)
 {
+    $dbh = nel_get_db_handle();
     $prepared = $dbh->prepare('INSERT INTO ' . THREAD_TABLE . ' (
         thread_id,
         first_post,

@@ -23,8 +23,9 @@ require_once CACHE_PATH . 'multi-cache.nelcache';
 //
 // Cache the posting rules
 //
-function nel_cache_rules($dbh)
+function nel_cache_rules()
 {
+    $dbh = nel_get_db_handle();
     $gmode = '';
     $amode = '';
     $vmode = '';
@@ -139,8 +140,10 @@ function nel_build_filetype_config($dbh)
 //
 // Cache the board settings
 //
-function nel_cache_settings($dbh)
+function nel_cache_settings()
 {
+    $dbh = nel_get_db_handle();
+
     // Get true/false (1-bit) board settings
     $result2 = $dbh->query('SELECT * FROM ' . CONFIG_TABLE . ' WHERE config_type="board_setting"');
     $config_list = $result2->fetchAll(PDO::FETCH_ASSOC);

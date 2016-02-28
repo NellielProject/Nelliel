@@ -4,8 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_thread_panel($dataforce, $expand, $dbh)
+function nel_render_thread_panel($dataforce, $expand)
 {
+    $dbh = nel_get_db_handle();
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
     nel_render_thread_panel_form($dataforce, $render);

@@ -4,8 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_thread_generator($dataforce, $dbh)
+function nel_thread_generator($dataforce)
 {
+    $dbh = nel_get_db_handle();
     $render = new nel_render();
     $render_expand = new nel_render();
     $render_collapse = new nel_render();
@@ -66,7 +67,7 @@ function nel_thread_generator($dataforce, $dbh)
         {
             $render_temp = clone $render;
             $gen_data['insert_hr'] = TRUE;
-            nel_render_post($dataforce, $render_temp, FALSE, FALSE, $gen_data, $treeline, $dbh);
+            nel_render_post($dataforce, $render_temp, FALSE, FALSE, $gen_data, $treeline);
             $gen_data['insert_hr'] = FALSE;
             nel_render_footer($render_temp, FALSE, TRUE, TRUE, TRUE, FALSE);
             nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-0-100.html', $render_temp->output(), 0644);
@@ -79,24 +80,24 @@ function nel_thread_generator($dataforce, $dbh)
 
         if ($gen_data['post']['op'] == 1)
         {
-            nel_render_post($dataforce, $render_temp, FALSE, FALSE, $gen_data, $treeline, $dbh); // for thread
+            nel_render_post($dataforce, $render_temp, FALSE, FALSE, $gen_data, $treeline); // for thread
         }
         else
         {
-            nel_render_post($dataforce, $render, TRUE, FALSE, $gen_data, $treeline, $dbh);
+            nel_render_post($dataforce, $render, TRUE, FALSE, $gen_data, $treeline);
 
             if ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD)
             {
                 if ($gen_data['post_counter'] > $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD)
                 {
-                    nel_render_post($dataforce, $render_temp2, TRUE, TRUE, $gen_data, $treeline, $dbh); // for collapse
+                    nel_render_post($dataforce, $render_temp2, TRUE, TRUE, $gen_data, $treeline); // for collapse
                     $render_collapse->input($render_temp2->output(FALSE));
                 }
             }
 
             $resid = $dataforce['response_id'];
             $dataforce['response_id'] = 0;
-            nel_render_post($dataforce, $render_temp3, TRUE, TRUE, $gen_data, $treeline, $dbh); // for expand
+            nel_render_post($dataforce, $render_temp3, TRUE, TRUE, $gen_data, $treeline); // for expand
             $render_expand->input($render_temp3->output(FALSE));
             $dataforce['response_id'] = $resid;
         }

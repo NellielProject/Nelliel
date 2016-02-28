@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_thread_updates($dataforce, $plugins, $dbh)
+function nel_thread_updates($dataforce, $plugins)
 {
     $threadlist = array();
     $postlist = array();
@@ -19,27 +19,27 @@ function nel_thread_updates($dataforce, $plugins, $dbh)
         switch ($sub[0])
         {
             case 'deletefile':
-                nel_delete_content($dataforce, $sub, 'FILE', $plugins, $dbh);
+                nel_delete_content($dataforce, $sub, 'FILE', $plugins);
                 $push = $sub[1];
                 break;
 
             case 'deletethread':
-                nel_delete_content($dataforce, $sub, 'THREAD', $plugins, $dbh);
+                nel_delete_content($dataforce, $sub, 'THREAD', $plugins);
                 $push = $sub[1];
                 break;
 
             case 'deletepost':
-                nel_delete_content($dataforce, $sub, 'POST', $plugins, $dbh);
+                nel_delete_content($dataforce, $sub, 'POST', $plugins);
                 $push = $sub[2];
                 break;
 
             case 'threadsticky':
-                nel_make_thread_sticky($dataforce, $sub, $dbh);
+                nel_make_thread_sticky($dataforce, $sub);
                 $push = $sub[1];
                 break;
 
             case 'threadunsticky':
-                nel_unsticky_thread($dataforce, $sub, $dbh);
+                nel_unsticky_thread($dataforce, $sub);
                 $push = $sub[1];
                 break;
         }
@@ -56,8 +56,9 @@ function nel_thread_updates($dataforce, $plugins, $dbh)
     return $returned_list;
 }
 
-function nel_make_thread_sticky($dataforce, $sub, $dbh)
+function nel_make_thread_sticky($dataforce, $sub)
 {
+    $dbh = nel_get_db_handle();
     $id = $sub[1];
     $result = $dbh->query('SELECT parent_thread,has_file,post_time FROM ' . POST_TABLE . ' WHERE post_number=' . $id . '');
     $post_data = $result->fetch(PDO::FETCH_ASSOC);
@@ -66,18 +67,19 @@ function nel_make_thread_sticky($dataforce, $sub, $dbh)
     // If this is not already a thread, make the post into one
     if ($post_data['parent_thread'] != $id)
     {
-        nel_make_post_thread($dataforce, $id, $dbh);
+        nel_make_post_thread($dataforce, $id);
     }
 
     $dbh->query('UPDATE ' . THREAD_TABLE . ' SET sticky=1 WHERE thread_id=' . $id . '');
-    nel_update_archive_status($dataforce, $dbh);
-    nel_regen($dataforce, $id, 'thread', FALSE, $dbh);
-    nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
+    nel_update_archive_status($dataforce);
+    nel_regen($dataforce, $id, 'thread', FALSE);
+    nel_regen($dataforce, NULL, 'main', FALSE);
     return;
 }
 
-function nel_unsticky_thread($dataforce, $sub, $dbh)
+function nel_unsticky_thread($dataforce, $sub)
 {
+    $dbh = nel_get_db_handle();
     $id = $sub[1];
     $dbh->query('UPDATE ' . POST_TABLE . ' SET sticky=0 WHERE post_number=' . $id . '');
     nel_update_archive_status($dataforce, $dbh);
@@ -86,16 +88,18 @@ function nel_unsticky_thread($dataforce, $sub, $dbh)
     if (!file_exists(PAGE_PATH . $id . '/' . $id . '.html'))
     {
         $dataforce['response_id'] = $id;
-        nel_regen($dataforce, $dataforce['response_id'], 'thread', FALSE, $dbh);
+        nel_regen($dataforce, $dataforce['response_id'], 'thread', FALSE);
     }
 
     $dataforce['archive_update'] = TRUE;
-    nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
+    nel_regen($dataforce, NULL, 'main', FALSE);
     nel_toggle_session();
 }
 
-function nel_make_post_thread($dataforce, $post_id, $dbh)
+function nel_make_post_thread($dataforce, $post_id)
 {
+    $dbh = nel_get_db_handle();
+
     // Lets collect the post data
     $result = $dbh->query('SELECT * FROM ' . POST_TABLE . ' WHERE post_number=' . $post_id . '');
     $post_data = $result->fetch(PDO::FETCH_ASSOC);
@@ -149,8 +153,9 @@ function nel_make_post_thread($dataforce, $post_id, $dbh)
     }
 }
 
-function nel_delete_content($dataforce, $sub, $type, $plugins, $dbh)
+function nel_delete_content($dataforce, $sub, $type, $plugins)
 {
+    $dbh = nel_get_db_handle();
     $id = $sub[1];
 
     if (!is_numeric($id))
@@ -225,7 +230,7 @@ function nel_delete_content($dataforce, $sub, $type, $plugins, $dbh)
         nel_eraser_gun(SRC_PATH . $id, NULL, TRUE);
         nel_eraser_gun(THUMB_PATH . $id, NULL, TRUE);
 
-        nel_update_archive_status($dataforce, $dbh);
+        nel_update_archive_status($dataforce);
     }
     else if ($type === 'POST')
     {

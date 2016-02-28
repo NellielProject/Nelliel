@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Auto-ban on Spambot detection
 //
-function nel_ban_spambots($dataforce, $dbh)
+function nel_ban_spambots($dataforce)
 {
     if (BS_USE_SPAMBOT_TRAP && (!is_null($dataforce['sp_field1']) || !is_null($dataforce['sp_field2'])))
     {
@@ -15,7 +15,7 @@ function nel_ban_spambots($dataforce, $dbh)
         $dataforce['bandays'] = 9001;
         $dataforce['banip'] = $_SERVER["REMOTE_ADDR"];
         $dataforce['snacks'] = 'addban';
-        nel_ban_hammer($dataforce, $dbh);
+        nel_ban_hammer($dataforce);
     }
 }
 
@@ -78,8 +78,9 @@ function nel_banned_text($text, $file)
 //
 // Apply b&hammer
 //
-function nel_apply_ban($dataforce, $dbh)
+function nel_apply_ban($dataforce)
 {
+    $dbh = nel_get_db_handle();
     $base_host = $_SERVER["REMOTE_ADDR"];
 
     if ($dataforce['mode'] === 'banappeal')

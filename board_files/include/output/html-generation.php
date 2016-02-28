@@ -113,7 +113,7 @@ function nel_render_posting_form($dataforce, $render)
 //
 // Render posts
 //
-function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline, $dbh)
+function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline)
 {
     global $link_resno;
 
@@ -354,7 +354,8 @@ function nel_render_ban_page($dataforce, $bandata)
 //
 function nel_parse_links($matches)
 {
-    global $link_resno, $dbh;
+    $dbh = nel_get_db_handle();
+    global $link_resno;
     static $links;
 
     if (!is_array($matches))
