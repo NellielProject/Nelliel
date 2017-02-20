@@ -5,7 +5,7 @@ A lightweight and fast imageboard. Designed with a focus on being a full-feature
 
 Nelliel was originally a modified version of Futallaby made to host Nigrachan. The software had good potential and was split off to
  independent development. While retaining an interface similar to Futallaby (and many other imageboards) it has been rewritten and
- expanded into a fully unique codebase.
+ expanded into a unique codebase.
 
 ## Minimum Requirements ##
 Nelliel's minimum requirements are kept to the lowest reasonable level while also remaining forward compatible. Presently this
