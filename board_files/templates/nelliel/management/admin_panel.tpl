@@ -376,44 +376,44 @@
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_graphics" id="box_graphics" value=1 {$render->retrieve_data('enable_graphics')}> <label for="box_graphics">{nel_stext('MANAGE_SET_ALW_GF')}</label>
+                    <input type="checkbox" name="graphics_enable" id="box_graphics" value=1 {$render->retrieve_data('graphics_enable')}> <label for="box_graphics">{nel_stext('MANAGE_SET_ALW_GF')}</label>
                 </td>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_jpeg" id="box_jpeg" value=1 {$render->retrieve_data('enable_jpeg')}> <label for="box_jpeg">{nel_stext('MANAGE_SET_ALW_JPEG')}</label>
+                    <input type="checkbox" name="graphics_jpeg" id="box_jpeg" value=1 {$render->retrieve_data('graphics_jpeg')}> <label for="box_jpeg">{nel_stext('MANAGE_SET_ALW_JPEG')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_gif" id="box_gif" value=1 {$render->retrieve_data('enable_gif')}> <label for="box_gif">{nel_stext('MANAGE_SET_ALW_GIF')}</label>
+                    <input type="checkbox" name="graphics_gif" id="box_gif" value=1 {$render->retrieve_data('graphics_gif')}> <label for="box_gif">{nel_stext('MANAGE_SET_ALW_GIF')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_png" id="box_png" value=1 {$render->retrieve_data('enable_png')}> <label for="box_png">{nel_stext('MANAGE_SET_ALW_PNG')}</label>
+                    <input type="checkbox" name="graphics_png" id="box_png" value=1 {$render->retrieve_data('graphics_png')}> <label for="box_png">{nel_stext('MANAGE_SET_ALW_PNG')}</label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_jpeg2000" id="box_jpeg2000" value=1 {$render->retrieve_data('enable_jpeg2000')}> <label for="box_jpeg2000">{nel_stext('MANAGE_SET_ALW_J2K')}</label>
+                    <input type="checkbox" name="graphics_jpeg2000" id="box_jpeg2000" value=1 {$render->retrieve_data('graphics_jpeg2000')}> <label for="box_jpeg2000">{nel_stext('MANAGE_SET_ALW_J2K')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_tiff" id="box_tiff" value=1 {$render->retrieve_data('enable_tiff')}> <label for="box_tiff">{nel_stext('MANAGE_SET_ALW_TIFF')}</label>
+                    <input type="checkbox" name="graphics_tiff" id="box_tiff" value=1 {$render->retrieve_data('graphics_tiff')}> <label for="box_tiff">{nel_stext('MANAGE_SET_ALW_TIFF')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_bmp" id="box_bmp" value=1 {$render->retrieve_data('enable_bmp')}> <label for="box_bmp">{nel_stext('MANAGE_SET_ALW_BMP')}</label>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="checkbox" name="enable_ico" id="box_ico" value=1 {$render->retrieve_data('enable_ico')}> <label for="box_ico">{nel_stext('MANAGE_SET_ALW_ICO')}</label>
-                </td>
-                <td>
-                    <input type="checkbox" name="enable_psd" id="box_psd" value=1 {$render->retrieve_data('enable_psd')}> <label for="box_psd">{nel_stext('MANAGE_SET_ALW_PSD')}</label>
-                </td>
-                <td>
-                    <input type="checkbox" name="enable_tga" id="box_tga" value=1 {$render->retrieve_data('enable_tga')}> <label for="box_tga">{nel_stext('MANAGE_SET_ALW_TGA')}</label>
+                    <input type="checkbox" name="graphics_bmp" id="box_bmp" value=1 {$render->retrieve_data('graphics_bmp')}> <label for="box_bmp">{nel_stext('MANAGE_SET_ALW_BMP')}</label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_pict" id="box_pict" value=1 {$render->retrieve_data('enable_pict')}> <label for="box_pict">{nel_stext('MANAGE_SET_ALW_PICT')}</label>
+                    <input type="checkbox" name="graphics_ico" id="box_ico" value=1 {$render->retrieve_data('graphics_ico')}> <label for="box_ico">{nel_stext('MANAGE_SET_ALW_ICO')}</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="graphics_psd" id="box_psd" value=1 {$render->retrieve_data('graphics_psd')}> <label for="box_psd">{nel_stext('MANAGE_SET_ALW_PSD')}</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="graphics_tga" id="box_tga" value=1 {$render->retrieve_data('graphics_tga')}> <label for="box_tga">{nel_stext('MANAGE_SET_ALW_TGA')}</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" name="graphics_pict" id="box_pict" value=1 {$render->retrieve_data('graphics_pict')}> <label for="box_pict">{nel_stext('MANAGE_SET_ALW_PICT')}</label>
                 </td>
             </tr>
             <tr>
@@ -423,47 +423,47 @@
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_audio" id="box_audio" value=1 {$render->retrieve_data('enable_audio')}> <label for="box_audio">{nel_stext('MANAGE_SET_ALW_AF')}</label>
+                    <input type="checkbox" name="audio_enable" id="box_audio" value=1 {$render->retrieve_data('audio_enable')}> <label for="box_audio">{nel_stext('MANAGE_SET_ALW_AF')}</label>
                 </td>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_wav" id="box_wav" value=1 {$render->retrieve_data('enable_wav')}> <label for="box_wav">{nel_stext('MANAGE_SET_ALW_WAV')}</label>
+                    <input type="checkbox" name="audio_wav" id="box_wav" value=1 {$render->retrieve_data('audio_wav')}> <label for="box_wav">{nel_stext('MANAGE_SET_ALW_WAV')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_aiff" id="box_aiff" value=1 {$render->retrieve_data('enable_aiff')}> <label for="box_aiff">{nel_stext('MANAGE_SET_ALW_AIFF')}</label>
+                    <input type="checkbox" name="audio_aiff" id="box_aiff" value=1 {$render->retrieve_data('audio_aiff')}> <label for="box_aiff">{nel_stext('MANAGE_SET_ALW_AIFF')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_mp3" id="box_mp3" value=1 {$render->retrieve_data('enable_mp3')}> <label for="box_mp3">{nel_stext('MANAGE_SET_ALW_MP3')}</label>
+                    <input type="checkbox" name="audio_mp3" id="box_mp3" value=1 {$render->retrieve_data('audio_mp3')}> <label for="box_mp3">{nel_stext('MANAGE_SET_ALW_MP3')}</label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_m4a" id="box_m4a" value=1 {$render->retrieve_data('enable_m4a')}> <label for="box_m4a">{nel_stext('MANAGE_SET_ALW_M4A')}</label>
+                    <input type="checkbox" name="audio_m4a" id="box_m4a" value=1 {$render->retrieve_data('audio_m4a')}> <label for="box_m4a">{nel_stext('MANAGE_SET_ALW_M4A')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_flac" id="box_flac" value=1 {$render->retrieve_data('enable_flac')}> <label for="box_flac">{nel_stext('MANAGE_SET_ALW_FLAC')}</label>
+                    <input type="checkbox" name="audio_flac" id="box_flac" value=1 {$render->retrieve_data('audio_flac')}> <label for="box_flac">{nel_stext('MANAGE_SET_ALW_FLAC')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_aac" id="box_aac" value=1 {$render->retrieve_data('enable_aac')}> <label for="box_aac">{nel_stext('MANAGE_SET_ALW_AAC')}</label>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="checkbox" name="enable_ogg" id="box_ogg" value=1 {$render->retrieve_data('enable_ogg')}> <label for="box_ogg">{nel_stext('MANAGE_SET_ALW_OGG')}</label>
-                </td>
-                <td>
-                    <input type="checkbox" name="enable_au" id="box_au" value=1 {$render->retrieve_data('enable_au')}> <label for="box_au">{nel_stext('MANAGE_SET_ALW_AU')}</label>
-                </td>
-                <td>
-                    <input type="checkbox" name="enable_ac3" id="box_ac3" value=1 {$render->retrieve_data('enable_ac3')}> <label for="box_ac3">{nel_stext('MANAGE_SET_ALW_AC3')}</label>
+                    <input type="checkbox" name="audio_aac" id="box_aac" value=1 {$render->retrieve_data('audio_aac')}> <label for="box_aac">{nel_stext('MANAGE_SET_ALW_AAC')}</label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_wma" id="box_wma" value=1 {$render->retrieve_data('enable_wma')}> <label for="box_wma">{nel_stext('MANAGE_SET_ALW_WMA')}</label>
+                    <input type="checkbox" name="audio_ogg" id="box_ogg" value=1 {$render->retrieve_data('audio_ogg')}> <label for="box_ogg">{nel_stext('MANAGE_SET_ALW_OGG')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_midi" id="box_midi" value=1 {$render->retrieve_data('enable_midi')}>  <label for="box_midi">{nel_stext('MANAGE_SET_ALW_MIDI')}</label>
+                    <input type="checkbox" name="audio_au" id="box_au" value=1 {$render->retrieve_data('audio_au')}> <label for="box_au">{nel_stext('MANAGE_SET_ALW_AU')}</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="audio_ac3" id="box_ac3" value=1 {$render->retrieve_data('audio_ac3')}> <label for="box_ac3">{nel_stext('MANAGE_SET_ALW_AC3')}</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" name="audio_wma" id="box_wma" value=1 {$render->retrieve_data('audio_wma')}> <label for="box_wma">{nel_stext('MANAGE_SET_ALW_WMA')}</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="audio_midi" id="box_midi" value=1 {$render->retrieve_data('audio_midi')}>  <label for="box_midi">{nel_stext('MANAGE_SET_ALW_MIDI')}</label>
                 </td>
             </tr>
 
@@ -474,33 +474,33 @@
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_video" id="box_video" value=1 {$render->retrieve_data('enable_video')}> <label for="box_video">{nel_stext('MANAGE_SET_ALW_VF')}</label>
+                    <input type="checkbox" name="video_enable" id="box_video" value=1 {$render->retrieve_data('video_enable')}> <label for="box_video">{nel_stext('MANAGE_SET_ALW_VF')}</label>
                 </td>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_mpeg" id="box_mpeg" value=1 {$render->retrieve_data('enable_mpeg')}> <label for="box_mpeg">{nel_stext('MANAGE_SET_ALW_MPEG')}</label>
+                    <input type="checkbox" name="video_mpeg" id="box_mpeg" value=1 {$render->retrieve_data('video_mpeg')}> <label for="box_mpeg">{nel_stext('MANAGE_SET_ALW_MPEG')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_mov" id="box_mov" value=1 {$render->retrieve_data('enable_mov')}> <label for="box_mov">{nel_stext('MANAGE_SET_ALW_MOV')}</label>
+                    <input type="checkbox" name="video_mov" id="box_mov" value=1 {$render->retrieve_data('video_mov')}> <label for="box_mov">{nel_stext('MANAGE_SET_ALW_MOV')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_avi" id="box_avi" value=1 {$render->retrieve_data('enable_avi')}> <label for="box_avi">{nel_stext('MANAGE_SET_ALW_AVI')}</label>
+                    <input type="checkbox" name="video_avi" id="box_avi" value=1 {$render->retrieve_data('video_avi')}> <label for="box_avi">{nel_stext('MANAGE_SET_ALW_AVI')}</label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_wmv" id="box_wmv" value=1 {$render->retrieve_data('enable_wmv')}> <label for="box_wmv">{nel_stext('MANAGE_SET_ALW_WMV')}</label>
+                    <input type="checkbox" name="video_wmv" id="box_wmv" value=1 {$render->retrieve_data('video_wmv')}> <label for="box_wmv">{nel_stext('MANAGE_SET_ALW_WMV')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_mp4" id="box_mp4" value=1 {$render->retrieve_data('enable_mp4')}> <label for="box_mp4">{nel_stext('MANAGE_SET_ALW_MP4')}</label>
+                    <input type="checkbox" name="video_mp4" id="box_mp4" value=1 {$render->retrieve_data('video_mp4')}> <label for="box_mp4">{nel_stext('MANAGE_SET_ALW_MP4')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_mkv" id="box_mkv" value=1 {$render->retrieve_data('enable_mkv')}> <label for="box_mkv">{nel_stext('MANAGE_SET_ALW_MKV')}</label>
+                    <input type="checkbox" name="video_mkv" id="box_mkv" value=1 {$render->retrieve_data('video_mkv')}> <label for="box_mkv">{nel_stext('MANAGE_SET_ALW_MKV')}</label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_flv" id="box_flv" value=1 {$render->retrieve_data('enable_flv')}> <label for="box_flv">{nel_stext('MANAGE_SET_ALW_FLV')}</label>
+                    <input type="checkbox" name="enable_flv" id="box_flv" value=1 {$render->retrieve_data('video_flv')}> <label for="box_flv">{nel_stext('MANAGE_SET_ALW_FLV')}</label>
                 </td>
             </tr>
 
@@ -511,15 +511,15 @@
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_other" id="box_other" value=1 {$render->retrieve_data('enable_other')}> <label for="box_other">{nel_stext('MANAGE_SET_ALW_OF')}</label>
+                    <input type="checkbox" name="other_enable" id="box_other" value=1 {$render->retrieve_data('other_enable')}> <label for="box_other">{nel_stext('MANAGE_SET_ALW_OF')}</label>
                 </td>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_swf" id="box_swf" value=1 {$render->retrieve_data('enable_swf')}> <label for="box_swf">{nel_stext('MANAGE_SET_ALW_SWF')}</label>
+                    <input type="checkbox" name="other_swf" id="box_swf" value=1 {$render->retrieve_data('other_swf')}> <label for="box_swf">{nel_stext('MANAGE_SET_ALW_SWF')}</label>
                 </td>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_blorb" id="box_blorb" value=1 {$render->retrieve_data('enable_blorb')}> <label for="box_blorb">{nel_stext('MANAGE_SET_ALW_BLORB')}</label>
+                    <input type="checkbox" name="other_blorb" id="box_blorb" value=1 {$render->retrieve_data('other_blorb')}> <label for="box_blorb">{nel_stext('MANAGE_SET_ALW_BLORB')}</label>
                 </td>
             </tr>
 
@@ -530,28 +530,28 @@
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_document" id="box_document" value=1 {$render->retrieve_data('enable_document')}> <label for="box_document">{nel_stext('MANAGE_SET_ALW_DF')}</label>
+                    <input type="checkbox" name="document_enable" id="box_document" value=1 {$render->retrieve_data('document_enable')}> <label for="box_document">{nel_stext('MANAGE_SET_ALW_DF')}</label>
                 </td>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_rtf" id="box_rtf" value=1 {$render->retrieve_data('enable_rtf')}> <label for="box_rtf">{nel_stext('MANAGE_SET_ALW_RTF')}</label>
+                    <input type="checkbox" name="document_rtf" id="box_rtf" value=1 {$render->retrieve_data('document_rtf')}> <label for="box_rtf">{nel_stext('MANAGE_SET_ALW_RTF')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_pdf" id="box_pdf" value=1 {$render->retrieve_data('enable_pdf')}> <label for="box_pdf">{nel_stext('MANAGE_SET_ALW_PDF')}</label>
+                    <input type="checkbox" name="document_pdf" id="box_pdf" value=1 {$render->retrieve_data('document_pdf')}> <label for="box_pdf">{nel_stext('MANAGE_SET_ALW_PDF')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_txt" id="box_txt" value=1 {$render->retrieve_data('enable_txt')}> <label for="box_txt">{nel_stext('MANAGE_SET_ALW_TXT')}</label>
+                    <input type="checkbox" name="document_txt" id="box_txt" value=1 {$render->retrieve_data('document_txt')}> <label for="box_txt">{nel_stext('MANAGE_SET_ALW_TXT')}</label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_doc" id="box_doc" value=1 {$render->retrieve_data('enable_doc')}> <label for="box_doc">{nel_stext('MANAGE_SET_ALW_DOC')}</label>
+                    <input type="checkbox" name="document_doc" id="box_doc" value=1 {$render->retrieve_data('document_doc')}> <label for="box_doc">{nel_stext('MANAGE_SET_ALW_DOC')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_ppt" id="box_ppt" value=1 {$render->retrieve_data('enable_ppt')}> <label for="box_ppt">{nel_stext('MANAGE_SET_ALW_PPT')}</label>
+                    <input type="checkbox" name="document_ppt" id="box_ppt" value=1 {$render->retrieve_data('document_ppt')}> <label for="box_ppt">{nel_stext('MANAGE_SET_ALW_PPT')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_xls" id="box_xls" value=1 {$render->retrieve_data('enable_xls')}> <label for="box_xls">{nel_stext('MANAGE_SET_ALW_XLS')}</label>
+                    <input type="checkbox" name="document_xls" id="box_xls" value=1 {$render->retrieve_data('document_xls')}> <label for="box_xls">{nel_stext('MANAGE_SET_ALW_XLS')}</label>
                 </td>
             <tr>
                 <td>
@@ -560,47 +560,47 @@
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_archive" id="box_archive" value=1 {$render->retrieve_data('enable_archive')}> <label for="box_archive">{nel_stext('MANAGE_SET_ALW_RF')}</label>
+                    <input type="checkbox" name="archive_enable" id="box_archive" value=1 {$render->retrieve_data('archive_enable')}> <label for="box_archive">{nel_stext('MANAGE_SET_ALW_RF')}</label>
                 </td>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_gzip" id="box_gzip" value=1 {$render->retrieve_data('enable_gzip')}> <label for="box_gzip">{nel_stext('MANAGE_SET_ALW_GZIP')}</label>
+                    <input type="checkbox" name="archive_gzip" id="box_gzip" value=1 {$render->retrieve_data('archive_gzip')}> <label for="box_gzip">{nel_stext('MANAGE_SET_ALW_GZIP')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_bz2" id="box_bz2" value=1 {$render->retrieve_data('enable_bz2')}> <label for="box_bz2">{nel_stext('MANAGE_SET_ALW_BZ2')}</label>
+                    <input type="checkbox" name="archive_bz2" id="box_bz2" value=1 {$render->retrieve_data('archive_bz2')}> <label for="box_bz2">{nel_stext('MANAGE_SET_ALW_BZ2')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_lzh" id="box_lzh" value=1 {$render->retrieve_data('enable_lzh')}> <label for="box_lzh">{nel_stext('MANAGE_SET_ALW_LZH')}</label>
+                    <input type="checkbox" name="archive_lzh" id="box_lzh" value=1 {$render->retrieve_data('archive_lzh')}> <label for="box_lzh">{nel_stext('MANAGE_SET_ALW_LZH')}</label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_zip" id="box_zip" value=1 {$render->retrieve_data('enable_zip')}> <label for="box_zip">{nel_stext('MANAGE_SET_ALW_ZIP')}</label>
+                    <input type="checkbox" name="archive_zip" id="box_zip" value=1 {$render->retrieve_data('archive_zip')}> <label for="box_zip">{nel_stext('MANAGE_SET_ALW_ZIP')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_rar" id="box_rar" value=1 {$render->retrieve_data('enable_rar')}> <label for="box_rar">{nel_stext('MANAGE_SET_ALW_RAR')}</label>
+                    <input type="checkbox" name="archive_rar" id="box_rar" value=1 {$render->retrieve_data('archive_rar')}> <label for="box_rar">{nel_stext('MANAGE_SET_ALW_RAR')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_sit" id="box_sit" value=1 {$render->retrieve_data('enable_stuffit')}> <label for="box_sit">{nel_stext('MANAGE_SET_ALW_STUFFIT')}</label>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="checkbox" name="enable_hqx" id="box_hqx" value=1 {$render->retrieve_data('enable_binhex')}> <label for="box_hqx">{nel_stext('MANAGE_SET_ALW_BINHEX')}</label>
-                </td>
-                <td>
-                    <input type="checkbox" name="enable_tar" id="box_tar" value=1 {$render->retrieve_data('enable_tar')}> <label for="box_tar">{nel_stext('MANAGE_SET_ALW_TAR')}</label>
-                </td>
-                <td>
-                    <input type="checkbox" name="enable_7z" id="box_7z" value=1 {$render->retrieve_data('enable_7z')}> <label for="box_7z">{nel_stext('MANAGE_SET_ALW_7Z')}</label>
+                    <input type="checkbox" name="archive_sit" id="box_sit" value=1 {$render->retrieve_data('archive_stuffit')}> <label for="box_sit">{nel_stext('MANAGE_SET_ALW_STUFFIT')}</label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="enable_iso" id="box_iso" value=1 {$render->retrieve_data('enable_iso')}> <label for="box_iso">{nel_stext('MANAGE_SET_ALW_ISO')}</label>
+                    <input type="checkbox" name="archive_hqx" id="box_hqx" value=1 {$render->retrieve_data('archive_binhex')}> <label for="box_hqx">{nel_stext('MANAGE_SET_ALW_BINHEX')}</label>
                 </td>
                 <td>
-                    <input type="checkbox" name="enable_dmg" id="box_dmg" value=1 {$render->retrieve_data('enable_dmg')}> <label for="box_dmg">{nel_stext('MANAGE_SET_ALW_DMG')}</label>
+                    <input type="checkbox" name="archive_tar" id="box_tar" value=1 {$render->retrieve_data('archive_tar')}> <label for="box_tar">{nel_stext('MANAGE_SET_ALW_TAR')}</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="archive_7z" id="box_7z" value=1 {$render->retrieve_data('archive_7z')}> <label for="box_7z">{nel_stext('MANAGE_SET_ALW_7Z')}</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" name="archive_iso" id="box_iso" value=1 {$render->retrieve_data('archive_iso')}> <label for="box_iso">{nel_stext('MANAGE_SET_ALW_ISO')}</label>
+                </td>
+                <td>
+                    <input type="checkbox" name="archive_dmg" id="box_dmg" value=1 {$render->retrieve_data('archive_dmg')}> <label for="box_dmg">{nel_stext('MANAGE_SET_ALW_DMG')}</label>
                 </td>
             </tr>
             <tr>

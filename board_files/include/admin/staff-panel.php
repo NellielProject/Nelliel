@@ -61,7 +61,7 @@ function nel_staff_panel($dataforce, $authorize, $plugins)
         {
             if ($key === 'staff_password')
             {
-                $new_pass = nel_hash($val, $plugins);
+                $new_pass = nel_password_hash($val, NELLIEL_PASS_ALGORITHM);
             }
 
             if ($key === 'change_pass' && $new_pass != '')

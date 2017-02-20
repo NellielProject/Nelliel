@@ -106,18 +106,17 @@ function nel_ban_hammer($dataforce)
             {
                 $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE host=?');
                 $prepared->bindParam(1, @inet_ntop($ban_input[$i]['host']), PDO::PARAM_STR);
-
-                if ($prepared->execute() != FALSE)
-                {
-                    $baninfo2 = $prepared->fetch(PDO::FETCH_ASSOC);
-
-                    if ($baninfo2['id'] && $baninfo2['board'] === TABLEPREFIX)
-                    {
-                        $dbh->query('DELETE FROM ' . BAN_TABLE . ' WHERE id=' . $baninfo2['id'] . '');
-                    }
-                }
-
+                $prepared->execute();
+                $baninfo2 = $prepared->fetch(PDO::FETCH_ASSOC);
                 $prepared->closeCursor();
+
+                if ($baninfo2['id'] && $baninfo2['board'] === TABLEPREFIX)
+                {
+                    $prepared = $dbh->prepare('DELETE FROM ' . BAN_TABLE . ' WHERE id=?');
+                    $prepared->bindParam(1, $baninfo2['id'], PDO::PARAM_INT);
+                    $prepared->execute();
+                    $prepared->closeCursor();
+                }
             }
 
             // Append mod ban message to post if it was given

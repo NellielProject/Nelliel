@@ -7,6 +7,7 @@ function nel_process_file_info()
     $files = array();
     $i = 0;
     $filetypes_loaded = FALSE;
+    $files_count = count($_FILES);
 
     foreach ($_FILES as $file)
     {
@@ -64,7 +65,8 @@ function nel_process_file_info()
 
                 if (array_key_exists($test_ext, $filetypes))
                 {
-                    if ($enabled_types[$filetypes[$test_ext]['supertype']] && $enabled_types[$filetypes[$test_ext]['subtype']])
+                    if ($enabled_types[$filetypes[$test_ext]['supertype']]['ENABLE']
+                    && $enabled_types[$filetypes[$test_ext]['supertype']][$filetypes[$test_ext]['subtype']])
                     {
                         $file_allowed = TRUE;
 
@@ -81,7 +83,7 @@ function nel_process_file_info()
                 if (!$file_allowed)
                 {
                     nel_derp(6, array(
-                                    'origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'],
+                                    'origin' => 'POST', 'bad-filename' => $files[$i]['basic_filename'] . $files[$i]['ext'],
                                     'files' => array($files[$i])));
                 }
 
@@ -89,7 +91,7 @@ function nel_process_file_info()
                 {
                     nel_derp(18, array(
                                         'origin' => 'POST',
-                                        'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'],
+                                        'bad-filename' => $files[$i]['basic_filename'] . $files[$i]['ext'],
                                         'files' => array($files[$i])));
                 }
 
@@ -115,6 +117,7 @@ function nel_process_file_info()
 function nel_generate_thumbnails($files, $srcpath, $thumbpath)
 {
     $i = 0;
+    $files_count = count($files);
 
     while ($i < $files_count)
     {
@@ -228,4 +231,6 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
         }
         ++ $i;
     }
+
+    return $files;
 }

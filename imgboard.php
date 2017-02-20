@@ -2,6 +2,20 @@
 define('NELLIEL_VERSION', 'v0.9.3'); // Version
 define('BOARD_FILES', 'board_files/'); // Name of directory where the support and internal files go
 require_once BOARD_FILES . 'config.php';
+require_once INCLUDE_PATH . 'crypt.php';
+require_once BOARD_FILES . 'libraries/password_compat/password.php';
+
+$best_hashing = nel_best_available_hashing();
+
+if($best_hashing === 0)
+{
+    die("No acceptable password hashing available. Something is broken or this host just sucks.");
+}
+else
+{
+    define('NELLIEL_PASS_ALGORITHM', $best_hashing);
+}
+
 require_once INCLUDE_PATH . 'plugins.php';
 $plugin_files = glob(PLUGINS_PATH . '*.nel.php');
 $plugins = new nel_plugin_handler();

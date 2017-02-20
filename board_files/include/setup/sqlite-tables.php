@@ -33,6 +33,8 @@ function nel_create_post_table($dbh, $tables)
 
     if (!$result)
     {
+        echo "\nPDO::errorInfo():\n";
+        print_r($dbh->errorInfo());
         nel_table_fail($tables[POST_TABLE]);
     }
 }
@@ -103,7 +105,7 @@ function nel_create_file_table($dbh, $tables)
     }
 }
 
-function nel_create_external_content_table($dbh, $tables)
+/*function nel_create_external_content_table($dbh, $tables)
 {
     if ($tables[EXTERNAL_TABLE] === TRUE)
     {
@@ -139,7 +141,7 @@ function nel_create_external_content_table($dbh, $tables)
     {
         nel_table_fail($tables[EXTERNAL_TABLE]);
     }
-}
+}*/
 
 function nel_create_external_content_table($dbh, $tables)
 {

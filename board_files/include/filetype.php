@@ -75,7 +75,7 @@ $filetypes['pict'] = array(
     'mime' => 'image/tiff',
     'id_regex' => '^^(II\x2A\x00|MM\x00\x2A)');
 
-$filetypes['pict'] = $filetypes['pct'];
+$filetypes['pct'] = $filetypes['pict'];
 
 $filetypes['wav'] = array(
     'supertype' => 'AUDIO',
@@ -241,6 +241,12 @@ $filetypes['swf'] = array(
     'mime' => 'application/x-shockwave-flash',
     'id_regex' => '^(FWS|CWS)');
 
+$filetypes['blorb'] = array(
+'supertype' => 'OTHER',
+'subtype' => 'BLORB',
+'mime' => 'application/x-blorb',
+'id_regex' => '^FORM.{4}IFRSRIdx');
+
 $filetypes['gblorb'] = $filetypes['blorb'];
 
 $filetypes['zblorb'] = $filetypes['blorb'];
@@ -250,12 +256,6 @@ $filetypes['glb'] = $filetypes['blorb'];
 $filetypes['blb'] = $filetypes['blorb'];
 
 $filetypes['zlb'] = $filetypes['blorb'];
-
-$filetypes['blorb'] = array(
-    'supertype' => 'OTHER',
-    'subtype' => 'BLORB',
-    'mime' => 'application/x-blorb',
-    'id_regex' => '^FORM.{4}IFRSRIdx');
 
 $filetypes['gz'] = array(
     'supertype' => 'ARCHIVE',

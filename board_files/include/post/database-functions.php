@@ -102,6 +102,7 @@ function nel_db_insert_new_thread($thread_info, $files_count)
 
 function nel_db_update_thread($new_post_info, $thread_info)
 {
+    $dbh = nel_get_db_handle();
     $prepared = $dbh->prepare('UPDATE ' . THREAD_TABLE . ' SET last_post=?, last_update=?, post_count=? WHERE thread_id=?');
     $prepared->bindParam(1, $new_post_info['post_number'], PDO::PARAM_INT);
     $prepared->bindParam(2, $thread_info['last_update'], PDO::PARAM_INT);
@@ -113,6 +114,7 @@ function nel_db_update_thread($new_post_info, $thread_info)
 
 function nel_db_insert_new_files($parent_id, $new_post_info, $files)
 {
+    $dbh = nel_get_db_handle();
     $i = 1;
 
     foreach ($files as $file)
@@ -136,7 +138,7 @@ function nel_db_insert_new_files($parent_id, $new_post_info, $files)
                 md5,
                 source,
                 license)
-            VALUES (' . '
+            VALUES (
                 :parent,
                 :post,
                 :order,
@@ -151,7 +153,7 @@ function nel_db_insert_new_files($parent_id, $new_post_info, $files)
                 :prex,
                 :prey,
                 :filesize,
-                :md5
+                :md5,
                 :source,
                 :license)');
         $prepared->bindValue(':parent', $parent_id, PDO::PARAM_INT);

@@ -9,29 +9,26 @@ Nelliel was originally a modified version of Futallaby made to host Nigrachan. T
 
 ## Minimum Requirements ##
 Nelliel's minimum requirements are kept to the lowest reasonable level while also remaining forward compatible. Presently this
- is what's included with the base RHEL 5/CentOS 5, which can satisfy all dependencies for Nelliel. These are only minimum requirements
- for Nelliel to function. It is strongly recommended to use the latest software versions available.
+ is what's included with the basic RHEL/CentOS 6 install, which can satisfy all dependencies for Nelliel. These are only minimum requirements
+ for Nelliel to function; it is strongly recommended to use the latest software versions available.
 
 Required:
 
-- PHP 5.1.6+
-- GD 2.0.28+
+- PHP 5.3.3+
+- GD 2.0.35+
 - PDO with MySQL or SQLite drivers
-- MySQL 5.0.95+ or SQLite 3.3.6+
+- MySQL 5.1.73+ or SQLite 3.6.20+
 - iconv
-
-Once RHEL 5 leaves [Production 3/Maintenance](https://access.redhat.com/support/policy/updates/errata#Production_3_Phase)
- phase the minimum requirements will likely be increased.
 
 ## Optional Requirements ##
 These are optional things that Nelliel or one of its libraries can utilize for extra features or performance increases. They are not
- required and the software will work perfectly fine without them:
+ required and the software will work fine without them:
 
 - ImageMagick
 - mbstring
 
 ## Development Stage ##
-Nelliel is currently considered beta software. It is functional but somewhat buggy and likely subject to major changes that
+Nelliel is currently early beta software. It is functional but somewhat buggy and still subject to major changes that
  may break existing content. Try it out if you like but don't use it for anything serious just yet.
 
 ## Plugin API ##

@@ -75,8 +75,8 @@ function nel_process_new_post($dataforce, $plugins)
     if (isset($dataforce['pass']))
     {
         $cpass = $dataforce['pass'];
-        $hashed_pass = nel_hash($dataforce['pass'], $plugins);
-        $poster_info['pass'] = utf8_substr($hashed_pass, 0, 16);
+        $poster_info['pass'] = nel_password_hash($dataforce['pass'], NELLIEL_PASS_ALGORITHM);
+        //$poster_info['pass'] = utf8_substr($hashed_pass, 0, 16);
     }
     else
     {
@@ -255,35 +255,36 @@ function nel_process_new_post($dataforce, $plugins)
     $dbh->query('UPDATE ' . POST_TABLE . ' SET parent_thread=' . $thread_info['id'] . ' WHERE post_number=' . $new_post_info['post_number']);
 
     $fgsfds['noko_topic'] = $thread_info['id'];
-    $srcpath = SRC_PATH . $parent_thread . '/';
-    $thumbpath = THUMB_PATH . $parent_thread . '/';
+    $srcpath = SRC_PATH . $thread_info['id'] . '/';
+    $thumbpath = THUMB_PATH . $thread_info['id'] . '/';
 
     // Make thumbnails and do final file processing
-    nel_generate_thumbnails($files, $srcpath, $thumbpath);
+    $files = nel_generate_thumbnails($files, $srcpath, $thumbpath);
     clearstatcache();
 
     // Add file data if applicable
     if (!$there_is_no_spoon)
     {
-        nel_db_insert_new_files($parent_id, $new_post_info, $files);
+        nel_db_insert_new_files($thread_info['id'], $new_post_info, $files);
     }
 
     // Run the archiving routine if this is a new thread or deleted/expired thread
     nel_update_archive_status($dataforce);
 
     // Generate response page if it doesn't exist, otherwise update
-    nel_regen($dataforce, $parent_thread, 'thread', FALSE);
+    nel_regen($dataforce, $thread_info['id'], 'thread', FALSE);
     $dataforce['archive_update'] = TRUE;
     nel_regen($dataforce, NULL, 'main', FALSE);
-    return $parent_thread;
+    return $thread_info['id'];
 }
 
 function nel_is_post_ok($dataforce, $time)
 {
+    $dbh = nel_get_db_handle();
     // Check for flood
     // If post is a reply, also check if the thread still exists
     $thread_delay = $time - (BS_THREAD_DELAY * 1000);
-    $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE post_time > ? AND host = >?');
+    $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE post_time > ? AND host = ?');
     $prepared->bindValue(1, $thread_delay, PDO::PARAM_STR);
     $prepared->bindValue(2, @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
     $prepared->execute();

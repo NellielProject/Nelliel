@@ -260,7 +260,7 @@ function generate_auth_file($plugins)
 $authorized = array(
     \'' . DEFAULTADMIN . '\' => array(
         \'settings\' => array(
-            \'staff_password\' => \'' . nel_hash(DEFAULTADMIN_PASS, $plugins) . '\',
+            \'staff_password\' => \'' . nel_password_hash(DEFAULTADMIN_PASS, NELLIEL_PASS_ALGORITHM) . '\',
             \'staff_type\' => \'admin\',
             \'staff_trip\' => \'\'),
         \'perms\' => array(

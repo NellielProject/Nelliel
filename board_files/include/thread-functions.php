@@ -164,8 +164,6 @@ function nel_delete_content($dataforce, $sub, $type, $plugins)
     }
 
     $flag = FALSE;
-    $hashed_pass = nel_hash($dataforce['pass'], $plugins);
-    $hashed_pass = utf8_substr($hashed_pass, 0, 16);
     $result = $dbh->query('SELECT post_number,password,parent_thread,mod_post FROM ' . POST_TABLE . ' WHERE post_number=' . $id . '');
     $post_data = $result->fetch(PDO::FETCH_ASSOC);
     unset($result);
@@ -203,7 +201,7 @@ function nel_delete_content($dataforce, $sub, $type, $plugins)
     }
     else
     {
-        $flag = $hashed_pass === $post_data['password'] ? TRUE : FALSE;
+        $flag = password_verify($dataforce['pass'], $post_data['password']);
         $temp = TRUE;
     }
 
