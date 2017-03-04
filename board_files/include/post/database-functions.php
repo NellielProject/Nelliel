@@ -162,7 +162,7 @@ function nel_db_insert_new_files($parent_id, $new_post_info, $files)
         $prepared->bindValue(':super', $file['supertype'], PDO::PARAM_STR);
         $prepared->bindValue(':sub', $file['subtype'], PDO::PARAM_STR);
         $prepared->bindValue(':mime', $file['mime'], PDO::PARAM_STR);
-        $prepared->bindValue(':filename', $file['basic_filename'], PDO::PARAM_STR);
+        $prepared->bindValue(':filename', $file['filename'], PDO::PARAM_STR);
         $prepared->bindValue(':ext', $file['ext'], PDO::PARAM_STR);
         $prepared->bindValue(':imgx', $file['im_x'], PDO::PARAM_INT);
         $prepared->bindValue(':imgy', $file['im_y'], PDO::PARAM_INT);

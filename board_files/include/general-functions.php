@@ -6,8 +6,10 @@ if (!defined('NELLIEL_VERSION'))
 
 // This hashing is probably fine for most imageboards
 // If you need something stronger, it can be replaced by a plugin method
-function nel_hash($input, $plugins)
+function nel_hash($input)
 {
+    global $plugins;
+
     $methods = array('sha256', 'md5', FALSE, FALSE);
     $methods = $plugins->plugin_hook('hash-algorithms', TRUE, array($methods));
 

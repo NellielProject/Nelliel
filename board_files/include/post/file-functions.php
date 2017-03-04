@@ -5,113 +5,121 @@ function nel_process_file_info()
     global $enabled_types;
 
     $files = array();
-    $i = 0;
     $filetypes_loaded = FALSE;
-    $files_count = count($_FILES);
+    $file_count = 1;
 
-    foreach ($_FILES as $file)
+    foreach ($_FILES as $entry => $file)
     {
-        if ($file['error'] === UPLOAD_ERR_OK)
+        $new_file = array();
+
+        if (empty($file['name']))
         {
-            if (!empty($file['name']))
-            {
-                if (!$filetypes_loaded)
-                {
-                    include INCLUDE_PATH . 'filetype.php';
-                    $filetypes_loaded = TRUE;
-                }
-
-                // Grab/strip the file extension
-                $files[$i]['ext'] = ltrim(strrchr($file['name'], '.'), '.');
-                $files[$i]['basic_filename'] = utf8_str_replace('.' . $files[$i]['ext'], "", $file['name']);
-
-                $max_upload = ini_get('upload_max_filesize');
-                $size_unit = utf8_strtolower(utf8_substr($max_upload, -1, 1));
-                $max_upload = utf8_strtolower(utf8_substr($max_upload, 0, -1));
-
-                if ($size_unit === 'g')
-                {
-                    $max_upload = $max_upload * 1024 * 1024 * 1024;
-                }
-                else if ($size_unit === 'm')
-                {
-                    $max_upload = $max_upload * 1024 * 1024;
-                }
-                else if ($size_unit === 'k')
-                {
-                    $max_upload = $max_upload * 1024;
-                }
-                else
-                {
-                    ; // Already in bytes
-                }
-
-                if ($file['size'] > BS_MAX_FILESIZE * 1024)
-                {
-                    nel_derp(19, array(
-                                        'origin' => 'POST',
-                                        'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'],
-                                        'files' => array($files[$i])));
-                }
-
-                $files[$i]['dest'] = SRC_PATH . $file['name'] . '.tmp';
-                move_uploaded_file($file['tmp_name'], $files[$i]['dest']);
-                chmod($files[$i]['dest'], 0644);
-                $files[$i]['fsize'] = filesize($files[$i]['dest']);
-                $test_ext = utf8_strtolower($files[$i]['ext']);
-                $file_test = file_get_contents($files[$i]['dest'], NULL, NULL, 0, 65535);
-                $file_good = FALSE;
-                $file_allowed = FALSE;
-
-                if (array_key_exists($test_ext, $filetypes))
-                {
-                    if ($enabled_types[$filetypes[$test_ext]['supertype']]['ENABLE']
-                    && $enabled_types[$filetypes[$test_ext]['supertype']][$filetypes[$test_ext]['subtype']])
-                    {
-                        $file_allowed = TRUE;
-
-                        if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test))
-                        {
-                            $files[$i]['supertype'] = $filetypes[$test_ext]['supertype'];
-                            $files[$i]['subtype'] = $filetypes[$test_ext]['subtype'];
-                            $files[$i]['mime'] = $filetypes[$test_ext]['mime'];
-                            $file_good = TRUE;
-                        }
-                    }
-                }
-
-                if (!$file_allowed)
-                {
-                    nel_derp(6, array(
-                                    'origin' => 'POST', 'bad-filename' => $files[$i]['basic_filename'] . $files[$i]['ext'],
-                                    'files' => array($files[$i])));
-                }
-
-                if (!$file_good)
-                {
-                    nel_derp(18, array(
-                                        'origin' => 'POST',
-                                        'bad-filename' => $files[$i]['basic_filename'] . $files[$i]['ext'],
-                                        'files' => array($files[$i])));
-                }
-
-                ++ $i;
-            }
-
-            if ($files_count == BS_MAX_POST_FILES)
-            {
-                break;
-            }
+            ++ $file_count;
+            continue;
         }
-        else if ($file['error'] === UPLOAD_ERR_INI_SIZE)
+
+        nel_check_upload_errors($file, $files);
+
+        if (!$filetypes_loaded)
         {
-            nel_derp(19, array(
-                                'origin' => 'POST', 'bad-filename' => $files[i]['basic_filename'] . $files[i]['ext'],
-                                'files' => array($files[$i])));
+            include INCLUDE_PATH . 'filetype.php';
+            $filetypes_loaded = TRUE;
         }
+
+        preg_match('#[0-9]+$#', $entry, $matches);
+        $file_order = $matches[0];
+
+        // Grab/strip the file extension
+        $info = pathinfo($file['name']);
+        $new_file['ext'] = $info['extension'];
+        $new_file['filename'] = $info['filename'];
+        $new_file['fullname'] = $info['basename'];
+        $new_file['dest'] = SRC_PATH . $file['name'] . '.tmp';
+        move_uploaded_file($file['tmp_name'], $new_file['dest']);
+        chmod($new_file['dest'], 0644);
+        $new_file['fsize'] = filesize($new_file['dest']);
+        $test_ext = utf8_strtolower($new_file['ext']);
+        $file_test = file_get_contents($new_file['dest'], NULL, NULL, 0, 65535);
+
+        if (!array_key_exists($test_ext, $filetypes))
+        {
+            nel_derp(21, array('origin' => 'POST', 'bad-filename' => $new_file['fullname'],
+                'files' => array($new_file)));
+        }
+
+        if (!$enabled_types[$filetypes[$test_ext]['supertype']]['ENABLE'] ||
+             !$enabled_types[$filetypes[$test_ext]['supertype']][$filetypes[$test_ext]['subtype']])
+        {
+            nel_derp(6, array('origin' => 'POST', 'bad-filename' => $new_file['fullname'],
+                'files' => array($new_file)));
+        }
+
+        if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test))
+        {
+            $new_file['supertype'] = $filetypes[$test_ext]['supertype'];
+            $new_file['subtype'] = $filetypes[$test_ext]['subtype'];
+            $new_file['mime'] = $filetypes[$test_ext]['mime'];
+        }
+        else
+        {
+            nel_derp(18, array('origin' => 'POST', 'bad-filename' => $new_file['fullname'],
+                'files' => array($files[$i])));
+        }
+
+        $new_file['source'] = $_POST['sauce' . $file_order];
+        $new_file['license'] = $_POST['loldrama' . $file_order];
+
+        array_push($files, $new_file);
+
+        if ($file_count == BS_MAX_POST_FILES)
+        {
+            break;
+        }
+
+        ++ $file_count;
     }
 
     return $files;
+}
+
+function nel_check_upload_errors($file, $files)
+{
+    $error_data = array('origin' => 'POST', 'bad-filename' => $file['name'], 'files' => $files);
+
+    if ($file['size'] > BS_MAX_FILESIZE * 1024)
+    {
+        nel_derp(19, $error_data);
+    }
+
+    if ($file['error'] === UPLOAD_ERR_INI_SIZE)
+    {
+        nel_derp(22, $error_data);
+    }
+
+    if ($file['error'] === UPLOAD_ERR_FORM_SIZE)
+    {
+        nel_derp(23, $error_data);
+    }
+
+    if ($file['error'] === UPLOAD_ERR_PARTIAL)
+    {
+        nel_derp(24, $error_data);
+    }
+
+    if ($file['error'] === UPLOAD_ERR_NO_FILE)
+    {
+        ; // For now do nothing
+    }
+
+    if ($file['error'] === UPLOAD_ERR_NO_TMP_DIR || $file['error'] === UPLOAD_ERR_CANT_WRITE)
+    {
+        nel_derp(26, $error_data);
+    }
+
+    if ($file['error'] !== UPLOAD_ERR_OK)
+    {
+        nel_derp(27, $error_data);
+    }
 }
 
 function nel_generate_thumbnails($files, $srcpath, $thumbpath)
@@ -154,9 +162,12 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
 
                 if ($files[$i]['subtype'] === 'GIF')
                 {
-                    $files[$i]['thumbfile'] = $files[$i]['basic_filename'] . '-preview.gif';
-                    $cmd_coalesce = 'convert ' . escapeshellarg($files[$i]['dest']) . ' -coalesce ' . escapeshellarg($thumbpath . 'tmp' . $files[$i]['thumbfile']);
-                    $cmd_resize = 'convert ' . escapeshellarg($thumbpath . 'tmp' . $files[$i]['thumbfile']) . ' -resize ' . BS_MAX_WIDTH . 'x' . BS_MAX_HEIGHT . '\> -layers optimize ' . escapeshellarg($thumbpath . $files[$i]['thumbfile']);
+                    $files[$i]['thumbfile'] = $files[$i]['filename'] . '-preview.gif';
+                    $cmd_coalesce = 'convert ' . escapeshellarg($files[$i]['dest']) . ' -coalesce ' .
+                         escapeshellarg($thumbpath . 'tmp' . $files[$i]['thumbfile']);
+                    $cmd_resize = 'convert ' . escapeshellarg($thumbpath . 'tmp' . $files[$i]['thumbfile']) . ' -resize ' .
+                         BS_MAX_WIDTH . 'x' . BS_MAX_HEIGHT . '\> -layers optimize ' .
+                         escapeshellarg($thumbpath . $files[$i]['thumbfile']);
                     exec($cmd_coalesce);
                     exec($cmd_resize);
                     unlink($thumbpath . 'tmp' . $files[$i]['thumbfile']);
@@ -166,13 +177,17 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
                 {
                     if (BS_USE_PNG_THUMB)
                     {
-                        $files[$i]['thumbfile'] = $files[$i]['basic_filename'] . '-preview.png';
-                        $cmd_resize = 'convert ' . escapeshellarg($files[$i]['dest']) . ' -resize ' . BS_MAX_WIDTH . 'x' . BS_MAX_HEIGHT . '\> -quality 00 -sharpen 0x0.5 ' . escapeshellarg($thumbpath . $files[$i]['thumbfile']);
+                        $files[$i]['thumbfile'] = $files[$i]['filename'] . '-preview.png';
+                        $cmd_resize = 'convert ' . escapeshellarg($files[$i]['dest']) . ' -resize ' . BS_MAX_WIDTH . 'x' .
+                             BS_MAX_HEIGHT . '\> -quality 00 -sharpen 0x0.5 ' .
+                             escapeshellarg($thumbpath . $files[$i]['thumbfile']);
                     }
                     else
                     {
-                        $files[$i]['thumbfile'] = $files[$i]['basic_filename'] . '-preview.jpg';
-                        $cmd_resize = 'convert ' . escapeshellarg($files[$i]['dest']) . ' -resize ' . BS_MAX_WIDTH . 'x' . BS_MAX_HEIGHT . '\> -quality ' . BS_JPEG_QUALITY . ' -sharpen 0x0.5 ' . escapeshellarg($thumbpath . $files[$i]['thumbfile']);
+                        $files[$i]['thumbfile'] = $files[$i]['filename'] . '-preview.jpg';
+                        $cmd_resize = 'convert ' . escapeshellarg($files[$i]['dest']) . ' -resize ' . BS_MAX_WIDTH . 'x' .
+                             BS_MAX_HEIGHT . '\> -quality ' . BS_JPEG_QUALITY . ' -sharpen 0x0.5 ' .
+                             escapeshellarg($thumbpath . $files[$i]['thumbfile']);
                     }
 
                     exec($cmd_resize);
@@ -204,7 +219,7 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
                 }
 
                 $files[$i]['thumbnail'] = imagecreatetruecolor($files[$i]['pre_x'], $files[$i]['pre_y']);
-                $files[$i]['thumbfile'] = $files[$i]['basic_filename'] . '-preview.jpg';
+                $files[$i]['thumbfile'] = $files[$i]['filename'] . '-preview.jpg';
                 imagecopyresampled($files[$i]['thumbnail'], $image, 0, 0, 0, 0, $files[$i]['pre_x'], $files[$i]['pre_y'], $files[$i]['im_x'], $files[$i]['im_y']);
 
                 if (BS_USE_PNG_THUMB)
@@ -220,14 +235,14 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
 
         clearstatcache();
 
-        if (!file_exists($srcpath . $files[$i]['basic_filename'] . $files[$i]['ext']))
+        if (!file_exists($srcpath . $files[$i]['filename'] . $files[$i]['ext']))
         {
-            rename($files[$i]['dest'], $srcpath . $files[$i]['basic_filename'] . '.' . $files[$i]['ext']);
+            rename($files[$i]['dest'], $srcpath . $files[$i]['filename'] . '.' . $files[$i]['ext']);
         }
         else
         {
-            $files[$i]['basic_filename'] = 'copy' . utf8_substr($time, -4) . '--' . $files[$i]['basic_filename'];
-            rename($files[$i]['dest'], $srcpath . $files[$i]['basic_filename'] . '.' . $files[$i]['ext']);
+            $files[$i]['filename'] = 'copy' . utf8_substr($time, -4) . '--' . $files[$i]['filename'];
+            rename($files[$i]['dest'], $srcpath . $files[$i]['filename'] . '.' . $files[$i]['ext']);
         }
         ++ $i;
     }

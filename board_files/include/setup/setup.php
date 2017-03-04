@@ -249,7 +249,7 @@ function get_tables($dbh, $tables)
     return $tables;
 }
 
-function generate_auth_file($plugins)
+function generate_auth_file()
 {
     if (!file_exists(FILES_PATH . '/auth_data.nel.php'))
     {

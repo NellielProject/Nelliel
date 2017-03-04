@@ -31,7 +31,7 @@ function nel_banned_md5($md5, $file)
     {
         if ($md5 === $cancer[$i])
         {
-            nel_derp(15, array('origin' => 'SNACKS', 'bad-filename' => $file['basic_filename'] . $file['ext'], 'files' => array($file)));
+            nel_derp(15, array('origin' => 'SNACKS', 'bad-filename' => $file['filename'] . $file['ext'], 'files' => array($file)));
         }
     }
 }
@@ -39,7 +39,7 @@ function nel_banned_md5($md5, $file)
 //
 // Banned poster names
 //
-function nel_banned_name($name, $file)
+function nel_banned_name($name)
 {
     $cancer = array('', '');
     $total_cancer = count($cancer);

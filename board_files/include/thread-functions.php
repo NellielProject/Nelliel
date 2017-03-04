@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_thread_updates($dataforce, $plugins)
+function nel_thread_updates($dataforce)
 {
     $threadlist = array();
     $postlist = array();
@@ -19,17 +19,17 @@ function nel_thread_updates($dataforce, $plugins)
         switch ($sub[0])
         {
             case 'deletefile':
-                nel_delete_content($dataforce, $sub, 'FILE', $plugins);
+                nel_delete_content($dataforce, $sub, 'FILE');
                 $push = $sub[1];
                 break;
 
             case 'deletethread':
-                nel_delete_content($dataforce, $sub, 'THREAD', $plugins);
+                nel_delete_content($dataforce, $sub, 'THREAD');
                 $push = $sub[1];
                 break;
 
             case 'deletepost':
-                nel_delete_content($dataforce, $sub, 'POST', $plugins);
+                nel_delete_content($dataforce, $sub, 'POST');
                 $push = $sub[2];
                 break;
 
@@ -153,7 +153,7 @@ function nel_make_post_thread($dataforce, $post_id)
     }
 }
 
-function nel_delete_content($dataforce, $sub, $type, $plugins)
+function nel_delete_content($dataforce, $sub, $type)
 {
     $dbh = nel_get_db_handle();
     $id = $sub[1];

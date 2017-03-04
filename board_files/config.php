@@ -43,8 +43,7 @@ define('DEFAULTADMIN', ''); // Sets a default admin with all permissions
 define('DEFAULTADMIN_PASS', ''); // Password for default admin
 
 
-// Salt used for secure tripcodes and with the fallback to basic hashed passwords if crypt isn't usable.
-// Include numbers, letters and funny symbols for best results.
+// Salt used for secure tripcodes
 // Change this setting ONCE when you begin your board. Changing it again will break everything that uses it.
 define('HASH_SALT', 'sodiumz');
 
@@ -53,6 +52,7 @@ define('HASH_SALT', 'sodiumz');
 // Generally these can be left alone.
 //
 
+
 // If a different hashing method or cost was used on something, then rehash it with the current settings.
 define('DO_PASSWORD_REHASH', false);
 
@@ -60,17 +60,17 @@ define('DO_PASSWORD_REHASH', false);
 // If set false we will try to use bcrypt specifically
 define('USE_PASSWORD_DEFAULT', true);
 
-// The cost used by bcrypt (if available)
-// Default is 10; minimum is 04; maximum is 31
+// The cost used by bcrypt
+// PHP default is 10; minimum is 04; maximum is 31
 define('BCRYPT_COST', 10);
 
-// In case bcrypt or a later PHP password option is not available,  Nelliel can fall back to SHA-2 crypts
-// This is not as secure and must be enabled manually by setting SHA_FALLBACK true
-define('SHA2_FALLBACK', false);
+// In case bcrypt or a later option is not available,  Nelliel can fall back to SHA-2 crypts
+// This is not as secure but it's still far better than MD5 (or nothing)
+define('SHA2_FALLBACK', true);
 
 // The cost used when falling back to SHA512 or SHA256
-// Default is 5000; minimum is 1000; maximum is 999999999
-define('CRYPT_SHA_COST', 5000);
+// PHP default is 5000; minimum is 1000; maximum is 999999999
+define('CRYPT_SHA_COST', 10000);
 
 //
 // The settings below can be changed if you really want but there's not much point.

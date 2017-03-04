@@ -45,7 +45,7 @@ function nel_process_get($dataforce, $authorize)
 //
 // This handles the POST requests
 //
-function nel_process_post($dataforce, $plugins, $authorize)
+function nel_process_post($dataforce, $authorize)
 {
     global $fgsfds;
 
@@ -73,7 +73,7 @@ function nel_process_post($dataforce, $plugins, $authorize)
                         nel_derp(108, array('origin' => 'DISPATCH'));
                     }
 
-                    $updates = nel_thread_updates($dataforce, $plugins);
+                    $updates = nel_thread_updates($dataforce);
                 }
 
                 nel_regen($dataforce, $updates, 'thread', FALSE);
@@ -83,14 +83,14 @@ function nel_process_post($dataforce, $plugins, $authorize)
                 nel_clean_exit($dataforce, TRUE);
             }
 
-            $updates = nel_thread_updates($dataforce, $plugins);
+            $updates = nel_thread_updates($dataforce);
             nel_regen($dataforce, $updates, 'thread', FALSE);
             nel_regen($dataforce, NULL, 'main', FALSE);
             nel_clean_exit($dataforce, FALSE);
 
         case 'new_post':
             require_once INCLUDE_PATH . 'post/post.php';
-            nel_process_new_post($dataforce, $plugins);
+            nel_process_new_post($dataforce);
 
             if ($fgsfds['noko'])
             {
@@ -124,12 +124,12 @@ function nel_process_post($dataforce, $plugins, $authorize)
             }
             else
             {
-                admin_dispatch($dataforce, $plugins, $authorize);
+                admin_dispatch($dataforce, $authorize);
             }
     }
 }
 
-function admin_dispatch($dataforce, $plugins, $authorize)
+function admin_dispatch($dataforce, $authorize)
 {
     switch ($dataforce['sub_mode'])
     {
@@ -159,7 +159,7 @@ function admin_dispatch($dataforce, $plugins, $authorize)
 
         case 'thread':
             require_once INCLUDE_PATH . 'admin/threads-panel.php';
-            nel_thread_panel($dataforce, $authorize, $plugins);
+            nel_thread_panel($dataforce, $authorize);
             break;
 
         default:

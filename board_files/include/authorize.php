@@ -13,6 +13,7 @@ class nel_authorization
 
     function __construct()
     {
+        // We need a check if this exists, etc.
         include BOARD_FILES . 'auth_data.nel.php';
         $this->authorized = $authorized;
     }

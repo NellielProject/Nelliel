@@ -52,7 +52,7 @@ function nel_set_session_cookie()
 // Check for existing session and process
 // If no session exists, confirm login info and set up a new one
 //
-function nel_initialize_session($dataforce, $plugins, $authorize)
+function nel_initialize_session($dataforce, $authorize)
 {
     session_start();
     require_once INCLUDE_PATH . 'admin/login.php';
