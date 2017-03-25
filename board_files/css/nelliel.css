@@ -195,6 +195,10 @@ a.post-link:visited {
     padding-left: 20px;
 }
 
+.sha1 {
+    padding-left: 20px;
+}
+
 /* General post formatting */
 a.mailto-name:active {
     

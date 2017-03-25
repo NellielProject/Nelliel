@@ -8,7 +8,7 @@ function nel_collect_post_data()
     $post_data['subject'] = nel_check_post_entry($_POST['verb'], "string");
     $post_data['comment'] = nel_check_post_entry($_POST['wordswordswords'], "string");
     $post_data['fgsfds'] = nel_check_post_entry($_POST['fgsfds'], "string");
-    $post_data['pass'] = nel_check_post_entry($_POST['sekrit'], "string");
+    $post_data['password'] = nel_check_post_entry($_POST['sekrit'], "string");
 
     BS_MAX_POST_FILES;
 
@@ -106,7 +106,13 @@ function nel_get_tripcodes($post_data, $name_pieces)
     global $plugins;
     $post_data['tripcode'] = '';
     $post_data['secure_tripcode'] = '';
-    $post_data = $plugins->plugin_hook('pre-tripcode-processing', TRUE, array($post_data));
+    $post_data = $plugins->plugin_hook('in-before-tripcode-processing', TRUE, array($post_data, $name_pieces));
+
+    if ($name_pieces[1] === '' || (!empty($_SESSION) && $_SESSION['perms']['perm_post_anon']))
+    {
+        $post_data['name'] = nel_stext('THREAD_NONAME');
+        $post_data['email'] = '';
+    }
 
     if ($name_pieces[3] !== '' && BS_ALLOW_TRIPKEYS)
     {
@@ -120,26 +126,15 @@ function nel_get_tripcodes($post_data, $name_pieces)
         $post_data['tripcode'] = iconv('SHIFT_JIS//IGNORE', 'UTF-8', $final_trip);
     }
 
-    $post_data = $plugins->plugin_hook('tripcode-processing', TRUE, array($post_data, $name_pieces));
-
     if ($name_pieces[5] !== '' || $post_data['modpost'] > 0)
     {
         $raw_trip = iconv('UTF-8', 'SHIFT_JIS//IGNORE', $name_pieces[5]);
-        $trip = nel_hash($raw_trip);
+        $trip = hash(SECURE_TRIPCODE_ALGORITHM . TRIPCODE_SALT, $raw_trip);
         $trip = base64_encode(pack("H*", $trip));
         $final_trip = substr($trip, -12);
         $post_data['secure_tripcode'] = iconv('SHIFT_JIS//IGNORE', 'UTF-8', $final_trip);
     }
 
-    $post_data = $plugins->plugin_hook('secure-tripcode-processing', TRUE, array($post_data, $name_pieces));
-
-    if ($name_pieces[1] === '' || (!empty($_SESSION) && $_SESSION['perms']['perm_post_anon']))
-    {
-        $post_data['name'] = nel_stext('THREAD_NONAME');
-        $post_data['email'] = '';
-    }
-
-    $post_data = $plugins->plugin_hook('post-tripcode-processing', TRUE, array($post_data, $name_pieces));
-
+    $post_data = $plugins->plugin_hook('in-after-tripcode-processing', TRUE, array($post_data, $name_pieces));
     return $post_data;
 }

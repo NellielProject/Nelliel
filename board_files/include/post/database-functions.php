@@ -5,14 +5,14 @@ function nel_db_insert_initial_post($time, $poster_info)
     global $fgsfds;
     $dbh = nel_get_db_handle();
     $prepared = $dbh->prepare('INSERT INTO ' . POST_TABLE . ' (
-        name,
+        poster_name,
         password,
         tripcode,
         secure_tripcode,
         email,
         subject,
         comment,
-        host,
+        ip_address,
         post_time,
         op,
         sage,
@@ -25,7 +25,7 @@ function nel_db_insert_initial_post($time, $poster_info)
         :email,
         :subject,
         :comment,
-        :host,
+        :ip_address,
         :time,
         :op,
         :sage,
@@ -54,8 +54,8 @@ function nel_db_insert_initial_post($time, $poster_info)
     $prepared->bindValue(':email', $poster_info['email'], PDO::PARAM_STR);
     $prepared->bindValue(':subject', $poster_info['subject'], PDO::PARAM_STR);
     $prepared->bindValue(':comment', $poster_info['comment'], PDO::PARAM_STR);
-    $prepared->bindValue(':host', @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
-    $prepared->bindValue(':password', $poster_info['pass'], PDO::PARAM_STR);
+    $prepared->bindValue(':ip_address', @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
+    $prepared->bindValue(':password', $poster_info['password'], PDO::PARAM_STR);
     $prepared->bindValue(':time', $time);
     $prepared->bindValue(':op', $poster_info['op'], PDO::PARAM_INT);
     if ($fgsfds['sage'])
@@ -136,6 +136,7 @@ function nel_db_insert_new_files($parent_id, $new_post_info, $files)
                 preview_height,
                 filesize,
                 md5,
+                sha1,
                 source,
                 license)
             VALUES (
@@ -154,6 +155,7 @@ function nel_db_insert_new_files($parent_id, $new_post_info, $files)
                 :prey,
                 :filesize,
                 :md5,
+                :sha1,
                 :source,
                 :license)');
         $prepared->bindValue(':parent', $parent_id, PDO::PARAM_INT);
@@ -169,10 +171,11 @@ function nel_db_insert_new_files($parent_id, $new_post_info, $files)
         $prepared->bindValue(':prename', $file['thumbfile'], PDO::PARAM_STR);
         $prepared->bindValue(':prex', $file['pre_x'], PDO::PARAM_INT);
         $prepared->bindValue(':prey', $file['pre_y'], PDO::PARAM_INT);
-        $prepared->bindValue(':filesize', $file['fsize'], PDO::PARAM_INT);
+        $prepared->bindValue(':filesize', $file['filesize'], PDO::PARAM_INT);
         $prepared->bindValue(':md5', $file['md5'], PDO::PARAM_STR);
-        $prepared->bindValue(':source', $file['file_source'], PDO::PARAM_STR);
-        $prepared->bindValue(':license', $file['file_license'], PDO::PARAM_STR);
+        $prepared->bindValue(':sha1', $file['sha1'], PDO::PARAM_STR);
+        $prepared->bindValue(':source', $file['source'], PDO::PARAM_STR);
+        $prepared->bindValue(':license', $file['license'], PDO::PARAM_STR);
         $prepared->execute();
         $prepared->closeCursor();
         ++ $i;

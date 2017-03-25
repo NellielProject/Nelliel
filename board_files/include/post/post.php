@@ -4,14 +4,15 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'post/filetypes.php';
 require_once INCLUDE_PATH . 'post/file-functions.php';
 require_once INCLUDE_PATH . 'post/post-data.php';
 
 function nel_process_new_post($dataforce)
 {
-    global $enabled_types, $fgsfds, $plugins;
-    $dbh = nel_get_db_handle();
 
+    global $enabled_types, $fgsfds, $plugins, $filetypes;
+    $dbh = nel_get_db_handle();
     $post_data = nel_collect_post_data();
     $new_thread_dir = '';
 
@@ -25,9 +26,9 @@ function nel_process_new_post($dataforce)
     // Process FGSFDS
     if (!is_null($post_data['fgsfds']))
     {
-        $fgsfds['noko'] = utf8_strripos($post_data['fgsfds'], 'noko');
-        $fgsfds['sage'] = utf8_strripos($post_data['fgsfds'], 'sage');
         $fgsfds = $plugins->plugin_hook('fgsfds_field', FALSE, array($fgsfds));
+        $fgsfds['noko'] = nel_is_in_string($post_data['fgsfds'], 'noko');
+        $fgsfds['sage'] = nel_is_in_string($post_data['fgsfds'], 'sage');
     }
 
     // Start collecting file info
@@ -66,10 +67,10 @@ function nel_process_new_post($dataforce)
         nel_derp(11, array('origin' => 'POST'));
     }
 
-    if (isset($dataforce['pass']))
+    if (isset($post_data['password']))
     {
-        $cpass = $dataforce['pass'];
-        $post_data['pass'] = nel_password_hash($dataforce['pass'], NELLIEL_PASS_ALGORITHM);
+        $cpass = $post_data['password'];
+        $post_data['password'] = nel_generate_salted_hash(POST_PASSWORD_ALGORITHM, $post_data['password']);
     }
     else
     {
@@ -85,29 +86,6 @@ function nel_process_new_post($dataforce)
     $post_data = $plugins->plugin_hook('after-post-info-processing', TRUE, array($post_data));
     $i = 0;
 
-    while ($i < $files_count)
-    {
-        if (!file_exists($files[$i]['dest']))
-        {
-            continue;
-        }
-
-        $files[$i]['md5'] = md5_file($files[$i]['dest'], TRUE);
-        nel_banned_md5(bin2hex($files[$i]['md5']), $files[$i]);
-        $prepared = $dbh->prepare('SELECT post_ref FROM ' . FILE_TABLE . ' WHERE md5=? LIMIT 1');
-        $prepared->bindParam(1, $files[$i]['md5'], PDO::PARAM_STR);
-        $prepared->execute();
-
-        if ($prepared->fetchColumn())
-        {
-            $prepared->closeCursor();
-            nel_derp(12, array('origin' => 'POST', 'bad-filename' => $files[$i]['fullname'], 'files' => $files));
-        }
-
-        $prepared->closeCursor();
-        ++ $i;
-    }
-
     // Go ahead and put post into database
     require_once INCLUDE_PATH . 'post/database-functions.php';
 
@@ -119,6 +97,7 @@ function nel_process_new_post($dataforce)
     {
         $post_data['op'] = 0;
     }
+
     nel_db_insert_initial_post($time, $post_data);
     $result = $dbh->query('SELECT * FROM ' . POST_TABLE . ' WHERE post_time=' . $time . ' LIMIT 1');
     $new_post_info = $result->fetch(PDO::FETCH_ASSOC);
@@ -185,7 +164,7 @@ function nel_is_post_ok($dataforce, $time)
     if ($dataforce['response_to'] !== 0)
     {
         $thread_delay = $time - (BS_REPLY_DELAY * 1000);
-        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE parent_thread = ? AND post_time > ? AND host = ?');
+        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE parent_thread = ? AND post_time > ? AND ip_address = ?');
         $prepared->bindValue(1, $dataforce['response_to'], PDO::PARAM_INT);
         $prepared->bindValue(2, $thread_delay, PDO::PARAM_STR);
         $prepared->bindValue(3, @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
@@ -196,7 +175,7 @@ function nel_is_post_ok($dataforce, $time)
     else
     {
         $thread_delay = $time - (BS_THREAD_DELAY * 1000);
-        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE post_time > ? AND host = ?');
+        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE post_time > ? AND ip_address = ?');
         $prepared->bindValue(1, $thread_delay, PDO::PARAM_STR);
         $prepared->bindValue(2, @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
         $prepared->execute();
@@ -251,4 +230,3 @@ function nel_is_post_ok($dataforce, $time)
 
     return $post_count;
 }
-?>

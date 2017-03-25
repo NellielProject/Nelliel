@@ -4,8 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-nel_parse_links($dataforce['post_links']);
-
 //
 // Generate the header
 //
@@ -47,7 +45,8 @@ function nel_render_header($dataforce, $render, $treeline)
             }
             else
             {
-                $render->add_data('page_title', ($treeline[0]['subject'] === '') ? BS_BOARD_NAME . ' > Thread #' . $treeline[0]['post_number'] : BS_BOARD_NAME . ' > ' . $treeline[0]['subject']);
+                $render->add_data('page_title', ($treeline[0]['subject'] === '') ? BS_BOARD_NAME . ' > Thread #' .
+                     $treeline[0]['post_number'] : BS_BOARD_NAME . ' > ' . $treeline[0]['subject']);
             }
 
             break;
@@ -57,7 +56,8 @@ function nel_render_header($dataforce, $render, $treeline)
             break;
     }
 
-    $render->add_data('log_out', (!nel_session_ignored()) ? '[<a href="' . $render->retrieve_data('dotdot') . PHP_SELF . '?mode=log_out">Log Out</a>]' : '');
+    $render->add_data('log_out', (!nel_session_ignored()) ? '[<a href="' . $render->retrieve_data('dotdot') . PHP_SELF .
+         '?mode=log_out">Log Out</a>]' : '');
     $render->add_data('page_ref1', (!nel_session_ignored()) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT);
     $render->parse('header.tpl', '');
 }
@@ -133,7 +133,8 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     $render->add_data('response_id', $dataforce['response_id']);
     $render->add_data('tripcode', (!is_null($post_data['tripcode'])) ? BS_TRIPKEY_MARKER . $post_data['tripcode'] : '');
-    $render->add_data('secure_tripcode', (!is_null($post_data['secure_tripcode'])) ? BS_TRIPKEY_MARKER . BS_TRIPKEY_MARKER . $post_data['secure_tripcode'] : '');
+    $render->add_data('secure_tripcode', (!is_null($post_data['secure_tripcode'])) ? BS_TRIPKEY_MARKER .
+         BS_TRIPKEY_MARKER . $post_data['secure_tripcode'] : '');
     $post_data['comment'] = nel_newline_cleanup($post_data['comment']);
     $post_data['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $post_data['comment']);
     $post_data['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'nel_parse_links', $post_data['comment']);
@@ -143,7 +144,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     }
     $render->add_sanitized_data('comment-part', utf8_str_replace('>><a href="../"', '>><a href="', $post_data['comment']));
     $render->add_sanitized_data('comment', $post_data['comment']);
-    $render->add_sanitized_data('name', $post_data['name']);
+    $render->add_sanitized_data('poster_name', $post_data['poster_name']);
     $render->add_sanitized_data('email', $post_data['email']);
     $render->add_sanitized_data('subject', $post_data['subject']);
     $temp_dot = ($partial) ? '' : $dataforce['dotdot'];
@@ -171,9 +172,11 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         while ($i < $filecount)
         {
             $files[$i]['img_dim'] = (!is_null($files[$i]['image_width']) && !is_null($files[$i]['image_height'])) ? TRUE : FALSE;
-            $files[$i]['file_location'] = $temp_dot . SRC_DIR . $post_id . '/' . $files[$i]['filename'] . "." . $files[$i]['extension'];
+            $files[$i]['file_location'] = $temp_dot . SRC_DIR . $post_id . '/' . $files[$i]['filename'] . "." .
+                 $files[$i]['extension'];
             $files[$i]['filesize'] = round(((int) $files[$i]['filesize'] / 1024), 2);
-            $files[$i]['md5'] = bin2hex($files[$i]['md5']);
+            $files[$i]['md5'] = $files[$i]['md5'];
+            $files[$i]['sha1'] = $files[$i]['sha1'];
 
             if (BS_USE_THUMB)
             {
@@ -184,18 +187,23 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
                     if ($files[$i]['preview_width'] != 0)
                     {
-                        if ($files[$i]['preview_width'] > BS_MAX_MULTI_WIDTH || $files[$i]['preview_height'] > BS_MAX_MULTI_HEIGHT)
+                        if ($files[$i]['preview_width'] > BS_MAX_MULTI_WIDTH ||
+                             $files[$i]['preview_height'] > BS_MAX_MULTI_HEIGHT)
                         {
-                            $ratio = min((BS_MAX_MULTI_HEIGHT / $files[$i]['preview_height']), (BS_MAX_MULTI_WIDTH / $files[$i]['preview_width']));
+                            $ratio = min((BS_MAX_MULTI_HEIGHT / $files[$i]['preview_height']), (BS_MAX_MULTI_WIDTH /
+                             $files[$i]['preview_width']));
                             $files[$i]['preview_width'] = intval($ratio * $files[$i]['preview_width']);
                             $files[$i]['preview_height'] = intval($ratio * $files[$i]['preview_height']);
                         }
                     }
                 }
-                else if (BS_USE_FILE_ICON && file_exists(BOARD_FILES . 'imagez/nelliel/filetype/' . utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($files[$i]['subtype']) . '.png'))
+                else if (BS_USE_FILE_ICON &&
+                     file_exists(BOARD_FILES . 'imagez/nelliel/filetype/' . utf8_strtolower($files[$i]['supertype']) .
+                     '/' . utf8_strtolower($files[$i]['subtype']) . '.png'))
                 {
                     $files[$i]['has_preview'] = TRUE;
-                    $files[$i]['preview_location'] = $temp_dot . BOARD_FILES . '/imagez/nelliel/filetype/' . utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($files[$i]['subtype']) . '.png';
+                    $files[$i]['preview_location'] = $temp_dot . BOARD_FILES . '/imagez/nelliel/filetype/' .
+                         utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($files[$i]['subtype']) . '.png';
                     $files[$i]['preview_width'] = (BS_MAX_WIDTH < 64) ? BS_MAX_WIDTH : '128';
                     $files[$i]['preview_height'] = (BS_MAX_HEIGHT < 64) ? BS_MAX_HEIGHT : '128';
                 }
@@ -228,15 +236,18 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     switch (BS_DATE_FORMAT)
     {
         case 'ISO':
-            $render->add_data('post_time', date("Y", $curr_time) . BS_DATE_SEPARATOR . date("m", $curr_time) . BS_DATE_SEPARATOR . date("d (D) H:i:s", $curr_time));
+            $render->add_data('post_time', date("Y", $curr_time) . BS_DATE_SEPARATOR . date("m", $curr_time) .
+                 BS_DATE_SEPARATOR . date("d (D) H:i:s", $curr_time));
             break;
 
         case 'US':
-            $render->add_data('post_time', date("m", $curr_time) . BS_DATE_SEPARATOR . date("d", $curr_time) . BS_DATE_SEPARATOR . date("Y (D) H:i:s", $curr_time));
+            $render->add_data('post_time', date("m", $curr_time) . BS_DATE_SEPARATOR . date("d", $curr_time) .
+                 BS_DATE_SEPARATOR . date("Y (D) H:i:s", $curr_time));
             break;
 
         case 'COM':
-            $render->add_data('post_time', date("d", $curr_time) . BS_DATE_SEPARATOR . date("m", $curr_time) . BS_DATE_SEPARATOR . date("Y (D) H:i:s", $curr_time));
+            $render->add_data('post_time', date("d", $curr_time) . BS_DATE_SEPARATOR . date("m", $curr_time) .
+                 BS_DATE_SEPARATOR . date("Y (D) H:i:s", $curr_time));
             break;
     }
 
@@ -268,7 +279,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     if (!nel_session_ignored())
     {
         $render->add_data('logged_in', TRUE);
-        $render->add_data('host', (@inet_ntop($render->retrieve_data('host'))) ? inet_ntop($render->retrieve_data('host')) : 'Unknown');
+        $render->add_data('ip_address', (@inet_ntop($render->retrieve_data('ip_address'))) ? inet_ntop($render->retrieve_data('ip_address')) : 'Unknown');
         $render->add_data('perm_ban', $_SESSION['perms']['perm_ban']);
         $render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
         $render->add_data('page_ref2', PHP_SELF . '?page=');
@@ -342,7 +353,7 @@ function nel_render_ban_page($dataforce, $bandata)
     $render->add_data('appeal_status', (int) $bandata['appeal_status']);
     $render->add_data('format_length', date("D F jS Y  H:i", $bandata['length_base']));
     $render->add_data('format_time', date("D F jS Y  H:i", $bandata['ban_time']));
-    $render->add_data('host', @inet_ntop($bandata['host']) ? inet_ntop($bandata['host']) : 'Unknown');
+    $render->add_data('ip_address', @inet_ntop($bandata['ip_address']) ? inet_ntop($bandata['ip_address']) : 'Unknown');
     nel_render_header($dataforce, $render, array());
     $render->parse('ban_page.tpl', '');
     nel_render_basic_footer($render);
@@ -350,52 +361,33 @@ function nel_render_ban_page($dataforce, $bandata)
 }
 
 //
-// Parse links in posts and update a cache to avoid a potential assload of database hits during rendering
+// Parse links in posts
 //
 function nel_parse_links($matches)
 {
-    $dbh = nel_get_db_handle();
     global $link_resno;
-    static $links;
+    $dbh = nel_get_db_handle();
+    $back = ($link_resno === 0) ? PAGE_DIR : '../';
+    $prepared = $dbh->prepare('SELECT response_to FROM ' . POST_TABLE . ' WHERE post_number=?');
+    $prepared->bindParam(1, $matches[1], PDO::PARAM_INT);
+    $prepared->execute();
+    $link = $prepared->fetch(PDO::FETCH_NUM);
+    $prepared->closeCursor();
 
-    if (!is_array($matches))
+    if($link === false)
     {
-        if ($matches === TRUE)
-        {
-            return $links;
-        }
-
-        $links = $matches;
-        return;
+        return $matches[0];
     }
 
-    $back = ($link_resno === 0) ? PAGE_DIR : '../';
-    $pattern = '#p' . $matches[1] . 't([0-9]+)#';
-    $cached = preg_match($pattern, $links, $matches2);
-
-    if ($cached === 0)
+    if ($link[0] == '0')
     {
-        $isquoted2 = preg_match($pattern, $link_updates, $matches2);
-        $prepared = $dbh->prepare('SELECT response_to FROM ' . POST_TABLE . ' WHERE post_number=?');
-        $prepared->bindParam(1, $matches[1], PDO::PARAM_INT);
-        $prepared->execute();
-        $link = $prepared->fetch(PDO::FETCH_NUM);
-        $prepared->closeCursor();
-        $links .= 'p' . $matches[1] . 't' . $link[0];
-        return '>>' . $matches[1];
+        return '<a href="' . $back . $matches[1] . '/' . $matches[1] . '.html" class="link_quote">>>' . $matches[1] .
+             '</a>';
     }
     else
     {
-        $link = $matches2[1];
-
-        if ($link[0] == '0')
-        {
-            return '<a href="' . $back . $matches[1] . '/' . $matches[1] . '.html" class="link_quote">>>' . $matches[1] . '</a>';
-        }
-        else
-        {
-            return '<a href="' . $back . $link . '/' . $link . '.html#' . $matches[1] . '" class="link_quote">>>' . $matches[1] . '</a>';
-        }
+        return '<a href="' . $back . $link . '/' . $link . '.html#' . $matches[1] . '" class="link_quote">>>' .
+             $matches[1] . '</a>';
     }
 }
 
@@ -414,4 +406,3 @@ function nel_escape_single_quotes($matches)
         return '\\' . $matches[4];
     }
 }
-?>

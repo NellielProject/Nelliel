@@ -7,9 +7,9 @@
                 <input type="checkbox" name="thread_{ $render->retrieve_data('post_number') }" value="selectthread_{ $render->retrieve_data('post_number') }" title="Delete entire post"><span class="op-subject">{ $render->retrieve_data('subject') }</span>
                 <span class="op-poster-name">
     {{ if $render->retrieve_data('email') }}
-                <a href="mailto:{ $render->retrieve_data('email') }" class="mailto-name">{ $render->retrieve_data('name') }</a>{ $render->retrieve_data('tripcode') }{ $render->retrieve_data('secure_tripcode') }&nbsp;&nbsp;{ $render->retrieve_data('staff_post') }
+                <a href="mailto:{ $render->retrieve_data('email') }" class="mailto-name">{ $render->retrieve_data('poster_name') }</a>{ $render->retrieve_data('tripcode') }{ $render->retrieve_data('secure_tripcode') }&nbsp;&nbsp;{ $render->retrieve_data('staff_post') }
     {{ else }}
-                { $render->retrieve_data('name') }{ $render->retrieve_data('tripcode') }{ $render->retrieve_data('secure_tripcode') }&nbsp;&nbsp;{ $render->retrieve_data('staff_post') }
+                { $render->retrieve_data('poster_name') }{ $render->retrieve_data('tripcode') }{ $render->retrieve_data('secure_tripcode') }&nbsp;&nbsp;{ $render->retrieve_data('staff_post') }
     {{ endif }}
                 </span>
     {{ if $render->retrieve_data('response_id') }}
@@ -37,9 +37,9 @@
     {{ endif }}
                 <br>
     {{ if $render->retrieve_data('logged_in') }}
-                <br>IP: <b>{ $render->retrieve_data('host') }</b>
+                <br>IP: <b>{ $render->retrieve_data('ip_address') }</b>
         {{ if $_SESSION['perms']['perm_ban'] }}
-                <input type="button" onClick="addBanDetails('ban{ $render->retrieve_data('post_number') }', '{ $render->retrieve_data('post_number') }', '{ $render->retrieve_data('name') }', '{ $render->retrieve_data('host') }')" value="Set Ban Details">
+                <input type="button" onClick="addBanDetails('ban{ $render->retrieve_data('post_number') }', '{ $render->retrieve_data('post_number') }', '{ $render->retrieve_data('poster_name') }', '{ $render->retrieve_data('ip_address') }')" value="Set Ban Details">
         {{ endif }}
     {{ endif }}
                 <div class="clear"></div>
@@ -83,6 +83,9 @@
                     <br><span class="license">License: { $file['license'] }</span>
                 {{ endif }}
                     <br><span class="md5">MD5: { $file['md5'] }</span>
+                    {{ if $file['sha1'] != '' }}
+                    <br><span class="sha1">SHA1: { $file['sha1'] }</span>
+                    {{ endif }}
                     </span>
                     <br>
                 {{ if $file['has_preview'] }}

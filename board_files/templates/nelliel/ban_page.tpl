@@ -25,7 +25,7 @@
                             The banned IP or hostname is: 
                         </td>
                         <td class="ban-bold">
-                            {$render->retrieve_data('host')}
+                            {$render->retrieve_data('ip_address')}
                         </td>
                     </tr>
                     <tr>
@@ -33,7 +33,7 @@
                         The name used was: 
                         </td>
                         <td class="ban-bold">
-                            {$render->retrieve_data('name')}
+                            {$render->retrieve_data('poster_name')}
                         </td>
                     </tr>
                 </tr>
@@ -46,7 +46,7 @@
                     {nel_stext('ABOUT_APPEALS')}
                 </p>
                 <input type="hidden" name="mode" value="banappeal">
-                <input type="hidden" name="banned_ip" value="{$render->retrieve_data('host')}">
+                <input type="hidden" name="banned_ip" value="{$render->retrieve_data('ip_address')}">
                 <input type="hidden" name="banned_board" value="{$render->retrieve_data('board')}">
                 <textarea name="bawww" id="bawww" cols="60" rows="3"></textarea>
                 <input type="submit" value="BAWWWWW">

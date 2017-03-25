@@ -20,16 +20,16 @@ function nel_ban_spambots($dataforce)
 }
 
 //
-// Banned md5 hashes
+// Banned hashes
 //
-function nel_banned_md5($md5, $file)
+function nel_banned_hash($hash, $file)
 {
     $cancer = array('', '');
     $total_cancer = count($cancer);
 
     for ($i = 0; $i < $total_cancer; ++ $i)
     {
-        if ($md5 === $cancer[$i])
+        if ($hash === $cancer[$i])
         {
             nel_derp(15, array('origin' => 'SNACKS', 'bad-filename' => $file['filename'] . $file['ext'], 'files' => array($file)));
         }
@@ -81,7 +81,7 @@ function nel_banned_text($text, $file)
 function nel_apply_ban($dataforce)
 {
     $dbh = nel_get_db_handle();
-    $base_host = $_SERVER["REMOTE_ADDR"];
+    $base_ip_address = $_SERVER["REMOTE_ADDR"];
 
     if ($dataforce['mode'] === 'banappeal')
     {
@@ -99,15 +99,15 @@ function nel_apply_ban($dataforce)
             }
         }
 
-        $prepared = $dbh->prepare('UPDATE ' . BAN_TABLE . ' SET appeal=:bawww, appeal_status=? WHERE host=?');
+        $prepared = $dbh->prepare('UPDATE ' . BAN_TABLE . ' SET appeal=:bawww, appeal_status=? WHERE ip_address=?');
         $prepared->bindParam(1, $bawww, PDO::PARAM_STR);
         $prepared->bindParam(2, @inet_pton($banned_ip), PDO::PARAM_STR);
         $prepared->execute();
         $prepared->closeCursor();
     }
 
-    $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE host=?');
-    $prepared->bindParam(1, @inet_pton($base_host), PDO::PARAM_STR);
+    $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE ip_address=?');
+    $prepared->bindParam(1, @inet_pton($base_ip_address), PDO::PARAM_STR);
     $prepared->execute();
     $bandata = $prepared->fetch(PDO::FETCH_ASSOC);
     $prepared->closeCursor();

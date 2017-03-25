@@ -18,9 +18,9 @@ function nel_ban_hammer($dataforce)
 
     if ($dataforce['snacks'] === 'addban')
     {
-        $prepared = $dbh->prepare('INSERT INTO ' . BAN_TABLE . ' (board,type,host,name,reason,length,ban_time)
+        $prepared = $dbh->prepare('INSERT INTO ' . BAN_TABLE . ' (board,type,ip_address,poster_name,reason,length,ban_time)
 								VALUES ("' . POST_TABLE . '",NULL,NULL,NULL,:reason,:length,' . time() . ')');
-        $prepared->bindParam(':host', @inet_pton($dataforce['banip']), PDO::PARAM_STR);
+        $prepared->bindParam(':ip_address', @inet_pton($dataforce['banip']), PDO::PARAM_STR);
         $prepared->bindParam(':reason', $dataforce['banreason'], PDO::PARAM_STR);
         $prepared->bindParam(':length', (($dataforce['timedays'] * 86400) + ($dataforce['timehours'] * 3600)), PDO::PARAM_INT);
         $prepared->execute();
@@ -55,7 +55,7 @@ function nel_ban_hammer($dataforce)
             }
 
             $current_num = $item[1];
-            $ban_input[$i] = array('num' => $item[1], 'days' => 0, 'hours' => 0, 'message' => '', 'reason' => '', 'name' => '', 'host' => '');
+            $ban_input[$i] = array('num' => $item[1], 'days' => 0, 'hours' => 0, 'message' => '', 'reason' => '', 'name' => '', 'ip_address' => '');
         }
 
         if ($item[0] === 'timedays' . $current_num)
@@ -85,7 +85,7 @@ function nel_ban_hammer($dataforce)
 
         if ($item[0] === 'banhost' . $current_num)
         {
-            $ban_input[$i]['host'] = $item[1];
+            $ban_input[$i]['ip_address'] = $item[1];
         }
     }
 
@@ -96,7 +96,7 @@ function nel_ban_hammer($dataforce)
     {
         if (!$manual)
         {
-            $prepared = $dbh->prepare('SELECT host,mod_comment FROM ' . POST_TABLE . ' WHERE post_number=?');
+            $prepared = $dbh->prepare('SELECT ip_address,mod_comment FROM ' . POST_TABLE . ' WHERE post_number=?');
             $prepared->bindParam(1, $ban_input[$i]['num'], PDO::PARAM_INT);
             $prepared->execute();
             $baninfo1 = $prepared->fetch(PDO::FETCH_ASSOC);
@@ -104,8 +104,8 @@ function nel_ban_hammer($dataforce)
 
             if (!empty($baninfo1))
             {
-                $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE host=?');
-                $prepared->bindParam(1, @inet_ntop($ban_input[$i]['host']), PDO::PARAM_STR);
+                $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE ip_address=?');
+                $prepared->bindParam(1, @inet_ntop($ban_input[$i]['ip_address']), PDO::PARAM_STR);
                 $prepared->execute();
                 $baninfo2 = $prepared->fetch(PDO::FETCH_ASSOC);
                 $prepared->closeCursor();
@@ -132,17 +132,17 @@ function nel_ban_hammer($dataforce)
         }
 
         $banlength = $ban_input[$i]['days'] + $ban_input[$i]['hours'];
-        $prepared = $dbh->prepare('INSERT INTO ' . BAN_TABLE . ' (type,host,name,reason,length,ban_time) //same
-									VALUES (NULL,:host,:name,:reason,:length,:time)');
-        $prepared->bindParam(':host', @inet_pton($ban_input[$i]['host']), PDO::PARAM_STR);
+        $prepared = $dbh->prepare('INSERT INTO ' . BAN_TABLE . ' (type,ip_address,poster_name,reason,length,ban_time) //same
+									VALUES (NULL,:ip_address,:poster_name,:reason,:length,:time)');
+        $prepared->bindParam(':ip_address', @inet_pton($ban_input[$i]['ip_address']), PDO::PARAM_STR);
 
         if ($manual)
         {
-            $prepared->bindParam(':name', NULL, PDO::PARAM_NULL);
+            $prepared->bindParam(':poster_name', NULL, PDO::PARAM_NULL);
         }
         else
         {
-            $prepared->bindParam(':name', $ban_input[$i]['name'], PDO::PARAM_STR);
+            $prepared->bindParam(':poster_name', $ban_input[$i]['name'], PDO::PARAM_STR);
         }
 
         $prepared->bindParam(':reason', $ban_input[$i]['reason'], PDO::PARAM_STR);

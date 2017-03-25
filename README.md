@@ -9,8 +9,9 @@ Nelliel was originally a modified version of Futallaby made to host Nigrachan. T
 
 ## Minimum Requirements ##
 Nelliel's minimum requirements are kept to the lowest reasonable level while also remaining forward compatible. Presently this
- is what's included with the basic RHEL/CentOS 6 install, which can satisfy all dependencies for Nelliel. These are only minimum requirements
- for Nelliel to function; it is strongly recommended to use the latest software versions available.
+ is what's included with the basic RHEL/CentOS 6 install, which can satisfy all dependencies for Nelliel and is also the primary
+ testing environment. These are only the minimum requirements for Nelliel to function; it is strongly recommended to use the latest
+ software versions available.
 
 Required:
 
@@ -28,14 +29,13 @@ These are optional things that Nelliel or one of its libraries can utilize for e
 - mbstring
 
 ## Development Stage ##
-Nelliel is currently early beta software. It is functional but somewhat buggy and still subject to major changes that
+Nelliel should be considered early beta software. It is functional but somewhat buggy and still subject to major changes that
  may break existing content. Try it out if you like but don't use it for anything serious just yet.
 
 ## Plugin API ##
-Nelliel has recently been given a very basic API for making plugins. This will allow extension of the software without having to worry about
- mods that can be easily broken during updates or having to mess with core code. At present there are only a couple of hooks but a
- rather extensive list is planned for the future as well as documentation and guidelines for making plugins. It is not recommended to use
- the plugin system yet.
+Nelliel currently has a very basic API for making plugins. This will eventually allow extension of the software without having to worry about
+ mods that can be easily broken during updates or having to mess with core code. It is not recommended to use
+ the plugin system yet as it continues to undergo changes and lacks documentation.
 
 ## License ##
 Nelliel is released under the Modified BSD license. This can be viewed in LICENSE.txt or the imageboard's About page.

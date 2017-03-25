@@ -10,28 +10,11 @@ if (!defined('NELLIEL_VERSION'))
 //
 
 
-// Database type. Supported types: MYSQL, SQLITE
-define('SQLTYPE', 'SQLITE'); // Database type
-
-
-// Set these if you plan to use MySQL.
-define('MYSQL_DB', 'database'); // Name of database used by imageboard
-define('MYSQL_HOST', 'localhost'); // SQL server address
-define('MYSQL_USER', 'username'); // SQL user
-define('MYSQL_PASS', 'password'); // SQL user's password
-
-
-// Set this if you plan to use SQLite
-// The filename can be an absolute path if you want the database file somewhere else on the server.
-define('SQLITE_DB_NAME', 'nelliel.sqlite'); // Filename of SQLite database.
-
-
 // Set the language; the corresponding file should be named lang.<language code>.php
 // Default Nelliel language files follow the IETF codes.
 define('BOARD_LANGUAGE', 'en-us');
 
-// Be certain TABLEPREFIX and CONF_BOARD_DIR are unique for each board you set up!
-define('TABLEPREFIX', 'nelliel'); // Prefix used for tables in the database.
+// Be certain CONF_BOARD_DIR are unique for each board you set up!
 define('CONF_BOARD_DIR', 'board'); // Name of the directory the imageboard is installed. Used for cookies and other things.
 define('HOME', '../'); // Site home directory (up one level by default). Can be a web-accessible directory or a URL.
 
@@ -44,33 +27,9 @@ define('DEFAULTADMIN_PASS', ''); // Password for default admin
 
 
 // Salt used for secure tripcodes
-// Change this setting ONCE when you begin your board. Changing it again will break everything that uses it.
-define('HASH_SALT', 'sodiumz');
+// Change this setting ONCE when you begin your board. Changing it again will alter the tripcode output
+define('TRIPCODE_SALT', 'sodiumz');
 
-//
-// This section is for the various hashing functions.
-// Generally these can be left alone.
-//
-
-
-// If a different hashing method or cost was used on something, then rehash it with the current settings.
-define('DO_PASSWORD_REHASH', false);
-
-// Whether to give password_hash PHP's PASSWORD_DEFAULT, which should pick the best algorithm available
-// If set false we will try to use bcrypt specifically
-define('USE_PASSWORD_DEFAULT', true);
-
-// The cost used by bcrypt
-// PHP default is 10; minimum is 04; maximum is 31
-define('BCRYPT_COST', 10);
-
-// In case bcrypt or a later option is not available,  Nelliel can fall back to SHA-2 crypts
-// This is not as secure but it's still far better than MD5 (or nothing)
-define('SHA2_FALLBACK', true);
-
-// The cost used when falling back to SHA512 or SHA256
-// PHP default is 5000; minimum is 1000; maximum is 999999999
-define('CRYPT_SHA_COST', 10000);
 
 //
 // The settings below can be changed if you really want but there's not much point.
@@ -88,24 +47,11 @@ define('PHP_EXT', '.html'); // Extension used for board pages
 
 //
 // Leave everything below this point alone unless you have a good reason to mess with it.
-// It's largely internal things used by the code or database.
 //
 
 
-define('POST_TABLE', TABLEPREFIX . '_post'); // Table used for post data
-define('THREAD_TABLE', TABLEPREFIX . '_thread'); // Table used for thread data
-define('FILE_TABLE', TABLEPREFIX . '_file'); // Table used for file data
-define('EXTERNAL_TABLE', TABLEPREFIX . '_external'); // Table used for external content
-define('ARCHIVE_POST_TABLE', TABLEPREFIX . '_archive_post'); // Stores archived threads
-define('ARCHIVE_THREAD_TABLE', TABLEPREFIX . '_archive_thread'); // Stores archived thread data
-define('ARCHIVE_FILE_TABLE', TABLEPREFIX . '_archive_file'); // Stores archived file data
-define('ARCHIVE_EXTERNAL_TABLE', TABLEPREFIX . '_archive_external'); // Stores archived external content
-define('CONFIG_TABLE', TABLEPREFIX . '_config'); // Table to store board configuration. Best to leave it as-is unless you really need to change it
-define('BAN_TABLE', TABLEPREFIX . '_ban'); // Table containing ban info
-
-
 define('BASE_PATH', realpath('./')); // Base path for script
-define('SQLITE_DB_LOCATION', BASE_PATH . '/' . BOARD_FILES); // Base SQLite DB location
+define('SQLITE_DB_DEFAULT_PATH', BASE_PATH . '/' . BOARD_FILES); // Base SQLite DB location
 define('FILES_PATH', BASE_PATH . '/' . BOARD_FILES); // Base cache path
 define('INCLUDE_PATH', BASE_PATH . '/' . BOARD_FILES . 'include/'); // Base cache path
 define('PLUGINS_PATH', BASE_PATH . '/' . BOARD_FILES . 'plugins/'); // Base cache path
@@ -122,6 +68,3 @@ define('ARCHIVE_PATH', BASE_PATH . '/' . ARCHIVE_DIR); // Base archive path
 define('ARC_SRC_PATH', BASE_PATH . '/' . ARCHIVE_DIR . SRC_DIR); // Archive src path
 define('ARC_THUMB_PATH', BASE_PATH . '/' . ARCHIVE_DIR . THUMB_DIR); // Archive thumbnail path
 define('ARC_PAGE_PATH', BASE_PATH . '/' . ARCHIVE_DIR . PAGE_DIR); // Archive page path
-
-
-?>

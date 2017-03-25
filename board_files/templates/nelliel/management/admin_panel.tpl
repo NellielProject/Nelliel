@@ -294,6 +294,11 @@
             </tr>
             <tr>
                 <td>
+                    <input type="checkbox" name="use_file_sha1" id="usesha1" value={$render->retrieve_data('use_sha1')}><label for="use_file_sha1">{nel_stext('MANAGE_SET_FILE_SHA1')}</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <input type="checkbox" name="use_thumb" id="uthumb" value=1 {$render->retrieve_data('use_thumb')}><label for="uthumb">{nel_stext('MANAGE_SET_USE_THUMB')}</label>
                 </td>
             </tr>

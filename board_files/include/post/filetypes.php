@@ -8,6 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 // Filetype data
 //
 
+$filetypes = array();
 
 $filetypes['jpg'] = array(
     'supertype' => 'GRAPHICS',

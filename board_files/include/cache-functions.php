@@ -179,14 +179,6 @@ function nel_cache_settings()
 }
 
 //
-// Cache post links
-//
-function nel_cache_links()
-{
-    return nel_parse_links(TRUE);
-}
-
-//
 // Regenerate the template cache
 //
 function nel_regen_template_cache()

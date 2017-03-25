@@ -21,7 +21,7 @@ function nel_render_ban_panel_list($dataforce)
     while ($baninfo = $result->fetch(PDO::FETCH_ASSOC))
     {
         $render->add_data('ban_panel_loop', TRUE);
-        $render->add_data('host', (@inet_ntop($render->retrieve_data('host'))) ? inet_ntop($render->retrieve_data('host')) : 'Unknown');
+        $render->add_data('ip_address', (@inet_ntop($render->retrieve_data('ip_address'))) ? inet_ntop($render->retrieve_data('ip_address')) : 'Unknown');
         $render->add_data('ban_appeal_response', $baninfo['appeal_response']);
         $render->add_data('ban_expire', date("D F jS Y  H:i:s", $render->retrieve_data('length') + $render->retrieve_data('ban_time')));
 

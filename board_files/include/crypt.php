@@ -1,23 +1,51 @@
 <?php
 
+//
+// Most of these functions are basically wrappers to extend or simplify PHP password and crypt functions
+//
 define('NEL_PASSWORD_MD5', 100);
 define('NEL_PASSWORD_SHA256', 101);
 define('NEL_PASSWORD_SHA512', 102);
+define('NEL_BASIC_HASH', 999);
+
+if (!function_exists('hash_equals'))
+{
+    function hash_equals($string1, $string2)
+    {
+        if (strlen($string1) != strlen($string2))
+        {
+            return false;
+        }
+        else
+        {
+            $res = $string1 ^ $string2;
+            $return = 0;
+
+            for ($i = strlen($res) - 1; $i >= 0; $i --)
+            {
+                $ret |= ord($res[$i]);
+            }
+
+            return !$return;
+        }
+    }
+}
 
 function nel_password_hash($password, $algorithm, array $options = array())
 {
-    if ($algorithm < 100)
+    if ($algorithm === 1)
     {
-        if (empty($options))
+        if (!array_key_exists('cost', $options))
         {
-            $options['cost'] = BCRYPT_COST;
+            $options['cost'] = PASSWORD_BCRYPT_COST;
         }
 
         return password_hash($password, $algorithm, $options);
     }
-    else
+
+    if ($algorithm >= 100)
     {
-        return nel_crypt($password, $options);
+        return nel_crypt($password, $algorithm, 'PASSWORD', $options);
     }
 }
 
@@ -28,63 +56,139 @@ function nel_password_verify($password, $hash)
 
 function nel_password_needs_rehash($hash, $algorithm, array $options = array())
 {
-    $id = nel_get_crypt_algorithm_id($hash);
-
-    if (!DO_PASSWORD_REHASH || $id === $algorithm)
+    if (!DO_PASSWORD_REHASH)
     {
         return false;
     }
 
-    if ($id < 100)
+    $info = nel_password_info($hash);
+
+    if ($info['algo'] < 100)
     {
         return password_needs_rehash($password, $algorithm);
     }
     else
     {
-        return true;
+        if ($info['algo'] < $algorithm)
+        {
+            return true;
+        }
+        else if ($info['algo'] === $algorithm && $info['options']['cost'] < $options['cost'])
+        {
+            return true;
+        }
     }
+
+    return false;
 }
 
-function nel_get_crypt_algorithm_id($hash)
+function nel_password_info($hash)
 {
-    if (substr($hash, 0, 4) === '$2y$') // Latest Blowfish
+    $return = array();
+    $info = password_get_info($hash);
+
+    if ($info['algo'] === 0)
     {
-        return PASSWORD_BCRYPT;
+        $id = substr($hash, 0, 3);
+        list ($cost) = sscanf($hash, $id);
+
+        if ($id === '$1$')
+        {
+            $return['algo'] = NEL_PASSWORD_MD5;
+            $return['algoName'] = 'md5';
+            $return['options']['cost'] = 1000;
+        }
+        else if ($id === '$5$')
+        {
+            $return['algo'] = NEL_PASSWORD_SHA256;
+            $return['algoName'] = 'sha256';
+            $return['options']['cost'] = $cost;
+        }
+        else if ($id === '$6$')
+        {
+            $return['algo'] = NEL_PASSWORD_SHA512;
+            $return['algoName'] = 'sha512';
+            $return['options']['cost'] = $cost;
+        }
+    }
+    else
+    {
+        $return = $info;
     }
 
-    if (substr($hash, 0, 3) === '$1$') // MD5
-    {
-        return NEL_PASSWORD_MD5;
-    }
-
-    if (substr($hash, 0, 3) === '$5$') // SHA256
-    {
-        return NEL_PASSWORD_SHA256;
-    }
-
-    if (substr($hash, 0, 3) === '$6$') // SHA512
-    {
-        return NEL_PASSWORD_SHA512;
-    }
-
-    return 0; // Unknown
+    return $return;
 }
 
-function nel_crypt($password, $algorithm = 900, array $options = array())
+function nel_salted_hash_info($hash)
+{
+    $available = hash_algos();
+    $info = array();
+    $pieces = explode('$', $hash);
+
+    if (in_array($pieces[0], $available))
+    {
+        $info['algoName'] = $pieces[0];
+        $info['salt'] = $pieces[1];
+        $info['hash'] = $pieces[2];
+    }
+    else
+    {
+        $info['algoName'] = 'unknown';
+        $info['salt'] = '';
+        $info['hash'] = '';
+    }
+
+    return $info;
+}
+
+function nel_generate_salted_hash($algorithm, $string)
+{
+    $salt = nel_gen_salt(16);
+    $full_string = $salt . $string;
+    $hash = hash($algorithm, $full_string, false);
+    return $algorithm . '$' . $salt . '$' . $hash;
+}
+
+function nel_get_crypt_cost($algorithm, $type)
+{
+    if ($algorithm === 1)
+    {
+        return constant($type . '_BCRYPT_COST');
+    }
+
+    if ($algorithm === 100 || $algorithm === 101)
+    {
+        return constant($type . '_SHA2_COST');
+    }
+
+    return 0;
+}
+
+function nel_crypt($password, $algorithm, $type, array $options = array())
 {
     if (!array_key_exists('salt', $options))
     {
         $options['salt'] = nel_gen_salt(16);
     }
 
+    if (!array_key_exists('cost', $options))
+    {
+        $options['cost'] = nel_get_crypt_cost($algorithm, $type);
+    }
+
+    if ($algorithm === PASSWORD_BCRYPT)
+    {
+        return crypt($password, '$2y$' . $options['cost'] . '$' . $options['salt'] . '$');
+    }
+
     if ($algorithm === NEL_PASSWORD_SHA256)
     {
-        return crypt($password, '$5$rounds=' . CRYPT_SHA_COST . '$' . $options['salt'] . '$');
+        return crypt($password, '$5$rounds=' . $options['cost'] . '$' . $options['salt'] . '$');
     }
 
     if ($algorithm === NEL_PASSWORD_SHA512)
     {
-        return crypt($password, '$6$rounds=' . CRYPT_SHA_COST . '$' . $options['salt'] . '$');
+        return crypt($password, '$6$rounds=' . $options['cost'] . '$' . $options['salt'] . '$');
     }
 }
 
@@ -94,23 +198,20 @@ function nel_best_available_hashing()
     {
         if (USE_PASSWORD_DEFAULT)
         {
-           return PASSWORD_DEFAULT;
+            return PASSWORD_DEFAULT;
         }
         else
         {
             return PASSWORD_BCRYPT;
         }
     }
-    else if (SHA2_FALLBACK)
+    else if (defined('CRYPT_SHA512') && CRYPT_SHA512 == 1)
     {
-        if (defined('CRYPT_SHA512') && CRYPT_SHA512 == 1)
-        {
-            return NEL_PASSWORD_SHA512;
-        }
-        else if (defined('CRYPT_SHA256') && CRYPT_SHA256 == 1)
-        {
-            return NEL_PASSWORD_SHA256;
-        }
+        return NEL_PASSWORD_SHA512;
+    }
+    else if (defined('CRYPT_SHA256') && CRYPT_SHA256 == 1)
+    {
+        return NEL_PASSWORD_SHA256;
     }
     else
     {

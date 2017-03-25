@@ -115,7 +115,7 @@ function nel_render_thread_panel_thread($dataforce, $render, $thread_data, $post
         $render->add_data('comment', utf8_substr($render->retrieve_data('comment'), 0, 19) . "...");
     }
 
-    $render->add_data('host', (@inet_ntop($post_data['host'])) ? inet_ntop($post_data['host']) : 'Unknown');
+    $render->add_data('ip_address', (@inet_ntop($post_data['ip_address'])) ? inet_ntop($post_data['ip_address']) : 'Unknown');
 
     if ($post_data['post_number'] == $post_data['parent_thread'])
     {

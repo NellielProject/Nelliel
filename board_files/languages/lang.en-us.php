@@ -253,6 +253,7 @@ $lang_singular = array(
     'MANAGE_SET_FGSFDS' => 'Use FGSFDS field for commands (noko, sage, etc) instead of the e-mail field',  // Use the FGSFDS field
     'MANAGE_SET_FGSFDS_NAME' => 'Name of the FGSFDS field',  // Name of the FGSFDS field
     'MANAGE_SET_LANGUAGE' => 'Set language for the board',  // Board language
+    'MANAGE_SET_FILE_SHA1' => 'Calculate and store SHA1 hash for files.',  // Calculate SHA1 hash for files
 
 
     'MANAGE_SET_ALW_GF' => 'Graphics files',  // Allow graphics files

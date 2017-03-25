@@ -201,7 +201,7 @@ function nel_delete_content($dataforce, $sub, $type)
     }
     else
     {
-        $flag = password_verify($dataforce['pass'], $post_data['password']);
+        $flag = hash_equals($post_data['password'], $dataforce['pass']); // Must be fixt!!!
         $temp = TRUE;
     }
 
@@ -296,8 +296,6 @@ function nel_delete_content($dataforce, $sub, $type)
             }
         }
     }
-
-    nel_cache_links();
 
     if (!empty($_SESSION))
     {

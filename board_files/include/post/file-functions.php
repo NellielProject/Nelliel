@@ -2,10 +2,7 @@
 
 function nel_process_file_info()
 {
-    global $enabled_types;
-
     $files = array();
-    $filetypes_loaded = FALSE;
     $file_count = 1;
 
     foreach ($_FILES as $entry => $file)
@@ -20,55 +17,22 @@ function nel_process_file_info()
 
         nel_check_upload_errors($file, $files);
 
-        if (!$filetypes_loaded)
-        {
-            include INCLUDE_PATH . 'filetype.php';
-            $filetypes_loaded = TRUE;
-        }
-
-        preg_match('#[0-9]+$#', $entry, $matches);
-        $file_order = $matches[0];
-
         // Grab/strip the file extension
         $info = pathinfo($file['name']);
         $new_file['ext'] = $info['extension'];
         $new_file['filename'] = $info['filename'];
         $new_file['fullname'] = $info['basename'];
+        $new_file['dest'] = $file['tmp_name'];
+        $new_file['filesize'] = $file['size'];
+        $new_file = nel_check_for_existing_file($new_file, $files);
+        $new_file = nel_get_filetype($new_file, $files);
+        preg_match('#[0-9]+$#', $entry, $matches);
+        $file_order = $matches[0];
         $new_file['dest'] = SRC_PATH . $file['name'] . '.tmp';
         move_uploaded_file($file['tmp_name'], $new_file['dest']);
         chmod($new_file['dest'], 0644);
-        $new_file['fsize'] = filesize($new_file['dest']);
-        $test_ext = utf8_strtolower($new_file['ext']);
-        $file_test = file_get_contents($new_file['dest'], NULL, NULL, 0, 65535);
-
-        if (!array_key_exists($test_ext, $filetypes))
-        {
-            nel_derp(21, array('origin' => 'POST', 'bad-filename' => $new_file['fullname'],
-                'files' => array($new_file)));
-        }
-
-        if (!$enabled_types[$filetypes[$test_ext]['supertype']]['ENABLE'] ||
-             !$enabled_types[$filetypes[$test_ext]['supertype']][$filetypes[$test_ext]['subtype']])
-        {
-            nel_derp(6, array('origin' => 'POST', 'bad-filename' => $new_file['fullname'],
-                'files' => array($new_file)));
-        }
-
-        if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test))
-        {
-            $new_file['supertype'] = $filetypes[$test_ext]['supertype'];
-            $new_file['subtype'] = $filetypes[$test_ext]['subtype'];
-            $new_file['mime'] = $filetypes[$test_ext]['mime'];
-        }
-        else
-        {
-            nel_derp(18, array('origin' => 'POST', 'bad-filename' => $new_file['fullname'],
-                'files' => array($files[$i])));
-        }
-
         $new_file['source'] = $_POST['sauce' . $file_order];
         $new_file['license'] = $_POST['loldrama' . $file_order];
-
         array_push($files, $new_file);
 
         if ($file_count == BS_MAX_POST_FILES)
@@ -120,6 +84,66 @@ function nel_check_upload_errors($file, $files)
     {
         nel_derp(27, $error_data);
     }
+}
+
+function nel_check_for_existing_file($file, $files)
+{
+    $dbh = nel_get_db_handle();
+    $file['md5'] = hash_file('md5', $file['dest'], FALSE);
+    $file['sha1'] = hash_file('sha1', $file['dest'], FALSE);
+
+    if(BS1_USE_SHA256_FILE)
+    {
+        $file['sha256'] = hash_file('sha256', $file['dest'], FALSE);
+    }
+
+    nel_banned_hash($file['md5'], $files);
+    $prepared = $dbh->prepare('SELECT post_ref FROM ' . FILE_TABLE . ' WHERE sha1=? LIMIT 1');
+    $prepared->bindParam(1, $file['sha1'], PDO::PARAM_STR);
+    $prepared->execute();
+
+    if ($prepared->fetchColumn())
+    {
+        $prepared->closeCursor();
+        nel_derp(12, array('origin' => 'POST', 'bad-filename' => $file['fullname'], 'files' => $files));
+    }
+
+    $prepared->closeCursor();
+
+    return $file;
+}
+
+function nel_get_filetype($file, $files)
+{
+    global $enabled_types, $filetypes;
+    $test_ext = utf8_strtolower($file['ext']);
+    $file_test = file_get_contents($file['dest'], NULL, NULL, 0, 65535);
+
+    if (!array_key_exists($test_ext, $filetypes))
+    {
+        nel_derp(21, array('origin' => 'POST', 'bad-filename' => $file['fullname'],
+        'files' => $files));
+    }
+
+    if (!$enabled_types[$filetypes[$test_ext]['supertype']]['ENABLE'] ||
+    !$enabled_types[$filetypes[$test_ext]['supertype']][$filetypes[$test_ext]['subtype']])
+    {
+        nel_derp(6, array('origin' => 'POST', 'bad-filename' => $file['fullname'], 'files' => $files));
+    }
+
+    if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test))
+    {
+        $file['supertype'] = $filetypes[$test_ext]['supertype'];
+        $file['subtype'] = $filetypes[$test_ext]['subtype'];
+        $file['mime'] = $filetypes[$test_ext]['mime'];
+    }
+    else
+    {
+        nel_derp(18, array('origin' => 'POST', 'bad-filename' => $file['fullname'],
+        'files' => $files));
+    }
+
+    return $file;
 }
 
 function nel_generate_thumbnails($files, $srcpath, $thumbpath)
