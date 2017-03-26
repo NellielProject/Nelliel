@@ -1,19 +1,28 @@
 <?php
 
-function nel_primary_key_def()
+function nel_primary_key_def($auto)
 {
+    $def = 'INTEGER NOT NULL PRIMARY KEY';
+
+    if(!$auto)
+    {
+        return $def;
+    }
+
     if (SQLTYPE === 'MYSQL')
     {
-        return "INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT";
+        $def = "INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT";
     }
     else if (SQLTYPE === 'POSTGRES')
     {
-        return "SERIAL PRIMARY KEY";
+        $def ="SERIAL PRIMARY KEY";
     }
     else if(SQLTYPE === 'SQLITE')
     {
-        return "INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT";
+        $def ="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT";
     }
+
+    return $def;
 }
 
 function nel_table_options()
@@ -33,23 +42,29 @@ function nel_table_options()
     return $options . ';';
 }
 
-function nel_create_posts_table($table_name, $auto)
+function nel_create_table_query($schema, $table_name)
 {
+    $dbh = nel_get_db_handle();
+
     if(nel_table_exists($table_name))
     {
-        return;
+        return false;
     }
 
-    $dbh = nel_get_db_handle();
-    $primary_key_def = 'INTEGER NOT NULL PRIMARY KEY';
+    $result = $dbh->query($schema);
 
-    if ($auto)
+    if (!$result)
     {
-        $primary_key_def = nel_primary_key_def();
+        nel_table_fail($table_name);
     }
 
-    $options = nel_table_options();
+    return $result;
+}
 
+function nel_create_posts_table($table_name, $auto)
+{
+    $primary_key_def = nel_primary_key_def($auto);
+    $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
         "post_number"       ' . $primary_key_def . ',
@@ -75,23 +90,12 @@ function nel_create_posts_table($table_name, $auto)
         "post_hash"         CHAR(40) DEFAULT NULL
     ) ' . $options . ';';
 
-    $result = $dbh->query($schema);
-    print_r($dbh->errorInfo());
-    if (!$result)
-    {
-        nel_table_fail($table_name);
-    }
+    $result = nel_create_table_query($schema, $table_name);
 }
 
 function nel_create_threads_table($table_name, $auto)
 {
-    if(nel_table_exists($table_name))
-    {
-        return;
-    }
-
-    $dbh = nel_get_db_handle();
-    $primary_key_def = 'INTEGER NOT NULL PRIMARY KEY';
+    $primary_key_def = nel_primary_key_def($auto);
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
@@ -108,21 +112,11 @@ function nel_create_threads_table($table_name, $auto)
         "locked"            SMALLINT NOT NULL DEFAULT 0
     ) ' . $options . ';';
 
-    $result = $dbh->query($schema);
-
-    if (!$result)
-    {
-        nel_table_fail($table_name);
-    }
+    $result = nel_create_table_query($schema, $table_name);
 }
 
 function nel_create_files_table($table_name, $auto)
 {
-    if(nel_table_exists($table_name))
-    {
-        return;
-    }
-
     $dbh = nel_get_db_handle();
     $options = nel_table_options();
     $schema = '
@@ -150,25 +144,19 @@ function nel_create_files_table($table_name, $auto)
         "extra_meta"        TEXT DEFAULT NULL
     ) ' . $options . ';';
 
-    $dbh->query('CREATE INDEX index_md5 ON ' . $table_name . ' (md5);');
-    $dbh->query('CREATE INDEX index_sha1 ON ' . $table_name . ' (sha1);');
-    $dbh->query('CREATE INDEX index_sha256 ON ' . $table_name . ' (sha256);');
-    $result = $dbh->query($schema);
 
-    if (!$result)
+    $result = nel_create_table_query($schema, $table_name);
+
+    if ($result)
     {
-        nel_table_fail($table_name);
+        $dbh->query('CREATE INDEX index_md5 ON ' . $table_name . ' (md5);');
+        $dbh->query('CREATE INDEX index_sha1 ON ' . $table_name . ' (sha1);');
+        $dbh->query('CREATE INDEX index_sha256 ON ' . $table_name . ' (sha256);');
     }
 }
 
 function nel_create_external_table($table_name, $auto)
 {
-    if(nel_table_exists($table_name))
-    {
-        return;
-    }
-
-    $dbh = nel_get_db_handle();
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
@@ -181,28 +169,12 @@ function nel_create_external_table($table_name, $auto)
         "license"           VARCHAR(255) DEFAULT NULL
     ) ' . $options . ';';
 
-    $result = $dbh->query($schema);
-
-    if (!$result)
-    {
-        nel_table_fail($table_name);
-    }
+    $result = nel_create_table_query($schema, $table_name);
 }
 
 function nel_create_bans_table($table_name, $auto)
 {
-    if(nel_table_exists($table_name))
-    {
-        return;
-    }
-
-    $dbh = nel_get_db_handle();
-
-    if ($auto)
-    {
-        $primary_key_def = nel_primary_key_def();
-    }
-
+    $primary_key_def = nel_primary_key_def($auto);
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
@@ -218,22 +190,11 @@ function nel_create_bans_table($table_name, $auto)
         "appeal_status"     SMALLINT NOT NULL DEFAULT 0
     ) ' . $options . ';';
 
-    $result = $dbh->query($schema);
-
-    if (!$result)
-    {
-        nel_table_fail($table_name);
-    }
+    $result = nel_create_table_query($schema, $table_name);
 }
 
 function nel_create_config_table($table_name, $auto)
 {
-    if(nel_table_exists($table_name))
-    {
-        return;
-    }
-
-    $dbh = nel_get_db_handle();
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
@@ -243,14 +204,63 @@ function nel_create_config_table($table_name, $auto)
         "setting"           VARCHAR(255) DEFAULT NULL
     ) ' . $options . ';';
 
-    $result = $dbh->query($schema);
-
-    if (!$result)
-    {
-        nel_table_fail($table_name);
-    }
-
+    $result = nel_create_table_query($schema, $table_name);
     nel_insert_config_defaults();
+}
+
+function nel_create_staff_table($table_name, $auto)
+{
+    $options = nel_table_options();
+    $schema = '
+    CREATE TABLE ' . $table_name . ' (
+        "staff_id"          VARCHAR(255) DEFAULT NULL,
+        "staff_password"    VARCHAR(255) DEFAULT NULL,
+        "staff_role"        VARCHAR(255) DEFAULT NULL,
+        "active"            SMALLINT NOT NULL DEFAULT 0
+    ) ' . $options . ';';
+
+    $result = nel_create_table_query($schema, $table_name);
+}
+
+function nel_create_roles_table($table_name, $auto)
+{
+    $options = nel_table_options();
+    $schema = '
+    CREATE TABLE ' . $table_name . ' (
+        "role_id"           VARCHAR(255) DEFAULT NULL,
+        "role_title"        VARCHAR(255) DEFAULT NULL,
+        "role_level"        SMALLINT NOT NULL DEFAULT 0,
+        "capcode_text"      VARCHAR(255) DEFAULT NULL,
+        "posting_tripcode"  VARCHAR(255) DEFAULT NULL,
+        "perm_set"          VARCHAR(255) DEFAULT NULL,
+    ) ' . $options . ';';
+
+    $result = nel_create_table_query($schema, $table_name);
+}
+
+function nel_create_staff_perms_table($table_name, $auto)
+{
+    $options = nel_table_options();
+    $schema = '
+    CREATE TABLE ' . $table_name . ' (
+        "set_id"            VARCHAR(255) DEFAULT NULL,
+        "set_name"          VARCHAR(255) DEFAULT NULL,
+        "board_config"      SMALLINT NOT NULL DEFAULT 0,
+        "staff_config"      SMALLINT NOT NULL DEFAULT 0,
+        "bans_add"          SMALLINT NOT NULL DEFAULT 0,
+        "bans_modify"       SMALLINT NOT NULL DEFAULT 0,
+        "bans_remove"       SMALLINT NOT NULL DEFAULT 0,
+        "posts_modify"      SMALLINT NOT NULL DEFAULT 0,
+        "posts_remove"      SMALLINT NOT NULL DEFAULT 0,
+        "post_anon"         SMALLINT NOT NULL DEFAULT 0,
+        "post_named"        SMALLINT NOT NULL DEFAULT 0,
+        "post_when_locked"  SMALLINT NOT NULL DEFAULT 0,
+        "regen_caches"      SMALLINT NOT NULL DEFAULT 0,
+        "regen_index"       SMALLINT NOT NULL DEFAULT 0,
+        "regen_thread"      SMALLINT NOT NULL DEFAULT 0,
+    ) ' . $options . ';';
+
+    $result = nel_create_table_query($schema, $table_name);
 }
 
 function nel_insert_config_defaults()
@@ -361,68 +371,4 @@ function nel_insert_config_defaults()
                         ('filetype_allow_r', 'enable_iso', ''),
                         ('filetype_allow_r', 'enable_dmg', '')
                         ");
-}
-
-function nel_create_staff_table($table_name, $auto)
-{
-    if(nel_table_exists($table_name))
-    {
-        return;
-    }
-
-    $dbh = nel_get_db_handle();
-    $options = nel_table_options();
-    $schema = '
-    CREATE TABLE ' . $table_name . ' (
-        "staff_id"          VARCHAR(255) DEFAULT NULL,
-        "staff_password"    VARCHAR(255) DEFAULT NULL,
-        "capcode"           VARCHAR(255) DEFAULT NULL,
-        "perm_set"          VARCHAR(255) DEFAULT NULL,
-        "active"            SMALLINT NOT NULL DEFAULT 0
-    ) ' . $options . ';';
-
-    $result = $dbh->query($schema);
-
-    if (!$result)
-    {
-        nel_table_fail($table_name);
-    }
-
-    nel_insert_config_defaults();
-}
-
-function nel_create_staff_perms_table($table_name, $auto)
-{
-    if(nel_table_exists($table_name))
-    {
-        return;
-    }
-
-    $dbh = nel_get_db_handle();
-    $options = nel_table_options();
-    $schema = '
-    CREATE TABLE ' . $table_name . ' (
-        "set_id"            VARCHAR(255) DEFAULT NULL,
-        "board_config"      SMALLINT NOT NULL DEFAULT 0,
-        "staff_config"      SMALLINT NOT NULL DEFAULT 0,
-        "bans_add"          SMALLINT NOT NULL DEFAULT 0,
-        "bans_modify"       SMALLINT NOT NULL DEFAULT 0,
-        "bans_remove"       SMALLINT NOT NULL DEFAULT 0,
-        "posts_modify"      SMALLINT NOT NULL DEFAULT 0,
-        "posts_remove"      SMALLINT NOT NULL DEFAULT 0,
-        "post_as_staff"     SMALLINT NOT NULL DEFAULT 0,
-        "post_as_named"     SMALLINT NOT NULL DEFAULT 0,
-        "regen_caches"      SMALLINT NOT NULL DEFAULT 0,
-        "regen_index"       SMALLINT NOT NULL DEFAULT 0,
-        "regen_thread"      SMALLINT NOT NULL DEFAULT 0,
-    ) ' . $options . ';';
-
-    $result = $dbh->query($schema);
-
-    if (!$result)
-    {
-        nel_table_fail($table_name);
-    }
-
-    nel_insert_config_defaults();
 }
