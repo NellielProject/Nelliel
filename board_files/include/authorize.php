@@ -10,92 +10,201 @@ if (!defined('NELLIEL_VERSION'))
 class nel_authorization
 {
     private $authorized = array();
+    private $dbh;
+    private $staff = array();
 
     function __construct()
     {
         // We need a check if this exists, etc.
-        include BOARD_FILES . 'auth_data.nel.php';
-        $this->authorized = $authorized;
+        //include BOARD_FILES . 'auth_data.nel.php';
+        //$this->authorized = $authorized;
+        $this->dbh = nel_get_db_handle();
     }
 
-    private function key_exists($key)
+    private function user_exists($user)
     {
-        return array_key_exists($key, $this->authorized);
+        return array_key_exists($user, $this->authorized);
     }
 
-    public function is_authorized($user, $setting)
+    private function get_user_data($user)
     {
-        if (is_boolean($this->authorized[$user][$setting]))
+        $result = $this->dbh->query('SELECT * FROM "' . USER_TABLE . '" WHERE "user_id" = \'' . $user . '\';');
+        return $result->fetch(PDO::FETCH_ASSOC);
+    }
+
+    private function get_role_data($role)
+    {
+        $result = $this->dbh->query('SELECT * FROM "' . ROLES_TABLE . '" WHERE "role_id" = \'' . $role . '\';');
+        return $result->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function set_up_user($user)
+    {
+        $info = array();
+        $user_data = $this->get_user_data($user);
+        $role_data = $this->get_role_data($user_data['role_id']);
+
+        foreach ($user_data as $key => $value)
         {
-            return $this->authorized[$user][$setting];
+            if ($key != 'role_id')
+            {
+                $info['info'][$key] = $value;
+            }
         }
 
-        return FALSE;
+        foreach ($role_data as $key => $value)
+        {
+            if (substr($key, 0, 5) === 'perm_')
+            {
+                $info['perms'][$key] = ($value) ? true : false;
+            }
+            else
+            {
+                $info['role'][$key] = $value;
+            }
+        }
+
+        $info['changed'] = false;
+        $this->authorized[$user] = $info;
     }
 
-    public function get_user_auth($user)
+    public function get_user($user)
     {
-        if ($this->key_exists($user))
+        if ($this->user_exists($user))
         {
             return $this->authorized[$user];
         }
 
-        return FALSE;
+        return false;
     }
 
-    public function get_user_setting($user, $setting)
+    public function get_user_info($user, $info)
     {
-        if ($this->key_exists($user))
+        if ($this->user_exists($user))
         {
-            return $this->authorized[$user]['settings'][$setting];
+            return $this->authorized[$user]['info'][$info];
         }
 
-        return FALSE;
+        return false;
+    }
+
+    public function get_user_role($user, $role)
+    {
+        if ($this->user_exists($user))
+        {
+            return $this->authorized[$user]['role'][$role];
+        }
+
+        return false;
     }
 
     public function get_user_perm($user, $perm)
     {
-        if ($this->key_exists($user))
+        if ($this->user_exists($user) && is_bool($this->authorized[$user]['perms'][$perm]))
         {
             return $this->authorized[$user]['perms'][$perm];
         }
 
-        return FALSE;
+        return false;
     }
 
-    public function update_user_auth($user, $update)
+    public function update_user($user, $update)
     {
         $this->authorized[$user] = $update;
+        $this->user_updated($user);
     }
 
-    public function update_user_setting($user, $setting, $update)
+    public function update_user_info($user, $info, $update)
     {
-        return $this->authorized[$user]['settings'][$setting] = $update;
+        $this->authorized[$user][$info] = $update;
+        $this->user_updated($user);
+    }
+
+    public function update_user_role($user, $role, $update)
+    {
+        $this->authorized[$user]['role'][$role] = $update;
+        $this->user_updated($user);
     }
 
     public function update_user_perm($user, $perm, $update)
     {
-        return $this->authorized[$user]['perms'][$perm] = $update;
+        $this->authorized[$user]['perms'][$perm] = $update;
+        $this->user_updated($user);
     }
 
-    public function remove_user_auth($user)
+    public function remove_user($user)
     {
-        if ($this->key_exists($user))
+        if ($this->user_exists($user))
         {
+            $this->dbh->query('DELETE FROM "' . USER_TABLE . '" WHERE "user_id" = \'' .
+                 $this->authorized[$user]['user_id'] . '\';');
+            $this->dbh->query('DELETE FROM "' . ROLE_TABLE . '" WHERE "role_id" = \'' .
+                 $this->authorized[$user]['role']['role_id'] . '\';');
             unset($this->authorized[$user]);
+            return true;
         }
+
+        return false;
     }
 
-    public function get_blank_settings()
+    private function user_updated($user)
     {
-        return array('settings' => array('staff_password' => '', 'staff_type' => '', 'staff_trip' => ''), 'perms' => array('perm_config' => FALSE, 'perm_staff_panel' => FALSE, 'perm_ban_panel' => FALSE, 'perm_thread_panel' => FALSE, 'perm_mod_mode' => FALSE, 'perm_ban' => FALSE, 'perm_delete' => FALSE, 'perm_post' => FALSE, 'perm_post_anon' => FALSE, 'perm_sticky' => FALSE, 'perm_update_pages' => FALSE, 'perm_update_cache' => FALSE));
+        $this->authorized[$user]['changed'] = true;
     }
 
-    public function write_auth_file()
+    private function save_user($user)
     {
-        $new_auth = '<?php $authorized = ' . var_export($this->authorized) . '?>';
-        nel_write_file(FILES_PATH . '/auth_data.nel.php', $new_auth, 0644);
+        $user_data = $this->authorized[$user];
+
+        if (!$user_data['changed'])
+        {
+            return;
+        }
+
+        $update_user = '';
+        $update_role = '';
+        $bind_user = '';
+        $bind_role = '';
+
+        foreach ($user_data as $key => $value)
+        {
+            if ($isset($key) && $key !== 'changed')
+            {
+                if($key === 'role' || $key === 'perms')
+                {
+                    foreach ($key as $key2 => $value2)
+                    {
+                        $update_role .= '"' . $key2 . '" = :' . $key2 . ', ';
+                        $bind_role[$key2] = $value2;
+                    }
+                }
+                else
+                {
+                    $update_user .= '"' . $key . '" = :' . $key . ', ';
+                    $bind_user[':' . $key] = $value;
+                }
+            }
+        }
+
+        $prepared = $this->dbh->prepare('UPDATE "' . USER_TABLE . '" WHERE "user_id" = \'' .
+             $this->authorized[$user]['user_id'] . '\' SET ' . $update_user . ';');
+
+        foreach ($bind_user as $key => $value)
+        {
+            $prepared->bindValue($key, $value);
+        }
+
+        $prepared->execute();
+
+        $prepared = $this->dbh->prepare('UPDATE "' . ROLES_TABLE . '" WHERE "role_id" = \'' .
+        $this->authorized[$user]['role']['role_id'] . '\' SET ' . $update_role . ';');
+
+        foreach ($bind_role as $key => $value)
+        {
+            $prepared->bindValue($key, $value);
+        }
+
+        $prepared->execute();
     }
 }
 
-?>

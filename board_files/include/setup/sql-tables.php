@@ -1,28 +1,41 @@
 <?php
 
-function nel_primary_key_def($auto)
-{
-    $def = 'INTEGER NOT NULL PRIMARY KEY';
+//
+// Because auto increment isn't really standard and everyone has to be a bit different
+// Pass $int_column as SMALLINT, INTEGER or BIGINT. This is basically just to deal with Postgres
+//
 
-    if(!$auto)
-    {
-        return $def;
-    }
+function nel_autoincrement_column($int_column)
+{
+    $auto = '';
 
     if (SQLTYPE === 'MYSQL')
     {
-        $def = "INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT";
+        $auto = 'AUTO_INCREMENT';
     }
     else if (SQLTYPE === 'POSTGRES')
     {
-        $def ="SERIAL PRIMARY KEY";
+        if($int_column === 'SMALLINT')
+        {
+            $int_column = 'SMALLSERIAL';
+        }
+
+        if($int_column === 'INTEGER')
+        {
+            $int_column = 'SERIAL';
+        }
+
+        if($int_column === 'BIGINT')
+        {
+            $int_column = 'BIGSERIAL';
+        }
     }
     else if(SQLTYPE === 'SQLITE')
     {
-        $def ="INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT";
+        $auto = 'AUTOINCREMENT';
     }
 
-    return $def;
+    return $int_column . ' ' . $auto;
 }
 
 function nel_table_options()
@@ -55,19 +68,20 @@ function nel_create_table_query($schema, $table_name)
 
     if (!$result)
     {
+        print_r($dbh->errorInfo());
         nel_table_fail($table_name);
     }
 
     return $result;
 }
 
-function nel_create_posts_table($table_name, $auto)
+function nel_create_posts_table($table_name)
 {
-    $primary_key_def = nel_primary_key_def($auto);
+    $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "post_number"       ' . $primary_key_def . ',
+        "post_number"       ' . $auto_inc . ' NOT NULL PRIMARY KEY,
         "parent_thread"     INTEGER NOT NULL DEFAULT 0,
         "poster_name"       VARCHAR(255) DEFAULT NULL,
         "post_password"     VARCHAR(255) DEFAULT NULL,
@@ -93,13 +107,12 @@ function nel_create_posts_table($table_name, $auto)
     $result = nel_create_table_query($schema, $table_name);
 }
 
-function nel_create_threads_table($table_name, $auto)
+function nel_create_threads_table($table_name)
 {
-    $primary_key_def = nel_primary_key_def($auto);
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "thread_id"         ' . $primary_key_def . ',
+        "thread_id"         INTEGER NOT NULL PRIMARY KEY,
         "first_post"        INTEGER NOT NULL DEFAULT 0,
         "last_post"         INTEGER NOT NULL DEFAULT 0,
         "total_files"       INTEGER NOT NULL DEFAULT 0,
@@ -115,7 +128,7 @@ function nel_create_threads_table($table_name, $auto)
     $result = nel_create_table_query($schema, $table_name);
 }
 
-function nel_create_files_table($table_name, $auto)
+function nel_create_files_table($table_name)
 {
     $dbh = nel_get_db_handle();
     $options = nel_table_options();
@@ -155,7 +168,7 @@ function nel_create_files_table($table_name, $auto)
     }
 }
 
-function nel_create_external_table($table_name, $auto)
+function nel_create_external_table($table_name)
 {
     $options = nel_table_options();
     $schema = '
@@ -172,13 +185,13 @@ function nel_create_external_table($table_name, $auto)
     $result = nel_create_table_query($schema, $table_name);
 }
 
-function nel_create_bans_table($table_name, $auto)
+function nel_create_bans_table($table_name)
 {
-    $primary_key_def = nel_primary_key_def($auto);
+    $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "ban_id"            ' . $primary_key_def . ',
+        "ban_id"            ' . $auto_inc . ' NOT NULL PRIMARY KEY,
         "type"              VARCHAR(255) DEFAULT NULL,
         "ip_address"        VARCHAR(45) DEFAULT NULL,
         "name"              VARCHAR(255) DEFAULT NULL,
@@ -193,14 +206,14 @@ function nel_create_bans_table($table_name, $auto)
     $result = nel_create_table_query($schema, $table_name);
 }
 
-function nel_create_config_table($table_name, $auto)
+function nel_create_config_table($table_name)
 {
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
         "config_type"       VARCHAR(255) DEFAULT NULL,
         "data_type"         SMALLINT NOT NULL DEFAULT 0,
-        "config_name"       VARCHAR(255) DEFAULT NULL,
+        "config_name"       VARCHAR(255) DEFAULT NULL UNIQUE,
         "setting"           VARCHAR(255) DEFAULT NULL
     ) ' . $options . ';';
 
@@ -208,56 +221,44 @@ function nel_create_config_table($table_name, $auto)
     nel_insert_config_defaults();
 }
 
-function nel_create_staff_table($table_name, $auto)
+function nel_create_user_table($table_name)
 {
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "staff_id"          VARCHAR(255) DEFAULT NULL,
-        "staff_password"    VARCHAR(255) DEFAULT NULL,
-        "staff_role"        VARCHAR(255) DEFAULT NULL,
-        "active"            SMALLINT NOT NULL DEFAULT 0
-    ) ' . $options . ';';
-
-    $result = nel_create_table_query($schema, $table_name);
-}
-
-function nel_create_roles_table($table_name, $auto)
-{
-    $options = nel_table_options();
-    $schema = '
-    CREATE TABLE ' . $table_name . ' (
+        "user_id"          VARCHAR(255) DEFAULT NULL UNIQUE,
+        "user_password"    VARCHAR(255) DEFAULT NULL,
         "role_id"           VARCHAR(255) DEFAULT NULL,
-        "role_title"        VARCHAR(255) DEFAULT NULL,
-        "role_level"        SMALLINT NOT NULL DEFAULT 0,
-        "capcode_text"      VARCHAR(255) DEFAULT NULL,
-        "posting_tripcode"  VARCHAR(255) DEFAULT NULL,
-        "perm_set"          VARCHAR(255) DEFAULT NULL,
+        "active"            SMALLINT NOT NULL DEFAULT 0,
+        "failed_logins"     SMALLINT NOT NULL DEFAULT 0,
+        "last_failed_login" INT NOT NULL DEFAULT 0
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
 }
 
-function nel_create_staff_perms_table($table_name, $auto)
+function nel_create_roles_table($table_name)
 {
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "set_id"            VARCHAR(255) DEFAULT NULL,
-        "set_name"          VARCHAR(255) DEFAULT NULL,
-        "board_config"      SMALLINT NOT NULL DEFAULT 0,
-        "staff_config"      SMALLINT NOT NULL DEFAULT 0,
-        "bans_add"          SMALLINT NOT NULL DEFAULT 0,
-        "bans_modify"       SMALLINT NOT NULL DEFAULT 0,
-        "bans_remove"       SMALLINT NOT NULL DEFAULT 0,
-        "posts_modify"      SMALLINT NOT NULL DEFAULT 0,
-        "posts_remove"      SMALLINT NOT NULL DEFAULT 0,
-        "post_anon"         SMALLINT NOT NULL DEFAULT 0,
-        "post_named"        SMALLINT NOT NULL DEFAULT 0,
-        "post_when_locked"  SMALLINT NOT NULL DEFAULT 0,
-        "regen_caches"      SMALLINT NOT NULL DEFAULT 0,
-        "regen_index"       SMALLINT NOT NULL DEFAULT 0,
-        "regen_thread"      SMALLINT NOT NULL DEFAULT 0,
+        "role_id"               VARCHAR(255) DEFAULT NULL UNIQUE,
+        "role_title"            VARCHAR(255) DEFAULT NULL,
+        "role_level"            SMALLINT NOT NULL DEFAULT 0,
+        "capcode_text"          VARCHAR(255) DEFAULT NULL,
+        "posting_tripcode"      VARCHAR(255) DEFAULT NULL,
+        "perm_board_config"     SMALLINT NOT NULL DEFAULT 0,
+        "perm_staff_add"        SMALLINT NOT NULL DEFAULT 0,
+        "perm_staff_modify"     SMALLINT NOT NULL DEFAULT 0,
+        "perm_ban_add"          SMALLINT NOT NULL DEFAULT 0,
+        "perm_ban_modify"       SMALLINT NOT NULL DEFAULT 0,
+        "perm_post_modify"      SMALLINT NOT NULL DEFAULT 0,
+        "perm_post_anon"        SMALLINT NOT NULL DEFAULT 0,
+        "perm_post_named"       SMALLINT NOT NULL DEFAULT 0,
+        "perm_post_locked"      SMALLINT NOT NULL DEFAULT 0,
+        "perm_regen_caches"     SMALLINT NOT NULL DEFAULT 0,
+        "perm_regen_index"      SMALLINT NOT NULL DEFAULT 0,
+        "perm_regen_thread"     SMALLINT NOT NULL DEFAULT 0
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);

@@ -53,11 +53,6 @@ define('POSTGRES_ENCODING', 'UTF8'); // The character encoding to use. See notes
 // You must make sure 'POSTGRES_ENCODING' matches or is compatible with what the database uses!
 
 
-//
-// Leave everything below this point alone unless you have a good reason to mess with it.
-//
-
-
 define('POST_TABLE', TABLEPREFIX . '_posts'); // Table used for post data
 define('THREAD_TABLE', TABLEPREFIX . '_threads'); // Table used for thread data
 define('FILE_TABLE', TABLEPREFIX . '_files'); // Table used for file data
@@ -68,3 +63,6 @@ define('ARCHIVE_FILE_TABLE', TABLEPREFIX . '_archive_files'); // Stores archived
 define('ARCHIVE_EXTERNAL_TABLE', TABLEPREFIX . '_archive_external'); // Stores archived external content
 define('CONFIG_TABLE', TABLEPREFIX . '_config'); // Table to store board configuration. Best to leave it as-is unless you really need to change it
 define('BAN_TABLE', TABLEPREFIX . '_bans'); // Table containing ban info
+define('USER_TABLE', TABLEPREFIX . '_users'); // Table used for post data
+define('ROLES_TABLE', TABLEPREFIX . '_roles'); // Table used for post data
+define('PERMS_TABLE', TABLEPREFIX . '_perms'); // Table used for post data

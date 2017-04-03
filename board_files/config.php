@@ -44,12 +44,6 @@ define('PHP_SELF', 'imgboard.php'); // Name of main script file
 define('PHP_SELF2', 'imgboard'); // Name of main html file
 define('PHP_EXT', '.html'); // Extension used for board pages
 
-
-//
-// Leave everything below this point alone unless you have a good reason to mess with it.
-//
-
-
 define('BASE_PATH', realpath('./')); // Base path for script
 define('SQLITE_DB_DEFAULT_PATH', BASE_PATH . '/' . BOARD_FILES); // Base SQLite DB location
 define('FILES_PATH', BASE_PATH . '/' . BOARD_FILES); // Base cache path

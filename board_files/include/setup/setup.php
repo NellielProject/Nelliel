@@ -33,16 +33,18 @@ function nel_create_structure_directory($path, $directory, $perms)
 function setup_check()
 {
     $dbh = nel_get_db_handle();
-    nel_create_posts_table(POST_TABLE, true);
-    nel_create_posts_table(ARCHIVE_POST_TABLE, false);
-    nel_create_threads_table(THREAD_TABLE, false);
-    nel_create_threads_table(ARCHIVE_THREAD_TABLE, false);
-    nel_create_files_table(FILE_TABLE, false);
-    nel_create_files_table(ARCHIVE_FILE_TABLE, false);
-    nel_create_external_table(EXTERNAL_TABLE, false);
-    nel_create_external_table(ARCHIVE_EXTERNAL_TABLE, false);
-    nel_create_bans_table(BAN_TABLE, true);
-    nel_create_config_table(CONFIG_TABLE, false);
+    nel_create_posts_table(POST_TABLE);
+    nel_create_posts_table(ARCHIVE_POST_TABLE);
+    nel_create_threads_table(THREAD_TABLE);
+    nel_create_threads_table(ARCHIVE_THREAD_TABLE);
+    nel_create_files_table(FILE_TABLE);
+    nel_create_files_table(ARCHIVE_FILE_TABLE);
+    nel_create_external_table(EXTERNAL_TABLE);
+    nel_create_external_table(ARCHIVE_EXTERNAL_TABLE);
+    nel_create_bans_table(BAN_TABLE);
+    nel_create_config_table(CONFIG_TABLE);
+    nel_create_user_table(USER_TABLE);
+    nel_create_roles_table(ROLES_TABLE);
 
     nel_create_structure_directory(SRC_PATH, SRC_DIR, 0755);
     nel_create_structure_directory(THUMB_PATH, THUMB_DIR, 0755);
