@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Update ban info
 //
-function nel_update_ban($dataforce, $authorize)
+function nel_update_ban($dataforce)
 {
     $dbh = nel_get_db_handle();
     $mode = $dataforce['mode_action'];
@@ -78,6 +78,7 @@ function nel_update_ban($dataforce, $authorize)
 function nel_ban_control($dataforce, $authorize)
 {
     $dbh = nel_get_db_handle();
+    $authorize = nel_get_authorization();
     $mode = $dataforce['mode_action'];
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_panel'))

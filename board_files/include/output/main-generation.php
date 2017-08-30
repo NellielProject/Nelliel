@@ -14,7 +14,7 @@ function nel_main_nel_thread_generator($dataforce)
     $gen_data['insert_hr'] = FALSE;
     $dataforce['dotdot'] = '';
 
-    $result = $dbh->query('SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0 ORDER BY sticky desc, last_update desc');
+    $result = $dbh->query('SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0 ORDER BY sticky desc, last_bump_time desc');
     $front_page_list = $result->fetchAll(PDO::FETCH_COLUMN);
     unset($result);
 

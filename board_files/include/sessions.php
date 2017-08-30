@@ -38,14 +38,7 @@ function nel_regen_session()
 
 function nel_set_session_cookie()
 {
-    if (version_compare(PHP_VERSION, '5.2.0', '<'))
-    {
-        setcookie(session_name(), session_id(), 0, '/', '; HttpOnly');
-    }
-    else
-    {
-        setcookie(session_name(), session_id(), 0, '/', '', NULL, TRUE);
-    }
+    setcookie(session_name(), session_id(), 0, '/', '; HttpOnly');
 }
 
 //

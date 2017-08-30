@@ -17,7 +17,7 @@ function nel_update_archive_status($dataforce)
     }
 
     // Need to fetch moar data like archive status
-    $result = $dbh->query('SELECT thread_id, archive_status FROM ' . THREAD_TABLE . ' ORDER BY sticky desc, last_update desc');
+    $result = $dbh->query('SELECT thread_id, archive_status FROM ' . THREAD_TABLE . ' ORDER BY sticky desc, last_bump_time desc');
     $thread_list = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
     $start_buffer = BS_THREADS_PER_PAGE * $dataforce['max_pages'];

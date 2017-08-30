@@ -60,7 +60,8 @@ function nel_make_thread_sticky($dataforce, $sub)
 {
     $dbh = nel_get_db_handle();
     $id = $sub[1];
-    $result = $dbh->query('SELECT parent_thread,has_file,post_time FROM ' . POST_TABLE . ' WHERE post_number=' . $id . '');
+    $result = $dbh->query('SELECT parent_thread,has_file,post_time FROM ' . POST_TABLE . ' WHERE post_number=' . $id .
+         '');
     $post_data = $result->fetch(PDO::FETCH_ASSOC);
     unset($result);
 
@@ -112,6 +113,7 @@ function nel_make_post_thread($dataforce, $post_id)
         thread_id,
         first_post,
         last_post,
+        last_bump_time,
         total_files,
         last_update,
         post_count)
@@ -119,6 +121,7 @@ function nel_make_post_thread($dataforce, $post_id)
 	   (:id,
         :first,
         :last,
+        :bump
         :files,
         :time,
         1)');
@@ -126,6 +129,7 @@ function nel_make_post_thread($dataforce, $post_id)
     $prepared->bindValue(':id', $post_id, PDO::PARAM_INT);
     $prepared->bindValue(':first', $post_id, PDO::PARAM_INT);
     $prepared->bindValue(':last', $post_id, PDO::PARAM_INT);
+    $prepared->bindValue(':bump', $post_data['post_time']);
     $prepared->bindValue(':files', $post_data['file_count'], PDO::PARAM_INT);
     $prepared->bindValue(':time', $post_data['post_time'], PDO::PARAM_INT);
     $prepared->execute();
@@ -137,7 +141,8 @@ function nel_make_post_thread($dataforce, $post_id)
     if ($post_data['has_file'])
     {
         $dbh->query('UPDATE ' . FILE_TABLE . ' SET parent_thread=' . $post_id . ' WHERE post_ref=' . $post_id . '');
-        $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILE_TABLE . ' WHERE post_ref=' . $post_id);
+        $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILE_TABLE . ' WHERE post_ref=' .
+             $post_id);
         $file_data = $result->fetchAll(PDO::FETCH_ASSOC);
         unset($result);
         $file_count = count($file_data);
@@ -145,8 +150,11 @@ function nel_make_post_thread($dataforce, $post_id)
 
         while ($line < $file_count)
         {
-            nel_move_file(SRC_PATH . $post_data['parent_thread'] . '/' . $file_data[$line]['filename'] . $file_data[$line]['extension'], SRC_PATH . $post_id . '/' . $file_data[$line]['filename'] . $file_data[$line]['extension']);
-            nel_move_file(THUMB_PATH . $post_data['parent_thread'] . '/' . $file_data[$line]['preview_name'], THUMB_PATH . $post_id . '/' . $file_data[$line]['preview_name']);
+            nel_move_file(SRC_PATH . $post_data['parent_thread'] . '/' . $file_data[$line]['filename'] .
+                 $file_data[$line]['extension'], SRC_PATH . $post_id . '/' . $file_data[$line]['filename'] .
+                 $file_data[$line]['extension']);
+            nel_move_file(THUMB_PATH . $post_data['parent_thread'] . '/' . $file_data[$line]['preview_name'], THUMB_PATH .
+                 $post_id . '/' . $file_data[$line]['preview_name']);
 
             ++ $line;
         }
@@ -164,7 +172,8 @@ function nel_delete_content($dataforce, $sub, $type)
     }
 
     $flag = FALSE;
-    $result = $dbh->query('SELECT post_number,password,parent_thread,mod_post FROM ' . POST_TABLE . ' WHERE post_number=' . $id . '');
+    $result = $dbh->query('SELECT post_number,password,parent_thread,mod_post FROM ' . POST_TABLE .
+         ' WHERE post_number=' . $id . '');
     $post_data = $result->fetch(PDO::FETCH_ASSOC);
     unset($result);
 
@@ -190,7 +199,8 @@ function nel_delete_content($dataforce, $sub, $type)
                 {
                     $flag = TRUE;
                 }
-                else if ($post_data['mod_post'] === '1' && ($staff_type === 'admin' || $staff_type === 'moderator' || $staff_type === 'janitor'))
+                else if ($post_data['mod_post'] === '1' &&
+                     ($staff_type === 'admin' || $staff_type === 'moderator' || $staff_type === 'janitor'))
                 {
                     $flag = TRUE;
                 }
@@ -232,7 +242,8 @@ function nel_delete_content($dataforce, $sub, $type)
     }
     else if ($type === 'POST')
     {
-        $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILE_TABLE . ' WHERE post_ref=' . $id . '');
+        $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILE_TABLE . ' WHERE post_ref=' . $id .
+             '');
         $file_data = $result->fetchAll(PDO::FETCH_ASSOC);
         unset($result);
         $dbh->query('DELETE FROM ' . FILE_TABLE . ' WHERE post_ref=' . $id . '');
@@ -254,13 +265,21 @@ function nel_delete_content($dataforce, $sub, $type)
         else
         {
             $dbh->query('DELETE FROM ' . POST_TABLE . ' WHERE post_number=' . $id . '');
-            $result = $dbh->query('SELECT post_count FROM ' . THREAD_TABLE . ' WHERE thread_id=' . $post_data['parent_thread'] . '');
+            $result = $dbh->query('SELECT post_count FROM ' . THREAD_TABLE . ' WHERE thread_id=' .
+                 $post_data['parent_thread'] . '');
             $pcount = $result->fetch(PDO::FETCH_ASSOC);
             unset($result);
-            $result = $dbh->query('SELECT post_number,post_time FROM ' . POST_TABLE . ' WHERE parent_thread=' . $post_data['parent_thread'] . ' ORDER BY post_number desc');
+            $result = $dbh->query('SELECT post_number,post_time FROM ' . POST_TABLE . ' WHERE parent_thread=' .
+                 $post_data['parent_thread'] . ' ORDER BY post_number desc');
             $ptimes = $result->fetchAll(PDO::FETCH_ASSOC);
             unset($result);
-            $dbh->query('UPDATE ' . THREAD_TABLE . ' SET post_count=' . ($pcount['post_count'] - 1) . ', last_update=' . $ptimes[0]['post_time'] . ', last_post=' . $ptimes[0]['post_number'] . ' WHERE thread_id=' . $post_data['parent_thread'] . '');
+            $result = $dbh->query('SELECT post_number,post_time FROM ' . POST_TABLE . ' WHERE parent_thread=' .
+                 $post_data['parent_thread'] . ' AND sage=0 ORDER BY post_number desc');
+            $ptimes2 = $result->fetchAll(PDO::FETCH_ASSOC);
+            unset($result);
+            $dbh->query('UPDATE ' . THREAD_TABLE . ' SET post_count=' . ($pcount['post_count'] - 1) . ', last_update=' .
+                 $ptimes[0]['post_time'] . ', last_bump_time=' . $ptimes2[0]['post_time'] . ' last_post=' .
+                 $ptimes[0]['post_number'] . ' WHERE thread_id=' . $post_data['parent_thread'] . '');
             preg_replace('#p' . $id . 't([0-9]+)#', '', $dataforce['post_links']);
         }
     }
@@ -268,7 +287,8 @@ function nel_delete_content($dataforce, $sub, $type)
     {
         // add check for updating post as no files if they're all gone
         $fnum = $sub[2];
-        $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILE_TABLE . ' WHERE post_ref=' . $id . ' AND file_order=' . $fnum . '');
+        $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILE_TABLE . ' WHERE post_ref=' . $id .
+             ' AND file_order=' . $fnum . '');
         $file_data = $result->fetch(PDO::FETCH_ASSOC);
         unset($result);
 

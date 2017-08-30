@@ -115,6 +115,7 @@ function nel_create_threads_table($table_name)
         "thread_id"         INTEGER NOT NULL PRIMARY KEY,
         "first_post"        INTEGER NOT NULL DEFAULT 0,
         "last_post"         INTEGER NOT NULL DEFAULT 0,
+        "last_bump_time"    BIGINT NOT NULL DEFAULT 0,
         "total_files"       INTEGER NOT NULL DEFAULT 0,
         "total_external"    INTEGER NOT NULL DEFAULT 0,
         "last_update"       BIGINT NOT NULL DEFAULT 0,

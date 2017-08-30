@@ -79,6 +79,7 @@ function nel_db_insert_new_thread($thread_info, $files_count)
         thread_id,
         first_post,
         last_post,
+        last_bump_time,
         total_files,
         last_update,
         post_count)
@@ -86,6 +87,7 @@ function nel_db_insert_new_thread($thread_info, $files_count)
 	   (:id,
         :first,
         :last,
+        :bump
         :files,
         :time,
         :posts)');
@@ -93,6 +95,7 @@ function nel_db_insert_new_thread($thread_info, $files_count)
     $prepared->bindValue(':id', $thread_info['id'], PDO::PARAM_INT);
     $prepared->bindValue(':first', $thread_info['id'], PDO::PARAM_INT);
     $prepared->bindValue(':last', $thread_info['id'], PDO::PARAM_INT);
+    $prepared->bindValue(':bump', $thread_info['last_bum_time']);
     $prepared->bindValue(':files', $files_count, PDO::PARAM_INT);
     $prepared->bindValue(':time', $thread_info['last_update']);
     $prepared->bindValue(':posts', 1, PDO::PARAM_INT);
@@ -103,7 +106,8 @@ function nel_db_insert_new_thread($thread_info, $files_count)
 function nel_db_update_thread($new_post_info, $thread_info)
 {
     $dbh = nel_get_db_handle();
-    $prepared = $dbh->prepare('UPDATE ' . THREAD_TABLE . ' SET last_post=?, last_update=?, post_count=? WHERE thread_id=?');
+    $prepared = $dbh->prepare('UPDATE ' . THREAD_TABLE .
+         ' SET last_post=?, last_update=?, post_count=? WHERE thread_id=?');
     $prepared->bindParam(1, $new_post_info['post_number'], PDO::PARAM_INT);
     $prepared->bindParam(2, $thread_info['last_update'], PDO::PARAM_INT);
     $prepared->bindParam(3, $thread_info['post_count'], PDO::PARAM_INT);

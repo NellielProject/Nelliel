@@ -10,7 +10,6 @@ require_once INCLUDE_PATH . 'post/post-data.php';
 
 function nel_process_new_post($dataforce)
 {
-
     global $enabled_types, $fgsfds, $plugins, $filetypes;
     $dbh = nel_get_db_handle();
     $post_data = nel_collect_post_data();
@@ -121,12 +120,18 @@ function nel_process_new_post($dataforce)
         unset($result);
         $thread_info['last_update'] = $current_thread['last_update'];
         $thread_info['post_count'] = $current_thread['post_count'] + 1;
-        nel_db_update_thread($new_post_info, $thread_info);
 
-        if (!$fgsfds['sage'] && $current_thread['post_count'] < BS_MAX_BUMPS)
+        if ($current_thread['post_count'] < BS_MAX_BUMPS)
         {
-            $last_update = $time;
+            $thread_info['last_bump_time'] = $time;
         }
+
+        if ($fgsfds['sage'])
+        {
+            $thread_info['last_bump_time'] = $current_thread['last_bump_time'];
+        }
+
+        nel_db_update_thread($new_post_info, $thread_info);
     }
 
     $dbh->query('UPDATE ' . POST_TABLE . ' SET parent_thread=' . $thread_info['id'] . ' WHERE post_number=' .
@@ -164,7 +169,8 @@ function nel_is_post_ok($dataforce, $time)
     if ($dataforce['response_to'] !== 0)
     {
         $thread_delay = $time - (BS_REPLY_DELAY * 1000);
-        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE parent_thread = ? AND post_time > ? AND ip_address = ?');
+        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE .
+             ' WHERE parent_thread = ? AND post_time > ? AND ip_address = ?');
         $prepared->bindValue(1, $dataforce['response_to'], PDO::PARAM_INT);
         $prepared->bindValue(2, $thread_delay, PDO::PARAM_STR);
         $prepared->bindValue(3, @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);

@@ -4,6 +4,18 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+function nel_get_authorization()
+{
+    static $authorized;
+
+    if (!isset($authorized))
+    {
+        $authorized = new nel_authorization();
+    }
+
+    return $authorized;
+}
+
 //
 // Handle all the authorization functions
 //
