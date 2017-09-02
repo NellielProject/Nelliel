@@ -108,6 +108,7 @@ function nel_process_new_post($dataforce)
     {
         $thread_info['last_update'] = $time;
         $thread_info['post_count'] = 1;
+        $thread_info['last_bump_time'] = $time;
         $thread_info['id'] = $new_post_info['post_number'];
         nel_db_insert_new_thread($thread_info, $files_count);
         nel_create_thread_directories($thread_info['id']);
@@ -120,13 +121,9 @@ function nel_process_new_post($dataforce)
         unset($result);
         $thread_info['last_update'] = $current_thread['last_update'];
         $thread_info['post_count'] = $current_thread['post_count'] + 1;
+        $thread_info['last_bump_time'] = $time;
 
-        if ($current_thread['post_count'] < BS_MAX_BUMPS)
-        {
-            $thread_info['last_bump_time'] = $time;
-        }
-
-        if ($fgsfds['sage'])
+        if ($current_thread['post_count'] > BS_MAX_BUMPS || $fgsfds['sage'])
         {
             $thread_info['last_bump_time'] = $current_thread['last_bump_time'];
         }

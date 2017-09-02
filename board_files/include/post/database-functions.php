@@ -6,7 +6,7 @@ function nel_db_insert_initial_post($time, $poster_info)
     $dbh = nel_get_db_handle();
     $prepared = $dbh->prepare('INSERT INTO ' . POST_TABLE . ' (
         poster_name,
-        password,
+        post_password,
         tripcode,
         secure_tripcode,
         email,
@@ -58,6 +58,7 @@ function nel_db_insert_initial_post($time, $poster_info)
     $prepared->bindValue(':password', $poster_info['password'], PDO::PARAM_STR);
     $prepared->bindValue(':time', $time);
     $prepared->bindValue(':op', $poster_info['op'], PDO::PARAM_INT);
+
     if ($fgsfds['sage'])
     {
         $prepared->bindValue(':sage', 1, PDO::PARAM_INT);
@@ -87,7 +88,7 @@ function nel_db_insert_new_thread($thread_info, $files_count)
 	   (:id,
         :first,
         :last,
-        :bump
+        :bump,
         :files,
         :time,
         :posts)');
@@ -95,7 +96,7 @@ function nel_db_insert_new_thread($thread_info, $files_count)
     $prepared->bindValue(':id', $thread_info['id'], PDO::PARAM_INT);
     $prepared->bindValue(':first', $thread_info['id'], PDO::PARAM_INT);
     $prepared->bindValue(':last', $thread_info['id'], PDO::PARAM_INT);
-    $prepared->bindValue(':bump', $thread_info['last_bum_time']);
+    $prepared->bindValue(':bump', $thread_info['last_bump_time']);
     $prepared->bindValue(':files', $files_count, PDO::PARAM_INT);
     $prepared->bindValue(':time', $thread_info['last_update']);
     $prepared->bindValue(':posts', 1, PDO::PARAM_INT);

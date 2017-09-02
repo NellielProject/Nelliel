@@ -92,7 +92,7 @@ function nel_check_for_existing_file($file, $files)
     $file['md5'] = hash_file('md5', $file['dest'], FALSE);
     $file['sha1'] = hash_file('sha1', $file['dest'], FALSE);
 
-    if(BS1_USE_SHA256_FILE)
+    if(GENERATE_FILE_SHA256)
     {
         $file['sha256'] = hash_file('sha256', $file['dest'], FALSE);
     }

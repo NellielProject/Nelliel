@@ -129,7 +129,7 @@ function nel_get_tripcodes($post_data, $name_pieces)
     if ($name_pieces[5] !== '' || $post_data['modpost'] > 0)
     {
         $raw_trip = iconv('UTF-8', 'SHIFT_JIS//IGNORE', $name_pieces[5]);
-        $trip = hash(SECURE_TRIPCODE_ALGORITHM . TRIPCODE_SALT, $raw_trip);
+        $trip = hash(SECURE_TRIPCODE_ALGORITHM, $raw_trip . TRIPCODE_SALT);
         $trip = base64_encode(pack("H*", $trip));
         $final_trip = substr($trip, -12);
         $post_data['secure_tripcode'] = iconv('SHIFT_JIS//IGNORE', 'UTF-8', $final_trip);
