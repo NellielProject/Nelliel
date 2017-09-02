@@ -35,7 +35,7 @@ function nel_autoincrement_column($int_column)
         $auto = 'AUTOINCREMENT';
     }
 
-    return $int_column . ' ' . $auto;
+    return array($int_column, $auto);
 }
 
 function nel_table_options()
@@ -81,7 +81,7 @@ function nel_create_posts_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "post_number"       ' . $auto_inc . ' NOT NULL PRIMARY KEY,
+        "post_number"       ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "parent_thread"     INTEGER NOT NULL DEFAULT 0,
         "poster_name"       VARCHAR(255) DEFAULT NULL,
         "post_password"     VARCHAR(255) DEFAULT NULL,
@@ -104,6 +104,7 @@ function nel_create_posts_table($table_name)
         "post_hash"         CHAR(40) DEFAULT NULL
     ) ' . $options . ';';
 
+    echo $schema;
     $result = nel_create_table_query($schema, $table_name);
 }
 
@@ -192,7 +193,7 @@ function nel_create_bans_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "ban_id"            ' . $auto_inc . ' NOT NULL PRIMARY KEY,
+        "ban_id"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "type"              VARCHAR(255) DEFAULT NULL,
         "ip_address"        VARCHAR(45) DEFAULT NULL,
         "name"              VARCHAR(255) DEFAULT NULL,
