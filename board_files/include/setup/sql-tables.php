@@ -104,7 +104,6 @@ function nel_create_posts_table($table_name)
         "post_hash"         CHAR(40) DEFAULT NULL
     ) ' . $options . ';';
 
-    echo $schema;
     $result = nel_create_table_query($schema, $table_name);
 }
 
