@@ -32,7 +32,6 @@ function nel_create_structure_directory($path, $directory, $perms)
 
 function setup_check()
 {
-    $dbh = nel_get_db_handle();
     nel_create_posts_table(POST_TABLE);
     nel_create_posts_table(ARCHIVE_POST_TABLE);
     nel_create_threads_table(THREAD_TABLE);
@@ -55,18 +54,31 @@ function setup_check()
     nel_create_structure_directory(ARC_THUMB_PATH, ARCHIVE_DIR . THUMB_DIR, 0755);
     nel_create_structure_directory(ARC_PAGE_PATH, ARCHIVE_DIR . PAGE_DIR, 0755);
 
-    if ($stuff_done)
+    nel_setup_stuff_done('check_done_nochange');
+
+    if (STUFF_DONE === true)
     {
-        define('STUFF_DONE', TRUE);
-        echo '<br><br>Process completed. If there are no errors listed above then you did it right. Please wait a few seconds and you will be taken to the front page.';
-    }
-    else
-    {
-        define('STUFF_DONE', FALSE);
+        // This should go to a log or something.
+        //echo '<br><br>Process completed. If there are no errors listed above then you did it right. Please wait a few seconds and you will be taken to the front page.';
     }
 }
 
-function generate_auth_file()
+function nel_setup_stuff_done($status)
+{
+    if(!defined('STUFF_DONE'))
+    {
+        if($status === 'check_done_nochange')
+        {
+            define('STUFF_DONE', false);
+        }
+        else if(!$status !== false )
+        {
+            define('STUFF_DONE', true);
+        }
+    }
+}
+
+/*function generate_auth_file()
 {
     if (!file_exists(FILES_PATH . '/auth_data.nel.php'))
     {
@@ -112,5 +124,5 @@ $authorized = array(
             echo 'ERROR: Could not create auth file due to invalid or missing admin info. The board will probably work but you will have no administrative abilities. Check your config.php then retry installation.';
         }
     }
-}
+}*/
 ?>

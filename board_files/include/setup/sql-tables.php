@@ -4,7 +4,6 @@
 // Because auto increment isn't really standard and everyone has to be a bit different
 // Pass $int_column as SMALLINT, INTEGER or BIGINT. This is basically just to deal with Postgres
 //
-
 function nel_autoincrement_column($int_column)
 {
     $auto = '';
@@ -15,22 +14,22 @@ function nel_autoincrement_column($int_column)
     }
     else if (SQLTYPE === 'POSTGRES')
     {
-        if($int_column === 'SMALLINT')
+        if ($int_column === 'SMALLINT')
         {
             $int_column = 'SMALLSERIAL';
         }
 
-        if($int_column === 'INTEGER')
+        if ($int_column === 'INTEGER')
         {
             $int_column = 'SERIAL';
         }
 
-        if($int_column === 'BIGINT')
+        if ($int_column === 'BIGINT')
         {
             $int_column = 'BIGSERIAL';
         }
     }
-    else if(SQLTYPE === 'SQLITE')
+    else if (SQLTYPE === 'SQLITE')
     {
         $auto = 'AUTOINCREMENT';
     }
@@ -59,7 +58,7 @@ function nel_create_table_query($schema, $table_name)
 {
     $dbh = nel_get_db_handle();
 
-    if(nel_table_exists($table_name))
+    if (nel_table_exists($table_name))
     {
         return false;
     }
@@ -105,6 +104,7 @@ function nel_create_posts_table($table_name)
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
+    nel_setup_stuff_done($result);
 }
 
 function nel_create_threads_table($table_name)
@@ -127,6 +127,7 @@ function nel_create_threads_table($table_name)
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
+    nel_setup_stuff_done($result);
 }
 
 function nel_create_files_table($table_name)
@@ -158,7 +159,6 @@ function nel_create_files_table($table_name)
         "extra_meta"        TEXT DEFAULT NULL
     ) ' . $options . ';';
 
-
     $result = nel_create_table_query($schema, $table_name);
 
     if ($result)
@@ -167,6 +167,8 @@ function nel_create_files_table($table_name)
         $dbh->query('CREATE INDEX index_sha1 ON ' . $table_name . ' (sha1);');
         $dbh->query('CREATE INDEX index_sha256 ON ' . $table_name . ' (sha256);');
     }
+
+    nel_setup_stuff_done($result);
 }
 
 function nel_create_external_table($table_name)
@@ -183,7 +185,8 @@ function nel_create_external_table($table_name)
         "license"           VARCHAR(255) DEFAULT NULL
     ) ' . $options . ';';
 
-    $result = nel_create_table_query($schema, $table_name);
+   $result = nel_create_table_query($schema, $table_name);
+   nel_setup_stuff_done($result);
 }
 
 function nel_create_bans_table($table_name)
@@ -205,6 +208,7 @@ function nel_create_bans_table($table_name)
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
+    nel_setup_stuff_done($result);
 }
 
 function nel_create_config_table($table_name)
@@ -219,7 +223,13 @@ function nel_create_config_table($table_name)
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
-    nel_insert_config_defaults();
+
+    if($result !== false)
+    {
+        nel_insert_config_defaults();
+    }
+
+    nel_setup_stuff_done($result);
 }
 
 function nel_create_user_table($table_name)
@@ -227,15 +237,22 @@ function nel_create_user_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "user_id"          VARCHAR(255) DEFAULT NULL UNIQUE,
-        "user_password"    VARCHAR(255) DEFAULT NULL,
+        "user_id"           VARCHAR(255) DEFAULT NULL UNIQUE,
+        "user_password"     VARCHAR(255) DEFAULT NULL,
         "role_id"           VARCHAR(255) DEFAULT NULL,
         "active"            SMALLINT NOT NULL DEFAULT 0,
         "failed_logins"     SMALLINT NOT NULL DEFAULT 0,
-        "last_failed_login" INT NOT NULL DEFAULT 0
+        "last_failed_login" BIGINT NOT NULL DEFAULT 0
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
+
+    if($result !== false)
+    {
+        nel_insert_default_admin();
+    }
+
+    nel_setup_stuff_done($result);
 }
 
 function nel_create_roles_table($table_name)
@@ -245,7 +262,6 @@ function nel_create_roles_table($table_name)
     CREATE TABLE ' . $table_name . ' (
         "role_id"               VARCHAR(255) DEFAULT NULL UNIQUE,
         "role_title"            VARCHAR(255) DEFAULT NULL,
-        "role_level"            SMALLINT NOT NULL DEFAULT 0,
         "capcode_text"          VARCHAR(255) DEFAULT NULL,
         "posting_tripcode"      VARCHAR(255) DEFAULT NULL,
         "perm_board_config"     SMALLINT NOT NULL DEFAULT 0,
@@ -263,12 +279,63 @@ function nel_create_roles_table($table_name)
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
+
+    if($result !== false)
+    {
+        nel_insert_role_defaults();
+    }
+
+    nel_setup_stuff_done($result);
+}
+
+function nel_insert_role_defaults()
+{
+    $dbh = nel_get_db_handle();
+    $result = $dbh->query("SELECT 1 FROM " . ROLES_TABLE . " WHERE role_id='ADMIN'");
+
+    if(!$result->fetch())
+    {
+        return false;
+    }
+
+    $result = $dbh->query("INSERT INTO " . ROLES_TABLE . "
+    (role_id, role_title, capcode_text, perm_board_config, perm_staff_add, perm_staff_modify, perm_post_anon,
+    perm_ban_add, perm_ban_modify, perm_post_named, perm_post_locked, perm_regen_caches, perm_regen_index,
+    perm_regen_thread)
+    VALUES
+    ('ADMIN', 'Admin', '## Admin ##', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)");
+
+    nel_setup_stuff_done($result);
+}
+
+function nel_insert_default_admin()
+{
+    if(DEFAULTADMIN === '' || DEFAULTADMIN_PASS === '')
+    {
+        return false;
+    }
+
+    $dbh = nel_get_db_handle();
+    $result = $dbh->query("SELECT 1 FROM " . USER_TABLE . " WHERE role_id='ADMIN'");
+
+    if(!$result->fetch())
+    {
+        return false;
+    }
+
+    $result = $dbh->query("INSERT INTO " . USER_TABLE . " (user_id, user_password, role_id, active, failed_logins, last_failed_login)
+    VALUES
+    ('" . DEFAULTADMIN .
+         "', '" . nel_password_hash(DEFAULTADMIN_PASS, NELLIEL_PASS_ALGORITHM) . "',
+    'ADMIN', 1, 1, 0)");
+
+    nel_setup_stuff_done($result);
 }
 
 function nel_insert_config_defaults()
 {
     $dbh = nel_get_db_handle();
-    $dbh->query("INSERT INTO " . CONFIG_TABLE . " (config_type, config_name, setting)
+    $result = $dbh->query("INSERT INTO " . CONFIG_TABLE . " (config_type, config_name, setting)
                 VALUES  ('technical', 'original_schema_version', '002'),
                         ('technical', 'current_schema_version', '002'),
                         ('board_setting_1bit', 'allow_tripkeys', '1'),
@@ -373,4 +440,6 @@ function nel_insert_config_defaults()
                         ('filetype_allow_r', 'enable_iso', ''),
                         ('filetype_allow_r', 'enable_dmg', '')
                         ");
+
+    nel_setup_stuff_done($result);
 }

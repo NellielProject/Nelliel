@@ -26,15 +26,7 @@ function nel_clean_exit($dataforce, $die)
         die();
     }
 
-    if (STUFF_DONE)
-    {
-        echo '<meta http-equiv="refresh" content="10;URL=' . PHP_SELF2 . PHP_EXT . '">';
-    }
-    else
-    {
-        echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF2 . PHP_EXT . '">';
-    }
-
+    echo '<meta http-equiv="refresh" content="2;URL=' . PHP_SELF2 . PHP_EXT . '">';
     die();
 }
 

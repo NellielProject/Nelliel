@@ -19,6 +19,7 @@ function nel_login($dataforce)
     }
     else
     {
+        nel_insert_default_admin(); // Let's make sure there's some kind of admin in the system
         $render->parse('manage_login.tpl', 'management');
     }
 

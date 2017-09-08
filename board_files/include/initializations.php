@@ -8,8 +8,12 @@ ignore_user_abort(TRUE);
 
 require_once BASE_PATH . '/' . BOARD_FILES . 'libraries/portable-utf8/portable-utf8.php';
 require_once INCLUDE_PATH . 'setup/setup.php';
-setup_check();
-generate_auth_file();
+
+if(RUN_SETUP_CHECK)
+{
+    setup_check();
+}
+
 require_once INCLUDE_PATH . 'authorize.php';
 $authorize = new nel_authorization();
 require_once INCLUDE_PATH . 'language.php';

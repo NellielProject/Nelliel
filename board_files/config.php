@@ -19,7 +19,7 @@ define('CONF_BOARD_DIR', 'board'); // Name of the directory the imageboard is in
 define('HOME', '../'); // Site home directory (up one level by default). Can be a web-accessible directory or a URL.
 
 
-// If no auth file is found and these settings are not blank, it will use DEFAULTADMIN and DEFAULTADMIN_PASS to create a default admin.
+// If on a new install or no users are found, it will use DEFAULTADMIN and DEFAULTADMIN_PASS to create a default admin.
 // Once able to login you can then set up other staff and even delete the default user if desired.
 // Once the default admin account is created, make sure to set both of these back to ''
 define('DEFAULTADMIN', ''); // Sets a default admin with all permissions
@@ -30,6 +30,10 @@ define('DEFAULTADMIN_PASS', ''); // Password for default admin
 // Change this setting ONCE when you begin your board. Changing it again will alter the tripcode output
 define('TRIPCODE_SALT', 'sodiumz');
 
+// Should Nelliel  go through the setup check
+// Basically this runs through the setup sequence and checks that files, directories and database stuff is in place.
+// Highly recommend setting this to false once your initial setup and testing is done! It can generate unnecessary load.
+define('RUN_SETUP_CHECK', true);
 
 //
 // The settings below can be changed if you really want but there's not much point.
