@@ -172,7 +172,14 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         while ($i < $filecount)
         {
             $files[$i]['img_dim'] = (!is_null($files[$i]['image_width']) && !is_null($files[$i]['image_height'])) ? TRUE : FALSE;
-            $files[$i]['file_location'] = $temp_dot . SRC_DIR . $post_id . '/' . $files[$i]['filename'] . "." .
+            $files[$i]['display_filename'] = $files[$i]['filename'];
+
+            if(strlen($files[$i]['filename']) > 32)
+            {
+                $files[$i]['display_filename'] = substr($files[$i]['filename'], 0, 25) . '(...)';
+            }
+
+            $files[$i]['file_location'] = $temp_dot . SRC_DIR . $post_id . '/' . $files[$i]['filename']. "." .
                  $files[$i]['extension'];
             $files[$i]['filesize'] = round(((int) $files[$i]['filesize'] / 1024), 2);
             $files[$i]['md5'] = $files[$i]['md5'];
