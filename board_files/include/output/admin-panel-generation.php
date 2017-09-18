@@ -16,47 +16,50 @@ function nel_render_admin_panel($dataforce)
 
     foreach ($rows as $config_line)
     {
-        if ($config_line['config_type'] !== 'board_setting')
+        if ($config_line['config_type'] === 'board_setting')
         {
-            if ($config_line['setting'] === '1')
+            if ($config_line['data_type'] === 'bool')
             {
-                $board_settings[$config_line['config_name']] = 'checked';
+                $board_settings[$config_line['config_name']] = $config_line['setting'] === '1' ? 'checked' : '';
             }
             else
             {
-                $board_settings[$config_line['config_name']] = '';
+                switch ($config_line['setting'])
+                {
+                    case 'ISO':
+                        $board_settings['iso'] = 'checked';
+                        break;
+
+                    case 'COM':
+                        $board_settings['com'] = 'checked';
+                        break;
+
+                    case 'US':
+                        $board_settings['us'] = 'checked';
+                        break;
+
+                    case 'ARCHIVE':
+                        $board_settings['archive'] = 'checked';
+                        break;
+
+                    case 'PRUNE':
+                        $board_settings['prune'] = 'checked';
+                        break;
+
+                    case 'NOTHING':
+                        $board_settings['nothing'] = 'checked';
+                        break;
+
+                    default:
+                        $board_settings[$config_line['config_name']] = $config_line['setting'];
+                }
             }
         }
-        else if ($config_line['config_type'] === 'board_setting')
+        else if (substr($config_line['config_type'], 0, 14) === 'filetype_allow')
         {
-            switch ($config_line['setting'])
+            if ($config_line['data_type'] === 'bool')
             {
-                case 'ISO':
-                    $board_settings['iso'] = 'checked';
-                    break;
-
-                case 'COM':
-                    $board_settings['com'] = 'checked';
-                    break;
-
-                case 'US':
-                    $board_settings['us'] = 'checked';
-                    break;
-
-                case 'ARCHIVE':
-                    $board_settings['archive'] = 'checked';
-                    break;
-
-                case 'PRUNE':
-                    $board_settings['prune'] = 'checked';
-                    break;
-
-                case 'NOTHING':
-                    $board_settings['nothing'] = 'checked';
-                    break;
-
-                default:
-                    $board_settings[$config_line['config_name']] = $config_line['setting'];
+                $board_settings[$config_line['config_name']] = $config_line['setting'] === '1' ? 'checked' : '';
             }
         }
     }
@@ -66,4 +69,3 @@ function nel_render_admin_panel($dataforce)
     $render->input(nel_render_basic_footer($render));
     $render->output(TRUE);
 }
-?>

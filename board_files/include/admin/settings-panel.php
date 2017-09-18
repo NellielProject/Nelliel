@@ -36,12 +36,10 @@ function nel_settings_control($dataforce, $authorize)
                     $dataforce['max_pages'] = (int) $item[1];
                 }
 
-                $dbh->query('UPDATE ' . CONFIG_TABLE . ' SET setting="' . $item[1] . '" WHERE config_name="' . $item[0] . '"');
+                $dbh->query('UPDATE "' . CONFIG_TABLE . '" SET setting=' . $item[1] . ' WHERE config_name=\'' . $item[0] . '\'');
             }
         }
 
-        //nel_cache_rules();
-        //nel_cache_settings();
         nel_regen($dataforce, NULL, 'full', FALSE);
     }
 
