@@ -19,7 +19,7 @@ function nel_is_in_string($string, $substring)
 function nel_clean_exit($dataforce, $die)
 {
     //$dataforce['post_links'] = nel_cache_links($dataforce['post_links']);
-    nel_write_multi_cache($dataforce);
+    //nel_write_multi_cache($dataforce);
 
     if ($die)
     {

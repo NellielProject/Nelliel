@@ -58,7 +58,7 @@ define('LANGUAGE_PATH', BASE_PATH . '/' . BOARD_FILES . 'languages/'); // locati
 define('CSSDIR', BOARD_FILES . 'css/'); // location of the css files
 define('JSDIR', BOARD_FILES . 'js/'); // location of the javascript files
 define('CACHE_DIR', 'cache/'); // Cache directory, only used internally by Nelliel
-define('CACHE_PATH', FILES_PATH . '/' . CACHE_DIR); // Base cache path
+define('CACHE_PATH', FILES_PATH . CACHE_DIR); // Base cache path
 define('SRC_PATH', BASE_PATH . '/' . SRC_DIR); // Base src path
 define('THUMB_PATH', BASE_PATH . '/' . THUMB_DIR); // Base thumbnail path
 define('PAGE_PATH', BASE_PATH . '/' . PAGE_DIR); // Base page path

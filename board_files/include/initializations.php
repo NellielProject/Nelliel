@@ -15,7 +15,6 @@ if(RUN_SETUP_CHECK)
 }
 
 require_once INCLUDE_PATH . 'authorize.php';
-$authorize = new nel_authorization();
 require_once INCLUDE_PATH . 'language.php';
 require_once INCLUDE_PATH . 'template.php';
 require_once INCLUDE_PATH . 'render.php';
@@ -80,4 +79,3 @@ $link_resno = 0;
 // Load caching routines and handle current cache files
 require_once INCLUDE_PATH . 'cache-functions.php'; // I liek cache
 $dataforce['max_pages'] = BS_PAGE_LIMIT;
-?>

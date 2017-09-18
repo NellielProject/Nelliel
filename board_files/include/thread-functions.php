@@ -189,7 +189,7 @@ function nel_delete_content($dataforce, $sub, $type)
             }
             else
             {
-                $staff_type = $_SESSION['settings']['staff_type'];
+                $staff_type = $_SESSION['settings']['staff_type']; //TODO: Fix this mod type stuff too
 
                 if ($post_data['mod_post'] === '3' && $staff_type === 'admin')
                 {
@@ -322,5 +322,3 @@ function nel_delete_content($dataforce, $sub, $type)
         $_SESSION['ignore_login'] = $temp;
     }
 }
-
-?>

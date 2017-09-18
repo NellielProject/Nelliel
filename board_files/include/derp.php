@@ -26,7 +26,7 @@ function nel_derp($error_id, $error_data)
     $diagnostic['error-message'] = nel_stext('ERROR_' . $error_id);
     $diagnostic['origin'] = $error_data['origin'];
 
-    if (!is_null($error_data['files']))
+    if (!is_null($error_data['files'])) // TODO: Fix this to not send notice
     {
         $diagnostic['bad-filename'] = $error_data['bad-filename'];
         $diagnostic['files'] = $error_data['files'];
@@ -46,4 +46,3 @@ function nel_get_derp($which_data)
 {
     return nel_derp('retrieve', $which_data);
 }
-?>

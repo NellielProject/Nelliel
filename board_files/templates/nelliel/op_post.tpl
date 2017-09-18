@@ -38,7 +38,7 @@
                 <br>
     {{ if $render->retrieve_data('logged_in') }}
                 <br>IP: <b>{ $render->retrieve_data('ip_address') }</b>
-        {{ if $_SESSION['perms']['perm_ban'] }}
+        {{ if nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_ban_add') }}
                 <input type="button" onClick="addBanDetails('ban{ $render->retrieve_data('post_number') }', '{ $render->retrieve_data('post_number') }', '{ $render->retrieve_data('poster_name') }', '{ $render->retrieve_data('ip_address') }')" value="Set Ban Details">
         {{ endif }}
     {{ endif }}

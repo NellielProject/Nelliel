@@ -12,7 +12,7 @@ function nel_staff_panel($dataforce, $authorize)
     $temp_auth = array();
     $mode = $dataforce['mode_action'];
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_staff_panel'))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_staff_access'))
     {
         nel_derp(102, array('origin' => 'ADMIN'));
     }
@@ -160,4 +160,3 @@ function nel_gen_new_staff($new_name, $new_type, $authorize)
 
     $authorize->write_auth_file();
 }
-?>

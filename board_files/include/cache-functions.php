@@ -15,6 +15,7 @@ require_once CACHE_PATH . 'parameters.nelcache';
 // Cached rules, post links and template info cache
 if (!file_exists(CACHE_PATH . 'multi-cache.nelcache'))
 {
+    $dataforce['rules_list'] = nel_cache_rules();
     nel_write_multi_cache($dataforce, $template_info);
 }
 
@@ -122,7 +123,7 @@ function nel_cache_rules()
 
 function nel_build_filetype_config($dbh)
 {
-    $result = $dbh->query('SELECT * FROM ' . CONFIG_TABLE . ' WHERE config_type="filetype"');
+    $result = $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'filetype\'');
     $config_list = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
     $result_count = count($config_list);
@@ -143,10 +144,8 @@ function nel_build_filetype_config($dbh)
 function nel_cache_settings()
 {
     $dbh = nel_get_db_handle();
-
-    // Get true/false (1-bit) board settings
-    $result2 = $dbh->query('SELECT * FROM ' . CONFIG_TABLE . ' WHERE config_type="board_setting"');
-    $config_list = $result2->fetchAll(PDO::FETCH_ASSOC);
+    $result = $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'');
+    $config_list = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
 
     $result_count = count($config_list);
@@ -154,19 +153,19 @@ function nel_cache_settings()
 
     foreach ($config_list as $config)
     {
-        if($config['data_type'] === '1')
+        if($config['data_type'] === 'bool')
         {
             $config['setting'] = var_export((bool)$config['setting'], TRUE);
         }
 
-        if($config['data_type'] === '2')
+        if($config['data_type'] === 'int')
         {
             $config['setting'] = intval($config['setting']);
         }
 
-        if($config['data_type'] === '3')
+        if($config['data_type'] === 'str')
         {
-            $config['setting'] = var_export((string)$config['setting'], TRUE);
+            $config['setting'] = var_export($config['setting'], TRUE);
         }
 
         $vars1 .= 'define(\'BS_' . utf8_strtoupper($config['config_name']) . '\', ' . $config['setting'] . ');';
@@ -183,16 +182,22 @@ function nel_cache_settings()
 //
 function nel_regen_template_cache()
 {
-    foreach (glob(TEMPLATE_PATH . '*.tpl') as $template)
+    $Directory = new RecursiveDirectoryIterator(TEMPLATE_PATH);
+    $Iterator = new RecursiveIteratorIterator($Directory);
+    $Regex = new RegexIterator($Iterator, '/^.+\.tpl$/i', RecursiveRegexIterator::GET_MATCH);
+
+    foreach($Regex as $key => $value)
     {
-        $template = basename($template);
-        nel_parse_template($template, '', NULL, TRUE);
+        $file = str_replace(TEMPLATE_PATH, '', $key);
+        $template = basename($file);
+        $subdirectory = str_replace($template, '', $file);
+        nel_parse_template($template, $subdirectory, null, true);
     }
 }
 
 function nel_reset_template_status($template_info)
 {
-    foreach ($template_info as $key => $value)
+    foreach ($template_info as $key => $value) // TODO: Invalid argument?
     {
         $template_info[$key]['loaded'] = FALSE;
     }
@@ -216,4 +221,3 @@ nel_template_info(NULL, NULL, $template_info, FALSE);
 
     nel_write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, 0644);
 }
-?>

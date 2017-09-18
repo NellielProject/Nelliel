@@ -72,9 +72,11 @@ function nel_check_mod_fake($post_data)
 
 function nel_get_mod_post($post_data, $name_pieces)
 {
+    // TODO: Fix mod post type stuffs
+    $authorize = nel_get_authorization();
     $post_data['modpost'] = 0;
 
-    if (!nel_session_ignored() && $name_pieces[5] === $_SESSION['settings']['staff_trip'])
+    if (!nel_session_ignored() && $name_pieces[5] === $authorize->get_user_role($_SESSION['username'], 'posting_tripcode'))
     {
         if ($_SESSION['perms']['perm_post'])
         {
@@ -92,7 +94,7 @@ function nel_get_mod_post($post_data, $name_pieces)
             }
         }
 
-        if ($_SESSION['perms']['perm_sticky'] && utf8_strripos($dataforce['fgsfds'], 'sticky') !== FALSE)
+        if ($authorize->get_user_perm($_SESSION['username'], 'perm_post_sticky') && utf8_strripos($dataforce['fgsfds'], 'sticky') !== FALSE)
         {
             $fgsfds['sticky'] = TRUE;
         }
@@ -104,12 +106,20 @@ function nel_get_mod_post($post_data, $name_pieces)
 function nel_get_tripcodes($post_data, $name_pieces)
 {
     global $plugins;
+
+    $authorize = nel_get_authorization();
     $post_data['tripcode'] = '';
     $post_data['secure_tripcode'] = '';
     $post_data = $plugins->plugin_hook('in-before-tripcode-processing', TRUE, array($post_data, $name_pieces));
 
-    if ($name_pieces[1] === '' || (!empty($_SESSION) && $_SESSION['perms']['perm_post_anon']))
+    if (!empty($_SESSION) && !$authorize->get_user_perm($_SESSION['username'], 'perm_post_named'))
     {
+        $name_pieces[1] = '';
+    }
+
+    if ($name_pieces[1] === '')
+    {
+
         $post_data['name'] = nel_stext('THREAD_NONAME');
         $post_data['email'] = '';
     }

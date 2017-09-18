@@ -115,6 +115,7 @@ function nel_render_posting_form($dataforce, $render)
 //
 function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline)
 {
+    $authorize = nel_get_authorization();
     global $link_resno;
 
     $render->add_data('insert_hr', $gen_data['insert_hr']);
@@ -287,7 +288,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     {
         $render->add_data('logged_in', TRUE);
         $render->add_data('ip_address', (@inet_ntop($render->retrieve_data('ip_address'))) ? inet_ntop($render->retrieve_data('ip_address')) : 'Unknown');
-        $render->add_data('perm_ban', $_SESSION['perms']['perm_ban']);
+        $render->add_data('perm_ban', $authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'));
         $render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
         $render->add_data('page_ref2', PHP_SELF . '?page=');
         $render->add_data('the_session', session_id());
@@ -308,12 +309,14 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 //
 function nel_render_basic_footer($render)
 {
+    $authorize = nel_get_authorization();
+
     if (!nel_session_ignored())
     {
         $render->add_data('logged_in', TRUE);
         $render->add_data('main_page', FALSE);
 
-        if ($_SESSION['perms']['perm_ban'])
+        if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'))
         {
             $render->add_data('perm_ban', TRUE);
         }
@@ -328,6 +331,7 @@ function nel_render_basic_footer($render)
 
 function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
 {
+    $authorize = nel_get_authorization();
     $render->add_data('main_page', $main_page);
 
     if (!nel_session_ignored())
@@ -335,7 +339,7 @@ function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
         $render->add_data('logged_in', TRUE);
         $render->add_data('main_page', FALSE);
 
-        if ($_SESSION['perms']['perm_ban'])
+        if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'))
         {
             $render->add_data('perm_ban', TRUE);
         }

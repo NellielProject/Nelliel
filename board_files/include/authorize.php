@@ -28,11 +28,23 @@ class nel_authorization
     function __construct()
     {
         $this->dbh = nel_get_db_handle();
+        $user_list = $this->get_user_list();
+
+        foreach($user_list as $user_id)
+        {
+            $this->set_up_user($user_id);
+        }
     }
 
     private function user_exists($user)
     {
         return array_key_exists($user, $this->authorized);
+    }
+
+    private function get_user_list()
+    {
+        $result = $this->dbh->query('SELECT user_id FROM "' . USER_TABLE . '";');
+        return $result->fetchAll(PDO::FETCH_COLUMN);
     }
 
     private function get_user_data($user)
@@ -216,4 +228,3 @@ class nel_authorization
         $prepared->execute();
     }
 }
-

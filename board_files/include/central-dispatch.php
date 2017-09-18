@@ -45,9 +45,11 @@ function nel_process_get($dataforce, $authorize)
 //
 // This handles the POST requests
 //
-function nel_process_post($dataforce, $authorize)
+function nel_process_post($dataforce)
 {
     global $fgsfds;
+
+    $authorize = nel_get_authorization();
 
     if (!isset($dataforce['mode']))
     {
@@ -68,7 +70,7 @@ function nel_process_post($dataforce, $authorize)
 
                 if ($dataforce['delpost'])
                 {
-                    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_delete'))
+                    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_modify'))
                     {
                         nel_derp(108, array('origin' => 'DISPATCH'));
                     }
@@ -167,5 +169,3 @@ function admin_dispatch($dataforce, $authorize)
 
     nel_clean_exit($dataforce, TRUE);
 }
-
-?>

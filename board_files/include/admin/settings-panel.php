@@ -9,7 +9,7 @@ function nel_settings_control($dataforce, $authorize)
     $dbh = nel_get_db_handle();
     $mode = $dataforce['mode_action'];
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config'))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_board_config'))
     {
         nel_derp(102, array('origin' => 'ADMIN'));
     }
@@ -40,11 +40,10 @@ function nel_settings_control($dataforce, $authorize)
             }
         }
 
-        nel_cache_rules();
-        nel_cache_settings();
+        //nel_cache_rules();
+        //nel_cache_settings();
         nel_regen($dataforce, NULL, 'full', FALSE);
     }
 
     nel_render_admin_panel($dataforce);
 }
-?>

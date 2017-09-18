@@ -45,8 +45,9 @@ function nel_set_session_cookie()
 // Check for existing session and process
 // If no session exists, confirm login info and set up a new one
 //
-function nel_initialize_session($dataforce, $authorize)
+function nel_initialize_session($dataforce)
 {
+    $authorize = nel_get_authorization();
     session_start();
     require_once INCLUDE_PATH . 'admin/login.php';
 
@@ -77,16 +78,16 @@ function nel_initialize_session($dataforce, $authorize)
     }
     else if (isset($dataforce['admin_mode']) && $dataforce['admin_mode'] === 'login') // No existing session but this may be a login attempt
     {
-        if ($dataforce['username'] !== '' && password_verify($dataforce['admin_pass'], $authorize->get_user_setting($dataforce['username'], 'staff_password')))
+        if ($dataforce['username'] !== '' && nel_password_verify($dataforce['admin_pass'], $authorize->get_user_info($dataforce['username'], 'user_password')))
         {
             // We set up the session here
             $_SESSION['ignore_login'] = FALSE;
             $_SESSION['username'] = $dataforce['username'];
             $_SESSION['login_time'] = time();
             $_SESSION['last_activity'] = time();
-            $user_auth = $authorize->get_user_auth($dataforce['username']);
-            $_SESSION['perms'] = $user_auth['perms'];
-            $_SESSION['settings'] = $user_auth['settings'];
+            //$user_auth = $authorize->get_user_auth($dataforce['username']);
+            //$_SESSION['perms'] = $user_auth['perms'];
+            //$_SESSION['settings'] = $user_auth['settings'];
         }
         else
         {
@@ -140,4 +141,3 @@ function nel_session_ignored()
         return TRUE;
     }
 }
-?>

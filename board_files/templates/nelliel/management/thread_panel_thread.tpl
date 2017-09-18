@@ -53,12 +53,12 @@
                             </td>
         {{ if $render->retrieve_data('response_to') == 0 }}
                             <td>
-                                <a href="{SRC_DIR}{$render->retrieve_data('post_number')}/{$file['filename']}{$file['extension']}" rel="external">{$file['filename']}{$file['extension']}</a> ( {$file['filesize']} KB )<br>MD5: {$file['md5']<br>SHA1: {$file['sha1']}
+                                <a href="{SRC_DIR}{$render->retrieve_data('post_number')}/{$file['filename']}{$file['extension']}" rel="external">{$file['filename']}{$file['extension']}</a> ( {$file['filesize']} KB )<br>MD5: {$file['md5']}<br>SHA1: {$file['sha1']}
                             </td>
                         </tr>
         {{ else }}
                             <td>
-                                <a href="{SRC_DIR}{$render->retrieve_data('response_to')}/{$file['filename']}{$file['extension']}" rel="external">{$file['filename']}{$file['extension']}</a> ( {$file['filesize']} KB )<br>MD5: {$file['md5']<br>SHA1: {$file['sha1']}
+                                <a href="{SRC_DIR}{$render->retrieve_data('response_to')}/{$file['filename']}{$file['extension']}" rel="external">{$file['filename']}{$file['extension']}</a> ( {$file['filesize']} KB )<br>MD5: {$file['md5']}<br>SHA1: {$file['sha1']}
                             </td>
                         </tr>
         {{ endif }}

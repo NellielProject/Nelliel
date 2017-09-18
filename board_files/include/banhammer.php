@@ -10,8 +10,9 @@ if (!defined('NELLIEL_VERSION'))
 function nel_ban_hammer($dataforce)
 {
     $dbh = nel_get_db_handle();
+    $authorize = nel_get_authorization();
 
-    if (!$authorize->get_user_setting($_SESSION['username'], 'perm_ban'))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'))
     {
         nel_derp(104, array('origin' => 'ADMIN'));
     }
@@ -153,4 +154,3 @@ function nel_ban_hammer($dataforce)
         ++ $i;
     }
 }
-?>

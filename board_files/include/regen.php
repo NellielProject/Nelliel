@@ -53,15 +53,15 @@ function nel_regen(&$dataforce, $id, $mode, $modmode)
         }
     }
 
-    if ($mode === 'cache')
+    if ($mode === 'cache' || $mode === 'full')
     {
         $dataforce['rules_list'] = nel_cache_rules();
         nel_cache_settings();
         $dataforce['post_links'] = $link_updates;
         nel_regen_template_cache();
+        nel_write_multi_cache($dataforce);
     }
 
     nel_toggle_session();
     $dataforce['post_links'] = $link_updates;
 }
-?>

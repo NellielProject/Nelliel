@@ -8,7 +8,7 @@ function nel_thread_panel($dataforce, $authorize)
 {
     $mode = $dataforce['mode_action'];
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_thread_panel'))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_access'))
     {
         nel_derp(103, array('origin' => 'ADMIN'));
     }
@@ -32,4 +32,3 @@ function nel_thread_panel($dataforce, $authorize)
 
     nel_render_thread_panel($dataforce, $expand);
 }
-?>
