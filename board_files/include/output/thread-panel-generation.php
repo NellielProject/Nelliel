@@ -41,7 +41,7 @@ function nel_render_thread_panel($dataforce, $expand)
             $thread['post_number'] = $thread['thread_id'];
         }
 
-        $prepared = $dbh->prepare('SELECT * FROM ' . POST_TABLE . ' WHERE post_number=?');
+        $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE post_number=?');
         $prepared->bindValue(1, $thread_id, PDO::PARAM_INT);
         $prepared->execute();
         $post = $prepared->fetch(PDO::FETCH_ASSOC);
@@ -49,7 +49,7 @@ function nel_render_thread_panel($dataforce, $expand)
 
         if ($post['has_file'] === '1')
         {
-            $prepared = $dbh->prepare('SELECT * FROM ' . FILE_TABLE . ' WHERE post_ref=? ORDER BY file_order asc');
+            $prepared = $dbh->prepare('SELECT * FROM "' . FILE_TABLE . '" WHERE post_ref=? ORDER BY file_order asc');
             $prepared->bindValue(1, $thread['post_number'], PDO::PARAM_INT);
             $prepared->execute();
             $thread['files'] = $prepared->fetchAll(PDO::FETCH_ASSOC);
@@ -92,7 +92,7 @@ function nel_render_thread_panel_thread($dataforce, $render, $thread_data, $post
             break;
     }
 
-    if (utf8_strlen($post_data['name']) > 12)
+    if (utf8_strlen($post_data['name']) > 12) // TODO: undefined index
     {
         $render->add_data('post_name', utf8_substr($post_data['name'], 0, 11) . "...");
     }
