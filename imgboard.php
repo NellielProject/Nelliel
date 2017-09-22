@@ -47,11 +47,10 @@ require_once INCLUDE_PATH . 'snacks.php';
 // IT'S GO TIME!
 nel_ban_spambots($dataforce);
 require_once INCLUDE_PATH . 'sessions.php';
-$authorize = nel_get_authorization();
 nel_initialize_session($dataforce);
 require_once INCLUDE_PATH . 'post/post.php';
 require_once INCLUDE_PATH . 'central-dispatch.php';
-nel_process_get($dataforce, $authorize);
+nel_process_get($dataforce);
 nel_process_post($dataforce);
 nel_regen($dataforce, NULL, 'main', FALSE);
 nel_clean_exit($dataforce, FALSE);

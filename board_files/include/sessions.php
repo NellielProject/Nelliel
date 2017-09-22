@@ -76,7 +76,7 @@ function nel_initialize_session($dataforce)
         {
         }
     }
-    else if (isset($dataforce['admin_mode']) && $dataforce['admin_mode'] === 'login') // No existing session but this may be a login attempt
+    else if (isset($dataforce['mode']) && $dataforce['mode'] === 'admin->login') // No existing session but this may be a login attempt
     {
         if ($dataforce['username'] !== '' && nel_password_verify($dataforce['admin_pass'], $authorize->get_user_info($dataforce['username'], 'user_password')))
         {

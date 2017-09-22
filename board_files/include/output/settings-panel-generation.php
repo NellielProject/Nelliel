@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_admin_panel($dataforce)
+function nel_render_settings_panel($dataforce)
 {
     $dbh = nel_get_db_handle();
     $render = new nel_render();
@@ -65,7 +65,7 @@ function nel_render_admin_panel($dataforce)
     }
 
     $render->add_multiple_data($board_settings);
-    $render->parse('admin_panel.tpl', 'management');
+    $render->parse('settings_panel.tpl', 'management');
     $render->input(nel_render_basic_footer($render));
     $render->output(TRUE);
 }

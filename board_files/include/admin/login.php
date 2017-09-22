@@ -13,8 +13,8 @@ function nel_login($dataforce)
 
     if (!nel_session_ignored())
     {
-        $user_auth = $authorize->get_user($_SESSION['username']);
-        $render->add_multiple_data($user_auth['perms']);
+        $user_perms = $authorize->get_user_perms($_SESSION['username']);
+        $render->add_multiple_data($user_perms);
         $render->parse('manage_options.tpl', 'management');
     }
     else

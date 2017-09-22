@@ -5,10 +5,20 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 //
+// Process the mode field input
+//
+function nel_process_mode_input($mode)
+{
+    return preg_split('#->#', $mode);
+}
+
+//
 // This handles the GET requests
 //
-function nel_process_get($dataforce, $authorize)
+function nel_process_get($dataforce)
 {
+    $authorize = nel_get_authorization();
+
     if (!isset($dataforce['get_mode']))
     {
         return;
@@ -49,14 +59,15 @@ function nel_process_post($dataforce)
 {
     global $fgsfds;
 
-    $authorize = nel_get_authorization();
-
     if (!isset($dataforce['mode']))
     {
         return;
     }
 
-    switch ($dataforce['mode']) // Even moar modes
+    $authorize = nel_get_authorization();
+    $mode = nel_process_mode_input($dataforce['mode']);
+
+    switch ($mode[0])
     {
         case 'update':
             $updates = 0;
@@ -119,29 +130,24 @@ function nel_process_post($dataforce)
             nel_clean_exit($dataforce, TRUE);
 
         case 'admin':
-            if (empty($_SESSION) || is_null($dataforce['sub_mode']))
-            {
-                break; // Should set up an error here probably
-            }
-            else
-            {
-                admin_dispatch($dataforce, $authorize);
-            }
+            admin_dispatch($dataforce, $mode);
     }
 }
 
-function admin_dispatch($dataforce, $authorize)
+function admin_dispatch($dataforce, $mode)
 {
-    switch ($dataforce['sub_mode'])
+    $authorize = nel_get_authorization();
+
+    switch ($mode[1])
     {
         case 'staff':
             require_once INCLUDE_PATH . 'admin/staff-panel.php';
-            nel_staff_panel($dataforce, $authorize);
+            nel_staff_panel($dataforce);
             break;
 
         case 'ban':
             require_once INCLUDE_PATH . 'admin/bans-panel.php';
-            nel_ban_control($dataforce, $authorize);
+            nel_ban_control($dataforce);
             break;
 
         case 'modmode':
@@ -150,17 +156,21 @@ function admin_dispatch($dataforce, $authorize)
 
         case 'settings':
             require_once INCLUDE_PATH . 'admin/settings-panel.php';
-            nel_settings_control($dataforce, $authorize);
+            nel_settings_control($dataforce);
             break;
 
         case 'regen':
-            nel_regen($dataforce, NULL, $dataforce['mode_action'], FALSE);
-            nel_login($dataforce, $authorize);
+            nel_regen($dataforce, NULL, $mode);
+            nel_login($dataforce);
             break;
 
         case 'thread':
             require_once INCLUDE_PATH . 'admin/threads-panel.php';
             nel_thread_panel($dataforce, $authorize);
+            break;
+
+        case 'login':
+            nel_login($dataforce);
             break;
 
         default:

@@ -92,7 +92,7 @@ function nel_render_thread_panel_thread($dataforce, $render, $thread_data, $post
             break;
     }
 
-    if (utf8_strlen($post_data['name']) > 12) // TODO: undefined index
+    if (utf8_strlen($post_data['poster_name']) > 12) // TODO: undefined index
     {
         $render->add_data('post_name', utf8_substr($post_data['name'], 0, 11) . "...");
     }
@@ -104,7 +104,7 @@ function nel_render_thread_panel_thread($dataforce, $render, $thread_data, $post
 
     if ($post_data['email'])
     {
-        $render->add_data('post_name', '"<a href="mailto:' . $post_data['email'] . '">' . $post_data['name'] . '</a>');
+        $render->add_data('post_name', '"<a href="mailto:' . $post_data['email'] . '">' . $post_data['poster_name'] . '</a>');
     }
 
     $post_data['comment'] = utf8_str_replace("<br>", " ", $post_data['comment']);

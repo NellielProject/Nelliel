@@ -34,20 +34,7 @@ $dataforce['get_mode'] = NULL;
 
 if (!empty($_POST))
 {
-    if (isset($_POST['mode']))
-    {
-        $mode = explode('->', $_POST['mode']);
-    }
-    else
-    {
-        $mode = array();
-    }
-
-    $dataforce['mode'] = (isset($mode[0])) ? $mode[0] : NULL;
-    $dataforce['sub_mode'] = (isset($mode[1])) ? $mode[1] : NULL;
-    $dataforce['mode_action'] = (isset($mode[2])) ? $mode[2] : NULL;
-    $dataforce['mode_extra'] = (isset($_POST['mode2'])) ? $_POST['mode2'] : NULL;
-    $dataforce['admin_mode'] = (isset($_POST['adminmode'])) ? $_POST['adminmode'] : NULL;
+    $dataforce['mode'] = (isset($_POST['mode'])) ? $_POST['mode']: NULL;
     $dataforce['admin_pass'] = (isset($_POST['super_sekrit'])) ? $_POST['super_sekrit'] : NULL;
     $dataforce['username'] = (isset($_POST['username'])) ? $_POST['username'] : NULL;
     $dataforce['usrdel'] = (isset($_POST['usrdel'])) ? $_POST['usrdel'] : NULL;

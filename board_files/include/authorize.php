@@ -149,7 +149,12 @@ class nel_authorization
 
         foreach ($user_data as $key => $value)
         {
-            $this->users[$user] = $value;
+            $this->users[$user][$key] = $value;
+        }
+
+        if($this->users[$user]['role_id'] != '')
+        {
+            $this->set_up_role($this->users[$user]['role_id']);
         }
 
         return true;
@@ -168,11 +173,11 @@ class nel_authorization
         {
             if (substr($key, 0, 5) === 'perm_')
             {
-                $this->$roles[$role] = ($value) ? true : false;
+                $this->roles[$role][$key] = ($value) ? true : false;
             }
             else
             {
-                $this->$roles[$role] = $value;
+                $this->roles[$role][$key] = $value;
             }
         }
 
@@ -219,14 +224,35 @@ class nel_authorization
         return false;
     }
 
+    public function get_role_perms($role)
+    {
+        $perms = array();
+
+        foreach ($this->roles[$role] as $key => $value)
+        {
+            if (substr($key, 0, 5) === 'perm_')
+            {
+                $perms[$key] = $value;
+            }
+        }
+
+        return $perms;
+    }
+
+    public function get_user_perms($user)
+    {
+        if($this->user_exists($user))
+        {
+            return $this->get_role_perms($this->users[$user]['role_id']);
+        }
+    }
+
     public function get_user_perm($user, $perm)
     {
-        if ($this->user_exists($user))
+        if($this->user_exists($user))
         {
             return $this->roles[$this->users[$user]['role_id']][$perm];
         }
-
-        return false;
     }
 
     public function update_user($user, $update)

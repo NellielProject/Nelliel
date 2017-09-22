@@ -16,7 +16,7 @@
             <input type="radio" name="mode" id="thread" value="admin->thread->panel"><label for="thread">{nel_stext('MANAGE_OPT_THREAD')}</label><br>
 {{ endif }}
 {{ if nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_staff_access') }}
-            <input type="radio" name="mode" id="staff" value="admin->staff->panel"><label for="staff">{nel_stext('MANAGE_OPT_STAFF')}</label><br>
+            <input type="radio" name="mode" id="staff" value="admin->staff->main"><label for="staff">{nel_stext('MANAGE_OPT_STAFF')}</label><br>
 {{ endif }}
 {{ if nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_mod_mode') }}
             <input type="radio" name="mode" id="mmode" value="admin->modmode->enter"><label for="mmode">{nel_stext('MANAGE_OPT_MMODE')}</label><br>

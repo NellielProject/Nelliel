@@ -7,11 +7,11 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Staff control panel
 //
-function nel_staff_panel($dataforce, $authorize)
+function nel_staff_panel($dataforce)
 {
     $authorize = nel_get_authorization();
     $temp_auth = array();
-    $mode = $dataforce['mode_action'];
+    $mode = $dataforce['mode'];
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_staff_access'))
     {
@@ -25,7 +25,11 @@ function nel_staff_panel($dataforce, $authorize)
         $user_id = $_POST['user_id'];
     }
 
-    if ($mode === 'admin->staff->user->edit')
+    if ($mode === 'admin->staff->main')
+    {
+        nel_render_staff_panel_main($dataforce);
+    }
+    else if ($mode === 'admin->staff->user->edit')
     {
         if (!$authorize->user_exists($user_id))
         {
@@ -80,6 +84,11 @@ function nel_staff_panel($dataforce, $authorize)
 
         foreach ($_POST as $key => $value)
         {
+            if(substr($key, 0, 4) === 'perm_')
+            {
+                $value = ($value === '1') ? true : false;
+            }
+
             $authorize->update_role_info($role_id, $key, $value);
         }
 

@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_thread_panel($dataforce, $authorize)
 {
-    $mode = $dataforce['mode_action'];
+    $mode = $dataforce['mode'];
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_access'))
     {
@@ -26,8 +26,8 @@ function nel_thread_panel($dataforce, $authorize)
     if ($mode === 'update')
     {
         $updates = nel_thread_updates($dataforce);
-        nel_regen($dataforce, $updates, 'thread', FALSE);
-        nel_regen($dataforce, NULL, 'main', FALSE);
+        nel_regen($dataforce, $updates, 'thread');
+        nel_regen($dataforce, NULL, 'main');
     }
 
     nel_render_thread_panel($dataforce, $expand);
