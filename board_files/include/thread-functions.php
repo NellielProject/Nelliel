@@ -60,8 +60,7 @@ function nel_make_thread_sticky($dataforce, $sub)
 {
     $dbh = nel_get_db_handle();
     $id = $sub[1];
-    $result = $dbh->query('SELECT parent_thread,has_file,post_time FROM ' . POST_TABLE . ' WHERE post_number=' . $id .
-         '');
+    $result = $dbh->query('SELECT parent_thread FROM "' . POST_TABLE . '" WHERE "post_number" = ' . $id . '');
     $post_data = $result->fetch(PDO::FETCH_ASSOC);
     unset($result);
 
@@ -71,7 +70,7 @@ function nel_make_thread_sticky($dataforce, $sub)
         nel_make_post_thread($dataforce, $id);
     }
 
-    $dbh->query('UPDATE ' . THREAD_TABLE . ' SET sticky=1 WHERE thread_id=' . $id . '');
+    $dbh->query('UPDATE "' . THREAD_TABLE . '" SET "sticky" = 1 WHERE "thread_id" = ' . $id . '');
     nel_update_archive_status($dataforce);
     nel_regen($dataforce, $id, 'thread', FALSE);
     nel_regen($dataforce, NULL, 'main', FALSE);
@@ -82,48 +81,98 @@ function nel_unsticky_thread($dataforce, $sub)
 {
     $dbh = nel_get_db_handle();
     $id = $sub[1];
-    $dbh->query('UPDATE ' . POST_TABLE . ' SET sticky=0 WHERE post_number=' . $id . '');
+    $dbh->query('UPDATE "' . THREAD_TABLE . '" SET "sticky" = 0 WHERE "thread_id" = ' . $id . '');
     nel_update_archive_status($dataforce, $dbh);
     nel_toggle_session();
-
-    if (!file_exists(PAGE_PATH . $id . '/' . $id . '.html'))
-    {
-        $dataforce['response_id'] = $id;
-        nel_regen($dataforce, $dataforce['response_id'], 'thread', FALSE);
-    }
-
+    $dataforce['response_id'] = $id;
+    nel_regen($dataforce, $dataforce['response_id'], 'thread', FALSE);
     $dataforce['archive_update'] = TRUE;
     nel_regen($dataforce, NULL, 'main', FALSE);
     nel_toggle_session();
 }
 
+function nel_get_thread_data($thread_id)
+{
+    $dbh = nel_get_db_handle();
+    $result = $dbh->query('SELECT *  FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ' . $thread_id . '');
+    $thread_data = $result->fetch(PDO::FETCH_ASSOC);
+    return $thread_data;
+}
+
+function nel_get_thread_all_posts($thread_id)
+{
+    $dbh = nel_get_db_handle();
+    $result = $dbh->query('SELECT * FROM "' . POST_TABLE . '" WHERE "parent_thread" = ' . $thread_id . '');
+    $thread_posts = $result->fetchAll(PDO::FETCH_ASSOC);
+    return $thread_posts;
+}
+
+function nel_get_post_data($post_id)
+{
+    $dbh = nel_get_db_handle();
+    $result = $dbh->query('SELECT *  FROM "' . POST_TABLE . '" WHERE "post_number" = ' . $post_id . '');
+    $post_data = $result->fetch(PDO::FETCH_ASSOC);
+    return $post_data;
+}
+
+function nel_get_thread_last_post($thread_id)
+{
+    $dbh = nel_get_db_handle();
+    $result = $dbh->query('SELECT *  FROM "' . POST_TABLE . '" WHERE "parent_thread" = ' . $thread_id .
+         ' ORDER BY "post_number" DESC LIMIT 1');
+    $post_data = $result->fetch(PDO::FETCH_ASSOC);
+    return $post_data;
+}
+
+function nel_get_thread_last_nosage_post($thread_id)
+{
+    $dbh = nel_get_db_handle();
+    $result = $dbh->query('SELECT *  FROM "' . POST_TABLE . '" WHERE "parent_thread" = ' . $thread_id .
+         ' AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1');
+    $post_data = $result->fetch(PDO::FETCH_ASSOC);
+    return $post_data;
+}
+
+function nel_get_thread_second_last_post($thread_id)
+{
+    $dbh = nel_get_db_handle();
+    $result = $dbh->query('SELECT *  FROM "' . POST_TABLE . '" WHERE "parent_thread" = ' . $thread_id .
+         ' ORDER BY "post_number" DESC LIMIT 2');
+    $post_data = $result->fetchAll(PDO::FETCH_ASSOC);
+
+    if (array_key_exists(1, $post_data))
+    {
+        return $post_data[1];
+    }
+
+    return false;
+}
+
 function nel_make_post_thread($dataforce, $post_id)
 {
     $dbh = nel_get_db_handle();
-
-    // Lets collect the post data
-    $result = $dbh->query('SELECT * FROM ' . POST_TABLE . ' WHERE post_number=' . $post_id . '');
-    $post_data = $result->fetch(PDO::FETCH_ASSOC);
     nel_create_thread_directories($post_id);
-    unset($result);
+    $post_data = nel_get_post_data($post_id);
 
-    // Create new thread
-    // Maybe make this a function in itself?
-    $prepared = $dbh->prepare('INSERT INTO ' . THREAD_TABLE . ' (
+    $prepared = $dbh->prepare('INSERT INTO "' . THREAD_TABLE . '" (
         thread_id,
         first_post,
         last_post,
         last_bump_time,
         total_files,
+        total_external,
         last_update,
-        post_count)
+        post_count,
+        sticky)
     VALUES
 	   (:id,
         :first,
         :last,
-        :bump
+        :bump,
         :files,
+        :externals,
         :time,
+        1,
         1)');
 
     $prepared->bindValue(':id', $post_id, PDO::PARAM_INT);
@@ -131,12 +180,13 @@ function nel_make_post_thread($dataforce, $post_id)
     $prepared->bindValue(':last', $post_id, PDO::PARAM_INT);
     $prepared->bindValue(':bump', $post_data['post_time']);
     $prepared->bindValue(':files', $post_data['file_count'], PDO::PARAM_INT);
+    $prepared->bindValue(':externals', $post_data['external_count'], PDO::PARAM_INT);
     $prepared->bindValue(':time', $post_data['post_time'], PDO::PARAM_INT);
     $prepared->execute();
     $prepared->closeCursor();
 
-    // Update post to new thread and move the files over
-    $dbh->query('UPDATE ' . POST_TABLE . ' SET parent_thread=' . $post_id . ' WHERE post_number=' . $post_id);
+    $dbh->query('UPDATE "' . POST_TABLE . '" SET "parent_thread" = ' . $post_id . ', "op" = 1 WHERE "post_number" = ' .
+         $post_id);
 
     if ($post_data['has_file'])
     {
@@ -159,6 +209,53 @@ function nel_make_post_thread($dataforce, $post_id)
             ++ $line;
         }
     }
+}
+
+function nel_update_thread_data($thread_id)
+{
+    $dbh = nel_get_db_handle();
+    $thread_data = nel_get_thread_data($thread_id);
+    $last_post = nel_get_thread_last_post($thread_id);
+    $second_last_post = nel_get_thread_second_last_post($thread_id);
+
+    $thread_posts = nel_get_thread_all_posts($thread_id);
+    $first_post = 0;
+    $last_post = 0;
+    $post_count = 0;
+    $file_count = 0;
+    $external_count = 0;
+    $last_update = 0;
+    $last_bump = 0; // TODO: Have this account for thread bump limit
+
+    foreach ($thread_posts as $post)
+    {
+        if($first_post === 0)
+        {
+            $first_post = $post['post_number'];
+        }
+
+        $last_post = $post['post_number'];
+        $post_count += 1;
+        $file_count += $post['file_count'];
+        $external_count += $post['external_count'];
+        $last_update = $post['post_time'];
+
+        if($post['sage'] === '0')
+        {
+            $last_bump = $post['post_time'];
+        }
+    }
+
+    $prepared = $dbh->prepare('UPDATE "' . THREAD_TABLE . '" SET "first_post" = :first, "last_post" = :last, "post_count" = :pcount, "file_count" = :fcount, "external_count" = :ecount, "last_update" = :update, "last_bump_time" = :bump WHERE "post_number" = ' . $thread_id . '');
+    $prepared->bindValue(':first', $first_post, PDO::PARAM_INT);
+    $prepared->bindValue(':last', $last_post, PDO::PARAM_INT);
+    $prepared->bindValue(':pcount', $post_count, PDO::PARAM_INT);
+    $prepared->bindValue(':fcount', $file_count, PDO::PARAM_INT);
+    $prepared->bindValue(':ecount', $external_count, PDO::PARAM_INT);
+    $prepared->bindValue(':update', $last_update);
+    $prepared->bindValue(':bump', $last_bump);
+    $prepared->execute();
+    unset($prepared);
 }
 
 function nel_delete_content($dataforce, $sub, $type)

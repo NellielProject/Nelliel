@@ -39,13 +39,16 @@ function nel_render_thread_panel($dataforce, $expand)
         {
             $thread_id = $thread['thread_id'];
             $thread['post_number'] = $thread['thread_id'];
+            $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE post_number=?');
+            $prepared->bindValue(1, $thread_id, PDO::PARAM_INT);
+            $prepared->execute();
+            $post = $prepared->fetch(PDO::FETCH_ASSOC);
+            $prepared->closeCursor();
         }
-
-        $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE post_number=?');
-        $prepared->bindValue(1, $thread_id, PDO::PARAM_INT);
-        $prepared->execute();
-        $post = $prepared->fetch(PDO::FETCH_ASSOC);
-        $prepared->closeCursor();
+        else
+        {
+            $post = $thread;
+        }
 
         if ($post['has_file'] === '1')
         {
@@ -94,7 +97,7 @@ function nel_render_thread_panel_thread($dataforce, $render, $thread_data, $post
 
     if (utf8_strlen($post_data['poster_name']) > 12) // TODO: undefined index
     {
-        $render->add_data('post_name', utf8_substr($post_data['name'], 0, 11) . "...");
+        $render->add_data('poster_name', utf8_substr($post_data['poster_name'], 0, 11) . "...");
     }
 
     if (utf8_strlen($post_data['subject']) > 12)
@@ -104,7 +107,7 @@ function nel_render_thread_panel_thread($dataforce, $render, $thread_data, $post
 
     if ($post_data['email'])
     {
-        $render->add_data('post_name', '"<a href="mailto:' . $post_data['email'] . '">' . $post_data['poster_name'] . '</a>');
+        $render->add_data('poster_name', '<a href="mailto:' . $post_data['email'] . '">' . $post_data['poster_name'] . '</a>');
     }
 
     $post_data['comment'] = utf8_str_replace("<br>", " ", $post_data['comment']);

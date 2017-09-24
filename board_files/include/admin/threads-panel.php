@@ -23,7 +23,7 @@ function nel_thread_panel($dataforce, $authorize)
         $expand = FALSE;
     }
 
-    if ($mode === 'update')
+    if ($mode === 'admin->thread->update')
     {
         $updates = nel_thread_updates($dataforce);
         nel_regen($dataforce, $updates, 'thread');

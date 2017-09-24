@@ -35,7 +35,7 @@
                     <a href="{PAGE_DIR}{$render->retrieve_data('post_number')}/{$render->retrieve_data('post_number')}.html" rel="external">{$render->retrieve_data('subject')}</a>
                 </td>
                 <td>
-                    {$render->retrieve_data('name')}
+                    {$render->retrieve_data('poster_name')}
                 </td>
                 <td>
                     {$render->retrieve_data('comment')}
