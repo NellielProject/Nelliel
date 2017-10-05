@@ -170,7 +170,7 @@ function nel_is_post_ok($dataforce, $time)
              ' WHERE parent_thread = ? AND post_time > ? AND ip_address = ?');
         $prepared->bindValue(1, $dataforce['response_to'], PDO::PARAM_INT);
         $prepared->bindValue(2, $thread_delay, PDO::PARAM_STR);
-        $prepared->bindValue(3, @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
+        $prepared->bindValue(3, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR);
         $prepared->execute();
         $renzoku = $prepared->fetchColumn();
         $prepared->closeCursor();
@@ -180,7 +180,7 @@ function nel_is_post_ok($dataforce, $time)
         $thread_delay = $time - (BS_THREAD_DELAY * 1000);
         $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE post_time > ? AND ip_address = ?');
         $prepared->bindValue(1, $thread_delay, PDO::PARAM_STR);
-        $prepared->bindValue(2, @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
+        $prepared->bindValue(2, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR);
         $prepared->execute();
         $renzoku = $prepared->fetchColumn();
         $prepared->closeCursor();

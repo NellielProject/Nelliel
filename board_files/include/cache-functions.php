@@ -27,95 +27,99 @@ require_once CACHE_PATH . 'multi-cache.nelcache';
 function nel_cache_rules()
 {
     $dbh = nel_get_db_handle();
-    $gmode = '';
-    $amode = '';
-    $vmode = '';
-    $dmode = '';
-    $rmode = '';
-    $omode = '';
+    $gtypes = '';
+    $atypes = '';
+    $vtypes = '';
+    $dtypes = '';
+    $rtypes = '';
+    $otypes = '';
     $file_config = nel_build_filetype_config($dbh);
     $rule_list = '';
 
-    foreach($file_config as $key => $value)
+    $graphics = $file_config['graphics']['graphics'];
+
+    if($file_config['graphics']['graphics'])
     {
-        if(!$file_config[$key]['ENABLE'])
+        foreach ($file_config['graphics'] as $key => $value)
         {
-            continue;
-        }
-
-        foreach ($file_config[$key] as $key2 => $value2)
-        {
-            if($key2 === 'ENABLE')
-            {
-                continue;
-            }
-
-            if($key === 'GRAPHICS' && $value2)
-            {
-                $gmode .= utf8_strtoupper($key2) . ', ';
-            }
-
-            if($key === 'AUDIO' && $value2)
-            {
-                $amode .= utf8_strtoupper($key2) . ', ';
-            }
-
-            if($key === 'VIDEO' && $value2)
-            {
-                $vmode .= utf8_strtoupper($key2) . ', ';
-            }
-
-            if($key === 'DOCUMENT' && $value2)
-            {
-                $dmode .= utf8_strtoupper($key2) . ', ';
-            }
-
-            if($key === 'ARCHIVE' && $value2)
-            {
-                $rmode .= utf8_strtoupper($key2) . ', ';
-            }
-
-            if($key === 'OTHER' && $value2)
-            {
-                $omode .= utf8_strtoupper($key2) . ', ';
-            }
+            $gtypes .= ($value && $key !== 'graphics') ? utf8_strtoupper($key) . ', ' : '';
         }
     }
 
-    if ($gmode !== '')
+    if($file_config['audio']['audio'])
     {
-        $gmode = utf8_substr($gmode, 0, -2);
-        $rule_list .= '<li>' . nel_stext('FILES_GRAPHICS') . $gmode . '</li>';
+        foreach ($file_config['audio'] as $key => $value)
+        {
+            $atypes .= ($value && $key !== 'audio') ? utf8_strtoupper($key) . ', ' : '';
+        }
     }
-    if ($amode !== '')
+
+    if($file_config['video']['video'])
     {
-        $amode = utf8_substr($amode, 0, -2);
-        $rule_list .= '
-							<li>' . nel_stext('FILES_AUDIO') . utf8_strtoupper($amode) . '</li>';
+        foreach ($file_config['video'] as $key => $value)
+        {
+            $vtypes .= ($value && $key !== 'video') ? utf8_strtoupper($key) . ', ' : '';
+        }
     }
-    if ($vmode !== '')
+
+    if($file_config['document']['document'])
     {
-        $vmode = utf8_substr($vmode, 0, -2);
-        $rule_list .= '
-							<li>' . nel_stext('FILES_VIDEO') . utf8_strtoupper($vmode) . '</li>';
+        foreach ($file_config['document'] as $key => $value)
+        {
+            $dtypes .= ($value && $key !== 'document') ? utf8_strtoupper($key) . ', ' : '';
+        }
     }
-    if ($dmode !== '')
+
+    if($file_config['archive']['archive'])
     {
-        $dmode = utf8_substr($dmode, 0, -2);
-        $rule_list .= '
-							<li>' . nel_stext('FILES_DOCUMENT') . utf8_strtoupper($dmode) . '</li>';
+        foreach ($file_config['archive'] as $key => $value)
+        {
+            $rtypes .= ($value && $key !== 'archive') ? utf8_strtoupper($key) . ', ' : '';
+        }
     }
-    if ($rmode !== '')
+
+    if($file_config['other']['other'])
     {
-        $rmode = utf8_substr($rmode, 0, -2);
-        $rule_list .= '
-							<li>' . nel_stext('FILES_ARCHIVE') . utf8_strtoupper($rmode) . '</li>';
+        foreach ($file_config['other'] as $key => $value)
+        {
+            $otypes .= ($value && $key !== 'other') ? utf8_strtoupper($key) . ', ' : '';
+        }
     }
-    if ($omode !== '')
+
+    if ($gtypes !== '')
     {
-        $omode = utf8_substr($omode, 0, -2);
+        $gtypes = utf8_substr($gtypes, 0, -2);
+        $rule_list .= '<li>' . nel_stext('FILES_GRAPHICS') . $gtypes . '</li>';
+    }
+    if ($atypes !== '')
+    {
+        $atypes = utf8_substr($atypes, 0, -2);
         $rule_list .= '
-							<li>' . nel_stext('FILES_OTHER') . $omode . '</li>';
+							<li>' . nel_stext('FILES_AUDIO') . $atypes . '</li>';
+    }
+    if ($vtypes !== '')
+    {
+        $vtypes = utf8_substr($vtypes, 0, -2);
+        $rule_list .= '
+							<li>' . nel_stext('FILES_VIDEO') . $vtypes . '</li>';
+    }
+    if ($dtypes !== '')
+    {
+        $dtypes = utf8_substr($dtypes, 0, -2);
+        $rule_list .= '
+							<li>' . nel_stext('FILES_DOCUMENT') . $dtypes . '</li>';
+    }
+    if ($rtypes !== '')
+    {
+        $rtypes = utf8_substr($rtypes, 0, -2);
+        $rule_list .= '
+							<li>' . nel_stext('FILES_ARCHIVE') . $rtypes . '</li>';
+    }
+    if ($otypes !== '')
+    {
+        $otypes = utf8_substr($otypes, 0, -2);
+        $rule_list .= '
+							<li>' . nel_stext('FILES_OTHER') . $otypes . '</li>';
     }
 
     return $rule_list;
@@ -123,16 +127,40 @@ function nel_cache_rules()
 
 function nel_build_filetype_config($dbh)
 {
-    $result = $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'filetype\'');
-    $config_list = $result->fetchAll(PDO::FETCH_ASSOC);
-    unset($result);
-    $result_count = count($config_list);
+    $query = 'SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'filetype_enable\'';
+    $config_list = nel_pdo_simple_query($query, true, PDO::FETCH_ASSOC, true);
     $file_config = array();
 
     foreach ($config_list as $config)
     {
         $setting_name = explode('_', $config['config_name']);
-        $file_config[utf8_strtoupper($setting_name[0])][utf8_strtoupper($setting_name[1])] = (bool)$config['setting'];
+
+        switch ($setting_name[0])
+        {
+            case 'g':
+                $file_config['graphics'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'a':
+                $file_config['audio'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'v':
+                $file_config['video'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'd':
+                $file_config['document'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'o':
+                $file_config['other'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'r':
+                $file_config['archive'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+        }
     }
 
     return $file_config;
@@ -213,7 +241,6 @@ function nel_write_multi_cache($dataforce)
     $template_info = nel_template_info(NULL, NULL, NULL, TRUE);
     $template_info = nel_reset_template_status($template_info);
     $cache = '<?php
-$dataforce[\'post_links\'] = \'' . $dataforce['post_links'] . '\';
 $dataforce[\'rules_list\'] = \'' . $dataforce['rules_list'] . '\';
 $template_info = ' . var_export($template_info, TRUE) . ';
 nel_template_info(NULL, NULL, $template_info, FALSE);

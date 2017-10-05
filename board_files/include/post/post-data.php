@@ -10,17 +10,15 @@ function nel_collect_post_data()
     $post_data['fgsfds'] = nel_check_post_entry($_POST['fgsfds'], "string");
     $post_data['password'] = nel_check_post_entry($_POST['sekrit'], "string");
 
-    BS_MAX_POST_FILES;
-
-    if ($post_data['name'] !== '' && !BS_FORCE_ANONYMOUS)
+    if ($post_data['name'] !== '')
     {
-        $post_data = nel_check_mod_fake($post_data);
         preg_match('/^([^#]*)(#(?!#))?([^#]*)(##)?(.*)$/', $post_data['name'], $name_pieces);
         $post_data['name'] = $name_pieces[1];
-        $post_data = nel_get_mod_post($post_data, $name_pieces);
         $post_data = nel_get_tripcodes($post_data, $name_pieces);
+        $post_data = nel_get_staff_post($post_data, $name_pieces);
     }
-    else
+
+    if (BS_FORCE_ANONYMOUS || $post_data['name'] === '')
     {
         $post_data['name'] = nel_stext('THREAD_NONAME');
         $post_data['email'] = '';
@@ -31,73 +29,56 @@ function nel_collect_post_data()
 
 function nel_check_post_entry($post_item, $type)
 {
-    if (!empty($post_item))
+    if ($type === "integer" || $type === "int")
     {
-        if ($type === "integer" || $type === "int")
+        if (!is_numeric($post_item))
         {
-            if (!is_numeric($post_item))
-            {
-                return null;
-            }
+            return null;
         }
     }
-    else
+
+    if ($type === "string" || $type === "str")
     {
-        return null;
+        if ($post_item === '')
+        {
+            return null;
+        }
     }
 
     settype($post_item, $type);
     return $post_item;
 }
 
-function nel_check_mod_fake($post_data)
+function nel_get_staff_post($post_data, $name_pieces)
 {
-    nel_banned_name($post_data['name']);
-
-    if (utf8_strpos($post_data['name'], nel_stext('THREAD_MODPOST')))
-    {
-        $post_data['name'] = nel_stext('FAKE_STAFF_ATTEMPT');
-    }
-    else if (utf8_strpos($post_data['name'], nel_stext('THREAD_ADMINPOST')))
-    {
-        $post_data['name'] = nel_stext('FAKE_STAFF_ATTEMPT');
-    }
-    else if (utf8_strpos($post_data['name'], nel_stext('THREAD_JANPOST')))
-    {
-        $post_data['name'] = nel_stext('FAKE_STAFF_ATTEMPT');
-    }
-
-    return $post_data;
-}
-
-function nel_get_mod_post($post_data, $name_pieces)
-{
-    // TODO: Fix mod post type stuffs
     $authorize = nel_get_authorization();
-    $post_data['modpost'] = 0;
+    $post_data['modpost'] = null;
 
-    if (!nel_session_ignored() && $name_pieces[5] === $authorize->get_user_role($_SESSION['username'], 'posting_tripcode'))
+    if ($name_pieces[5] === '')
     {
-        if ($_SESSION['perms']['perm_post'])
-        {
-            if ($_SESSION['settings']['staff_type'] === 'admin')
-            {
-                $post_data['modpost'] = 3;
-            }
-            else if ($_SESSION['settings']['staff_type'] === 'moderator')
-            {
-                $post_data['modpost'] = 2;
-            }
-            else if ($_SESSION['settings']['staff_type'] === 'janitor')
-            {
-                $post_data['modpost'] = 1;
-            }
-        }
+        return $post_data;
+    }
 
-        if ($authorize->get_user_perm($_SESSION['username'], 'perm_post_sticky') && utf8_strripos($dataforce['fgsfds'], 'sticky') !== FALSE)
-        {
-            $fgsfds['sticky'] = TRUE;
-        }
+    $user = $authorize->get_tripcode_user($name_pieces[5]);
+
+    if ($user === FALSE)
+    {
+        return $post_data;
+    }
+
+    $role = $authorize->get_user_info($user, 'role_id');
+
+    if ($name_pieces[5] !== $authorize->get_role_info($role, 'posting_tripcode') ||
+         !$authorize->get_role_info($role, 'perm_can_post'))
+    {
+        return $post_data;
+    }
+
+    $post_data['modpost'] = $role;
+
+    if (!$authorize->get_role_info($role, 'perm_can_post_name'))
+    {
+        $post_data['name'] = $authorize->get_user_info($user, 'user_title');
     }
 
     return $post_data;
@@ -112,18 +93,6 @@ function nel_get_tripcodes($post_data, $name_pieces)
     $post_data['secure_tripcode'] = '';
     $post_data = $plugins->plugin_hook('in-before-tripcode-processing', TRUE, array($post_data, $name_pieces));
 
-    if (!empty($_SESSION) && !$authorize->get_user_perm($_SESSION['username'], 'perm_post_named'))
-    {
-        $name_pieces[1] = '';
-    }
-
-    if ($name_pieces[1] === '')
-    {
-
-        $post_data['name'] = nel_stext('THREAD_NONAME');
-        $post_data['email'] = '';
-    }
-
     if ($name_pieces[3] !== '' && BS_ALLOW_TRIPKEYS)
     {
         $raw_trip = iconv('UTF-8', 'SHIFT_JIS//IGNORE', $name_pieces[3]);
@@ -136,7 +105,7 @@ function nel_get_tripcodes($post_data, $name_pieces)
         $post_data['tripcode'] = iconv('SHIFT_JIS//IGNORE', 'UTF-8', $final_trip);
     }
 
-    if ($name_pieces[5] !== '' || $post_data['modpost'] > 0)
+    if ($name_pieces[5] !== '')
     {
         $raw_trip = iconv('UTF-8', 'SHIFT_JIS//IGNORE', $name_pieces[5]);
         $trip = hash(SECURE_TRIPCODE_ALGORITHM, $raw_trip . TRIPCODE_SALT);

@@ -18,7 +18,7 @@ Required:
 - PHP 5.3.3+
 - GD 2.0.35+
 - PDO with MySQL or SQLite drivers
-- MySQL 5.1.73+ or SQLite 3.6.20+
+- MySQL 5.1.73+ or SQLite 3.6.20+ or PostgreSQL 8.4.20+
 - iconv
 
 ## Optional Requirements ##

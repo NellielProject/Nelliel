@@ -85,9 +85,6 @@ function nel_initialize_session($dataforce)
             $_SESSION['username'] = $dataforce['username'];
             $_SESSION['login_time'] = time();
             $_SESSION['last_activity'] = time();
-            //$user_auth = $authorize->get_user_auth($dataforce['username']);
-            //$_SESSION['perms'] = $user_auth['perms'];
-            //$_SESSION['settings'] = $user_auth['settings'];
         }
         else
         {

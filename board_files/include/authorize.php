@@ -104,38 +104,30 @@ class nel_authorization
 
     private function get_user_list()
     {
-        $result = $this->dbh->query('SELECT user_id FROM "' . USER_TABLE . '";');
-        return $result->fetchAll(PDO::FETCH_COLUMN);
+        $query = 'SELECT "user_id" FROM "' . USER_TABLE . '"';
+        return nel_pdo_simple_query($query, true, PDO::FETCH_COLUMN, true);
     }
 
     private function get_role_list()
     {
-        $result = $this->dbh->query('SELECT role_id FROM "' . ROLES_TABLE . '";');
-        return $result->fetchAll(PDO::FETCH_COLUMN);
+        $query = 'SELECT "role_id" FROM "' . ROLES_TABLE . '"';
+        return nel_pdo_simple_query($query, true, PDO::FETCH_COLUMN);
     }
 
     private function load_user($user)
     {
-        $result = $this->dbh->query('SELECT * FROM "' . USER_TABLE . '" WHERE "user_id" = \'' . $user . '\';');
-
-        if ($result !== false)
-        {
-            return $result->fetch(PDO::FETCH_ASSOC);
-        }
-
-        return false;
+        $query = 'SELECT * FROM "' . USER_TABLE . '" WHERE "user_id" = ?';
+        $bind_values[1]['value'] = $user;
+        $bind_values[1]['type'] = PDO::PARAM_STR;
+        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC);
     }
 
     private function load_role($role)
     {
-        $result = $this->dbh->query('SELECT * FROM "' . ROLES_TABLE . '" WHERE "role_id" = \'' . $role . '\';');
-
-        if ($result !== false)
-        {
-            return $result->fetch(PDO::FETCH_ASSOC);
-        }
-
-        return false;
+        $query = 'SELECT * FROM "' . ROLES_TABLE . '" WHERE "role_id" = ?';
+        $bind_values[1]['value'] = $role;
+        $bind_values[1]['type'] = PDO::PARAM_STR;
+        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC);
     }
 
     public function set_up_user($user)
@@ -255,6 +247,13 @@ class nel_authorization
         }
     }
 
+    public function get_tripcode_user($tripcode)
+    {
+        $query = 'SELECT "user_id" FROM "' . USER_TABLE . '" WHERE "user_tripcode" = ?';
+        nel_pdo_bind_set($bind_values, 1, $tripcode, PDO::PARAM_STR);
+        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC);
+    }
+
     public function update_user($user, $update)
     {
         if ($this->user_exists($user))
@@ -327,18 +326,15 @@ class nel_authorization
         foreach ($user_data as $key => $value)
         {
             $update_user .= '"' . $key . '" = :' . $key . ', ';
-            $bind_user[':' . $key] = $value;
+            $bind_values[':' . $key]['value'] = $value;
         }
 
-        $prepared = $this->dbh->prepare('UPDATE "' . USER_TABLE . '" WHERE "user_id" = \'' . $user . '\' SET ' .
-             $update_user . ';');
+        $bind_values[':user']['value'] = $user;
+        $bind_values[':user']['type'] = PDO::PARAM_STR;
 
-        foreach ($bind_user as $key => $value)
-        {
-            $prepared->bindValue($key, $value);
-        }
-
-        $prepared->execute();
+        $update_user = substr($update_user, 0, -2);
+        $query = 'UPDATE "' . USER_TABLE . '" SET ' . $update_user . ' WHERE "user_id" = :user';
+        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC);
     }
 
     private function save_role($role)
@@ -349,17 +345,14 @@ class nel_authorization
         foreach ($role_data as $key => $value)
         {
             $update_role .= '"' . $key . '" = :' . $key . ', ';
-            $bind_role[':' . $key] = $value;
+            $bind_role[':' . $key]['value'] = $value;
         }
 
-        $prepared = $this->dbh->prepare('UPDATE "' . ROLES_TABLE . '" WHERE "role_id" = \'' . $role . '\' SET ' .
-             $update_role . ';');
+        $bind_values[':role']['value'] = $role;
+        $bind_values[':role']['type'] = PDO::PARAM_STR;
 
-        foreach ($bind_role as $key => $value)
-        {
-            $prepared->bindValue($key, $value);
-        }
-
-        $prepared->execute();
+        $update_role = substr($update_role, 0, -2);
+        $query = 'UPDATE "' . ROLES_TABLE . '" SET ' . $update_role . ' WHERE "role_id" = :role';
+        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC);
     }
 }

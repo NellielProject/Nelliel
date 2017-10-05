@@ -101,13 +101,13 @@ function nel_apply_ban($dataforce)
 
         $prepared = $dbh->prepare('UPDATE ' . BAN_TABLE . ' SET appeal=:bawww, appeal_status=? WHERE ip_address=?');
         $prepared->bindParam(1, $bawww, PDO::PARAM_STR);
-        $prepared->bindParam(2, @inet_pton($banned_ip), PDO::PARAM_STR);
+        $prepared->bindParam(2, $banned_ip, PDO::PARAM_STR);
         $prepared->execute();
         $prepared->closeCursor();
     }
 
     $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE ip_address=?');
-    $prepared->bindParam(1, @inet_pton($base_ip_address), PDO::PARAM_STR);
+    $prepared->bindParam(1, $base_ip_address, PDO::PARAM_STR);
     $prepared->execute();
     $bandata = $prepared->fetch(PDO::FETCH_ASSOC);
     $prepared->closeCursor();

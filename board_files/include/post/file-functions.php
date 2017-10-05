@@ -98,17 +98,15 @@ function nel_check_for_existing_file($file, $files)
     }
 
     nel_banned_hash($file['md5'], $files);
-    $prepared = $dbh->prepare('SELECT post_ref FROM ' . FILE_TABLE . ' WHERE sha1=? LIMIT 1');
-    $prepared->bindParam(1, $file['sha1'], PDO::PARAM_STR);
-    $prepared->execute();
+    $query = 'SELECT post_ref FROM ' . FILE_TABLE . ' WHERE sha1=? LIMIT 1';
+    $bind_values = array();
+    nel_pdo_bind_set($bind_values, 1, $file['sha1'], PDO::PARAM_STR);
+    $result = nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_COLUMN);
 
-    if ($prepared->fetchColumn())
+    if ($result)
     {
-        $prepared->closeCursor();
         nel_derp(12, array('origin' => 'POST', 'bad-filename' => $file['fullname'], 'files' => $files));
     }
-
-    $prepared->closeCursor();
 
     return $file;
 }
@@ -125,8 +123,7 @@ function nel_get_filetype($file, $files)
         'files' => $files));
     }
 
-    if (!$enabled_types[$filetypes[$test_ext]['supertype']]['ENABLE'] ||
-    !$enabled_types[$filetypes[$test_ext]['supertype']][$filetypes[$test_ext]['subtype']])
+    if (!$enabled_types[$filetypes[$test_ext]['supertype']][$filetypes[$test_ext]['subtype']])
     {
         nel_derp(6, array('origin' => 'POST', 'bad-filename' => $file['fullname'], 'files' => $files));
     }

@@ -34,7 +34,7 @@ function nel_thread_updates($dataforce)
                 break;
 
             case 'threadsticky':
-                nel_make_thread_sticky($dataforce, $sub);
+                nel_sticky_thread($dataforce, $sub);
                 $push = $sub[1];
                 break;
 
@@ -56,11 +56,11 @@ function nel_thread_updates($dataforce)
     return $returned_list;
 }
 
-function nel_make_thread_sticky($dataforce, $sub)
+function nel_sticky_thread($dataforce, $sub)
 {
     $dbh = nel_get_db_handle();
     $id = $sub[1];
-    $result = $dbh->query('SELECT parent_thread FROM "' . POST_TABLE . '" WHERE "post_number" = ' . $id . '');
+    $result = $dbh->query('SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ' . $id . '');
     $post_data = $result->fetch(PDO::FETCH_ASSOC);
     unset($result);
 

@@ -65,10 +65,15 @@ function nel_staff_panel($dataforce)
 
         foreach ($_POST as $key => $value)
         {
+            if($key === 'mode' || $key === 'user_password' || $key === 'change_pass')
+            {
+                continue;
+            }
+
             $authorize->update_user_info($user_id, $key, $value);
         }
 
-        nel_render_staff_panel_user_update($dataforce, $user_id);
+        nel_render_staff_panel_user_edit($dataforce, $user_id);
         return true;
     }
     else if ($mode === 'admin->staff->role->update')
@@ -84,6 +89,11 @@ function nel_staff_panel($dataforce)
 
         foreach ($_POST as $key => $value)
         {
+            if($key === 'mode')
+            {
+                continue;
+            }
+
             if(substr($key, 0, 4) === 'perm_')
             {
                 $value = ($value === '1') ? true : false;
@@ -92,7 +102,7 @@ function nel_staff_panel($dataforce)
             $authorize->update_role_info($role_id, $key, $value);
         }
 
-        nel_render_staff_panel_role_update($dataforce, $role_id);
+        nel_render_staff_panel_role_edit($dataforce, $role_id);
         return true;
     }
     else

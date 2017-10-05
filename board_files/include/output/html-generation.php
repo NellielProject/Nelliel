@@ -143,6 +143,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     {
         $post_data['comment'] = nel_stext('THREAD_NOTEXT');
     }
+
     $render->add_sanitized_data('comment-part', utf8_str_replace('>><a href="../"', '>><a href="', $post_data['comment']));
     $render->add_sanitized_data('comment', $post_data['comment']);
     $render->add_sanitized_data('poster_name', $post_data['poster_name']);
@@ -287,7 +288,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     if (!nel_session_ignored())
     {
         $render->add_data('logged_in', TRUE);
-        $render->add_data('ip_address', (@inet_ntop($render->retrieve_data('ip_address'))) ? inet_ntop($render->retrieve_data('ip_address')) : 'Unknown');
+        $render->add_data('ip_address', $render->retrieve_data('ip_address') ? $render->retrieve_data('ip_address') : 'Unknown');
         $render->add_data('perm_ban', $authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'));
         $render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
         $render->add_data('page_ref2', PHP_SELF . '?page=');
@@ -364,7 +365,7 @@ function nel_render_ban_page($dataforce, $bandata)
     $render->add_data('appeal_status', (int) $bandata['appeal_status']);
     $render->add_data('format_length', date("D F jS Y  H:i", $bandata['length_base']));
     $render->add_data('format_time', date("D F jS Y  H:i", $bandata['ban_time']));
-    $render->add_data('ip_address', @inet_ntop($bandata['ip_address']) ? inet_ntop($bandata['ip_address']) : 'Unknown');
+    $render->add_data('ip_address', $bandata['ip_address'] ? $bandata['ip_address'] : 'Unknown');
     nel_render_header($dataforce, $render, array());
     $render->parse('ban_page.tpl', '');
     nel_render_basic_footer($render);

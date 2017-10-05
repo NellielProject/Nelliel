@@ -75,13 +75,13 @@ function nel_update_ban($dataforce)
 //
 // Ban control panel
 //
-function nel_ban_control($dataforce, $authorize)
+function nel_ban_control($dataforce)
 {
     $dbh = nel_get_db_handle();
     $authorize = nel_get_authorization();
-    $mode = $dataforce['mode_action'];
+    $mode = $dataforce['mode'];
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_panel'))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_access'))
     {
         nel_derp(101, array('origin' => 'ADMIN'));
     }
@@ -92,12 +92,13 @@ function nel_ban_control($dataforce, $authorize)
     {
         nel_render_ban_panel_modify($dataforce);
     }
-    else if ($mode === 'new')
+    else if ($mode === 'admin->ban->new')
     {
         nel_render_ban_panel_add($dataforce);
     }
-    else if ($mode === 'add')
+    else if ($mode === 'admin->ban->add')
     {
+        $dataforce['snacks'] = 'addban';
         nel_ban_hammer($dataforce);
         nel_render_ban_panel_list($dataforce);
     }
@@ -110,7 +111,7 @@ function nel_ban_control($dataforce, $authorize)
     {
         nel_update_ban($dataforce, $authorize);
     }
-    else if ($mode === 'panel')
+    else if ($mode === 'admin->ban->panel')
     {
         nel_render_ban_panel_list($dataforce);
     }

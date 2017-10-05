@@ -15,13 +15,13 @@ function nel_render_ban_panel_list($dataforce)
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
     nel_render_ban_panel_top($dataforce, $render);
-    $result = $dbh->query('SELECT * FROM ' . BAN_TABLE . ' ORDER BY id DESC');
+    $result = $dbh->query('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "id" DESC');
     $bgclass = 'row1';
 
-    while ($baninfo = $result->fetch(PDO::FETCH_ASSOC))
+    while ($result && $baninfo = $result->fetch(PDO::FETCH_ASSOC))
     {
         $render->add_data('ban_panel_loop', TRUE);
-        $render->add_data('ip_address', (@inet_ntop($render->retrieve_data('ip_address'))) ? inet_ntop($render->retrieve_data('ip_address')) : 'Unknown');
+        $render->add_data('ip_address', $render->retrieve_data('ip_address') ? $render->retrieve_data('ip_address') : 'Unknown');
         $render->add_data('ban_appeal_response', $baninfo['appeal_response']);
         $render->add_data('ban_expire', date("D F jS Y  H:i:s", $render->retrieve_data('length') + $render->retrieve_data('ban_time')));
 

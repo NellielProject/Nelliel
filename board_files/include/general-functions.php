@@ -21,6 +21,10 @@ function nel_clean_exit($dataforce, $die)
     //$dataforce['post_links'] = nel_cache_links($dataforce['post_links']);
     //nel_write_multi_cache($dataforce);
 
+    $authorize = nel_get_authorization();
+    $authorize->save_users();
+    $authorize->save_roles();
+
     if ($die)
     {
         die();

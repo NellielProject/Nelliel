@@ -71,13 +71,136 @@ function nel_get_db_handle()
     return $database_handle;
 }
 
+function nel_pdo_bind_set(&$bind_set, $parameter, $value, $bind_style = null)
+{
+    $bind_set[$parameter]['value'] = $value;
+
+    if (!is_null($bind_style))
+    {
+        $bind_set[$parameter]['bind_type'] = $bind_style;
+    }
+
+    return $bind_set;
+}
+
+function nel_format_multiple_columns($columns)
+{
+    $column_count = count($columns);
+    $columns_sql = '(';
+
+    for ($i = 0; $i < $column_count; $i ++)
+    {
+        $columns_sql .= '"' . $columns[$i] . '"';
+
+        if ($i < $column_count - 1)
+        {
+            $columns_sql .= ', ';
+        }
+        else
+        {
+            $columns_sql .= ')';
+        }
+    }
+
+    return $columns_sql;
+}
+
+function nel_format_multiple_values($values)
+{
+    $values_count = count($values);
+    $values_sql = '(';
+
+    for ($i = 0; $i < $values_count; $i ++)
+    {
+        $values_sql .= $values[$i];
+
+        if ($i < $values_count - 1)
+        {
+            $values_sql .= ', ';
+        }
+        else
+        {
+            $values_sql .= ')';
+        }
+    }
+
+    return $values_sql;
+}
+
+function nel_pdo_simple_query($query, $do_fetch = false, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, $fetchall = false)
+{
+    $dbh = nel_get_db_handle();
+    $result = $dbh->query($query);
+
+    if ($result != false && $do_fetch)
+    {
+        return nel_pdo_do_fetch($result, $fetch_style, $fetchall);
+    }
+
+    return $result;
+}
+
+function nel_pdo_prepared_query($query, $bind_values, $do_fetch = false, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, $fetchall = false)
+{
+    $dbh = nel_get_db_handle();
+    $prepared = $dbh->prepare($query);
+    $prepared = nel_pdo_bind_values($prepared, $bind_values);
+
+    if ($prepared->execute() && $do_fetch)
+    {
+        $results = nel_pdo_do_fetch($prepared, $fetch_style, $fetchall);
+        $prepared->closeCursor();
+        return $results;
+    }
+
+    return $prepared;
+}
+
+function nel_pdo_do_fetch($result, $fetch_style, $fetchall)
+{
+    if ($fetchall)
+    {
+        $fetched_result = $result->fetchAll($fetch_style);
+    }
+    else
+    {
+        if($fetch_style === PDO::FETCH_COLUMN)
+        {
+            $fetched_result = $result->fetchColumn();
+        }
+        else
+        {
+            $fetched_result = $result->fetch($fetch_style);
+        }
+    }
+
+    return $fetched_result;
+}
+
+function nel_pdo_bind_values($prepared, $bind_values)
+{
+    foreach ($bind_values as $parameter => $values)
+    {
+        if (array_key_exists('bind_type', $values))
+        {
+            $prepared->bindValue($parameter, $values['value'], $values['bind_type']);
+        }
+        else
+        {
+            $prepared->bindValue($parameter, $values['value']);
+        }
+    }
+
+    return $prepared;
+}
+
 function nel_database_exists($database)
 {
     $dbh = nel_get_db_handle();
 
     if (SQLTYPE === 'SQLITE')
     {
-        $result = $dbh->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $table . "'");
+        $result = $dbh->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $database . "'");
     }
 
     if (SQLTYPE === 'MYSQL')
