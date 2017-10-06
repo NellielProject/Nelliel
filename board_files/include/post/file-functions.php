@@ -156,7 +156,7 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
         $files[$i]['pre_y'] = null;
         $files[$i]['thumbfile'] = null;
 
-        if ($files[$i]['subtype'] === 'SWF' || ($files[$i]['supertype'] === 'GRAPHICS' && !BS_USE_MAGICK))
+        if ($files[$i]['subtype'] === 'swf' || ($files[$i]['supertype'] === 'graphics' && !BS_USE_MAGICK))
         {
             $dim = getimagesize($files[$i]['dest']);
             $files[$i]['im_x'] = $dim[0];
@@ -166,7 +166,7 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
             $files[$i]['pre_y'] = ($files[$i]['im_y'] > BS_MAX_HEIGHT) ? intval($ratio * $files[$i]['im_y']) : $files[$i]['im_y'];
         }
 
-        if (BS_USE_THUMB && $files[$i]['supertype'] === 'GRAPHICS')
+        if (BS_USE_THUMB && $files[$i]['supertype'] === 'graphics')
         {
             exec("convert -version", $out, $rescode);
 
@@ -181,7 +181,7 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
                 $files[$i]['pre_x'] = ($files[$i]['im_x'] > BS_MAX_WIDTH) ? intval($ratio * $files[$i]['im_x']) : $files[$i]['im_x'];
                 $files[$i]['pre_y'] = ($files[$i]['im_y'] > BS_MAX_HEIGHT) ? intval($ratio * $files[$i]['im_y']) : $files[$i]['im_y'];
 
-                if ($files[$i]['subtype'] === 'GIF')
+                if ($files[$i]['subtype'] === 'gif')
                 {
                     $files[$i]['thumbfile'] = $files[$i]['filename'] . '-preview.gif';
                     $cmd_coalesce = 'convert ' . escapeshellarg($files[$i]['dest']) . ' -coalesce ' .
@@ -223,18 +223,18 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
 
                 switch ($files[$i]['subtype'])
                 {
-                    case 'JPEG':
+                    case 'jpeg':
                         $image = imagecreatefromjpeg($files[$i]['dest']);
                         break;
 
-                    case 'GIF':
+                    case 'gif':
                         if ($gd_test['GIF Read Support'])
                         {
                             $image = imagecreatefromgif($files[$i]['dest']);
                         }
                         break;
 
-                    case 'PNG':
+                    case 'png':
                         $image = imagecreatefrompng($files[$i]['dest']);
                         break;
                 }

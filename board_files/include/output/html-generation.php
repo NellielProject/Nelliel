@@ -176,12 +176,12 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             $files[$i]['img_dim'] = (!is_null($files[$i]['image_width']) && !is_null($files[$i]['image_height'])) ? TRUE : FALSE;
             $files[$i]['display_filename'] = $files[$i]['filename'];
 
-            if(strlen($files[$i]['filename']) > 32)
+            if (strlen($files[$i]['filename']) > 32)
             {
                 $files[$i]['display_filename'] = substr($files[$i]['filename'], 0, 25) . '(...)';
             }
 
-            $files[$i]['file_location'] = $temp_dot . SRC_DIR . $post_id . '/' . $files[$i]['filename']. "." .
+            $files[$i]['file_location'] = $temp_dot . SRC_DIR . $post_id . '/' . $files[$i]['filename'] . "." .
                  $files[$i]['extension'];
             $files[$i]['filesize'] = round(((int) $files[$i]['filesize'] / 1024), 2);
             $files[$i]['md5'] = $files[$i]['md5'];
@@ -194,21 +194,20 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                     $files[$i]['has_preview'] = TRUE;
                     $files[$i]['preview_location'] = $temp_dot . THUMB_DIR . $post_id . '/' . $files[$i]['preview_name'];
 
-                    if ($files[$i]['preview_width'] != 0)
+                    if ($filecount > 1)
                     {
                         if ($files[$i]['preview_width'] > BS_MAX_MULTI_WIDTH ||
-                             $files[$i]['preview_height'] > BS_MAX_MULTI_HEIGHT)
-                        {
-                            $ratio = min((BS_MAX_MULTI_HEIGHT / $files[$i]['preview_height']), (BS_MAX_MULTI_WIDTH /
-                             $files[$i]['preview_width']));
-                            $files[$i]['preview_width'] = intval($ratio * $files[$i]['preview_width']);
-                            $files[$i]['preview_height'] = intval($ratio * $files[$i]['preview_height']);
-                        }
+                         $files[$i]['preview_height'] > BS_MAX_MULTI_HEIGHT)
+                         {
+                         $ratio = min((BS_MAX_MULTI_HEIGHT / $files[$i]['preview_height']), (BS_MAX_MULTI_WIDTH /
+                         $files[$i]['preview_width']));
+                         $files[$i]['preview_width'] = intval($ratio * $files[$i]['preview_width']);
+                         $files[$i]['preview_height'] = intval($ratio * $files[$i]['preview_height']);
+                         }
                     }
                 }
-                else if (BS_USE_FILE_ICON &&
-                     file_exists(BOARD_FILES . 'imagez/nelliel/filetype/' . utf8_strtolower($files[$i]['supertype']) .
-                     '/' . utf8_strtolower($files[$i]['subtype']) . '.png'))
+                else if (BS_USE_FILE_ICON && file_exists(BOARD_FILES . 'imagez/nelliel/filetype/' .
+                     utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($files[$i]['subtype']) . '.png'))
                 {
                     $files[$i]['has_preview'] = TRUE;
                     $files[$i]['preview_location'] = $temp_dot . BOARD_FILES . '/imagez/nelliel/filetype/' .
@@ -262,7 +261,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     $mod_post_role = $render->retrieve_data('mod_post');
 
-    if($mod_post_role)
+    if ($mod_post_role)
     {
         $capcode_text = $authorize->get_role_info($mod_post_role, 'capcode_text');
         $render->add_data('staff_post', $capcode_text);
@@ -378,7 +377,7 @@ function nel_parse_links($matches)
     $link = $prepared->fetch(PDO::FETCH_NUM);
     $prepared->closeCursor();
 
-    if($link === false)
+    if ($link === false)
     {
         return $matches[0];
     }
