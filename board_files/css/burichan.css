@@ -3,6 +3,7 @@ body {
     font-size: 1.0em;
     background: #EEF2FF;
     color: #000000;
+    font-family: sans-serif;
     padding-left: 6px;
     padding-right: 6px;
 }
@@ -168,31 +169,32 @@ a.post-link:visited {
 }
 
 .op-fileinfo {
-    font-size: 0.90em;
+
 }
 
 .op-multiple-fileinfo {
-    font-size: 0.90em;
     float: left;
     text-align: left;
     text-decoration: none;
     white-space: nowrap;
     padding: 2px;
+    padding-right: 15px;
     padding-left: 15px;
     margin: 3px;
 }
 
 .reply-fileinfo {
-    font-size: 0.90em;
+
 }
 
 .reply-multiple-fileinfo {
-    font-size: 0.90em;
+
     float: left;
     text-align: left;
     text-decoration: none;
     white-space: nowrap;
     padding: 2px;
+    padding-right: 15px;
     padding-left: 15px;
     margin: 3px;
 }
@@ -311,13 +313,12 @@ a.mailto-name:visited {
     font-family: serif;
     float: left;
     padding: 5px;
-    min-width: 25em;
+    min-width: 15em;
     max-width: 60em;
     margin: 5px;
 }
 
 .reply-poster-name {
-    font-size: 0.8em;
     text-decoration: none;
     color: #117743;
     font-weight: bold;

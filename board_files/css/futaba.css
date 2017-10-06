@@ -173,6 +173,8 @@ a.post-link:visited {
     text-decoration: none;
     white-space: nowrap;
     padding: 2px;
+    padding-right: 15px;
+    padding-left: 15px;
     margin: 3px;
 }
 
@@ -187,6 +189,8 @@ a.post-link:visited {
     text-decoration: none;
     white-space: nowrap;
     padding: 2px;
+    padding-right: 15px;
+    padding-left: 15px;
     margin: 3px;
 }
 
