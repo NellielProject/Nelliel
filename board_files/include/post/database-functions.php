@@ -22,7 +22,7 @@ function nel_db_insert_initial_post($time, $poster_info)
     nel_pdo_bind_set($bind_values, ':time', $time);
     nel_pdo_bind_set($bind_values, ':op', $poster_info['op'], PDO::PARAM_INT);
     nel_pdo_bind_set($bind_values, ':sage', 0, PDO::PARAM_INT);
-    nel_pdo_bind_set($bind_values, ':modpost', $poster_info['modpost'], PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, ':modpost', $poster_info['modpost'], PDO::PARAM_STR);
     $results = nel_pdo_prepared_query($query, $bind_values);
 }
 

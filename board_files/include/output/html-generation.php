@@ -260,25 +260,17 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             break;
     }
 
-    switch ($render->retrieve_data('mod_post'))
+    $mod_post_role = $render->retrieve_data('mod_post');
+
+    if($mod_post_role)
     {
-        case '1':
-            $render->add_data('staff_post', nel_stext('THREAD_JANPOST'));
-            $render->add_data('secure_tripcode', '');
-            break;
-
-        case '2':
-            $render->add_data('staff_post', nel_stext('THREAD_MODPOST'));
-            $render->add_data('secure_tripcode', '');
-            break;
-
-        case '3':
-            $render->add_data('staff_post', nel_stext('THREAD_ADMINPOST'));
-            $render->add_data('secure_tripcode', '');
-            break;
-
-        default:
-            $render->add_data('staff_post', '');
+        $capcode_text = $authorize->get_role_info($mod_post_role, 'capcode_text');
+        $render->add_data('staff_post', $capcode_text);
+        $render->add_data('secure_tripcode', '');
+    }
+    else
+    {
+        $render->add_data('staff_post', '');
     }
 
     $render->add_data('logged_in', FALSE);

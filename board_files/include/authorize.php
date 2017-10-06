@@ -251,7 +251,7 @@ class nel_authorization
     {
         $query = 'SELECT "user_id" FROM "' . USER_TABLE . '" WHERE "user_tripcode" = ?';
         nel_pdo_bind_set($bind_values, 1, $tripcode, PDO::PARAM_STR);
-        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC);
+        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_COLUMN);
     }
 
     public function update_user($user, $update)
