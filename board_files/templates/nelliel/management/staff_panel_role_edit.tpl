@@ -90,22 +90,22 @@
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="perm_post_anon" id="ppanon" value=1 {$render->retrieve_data('perm_post_anon')}><label for="ppanon">{nel_stext('MANAGE_STAFF_POST_ANON')}</label>
+                    <input type="checkbox" name="perm_can_post" id="pppost" value=1 {$render->retrieve_data('perm_can_post')}><label for="pppost">{nel_stext('MANAGE_STAFF_CAN_POST')}</label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="perm_post_named" id="ppnamed" value=1 {$render->retrieve_data('perm_post_named')}><label for="ppnamed">{nel_stext('MANAGE_STAFF_POST_NAMED')}</label>
+                    <input type="checkbox" name="perm_can_post_name" id="ppname" value=1 {$render->retrieve_data('perm_can_post_name')}><label for="ppname">{nel_stext('MANAGE_STAFF_CAN_POST_NAME')}</label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="perm_post_sticky" id="ppsticky" value=1 {$render->retrieve_data('perm_post_sticky')}><label for="ppsticky">{nel_stext('MANAGE_STAFF_POST_STICKY')}</label>
+                    <input type="checkbox" name="perm_make_sticky" id="ppsticky" value=1 {$render->retrieve_data('perm_make_sticky')}><label for="ppsticky">{nel_stext('MANAGE_STAFF_MAKE_STICKY')}</label>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="perm_post_locked" id="pplocked" value=1 {$render->retrieve_data('perm_post_locked')}><label for="pplocked">{nel_stext('MANAGE_STAFF_POST_LOCKED')}</label>
+                    <input type="checkbox" name="perm_make_locked" id="pplocked" value=1 {$render->retrieve_data('perm_make_locked')}><label for="pplocked">{nel_stext('MANAGE_STAFF_MAKE_LOCKED')}</label>
                 </td>
             </tr>
             <tr>

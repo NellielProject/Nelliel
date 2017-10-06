@@ -34,6 +34,14 @@
             </tr>
             <tr>
                 <td>
+                    <label for="utitle">{nel_stext('MANAGE_STAFF_USER_TITLE')}</label>
+                </td>
+                <td>
+                    <input type="text" name="user_title" id="utitle" size="50" value="{$render->retrieve_data('user_title')}">
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <label for="rselect">{nel_stext('MANAGE_STAFF_USER_ROLEID')}</label>
                 </td>
                 <td>

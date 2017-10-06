@@ -73,10 +73,10 @@ function nel_eraser_gun($path, $filename, $multi)
 //
 function nel_create_thread_directories($thread_id)
 {
-    mkdir(SRC_PATH . $thread_id, 0777);
-    chmod(SRC_PATH . $thread_id, 0777);
-    mkdir(THUMB_PATH . $thread_id, 0777);
-    chmod(THUMB_PATH . $thread_id, 0777);
-    mkdir(PAGE_PATH . $thread_id, 0777);
-    chmod(PAGE_PATH . $thread_id, 0777);
+    mkdir(SRC_PATH . $thread_id, octdec(DIRECTORY_PERM));
+    chmod(SRC_PATH . $thread_id, octdec(DIRECTORY_PERM));
+    mkdir(THUMB_PATH . $thread_id, octdec(DIRECTORY_PERM));
+    chmod(THUMB_PATH . $thread_id, octdec(DIRECTORY_PERM));
+    mkdir(PAGE_PATH . $thread_id, octdec(DIRECTORY_PERM));
+    chmod(PAGE_PATH . $thread_id, octdec(DIRECTORY_PERM));
 }

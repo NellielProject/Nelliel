@@ -30,7 +30,7 @@ function nel_process_file_info()
         $file_order = $matches[0];
         $new_file['dest'] = SRC_PATH . $file['name'] . '.tmp';
         move_uploaded_file($file['tmp_name'], $new_file['dest']);
-        chmod($new_file['dest'], 0644);
+        chmod($new_file['dest'], octdec(FILE_PERM));
         $new_file['source'] = $_POST['sauce' . $file_order];
         $new_file['license'] = $_POST['loldrama' . $file_order];
         array_push($files, $new_file);
@@ -192,7 +192,7 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
                     exec($cmd_coalesce);
                     exec($cmd_resize);
                     unlink($thumbpath . 'tmp' . $files[$i]['thumbfile']);
-                    chmod($thumbpath . $files[$i]['thumbfile'], 0644);
+                    chmod($thumbpath . $files[$i]['thumbfile'], octdec(FILE_PERM));
                 }
                 else
                 {
@@ -212,7 +212,7 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
                     }
 
                     exec($cmd_resize);
-                    chmod($thumbpath . $files[$i]['thumbfile'], 0644);
+                    chmod($thumbpath . $files[$i]['thumbfile'], octdec(FILE_PERM));
                 }
             }
             else
