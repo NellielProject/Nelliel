@@ -29,7 +29,7 @@
             </tr>
             <tr>
                 <td>
-                    <label for="rcaptext">{nel_stext('MANAGE_STAFF_ROLE_CAPCODE_TEXT')}</label>
+                    <label for="rcaptext">{nel_stext('MANAGE_STAFF_CAPCODE_TEXT')}</label>
                 </td>
                 <td>
                     <input type="text" name="capcode_text" id="rcaptext" size="50" value="{$render->retrieve_data('capcode_text')}">
@@ -37,15 +37,7 @@
             </tr>
             <tr>
                 <td>
-                    <label for="rcapcode">{nel_stext('MANAGE_STAFF_ROLE_POSTING_TRIP')}</label>
-                </td>
-                <td>
-                    <input type="text" name="posting_tripcode" id="rcapcode" size="50" value="{$render->retrieve_data('posting_tripcode')}">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="checkbox" name="perm_board_config" id="paccconfig" value=1 {$render->retrieve_data('perm_board_config')}><label for="paccconfig">{nel_stext('MANAGE_STAFF_ACCESS_CONFIG')}</label>
+                    <input type="checkbox" name="perm_board_config" id="paccconfig" value=1 {$render->retrieve_data('perm_board_config')}><label for="paccconfig">{nel_stext('MANAGE_PERM_CONFIG')}</label>
                 </td>
             </tr>
             <tr>
@@ -125,7 +117,7 @@
             </tr>
             <tr>
                 <td>
-                    <input type="submit" value="{nel_stext('FORM_UPDATE_STAFF')}">
+                    <input type="submit" value="{nel_stext('FORM_STAFF_ROLE_UPDATE')}">
                 </td>
             </tr>
         </table>

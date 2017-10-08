@@ -13,7 +13,7 @@
             </tr>
             <tr>
                 <td>
-                    <label for="bname">{nel_stext('MANAGE_STAFF_USER_NAME')}</label>
+                    <label for="bname">{nel_stext('MANAGE_STAFF_USER_ID')}</label>
                 </td>
                 <td>
                     <input type="text" name="user_id" id="bname" size="50" value="{$render->retrieve_data('user_id')}">
@@ -42,7 +42,7 @@
             </tr>
             <tr>
                 <td>
-                    <label for="rselect">{nel_stext('MANAGE_STAFF_USER_ROLEID')}</label>
+                    <label for="rselect">{nel_stext('MANAGE_STAFF_ROLE_ID')}</label>
                 </td>
                 <td>
                     <input type="text" name="role_id" id="rselect" size="50" value="{$render->retrieve_data('role_id')}">

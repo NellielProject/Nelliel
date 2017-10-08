@@ -163,11 +163,12 @@ a.post-link:visited {
     float: left;
     text-align: left;
     text-decoration: none;
-    white-space: nowrap;
+	white-space: nowrap;
     padding: 2px;
     padding-left: 15px;
     padding-right: 15px;
     margin: 3px;
+    font-size: 0.95em;
 }
 
 .reply-fileinfo {
@@ -183,6 +184,7 @@ a.post-link:visited {
     padding-right: 15px;
     padding-left: 15px;
     margin: 3px;
+    font-size: 0.95em;
 }
 
 .source {

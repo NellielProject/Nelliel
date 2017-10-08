@@ -13,7 +13,7 @@
             </tr>
             <tr>
                 <td>
-                    <label for="bname">{nel_stext('MANAGE_STAFF_USER_EDIT')}</label>
+                    <label for="bname">{nel_stext('MANAGE_STAFF_USER_ID')}</label>
                 </td>
                 <td>
                     <input type="text" name="user_id" id="bname" size="50" value="">
@@ -36,7 +36,7 @@
             </tr>
             <tr>
                 <td>
-                    <label for="bname">{nel_stext('MANAGE_STAFF_ROLE_EDIT')}</label>
+                    <label for="bname">{nel_stext('MANAGE_STAFF_ROLE_ID')}</label>
                 </td>
                 <td>
                     <input type="text" name="role_id" id="bname" size="50" value="">
