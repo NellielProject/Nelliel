@@ -44,6 +44,7 @@ function setup_check()
     nel_create_config_table(CONFIG_TABLE);
     nel_create_user_table(USER_TABLE);
     nel_create_roles_table(ROLES_TABLE);
+    nel_create_permissions_table(PERMISSIONS_TABLE);
 
     nel_create_structure_directory(SRC_PATH, SRC_DIR, 0755);
     nel_create_structure_directory(THUMB_PATH, THUMB_DIR, 0755);

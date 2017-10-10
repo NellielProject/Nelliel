@@ -80,8 +80,7 @@ function nel_create_posts_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "post_number"       ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "post_number"       ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "parent_thread"     INTEGER NOT NULL DEFAULT 0,
         "poster_name"       VARCHAR(255) DEFAULT NULL,
         "post_password"     VARCHAR(255) DEFAULT NULL,
@@ -197,8 +196,7 @@ function nel_create_bans_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "ban_id"            ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "ban_id"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "type"              VARCHAR(255) DEFAULT NULL,
         "ip_address"        VARCHAR(45) DEFAULT NULL,
         "name"              VARCHAR(255) DEFAULT NULL,
@@ -267,7 +265,7 @@ function nel_create_roles_table($table_name)
     CREATE TABLE ' . $table_name . ' (
         "role_id"               VARCHAR(255) DEFAULT NULL UNIQUE,
         "role_title"            VARCHAR(255) DEFAULT NULL,
-        "capcode_text"          VARCHAR(255) DEFAULT NULL,
+        "capcode_text"          VARCHAR(255) DEFAULT NULL
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -286,40 +284,17 @@ function nel_create_permissions_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "index"                 ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "index"                 ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "role_id"               VARCHAR(255) DEFAULT NULL,
         "perm_id"               VARCHAR(255) DEFAULT NULL,
-        "perm_setting"          SMALLINT NOT NULL DEFAULT 0,
-        "perm_board_config"     SMALLINT NOT NULL DEFAULT 0,
-        "perm_staff_access"     SMALLINT NOT NULL DEFAULT 0,
-        "perm_user_add"         SMALLINT NOT NULL DEFAULT 0,
-        "perm_user_modify"      SMALLINT NOT NULL DEFAULT 0,
-        "perm_user_delete"      SMALLINT NOT NULL DEFAULT 0,
-        "perm_role_add"         SMALLINT NOT NULL DEFAULT 0,
-        "perm_role_modify"      SMALLINT NOT NULL DEFAULT 0,
-        "perm_role_delete"      SMALLINT NOT NULL DEFAULT 0,
-        "perm_ban_access"       SMALLINT NOT NULL DEFAULT 0,
-        "perm_ban_add"          SMALLINT NOT NULL DEFAULT 0,
-        "perm_ban_modify"       SMALLINT NOT NULL DEFAULT 0,
-        "perm_ban_delete"       SMALLINT NOT NULL DEFAULT 0,
-        "perm_post_access"      SMALLINT NOT NULL DEFAULT 0,
-        "perm_post_modify"      SMALLINT NOT NULL DEFAULT 0,
-        "perm_can_post"         SMALLINT NOT NULL DEFAULT 0,
-        "perm_can_post_name"    SMALLINT NOT NULL DEFAULT 0,
-        "perm_make_sticky"      SMALLINT NOT NULL DEFAULT 0,
-        "perm_make_locked"      SMALLINT NOT NULL DEFAULT 0,
-        "perm_regen_caches"     SMALLINT NOT NULL DEFAULT 0,
-        "perm_regen_index"      SMALLINT NOT NULL DEFAULT 0,
-        "perm_regen_thread"     SMALLINT NOT NULL DEFAULT 0,
-        "perm_mod_mode"         SMALLINT NOT NULL DEFAULT 0
+        "perm_setting"          SMALLINT NOT NULL DEFAULT 0
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
 
     if ($result !== false)
     {
-        nel_insert_role_defaults();
+        nel_insert_permissions_defaults();
     }
 
     nel_setup_stuff_done($result);
@@ -343,18 +318,12 @@ function nel_insert_role_defaults()
     nel_setup_stuff_done($result);
 }
 
-function nel_insertpermissions_defaults()
+function nel_insert_permissions_defaults()
 {
     $dbh = nel_get_db_handle();
-    $result = $dbh->query("SELECT 1 FROM " . ROLES_TABLE . " WHERE role_id='ADMIN'");
-
-    if ($result->fetch() !== false)
-    {
-        return false;
-    }
-
     $result = $dbh->query("INSERT INTO " . PERMISSIONS_TABLE . " (role_id, perm_id, perm_setting)
-                        VALUES  ('ADMIN', 'perm_board_config', 1),
+                        VALUES  ('ADMIN', 'perm_config_access', 1),
+                                ('ADMIN', 'perm_config_change', 1),
                                 ('ADMIN', 'perm_user_access', 1),
                                 ('ADMIN', 'perm_user_add', 1),
                                 ('ADMIN', 'perm_user_modify', 1),
@@ -387,7 +356,8 @@ function nel_insertpermissions_defaults()
                                 ('ADMIN', 'perm_regen_threads', 1),
                                 ('ADMIN', 'perm_modmode_access', 1),
                                 ('ADMIN', 'perm_modmode_view_ips', 1),
-                                ('MOD', 'perm_board_config', 0),
+                                ('MOD', 'perm_config_access', 0),
+                                ('MOD', 'perm_config_change', 0),
                                 ('MOD', 'perm_user_access', 0),
                                 ('MOD', 'perm_user_add', 0),
                                 ('MOD', 'perm_user_modify', 0),
@@ -418,9 +388,10 @@ function nel_insertpermissions_defaults()
                                 ('MOD', 'perm_regen_caches', 0),
                                 ('MOD', 'perm_regen_index', 0),
                                 ('MOD', 'perm_regen_threads', 0),
-                                ('MOD', 'perm_modmode_access', 1)
+                                ('MOD', 'perm_modmode_access', 1),
                                 ('MOD', 'perm_modmode_view_ips', 1),
-                                ('JANITOR', 'perm_board_config', 0),
+                                ('JANITOR', 'perm_config_access', 0),
+                                ('JANITOR', 'perm_config_change', 0),
                                 ('JANITOR', 'perm_user_access', 0),
                                 ('JANITOR', 'perm_user_add', 0),
                                 ('JANITOR', 'perm_user_modify', 0),
@@ -451,8 +422,8 @@ function nel_insertpermissions_defaults()
                                 ('JANITOR', 'perm_regen_caches', 0),
                                 ('JANITOR', 'perm_regen_index', 0),
                                 ('JANITOR', 'perm_regen_threads', 0),
-                                ('JANITOR', 'perm_modmode_access', 1)
-                                ('JANITOR', 'perm_modmode_view_ips', 0),");
+                                ('JANITOR', 'perm_modmode_access', 1),
+                                ('JANITOR', 'perm_modmode_view_ips', 0)");
 
     nel_setup_stuff_done($result);
 }
@@ -474,7 +445,8 @@ function nel_insert_default_admin()
 
     $result = $dbh->query("INSERT INTO " . USER_TABLE . " (user_id, user_password, role_id, active, failed_logins, last_failed_login)
     VALUES
-    ('" . DEFAULTADMIN . "', '" . nel_password_hash(DEFAULTADMIN_PASS, NELLIEL_PASS_ALGORITHM) . "',
+    ('" . DEFAULTADMIN .
+         "', '" . nel_password_hash(DEFAULTADMIN_PASS, NELLIEL_PASS_ALGORITHM) . "',
     'ADMIN', 1, 1, 0)");
 
     nel_setup_stuff_done($result);

@@ -13,7 +13,7 @@ function nel_staff_panel($dataforce)
     $temp_auth = array();
     $mode = $dataforce['mode'];
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_staff_access'))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access') && !$authorize->get_user_perm($_SESSION['username'], 'perm_role_access'))
     {
         nel_derp(102, array('origin' => 'ADMIN'));
     }
@@ -94,12 +94,12 @@ function nel_staff_panel($dataforce)
                 continue;
             }
 
-            if(substr($key, 0, 4) === 'perm_')
+            if(substr($key, 0, 5) === 'perm_')
             {
                 $value = ($value === '1') ? true : false;
             }
 
-            $authorize->update_role_info($role_id, $key, $value);
+            $authorize->update_perm($role_id, $key, $value);
         }
 
         nel_render_staff_panel_role_edit($dataforce, $role_id);

@@ -190,7 +190,7 @@ class nel_authorization
 
         foreach ($perms as $perm)
         {
-            $this->roles[$role_id]['permissions'][$perm['perm_id']] = $perm['perm_setting'];
+            $this->roles[$role_id]['permissions'][$perm['perm_id']] = $perm['perm_setting'] === '1' ? true : false;
         }
 
         return true;
@@ -240,7 +240,7 @@ class nel_authorization
     {
         $perms = array();
 
-        if ($this->role_exists($role))
+        if ($this->role_exists($role_id))
         {
             $perms = $this->roles[$role_id]['permissions'];
         }
@@ -250,7 +250,7 @@ class nel_authorization
 
     public function get_role_perm($role_id, $perm)
     {
-        if ($this->role_exists($role))
+        if ($this->role_exists($role_id))
         {
             return $this->roles[$role_id]['permissions'][$perm];
         }
@@ -262,7 +262,7 @@ class nel_authorization
     {
         if($this->user_exists($user))
         {
-            return $this->get_role_perms($this->users[$user]['role_id']);
+            return $this->get_role_all_perms($this->users[$user]['role_id']);
         }
 
         return array();
@@ -272,7 +272,7 @@ class nel_authorization
     {
         if($this->user_exists($user))
         {
-            return $this->roles[$this->users[$user]['role_id']][$perm];
+            return $this->get_role_perm($this->users[$user]['role_id'], $perm);
         }
     }
 
@@ -323,7 +323,7 @@ class nel_authorization
     {
         if ($this->role_exists($role))
         {
-            $this->roles[$role][$perm] = $update;
+            $this->roles[$role]['permissions'][$perm] = $update;
             $this->roles_modified[$role] = true;
             return true;
         }
@@ -373,15 +373,37 @@ class nel_authorization
 
         foreach ($role_data as $key => $value)
         {
+            if($key === 'permissions')
+            {
+                $this->save_permissions($role);
+                continue;
+            }
+
             $update_role .= '"' . $key . '" = :' . $key . ', ';
-            $bind_role[':' . $key]['value'] = $value;
+            $bind_values[':' . $key]['value'] = $value;
         }
 
         $bind_values[':role']['value'] = $role;
         $bind_values[':role']['type'] = PDO::PARAM_STR;
-
         $update_role = substr($update_role, 0, -2);
         $query = 'UPDATE "' . ROLES_TABLE . '" SET ' . $update_role . ' WHERE "role_id" = :role';
         return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC);
+    }
+
+    private function save_permissions($role)
+    {
+        $perms_data = $this->roles[$role]['permissions'];
+        $update_perms = '';
+        $update_setting = '';
+
+        foreach ($perms_data as $key => $value)
+        {
+            $query = 'UPDATE "' . PERMISSIONS_TABLE . '" SET "perm_setting" = :setting WHERE "perm_id" = \'' . $key . '\' AND "role_id" = :role';
+            $bind_values[':role']['value'] = $role;
+            $bind_values[':role']['type'] = PDO::PARAM_STR;
+            $bind_values[':setting']['value'] = (int)$value;
+            $bind_values[':setting']['type'] = PDO::PARAM_INT;
+            nel_pdo_prepared_query($query, $bind_values);
+        }
     }
 }

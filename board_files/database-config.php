@@ -65,4 +65,4 @@ define('CONFIG_TABLE', TABLEPREFIX . '_config'); // Table to store board configu
 define('BAN_TABLE', TABLEPREFIX . '_bans'); // Table containing ban info
 define('USER_TABLE', TABLEPREFIX . '_users'); // Table used for post data
 define('ROLES_TABLE', TABLEPREFIX . '_roles'); // Table used for post data
-define('PERMS_TABLE', TABLEPREFIX . '_perms'); // Table used for post data
+define('PERMISSIONS_TABLE', TABLEPREFIX . '_permissions'); // Table used for post data
