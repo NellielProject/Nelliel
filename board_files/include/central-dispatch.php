@@ -81,7 +81,7 @@ function nel_process_post($dataforce)
 
                 if ($dataforce['delpost'])
                 {
-                    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_modify'))
+                    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_delete'))
                     {
                         nel_derp(108, array('origin' => 'DISPATCH'));
                     }

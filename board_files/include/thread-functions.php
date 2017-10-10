@@ -261,6 +261,7 @@ function nel_update_thread_data($thread_id)
 function nel_delete_content($dataforce, $sub, $type)
 {
     $dbh = nel_get_db_handle();
+    $authorize = nel_get_authorization();
     $id = $sub[1];
 
     if (!is_numeric($id))
@@ -278,7 +279,7 @@ function nel_delete_content($dataforce, $sub, $type)
     {
         $temp = $_SESSION['ignore_login'];
 
-        if ($_SESSION['perms']['perm_delete'])
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_delete'))
         {
             if ($post_data['mod_post'] === '0')
             {

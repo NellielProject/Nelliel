@@ -37,7 +37,7 @@
             </tr>
             <tr>
                 <td>
-                    <input type="checkbox" name="perm_board_config" id="paccconfig" value=1 {$render->retrieve_data('perm_board_config')}><label for="paccconfig">{nel_stext('MANAGE_PERM_CONFIG')}</label>
+                    <input type="checkbox" name="perm_config_access" id="paccconfig" value=1 {$render->retrieve_data('perm_config_access')}><label for="paccconfig">{nel_stext('MANAGE_PERM_CONFIG')}</label>
                 </td>
             </tr>
             <tr>

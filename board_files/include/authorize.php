@@ -130,6 +130,14 @@ class nel_authorization
         return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC);
     }
 
+    private function load_role_permissons($role_id)
+    {
+        $query = 'SELECT "perm_id", "perm_setting" FROM "' . 'nelliel_permissions' . '" WHERE "role_id" = ?';
+        $bind_values[1]['value'] = $role_id;
+        $bind_values[1]['type'] = PDO::PARAM_STR;
+        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC, true);
+    }
+
     public function set_up_user($user)
     {
         $user_data = $this->load_user($user);
@@ -163,14 +171,26 @@ class nel_authorization
 
         foreach ($role_data as $key => $value)
         {
-            if (substr($key, 0, 5) === 'perm_')
-            {
-                $this->roles[$role][$key] = ($value) ? true : false;
-            }
-            else
-            {
-                $this->roles[$role][$key] = $value;
-            }
+            $this->roles[$role][$key] = $value;
+        }
+
+        $this->set_up_role_permissions($role);
+
+        return true;
+    }
+
+    public function set_up_role_permissions($role_id)
+    {
+        $perms = $this->load_role_permissons($role_id);
+
+        if($perms === false)
+        {
+            return false;
+        }
+
+        foreach ($perms as $perm)
+        {
+            $this->roles[$role_id]['permissions'][$perm['perm_id']] = $perm['perm_setting'];
         }
 
         return true;
@@ -216,19 +236,26 @@ class nel_authorization
         return false;
     }
 
-    public function get_role_perms($role)
+    public function get_role_all_perms($role_id)
     {
         $perms = array();
 
-        foreach ($this->roles[$role] as $key => $value)
+        if ($this->role_exists($role))
         {
-            if (substr($key, 0, 5) === 'perm_')
-            {
-                $perms[$key] = $value;
-            }
+            $perms = $this->roles[$role_id]['permissions'];
         }
 
         return $perms;
+    }
+
+    public function get_role_perm($role_id, $perm)
+    {
+        if ($this->role_exists($role))
+        {
+            return $this->roles[$role_id]['permissions'][$perm];
+        }
+
+        return false;
     }
 
     public function get_user_perms($user)
@@ -237,6 +264,8 @@ class nel_authorization
         {
             return $this->get_role_perms($this->users[$user]['role_id']);
         }
+
+        return array();
     }
 
     public function get_user_perm($user, $perm)

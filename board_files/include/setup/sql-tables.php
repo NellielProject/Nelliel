@@ -80,7 +80,8 @@ function nel_create_posts_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "post_number"       ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "post_number"       ' . $auto_inc[0] .
+         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "parent_thread"     INTEGER NOT NULL DEFAULT 0,
         "poster_name"       VARCHAR(255) DEFAULT NULL,
         "post_password"     VARCHAR(255) DEFAULT NULL,
@@ -186,8 +187,8 @@ function nel_create_external_table($table_name)
         "license"           VARCHAR(255) DEFAULT NULL
     ) ' . $options . ';';
 
-   $result = nel_create_table_query($schema, $table_name);
-   nel_setup_stuff_done($result);
+    $result = nel_create_table_query($schema, $table_name);
+    nel_setup_stuff_done($result);
 }
 
 function nel_create_bans_table($table_name)
@@ -196,7 +197,8 @@ function nel_create_bans_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "ban_id"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "ban_id"            ' . $auto_inc[0] .
+         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "type"              VARCHAR(255) DEFAULT NULL,
         "ip_address"        VARCHAR(45) DEFAULT NULL,
         "name"              VARCHAR(255) DEFAULT NULL,
@@ -225,7 +227,7 @@ function nel_create_config_table($table_name)
 
     $result = nel_create_table_query($schema, $table_name);
 
-    if($result !== false)
+    if ($result !== false)
     {
         nel_insert_config_defaults();
     }
@@ -250,7 +252,7 @@ function nel_create_user_table($table_name)
 
     $result = nel_create_table_query($schema, $table_name);
 
-    if($result !== false)
+    if ($result !== false)
     {
         nel_insert_default_admin();
     }
@@ -266,13 +268,41 @@ function nel_create_roles_table($table_name)
         "role_id"               VARCHAR(255) DEFAULT NULL UNIQUE,
         "role_title"            VARCHAR(255) DEFAULT NULL,
         "capcode_text"          VARCHAR(255) DEFAULT NULL,
+    ) ' . $options . ';';
+
+    $result = nel_create_table_query($schema, $table_name);
+
+    if ($result !== false)
+    {
+        nel_insert_role_defaults();
+    }
+
+    nel_setup_stuff_done($result);
+}
+
+function nel_create_permissions_table($table_name)
+{
+    $auto_inc = nel_autoincrement_column('INTEGER');
+    $options = nel_table_options();
+    $schema = '
+    CREATE TABLE ' . $table_name . ' (
+        "index"                 ' . $auto_inc[0] .
+         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "role_id"               VARCHAR(255) DEFAULT NULL,
+        "perm_id"               VARCHAR(255) DEFAULT NULL,
+        "perm_setting"          SMALLINT NOT NULL DEFAULT 0,
         "perm_board_config"     SMALLINT NOT NULL DEFAULT 0,
         "perm_staff_access"     SMALLINT NOT NULL DEFAULT 0,
-        "perm_staff_add"        SMALLINT NOT NULL DEFAULT 0,
-        "perm_staff_modify"     SMALLINT NOT NULL DEFAULT 0,
+        "perm_user_add"         SMALLINT NOT NULL DEFAULT 0,
+        "perm_user_modify"      SMALLINT NOT NULL DEFAULT 0,
+        "perm_user_delete"      SMALLINT NOT NULL DEFAULT 0,
+        "perm_role_add"         SMALLINT NOT NULL DEFAULT 0,
+        "perm_role_modify"      SMALLINT NOT NULL DEFAULT 0,
+        "perm_role_delete"      SMALLINT NOT NULL DEFAULT 0,
         "perm_ban_access"       SMALLINT NOT NULL DEFAULT 0,
         "perm_ban_add"          SMALLINT NOT NULL DEFAULT 0,
         "perm_ban_modify"       SMALLINT NOT NULL DEFAULT 0,
+        "perm_ban_delete"       SMALLINT NOT NULL DEFAULT 0,
         "perm_post_access"      SMALLINT NOT NULL DEFAULT 0,
         "perm_post_modify"      SMALLINT NOT NULL DEFAULT 0,
         "perm_can_post"         SMALLINT NOT NULL DEFAULT 0,
@@ -287,7 +317,7 @@ function nel_create_roles_table($table_name)
 
     $result = nel_create_table_query($schema, $table_name);
 
-    if($result !== false)
+    if ($result !== false)
     {
         nel_insert_role_defaults();
     }
@@ -300,25 +330,136 @@ function nel_insert_role_defaults()
     $dbh = nel_get_db_handle();
     $result = $dbh->query("SELECT 1 FROM " . ROLES_TABLE . " WHERE role_id='ADMIN'");
 
-    if($result->fetch() !== false)
+    if ($result->fetch() !== false)
     {
         return false;
     }
 
     $result = $dbh->query("INSERT INTO " . ROLES_TABLE . "
-    (role_id, role_title, capcode_text, perm_board_config, perm_staff_access, perm_staff_add, perm_ban_access,
-    perm_staff_modify, perm_ban_add, perm_ban_modify, perm_post_access, perm_post_modify, perm_post_anon,
-    perm_post_named, perm_post_sticky, perm_post_locked, perm_regen_caches, perm_regen_index, perm_regen_thread,
-    perm_mod_mode)
+    (role_id, role_title, capcode_text)
     VALUES
-    ('ADMIN', 'Admin', '## Admin ##', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)");
+    ('ADMIN', 'Admin', '## Admin ##')");
+
+    nel_setup_stuff_done($result);
+}
+
+function nel_insertpermissions_defaults()
+{
+    $dbh = nel_get_db_handle();
+    $result = $dbh->query("SELECT 1 FROM " . ROLES_TABLE . " WHERE role_id='ADMIN'");
+
+    if ($result->fetch() !== false)
+    {
+        return false;
+    }
+
+    $result = $dbh->query("INSERT INTO " . PERMISSIONS_TABLE . " (role_id, perm_id, perm_setting)
+                        VALUES  ('ADMIN', 'perm_board_config', 1),
+                                ('ADMIN', 'perm_user_access', 1),
+                                ('ADMIN', 'perm_user_add', 1),
+                                ('ADMIN', 'perm_user_modify', 1),
+                                ('ADMIN', 'perm_user_delete', 1),
+                                ('ADMIN', 'perm_user_change_pass', 1),
+                                ('ADMIN', 'perm_role_access', 1),
+                                ('ADMIN', 'perm_role_add', 1),
+                                ('ADMIN', 'perm_role_modify', 1),
+                                ('ADMIN', 'perm_role_delete', 1),
+                                ('ADMIN', 'perm_ban_access', 1),
+                                ('ADMIN', 'perm_ban_add', 1),
+                                ('ADMIN', 'perm_ban_modify', 1),
+                                ('ADMIN', 'perm_ban_delete', 1),
+                                ('ADMIN', 'perm_post_access', 1),
+                                ('ADMIN', 'perm_post_modify', 1),
+                                ('ADMIN', 'perm_post_delete', 1),
+                                ('ADMIN', 'perm_post_file_delete', 1),
+                                ('ADMIN', 'perm_post_default_name', 1),
+                                ('ADMIN', 'perm_post_custom_name', 1),
+                                ('ADMIN', 'perm_post_override_anon', 1),
+                                ('ADMIN', 'perm_post_sticky', 1),
+                                ('ADMIN', 'perm_post_unsticky', 1),
+                                ('ADMIN', 'perm_post_lock', 1),
+                                ('ADMIN', 'perm_post_unlock', 1),
+                                ('ADMIN', 'perm_post_in_locked', 1),
+                                ('ADMIN', 'perm_post_comment', 1),
+                                ('ADMIN', 'perm_post_permsage', 1),
+                                ('ADMIN', 'perm_regen_caches', 1),
+                                ('ADMIN', 'perm_regen_index', 1),
+                                ('ADMIN', 'perm_regen_threads', 1),
+                                ('ADMIN', 'perm_modmode_access', 1),
+                                ('ADMIN', 'perm_modmode_view_ips', 1),
+                                ('MOD', 'perm_board_config', 0),
+                                ('MOD', 'perm_user_access', 0),
+                                ('MOD', 'perm_user_add', 0),
+                                ('MOD', 'perm_user_modify', 0),
+                                ('MOD', 'perm_user_delete', 0),
+                                ('MOD', 'perm_user_change_pass', 1),
+                                ('MOD', 'perm_role_access', 0),
+                                ('MOD', 'perm_role_add', 0),
+                                ('MOD', 'perm_role_modify', 0),
+                                ('MOD', 'perm_role_delete', 0),
+                                ('MOD', 'perm_ban_access', 1),
+                                ('MOD', 'perm_ban_add', 1),
+                                ('MOD', 'perm_ban_modify', 1),
+                                ('MOD', 'perm_ban_delete', 1),
+                                ('MOD', 'perm_post_access', 1),
+                                ('MOD', 'perm_post_modify', 0),
+                                ('MOD', 'perm_post_delete', 1),
+                                ('MOD', 'perm_post_file_delete', 1),
+                                ('MOD', 'perm_post_default_name', 1),
+                                ('MOD', 'perm_post_custom_name', 0),
+                                ('MOD', 'perm_post_override_anon', 0),
+                                ('MOD', 'perm_post_sticky', 1),
+                                ('MOD', 'perm_post_unsticky', 1),
+                                ('MOD', 'perm_post_lock', 1),
+                                ('MOD', 'perm_post_unlock', 1),
+                                ('MOD', 'perm_post_in_locked', 1),
+                                ('MOD', 'perm_post_comment', 1),
+                                ('MOD', 'perm_post_permsage', 1),
+                                ('MOD', 'perm_regen_caches', 0),
+                                ('MOD', 'perm_regen_index', 0),
+                                ('MOD', 'perm_regen_threads', 0),
+                                ('MOD', 'perm_modmode_access', 1)
+                                ('MOD', 'perm_modmode_view_ips', 1),
+                                ('JANITOR', 'perm_board_config', 0),
+                                ('JANITOR', 'perm_user_access', 0),
+                                ('JANITOR', 'perm_user_add', 0),
+                                ('JANITOR', 'perm_user_modify', 0),
+                                ('JANITOR', 'perm_user_delete', 0),
+                                ('JANITOR', 'perm_user_change_pass', 1),
+                                ('JANITOR', 'perm_role_access', 0),
+                                ('JANITOR', 'perm_role_add', 0),
+                                ('JANITOR', 'perm_role_modify', 0),
+                                ('JANITOR', 'perm_role_delete', 0),
+                                ('JANITOR', 'perm_ban_access', 0),
+                                ('JANITOR', 'perm_ban_add', 0),
+                                ('JANITOR', 'perm_ban_modify', 01),
+                                ('JANITOR', 'perm_ban_delete', 0),
+                                ('JANITOR', 'perm_post_access', 1),
+                                ('JANITOR', 'perm_post_modify', 0),
+                                ('JANITOR', 'perm_post_delete', 1),
+                                ('JANITOR', 'perm_post_file_delete', 1),
+                                ('JANITOR', 'perm_post_default_name', 0),
+                                ('JANITOR', 'perm_post_custom_name', 0),
+                                ('JANITOR', 'perm_post_override_anon', 0),
+                                ('JANITOR', 'perm_post_sticky', 0),
+                                ('JANITOR', 'perm_post_unsticky', 0),
+                                ('JANITOR', 'perm_post_lock', 0),
+                                ('JANITOR', 'perm_post_unlock', 0),
+                                ('JANITOR', 'perm_post_in_locked', 0),
+                                ('JANITOR', 'perm_post_comment', 0),
+                                ('JANITOR', 'perm_post_permsage', 0),
+                                ('JANITOR', 'perm_regen_caches', 0),
+                                ('JANITOR', 'perm_regen_index', 0),
+                                ('JANITOR', 'perm_regen_threads', 0),
+                                ('JANITOR', 'perm_modmode_access', 1)
+                                ('JANITOR', 'perm_modmode_view_ips', 0),");
 
     nel_setup_stuff_done($result);
 }
 
 function nel_insert_default_admin()
 {
-    if(DEFAULTADMIN === '' || DEFAULTADMIN_PASS === '')
+    if (DEFAULTADMIN === '' || DEFAULTADMIN_PASS === '')
     {
         return false;
     }
@@ -326,15 +467,14 @@ function nel_insert_default_admin()
     $dbh = nel_get_db_handle();
     $result = $dbh->query("SELECT 1 FROM " . USER_TABLE . " WHERE role_id='ADMIN'");
 
-    if($result->fetch() !== false)
+    if ($result->fetch() !== false)
     {
         return false;
     }
 
     $result = $dbh->query("INSERT INTO " . USER_TABLE . " (user_id, user_password, role_id, active, failed_logins, last_failed_login)
     VALUES
-    ('" . DEFAULTADMIN .
-         "', '" . nel_password_hash(DEFAULTADMIN_PASS, NELLIEL_PASS_ALGORITHM) . "',
+    ('" . DEFAULTADMIN . "', '" . nel_password_hash(DEFAULTADMIN_PASS, NELLIEL_PASS_ALGORITHM) . "',
     'ADMIN', 1, 1, 0)");
 
     nel_setup_stuff_done($result);

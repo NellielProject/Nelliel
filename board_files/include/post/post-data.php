@@ -69,14 +69,14 @@ function nel_get_staff_post($post_data, $name_pieces)
     $role = $authorize->get_user_info($user, 'role_id');
 
     if ($name_pieces[5] !== $authorize->get_user_info($user, 'user_tripcode') ||
-         !$authorize->get_role_info($role, 'perm_can_post'))
+         !$authorize->get_role_info($role, 'perm_post_default_name'))
     {
         return $post_data;
     }
 
     $post_data['modpost'] = $role;
 
-    if (!$authorize->get_role_info($role, 'perm_can_post_name'))
+    if (!$authorize->get_role_info($role, 'perm_post_custom_name'))
     {
         $post_data['name'] = $authorize->get_user_info($user, 'user_title');
     }

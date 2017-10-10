@@ -6,7 +6,7 @@
     </div>
     <form action="imgboard.php" method="post" enctype="multipart/form-data">
         <div>
-{{ if nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_board_config') }}
+{{ if nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_config_access') }}
             <input type="radio" name="mode" id="admin" value="admin->settings->panel"><label for="admin">{nel_stext('MANAGE_OPT_SETTINGS')}</label><br>
 {{ endif }}
 {{ if nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_ban_access') }}
