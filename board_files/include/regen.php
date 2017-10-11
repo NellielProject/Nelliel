@@ -9,7 +9,10 @@ function nel_regen(&$dataforce, $id, $mode)
     global $link_resno, $link_updates;
     $dbh = nel_get_db_handle();
     require_once INCLUDE_PATH . 'output-filter.php';
-    nel_toggle_session();
+    if($mode[1] !== 'modmode')
+    {
+        nel_toggle_session();
+    }
 
     if ($mode[2] === 'full')
     {
@@ -62,6 +65,9 @@ function nel_regen(&$dataforce, $id, $mode)
         nel_write_multi_cache($dataforce);
     }
 
-    nel_toggle_session();
+    if($mode[1] !== 'modmode')
+    {
+        nel_toggle_session();
+    }
     $dataforce['post_links'] = $link_updates;
 }

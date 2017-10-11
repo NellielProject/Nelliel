@@ -31,11 +31,11 @@ function nel_process_get($dataforce)
             {
                 if (is_null($dataforce['response_id']))
                 {
-                    nel_regen($dataforce, NULL, 'main', TRUE);
+                    nel_regen($dataforce, NULL, array('', 'modmode', 'main'));
                 }
                 else
                 {
-                    nel_regen($dataforce, $dataforce['response_id'], 'thread', TRUE);
+                    nel_regen($dataforce, $dataforce['response_id'], array('', 'modmode', 'thread'));
                 }
             }
 
