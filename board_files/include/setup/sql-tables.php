@@ -313,7 +313,9 @@ function nel_insert_role_defaults()
     $result = $dbh->query("INSERT INTO " . ROLES_TABLE . "
     (role_id, role_title, capcode_text)
     VALUES
-    ('ADMIN', 'Admin', '## Admin ##')");
+    ('ADMIN', 'Administrator', '## Administrator ##')
+    ('MOD', 'Moderator', '## Moderator ##')
+    ('JANITOR', 'Janitor', '## Janitor ##')");
 
     nel_setup_stuff_done($result);
 }
@@ -403,7 +405,7 @@ function nel_insert_permissions_defaults()
                                 ('JANITOR', 'perm_role_delete', 0),
                                 ('JANITOR', 'perm_ban_access', 0),
                                 ('JANITOR', 'perm_ban_add', 0),
-                                ('JANITOR', 'perm_ban_modify', 01),
+                                ('JANITOR', 'perm_ban_modify', 0),
                                 ('JANITOR', 'perm_ban_delete', 0),
                                 ('JANITOR', 'perm_post_access', 1),
                                 ('JANITOR', 'perm_post_modify', 0),
