@@ -191,6 +191,13 @@
             </tr>
             <tr>
                 <td>
+                	<input type="hidden" name="perm_post_sticky" value=0>
+                    <input type="checkbox" name="perm_post_sticky" id="perm_post_sticky" value=1 {$render->retrieve_data('perm_post_sticky')}>
+                    <label for="perm_post_sticky">{nel_stext('MANAGE_STAFF_POST_STICKY')}</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
                 	<input type="hidden" name="perm_post_unsticky" value=0>
                     <input type="checkbox" name="perm_post_unsticky" id="perm_post_unsticky" value=1 {$render->retrieve_data('perm_post_unsticky')}>
                     <label for="perm_post_unsticky">{nel_stext('MANAGE_STAFF_POST_UNSTICKY')}</label>
