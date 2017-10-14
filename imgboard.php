@@ -1,8 +1,12 @@
 <?php
 define('NELLIEL_VERSION', 'v0.9.3'); // Version
 define('BOARD_FILES', 'board_files/'); // Name of directory where the support and internal files go
+define('BASE_PATH', realpath('./')); // Base path for script
+define('INCLUDE_PATH', BASE_PATH . '/' . BOARD_FILES . 'include/'); // Base cache path
 require_once BOARD_FILES . 'config.php';
 require_once BOARD_FILES . 'crypt-config.php';
+require_once BOARD_FILES . 'database-config.php';
+require_once INCLUDE_PATH . 'defines.php';
 require_once INCLUDE_PATH . 'crypt.php';
 require_once BOARD_FILES . 'libraries/password_compat/password.php';
 
@@ -31,7 +35,7 @@ $plugins->activate();
 // A demo point. Does nothing, really
 $example_result = $plugins->plugin_hook('plugin-example', TRUE, array(5));
 
-require_once BOARD_FILES . 'database-config.php';
+
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'general-functions.php';
 require_once INCLUDE_PATH . 'file-handling.php';

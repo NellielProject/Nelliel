@@ -51,18 +51,3 @@ define('POSTGRES_PASS', 'password'); // Password of user
 define('POSTGRES_SCHEMA', 'public'); // Which schema to use; default is 'public'
 define('POSTGRES_ENCODING', 'UTF8'); // The character encoding to use. See notes below!
 // You must make sure 'POSTGRES_ENCODING' matches or is compatible with what the database uses!
-
-
-define('POST_TABLE', TABLEPREFIX . '_posts'); // Table used for post data
-define('THREAD_TABLE', TABLEPREFIX . '_threads'); // Table used for thread data
-define('FILE_TABLE', TABLEPREFIX . '_files'); // Table used for file data
-define('EXTERNAL_TABLE', TABLEPREFIX . '_external'); // Table used for external content
-define('ARCHIVE_POST_TABLE', TABLEPREFIX . '_archive_posts'); // Stores archived threads
-define('ARCHIVE_THREAD_TABLE', TABLEPREFIX . '_archive_threads'); // Stores archived thread data
-define('ARCHIVE_FILE_TABLE', TABLEPREFIX . '_archive_files'); // Stores archived file data
-define('ARCHIVE_EXTERNAL_TABLE', TABLEPREFIX . '_archive_external'); // Stores archived external content
-define('CONFIG_TABLE', TABLEPREFIX . '_config'); // Table to store board configuration. Best to leave it as-is unless you really need to change it
-define('BAN_TABLE', TABLEPREFIX . '_bans'); // Table containing ban info
-define('USER_TABLE', TABLEPREFIX . '_users'); // Table used for post data
-define('ROLES_TABLE', TABLEPREFIX . '_roles'); // Table used for post data
-define('PERMISSIONS_TABLE', TABLEPREFIX . '_permissions'); // Table used for post data
