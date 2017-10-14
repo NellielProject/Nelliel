@@ -151,6 +151,7 @@ function admin_dispatch($dataforce, $mode)
             break;
 
         case 'modmode':
+            nel_thread_updates($dataforce);
             echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF . '?mode=display&page=0">';
             break;
 

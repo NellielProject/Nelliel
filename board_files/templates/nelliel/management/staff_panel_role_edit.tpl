@@ -13,10 +13,18 @@
             </tr>
             <tr>
                 <td>
-                    <label for="rid">{nel_stext('MANAGE_STAFF_ROLE_ID')}</label>
+                    <label for="role_id">{nel_stext('MANAGE_STAFF_ROLE_ID')}</label>
                 </td>
                 <td>
-                    <input type="text" name="role_id" id="rid" size="50" value="{$render->retrieve_data('role_id')}">
+                    <input type="text" name="role_id" id="role_id" size="50" value="{$render->retrieve_data('role_id')}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="role_level">{nel_stext('MANAGE_STAFF_ROLE_LEVEL')}</label>
+                </td>
+                <td>
+                    <input type="text" name="role_level" id="role_level" size="5" value="{$render->retrieve_data('role_level')}">
                 </td>
             </tr>
             <tr>
@@ -29,10 +37,10 @@
             </tr>
             <tr>
                 <td>
-                    <label for="rcaptext">{nel_stext('MANAGE_STAFF_CAPCODE_TEXT')}</label>
+                    <label for="capcode_text">{nel_stext('MANAGE_STAFF_CAPCODE_TEXT')}</label>
                 </td>
                 <td>
-                    <input type="text" name="capcode_text" id="rcaptext" size="50" value="{$render->retrieve_data('capcode_text')}">
+                    <input type="text" name="capcode_text" id="capcode_text" size="50" value="{$render->retrieve_data('capcode_text')}">
                 </td>
             </tr>
             <tr>

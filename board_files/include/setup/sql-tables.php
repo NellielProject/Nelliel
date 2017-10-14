@@ -264,6 +264,7 @@ function nel_create_roles_table($table_name)
     $schema = '
     CREATE TABLE ' . $table_name . ' (
         "role_id"               VARCHAR(255) DEFAULT NULL UNIQUE,
+        "role_level"            SMALLINT NOT NULL DEFAULT 0,
         "role_title"            VARCHAR(255) DEFAULT NULL,
         "capcode_text"          VARCHAR(255) DEFAULT NULL
     ) ' . $options . ';';
@@ -284,7 +285,7 @@ function nel_create_permissions_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "index"                 ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "role_number"           ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "role_id"               VARCHAR(255) DEFAULT NULL,
         "perm_id"               VARCHAR(255) DEFAULT NULL,
         "perm_setting"          SMALLINT NOT NULL DEFAULT 0
@@ -311,11 +312,11 @@ function nel_insert_role_defaults()
     }
 
     $result = $dbh->query("INSERT INTO " . ROLES_TABLE . "
-    (role_id, role_title, capcode_text)
+    (role_id, role_level, role_title, capcode_text)
     VALUES
-    ('ADMIN', 'Administrator', '## Administrator ##')
-    ('MOD', 'Moderator', '## Moderator ##')
-    ('JANITOR', 'Janitor', '## Janitor ##')");
+    ('ADMIN', 100, 'Administrator', '## Administrator ##')
+    ('MOD', 50, 'Moderator', '## Moderator ##')
+    ('JANITOR', 10, 'Janitor', '## Janitor ##')");
 
     nel_setup_stuff_done($result);
 }

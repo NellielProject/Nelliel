@@ -93,26 +93,23 @@ function nel_unsticky_thread($dataforce, $sub)
 
 function nel_get_thread_data($thread_id)
 {
-    $dbh = nel_get_db_handle();
-    $result = $dbh->query('SELECT *  FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ' . $thread_id . '');
-    $thread_data = $result->fetch(PDO::FETCH_ASSOC);
-    return $thread_data;
+    $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ?';
+    $bind_values = nel_pdo_bind_set(1, $thread_id, PDO::PARAM_INT);
+    return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC, true);
 }
 
 function nel_get_thread_all_posts($thread_id)
 {
-    $dbh = nel_get_db_handle();
-    $result = $dbh->query('SELECT * FROM "' . POST_TABLE . '" WHERE "parent_thread" = ' . $thread_id . '');
-    $thread_posts = $result->fetchAll(PDO::FETCH_ASSOC);
-    return $thread_posts;
+    $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "parent_thread" = ?';
+    $bind_values = nel_pdo_bind_set(1, $thread_id, PDO::PARAM_INT);
+    return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC, true);
 }
 
 function nel_get_post_data($post_id)
 {
-    $dbh = nel_get_db_handle();
-    $result = $dbh->query('SELECT *  FROM "' . POST_TABLE . '" WHERE "post_number" = ' . $post_id . '');
-    $post_data = $result->fetch(PDO::FETCH_ASSOC);
-    return $post_data;
+    $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
+    $bind_values = nel_pdo_bind_set(1, post_id, PDO::PARAM_INT);
+    return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC, true);
 }
 
 function nel_get_thread_last_post($thread_id)
@@ -229,7 +226,7 @@ function nel_update_thread_data($thread_id)
 
     foreach ($thread_posts as $post)
     {
-        if($first_post === 0)
+        if ($first_post === 0)
         {
             $first_post = $post['post_number'];
         }
@@ -240,13 +237,15 @@ function nel_update_thread_data($thread_id)
         $external_count += $post['external_count'];
         $last_update = $post['post_time'];
 
-        if($post['sage'] === '0')
+        if ($post['sage'] === '0')
         {
             $last_bump = $post['post_time'];
         }
     }
 
-    $prepared = $dbh->prepare('UPDATE "' . THREAD_TABLE . '" SET "first_post" = :first, "last_post" = :last, "post_count" = :pcount, "file_count" = :fcount, "external_count" = :ecount, "last_update" = :update, "last_bump_time" = :bump WHERE "post_number" = ' . $thread_id . '');
+    $prepared = $dbh->prepare('UPDATE "' . THREAD_TABLE .
+         '" SET "first_post" = :first, "last_post" = :last, "post_count" = :pcount, "file_count" = :fcount, "external_count" = :ecount, "last_update" = :update, "last_bump_time" = :bump WHERE "post_number" = ' .
+         $thread_id . '');
     $prepared->bindValue(':first', $first_post, PDO::PARAM_INT);
     $prepared->bindValue(':last', $last_post, PDO::PARAM_INT);
     $prepared->bindValue(':pcount', $post_count, PDO::PARAM_INT);
@@ -270,46 +269,18 @@ function nel_delete_content($dataforce, $sub, $type)
     }
 
     $flag = FALSE;
-    $result = $dbh->query('SELECT post_number,password,parent_thread,mod_post FROM ' . POST_TABLE .
-         ' WHERE post_number=' . $id . '');
+    $result = $dbh->query('SELECT "post_number", "post_password", "parent_thread", "mod_post" FROM "' . POST_TABLE .
+         '" WHERE "post_number" = ' . $id . '');
     $post_data = $result->fetch(PDO::FETCH_ASSOC);
     unset($result);
 
-    if (!nel_session_ignored())
+    if (!nel_session_ignored() && $authorize->get_user_perm($_SESSION['username'], 'perm_post_delete'))
     {
-        $temp = $_SESSION['ignore_login'];
-
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_delete'))
-        {
-            if ($post_data['mod_post'] === '0')
-            {
-                $flag = TRUE;
-            }
-            else
-            {
-                $staff_type = $_SESSION['settings']['staff_type']; //TODO: Fix this mod type stuff too
-
-                if ($post_data['mod_post'] === '3' && $staff_type === 'admin')
-                {
-                    $flag = TRUE;
-                }
-                else if ($post_data['mod_post'] === '2' && ($staff_type === 'admin' || $staff_type === 'moderator'))
-                {
-                    $flag = TRUE;
-                }
-                else if ($post_data['mod_post'] === '1' &&
-                     ($staff_type === 'admin' || $staff_type === 'moderator' || $staff_type === 'janitor'))
-                {
-                    $flag = TRUE;
-                }
-            }
-        }
-
-        $_SESSION['ignore_login'] = $flag ? TRUE : $temp;
+        $flag = TRUE;
     }
     else
     {
-        $flag = hash_equals($post_data['password'], $dataforce['pass']); // Must be fixt!!!
+        $flag = nel_password_verify($post_data['post_password'], $_POST['sekrit']);
         $temp = TRUE;
     }
 
@@ -320,7 +291,7 @@ function nel_delete_content($dataforce, $sub, $type)
 
     if ($type === 'THREAD')
     {
-        $result = $dbh->query('SELECT post_number FROM ' . POST_TABLE . ' WHERE parent_thread=' . $id);
+        $result = $dbh->query('SELECT "post_number" FROM "' . POST_TABLE . '" WHERE "parent_thread" = ' . $id);
         $content_refs = $result->fetchALL(PDO::FETCH_COLUMN, 0);
         unset($result);
 
@@ -413,10 +384,5 @@ function nel_delete_content($dataforce, $sub, $type)
                 }
             }
         }
-    }
-
-    if (!empty($_SESSION))
-    {
-        $_SESSION['ignore_login'] = $temp;
     }
 }

@@ -71,18 +71,6 @@ function nel_get_db_handle()
     return $database_handle;
 }
 
-function nel_pdo_bind_set(&$bind_set, $parameter, $value, $bind_style = null)
-{
-    $bind_set[$parameter]['value'] = $value;
-
-    if (!is_null($bind_style))
-    {
-        $bind_set[$parameter]['bind_type'] = $bind_style;
-    }
-
-    return $bind_set;
-}
-
 function nel_format_multiple_columns($columns)
 {
     $column_count = count($columns);
@@ -175,6 +163,18 @@ function nel_pdo_do_fetch($result, $fetch_style, $fetchall)
     }
 
     return $fetched_result;
+}
+
+function nel_pdo_bind_set($key, $value, $type = null, $bind_values = array())
+{
+    $bind_values[$key]['value'] = $value;
+
+    if(!is_null($type))
+    {
+        $bind_values[$key]['type'] = $type;
+    }
+
+    return $bind_values;
 }
 
 function nel_pdo_bind_values($prepared, $bind_values)

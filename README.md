@@ -1,7 +1,6 @@
 # Nelliel Imageboard #
 
-A lightweight and fast imageboard. Designed with a focus on being a full-featured single board that is easy to set up and will work
- on any halfway-sane hosting.
+A lightweight and fast imageboard based of Futallaby.
 
 Nelliel was originally a modified version of Futallaby made to host Nigrachan. The software had good potential and was split off to
  independent development. While retaining an interface similar to Futallaby (and many other imageboards) it has been rewritten and
@@ -30,12 +29,12 @@ These are optional things that Nelliel or one of its libraries can utilize for e
 
 ## Development Stage ##
 Nelliel should be considered early beta software. It is functional but somewhat buggy and still subject to major changes that
- may break existing content. Try it out if you like but don't use it for anything serious just yet.
+ may break existing content. Try it out if you like but don't use it for anything too serious just yet.
 
 ## Plugin API ##
 Nelliel currently has a very basic API for making plugins. This will eventually allow extension of the software without having to worry about
  mods that can be easily broken during updates or having to mess with core code. It is not recommended to use
- the plugin system yet as it continues to undergo changes and lacks documentation.
+ the plugin system yet as it continues to undergo changes and lacks documentation.\
 
 ## License ##
 Nelliel is released under the Modified BSD license. This can be viewed in LICENSE.txt or the imageboard's About page.
