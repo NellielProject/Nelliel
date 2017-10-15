@@ -226,7 +226,7 @@ function nel_gen_salt($length)
 
     if (function_exists('mcrypt_create_iv'))
     {
-        $salt = mcrypt_create_iv($raw_salt_len, MCRYPT_DEV_URANDOM);
+        $salt = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
         $good = ($salt !== false) ? true : false;
     }
 

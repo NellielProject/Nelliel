@@ -106,7 +106,7 @@ function nel_process_post($dataforce)
 
             if ($fgsfds['noko'])
             {
-                if (isset($dataforce['get_mode']) || $dataforce['mode_extra'] === 'modmode')
+                if (isset($dataforce['get_mode']))
                 {
                     echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF . '?mode=display&post=' . $fgsfds['noko_topic'] . '">';
                 }
@@ -117,7 +117,7 @@ function nel_process_post($dataforce)
             }
             else
             {
-                if (!empty($_SESSION) && $dataforce['mode_extra'] === 'modmode')
+                if (!empty($_SESSION))
                 {
                     echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF . '?mode=display&page=0">';
                 }
