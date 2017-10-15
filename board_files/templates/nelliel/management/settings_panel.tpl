@@ -294,6 +294,11 @@
             </tr>
             <tr>
                 <td>
+                    <input type="checkbox" name="use_file_sha1" id="usesha1" value={$render->retrieve_data('use_sha1')}><label for="use_file_sha1">{nel_stext('MANAGE_SET_FILE_SHA1')}</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <input type="checkbox" name="use_thumb" id="uthumb" value=1 {$render->retrieve_data('use_thumb')}><label for="uthumb">{nel_stext('MANAGE_SET_USE_THUMB')}</label>
                 </td>
             </tr>
@@ -466,7 +471,7 @@
                     <input type="checkbox" name="enable_midi" id="box_midi" value=1 {$render->retrieve_data('enable_midi')}>  <label for="box_midi">{nel_stext('MANAGE_SET_ALW_MIDI')}</label>
                 </td>
             </tr>
-    
+
             <tr>
                 <td>
                     <br><b>{nel_stext('MANAGE_SET_VFORMAT')}</b>
@@ -503,7 +508,7 @@
                     <input type="checkbox" name="enable_flv" id="box_flv" value=1 {$render->retrieve_data('enable_flv')}> <label for="box_flv">{nel_stext('MANAGE_SET_ALW_FLV')}</label>
                 </td>
             </tr>
-    
+
             <tr>
                 <td>
                     <br><b>{nel_stext('MANAGE_SET_OFORMAT')}</b>
@@ -522,7 +527,7 @@
                     <input type="checkbox" name="enable_blorb" id="box_blorb" value=1 {$render->retrieve_data('enable_blorb')}> <label for="box_blorb">{nel_stext('MANAGE_SET_ALW_BLORB')}</label>
                 </td>
             </tr>
-    
+
             <tr>
                 <td>
                     <br><b>{nel_stext('MANAGE_SET_DFORMAT')}</b>

@@ -15,6 +15,7 @@ require_once CACHE_PATH . 'parameters.nelcache';
 // Cached rules, post links and template info cache
 if (!file_exists(CACHE_PATH . 'multi-cache.nelcache'))
 {
+    $dataforce['rules_list'] = nel_cache_rules();
     nel_write_multi_cache($dataforce, $template_info);
 }
 
@@ -23,229 +24,185 @@ require_once CACHE_PATH . 'multi-cache.nelcache';
 //
 // Cache the posting rules
 //
-function nel_cache_rules($dbh)
+function nel_cache_rules()
 {
-    $gmode = '';
-    $amode = '';
-    $vmode = '';
-    $dmode = '';
-    $rmode = '';
-    $omode = '';
-    
-    $result = $dbh->query('SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type IN ("filetype_allow_g","filetype_allow_a","filetype_allow_o","filetype_allow_p","filetype_allow_d","filetype_allow_r")');
-    $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
-    $result_count = count($config_list);
-    $config_list2 = array();
-    
-    foreach ($config_list as $array)
-    {
-        if (array_search('enable_graphics', $array) !== FALSE)
-        {
-            $config_list2['graphics'] = $array['setting'];
-        }
-        else if (array_search('enable_audio', $array) !== FALSE)
-        {
-            $config_list2['audio'] = $array['setting'];
-        }
-        else if (array_search('enable_video', $array) !== FALSE)
-        {
-            $config_list2['video'] = $array['setting'];
-        }
-        else if (array_search('enable_other', $array) !== FALSE)
-        {
-            $config_list2['other'] = $array['setting'];
-        }
-        else if (array_search('enable_package', $array) !== FALSE)
-        {
-            $config_list2['package'] = $array['setting'];
-        }
-        else if (array_search('enable_document', $array) !== FALSE)
-        {
-            $config_list2['document'] = $array['setting'];
-        }
-        else if (array_search('enable_archive', $array) !== FALSE)
-        {
-            $config_list2['archive'] = $array['setting'];
-        }
-    }
-    
-    $i = 0;
-    
-    while ($i < $result_count)
-    {
-        $t_element = utf8_str_replace('enable_', '', $config_list[$i]['config_name']);
-        
-        if ($config_list[$i]['setting'] !== '1')
-        {
-            ++ $i;
-            continue;
-        }
-        
-        if ($config_list[$i]['config_type'] === 'filetype_allow_g' && $t_element !== 'graphics' && $config_list2['graphics'] === '1')
-        {
-            $gmode = $gmode . $t_element . ', ';
-        }
-        else if ($config_list[$i]['config_type'] === 'filetype_allow_a' && $t_element !== 'audio' && $config_list2['audio'] === '1')
-        {
-            $amode = $amode . $t_element . ', ';
-        }
-        else if ($config_list[$i]['config_type'] === 'filetype_allow_v' && $t_element !== 'video' && $config_list2['video'] === '1')
-        {
-            $vmode = $vmode . $t_element . ', ';
-        }
-        else if ($config_list[$i]['config_type'] === 'filetype_allow_o' && $t_element !== 'other' && $config_list2['other'] === '1')
-        {
-            $omode = $omode . $t_element . ', ';
-        }
-        else if ($config_list[$i]['config_type'] === 'filetype_allow_d' && $t_element !== 'document' && $config_list2['document'] === '1')
-        {
-            $dmode = $dmode . $t_element . ', ';
-        }
-        else if ($config_list[$i]['config_type'] === 'filetype_allow_r' && $t_element !== 'archive' && $config_list2['archive'] === '1')
-        {
-            $rmode = $rmode . $t_element . ', ';
-        }
-        
-        ++ $i;
-    }
-    
+    $dbh = nel_get_db_handle();
+    $gtypes = '';
+    $atypes = '';
+    $vtypes = '';
+    $dtypes = '';
+    $rtypes = '';
+    $otypes = '';
+    $file_config = nel_build_filetype_config($dbh);
     $rule_list = '';
-    
-    if ($gmode !== '')
+
+    $graphics = $file_config['graphics']['graphics'];
+
+    if($file_config['graphics']['graphics'])
     {
-        $gmode = utf8_substr($gmode, 0, -2);
-        $rule_list .= '<li>' . nel_stext('FILES_GRAPHICS') . utf8_strtoupper($gmode) . '</li>';
+        foreach ($file_config['graphics'] as $key => $value)
+        {
+            $gtypes .= ($value && $key !== 'graphics') ? utf8_strtoupper($key) . ', ' : '';
+        }
     }
-    if ($amode !== '')
+
+    if($file_config['audio']['audio'])
     {
-        $amode = utf8_substr($amode, 0, -2);
+        foreach ($file_config['audio'] as $key => $value)
+        {
+            $atypes .= ($value && $key !== 'audio') ? utf8_strtoupper($key) . ', ' : '';
+        }
+    }
+
+    if($file_config['video']['video'])
+    {
+        foreach ($file_config['video'] as $key => $value)
+        {
+            $vtypes .= ($value && $key !== 'video') ? utf8_strtoupper($key) . ', ' : '';
+        }
+    }
+
+    if($file_config['document']['document'])
+    {
+        foreach ($file_config['document'] as $key => $value)
+        {
+            $dtypes .= ($value && $key !== 'document') ? utf8_strtoupper($key) . ', ' : '';
+        }
+    }
+
+    if($file_config['archive']['archive'])
+    {
+        foreach ($file_config['archive'] as $key => $value)
+        {
+            $rtypes .= ($value && $key !== 'archive') ? utf8_strtoupper($key) . ', ' : '';
+        }
+    }
+
+    if($file_config['other']['other'])
+    {
+        foreach ($file_config['other'] as $key => $value)
+        {
+            $otypes .= ($value && $key !== 'other') ? utf8_strtoupper($key) . ', ' : '';
+        }
+    }
+
+    if ($gtypes !== '')
+    {
+        $gtypes = utf8_substr($gtypes, 0, -2);
+        $rule_list .= '<li>' . nel_stext('FILES_GRAPHICS') . $gtypes . '</li>';
+    }
+    if ($atypes !== '')
+    {
+        $atypes = utf8_substr($atypes, 0, -2);
         $rule_list .= '
-							<li>' . nel_stext('FILES_AUDIO') . utf8_strtoupper($amode) . '</li>';
+							<li>' . nel_stext('FILES_AUDIO') . $atypes . '</li>';
     }
-    if ($vmode !== '')
+    if ($vtypes !== '')
     {
-        $vmode = utf8_substr($vmode, 0, -2);
+        $vtypes = utf8_substr($vtypes, 0, -2);
         $rule_list .= '
-							<li>' . nel_stext('FILES_VIDEO') . utf8_strtoupper($vmode) . '</li>';
+							<li>' . nel_stext('FILES_VIDEO') . $vtypes . '</li>';
     }
-    if ($dmode !== '')
+    if ($dtypes !== '')
     {
-        $dmode = utf8_substr($dmode, 0, -2);
+        $dtypes = utf8_substr($dtypes, 0, -2);
         $rule_list .= '
-							<li>' . nel_stext('FILES_DOCUMENT') . utf8_strtoupper($dmode) . '</li>';
+							<li>' . nel_stext('FILES_DOCUMENT') . $dtypes . '</li>';
     }
-    if ($rmode !== '')
+    if ($rtypes !== '')
     {
-        $rmode = utf8_substr($rmode, 0, -2);
+        $rtypes = utf8_substr($rtypes, 0, -2);
         $rule_list .= '
-							<li>' . nel_stext('FILES_ARCHIVE') . utf8_strtoupper($rmode) . '</li>';
+							<li>' . nel_stext('FILES_ARCHIVE') . $rtypes . '</li>';
     }
-    if ($omode !== '')
+    if ($otypes !== '')
     {
-        $omode = utf8_substr($omode, 0, -2);
+        $otypes = utf8_substr($otypes, 0, -2);
         $rule_list .= '
-							<li>' . nel_stext('FILES_OTHER') . utf8_strtoupper($omode) . '</li>';
+							<li>' . nel_stext('FILES_OTHER') . $otypes . '</li>';
     }
-    
+
     return $rule_list;
+}
+
+function nel_build_filetype_config($dbh)
+{
+    $query = 'SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'filetype_enable\'';
+    $config_list = nel_pdo_simple_query($query, true, PDO::FETCH_ASSOC, true);
+    $file_config = array();
+
+    foreach ($config_list as $config)
+    {
+        $setting_name = explode('_', $config['config_name']);
+
+        switch ($setting_name[0])
+        {
+            case 'g':
+                $file_config['graphics'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'a':
+                $file_config['audio'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'v':
+                $file_config['video'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'd':
+                $file_config['document'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'o':
+                $file_config['other'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'r':
+                $file_config['archive'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+        }
+    }
+
+    return $file_config;
 }
 
 //
 // Cache the board settings
 //
-function nel_cache_settings($dbh)
+function nel_cache_settings()
 {
-    // Get true/false (1-bit) board settings
-    $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIGTABLE . ' WHERE config_type="board_setting_1bit"');
-    $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
+    $dbh = nel_get_db_handle();
+    $result = $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'');
+    $config_list = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
-    
-    $result_count = count($config_list);
-    $i = 0;
-    $vars1 = '';
-    
-    while ($i < $result_count)
-    {
-        if ($config_list[$i]['setting'] === '1')
-        {
-            $vars1 .= 'define(\'BS1_' . utf8_strtoupper($config_list[$i]['config_name']) . '\',TRUE);';
-        }
-        else
-        {
-            $vars1 .= 'define(\'BS1_' . utf8_strtoupper($config_list[$i]['config_name']) . '\',FALSE);';
-        }
-        ++ $i;
-    }
-    
-    $rows = array();
-    
-    // Get other board settings
-    $result = $dbh->query('SELECT config_name,setting FROM ' . CONFIGTABLE . ' WHERE config_type="board_setting"');
-    $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
-    unset($result);
-    
-    $result_count = count($config_list);
-    $i = 0;
-    $vars2 = '';
-    
-    while ($i < $result_count)
-    {
-        $rows[$config_list[$i]['config_name']] = $config_list[$i]['setting'];
-        if (is_numeric($config_list[$i]['setting']))
-        {
-            $vars2 .= 'define(\'BS_' . utf8_strtoupper($config_list[$i]['config_name']) . '\',' . $config_list[$i]['setting'] . ');';
-        }
-        else
-        {
-            $vars2 .= 'define(\'BS_' . utf8_strtoupper($config_list[$i]['config_name']) . '\',\'' . $config_list[$i]['setting'] . '\');';
-        }
-        ++ $i;
-    }
-    
-    $result = $dbh->query('SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_g" 
-					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_a"
-					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_v"
-					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_o"
-					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_d"
-					       UNION SELECT * FROM ' . CONFIGTABLE . ' WHERE config_type="filetype_allow_r"');
-    
-    $config_list = $result->fetchALL(PDO::FETCH_ASSOC);
-    unset($result);
-    
-    $fvars = '$enabled_types = array(';
-    
-    $result_count = count($config_list);
-    $i = 0;
-    $rows = array();
-    
-    while ($i < $result_count)
-    {
-        if ($config_list[$i]['setting'] === '1')
-        {
-            $fvars .= '\'' . $config_list[$i]['config_name'] . '\'=>TRUE,';
-        }
-        else
-        {
-            $fvars .= '\'' . $config_list[$i]['config_name'] . '\'=>FALSE,';
-        }
-        
-        ++ $i;
-    }
-    
-    $fvars = utf8_substr($fvars, 0, utf8_strlen($fvars) - 1) . ');';
-    $final_vars = '<?php ' . $vars1 . $vars2 . $fvars . ' ?>';
-    
-    nel_write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, 0644);
-    
-    unset($rows);
-}
 
-//
-// Cache post links
-//
-function nel_cache_links()
-{
-    return nel_parse_links(TRUE);
+    $result_count = count($config_list);
+    $vars1 = '';
+
+    foreach ($config_list as $config)
+    {
+        if($config['data_type'] === 'bool')
+        {
+            $config['setting'] = var_export((bool)$config['setting'], TRUE);
+        }
+
+        if($config['data_type'] === 'int')
+        {
+            $config['setting'] = intval($config['setting']);
+        }
+
+        if($config['data_type'] === 'str')
+        {
+            $config['setting'] = var_export($config['setting'], TRUE);
+        }
+
+        $vars1 .= 'define(\'BS_' . utf8_strtoupper($config['config_name']) . '\', ' . $config['setting'] . ');';
+    }
+
+    $file_config = nel_build_filetype_config($dbh);
+    $fvars = '$enabled_types = ' . var_export($file_config, true) . ';';
+    $final_vars = '<?php ' . $vars1 . $fvars . ' ?>';
+    nel_write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, octdec(FILE_PERM));
 }
 
 //
@@ -253,20 +210,26 @@ function nel_cache_links()
 //
 function nel_regen_template_cache()
 {
-    foreach (glob(TEMPLATE_PATH . '*.tpl') as $template)
+    $Directory = new RecursiveDirectoryIterator(TEMPLATE_PATH);
+    $Iterator = new RecursiveIteratorIterator($Directory);
+    $Regex = new RegexIterator($Iterator, '/^.+\.tpl$/i', RecursiveRegexIterator::GET_MATCH);
+
+    foreach($Regex as $key => $value)
     {
-        $template = basename($template);
-        nel_parse_template($template, '', NULL, TRUE);
+        $file = str_replace(TEMPLATE_PATH, '', $key);
+        $template = basename($file);
+        $subdirectory = str_replace($template, '', $file);
+        nel_parse_template($template, $subdirectory, null, true);
     }
 }
 
 function nel_reset_template_status($template_info)
 {
-    foreach ($template_info as $key => $value)
+    foreach ($template_info as $key => $value) // TODO: Invalid argument?
     {
         $template_info[$key]['loaded'] = FALSE;
     }
-    
+
     return $template_info;
 }
 
@@ -278,12 +241,10 @@ function nel_write_multi_cache($dataforce)
     $template_info = nel_template_info(NULL, NULL, NULL, TRUE);
     $template_info = nel_reset_template_status($template_info);
     $cache = '<?php
-$dataforce[\'post_links\'] = \'' . $dataforce['post_links'] . '\';
 $dataforce[\'rules_list\'] = \'' . $dataforce['rules_list'] . '\';
 $template_info = ' . var_export($template_info, TRUE) . ';
 nel_template_info(NULL, NULL, $template_info, FALSE);
 ?>';
-    
-    nel_write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, 0644);
+
+    nel_write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, octdec(FILE_PERM));
 }
-?>

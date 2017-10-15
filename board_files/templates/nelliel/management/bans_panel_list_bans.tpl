@@ -6,7 +6,7 @@
                 {$render->retrieve_data('type')}
             </td>
             <td>
-                {$render->retrieve_data('host')}
+                {$render->retrieve_data('ip_address')}
             </td>
             <td>
                {$render->retrieve_data('name')}

@@ -1,7 +1,26 @@
 <?php
-define('NELLIEL_VERSION', 'v0.9.3'); // Version
+define('NELLIEL_VERSION', 'v0.9.4'); // Version
 define('BOARD_FILES', 'board_files/'); // Name of directory where the support and internal files go
+define('BASE_PATH', realpath('./')); // Base path for script
+define('INCLUDE_PATH', BASE_PATH . '/' . BOARD_FILES . 'include/'); // Base cache path
 require_once BOARD_FILES . 'config.php';
+require_once BOARD_FILES . 'crypt-config.php';
+require_once BOARD_FILES . 'database-config.php';
+require_once INCLUDE_PATH . 'defines.php';
+require_once INCLUDE_PATH . 'crypt.php';
+require_once BOARD_FILES . 'libraries/password_compat/password.php';
+
+$best_hashing = nel_best_available_hashing();
+
+if($best_hashing === 0)
+{
+    die("No acceptable password hashing available. Something is broken or this host just sucks.");
+}
+else
+{
+    define('NELLIEL_PASS_ALGORITHM', $best_hashing);
+}
+
 require_once INCLUDE_PATH . 'plugins.php';
 $plugin_files = glob(PLUGINS_PATH . '*.nel.php');
 $plugins = new nel_plugin_handler();
@@ -16,6 +35,8 @@ $plugins->activate();
 // A demo point. Does nothing, really
 $example_result = $plugins->plugin_hook('plugin-example', TRUE, array(5));
 
+
+require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'general-functions.php';
 require_once INCLUDE_PATH . 'file-handling.php';
 require_once INCLUDE_PATH . 'initializations.php';
@@ -28,12 +49,13 @@ require_once INCLUDE_PATH . 'banhammer.php';
 require_once INCLUDE_PATH . 'snacks.php';
 
 // IT'S GO TIME!
-nel_ban_spambots($dataforce, $dbh);
+nel_ban_spambots($dataforce);
 require_once INCLUDE_PATH . 'sessions.php';
-nel_initialize_session($dataforce, $plugins, $authorize);
+nel_initialize_session($dataforce);
+require_once INCLUDE_PATH . 'post/post.php';
 require_once INCLUDE_PATH . 'central-dispatch.php';
-nel_process_get($dataforce, $authorize, $dbh);
-nel_process_post($dataforce, $plugins, $authorize, $dbh);
-nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
+nel_process_get($dataforce);
+nel_process_post($dataforce);
+nel_regen($dataforce, NULL, 'main', FALSE);
 nel_clean_exit($dataforce, FALSE);
-?>
+

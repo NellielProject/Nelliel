@@ -6,20 +6,28 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_parse_template($template, $subdirectory, $render, $regen)
 {
-    if (!empty($subdirectory))
+    $authorize = nel_get_authorization();
+    $template_cache_dir = 'templates/';
+
+    if (!empty($subdirectory) && substr($subdirectory, -1) !== '/')
     {
         $subdirectory .= '/';
     }
-    
+
     $template_short = utf8_str_replace('.tpl', '', $template);
-    $info = nel_template_info($template, NULL, NULL, TRUE);
-    
-    if (is_null($info) || $info['loaded'] === FALSE || $info['loaded'] === NULL)
+    $info = nel_template_info($template, null, null, true);
+
+    if($regen)
+    {
+        $info['loaded'] = false;
+    }
+
+    if (is_null($info) || $info['loaded'] === false || $info['loaded'] === null)
     {
         clearstatcache();
         $modify_time = filemtime(TEMPLATE_PATH . $subdirectory . $template);
-        
-        if (!isset($info['modify_time']) || $modify_time !== $info['modify_time'] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
+
+        if ($regen || !isset($info['modify_time']) || $modify_time !== $info['modify_time'] || !file_exists(CACHE_PATH . $template_short . '.nelcache'))
         {
             $info['modify-time'] = $modify_time;
             $lol = file_get_contents(TEMPLATE_PATH . $subdirectory . $template);
@@ -33,14 +41,17 @@ function nel_parse_template($template, $subdirectory, $render, $regen)
             $lol = preg_replace('#{{{\s*?(.*?)\s*?}}}#', '\'; $1; $temp .= \'', $lol); // Parse other PHP code
             $end = '\'; return $temp; } ?>'; // End of the caches template
             $lol_out = $begin . $lol . $end;
-            nel_write_file(CACHE_PATH . $template_short . '.nelcache', $lol_out, 0644);
+            nel_write_file_create_dirs(CACHE_PATH . $template_cache_dir . $subdirectory . $template_short . '.nelcache', $lol_out, octdec(FILE_PERM), octdec(DIRECTORY_PERM));
         }
-        
-        include (CACHE_PATH . $template_short . '.nelcache');
-        $info['loaded'] = TRUE;
-        nel_template_info($template, NULL, $info, FALSE);
+
+        if(!$regen)
+        {
+            include (CACHE_PATH . $template_cache_dir . $subdirectory . $template_short . '.nelcache');
+            $info['loaded'] = true;
+            nel_template_info($template, null, $info, false);
+        }
     }
-    
+
     if (!$regen)
     {
         $dat_temp = call_user_func('nel_template_render_' . $template_short, $render);
@@ -51,7 +62,7 @@ function nel_parse_template($template, $subdirectory, $render, $regen)
 function nel_template_info($template, $parameter, $update, $return)
 {
     static $info;
-    
+
     if (!$return)
     {
         if (is_null($template))
@@ -87,9 +98,7 @@ function nel_template_info($template, $parameter, $update, $return)
                 return $info[$template][$parameter];
             }
         }
-        
+
         return NULL;
     }
 }
-
-?>

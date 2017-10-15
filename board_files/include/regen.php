@@ -4,72 +4,69 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_regen(&$dataforce, $id, $mode, $modmode, $dbh)
+function nel_regen_threads($dataforce, $write, $ids)
+{
+    require_once INCLUDE_PATH . 'output-filter.php';
+    require_once INCLUDE_PATH . 'output/thread-generation.php';
+    $threads = count($ids);
+    $i = 0;
+
+    while ($i < $threads)
+    {
+        nel_thread_generator($dataforce, $write, $ids[$i]);
+        ++ $i;
+    }
+}
+
+function nel_regen_cache($dataforce)
+{
+    global $link_updates;
+    $dataforce['rules_list'] = nel_cache_rules();
+    nel_cache_settings();
+    $dataforce['post_links'] = $link_updates;
+    nel_regen_template_cache();
+    nel_write_multi_cache($dataforce);
+}
+
+function nel_regen(&$dataforce, $ids, $mode)
 {
     global $link_resno, $link_updates;
-    
+    $dbh = nel_get_db_handle();
     require_once INCLUDE_PATH . 'output-filter.php';
-    
-    if (!empty($_SESSION) && !$modmode)
+    if($mode[1] !== 'modmode')
     {
-        $temp = $_SESSION['ignore_login'];
-        $_SESSION['ignore_login'] = TRUE;
+        nel_toggle_session();
     }
-    
-    if ($mode === 'full')
+
+    if ($mode[2] === 'full')
     {
-        $result = $dbh->query('SELECT post_number FROM ' . POSTTABLE . ' WHERE response_to=0 AND archive_status=0');
-        $ids = $result->fetchAll(PDO::FETCH_COLUMN);
+        $query = 'SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0';
+        $ids = nel_pdo_simple_query($query, true, PDO::FETCH_COLUMN, true);
     }
-    
-    if ($mode === 'thread')
-    {
-        if (is_array($id))
-        {
-            $ids = $id;
-        }
-        else
-        {
-            $ids[0] = $id;
-        }
-    }
-    
-    if ($mode === 'main' || $mode === 'full')
+
+    if ($mode[2] === 'main' || $mode[2] === 'full')
     {
         require_once INCLUDE_PATH . 'output/main-generation.php';
-        nel_update_archive_status($dataforce, $dbh);
+        nel_update_archive_status($dataforce);
         $dataforce['response_id'] = 0;
         $link_resno = 0;
-        nel_main_nel_thread_generator($dataforce, $dbh);
+        nel_main_thread_generator($dataforce, true);
     }
-    
-    if ($mode === 'thread' || $mode === 'full')
+
+    if (/*$mode[2] === 'thread' || */$mode[2] === 'full')
     {
-        require_once INCLUDE_PATH . 'output/thread-generation.php';
-        $threads = count($ids);
-        $i = 0;
-        
-        while ($i < $threads)
-        {
-            $dataforce['response_id'] = $ids[$i];
-            nel_thread_generator($dataforce, $dbh);
-            ++ $i;
-        }
+        nel_regen_threads($dataforce, true, $ids);
     }
-    
-    if ($mode === 'cache')
+
+    if ($mode[2] === 'cache' || $mode[2] === 'full')
     {
-        $dataforce['rules_list'] = nel_cache_rules($dbh);
-        nel_cache_settings($dbh);
-        $dataforce['post_links'] = $link_updates;
-        nel_regen_template_cache();
+        nel_regen_cache();
     }
-    
-    if (!empty($_SESSION) && !$modmode)
+
+    if($mode[1] !== 'modmode')
     {
-        $_SESSION['ignore_login'] = $temp;
+        nel_toggle_session();
     }
-    
+
     $dataforce['post_links'] = $link_updates;
 }
-?>

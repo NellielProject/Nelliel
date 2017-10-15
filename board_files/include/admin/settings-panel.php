@@ -4,23 +4,25 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_settings_control($dataforce, $authorize, $dbh)
+function nel_settings_control($dataforce)
 {
-    $mode = $dataforce['mode_action'];
-    
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config'))
+    $dbh = nel_get_db_handle();
+    $authorize = nel_get_authorization();
+    $mode = $dataforce['mode'];
+
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_change'))
     {
         nel_derp(102, array('origin' => 'ADMIN'));
     }
-    
-    require_once INCLUDE_PATH . 'output/admin-panel-generation.php';
+
+    require_once INCLUDE_PATH . 'output/settings-panel-generation.php';
     $update = FALSE;
-    
-    if ($mode === 'update')
+
+    if ($mode === 'admin->settings->update')
     {
         // Apply settings from admin panel
-        $dbh->query('UPDATE ' . CONFIGTABLE . ' SET setting=""');
-        
+        $dbh->query('UPDATE ' . CONFIG_TABLE . ' SET setting=""');
+
         while ($item = each($_POST))
         {
             if ($item[0] !== 'mode' && $item[0] !== 'username' && $item[0] !== 'super_sekrit')
@@ -29,21 +31,18 @@ function nel_settings_control($dataforce, $authorize, $dbh)
                 {
                     $item[0] = 100;
                 }
-                
+
                 if ($item[0] === 'page_limit')
                 {
                     $dataforce['max_pages'] = (int) $item[1];
                 }
-                
-                $dbh->query('UPDATE ' . CONFIGTABLE . ' SET setting="' . $item[1] . '" WHERE config_name="' . $item[0] . '"');
+
+                $dbh->query('UPDATE "' . CONFIG_TABLE . '" SET setting=' . $item[1] . ' WHERE config_name=\'' . $item[0] . '\'');
             }
         }
-        
-        nel_cache_rules($dbh);
-        nel_cache_settings($dbh);
-        nel_regen($dataforce, NULL, 'full', FALSE, $dbh);
+
+        nel_regen($dataforce, NULL, 'full', FALSE);
     }
-    
-    nel_render_admin_panel($dataforce, $dbh);
+
+    nel_render_settings_panel($dataforce);
 }
-?>

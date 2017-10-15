@@ -10,14 +10,20 @@ if (!defined('NELLIEL_VERSION'))
 function nel_get_language($language, $form, $text)
 {
     static $lang_arrays;
-    
+
     if (!isset($lang_arrays[$language]))
     {
         include LANGUAGE_PATH . 'lang.' . $language . '.php';
         $lang_arrays[$language]['singular'] = $lang_singular;
         $lang_arrays[$language]['plural'] = $lang_plural;
     }
-    
+
+
+    if(!isset($lang_arrays[$language][$form][$text]))
+    {
+        return '???';
+    }
+
     return $lang_arrays[$language][$form][$text];
 }
 

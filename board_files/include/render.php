@@ -46,7 +46,7 @@ class nel_render
         {
             return $this->variables[$setting];
         }
-        
+
         return NULL;
     }
 
@@ -95,7 +95,7 @@ class nel_render
         {
             $this->variables = array();
         }
-        
+
         $this->output = '';
     }
 
@@ -110,13 +110,13 @@ class nel_render
         {
             return $this->output;
         }
-        
+
         echo $this->output;
     }
 
     public function parse($template, $subdirectory)
     {
-        $output = nel_parse_template($template, $subdirectory, $this, FALSE);
+        $output = nel_parse_template($template, $subdirectory, $this, false);
         $this->output .= $output;
     }
 
@@ -140,7 +140,7 @@ class nel_render
         {
             $this->end_timer();
         }
-        
+
         return round(($this->timer_end - $this->timer_start), $round);
     }
 
@@ -150,11 +150,14 @@ class nel_render
         {
             $string = stripslashes($string);
         }
-        
+
         $string = trim($string);
         $string = htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
         return $string;
     }
-}
 
-?>
+    public function get_auth()
+    {
+        return nel_get_authorization();
+    }
+}

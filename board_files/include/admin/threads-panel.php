@@ -4,15 +4,15 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_thread_panel($dataforce, $authorize, $plugins, $dbh)
+function nel_thread_panel($dataforce, $authorize)
 {
-    $mode = $dataforce['mode_action'];
-    
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_thread_panel'))
+    $mode = $dataforce['mode'];
+
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_access'))
     {
         nel_derp(103, array('origin' => 'ADMIN'));
     }
-    
+
     require_once INCLUDE_PATH . 'output/thread-panel-generation.php';
     if (isset($dataforce['expand_thread']))
     {
@@ -22,14 +22,13 @@ function nel_thread_panel($dataforce, $authorize, $plugins, $dbh)
     {
         $expand = FALSE;
     }
-    
-    if ($mode === 'update')
+
+    if ($mode === 'admin->thread->update')
     {
-        $updates = nel_thread_updates($dataforce, $plugins, $dbh);
-        nel_regen($dataforce, $updates, 'thread', FALSE, $dbh);
-        nel_regen($dataforce, NULL, 'main', FALSE, $dbh);
+        $updates = nel_thread_updates($dataforce);
+        nel_regen_threads($dataforce, true, $updates);
+        nel_regen($dataforce, NULL, 'main');
     }
-    
-    nel_render_thread_panel($dataforce, $expand, $dbh);
+
+    nel_render_thread_panel($dataforce, $expand);
 }
-?>
