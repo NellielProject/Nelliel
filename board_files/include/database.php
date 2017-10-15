@@ -71,6 +71,18 @@ function nel_get_db_handle()
     return $database_handle;
 }
 
+function nel_pdo_create_parameter_ids($column_names)
+{
+    $identifiers = array();
+
+    foreach($column_names as $name)
+    {
+        array_push($identifiers, ':' . $name);
+    }
+
+    return $identifiers;
+}
+
 function nel_format_multiple_columns($columns)
 {
     $column_count = count($columns);

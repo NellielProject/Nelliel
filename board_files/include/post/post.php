@@ -125,9 +125,6 @@ function nel_process_new_post($dataforce)
 
         if ($current_thread['post_count'] > BS_MAX_BUMPS || $fgsfds['sage'])
         {
-            var_dump($current_thread['post_count']);
-            echo BS_MAX_BUMPS;
-            die("WAT");
             $thread_info['last_bump_time'] = $current_thread['last_bump_time'];
         }
 
