@@ -10,7 +10,7 @@ function nel_settings_control($dataforce)
     $authorize = nel_get_authorization();
     $mode = $dataforce['mode'];
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_board_config'))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_change'))
     {
         nel_derp(102, array('origin' => 'ADMIN'));
     }
