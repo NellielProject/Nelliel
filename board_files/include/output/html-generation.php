@@ -276,7 +276,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
     $render->add_data('page_ref2', '');
 
-    if (!nel_session_ignored())
+    /*if (!nel_session_ignored())
     {
         $render->add_data('logged_in', TRUE);
         $render->add_data('ip_address', $render->retrieve_data('ip_address') ? $render->retrieve_data('ip_address') : 'Unknown');
@@ -284,7 +284,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
         $render->add_data('page_ref2', PHP_SELF . '?page=');
         $render->add_data('the_session', session_id());
-    }
+    }*/
 
     if ($response)
     {

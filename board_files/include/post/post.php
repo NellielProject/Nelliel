@@ -125,6 +125,9 @@ function nel_process_new_post($dataforce)
 
         if ($current_thread['post_count'] > BS_MAX_BUMPS || $fgsfds['sage'])
         {
+            var_dump($current_thread['post_count']);
+            echo BS_MAX_BUMPS;
+            die("WAT");
             $thread_info['last_bump_time'] = $current_thread['last_bump_time'];
         }
 
@@ -152,7 +155,7 @@ function nel_process_new_post($dataforce)
     nel_update_archive_status($dataforce);
 
     // Generate response page if it doesn't exist, otherwise update
-    nel_regen($dataforce, $thread_info['id'], 'thread', FALSE);
+    nel_regen_threads($dataforce, true, array($thread_info['id']));
     $dataforce['archive_update'] = TRUE;
     nel_regen($dataforce, NULL, 'main', FALSE);
     return $thread_info['id'];

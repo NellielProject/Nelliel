@@ -4,16 +4,16 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_thread_generator($dataforce)
+function nel_thread_generator($dataforce, $write, $write_id)
 {
     $dbh = nel_get_db_handle();
     $render = new nel_render();
     $render_expand = new nel_render();
     $render_collapse = new nel_render();
     $gen_data['insert_hr'] = FALSE;
-    $dataforce['dotdot'] = '';
-    $write_id = ($dataforce['response_to'] === 0 || is_null($dataforce['response_to'])) ? $dataforce['response_id'] : $dataforce['response_to'];
-
+    $dataforce['dotdot'] = '../../';
+    //$write_id = ($dataforce['response_to'] === 0 || is_null($dataforce['response_to'])) ? $dataforce['response_id'] : $dataforce['response_to'];
+    $dataforce['response_id'] = $write_id;
     $prepared = $dbh->prepare('SELECT * FROM ' . THREAD_TABLE . ' WHERE thread_id=?');
     $prepared->bindValue(1, $write_id, PDO::PARAM_INT);
     $prepared->execute();
@@ -31,10 +31,10 @@ function nel_thread_generator($dataforce)
         return;
     }
 
-    if (empty($_SESSION) || $_SESSION['ignore_login'])
+   /* if (empty($_SESSION) || $_SESSION['ignore_login'])
     {
         $dataforce['dotdot'] = '../../';
-    }
+    }*/
 
     $page = 1;
     $gen_data['post_counter'] = 0;
@@ -70,7 +70,7 @@ function nel_thread_generator($dataforce)
             nel_render_post($dataforce, $render_temp, FALSE, FALSE, $gen_data, $treeline);
             $gen_data['insert_hr'] = FALSE;
             nel_render_footer($render_temp, FALSE, TRUE, TRUE, TRUE, FALSE);
-            nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-0-100.html', $render_temp->output(), octdec(FILE_PERM));
+            nel_write_file(PAGE_PATH . $write_id . '/' . $write_id. '-0-100.html', $render_temp->output(), octdec(FILE_PERM));
             unset($render_temp);
         }
 
@@ -112,7 +112,13 @@ function nel_thread_generator($dataforce)
 
     nel_render_footer($render, FALSE, TRUE, TRUE, TRUE, FALSE);
 
-    if (!nel_session_ignored())
+    if ($write)
+    {
+        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '.html', $render->output(FALSE), octdec(FILE_PERM));
+        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '-expand.html', $render_expand->output(FALSE), octdec(FILE_PERM));
+        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '-collapse.html', $render_collapse->output(FALSE), octdec(FILE_PERM));
+    }
+    else
     {
         if ($dataforce['expand'])
         {
@@ -128,12 +134,6 @@ function nel_thread_generator($dataforce)
         }
 
         die();
-    }
-    else
-    {
-        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '.html', $render->output(FALSE), octdec(FILE_PERM));
-        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-expand.html', $render_expand->output(FALSE), octdec(FILE_PERM));
-        nel_write_file(PAGE_PATH . $write_id . '/' . $dataforce['response_id'] . '-collapse.html', $render_collapse->output(FALSE), octdec(FILE_PERM));
     }
 }
 

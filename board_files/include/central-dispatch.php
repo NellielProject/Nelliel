@@ -35,7 +35,7 @@ function nel_process_get($dataforce)
                 }
                 else
                 {
-                    nel_regen($dataforce, $dataforce['response_id'], array('', 'modmode', 'thread'));
+                    nel_regen_threads($dataforce, false, array($dataforce['response_id']));
                 }
             }
 
@@ -89,7 +89,7 @@ function nel_process_post($dataforce)
                     $updates = nel_thread_updates($dataforce);
                 }
 
-                nel_regen($dataforce, $updates, 'thread', FALSE);
+                nel_regen_threads($dataforce, true, $updates);
                 nel_regen($dataforce, NULL, 'main', FALSE);
 
                 echo '<meta http-equiv="refresh" content="0;URL=' . PHP_SELF . '?mode=display&page=0">';
@@ -97,7 +97,7 @@ function nel_process_post($dataforce)
             }
 
             $updates = nel_thread_updates($dataforce);
-            nel_regen($dataforce, $updates, 'thread', FALSE);
+            nel_regen_threads($dataforce, true, $updates);
             nel_regen($dataforce, NULL, 'main', FALSE);
             nel_clean_exit($dataforce, FALSE);
 

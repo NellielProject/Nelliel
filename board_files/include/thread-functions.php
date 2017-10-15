@@ -72,7 +72,7 @@ function nel_sticky_thread($dataforce, $sub)
 
     $dbh->query('UPDATE "' . THREAD_TABLE . '" SET "sticky" = 1 WHERE "thread_id" = ' . $id . '');
     nel_update_archive_status($dataforce);
-    nel_regen($dataforce, $id, 'thread', FALSE);
+    nel_regen_threads($dataforce, true, array($id));
     nel_regen($dataforce, NULL, 'main', FALSE);
     return;
 }
@@ -85,7 +85,7 @@ function nel_unsticky_thread($dataforce, $sub)
     nel_update_archive_status($dataforce, $dbh);
     nel_toggle_session();
     $dataforce['response_id'] = $id;
-    nel_regen($dataforce, $dataforce['response_id'], 'thread', FALSE);
+    nel_regen($dataforce, true, array($dataforce['response_id']));
     $dataforce['archive_update'] = TRUE;
     nel_regen($dataforce, NULL, 'main', FALSE);
     nel_toggle_session();

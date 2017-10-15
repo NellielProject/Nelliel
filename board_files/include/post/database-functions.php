@@ -11,10 +11,12 @@ function nel_db_insert_initial_post($time, $poster_info)
     $query = 'INSERT INTO ' . POST_TABLE . ' ' . nel_format_multiple_columns($columns) . ' VALUES ' .
          nel_format_multiple_values($values);
     $bind_values = array();
+    echo "<pre>";
     $bind_values = nel_pdo_bind_set(':name', $poster_info['name'], PDO::PARAM_STR, $bind_values);
     $bind_values = nel_pdo_bind_set(':password', $poster_info['password'], PDO::PARAM_STR, $bind_values);
-    $bind_values = nel_pdo_bind_set(':tripcode', $poster_info['tripcode'] === '' ? null : $poster_info['tripcode'], $bind_values);
-    $bind_values = nel_pdo_bind_set(':secure_tripcode', $poster_info['secure_tripcode'] === '' ? null : $poster_info['secure_tripcode'], $bind_values);
+    var_dump($bind_values);
+    $bind_values = nel_pdo_bind_set(':tripcode', $poster_info['tripcode'] === '' ? null : $poster_info['tripcode'], null, $bind_values);
+    $bind_values = nel_pdo_bind_set(':secure_tripcode', $poster_info['secure_tripcode'] === '' ? null : $poster_info['secure_tripcode'], null, $bind_values);
     $bind_values = nel_pdo_bind_set(':email', $poster_info['email'], PDO::PARAM_STR, $bind_values);
     $bind_values = nel_pdo_bind_set(':subject', $poster_info['subject'], PDO::PARAM_STR, $bind_values);
     $bind_values = nel_pdo_bind_set(':comment', $poster_info['comment'], PDO::PARAM_STR, $bind_values);
@@ -23,6 +25,8 @@ function nel_db_insert_initial_post($time, $poster_info)
     $bind_values = nel_pdo_bind_set(':op', $poster_info['op'], PDO::PARAM_INT, $bind_values);
     $bind_values = nel_pdo_bind_set(':sage', 0, PDO::PARAM_INT, $bind_values);
     $bind_values = nel_pdo_bind_set(':modpost', $poster_info['modpost'], PDO::PARAM_STR, $bind_values);
+    var_dump($bind_values);
+    echo "</pre>";
     $results = nel_pdo_prepared_query($query, $bind_values);
 }
 
@@ -34,13 +38,13 @@ function nel_db_insert_new_thread($thread_info, $files_count) // TODO: Update fo
     $query = 'INSERT INTO ' . THREAD_TABLE . ' ' . nel_format_multiple_columns($columns) . ' VALUES ' .
     nel_format_multiple_values($values);
     $bind_values = array();
-    $bind_values = nel_pdo_bind_set($bind_values, ':id', $thread_info['id'], PDO::PARAM_INT, $bind_values);
-    $bind_values = nel_pdo_bind_set($bind_values, ':first', $thread_info['id'], PDO::PARAM_INT, $bind_values);
-    $bind_values = nel_pdo_bind_set($bind_values, ':last', $thread_info['id'], PDO::PARAM_INT, $bind_values);
-    $bind_values = nel_pdo_bind_set($bind_values, ':bump', $thread_info['last_bump_time'], $bind_values);
-    $bind_values = nel_pdo_bind_set($bind_values, ':files', $files_count, PDO::PARAM_INT, $bind_values);
-    $bind_values = nel_pdo_bind_set($bind_values, ':time', $thread_info['last_update'], $bind_values);
-    $bind_values = nel_pdo_bind_set($bind_values, ':posts', 1, PDO::PARAM_INT, $bind_values);
+    $bind_values = nel_pdo_bind_set(':id', $thread_info['id'], PDO::PARAM_INT, $bind_values);
+    $bind_values = nel_pdo_bind_set(':first', $thread_info['id'], PDO::PARAM_INT, $bind_values);
+    $bind_values = nel_pdo_bind_set(':last', $thread_info['id'], PDO::PARAM_INT, $bind_values);
+    $bind_values = nel_pdo_bind_set(':bump', $thread_info['last_bump_time'], null, $bind_values);
+    $bind_values = nel_pdo_bind_set(':files', $files_count, PDO::PARAM_INT, $bind_values);
+    $bind_values = nel_pdo_bind_set(':time', $thread_info['last_update'], null, $bind_values);
+    $bind_values = nel_pdo_bind_set(':posts', 1, PDO::PARAM_INT, $bind_values);
     $results = nel_pdo_prepared_query($query, $bind_values);
 }
 
@@ -48,11 +52,12 @@ function nel_db_update_thread($new_post_info, $thread_info)
 {
     $dbh = nel_get_db_handle();
     $prepared = $dbh->prepare('UPDATE ' . THREAD_TABLE .
-         ' SET last_post=?, last_update=?, post_count=? WHERE thread_id=?');
+         ' SET last_post=?, last_bump_time=?, last_update=?, post_count=? WHERE thread_id=?');
     $prepared->bindParam(1, $new_post_info['post_number'], PDO::PARAM_INT);
-    $prepared->bindParam(2, $thread_info['last_update'], PDO::PARAM_INT);
-    $prepared->bindParam(3, $thread_info['post_count'], PDO::PARAM_INT);
-    $prepared->bindParam(4, $thread_info['id'], PDO::PARAM_INT);
+    $prepared->bindParam(2, $thread_info['last_bump_time'], PDO::PARAM_INT);
+    $prepared->bindParam(3, $thread_info['last_update'], PDO::PARAM_INT);
+    $prepared->bindParam(4, $thread_info['post_count'], PDO::PARAM_INT);
+    $prepared->bindParam(5, $thread_info['id'], PDO::PARAM_INT);
     $prepared->execute();
     $prepared->closeCursor();
 }

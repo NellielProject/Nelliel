@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Genrerates the main thread listings
 //
-function nel_main_nel_thread_generator($dataforce)
+function nel_main_thread_generator($dataforce, $write)
 {
     $dbh = nel_get_db_handle();
     $gen_data = array();
@@ -33,7 +33,7 @@ function nel_main_nel_thread_generator($dataforce)
         $render->add_data('page_nav', '');
         nel_render_footer($render, FALSE, TRUE, TRUE, FALSE, TRUE);
 
-        if (nel_session_ignored())
+        if ($write)
         {
             nel_write_file(PHP_SELF2 . PHP_EXT, $render->output(FALSE), octdec(FILE_PERM));
         }
@@ -170,7 +170,7 @@ function nel_main_nel_thread_generator($dataforce)
 
         nel_render_footer($render, FALSE, TRUE, TRUE, FALSE, TRUE);
 
-        if (!nel_session_ignored())
+        if (!$write)
         {
             if ($page >= $dataforce['current_page'])
             {
