@@ -1,7 +1,7 @@
                 <a id="p{$render->retrieve_data('post_number')}"></a>
                 <div class="indents">&gt;&gt;</div>
                 <div class="reply-post">
-                    <input type="checkbox" name="thread_{$render->retrieve_data('post_number')}" value="selectthread_{$render->retrieve_data('post_number')}" title="Delete entire post"><span class="reply-subject">{$render->retrieve_data('subject')}</span>
+                    <input type="checkbox" name="post_{$render->retrieve_data('post_number')}_{$render->retrieve_data('parent_thread')}" value="deletepost_{$render->retrieve_data('post_number')}_{$render->retrieve_data('parent_thread')}" title="Delete entire post"><span class="reply-subject">{$render->retrieve_data('subject')}</span>
                     <span class="reply-poster-name">
 {{ if $render->retrieve_data('email') }}
                     <a href="mailto:{$render->retrieve_data('email')}" class="mailto-name">{$render->retrieve_data('poster_name')}</a>{$render->retrieve_data('tripcode')}{$render->retrieve_data('secure_tripcode')}&nbsp;&nbsp;{$render->retrieve_data('staff_post')}

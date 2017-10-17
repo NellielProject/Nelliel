@@ -75,7 +75,7 @@ function nel_pdo_create_parameter_ids($column_names)
 {
     $identifiers = array();
 
-    foreach($column_names as $name)
+    foreach ($column_names as $name)
     {
         array_push($identifiers, ':' . $name);
     }
@@ -127,66 +127,63 @@ function nel_format_multiple_values($values)
     return $values_sql;
 }
 
-function nel_pdo_simple_query($query, $do_fetch = false, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, $fetchall = false)
+function nel_pdo_one_parameter_query($query, $parameter, $type = null, $close_cursor = false)
+{
+    $bind_values = array();
+    $bind_values = nel_pdo_bind_set(1, $parameter, $type, $bind_values);
+    return nel_pdo_prepared_query($query, $bind_values);
+}
+
+function nel_pdo_simple_query($query)
 {
     $dbh = nel_get_db_handle();
     $result = $dbh->query($query);
-
-    if ($result != false && $do_fetch)
-    {
-        return nel_pdo_do_fetch($result, $fetch_style, $fetchall);
-    }
-
     return $result;
 }
 
-function nel_pdo_prepared_query($query, $bind_values, $do_fetch = false, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, $fetchall = false)
+function nel_pdo_prepared_query($query, $bind_values, $close_cursor = false)
 {
     $dbh = nel_get_db_handle();
     $prepared = $dbh->prepare($query);
     $prepared = nel_pdo_bind_values($prepared, $bind_values);
+    $prepared->execute();
 
-    if ($prepared->execute() && $do_fetch)
+    if ($close_cursor)
     {
-        $results = nel_pdo_do_fetch($prepared, $fetch_style, $fetchall);
         $prepared->closeCursor();
-        return $results;
     }
 
     return $prepared;
 }
 
-function nel_pdo_do_fetch($result, $fetch_style, $fetchall)
+function nel_pdo_do_fetchall($prepared, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)
 {
-    if ($fetchall)
+    $fetched_result = $prepared->fetchAll($fetch_style);
+    return $fetched_result;
+}
+
+function nel_pdo_do_fetch($prepared, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, $close_cursor = false)
+{
+    if ($fetch_style === PDO::FETCH_COLUMN)
     {
-        $fetched_result = $result->fetchAll($fetch_style);
+        $fetched_result = $result->fetchColumn();
     }
     else
     {
-        if($fetch_style === PDO::FETCH_COLUMN)
-        {
-            $fetched_result = $result->fetchColumn();
-        }
-        else
-        {
-            $fetched_result = $result->fetch($fetch_style);
-        }
+        $fetched_result = $result->fetch($fetch_style);
     }
 
     return $fetched_result;
 }
 
-function nel_pdo_bind_set($key, $value, $type = null, $bind_values = array())
+function nel_pdo_bind_set(&$bind_values, $key, $value, $type = null)
 {
     $bind_values[$key]['value'] = $value;
 
-    if(!is_null($type))
+    if (!is_null($type))
     {
         $bind_values[$key]['type'] = $type;
     }
-
-    return $bind_values;
 }
 
 function nel_pdo_bind_values($prepared, $bind_values)

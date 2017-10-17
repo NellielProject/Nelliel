@@ -98,9 +98,9 @@ function nel_check_for_existing_file($file, $files)
     }
 
     nel_banned_hash($file['md5'], $files);
-    $query = 'SELECT post_ref FROM ' . FILE_TABLE . ' WHERE sha1=? LIMIT 1';
-    $bind_values = nel_pdo_bind_set(1, $file['sha1'], PDO::PARAM_STR, $bind_values);
-    $result = nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_COLUMN);
+    $query = 'SELECT "post_ref" FROM "' . FILE_TABLE . '" WHERE "sha1" = ? LIMIT 1';
+    $prepared = nel_pdo_one_parameter_query($query, $file['sha1'], PDO::PARAM_STR);
+    $result = nel_pdo_do_fetch($prepared, PDO::FETCH_COLUMN, true);
 
     if ($result)
     {

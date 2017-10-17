@@ -105,34 +105,36 @@ class nel_authorization
     private function get_user_list()
     {
         $query = 'SELECT "user_id" FROM "' . USER_TABLE . '"';
-        return nel_pdo_simple_query($query, true, PDO::FETCH_COLUMN, true);
+        $result = nel_pdo_simple_query($query);
+        return nel_pdo_do_fetchall($result, PDO::FETCH_COLUMN);
     }
 
     private function get_role_list()
     {
         $query = 'SELECT "role_id" FROM "' . ROLES_TABLE . '"';
-        return nel_pdo_simple_query($query, true, PDO::FETCH_COLUMN, true);
+        $result = nel_pdo_simple_query($query);
+        return nel_pdo_do_fetchall($result, PDO::FETCH_COLUMN);
     }
 
     private function load_user($user_id)
     {
         $query = 'SELECT * FROM "' . USER_TABLE . '" WHERE "user_id" = ?';
-        $bind_values = nel_pdo_bind_set(1, $user_id, PDO::PARAM_STR);
-        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC);
+        $prepared = nel_pdo_one_parameter_query($query, $user_id, PDO::PARAM_STR);
+        return nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
     }
 
     private function load_role($role_id)
     {
         $query = 'SELECT * FROM "' . ROLES_TABLE . '" WHERE "role_id" = ?';
-        $bind_values = nel_pdo_bind_set(1, $role_id, PDO::PARAM_STR);
-        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC);
+        $prepared = nel_pdo_one_parameter_query($query, $role_id, PDO::PARAM_STR);
+        return nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
     }
 
     private function load_role_permissons($role_id)
     {
         $query = 'SELECT "perm_id", "perm_setting" FROM "' . 'nelliel_permissions' . '" WHERE "role_id" = ?';
-        $bind_values = nel_pdo_bind_set(1, $role_id, PDO::PARAM_STR);
-        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC, true);
+        $prepared = nel_pdo_one_parameter_query($query, $role_id, PDO::PARAM_STR);
+        return nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
     }
 
     public function set_up_user($user)
@@ -276,8 +278,8 @@ class nel_authorization
     public function get_tripcode_user($tripcode)
     {
         $query = 'SELECT "user_id" FROM "' . USER_TABLE . '" WHERE "user_tripcode" = ?';
-        $bind_values = nel_pdo_bind_set(1, $tripcode, PDO::PARAM_STR);
-        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_COLUMN);
+        $prepared = nel_pdo_one_parameter_query($query, $tripcode, PDO::PARAM_STR);
+        return nel_pdo_do_fetch($prepared, PDO::FETCH_COLUMN, true);
     }
 
     public function update_user($user, $update)
@@ -360,7 +362,7 @@ class nel_authorization
 
         $update_user = substr($update_user, 0, -2);
         $query = 'UPDATE "' . USER_TABLE . '" SET ' . $update_user . ' WHERE "user_id" = :user';
-        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC);
+        nel_pdo_prepared_query($query, $bind_values, true);
     }
 
     private function save_role($role)
@@ -384,7 +386,7 @@ class nel_authorization
         $bind_values[':role']['type'] = PDO::PARAM_STR;
         $update_role = substr($update_role, 0, -2);
         $query = 'UPDATE "' . ROLES_TABLE . '" SET ' . $update_role . ' WHERE "role_id" = :role';
-        return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC);
+        nel_pdo_prepared_query($query, $bind_values, true);
     }
 
     private function save_permissions($role)
@@ -400,7 +402,7 @@ class nel_authorization
             $bind_values[':role']['type'] = PDO::PARAM_STR;
             $bind_values[':setting']['value'] = (int)$value;
             $bind_values[':setting']['type'] = PDO::PARAM_INT;
-            nel_pdo_prepared_query($query, $bind_values);
+            nel_pdo_prepared_query($query, $bind_values, true);
         }
     }
 }

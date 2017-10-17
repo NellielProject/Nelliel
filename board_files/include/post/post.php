@@ -98,10 +98,9 @@ function nel_process_new_post($dataforce)
     }
 
     nel_db_insert_initial_post($time, $post_data);
-    $result = $dbh->query('SELECT * FROM ' . POST_TABLE . ' WHERE post_time=' . $time . ' LIMIT 1');
-    $new_post_info = $result->fetch(PDO::FETCH_ASSOC);
-    unset($result);
-
+    $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "post_time" = ? LIMIT 1';
+    $prepared = nel_pdo_one_parameter_query($query, $time, PDO::PARAM_INT);
+    $new_post_info = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
     $thread_info = array();
 
     if ($dataforce['response_to'] === 0)
@@ -116,9 +115,9 @@ function nel_process_new_post($dataforce)
     else
     {
         $thread_info['id'] = $dataforce['response_to'];
-        $result = $dbh->query('SELECT * FROM ' . THREAD_TABLE . ' WHERE thread_id=' . $thread_info['id'] . ' LIMIT 1');
-        $current_thread = $result->fetch(PDO::FETCH_ASSOC);
-        unset($result);
+        $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1';
+        $prepared = nel_pdo_one_parameter_query($query, $thread_info['id'], PDO::PARAM_INT);
+        $current_thread = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
         $thread_info['last_update'] = $current_thread['last_update'];
         $thread_info['post_count'] = $current_thread['post_count'] + 1;
         $thread_info['last_bump_time'] = $time;
@@ -195,35 +194,29 @@ function nel_is_post_ok($dataforce, $time)
 
     if ($dataforce['response_to'] !== 0)
     {
-        $result = $dbh->query('SELECT * FROM ' . THREAD_TABLE . ' WHERE thread_id=' . $dataforce['response_to'] .
-             ' LIMIT 1');
+        $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1';
+        $prepared = nel_pdo_one_parameter_query($query, $dataforce['response_to'], PDO::PARAM_INT);
+        $op_post = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
 
-        if ($result !== FALSE)
+        if (!empty($op_post))
         {
-            $op_post = $result->fetch(PDO::FETCH_ASSOC);
-
-            if (!empty($op_post))
+            if ($op_post['thread_id'] === '')
             {
-                if ($op_post['thread_id'] === '')
-                {
-                    nel_derp(2, array('origin' => 'POST'));
-                }
-
-                if ($op_post['locked'] === '1')
-                {
-                    nel_derp(3, array('origin' => 'POST'));
-                }
-
-                if ($op_post['archive_status'] !== '0')
-                {
-                    nel_derp(14, array('origin' => 'POST'));
-                }
-
-                $post_count = $op_post['post_count'];
+                nel_derp(2, array('origin' => 'POST'));
             }
-        }
 
-        unset($result);
+            if ($op_post['locked'] === '1')
+            {
+                nel_derp(3, array('origin' => 'POST'));
+            }
+
+            if ($op_post['archive_status'] !== '0')
+            {
+                nel_derp(14, array('origin' => 'POST'));
+            }
+
+            $post_count = $op_post['post_count'];
+        }
 
         if ($post_count >= BS_MAX_POSTS)
         {

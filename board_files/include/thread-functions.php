@@ -60,9 +60,9 @@ function nel_sticky_thread($dataforce, $sub)
 {
     $dbh = nel_get_db_handle();
     $id = $sub[1];
-    $result = $dbh->query('SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ' . $id . '');
-    $post_data = $result->fetch(PDO::FETCH_ASSOC);
-    unset($result);
+    $query = 'SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
+    $prepared = nel_pdo_one_parameter_query($query, $id, PDO::PARAM_INT);
+    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
 
     // If this is not already a thread, make the post into one
     if ($post_data['parent_thread'] != $id)
@@ -70,7 +70,8 @@ function nel_sticky_thread($dataforce, $sub)
         nel_make_post_thread($dataforce, $id);
     }
 
-    $dbh->query('UPDATE "' . THREAD_TABLE . '" SET "sticky" = 1 WHERE "thread_id" = ' . $id . '');
+    $query = 'UPDATE "' . THREAD_TABLE . '" SET "sticky" = 1 WHERE "thread_id" = ?';
+    nel_pdo_one_parameter_query($query, $id, PDO::PARAM_INT, true);
     nel_update_archive_status($dataforce);
     nel_regen_threads($dataforce, true, array($id));
     nel_regen($dataforce, NULL, 'main', FALSE);
@@ -81,7 +82,8 @@ function nel_unsticky_thread($dataforce, $sub)
 {
     $dbh = nel_get_db_handle();
     $id = $sub[1];
-    $dbh->query('UPDATE "' . THREAD_TABLE . '" SET "sticky" = 0 WHERE "thread_id" = ' . $id . '');
+    $query = 'UPDATE "' . THREAD_TABLE . '" SET "sticky" = 0 WHERE "thread_id" = ?';
+    nel_pdo_one_parameter_query($query, $id, PDO::PARAM_INT, true);
     nel_update_archive_status($dataforce, $dbh);
     nel_toggle_session();
     $dataforce['response_id'] = $id;
@@ -94,48 +96,44 @@ function nel_unsticky_thread($dataforce, $sub)
 function nel_get_thread_data($thread_id)
 {
     $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ?';
-    $bind_values = nel_pdo_bind_set(1, $thread_id, PDO::PARAM_INT);
-    return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC, true);
+    $prepared = nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT);
+    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
 }
 
 function nel_get_thread_all_posts($thread_id)
 {
     $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "parent_thread" = ?';
-    $bind_values = nel_pdo_bind_set(1, $thread_id, PDO::PARAM_INT);
-    return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC, true);
+    $prepared = nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT);
+    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
 }
 
 function nel_get_post_data($post_id)
 {
     $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
-    $bind_values = nel_pdo_bind_set(1, post_id, PDO::PARAM_INT);
-    return nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_ASSOC, true);
+    $prepared = nel_pdo_one_parameter_query($query, $post_id, PDO::PARAM_INT);
+    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
 }
 
 function nel_get_thread_last_post($thread_id)
 {
-    $dbh = nel_get_db_handle();
-    $result = $dbh->query('SELECT *  FROM "' . POST_TABLE . '" WHERE "parent_thread" = ' . $thread_id .
-         ' ORDER BY "post_number" DESC LIMIT 1');
-    $post_data = $result->fetch(PDO::FETCH_ASSOC);
-    return $post_data;
+    $query = 'SELECT *  FROM "' . POST_TABLE . '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1';
+    $prepared = nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT);
+    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
 }
 
 function nel_get_thread_last_nosage_post($thread_id)
 {
-    $dbh = nel_get_db_handle();
-    $result = $dbh->query('SELECT *  FROM "' . POST_TABLE . '" WHERE "parent_thread" = ' . $thread_id .
-         ' AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1');
-    $post_data = $result->fetch(PDO::FETCH_ASSOC);
-    return $post_data;
+    $query = 'SELECT *  FROM "' . POST_TABLE .
+         '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1';
+    $prepared = nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT);
+    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
 }
 
 function nel_get_thread_second_last_post($thread_id)
 {
-    $dbh = nel_get_db_handle();
-    $result = $dbh->query('SELECT *  FROM "' . POST_TABLE . '" WHERE "parent_thread" = ' . $thread_id .
-         ' ORDER BY "post_number" DESC LIMIT 2');
-    $post_data = $result->fetchAll(PDO::FETCH_ASSOC);
+    $query = 'SELECT *  FROM "' . POST_TABLE . '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 2';
+    $prepared = nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT);
+    $post_data = nel_pdo_do_fetchall($prepared, PDO::FETCH_ASSOC);
 
     if (array_key_exists(1, $post_data))
     {
@@ -151,47 +149,41 @@ function nel_make_post_thread($dataforce, $post_id)
     nel_create_thread_directories($post_id);
     $post_data = nel_get_post_data($post_id);
 
-    $prepared = $dbh->prepare('INSERT INTO "' . THREAD_TABLE . '" (
-        thread_id,
-        first_post,
-        last_post,
-        last_bump_time,
-        total_files,
-        total_external,
-        last_update,
-        post_count,
-        sticky)
-    VALUES
-	   (:id,
-        :first,
-        :last,
-        :bump,
-        :files,
-        :externals,
-        :time,
-        1,
-        1)');
+    $columns = array('thread_id', 'first_post', 'last_post', 'last_bump_time', 'total_files', 'total_externals',
+        'last_update', 'post_count', 'sticky');
+    $values = nel_pdo_create_parameter_ids($columns);
+    $query = 'INSERT INTO ' . THREAD_TABLE . ' ' . nel_format_multiple_columns($columns) . ' VALUES ' .
+         nel_format_multiple_values($values);
+    $bind_values = array();
+    nel_pdo_bind_set($bind_values, ':thread_id', $post_id, PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, ':first_post', $post_id, PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, ':last_post', $post_id, PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, ':last_bump_time', $post_data['post_time'], PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, ':total_files', $post_data['file_count'], PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, ':total_externals', $post_data['external_count'], PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, ':last_update', $thread_info['last_update'], PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, ':post_count', 1, PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, ':sticky', 1, PDO::PARAM_INT);
+    nel_pdo_prepared_query($query, $bind_values, true);
 
-    $prepared->bindValue(':id', $post_id, PDO::PARAM_INT);
-    $prepared->bindValue(':first', $post_id, PDO::PARAM_INT);
-    $prepared->bindValue(':last', $post_id, PDO::PARAM_INT);
-    $prepared->bindValue(':bump', $post_data['post_time']);
-    $prepared->bindValue(':files', $post_data['file_count'], PDO::PARAM_INT);
-    $prepared->bindValue(':externals', $post_data['external_count'], PDO::PARAM_INT);
-    $prepared->bindValue(':time', $post_data['post_time'], PDO::PARAM_INT);
-    $prepared->execute();
-    $prepared->closeCursor();
-
-    $dbh->query('UPDATE "' . POST_TABLE . '" SET "parent_thread" = ' . $post_id . ', "op" = 1 WHERE "post_number" = ' .
-         $post_id);
+    $query = 'UPDATE "' . POST_TABLE . '" SET "parent_thread" = ?, "op" = 1 WHERE "post_number" = ?';
+    $bind_values = array();
+    nel_pdo_bind_set($bind_values, '1', $post_id, PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, '2', $post_id, PDO::PARAM_INT);
+    nel_pdo_prepared_query($query, $bind_values, true);
 
     if ($post_data['has_file'])
     {
-        $dbh->query('UPDATE ' . FILE_TABLE . ' SET parent_thread=' . $post_id . ' WHERE post_ref=' . $post_id . '');
-        $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILE_TABLE . ' WHERE post_ref=' .
-             $post_id);
-        $file_data = $result->fetchAll(PDO::FETCH_ASSOC);
-        unset($result);
+        $query = 'UPDATE "' . FILE_TABLE . '" SET "parent_thread" = ? WHERE "post_ref" = ?';
+        $bind_values = array();
+        nel_pdo_bind_set($bind_values, '1', $post_id, PDO::PARAM_INT);
+        nel_pdo_bind_set($bind_values, '2', $post_id, PDO::PARAM_INT);
+        nel_pdo_prepared_query($query, $bind_values, true);
+
+        $query = 'SELECT "filename", "extension", "preview_name" FROM "' . FILE_TABLE . '" WHERE "post_ref" = ?';
+        $prepared = nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT);
+        $file_data = nel_pdo_do_fetchall($prepared, PDO::FETCH_ASSOC);
+
         $file_count = count($file_data);
         $line = 0;
 
@@ -244,17 +236,80 @@ function nel_update_thread_data($thread_id)
     }
 
     $prepared = $dbh->prepare('UPDATE "' . THREAD_TABLE .
-         '" SET "first_post" = :first, "last_post" = :last, "post_count" = :pcount, "file_count" = :fcount, "external_count" = :ecount, "last_update" = :update, "last_bump_time" = :bump WHERE "post_number" = ' .
-         $thread_id . '');
-    $prepared->bindValue(':first', $first_post, PDO::PARAM_INT);
-    $prepared->bindValue(':last', $last_post, PDO::PARAM_INT);
-    $prepared->bindValue(':pcount', $post_count, PDO::PARAM_INT);
-    $prepared->bindValue(':fcount', $file_count, PDO::PARAM_INT);
-    $prepared->bindValue(':ecount', $external_count, PDO::PARAM_INT);
-    $prepared->bindValue(':update', $last_update);
-    $prepared->bindValue(':bump', $last_bump);
+         '" SET "first_post" = :first_post, "last_post" = :last_post, "post_count" = :post_count,
+        "file_count" = :file_count, "external_count" = :external_count, "last_update" = :last_update,
+        "last_bump_time" = :last_bump_time WHERE "post_number" = :post_number');
+    $prepared->bindValue(':first_post', $first_post, PDO::PARAM_INT);
+    $prepared->bindValue(':last_post', $last_post, PDO::PARAM_INT);
+    $prepared->bindValue(':post_count', $post_count, PDO::PARAM_INT);
+    $prepared->bindValue(':file_count', $file_count, PDO::PARAM_INT);
+    $prepared->bindValue(':external_count', $external_count, PDO::PARAM_INT);
+    $prepared->bindValue(':last_update', $last_update, PDO::PARAM_INT);
+    $prepared->bindValue(':last_bump_time', $last_bump, PDO::PARAM_INT);
+    $prepared->bindValue(':post_number', $thread_id, PDO::PARAM_INT);
     $prepared->execute();
     unset($prepared);
+}
+
+function nel_remove_post_from_database($sub, $id, $post_data)
+{
+    $query = 'DELETE FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
+    nel_pdo_one_parameter_query($query, $id, PDO::PARAM_INT, true);
+
+    $thread_data = nel_get_thread_data($post_data['parent_thread']);
+    $new_count = $thread_data['post_count'] - 1;
+    $new_last = nel_get_thread_last_post($sub[2]);
+    $last_bump = $new_last['post_time'];
+
+    if ($new_last['sage'] !== '0')
+    {
+        $last_nosage = nel_get_thread_last_nosage_post($id);
+        $last_bump = $last_nosage['post_time'];
+    }
+
+    $query = 'UPDATE "' . THREAD_TABLE .
+         '" SET "post_count" = ?, "last_update" = ?, "last_bump_time" = ?, "last_post" = ? WHERE "thread_id" = ?';
+    $bind_values = array();
+    nel_pdo_bind_set($bind_values, 1, $new_count, PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, 2, $new_last['post_time'], PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, 3, $last_bump, PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, 4, $new_last['post_number'], PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, 5, $post_data['parent_thread'], PDO::PARAM_INT);
+    nel_pdo_prepared_query($query, $bind_values, true);
+}
+
+function nel_remove_thread_from_database($thread_id)
+{
+    $query = 'SELECT "post_number" FROM "' . POST_TABLE . '" WHERE "parent_thread" = ?';
+    $prepared = nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT);
+    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_COLUMN, true);
+
+    foreach ($thread_posts as $ref)
+    {
+        nel_remove_file_from_database($ref);
+        $query = 'DELETE FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
+        nel_pdo_one_parameter_query($query, $ref, PDO::PARAM_INT, true);
+    }
+
+    $query = 'DELETE FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ?';
+    nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT, true);
+}
+
+function nel_remove_file_from_database($post_ref, $order = null)
+{
+    if (is_null($order))
+    {
+        $query = 'DELETE FROM "' . FILE_TABLE . '" WHERE "post_ref" = ?';
+        nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT, true);
+    }
+    else
+    {
+        $query = 'DELETE FROM ' . FILE_TABLE . ' WHERE "post_ref" = ? AND "file_order" = ?';
+        $bind_values = array();
+        nel_pdo_bind_set($bind_values, 1, $post_ref, PDO::PARAM_INT);
+        nel_pdo_bind_set($bind_values, 2, $order, PDO::PARAM_INT);
+        nel_pdo_prepared_query($query, $bind_values, true);
+    }
 }
 
 function nel_delete_content($dataforce, $sub, $type)
@@ -269,10 +324,10 @@ function nel_delete_content($dataforce, $sub, $type)
     }
 
     $flag = FALSE;
-    $result = $dbh->query('SELECT "post_number", "post_password", "parent_thread", "mod_post" FROM "' . POST_TABLE .
-         '" WHERE "post_number" = ' . $id . '');
-    $post_data = $result->fetch(PDO::FETCH_ASSOC);
-    unset($result);
+    $query = 'SELECT "post_number", "post_password", "parent_thread", "mod_post" FROM "' . POST_TABLE .
+         '" WHERE "post_number" = ?';
+    $prepared = nel_pdo_one_parameter_query($query, $id, PDO::PARAM_INT);
+    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
 
     if (!nel_session_ignored() && $authorize->get_user_perm($_SESSION['username'], 'perm_post_delete'))
     {
@@ -291,22 +346,11 @@ function nel_delete_content($dataforce, $sub, $type)
 
     if ($type === 'THREAD')
     {
-        $result = $dbh->query('SELECT "post_number" FROM "' . POST_TABLE . '" WHERE "parent_thread" = ' . $id);
-        $content_refs = $result->fetchALL(PDO::FETCH_COLUMN, 0);
-        unset($result);
-
-        foreach ($content_refs as $ref)
-        {
-            $dbh->query('DELETE FROM ' . FILE_TABLE . ' WHERE post_ref=' . $ref . '');
-            $dbh->query('DELETE FROM ' . POST_TABLE . ' WHERE post_number=' . $ref . '');
-            $dbh->query('DELETE FROM ' . THREAD_TABLE . ' WHERE thread_id=' . $ref . '');
-            preg_replace('#p([0-9]+)t' . $ref . '#', '', $dataforce['post_links']);
-        }
-
+        nel_remove_thread_from_database($id);
+        preg_replace('#p([0-9]+)t' . $id . '#', '', $dataforce['post_links']);
         nel_eraser_gun(PAGE_PATH . $id, NULL, TRUE);
         nel_eraser_gun(SRC_PATH . $id, NULL, TRUE);
         nel_eraser_gun(THUMB_PATH . $id, NULL, TRUE);
-
         nel_update_archive_status($dataforce);
     }
     else if ($type === 'POST')
@@ -315,7 +359,8 @@ function nel_delete_content($dataforce, $sub, $type)
              '');
         $file_data = $result->fetchAll(PDO::FETCH_ASSOC);
         unset($result);
-        $dbh->query('DELETE FROM ' . FILE_TABLE . ' WHERE post_ref=' . $id . '');
+
+        nel_remove_file_from_database($id);
 
         foreach ($file_data as $refs)
         {
@@ -333,24 +378,10 @@ function nel_delete_content($dataforce, $sub, $type)
         }
         else
         {
-            $dbh->query('DELETE FROM ' . POST_TABLE . ' WHERE post_number=' . $id . '');
-            $result = $dbh->query('SELECT post_count FROM ' . THREAD_TABLE . ' WHERE thread_id=' .
-                 $post_data['parent_thread'] . '');
-            $pcount = $result->fetch(PDO::FETCH_ASSOC);
-            unset($result);
-            $result = $dbh->query('SELECT post_number,post_time FROM ' . POST_TABLE . ' WHERE parent_thread=' .
-                 $post_data['parent_thread'] . ' ORDER BY post_number desc');
-            $ptimes = $result->fetchAll(PDO::FETCH_ASSOC);
-            unset($result);
-            $result = $dbh->query('SELECT post_number,post_time FROM ' . POST_TABLE . ' WHERE parent_thread=' .
-                 $post_data['parent_thread'] . ' AND sage=0 ORDER BY post_number desc');
-            $ptimes2 = $result->fetchAll(PDO::FETCH_ASSOC);
-            unset($result);
-            $dbh->query('UPDATE ' . THREAD_TABLE . ' SET post_count=' . ($pcount['post_count'] - 1) . ', last_update=' .
-                 $ptimes[0]['post_time'] . ', last_bump_time=' . $ptimes2[0]['post_time'] . ' last_post=' .
-                 $ptimes[0]['post_number'] . ' WHERE thread_id=' . $post_data['parent_thread'] . '');
-            preg_replace('#p' . $id . 't([0-9]+)#', '', $dataforce['post_links']);
+            nel_remove_post_from_database($sub, $id, $post_data);
         }
+
+        preg_replace('#p' . $id . 't([0-9]+)#', '', $dataforce['post_links']);
     }
     else if ($type === 'FILE')
     {
@@ -363,7 +394,7 @@ function nel_delete_content($dataforce, $sub, $type)
 
         if ($file_data !== FALSE)
         {
-            $dbh->query('DELETE FROM ' . FILE_TABLE . ' WHERE post_ref=' . $id . ' AND file_order=' . $fnum . '');
+            nel_remove_file_from_database($id, $fnum);
 
             if ($post_data['response_to'] == 0)
             {
