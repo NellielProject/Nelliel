@@ -130,7 +130,7 @@ function nel_format_multiple_values($values)
 function nel_pdo_one_parameter_query($query, $parameter, $type = null, $close_cursor = false)
 {
     $bind_values = array();
-    $bind_values = nel_pdo_bind_set(1, $parameter, $type, $bind_values);
+    nel_pdo_bind_set($bind_values, 1, $parameter, $type);
     return nel_pdo_prepared_query($query, $bind_values);
 }
 
@@ -162,7 +162,7 @@ function nel_pdo_do_fetchall($prepared, $fetch_style = PDO::ATTR_DEFAULT_FETCH_M
     return $fetched_result;
 }
 
-function nel_pdo_do_fetch($prepared, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, $close_cursor = false)
+function nel_pdo_do_fetch($result, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, $close_cursor = false)
 {
     if ($fetch_style === PDO::FETCH_COLUMN)
     {

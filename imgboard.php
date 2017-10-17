@@ -9,7 +9,6 @@ require_once BOARD_FILES . 'database-config.php';
 require_once INCLUDE_PATH . 'defines.php';
 require_once INCLUDE_PATH . 'crypt.php';
 require_once BOARD_FILES . 'libraries/password_compat/password.php';
-
 $best_hashing = nel_best_available_hashing();
 
 if($best_hashing === 0)
@@ -56,6 +55,6 @@ require_once INCLUDE_PATH . 'post/post.php';
 require_once INCLUDE_PATH . 'central-dispatch.php';
 nel_process_get($dataforce);
 nel_process_post($dataforce);
-nel_regen($dataforce, NULL, 'main', FALSE);
+nel_regen_index($dataforce);
 nel_clean_exit($dataforce, FALSE);
 

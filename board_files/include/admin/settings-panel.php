@@ -41,7 +41,8 @@ function nel_settings_control($dataforce)
             }
         }
 
-        nel_regen($dataforce, NULL, 'full', FALSE);
+        nel_regen_cache($dataforce);
+        nel_regen_all_pages($dataforce);
     }
 
     nel_render_settings_panel($dataforce);

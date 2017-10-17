@@ -153,7 +153,7 @@ function nel_process_new_post($dataforce)
     // Generate response page if it doesn't exist, otherwise update
     nel_regen_threads($dataforce, true, array($thread_info['id']));
     $dataforce['archive_update'] = TRUE;
-    nel_regen($dataforce, NULL, 'main', FALSE);
+    nel_regen_index($dataforce);
     return $thread_info['id'];
 }
 

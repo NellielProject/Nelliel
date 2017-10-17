@@ -93,7 +93,7 @@ function nel_initialize_session($dataforce)
         }
 
         nel_set_session_cookie();
-        nel_login($dataforce, $authorize);
+        nel_login($dataforce);
         die();
     }
     else

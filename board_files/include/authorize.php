@@ -134,7 +134,7 @@ class nel_authorization
     {
         $query = 'SELECT "perm_id", "perm_setting" FROM "' . 'nelliel_permissions' . '" WHERE "role_id" = ?';
         $prepared = nel_pdo_one_parameter_query($query, $role_id, PDO::PARAM_STR);
-        return nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
+        return nel_pdo_do_fetchall($prepared, PDO::FETCH_ASSOC);
     }
 
     public function set_up_user($user)

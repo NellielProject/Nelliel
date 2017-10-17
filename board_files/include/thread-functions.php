@@ -74,22 +74,21 @@ function nel_sticky_thread($dataforce, $sub)
     nel_pdo_one_parameter_query($query, $id, PDO::PARAM_INT, true);
     nel_update_archive_status($dataforce);
     nel_regen_threads($dataforce, true, array($id));
-    nel_regen($dataforce, NULL, 'main', FALSE);
+    nel_regen_index($dataforce);
     return;
 }
 
 function nel_unsticky_thread($dataforce, $sub)
 {
-    $dbh = nel_get_db_handle();
     $id = $sub[1];
     $query = 'UPDATE "' . THREAD_TABLE . '" SET "sticky" = 0 WHERE "thread_id" = ?';
     nel_pdo_one_parameter_query($query, $id, PDO::PARAM_INT, true);
     nel_update_archive_status($dataforce, $dbh);
     nel_toggle_session();
     $dataforce['response_id'] = $id;
-    nel_regen($dataforce, true, array($dataforce['response_id']));
+    nel_regen_threads($dataforce, true, array($dataforce['response_id']));
     $dataforce['archive_update'] = TRUE;
-    nel_regen($dataforce, NULL, 'main', FALSE);
+    nel_regen_index($dataforce);
     nel_toggle_session();
 }
 

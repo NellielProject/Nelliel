@@ -27,7 +27,7 @@ function nel_thread_panel($dataforce, $authorize)
     {
         $updates = nel_thread_updates($dataforce);
         nel_regen_threads($dataforce, true, $updates);
-        nel_regen($dataforce, NULL, 'main');
+        nel_regen_index($dataforce);
     }
 
     nel_render_thread_panel($dataforce, $expand);
