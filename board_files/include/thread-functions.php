@@ -234,8 +234,7 @@ function nel_update_thread_data($thread_id)
         }
     }
 
-    $prepared = $dbh->prepare('UPDATE "' . THREAD_TABLE .
-         '" SET "first_post" = :first_post, "last_post" = :last_post, "post_count" = :post_count,
+    $prepared = $dbh->prepare('UPDATE "' . THREAD_TABLE . '" SET "first_post" = :first_post, "last_post" = :last_post, "post_count" = :post_count,
         "file_count" = :file_count, "external_count" = :external_count, "last_update" = :last_update,
         "last_bump_time" = :last_bump_time WHERE "post_number" = :post_number');
     $prepared->bindValue(':first_post', $first_post, PDO::PARAM_INT);
@@ -285,7 +284,7 @@ function nel_remove_thread_from_database($thread_id)
 
     foreach ($thread_posts as $ref)
     {
-        nel_remove_file_from_database($ref);
+        nel_remove_files_from_database($ref);
         $query = 'DELETE FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
         nel_pdo_one_parameter_query($query, $ref, PDO::PARAM_INT, true);
     }
@@ -294,7 +293,7 @@ function nel_remove_thread_from_database($thread_id)
     nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT, true);
 }
 
-function nel_remove_file_from_database($post_ref, $order = null)
+function nel_remove_files_from_database($post_ref, $order = null)
 {
     if (is_null($order))
     {
@@ -347,9 +346,7 @@ function nel_delete_content($dataforce, $sub, $type)
     {
         nel_remove_thread_from_database($id);
         preg_replace('#p([0-9]+)t' . $id . '#', '', $dataforce['post_links']);
-        nel_eraser_gun(PAGE_PATH . $id, NULL, TRUE);
-        nel_eraser_gun(SRC_PATH . $id, NULL, TRUE);
-        nel_eraser_gun(THUMB_PATH . $id, NULL, TRUE);
+        nel_delete_thread_directories($id);
         nel_update_archive_status($dataforce);
     }
     else if ($type === 'POST')
@@ -363,12 +360,7 @@ function nel_delete_content($dataforce, $sub, $type)
 
         foreach ($file_data as $refs)
         {
-            nel_eraser_gun(SRC_PATH . $post_data['parent_thread'], $refs['filename'] . $refs['extension'], FALSE);
-
-            if ($refs['preview_name'])
-            {
-                nel_eraser_gun(THUMB_PATH . $post_data['parent_thread'], $refs['preview_name'], FALSE);
-            }
+            nel_remove_post_file(SRC_PATH . $post_data['parent_thread'], $refs['filename'] . $refs['extension'], $refs['preview_name']);
         }
 
         if ($dataforce['only_delete_file'])
@@ -391,27 +383,19 @@ function nel_delete_content($dataforce, $sub, $type)
         $file_data = $result->fetch(PDO::FETCH_ASSOC);
         unset($result);
 
-        if ($file_data !== FALSE)
+        if ($file_data !== false)
         {
             nel_remove_file_from_database($id, $fnum);
 
             if ($post_data['response_to'] == 0)
             {
-                nel_eraser_gun(SRC_PATH . $post_data['post_number'], $file_data['filename'] . $file_data['extension'], FALSE);
-
-                if ($file_data['preview_name'])
-                {
-                    nel_eraser_gun(THUMB_PATH . $post_data['post_number'], $file_data['preview_name'], FALSE);
-                }
+                nel_remove_post_file(SRC_PATH . $post_data['post_number'], $file_data['filename'] .
+                     $file_data['extension'], $file_data['preview_name']);
             }
             else
             {
-                nel_eraser_gun(SRC_PATH . $post_data['parent_thread'], $file_data['filename'] . $file_data['extension'], FALSE);
-
-                if ($file_data['preview_name'])
-                {
-                    nel_eraser_gun(THUMB_PATH . $post_data['parent_thread'], $file_data['preview_name'], FALSE);
-                }
+                nel_remove_post_file(SRC_PATH . $post_data['parent_thread'], $file_data['filename'] .
+                     $file_data['extension'], $file_data['preview_name']);
             }
         }
     }

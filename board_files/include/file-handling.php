@@ -49,9 +49,9 @@ function nel_move_file($location, $destination)
 //
 // Delete files
 //
-function nel_eraser_gun($path, $filename, $multi)
+function nel_eraser_gun($path, $is_directory = false, $filename = null)
 {
-    if ($multi && file_exists($path))
+    if ($is_directory && file_exists($path))
     {
         $files = glob($path . "/*.*");
 
@@ -79,4 +79,21 @@ function nel_create_thread_directories($thread_id)
     chmod(THUMB_PATH . $thread_id, octdec(DIRECTORY_PERM));
     mkdir(PAGE_PATH . $thread_id, octdec(DIRECTORY_PERM));
     chmod(PAGE_PATH . $thread_id, octdec(DIRECTORY_PERM));
+}
+
+function nel_delete_thread_directories($thread_id)
+{
+    nel_eraser_gun(PAGE_PATH . $thread_id, true);
+    nel_eraser_gun(SRC_PATH . $thread_id, true);
+    nel_eraser_gun(THUMB_PATH . $thread_id, true);
+}
+
+function nel_remove_post_file($path, $filename, $preview_name = null)
+{
+    nel_eraser_gun($path, $filename);
+
+    if(!is_null($preview_name) && $preview_name !== '')
+    {
+        nel_eraser_gun($path, $preview_name);
+    }
 }

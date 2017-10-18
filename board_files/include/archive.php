@@ -71,9 +71,7 @@ function nel_update_archive_status($dataforce)
             $dbh->query('DELETE FROM ' . POST_TABLE . ' WHERE parent_thread=' . $move_list[$i]);
             $dbh->query('DELETE FROM ' . THREAD_TABLE . ' WHERE thread_id=' . $move_list[$i]);
             $dbh->query('DELETE FROM ' . FILE_TABLE . ' WHERE parent_thread=' . $move_list[$i]);
-            nel_eraser_gun(PAGE_PATH . $thread, NULL, TRUE);
-            nel_eraser_gun(SRC_PATH . $thread, NULL, TRUE);
-            nel_eraser_gun(THUMB_PATH . $thread, NULL, TRUE);
+            nel_delete_thread_directories($thread);
         }
 
         $dbh->query('UPDATE ' . ARCHIVE_THREAD_TABLE . ' SET archive_status=0 WHERE archive_status=2');
