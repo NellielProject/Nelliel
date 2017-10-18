@@ -7,32 +7,37 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Write files
 //
-function nel_write_file($filename, $output, $chmod)
+function nel_write_file($file, $output, $chmod = FILE_PERM, $create_directories = false, $dir_chmod = DIRECTORY_PERM)
 {
-    $fp = fopen($filename, "w");
+    if ($create_directories)
+    {
+        nel_create_directory(dirname($file), $dir_chmod, true);
+    }
+
+    $fp = fopen($file, "w");
 
     if (!$fp)
     {
         echo 'Failed to open file for writing. Check permissions.';
-        return FALSE;
+        return false;
     }
 
     set_file_buffer($fp, 0);
     rewind($fp);
     fputs($fp, $output);
     fclose($fp);
-    chmod($filename, $chmod);
-    return TRUE;
+    chmod($file, octdec($chmod));
+    return true;
 }
 
-//
-// Create directories as needed before writing files
-
-function nel_write_file_create_dirs($filename, $output, $chmod, $dir_chmod)
+function nel_create_directory($directory, $dir_chmod = DIRECTORY_PERM, $recursive = false)
 {
-    $directory = dirname($filename);
-    nel_create_structure_directory($directory, '', $dir_chmod);
-    nel_write_file($filename, $output, $chmod);
+    if (file_exists($directory))
+    {
+        return false;
+    }
+
+    return mkdir($directory, $dir_chmod, $recursive);
 }
 
 //
@@ -74,11 +79,8 @@ function nel_eraser_gun($path, $is_directory = false, $filename = null)
 function nel_create_thread_directories($thread_id)
 {
     mkdir(SRC_PATH . $thread_id, octdec(DIRECTORY_PERM));
-    chmod(SRC_PATH . $thread_id, octdec(DIRECTORY_PERM));
     mkdir(THUMB_PATH . $thread_id, octdec(DIRECTORY_PERM));
-    chmod(THUMB_PATH . $thread_id, octdec(DIRECTORY_PERM));
     mkdir(PAGE_PATH . $thread_id, octdec(DIRECTORY_PERM));
-    chmod(PAGE_PATH . $thread_id, octdec(DIRECTORY_PERM));
 }
 
 function nel_delete_thread_directories($thread_id)
@@ -92,7 +94,7 @@ function nel_remove_post_file($path, $filename, $preview_name = null)
 {
     nel_eraser_gun($path, $filename);
 
-    if(!is_null($preview_name) && $preview_name !== '')
+    if (!nel_true_empty($preview_name))
     {
         nel_eraser_gun($path, $preview_name);
     }

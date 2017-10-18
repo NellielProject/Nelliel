@@ -35,7 +35,7 @@ function nel_main_thread_generator($dataforce, $write)
 
         if ($write)
         {
-            nel_write_file(PHP_SELF2 . PHP_EXT, $render->output(FALSE), octdec(FILE_PERM));
+            nel_write_file(PHP_SELF2 . PHP_EXT, $render->output(FALSE), FILE_PERM);
         }
         else
         {
@@ -183,7 +183,7 @@ function nel_main_thread_generator($dataforce, $write)
         else
         {
             $logfilename = ($page === 1) ? PHP_SELF2 . PHP_EXT : PHP_SELF2 . ($page - 1) . PHP_EXT;
-            nel_write_file($logfilename, $render->output(FALSE), octdec(FILE_PERM));
+            nel_write_file($logfilename, $render->output(FALSE), FILE_PERM);
         }
 
         ++ $page;

@@ -202,7 +202,7 @@ function nel_cache_settings()
     $file_config = nel_build_filetype_config($dbh);
     $fvars = '$enabled_types = ' . var_export($file_config, true) . ';';
     $final_vars = '<?php ' . $vars1 . $fvars . ' ?>';
-    nel_write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, octdec(FILE_PERM));
+    nel_write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, FILE_PERM);
 }
 
 //
@@ -246,5 +246,5 @@ $template_info = ' . var_export($template_info, TRUE) . ';
 nel_template_info(NULL, NULL, $template_info, FALSE);
 ?>';
 
-    nel_write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, octdec(FILE_PERM));
+    nel_write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, FILE_PERM);
 }
