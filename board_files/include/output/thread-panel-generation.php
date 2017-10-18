@@ -115,7 +115,7 @@ function nel_render_thread_panel_thread($dataforce, $render, $thread_data, $post
 
     if (utf8_strlen($post_data['comment']) > 20)
     {
-        $render->add_data('comment', utf8_substr($render->retrieve_data('comment'), 0, 19) . "...");
+        $render->add_data('comment', utf8_substr($render->get('comment'), 0, 19) . "...");
     }
 
     $render->add_data('ip_address', $post_data['ip_address'] ? $post_data['ip_address'] : 'Unknown');

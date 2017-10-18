@@ -8,7 +8,7 @@
         <input type="hidden" name="mode" value="admin->thread->update">
         <table class="post-lists">
             <tr class="manage-header">
-{{ if !$render->retrieve_data('expand_thread') }}
+{{ if !$render->get('expand_thread') }}
                 <th>{nel_stext('MANAGE_THREAD_EXPAND')}</th>
 {{ else }}
                 <th></th>

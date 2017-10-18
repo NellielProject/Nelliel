@@ -20,16 +20,15 @@ function nel_regen_threads($dataforce, $write, $ids)
 
 function nel_regen_cache($dataforce)
 {
-    global $link_updates;
     $dataforce['rules_list'] = nel_cache_rules();
     nel_cache_settings();
-    $dataforce['post_links'] = $link_updates;
     nel_regen_template_cache();
     nel_write_multi_cache($dataforce);
 }
 
 function nel_regen_index($dataforce)
 {
+    require_once INCLUDE_PATH . 'output-filter.php';
     require_once INCLUDE_PATH . 'output/main-generation.php';
     nel_update_archive_status($dataforce);
     $dataforce['response_id'] = 0;
@@ -48,15 +47,12 @@ function nel_regen_all_pages($dataforce)
 
 function nel_regen(&$dataforce, $ids, $mode)
 {
-    global $link_resno, $link_updates;
-    require_once INCLUDE_PATH . 'output-filter.php';
-
     if ($mode[2] === 'full')
     {
         nel_regen_all_pages($dataforce);
     }
 
-    if ($mode[2] === 'main')
+    if ($mode[2] === 'index')
     {
         nel_regen_index($dataforce);
     }
@@ -70,6 +66,4 @@ function nel_regen(&$dataforce, $ids, $mode)
     {
         nel_regen_cache($dataforce);
     }
-
-    $dataforce['post_links'] = $link_updates;
 }

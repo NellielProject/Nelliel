@@ -31,7 +31,7 @@ function nel_process_get($dataforce)
             {
                 if (is_null($dataforce['response_id']))
                 {
-                    nel_regen($dataforce, NULL, array('', 'modmode', 'main'));
+                    nel_regen_index($dataforce);
                 }
                 else
                 {

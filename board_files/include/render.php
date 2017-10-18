@@ -40,14 +40,14 @@ class nel_render
         $this->variables[$setting] = $this->cleanse_the_aids($input);
     }
 
-    public function retrieve_data($setting)
+    public function get($setting)
     {
         if (isset($this->variables[$setting]))
         {
             return $this->variables[$setting];
         }
 
-        return NULL;
+        return null;
     }
 
     public function remove_data($setting)

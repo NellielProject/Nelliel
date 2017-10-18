@@ -154,15 +154,15 @@ function nel_main_thread_generator($dataforce, $write)
         {
             if ($i === 0)
             {
-                $render->add_data('page_nav', $render->retrieve_data('page_nav') . (($page > 1) ? '[<a href="' . PHP_SELF2 . PHP_EXT . '">0</a>] ' : '[0] '));
+                $render->add_data('page_nav', $render->get('page_nav') . (($page > 1) ? '[<a href="' . PHP_SELF2 . PHP_EXT . '">0</a>] ' : '[0] '));
             }
             else if ($i === ($page - 1) || $dataforce['max_pages'] === 1)
             {
-                $render->add_data('page_nav', $render->retrieve_data('page_nav') . '[' . ($i) . '] ');
+                $render->add_data('page_nav', $render->get('page_nav') . '[' . ($i) . '] ');
             }
             else
             {
-                $render->add_data('page_nav', $render->retrieve_data('page_nav') . '[<a href="' . PHP_SELF2 . ($i) . PHP_EXT . '">' . ($i) . '</a>] ');
+                $render->add_data('page_nav', $render->get('page_nav') . '[<a href="' . PHP_SELF2 . ($i) . PHP_EXT . '">' . ($i) . '</a>] ');
             }
 
             ++ $i;

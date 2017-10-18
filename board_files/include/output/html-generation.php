@@ -32,7 +32,7 @@ function nel_render_header($dataforce, $render, $treeline)
 
     $render->add_data('titlepart', $title);
 
-    switch ($render->retrieve_data('header_type'))
+    switch ($render->get('header_type'))
     {
         case 'ABOUT':
             $render->add_data('page_title', 'About Nelliel Imageboard');
@@ -56,7 +56,7 @@ function nel_render_header($dataforce, $render, $treeline)
             break;
     }
 
-    $render->add_data('log_out', (!nel_session_ignored()) ? '[<a href="' . $render->retrieve_data('dotdot') . PHP_SELF .
+    $render->add_data('log_out', (!nel_session_ignored()) ? '[<a href="' . $render->get('dotdot') . PHP_SELF .
          '?mode=log_out">Log Out</a>]' : '');
     $render->add_data('page_ref1', (!nel_session_ignored()) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT);
     $render->parse('header.tpl', '');
@@ -73,11 +73,11 @@ function nel_render_posting_form($dataforce, $render)
 
     if (BS_ALLOW_MULTIFILE)
     {
-        if ($render->retrieve_data('response_id'))
+        if ($render->get('response_id'))
         {
             $render->add_data('allow_multifile', TRUE);
         }
-        else if (!$render->retrieve_data('response_id') && BS_ALLOW_OP_MULTIFILE)
+        else if (!$render->get('response_id') && BS_ALLOW_OP_MULTIFILE)
         {
             $render->add_data('response_id', '0');
             $render->add_data('allow_multifile', TRUE);
@@ -89,7 +89,7 @@ function nel_render_posting_form($dataforce, $render)
     }
     else
     {
-        $render->retrieve_data('allow_multifile', FALSE);
+        $render->get('allow_multifile', FALSE);
     }
 
     $render->add_data('modmode', ($dataforce['get_mode'] === 'display') ? TRUE : FALSE);
@@ -259,7 +259,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             break;
     }
 
-    $mod_post_role = $render->retrieve_data('mod_post');
+    $mod_post_role = $render->get('mod_post');
 
     if ($mod_post_role)
     {
@@ -279,7 +279,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     /*if (!nel_session_ignored())
     {
         $render->add_data('logged_in', TRUE);
-        $render->add_data('ip_address', $render->retrieve_data('ip_address') ? $render->retrieve_data('ip_address') : 'Unknown');
+        $render->add_data('ip_address', $render->get('ip_address') ? $render->get('ip_address') : 'Unknown');
         $render->add_data('perm_ban', $authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'));
         $render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
         $render->add_data('page_ref2', PHP_SELF . '?page=');
