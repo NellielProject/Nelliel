@@ -109,28 +109,28 @@ function nel_get_thread_data($thread_id)
 {
     $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ?';
     $prepared = nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT);
-    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
+    return nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
 }
 
 function nel_get_thread_all_posts($thread_id)
 {
     $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "parent_thread" = ?';
     $prepared = nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT);
-    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
+    return nel_pdo_do_fetchall($prepared, PDO::FETCH_ASSOC, true);
 }
 
 function nel_get_post_data($post_id)
 {
     $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
     $prepared = nel_pdo_one_parameter_query($query, $post_id, PDO::PARAM_INT);
-    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
+    return nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
 }
 
 function nel_get_thread_last_post($thread_id)
 {
     $query = 'SELECT *  FROM "' . POST_TABLE . '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1';
     $prepared = nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT);
-    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
+    return nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
 }
 
 function nel_get_thread_last_nosage_post($thread_id)
@@ -138,7 +138,7 @@ function nel_get_thread_last_nosage_post($thread_id)
     $query = 'SELECT *  FROM "' . POST_TABLE .
          '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1';
     $prepared = nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT);
-    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
+    return nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
 }
 
 function nel_get_thread_second_last_post($thread_id)
@@ -250,16 +250,16 @@ function nel_update_thread_data($thread_id)
     }
 
     $prepared = $dbh->prepare('UPDATE "' . THREAD_TABLE . '" SET "first_post" = :first_post, "last_post" = :last_post, "post_count" = :post_count,
-        "file_count" = :file_count, "external_count" = :external_count, "last_update" = :last_update,
-        "last_bump_time" = :last_bump_time WHERE "post_number" = :post_number');
+        "total_files" = :total_files, "total_external" = :total_external, "last_update" = :last_update,
+        "last_bump_time" = :last_bump_time WHERE "thread_id" = :thread_id');
     $prepared->bindValue(':first_post', $first_post, PDO::PARAM_INT);
     $prepared->bindValue(':last_post', $last_post, PDO::PARAM_INT);
     $prepared->bindValue(':post_count', $post_count, PDO::PARAM_INT);
-    $prepared->bindValue(':file_count', $file_count, PDO::PARAM_INT);
-    $prepared->bindValue(':external_count', $external_count, PDO::PARAM_INT);
+    $prepared->bindValue(':total_files', $file_count, PDO::PARAM_INT);
+    $prepared->bindValue(':total_external', $external_count, PDO::PARAM_INT);
     $prepared->bindValue(':last_update', $last_update, PDO::PARAM_INT);
     $prepared->bindValue(':last_bump_time', $last_bump, PDO::PARAM_INT);
-    $prepared->bindValue(':post_number', $thread_id, PDO::PARAM_INT);
+    $prepared->bindValue(':thread_id', $thread_id, PDO::PARAM_INT);
     $prepared->execute();
     unset($prepared);
 }
@@ -280,7 +280,8 @@ function nel_remove_post_from_database($sub, $id, $post_data)
         $last_bump = $last_nosage['post_time'];
     }
 
-    $query = 'UPDATE "' . THREAD_TABLE .
+    nel_update_thread_data($post_data['parent_thread']);
+    /*$query = 'UPDATE "' . THREAD_TABLE .
          '" SET "post_count" = ?, "last_update" = ?, "last_bump_time" = ?, "last_post" = ? WHERE "thread_id" = ?';
     $bind_values = array();
     nel_pdo_bind_set($bind_values, 1, $new_count, PDO::PARAM_INT);
@@ -288,7 +289,7 @@ function nel_remove_post_from_database($sub, $id, $post_data)
     nel_pdo_bind_set($bind_values, 3, $last_bump, PDO::PARAM_INT);
     nel_pdo_bind_set($bind_values, 4, $new_last['post_number'], PDO::PARAM_INT);
     nel_pdo_bind_set($bind_values, 5, $post_data['parent_thread'], PDO::PARAM_INT);
-    nel_pdo_prepared_query($query, $bind_values, true);
+    nel_pdo_prepared_query($query, $bind_values, true);*/
 }
 
 function nel_remove_thread_from_database($thread_id)
@@ -441,7 +442,7 @@ function nel_verify_delete_perms($sub)
         nel_derp(13, array('origin' => 'DELETE'));
     }
 
-    $query = 'SELECT "post_password", "mod_post" FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
+    $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
     $prepared = nel_pdo_one_parameter_query($query, $id, PDO::PARAM_INT);
     $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
     $flag = false;
