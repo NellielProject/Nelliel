@@ -19,17 +19,23 @@ function nel_thread_updates($dataforce)
         switch ($sub[0])
         {
             case 'deletefile':
-                nel_delete_content($dataforce, $sub, 'FILE');
+                nel_verify_delete_perms($sub);
+                nel_delete_file($dataforce, $sub);
                 $push = $sub[1];
                 break;
 
             case 'deletethread':
-                nel_delete_content($dataforce, $sub, 'THREAD');
-                $push = $sub[1];
+                $id = $sub[1];
+                nel_verify_delete_perms($sub);
+                nel_remove_thread_from_database($id);
+                nel_delete_thread_directories($id);
+                nel_update_archive_status($dataforce);
+                $push = $id;
                 break;
 
             case 'deletepost':
-                nel_delete_content($dataforce, $sub, 'POST');
+                nel_verify_delete_perms($sub);
+                nel_delete_post($dataforce, $sub);
                 $push = $sub[2];
                 break;
 
@@ -173,6 +179,11 @@ function nel_make_post_thread($dataforce, $post_id)
 
     if ($post_data['has_file'])
     {
+        $src_path = nel_path_file_join(SRC_PATH, $post_data['parent_thread']);
+        $thumb_path = nel_path_file_join(THUMB_PATH, $post_data['parent_thread']);
+        $src_dest = nel_path_file_join(SRC_PATH, $post_id);
+        $thumb_dest = nel_path_file_join(THUMB_PATH, $post_id);
+
         $query = 'UPDATE "' . FILE_TABLE . '" SET "parent_thread" = ? WHERE "post_ref" = ?';
         $bind_values = array();
         nel_pdo_bind_set($bind_values, '1', $post_id, PDO::PARAM_INT);
@@ -182,18 +193,15 @@ function nel_make_post_thread($dataforce, $post_id)
         $query = 'SELECT "filename", "extension", "preview_name" FROM "' . FILE_TABLE . '" WHERE "post_ref" = ?';
         $prepared = nel_pdo_one_parameter_query($query, $thread_id, PDO::PARAM_INT);
         $file_data = nel_pdo_do_fetchall($prepared, PDO::FETCH_ASSOC);
-
         $file_count = count($file_data);
         $line = 0;
 
         while ($line < $file_count)
         {
-            nel_move_file(SRC_PATH . $post_data['parent_thread'] . '/' . $file_data[$line]['filename'] .
-                 $file_data[$line]['extension'], SRC_PATH . $post_id . '/' . $file_data[$line]['filename'] .
-                 $file_data[$line]['extension']);
-            nel_move_file(THUMB_PATH . $post_data['parent_thread'] . '/' . $file_data[$line]['preview_name'], THUMB_PATH .
-                 $post_id . '/' . $file_data[$line]['preview_name']);
-
+            $filename = $file_data[$line]['filename'] . $file_data[$line]['extension'];
+            $preview = $file_data[$line]['preview_name'];
+            nel_move_file(nel_path_file_join($src_path, $filename), nel_path_file_join($src_dest, $filename));
+            nel_move_file(nel_path_file_join($thumb_path, $preview), nel_path_file_join($thumb_dest, $preview));
             ++ $line;
         }
     }
@@ -310,9 +318,70 @@ function nel_remove_files_from_database($post_ref, $order = null)
     }
 }
 
-function nel_delete_content($dataforce, $sub, $type)
+function nel_delete_file($dataforce, $sub)
+{
+    $query = 'SELECT "post_number", "post_password", "parent_thread", "mod_post" FROM "' . POST_TABLE .
+         '" WHERE "post_number" = ?';
+    $prepared = nel_pdo_one_parameter_query($query, $id, PDO::PARAM_INT);
+    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
+
+    // add check for updating post as no files if they're all gone
+    $fnum = $sub[2];
+    $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILE_TABLE . ' WHERE post_ref=' . $id .
+         ' AND file_order=' . $fnum . '');
+    $file_data = $result->fetch(PDO::FETCH_ASSOC);
+    unset($result);
+
+    if ($file_data !== false)
+    {
+        nel_remove_file_from_database($id, $fnum);
+
+        if ($post_data['response_to'] == 0)
+        {
+            nel_remove_post_file(nel_path_join(SRC_PATH, $post_data['post_number']), $file_data['filename'] .
+                 $file_data['extension'], $file_data['preview_name']);
+        }
+        else
+        {
+            nel_remove_post_file(nel_path_join(SRC_PATH, $post_data['parent_thread']), $file_data['filename'] .
+                 $file_data['extension'], $file_data['preview_name']);
+        }
+    }
+}
+
+function nel_delete_post($dataforce, $sub)
 {
     $dbh = nel_get_db_handle();
+    $id = $sub[1];
+    $query = 'SELECT "post_number", "post_password", "parent_thread", "mod_post" FROM "' . POST_TABLE .
+         '" WHERE "post_number" = ?';
+    $prepared = nel_pdo_one_parameter_query($query, $id, PDO::PARAM_INT);
+    $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
+
+    $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILE_TABLE . ' WHERE post_ref=' . $id . '');
+    $file_data = $result->fetchAll(PDO::FETCH_ASSOC);
+    unset($result);
+
+    nel_remove_file_from_database($id);
+
+    foreach ($file_data as $refs)
+    {
+        nel_remove_post_file(nel_path_file_join(SRC_PATH, $post_data['parent_thread']), $refs['filename'] .
+             $refs['extension'], $refs['preview_name']);
+    }
+
+    if ($dataforce['only_delete_file'])
+    {
+        $dbh->query('UPDATE ' . POST_TABLE . ' SET has_file=0 WHERE post_number=' . $id . '');
+    }
+    else
+    {
+        nel_remove_post_from_database($sub, $id, $post_data);
+    }
+}
+
+function nel_verify_delete_perms($sub)
+{
     $authorize = nel_get_authorization();
     $id = $sub[1];
 
@@ -321,82 +390,14 @@ function nel_delete_content($dataforce, $sub, $type)
         nel_derp(13, array('origin' => 'DELETE'));
     }
 
-    $flag = FALSE;
     $query = 'SELECT "post_number", "post_password", "parent_thread", "mod_post" FROM "' . POST_TABLE .
          '" WHERE "post_number" = ?';
     $prepared = nel_pdo_one_parameter_query($query, $id, PDO::PARAM_INT);
     $post_data = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
-
-    if (!nel_session_ignored() && $authorize->get_user_perm($_SESSION['username'], 'perm_post_delete'))
-    {
-        $flag = TRUE;
-    }
-    else
-    {
-        $flag = nel_password_verify($post_data['post_password'], $_POST['sekrit']);
-        $temp = TRUE;
-    }
+    $flag = nel_password_verify($post_data['post_password'], $_POST['sekrit']);
 
     if (!$flag)
     {
         nel_derp(20, array('origin' => 'DELETE'));
-    }
-
-    if ($type === 'THREAD')
-    {
-        nel_remove_thread_from_database($id);
-        preg_replace('#p([0-9]+)t' . $id . '#', '', $dataforce['post_links']);
-        nel_delete_thread_directories($id);
-        nel_update_archive_status($dataforce);
-    }
-    else if ($type === 'POST')
-    {
-        $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILE_TABLE . ' WHERE post_ref=' . $id .
-             '');
-        $file_data = $result->fetchAll(PDO::FETCH_ASSOC);
-        unset($result);
-
-        nel_remove_file_from_database($id);
-
-        foreach ($file_data as $refs)
-        {
-            nel_remove_post_file(SRC_PATH . $post_data['parent_thread'], $refs['filename'] . $refs['extension'], $refs['preview_name']);
-        }
-
-        if ($dataforce['only_delete_file'])
-        {
-            $dbh->query('UPDATE ' . POST_TABLE . ' SET has_file=0 WHERE post_number=' . $id . '');
-        }
-        else
-        {
-            nel_remove_post_from_database($sub, $id, $post_data);
-        }
-
-        preg_replace('#p' . $id . 't([0-9]+)#', '', $dataforce['post_links']);
-    }
-    else if ($type === 'FILE')
-    {
-        // add check for updating post as no files if they're all gone
-        $fnum = $sub[2];
-        $result = $dbh->query('SELECT filename,extension,preview_name FROM ' . FILE_TABLE . ' WHERE post_ref=' . $id .
-             ' AND file_order=' . $fnum . '');
-        $file_data = $result->fetch(PDO::FETCH_ASSOC);
-        unset($result);
-
-        if ($file_data !== false)
-        {
-            nel_remove_file_from_database($id, $fnum);
-
-            if ($post_data['response_to'] == 0)
-            {
-                nel_remove_post_file(SRC_PATH . $post_data['post_number'], $file_data['filename'] .
-                     $file_data['extension'], $file_data['preview_name']);
-            }
-            else
-            {
-                nel_remove_post_file(SRC_PATH . $post_data['parent_thread'], $file_data['filename'] .
-                     $file_data['extension'], $file_data['preview_name']);
-            }
-        }
     }
 }
