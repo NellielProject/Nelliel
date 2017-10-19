@@ -14,7 +14,7 @@ function nel_main_thread_generator($dataforce, $write)
     $gen_data['insert_hr'] = FALSE;
     $dataforce['dotdot'] = '';
 
-    if(nel_session_active() && $write)
+    if($write)
     {
         nel_session_set_ignored('render', true);
     }
@@ -195,7 +195,7 @@ function nel_main_thread_generator($dataforce, $write)
         unset($render);
     }
 
-    if(nel_session_active())
+    if($write)
     {
         nel_session_set_ignored('render', false);
     }

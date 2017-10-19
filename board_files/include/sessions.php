@@ -135,10 +135,18 @@ function nel_session_ignored()
 
 function nel_session_is_ignored($reason)
 {
-    return $_SESSION['ignores'][$reason];
+    if(!nel_session_active())
+    {
+        return true;
+    }
+
+    return isset($_SESSION['ignores'][$reason]) && $_SESSION['ignores'][$reason];
 }
 
 function nel_session_set_ignored($reason, $value)
 {
-    $_SESSION['ignores'][$reason] = $value;
+    if(nel_session_active())
+    {
+        $_SESSION['ignores'][$reason] = $value;
+    }
 }

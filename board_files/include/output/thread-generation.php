@@ -8,7 +8,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
 {
     $dbh = nel_get_db_handle();
 
-    if(nel_session_active() && $write)
+    if($write)
     {
         nel_session_set_ignored('render', true);
     }
@@ -142,7 +142,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
         die();
     }
 
-    if(nel_session_active())
+    if($write)
     {
         nel_session_set_ignored('render', false);
     }
