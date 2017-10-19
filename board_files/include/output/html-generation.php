@@ -56,9 +56,9 @@ function nel_render_header($dataforce, $render, $treeline)
             break;
     }
 
-    $render->add_data('log_out', (!nel_session_ignored()) ? '[<a href="' . $render->get('dotdot') . PHP_SELF .
+    $render->add_data('log_out', (!nel_session_is_ignored('render')) ? '[<a href="' . $render->get('dotdot') . PHP_SELF .
          '?mode=log_out">Log Out</a>]' : '');
-    $render->add_data('page_ref1', (!nel_session_ignored()) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT);
+    $render->add_data('page_ref1', (!nel_session_is_ignored('render')) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT);
     $render->parse('header.tpl', '');
 }
 
@@ -94,15 +94,13 @@ function nel_render_posting_form($dataforce, $render)
 
     $render->add_data('modmode', ($dataforce['get_mode'] === 'display') ? TRUE : FALSE);
 
-    if (!nel_session_ignored())
+    if (!nel_session_is_ignored('render'))
     {
-        $render->add_data('logged_in', TRUE);
         $render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
         $render->add_data('page_ref2', PHP_SELF . '?page=');
     }
     else
     {
-        $render->add_data('logged_in', FALSE);
         $render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
     }
 
@@ -303,19 +301,14 @@ function nel_render_basic_footer($render)
 {
     $authorize = nel_get_authorization();
 
-    if (!nel_session_ignored())
+    if (!nel_session_is_ignored('render'))
     {
-        $render->add_data('logged_in', TRUE);
         $render->add_data('main_page', FALSE);
 
         if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'))
         {
             $render->add_data('perm_ban', TRUE);
         }
-    }
-    else
-    {
-        $render->add_data('logged_in', FALSE);
     }
 
     $render->parse('footer.tpl', '');
@@ -326,19 +319,14 @@ function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
     $authorize = nel_get_authorization();
     $render->add_data('main_page', $main_page);
 
-    if (!nel_session_ignored())
+    if (!nel_session_is_ignored('render'))
     {
-        $render->add_data('logged_in', TRUE);
         $render->add_data('main_page', FALSE);
 
         if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'))
         {
             $render->add_data('perm_ban', TRUE);
         }
-    }
-    else
-    {
-        $render->add_data('logged_in', FALSE);
     }
 
     $render->add_data('link', $link);

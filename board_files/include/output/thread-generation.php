@@ -7,6 +7,12 @@ if (!defined('NELLIEL_VERSION'))
 function nel_thread_generator($dataforce, $write, $write_id)
 {
     $dbh = nel_get_db_handle();
+
+    if(nel_session_active() && $write)
+    {
+        nel_session_set_ignored('render', true);
+    }
+
     $render = new nel_render();
     $render_expand = new nel_render();
     $render_collapse = new nel_render();
@@ -134,6 +140,11 @@ function nel_thread_generator($dataforce, $write, $write_id)
         }
 
         die();
+    }
+
+    if(nel_session_active())
+    {
+        nel_session_set_ignored('render', false);
     }
 }
 

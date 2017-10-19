@@ -56,8 +56,12 @@ function nel_db_update_thread($new_post_info, $thread_info)
 
 function nel_db_insert_new_files($parent_id, $new_post_info, $files)
 {
-    $query = 'UPDATE "' . POST_TABLE . '" SET "has_file" = 1 WHERE "post_number" = ?';
-    nel_pdo_one_parameter_query($query, $new_post_info['post_number'], PDO::PARAM_INT, true);
+    $file_count = count($files);
+    $query = 'UPDATE "' . POST_TABLE . '" SET "has_file" = 1, "file_count" = ? WHERE "post_number" = ?';
+    $bind_values = array();
+    nel_pdo_bind_set($bind_values, 1, $file_count, PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, 2, $new_post_info['post_number'], PDO::PARAM_INT);
+    nel_pdo_prepared_query($query, $bind_values, true);
 
     $i = 1;
 

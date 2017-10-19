@@ -16,7 +16,7 @@
                     {$render->get('post_time')} No. <a href="{PAGE_DIR}{$render->get('response_to')}/{$render->get('response_to')}.html#p{$render->get('post_number')}" class="post-link">{$render->get('post_number')}</a>&nbsp;
 {{ endif }}
                     <br>
-{{ if $render->get('logged_in') }}
+{{ if !nel_session_is_ignored('render') }}
                     <br>IP: <b>{$render->get('ip_address')}</b>
     {{ if nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_ban_add') }}
                     <input type="button" onClick="addBanDetails('ban{$render->get('post_number')}', '{$render->get('post_number')}', '{$render->get('poster_name')}', '{$render->get('ip_address')}')" value="Set Ban Details">

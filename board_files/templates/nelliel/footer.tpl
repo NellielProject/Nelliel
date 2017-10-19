@@ -14,7 +14,7 @@
             <tr>
                 <td>
                     <input type="hidden" name="mode" value="update">
-    {{ if $render->get('logged_in') }}
+    {{ if !nel_session_is_ignored('render') }}
                     <input type="checkbox" name="delpost" id="dpost"><label for="dpost">{nel_stext('FORM_DELETE_POSTS')}</label><br>
                     <input type="checkbox" name="banpost" id="bpost"><label for="bpost">{nel_stext('FORM_BAN_POSTS')}</label><br>
                     <input type="hidden" name="mode" value="admin->modmode">
@@ -22,7 +22,7 @@
     {{ if !BS_USE_NEW_IMGDEL }}
                     <input type="checkbox" name="onlyimgdel" id="delfbox" value="on"><label for="delfbox">{nel_stext('DELETE_FILES_ONLY')}</label><br>
     {{ endif }}
-    {{ if $render->get('logged_in') }}
+    {{ if !nel_session_is_ignored('render') }}
                     <input type="submit" value="{nel_stext('FORM_SUBMIT')}">
     {{ else }}
                     <label for="delpass">{nel_stext('FORM_LABEL_PASS')}</label><input type="password" name="sekrit" id="delpass" size="12" maxlength="16" value="">

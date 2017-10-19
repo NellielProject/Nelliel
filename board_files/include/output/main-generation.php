@@ -14,6 +14,11 @@ function nel_main_thread_generator($dataforce, $write)
     $gen_data['insert_hr'] = FALSE;
     $dataforce['dotdot'] = '';
 
+    if(nel_session_active() && $write)
+    {
+        nel_session_set_ignored('render', true);
+    }
+
     $result = $dbh->query('SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0 ORDER BY sticky desc, last_bump_time desc');
     $front_page_list = $result->fetchAll(PDO::FETCH_COLUMN);
     unset($result);
@@ -188,6 +193,11 @@ function nel_main_thread_generator($dataforce, $write)
 
         ++ $page;
         unset($render);
+    }
+
+    if(nel_session_active())
+    {
+        nel_session_set_ignored('render', false);
     }
 }
 

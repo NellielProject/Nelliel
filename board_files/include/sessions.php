@@ -82,7 +82,10 @@ function nel_initialize_session($dataforce)
         {
             // We set up the session here
             $_SESSION['ignore_login'] = FALSE;
+            $_SESSION['ignores'] = array();
+            $_SESSION['active'] = true;
             $_SESSION['username'] = $dataforce['username'];
+            $_SESSION['role_id'] = $authorize->get_user_role($dataforce['username']);
             $_SESSION['login_time'] = time();
             $_SESSION['last_activity'] = time();
         }
@@ -102,29 +105,20 @@ function nel_initialize_session($dataforce)
     }
 }
 
-function nel_toggle_session()
+function nel_session_active()
 {
-    static $session_status;
+    static $status;
 
-    if (empty($_SESSION))
+    if(!empty($_SESSION))
     {
-        return;
-    }
-
-    if (!isset($ignored))
-    {
-        $ignored = FALSE;
-    }
-
-    if ($_SESSION['ignore_login'])
-    {
-        $_SESSION['ignore_login'] = $session_status;
+        $status = $_SESSION['active'];
     }
     else
     {
-        $session_status = $_SESSION['ignore_login'];
-        $_SESSION['ignore_login'] = TRUE;
+        $status = false;
     }
+
+    return $status;
 }
 
 function nel_session_ignored()
@@ -137,4 +131,14 @@ function nel_session_ignored()
     {
         return TRUE;
     }
+}
+
+function nel_session_is_ignored($reason)
+{
+    return $_SESSION['ignores'][$reason];
+}
+
+function nel_session_set_ignored($reason, $value)
+{
+    $_SESSION['ignores'][$reason] = $value;
 }

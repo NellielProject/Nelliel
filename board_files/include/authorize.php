@@ -257,6 +257,16 @@ class nel_authorization
         return false;
     }
 
+    public function get_user_role($user)
+    {
+        if($this->user_exists($user))
+        {
+            return $this->users[$user]['role_id'];
+        }
+
+        return false;
+    }
+
     public function get_user_perms($user)
     {
         if($this->user_exists($user))
@@ -328,6 +338,31 @@ class nel_authorization
         }
 
         return false;
+    }
+
+    public function role_level_check($role1, $role2, $false_if_equal = false)
+    {
+        if(!$this->role_exists($role1))
+        {
+            return false;
+        }
+
+        if(!$this->role_exists($role2))
+        {
+            return true;
+        }
+
+        $level1 = $this->get_role_info($role1, 'role_level');
+        $level2 = $this->get_role_info($role2, 'role_level');
+
+        if($false_if_equal)
+        {
+            return $level1 > $level2;
+        }
+        else
+        {
+            return $level1 >= $level2;
+        }
     }
 
     public function save_roles()

@@ -28,7 +28,7 @@
                             <label for="durrname">{nel_stext('FORM_LABEL_NAME')}</label>
                         </td>
                         <td class="posting-form-input">
-                            <input type="text" name="notanonymous" id="durrname" size="40" maxlength="{BS_MAX_NAME_LENGTH}">
+                            <input type="text" name="notanonymous" id="durrname" size="30" maxlength="{BS_MAX_NAME_LENGTH}">
                         </td>
                     </tr>
                     <tr class="posting-form-row">
@@ -36,7 +36,7 @@
                             <label for="durrmail">{nel_stext('FORM_LABEL_EMAIL')}</label>
                         </td>
                         <td class="posting-form-input">
-                            <input type="text" name="spamtarget" id="durrmail" size="40" maxlength="{BS_MAX_EMAIL_LENGTH}">
+                            <input type="text" name="spamtarget" id="durrmail" size="30" maxlength="{BS_MAX_EMAIL_LENGTH}">
                         </td>
                     </tr>
 {{ endif }}
@@ -45,7 +45,7 @@
                             <label for="durrsubject">{nel_stext('FORM_LABEL_SUBJECT')}</label>
                         </td>
                         <td class="posting-form-input">
-                            <input type="text" name="verb" id="durrsubject" size="40" maxlength="{BS_MAX_SUBJECT_LENGTH}">
+                            <input type="text" name="verb" id="durrsubject" size="30" maxlength="{BS_MAX_SUBJECT_LENGTH}">
                         </td>
                     </tr>
                     <tr class="posting-form-row">
@@ -53,7 +53,7 @@
                             <label for="durrwords">{nel_stext('FORM_LABEL_COMMENT')}</label>
                         </td>
                         <td class="posting-form-input">
-                            <textarea name="wordswordswords" id="durrwords" cols="48" rows="6"></textarea>
+                            <textarea name="wordswordswords" id="durrwords" cols="30" rows="6"></textarea>
                         </td>
                     </tr>
     {{ for $i = 1, $j = 2; $i <= BS_MAX_POST_FILES; ++$i, ++$j }}

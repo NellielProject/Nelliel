@@ -21,22 +21,22 @@
                 <img src="{ $render->get('dotdot') }{ BOARD_FILES }/imagez/nelliel/{ nel_stext('THREAD_STICKY_ICON') }" width="22" height="22" alt="{ nel_stext('THREAD_STICKY') }">
     {{ endif }}
     {{ if !$render->get('response_id') }}
-        {{ if $render->get('logged_in') }}
+        {{ if !nel_session_is_ignored('render') }}
                 [<a href="{ PHP_SELF }?mode=display&post={ $render->get('post_number') }">{ nel_stext('LINK_REPLY') }</a>]
         {{ else }}
                 [<a href="{ PAGE_DIR }{ $render->get('post_number') }/{ $render->get('post_number') }.html">{ nel_stext('LINK_REPLY') }</a>]
         {{ endif }}
     {{ endif }}
-    {{ if $render->get('expand_post') && $render->get('logged_in') }}
+    {{ if $render->get('expand_post') && !nel_session_is_ignored('render') }}
                 [<a href="javascript:clientSideInclude('expand{ $render->get('post_number') }', 'expLink{ $render->get('post_number') }', '{ PHP_SELF }?mode=display&post={ $render->get('post_number') }&expand=TRUE', '{ PHP_SELF }?mode=display&post={ $render->get('post_number') }&collapse=TRUE', 'Collapse thread')" id="expLink{ $render->get('post_number') }">{ nel_stext('THREAD_EXPAND') }</a>]
-    {{ elseif $render->get('expand_post') && !$render->get('logged_in') }}
+    {{ elseif $render->get('expand_post') && nel_session_is_ignored('render') }}
                 [<a href="javascript:clientSideInclude('expand{ $render->get('post_number') }', 'expLink{ $render->get('post_number') }', '{ PAGE_DIR }{ $render->get('post_number') }/{ $render->get('post_number') }-expand.html', '{ PAGE_DIR }{ $render->get('post_number') }/{ $render->get('post_number') }-collapse.html', 'Collapse thread')" id="expLink{ $render->get('post_number') }">{ nel_stext('THREAD_EXPAND') }</a>]
     {{ endif }}
     {{ if $render->get('first100') }}
                 [<a href="{ PAGE_DIR }{ $render->get('post_number') }/{ $render->get('post_number') }-0-100.html">First 100 Posts</a>]
     {{ endif }}
                 <br>
-    {{ if $render->get('logged_in') }}
+    {{ if !nel_session_is_ignored('render') }}
                 <br>IP: <b>{ $render->get('ip_address') }</b>
         {{ if nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_ban_add') }}
                 <input type="button" onClick="addBanDetails('ban{ $render->get('post_number') }', '{ $render->get('post_number') }', '{ $render->get('poster_name') }', '{ $render->get('ip_address') }')" value="Set Ban Details">
