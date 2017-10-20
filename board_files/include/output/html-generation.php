@@ -104,7 +104,7 @@ function nel_render_posting_form($dataforce, $render)
         $render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
     }
 
-    $render->add_data('max_files', 3);
+    $render->add_data('max_files', BS_MAX_POST_FILES);
     $render->parse('posting_form.tpl', '', $render, FALSE);
 }
 
@@ -130,13 +130,17 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $link_resno = $dataforce['response_id'];
     }
 
+    //$thread_id = ($dataforce['response_id'] == '0') ? $post_data['post_number'] : $post_data['parent_thread'];
+
     $render->add_data('response_id', $dataforce['response_id']);
+    $render->add_data('thread_id', $post_data['parent_thread']);
     $render->add_data('tripcode', (!is_null($post_data['tripcode'])) ? BS_TRIPKEY_MARKER . $post_data['tripcode'] : '');
     $render->add_data('secure_tripcode', (!is_null($post_data['secure_tripcode'])) ? BS_TRIPKEY_MARKER .
          BS_TRIPKEY_MARKER . $post_data['secure_tripcode'] : '');
     $post_data['comment'] = nel_newline_cleanup($post_data['comment']);
     $post_data['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $post_data['comment']);
     $post_data['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'nel_parse_links', $post_data['comment']);
+
     if (nel_clear_whitespace($post_data['comment']) === '')
     {
         $post_data['comment'] = nel_stext('THREAD_NOTEXT');
@@ -273,16 +277,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $render->add_data('logged_in', FALSE);
     $render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
     $render->add_data('page_ref2', '');
-
-    /*if (!nel_session_ignored())
-    {
-        $render->add_data('logged_in', TRUE);
-        $render->add_data('ip_address', $render->get('ip_address') ? $render->get('ip_address') : 'Unknown');
-        $render->add_data('perm_ban', $authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'));
-        $render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
-        $render->add_data('page_ref2', PHP_SELF . '?page=');
-        $render->add_data('the_session', session_id());
-    }*/
 
     if ($response)
     {

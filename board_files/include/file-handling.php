@@ -111,3 +111,21 @@ function nel_delete_thread_directories($thread_id)
     nel_eraser_gun(nel_path_join(SRC_PATH, $thread_id), null, true);
     nel_eraser_gun(nel_path_join(THUMB_PATH, $thread_id), null,true);
 }
+
+function nel_filter_filename($filename)
+{
+    // https://stackoverflow.com/a/23066553
+    $filtered = preg_replace('#[^\PC\s]#u', '', $filename); // Filter control and unprintable characters
+
+    // https://msdn.microsoft.com/en-us/library/aa365247(VS.85).aspx
+    $filtered = preg_replace('#[<>:"\/\\|?*]#u', '', $filtered); // Reserved characters for Windows
+    $filtered = preg_replace('#(com[1-9]|lpt[1-9]|con|prn|aux|nul)\.?[a-zA-Z0-9]*#ui', '', $filtered); // Reserved names for Windows
+
+    $filtered = preg_replace('#^[ -.]|\'#', '', $filtered); // Other potentially troublesome characters
+
+    if($filtered === '')
+    {
+        // TODO: completely invalid filename error
+    }
+    return $filtered;
+}

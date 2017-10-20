@@ -1,25 +1,27 @@
 <?php
 
-function nel_db_insert_initial_post($time, $poster_info)
+function nel_db_insert_initial_post($time, $post_data)
 {
     $columns = array('poster_name', 'post_password', 'tripcode', 'secure_tripcode', 'email', 'subject', 'comment',
-        'ip_address', 'post_time', 'op', 'sage', 'mod_post');
+        'ip_address', 'has_file', 'file_count', 'post_time', 'op', 'sage', 'mod_post');
     $values = nel_pdo_create_parameter_ids($columns);
     $query = 'INSERT INTO "' . POST_TABLE . '" ' . nel_format_multiple_columns($columns) . ' VALUES ' .
          nel_format_multiple_values($values);
     $bind_values = array();
-    nel_pdo_bind_set($bind_values, ':poster_name', $poster_info['name'], PDO::PARAM_STR);
-    nel_pdo_bind_set($bind_values, ':post_password', $poster_info['password'], PDO::PARAM_STR);
-    nel_pdo_bind_set($bind_values, ':tripcode', $poster_info['tripcode'] === '' ? null : $poster_info['tripcode']);
-    nel_pdo_bind_set($bind_values, ':secure_tripcode', $poster_info['secure_tripcode'] === '' ? null : $poster_info['secure_tripcode']);
-    nel_pdo_bind_set($bind_values, ':email', $poster_info['email'], PDO::PARAM_STR);
-    nel_pdo_bind_set($bind_values, ':subject', $poster_info['subject'], PDO::PARAM_STR);
-    nel_pdo_bind_set($bind_values, ':comment', $poster_info['comment'], PDO::PARAM_STR);
+    nel_pdo_bind_set($bind_values, ':poster_name', $post_data['name'], PDO::PARAM_STR);
+    nel_pdo_bind_set($bind_values, ':post_password', $post_data['password'], PDO::PARAM_STR);
+    nel_pdo_bind_set($bind_values, ':tripcode', $post_data['tripcode'] === '' ? null : $post_data['tripcode']);
+    nel_pdo_bind_set($bind_values, ':secure_tripcode', $post_data['secure_tripcode'] === '' ? null : $post_data['secure_tripcode']);
+    nel_pdo_bind_set($bind_values, ':email', $post_data['email'], PDO::PARAM_STR);
+    nel_pdo_bind_set($bind_values, ':subject', $post_data['subject'], PDO::PARAM_STR);
+    nel_pdo_bind_set($bind_values, ':comment', $post_data['comment'], PDO::PARAM_STR);
     nel_pdo_bind_set($bind_values, ':ip_address', $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR);
+    nel_pdo_bind_set($bind_values, ':has_file', $post_data['has_file'], PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, ':file_count', $post_data['file_count'], PDO::PARAM_INT);
     nel_pdo_bind_set($bind_values, ':post_time', $time, PDO::PARAM_INT);
-    nel_pdo_bind_set($bind_values, ':op', $poster_info['op'], PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, ':op', $post_data['op'], PDO::PARAM_INT);
     nel_pdo_bind_set($bind_values, ':sage', 0, PDO::PARAM_INT);
-    nel_pdo_bind_set($bind_values, ':mod_post', $poster_info['modpost'], PDO::PARAM_STR);
+    nel_pdo_bind_set($bind_values, ':mod_post', $post_data['modpost'], PDO::PARAM_STR);
     nel_pdo_prepared_query($query, $bind_values, true);
 }
 
@@ -35,7 +37,7 @@ function nel_db_insert_new_thread($thread_info, $files_count) // TODO: Update fo
     nel_pdo_bind_set($bind_values, ':first_post', $thread_info['id'], PDO::PARAM_INT);
     nel_pdo_bind_set($bind_values, ':last_post', $thread_info['id'], PDO::PARAM_INT);
     nel_pdo_bind_set($bind_values, ':last_bump_time', $thread_info['last_bump_time'], PDO::PARAM_INT);
-    nel_pdo_bind_set($bind_values, ':total_files', $files_count, PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, ':total_files', $thread_info['total_files'], PDO::PARAM_INT);
     nel_pdo_bind_set($bind_values, ':last_update', $thread_info['last_update'], PDO::PARAM_INT);
     nel_pdo_bind_set($bind_values, ':post_count', 1, PDO::PARAM_INT);
     nel_pdo_prepared_query($query, $bind_values, true);
@@ -44,25 +46,19 @@ function nel_db_insert_new_thread($thread_info, $files_count) // TODO: Update fo
 function nel_db_update_thread($new_post_info, $thread_info)
 {
     $query = 'UPDATE "' . THREAD_TABLE .
-         '" SET "last_post" = ?, "last_bump_time" = ?, "last_update" = ?, "post_count" = ? WHERE "thread_id" = ?';
+         '" SET "last_post" = ?, "last_bump_time" = ?, "last_update" = ?, "post_count" = ?, "total_files" = ? WHERE "thread_id" = ?';
     $bind_values = array();
     nel_pdo_bind_set($bind_values, 1, $new_post_info['post_number'], PDO::PARAM_INT);
     nel_pdo_bind_set($bind_values, 2, $thread_info['last_bump_time'], PDO::PARAM_INT);
     nel_pdo_bind_set($bind_values, 3, $thread_info['last_update'], PDO::PARAM_INT);
     nel_pdo_bind_set($bind_values, 4, $thread_info['post_count'], PDO::PARAM_INT);
-    nel_pdo_bind_set($bind_values, 5, $thread_info['id'], PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, 5, $thread_info['total_files'], PDO::PARAM_INT);
+    nel_pdo_bind_set($bind_values, 6, $thread_info['id'], PDO::PARAM_INT);
     nel_pdo_prepared_query($query, $bind_values, true);
 }
 
 function nel_db_insert_new_files($parent_id, $new_post_info, $files)
 {
-    $file_count = count($files);
-    $query = 'UPDATE "' . POST_TABLE . '" SET "has_file" = 1, "file_count" = ? WHERE "post_number" = ?';
-    $bind_values = array();
-    nel_pdo_bind_set($bind_values, 1, $file_count, PDO::PARAM_INT);
-    nel_pdo_bind_set($bind_values, 2, $new_post_info['post_number'], PDO::PARAM_INT);
-    nel_pdo_prepared_query($query, $bind_values, true);
-
     $i = 1;
 
     foreach ($files as $file)

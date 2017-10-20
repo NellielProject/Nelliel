@@ -97,6 +97,10 @@ function nel_process_new_post($dataforce)
         $post_data['op'] = 0;
     }
 
+    $files_count = count($files);
+    $post_data['file_count'] = $files_count;
+
+    $post_data['has_file'] = ($files_count > 0) ? 1 : 0;
     nel_db_insert_initial_post($time, $post_data);
     $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "post_time" = ? LIMIT 1';
     $prepared = nel_pdo_one_parameter_query($query, $time, PDO::PARAM_INT);
@@ -109,6 +113,7 @@ function nel_process_new_post($dataforce)
         $thread_info['post_count'] = 1;
         $thread_info['last_bump_time'] = $time;
         $thread_info['id'] = $new_post_info['post_number'];
+        $thread_info['total_files'] = $files_count;
         nel_db_insert_new_thread($thread_info, $files_count);
         nel_create_thread_directories($thread_info['id']);
     }
@@ -121,6 +126,7 @@ function nel_process_new_post($dataforce)
         $thread_info['last_update'] = $current_thread['last_update'];
         $thread_info['post_count'] = $current_thread['post_count'] + 1;
         $thread_info['last_bump_time'] = $time;
+        $thread_info['total_files'] = $current_thread['total_files'] + count($files);
 
         if ($current_thread['post_count'] > BS_MAX_BUMPS || $fgsfds['sage'])
         {

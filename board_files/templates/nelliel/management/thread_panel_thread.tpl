@@ -1,7 +1,7 @@
             <tr class="{$render->get('bg_class')}">
 {{ if !$render->get('expand_thread') }}
                 <td>
-                    <input type="submit" name="expand_thread" value="{nel_stext('FORM_EXPAND')} {$render->get('post_number')}">
+                    <input type="submit" name="expand_thread" value="{nel_stext('FORM_EXPAND')} {$render->get('parent_thread')}">
                 </td>
 {{ else }}
                 <td>
@@ -10,20 +10,20 @@
                 <td>{$render->get('post_number')}</td>
                 <td>
 {{ if $render->get('is_op') }}
-                    <input type="checkbox" name="thread_{$render->get('post_number')}" value="deletethread_{$render->get('post_number')}" title="Delete entire post">(OP)
+                    <input type="checkbox" name="thread_{$render->get('post_number')}" value="deletethread_{$render->get('parent_thread')}_{$render->get('post_number')}" title="Delete entire post">(OP)
 {{ else }}
-                    <input type="checkbox" name="post_{$render->get('post_number')}_{$render->get('response_to')}" value="deletepost_{$render->get('post_number')}_{$render->get('parent_thread')}" title="Delete entire post">
+                    <input type="checkbox" name="post_{$render->get('parent_thread')}_{$render->get('post_number')}" value="deletepost_{$render->get('parent_thread')}_{$render->get('post_number')}" title="Delete entire post">
 {{ endif }}
                 </td>
 {{ if $render->get('sticky') }}
                 <td>
                 </td>
                 <td>
-                    <input type="checkbox" name="{$render->get('post_number')}" value="threadunsticky_{$render->get('post_number')}">
+                    <input type="checkbox" name="{$render->get('post_number')}" value="threadunsticky_{$render->get('parent_thread')}_{$render->get('post_number')}">
                 </td>
 {{ else }}
                 <td>
-                    <input type="checkbox" name="{$render->get('post_number')}" value="threadsticky_{$render->get('post_number')}">
+                    <input type="checkbox" name="{$render->get('post_number')}" value="threadsticky_{$render->get('parent_thread')}_{$render->get('post_number')}">
                 </td>
                 <td>
                 </td>
@@ -49,7 +49,7 @@
     {{ foreach $render->get('files') as $file }}
                         <tr>
                             <td>
-                                <input type="checkbox" name="fileid{$render->get('post_number')}_{$file['file_order']}" value="deletefile_{$render->get('post_number')}_{$file['file_order']}" title="Delete file">
+                                <input type="checkbox" name="fileid{$render->get('post_number')}_{$file['file_order']}" value="deletefile_{$render->get('parent_thread')}_{$render->get('post_number')}_{$file['file_order']}" title="Delete file">
                             </td>
         {{ if $render->get('response_to') == 0 }}
                             <td>

@@ -4,7 +4,7 @@
 {{ else }}
             <a id="p{ $render->get('post_number') }"></a>
             <div class="op-post">
-                <input type="checkbox" name="thread_{$render->get('post_number')}_{$render->get('parent_thread')}" value="deletethread_{$render->get('post_number')}_{$render->get('parent_thread')}" title="Delete entire post"><span class="op-subject">{ $render->get('subject') }</span>
+                <input type="checkbox" name="thread_{$render->get('post_number')}_{$render->get('parent_thread')}" value="deletethread_{$render->get('parent_thread')}_{$render->get('post_number')}" title="Delete entire post"><span class="op-subject">{ $render->get('subject') }</span>
                 <span class="op-poster-name">
     {{ if $render->get('email') }}
                 <a href="mailto:{ $render->get('email') }" class="mailto-name">{ $render->get('poster_name') }</a>{ $render->get('tripcode') }{ $render->get('secure_tripcode') }&nbsp;&nbsp;{ $render->get('staff_post') }
@@ -15,7 +15,7 @@
     {{ if $render->get('response_id') }}
                 { $render->get('post_time') } No. <a href="javascript:postQuote('{ $render->get('post_number') }')" class="post-link">{ $render->get('post_number') }</a>&nbsp;
     {{ else }}
-                { $render->get('post_time') } No. <a href="{ PAGE_DIR }{ $render->get('post_number') }/{ $render->get('post_number') }.html" class="post-link">{ $render->get('post_number') }</a>&nbsp;
+                { $render->get('post_time') } No. <a href="{ PAGE_DIR }{ $render->get('parent_thread') }/{ $render->get('parent_thread') }.html" class="post-link">{ $render->get('post_number') }</a>&nbsp;
     {{ endif }}
     {{ if $render->get('sticky') }}
                 <img src="{ $render->get('dotdot') }{ BOARD_FILES }/imagez/nelliel/{ nel_stext('THREAD_STICKY_ICON') }" width="22" height="22" alt="{ nel_stext('THREAD_STICKY') }">
@@ -24,7 +24,7 @@
         {{ if !nel_session_is_ignored('render') }}
                 [<a href="{ PHP_SELF }?mode=display&post={ $render->get('post_number') }">{ nel_stext('LINK_REPLY') }</a>]
         {{ else }}
-                [<a href="{ PAGE_DIR }{ $render->get('post_number') }/{ $render->get('post_number') }.html">{ nel_stext('LINK_REPLY') }</a>]
+                [<a href="{ PAGE_DIR }{ $render->get('parent_thread') }/{ $render->get('post_number') }.html">{ nel_stext('LINK_REPLY') }</a>]
         {{ endif }}
     {{ endif }}
     {{ if $render->get('expand_post') && !nel_session_is_ignored('render') }}
@@ -48,7 +48,7 @@
             {{ if $render->get('multifile') }}
                 <div class="op-multiple-fileinfo">
                 {{ if BS_USE_NEW_IMGDEL }}
-                    <input type="checkbox" name="fileid{ $render->get('post_number') }_{ $file['file_order'] }" value="deletefile_{ $render->get('post_number') }_{ $file['file_order'] }" title="Delete file" class="multi-file-delete-box">
+                    <input type="checkbox" name="fileid_{ $render->get('post_number') }_{ $file['file_order'] }" value="deletefile_{ $render->get('parent_thread') }_{ $render->get('post_number') }_{ $file['file_order'] }" title="Delete file" class="multi-file-delete-box">
                 {{ endif }}
                     <a href="{ $file['file_location'] }" rel="external">{ $file['display_filename'] }.{ $file['extension'] }</a>
                     <br>{{ if $file['img_dim'] }}{ $file['image_width'] } x { $file['image_height'] }{{ endif }} ({ $file['filesize'] } KB)
@@ -70,7 +70,7 @@
             {{ else }}
                 <div class="op-fileinfo">
                 {{ if BS_USE_NEW_IMGDEL }}
-                    <span class="file-delete-box"><input type="checkbox" name="fileid{ $render->get('post_number') }_{ $file['file_order'] }" value="deletefile_{ $render->get('post_number') }_{ $file['file_order'] }" title="Delete file"></span>
+                    <span class="file-delete-box"><input type="checkbox" name="fileid_{ $render->get('post_number') }_{ $file['file_order'] }" value="deletefile_{ $render->get('parent_thread') }_{ $render->get('post_number') }_{ $file['file_order'] }" title="Delete file"></span>
                 {{ endif }}
                     <a href="{ $file['file_location'] }" rel="external">{ $file['display_filename'] }.{ $file['extension'] }</a> -&nbsp;
                 {{ if $file['img_dim'] }}{ $file['image_width'] } x { $file['image_height'] }{{ endif }} ({ $file['filesize'] } KB)
