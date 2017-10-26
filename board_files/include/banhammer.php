@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 function nel_ban_hammer($dataforce)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $authorize = nel_get_authorization();
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'))

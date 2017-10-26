@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 function nel_main_thread_generator($dataforce, $write)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $gen_data = array();
     $gen_data['insert_hr'] = FALSE;
     $dataforce['dotdot'] = '';
@@ -19,7 +19,7 @@ function nel_main_thread_generator($dataforce, $write)
         nel_session_set_ignored('render', true);
     }
 
-    $result = $dbh->query('SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0 ORDER BY sticky desc, last_bump_time desc');
+    $result =  $dbh->query('SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0 ORDER BY sticky desc, last_bump_time desc');
     $front_page_list = $result->fetchAll(PDO::FETCH_COLUMN);
     unset($result);
 

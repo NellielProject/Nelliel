@@ -11,11 +11,11 @@ function nel_render_ban_panel_top($dataforce, $render)
 
 function nel_render_ban_panel_list($dataforce)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
     nel_render_ban_panel_top($dataforce, $render);
-    $result = $dbh->query('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "id" DESC');
+    $result =  $dbh->query('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "id" DESC');
     $bgclass = 'row1';
 
     while ($result && $baninfo = $result->fetch(PDO::FETCH_ASSOC))
@@ -57,10 +57,10 @@ function nel_render_ban_panel_add($dataforce)
 
 function nel_render_ban_panel_modify($dataforce)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
-    $result = $dbh->query('SELECT * FROM ' . BAN_TABLE . ' WHERE id=' . $dataforce['banid'] . '');
+    $result =  $dbh->query('SELECT * FROM ' . BAN_TABLE . ' WHERE id=' . $dataforce['banid'] . '');
     $baninfo = $result->fetch(PDO::FETCH_ASSOC);
     unset($result);
     $render->add_data('appeal_check', '');

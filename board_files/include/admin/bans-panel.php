@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 function nel_update_ban($dataforce)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $mode = $dataforce['mode_action'];
 
     if ($mode === 'update')
@@ -77,7 +77,7 @@ function nel_update_ban($dataforce)
 //
 function nel_ban_control($dataforce)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $authorize = nel_get_authorization();
     $mode = $dataforce['mode'];
 
@@ -104,7 +104,7 @@ function nel_ban_control($dataforce)
     }
     else if ($mode === 'remove')
     {
-        $dbh->query('DELETE FROM ' . BAN_TABLE . ' WHERE id=' . $dataforce['banid'] . '');
+         $dbh->query('DELETE FROM ' . BAN_TABLE . ' WHERE id=' . $dataforce['banid'] . '');
         nel_update_ban($dataforce, $authorize);
     }
     else if ($mode === 'update')

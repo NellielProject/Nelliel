@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_thread_generator($dataforce, $write, $write_id)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
 
     if($write)
     {

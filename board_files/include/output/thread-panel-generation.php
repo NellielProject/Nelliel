@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_thread_panel($dataforce, $expand)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
     nel_render_thread_panel_form($dataforce, $render);
@@ -25,7 +25,7 @@ function nel_render_thread_panel($dataforce, $expand)
     else
     {
         $render->add_data('expand_thread', FALSE);
-        $result = $dbh->query('SELECT * FROM ' . THREAD_TABLE . ' ORDER BY thread_id DESC');
+        $result =  $dbh->query('SELECT * FROM ' . THREAD_TABLE . ' ORDER BY thread_id DESC');
         $thread_data = $result->fetchAll(PDO::FETCH_ASSOC);
         unset($result);
     }

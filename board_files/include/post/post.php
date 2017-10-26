@@ -11,7 +11,7 @@ require_once INCLUDE_PATH . 'post/post-data.php';
 function nel_process_new_post($dataforce)
 {
     global $enabled_types, $fgsfds, $plugins, $filetypes;
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $post_data = nel_collect_post_data();
     $new_thread_dir = '';
 
@@ -103,8 +103,9 @@ function nel_process_new_post($dataforce)
     $post_data['has_file'] = ($files_count > 0) ? 1 : 0;
     nel_db_insert_initial_post($time, $post_data);
     $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "post_time" = ? LIMIT 1';
-    $prepared = nel_pdo_one_parameter_query($query, $time, PDO::PARAM_INT);
-    $new_post_info = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
+    $prepared = $dbh->prepare($query);
+    $prepared->bindValue(1, $time, PDO::PARAM_INT);
+    $new_post_info = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
     $thread_info = array();
 
     if ($dataforce['response_to'] === 0)
@@ -121,8 +122,9 @@ function nel_process_new_post($dataforce)
     {
         $thread_info['id'] = $dataforce['response_to'];
         $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1';
-        $prepared = nel_pdo_one_parameter_query($query, $thread_info['id'], PDO::PARAM_INT);
-        $current_thread = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
+        $prepared = $dbh->prepare($query);
+        $prepared->bindValue(1, $thread_info['id'], PDO::PARAM_INT);
+        $current_thread = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
         $thread_info['last_update'] = $current_thread['last_update'];
         $thread_info['post_count'] = $current_thread['post_count'] + 1;
         $thread_info['last_bump_time'] = $time;
@@ -136,7 +138,7 @@ function nel_process_new_post($dataforce)
         nel_db_update_thread($new_post_info, $thread_info);
     }
 
-    $dbh->query('UPDATE ' . POST_TABLE . ' SET parent_thread=' . $thread_info['id'] . ' WHERE post_number=' .
+     $dbh->query('UPDATE ' . POST_TABLE . ' SET parent_thread=' . $thread_info['id'] . ' WHERE post_number=' .
          $new_post_info['post_number']);
 
     $fgsfds['noko_topic'] = $thread_info['id'];
@@ -165,7 +167,7 @@ function nel_process_new_post($dataforce)
 
 function nel_is_post_ok($dataforce, $time)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     // Check for flood
     // If post is a reply, also check if the thread still exists
     if ($dataforce['response_to'] !== 0)
@@ -201,8 +203,9 @@ function nel_is_post_ok($dataforce, $time)
     if ($dataforce['response_to'] !== 0)
     {
         $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1';
-        $prepared = nel_pdo_one_parameter_query($query, $dataforce['response_to'], PDO::PARAM_INT);
-        $op_post = nel_pdo_do_fetch($prepared, PDO::FETCH_ASSOC, true);
+        $prepared = $dbh->prepare($query);
+        $prepared->bindValue(1, $dataforce['response_to'], PDO::PARAM_INT);
+        $op_post = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
 
         if (!empty($op_post))
         {

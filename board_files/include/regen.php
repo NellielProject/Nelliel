@@ -38,9 +38,9 @@ function nel_regen_index($dataforce)
 
 function nel_regen_all_pages($dataforce)
 {
-    $query = 'SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0';
-    $result = nel_pdo_simple_query($query);
-    $ids = nel_pdo_do_fetchall($result, PDO::FETCH_COLUMN);
+    $dbh = nel_get_database_handle();
+    $result =  $dbh->query('SELECT "thread_id" FROM "' . THREAD_TABLE . '" WHERE "archive_status" = 0');
+    $ids = $result->fetchAll(PDO::FETCH_COLUMN);
     nel_regen_threads($dataforce, true, $ids);
     nel_regen_index($dataforce);
 }

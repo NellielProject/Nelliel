@@ -1,5 +1,5 @@
 <?php
-$dbh = nel_get_db_handle();
+$dbh = nel_get_database_handle();
 
 function nel_init_db_connection()
 {
@@ -44,7 +44,7 @@ function nel_init_db_connection()
 
 function nel_check_for_innodb()
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $result = $dbh->query("SHOW ENGINES");
     $list = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -59,7 +59,7 @@ function nel_check_for_innodb()
     return false;
 }
 
-function nel_get_db_handle()
+function nel_get_database_handle()
 {
     static $database_handle;
 
@@ -69,6 +69,77 @@ function nel_get_db_handle()
     }
 
     return $database_handle;
+}
+
+function nel_pdo_simple_query($query)
+{
+    $dbh = nel_get_database_handle();
+    $result = $dbh->query($query);
+    return $result;
+}
+
+function nel_pdo_one_parameter_query($query, $parameter, $type = PDO::PARAM_STR, $close_cursor = true)
+{
+    $prepared = nel_pdo_prepare($query);
+    $prepared->bindValue(1, $parameter, $type);
+    $prepared = nel_pdo_execute($prepared, $close_cursor);
+    return $prepared;
+}
+
+function nel_pdo_prepare($query)
+{
+    $dbh = nel_get_database_handle();
+    $prepared = $dbh->prepare($query);
+    return $prepared;
+}
+
+function nel_pdo_execute($prepared, $closecursor = true)
+{
+    $prepared->execute();
+
+    if ($closecursor)
+    {
+        $prepared->closeCursor();
+    }
+
+    return $prepared;
+}
+
+function nel_pdo_execute_fetch($prepared, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, $closecursor = false)
+{
+    $prepared = nel_pdo_execute($prepared, false);
+    return nel_pdo_doFetch($prepared, $fetch_style, $closecursor);
+}
+
+function nel_pdo_execute_fetchall($prepared, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)
+{
+    $prepared = nel_pdo_execute($prepared, false);
+    return nel_pdo_doFetch($prepared, $fetch_style, $closecursor);
+}
+
+function nel_pdo_doFetch($prepared, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, $closecursor = false)
+{
+    if ($fetch_style === PDO::FETCH_COLUMN)
+    {
+        $fetched_result = $prepared->fetchColumn();
+    }
+    else
+    {
+        $fetched_result = $prepared->fetch($fetch_style);
+    }
+
+    if ($closecursor)
+    {
+        $prepared->closeCursor();
+    }
+
+    return $fetched_result;
+}
+
+function nel_pdo_fetchall($prepared, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)
+{
+    $fetched_result = $prepared->fetchAll($fetch_style);
+    return $fetched_result;
 }
 
 function nel_pdo_create_parameter_ids($column_names)
@@ -83,7 +154,7 @@ function nel_pdo_create_parameter_ids($column_names)
     return $identifiers;
 }
 
-function nel_format_multiple_columns($columns)
+function nel_sql_format_columns($columns)
 {
     $column_count = count($columns);
     $columns_sql = '(';
@@ -105,7 +176,7 @@ function nel_format_multiple_columns($columns)
     return $columns_sql;
 }
 
-function nel_format_multiple_values($values)
+function nel_sql_format_values($values)
 {
     $values_count = count($values);
     $values_sql = '(';
@@ -127,6 +198,14 @@ function nel_format_multiple_values($values)
     return $values_sql;
 }
 
+function nel_pdo_generate_insert_query($table, $columns, $values)
+{
+    $query = 'INSERT INTO "' . $table . '" ' . nel_sql_format_columns($columns) . ' VALUES ' .
+         nel_sql_format_values($values);
+    return $query;
+}
+
+// Bye
 function nel_pdo_one_parameter_query($query, $parameter, $type = null, $close_cursor = false)
 {
     $bind_values = array();
@@ -134,16 +213,10 @@ function nel_pdo_one_parameter_query($query, $parameter, $type = null, $close_cu
     return nel_pdo_prepared_query($query, $bind_values);
 }
 
-function nel_pdo_simple_query($query)
-{
-    $dbh = nel_get_db_handle();
-    $result = $dbh->query($query);
-    return $result;
-}
-
+//Bye
 function nel_pdo_prepared_query($query, $bind_values, $close_cursor = false)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $prepared = $dbh->prepare($query);
     $prepared = nel_pdo_bind_values($prepared, $bind_values);
     $prepared->execute();
@@ -156,13 +229,15 @@ function nel_pdo_prepared_query($query, $bind_values, $close_cursor = false)
     return $prepared;
 }
 
+// Bye
 function nel_pdo_do_fetchall($prepared, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)
 {
     $fetched_result = $prepared->fetchAll($fetch_style);
     return $fetched_result;
 }
 
-function nel_pdo_do_fetch($result, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, $close_cursor = false)
+// Bye
+function nel_pdo_doFetch($result, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, $close_cursor = false)
 {
     if ($fetch_style === PDO::FETCH_COLUMN)
     {
@@ -176,6 +251,7 @@ function nel_pdo_do_fetch($result, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, 
     return $fetched_result;
 }
 
+// Bye
 function nel_pdo_bind_set(&$bind_values, $key, $value, $type = null)
 {
     $bind_values[$key]['value'] = $value;
@@ -186,6 +262,7 @@ function nel_pdo_bind_set(&$bind_values, $key, $value, $type = null)
     }
 }
 
+// Bye
 function nel_pdo_bind_values($prepared, $bind_values)
 {
     foreach ($bind_values as $parameter => $values)
@@ -205,7 +282,7 @@ function nel_pdo_bind_values($prepared, $bind_values)
 
 function nel_database_exists($database)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
 
     if (SQLTYPE === 'SQLITE')
     {
@@ -227,15 +304,15 @@ function nel_database_exists($database)
 
     if ($test[0] == $database)
     {
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 function nel_table_exists($table)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
 
     if (SQLTYPE === 'SQLITE')
     {
@@ -258,10 +335,10 @@ function nel_table_exists($table)
 
     if ($test[0] == $table)
     {
-        return TRUE;
+        return true;
     }
 
-    return FALSE;
+    return false;
 }
 
 function nel_table_fail($table)

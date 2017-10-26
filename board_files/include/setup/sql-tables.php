@@ -54,11 +54,28 @@ function nel_table_options()
     return $options . ';';
 }
 
+function nel_check_for_innodb()
+{
+    $dbh = nel_get_database_handle();
+    $result = $dbh->query("SHOW ENGINES");
+    $list = $result->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($list as $entry)
+    {
+        if ($entry['Engine'] === 'InnoDB' && ($entry['Support'] === 'DEFAULT' || $entry['Support'] === 'YES'))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function nel_create_table_query($schema, $table_name)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
 
-    if (nel_table_exists($table_name))
+    if ($dbh->tableExists($table_name))
     {
         return false;
     }
@@ -68,7 +85,7 @@ function nel_create_table_query($schema, $table_name)
     if (!$result)
     {
         print_r($dbh->errorInfo());
-        nel_table_fail($table_name);
+        $dbh->tableFail($table_name);
     }
 
     return $result;
@@ -133,7 +150,7 @@ function nel_create_threads_table($table_name)
 
 function nel_create_files_table($table_name)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
@@ -303,7 +320,7 @@ function nel_create_permissions_table($table_name)
 
 function nel_insert_role_defaults()
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $result = $dbh->query("SELECT 1 FROM " . ROLES_TABLE . " WHERE role_id='ADMIN'");
 
     if ($result->fetch() !== false)
@@ -323,7 +340,7 @@ function nel_insert_role_defaults()
 
 function nel_insert_permissions_defaults()
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $result = $dbh->query("INSERT INTO " . PERMISSIONS_TABLE . " (role_id, perm_id, perm_setting)
                         VALUES  ('ADMIN', 'perm_config_access', 1),
                                 ('ADMIN', 'perm_config_change', 1),
@@ -438,7 +455,7 @@ function nel_insert_default_admin()
         return false;
     }
 
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $result = $dbh->query("SELECT 1 FROM " . USER_TABLE . " WHERE role_id='ADMIN'");
 
     if ($result->fetch() !== false)
@@ -457,7 +474,7 @@ function nel_insert_default_admin()
 
 function nel_insert_config_defaults()
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $result = $dbh->query("INSERT INTO " . CONFIG_TABLE . " (config_type, data_type, config_name, setting)
                 VALUES  ('technical', 'str', 'original_schema_version', '002'),
                         ('technical', 'str', 'current_schema_version', '002'),

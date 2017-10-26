@@ -88,7 +88,7 @@ function nel_check_upload_errors($file, $files)
 
 function nel_check_for_existing_file($file, $files)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_get_database_handle();
     $file['md5'] = hash_file('md5', $file['dest'], FALSE);
     $file['sha1'] = hash_file('sha1', $file['dest'], FALSE);
 
@@ -99,8 +99,9 @@ function nel_check_for_existing_file($file, $files)
 
     nel_banned_hash($file['md5'], $files);
     $query = 'SELECT "post_ref" FROM "' . FILE_TABLE . '" WHERE "sha1" = ? LIMIT 1';
-    $prepared = nel_pdo_one_parameter_query($query, $file['sha1'], PDO::PARAM_STR);
-    $result = nel_pdo_do_fetch($prepared, PDO::FETCH_COLUMN, true);
+    $prepared = $dbh->prepare($query);
+    $prepared->bindValue(1, $file['sha1'], PDO::PARAM_STR);
+    $result = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
 
     if ($result)
     {
