@@ -284,6 +284,7 @@ function nel_update_thread_data($thread_id)
 
 function nel_remove_post_from_database($sub, $id, $post_data)
 {
+    $dbh = nel_get_database_handle();
     $query = 'DELETE FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $id, PDO::PARAM_INT);
@@ -315,6 +316,7 @@ function nel_remove_post_from_database($sub, $id, $post_data)
 
 function nel_remove_thread_from_database($thread_id)
 {
+    $dbh = nel_get_database_handle();
     $query = 'SELECT "post_number" FROM "' . POST_TABLE . '" WHERE "parent_thread" = ?';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $thread_id, PDO::PARAM_INT);
@@ -475,14 +477,15 @@ function nel_verify_delete_perms($sub)
     if (nel_session_active())
     {
         $flag = $authorize->role_level_check($_SESSION['role_id'], $authorize->get_user_role($post_data['mod_post']));
+
+        if(!flag)
+        {
+            $flag = nel_verify_salted_hash($_POST['sekrit'], $post_data['post_password']);
+        }
     }
     else
     {
-        $flag = nel_password_verify($post_data['post_password'], $_POST['sekrit']);
-        var_dump($flag);
-        var_dump($post_data['post_password']);
-        var_dump($_POST['sekrit']);
-        die();
+        $flag = nel_verify_salted_hash($_POST['sekrit'], $post_data['post_password']);
     }
 
     if (!$flag)
