@@ -27,11 +27,11 @@ function nel_process_get($dataforce)
     switch ($dataforce['get_mode']) // Moar modes
     {
         case 'display':
-            if (!empty($_SESSION)) // For expanding a thread
+            if (!empty($_SESSION)) // For expanding a thread TODO: Fix this
             {
                 if (is_null($dataforce['response_id']))
                 {
-                    nel_regen($dataforce, NULL, array('', 'modmode', 'main'));
+                    nel_regen_index($dataforce);
                 }
                 else
                 {
@@ -90,7 +90,7 @@ function nel_process_post($dataforce)
                 }
 
                 nel_regen_threads($dataforce, true, $updates);
-                nel_regen($dataforce, NULL, 'main', FALSE);
+                nel_regen_index($dataforce);
 
                 //echo '<meta http-equiv="refresh" content="0;URL=' . PHP_SELF . '?mode=display&page=0">';
                 nel_clean_exit($dataforce, TRUE);
@@ -98,7 +98,7 @@ function nel_process_post($dataforce)
 
             $updates = nel_thread_updates($dataforce);
             nel_regen_threads($dataforce, true, $updates);
-            nel_regen($dataforce, NULL, 'main', FALSE);
+            nel_regen_index($dataforce);
             nel_clean_exit($dataforce, FALSE);
 
         case 'new_post':

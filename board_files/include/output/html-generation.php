@@ -32,7 +32,7 @@ function nel_render_header($dataforce, $render, $treeline)
 
     $render->add_data('titlepart', $title);
 
-    switch ($render->retrieve_data('header_type'))
+    switch ($render->get('header_type'))
     {
         case 'ABOUT':
             $render->add_data('page_title', 'About Nelliel Imageboard');
@@ -56,9 +56,9 @@ function nel_render_header($dataforce, $render, $treeline)
             break;
     }
 
-    $render->add_data('log_out', (!nel_session_ignored()) ? '[<a href="' . $render->retrieve_data('dotdot') . PHP_SELF .
+    $render->add_data('log_out', (!nel_session_is_ignored('render')) ? '[<a href="' . $render->get('dotdot') . PHP_SELF .
          '?mode=log_out">Log Out</a>]' : '');
-    $render->add_data('page_ref1', (!nel_session_ignored()) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT);
+    $render->add_data('page_ref1', (!nel_session_is_ignored('render')) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT);
     $render->parse('header.tpl', '');
 }
 
@@ -73,11 +73,11 @@ function nel_render_posting_form($dataforce, $render)
 
     if (BS_ALLOW_MULTIFILE)
     {
-        if ($render->retrieve_data('response_id'))
+        if ($render->get('response_id'))
         {
             $render->add_data('allow_multifile', TRUE);
         }
-        else if (!$render->retrieve_data('response_id') && BS_ALLOW_OP_MULTIFILE)
+        else if (!$render->get('response_id') && BS_ALLOW_OP_MULTIFILE)
         {
             $render->add_data('response_id', '0');
             $render->add_data('allow_multifile', TRUE);
@@ -89,24 +89,22 @@ function nel_render_posting_form($dataforce, $render)
     }
     else
     {
-        $render->retrieve_data('allow_multifile', FALSE);
+        $render->get('allow_multifile', FALSE);
     }
 
     $render->add_data('modmode', ($dataforce['get_mode'] === 'display') ? TRUE : FALSE);
 
-    if (!nel_session_ignored())
+    if (!nel_session_is_ignored('render'))
     {
-        $render->add_data('logged_in', TRUE);
         $render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
         $render->add_data('page_ref2', PHP_SELF . '?page=');
     }
     else
     {
-        $render->add_data('logged_in', FALSE);
         $render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
     }
 
-    $render->add_data('max_files', 3);
+    $render->add_data('max_files', BS_MAX_POST_FILES);
     $render->parse('posting_form.tpl', '', $render, FALSE);
 }
 
@@ -132,13 +130,17 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $link_resno = $dataforce['response_id'];
     }
 
+    //$thread_id = ($dataforce['response_id'] == '0') ? $post_data['post_number'] : $post_data['parent_thread'];
+
     $render->add_data('response_id', $dataforce['response_id']);
+    $render->add_data('thread_id', $post_data['parent_thread']);
     $render->add_data('tripcode', (!is_null($post_data['tripcode'])) ? BS_TRIPKEY_MARKER . $post_data['tripcode'] : '');
     $render->add_data('secure_tripcode', (!is_null($post_data['secure_tripcode'])) ? BS_TRIPKEY_MARKER .
          BS_TRIPKEY_MARKER . $post_data['secure_tripcode'] : '');
     $post_data['comment'] = nel_newline_cleanup($post_data['comment']);
     $post_data['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $post_data['comment']);
     $post_data['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'nel_parse_links', $post_data['comment']);
+
     if (nel_clear_whitespace($post_data['comment']) === '')
     {
         $post_data['comment'] = nel_stext('THREAD_NOTEXT');
@@ -259,7 +261,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             break;
     }
 
-    $mod_post_role = $render->retrieve_data('mod_post');
+    $mod_post_role = $render->get('mod_post');
 
     if ($mod_post_role)
     {
@@ -275,16 +277,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $render->add_data('logged_in', FALSE);
     $render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
     $render->add_data('page_ref2', '');
-
-    /*if (!nel_session_ignored())
-    {
-        $render->add_data('logged_in', TRUE);
-        $render->add_data('ip_address', $render->retrieve_data('ip_address') ? $render->retrieve_data('ip_address') : 'Unknown');
-        $render->add_data('perm_ban', $authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'));
-        $render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
-        $render->add_data('page_ref2', PHP_SELF . '?page=');
-        $render->add_data('the_session', session_id());
-    }*/
 
     if ($response)
     {
@@ -303,19 +295,14 @@ function nel_render_basic_footer($render)
 {
     $authorize = nel_get_authorization();
 
-    if (!nel_session_ignored())
+    if (!nel_session_is_ignored('render'))
     {
-        $render->add_data('logged_in', TRUE);
         $render->add_data('main_page', FALSE);
 
         if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'))
         {
             $render->add_data('perm_ban', TRUE);
         }
-    }
-    else
-    {
-        $render->add_data('logged_in', FALSE);
     }
 
     $render->parse('footer.tpl', '');
@@ -326,19 +313,14 @@ function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
     $authorize = nel_get_authorization();
     $render->add_data('main_page', $main_page);
 
-    if (!nel_session_ignored())
+    if (!nel_session_is_ignored('render'))
     {
-        $render->add_data('logged_in', TRUE);
         $render->add_data('main_page', FALSE);
 
         if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'))
         {
             $render->add_data('perm_ban', TRUE);
         }
-    }
-    else
-    {
-        $render->add_data('logged_in', FALSE);
     }
 
     $render->add_data('link', $link);
@@ -369,7 +351,7 @@ function nel_render_ban_page($dataforce, $bandata)
 function nel_parse_links($matches)
 {
     global $link_resno;
-    $dbh = nel_get_db_handle();
+    $dbh = nel_database();
     $back = ($link_resno === 0) ? PAGE_DIR : '../';
     $prepared = $dbh->prepare('SELECT response_to FROM ' . POST_TABLE . ' WHERE post_number=?');
     $prepared->bindParam(1, $matches[1], PDO::PARAM_INT);

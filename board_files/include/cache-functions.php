@@ -26,7 +26,7 @@ require_once CACHE_PATH . 'multi-cache.nelcache';
 //
 function nel_cache_rules()
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_database();
     $gtypes = '';
     $atypes = '';
     $vtypes = '';
@@ -127,8 +127,9 @@ function nel_cache_rules()
 
 function nel_build_filetype_config($dbh)
 {
-    $query = 'SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'filetype_enable\'';
-    $config_list = nel_pdo_simple_query($query, true, PDO::FETCH_ASSOC, true);
+    $dbh = nel_database();
+    $result =  $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'filetype_enable\'');
+    $config_list = $result->fetchAll(PDO::FETCH_ASSOC);
     $file_config = array();
 
     foreach ($config_list as $config)
@@ -171,8 +172,8 @@ function nel_build_filetype_config($dbh)
 //
 function nel_cache_settings()
 {
-    $dbh = nel_get_db_handle();
-    $result = $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'');
+    $dbh = nel_database();
+    $result =  $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'');
     $config_list = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
 
@@ -202,7 +203,7 @@ function nel_cache_settings()
     $file_config = nel_build_filetype_config($dbh);
     $fvars = '$enabled_types = ' . var_export($file_config, true) . ';';
     $final_vars = '<?php ' . $vars1 . $fvars . ' ?>';
-    nel_write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, octdec(FILE_PERM));
+    nel_write_file(CACHE_PATH . 'parameters.nelcache', $final_vars, FILE_PERM);
 }
 
 //
@@ -246,5 +247,5 @@ $template_info = ' . var_export($template_info, TRUE) . ';
 nel_template_info(NULL, NULL, $template_info, FALSE);
 ?>';
 
-    nel_write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, octdec(FILE_PERM));
+    nel_write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, FILE_PERM);
 }

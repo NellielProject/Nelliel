@@ -88,7 +88,7 @@ function nel_check_upload_errors($file, $files)
 
 function nel_check_for_existing_file($file, $files)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_database();
     $file['md5'] = hash_file('md5', $file['dest'], FALSE);
     $file['sha1'] = hash_file('sha1', $file['dest'], FALSE);
 
@@ -98,9 +98,10 @@ function nel_check_for_existing_file($file, $files)
     }
 
     nel_banned_hash($file['md5'], $files);
-    $query = 'SELECT post_ref FROM ' . FILE_TABLE . ' WHERE sha1=? LIMIT 1';
-    $bind_values = nel_pdo_bind_set(1, $file['sha1'], PDO::PARAM_STR, $bind_values);
-    $result = nel_pdo_prepared_query($query, $bind_values, true, PDO::FETCH_COLUMN);
+    $query = 'SELECT "post_ref" FROM "' . FILE_TABLE . '" WHERE "sha1" = ? LIMIT 1';
+    $prepared = $dbh->prepare($query);
+    $prepared->bindValue(1, $file['sha1'], PDO::PARAM_STR);
+    $result = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
 
     if ($result)
     {
@@ -167,7 +168,9 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
 
         if (BS_USE_THUMB && $files[$i]['supertype'] === 'graphics')
         {
-            exec("convert -version", $out, $rescode);
+            exec("convert -version 2>/dev/null", $out, $rescode);
+            var_dump($out);
+            var_dump($rescode);
 
             if ($rescode === 0 && BS_USE_MAGICK)
             {
@@ -227,10 +230,7 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
                         break;
 
                     case 'gif':
-                        if ($gd_test['GIF Read Support'])
-                        {
-                            $image = imagecreatefromgif($files[$i]['dest']);
-                        }
+                        $image = imagecreatefromgif($files[$i]['dest']);
                         break;
 
                     case 'png':

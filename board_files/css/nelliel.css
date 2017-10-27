@@ -18,6 +18,10 @@ a {
     color: #0000EE;
 }
 
+img {
+	float: left;
+}
+
 a:visited {
     color: #0000FF;
 }
@@ -296,12 +300,14 @@ a.mailto-name:visited {
 .reply-post {
     background: #77EEFF;
     border: 1px solid #77DDFF;
-    float: left;
+    /*float: left;*/
     padding: 5px;
     min-width: 15em;
     max-width: 60em;
     height: 100%;
     margin: 5px;
+    overflow: hidden;
+    display: inline-block;
 }
 
 .reply-poster-name {
@@ -319,12 +325,12 @@ a.mailto-name:visited {
 
 .reply-post-text {
     padding-left: 1.10em;
-    float: left;
+    /*float: left;*/
 }
 
 .reply-post-preview {
     text-align: left;
-    float: left;
+    /*float: left;*/
     padding-left: 20px;
     padding-top: 3px;
     padding-bottom: 10px;

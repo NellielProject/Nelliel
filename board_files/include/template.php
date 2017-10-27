@@ -41,7 +41,7 @@ function nel_parse_template($template, $subdirectory, $render, $regen)
             $lol = preg_replace('#{{{\s*?(.*?)\s*?}}}#', '\'; $1; $temp .= \'', $lol); // Parse other PHP code
             $end = '\'; return $temp; } ?>'; // End of the caches template
             $lol_out = $begin . $lol . $end;
-            nel_write_file_create_dirs(CACHE_PATH . $template_cache_dir . $subdirectory . $template_short . '.nelcache', $lol_out, octdec(FILE_PERM), octdec(DIRECTORY_PERM));
+            nel_write_file(CACHE_PATH . $template_cache_dir . $subdirectory . $template_short . '.nelcache', $lol_out, FILE_PERM, true);
         }
 
         if(!$regen)

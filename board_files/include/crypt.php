@@ -10,20 +10,20 @@ define('NEL_BASIC_HASH', 999);
 
 if (!function_exists('hash_equals'))
 {
-    function hash_equals($string1, $string2)
+    function hash_equals($known_string, $user_string)
     {
-        if (strlen($string1) != strlen($string2))
+        if (strlen($known_string) != strlen($user_string))
         {
             return false;
         }
         else
         {
-            $res = $string1 ^ $string2;
+            $res = $known_string^ $user_string;
             $return = 0;
 
             for ($i = strlen($res) - 1; $i >= 0; $i --)
             {
-                $ret |= ord($res[$i]);
+                $return |= ord($res[$i]);
             }
 
             return !$return;
@@ -141,12 +141,23 @@ function nel_salted_hash_info($hash)
     return $info;
 }
 
-function nel_generate_salted_hash($algorithm, $string)
+function nel_generate_salted_hash($algorithm, $string, $salt = null)
 {
-    $salt = nel_gen_salt(16);
+    if(is_null($salt))
+    {
+        $salt = nel_gen_salt(16);
+    }
+
     $full_string = $salt . $string;
     $hash = hash($algorithm, $full_string, false);
     return $algorithm . '$' . $salt . '$' . $hash;
+}
+
+function nel_verify_salted_hash($string, $hash)
+{
+    $info = nel_salted_hash_info($hash);
+    $new_hash = nel_generate_salted_hash($info['algoName'], $string, $info['salt']);
+    return hash_equals($hash, $new_hash);
 }
 
 function nel_get_crypt_cost($algorithm, $type)

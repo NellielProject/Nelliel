@@ -20,53 +20,50 @@ function nel_regen_threads($dataforce, $write, $ids)
 
 function nel_regen_cache($dataforce)
 {
-    global $link_updates;
     $dataforce['rules_list'] = nel_cache_rules();
     nel_cache_settings();
-    $dataforce['post_links'] = $link_updates;
     nel_regen_template_cache();
     nel_write_multi_cache($dataforce);
 }
 
+function nel_regen_index($dataforce)
+{
+    require_once INCLUDE_PATH . 'output-filter.php';
+    require_once INCLUDE_PATH . 'output/main-generation.php';
+    nel_update_archive_status($dataforce);
+    $dataforce['response_id'] = 0;
+    $link_resno = 0;
+    nel_main_thread_generator($dataforce, true);
+}
+
+function nel_regen_all_pages($dataforce)
+{
+    $dbh = nel_database();
+    $result =  $dbh->query('SELECT "thread_id" FROM "' . THREAD_TABLE . '" WHERE "archive_status" = 0');
+    $ids = $result->fetchAll(PDO::FETCH_COLUMN);
+    nel_regen_threads($dataforce, true, $ids);
+    nel_regen_index($dataforce);
+}
+
 function nel_regen(&$dataforce, $ids, $mode)
 {
-    global $link_resno, $link_updates;
-    $dbh = nel_get_db_handle();
-    require_once INCLUDE_PATH . 'output-filter.php';
-    if($mode[1] !== 'modmode')
-    {
-        nel_toggle_session();
-    }
-
     if ($mode[2] === 'full')
     {
-        $query = 'SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0';
-        $ids = nel_pdo_simple_query($query, true, PDO::FETCH_COLUMN, true);
+        nel_regen_all_pages($dataforce);
     }
 
-    if ($mode[2] === 'main' || $mode[2] === 'full')
+    if ($mode[2] === 'index')
     {
-        require_once INCLUDE_PATH . 'output/main-generation.php';
-        nel_update_archive_status($dataforce);
-        $dataforce['response_id'] = 0;
-        $link_resno = 0;
-        nel_main_thread_generator($dataforce, true);
+        nel_regen_index($dataforce);
     }
 
-    if (/*$mode[2] === 'thread' || */$mode[2] === 'full')
+    if ($mode[2] === 'thread')
     {
         nel_regen_threads($dataforce, true, $ids);
     }
 
-    if ($mode[2] === 'cache' || $mode[2] === 'full')
+    if ($mode[2] === 'cache')
     {
-        nel_regen_cache();
+        nel_regen_cache($dataforce);
     }
-
-    if($mode[1] !== 'modmode')
-    {
-        nel_toggle_session();
-    }
-
-    $dataforce['post_links'] = $link_updates;
 }

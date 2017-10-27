@@ -9,12 +9,17 @@ if (!defined('NELLIEL_VERSION'))
 //
 function nel_main_thread_generator($dataforce, $write)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_database();
     $gen_data = array();
     $gen_data['insert_hr'] = FALSE;
     $dataforce['dotdot'] = '';
 
-    $result = $dbh->query('SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0 ORDER BY sticky desc, last_bump_time desc');
+    if($write)
+    {
+        nel_session_set_ignored('render', true);
+    }
+
+    $result =  $dbh->query('SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0 ORDER BY sticky desc, last_bump_time desc');
     $front_page_list = $result->fetchAll(PDO::FETCH_COLUMN);
     unset($result);
 
@@ -35,7 +40,7 @@ function nel_main_thread_generator($dataforce, $write)
 
         if ($write)
         {
-            nel_write_file(PHP_SELF2 . PHP_EXT, $render->output(FALSE), octdec(FILE_PERM));
+            nel_write_file(PHP_SELF2 . PHP_EXT, $render->output(FALSE), FILE_PERM);
         }
         else
         {
@@ -154,15 +159,15 @@ function nel_main_thread_generator($dataforce, $write)
         {
             if ($i === 0)
             {
-                $render->add_data('page_nav', $render->retrieve_data('page_nav') . (($page > 1) ? '[<a href="' . PHP_SELF2 . PHP_EXT . '">0</a>] ' : '[0] '));
+                $render->add_data('page_nav', $render->get('page_nav') . (($page > 1) ? '[<a href="' . PHP_SELF2 . PHP_EXT . '">0</a>] ' : '[0] '));
             }
             else if ($i === ($page - 1) || $dataforce['max_pages'] === 1)
             {
-                $render->add_data('page_nav', $render->retrieve_data('page_nav') . '[' . ($i) . '] ');
+                $render->add_data('page_nav', $render->get('page_nav') . '[' . ($i) . '] ');
             }
             else
             {
-                $render->add_data('page_nav', $render->retrieve_data('page_nav') . '[<a href="' . PHP_SELF2 . ($i) . PHP_EXT . '">' . ($i) . '</a>] ');
+                $render->add_data('page_nav', $render->get('page_nav') . '[<a href="' . PHP_SELF2 . ($i) . PHP_EXT . '">' . ($i) . '</a>] ');
             }
 
             ++ $i;
@@ -183,11 +188,16 @@ function nel_main_thread_generator($dataforce, $write)
         else
         {
             $logfilename = ($page === 1) ? PHP_SELF2 . PHP_EXT : PHP_SELF2 . ($page - 1) . PHP_EXT;
-            nel_write_file($logfilename, $render->output(FALSE), octdec(FILE_PERM));
+            nel_write_file($logfilename, $render->output(FALSE), FILE_PERM);
         }
 
         ++ $page;
         unset($render);
+    }
+
+    if($write)
+    {
+        nel_session_set_ignored('render', false);
     }
 }
 

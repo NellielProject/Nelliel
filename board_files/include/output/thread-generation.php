@@ -6,7 +6,13 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_thread_generator($dataforce, $write, $write_id)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_database();
+
+    if($write)
+    {
+        nel_session_set_ignored('render', true);
+    }
+
     $render = new nel_render();
     $render_expand = new nel_render();
     $render_collapse = new nel_render();
@@ -70,7 +76,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
             nel_render_post($dataforce, $render_temp, FALSE, FALSE, $gen_data, $treeline);
             $gen_data['insert_hr'] = FALSE;
             nel_render_footer($render_temp, FALSE, TRUE, TRUE, TRUE, FALSE);
-            nel_write_file(PAGE_PATH . $write_id . '/' . $write_id. '-0-100.html', $render_temp->output(), octdec(FILE_PERM));
+            nel_write_file(PAGE_PATH . $write_id . '/' . $write_id. '-0-100.html', $render_temp->output(), FILE_PERM);
             unset($render_temp);
         }
 
@@ -114,9 +120,9 @@ function nel_thread_generator($dataforce, $write, $write_id)
 
     if ($write)
     {
-        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '.html', $render->output(FALSE), octdec(FILE_PERM));
-        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '-expand.html', $render_expand->output(FALSE), octdec(FILE_PERM));
-        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '-collapse.html', $render_collapse->output(FALSE), octdec(FILE_PERM));
+        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '.html', $render->output(FALSE), FILE_PERM);
+        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '-expand.html', $render_expand->output(FALSE), FILE_PERM);
+        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '-collapse.html', $render_collapse->output(FALSE), FILE_PERM);
     }
     else
     {
@@ -134,6 +140,11 @@ function nel_thread_generator($dataforce, $write, $write_id)
         }
 
         die();
+    }
+
+    if($write)
+    {
+        nel_session_set_ignored('render', false);
     }
 }
 

@@ -7,53 +7,58 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Write files
 //
-function nel_write_file($filename, $output, $chmod)
+function nel_write_file($file, $output, $chmod = FILE_PERM, $create_directories = false, $dir_chmod = DIRECTORY_PERM)
 {
-    $fp = fopen($filename, "w");
+    if ($create_directories)
+    {
+        nel_create_directory(dirname($file), $dir_chmod, true);
+    }
+
+    $fp = fopen($file, "w");
 
     if (!$fp)
     {
         echo 'Failed to open file for writing. Check permissions.';
-        return FALSE;
+        return false;
     }
 
     set_file_buffer($fp, 0);
     rewind($fp);
     fputs($fp, $output);
     fclose($fp);
-    chmod($filename, $chmod);
-    return TRUE;
+    chmod($file, octdec($chmod));
+    return true;
 }
 
-//
-// Create directories as needed before writing files
-
-function nel_write_file_create_dirs($filename, $output, $chmod, $dir_chmod)
+function nel_create_directory($directory, $dir_chmod = DIRECTORY_PERM, $recursive = false)
 {
-    $directory = dirname($filename);
-    nel_create_structure_directory($directory, '', $dir_chmod);
-    nel_write_file($filename, $output, $chmod);
+    if (file_exists($directory))
+    {
+        return false;
+    }
+
+    return mkdir($directory, $dir_chmod, $recursive);
 }
 
 //
 // Move files
 //
-function nel_move_file($location, $destination)
+function nel_move_file($file, $destination)
 {
-    if (file_exists($location))
+    if (file_exists($file))
     {
-        rename($location, $destination);
+        rename($file, $destination);
     }
 }
 
 //
 // Delete files
 //
-function nel_eraser_gun($path, $filename, $multi)
+function nel_eraser_gun($path, $filename = null, $is_directory = false)
 {
-    if ($multi && file_exists($path))
+    if ($is_directory && file_exists($path))
     {
-        $files = glob($path . "/*.*");
+        $files = glob(nel_path_file_join($path, '*.*'));
 
         foreach ($files as $file)
         {
@@ -62,10 +67,32 @@ function nel_eraser_gun($path, $filename, $multi)
 
         rmdir($path);
     }
-    else if (file_exists($path . "/" . $filename))
+    else if (file_exists(nel_path_file_join($path, $filename)))
     {
-        unlink($path . "/" . $filename);
+        unlink(nel_path_file_join($path, $filename));
     }
+}
+
+function nel_path_file_join($path, $filename)
+{
+    $separator = DIRECTORY_SEPARATOR;
+
+    if(substr($path,-1) == DIRECTORY_SEPARATOR)
+    {
+        $separator = '';
+    }
+    return $path . $separator . $filename;
+}
+
+function nel_path_join($path, $path2)
+{
+    $separator = DIRECTORY_SEPARATOR;
+
+    if(substr($path,-1) == DIRECTORY_SEPARATOR)
+    {
+        $separator = '';
+    }
+    return $path . $separator . $path2;
 }
 
 //
@@ -74,9 +101,31 @@ function nel_eraser_gun($path, $filename, $multi)
 function nel_create_thread_directories($thread_id)
 {
     mkdir(SRC_PATH . $thread_id, octdec(DIRECTORY_PERM));
-    chmod(SRC_PATH . $thread_id, octdec(DIRECTORY_PERM));
     mkdir(THUMB_PATH . $thread_id, octdec(DIRECTORY_PERM));
-    chmod(THUMB_PATH . $thread_id, octdec(DIRECTORY_PERM));
     mkdir(PAGE_PATH . $thread_id, octdec(DIRECTORY_PERM));
-    chmod(PAGE_PATH . $thread_id, octdec(DIRECTORY_PERM));
+}
+
+function nel_delete_thread_directories($thread_id)
+{
+    nel_eraser_gun(nel_path_join(PAGE_PATH, $thread_id), null, true);
+    nel_eraser_gun(nel_path_join(SRC_PATH, $thread_id), null, true);
+    nel_eraser_gun(nel_path_join(THUMB_PATH, $thread_id), null,true);
+}
+
+function nel_filter_filename($filename)
+{
+    // https://stackoverflow.com/a/23066553
+    $filtered = preg_replace('#[^\PC\s]#u', '', $filename); // Filter control and unprintable characters
+
+    // https://msdn.microsoft.com/en-us/library/aa365247(VS.85).aspx
+    $filtered = preg_replace('#[<>:"\/\\|?*]#u', '', $filtered); // Reserved characters for Windows
+    $filtered = preg_replace('#(com[1-9]|lpt[1-9]|con|prn|aux|nul)\.?[a-zA-Z0-9]*#ui', '', $filtered); // Reserved names for Windows
+
+    $filtered = preg_replace('#^[ -.]|\'#', '', $filtered); // Other potentially troublesome characters
+
+    if($filtered === '')
+    {
+        // TODO: completely invalid filename error
+    }
+    return $filtered;
 }

@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_is_in_string($string, $substring)
 {
-    if(strripos($string, $substring) !== false)
+    if (strripos($string, $substring) !== false)
     {
         return true;
     }
@@ -20,7 +20,6 @@ function nel_clean_exit($dataforce, $die)
 {
     //$dataforce['post_links'] = nel_cache_links($dataforce['post_links']);
     //nel_write_multi_cache($dataforce);
-
     $authorize = nel_get_authorization();
     $authorize->save_users();
     $authorize->save_roles();
@@ -39,4 +38,19 @@ function get_millisecond_time()
     $time = explode(' ', microtime());
     $time[0] = str_pad(round($time[0] * 1000), 3, '0', STR_PAD_LEFT);
     return $time[1] . $time[0];
+}
+
+function nel_true_empty($var)
+{
+    if (!empty($var))
+    {
+        return false;
+    }
+
+    if(is_null($var) || (is_string($var) && $var === '') || (is_array($var) && $var === array()))
+    {
+        return true;
+    }
+
+    return false;
 }

@@ -1,64 +1,64 @@
-            <tr class="{$render->retrieve_data('bg_class')}">
-{{ if !$render->retrieve_data('expand_thread') }}
+            <tr class="{$render->get('bg_class')}">
+{{ if !$render->get('expand_thread') }}
                 <td>
-                    <input type="submit" name="expand_thread" value="{nel_stext('FORM_EXPAND')} {$render->retrieve_data('post_number')}">
+                    <input type="submit" name="expand_thread" value="{nel_stext('FORM_EXPAND')} {$render->get('parent_thread')}">
                 </td>
 {{ else }}
                 <td>
                 </td>
 {{ endif }}
-                <td>{$render->retrieve_data('post_number')}</td>
+                <td>{$render->get('post_number')}</td>
                 <td>
-{{ if $render->retrieve_data('is_op') }}
-                    <input type="checkbox" name="thread_{$render->retrieve_data('post_number')}" value="deletethread_{$render->retrieve_data('post_number')}" title="Delete entire post">(OP)
+{{ if $render->get('is_op') }}
+                    <input type="checkbox" name="thread_{$render->get('post_number')}" value="deletethread_{$render->get('parent_thread')}_{$render->get('post_number')}" title="Delete entire post">(OP)
 {{ else }}
-                    <input type="checkbox" name="post_{$render->retrieve_data('post_number')}_{$render->retrieve_data('response_to')}" value="deletepost_{$render->retrieve_data('post_number')}_{$render->retrieve_data('parent_thread')}" title="Delete entire post">
+                    <input type="checkbox" name="post_{$render->get('parent_thread')}_{$render->get('post_number')}" value="deletepost_{$render->get('parent_thread')}_{$render->get('post_number')}" title="Delete entire post">
 {{ endif }}
                 </td>
-{{ if $render->retrieve_data('sticky') }}
+{{ if $render->get('sticky') }}
                 <td>
                 </td>
                 <td>
-                    <input type="checkbox" name="{$render->retrieve_data('post_number')}" value="threadunsticky_{$render->retrieve_data('post_number')}">
+                    <input type="checkbox" name="{$render->get('post_number')}" value="threadunsticky_{$render->get('parent_thread')}_{$render->get('post_number')}">
                 </td>
 {{ else }}
                 <td>
-                    <input type="checkbox" name="{$render->retrieve_data('post_number')}" value="threadsticky_{$render->retrieve_data('post_number')}">
+                    <input type="checkbox" name="{$render->get('post_number')}" value="threadsticky_{$render->get('parent_thread')}_{$render->get('post_number')}">
                 </td>
                 <td>
                 </td>
 {{ endif }}
                 <td>
-                    {$render->retrieve_data('post_time')}
+                    {$render->get('post_time')}
                 </td>
                 <td>
-                    <a href="{PAGE_DIR}{$render->retrieve_data('post_number')}/{$render->retrieve_data('post_number')}.html" rel="external">{$render->retrieve_data('subject')}</a>
+                    <a href="{PAGE_DIR}{$render->get('post_number')}/{$render->get('post_number')}.html" rel="external">{$render->get('subject')}</a>
                 </td>
                 <td>
-                    {$render->retrieve_data('poster_name')}
+                    {$render->get('poster_name')}
                 </td>
                 <td>
-                    {$render->retrieve_data('comment')}
+                    {$render->get('comment')}
                 </td>
                 <td>
-                    {$render->retrieve_data('ip_address')}
+                    {$render->get('ip_address')}
                 </td>
-{{ if $render->retrieve_data('has_file') }}
+{{ if $render->get('has_file') }}
                 <td>
                     <table>
-    {{ foreach $render->retrieve_data('files') as $file }}
+    {{ foreach $render->get('files') as $file }}
                         <tr>
                             <td>
-                                <input type="checkbox" name="fileid{$render->retrieve_data('post_number')}_{$file['file_order']}" value="deletefile_{$render->retrieve_data('post_number')}_{$file['file_order']}" title="Delete file">
+                                <input type="checkbox" name="fileid{$render->get('post_number')}_{$file['file_order']}" value="deletefile_{$render->get('parent_thread')}_{$render->get('post_number')}_{$file['file_order']}" title="Delete file">
                             </td>
-        {{ if $render->retrieve_data('response_to') == 0 }}
+        {{ if $render->get('response_to') == 0 }}
                             <td>
-                                <a href="{SRC_DIR}{$render->retrieve_data('post_number')}/{$file['filename']}{$file['extension']}" rel="external">{$file['filename']}{$file['extension']}</a> ( {$file['filesize']} KB )<br>MD5: {$file['md5']}<br>SHA1: {$file['sha1']}
+                                <a href="{SRC_DIR}{$render->get('post_number')}/{$file['filename']}{$file['extension']}" rel="external">{$file['filename']}{$file['extension']}</a> ( {$file['filesize']} KB )<br>MD5: {$file['md5']}<br>SHA1: {$file['sha1']}
                             </td>
                         </tr>
         {{ else }}
                             <td>
-                                <a href="{SRC_DIR}{$render->retrieve_data('response_to')}/{$file['filename']}{$file['extension']}" rel="external">{$file['filename']}{$file['extension']}</a> ( {$file['filesize']} KB )<br>MD5: {$file['md5']}<br>SHA1: {$file['sha1']}
+                                <a href="{SRC_DIR}{$render->get('response_to')}/{$file['filename']}{$file['extension']}" rel="external">{$file['filename']}{$file['extension']}</a> ( {$file['filesize']} KB )<br>MD5: {$file['md5']}<br>SHA1: {$file['sha1']}
                             </td>
                         </tr>
         {{ endif }}

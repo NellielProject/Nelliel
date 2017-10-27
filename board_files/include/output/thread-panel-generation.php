@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_thread_panel($dataforce, $expand)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_database();
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
     nel_render_thread_panel_form($dataforce, $render);
@@ -25,7 +25,7 @@ function nel_render_thread_panel($dataforce, $expand)
     else
     {
         $render->add_data('expand_thread', FALSE);
-        $result = $dbh->query('SELECT * FROM ' . THREAD_TABLE . ' ORDER BY thread_id DESC');
+        $result =  $dbh->query('SELECT * FROM ' . THREAD_TABLE . ' ORDER BY thread_id DESC');
         $thread_data = $result->fetchAll(PDO::FETCH_ASSOC);
         unset($result);
     }
@@ -115,7 +115,7 @@ function nel_render_thread_panel_thread($dataforce, $render, $thread_data, $post
 
     if (utf8_strlen($post_data['comment']) > 20)
     {
-        $render->add_data('comment', utf8_substr($render->retrieve_data('comment'), 0, 19) . "...");
+        $render->add_data('comment', utf8_substr($render->get('comment'), 0, 19) . "...");
     }
 
     $render->add_data('ip_address', $post_data['ip_address'] ? $post_data['ip_address'] : 'Unknown');

@@ -6,10 +6,10 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_settings_panel($dataforce)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_database();
     $render = new nel_render();
     $render->input(nel_render_header($dataforce, $render, array()));
-    $result = $dbh->query('SELECT * FROM ' . CONFIG_TABLE . '');
+    $result =  $dbh->query('SELECT * FROM ' . CONFIG_TABLE . '');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
     $board_settings = array('iso' => '', 'com' => '', 'us' => '', 'archive' => '', 'prune' => '', 'nothing' => '');

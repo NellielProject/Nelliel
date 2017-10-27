@@ -11,19 +11,19 @@ function nel_render_ban_panel_top($dataforce, $render)
 
 function nel_render_ban_panel_list($dataforce)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_database();
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
     nel_render_ban_panel_top($dataforce, $render);
-    $result = $dbh->query('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "id" DESC');
+    $result =  $dbh->query('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "id" DESC');
     $bgclass = 'row1';
 
     while ($result && $baninfo = $result->fetch(PDO::FETCH_ASSOC))
     {
         $render->add_data('ban_panel_loop', TRUE);
-        $render->add_data('ip_address', $render->retrieve_data('ip_address') ? $render->retrieve_data('ip_address') : 'Unknown');
+        $render->add_data('ip_address', $render->get('ip_address') ? $render->get('ip_address') : 'Unknown');
         $render->add_data('ban_appeal_response', $baninfo['appeal_response']);
-        $render->add_data('ban_expire', date("D F jS Y  H:i:s", $render->retrieve_data('length') + $render->retrieve_data('ban_time')));
+        $render->add_data('ban_expire', date("D F jS Y  H:i:s", $render->get('length') + $render->get('ban_time')));
 
         if ($bgclass === 'row1')
         {
@@ -57,10 +57,10 @@ function nel_render_ban_panel_add($dataforce)
 
 function nel_render_ban_panel_modify($dataforce)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_database();
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
-    $result = $dbh->query('SELECT * FROM ' . BAN_TABLE . ' WHERE id=' . $dataforce['banid'] . '');
+    $result =  $dbh->query('SELECT * FROM ' . BAN_TABLE . ' WHERE id=' . $dataforce['banid'] . '');
     $baninfo = $result->fetch(PDO::FETCH_ASSOC);
     unset($result);
     $render->add_data('appeal_check', '');
@@ -74,7 +74,7 @@ function nel_render_ban_panel_modify($dataforce)
     {
         $length2 = $length2 / 24;
         $render->add_data('ban_length_days', floor($length2));
-        $length2 = $length2 - $render->retrieve_data('ban_length_days');
+        $length2 = $length2 - $render->get('ban_length_days');
         $render->add_data('ban_length_hours', $length2 * 24);
     }
 

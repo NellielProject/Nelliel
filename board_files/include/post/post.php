@@ -11,7 +11,7 @@ require_once INCLUDE_PATH . 'post/post-data.php';
 function nel_process_new_post($dataforce)
 {
     global $enabled_types, $fgsfds, $plugins, $filetypes;
-    $dbh = nel_get_db_handle();
+    $dbh = nel_database();
     $post_data = nel_collect_post_data();
     $new_thread_dir = '';
 
@@ -97,11 +97,15 @@ function nel_process_new_post($dataforce)
         $post_data['op'] = 0;
     }
 
-    nel_db_insert_initial_post($time, $post_data);
-    $result = $dbh->query('SELECT * FROM ' . POST_TABLE . ' WHERE post_time=' . $time . ' LIMIT 1');
-    $new_post_info = $result->fetch(PDO::FETCH_ASSOC);
-    unset($result);
+    $files_count = count($files);
+    $post_data['file_count'] = $files_count;
 
+    $post_data['has_file'] = ($files_count > 0) ? 1 : 0;
+    nel_db_insert_initial_post($time, $post_data);
+    $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "post_time" = ? LIMIT 1';
+    $prepared = $dbh->prepare($query);
+    $prepared->bindValue(1, $time, PDO::PARAM_INT);
+    $new_post_info = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
     $thread_info = array();
 
     if ($dataforce['response_to'] === 0)
@@ -110,18 +114,21 @@ function nel_process_new_post($dataforce)
         $thread_info['post_count'] = 1;
         $thread_info['last_bump_time'] = $time;
         $thread_info['id'] = $new_post_info['post_number'];
+        $thread_info['total_files'] = $files_count;
         nel_db_insert_new_thread($thread_info, $files_count);
         nel_create_thread_directories($thread_info['id']);
     }
     else
     {
         $thread_info['id'] = $dataforce['response_to'];
-        $result = $dbh->query('SELECT * FROM ' . THREAD_TABLE . ' WHERE thread_id=' . $thread_info['id'] . ' LIMIT 1');
-        $current_thread = $result->fetch(PDO::FETCH_ASSOC);
-        unset($result);
+        $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1';
+        $prepared = $dbh->prepare($query);
+        $prepared->bindValue(1, $thread_info['id'], PDO::PARAM_INT);
+        $current_thread = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
         $thread_info['last_update'] = $current_thread['last_update'];
         $thread_info['post_count'] = $current_thread['post_count'] + 1;
         $thread_info['last_bump_time'] = $time;
+        $thread_info['total_files'] = $current_thread['total_files'] + count($files);
 
         if ($current_thread['post_count'] > BS_MAX_BUMPS || $fgsfds['sage'])
         {
@@ -131,7 +138,7 @@ function nel_process_new_post($dataforce)
         nel_db_update_thread($new_post_info, $thread_info);
     }
 
-    $dbh->query('UPDATE ' . POST_TABLE . ' SET parent_thread=' . $thread_info['id'] . ' WHERE post_number=' .
+     $dbh->query('UPDATE ' . POST_TABLE . ' SET parent_thread=' . $thread_info['id'] . ' WHERE post_number=' .
          $new_post_info['post_number']);
 
     $fgsfds['noko_topic'] = $thread_info['id'];
@@ -154,13 +161,13 @@ function nel_process_new_post($dataforce)
     // Generate response page if it doesn't exist, otherwise update
     nel_regen_threads($dataforce, true, array($thread_info['id']));
     $dataforce['archive_update'] = TRUE;
-    nel_regen($dataforce, NULL, 'main', FALSE);
+    nel_regen_index($dataforce);
     return $thread_info['id'];
 }
 
 function nel_is_post_ok($dataforce, $time)
 {
-    $dbh = nel_get_db_handle();
+    $dbh = nel_database();
     // Check for flood
     // If post is a reply, also check if the thread still exists
     if ($dataforce['response_to'] !== 0)
@@ -195,35 +202,30 @@ function nel_is_post_ok($dataforce, $time)
 
     if ($dataforce['response_to'] !== 0)
     {
-        $result = $dbh->query('SELECT * FROM ' . THREAD_TABLE . ' WHERE thread_id=' . $dataforce['response_to'] .
-             ' LIMIT 1');
+        $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1';
+        $prepared = $dbh->prepare($query);
+        $prepared->bindValue(1, $dataforce['response_to'], PDO::PARAM_INT);
+        $op_post = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
 
-        if ($result !== FALSE)
+        if (!empty($op_post))
         {
-            $op_post = $result->fetch(PDO::FETCH_ASSOC);
-
-            if (!empty($op_post))
+            if ($op_post['thread_id'] === '')
             {
-                if ($op_post['thread_id'] === '')
-                {
-                    nel_derp(2, array('origin' => 'POST'));
-                }
-
-                if ($op_post['locked'] === '1')
-                {
-                    nel_derp(3, array('origin' => 'POST'));
-                }
-
-                if ($op_post['archive_status'] !== '0')
-                {
-                    nel_derp(14, array('origin' => 'POST'));
-                }
-
-                $post_count = $op_post['post_count'];
+                nel_derp(2, array('origin' => 'POST'));
             }
-        }
 
-        unset($result);
+            if ($op_post['locked'] === '1')
+            {
+                nel_derp(3, array('origin' => 'POST'));
+            }
+
+            if ($op_post['archive_status'] !== '0')
+            {
+                nel_derp(14, array('origin' => 'POST'));
+            }
+
+            $post_count = $op_post['post_count'];
+        }
 
         if ($post_count >= BS_MAX_POSTS)
         {

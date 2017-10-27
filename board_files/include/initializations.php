@@ -14,7 +14,7 @@ if(RUN_SETUP_CHECK)
     setup_check();
 }
 
-require_once INCLUDE_PATH . 'authorize.php';
+require_once INCLUDE_PATH . 'classes/Authorize.php';
 require_once INCLUDE_PATH . 'language.php';
 require_once INCLUDE_PATH . 'template.php';
 require_once INCLUDE_PATH . 'render.php';

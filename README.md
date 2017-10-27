@@ -7,8 +7,8 @@ Nelliel was originally a modified version of Futallaby made to host Nigrachan. T
  expanded into a unique codebase.
 
 ## Minimum Requirements ##
-Nelliel's minimum requirements are kept to the lowest reasonable level while also remaining forward compatible. Presently this
- is what's included with the basic RHEL/CentOS 6 install, which can satisfy all dependencies for Nelliel and is also the primary
+Nelliel's minimum requirements are kept to the lowest reasonable level for current functionality while also remaining forward compatible.
+Presently this is what's included with the basic RHEL/CentOS 6 install, which can satisfy all dependencies for Nelliel and is also the primary
  testing environment. These are only the minimum requirements for Nelliel to function; it is strongly recommended to use the latest
  software versions available.
 
