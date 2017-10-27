@@ -11,7 +11,7 @@ require_once INCLUDE_PATH . 'post/post-data.php';
 function nel_process_new_post($dataforce)
 {
     global $enabled_types, $fgsfds, $plugins, $filetypes;
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $post_data = nel_collect_post_data();
     $new_thread_dir = '';
 
@@ -167,7 +167,7 @@ function nel_process_new_post($dataforce)
 
 function nel_is_post_ok($dataforce, $time)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     // Check for flood
     // If post is a reply, also check if the thread still exists
     if ($dataforce['response_to'] !== 0)

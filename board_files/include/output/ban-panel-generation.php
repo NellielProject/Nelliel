@@ -11,7 +11,7 @@ function nel_render_ban_panel_top($dataforce, $render)
 
 function nel_render_ban_panel_list($dataforce)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
     nel_render_ban_panel_top($dataforce, $render);
@@ -57,7 +57,7 @@ function nel_render_ban_panel_add($dataforce)
 
 function nel_render_ban_panel_modify($dataforce)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
     $result =  $dbh->query('SELECT * FROM ' . BAN_TABLE . ' WHERE id=' . $dataforce['banid'] . '');

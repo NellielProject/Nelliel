@@ -19,7 +19,7 @@ class Authorization
 
     function __construct()
     {
-        $this->dbh = nel_get_database_handle();
+        $this->dbh = nel_database();
     }
 
     public function user_exists($user)

@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 function nel_update_archive_status($dataforce)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
 
     if (BS_OLD_THREADS === 'NOTHING')
     {

@@ -80,7 +80,7 @@ function nel_banned_text($text, $file)
 //
 function nel_apply_ban($dataforce)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $base_ip_address = $_SERVER["REMOTE_ADDR"];
 
     if ($dataforce['mode'] === 'banappeal')

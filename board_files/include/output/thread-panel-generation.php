@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_thread_panel($dataforce, $expand)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
     nel_render_thread_panel_form($dataforce, $render);

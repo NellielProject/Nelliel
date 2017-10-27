@@ -1,6 +1,7 @@
 <?php
 namespace Nelliel;
 use PDO;
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -19,47 +20,6 @@ class NellielPDO extends PDO
             date_default_timezone_set('UTC');
         }
     }
-
-    /*private function initializeConnection()
-    {
-        if (SQLTYPE === 'MYSQL')
-        {
-            $dsn = 'mysql:host=' . MYSQL_HOST . ';port=' . MYSQL_PORT . ';dbname=' . MYSQL_DB . ';';
-            $connection = new PDO($dsn, MYSQL_USER, MYSQL_PASS);
-            $connection->exec("SET names '" . MYSQL_ENCODING . "'; SET SESSION sql_mode='ANSI';");
-        }
-        else if (SQLTYPE === 'SQLITE')
-        {
-            if (SQLITE_DB_PATH === '')
-            {
-                $path = SQLITE_DB_DEFAULT_PATH;
-            }
-            else
-            {
-                $path = SQLITE_DB_PATH;
-            }
-
-            $connection = new PDO('sqlite:' . $path . SQLITE_DB_NAME);
-            $connection->exec('PRAGMA encoding = "' . SQLITE_ENCODING . '";');
-        }
-        else if (SQLTYPE === 'POSTGRES')
-        {
-            $dsn = 'pgsql:host=' . POSTGRES_HOST . ';port=' . POSTGRES_PORT . ';dbname=' . POSTGRES_DB . ';';
-            $connection = new PDO($dsn, POSTGRES_USER, POSTGRES_PASS);
-            $connection->exec("SET search_path TO " . POSTGRES_SCHEMA . "; SET names '" . POSTGRES_ENCODING . "';");
-        }
-        else
-        {
-            die("No valid database type specified in config. Can't do shit cap'n!");
-        }
-
-        if (ini_get('date.timezone') === '')
-        {
-            date_default_timezone_set('UTC');
-        }
-
-        return $connection;
-    }*/
 
     public function databaseExists($database)
     {

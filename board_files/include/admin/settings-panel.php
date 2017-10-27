@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_settings_control($dataforce)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $authorize = nel_get_authorization();
     $mode = $dataforce['mode'];
 

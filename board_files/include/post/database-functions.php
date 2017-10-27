@@ -2,7 +2,7 @@
 
 function nel_db_insert_initial_post($time, $post_data)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $columns = array('poster_name', 'post_password', 'tripcode', 'secure_tripcode', 'email', 'subject', 'comment',
         'ip_address', 'has_file', 'file_count', 'post_time', 'op', 'sage', 'mod_post');
     $values = $dbh->generateParameterIds($columns);
@@ -27,7 +27,7 @@ function nel_db_insert_initial_post($time, $post_data)
 
 function nel_db_insert_new_thread($thread_info, $files_count) // TODO: Update for externals and other new data
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $columns = array('thread_id', 'first_post', 'last_post', 'last_bump_time', 'total_files', 'last_update',
         'post_count');
     $values = $dbh->generateParameterIds($columns);
@@ -45,7 +45,7 @@ function nel_db_insert_new_thread($thread_info, $files_count) // TODO: Update fo
 
 function nel_db_update_thread($new_post_info, $thread_info)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $query = 'UPDATE "' . THREAD_TABLE .
          '" SET "last_post" = ?, "last_bump_time" = ?, "last_update" = ?, "post_count" = ?, "total_files" = ? WHERE "thread_id" = ?';
     $prepared = $dbh->prepare($query);
@@ -64,7 +64,7 @@ function nel_db_insert_new_files($parent_id, $new_post_info, $files)
 
     foreach ($files as $file)
     {
-        $dbh = nel_get_database_handle();
+        $dbh = nel_database();
         $columns = array('parent_thread', 'post_ref', 'file_order', 'supertype', 'subtype', 'mime', 'filename',
         'extension', 'image_width', 'image_height', 'preview_name', 'preview_width', 'preview_height', 'filesize',
         'md5', 'sha1', 'source', 'license');

@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 function nel_main_thread_generator($dataforce, $write)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $gen_data = array();
     $gen_data['insert_hr'] = FALSE;
     $dataforce['dotdot'] = '';

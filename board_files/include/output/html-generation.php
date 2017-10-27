@@ -351,7 +351,7 @@ function nel_render_ban_page($dataforce, $bandata)
 function nel_parse_links($matches)
 {
     global $link_resno;
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $back = ($link_resno === 0) ? PAGE_DIR : '../';
     $prepared = $dbh->prepare('SELECT response_to FROM ' . POST_TABLE . ' WHERE post_number=?');
     $prepared->bindParam(1, $matches[1], PDO::PARAM_INT);

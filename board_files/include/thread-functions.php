@@ -55,7 +55,7 @@ function nel_thread_updates($dataforce)
 
 function nel_sticky_thread($dataforce, $sub)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $id = $sub[2];
     $query = 'SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
     $prepared = $dbh->prepare($query);
@@ -80,7 +80,7 @@ function nel_sticky_thread($dataforce, $sub)
 
 function nel_unsticky_thread($dataforce, $sub)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $id = $sub[1];
     $query = 'UPDATE "' . THREAD_TABLE . '" SET "sticky" = 0 WHERE "thread_id" = ?';
     $prepared = $dbh->prepare($query);
@@ -95,7 +95,7 @@ function nel_unsticky_thread($dataforce, $sub)
 
 function nel_get_post_thread_id($post_number)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $query = 'SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $post_number, PDO::PARAM_INT);
@@ -104,7 +104,7 @@ function nel_get_post_thread_id($post_number)
 
 function nel_get_thread_data($thread_id)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ?';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $thread_id, PDO::PARAM_INT);
@@ -113,7 +113,7 @@ function nel_get_thread_data($thread_id)
 
 function nel_get_thread_all_posts($thread_id)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "parent_thread" = ?';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $thread_id, PDO::PARAM_INT);
@@ -122,7 +122,7 @@ function nel_get_thread_all_posts($thread_id)
 
 function nel_get_post_data($post_id)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $post_id, PDO::PARAM_INT);
@@ -131,7 +131,7 @@ function nel_get_post_data($post_id)
 
 function nel_get_post_files($post_id)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $query = 'SELECT * FROM "' . FILE_TABLE . '" WHERE "post_ref" = ?';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $post_id, PDO::PARAM_INT);
@@ -140,7 +140,7 @@ function nel_get_post_files($post_id)
 
 function nel_get_thread_last_post($thread_id)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $query = 'SELECT *  FROM "' . POST_TABLE . '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $thread_id, PDO::PARAM_INT);
@@ -149,7 +149,7 @@ function nel_get_thread_last_post($thread_id)
 
 function nel_get_thread_last_nosage_post($thread_id)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $query = 'SELECT *  FROM "' . POST_TABLE .
              '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1';
     $prepared = $dbh->prepare($query);
@@ -159,7 +159,7 @@ function nel_get_thread_last_nosage_post($thread_id)
 
 function nel_get_thread_second_last_post($thread_id)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $query = 'SELECT *  FROM "' . POST_TABLE . '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 2';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $thread_id, PDO::PARAM_INT);
@@ -175,7 +175,7 @@ function nel_get_thread_second_last_post($thread_id)
 
 function nel_make_post_thread($dataforce, $post_id)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     nel_create_thread_directories($post_id);
     $post_data = nel_get_post_data($post_id);
 
@@ -234,7 +234,7 @@ function nel_make_post_thread($dataforce, $post_id)
 
 function nel_update_thread_data($thread_id)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $thread_data = nel_get_thread_data($thread_id);
     $last_post = nel_get_thread_last_post($thread_id);
 
@@ -284,7 +284,7 @@ function nel_update_thread_data($thread_id)
 
 function nel_remove_post_from_database($sub, $id, $post_data)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $query = 'DELETE FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $id, PDO::PARAM_INT);
@@ -316,7 +316,7 @@ function nel_remove_post_from_database($sub, $id, $post_data)
 
 function nel_remove_thread_from_database($thread_id)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $query = 'SELECT "post_number" FROM "' . POST_TABLE . '" WHERE "parent_thread" = ?';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $thread_id, PDO::PARAM_INT);
@@ -339,7 +339,7 @@ function nel_remove_thread_from_database($thread_id)
 
 function nel_remove_files_from_database($post_ref, $order = null)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     if (is_null($order))
     {
         $query = 'DELETE FROM "' . FILE_TABLE . '" WHERE "post_ref" = ?';
@@ -362,7 +362,7 @@ function nel_remove_files_from_database($post_ref, $order = null)
 
 function subtract_from_file_count($post_number, $thread_id, $quantity)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $query = 'SELECT "file_count", "has_file" FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $post_number, PDO::PARAM_INT);
@@ -402,7 +402,7 @@ function subtract_from_file_count($post_number, $thread_id, $quantity)
 
 function nel_delete_file($dataforce, $sub)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $id = $sub[2];
     $post_data = nel_get_post_data($id);
     $fnum = $sub[3];
@@ -434,7 +434,7 @@ function nel_delete_file($dataforce, $sub)
 
 function nel_delete_post($dataforce, $sub)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $id = $sub[2];
     $post_data = nel_get_post_data($id);
     $post_files = nel_get_post_files($id);
@@ -459,7 +459,7 @@ function nel_delete_post($dataforce, $sub)
 
 function nel_verify_delete_perms($sub)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $authorize = nel_get_authorization();
     $id = $sub[2];
 

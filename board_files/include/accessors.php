@@ -5,53 +5,73 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 //
-// Because fuck passing an instance through half a dozen classes and/or functions
-// just so one thing can access it. PHP gives us nice things and we're gonna use them!
+// Access point for database connections.
+// Databases connection can be added, retrieved or removed using the hash table ID.
 //
 
-function nel_get_database_handle()
+function nel_database($input = null, $wat_do = null)
 {
-    static $database;
+    static $databases = array();
+    static $default_database;
 
-    if (!isset($database))
+    // No arguments provided: send back the default database
+    if (is_null($wat_do) && is_null($input))
     {
-        $options = array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_EMULATE_PREPARES => false,
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
-
-        switch (SQLTYPE)
+        if (!isset($default_database))
         {
-            case 'MYSQL':
-                $dsn = 'mysql:host=' . MYSQL_HOST . ';port=' . MYSQL_PORT . ';dbname=' . MYSQL_DB . ';';
-                $connection = new \Nelliel\NellielPDO($dsn, MYSQL_USER, MYSQL_PASS, $options);
-                $connection->exec("SET names '" . MYSQL_ENCODING . "'; SET SESSION sql_mode='ANSI';");
-                break;
-            case 'SQLITE':
-                if (SQLITE_DB_PATH === '')
-                {
-                    $path = SQLITE_DB_DEFAULT_PATH;
-                }
-                else
-                {
-                    $path = SQLITE_DB_PATH;
-                }
-
-                $dsn = 'sqlite:' . $path . SQLITE_DB_NAME;
-                $connection = new PDO($dsn);
-                $connection->exec('PRAGMA encoding = "' . SQLITE_ENCODING . '";');
-                break;
-            case 'POSTGRES':
-                $dsn = 'pgsql:host=' . POSTGRES_HOST . ';port=' . POSTGRES_PORT . ';dbname=' . POSTGRES_DB . ';';
-                $connection = new PDO($dsn, POSTGRES_USER, POSTGRES_PASS, $options);
-                $connection->exec("SET search_path TO " . POSTGRES_SCHEMA . "; SET names '" . POSTGRES_ENCODING . "';");
-                break;
-            default:
-                return false;
+            $default_database = nel_default_database_connection();
         }
 
-        $database = $connection;
+        return $default_database;
     }
 
-    return $database;
+    // ID provided but no instructions: send back the requested database if available
+    if (is_null($wat_do) && !is_null($input))
+    {
+        if (array_key_exists($input, $databases))
+        {
+            return $databases[$input];
+        }
+    }
+
+    // Both ID and instructions provided
+    if (!is_null($wat_do) && !is_null($input))
+    {
+        switch ($wat_do)
+        {
+            case 'store':
+                $id = spl_object_hash($input);
+                $databases[$id] = $input;
+                return $id;
+                break;
+
+            case 'retrieve':
+                if (array_key_exists($input, $databases))
+                {
+                    return $databases[$input];
+                }
+
+                break;
+
+            case 'identify':
+                if (in_array($input, $databases))
+                {
+                    return array_search($input, $databases);
+                }
+                break;
+
+            case 'remove':
+                if (array_key_exists($input, $databases))
+                {
+                    unset($input);
+                    return true;
+                }
+
+                break;
+        }
+    }
+
+    return false;
 }
 
 function nel_authorize()

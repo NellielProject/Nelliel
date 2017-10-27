@@ -26,7 +26,7 @@ require_once CACHE_PATH . 'multi-cache.nelcache';
 //
 function nel_cache_rules()
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $gtypes = '';
     $atypes = '';
     $vtypes = '';
@@ -127,7 +127,7 @@ function nel_cache_rules()
 
 function nel_build_filetype_config($dbh)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $result =  $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'filetype_enable\'');
     $config_list = $result->fetchAll(PDO::FETCH_ASSOC);
     $file_config = array();
@@ -172,7 +172,7 @@ function nel_build_filetype_config($dbh)
 //
 function nel_cache_settings()
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $result =  $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'');
     $config_list = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);

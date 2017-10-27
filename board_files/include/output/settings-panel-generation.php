@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_settings_panel($dataforce)
 {
-    $dbh = nel_get_database_handle();
+    $dbh = nel_database();
     $render = new nel_render();
     $render->input(nel_render_header($dataforce, $render, array()));
     $result =  $dbh->query('SELECT * FROM ' . CONFIG_TABLE . '');
