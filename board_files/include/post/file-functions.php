@@ -16,6 +16,9 @@ function nel_process_file_info()
         }
 
         nel_check_upload_errors($file, $files);
+        preg_match('#[0-9]+$#', $entry, $matches);
+        $file_order = $matches[0];
+        $post_file_info = $_POST['new_post']['file_info']['file_' . $file_order . ''];
 
         // Grab/strip the file extension
         $info = pathinfo($file['name']);
@@ -26,13 +29,12 @@ function nel_process_file_info()
         $new_file['filesize'] = $file['size'];
         $new_file = nel_check_for_existing_file($new_file, $files);
         $new_file = nel_get_filetype($new_file, $files);
-        preg_match('#[0-9]+$#', $entry, $matches);
-        $file_order = $matches[0];
         $new_file['dest'] = SRC_PATH . $file['name'] . '.tmp';
         move_uploaded_file($file['tmp_name'], $new_file['dest']);
         chmod($new_file['dest'], octdec(FILE_PERM));
-        $new_file['source'] = $_POST['sauce' . $file_order];
-        $new_file['license'] = $_POST['loldrama' . $file_order];
+
+        $new_file['source'] = nel_check_post_entry($post_file_info['sauce'], 'string');
+        $new_file['license'] = nel_check_post_entry($post_file_info['lol_drama'], 'string');
         array_push($files, $new_file);
 
         if ($file_count == BS_MAX_POST_FILES)

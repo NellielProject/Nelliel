@@ -58,8 +58,6 @@ $lang_singular = array(
     'TEXT_THREADMODE' => 'Posting mode: New thread',  // New thread mode
     'TEXT_PASS_WAT' => '(Password used for file deletion)',  // Explain wtf the password is for
     'TEXT_SPAMBOT_TRAP' => 'Never put anything in this field!',  // Warning about the hidden spambot trap fields
-    'TEXT_SPAMBOT_FIELD1' => 'thename1',  // First anti-spambot hidden field
-    'TEXT_SPAMBOT_FIELD2' => 'theurl1',  // Second anti-spambot hidden field
     'TEXT_OMITTED_POSTS' => ' posts omitted. Click Reply or Expand Post to view.',  // Prints text to be shown when replies are hidden
 
 

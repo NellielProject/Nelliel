@@ -34,8 +34,9 @@ $plugins->activate();
 // A demo point. Does nothing, really
 $example_result = $plugins->plugin_hook('plugin-example', TRUE, array(5));
 
-require_once INCLUDE_PATH . 'accessors.php';
+require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'classes/NellielPDO.php';
+require_once INCLUDE_PATH . 'accessors.php';
 require_once INCLUDE_PATH . 'general-functions.php';
 require_once INCLUDE_PATH . 'file-handling.php';
 require_once INCLUDE_PATH . 'initializations.php';

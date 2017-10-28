@@ -88,7 +88,7 @@ function nel_process_new_post($dataforce)
     // Go ahead and put post into database
     require_once INCLUDE_PATH . 'post/database-functions.php';
 
-    if ($dataforce['response_to'] === 0)
+    if ($post_data['parent_thread'] === 0)
     {
         $post_data['op'] = 1;
     }
@@ -99,7 +99,6 @@ function nel_process_new_post($dataforce)
 
     $files_count = count($files);
     $post_data['file_count'] = $files_count;
-
     $post_data['has_file'] = ($files_count > 0) ? 1 : 0;
     nel_db_insert_initial_post($time, $post_data);
     $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "post_time" = ? LIMIT 1';
@@ -108,7 +107,7 @@ function nel_process_new_post($dataforce)
     $new_post_info = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
     $thread_info = array();
 
-    if ($dataforce['response_to'] === 0)
+    if ($post_data['parent_thread']=== 0)
     {
         $thread_info['last_update'] = $time;
         $thread_info['post_count'] = 1;
@@ -120,7 +119,7 @@ function nel_process_new_post($dataforce)
     }
     else
     {
-        $thread_info['id'] = $dataforce['response_to'];
+        $thread_info['id'] = $post_data['parent_thread'];
         $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1';
         $prepared = $dbh->prepare($query);
         $prepared->bindValue(1, $thread_info['id'], PDO::PARAM_INT);
@@ -138,7 +137,10 @@ function nel_process_new_post($dataforce)
         nel_db_update_thread($new_post_info, $thread_info);
     }
 
-     $dbh->query('UPDATE ' . POST_TABLE . ' SET parent_thread=' . $thread_info['id'] . ' WHERE post_number=' .
+    $query = 'UPDATE "' . POST_TABLE . '" SET parent_thread = ' . $thread_info['id'] . ' WHERE post_number = ' .
+    $new_post_info['post_number'];
+    var_dump($query);
+     $dbh->query('UPDATE "' . POST_TABLE . '" SET parent_thread = ' . $thread_info['id'] . ' WHERE post_number = ' .
          $new_post_info['post_number']);
 
     $fgsfds['noko_topic'] = $thread_info['id'];

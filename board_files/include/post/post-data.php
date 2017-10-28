@@ -3,12 +3,13 @@
 function nel_collect_post_data()
 {
     $post_data = array();
-    $post_data['name'] = nel_check_post_entry($_POST['notanonymous'], "string");
-    $post_data['email'] = nel_check_post_entry($_POST['spamtarget'], "string");
-    $post_data['subject'] = nel_check_post_entry($_POST['verb'], "string");
-    $post_data['comment'] = nel_check_post_entry($_POST['wordswordswords'], "string");
-    $post_data['fgsfds'] = nel_check_post_entry($_POST['fgsfds'], "string");
-    $post_data['password'] = nel_check_post_entry($_POST['sekrit'], "string");
+    $post_data['parent_thread'] = nel_check_post_entry($_POST['new_post']['post_info']['response_to'], "int");
+    $post_data['name'] = nel_check_post_entry($_POST['new_post']['post_info']['not_anonymous'], "string");
+    $post_data['email'] = nel_check_post_entry($_POST['new_post']['post_info']['spam_target'], "string");
+    $post_data['subject'] = nel_check_post_entry($_POST['new_post']['post_info']['verb'], "string");
+    $post_data['comment'] = nel_check_post_entry($_POST['new_post']['post_info']['wordswordswords'], "string");
+    $post_data['fgsfds'] = nel_check_post_entry($_POST['new_post']['post_info']['fgsfds'], "string");
+    $post_data['password'] = nel_check_post_entry($_POST['new_post']['post_info']['sekrit'], "string");
 
     if ($post_data['name'] !== '')
     {

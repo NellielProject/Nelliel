@@ -89,7 +89,8 @@ function nel_db_insert_new_files($parent_id, $new_post_info, $files)
         $prepared->bindValue(':sha1', $file['sha1'], PDO::PARAM_STR);
         $prepared->bindValue(':source', $file['source'], PDO::PARAM_STR);
         $prepared->bindValue(':license', $file['license'], PDO::PARAM_STR);
-        $prepared->execute()->closeCursor();
+        $prepared->execute();
+        $prepared->closeCursor();
         ++ $i;
     }
 }
