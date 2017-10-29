@@ -216,12 +216,12 @@ function nel_is_post_ok($dataforce, $time)
                 nel_derp(2, array('origin' => 'POST'));
             }
 
-            if ($op_post['locked'] === '1')
+            if ($op_post['locked'] == 1)
             {
                 nel_derp(3, array('origin' => 'POST'));
             }
 
-            if ($op_post['archive_status'] !== '0')
+            if ($op_post['archive_status'] != 0)
             {
                 nel_derp(14, array('origin' => 'POST'));
             }

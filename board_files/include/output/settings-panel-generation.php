@@ -20,7 +20,7 @@ function nel_render_settings_panel($dataforce)
         {
             if ($config_line['data_type'] === 'bool')
             {
-                $board_settings[$config_line['config_name']] = $config_line['setting'] === '1' ? 'checked' : '';
+                $board_settings[$config_line['config_name']] = $config_line['setting'] == 1 ? 'checked' : '';
             }
             else
             {
@@ -59,7 +59,7 @@ function nel_render_settings_panel($dataforce)
         {
             if ($config_line['data_type'] === 'bool')
             {
-                $board_settings[$config_line['config_name']] = $config_line['setting'] === '1' ? 'checked' : '';
+                $board_settings[$config_line['config_name']] = $config_line['setting'] == 1 ? 'checked' : '';
             }
         }
     }

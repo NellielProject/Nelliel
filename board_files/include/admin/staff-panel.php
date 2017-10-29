@@ -96,7 +96,7 @@ function nel_staff_panel($dataforce)
 
             if(substr($key, 0, 5) === 'perm_')
             {
-                $value = ($value === '1') ? true : false;
+                $value = ($value == 1) ? true : false;
             }
 
             $authorize->update_perm($role_id, $key, $value);
