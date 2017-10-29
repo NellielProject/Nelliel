@@ -37,7 +37,7 @@ function nel_create_directory($directory, $dir_chmod = DIRECTORY_PERM, $recursiv
         return false;
     }
 
-    return mkdir($directory, $dir_chmod, $recursive);
+    return mkdir($directory, octdec($dir_chmod), $recursive);
 }
 
 //

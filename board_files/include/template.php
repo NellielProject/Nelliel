@@ -61,7 +61,7 @@ function nel_parse_template($template, $subdirectory, $render, $regen)
 
 function nel_template_info($template, $parameter, $update, $return)
 {
-    static $info;
+    static $info = array();
 
     if (!$return)
     {

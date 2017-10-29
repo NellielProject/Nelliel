@@ -151,6 +151,7 @@ function nel_create_threads_table($table_name)
 function nel_create_files_table($table_name)
 {
     $dbh = nel_database();
+    $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
@@ -192,6 +193,7 @@ function nel_create_files_table($table_name)
 
 function nel_create_external_table($table_name)
 {
+    $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
@@ -333,8 +335,8 @@ function nel_insert_role_defaults()
     $result = $dbh->query("INSERT INTO " . ROLES_TABLE . "
     (role_id, role_level, role_title, capcode_text)
     VALUES
-    ('ADMIN', 100, 'Administrator', '## Administrator ##')
-    ('MOD', 50, 'Moderator', '## Moderator ##')
+    ('ADMIN', 100, 'Administrator', '## Administrator ##'),
+    ('MOD', 50, 'Moderator', '## Moderator ##'),
     ('JANITOR', 10, 'Janitor', '## Janitor ##')");
 
     nel_setup_stuff_done($result);

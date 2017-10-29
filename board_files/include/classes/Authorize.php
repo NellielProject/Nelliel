@@ -180,7 +180,7 @@ class Authorization
 
         foreach ($perms as $perm)
         {
-            $this->roles[$role_id]['permissions'][$perm['perm_id']] = $perm['perm_setting'] === '1' ? true : false;
+            $this->roles[$role_id]['permissions'][$perm['perm_id']] = $perm['perm_setting'] == 1 ? true : false;
         }
 
         return true;

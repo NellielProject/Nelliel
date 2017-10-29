@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 // Cached settings
 if (!file_exists(CACHE_PATH . 'parameters.nelcache'))
 {
-    nel_cache_settings($dbh);
+    nel_cache_settings();
 }
 
 require_once CACHE_PATH . 'parameters.nelcache';
@@ -226,7 +226,7 @@ function nel_regen_template_cache()
 
 function nel_reset_template_status($template_info)
 {
-    foreach ($template_info as $key => $value) // TODO: Invalid argument?
+    foreach ($template_info as $key => $value)
     {
         $template_info[$key]['loaded'] = FALSE;
     }
