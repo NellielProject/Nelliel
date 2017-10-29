@@ -15,7 +15,7 @@ function nel_render_ban_panel_list($dataforce)
     $render = new nel_render();
     nel_render_header($dataforce, $render, array());
     nel_render_ban_panel_top($dataforce, $render);
-    $result =  $dbh->query('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "id" DESC');
+    $result =  $dbh->query('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "ban_id" DESC');
     $bgclass = 'row1';
 
     while ($result && $baninfo = $result->fetch(PDO::FETCH_ASSOC))

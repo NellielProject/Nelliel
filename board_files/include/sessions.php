@@ -26,6 +26,7 @@ function nel_regen_session()
         session_regenerate_id(true);
         $_SESSION['last_activity'] = time();
         $_SESSION['ignore_login'] = FALSE;
+        $_SESSION['ignores'] = array();
     }
     else // Session timed out or doesn't match the cookie
     {
