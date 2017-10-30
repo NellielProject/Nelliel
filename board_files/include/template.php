@@ -15,7 +15,7 @@ function nel_parse_template_include($matches, $template_short_in = null)
 
     if (!is_null($matches))
     {
-        $parsed = nel_parse_template_input('/', $matches[2], $template_short, true);
+        $parsed = nel_parse_template_input('', $matches[2], $template_short, true);
         return '\'; $temp .= \'' . $parsed;
     }
 }
@@ -74,10 +74,10 @@ function nel_parse_template_input($subdirectory, $template, $template_short, $is
     $begin = '<?php function nel_template_render_' . $template_short . '($render) { $temp = \''; // Start of the cached template
     $lol = preg_replace_callback('#({{.*?}})|({(.*?)})|(\')#', 'nel_escape_single_quotes', $lol); // Do escaping and variable parse
     $lol = preg_replace('#(})\s*?({)#', '$1$2', $lol); // Clear white space between control statements
-    $lol = preg_replace('#{{\s*?(if|elseif|foreach|for|while)\s*?(.*?)}}#', '\'; $1($2): $temp .= \'', $lol); // Parse opening control statements
+    $lol = preg_replace('#{{\s*?(if|elseif|foreach|for|while)\s*?(.*?)}}\n?#', '\'; $1($2): $temp .= \'', $lol); // Parse opening control statements
     $lol = preg_replace('#{{\s*?else\s*?}}#', '\'; else: $temp .= \'', $lol); // Parse else statements
-    $lol = preg_replace('#{{\s*?(endif|endforeach|endfor|endwhile|endswitch)\s*?}}#', '\'; $1; $temp .= \'', $lol); // Parse closing control statements
-    $lol = preg_replace_callback('#{{\s*?(include)\s*(.*?)\s*?}}#', 'nel_parse_template_include', $lol); // Parse closing control statements
+    $lol = preg_replace('#{{\s*?(endif|endforeach|endfor|endwhile|endswitch)\s*?}}\n?#', '\'; $1; $temp .= \'', $lol); // Parse closing control statements
+    $lol = preg_replace_callback('#{{\s*?(include)\s*(.*?)\s*?}}\n?#', 'nel_parse_template_include', $lol); // Parse closing control statements
     $lol = preg_replace('#{{{\s*?(.*?)\s*?}}}#', '\'; $1; $temp .= \'', $lol); // Parse other PHP code
     $end = '\'; return $temp; } ?>'; // End of the caches template
 
