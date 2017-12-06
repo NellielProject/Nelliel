@@ -104,7 +104,7 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
 
     nel_process_i18n($dom);
 
-    $render->appendOutput($dom->saveHTML());
+    $render->appendOutput($dom->outputHTML());
 }
 
 //
