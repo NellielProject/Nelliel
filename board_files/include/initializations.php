@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 ignore_user_abort(TRUE);
 
-require_once BASE_PATH . '/' . BOARD_FILES . 'libraries/portable-utf8/portable-utf8.php';
+require_once FILES_PATH . 'libraries/portable-utf8/portable-utf8.php';
 require_once INCLUDE_PATH . 'setup/setup.php';
 
 if(RUN_SETUP_CHECK)

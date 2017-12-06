@@ -4,10 +4,113 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
+{
+    $render1 = new NellielTemplates\RenderCore();
+    $dom = $render1->newDOMDocument();
+    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    $dom->loadTemplateFromFile('header.html');
+    $xpath = new DOMXPath($dom);
+    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
+    $head_element = $dom->getElementsByTagName('head')->item(0);
+    $link_elements = $head_element->getElementsByTagName('link');
+    $dom->getElementById('js-onload')->setContent('window.onload = doImportantStuff(\'' . CONF_BOARD_DIR . '\')');
+    $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JSDIR . 'html5shiv-printshiv.js"></script><![endif]';
+    $xpath->query('//comment()', $head_element)->item(0)->data = $html5shiv;
+
+    foreach ($link_elements as $element)
+    {
+        $content = $element->getAttribute('title');
+        $element->setAttribute('href', $dotdot . CSSDIR . strtolower($content) . '.css', 'none');
+    }
+
+    $title_element = $head_element->getElementsByTagName('title')->item(0);
+
+    switch ($type)
+    {
+        case 'ABOUT':
+            $title_element->setContent('About Nelliel Imageboard');
+            break;
+
+        case 'NORMAL':
+            if ($dataforce['page_gen'] == 'main')
+            {
+                $title_element->setContent(BS_BOARD_NAME);
+            }
+            else
+            {
+                if ($treeline[0]['subject'] === '')
+                {
+                    $title_element->setContent(BS_BOARD_NAME . ' > Thread #' . $treeline[0]['post_number']);
+                }
+                else
+                {
+                    $title_element->setContent(BS_BOARD_NAME . ' > ' . $treeline[0]['subject']);
+                }
+            }
+
+            break;
+
+        default:
+            $title_element->setContent(BS_BOARD_NAME);
+    }
+
+    $logo_element = $dom->getElementById('logo');
+    $logo_image = $dom->getElementById('top-logo-image');
+    $logo_text = $dom->getElementById('top-logo-text');
+
+    if (BS_SHOW_LOGO)
+    {
+        $logo_image->setAttribute('src', BS_BOARD_LOGO);
+        $logo_image->setAttribute('alt', BS_BOARD_NAME);
+    }
+    else
+    {
+        $logo_element->removeChild($logo_image);
+    }
+
+    if (BS_SHOW_TITLE)
+    {
+        $logo_text->setContent(BS_BOARD_NAME);
+    }
+    else
+    {
+        $logo_element->removeChild($logo_text);
+    }
+
+    $a_elements = $dom->getElementById('top-styles-span')->getElementsByTagName('a');
+
+    foreach ($a_elements as $element)
+    {
+        $content = $element->getContent();
+        $element->setAttribute('onclick', 'changeCSS(\'' . $content . '\', \'style-' . CONF_BOARD_DIR .
+             '\'); return false;', 'none');
+    }
+
+    $top_admin_span = $dom->getElementById('top-admin-span');
+    $a_elements = $top_admin_span->getElementsByTagName('a');
+    $a_elements->item(1)->setAttribute('href', $dotdot . HOME, 'none');
+    $a_elements->item(2)->setAttribute('href', $dotdot . PHP_SELF . '?mode=admin', 'none');
+    $a_elements->item(3)->setAttribute('href', $dotdot . PHP_SELF . '?mode=about', 'none');
+
+    if (nel_session_is_ignored('render'))
+    {
+        $top_admin_span->removeChild($a_elements->item(0)->parentNode);
+    }
+    else
+    {
+        $a_elements->item(0)->setAttribute('href', $dotdot . PHP_SELF . '?mode=log_out', 'none');
+    }
+
+    nel_process_i18n($dom);
+
+    $render->appendOutput($dom->saveHTML());
+}
+
 //
 // Generate the header
 //
-function nel_render_header($dataforce, $render, $treeline)
+/*function nel_render_header($dataforce, $render, $treeline)
 {
     $title = '';
 
@@ -58,9 +161,10 @@ function nel_render_header($dataforce, $render, $treeline)
 
     $render->add_data('log_out', (!nel_session_is_ignored('render')) ? '[<a href="' . $render->get('dotdot') . PHP_SELF .
          '?mode=log_out">Log Out</a>]' : '');
-    $render->add_data('page_ref1', (!nel_session_is_ignored('render')) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT);
+    $render->add_data('page_ref1', (!nel_session_is_ignored('render')) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 .
+         PHP_EXT);
     $render->parse('header.tpl', '');
-}
+}*/
 
 //
 // Generate reply form
@@ -199,13 +303,13 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                     if ($filecount > 1)
                     {
                         if ($files[$i]['preview_width'] > BS_MAX_MULTI_WIDTH ||
-                         $files[$i]['preview_height'] > BS_MAX_MULTI_HEIGHT)
-                         {
-                         $ratio = min((BS_MAX_MULTI_HEIGHT / $files[$i]['preview_height']), (BS_MAX_MULTI_WIDTH /
-                         $files[$i]['preview_width']));
-                         $files[$i]['preview_width'] = intval($ratio * $files[$i]['preview_width']);
-                         $files[$i]['preview_height'] = intval($ratio * $files[$i]['preview_height']);
-                         }
+                             $files[$i]['preview_height'] > BS_MAX_MULTI_HEIGHT)
+                        {
+                            $ratio = min((BS_MAX_MULTI_HEIGHT / $files[$i]['preview_height']), (BS_MAX_MULTI_WIDTH /
+                             $files[$i]['preview_width']));
+                            $files[$i]['preview_width'] = intval($ratio * $files[$i]['preview_width']);
+                            $files[$i]['preview_height'] = intval($ratio * $files[$i]['preview_height']);
+                        }
                     }
                 }
                 else if (BS_USE_FILE_ICON && file_exists(BOARD_FILES . 'imagez/nelliel/filetype/' .

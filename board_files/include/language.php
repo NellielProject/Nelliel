@@ -43,3 +43,24 @@ function nel_ptext($text, $num)
         return nel_get_language(BOARD_LANGUAGE, 'plural', $text);
     }
 }
+
+function nel_process_i18n($dom)
+{
+    $node_list = $dom->getElementsByAttributeName('data-i18n');
+
+    foreach($node_list as $node)
+    {
+        if(!$node->hasChildNodes())
+        {
+            continue;
+        }
+
+        $singular_element = $dom->doXPathQuery('.//*[@data-singular]', $node)->item(0);
+
+        if(!is_null($singular_element))
+        {
+            $text = $singular_element->getContent();
+            $singular_element->setContent(nel_stext($text));
+        }
+    }
+}

@@ -114,6 +114,12 @@ class nel_render
         echo $this->output;
     }
 
+    // Temporary measure while combining new and old render systems
+    public function appendOutput($output)
+    {
+        $this->output .= $output;
+    }
+
     public function parse($template, $subdirectory)
     {
         $output = nel_parse_template($template, $subdirectory, $this, false);

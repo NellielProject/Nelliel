@@ -5,7 +5,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 define('SQLITE_DB_DEFAULT_PATH', BASE_PATH . '/' . BOARD_FILES); // Base SQLite DB location
-define('FILES_PATH', BASE_PATH . '/' . BOARD_FILES); // Base cache path
+define('FILES_PATH', BASE_PATH . '/' . BOARD_FILES); // Base files path
 define('PLUGINS_PATH', BASE_PATH . '/' . BOARD_FILES . 'plugins/'); // Base cache path
 define('TEMPLATE_PATH', BASE_PATH . '/' . BOARD_FILES . 'templates/nelliel/'); // Base template path
 define('LANGUAGE_PATH', BASE_PATH . '/' . BOARD_FILES . 'languages/'); // location of the language files
