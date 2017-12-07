@@ -43,6 +43,26 @@ function nel_ptext($text, $num)
     }
 }
 
+function nel_process_neltext($dom, $node)
+{
+    $plural = $dom->doXPathQuery('(.//*[@data-plural])[1]', $node)->item(0);
+
+    if (!is_null($plural))
+    {
+        $text = $plural->getContent();
+        $variable = $plural->getAttribute('data-plural');
+        $new_text = nel_ptext($text, $$variable);
+    }
+    else
+    {
+        $text = $node->getContent();
+        $new_text = nel_stext($text);
+    }
+
+    $node->setContent($new_text, 'replace', 'none');
+    $node->removeAttribute('data-i18n');
+}
+
 function nel_process_i18n($dom)
 {
     $content_node_list = $dom->getElementsByAttributeName('data-i18n');
@@ -50,20 +70,9 @@ function nel_process_i18n($dom)
 
     foreach ($content_node_list as $node)
     {
-        $node->removeAttribute('data-i18n');
-
-        if (!$node->hasChildNodes())
+        if ($node->getAttribute('data-i18n') === 'neltext')
         {
-            continue;
-        }
-
-        $singular_elements = $dom->doXPathQuery('.//*[@data-singular]', $node);
-
-        foreach ($singular_elements as $element)
-        {
-            $text = $element->getContent();
-            $new_text = $dom->createTextNode(nel_stext($text), 'none');
-            $element->parentNode->replaceChild($new_text, $element);
+            nel_process_neltext($dom, $node);
         }
     }
 

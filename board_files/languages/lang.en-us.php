@@ -23,6 +23,7 @@ $lang_singular = array(
     'LINK_RETURN' => 'Return',  // Return to main page link
     'LINK_REPLY' => 'Reply',  // Reply to a post
     'LINK_EXPAND' => 'Expand thread',  // Expand thread
+    'LINK_LOGOUT' => 'Logout',  // Logout
 
 
     'FORM_SUBMIT' => 'Submit',  // Submit button
