@@ -18,8 +18,7 @@ function nel_get_language($language, $form, $text)
         $lang_arrays[$language]['plural'] = $lang_plural;
     }
 
-
-    if(!isset($lang_arrays[$language][$form][$text]))
+    if (!isset($lang_arrays[$language][$form][$text]))
     {
         return '???';
     }
@@ -46,21 +45,45 @@ function nel_ptext($text, $num)
 
 function nel_process_i18n($dom)
 {
-    $node_list = $dom->getElementsByAttributeName('data-i18n');
+    $content_node_list = $dom->getElementsByAttributeName('data-i18n');
+    $attribute_node_list = $dom->getElementsByAttributeName('data-i18n-attributes');
 
-    foreach($node_list as $node)
+    foreach ($content_node_list as $node)
     {
-        if(!$node->hasChildNodes())
+        $node->removeAttribute('data-i18n');
+
+        if (!$node->hasChildNodes())
         {
             continue;
         }
 
         $singular_element = $dom->doXPathQuery('.//*[@data-singular]', $node)->item(0);
 
-        if(!is_null($singular_element))
+        if (!is_null($singular_element))
         {
             $text = $singular_element->getContent();
-            $singular_element->setContent(nel_stext($text));
+            $new_text = $dom->createTextNode(nel_stext($text), 'none');
+            $singular_element->parentNode->replaceChild($new_text, $singular_element);
+        }
+    }
+
+    foreach ($attribute_node_list as $node)
+    {
+        $attribute_list = $node->getAttribute('data-i18n-attributes');
+        $attributes = explode(',', $attribute_list);
+        $node->removeAttribute('data-i18n-attributes');
+
+        foreach ($attributes as $attribute)
+        {
+            $attribute = trim($attribute);
+
+            if (!$node->hasAttribute($attribute))
+            {
+                continue;
+            }
+
+            $text = $node->getAttribute($attribute);
+            $node->setAttribute($attribute, nel_stext($text));
         }
     }
 }
