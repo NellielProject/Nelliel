@@ -15,7 +15,7 @@ function nel_login($dataforce)
     {
         $user_perms = $authorize->get_user_perms($_SESSION['username']);
         $render->add_multiple_data($user_perms);
-        $render->parse('manage_options.tpl', 'management');
+        nel_generate_main_panel($render);
     }
     else
     {

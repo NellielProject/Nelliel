@@ -8,6 +8,7 @@ ignore_user_abort(TRUE);
 
 require_once FILES_PATH . 'libraries/portable-utf8/portable-utf8.php';
 require_once INCLUDE_PATH . 'setup/setup.php';
+require_once INCLUDE_PATH . 'output/main_panel.php';
 
 if(RUN_SETUP_CHECK)
 {
