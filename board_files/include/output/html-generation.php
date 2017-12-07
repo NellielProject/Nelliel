@@ -21,7 +21,7 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     foreach ($link_elements as $element)
     {
         $content = $element->getAttribute('title');
-        $element->setAttribute('href', $dotdot . CSSDIR . strtolower($content) . '.css', 'none');
+        $element->extSetAttribute('href', $dotdot . CSSDIR . strtolower($content) . '.css');
     }
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
@@ -61,8 +61,8 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
 
     if (BS_SHOW_LOGO)
     {
-        $logo_image->setAttribute('src', BS_BOARD_LOGO);
-        $logo_image->setAttribute('alt', BS_BOARD_NAME);
+        $logo_image->extSetAttribute('src', BS_BOARD_LOGO);
+        $logo_image->extSetAttribute('alt', BS_BOARD_NAME);
     }
     else
     {
@@ -83,15 +83,15 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     foreach ($a_elements as $element)
     {
         $content = $element->getContent();
-        $element->setAttribute('onclick', 'changeCSS(\'' . $content . '\', \'style-' . CONF_BOARD_DIR .
-             '\'); return false;', 'none');
+        $element->extSetAttribute('onclick', 'changeCSS(\'' . $content . '\', \'style-' . CONF_BOARD_DIR .
+             '\'); return false;');
     }
 
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
-    $a_elements->item(1)->setAttribute('href', $dotdot . HOME, 'none');
-    $a_elements->item(2)->setAttribute('href', $dotdot . PHP_SELF . '?mode=admin', 'none');
-    $a_elements->item(3)->setAttribute('href', $dotdot . PHP_SELF . '?mode=about', 'none');
+    $a_elements->item(1)->extSetAttribute('href', $dotdot . HOME);
+    $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?mode=admin');
+    $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?mode=about');
 
     if (nel_session_is_ignored('render'))
     {
@@ -99,7 +99,7 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     }
     else
     {
-        $a_elements->item(0)->setAttribute('href', $dotdot . PHP_SELF . '?mode=log_out', 'none');
+        $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?mode=log_out');
     }
 
     nel_process_i18n($dom);

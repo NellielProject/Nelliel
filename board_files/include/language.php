@@ -92,7 +92,9 @@ function nel_process_i18n($dom)
             }
 
             $text = $node->getAttribute($attribute);
-            $node->setAttribute($attribute, nel_stext($text), 'none');
+            $node->extSetAttribute($attribute, nel_stext($text));
+            //$attr = $dom->createFullAttribute($attribute, nel_stext($text));
+            //$node->appendChild($attr);
         }
     }
 }
