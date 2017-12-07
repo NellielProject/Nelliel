@@ -57,13 +57,13 @@ function nel_process_i18n($dom)
             continue;
         }
 
-        $singular_element = $dom->doXPathQuery('.//*[@data-singular]', $node)->item(0);
+        $singular_elements = $dom->doXPathQuery('.//*[@data-singular]', $node);
 
-        if (!is_null($singular_element))
+        foreach ($singular_elements as $element)
         {
-            $text = $singular_element->getContent();
+            $text = $element->getContent();
             $new_text = $dom->createTextNode(nel_stext($text), 'none');
-            $singular_element->parentNode->replaceChild($new_text, $singular_element);
+            $element->parentNode->replaceChild($new_text, $element);
         }
     }
 
@@ -83,7 +83,7 @@ function nel_process_i18n($dom)
             }
 
             $text = $node->getAttribute($attribute);
-            $node->setAttribute($attribute, nel_stext($text));
+            $node->setAttribute($attribute, nel_stext($text), 'none');
         }
     }
 }
