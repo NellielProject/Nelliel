@@ -21,30 +21,6 @@ class NellielEscaper
                 $content = htmlspecialchars($content, ENT_QUOTES, 'UTF-8', FALSE);
                 break;
 
-            // When processed through DOM, three of these are escaped automatically and we don't want to double-escape
-            case 'attribute-dom':
-                $content = preg_replace_callback('#[^a-zA-Z0-9,\._&<>]#Su',
-                function ($matches)
-                {
-                    switch ($matches[0])
-                    {
-                        case '"':
-                            return '&quot';
-                    }
-
-                    if (strlen($matches[0]) === 1)
-                    {
-                        return '&#x' . bin2hex($matches[0]);
-                    }
-                    else
-                    {
-                        return '&#x' . substr(trim(json_encode($matches[0]), '"'), 2);
-                    }
-
-                    return $matches[0];
-                }, $content);
-                break;
-
             case 'attribute':
                 $content = preg_replace_callback('#[^a-zA-Z0-9,\._]#Su',
                         function ($matches)
@@ -63,11 +39,11 @@ class NellielEscaper
 
                             if (strlen($matches[0]) === 1)
                             {
-                                return '&#x' . bin2hex($matches[0]);
+                                return '&#x' . bin2hex($matches[0]) . ';';
                             }
                             else
                             {
-                                return '&#x' . substr(trim(json_encode($matches[0]), '"'), 2);
+                                return '&#x' . substr(trim(json_encode($matches[0]), '"'), 2) . ';';
                             }
 
                             return $matches[0];
