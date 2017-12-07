@@ -43,24 +43,45 @@ function nel_ptext($text, $num)
     }
 }
 
-function nel_process_neltext($dom, $node)
+function nel_process_neltext($dom, $node, $attribute = null, $variable = null)
 {
-    $plural = $dom->doXPathQuery('(.//*[@data-plural])[1]', $node)->item(0);
-
-    if (!is_null($plural))
+    if (!is_null($attribute))
     {
-        $text = $plural->getContent();
-        $variable = $plural->getAttribute('data-plural');
-        $new_text = nel_ptext($text, $$variable);
+        if ($node->hasAttribute('data-' . $attribute . '-plural'))
+        {
+            $text = $node->getAttribute('data-' . $attribute . '-plural');
+            $new_text = nel_ptext($text, $$variable);
+            $node->removeAttribute('data-' . $attribute . '-plural');
+        }
+        else
+        {
+            $text = $node->getAttribute($attribute);
+            $new_text = nel_stext($text);
+        }
+
+        $node->extSetAttribute($attribute, $new_text);
+        $node->removeAttribute('data-i18n');
+        $node->removeAttribute('data-i18n-attributes');
     }
     else
     {
-        $text = $node->getContent();
-        $new_text = nel_stext($text);
-    }
+        $plural_data = $dom->doXPathQuery('(.//*[@data-plural])[1]', $node)->item(0);
 
-    $node->setContent($new_text, 'replace', 'none');
-    $node->removeAttribute('data-i18n');
+        if (!is_null($plural_data))
+        {
+            $text = $plural_data->getContent();
+            $variable = $plural_data->getAttribute('data-plural');
+            $new_text = nel_ptext($text, $$variable);
+        }
+        else
+        {
+            $text = $node->getContent();
+            $new_text = nel_stext($text);
+        }
+
+        $node->setContent($new_text, 'replace');
+        $node->removeAttribute('data-i18n');
+    }
 }
 
 function nel_process_i18n($dom)
@@ -80,21 +101,24 @@ function nel_process_i18n($dom)
     {
         $attribute_list = $node->getAttribute('data-i18n-attributes');
         $attributes = explode(',', $attribute_list);
-        $node->removeAttribute('data-i18n-attributes');
 
         foreach ($attributes as $attribute)
         {
-            $attribute = trim($attribute);
+            $parts = explode('|', $attribute);
+            $attribute = trim($parts[0]);
+            $variable = null;
 
             if (!$node->hasAttribute($attribute))
             {
                 continue;
             }
 
-            $text = $node->getAttribute($attribute);
-            $node->extSetAttribute($attribute, nel_stext($text));
-            //$attr = $dom->createFullAttribute($attribute, nel_stext($text));
-            //$node->appendChild($attr);
+            if ($node->hasAttribute('data-' . $attribute . '-plural'))
+            {
+                $variable = $parts[1];
+            }
+
+            nel_process_neltext($dom, $node, $attribute, $variable);
         }
     }
 }
