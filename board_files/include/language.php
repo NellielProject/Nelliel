@@ -60,7 +60,6 @@ function nel_process_neltext($dom, $node, $attribute = null, $variable = null)
         }
 
         $node->extSetAttribute($attribute, $new_text);
-        $node->removeAttribute('data-i18n');
         $node->removeAttribute('data-i18n-attributes');
     }
     else
