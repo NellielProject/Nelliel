@@ -16,6 +16,8 @@ $lang_singular = array(
     'LANG_NAME' => 'United States English',  // Full language name
     'LANG_FORM' => 'singular',
 
+    'PLURAL_TEST %count%' => 'Plural Test - Count: Only 1',  // Plural test
+
 
     'LINK_HOME' => 'Home',  // Home page link
     'LINK_MANAGE' => 'Manage',  // Management page link
@@ -380,6 +382,8 @@ $lang_plural = array(
 'LANG_CODE' => 'en-us', // Language code
 'LANG_NAME' => 'United States English', // Full language name
 'LANG_FORM' => 'plural',
+
+'PLURAL_TEST %count%' => 'Plural Test - Count:%count%',  // Plural test
 
 'LANG_END' => '');
 

@@ -4,6 +4,18 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+function nel_neltext_variable($name, $value = null)
+{
+    static $variables = array();
+
+    if(!is_null($value))
+    {
+        $variables[$name] = $value;
+    }
+
+    return $variables[$name];
+}
+
 function nel_stext($text)
 {
     return nel_get_language(BOARD_LANGUAGE, 'singular', $text);
@@ -21,40 +33,47 @@ function nel_ptext($text, $num)
     }
 }
 
-function nel_process_neltext_attribute($temp_dom, $attribute)
+function nel_process_neltext_attribute($node)
 {
-    $temp_dom->loadHTML($attribute->value);
-    $final_text = '';
+    $attribute_list = explode(',', $node->getAttribute('data-i18n-attributes'));
+    $new_text = '';
 
-    foreach ($temp_dom->getElementsByTagName('i18n') as $element)
+    foreach ($attribute_list as $attribute_name)
     {
-        $plural_element = $element->getElementsByTagName('plural')->item(0);
+        $attribute_name = trim($attribute_name);
+        $attribute_value = $node->getAttribute($attribute_name);
+        $matches = array();
+        $has_plural = preg_match('#{\+[\s.*]?plural:(.*?)[\s.*]?\+}(.*?)$#u', $attribute_value, $matches);
 
-        if (!is_null($plural_element))
+        if($has_plural === 1)
         {
-            $variable = $plural_element->getAttribute('var');
-            $text = $plural_element->nodeValue;
-            $final_text .= nel_ptext($text, $$variable);
+            $variable = nel_neltext_variable($matches[1]);
+            $new_text = nel_ptext($matches[2], $variable);
+            $new_text = preg_replace('#%count%#u', $variable, $new_text);
         }
         else
         {
-            $text = $element->nodeValue;
-            $final_text .= nel_stext($text);
+            $new_text = nel_stext($attribute_value);
         }
-    }
 
-    $attribute->value = $final_text;
+        $attribute_node = $node->ownerDocument->createAttribute($attribute_name);
+        $attribute_node->value = $new_text;
+        $node->setAttributeNode($attribute_node);
+    }
 }
 
-function nel_process_neltext_content($dom, $node)
+function nel_process_neltext_content($node)
 {
-    $plural_element = $node->getElementsByTagName('plural')->item(0);
+    $new_text = '';
+    $xpath = new DOMXPath($node->ownerDocument);
+    $plural_element = $xpath->query('//*[@data-plural]', $node)->item(0);
 
     if (!is_null($plural_element))
     {
-        $variable = $plural_element->getAttribute('var');
-        $text = $plural_element->getContent();
-        $new_text = nel_ptext($text, $$variable);
+        $variable_name = $plural_element->getAttribute('data-plural');
+        $variable = nel_neltext_variable($variable_name);
+        $new_text = nel_ptext($plural_element->getContent(), $variable);
+        $new_text = preg_replace('#%count%#u', $variable, $new_text);
     }
     else
     {

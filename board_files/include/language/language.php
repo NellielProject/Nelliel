@@ -30,28 +30,26 @@ function nel_get_language($language, $form, $text)
 
 function nel_process_i18n($dom)
 {
-    $temp_dom = new \DOMDocument();
     $content_node_list = $dom->getElementsByAttributeName('data-i18n');
+    $attribute_node_list = $dom->getElementsByAttributeName('data-i18n-attributes');
+
+    foreach ($attribute_node_list as $node)
+    {
+        if ($node->getAttribute('data-i18n') === 'neltext')
+        {
+            nel_process_neltext_attribute($node);
+        }
+
+        $node->removeAttribute('data-i18n-attributes');
+    }
 
     foreach ($content_node_list as $node)
     {
         if ($node->getAttribute('data-i18n') === 'neltext')
         {
-            nel_process_neltext_content($dom, $node);
+            nel_process_neltext_content($node);
         }
-
-        foreach ($node->attributes as $attribute)
-        {
-            if ($node->getAttribute('data-i18n') === 'neltext')
-            {
-                if (strpos($attribute->value, '<i18n>') !== false)
-                {
-                    nel_process_neltext_attribute($temp_dom, $attribute);
-                    $processed = true;
-                }
-            }
-        }
-
-        $node->removeAttribute('data-i18n');
     }
+
+    $node->removeAttribute('data-i18n');
 }
