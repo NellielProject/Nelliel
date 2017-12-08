@@ -50,7 +50,7 @@ function nel_initialize_session($dataforce)
 {
     $authorize = nel_get_authorization();
     session_start();
-    require_once INCLUDE_PATH . 'output/login-page.php';
+    require_once INCLUDE_PATH . 'output/login_page.php';
     require_once INCLUDE_PATH . 'admin/login.php';
 
     if (!empty($_SESSION))
