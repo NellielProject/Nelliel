@@ -169,7 +169,7 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
 //
 // Generate reply form
 //
-function nel_render_posting_form($dataforce, $render)
+/*function nel_render_posting_form($dataforce, $render)
 {
     $render->add_data('response_id', (is_null($dataforce['response_id'])) ? '0' : $dataforce['response_id']);
     $render->add_data('rules_list', $dataforce['rules_list']);
@@ -210,7 +210,7 @@ function nel_render_posting_form($dataforce, $render)
 
     $render->add_data('max_files', BS_MAX_POST_FILES);
     $render->parse('posting_form.tpl', '', $render, FALSE);
-}
+}*/
 
 //
 // Render posts

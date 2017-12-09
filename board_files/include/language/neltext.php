@@ -66,7 +66,7 @@ function nel_process_neltext_content($node)
 {
     $new_text = '';
     $xpath = new DOMXPath($node->ownerDocument);
-    $plural_element = $xpath->query('//*[@data-plural]', $node)->item(0);
+    $plural_element = $xpath->query('.//*[@data-plural]', $node)->item(0);
 
     if (!is_null($plural_element))
     {
