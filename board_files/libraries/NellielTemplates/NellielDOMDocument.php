@@ -14,7 +14,12 @@ class NellielDOMDocument extends \DOMDocument
     {
         parent::__construct();
         $this->render_instance = $render_instance;
-        $this->template_instance = $render_instance->getTemplateInstance();
+
+        if(!is_null($render_instance))
+        {
+            $this->template_instance = $render_instance->getTemplateInstance();
+        }
+
         $this->escaper_instance = new NellielEscaper();
         $this->registerNodeClass('DOMDocument', 'NellielTemplates\NellielDOMDocument');
         $this->registerNodeClass('DOMElement', 'NellielTemplates\NellielDOMElement');

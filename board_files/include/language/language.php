@@ -49,7 +49,7 @@ function nel_process_i18n($dom)
         {
             nel_process_neltext_content($node);
         }
-    }
 
-    $node->removeAttribute('data-i18n');
+        $node->removeAttribute('data-i18n');
+    }
 }

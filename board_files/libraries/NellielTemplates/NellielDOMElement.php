@@ -102,6 +102,12 @@ class NellielDOMElement extends \DOMElement
         return $old_value;
     }
 
+    public function changeId($new_id)
+    {
+        $this->setAttribute('id', $new_id);
+        $this->setIdAttribute('id', true);
+    }
+
     public function getInnerNode()
     {
         $nodes = $this->childNodes;
