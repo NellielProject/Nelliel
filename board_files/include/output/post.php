@@ -88,6 +88,10 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     {
         $post_container->extSetAttribute('class', 'reply-post');
     }
+    else
+    {
+        $dom->getElementsByClassName('indents')->item(0)->removeSelf();
+    }
 
     $render->add_multiple_data($gen_data['post']);
     $render->add_multiple_data($gen_data['thread']);
