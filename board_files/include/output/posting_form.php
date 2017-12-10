@@ -35,12 +35,12 @@ function nel_render_posting_form($dataforce, $render)
     }
     else
     {
-        $dom->removeChild($post_form_return_link);
+        $post_form_return_link->removeSelf();
     }
 
     if ($dataforce['get_mode'] !== 'display')
     {
-        $dom->removeChild($xpath->query(".//input[@name='mode2']", $posting_form)->item(0));
+        $xpath->query(".//input[@name='mode2']", $posting_form)->item(0)->removeSelf();
     }
 
     $new_post_element = $xpath->query(".//input[@name='new_post[post_info][response_to]']", $posting_form)->item(0);
