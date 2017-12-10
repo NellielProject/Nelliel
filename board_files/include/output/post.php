@@ -198,7 +198,8 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                  $post_data['post_number'] . '.html');
         }
     }
-    else
+
+    if(!$dataforce['index_rendering'] || $response)
     {
         $reply_to_link_element->parentNode->removeSelf();
     }

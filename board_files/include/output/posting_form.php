@@ -31,7 +31,7 @@ function nel_render_posting_form($dataforce, $render)
 
     if ($response_id)
     {
-        $post_form_return_link->extSetAttribute('href', $dotdot . $page_ref1);
+        $xpath->query(".//a", $post_form_return_link)->item(0)->extSetAttribute('href', $dotdot . $page_ref1);
     }
     else
     {
