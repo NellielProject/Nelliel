@@ -66,13 +66,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $dom->loadTemplateFromFile('post.html');
     $xpath = new DOMXPath($dom);
-
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
-
-    /*if ($gen_data['insert_hr'])
-     {
-
-     }*/
 
     if ($dataforce['posts_beginning'])
     {
@@ -266,6 +260,11 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             $file['file_location'] = $temp_dot . SRC_DIR . $thread_id . '/' . $file['filename'] . "." .
                  $file['extension'];
             $file['display_filename'] = $file['filename'];
+
+            if (strlen($file['filename']) > 32)
+            {
+                $file['display_filename'] = substr($file['filename'], 0, 25) . '(...)';
+            }
 
             $file_text_link = $xpath->query(".//a[@id='file-link-']", $temp_file_node)->item(0);
             $file_text_link->changeId('file-link-' . $file_id);
