@@ -1,5 +1,61 @@
 <?php
 
+function nel_render_insert_hr($render)
+{
+    $dom = new DOMDocument();
+    $hr = $dom->createElement('hr');
+    $hr->setAttribute('class', 'clear');
+    $dom->appendChild($hr);
+    $render->appendOutput($dom->saveHTML());
+    return;
+}
+
+function nel_render_index_navigation($render, $pages)
+{
+    $render1 = new NellielTemplates\RenderCore();
+    $dom = $render1->newDOMDocument();
+    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    $dom->loadTemplateFromFile('index_navigation.html');
+    $xpath = new DOMXPath($dom);
+    $index_bottom_nav_element = $dom->getElementById('index-bottom-nav');
+    $inner_td_elements = $xpath->query(".//td", $index_bottom_nav_element);
+    $page_nav_td = $inner_td_elements->item(0);
+
+    foreach ($pages as $key => $value)
+    {
+        $temp_page_nav_td = $page_nav_td->cloneNode(true);
+        $page_link = $xpath->query(".//a", $temp_page_nav_td)->item(0);
+
+        $content = $key;
+
+        if ($key === 'prev')
+        {
+            $content = 'Previous';
+        }
+
+        if ($key === 'next')
+        {
+            $content = 'Next';
+        }
+
+        if ($value !== '')
+        {
+            $page_link->extSetAttribute('href', $value, 'none');
+            $page_link->setContent($content);
+        }
+        else
+        {
+            $temp_page_nav_td->replaceChild($dom->createTextNode($content), $page_link);
+        }
+
+        $page_nav_td->parentNode->insertBefore($temp_page_nav_td, $inner_td_elements->item(2));
+    }
+
+    $page_nav_td->removeSelf();
+    nel_process_i18n($dom);
+    $render->appendOutput($dom->saveHTML());
+}
+
 function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline)
 {
     $authorize = nel_get_authorization();
@@ -11,17 +67,24 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $dom->loadTemplateFromFile('post.html');
     $xpath = new DOMXPath($dom);
 
-    $post_data = $gen_data['post'];
+    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
 
-    if ($gen_data['insert_hr'])
+    /*if ($gen_data['insert_hr'])
+     {
+
+     }*/
+
+    if ($dataforce['posts_beginning'])
     {
-        $dom = $render1->newDOMDocument();
-        $hr = $dom->createElement('hr');
-        $hr->extSetAttribute('class', 'clear');
-        $dom->appendChild($hr);
-        $render->appendOutput($dom->saveHTML());
-        return;
+        $dom->getElementById('form-post-index')->extSetAttribute('action', $dotdot . PHP_SELF);
     }
+    else
+    {
+        $dom->removeElementKeepChildren($dom->getElementById('outer-div'));
+        $dom->removeElementKeepChildren($dom->getElementById('form-post-index'));
+    }
+
+    $post_data = $gen_data['post'];
 
     $post_container = $dom->getElementById('post-container-');
     $post_container->changeId('post-container-' . $post_data['post_number']);

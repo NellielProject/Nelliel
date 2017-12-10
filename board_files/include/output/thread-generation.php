@@ -16,7 +16,6 @@ function nel_thread_generator($dataforce, $write, $write_id)
     $render = new nel_render();
     $render_expand = new nel_render();
     $render_collapse = new nel_render();
-    $gen_data['insert_hr'] = FALSE;
     $dataforce['dotdot'] = '../../';
     //$write_id = ($dataforce['response_to'] === 0 || is_null($dataforce['response_to'])) ? $dataforce['response_id'] : $dataforce['response_to'];
     $dataforce['response_id'] = $write_id;
@@ -48,6 +47,9 @@ function nel_thread_generator($dataforce, $write, $write_id)
     $dataforce['omitted_done'] = TRUE;
     $partlimit = 1;
     $gen_data['first100'] = FALSE;
+    $dataforce['posts_beginning'] = false;
+    $dataforce['posts_ending'] = false;
+    $dataforce['index_rendering'] = false;
 
     while ($gen_data['post_counter'] < $gen_data['thread']['post_count'])
     {
@@ -58,6 +60,16 @@ function nel_thread_generator($dataforce, $write, $write_id)
             $render->add_data('header_type', 'NORMAL');
             nel_render_header($dataforce, $render, $treeline);
             nel_render_posting_form($dataforce, $render);
+            $dataforce['posts_beginning'] = true;
+        }
+        else
+        {
+            $dataforce['posts_beginning'] = false;
+        }
+
+        if($gen_data['post_counter'] == $gen_data['thread']['post_count'] - 1)
+        {
+            $dataforce['posts_ending'] = true;
         }
 
         if ($gen_data['post']['has_file'] == 1)
@@ -72,9 +84,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
         if ($partlimit === 100)
         {
             $render_temp = clone $render;
-            $gen_data['insert_hr'] = TRUE;
-            nel_render_post($dataforce, $render_temp, FALSE, FALSE, $gen_data, $treeline);
-            $gen_data['insert_hr'] = FALSE;
+            nel_render_insert_hr($render);
             nel_render_footer($render_temp, FALSE, TRUE, TRUE, TRUE, FALSE);
             nel_write_file(PAGE_PATH . $write_id . '/' . $write_id. '-0-100.html', $render_temp->output(), FILE_PERM);
             unset($render_temp);
@@ -147,5 +157,3 @@ function nel_thread_generator($dataforce, $write, $write_id)
         nel_session_set_ignored('render', false);
     }
 }
-
-?>

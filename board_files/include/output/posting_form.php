@@ -135,8 +135,6 @@ function nel_render_posting_form($dataforce, $render)
         $dom->removeChild($dom->getElementById('form-trap2'));
     }
 
-    $dom->getElementById('form-post-index')->extSetAttribute('action', $dotdot . PHP_SELF);
-
     nel_process_i18n($dom);
     $render->appendOutput($dom->outputHTML());
 }
