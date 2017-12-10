@@ -14,6 +14,7 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
+    $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent('window.onload = doImportantStuff(\'' . CONF_BOARD_DIR . '\')');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JSDIR . 'html5shiv-printshiv.js"></script><![endif]';
     $xpath->query('//comment()', $head_element)->item(0)->data = $html5shiv;
