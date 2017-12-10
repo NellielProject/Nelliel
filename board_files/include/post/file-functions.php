@@ -171,8 +171,8 @@ function nel_generate_thumbnails($files, $srcpath, $thumbpath)
         if (BS_USE_THUMB && $files[$i]['supertype'] === 'graphics')
         {
             exec("convert -version 2>/dev/null", $out, $rescode);
-            var_dump($out);
-            var_dump($rescode);
+            //var_dump($out);
+            //var_dump($rescode);
 
             if ($rescode === 0 && BS_USE_MAGICK)
             {

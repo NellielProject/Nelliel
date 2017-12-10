@@ -104,7 +104,7 @@ class nel_render
         $this->output .= $input;
     }
 
-    public function output($echo)
+    public function output($echo = false)
     {
         if ($echo === FALSE)
         {

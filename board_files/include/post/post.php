@@ -139,8 +139,7 @@ function nel_process_new_post($dataforce)
 
     $query = 'UPDATE "' . POST_TABLE . '" SET parent_thread = ' . $thread_info['id'] . ' WHERE post_number = ' .
     $new_post_info['post_number'];
-    var_dump($query);
-     $dbh->query('UPDATE "' . POST_TABLE . '" SET parent_thread = ' . $thread_info['id'] . ' WHERE post_number = ' .
+    $dbh->query('UPDATE "' . POST_TABLE . '" SET parent_thread = ' . $thread_info['id'] . ' WHERE post_number = ' .
          $new_post_info['post_number']);
 
     $fgsfds['noko_topic'] = $thread_info['id'];

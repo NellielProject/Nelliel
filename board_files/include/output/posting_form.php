@@ -121,7 +121,7 @@ function nel_render_posting_form($dataforce, $render)
 
     if($response_id)
     {
-        $dom->getElementById('which-post-mode')->setContent(TEXT_REPLYMODE);
+        $dom->getElementById('which-post-mode')->setContent(nel_stext('TEXT_REPLYMODE'));
     }
 
     $form_rules_list = $dom->getElementById('form-rules-list');
