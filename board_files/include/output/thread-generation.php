@@ -126,6 +126,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
         unset($render_temp3);
     }
 
+    nel_render_insert_hr($render);
     nel_render_footer($render, FALSE, TRUE, TRUE, TRUE, FALSE);
 
     if ($write)

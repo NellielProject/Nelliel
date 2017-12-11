@@ -2,11 +2,13 @@
 
 function nel_render_insert_hr($render)
 {
-    $dom = new DOMDocument();
+    $render1 = new NellielTemplates\RenderCore();
+    $dom = $render1->newDOMDocument();
+    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $hr = $dom->createElement('hr');
     $hr->setAttribute('class', 'clear');
     $dom->appendChild($hr);
-    $render->appendOutput($dom->saveHTML());
+    $render->appendOutput($dom->outputHTML());
     return;
 }
 
@@ -53,7 +55,7 @@ function nel_render_index_navigation($render, $pages)
 
     $page_nav_td->removeSelf();
     nel_process_i18n($dom);
-    $render->appendOutput($dom->saveHTML());
+    $render->appendOutput($dom->outputHTML());
 }
 
 function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline)
