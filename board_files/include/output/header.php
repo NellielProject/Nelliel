@@ -92,7 +92,7 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', $dotdot . HOME);
     $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?mode=admin');
-    $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?mode=about');
+    $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?mode=about_nelliel');
 
     if (nel_session_is_ignored('render'))
     {

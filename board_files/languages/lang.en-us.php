@@ -21,7 +21,7 @@ $lang_singular = array(
 
     'LINK_HOME' => 'Home',  // Home page link
     'LINK_MANAGE' => 'Manage',  // Management page link
-    'LINK_ABOUT' => 'About',  // About page link
+    'LINK_ABOUT_NELLIEL' => 'About Nelliel',  // About page link
     'LINK_RETURN' => 'Return',  // Return to main page link
     'LINK_REPLY' => 'Reply',  // Reply to a post
     'LINK_EXPAND' => 'Expand thread',  // Expand thread
