@@ -332,7 +332,7 @@ function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
     $render->parse('footer.tpl', '');
 }*/
 
-function nel_render_ban_page($dataforce, $bandata)
+/*function nel_render_ban_page($dataforce, $bandata)
 {
     $render = new nel_render();
     $render->add_multiple_data($bandata);
@@ -344,7 +344,7 @@ function nel_render_ban_page($dataforce, $bandata)
     $render->parse('ban_page.tpl', '');
     nel_render_basic_footer($render);
     $render->output(TRUE);
-}
+}*/
 
 //
 // Parse links in posts

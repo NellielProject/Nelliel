@@ -48,10 +48,11 @@ require_once INCLUDE_PATH . 'thread-functions.php';
 require_once INCLUDE_PATH . 'output/html-generation.php';
 require_once INCLUDE_PATH . 'banhammer.php';
 require_once INCLUDE_PATH . 'snacks.php';
+require_once INCLUDE_PATH . 'sessions.php';
 
 // IT'S GO TIME!
+nel_apply_ban($dataforce);
 nel_ban_spambots($dataforce);
-require_once INCLUDE_PATH . 'sessions.php';
 nel_initialize_session($dataforce);
 require_once INCLUDE_PATH . 'post/post.php';
 require_once INCLUDE_PATH . 'central-dispatch.php';
