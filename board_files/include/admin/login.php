@@ -24,6 +24,6 @@ function nel_login($dataforce)
         nel_generate_login_page($render);
     }
 
-    nel_render_basic_footer($render);
+    nel_render_footer($render, false);
     $render->output(TRUE);
 }

@@ -38,7 +38,7 @@ function nel_main_thread_generator($dataforce, $write)
         $render->add_data('prev_nav', '');
         $render->add_data('next_nav', '');
         $render->add_data('page_nav', '');
-        nel_render_footer($render, FALSE, TRUE, TRUE, FALSE, TRUE);
+        nel_render_footer($render, true);
 
         if ($write)
         {
@@ -193,7 +193,7 @@ function nel_main_thread_generator($dataforce, $write)
         }
 
         nel_render_index_navigation($render, $pages);
-        nel_render_footer($render, FALSE, TRUE, TRUE, FALSE, TRUE);
+        nel_render_footer($render, true);
 
         if (!$write)
         {

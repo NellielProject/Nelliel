@@ -85,7 +85,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
         {
             $render_temp = clone $render;
             nel_render_insert_hr($render);
-            nel_render_footer($render_temp, FALSE, TRUE, TRUE, TRUE, FALSE);
+            nel_render_footer($render_temp, true);
             nel_write_file(PAGE_PATH . $write_id . '/' . $write_id. '-0-100.html', $render_temp->output(), FILE_PERM);
             unset($render_temp);
         }
@@ -127,7 +127,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
     }
 
     nel_render_insert_hr($render);
-    nel_render_footer($render, FALSE, TRUE, TRUE, TRUE, FALSE);
+    nel_render_footer($render, true);
 
     if ($write)
     {

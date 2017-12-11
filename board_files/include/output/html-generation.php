@@ -292,7 +292,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Footer
 //
-function nel_render_basic_footer($render)
+/*function nel_render_basic_footer($render)
 {
     $authorize = nel_get_authorization();
 
@@ -330,7 +330,7 @@ function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
     $render->add_data('response', $response);
     $render->add_data('main_page', $main_page);
     $render->parse('footer.tpl', '');
-}
+}*/
 
 function nel_render_ban_page($dataforce, $bandata)
 {

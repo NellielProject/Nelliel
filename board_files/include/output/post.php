@@ -1,4 +1,8 @@
 <?php
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
 
 function nel_render_insert_hr($render)
 {
@@ -8,7 +12,7 @@ function nel_render_insert_hr($render)
     $hr = $dom->createElement('hr');
     $hr->setAttribute('class', 'clear');
     $dom->appendChild($hr);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($dom->saveHTML());
     return;
 }
 

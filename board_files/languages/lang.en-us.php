@@ -368,7 +368,6 @@ $lang_singular = array(
 
 
 // These are holdovers from the original Nelliel that are still in use. I need to clean them up.
-    'S_FOOT' => '- <a href="http://www.1chan.net/futallaby/" rel="external">futallaby</a> + <a href="http://www.nelliel.com" rel="external" title="Nelliel Imageboard Software">Nelliel ' . NELLIEL_VERSION . '</a> -',  // Prints footer (leave these credits)
     'S_DELPICONLY' => 'Delete File Only',  // Prints text next to checkbox for file deletion (right)
     'S_SHORT_MENU' => 'fff',  // Other boards menu
 

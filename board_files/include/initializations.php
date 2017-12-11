@@ -13,6 +13,7 @@ require_once INCLUDE_PATH . 'output/main_panel.php';
 require_once INCLUDE_PATH . 'output/posting_form.php';
 require_once INCLUDE_PATH . 'output/header.php';
 require_once INCLUDE_PATH . 'output/post.php';
+require_once INCLUDE_PATH . 'output/footer.php';
 
 if(RUN_SETUP_CHECK)
 {
