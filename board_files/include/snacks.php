@@ -116,8 +116,8 @@ function nel_apply_ban($dataforce)
 
     if (time() >= $bandata['length_base'])
     {
-        $prepared = $dbh->prepare('DELETE FROM ' . BAN_TABLE . ' WHERE id=?');
-        $prepared->bindParam(1, $bandata['id'], PDO::PARAM_INT);
+        $prepared = $dbh->prepare('DELETE FROM ' . BAN_TABLE . ' WHERE ban_id=?');
+        $prepared->bindParam(1, $bandata['ban_id'], PDO::PARAM_INT);
         $prepared->execute();
         $prepared->closeCursor();
         return;

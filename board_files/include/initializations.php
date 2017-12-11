@@ -9,12 +9,13 @@ ignore_user_abort(TRUE);
 // TODO: Clean all these up along with the other includes
 require_once FILES_PATH . 'libraries/portable-utf8/portable-utf8.php';
 require_once INCLUDE_PATH . 'setup/setup.php';
-require_once INCLUDE_PATH . 'output/main_panel.php';
+require_once INCLUDE_PATH . 'output/management/main_panel.php';
 require_once INCLUDE_PATH . 'output/posting_form.php';
 require_once INCLUDE_PATH . 'output/header.php';
 require_once INCLUDE_PATH . 'output/post.php';
 require_once INCLUDE_PATH . 'output/footer.php';
 require_once INCLUDE_PATH . 'output/ban_page.php';
+require_once INCLUDE_PATH . 'output/management/ban_panel.php';
 
 if(RUN_SETUP_CHECK)
 {

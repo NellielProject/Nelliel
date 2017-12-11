@@ -100,7 +100,7 @@ function nel_ban_control($dataforce)
     {
         $dataforce['snacks'] = 'addban';
         nel_ban_hammer($dataforce);
-        nel_render_ban_panel_list($dataforce);
+        nel_render_main_ban_panel($dataforce);
     }
     else if ($mode === 'remove')
     {
@@ -113,7 +113,7 @@ function nel_ban_control($dataforce)
     }
     else if ($mode === 'admin->ban->panel')
     {
-        nel_render_ban_panel_list($dataforce);
+        nel_render_main_ban_panel($dataforce);
     }
     else
     {

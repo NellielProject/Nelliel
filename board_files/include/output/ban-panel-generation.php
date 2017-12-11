@@ -9,7 +9,7 @@ function nel_render_ban_panel_top($dataforce, $render)
     $render->parse('bans_panel_top.tpl', 'management');
 }
 
-function nel_render_ban_panel_list($dataforce)
+/*function nel_render_ban_panel_list($dataforce)
 {
     $dbh = nel_database();
     $render = new nel_render();
@@ -44,7 +44,7 @@ function nel_render_ban_panel_list($dataforce)
     nel_render_ban_panel_bottom($dataforce, $render);
     nel_render_basic_footer($render);
     $render->output(TRUE);
-}
+}*/
 
 function nel_render_ban_panel_add($dataforce)
 {
