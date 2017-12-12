@@ -1,0 +1,58 @@
+    <div class="pass-valid">
+        <span data-i18n="neltext">MANAGE_MODE</span>
+    </div>
+    <div class="del-list">
+        <span data-i18n="neltext">MANAGE_STAFF</span>
+    </div>
+    <form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
+        <table>
+            <tr>
+                <td>
+                    <input type="hidden" name="mode" value="admin->staff->user->update">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="bname"data-i18n="neltext">MANAGE_STAFF_USER_ID</label>
+                </td>
+                <td>
+                    <input id="user-id-field"type="text" name="user_id" id="bname" size="50" value="">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="bpass"data-i18n="neltext">MANAGE_STAFF_USER_PASS</label>
+                </td>
+                <td>
+                    <input type="text" name="user_password" id="bpass" size="50">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" name="change_pass" id="pchange" value=0>
+                    <label for="pchange"data-i18n="neltext">MANAGE_STAFF_CHANGE_PASS</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="utitle" data-i18n="neltext">MANAGE_STAFF_USER_TITLE</label>
+                </td>
+                <td>
+                    <input id="user-title-field" type="text" name="user_title" id="utitle" size="50" value="">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="rselect" data-i18n="neltext">MANAGE_STAFF_ROLE_ID</label>
+                </td>
+                <td>
+                    <input id="role-id-field" type="text" name="role_id" id="rselect" size="50" value="">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="FORM_STAFF_USER_UPDATE" data-i18n="neltext" data-i18n-attributes="value">
+                </td>
+            </tr>
+        </table>
+    </form>

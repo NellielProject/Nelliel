@@ -16,6 +16,7 @@ require_once INCLUDE_PATH . 'output/post.php';
 require_once INCLUDE_PATH . 'output/footer.php';
 require_once INCLUDE_PATH . 'output/ban_page.php';
 require_once INCLUDE_PATH . 'output/management/ban_panel.php';
+require_once INCLUDE_PATH . 'output/management/staff_panel.php';
 
 if(RUN_SETUP_CHECK)
 {
