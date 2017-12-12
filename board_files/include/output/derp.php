@@ -17,6 +17,6 @@ function nel_render_derp()
     $return_link = $dom->getElementById('return-link')->extSetAttribute('href', PHP_SELF2 . PHP_EXT);
     nel_process_i18n($dom);
     $render->appendOutput($dom->outputHTML());
-    nel_render_basic_footer($render);
-    $render->output(TRUE);
+    nel_render_footer($render, false);
+    $render->output(true);
 }

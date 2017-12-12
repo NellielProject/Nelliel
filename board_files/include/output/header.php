@@ -33,6 +33,7 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
             $title_element->setContent('About Nelliel Imageboard');
             break;
 
+            // TODO: Fix undefineds
         case 'NORMAL':
             if ($dataforce['page_gen'] == 'main')
             {

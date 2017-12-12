@@ -88,7 +88,7 @@ function nel_ban_control($dataforce)
 
     require_once INCLUDE_PATH . 'output/ban-panel-generation.php';
 
-    if ($mode === 'modify')
+    if ($mode === 'admin->ban->modify')
     {
         nel_render_ban_panel_modify($dataforce);
     }

@@ -61,6 +61,7 @@ function nel_render_main_ban_panel($dataforce)
         $i++;
     }
 
+    unset($result);
     $ban_info_row->removeSelf();
 
     $form_add_ban = $dom->getElementById('form-add-ban');
@@ -80,6 +81,57 @@ function nel_render_ban_panel_add($dataforce)
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $dom->loadTemplateFromFile('management/bans_panel_add_ban.html');
+    nel_process_i18n($dom);
+    $render->appendOutput($dom->outputHTML());
+    nel_render_footer($render, false);
+    $render->output(true);
+}
+
+function nel_render_ban_panel_modify($dataforce)
+{
+    $dbh = nel_database();
+    $render = new nel_render();
+    nel_render_header($dataforce, $render, array());
+    $render1 = new NellielTemplates\RenderCore();
+    $dom = $render1->newDOMDocument();
+    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    $dom->loadTemplateFromFile('management/bans_panel_modify_ban.html');
+
+    $result =  $dbh->query('SELECT * FROM ' . BAN_TABLE . ' WHERE ban_id=' . $dataforce['banid'] . '');
+    $baninfo = $result->fetch(PDO::FETCH_ASSOC);
+    unset($result);
+
+    $dom->getElementById('ban-time-display')->setContent(date("D F jS Y  H:i:s", $baninfo['ban_time']));
+    $dom->getElementById('ban-expiration-display')->setContent(date("D F jS Y  H:i:s", $baninfo['length'] + $baninfo['ban_time']));
+    $length2 = $baninfo['length'] / 3600;
+
+    if ($length2 >= 24)
+    {
+        $length2 = $length2 / 24;
+        $dom->getElementById('ban-length-days')->extSetAttribute('value', floor($length2));
+        $length2 = $length2 - floor($length2);
+        $dom->getElementById('ban-length-hours')->extSetAttribute('value', floor($length2 * 24));
+    }
+
+    $dom->getElementById('ban-name-display')->setContent($baninfo['name']);
+    $dom->getElementById('ban-id-field')->extSetAttribute('value', $baninfo['ban_id']);
+    $dom->getElementById('ban-length-field')->extSetAttribute('value', $baninfo['length']);
+    $dom->getElementById('ban-reason-field')->setContent($baninfo['reason']);
+
+    if ($baninfo['appeal'] === '')
+    {
+        $dom->getElementById('ban-appeal-display-row')->removeSelf();
+    }
+    else
+    {
+        $dom->getElementById('ban-appeal-display')->setContent($baninfo['appeal']);
+    }
+
+    if ($baninfo['appeal_status'] > 1)
+    {
+        $dom->getElementById('ban-appealed-field')->extSetAttribute('checked', 'checked');
+    }
+
     nel_process_i18n($dom);
     $render->appendOutput($dom->outputHTML());
     nel_render_footer($render, false);

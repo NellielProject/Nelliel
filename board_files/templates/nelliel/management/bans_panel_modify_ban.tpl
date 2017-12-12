@@ -1,18 +1,27 @@
     <form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
         <table>
             <tr>
-                <td><span>MANAGE_BANMOD_GEN</span> {$render->get('ban_time')}</td>
-            </tr>
-            <tr>
-                <td><span>MANAGE_BANMOD_EXP</span> {$render->get('ban_expire')}</td>
-            </tr>
-            <tr>
-                <td>MANAGE_BANMOD_LENGTH</td>
-                <td><span>MANAGE_BANMOD_DAY')}</span> <input type="text" name="timedays" size="4" maxlength="4" value="{$render->get('ban_length_days')}"> &nbsp;&nbsp;&nbsp; {nel_stext('MANAGE_BANMOD_HOUR')} <input type="text" name="timehours" size="4" maxlength="4" value="{$render->get('ban_length_hours')}">
+                <td>
+                    {nel_stext('MANAGE_BANMOD_GEN')} {$render->get('ban_time')}
                 </td>
             </tr>
             <tr>
-                <td><span>MANAGE_BANMOD_NAME')}</span> {$render->get('name')}</td>
+                <td>
+                    {nel_stext('MANAGE_BANMOD_EXP')} {$render->get('ban_expire')}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {nel_stext('MANAGE_BANMOD_LENGTH')} 
+                </td>
+                <td>
+                    {nel_stext('MANAGE_BANMOD_DAY')} <input type="text" name="timedays" size="4" maxlength="4" value="{$render->get('ban_length_days')}"> &nbsp;&nbsp;&nbsp; {nel_stext('MANAGE_BANMOD_HOUR')} <input type="text" name="timehours" size="4" maxlength="4" value="{$render->get('ban_length_hours')}">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {nel_stext('MANAGE_BANMOD_NAME')} {$render->get('name')}
+                </td>
             </tr>
             <tr>
                 <td>
