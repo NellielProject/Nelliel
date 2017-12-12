@@ -113,7 +113,7 @@ function nel_ban_hammer($dataforce)
 
                 if ($baninfo2['id'] && $baninfo2['board'] === TABLEPREFIX)
                 {
-                    $prepared = $dbh->prepare('DELETE FROM ' . BAN_TABLE . ' WHERE id=?');
+                    $prepared = $dbh->prepare('DELETE FROM ' . BAN_TABLE . ' WHERE ban_id=?');
                     $prepared->bindParam(1, $baninfo2['id'], PDO::PARAM_INT);
                     $prepared->execute();
                     $prepared->closeCursor();
