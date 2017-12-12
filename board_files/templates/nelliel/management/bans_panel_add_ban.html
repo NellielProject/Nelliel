@@ -1,0 +1,35 @@
+    <form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
+        <table>
+            <tr>
+                <td data-i18n="neltext">MANAGE_BANMOD_IP</td>
+                <td>
+                    <input type="text" name="banhost" size="24" maxlength="50" value="">
+                </td>
+            </tr>
+            <tr>
+                <td data-i18n="neltext">MANAGE_BANMOD_LENGTH</td>
+                <td>
+                	<span data-i18n="neltext">MANAGE_BANMOD_DAY</span>
+                	<input type="text" name="timedays" size="4" maxlength="4" value="0"> &nbsp;&nbsp;&nbsp;
+                	<span data-i18n="neltext">MANAGE_BANMOD_HOUR</span>
+                	<input type="text" name="timehours" size="4" maxlength="4" value="0">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="hidden" name="mode" value="admin->ban->add">
+                </td>
+            </tr>
+            <tr>
+                <td data-i18n="neltext">MANAGE_BANMOD_RSN</td>
+                <td>
+                    <textarea name="banreason" cols="32" rows="3"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit" value="FORM_UPDATE"  data-i18n="neltext" data-i18n-attributes="value">
+                </td>
+            </tr>
+        </table>
+    </form>

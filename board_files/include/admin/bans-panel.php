@@ -120,4 +120,3 @@ function nel_ban_control($dataforce)
         ; // error here
     }
 }
-?>

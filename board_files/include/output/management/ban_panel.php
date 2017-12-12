@@ -36,22 +36,23 @@ function nel_render_main_ban_panel($dataforce)
         $temp_ban_info_row = $ban_info_row->cloneNode(true);
         $temp_ban_info_row->extSetAttribute('class', $bgclass);
         $ban_info_td_list = $xpath->query(".//td", $temp_ban_info_row);
-        $temp_ban_info_row->item(0)->setContent($baninfo['ban_id']);
-        $temp_ban_info_row->item(1)->setContent($baninfo['type']);
-        $temp_ban_info_row->item(2)->setContent($baninfo['ip_address'] ? $baninfo['ip_address']: 'Unknown');
-        $temp_ban_info_row->item(3)->setContent($baninfo['name']);
-        $temp_ban_info_row->item(4)->setContent($baninfo['reason']);
-        $temp_ban_info_row->item(5)->setContent(date("D F jS Y  H:i:s", $baninfo['length'] + $baninfo['ban_time']));
-        $temp_ban_info_row->item(6)->setContent($baninfo['appeal']);
-        $temp_ban_info_row->item(7)->setContent($baninfo['appeal_response']);
-        $temp_ban_info_row->item(8)->setContent($baninfo['appeal_status']);
+        $ban_info_td_list->item(0)->setContent($baninfo['ban_id']);
+        $ban_info_td_list->item(1)->setContent($baninfo['type']);
+        $ban_info_td_list->item(2)->setContent($baninfo['ip_address'] ? $baninfo['ip_address']: 'Unknown');
+        $ban_info_td_list->item(3)->setContent($baninfo['name']);
+        $ban_info_td_list->item(4)->setContent($baninfo['reason']);
+        $ban_info_td_list->item(5)->setContent(date("D F jS Y  H:i:s", $baninfo['length'] + $baninfo['ban_time']));
+        $ban_info_td_list->item(6)->setContent($baninfo['appeal']);
+        $ban_info_td_list->item(7)->setContent($baninfo['appeal_response']);
+        $ban_info_td_list->item(8)->setContent($baninfo['appeal_status']);
 
-        $form_mod_ban = $dom->getElementById('form-mod-ban-');
+        //$form_mod_ban = $dom->getElementById('form-mod-ban-');
+        $form_mod_ban = $xpath->query(".//form[@id='form-mod-ban-']", $temp_ban_info_row)->item(0);
         $form_mod_ban->extSetAttribute('action', $dotdot . PHP_SELF);
         $form_mod_ban->changeId('form_mod_ban-' . $baninfo['ban_id']);
         $xpath->query(".//input[@name='banid']", $form_mod_ban)->item(0)->extSetAttribute('value', $baninfo['ban_id']);
 
-        $form_remove_ban = $dom->getElementById('form-remove-ban-');
+        $form_remove_ban = $xpath->query(".//form[@id='form-remove-ban-']", $temp_ban_info_row)->item(0);
         $form_remove_ban->extSetAttribute('action', $dotdot . PHP_SELF);
         $form_remove_ban->changeId('form_mod_ban-' . $baninfo['ban_id']);
         $xpath->query(".//input[@name='banid']", $form_remove_ban)->item(0)->extSetAttribute('value', $baninfo['ban_id']);
@@ -65,6 +66,20 @@ function nel_render_main_ban_panel($dataforce)
     $form_add_ban = $dom->getElementById('form-add-ban');
     $form_add_ban->extSetAttribute('action', $dotdot . PHP_SELF);
 
+    nel_process_i18n($dom);
+    $render->appendOutput($dom->outputHTML());
+    nel_render_footer($render, false);
+    $render->output(true);
+}
+
+function nel_render_ban_panel_add($dataforce)
+{
+    $render = new nel_render();
+    nel_render_header($dataforce, $render, array());
+    $render1 = new NellielTemplates\RenderCore();
+    $dom = $render1->newDOMDocument();
+    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    $dom->loadTemplateFromFile('management/bans_panel_add_ban.html');
     nel_process_i18n($dom);
     $render->appendOutput($dom->outputHTML());
     nel_render_footer($render, false);
