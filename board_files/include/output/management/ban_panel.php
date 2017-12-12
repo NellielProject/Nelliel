@@ -13,7 +13,7 @@ function nel_render_main_ban_panel($dataforce)
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('management/bans_panel.html');
+    $dom->loadTemplateFromFile('management/bans_panel_main.html');
     $xpath = new DOMXPath($dom);
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
 
