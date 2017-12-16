@@ -15,7 +15,7 @@ function nel_render_thread_panel_main($dataforce)
     $dom->loadTemplateFromFile('management/thread_panel.html');
     $xpath = new DOMXPath($dom);
 
-    $result =  $dbh->query('SELECT * FROM "' . THREAD_TABLE . '" ORDER BY "thread_id" DESC');
+    $result =  $dbh->query('SELECT * FROM "' . THREAD_TABLE . '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC');
     $thread_data = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
     $thread_list_table = $dom->getElementById('thread-list');
@@ -63,8 +63,12 @@ function nel_render_thread_panel_main($dataforce)
         }
 
         $thread_locked = $xpath->query(".//*[@id='thread-locked-']", $temp_thread_row)->item(0);
-        $thread_locked->setContent($thread['locked'] == 1 ? 'Locked' : '');
+        $thread_locked->setContent($thread['locked'] == 1 ? 'Locked' : 'Unlocked');
         $thread_locked->changeId('thread-locked-' . $thread['thread_id']);
+
+        $thread_last_update = $xpath->query(".//*[@id='thread-last-update-']", $temp_thread_row)->item(0);
+        $thread_last_update->setContent(date("D F jS Y  H:i:s", $thread['last_update'] / 1000));
+        $thread_last_update->changeId('thread-last-update-' . $thread['thread_id']);
 
         $thread_subject_link = $xpath->query(".//*[@id='thread-subject-link-']", $temp_thread_row)->item(0);
         $thread_subject_link->setContent($op_post['subject']);
@@ -89,6 +93,7 @@ function nel_render_thread_panel_main($dataforce)
 
         $temp_thread_row->extSetAttribute('class', $bgclass);
         $thread_list_table->appendChild($temp_thread_row);
+        $i ++;
     }
 
     $thread_row->removeSelf();
