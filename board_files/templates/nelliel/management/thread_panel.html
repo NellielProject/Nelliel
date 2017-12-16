@@ -1,0 +1,59 @@
+	<div class="pass-valid">
+		<span data-i18n="neltext">MANAGE_MODE</span>
+	</div>
+	<div class="del-list">
+		<span data-i18n="neltext">MANAGE_THREADS</span>
+	</div>
+	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="mode" value="admin->thread->update">
+		<table id="thread-list" class="post-lists">
+			<tr class="manage-header">
+				<th id="expand-thread-th" data-i18n="neltext">MANAGE_THREAD_EXPAND</th>
+				<th data-i18n="neltext">thread_id</th>
+				<th data-i18n="neltext">MANAGE_THREAD_DELETE</th>
+				<th data-i18n="neltext">MANAGE_THREAD_STICKY</th>
+				<th data-i18n="neltext">MANAGE_THREAD_UNSTICKY</th>
+				<th data-i18n="neltext">locked</th>
+				<th data-i18n="neltext">last_update</th>
+				<th data-i18n="neltext">thread subject</th>
+				<th data-i18n="neltext">op name</th>
+				<th data-i18n="neltext">op host</th>
+				<th data-i18n="neltext">post count</th>
+				<th data-i18n="neltext">file count</th>
+				<th data-i18n="neltext">external count</th>
+			</tr>
+			<tr id="thread-row-" class="row1">
+				<td>
+					<input id="expand-thread-button-" type="submit" name="expand_thread" value="">
+				</td>
+				<td id="thread-post-number-"></td>
+				<td>
+					<input id="delete-thread-" type="checkbox" name="thread_" value="deletethread_{$render->get('parent_thread')}_{$render->get('post_number')}" title="Delete entire post">
+				</td>
+				<td>
+					<input id="sticky-thread-" type="checkbox" name="" value="threadsticky_">
+				</td>
+				<td>
+					<input id="unsticky-thread-" type="checkbox" name="" value="threadunsticky_">
+				</td>
+				<td>
+					<span id="thread-locked-"></span>
+				</td>
+				<td>
+				</td>
+				<td>
+					<a id="thread-subject-link-" href="" rel="external"></a>
+				</td>
+				<td>
+					<span id="thread-op-name-"></span>
+				</td>
+				<td>
+					<span id="thread-op-ip-"></span>
+				</td>
+			</tr>
+		</table>
+		<div>
+			<input type="submit" name="dostuff" value="Update">&nbsp;
+			<input type=reset value="Reset">
+		</div>
+	</form>
