@@ -12,7 +12,7 @@ function nel_render_settings_panel($dataforce)
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('management/settings_panel.html');
+    $render1->loadTemplateFromFile($dom, 'management/settings_panel.html');
 
     $result =  $dbh->query('SELECT * FROM ' . CONFIG_TABLE . '');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -70,7 +70,7 @@ function nel_render_settings_panel($dataforce)
     }
 
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
     nel_render_footer($render, false);
     $render->output(true);
 }

@@ -13,7 +13,7 @@ function nel_render_main_ban_panel($dataforce)
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('management/bans_panel_main.html');
+    $render1->loadTemplateFromFile($dom, 'management/bans_panel_main.html');
     $xpath = new DOMXPath($dom);
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
 
@@ -68,7 +68,7 @@ function nel_render_main_ban_panel($dataforce)
     $form_add_ban->extSetAttribute('action', $dotdot . PHP_SELF);
 
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
     nel_render_footer($render, false);
     $render->output(true);
 }
@@ -80,9 +80,9 @@ function nel_render_ban_panel_add($dataforce)
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('management/bans_panel_add_ban.html');
+    $render1->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
     nel_render_footer($render, false);
     $render->output(true);
 }
@@ -95,7 +95,7 @@ function nel_render_ban_panel_modify($dataforce)
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('management/bans_panel_modify_ban.html');
+    $render1->loadTemplateFromFile($dom, 'management/bans_panel_modify_ban.html');
 
     $result =  $dbh->query('SELECT * FROM ' . BAN_TABLE . ' WHERE ban_id=' . $dataforce['banid'] . '');
     $baninfo = $result->fetch(PDO::FETCH_ASSOC);
@@ -133,7 +133,7 @@ function nel_render_ban_panel_modify($dataforce)
     }
 
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
     nel_render_footer($render, false);
     $render->output(true);
 }

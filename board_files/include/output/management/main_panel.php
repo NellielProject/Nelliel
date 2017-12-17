@@ -5,7 +5,7 @@ function nel_generate_main_panel($render)
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('management/main_panel.html');
+    $render1->loadTemplateFromFile($dom, 'management/main_panel.html');
 
     if (nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_config_access'))
     {
@@ -44,5 +44,5 @@ function nel_generate_main_panel($render)
     }
 
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
 }

@@ -1,10 +1,9 @@
 <?php
 
-namespace NellielTemplates;
+namespace phpDOMExtend;
 
-class NellielEscaper
+class DOMEscaper
 {
-
     function __construct()
     {
         ;

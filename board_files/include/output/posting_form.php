@@ -5,7 +5,7 @@ function nel_render_posting_form($dataforce, $render)
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('posting_form.html');
+    $render1->loadTemplateFromFile($dom, 'posting_form.html');
     $xpath = new DOMXPath($dom);
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
     $response_id = (is_null($dataforce['response_id'])) ? '0' : $dataforce['response_id'];
@@ -136,5 +136,5 @@ function nel_render_posting_form($dataforce, $render)
     }
 
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
 }

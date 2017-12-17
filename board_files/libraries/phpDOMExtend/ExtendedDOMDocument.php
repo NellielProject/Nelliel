@@ -1,44 +1,40 @@
 <?php
 
-namespace NellielTemplates;
+namespace phpDOMExtend;
 
-class NellielDOMDocument extends \DOMDocument
+class ExtendedDOMDocument extends \DOMDocument
 {
     private $escaper_instance;
-    private $render_instance;
-    private $template_instance;
-    private $template;
-    private $xpath;
 
-    function __construct($render_instance = null)
+    function __construct($register = false)
     {
         parent::__construct();
-        $this->render_instance = $render_instance;
 
-        if(!is_null($render_instance))
+        $this->escaper_instance = new DOMEscaper();
+
+        if ($register)
         {
-            $this->template_instance = $render_instance->getTemplateInstance();
+            $this->registerNodeClasses();
+        }
+    }
+
+    public function registerNodeClasses($dom_document = true, $dom_element = true)
+    {
+        if($dom_document)
+        {
+            $this->registerNodeClass('DOMDocument', 'phpDOMExtend\ExtendedDOMDocument');
         }
 
-        $this->escaper_instance = new NellielEscaper();
-        $this->registerNodeClass('DOMDocument', 'NellielTemplates\NellielDOMDocument');
-        $this->registerNodeClass('DOMElement', 'NellielTemplates\NellielDOMElement');
-        $this->formatOutput = true;
-        $this->strictErrorChecking = false;
-        $this->validateOnParse = true;
+        if($dom_element)
+        {
+            $this->registerNodeClass('DOMElement', 'phpDOMExtend\ExtendedDOMElement');
+        }
     }
 
-    public function loadTemplateFromFile($template_file)
+    public function doXPathQuery($expression, $context_node = null)
     {
-        $this->template = $template_file;
-        $source = $this->template_instance->getTemplate($template_file);
-        $this->loadHTML($source);
-        $this->xpath = new \DOMXPath($this);
-    }
-
-    public function outputHTML()
-    {
-        return $this->template_instance->outputHTMLFromDom($this, $this->template);
+        $xpath = new \DOMXPath($this);
+        return $xpath->query($expression, $context_node);
     }
 
     public function doEscaping(&$content, $escape_type)
@@ -54,7 +50,7 @@ class NellielDOMDocument extends \DOMDocument
 
     public function extCreateElement($name, $value = null, $escape_type = 'html')
     {
-        if(!is_null($value))
+        if (!is_null($value))
         {
             $this->doEscaping($value, $escape_type);
         }
@@ -64,7 +60,7 @@ class NellielDOMDocument extends \DOMDocument
 
     public function extCreateElementNS($namespaceURI, $qualifiedName, $value = null, $escape_type = 'html')
     {
-        if(!is_null($value))
+        if (!is_null($value))
         {
             $this->doEscaping($value, $escape_type);
         }
@@ -88,23 +84,31 @@ class NellielDOMDocument extends \DOMDocument
         return $attribute;
     }
 
-    public function getXPath()
+    public function getElementsByAttributeName($attribute_name, $context_node = null)
     {
-        return $this->xpath;
+        return $this->doXPathQuery('.//*[@' . $attribute_name . ']', $context_node);
     }
 
-    public function doXPathQuery($expression, $context_node = null)
+    public function getElementsByAttributeValue($attribute, $attribute_name, $context_node = null)
     {
-        return $this->xpath->query($expression, $context_node);
+        return $this->doXPathQuery('.//*[@' . $attribute . '=\'' . $attribute_name . '\']', $context_node);
     }
 
     public function getElementsByClassName($class_name, $context_node = null)
     {
-        $this->getElementsByAttributeName($class_name, $context_node);
+        return $this->getElementsByAttributeValue('class', $class_name, $context_node);
     }
 
-    public function getElementsByAttributeName($attribute_name, $context_node = null)
+    public function removeElementKeepChildren($element)
     {
-        return $this->xpath->query('//*[@' . $attribute_name . ']', $context_node);
+        $children = $element->getInnerNode(true);
+        $parent = $element->parentNode;
+
+        foreach ($children as $child_node)
+        {
+            $parent->insertBefore($child_node->cloneNode(true), $element);
+        }
+
+        $element->removeSelf();
     }
 }

@@ -9,7 +9,7 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('header.html');
+    $render1->loadTemplateFromFile($dom, 'header.html');
     $xpath = new DOMXPath($dom);
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
     $head_element = $dom->getElementsByTagName('head')->item(0);
@@ -106,5 +106,5 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
 
     nel_process_i18n($dom);
 
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
 }

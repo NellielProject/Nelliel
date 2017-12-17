@@ -11,7 +11,7 @@ function nel_render_ban_page($dataforce, $bandata)
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('ban_page.html');
+    $render1->loadTemplateFromFile($dom, 'ban_page.html');
     $xpath = new DOMXPath($dom);
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
     $ip_address = ($bandata['ip_address']) ? $bandata['ip_address'] : 'Unknown';
@@ -66,7 +66,7 @@ function nel_render_ban_page($dataforce, $bandata)
     }
 
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
     nel_render_footer($render, false);
     $render->output(true);
 }

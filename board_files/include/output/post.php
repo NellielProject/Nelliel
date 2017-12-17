@@ -21,7 +21,7 @@ function nel_render_index_navigation($render, $pages)
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('index_navigation.html');
+    $render1->loadTemplateFromFile($dom, 'index_navigation.html');
     $xpath = new DOMXPath($dom);
     $index_bottom_nav_element = $dom->getElementById('index-bottom-nav');
     $inner_td_elements = $xpath->query(".//td", $index_bottom_nav_element);
@@ -59,7 +59,7 @@ function nel_render_index_navigation($render, $pages)
 
     $page_nav_td->removeSelf();
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
 }
 
 function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline)
@@ -70,7 +70,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('post.html');
+    $render1->loadTemplateFromFile($dom, 'post.html');
     $xpath = new DOMXPath($dom);
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
 
@@ -446,5 +446,5 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $render->add_data('page_ref2', '');
 
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
 }

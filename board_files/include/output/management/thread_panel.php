@@ -12,7 +12,7 @@ function nel_render_thread_panel_main($dataforce)
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('management/thread_panel.html');
+    $render1->loadTemplateFromFile($dom, 'management/thread_panel.html');
     $xpath = new DOMXPath($dom);
 
     $result =  $dbh->query('SELECT * FROM "' . THREAD_TABLE . '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC');
@@ -81,6 +81,12 @@ function nel_render_thread_panel_main($dataforce)
         $thread_op_ip = $xpath->query(".//*[@id='thread-op-ip-']", $temp_thread_row)->item(0);
         $thread_op_ip->setContent($op_post['ip_address']);
         $thread_op_ip->changeId('thread-op-ip-' . $thread['thread_id']);
+        $thread_post_count = $xpath->query(".//*[@id='thread-post-count-']", $temp_thread_row)->item(0);
+        $thread_post_count->setContent($thread['post_count']);
+        $thread_post_count->changeId('thread-post-count-' . $thread['thread_id']);
+        $thread_total_files = $xpath->query(".//*[@id='thread-total-files-']", $temp_thread_row)->item(0);
+        $thread_total_files->setContent($thread['total_files']);
+        $thread_total_files->changeId('thread-total-files-' . $thread['thread_id']);
 
         if($i & 1)
         {
@@ -99,7 +105,7 @@ function nel_render_thread_panel_main($dataforce)
     $thread_row->removeSelf();
 
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
     nel_render_footer($render, false);
     $render->output(true);
 }

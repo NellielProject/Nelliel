@@ -11,9 +11,9 @@ function nel_render_staff_panel_main($dataforce)
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('management/staff_panel_main.html');
+    $render1->loadTemplateFromFile($dom, 'management/staff_panel_main.html');
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
     nel_render_footer($render, false);
     $render->output(true);
 }
@@ -27,14 +27,14 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('management/staff_panel_user_edit.html');
+    $render1->loadTemplateFromFile($dom, 'management/staff_panel_user_edit.html');
 
     $dom->getElementById('user-id-field')->extSetAttribute('value', $user['user_id']);
     $dom->getElementById('user-title-field')->extSetAttribute('value', $user['user_title']);
     $dom->getElementById('role-id-field')->extSetAttribute('value', $user['role_id']);
 
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
     nel_render_footer($render, false);
     $render->output(true);
 }
@@ -48,7 +48,7 @@ function nel_render_staff_panel_role_edit($dataforce, $role_id)
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('management/staff_panel_role_edit.html');
+    $render1->loadTemplateFromFile($dom, 'management/staff_panel_role_edit.html');
 
     $dom->getElementById('role_id')->extSetAttribute('value', $role['role_id']);
     $dom->getElementById('role_level')->extSetAttribute('value', $role['role_level']);
@@ -63,7 +63,7 @@ function nel_render_staff_panel_role_edit($dataforce, $role_id)
     }
 
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
     nel_render_footer($render, false, true, false);
     $render->output(TRUE);
 }

@@ -9,7 +9,7 @@ function nel_render_footer($render, $footer_form, $styles = true, $extra_links =
     $render1 = new NellielTemplates\RenderCore();
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom->loadTemplateFromFile('footer.html');
+    $render1->loadTemplateFromFile($dom, 'footer.html');
     $xpath = new DOMXPath($dom);
     $footer_form_element = $dom->getElementById('footer-form');
 
@@ -64,5 +64,5 @@ function nel_render_footer($render, $footer_form, $styles = true, $extra_links =
     }
 
     nel_process_i18n($dom);
-    $render->appendOutput($dom->outputHTML());
+    $render->appendOutput($render1->outputHTML($dom));
 }
