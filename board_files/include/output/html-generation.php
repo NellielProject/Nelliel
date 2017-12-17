@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Generate the header
 //
-function nel_render_header($dataforce, $render, $treeline)
+/*function nel_render_header($dataforce, $render, $treeline)
 {
     $title = '';
 
@@ -58,14 +58,15 @@ function nel_render_header($dataforce, $render, $treeline)
 
     $render->add_data('log_out', (!nel_session_is_ignored('render')) ? '[<a href="' . $render->get('dotdot') . PHP_SELF .
          '?mode=log_out">Log Out</a>]' : '');
-    $render->add_data('page_ref1', (!nel_session_is_ignored('render')) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 . PHP_EXT);
+    $render->add_data('page_ref1', (!nel_session_is_ignored('render')) ? PHP_SELF . '?mode=display&page=0' : PHP_SELF2 .
+         PHP_EXT);
     $render->parse('header.tpl', '');
-}
+}*/
 
 //
 // Generate reply form
 //
-function nel_render_posting_form($dataforce, $render)
+/*function nel_render_posting_form($dataforce, $render)
 {
     $render->add_data('response_id', (is_null($dataforce['response_id'])) ? '0' : $dataforce['response_id']);
     $render->add_data('rules_list', $dataforce['rules_list']);
@@ -106,12 +107,12 @@ function nel_render_posting_form($dataforce, $render)
 
     $render->add_data('max_files', BS_MAX_POST_FILES);
     $render->parse('posting_form.tpl', '', $render, FALSE);
-}
+}*/
 
 //
 // Render posts
 //
-function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline)
+/*function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline)
 {
     $authorize = nel_get_authorization();
     global $link_resno;
@@ -199,13 +200,13 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                     if ($filecount > 1)
                     {
                         if ($files[$i]['preview_width'] > BS_MAX_MULTI_WIDTH ||
-                         $files[$i]['preview_height'] > BS_MAX_MULTI_HEIGHT)
-                         {
-                         $ratio = min((BS_MAX_MULTI_HEIGHT / $files[$i]['preview_height']), (BS_MAX_MULTI_WIDTH /
-                         $files[$i]['preview_width']));
-                         $files[$i]['preview_width'] = intval($ratio * $files[$i]['preview_width']);
-                         $files[$i]['preview_height'] = intval($ratio * $files[$i]['preview_height']);
-                         }
+                             $files[$i]['preview_height'] > BS_MAX_MULTI_HEIGHT)
+                        {
+                            $ratio = min((BS_MAX_MULTI_HEIGHT / $files[$i]['preview_height']), (BS_MAX_MULTI_WIDTH /
+                             $files[$i]['preview_width']));
+                            $files[$i]['preview_width'] = intval($ratio * $files[$i]['preview_width']);
+                            $files[$i]['preview_height'] = intval($ratio * $files[$i]['preview_height']);
+                        }
                     }
                 }
                 else if (BS_USE_FILE_ICON && file_exists(BOARD_FILES . 'imagez/nelliel/filetype/' .
@@ -286,12 +287,12 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     {
         $render->parse('op_post.tpl', '');
     }
-}
+}*/
 
 //
 // Footer
 //
-function nel_render_basic_footer($render)
+/*function nel_render_basic_footer($render)
 {
     $authorize = nel_get_authorization();
 
@@ -329,9 +330,9 @@ function nel_render_footer($render, $link, $styles, $del, $response, $main_page)
     $render->add_data('response', $response);
     $render->add_data('main_page', $main_page);
     $render->parse('footer.tpl', '');
-}
+}*/
 
-function nel_render_ban_page($dataforce, $bandata)
+/*function nel_render_ban_page($dataforce, $bandata)
 {
     $render = new nel_render();
     $render->add_multiple_data($bandata);
@@ -343,7 +344,7 @@ function nel_render_ban_page($dataforce, $bandata)
     $render->parse('ban_page.tpl', '');
     nel_render_basic_footer($render);
     $render->output(TRUE);
-}
+}*/
 
 //
 // Parse links in posts

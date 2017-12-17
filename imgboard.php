@@ -1,5 +1,5 @@
 <?php
-define('NELLIEL_VERSION', 'v0.9.4'); // Version
+define('NELLIEL_VERSION', 'v0.9.4.1'); // Version
 define('BOARD_FILES', 'board_files/'); // Name of directory where the support and internal files go
 define('BASE_PATH', realpath('./')); // Base path for script
 define('INCLUDE_PATH', BASE_PATH . '/' . BOARD_FILES . 'include/'); // Base cache path
@@ -34,8 +34,11 @@ $plugins->activate();
 // A demo point. Does nothing, really
 $example_result = $plugins->plugin_hook('plugin-example', TRUE, array(5));
 
-require_once INCLUDE_PATH . 'accessors.php';
+require_once FILES_PATH . 'libraries/phpDOMExtend/autoload.php';
+require_once FILES_PATH . 'libraries/NellielTemplates/autoload.php';
+require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'classes/NellielPDO.php';
+require_once INCLUDE_PATH . 'accessors.php';
 require_once INCLUDE_PATH . 'general-functions.php';
 require_once INCLUDE_PATH . 'file-handling.php';
 require_once INCLUDE_PATH . 'initializations.php';
@@ -46,10 +49,11 @@ require_once INCLUDE_PATH . 'thread-functions.php';
 require_once INCLUDE_PATH . 'output/html-generation.php';
 require_once INCLUDE_PATH . 'banhammer.php';
 require_once INCLUDE_PATH . 'snacks.php';
+require_once INCLUDE_PATH . 'sessions.php';
 
 // IT'S GO TIME!
+nel_apply_ban($dataforce);
 nel_ban_spambots($dataforce);
-require_once INCLUDE_PATH . 'sessions.php';
 nel_initialize_session($dataforce);
 require_once INCLUDE_PATH . 'post/post.php';
 require_once INCLUDE_PATH . 'central-dispatch.php';

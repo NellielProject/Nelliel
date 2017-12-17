@@ -394,7 +394,7 @@
    * @param {String} cssText The CSS text to shiv.
    * @returns {String} The shived CSS text.
    */
-  function shivCsnel_stext(cssText) {
+  function shivCssText(cssText) {
     var pair,
         parts = cssText.split('{'),
         index = parts.length,
@@ -491,7 +491,7 @@
       }
 
       // wrap all HTML5 elements with printable elements and add the shived style sheet
-      cssText = shivCsnel_stext(cssText.reverse().join(''));
+      cssText = shivCssText(cssText.reverse().join(''));
       wrappers = addWrappers(ownerDocument);
       shivedSheet = addStyleSheet(ownerDocument, cssText);
 

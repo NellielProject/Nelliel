@@ -13,7 +13,7 @@ function nel_thread_panel($dataforce, $authorize)
         nel_derp(103, array('origin' => 'ADMIN'));
     }
 
-    require_once INCLUDE_PATH . 'output/thread-panel-generation.php';
+    require_once INCLUDE_PATH . 'output/management/thread_panel.php';
     if (isset($dataforce['expand_thread']))
     {
         $expand = TRUE;
@@ -30,5 +30,5 @@ function nel_thread_panel($dataforce, $authorize)
         nel_regen_index($dataforce);
     }
 
-    nel_render_thread_panel($dataforce, $expand);
+    nel_render_thread_panel_main($dataforce, $expand);
 }

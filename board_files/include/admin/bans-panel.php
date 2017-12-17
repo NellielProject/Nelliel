@@ -10,7 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_update_ban($dataforce)
 {
     $dbh = nel_database();
-    $mode = $dataforce['mode_action'];
+    $mode = $dataforce['mode'];
 
     if ($mode === 'update')
     {
@@ -61,7 +61,7 @@ function nel_update_ban($dataforce)
             $ban_input['status'] = ((int) $ban_input['length'] !== $bantotal) ? 3 : 2;
         }
 
-        $prepared = $dbh->prepare('UPDATE ' . BAN_TABLE . ' SET reason=:reason, length=:length, appeal_response=:response, appeal_status=:status WHERE id=:banid');
+        $prepared = $dbh->prepare('UPDATE ' . BAN_TABLE . ' SET reason=:reason, length=:length, appeal_response=:response, appeal_status=:status WHERE ban_id=:banid');
         $prepared->bindParam(':reason', $ban_input['reason'], PDO::PARAM_STR);
         $prepared->bindParam(':length', $bantotal, PDO::PARAM_INT);
         $prepared->bindParam(':response', $ban_input['response'], PDO::PARAM_STR);
@@ -86,9 +86,9 @@ function nel_ban_control($dataforce)
         nel_derp(101, array('origin' => 'ADMIN'));
     }
 
-    require_once INCLUDE_PATH . 'output/ban-panel-generation.php';
+    //require_once INCLUDE_PATH . 'output/ban-panel-generation.php';
 
-    if ($mode === 'modify')
+    if ($mode === 'admin->ban->modify')
     {
         nel_render_ban_panel_modify($dataforce);
     }
@@ -100,24 +100,26 @@ function nel_ban_control($dataforce)
     {
         $dataforce['snacks'] = 'addban';
         nel_ban_hammer($dataforce);
-        nel_render_ban_panel_list($dataforce);
+        nel_render_main_ban_panel($dataforce);
     }
-    else if ($mode === 'remove')
+    else if ($mode === 'admin->ban->remove')
     {
-         $dbh->query('DELETE FROM ' . BAN_TABLE . ' WHERE id=' . $dataforce['banid'] . '');
-        nel_update_ban($dataforce, $authorize);
+        $dbh->query('DELETE FROM ' . BAN_TABLE . ' WHERE ban_id=' . $dataforce['banid'] . '');
+        nel_update_ban($dataforce);
+        nel_render_main_ban_panel($dataforce);
     }
-    else if ($mode === 'update')
+    else if ($mode === 'admin->ban->update')
     {
-        nel_update_ban($dataforce, $authorize);
+        nel_update_ban($dataforce);
+        nel_render_main_ban_panel($dataforce);
     }
     else if ($mode === 'admin->ban->panel')
     {
-        nel_render_ban_panel_list($dataforce);
+        nel_render_main_ban_panel($dataforce);
     }
     else
     {
-        ; // error here
+        ; //TODO: Error or something
     }
+
 }
-?>

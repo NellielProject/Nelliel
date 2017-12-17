@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 // Cached settings
 if (!file_exists(CACHE_PATH . 'parameters.nelcache'))
 {
-    nel_cache_settings($dbh);
+    nel_cache_settings();
 }
 
 require_once CACHE_PATH . 'parameters.nelcache';
@@ -209,7 +209,7 @@ function nel_cache_settings()
 //
 // Regenerate the template cache
 //
-function nel_regen_template_cache()
+/*function nel_regen_template_cache()
 {
     $Directory = new RecursiveDirectoryIterator(TEMPLATE_PATH);
     $Iterator = new RecursiveIteratorIterator($Directory);
@@ -222,29 +222,15 @@ function nel_regen_template_cache()
         $subdirectory = str_replace($template, '', $file);
         nel_parse_template($template, $subdirectory, null, true);
     }
-}
-
-function nel_reset_template_status($template_info)
-{
-    foreach ($template_info as $key => $value) // TODO: Invalid argument?
-    {
-        $template_info[$key]['loaded'] = FALSE;
-    }
-
-    return $template_info;
-}
+}*/
 
 //
 // Write out rules, post links and template info cache
 //
 function nel_write_multi_cache($dataforce)
 {
-    $template_info = nel_template_info(NULL, NULL, NULL, TRUE);
-    $template_info = nel_reset_template_status($template_info);
     $cache = '<?php
 $dataforce[\'rules_list\'] = \'' . $dataforce['rules_list'] . '\';
-$template_info = ' . var_export($template_info, TRUE) . ';
-nel_template_info(NULL, NULL, $template_info, FALSE);
 ?>';
 
     nel_write_file(CACHE_PATH . 'multi-cache.nelcache', $cache, FILE_PERM);

@@ -22,7 +22,6 @@ function nel_regen_cache($dataforce)
 {
     $dataforce['rules_list'] = nel_cache_rules();
     nel_cache_settings();
-    nel_regen_template_cache();
     nel_write_multi_cache($dataforce);
 }
 

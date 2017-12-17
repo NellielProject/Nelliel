@@ -19,11 +19,6 @@ function nel_process_get($dataforce)
 {
     $authorize = nel_get_authorization();
 
-    if (!isset($dataforce['get_mode']))
-    {
-        return;
-    }
-
     switch ($dataforce['get_mode']) // Moar modes
     {
         case 'display':
@@ -44,11 +39,18 @@ function nel_process_get($dataforce)
         case 'admin':
             nel_login($dataforce, $authorize);
             die();
+    }
 
-        case 'about':
-            include INCLUDE_PATH . 'about.php';
-            about_screen();
-            die();
+    if(isset($_GET['about_nelliel']))
+    {
+        require_once INCLUDE_PATH . 'about.php';
+        nel_about_nelliel_screen();
+    }
+
+    if(isset($_GET['blank']) || isset($_GET['tpilb']))
+    {
+        require_once INCLUDE_PATH . 'about.php';
+        nel_tpilb();
     }
 }
 

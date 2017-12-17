@@ -11,7 +11,6 @@ function nel_main_thread_generator($dataforce, $write)
 {
     $dbh = nel_database();
     $gen_data = array();
-    $gen_data['insert_hr'] = FALSE;
     $dataforce['dotdot'] = '';
 
     if($write)
@@ -25,26 +24,26 @@ function nel_main_thread_generator($dataforce, $write)
 
     $treeline = array(0);
     $counttree = count($front_page_list);
+    $dataforce['posts_beginning'] = false;
+    $dataforce['posts_ending'] = false;
+    $dataforce['index_rendering'] = true;
 
     // Special handling when there's no content
     if ($counttree === 0)
     {
-        $render = new nel_render();
-        $render->add_data('header_type', 'NORMAL');
+        $render = new NellielTemplates\RenderCore();
+        $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
         nel_render_header($dataforce, $render, $treeline);
         nel_render_posting_form($dataforce, $render);
-        $render->add_data('prev_nav', '');
-        $render->add_data('next_nav', '');
-        $render->add_data('page_nav', '');
-        nel_render_footer($render, FALSE, TRUE, TRUE, FALSE, TRUE);
+        nel_render_footer($render, true);
 
         if ($write)
         {
-            nel_write_file(PHP_SELF2 . PHP_EXT, $render->output(FALSE), FILE_PERM);
+            nel_write_file(PHP_SELF2 . PHP_EXT, $render->outputRenderSet(), FILE_PERM);
         }
         else
         {
-            $render->output(TRUE);
+            echo $render->outputRenderSet();
         }
 
         return;
@@ -56,9 +55,9 @@ function nel_main_thread_generator($dataforce, $write)
 
     while ($thread_counter < $counttree)
     {
-        $render = new nel_render();
+        $render = new NellielTemplates\RenderCore();
+        $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
         $dataforce['omitted_done'] = TRUE;
-        $render->add_data('header_type', 'NORMAL');
         nel_render_header($dataforce, $render, $treeline);
         nel_render_posting_form($dataforce, $render);
         $sub_page_thread_counter = 0;
@@ -66,7 +65,6 @@ function nel_main_thread_generator($dataforce, $write)
 
         while ($sub_page_thread_counter < BS_THREADS_PER_PAGE)
         {
-
             if ($gen_data['post_counter'] === -1)
             {
                 $prepared = $dbh->prepare('SELECT * FROM ' . THREAD_TABLE . ' WHERE thread_id=?');
@@ -84,6 +82,15 @@ function nel_main_thread_generator($dataforce, $write)
                 $gen_data['thread']['expand_post'] = ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD) ? TRUE : FALSE;
                 $gen_data['thread']['first100'] = ($gen_data['thread']['post_count'] > 100) ? TRUE : FALSE;
                 $gen_data['post_counter'] = 0;
+            }
+
+            if($thread_counter === 0 && $gen_data['post_counter'] === 0)
+            {
+                $dataforce['posts_beginning'] = true;
+            }
+            else
+            {
+                $dataforce['posts_beginning'] = false;
             }
 
             $gen_data['post'] = $treeline[$gen_data['post_counter']];
@@ -120,9 +127,7 @@ function nel_main_thread_generator($dataforce, $write)
             {
                 $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? BS_THREADS_PER_PAGE : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
-                $gen_data['insert_hr'] = TRUE;
-                nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline);
-                $gen_data['insert_hr'] = FALSE;
+                nel_render_insert_hr($render);
                 $gen_data['post_counter'] = -1;
             }
             else
@@ -131,49 +136,61 @@ function nel_main_thread_generator($dataforce, $write)
             }
         }
 
+        $dataforce['posts_ending'] = true;
+
         // if not in res display mode
         $prev = $page - 1;
         $next = $page + 1;
 
-        $render->add_data('page_nav', ' ');
         $page_count = (int) ceil($counttree / BS_THREADS_PER_PAGE);
-        $render->add_data('main_page', TRUE);
+        //$render->add_data('main_page', TRUE);
+        $pages = array();
 
         if ($page === 1)
         {
-            $render->add_data('prev_nav', 'Previous');
+            $pages['prev'] = '';
         }
         else if ($page === 2)
         {
-            $render->add_data('prev_nav', '<a href="' . PHP_SELF2 . PHP_EXT . '">Previous</a> ');
+            $pages['prev'] = PHP_SELF2 . PHP_EXT;
         }
         else
         {
-            $render->add_data('prev_nav', '<a href="' . PHP_SELF2 . ($page - 2) . PHP_EXT . '">Previous</a>');
+            $pages['prev'] = PHP_SELF2 . ($page - 2) . PHP_EXT;
         }
 
-        $render->add_data('next_nav', ($page === $page_count || $dataforce['max_pages'] === 1) ? 'Next' : '<a href="' . PHP_SELF2 . ($page) . PHP_EXT . '">Next</a>');
         $i = 0;
 
+        // TODO: Clean shit up
         while ($i < $page_count)
         {
             if ($i === 0)
             {
-                $render->add_data('page_nav', $render->get('page_nav') . (($page > 1) ? '[<a href="' . PHP_SELF2 . PHP_EXT . '">0</a>] ' : '[0] '));
+                $pages[$i] = (($page > 1) ? PHP_SELF2 . PHP_EXT : '');
             }
             else if ($i === ($page - 1) || $dataforce['max_pages'] === 1)
             {
-                $render->add_data('page_nav', $render->get('page_nav') . '[' . ($i) . '] ');
+                $pages[$i] = '';
             }
             else
             {
-                $render->add_data('page_nav', $render->get('page_nav') . '[<a href="' . PHP_SELF2 . ($i) . PHP_EXT . '">' . ($i) . '</a>] ');
+                $pages[$i] = PHP_SELF2 . ($i) . PHP_EXT;
             }
 
             ++ $i;
         }
 
-        nel_render_footer($render, FALSE, TRUE, TRUE, FALSE, TRUE);
+        if($page === $page_count || $dataforce['max_pages'] === 1)
+        {
+            $pages['next'] = '';
+        }
+        else
+        {
+            $pages['next'] = PHP_SELF2 . ($page) . PHP_EXT;
+        }
+
+        nel_render_index_navigation($render, $pages);
+        nel_render_footer($render, true);
 
         if (!$write)
         {
@@ -182,13 +199,13 @@ function nel_main_thread_generator($dataforce, $write)
                 $page = $counttree;
             }
 
-            $render->output(TRUE);
+            echo $render->outputRenderSet();
             die();
         }
         else
         {
             $logfilename = ($page === 1) ? PHP_SELF2 . PHP_EXT : PHP_SELF2 . ($page - 1) . PHP_EXT;
-            nel_write_file($logfilename, $render->output(FALSE), FILE_PERM);
+            nel_write_file($logfilename, $render->outputRenderSet(), FILE_PERM);
         }
 
         ++ $page;
@@ -200,5 +217,3 @@ function nel_main_thread_generator($dataforce, $write)
         nel_session_set_ignored('render', false);
     }
 }
-
-?>

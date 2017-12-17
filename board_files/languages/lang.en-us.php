@@ -16,13 +16,16 @@ $lang_singular = array(
     'LANG_NAME' => 'United States English',  // Full language name
     'LANG_FORM' => 'singular',
 
+    'PLURAL_TEST %count%' => 'Plural Test - Count: Only 1',  // Plural test
+
 
     'LINK_HOME' => 'Home',  // Home page link
     'LINK_MANAGE' => 'Manage',  // Management page link
-    'LINK_ABOUT' => 'About',  // About page link
+    'LINK_ABOUT_NELLIEL' => 'About Nelliel',  // About page link
     'LINK_RETURN' => 'Return',  // Return to main page link
     'LINK_REPLY' => 'Reply',  // Reply to a post
     'LINK_EXPAND' => 'Expand thread',  // Expand thread
+    'LINK_LOGOUT' => 'Logout',  // Logout
 
 
     'FORM_SUBMIT' => 'Submit',  // Submit button
@@ -48,7 +51,7 @@ $lang_singular = array(
     'FORM_LABEL_EMAIL' => 'E-mail',  // E-mail field
     'FORM_LABEL_SUBJECT' => 'Subject',  // Subject field
     'FORM_LABEL_COMMENT' => 'Comment',  // Comment field
-    'FORM_LABEL_FILE' => 'File',  // File upload
+    'FORM_LABEL_FILE #' => 'File',  // File upload
     'FORM_LABEL_PASS' => 'Password',  // Password for deleting post
     'FORM_LABEL_SOURCE' => 'Source',  // Source field
     'FORM_LABEL_LICENSE' => 'License',  // License field
@@ -58,8 +61,6 @@ $lang_singular = array(
     'TEXT_THREADMODE' => 'Posting mode: New thread',  // New thread mode
     'TEXT_PASS_WAT' => '(Password used for file deletion)',  // Explain wtf the password is for
     'TEXT_SPAMBOT_TRAP' => 'Never put anything in this field!',  // Warning about the hidden spambot trap fields
-    'TEXT_SPAMBOT_FIELD1' => 'thename1',  // First anti-spambot hidden field
-    'TEXT_SPAMBOT_FIELD2' => 'theurl1',  // Second anti-spambot hidden field
     'TEXT_OMITTED_POSTS' => ' posts omitted. Click Reply or Expand Post to view.',  // Prints text to be shown when replies are hidden
 
 
@@ -173,6 +174,11 @@ $lang_singular = array(
     'MANAGE_THREAD_COMMENT' => 'Comment',  // Comment
     'MANAGE_THREAD_HOST' => 'Host',  // Host
     'MANAGE_THREAD_FILE' => 'Filename (Filesize [Bytes])<br>md5',  // File info
+    'MANAGE_THREAD_LOCKED' => 'Locked',  // Host
+    'MANAGE_THREAD_LAST_UPDATE' => 'Last Updated',  // Host
+    'MANAGE_THREAD_HOST' => 'Host',  // Host
+    'MANAGE_THREAD_POST_COUNT' => 'Total Posts',  // Host
+    'MANAGE_THREAD_TOTAL_FILES' => 'Total Files',  // Host
     'MANAGE_STAFF_USER_ID' => 'User ID',  // User ID
     'MANAGE_STAFF_USER_PASS' => 'New password (leave blank to keep current password)',  // Password
     'MANAGE_STAFF_CHANGE_PASS' => 'Check this to change current password to the one entered above',  // Checkbox to change password
@@ -367,7 +373,6 @@ $lang_singular = array(
 
 
 // These are holdovers from the original Nelliel that are still in use. I need to clean them up.
-    'S_FOOT' => '- <a href="http://www.1chan.net/futallaby/" rel="external">futallaby</a> + <a href="http://www.nelliel.com" rel="external" title="Nelliel Imageboard Software">Nelliel ' . NELLIEL_VERSION . '</a> -',  // Prints footer (leave these credits)
     'S_DELPICONLY' => 'Delete File Only',  // Prints text next to checkbox for file deletion (right)
     'S_SHORT_MENU' => 'fff',  // Other boards menu
 
@@ -381,6 +386,8 @@ $lang_plural = array(
 'LANG_CODE' => 'en-us', // Language code
 'LANG_NAME' => 'United States English', // Full language name
 'LANG_FORM' => 'plural',
+
+'PLURAL_TEST %count%' => 'Plural Test - Count:%count%',  // Plural test
 
 'LANG_END' => '');
 

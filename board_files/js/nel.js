@@ -1,3 +1,10 @@
+function doImportantStuff(board_id)
+{
+	processCookie("style-"+board_id);
+	externalLinks();
+	fillForms(board_id);
+}
+
 function setCookie(c_name,value,expiredays)
 {
     var exdate=new Date();

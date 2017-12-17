@@ -15,7 +15,7 @@ function nel_settings_control($dataforce)
         nel_derp(102, array('origin' => 'ADMIN'));
     }
 
-    require_once INCLUDE_PATH . 'output/settings-panel-generation.php';
+    require_once INCLUDE_PATH . 'output/management/settings_panel.php';
     $update = FALSE;
 
     if ($mode === 'admin->settings->update')

@@ -50,7 +50,7 @@ function nel_render_thread_panel($dataforce, $expand)
             $post = $thread;
         }
 
-        if ($post['has_file'] === '1')
+        if ($post['has_file'] == 1)
         {
             $prepared = $dbh->prepare('SELECT * FROM "' . FILE_TABLE . '" WHERE post_ref=? ORDER BY file_order asc');
             $prepared->bindValue(1, $thread['post_number'], PDO::PARAM_INT);
@@ -71,7 +71,7 @@ function nel_render_thread_panel($dataforce, $expand)
 
     $dataforce['all_filesize'] = (int) ($all / 1024);
     nel_render_thread_panel_bottom($dataforce, $render, $thread_data);
-    nel_render_basic_footer($render);
+    nel_render_footer($render, false);
     $render->output(TRUE);
 }
 

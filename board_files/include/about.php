@@ -7,12 +7,13 @@ if (!defined('NELLIEL_VERSION'))
 //
 // The content this function presents must remain intact and be accessible to users
 //
-function about_screen()
+function nel_about_nelliel_screen()
 {
-    $render = new nel_render();
-    $render->add_data('header_type', 'ABOUT');
-    nel_render_header(array(), $render, array());
-    $render->output(TRUE);
+    $render = new NellielTemplates\RenderCore();
+    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    nel_render_header(array(), $render, array(), 'ABOUT');
+    echo $render->outputRenderSet();
+
     echo '
     <div class="text-center">
         <p>
@@ -20,7 +21,7 @@ function about_screen()
             Version: ' . NELLIEL_VERSION . '
         </p>
         <p class="text-center">
-            Copyright (c) 2010-2015, <a href="http://www.nelliel.com">Nelliel Project</a><br>
+            Copyright (c) 2010-2017, <a href="http://www.nelliel.com">Nelliel Project</a><br>
             All rights reserved.
         </p>
 		<div class="nelliel-license-div">
@@ -38,15 +39,16 @@ function about_screen()
                 3) Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without
                 specific prior written permission.
             </p>
-            <img src="board_files/imagez/luna_canterlot_disclaimer.png" alt="Canterlot Voice Disclaimer" width="320" height="180" style="float: left; padding-right: 8px;">
-            <p style="margin-left: 330px;">
-                THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-                THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-                FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-                LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-                NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-            </p>
-            <br>
+            <div>
+                <img src="board_files/imagez/luna_canterlot_disclaimer.png" alt="Canterlot Voice Disclaimer" width="320" height="180" style="padding-right: 10px; width: 330px; float: left;">
+                <p style="overflow: hidden; min-width: 15em;">
+                    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+                    THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+                    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+                    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+                    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+                </p>
+            </div>
             <hr class="clear">
             <p>
                 Default filetype icons are from the Soft Scraps pack made by <a href="http://deleket.deviantart.com/" title="Deleket">Deleket</a>
@@ -62,6 +64,5 @@ function about_screen()
     <hr>
 </body>
 </html>';
+    die();
 }
-
-?>

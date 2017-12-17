@@ -151,9 +151,11 @@ function nel_create_threads_table($table_name)
 function nel_create_files_table($table_name)
 {
     $dbh = nel_database();
+    $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
+        "entry"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "parent_thread"     INTEGER NOT NULL DEFAULT 0,
         "post_ref"          INTEGER NOT NULL DEFAULT 0,
         "file_order"        SMALLINT NOT NULL DEFAULT 1,
@@ -191,9 +193,11 @@ function nel_create_files_table($table_name)
 
 function nel_create_external_table($table_name)
 {
+    $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
+        "entry"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "parent_thread"     INTEGER NOT NULL DEFAULT 0,
         "post_ref"          INTEGER NOT NULL DEFAULT 0,
         "content_order"     SMALLINT NOT NULL DEFAULT 1,
@@ -234,9 +238,9 @@ function nel_create_config_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
+        "config_name"       VARCHAR(255) DEFAULT NULL UNIQUE,
         "config_type"       VARCHAR(255) DEFAULT NULL,
         "data_type"         VARCHAR(255) DEFAULT NULL,
-        "config_name"       VARCHAR(255) DEFAULT NULL UNIQUE,
         "setting"           VARCHAR(255) DEFAULT NULL
     ) ' . $options . ';';
 
@@ -302,7 +306,7 @@ function nel_create_permissions_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "role_number"           ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "entry"                ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "role_id"               VARCHAR(255) DEFAULT NULL,
         "perm_id"               VARCHAR(255) DEFAULT NULL,
         "perm_setting"          SMALLINT NOT NULL DEFAULT 0
@@ -331,8 +335,8 @@ function nel_insert_role_defaults()
     $result = $dbh->query("INSERT INTO " . ROLES_TABLE . "
     (role_id, role_level, role_title, capcode_text)
     VALUES
-    ('ADMIN', 100, 'Administrator', '## Administrator ##')
-    ('MOD', 50, 'Moderator', '## Moderator ##')
+    ('ADMIN', 100, 'Administrator', '## Administrator ##'),
+    ('MOD', 50, 'Moderator', '## Moderator ##'),
     ('JANITOR', 10, 'Janitor', '## Janitor ##')");
 
     nel_setup_stuff_done($result);

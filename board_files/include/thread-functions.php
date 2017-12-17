@@ -260,7 +260,7 @@ function nel_update_thread_data($thread_id)
         $external_count += $post['external_count'];
         $last_update = $post['post_time'];
 
-        if ($post['sage'] === '0')
+        if ($post['sage'] == 0)
         {
             $last_bump = $post['post_time'];
         }

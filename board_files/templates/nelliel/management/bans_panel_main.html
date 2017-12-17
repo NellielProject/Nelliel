@@ -1,0 +1,63 @@
+	<div class="pass-valid">
+		<span data-i18n="neltext">MANAGE_MODE</span>
+	</div>
+	<div class="del-list">
+		<span data-i18n="neltext">MANAGE_BANS</span>
+	</div>
+	<table id="ban-info-table" class="post-lists">
+		<tr class="manage-header">
+			<th data-i18n="neltext">MANAGE_BAN_ID</th>
+			<th data-i18n="neltext">MANAGE_BAN_TYPE</th>
+			<th data-i18n="neltext">MANAGE_BAN_HOST</th>
+			<th data-i18n="neltext">MANAGE_BAN_NAME</th>
+			<th data-i18n="neltext">MANAGE_BAN_REASON</th>
+			<th data-i18n="neltext">MANAGE_BAN_EXPIRE</th>
+			<th data-i18n="neltext">MANAGE_BAN_APPEAL</th>
+			<th data-i18n="neltext">MANAGE_BAN_APPEAL_RESPONSE</th>
+			<th data-i18n="neltext">MANAGE_BAN_STATUS</th>
+			<th data-i18n="neltext">MANAGE_BAN_MODIFY</th>
+			<th data-i18n="neltext">MANAGE_BAN_REMOVE</th>
+		</tr>
+		<tr id="ban-info-row" class="row1">
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td>
+				<form id="form-mod-ban-" accept-charset="utf-8" action="imgboard.php" method="post">
+					<div>
+						<input type="hidden" name="mode" value="admin->ban->modify">
+						<input type="hidden" name="banid" value="s">
+						<input type="submit" value="FORM_MOD_BAN" data-i18n="neltext" data-i18n-attributes="value">
+					</div>
+				</form>
+			</td>
+			<td>
+				<form id="form-remove-ban-" accept-charset="utf-8" action="imgboard.php" method="post">
+					<div>
+						<input type="hidden" name="mode" value="admin->ban->remove">
+						<input type="hidden" name="banid" value="">
+						<input type="submit" value="FORM_REMOVE_BAN" data-i18n="neltext" data-i18n-attributes="value">
+					</div>
+				</form>
+			</td>
+		</tr>
+	</table>
+	<hr>
+	<table>
+		<tr>
+			<td>
+				<form id="form-add-ban" accept-charset="utf-8" action="imgboard.php" method="post">
+					<div>
+						<input type="hidden" name="mode" value="admin->ban->new">
+						<input type="submit" value="FORM_ADD_BAN" data-i18n="neltext" data-i18n-attributes="value">
+					</div>
+				</form>
+			</td>
+		</tr>
+	</table>

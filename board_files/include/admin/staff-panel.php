@@ -18,7 +18,7 @@ function nel_staff_panel($dataforce)
         nel_derp(102, array('origin' => 'ADMIN'));
     }
 
-    require_once INCLUDE_PATH . 'output/staff-panel-generation.php';
+    //require_once INCLUDE_PATH . 'output/staff-panel-generation.php';
 
     if (isset($_POST['user_id']))
     {
@@ -96,7 +96,7 @@ function nel_staff_panel($dataforce)
 
             if(substr($key, 0, 5) === 'perm_')
             {
-                $value = ($value === '1') ? true : false;
+                $value = ($value == 1) ? true : false;
             }
 
             $authorize->update_perm($role_id, $key, $value);

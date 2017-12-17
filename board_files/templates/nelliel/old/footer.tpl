@@ -1,15 +1,4 @@
-{{ if $render->get('main_page') }}
-            <table>
-                <tr>
-                    <td>
-                        {$render->get('prev_nav')}</td><td>{$render->get('page_nav')}</td><td>{$render->get('next_nav')}
-                    </td>
-                </tr>
-            </table>
-{{ endif }}
 {{ if $render->get('del') }}
-            <div class="clear"></div>
-        </div>
         <table class="footer-form">
             <tr>
                 <td>
@@ -31,10 +20,6 @@
                 </td>
             </tr>
         </table>
-    {{ if $render->get('response') }}
-        </div>
-    {{ endif }}
-    </form>
 {{ endif }}
 {{ if $render->get('styles_link') }}
     <div class="bottom-styles">

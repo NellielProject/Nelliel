@@ -6,8 +6,17 @@ if (!defined('NELLIEL_VERSION'))
 
 ignore_user_abort(TRUE);
 
-require_once BASE_PATH . '/' . BOARD_FILES . 'libraries/portable-utf8/portable-utf8.php';
+// TODO: Clean all these up along with the other includes
+require_once FILES_PATH . 'libraries/portable-utf8/portable-utf8.php';
 require_once INCLUDE_PATH . 'setup/setup.php';
+require_once INCLUDE_PATH . 'output/management/main_panel.php';
+require_once INCLUDE_PATH . 'output/posting_form.php';
+require_once INCLUDE_PATH . 'output/header.php';
+require_once INCLUDE_PATH . 'output/post.php';
+require_once INCLUDE_PATH . 'output/footer.php';
+require_once INCLUDE_PATH . 'output/ban_page.php';
+require_once INCLUDE_PATH . 'output/management/ban_panel.php';
+require_once INCLUDE_PATH . 'output/management/staff_panel.php';
 
 if(RUN_SETUP_CHECK)
 {
@@ -15,11 +24,8 @@ if(RUN_SETUP_CHECK)
 }
 
 require_once INCLUDE_PATH . 'classes/Authorize.php';
-require_once INCLUDE_PATH . 'language.php';
-require_once INCLUDE_PATH . 'template.php';
-require_once INCLUDE_PATH . 'render.php';
+require_once INCLUDE_PATH . 'language/language.php';
 
-//nel_render_add_default('dotdot', '');
 $template_info = array();
 $dataforce = array();
 $enabled_types = array();
