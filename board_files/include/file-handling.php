@@ -127,5 +127,6 @@ function nel_filter_filename($filename)
     {
         // TODO: completely invalid filename error
     }
+
     return $filtered;
 }

@@ -163,7 +163,6 @@ function nel_main_thread_generator($dataforce, $write)
 
         $i = 0;
 
-        // TODO: Clean shit up
         while ($i < $page_count)
         {
             if ($i === 0)

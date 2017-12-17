@@ -52,3 +52,32 @@ function nel_true_empty($var)
 
     return false;
 }
+
+// TODO: Update this, it probably doesn't even work
+function nel_parse_links($matches)
+{
+    global $link_resno;
+    $dbh = nel_database();
+    $back = ($link_resno === 0) ? PAGE_DIR : '../';
+    $prepared = $dbh->prepare('SELECT response_to FROM ' . POST_TABLE . ' WHERE post_number=?');
+    $prepared->bindParam(1, $matches[1], PDO::PARAM_INT);
+    $prepared->execute();
+    $link = $prepared->fetch(PDO::FETCH_NUM);
+    $prepared->closeCursor();
+
+    if ($link === false)
+    {
+        return $matches[0];
+    }
+
+    if ($link[0] == '0')
+    {
+        return '<a href="' . $back . $matches[1] . '/' . $matches[1] . '.html" class="link_quote">>>' . $matches[1] .
+        '</a>';
+    }
+    else
+    {
+        return '<a href="' . $back . $link . '/' . $link . '.html#' . $matches[1] . '" class="link_quote">>>' .
+        $matches[1] . '</a>';
+    }
+}

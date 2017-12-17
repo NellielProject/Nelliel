@@ -80,14 +80,17 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     $post_container = $dom->getElementById('post-container-');
     $post_container->changeId('post-container-' . $post_data['post_number']);
-    $post_type = ($response) ? 'reply' : 'op';
 
     if ($response)
     {
+        $post_type = 'reply';
+        $post_type_class = 'reply-';
         $post_container->extSetAttribute('class', 'reply-post');
     }
     else
     {
+        $post_type = 'op';
+        $post_type_class = 'op-';
         $dom->getElementsByClassName('indents')->item(0)->removeSelf();
     }
 
@@ -237,23 +240,22 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $post_files_container->extSetAttribute('class', $post_type . '-files-container');
         $filecount = count($gen_data['files']);
         $file_node = $dom->getElementById('fileinfo-');
+        $multiple_class = '';
+        $multiple_files = false;
+
+        if ($filecount > 1)
+        {
+            $multiple_class = 'multiple-';
+            $multiple_files = true;
+        }
 
         foreach ($gen_data['files'] as $file)
         {
             $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['file_order'];
-
             $temp_file_node = $file_node->cloneNode(true);
             $temp_file_node->changeId('fileinfo-' . $file_id);
             $post_files_container->appendChild($temp_file_node);
-
-            if ($filecount > 1)
-            {
-                $temp_file_node->extSetAttribute('class', $post_type . '-multiple-fileinfo');
-            }
-            else
-            {
-                $temp_file_node->extSetAttribute('class', $post_type . '-fileinfo');
-            }
+            $temp_file_node->extSetAttribute('class', $post_type_class . $multiple_class . 'fileinfo');
 
             $delete_file_element = $temp_file_node->doXPathQuery(".//input[@id='delete-file-']")->item(0);
             $delete_file_element->changeId('delete-file-' . $file_id);
@@ -355,7 +357,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                 $preview_element->extSetAttribute('width', $file['preview_width']);
                 $preview_element->extSetAttribute('height', $file['preview_height']);
                 $preview_element->extSetAttribute('alt', $file['filesize'] . ' KB)');
-                $preview_element->extSetAttribute('class', 'preview_class'); // TODO: wat
+                $preview_element->extSetAttribute('class', $post_type_class . $multiple_class . 'post-preview');
             }
             else
             {
@@ -373,16 +375,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     else
     {
         $post_files_container->removeSelf();
-    }
-
-    // TODO: Fix/remove this
-    if ($partial)
-    {
-        $link_resno = 0;
-    }
-    else
-    {
-        $link_resno = $dataforce['response_id'];
     }
 
     $post_data['comment'] = nel_newline_cleanup($post_data['comment']);
@@ -408,14 +400,14 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     $post_contents_element = $dom->getElementById('post-contents-');
     $post_contents_element->changeID('post-contents-' . $post_id);
-    $post_contents_element->extSetAttribute('class', $post_type . '-post_text');
+    $post_contents_element->extSetAttribute('class', $post_type_class . 'post-text');
     $post_text_element = $dom->getElementsByClassName('-post-text')->item(0);
-    $post_text_element->extSetAttribute('class', $post_type . '-post-contents');
+    $post_text_element->extSetAttribute('class', $post_type_class . 'post-contents');
     $post_comment_element = $dom->getElementById('post-comment-');
     $post_comment_element->setContent($post_data['comment']);
     $post_comment_element->changeID('post-comment-' . $post_id);
     $mod_comment_element = $dom->getElementById('mod-comment-');
-    //$post_comment_element->setContent($post_data['mod_comment']); TODO: Fix this
+    $mod_comment_element->setContent($post_data['mod_comment']);
     $mod_comment_element->changeID('mod-comment-' . $post_id);
     $dom->getElementById('ban-')->changeID('ban' . $post_data['post_number']);
 

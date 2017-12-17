@@ -4,9 +4,9 @@ define('BASE_PATH', realpath('./')); // Base path for script
 define('BOARD_FILES', 'board_files/'); // Name of directory where the support and internal files go
 define('INCLUDE_PATH', BASE_PATH . '/' . BOARD_FILES . 'include/'); // Base cache path
 require_once BOARD_FILES . 'config.php';
-require_once INCLUDE_PATH . 'defines.php';
 require_once BOARD_FILES . 'crypt-config.php';
 require_once BOARD_FILES . 'database-config.php';
+require_once INCLUDE_PATH . 'defines.php';
 require_once INCLUDE_PATH . 'crypt.php';
 require_once LIBRARY_PATH . 'password_compat/password.php';
 $best_hashing = nel_best_available_hashing();
@@ -46,7 +46,6 @@ require_once INCLUDE_PATH . 'archive.php';
 require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'regen.php';
 require_once INCLUDE_PATH . 'thread-functions.php';
-require_once INCLUDE_PATH . 'output/html-generation.php';
 require_once INCLUDE_PATH . 'banhammer.php';
 require_once INCLUDE_PATH . 'snacks.php';
 require_once INCLUDE_PATH . 'sessions.php';
