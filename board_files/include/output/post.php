@@ -22,15 +22,14 @@ function nel_render_index_navigation($render, $pages)
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $render1->loadTemplateFromFile($dom, 'index_navigation.html');
-    $xpath = new DOMXPath($dom);
     $index_bottom_nav_element = $dom->getElementById('index-bottom-nav');
-    $inner_td_elements = $xpath->query(".//td", $index_bottom_nav_element);
+    $inner_td_elements = $index_bottom_nav_element->doXPathQuery(".//td");
     $page_nav_td = $inner_td_elements->item(0);
 
     foreach ($pages as $key => $value)
     {
         $temp_page_nav_td = $page_nav_td->cloneNode(true);
-        $page_link = $xpath->query(".//a", $temp_page_nav_td)->item(0);
+        $page_link = $temp_page_nav_td->doXPathQuery(".//a")->item(0);
 
         $content = $key;
 
@@ -71,7 +70,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $render1->loadTemplateFromFile($dom, 'post.html');
-    $xpath = new DOMXPath($dom);
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
 
     if ($dataforce['posts_beginning'])
@@ -109,13 +107,13 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     $post_header = $dom->getElementsByClassName('post-header')->item(0);
 
-    $post_checkbox = $xpath->query(".//input[@name='post_post-id']", $post_header)->item(0);
+    $post_checkbox = $post_header->doXPathQuery(".//input[@name='post_post-id']")->item(0);
     $post_checkbox->extSetAttribute('name', 'post_' . $rev_post_id);
     $post_checkbox->extSetAttribute('value', 'deletepost_' . $post_id);
-    $subject_element = $xpath->query(".//span[@class='-subject']", $post_header)->item(0);
+    $subject_element = $post_header->doXPathQuery(".//span[@class='-subject']")->item(0);
     $subject_element->modifyAttribute('class', $post_type, 'before');
     $subject_element->setContent($post_data['subject']);
-    $poster_name_element = $xpath->query(".//span[@class='-poster-name']", $post_header)->item(0);
+    $poster_name_element = $post_header->doXPathQuery(".//span[@class='-poster-name']")->item(0);
     $poster_name_element->modifyAttribute('class', $post_type, 'before');
 
     $tripcode = (!is_null($post_data['tripcode'])) ? BS_TRIPKEY_MARKER . $post_data['tripcode'] : '';
@@ -264,7 +262,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                 $temp_file_node->extSetAttribute('class', $post_type . '-fileinfo');
             }
 
-            $delete_file_element = $xpath->query(".//input[@id='delete-file-']", $temp_file_node)->item(0);
+            $delete_file_element = $temp_file_node->doXPathQuery(".//input[@id='delete-file-']")->item(0);
             $delete_file_element->changeId('delete-file-' . $file_id);
             $delete_file_element->extSetAttribute('name', 'files' . $file_id);
 
@@ -277,7 +275,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                 $file['display_filename'] = substr($file['filename'], 0, 25) . '(...)';
             }
 
-            $file_text_link = $xpath->query(".//a[@id='file-link-']", $temp_file_node)->item(0);
+            $file_text_link = $temp_file_node->doXPathQuery(".//a[@id='file-link-']")->item(0);
             $file_text_link->changeId('file-link-' . $file_id);
             $file_text_link->extSetAttribute('href', $file['file_location']);
             $file_text_link->setContent($file['display_filename'] . '.' . $file['extension']);
@@ -291,43 +289,43 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                 $filesize_display = $file['image_width'] . ' x ' . $file['image_height'] . $filesize_display;
             }
 
-            $filesize_display_element = $xpath->query(".//*[@id='filesize-display-']", $temp_file_node)->item(0);
+            $filesize_display_element = $temp_file_node->doXPathQuery(".//*[@id='filesize-display-']")->item(0);
             $filesize_display_element->setContent($filesize_display);
             $filesize_display_element->changeId('filesize-display-' . $file_id);
-            $show_file_meta_element = $xpath->query(".//*[@id='show-file-meta-']", $temp_file_node)->item(0);
+            $show_file_meta_element = $temp_file_node->doXPathQuery(".//*[@id='show-file-meta-']")->item(0);
             $show_script = 'javascript:displayImgMeta(\'file-meta-' . $file_id . '\',\'show-file-meta-' . $file_id .
                  '\',\'none\',\'' . nel_stext('THREAD_LESS_DATA') . '\')';
             $show_file_meta_element->extSetAttribute('href', $show_script, 'none');
             $show_file_meta_element->changeId('show-file-meta-' . $file_id);
-            $file_meta_element = $xpath->query(".//*[@id='file-meta-']", $temp_file_node)->item(0);
+            $file_meta_element = $temp_file_node->doXPathQuery(".//*[@id='file-meta-']")->item(0);
             $file_meta_element->changeId('file-meta-' . $file_id);
 
             $file['source'] = nel_cleanse_the_aids($file['source']);
             $file['license'] = nel_cleanse_the_aids($file['license']);
 
-            $source_element = $xpath->query(".//*[@id='file-source-']", $temp_file_node)->item(0);
+            $source_element = $temp_file_node->doXPathQuery(".//*[@id='file-source-']")->item(0);
             $source_element->changeId('file-source-' . $file_id);
             $source_element->setContent('Source: ' . $file['source']);
 
-            $license_element = $xpath->query(".//*[@id='file-license-']", $temp_file_node)->item(0);
+            $license_element = $temp_file_node->doXPathQuery(".//*[@id='file-license-']")->item(0);
             $license_element->changeId('file-license-' . $file_id);
             $license_element->setContent('License: ' . $file['license']);
 
-            $md5_element = $xpath->query(".//*[@id='file-md5-']", $temp_file_node)->item(0);
+            $md5_element = $temp_file_node->doXPathQuery(".//*[@id='file-md5-']")->item(0);
             $md5_element->changeId('file-md5-' . $file_id);
             $md5_element->setContent('MD5: ' . $file['md5']);
 
-            $sha1_element = $xpath->query(".//*[@id='file-sha1-']", $temp_file_node)->item(0);
+            $sha1_element = $temp_file_node->doXPathQuery(".//*[@id='file-sha1-']")->item(0);
             $sha1_element->changeId('file-sha1-' . $file_id);
             $sha1_element->setContent('SHA1: ' . $file['sha1']);
 
-            $location_element = $xpath->query(".//*[@id='file-location-']", $temp_file_node)->item(0);
+            $location_element = $temp_file_node->doXPathQuery(".//*[@id='file-location-']")->item(0);
 
             if (BS_USE_THUMB)
             {
                 $location_element->extSetAttribute('href', $file['file_location'], 'none');
                 $location_element->changeId('file-location-' . $file_id);
-                $preview_element = $xpath->query(".//*[@id='file-preview-']", $temp_file_node)->item(0);
+                $preview_element = $temp_file_node->doXPathQuery(".//*[@id='file-preview-']")->item(0);
                 $preview_element->changeId('file-preview-' . $file_id);
 
                 if (isset($file['preview_name']))

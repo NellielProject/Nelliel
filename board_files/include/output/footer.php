@@ -10,12 +10,11 @@ function nel_render_footer($render, $footer_form, $styles = true, $extra_links =
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $render1->loadTemplateFromFile($dom, 'footer.html');
-    $xpath = new DOMXPath($dom);
     $footer_form_element = $dom->getElementById('footer-form');
 
     if($footer_form)
     {
-        $form_td_list = $xpath->query(".//input", $footer_form_element);
+        $form_td_list = $footer_form_element->doXPathQuery(".//input");
 
         if(nel_session_is_ignored('render'))
         {

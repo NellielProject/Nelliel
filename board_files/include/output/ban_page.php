@@ -12,7 +12,6 @@ function nel_render_ban_page($dataforce, $bandata)
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $render1->loadTemplateFromFile($dom, 'ban_page.html');
-    $xpath = new DOMXPath($dom);
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
     $ip_address = ($bandata['ip_address']) ? $bandata['ip_address'] : 'Unknown';
     $dom->getElementById('banned-board')->setContent($bandata['board']);
@@ -26,8 +25,8 @@ function nel_render_ban_page($dataforce, $bandata)
     if ($bandata['appeal_status'] === 0)
     {
         $appeal_form_element->extSetAttribute('action', $dotdot . PHP_SELF);
-        $xpath->query(".//input[@name='banned_ip']")->item(0)->extSetAttribute('value', $ip_address);
-        $xpath->query(".//input[@name='banned_board']")->item(0)->extSetAttribute('value', $bandata['board']);
+        $dom->doXPathQuery(".//input[@name='banned_ip']")->item(0)->extSetAttribute('value', $ip_address);
+        $dom->doXPathQuery(".//input[@name='banned_board']")->item(0)->extSetAttribute('value', $bandata['board']);
     }
     else
     {

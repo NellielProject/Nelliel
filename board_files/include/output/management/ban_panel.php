@@ -14,7 +14,6 @@ function nel_render_main_ban_panel($dataforce)
     $dom = $render1->newDOMDocument();
     $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $render1->loadTemplateFromFile($dom, 'management/bans_panel_main.html');
-    $xpath = new DOMXPath($dom);
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
 
     $result =  $dbh->query('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "ban_id" DESC');
@@ -35,7 +34,7 @@ function nel_render_main_ban_panel($dataforce)
 
         $temp_ban_info_row = $ban_info_row->cloneNode(true);
         $temp_ban_info_row->extSetAttribute('class', $bgclass);
-        $ban_info_td_list = $xpath->query(".//td", $temp_ban_info_row);
+        $ban_info_td_list = $temp_ban_info_row->doXPathQuery(".//td");
         $ban_info_td_list->item(0)->setContent($baninfo['ban_id']);
         $ban_info_td_list->item(1)->setContent($baninfo['type']);
         $ban_info_td_list->item(2)->setContent($baninfo['ip_address'] ? $baninfo['ip_address']: 'Unknown');
@@ -46,16 +45,15 @@ function nel_render_main_ban_panel($dataforce)
         $ban_info_td_list->item(7)->setContent($baninfo['appeal_response']);
         $ban_info_td_list->item(8)->setContent($baninfo['appeal_status']);
 
-        //$form_mod_ban = $dom->getElementById('form-mod-ban-');
-        $form_mod_ban = $xpath->query(".//form[@id='form-mod-ban-']", $temp_ban_info_row)->item(0);
+        $form_mod_ban = $temp_ban_info_row->getElementById('form-mod-ban-');
         $form_mod_ban->extSetAttribute('action', $dotdot . PHP_SELF);
-        $form_mod_ban->changeId('form_mod_ban-' . $baninfo['ban_id']);
-        $xpath->query(".//input[@name='banid']", $form_mod_ban)->item(0)->extSetAttribute('value', $baninfo['ban_id']);
+        $form_mod_ban->changeId('form-mod-ban-' . $baninfo['ban_id']);
+        $form_mod_ban->doXPathQuery(".//input[@name='banid']")->item(0)->extSetAttribute('value', $baninfo['ban_id']);
 
-        $form_remove_ban = $xpath->query(".//form[@id='form-remove-ban-']", $temp_ban_info_row)->item(0);
+        $form_remove_ban = $temp_ban_info_row->getElementById('form-remove-ban-');
         $form_remove_ban->extSetAttribute('action', $dotdot . PHP_SELF);
-        $form_remove_ban->changeId('form_mod_ban-' . $baninfo['ban_id']);
-        $xpath->query(".//input[@name='banid']", $form_remove_ban)->item(0)->extSetAttribute('value', $baninfo['ban_id']);
+        $form_remove_ban->changeId('form-remove-ban-' . $baninfo['ban_id']);
+        $form_remove_ban->doXPathQuery(".//input[@name='banid']")->item(0)->extSetAttribute('value', $baninfo['ban_id']);
 
         $ban_info_table->appendChild($temp_ban_info_row);
         $i++;
