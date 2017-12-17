@@ -25,10 +25,7 @@ if(RUN_SETUP_CHECK)
 
 require_once INCLUDE_PATH . 'classes/Authorize.php';
 require_once INCLUDE_PATH . 'language/language.php';
-require_once INCLUDE_PATH . 'template.php';
-require_once INCLUDE_PATH . 'render.php';
 
-//nel_render_add_default('dotdot', '');
 $template_info = array();
 $dataforce = array();
 $enabled_types = array();
