@@ -32,13 +32,13 @@ function nel_process_new_post($dataforce)
 
     // Start collecting file info
     $files = nel_process_file_info();
-    $there_is_no_spoon = TRUE;
+    $spoon = false;
     $files_count = 0;
 
     if (!empty($files))
     {
         $files_count = count($files);
-        $there_is_no_spoon = FALSE;
+        $spoon = true;
     }
     else
     {
@@ -151,7 +151,7 @@ function nel_process_new_post($dataforce)
     clearstatcache();
 
     // Add file data if applicable
-    if (!$there_is_no_spoon)
+    if ($spoon)
     {
         nel_db_insert_new_files($thread_info['id'], $new_post_info, $files);
     }
