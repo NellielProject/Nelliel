@@ -16,10 +16,8 @@ function nel_thread_generator($dataforce, $write, $write_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render_expand = new NellielTemplates\RenderCore();
-    $render_expand->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render_collapse = new NellielTemplates\RenderCore();
-    $render_collapse->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    $render->createRenderSet('expand');
+    $render->createRenderSet('collapse');
     $dataforce['dotdot'] = '../../';
     //$write_id = ($dataforce['response_to'] === 0 || is_null($dataforce['response_to'])) ? $dataforce['response_id'] : $dataforce['response_to'];
     $dataforce['response_id'] = $write_id;
@@ -111,14 +109,14 @@ function nel_thread_generator($dataforce, $write, $write_id)
                 if ($gen_data['post_counter'] > $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD)
                 {
                     nel_render_post($dataforce, $render_temp2, TRUE, TRUE, $gen_data, $treeline); // for collapse
-                    $render_collapse->appendHTML($render_temp2->outputRenderSet());
+                    $render->appendHTML($render_temp2->outputRenderSet(), 'collapse');
                 }
             }
 
             $resid = $dataforce['response_id'];
             $dataforce['response_id'] = 0;
             nel_render_post($dataforce, $render_temp3, TRUE, TRUE, $gen_data, $treeline); // for expand
-            $render_expand->appendHTML($render_temp3->outputRenderSet());
+            $render->appendHTML($render_temp3->outputRenderSet(), 'expand');
             $dataforce['response_id'] = $resid;
         }
 
@@ -136,18 +134,18 @@ function nel_thread_generator($dataforce, $write, $write_id)
     if ($write)
     {
         nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '.html', $render->outputRenderSet(), FILE_PERM);
-        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '-expand.html', $render_expand->outputRenderSet(), FILE_PERM);
-        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '-collapse.html', $render_collapse->outputRenderSet(), FILE_PERM);
+        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '-expand.html', $render->outputRenderSet('expand'), FILE_PERM);
+        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '-collapse.html', $render->outputRenderSet('collapse'), FILE_PERM);
     }
     else
     {
         if ($dataforce['expand'])
         {
-            echo $render_expand->outputRenderSet();
+            echo $render->outputRenderSet('expand');
         }
         else if ($dataforce['collapse'])
         {
-            echo $render_collapse->outputRenderSet();
+            echo $render->outputRenderSet('collapse');
         }
         else
         {
