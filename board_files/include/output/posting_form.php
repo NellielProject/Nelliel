@@ -66,6 +66,7 @@ function nel_render_posting_form($dataforce, $render)
     {
         $temp_file_block = $file_block->cloneNode(true);
         $temp_file_block->changeId('form-file-' . $i);
+        $temp_file_block->modifyAttribute('class', ' none', 'after');
         $temp_source_block = $source_block->cloneNode(true);
         $temp_source_block->changeId('form-sauce-' . $i);
         $temp_license_block = $license_block->cloneNode(true);
