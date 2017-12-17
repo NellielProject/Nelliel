@@ -14,6 +14,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
     }
 
     $render = new NellielTemplates\RenderCore();
+    $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $render_expand = new NellielTemplates\RenderCore();
     $render_expand->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);

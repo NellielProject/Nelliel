@@ -32,6 +32,7 @@ function nel_main_thread_generator($dataforce, $write)
     if ($counttree === 0)
     {
         $render = new NellielTemplates\RenderCore();
+        $render->startRenderTimer();
         $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
         nel_render_header($dataforce, $render, $treeline);
         nel_render_posting_form($dataforce, $render);
@@ -56,6 +57,7 @@ function nel_main_thread_generator($dataforce, $write)
     while ($thread_counter < $counttree)
     {
         $render = new NellielTemplates\RenderCore();
+        $render->startRenderTimer();
         $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
         $dataforce['omitted_done'] = TRUE;
         nel_render_header($dataforce, $render, $treeline);

@@ -49,18 +49,7 @@ function nel_render_footer($render, $footer_form, $styles = true, $extra_links =
     }
 
     $dom->getElementById('nelliel-version')->setContent(NELLIEL_VERSION);
-    $timer_element = $dom->getElementById('footer-timer');
-
-    // TODO: Convert this to new render
-    /*if($render->get('output_timer'))
-    {
-        $dom->getElementById('timer-result')->setContent($render->get_timer(4));
-    }
-    else
-    {
-        $timer_element->removeSelf();
-    }*/
-
     nel_process_i18n($dom);
+    $dom->getElementById('timer-result')->setContent(round($render->endRenderTimer(), 4));
     $render->appendHTMLFromDOM($dom);
 }

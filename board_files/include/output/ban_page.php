@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_ban_page($dataforce, $bandata)
 {
     $render = new NellielTemplates\RenderCore();
+    $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();

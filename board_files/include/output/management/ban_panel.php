@@ -9,6 +9,7 @@ function nel_render_main_ban_panel($dataforce)
 {
     $dbh = nel_database();
     $render = new NellielTemplates\RenderCore();
+    $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();
@@ -73,6 +74,7 @@ function nel_render_main_ban_panel($dataforce)
 function nel_render_ban_panel_add($dataforce)
 {
     $render = new NellielTemplates\RenderCore();
+    $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();
@@ -87,6 +89,7 @@ function nel_render_ban_panel_modify($dataforce)
 {
     $dbh = nel_database();
     $render = new NellielTemplates\RenderCore();
+    $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();

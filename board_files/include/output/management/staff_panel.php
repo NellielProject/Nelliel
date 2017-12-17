@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_staff_panel_main($dataforce)
 {
     $render = new NellielTemplates\RenderCore();
+    $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();
@@ -22,6 +23,7 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
     $authorize = nel_get_authorization();
     $user = $authorize->get_user($user_id);
     $render = new NellielTemplates\RenderCore();
+    $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();
@@ -42,6 +44,7 @@ function nel_render_staff_panel_role_edit($dataforce, $role_id)
     $authorize = nel_get_authorization();
     $role = $authorize->get_role($role_id);
     $render = new NellielTemplates\RenderCore();
+    $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();

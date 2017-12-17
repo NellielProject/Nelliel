@@ -3,6 +3,7 @@
 function nel_generate_main_panel()
 {
     $render = new NellielTemplates\RenderCore();
+    $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header(array(), $render, array());
     $dom = $render->newDOMDocument();

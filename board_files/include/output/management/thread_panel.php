@@ -8,6 +8,7 @@ function nel_render_thread_panel_main($dataforce)
 {
     $dbh = nel_database();
     $render = new NellielTemplates\RenderCore();
+    $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header(array(), $render, array());
     $dom = $render->newDOMDocument();
