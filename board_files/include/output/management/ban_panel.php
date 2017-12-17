@@ -8,12 +8,11 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_main_ban_panel($dataforce)
 {
     $dbh = nel_database();
-    $render = new nel_render();
+    $render = new NellielTemplates\RenderCore();
+    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header($dataforce, $render, array());
-    $render1 = new NellielTemplates\RenderCore();
-    $dom = $render1->newDOMDocument();
-    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render1->loadTemplateFromFile($dom, 'management/bans_panel_main.html');
+    $dom = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom, 'management/bans_panel_main.html');
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
 
     $result =  $dbh->query('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "ban_id" DESC');
@@ -66,34 +65,32 @@ function nel_render_main_ban_panel($dataforce)
     $form_add_ban->extSetAttribute('action', $dotdot . PHP_SELF);
 
     nel_process_i18n($dom);
-    $render->appendOutput($render1->outputHTML($dom));
+    $render->appendHTMLFromDOM($dom);
     nel_render_footer($render, false);
-    $render->output(true);
+    echo $render->outputRenderSet();
 }
 
 function nel_render_ban_panel_add($dataforce)
 {
-    $render = new nel_render();
+    $render = new NellielTemplates\RenderCore();
+    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header($dataforce, $render, array());
-    $render1 = new NellielTemplates\RenderCore();
-    $dom = $render1->newDOMDocument();
-    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render1->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
+    $dom = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
     nel_process_i18n($dom);
-    $render->appendOutput($render1->outputHTML($dom));
+    $render->appendHTMLFromDOM($dom);
     nel_render_footer($render, false);
-    $render->output(true);
+    echo $render->outputRenderSet();
 }
 
 function nel_render_ban_panel_modify($dataforce)
 {
     $dbh = nel_database();
-    $render = new nel_render();
+    $render = new NellielTemplates\RenderCore();
+    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header($dataforce, $render, array());
-    $render1 = new NellielTemplates\RenderCore();
-    $dom = $render1->newDOMDocument();
-    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render1->loadTemplateFromFile($dom, 'management/bans_panel_modify_ban.html');
+    $dom = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom, 'management/bans_panel_modify_ban.html');
 
     $result =  $dbh->query('SELECT * FROM ' . BAN_TABLE . ' WHERE ban_id=' . $dataforce['banid'] . '');
     $baninfo = $result->fetch(PDO::FETCH_ASSOC);
@@ -131,7 +128,7 @@ function nel_render_ban_panel_modify($dataforce)
     }
 
     nel_process_i18n($dom);
-    $render->appendOutput($render1->outputHTML($dom));
+    $render->appendHTMLFromDOM($dom);
     nel_render_footer($render, false);
-    $render->output(true);
+    echo $render->outputRenderSet();
 }

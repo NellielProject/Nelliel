@@ -1,11 +1,12 @@
 <?php
 
-function nel_generate_main_panel($render)
+function nel_generate_main_panel()
 {
-    $render1 = new NellielTemplates\RenderCore();
-    $dom = $render1->newDOMDocument();
-    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render1->loadTemplateFromFile($dom, 'management/main_panel.html');
+    $render = new NellielTemplates\RenderCore();
+    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    nel_render_header(array(), $render, array());
+    $dom = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom, 'management/main_panel.html');
 
     if (nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_config_access'))
     {
@@ -44,5 +45,7 @@ function nel_generate_main_panel($render)
     }
 
     nel_process_i18n($dom);
-    $render->appendOutput($render1->outputHTML($dom));
+    $render->appendHTMLFromDOM($dom);
+    nel_render_footer($render, false);
+    echo $render->outputRenderSet();
 }

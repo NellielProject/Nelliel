@@ -7,12 +7,11 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_thread_panel_main($dataforce)
 {
     $dbh = nel_database();
-    $render = new nel_render();
-    nel_render_header($dataforce, $render, array());
-    $render1 = new NellielTemplates\RenderCore();
-    $dom = $render1->newDOMDocument();
-    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render1->loadTemplateFromFile($dom, 'management/thread_panel.html');
+    $render = new NellielTemplates\RenderCore();
+    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    nel_render_header(array(), $render, array());
+    $dom = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom, 'management/thread_panel.html');
     $result =  $dbh->query('SELECT * FROM "' . THREAD_TABLE . '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC');
     $thread_data = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
@@ -102,7 +101,7 @@ function nel_render_thread_panel_main($dataforce)
     $thread_row->removeSelf();
 
     nel_process_i18n($dom);
-    $render->appendOutput($render1->outputHTML($dom));
+    $render->appendHTMLFromDOM($dom);
     nel_render_footer($render, false);
-    $render->output(true);
+    echo $render->outputRenderSet();
 }

@@ -6,10 +6,8 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_footer($render, $footer_form, $styles = true, $extra_links = false)
 {
-    $render1 = new NellielTemplates\RenderCore();
-    $dom = $render1->newDOMDocument();
-    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render1->loadTemplateFromFile($dom, 'footer.html');
+    $dom = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom, 'footer.html');
     $footer_form_element = $dom->getElementById('footer-form');
 
     if($footer_form)
@@ -53,15 +51,16 @@ function nel_render_footer($render, $footer_form, $styles = true, $extra_links =
     $dom->getElementById('nelliel-version')->setContent(NELLIEL_VERSION);
     $timer_element = $dom->getElementById('footer-timer');
 
-    if($render->get('output_timer'))
+    // TODO: Convert this to new render
+    /*if($render->get('output_timer'))
     {
         $dom->getElementById('timer-result')->setContent($render->get_timer(4));
     }
     else
     {
         $timer_element->removeSelf();
-    }
+    }*/
 
     nel_process_i18n($dom);
-    $render->appendOutput($render1->outputHTML($dom));
+    $render->appendHTMLFromDOM($dom);
 }

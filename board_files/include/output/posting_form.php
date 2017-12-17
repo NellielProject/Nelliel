@@ -2,10 +2,8 @@
 
 function nel_render_posting_form($dataforce, $render)
 {
-    $render1 = new NellielTemplates\RenderCore();
-    $dom = $render1->newDOMDocument();
-    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render1->loadTemplateFromFile($dom, 'posting_form.html');
+    $dom = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom, 'posting_form.html');
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
     $response_id = (is_null($dataforce['response_id'])) ? '0' : $dataforce['response_id'];
     $post_form_return_link = $dom->getElementById('post-form-return-link');
@@ -14,19 +12,19 @@ function nel_render_posting_form($dataforce, $render)
     {
         $page_ref1 = PHP_SELF . '?mode=display&page=0';
         $page_ref2 = PHP_SELF . '?page=';
-        $render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
-        $render->add_data('page_ref2', PHP_SELF . '?page=');
+        //$render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
+        //$render->add_data('page_ref2', PHP_SELF . '?page=');
     }
     else
     {
         $page_ref1 = PHP_SELF2 . PHP_EXT;
-        $render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
+        //$render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
     }
 
     $posting_form = $dom->getElementById('posting-form');
     $posting_form->extSetAttribute('action', $dotdot . PHP_SELF);
 
-    $render->add_data('response_id', (is_null($dataforce['response_id'])) ? '0' : $dataforce['response_id']);
+    //$render->add_data('response_id', (is_null($dataforce['response_id'])) ? '0' : $dataforce['response_id']);
 
     if ($response_id)
     {
@@ -136,5 +134,5 @@ function nel_render_posting_form($dataforce, $render)
     }
 
     nel_process_i18n($dom);
-    $render->appendOutput($render1->outputHTML($dom));
+    $render->appendHTMLFromDOM($dom);
 }

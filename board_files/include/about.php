@@ -9,10 +9,11 @@ if (!defined('NELLIEL_VERSION'))
 //
 function nel_about_nelliel_screen()
 {
-    $render = new nel_render();
-    $render->add_data('header_type', 'ABOUT');
+    $render = new NellielTemplates\RenderCore();
+    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header(array(), $render, array(), 'ABOUT');
-    $render->output(TRUE);
+    echo $render->outputRenderSet();
+
     echo '
     <div class="text-center">
         <p>

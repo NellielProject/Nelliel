@@ -6,12 +6,11 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_ban_page($dataforce, $bandata)
 {
-    $render = new nel_render();
+    $render = new NellielTemplates\RenderCore();
+    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header($dataforce, $render, array());
-    $render1 = new NellielTemplates\RenderCore();
-    $dom = $render1->newDOMDocument();
-    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render1->loadTemplateFromFile($dom, 'ban_page.html');
+    $dom = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom, 'ban_page.html');
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
     $ip_address = ($bandata['ip_address']) ? $bandata['ip_address'] : 'Unknown';
     $dom->getElementById('banned-board')->setContent($bandata['board']);
@@ -65,7 +64,7 @@ function nel_render_ban_page($dataforce, $bandata)
     }
 
     nel_process_i18n($dom);
-    $render->appendOutput($render1->outputHTML($dom));
+    $render->appendHTMLFromDOM($dom);
     nel_render_footer($render, false);
-    $render->output(true);
+    echo $render->outputRenderSet();
 }

@@ -6,11 +6,14 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_generate_login_page($render)
 {
-    $render1 = new NellielTemplates\RenderCore();
-    $dom = $render1->newDOMDocument();
-    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render1->loadTemplateFromFile($dom, 'management/login.html');
+    $render = new NellielTemplates\RenderCore();
+    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    nel_render_header(array(), $render, array());
+    $dom = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom, 'management/login.html');
     $dom->getElementById('login-form')->extSetAttribute('action', PHP_SELF);
     nel_process_i18n($dom);
-    $render->appendOutput($render1->outputHTML($dom));
+    $render->appendHTMLFromDOM($dom);
+    nel_render_footer($render, false);
+    echo $render->outputRenderSet();
 }

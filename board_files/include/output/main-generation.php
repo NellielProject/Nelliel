@@ -31,22 +31,19 @@ function nel_main_thread_generator($dataforce, $write)
     // Special handling when there's no content
     if ($counttree === 0)
     {
-        $render = new nel_render();
-        $render->add_data('header_type', 'NORMAL');
+        $render = new NellielTemplates\RenderCore();
+        $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
         nel_render_header($dataforce, $render, $treeline);
         nel_render_posting_form($dataforce, $render);
-        $render->add_data('prev_nav', '');
-        $render->add_data('next_nav', '');
-        $render->add_data('page_nav', '');
         nel_render_footer($render, true);
 
         if ($write)
         {
-            nel_write_file(PHP_SELF2 . PHP_EXT, $render->output(FALSE), FILE_PERM);
+            nel_write_file(PHP_SELF2 . PHP_EXT, $render->outputRenderSet(), FILE_PERM);
         }
         else
         {
-            $render->output(TRUE);
+            echo $render->outputRenderSet();
         }
 
         return;
@@ -58,9 +55,9 @@ function nel_main_thread_generator($dataforce, $write)
 
     while ($thread_counter < $counttree)
     {
-        $render = new nel_render();
+        $render = new NellielTemplates\RenderCore();
+        $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
         $dataforce['omitted_done'] = TRUE;
-        $render->add_data('header_type', 'NORMAL');
         nel_render_header($dataforce, $render, $treeline);
         nel_render_posting_form($dataforce, $render);
         $sub_page_thread_counter = 0;
@@ -146,7 +143,7 @@ function nel_main_thread_generator($dataforce, $write)
         $next = $page + 1;
 
         $page_count = (int) ceil($counttree / BS_THREADS_PER_PAGE);
-        $render->add_data('main_page', TRUE);
+        //$render->add_data('main_page', TRUE);
         $pages = array();
 
         if ($page === 1)
@@ -202,13 +199,13 @@ function nel_main_thread_generator($dataforce, $write)
                 $page = $counttree;
             }
 
-            $render->output(TRUE);
+            echo $render->outputRenderSet();
             die();
         }
         else
         {
             $logfilename = ($page === 1) ? PHP_SELF2 . PHP_EXT : PHP_SELF2 . ($page - 1) . PHP_EXT;
-            nel_write_file($logfilename, $render->output(FALSE), FILE_PERM);
+            nel_write_file($logfilename, $render->outputRenderSet(), FILE_PERM);
         }
 
         ++ $page;

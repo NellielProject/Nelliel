@@ -6,22 +6,18 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_insert_hr($render)
 {
-    $render1 = new NellielTemplates\RenderCore();
-    $dom = $render1->newDOMDocument();
-    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    $dom = $render->newDOMDocument();
     $hr = $dom->createElement('hr');
     $hr->setAttribute('class', 'clear');
     $dom->appendChild($hr);
-    $render->appendOutput($dom->saveHTML());
+    $render->appendHTMLFromDOM($dom);
     return;
 }
 
 function nel_render_index_navigation($render, $pages)
 {
-    $render1 = new NellielTemplates\RenderCore();
-    $dom = $render1->newDOMDocument();
-    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render1->loadTemplateFromFile($dom, 'index_navigation.html');
+    $dom = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom, 'index_navigation.html');
     $index_bottom_nav_element = $dom->getElementById('index-bottom-nav');
     $inner_td_elements = $index_bottom_nav_element->doXPathQuery(".//td");
     $page_nav_td = $inner_td_elements->item(0);
@@ -58,7 +54,7 @@ function nel_render_index_navigation($render, $pages)
 
     $page_nav_td->removeSelf();
     nel_process_i18n($dom);
-    $render->appendOutput($render1->outputHTML($dom));
+    $render->appendHTMLFromDOM($dom);
 }
 
 function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline)
@@ -66,10 +62,8 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $authorize = nel_get_authorization();
     global $link_resno;
 
-    $render1 = new NellielTemplates\RenderCore();
-    $dom = $render1->newDOMDocument();
-    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render1->loadTemplateFromFile($dom, 'post.html');
+    $dom = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom, 'post.html');
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
 
     if ($dataforce['posts_beginning'])
@@ -97,12 +91,9 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $dom->getElementsByClassName('indents')->item(0)->removeSelf();
     }
 
-    $render->add_multiple_data($gen_data['post']);
-    $render->add_multiple_data($gen_data['thread']);
-
-    $dom->getElementById('p-number')->changeId('p' . $render->get('post_number'));
-    $post_id = $post_data['parent_thread'] . '_' . $render->get('post_number');
-    $rev_post_id = $render->get('post_number') . '_' . $post_data['parent_thread'];
+    $dom->getElementById('p-number')->changeId('p' . $post_data['post_number']);
+    $post_id = $post_data['parent_thread'] . '_' . $post_data['post_number'];
+    $rev_post_id = $post_data['post_number'] . '_' . $post_data['parent_thread'];
     $thread_id = $post_data['parent_thread'];
 
     $post_header = $dom->getElementsByClassName('post-header')->item(0);
@@ -119,13 +110,19 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $tripcode = (!is_null($post_data['tripcode'])) ? BS_TRIPKEY_MARKER . $post_data['tripcode'] : '';
     $secure_tripcode = (!is_null($post_data['secure_tripcode'])) ? BS_TRIPKEY_MARKER . BS_TRIPKEY_MARKER .
          $post_data['secure_tripcode'] : '';
+    $capcode_text = '';
+
+         if ($post_data['mod_post'])
+         {
+             $capcode_text = $authorize->get_role_info($post_data['mod_post'], 'capcode_text');
+         }
 
     $mailto_element = $dom->getElementById('poster-mailto');
     $trip_line_element = $dom->getElementById('trip-line-');
-    $trip_line = $tripcode . $secure_tripcode . '&nbsp;&nbsp;' . $render->get('staff_post');
+    $trip_line = $tripcode . $secure_tripcode . '&nbsp;&nbsp;' . $capcode_text;
     $trip_line_element->changeId('trip-line-' . $post_id);
 
-    if ($render->get('email'))
+    if ($post_data['email'])
     {
         $mailto_element->modifyAttribute('href', $post_data['email'] . 'after');
         $mailto_element->setContent($post_data['poster_name']);
@@ -177,7 +174,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $sticky_icon_element = $dom->getElementById('sticky-icon-');
     $sticky_icon_element->changeId('sticky-icon-' . $post_id);
 
-    if ($render->get('sticky'))
+    if ($gen_data['thread']['sticky'])
     {
         $sticky_icon_element->extSetAttribute('src', $dotdot . BOARD_FILES . '/imagez/nelliel/' .
              nel_stext('THREAD_STICKY_ICON'), 'url');
@@ -212,13 +209,13 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     if (!nel_session_is_ignored('render'))
     {
-        $dom->getElementById('ip-address-display')->setContent($render->get('ip_address'));
+        $dom->getElementById('ip-address-display')->setContent($post_data['ip_address']);
         $set_ban_details = $dom->getElementById('set-ban-details');
 
         if (nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_ban_add'))
         {
             $ban_details = 'addBanDetails(\'ban' . $post_data['post_number'] . '\', \'' . $post_data['post_number'] .
-                 '\', \'' . $post_data['poster_name'] . '\', \'' . $render->get('ip_address') . '\')';
+                 '\', \'' . $post_data['poster_name'] . '\', \'' . $post_data['ip_address'] . '\')';
             $set_ban_details->extSetAttribute('onclick', $ban_details, 'none');
         }
         else
@@ -238,11 +235,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     {
         $post_files_container->changeId('post-files-container-' . $post_id);
         $post_files_container->extSetAttribute('class', $post_type . '-files-container');
-
         $filecount = count($gen_data['files']);
-        $render->add_data('has_file', true);
-        $render->add_data('multifile', ($filecount > 1) ? true : false);
-
         $file_node = $dom->getElementById('fileinfo-');
 
         foreach ($gen_data['files'] as $file)
@@ -426,23 +419,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $mod_comment_element->changeID('mod-comment-' . $post_id);
     $dom->getElementById('ban-')->changeID('ban' . $post_data['post_number']);
 
-    $mod_post_role = $render->get('mod_post');
-
-    if ($mod_post_role)
-    {
-        $capcode_text = $authorize->get_role_info($mod_post_role, 'capcode_text');
-        $render->add_data('staff_post', $capcode_text);
-        $render->add_data('secure_tripcode', '');
-    }
-    else
-    {
-        $render->add_data('staff_post', '');
-    }
-
-    $render->add_data('logged_in', FALSE);
-    $render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
-    $render->add_data('page_ref2', '');
-
     nel_process_i18n($dom);
-    $render->appendOutput($render1->outputHTML($dom));
+    $render->appendHTMLFromDOM($dom);
 }

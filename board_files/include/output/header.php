@@ -6,10 +6,8 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
 {
-    $render1 = new NellielTemplates\RenderCore();
-    $dom = $render1->newDOMDocument();
-    $render1->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $render1->loadTemplateFromFile($dom, 'header.html');
+    $dom = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom, 'header.html');
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
@@ -25,36 +23,33 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     }
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
+    $title_content = BS_BOARD_NAME;
 
     switch ($type)
     {
         case 'ABOUT':
-            $title_element->setContent('About Nelliel Imageboard');
+            $title_content = 'About Nelliel Imageboard';
             break;
 
-            // TODO: Fix undefineds
         case 'NORMAL':
-            if ($dataforce['page_gen'] == 'main')
-            {
-                $title_element->setContent(BS_BOARD_NAME);
-            }
-            else
-            {
-                if ($treeline[0]['subject'] === '')
+
+                if (!empty($treeline))
                 {
-                    $title_element->setContent(BS_BOARD_NAME . ' > Thread #' . $treeline[0]['post_number']);
+                    if ($treeline[0]['subject'] === '')
+                    {
+                        $title_content = BS_BOARD_NAME . ' > Thread #' . $treeline[0]['post_number'];
+                    }
+                    else
+                    {
+                        $title_content = BS_BOARD_NAME . ' > ' . $treeline[0]['subject'];
+                    }
                 }
-                else
-                {
-                    $title_element->setContent(BS_BOARD_NAME . ' > ' . $treeline[0]['subject']);
-                }
-            }
+
 
             break;
-
-        default:
-            $title_element->setContent(BS_BOARD_NAME);
     }
+
+    $title_element->setContent($title_content);
 
     $logo_element = $dom->getElementById('logo');
     $logo_image = $dom->getElementById('top-logo-image');
@@ -85,7 +80,7 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     {
         $content = $element->getContent();
         $element->extSetAttribute('onclick', 'changeCSS(\'' . $content . '\', \'style-' . CONF_BOARD_DIR .
-        '\'); return false;');
+             '\'); return false;');
     }
 
     $top_admin_span = $dom->getElementById('top-admin-span');
@@ -105,5 +100,5 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
 
     nel_process_i18n($dom);
 
-    $render->appendOutput($render1->outputHTML($dom));
+    $render->appendHTMLFromDOM($dom);
 }
