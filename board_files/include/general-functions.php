@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_is_in_string($string, $substring)
 {
-    if (strripos($string, $substring) !== false)
+    if (utf8_strripos($string, $substring) !== false)
     {
         return true;
     }
@@ -18,8 +18,6 @@ function nel_is_in_string($string, $substring)
 
 function nel_clean_exit($dataforce, $die)
 {
-    //$dataforce['post_links'] = nel_cache_links($dataforce['post_links']);
-    //nel_write_multi_cache($dataforce);
     $authorize = nel_get_authorization();
     $authorize->save_users();
     $authorize->save_roles();
