@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_settings_control($dataforce)
 {
     $dbh = nel_database();
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
     $mode = $dataforce['mode'];
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_change'))

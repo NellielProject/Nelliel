@@ -48,7 +48,7 @@ function nel_set_session_cookie()
 //
 function nel_initialize_session($dataforce)
 {
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
     session_start();
     require_once INCLUDE_PATH . 'output/management/login_page.php';
     require_once INCLUDE_PATH . 'admin/login.php';

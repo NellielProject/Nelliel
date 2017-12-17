@@ -59,7 +59,7 @@ function nel_render_index_navigation($render, $pages)
 
 function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline)
 {
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
     global $link_resno;
 
     $dom = $render->newDOMDocument();

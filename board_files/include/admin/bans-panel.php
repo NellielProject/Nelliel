@@ -78,7 +78,7 @@ function nel_update_ban($dataforce)
 function nel_ban_control($dataforce)
 {
     $dbh = nel_database();
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
     $mode = $dataforce['mode'];
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_access'))

@@ -20,7 +20,7 @@ function nel_render_staff_panel_main($dataforce)
 
 function nel_render_staff_panel_user_edit($dataforce, $user_id)
 {
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
     $user = $authorize->get_user($user_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -41,7 +41,7 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
 
 function nel_render_staff_panel_role_edit($dataforce, $role_id)
 {
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
     $role = $authorize->get_role($role_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();

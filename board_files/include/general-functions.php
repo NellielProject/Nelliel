@@ -18,7 +18,7 @@ function nel_is_in_string($string, $substring)
 
 function nel_clean_exit($dataforce, $die)
 {
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
     $authorize->save_users();
     $authorize->save_roles();
 

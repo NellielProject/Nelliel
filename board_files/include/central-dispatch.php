@@ -17,7 +17,7 @@ function nel_process_mode_input($mode)
 //
 function nel_process_get($dataforce)
 {
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
 
     switch ($dataforce['get_mode']) // Moar modes
     {
@@ -66,7 +66,7 @@ function nel_process_post($dataforce)
         return;
     }
 
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
     $mode = nel_process_mode_input($dataforce['mode']);
 
     switch ($mode[0])
@@ -138,7 +138,7 @@ function nel_process_post($dataforce)
 
 function admin_dispatch($dataforce, $mode)
 {
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
 
     switch ($mode[1])
     {

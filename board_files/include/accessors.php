@@ -85,9 +85,3 @@ function nel_authorize()
 
     return $authorize;
 }
-
-// Legacy. TODO: Remove when no longer accessed.
-function nel_get_authorization()
-{
-    return nel_authorize();
-}

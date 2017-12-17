@@ -52,7 +52,7 @@ function nel_check_post_entry($post_item, $type)
 
 function nel_get_staff_post($post_data, $name_pieces)
 {
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
     $post_data['modpost'] = null;
 
     if ($name_pieces[5] === '')
@@ -89,7 +89,7 @@ function nel_get_tripcodes($post_data, $name_pieces)
 {
     global $plugins;
 
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
     $post_data['tripcode'] = '';
     $post_data['secure_tripcode'] = '';
     $post_data = $plugins->plugin_hook('in-before-tripcode-processing', TRUE, array($post_data, $name_pieces));

@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 function nel_staff_panel($dataforce)
 {
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
     $temp_auth = array();
     $mode = $dataforce['mode'];
 

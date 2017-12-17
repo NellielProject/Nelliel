@@ -460,7 +460,7 @@ function nel_delete_post($dataforce, $sub)
 function nel_verify_delete_perms($sub)
 {
     $dbh = nel_database();
-    $authorize = nel_get_authorization();
+    $authorize = nel_authorize();
     $id = $sub[2];
 
     if (!is_numeric($id))
