@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 ignore_user_abort(TRUE);
 
 // TODO: Clean all these up along with the other includes
-require_once FILES_PATH . 'libraries/portable-utf8/portable-utf8.php';
+require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
 require_once INCLUDE_PATH . 'wat.php';
 require_once INCLUDE_PATH . 'setup/setup.php';
 require_once INCLUDE_PATH . 'output/management/main_panel.php';

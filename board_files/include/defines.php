@@ -8,7 +8,8 @@ define('SQLITE_DB_DEFAULT_PATH', BASE_PATH . '/' . BOARD_FILES); // Base SQLite 
 define('FILES_PATH', BASE_PATH . '/' . BOARD_FILES); // Base files path
 define('PLUGINS_PATH', BASE_PATH . '/' . BOARD_FILES . 'plugins/'); // Base cache path
 define('TEMPLATE_PATH', BASE_PATH . '/' . BOARD_FILES . 'templates/nelliel/'); // Base template path
-define('LANGUAGE_PATH', BASE_PATH . '/' . BOARD_FILES . 'languages/'); // location of the language files
+define('LANGUAGE_PATH', BASE_PATH . '/' . BOARD_FILES . 'languages/'); // Language files path
+define('LIBRARY_PATH', BASE_PATH . '/' . BOARD_FILES . 'libraries/'); // Libraries path
 define('CSSDIR', BOARD_FILES . 'css/'); // location of the css files
 define('JSDIR', BOARD_FILES . 'js/'); // location of the javascript files
 define('CACHE_DIR', 'cache/'); // Cache directory, only used internally by Nelliel

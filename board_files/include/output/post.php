@@ -172,12 +172,12 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     }
 
     $sticky_icon_element = $dom->getElementById('sticky-icon-');
-    $sticky_icon_element->changeId('sticky-icon-' . $post_id);
 
     if ($gen_data['thread']['sticky'])
     {
         $sticky_icon_element->extSetAttribute('src', $dotdot . BOARD_FILES . '/imagez/nelliel/' .
              nel_stext('THREAD_STICKY_ICON'), 'url');
+        $sticky_icon_element->changeId('sticky-icon-' . $post_id);
     }
     else
     {

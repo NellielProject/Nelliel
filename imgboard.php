@@ -1,14 +1,14 @@
 <?php
 define('NELLIEL_VERSION', 'v0.9.4.1'); // Version
-define('BOARD_FILES', 'board_files/'); // Name of directory where the support and internal files go
 define('BASE_PATH', realpath('./')); // Base path for script
+define('BOARD_FILES', 'board_files/'); // Name of directory where the support and internal files go
 define('INCLUDE_PATH', BASE_PATH . '/' . BOARD_FILES . 'include/'); // Base cache path
 require_once BOARD_FILES . 'config.php';
+require_once INCLUDE_PATH . 'defines.php';
 require_once BOARD_FILES . 'crypt-config.php';
 require_once BOARD_FILES . 'database-config.php';
-require_once INCLUDE_PATH . 'defines.php';
 require_once INCLUDE_PATH . 'crypt.php';
-require_once BOARD_FILES . 'libraries/password_compat/password.php';
+require_once LIBRARY_PATH . 'password_compat/password.php';
 $best_hashing = nel_best_available_hashing();
 
 if($best_hashing === 0)
@@ -34,8 +34,8 @@ $plugins->activate();
 // A demo point. Does nothing, really
 $example_result = $plugins->plugin_hook('plugin-example', TRUE, array(5));
 
-require_once FILES_PATH . 'libraries/phpDOMExtend/autoload.php';
-require_once FILES_PATH . 'libraries/NellielTemplates/autoload.php';
+require_once LIBRARY_PATH . 'phpDOMExtend/autoload.php';
+require_once LIBRARY_PATH . 'NellielTemplates/autoload.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'classes/NellielPDO.php';
 require_once INCLUDE_PATH . 'accessors.php';
