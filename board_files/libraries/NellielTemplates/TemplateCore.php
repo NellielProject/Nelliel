@@ -72,7 +72,12 @@ class TemplateCore
     public function outputHTMLFromDom($dom, $template)
     {
         $output = $dom->saveHTML();
-        $output = $this->fixOutputHTML($template, $output);
+
+        if(!is_null($template))
+        {
+            $output = $this->fixOutputHTML($template, $output);
+        }
+
         return $output;
     }
 

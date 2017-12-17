@@ -6,6 +6,7 @@ class RenderCore
     private $template_instance;
     private $dom_documents;
     private $version;
+    private $render_sets;
 
     function __construct()
     {
@@ -22,6 +23,7 @@ class RenderCore
     public function newDOMDocument()
     {
         $dom = new \phpDOMExtend\ExtendedDOMDocument(true);
+        $this->dom_documents[spl_object_hash($dom)]['template'] = null;
         $dom->formatOutput = true;
         $dom->strictErrorChecking = false;
         $dom->validateOnParse = true;
@@ -43,5 +45,30 @@ class RenderCore
     public function outputHTML($dom_document)
     {
         return $this->template_instance->outputHTMLFromDom($dom_document, $this->dom_documents[spl_object_hash($dom_document)]['template']);
+    }
+
+    public function appendHTML($html, $render_set = 'default')
+    {
+        if(!isset($this->render_sets[$render_set]))
+        {
+            $this->render_sets[$render_set] = '';
+        }
+
+        $this->render_sets[$render_set] .= $html;
+    }
+
+    public function appendHTMLFromDOM($dom_document, $render_set = 'default')
+    {
+        if(!isset($this->render_sets[$render_set]))
+        {
+            $this->render_sets[$render_set] = '';
+        }
+
+        $this->render_sets[$render_set] .= $this->outputHTML($dom_document, $this->dom_documents[spl_object_hash($dom_document)]['template']);
+    }
+
+    public function outputRenderSet($render_set = 'default')
+    {
+        return $this->render_sets[$render_set];
     }
 }
