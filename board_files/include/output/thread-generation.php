@@ -41,6 +41,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
     $gen_data['first100'] = FALSE;
     $dataforce['posts_ending'] = false;
     $dataforce['index_rendering'] = false;
+    $dataforce['abbreviate'] = false;
 
     while ($gen_data['post_counter'] < $gen_data['thread']['post_count'])
     {
@@ -75,6 +76,24 @@ function nel_thread_generator($dataforce, $write, $write_id)
         if ($gen_data['post']['op'] == 1)
         {
             $new_post_element = nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
+
+            $expand_div = $dom->getElementById('thread-expand-')->cloneNode(true);
+            $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
+            $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
+
+            if ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD)
+            {
+                $omitted_count = $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD;
+                $omitted_element->firstChild->setContent($omitted_count);
+            }
+            else
+            {
+                $omitted_element->removeSelf();
+            }
+
+            nel_process_i18n($expand_div);
+            $import_node = $collapse_dom->importNode($expand_div, true);
+            $collapse_dom->appendChild($import_node);
         }
         else
         {
@@ -86,7 +105,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
                 if ($gen_data['post_counter'] > $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD)
                 {
                     $import_node = $collapse_dom->importNode($partial_post_element, true);
-                    $collapse_dom->appendChild($import_node);
+                    $collapse_dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id'])->appendChild($import_node);
                 }
             }
 

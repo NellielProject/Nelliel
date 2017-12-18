@@ -86,8 +86,12 @@ function nel_main_thread_generator($dataforce, $write)
                 $gen_data['thread']['expand_post'] = ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD) ? TRUE : FALSE;
                 $gen_data['thread']['first100'] = ($gen_data['thread']['post_count'] > 100) ? TRUE : FALSE;
                 $gen_data['post_counter'] = 0;
+
+                $post_append_target = $dom->getElementById('outer-div');
             }
 
+            $abbreviate = ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD) ? true : false;
+            $dataforce['abbreviate'] = $abbreviate;
             $gen_data['post'] = $treeline[$gen_data['post_counter']];
 
             if ($gen_data['post']['has_file'] == 1)
@@ -101,7 +105,7 @@ function nel_main_thread_generator($dataforce, $write)
 
             if ($gen_data['post']['op'] == 1)
             {
-                if ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD)
+                if ($abbreviate)
                 {
                     $gen_data['post_counter'] = $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD;
                     $dataforce['omitted_done'] = FALSE;
@@ -118,7 +122,27 @@ function nel_main_thread_generator($dataforce, $write)
                 $new_post_element = nel_render_post($dataforce, $render, TRUE, TRUE, $gen_data, $treeline, $dom);
             }
 
-            $dom->getElementById('outer-div')->appendChild($new_post_element);
+            $post_append_target->appendChild($new_post_element);
+
+            if ($gen_data['post']['op'] == 1)
+            {
+                    $expand_div = $dom->getElementById('thread-expand-')->cloneNode(true);
+                    $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
+                    $dom->getElementById('outer-div')->appendChild($expand_div);
+                    $post_append_target = $dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id']);
+                    $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
+                    nel_process_i18n($expand_div);
+
+                    if ($abbreviate)
+                    {
+                        $omitted_count = $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD;
+                        $omitted_element->firstChild->setContent($omitted_count);
+                    }
+                    else
+                    {
+                        $omitted_element->removeSelf();
+                    }
+            }
 
             if (empty($treeline[$gen_data['post_counter'] + 1]))
             {
@@ -134,6 +158,7 @@ function nel_main_thread_generator($dataforce, $write)
         }
 
         $dom->getElementById('post-id-')->removeSelf();
+        $dom->getElementById('thread-expand-')->removeSelf();
         $render->appendHTMLFromDOM($dom);
         $dataforce['posts_ending'] = true;
 

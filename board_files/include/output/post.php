@@ -61,7 +61,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     $post_data = $gen_data['post'];
     $post_id = $post_data['parent_thread'] . '_' . $post_data['post_number'];
-    $new_post_element= $dom->getElementById('post-id-')->cloneNode(true);
+    $new_post_element = $dom->getElementById('post-id-')->cloneNode(true);
     $new_post_element->changeId('post-id-' . $post_id);
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
     $post_container = $new_post_element->getElementById('post-container-');
@@ -100,13 +100,13 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
          $post_data['secure_tripcode'] : '';
     $capcode_text = '';
 
-         if ($post_data['mod_post'])
-         {
-             $capcode_text = $authorize->get_role_info($post_data['mod_post'], 'capcode_text');
-         }
+    if ($post_data['mod_post'])
+    {
+        $capcode_text = $authorize->get_role_info($post_data['mod_post'], 'capcode_text');
+    }
 
-         $mailto_element = $new_post_element->getElementById('poster-mailto');
-         $trip_line_element = $new_post_element->getElementById('trip-line-');
+    $mailto_element = $new_post_element->getElementById('poster-mailto');
+    $trip_line_element = $new_post_element->getElementById('trip-line-');
     $trip_line = $tripcode . $secure_tripcode . '&nbsp;&nbsp;' . $capcode_text;
     $trip_line_element->changeId('trip-line-' . $post_id);
 
@@ -188,9 +188,25 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         }
     }
 
-    if(!$dataforce['index_rendering'] || $response)
+    $reply_to_link_element->changeId('reply-to-link-' . $post_id);
+
+    if (!$dataforce['index_rendering'] || $response)
     {
         $reply_to_link_element->parentNode->removeSelf();
+    }
+
+    $thread_link_html = PAGE_DIR . $thread_id . '/' . $thread_id;
+
+    $expand_js = 'javascript:clientSideInclude(\'thread-expand-' . $thread_id . '\',\'expLink' . $thread_id . '\',\'' .
+         $thread_link_html . '-expand.html\',\'' . $thread_link_html . '-collapse.html\',\'Collapse Thread\')';
+
+    $expand_link_element = $new_post_element->getElementById('expLink');
+    $expand_link_element->changeId('expLink' . $thread_id);
+    $expand_link_element->extSetAttribute('href', $expand_js);
+
+    if (!$dataforce['index_rendering'] || $response || !$dataforce['abbreviate'])
+    {
+        $expand_link_element->parentNode->removeSelf();
     }
 
     $mod_tools_1 = $new_post_element->getElementById('mod-tools-1');
@@ -369,18 +385,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     if (nel_clear_whitespace($post_data['comment']) === '')
     {
         $post_data['comment'] = nel_stext('THREAD_NOTEXT');
-    }
-
-    $omitted_element = $new_post_element->getElementsByClassName('omitted-posts')->item(0);
-
-    if (!$dataforce['omitted_done'])
-    {
-        $omitted_count = $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD;
-        $omitted_element->firstChild->setContent($omitted_count);
-    }
-    else
-    {
-        $omitted_element->removeSelf();
     }
 
     $post_contents_element = $new_post_element->getElementById('post-contents-');
