@@ -19,35 +19,21 @@ function nel_thread_generator($dataforce, $write, $write_id)
     $render->createRenderSet('expand');
     $render->createRenderSet('collapse');
     $dataforce['dotdot'] = '../../';
-    //$write_id = ($dataforce['response_to'] === 0 || is_null($dataforce['response_to'])) ? $dataforce['response_id'] : $dataforce['response_to'];
     $dataforce['response_id'] = $write_id;
-    $prepared = $dbh->prepare('SELECT * FROM ' . THREAD_TABLE . ' WHERE thread_id=?');
-    $prepared->bindValue(1, $write_id, PDO::PARAM_INT);
-    $prepared->execute();
-    $gen_data['thread'] = $prepared->fetch(PDO::FETCH_ASSOC);
-    $prepared->closeCursor();
+    $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ?');
+    $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($write_id), PDO::FETCH_ASSOC);
 
-    $prepared = $dbh->prepare('SELECT * FROM ' . POST_TABLE . ' WHERE parent_thread=? ORDER BY post_number asc');
-    $prepared->bindValue(1, $write_id, PDO::PARAM_INT);
-    $prepared->execute();
-    $treeline = $prepared->fetchAll(PDO::FETCH_ASSOC);
-    $prepared->closeCursor();
+    $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+    $treeline = $dbh->executePreparedFetchAll($prepared, array($write_id), PDO::FETCH_ASSOC);
 
     if (empty($treeline))
     {
         return;
     }
 
-   /* if (empty($_SESSION) || $_SESSION['ignore_login'])
-    {
-        $dataforce['dotdot'] = '../../';
-    }*/
-
-    $page = 1;
     $gen_data['post_counter'] = 0;
     $gen_data['expand_post'] = FALSE;
     $dataforce['omitted_done'] = TRUE;
-    $partlimit = 1;
     $gen_data['first100'] = FALSE;
     $dataforce['posts_beginning'] = false;
     $dataforce['posts_ending'] = false;
@@ -75,14 +61,11 @@ function nel_thread_generator($dataforce, $write, $write_id)
 
         if ($gen_data['post']['has_file'] == 1)
         {
-            $prepared = $dbh->prepare('SELECT * FROM ' . FILE_TABLE . ' WHERE post_ref=? ORDER BY file_order asc');
-            $prepared->bindValue(1, $gen_data['post']['post_number'], PDO::PARAM_INT);
-            $prepared->execute();
-            $gen_data['files'] = $prepared->fetchAll(PDO::FETCH_ASSOC);
-            $prepared->closeCursor();
+            $prepared = $dbh->prepare('SELECT * FROM "' . FILE_TABLE . '" WHERE "post_ref" = ? ORDER BY "file_order" ASC');
+            $gen_data['files'] = $dbh->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']), PDO::FETCH_ASSOC);
         }
 
-        if ($partlimit === 100)
+        if ($gen_data['post_counter'] === 99)
         {
             $render_temp = clone $render;
             nel_render_insert_hr($render);
@@ -121,7 +104,6 @@ function nel_thread_generator($dataforce, $write, $write_id)
         }
 
         $render->appendHTML($render_temp->outputRenderSet());
-        ++ $partlimit;
         ++ $gen_data['post_counter'];
         unset($render_temp);
         unset($render_temp2);
