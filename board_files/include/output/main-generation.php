@@ -24,7 +24,6 @@ function nel_main_thread_generator($dataforce, $write)
 
     $treeline = array(0);
     $counttree = count($front_page_list);
-    $dataforce['posts_beginning'] = false;
     $dataforce['posts_ending'] = false;
     $dataforce['index_rendering'] = true;
 
@@ -57,8 +56,11 @@ function nel_main_thread_generator($dataforce, $write)
     while ($thread_counter < $counttree)
     {
         $render = new NellielTemplates\RenderCore();
-        $render->startRenderTimer();
         $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+        $dom = $render->newDOMDocument();
+        $render->loadTemplateFromFile($dom, 'thread.html');
+        $render->startRenderTimer();
+        $dom->getElementById('form-post-index')->extSetAttribute('action', $dataforce['dotdot'] . PHP_SELF);
         $dataforce['omitted_done'] = TRUE;
         nel_render_header($dataforce, $render, $treeline);
         nel_render_posting_form($dataforce, $render);
@@ -86,15 +88,6 @@ function nel_main_thread_generator($dataforce, $write)
                 $gen_data['post_counter'] = 0;
             }
 
-            if($thread_counter === 0 && $gen_data['post_counter'] === 0)
-            {
-                $dataforce['posts_beginning'] = true;
-            }
-            else
-            {
-                $dataforce['posts_beginning'] = false;
-            }
-
             $gen_data['post'] = $treeline[$gen_data['post_counter']];
 
             if ($gen_data['post']['has_file'] == 1)
@@ -112,24 +105,26 @@ function nel_main_thread_generator($dataforce, $write)
                 {
                     $gen_data['post_counter'] = $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD;
                     $dataforce['omitted_done'] = FALSE;
-                    nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline);
+                    $new_post_element = nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
                     $dataforce['omitted_done'] = TRUE;
                 }
                 else
                 {
-                    nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline);
+                    $new_post_element = nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
                 }
             }
             else
             {
-                nel_render_post($dataforce, $render, TRUE, TRUE, $gen_data, $treeline);
+                $new_post_element = nel_render_post($dataforce, $render, TRUE, TRUE, $gen_data, $treeline, $dom);
             }
+
+            $dom->getElementById('outer-div')->appendChild($new_post_element);
 
             if (empty($treeline[$gen_data['post_counter'] + 1]))
             {
                 $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? BS_THREADS_PER_PAGE : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
-                nel_render_insert_hr($render);
+                nel_render_insert_hr($dom);
                 $gen_data['post_counter'] = -1;
             }
             else
@@ -138,6 +133,8 @@ function nel_main_thread_generator($dataforce, $write)
             }
         }
 
+        $dom->getElementById('post-id-')->removeSelf();
+        $render->appendHTMLFromDOM($dom);
         $dataforce['posts_ending'] = true;
 
         // if not in res display mode
@@ -145,7 +142,6 @@ function nel_main_thread_generator($dataforce, $write)
         $next = $page + 1;
 
         $page_count = (int) ceil($counttree / BS_THREADS_PER_PAGE);
-        //$render->add_data('main_page', TRUE);
         $pages = array();
 
         if ($page === 1)

@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_generate_login_page($render)
+function nel_generate_login_page()
 {
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();

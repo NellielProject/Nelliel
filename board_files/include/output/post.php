@@ -4,14 +4,11 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_insert_hr($render)
+function nel_render_insert_hr($dom)
 {
-    $dom = $render->newDOMDocument();
     $hr = $dom->createElement('hr');
     $hr->setAttribute('class', 'clear');
-    $dom->appendChild($hr);
-    $render->appendHTMLFromDOM($dom);
-    return;
+    $dom->getElementById('outer-div')->appendChild($hr);
 }
 
 function nel_render_index_navigation($render, $pages)
@@ -57,28 +54,17 @@ function nel_render_index_navigation($render, $pages)
     $render->appendHTMLFromDOM($dom);
 }
 
-function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline)
+function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline, $dom)
 {
     $authorize = nel_authorize();
     global $link_resno;
 
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'post.html');
-    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
-
-    if ($dataforce['posts_beginning'])
-    {
-        $dom->getElementById('form-post-index')->extSetAttribute('action', $dotdot . PHP_SELF);
-    }
-    else
-    {
-        $dom->removeElementKeepChildren($dom->getElementById('outer-div'));
-        $dom->removeElementKeepChildren($dom->getElementById('form-post-index'));
-    }
-
     $post_data = $gen_data['post'];
-
-    $post_container = $dom->getElementById('post-container-');
+    $post_id = $post_data['parent_thread'] . '_' . $post_data['post_number'];
+    $new_post_element= $dom->getElementById('post-id-')->cloneNode(true);
+    $new_post_element->changeId('post-id-' . $post_id);
+    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
+    $post_container = $new_post_element->getElementById('post-container-');
     $post_container->changeId('post-container-' . $post_data['post_number']);
 
     if ($response)
@@ -91,15 +77,14 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     {
         $post_type = 'op';
         $post_type_class = 'op-';
-        $dom->getElementsByClassName('indents')->item(0)->removeSelf();
+        $new_post_element->getElementsByClassName('indents')->item(0)->removeSelf();
     }
 
-    $dom->getElementById('p-number')->changeId('p' . $post_data['post_number']);
-    $post_id = $post_data['parent_thread'] . '_' . $post_data['post_number'];
+    $new_post_element->getElementById('p-number')->changeId('p' . $post_data['post_number']);
     $rev_post_id = $post_data['post_number'] . '_' . $post_data['parent_thread'];
     $thread_id = $post_data['parent_thread'];
 
-    $post_header = $dom->getElementsByClassName('post-header')->item(0);
+    $post_header = $new_post_element->getElementsByClassName('post-header')->item(0);
 
     $post_checkbox = $post_header->doXPathQuery(".//input[@name='post_post-id']")->item(0);
     $post_checkbox->extSetAttribute('name', 'post_' . $rev_post_id);
@@ -120,8 +105,8 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
              $capcode_text = $authorize->get_role_info($post_data['mod_post'], 'capcode_text');
          }
 
-    $mailto_element = $dom->getElementById('poster-mailto');
-    $trip_line_element = $dom->getElementById('trip-line-');
+         $mailto_element = $new_post_element->getElementById('poster-mailto');
+         $trip_line_element = $new_post_element->getElementById('trip-line-');
     $trip_line = $tripcode . $secure_tripcode . '&nbsp;&nbsp;' . $capcode_text;
     $trip_line_element->changeId('trip-line-' . $post_id);
 
@@ -157,10 +142,10 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             break;
     }
 
-    $post_time_element = $dom->getElementById('post-time-');
+    $post_time_element = $new_post_element->getElementById('post-time-');
     $post_time_element->setContent($post_time);
     $post_time_element->changeId('post-time-' . $post_id);
-    $post_quote_element = $dom->getElementById('post-quote-link-');
+    $post_quote_element = $new_post_element->getElementById('post-quote-link-');
     $post_quote_element->setContent($post_data['post_number']);
     $post_quote_element->changeId('post-quote-link-' . $post_id);
 
@@ -174,7 +159,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
              $post_data['parent_thread'] . '.html', 'none');
     }
 
-    $sticky_icon_element = $dom->getElementById('sticky-icon-');
+    $sticky_icon_element = $new_post_element->getElementById('sticky-icon-');
 
     if ($gen_data['thread']['sticky'])
     {
@@ -187,7 +172,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $sticky_icon_element->removeSelf();
     }
 
-    $reply_to_link_element = $dom->getElementById('reply-to-link-');
+    $reply_to_link_element = $new_post_element->getElementById('reply-to-link-');
     $reply_to_link_element->changeId('reply-to-link-' . $post_id);
 
     if (!$response)
@@ -208,12 +193,12 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $reply_to_link_element->parentNode->removeSelf();
     }
 
-    $mod_tools_1 = $dom->getElementById('mod-tools-1');
+    $mod_tools_1 = $new_post_element->getElementById('mod-tools-1');
 
     if (!nel_session_is_ignored('render'))
     {
-        $dom->getElementById('ip-address-display')->setContent($post_data['ip_address']);
-        $set_ban_details = $dom->getElementById('set-ban-details');
+        $new_post_element->getElementById('ip-address-display')->setContent($post_data['ip_address']);
+        $set_ban_details = $new_post_element->getElementById('set-ban-details');
 
         if (nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_ban_add'))
         {
@@ -232,14 +217,14 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     }
 
     $temp_dot = ($partial) ? '' : $dataforce['dotdot'];
-    $post_files_container = $dom->getElementById('post-files-container-');
+    $post_files_container = $new_post_element->getElementById('post-files-container-');
 
     if ($post_data['has_file'] == 1)
     {
         $post_files_container->changeId('post-files-container-' . $post_id);
         $post_files_container->extSetAttribute('class', $post_type . '-files-container');
         $filecount = count($gen_data['files']);
-        $file_node = $dom->getElementById('fileinfo-');
+        $file_node = $new_post_element->getElementById('fileinfo-');
         $multiple_class = '';
         $multiple_files = false;
 
@@ -386,7 +371,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $post_data['comment'] = nel_stext('THREAD_NOTEXT');
     }
 
-    $omitted_element = $dom->getElementsByClassName('omitted-posts')->item(0);
+    $omitted_element = $new_post_element->getElementsByClassName('omitted-posts')->item(0);
 
     if (!$dataforce['omitted_done'])
     {
@@ -398,19 +383,19 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $omitted_element->removeSelf();
     }
 
-    $post_contents_element = $dom->getElementById('post-contents-');
+    $post_contents_element = $new_post_element->getElementById('post-contents-');
     $post_contents_element->changeID('post-contents-' . $post_id);
     $post_contents_element->extSetAttribute('class', $post_type_class . 'post-text');
-    $post_text_element = $dom->getElementsByClassName('-post-text')->item(0);
+    $post_text_element = $new_post_element->getElementsByClassName('-post-text')->item(0);
     $post_text_element->extSetAttribute('class', $post_type_class . 'post-contents');
-    $post_comment_element = $dom->getElementById('post-comment-');
+    $post_comment_element = $new_post_element->getElementById('post-comment-');
     $post_comment_element->setContent($post_data['comment']);
     $post_comment_element->changeID('post-comment-' . $post_id);
-    $mod_comment_element = $dom->getElementById('mod-comment-');
+    $mod_comment_element = $new_post_element->getElementById('mod-comment-');
     $mod_comment_element->setContent($post_data['mod_comment']);
     $mod_comment_element->changeID('mod-comment-' . $post_id);
-    $dom->getElementById('ban-')->changeID('ban' . $post_data['post_number']);
+    $new_post_element->getElementById('ban-')->changeID('ban' . $post_data['post_number']);
 
-    nel_process_i18n($dom);
-    $render->appendHTMLFromDOM($dom);
+    nel_process_i18n($new_post_element);
+    return $new_post_element;
 }
