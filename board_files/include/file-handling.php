@@ -32,12 +32,14 @@ function nel_write_file($file, $output, $chmod = FILE_PERM, $create_directories 
 
 function nel_create_directory($directory, $dir_chmod = DIRECTORY_PERM, $recursive = false)
 {
-    if (file_exists($directory))
+    clearstatcache();
+
+    if (is_dir($directory))
     {
         return false;
     }
 
-    return mkdir($directory, octdec($dir_chmod), $recursive);
+    return @mkdir($directory, octdec($dir_chmod), $recursive);
 }
 
 //
@@ -45,6 +47,8 @@ function nel_create_directory($directory, $dir_chmod = DIRECTORY_PERM, $recursiv
 //
 function nel_move_file($file, $destination)
 {
+    clearstatcache();
+
     if (file_exists($file))
     {
         rename($file, $destination);
@@ -56,6 +60,8 @@ function nel_move_file($file, $destination)
 //
 function nel_eraser_gun($path, $filename = null, $is_directory = false)
 {
+    clearstatcache();
+
     if ($is_directory && file_exists($path))
     {
         $files = glob(nel_path_file_join($path, '*.*'));
@@ -65,7 +71,7 @@ function nel_eraser_gun($path, $filename = null, $is_directory = false)
             unlink($file);
         }
 
-        rmdir($path);
+        @rmdir($path);
     }
     else if (file_exists(nel_path_file_join($path, $filename)))
     {
@@ -100,9 +106,9 @@ function nel_path_join($path, $path2)
 //
 function nel_create_thread_directories($thread_id)
 {
-    mkdir(SRC_PATH . $thread_id, octdec(DIRECTORY_PERM));
-    mkdir(THUMB_PATH . $thread_id, octdec(DIRECTORY_PERM));
-    mkdir(PAGE_PATH . $thread_id, octdec(DIRECTORY_PERM));
+    nel_create_directory(SRC_PATH . $thread_id, octdec(DIRECTORY_PERM));
+    nel_create_directory(THUMB_PATH . $thread_id, octdec(DIRECTORY_PERM));
+    nel_create_directory(PAGE_PATH . $thread_id, octdec(DIRECTORY_PERM));
 }
 
 function nel_delete_thread_directories($thread_id)
