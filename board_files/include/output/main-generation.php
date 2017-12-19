@@ -13,12 +13,13 @@ function nel_main_thread_generator($dataforce, $write)
     $gen_data = array();
     $dataforce['dotdot'] = '';
 
-    if($write)
+    if ($write)
     {
         nel_session_set_ignored('render', true);
     }
 
-    $result =  $dbh->query('SELECT thread_id FROM ' . THREAD_TABLE . ' WHERE archive_status=0 ORDER BY sticky desc, last_bump_time desc');
+    $result = $dbh->query('SELECT "thread_id" FROM "' . THREAD_TABLE .
+         '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "ast_bump_time" DESC');
     $front_page_list = $result->fetchAll(PDO::FETCH_COLUMN);
     unset($result);
 
@@ -71,17 +72,12 @@ function nel_main_thread_generator($dataforce, $write)
         {
             if ($gen_data['post_counter'] === -1)
             {
-                $prepared = $dbh->prepare('SELECT * FROM ' . THREAD_TABLE . ' WHERE thread_id=?');
-                $prepared->bindValue(1, $front_page_list[$thread_counter], PDO::PARAM_INT);
-                $prepared->execute();
-                $gen_data['thread'] = $prepared->fetch(PDO::FETCH_ASSOC);
-                $prepared->closeCursor();
+                $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ?');
+                $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($front_page_list[$thread_counter]), PDO::FETCH_ASSOC);
 
-                $prepared = $dbh->prepare('SELECT * FROM ' . POST_TABLE . ' WHERE parent_thread=? ORDER BY post_number asc');
-                $prepared->bindValue(1, $front_page_list[$thread_counter], PDO::PARAM_INT);
-                $prepared->execute();
-                $treeline = $prepared->fetchAll(PDO::FETCH_ASSOC);
-                $prepared->closeCursor();
+                $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE .
+                     '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+                $treeline = $dbh->executePreparedFetchAll($prepared, array($front_page_list[$thread_counter]), PDO::FETCH_ASSOC);
 
                 $gen_data['thread']['expand_post'] = ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD) ? TRUE : FALSE;
                 $gen_data['thread']['first100'] = ($gen_data['thread']['post_count'] > 100) ? TRUE : FALSE;
@@ -96,11 +92,9 @@ function nel_main_thread_generator($dataforce, $write)
 
             if ($gen_data['post']['has_file'] == 1)
             {
-                $prepared = $dbh->prepare('SELECT * FROM ' . FILE_TABLE . ' WHERE post_ref=? ORDER BY file_order asc');
-                $prepared->bindValue(1, $gen_data['post']['post_number'], PDO::PARAM_INT);
-                $prepared->execute();
-                $gen_data['files'] = $prepared->fetchAll(PDO::FETCH_ASSOC);
-                $prepared->closeCursor();
+                $prepared = $dbh->prepare('SELECT * FROM "' . FILE_TABLE .
+                     '" WHERE "post_ref" = ? ORDER BY "file_order" ASC');
+                $gen_data['files'] = $dbh->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']), PDO::FETCH_ASSOC);
             }
 
             if ($gen_data['post']['op'] == 1)
@@ -126,22 +120,22 @@ function nel_main_thread_generator($dataforce, $write)
 
             if ($gen_data['post']['op'] == 1)
             {
-                    $expand_div = $dom->getElementById('thread-expand-')->cloneNode(true);
-                    $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
-                    $dom->getElementById('outer-div')->appendChild($expand_div);
-                    $post_append_target = $dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id']);
-                    $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
-                    nel_process_i18n($expand_div);
+                $expand_div = $dom->getElementById('thread-expand-')->cloneNode(true);
+                $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
+                $dom->getElementById('outer-div')->appendChild($expand_div);
+                $post_append_target = $dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id']);
+                $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
+                nel_process_i18n($expand_div);
 
-                    if ($abbreviate)
-                    {
-                        $omitted_count = $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD;
-                        $omitted_element->firstChild->setContent($omitted_count);
-                    }
-                    else
-                    {
-                        $omitted_element->removeSelf();
-                    }
+                if ($abbreviate)
+                {
+                    $omitted_count = $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD;
+                    $omitted_element->firstChild->setContent($omitted_count);
+                }
+                else
+                {
+                    $omitted_element->removeSelf();
+                }
             }
 
             if (empty($treeline[$gen_data['post_counter'] + 1]))
@@ -202,7 +196,7 @@ function nel_main_thread_generator($dataforce, $write)
             ++ $i;
         }
 
-        if($page === $page_count || $dataforce['max_pages'] === 1)
+        if ($page === $page_count || $dataforce['max_pages'] === 1)
         {
             $pages['next'] = '';
         }
@@ -234,7 +228,7 @@ function nel_main_thread_generator($dataforce, $write)
         unset($render);
     }
 
-    if($write)
+    if ($write)
     {
         nel_session_set_ignored('render', false);
     }
