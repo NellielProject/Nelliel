@@ -101,10 +101,8 @@ function nel_process_new_post($dataforce)
     $post_data['file_count'] = $files_count;
     $post_data['has_file'] = ($files_count > 0) ? 1 : 0;
     nel_db_insert_initial_post($time, $post_data);
-    $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "post_time" = ? LIMIT 1';
-    $prepared = $dbh->prepare($query);
-    $prepared->bindValue(1, $time, PDO::PARAM_INT);
-    $new_post_info = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
+    $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE "post_time" = ? LIMIT 1');
+    $new_post_info = $dbh->executePreparedFetch($prepared, array($time), PDO::FETCH_ASSOC, true);
     $thread_info = array();
 
     if ($post_data['parent_thread']=== 0)
@@ -120,10 +118,8 @@ function nel_process_new_post($dataforce)
     else
     {
         $thread_info['id'] = $post_data['parent_thread'];
-        $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1';
-        $prepared = $dbh->prepare($query);
-        $prepared->bindValue(1, $thread_info['id'], PDO::PARAM_INT);
-        $current_thread = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
+        $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1');
+        $current_thread = $dbh->executePreparedFetch($prepared, array($thread_info['id']), PDO::FETCH_ASSOC, true);
         $thread_info['last_update'] = $current_thread['last_update'];
         $thread_info['post_count'] = $current_thread['post_count'] + 1;
         $thread_info['last_bump_time'] = $time;
@@ -137,10 +133,8 @@ function nel_process_new_post($dataforce)
         nel_db_update_thread($new_post_info, $thread_info);
     }
 
-    $query = 'UPDATE "' . POST_TABLE . '" SET parent_thread = ' . $thread_info['id'] . ' WHERE post_number = ' .
-    $new_post_info['post_number'];
-    $dbh->query('UPDATE "' . POST_TABLE . '" SET parent_thread = ' . $thread_info['id'] . ' WHERE post_number = ' .
-         $new_post_info['post_number']);
+    $prepared = $dbh->prepare('UPDATE "' . POST_TABLE . '" SET parent_thread = ? WHERE post_number = ?');
+    $dbh->executePrepared($prepared, array($thread_info['id'], $new_post_info['post_number']), true);
 
     $fgsfds['noko_topic'] = $thread_info['id'];
     $srcpath = SRC_PATH . $thread_info['id'] . '/';
@@ -203,10 +197,8 @@ function nel_is_post_ok($dataforce, $time)
 
     if ($dataforce['response_to'] !== 0)
     {
-        $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1';
-        $prepared = $dbh->prepare($query);
-        $prepared->bindValue(1, $dataforce['response_to'], PDO::PARAM_INT);
-        $op_post = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
+        $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1');
+        $op_post = $dbh->executePreparedFetch($prepared, array($dataforce['response_to']), PDO::FETCH_ASSOC, true);
 
         if (!empty($op_post))
         {
