@@ -97,19 +97,19 @@ function nel_thread_generator($dataforce, $write, $write_id)
         }
         else
         {
-            $new_post_element = nel_render_post($dataforce, $render, TRUE, FALSE, $gen_data, $treeline, $dom);
-            $partial_post_element = nel_render_post($dataforce, $render, TRUE, TRUE, $gen_data, $treeline, $dom);
+            $base_new_post_node = nel_render_post($dataforce, $render, TRUE, FALSE, $gen_data, $treeline, $dom);
+            $new_post_element = nel_render_post_adjust_relative($base_new_post_node, $gen_data);
 
             if ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD)
             {
                 if ($gen_data['post_counter'] > $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD)
                 {
-                    $import_node = $collapse_dom->importNode($partial_post_element, true);
+                    $import_node = $collapse_dom->importNode($base_new_post_node, true);
                     $collapse_dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id'])->appendChild($import_node);
                 }
             }
 
-            $import_node = $expand_dom->importNode($partial_post_element, true);
+            $import_node = $expand_dom->importNode($base_new_post_node, true);
             $expand_dom->appendChild($import_node);
         }
 

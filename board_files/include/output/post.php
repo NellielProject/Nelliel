@@ -64,7 +64,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-'), true);
     $new_post_element = $new_post_dom->getElementById('post-id-');
     $new_post_element->changeId('post-id-' . $post_id);
-    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
+    //$dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
     $post_container = $new_post_dom->getElementById('post-container-');
     $post_container->changeId('post-container-' . $post_data['post_number']);
 
@@ -168,8 +168,9 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     if ($gen_data['thread']['sticky'])
     {
-        $sticky_icon_element->extSetAttribute('src', $dotdot . BOARD_FILES . '/imagez/nelliel/' .
-             nel_stext('THREAD_STICKY_ICON'), 'url');
+        $sticky_icon_element->extSetAttribute('src', BOARD_FILES . '/imagez/nelliel/' . nel_stext('THREAD_STICKY_ICON'), 'url');
+        //$sticky_icon_element->extSetAttribute('src', $dotdot . BOARD_FILES . '/imagez/nelliel/' .
+        //nel_stext('THREAD_STICKY_ICON'), 'url');
         $sticky_icon_element->changeId('sticky-icon-' . $post_id);
     }
     else
@@ -205,7 +206,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $expand_js = 'javascript:clientSideInclude(\'thread-expand-' . $thread_id . '\',\'expLink' . $thread_id . '\',\'' .
          $thread_link_html . '-expand.html\',\'' . $thread_link_html . '-collapse.html\',\'Collapse Thread\')';
 
-         $expand_link_element = $new_post_dom->getElementById('expLink');
+    $expand_link_element = $new_post_dom->getElementById('expLink');
     $expand_link_element->changeId('expLink' . $thread_id);
     $expand_link_element->extSetAttribute('href', $expand_js);
 
@@ -237,9 +238,8 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $mod_tools_1->removeSelf();
     }
 
-    $temp_dot = ($partial) ? '' : $dataforce['dotdot'];
+    //$temp_dot = ($partial) ? '' : $dataforce['dotdot'];
     $post_files_container = $new_post_dom->getElementById('post-files-container-');
-
 
     if ($post_data['has_file'] == 1)
     {
@@ -268,8 +268,9 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             $delete_file_element->changeId('delete-file-' . $file_id);
             $delete_file_element->extSetAttribute('name', 'files' . $file_id);
 
-            $file['file_location'] = $temp_dot . SRC_DIR . $thread_id . '/' . $file['filename'] . "." .
-                 $file['extension'];
+            $file['file_location'] = SRC_DIR . $thread_id . '/' . $file['filename'] . "." . $file['extension'];
+            //$file['file_location'] = $temp_dot . SRC_DIR . $thread_id . '/' . $file['filename'] . "." .
+            //     $file['extension'];
             $file['display_filename'] = $file['filename'];
 
             if (strlen($file['filename']) > 32)
@@ -332,7 +333,8 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                 if (isset($file['preview_name']))
                 {
                     $file['has_preview'] = true;
-                    $file['preview_location'] = $temp_dot . THUMB_DIR . $thread_id . '/' . $file['preview_name'];
+                    //$file['preview_location'] = $temp_dot . THUMB_DIR . $thread_id . '/' . $file['preview_name'];
+                    $file['preview_location'] = THUMB_DIR . $thread_id . '/' . $file['preview_name'];
 
                     if ($filecount > 1)
                     {
@@ -349,7 +351,9 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                      utf8_strtolower($file['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png'))
                 {
                     $file['has_preview'] = true;
-                    $file['preview_location'] = $temp_dot . BOARD_FILES . '/imagez/nelliel/filetype/' .
+                    //$file['preview_location'] = $temp_dot . BOARD_FILES . '/imagez/nelliel/filetype/' .
+                    //    utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png';
+                    $file['preview_location'] = BOARD_FILES . '/imagez/nelliel/filetype/' .
                          utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png';
                     $file['preview_width'] = (BS_MAX_WIDTH < 64) ? BS_MAX_WIDTH : '128';
                     $file['preview_height'] = (BS_MAX_HEIGHT < 64) ? BS_MAX_HEIGHT : '128';
@@ -386,8 +390,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $post_files_container->removeSelf();
     }
 
-
-
     $post_data['comment'] = nel_newline_cleanup($post_data['comment']);
     $post_data['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $post_data['comment']);
     $post_data['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'nel_parse_links', $post_data['comment']);
@@ -412,4 +414,35 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     nel_process_i18n($new_post_dom);
     return $new_post_element;
+}
+
+function nel_render_post_adjust_relative($node, $gen_data)
+{
+    $post_id = $gen_data['post']['parent_thread'] . '_' . $gen_data['post']['post_number'];
+    $new_post_dom = $node->ownerDocument->copyNodeIntoDocument($node, true);
+    $sticky_element = $new_post_dom->getElementById('sticky-icon-');
+
+    if (!is_null($sticky_element))
+    {
+        $sticky_element->modifyAttribute('src', '../../', 'before');
+    }
+
+    if ($gen_data['post']['has_file'] == 1)
+    {
+        foreach ($gen_data['files'] as $file)
+        {
+            $file_id = $post_id . '_' . $file['file_order'];
+            $new_post_dom->getElementById('file-link-' . $file_id)->modifyAttribute('href', '../../', 'before');
+            $new_post_dom->getElementById('file-location-' . $file_id)->modifyAttribute('href', '../../', 'before');
+
+            $preview_element = $new_post_dom->getElementById('file-preview-' . $file_id);
+
+            if (!is_null($preview_element))
+            {
+                $preview_element->modifyAttribute('src', '../../', 'before');
+            }
+        }
+    }
+
+    return $new_post_dom->getElementById('post-id-' . $post_id);
 }
