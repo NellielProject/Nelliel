@@ -18,6 +18,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'thread.html');
+    nel_process_i18n($dom);
     $expand_dom = $render->newDOMDocument();
     $collapse_dom = $render->newDOMDocument();
     $render->startRenderTimer();
@@ -91,7 +92,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
                 $omitted_element->removeSelf();
             }
 
-            nel_process_i18n($expand_div);
+            //nel_process_i18n($expand_div);
             $import_node = $collapse_dom->importNode($expand_div, true);
             $collapse_dom->appendChild($import_node);
         }

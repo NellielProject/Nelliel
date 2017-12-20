@@ -65,7 +65,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-'), true);
     $new_post_element = $new_post_dom->getElementById('post-id-');
     $new_post_element->changeId('post-id-' . $post_id);
-    //$dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
     $post_container = $new_post_dom->getElementById('post-container-');
     $post_container->changeId('post-container-' . $post_data['post_number']);
 
@@ -129,7 +128,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     }
 
     $curr_time = floor($gen_data['post']['post_time'] / 1000);
-    // Up to 0.00022
 
     switch (BS_DATE_FORMAT)
     {
@@ -171,8 +169,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     if ($gen_data['thread']['sticky'])
     {
         $sticky_icon_element->extSetAttribute('src', BOARD_FILES . '/imagez/nelliel/' . nel_stext('THREAD_STICKY_ICON'), 'url');
-        //$sticky_icon_element->extSetAttribute('src', $dotdot . BOARD_FILES . '/imagez/nelliel/' .
-        //nel_stext('THREAD_STICKY_ICON'), 'url');
         $sticky_icon_element->changeId('sticky-icon-' . $post_id);
     }
     else
@@ -195,7 +191,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                  $post_data['post_number'] . '.html');
         }
     }
-    // Up to 0.00028
 
     $reply_to_link_element->changeId('reply-to-link-' . $post_id);
 
@@ -242,7 +237,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     }
 
     $post_files_container = $new_post_dom->getElementById('post-files-container-');
-    // Up to 0.00041
 
     if ($post_data['has_file'] == 1)
     {
@@ -412,9 +406,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $mod_comment_element->setContent($post_data['mod_comment']);
     $mod_comment_element->changeId('mod-comment-' . $post_id);
     $new_post_dom->getElementById('ban-')->changeId('ban' . $post_data['post_number']);
-    // Up to 0.00044 (no file)
-    nel_process_i18n($new_post_dom);
-    // Up to 0.00056 (no file)
+    //nel_process_i18n($new_post_dom);
     return $new_post_element;
 }
 
