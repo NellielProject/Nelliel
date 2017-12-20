@@ -111,4 +111,14 @@ class ExtendedDOMDocument extends \DOMDocument
 
         $element->removeSelf();
     }
+
+    public function copyNodeIntoDocument($node, $deep = false)
+    {
+        $new_dom = new ExtendedDOMDocument(true);
+        $new_dom->validateOnParse = true;
+        $new_dom->loadHTML('<!DOCTYPE html>');
+        $importNode = $new_dom->importNode($node, $deep);
+        $new_dom->appendChild($importNode);
+        return $new_dom;
+    }
 }

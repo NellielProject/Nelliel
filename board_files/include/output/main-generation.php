@@ -19,7 +19,7 @@ function nel_main_thread_generator($dataforce, $write)
     }
 
     $result = $dbh->query('SELECT "thread_id" FROM "' . THREAD_TABLE .
-         '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "ast_bump_time" DESC');
+         '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC');
     $front_page_list = $result->fetchAll(PDO::FETCH_COLUMN);
     unset($result);
 
@@ -116,14 +116,15 @@ function nel_main_thread_generator($dataforce, $write)
                 $new_post_element = nel_render_post($dataforce, $render, TRUE, TRUE, $gen_data, $treeline, $dom);
             }
 
-            $post_append_target->appendChild($new_post_element);
+            $imported = $dom->importNode($new_post_element, true);
+            $post_append_target->appendChild($imported);
 
             if ($gen_data['post']['op'] == 1)
             {
                 $expand_div = $dom->getElementById('thread-expand-')->cloneNode(true);
                 $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
                 $dom->getElementById('outer-div')->appendChild($expand_div);
-                $post_append_target = $dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id']);
+                //$post_append_target = $dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id']);
                 $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
                 nel_process_i18n($expand_div);
 
@@ -221,7 +222,7 @@ function nel_main_thread_generator($dataforce, $write)
         else
         {
             $logfilename = ($page === 1) ? PHP_SELF2 . PHP_EXT : PHP_SELF2 . ($page - 1) . PHP_EXT;
-            nel_write_file($logfilename, $render->outputRenderSet(), FILE_PERM);
+            nel_write_file($logfilename, $render->outputRenderSet(), FILE_PERM, true);
         }
 
         ++ $page;
