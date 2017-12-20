@@ -59,6 +59,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $authorize = nel_authorize();
     global $link_resno;
 
+    $start = microtime(true);
     $post_data = $gen_data['post'];
     $post_id = $post_data['parent_thread'] . '_' . $post_data['post_number'];
     $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-'), true);
@@ -128,6 +129,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     }
 
     $curr_time = floor($gen_data['post']['post_time'] / 1000);
+    // Up to 0.00022
 
     switch (BS_DATE_FORMAT)
     {
@@ -193,6 +195,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                  $post_data['post_number'] . '.html');
         }
     }
+    // Up to 0.00028
 
     $reply_to_link_element->changeId('reply-to-link-' . $post_id);
 
@@ -238,8 +241,8 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $mod_tools_1->removeSelf();
     }
 
-    //$temp_dot = ($partial) ? '' : $dataforce['dotdot'];
     $post_files_container = $new_post_dom->getElementById('post-files-container-');
+    // Up to 0.00041
 
     if ($post_data['has_file'] == 1)
     {
@@ -269,8 +272,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             $delete_file_element->extSetAttribute('name', 'files' . $file_id);
 
             $file['file_location'] = SRC_DIR . $thread_id . '/' . $file['filename'] . "." . $file['extension'];
-            //$file['file_location'] = $temp_dot . SRC_DIR . $thread_id . '/' . $file['filename'] . "." .
-            //     $file['extension'];
             $file['display_filename'] = $file['filename'];
 
             if (strlen($file['filename']) > 32)
@@ -333,7 +334,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                 if (isset($file['preview_name']))
                 {
                     $file['has_preview'] = true;
-                    //$file['preview_location'] = $temp_dot . THUMB_DIR . $thread_id . '/' . $file['preview_name'];
                     $file['preview_location'] = THUMB_DIR . $thread_id . '/' . $file['preview_name'];
 
                     if ($filecount > 1)
@@ -351,8 +351,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                      utf8_strtolower($file['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png'))
                 {
                     $file['has_preview'] = true;
-                    //$file['preview_location'] = $temp_dot . BOARD_FILES . '/imagez/nelliel/filetype/' .
-                    //    utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png';
                     $file['preview_location'] = BOARD_FILES . '/imagez/nelliel/filetype/' .
                          utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png';
                     $file['preview_width'] = (BS_MAX_WIDTH < 64) ? BS_MAX_WIDTH : '128';
@@ -389,6 +387,8 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     {
         $post_files_container->removeSelf();
     }
+    // Up to 0.0041 (no file)
+    // Approx 0.00030 per file
 
     $post_data['comment'] = nel_newline_cleanup($post_data['comment']);
     $post_data['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $post_data['comment']);
@@ -402,7 +402,8 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $post_contents_element = $new_post_dom->getElementById('post-contents-');
     $post_contents_element->changeId('post-contents-' . $post_id);
     $post_contents_element->extSetAttribute('class', $post_type_class . 'post-text');
-    $post_text_element = $new_post_dom->getElementsByClassName('-post-text')->item(0);
+    $post_text_element = $new_post_dom->getElementById('-post-text');
+    $post_text_element->changeId($post_id . '-post-text');
     $post_text_element->extSetAttribute('class', $post_type_class . 'post-contents');
     $post_comment_element = $new_post_dom->getElementById('post-comment-');
     $post_comment_element->setContent($post_data['comment']);
@@ -411,8 +412,9 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $mod_comment_element->setContent($post_data['mod_comment']);
     $mod_comment_element->changeId('mod-comment-' . $post_id);
     $new_post_dom->getElementById('ban-')->changeId('ban' . $post_data['post_number']);
-
+    // Up to 0.00044 (no file)
     nel_process_i18n($new_post_dom);
+    // Up to 0.00056 (no file)
     return $new_post_element;
 }
 
