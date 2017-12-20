@@ -97,6 +97,13 @@ function nel_thread_generator($dataforce, $write, $write_id)
         }
         else
         {
+            $expand_div = $dom->getElementById('thread-expand-');
+
+            if(!is_null($expand_div))
+            {
+                $expand_div->removeSelf();
+            }
+
             $base_new_post_node = nel_render_post($dataforce, $render, TRUE, FALSE, $gen_data, $treeline, $dom);
             $new_post_element = nel_render_post_adjust_relative($base_new_post_node, $gen_data);
 
