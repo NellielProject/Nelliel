@@ -163,7 +163,26 @@ function admin_dispatch($dataforce, $mode)
             break;
 
         case 'regen':
-            nel_regen($dataforce, NULL, $mode);
+            if ($mode[2] === 'full')
+            {
+                nel_regen_all_pages($dataforce);
+            }
+
+            if ($mode[2] === 'index')
+            {
+                nel_regen_index($dataforce);
+            }
+
+            if ($mode[2] === 'thread')
+            {
+                nel_regen_threads($dataforce, true, null);
+            }
+
+            if ($mode[2] === 'cache')
+            {
+                nel_regen_cache($dataforce);
+            }
+
             nel_login($dataforce);
             break;
 

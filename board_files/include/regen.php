@@ -43,25 +43,3 @@ function nel_regen_all_pages($dataforce)
     nel_regen_index($dataforce);
 }
 
-function nel_regen(&$dataforce, $ids, $mode)
-{
-    if ($mode[2] === 'full')
-    {
-        nel_regen_all_pages($dataforce);
-    }
-
-    if ($mode[2] === 'index')
-    {
-        nel_regen_index($dataforce);
-    }
-
-    if ($mode[2] === 'thread')
-    {
-        nel_regen_threads($dataforce, true, $ids);
-    }
-
-    if ($mode[2] === 'cache')
-    {
-        nel_regen_cache($dataforce);
-    }
-}
