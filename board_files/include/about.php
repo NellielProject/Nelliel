@@ -56,6 +56,9 @@ function nel_about_nelliel_screen()
             <p>
                 <a href="http://pageconfig.com/post/portable-utf8" title="Portable UTF-8">Portable UTF-8</a> library created by <a href="http://pageconfig.com">Hamid Sarfraz</a>.
             </p>
+            <p>
+                <a href="https://github.com/ircmaxell/password_compat" title="password_compat">password_compat</a> library created by <a href="https://blog.ircmaxell.com/">Anthony Ferrara</a>.
+            </p>
             <p class="text-center">
                 <a href="' . PHP_SELF2 . PHP_EXT . '">' . nel_stext('LINK_RETURN') . '</a>
             </p>
