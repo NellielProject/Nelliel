@@ -1,5 +1,7 @@
 <?php
 
+require_once INCLUDE_PATH . 'output/rules.php';
+
 function nel_render_posting_form($dataforce, $render)
 {
     $dom = $render->newDOMDocument();
@@ -12,13 +14,10 @@ function nel_render_posting_form($dataforce, $render)
     {
         $page_ref1 = PHP_SELF . '?mode=display&page=0';
         $page_ref2 = PHP_SELF . '?page=';
-        //$render->add_data('page_ref1', PHP_SELF . '?mode=display&page=0');
-        //$render->add_data('page_ref2', PHP_SELF . '?page=');
     }
     else
     {
         $page_ref1 = PHP_SELF2 . PHP_EXT;
-        //$render->add_data('page_ref1', PHP_SELF2 . PHP_EXT);
     }
 
     $posting_form = $dom->getElementById('posting-form');
@@ -122,10 +121,9 @@ function nel_render_posting_form($dataforce, $render)
         $dom->getElementById('which-post-mode')->setContent(nel_stext('TEXT_REPLYMODE'));
     }
 
-    $form_rules_list = $dom->getElementById('form-rules-list');
-    $form_rules_list->doXPathQuery('.//ul/li[1]/span[2]')->item(0)->setContent(BS_MAX_FILESIZE);
-    $form_rules_list->doXPathQuery('.//ul/li[2]/span[2]')->item(0)->setContent(BS_MAX_WIDTH . 'x' . BS_MAX_HEIGHT);
-    $dom->getElementById('rule-list')->setContent($dataforce['rules_list']);
+    $rl = nel_cache_filetype_settings();
+    $rules = $dom->importNode(nel_render_rules_list($rl), true);
+    $dom->getElementById('form-rules-list')->appendChild($rules);
 
     if(!BS_USE_SPAMBOT_TRAP)
     {

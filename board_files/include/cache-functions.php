@@ -21,6 +21,48 @@ if (!file_exists(CACHE_PATH . 'multi-cache.nelcache'))
 
 require_once CACHE_PATH . 'multi-cache.nelcache';
 
+
+function nel_cache_filetype_settings()
+{
+    $dbh = nel_database();
+    $result = $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'filetype_enable\'');
+    $config_list = $result->fetchAll(PDO::FETCH_ASSOC);
+    $file_config = array();
+
+    foreach ($config_list as $config)
+    {
+        $setting_name = explode('_', $config['config_name']); //TODO: Update with db change
+
+        switch ($setting_name[0])
+        {
+            case 'g':
+                $file_config['graphics'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'a':
+                $file_config['audio'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'v':
+                $file_config['video'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'd':
+                $file_config['document'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'r':
+                $file_config['archive'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+
+            case 'o':
+                $file_config['other'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
+                break;
+        }
+    }
+
+    return $file_config;
+}
 //
 // Cache the posting rules
 //
