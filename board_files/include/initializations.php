@@ -24,7 +24,6 @@ if(RUN_SETUP_CHECK)
     setup_check();
 }
 
-require_once INCLUDE_PATH . 'classes/Authorize.php';
 require_once INCLUDE_PATH . 'language/language.php';
 
 $template_info = array();
