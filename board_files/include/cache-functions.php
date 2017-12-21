@@ -16,34 +16,7 @@ function nel_cache_filetype_settings()
 
     foreach ($config_list as $config)
     {
-        $setting_name = explode('_', $config['config_name']); //TODO: Update with db change
-
-        switch ($setting_name[0])
-        {
-            case 'g':
-                $file_config['graphics'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
-                break;
-
-            case 'a':
-                $file_config['audio'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
-                break;
-
-            case 'v':
-                $file_config['video'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
-                break;
-
-            case 'd':
-                $file_config['document'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
-                break;
-
-            case 'r':
-                $file_config['archive'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
-                break;
-
-            case 'o':
-                $file_config['other'][utf8_strtolower($setting_name[1])] = (bool)$config['setting'];
-                break;
-        }
+        $file_config[$config['config_category']][utf8_strtolower($config['config_name'])] = (bool)$config['setting'];
     }
 
     $output = '<?php $filetype_settings = ' . var_export($file_config, true) . ';';

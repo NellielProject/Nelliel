@@ -13,10 +13,9 @@ function nel_render_settings_panel($dataforce)
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/settings_panel.html');
-    $result = $dbh->query('SELECT * FROM ' . CONFIG_TABLE . '');
+    $result = $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '"');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
-    $board_settings = array('iso' => '', 'com' => '', 'us' => '', 'archive' => '', 'prune' => '', 'nothing' => '');
 
     foreach ($rows as $config_line)
     {
@@ -31,18 +30,19 @@ function nel_render_settings_panel($dataforce)
         }
         else
         {
+            // TODO: Can be simplified
             switch ($config_line['setting'])
             {
                 case 'ISO':
-                    $dom->getElementById('iso')->extSetAttribute('checked', 'true');
+                    $dom->getElementById('date_iso')->extSetAttribute('checked', 'true');
                     break;
 
                 case 'COM':
-                    $dom->getElementById('com')->extSetAttribute('checked', 'true');
+                    $dom->getElementById('date_com')->extSetAttribute('checked', 'true');
                     break;
 
                 case 'US':
-                    $dom->getElementById('us')->extSetAttribute('checked', 'true');
+                    $dom->getElementById('date_us')->extSetAttribute('checked', 'true');
                     break;
 
                 case 'ARCHIVE':
