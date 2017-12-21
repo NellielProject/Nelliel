@@ -70,5 +70,22 @@ $fgsfds = array('noko' => FALSE, 'noko_topic' => 0, 'sage' => FALSE, 'sticky' =>
 $link_resno = 0;
 
 // Load caching routines and handle current cache files
+
 require_once INCLUDE_PATH . 'cache-functions.php'; // I liek cache
+
+// Cached board settings
+if (!file_exists(CACHE_PATH . 'board_settings.nelcache'))
+{
+    nel_cache_board_settings();
+}
+
+require_once CACHE_PATH . 'board_settings.nelcache';
+
+// Cached filetype settings
+if (!file_exists(CACHE_PATH . 'filetype_settings.nelcache'))
+{
+    nel_cache_filetype_settings();
+}
+
+require_once CACHE_PATH . 'filetype_settings.nelcache';
 $dataforce['max_pages'] = BS_PAGE_LIMIT;

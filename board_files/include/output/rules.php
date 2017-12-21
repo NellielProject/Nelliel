@@ -4,8 +4,10 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_rules_list($list)
+function nel_render_rules_list()
 {
+    global $filetype_settings;
+
     $render = new NellielTemplates\RenderCore();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $dom = $render->newDOMDocument();
@@ -14,7 +16,7 @@ function nel_render_rules_list($list)
     $rules_list_element = $dom->getElementsByClassName('rules-list')->item(0);
     $rules_item_element = $dom->getElementsByClassName('rules-item')->item(0);
 
-    foreach ($list as $key => $value)
+    foreach ($filetype_settings as $key => $value)
     {
         $current_list_item = $rules_item_element->cloneNode(true);
         $list_set = '';

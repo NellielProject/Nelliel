@@ -20,9 +20,8 @@ function nel_regen_threads($dataforce, $write, $ids)
 
 function nel_regen_cache($dataforce)
 {
-    $dataforce['rules_list'] = nel_cache_rules();
-    nel_cache_settings();
-    nel_write_multi_cache($dataforce);
+    nel_cache_filetype_settings();
+    nel_cache_board_settings();
 }
 
 function nel_regen_index($dataforce)
