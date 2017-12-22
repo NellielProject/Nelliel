@@ -474,9 +474,9 @@ function nel_verify_delete_perms($sub)
     $post_data = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
     $flag = false;
 
-    if (nel_session_active())
+    if (nel_session_is_active())
     {
-        $flag = $authorize->role_level_check($_SESSION['role_id'], $authorize->get_user_role($post_data['mod_post']));
+        $flag = $authorize->role_level_check($authorize->get_user_role($_SESSION['username']), $authorize->get_user_role($post_data['mod_post']));
 
         if(!flag)
         {

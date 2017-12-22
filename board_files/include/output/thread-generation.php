@@ -10,7 +10,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
 
     if($write)
     {
-        nel_session_set_ignored('render', true);
+        nel_session_is_ignored('render', true);
     }
 
     $dataforce['dotdot'] = '../../';
@@ -159,6 +159,6 @@ function nel_thread_generator($dataforce, $write, $write_id)
 
     if($write)
     {
-        nel_session_set_ignored('render', false);
+        nel_session_is_ignored('render', false);
     }
 }

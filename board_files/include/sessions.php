@@ -4,14 +4,13 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-//
-// End and delete session
-//
-function nel_terminate_session()
+function nel_session_settings()
 {
-    session_unset();
-    session_destroy();
-    setcookie("PHPSESSID", "", time() - 3600, "/");
+    ini_set('session.use_cookies', 1);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_secure', 1);
+    //ini_set('session.cookie_secure', 1); // TODO: Use this once https properly supported
 }
 
 //
@@ -19,27 +18,19 @@ function nel_terminate_session()
 //
 function nel_regen_session()
 {
-    $timeout = time() - $_SESSION['last_activity'];
-
-    if ($_COOKIE['PHPSESSID'] === session_id() && $timeout < 1800)
+    if (hash_equals(session_id(), $_COOKIE['PHPSESSID']) && !nel_session_is_old())
     {
         session_regenerate_id(true);
         $_SESSION['last_activity'] = time();
-        $_SESSION['ignore_login'] = FALSE;
-        $_SESSION['ignores'] = array();
+        $_SESSION['ignores'] = array('default' => false);
     }
-    else // Session timed out or doesn't match the cookie
+    else
     {
         nel_terminate_session();
         nel_derp(105, array('origin' => 'SESSION_REGEN'));
     }
 
     nel_set_session_cookie();
-}
-
-function nel_set_session_cookie()
-{
-    setcookie(session_name(), session_id(), 0, '/', '; HttpOnly');
 }
 
 //
@@ -50,10 +41,8 @@ function nel_initialize_session($dataforce)
 {
     $authorize = nel_authorize();
     session_start();
-    require_once INCLUDE_PATH . 'output/management/login_page.php';
-    require_once INCLUDE_PATH . 'admin/login.php';
 
-    if (!empty($_SESSION))
+    if (!empty($_SESSION) && !nel_session_is_old())
     {
         if (isset($dataforce['get_mode']))
         {
@@ -65,29 +54,19 @@ function nel_initialize_session($dataforce)
             }
             else if ($dataforce['get_mode'] === 'admin')
             {
-                nel_regen_session();
-                nel_login($dataforce, $authorize);
+                nel_login($dataforce);
                 die();
             }
-        }
-        else if (isset($dataforce['admin_mode']))
-        {
-            nel_regen_session();
-        }
-        else
-        {
         }
     }
     else if (isset($dataforce['mode']) && $dataforce['mode'] === 'admin->login') // No existing session but this may be a login attempt
     {
-        if ($dataforce['username'] !== '' && nel_password_verify($dataforce['admin_pass'], $authorize->get_user_info($dataforce['username'], 'user_password')))
+        if ($dataforce['username'] !== '' &&
+             nel_password_verify($dataforce['admin_pass'], $authorize->get_user_info($dataforce['username'], 'user_password')))
         {
-            // We set up the session here
-            $_SESSION['ignore_login'] = FALSE;
-            $_SESSION['ignores'] = array();
+            $_SESSION['ignores'] = array('default' => false);
             $_SESSION['active'] = true;
             $_SESSION['username'] = $dataforce['username'];
-            $_SESSION['role_id'] = $authorize->get_user_role($dataforce['username']);
             $_SESSION['login_time'] = time();
             $_SESSION['last_activity'] = time();
         }
@@ -107,48 +86,39 @@ function nel_initialize_session($dataforce)
     }
 }
 
-function nel_session_active()
+function nel_terminate_session()
 {
-    static $status;
-
-    if(!empty($_SESSION))
-    {
-        $status = $_SESSION['active'];
-    }
-    else
-    {
-        $status = false;
-    }
-
-    return $status;
+    session_unset();
+    session_destroy();
+    setcookie("PHPSESSID", "", time() - 3600, "/");
 }
 
-function nel_session_ignored()
+function nel_set_session_cookie()
 {
-    if (!empty($_SESSION) && !$_SESSION['ignore_login'])
-    {
-        return FALSE;
-    }
-    else
-    {
-        return TRUE;
-    }
+    setcookie(session_name(), session_id(), 0, '/', '; HttpOnly');
 }
 
-function nel_session_is_ignored($reason)
+function nel_session_is_old()
 {
-    if(!nel_session_active())
+    return !isset($_SESSION['login_time']) || (time() - $_SESSION['last_activity']) > 1800;
+}
+
+function nel_session_is_active()
+{
+    return !empty($_SESSION) && $_SESSION['active'];
+}
+
+function nel_session_is_ignored($reason = 'default', $value = null)
+{
+    if (!nel_session_is_active())
     {
         return true;
     }
 
-    return isset($_SESSION['ignores'][$reason]) && $_SESSION['ignores'][$reason];
-}
-
-function nel_session_set_ignored($reason, $value)
-{
-    if(nel_session_active())
+    if(!is_null($value))
     {
         $_SESSION['ignores'][$reason] = $value;
     }
+
+    return isset($_SESSION['ignores'][$reason]) && $_SESSION['ignores'][$reason];
 }

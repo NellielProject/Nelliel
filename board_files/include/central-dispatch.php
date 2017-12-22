@@ -37,7 +37,7 @@ function nel_process_get($dataforce)
             die();
 
         case 'admin':
-            nel_login($dataforce, $authorize);
+            nel_login($dataforce);
             die();
     }
 
@@ -74,6 +74,7 @@ function nel_process_post($dataforce)
         case 'update':
             $updates = 0;
 
+            // TODO: this doesn't wurk rite
             if (!empty($_SESSION) && isset($dataforce['admin_mode']) && $dataforce['admin_mode'] === 'modmode')
             {
                 if ($dataforce['banpost'])

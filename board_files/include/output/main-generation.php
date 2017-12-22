@@ -15,7 +15,7 @@ function nel_main_thread_generator($dataforce, $write)
 
     if ($write)
     {
-        nel_session_set_ignored('render', true);
+        nel_session_is_ignored('render', true);
     }
 
     $result = $dbh->query('SELECT "thread_id" FROM "' . THREAD_TABLE .
@@ -232,6 +232,6 @@ function nel_main_thread_generator($dataforce, $write)
 
     if ($write)
     {
-        nel_session_set_ignored('render', false);
+        nel_session_is_ignored('render', false);
     }
 }

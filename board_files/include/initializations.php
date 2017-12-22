@@ -10,7 +10,6 @@ ignore_user_abort(TRUE);
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
 require_once INCLUDE_PATH . 'wat.php';
 require_once INCLUDE_PATH . 'setup/setup.php';
-require_once INCLUDE_PATH . 'output/management/main_panel.php';
 require_once INCLUDE_PATH . 'output/posting_form.php';
 require_once INCLUDE_PATH . 'output/header.php';
 require_once INCLUDE_PATH . 'output/post.php';
