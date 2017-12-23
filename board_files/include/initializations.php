@@ -36,6 +36,7 @@ $dataforce['sp_field1'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')])) ? $
 $dataforce['sp_field2'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD2')] : NULL;
 $dataforce['mode'] = NULL;
 $dataforce['get_mode'] = NULL;
+$dataforce['login_valid'] = false;
 
 if (!empty($_POST))
 {

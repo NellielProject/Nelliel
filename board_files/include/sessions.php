@@ -59,10 +59,9 @@ function nel_initialize_session($dataforce)
             }
         }
     }
-    else if (isset($dataforce['mode']) && $dataforce['mode'] === 'admin->login') // No existing session but this may be a login attempt
+    else
     {
-        if ($dataforce['username'] !== '' &&
-             nel_password_verify($dataforce['admin_pass'], $authorize->get_user_info($dataforce['username'], 'user_password')))
+        if ($dataforce['login_valid'])
         {
             $_SESSION['ignores'] = array('default' => false);
             $_SESSION['active'] = true;
@@ -79,10 +78,6 @@ function nel_initialize_session($dataforce)
         nel_set_session_cookie();
         nel_login($dataforce);
         die();
-    }
-    else
-    {
-        nel_terminate_session();
     }
 }
 

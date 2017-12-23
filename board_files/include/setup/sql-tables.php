@@ -324,6 +324,26 @@ function nel_create_permissions_table($table_name)
     nel_setup_stuff_done($result);
 }
 
+function nel_create_logins_table($table_name)
+{
+    $options = nel_table_options();
+    $schema = '
+    CREATE TABLE ' . $table_name . ' (
+        "ip"                    VARCHAR(45) DEFAULT NULL UNIQUE,
+        "failed_attempts"       INTEGER NOT NULL DEFAULT 0,
+        "last_attempt"          BIGINT DEFAULT NULL
+    ) ' . $options . ';';
+
+    $result = nel_create_table_query($schema, $table_name);
+
+    if ($result !== false)
+    {
+        nel_insert_permissions_defaults();
+    }
+
+    nel_setup_stuff_done($result);
+}
+
 function nel_insert_role_defaults()
 {
     $dbh = nel_database();

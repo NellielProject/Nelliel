@@ -25,6 +25,7 @@ function setup_check()
     nel_create_user_table(USER_TABLE);
     nel_create_roles_table(ROLES_TABLE);
     nel_create_permissions_table(PERMISSIONS_TABLE);
+    nel_create_logins_table(LOGINS_TABLE);
 
     nel_create_directory(SRC_PATH, DIRECTORY_PERM);
     nel_create_directory(THUMB_PATH, DIRECTORY_PERM);

@@ -54,7 +54,6 @@ require_once INCLUDE_PATH . 'sessions.php';
 // IT'S GO TIME!
 nel_apply_ban($dataforce);
 nel_ban_spambots($dataforce);
-nel_initialize_session($dataforce);
 require_once INCLUDE_PATH . 'post/post.php';
 require_once INCLUDE_PATH . 'central-dispatch.php';
 nel_process_get($dataforce);
