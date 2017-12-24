@@ -140,7 +140,7 @@ function nel_process_post($dataforce)
 function admin_dispatch($dataforce, $mode)
 {
     $authorize = nel_authorize();
-    nel_initialize_session($dataforce);
+    nel_verify_login_or_session($dataforce);
 
     switch ($mode[1])
     {
