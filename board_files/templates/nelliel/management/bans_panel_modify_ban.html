@@ -1,56 +1,70 @@
-    <form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
-        <table>
-            <tr>
-                <td><span data-i18n="neltext">MANAGE_BANMOD_GEN</span> <span id="ban-time-display"></span></td>
-            </tr>
-            <tr>
-                <td><span data-i18n="neltext">MANAGE_BANMOD_EXP</span> <span id="ban-expiration-display"></span></td>
-            </tr>
-            <tr>
-                <td data-i18n="neltext">MANAGE_BANMOD_LENGTH</td>
-                <td>
-                	<span data-i18n="neltext">MANAGE_BANMOD_DAY</span>
-                	<input id="ban-length-days" type="text" name="timedays" size="4" maxlength="4" value="0"> &nbsp;&nbsp;&nbsp;
-                	<span data-i18n="neltext">MANAGE_BANMOD_HOUR</span>
-                	<input id="ban-length-hours" type="text" name="timehours" size="4" maxlength="4" value="0">
-                </td>
-            </tr>
-            <tr>
-                <td><span data-i18n="neltext">MANAGE_BANMOD_NAME</span> <span id="ban-name-display"></span></td>
-            </tr>
-            <tr>
-                <td>
-                    <input id="ban-id-field" type="hidden" name="banid" value="">
-                    <input id="ban-length-field" type="hidden" name="original" value="">
-                </td>
-            </tr>
-            <tr>
-                <td data-i18n="neltext">MANAGE_BANMOD_RSN</td>
-                <td>
-                    <textarea id="ban-reason-field" name="banreason" cols="32" rows="3"></textarea>
-                </td>
-            </tr>
-            <tr id="ban-appeal-display-row">
-                <td>Appeal: </td>
-                <td id="ban-appeal-display"></td>
-            </tr>
-            <tr>
-                <td data-i18n="neltext">MANAGE_BAN_APPEAL_RESPONSE</td>
-                <td>
-                    <textarea name="appealresponse" cols="32" rows="3"></textarea>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input id="ban-appealed-field" type="checkbox" name="appealreview" value="1">
-                    <span data-i18n="neltext">MANAGE_BANMOD_MRKAPPL</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                	<input type="hidden" name="mode" value="admin->ban->update">
-                    <input type="submit" value="FORM_UPDATE" data-i18n="neltext" data-i18n-attributes="value">
-                </td>
-            </tr>
-        </table>
-    </form>
+	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
+		<table>
+			<tr>
+				<td><span data-i18n="neltext">MANAGE_BANMOD_GEN</span> <span id="ban-time-display"></span></td>
+			</tr>
+			<tr>
+				<td><span data-i18n="neltext">MANAGE_BANMOD_EXP</span> <span id="ban-expiration-display"></span></td>
+			</tr>
+			<tr>
+				<td data-i18n="neltext">MANAGE_BANMOD_IP</td>
+				<td>
+					<input id="ban-ip-field" type="text" name="ban_ip" size="30" maxlength="45" value=""></input>
+				</td>
+			</tr>
+			<tr>
+				<td data-i18n="neltext">MANAGE_BANMOD_LENGTH</td>
+				<td>
+					<span data-i18n="neltext">MANAGE_BANMOD_YEAR</span>
+					<input id="ban-time-years" type="text" name="ban_time_years" size="6" maxlength="12" value="0">&nbsp;&nbsp;&nbsp;
+					<span data-i18n="neltext">MANAGE_BANMOD_MONTH</span>
+					<input id="ban-time-months"  type="text" name="ban_time_months" size="6" maxlength="12" value="0">&nbsp;&nbsp;&nbsp;
+					<span data-i18n="neltext">MANAGE_BANMOD_DAY</span>
+					<input id="ban-time-days" type="text" name="ban_time_days" size="6" maxlength="12" value="0">&nbsp;&nbsp;&nbsp;
+					<span data-i18n="neltext">MANAGE_BANMOD_HOUR</span>
+					<input id="ban-time-hours"  type="text" name="ban_time_hours" size="6" maxlength="12" value="0">&nbsp;&nbsp;&nbsp;
+					<span data-i18n="neltext">MANAGE_BANMOD_MINUTES</span>
+					<input id="ban-time-minutes"  type="text" name="ban_time_minutes" size="6" maxlength="12" value="0">&nbsp;&nbsp;&nbsp;
+					<span data-i18n="neltext">MANAGE_BANMOD_SECONDS</span>
+					<input id="ban-time-seconds"  type="text" name="ban_time_seconds" size="6" maxlength="12" value="0">
+				</td>
+			</tr>
+			<tr>
+				<td><span data-i18n="neltext">MANAGE_BANMOD_NAME</span> <span id="ban-name-display"></span></td>
+			</tr>
+			<tr>
+				<td>
+					<input id="ban-id-field" type="hidden" name="ban_id" value="">
+					<input id="ban-start-field" type="hidden" name="ban_start_time" value="">
+				</td>
+			</tr>
+			<tr>
+				<td data-i18n="neltext">MANAGE_BANMOD_RSN</td>
+				<td>
+					<textarea id="ban-reason-field" name="ban_reason" cols="32" rows="3"></textarea>
+				</td>
+			</tr>
+			<tr id="ban-appeal-display-row">
+				<td data-i18n="neltext">MANAGE_BAN_APPEAL</td>
+				<td id="ban-appeal-display"></td>
+			</tr>
+			<tr id="ban-appeal-response-row">
+				<td data-i18n="neltext">MANAGE_BAN_APPEAL_RESPONSE</td>
+				<td>
+					<textarea id="ban-appeal-response"name="ban_appeal_response" cols="32" rows="3"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input id="ban-appealed-field" type="checkbox" name="ban_appeal_status" value="1">
+					<span data-i18n="neltext">MANAGE_BANMOD_MRKAPPL</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="mode" value="admin->ban->update">
+					<input type="submit" value="FORM_UPDATE" data-i18n="neltext" data-i18n-attributes="value">
+				</td>
+			</tr>
+		</table>
+	</form>
