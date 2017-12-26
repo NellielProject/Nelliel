@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_ban_page($dataforce, $bandata)
+function nel_render_ban_page($dataforce, $ban_info)
 {
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -13,50 +13,48 @@ function nel_render_ban_page($dataforce, $bandata)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'ban_page.html');
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
-    $ip_address = ($bandata['ip_address']) ? $bandata['ip_address'] : 'Unknown';
-    $dom->getElementById('banned-board')->setContent($bandata['board']);
-    $dom->getElementById('banned-time')->setContent(date("D F jS Y  H:i", $bandata['ban_time']));
-    $dom->getElementById('banned-reason')->setContent($bandata['reason']);
-    $dom->getElementById('banned-length')->setContent(date("D F jS Y  H:i", $bandata['length_base']));
-    $dom->getElementById('banned-ip')->setContent($ip_address);
-    $dom->getElementById('banned-name')->setContent($bandata['name']);
+    $dom->getElementById('banned-board')->setContent($ban_info['board']);
+    $dom->getElementById('banned-time')->setContent(date("D F jS Y  H:i", $ban_info['start_time']));
+    $dom->getElementById('banned-reason')->setContent($ban_info['reason']);
+    $dom->getElementById('banned-length')->setContent(date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']));
+    $dom->getElementById('banned-ip')->setContent($ban_info['ip_address']);
     $appeal_form_element = $dom->getElementById('appeal-form');
 
-    if ($bandata['appeal_status'] === 0)
+    if ($ban_info['appeal_status'] == 0)
     {
         $appeal_form_element->extSetAttribute('action', $dotdot . PHP_SELF);
-        $dom->doXPathQuery(".//input[@name='banned_ip']")->item(0)->extSetAttribute('value', $ip_address);
-        $dom->doXPathQuery(".//input[@name='banned_board']")->item(0)->extSetAttribute('value', $bandata['board']);
+        $appeal_form_element->doXPathQuery(".//input[@name='ban_ip']")->item(0)->extSetAttribute('value', $ban_info['ip_address']);
+        $appeal_form_element->doXPathQuery(".//input[@name='ban_board']")->item(0)->extSetAttribute('value', $ban_info['board']);
     }
     else
     {
         $appeal_form_element->removeSelf();
     }
 
-    if ($bandata['appeal_status'] != 1)
+    if ($ban_info['appeal_status'] != 1)
     {
         $dom->getElementById('appeal-pending')->removeSelf();
     }
 
-    if ($bandata['appeal_status'] != 2 && $bandata['appeal_status'] != 3)
+    if ($ban_info['appeal_status'] != 2 && $ban_info['appeal_status'] != 3)
     {
         $dom->getElementById('appeal-response-div')->removeSelf();
     }
     else
     {
-        if ($bandata['appeal_status'] == 2)
+        if ($ban_info['appeal_status'] == 2)
         {
             $dom->getElementById('appeal-what-done')->setContent(nel_stext('APPEAL_REVIEWED'));
         }
 
-        if ($bandata['appeal_status'] == 3)
+        if ($ban_info['appeal_status'] == 3)
         {
             $dom->getElementById('appeal-what-done')->setContent(nel_stext('BAN_ALTERED'));
         }
 
-        if ($bandata['appeal_response'] != '')
+        if ($ban_info['appeal_response'] != '')
         {
-            $dom->getElementById('appeal-response-text')->setContent($bandata['appeal_response']);
+            $dom->getElementById('appeal-response-text')->setContent($ban_info['appeal_response']);
         }
         else
         {
