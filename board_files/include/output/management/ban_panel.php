@@ -21,7 +21,7 @@ function nel_render_main_ban_panel($dataforce)
     $ban_info_row = $dom->getElementById('ban-info-row');
     $i = 0;
 
-    while ($result && $baninfo = $result->fetch(PDO::FETCH_ASSOC))
+    while ($result && $ban_info = $result->fetch(PDO::FETCH_ASSOC))
     {
         if($i & 1)
         {
@@ -35,24 +35,25 @@ function nel_render_main_ban_panel($dataforce)
         $temp_ban_info_row = $ban_info_row->cloneNode(true);
         $temp_ban_info_row->extSetAttribute('class', $bgclass);
         $ban_info_td_list = $temp_ban_info_row->doXPathQuery(".//td");
-        $ban_info_td_list->item(0)->setContent($baninfo['ban_id']);
-        $ban_info_td_list->item(1)->setContent($baninfo['type']);
-        $ban_info_td_list->item(2)->setContent($baninfo['ip_address'] ? $baninfo['ip_address']: 'Unknown');
-        $ban_info_td_list->item(4)->setContent($baninfo['reason']);
-        $ban_info_td_list->item(5)->setContent(date("D F jS Y  H:i:s", $baninfo['length'] + $baninfo['start_time']));
-        $ban_info_td_list->item(6)->setContent($baninfo['appeal']);
-        $ban_info_td_list->item(7)->setContent($baninfo['appeal_response']);
-        $ban_info_td_list->item(8)->setContent($baninfo['appeal_status']);
+        $ban_info_td_list->item(0)->setContent($ban_info['ban_id']);
+        $ban_info_td_list->item(1)->setContent($ban_info['type']);
+        $ban_info_td_list->item(2)->setContent($ban_info['ip_address'] ? $ban_info['ip_address']: 'Unknown');
+        $ban_info_td_list->item(3)->setContent($ban_info['board']);
+        $ban_info_td_list->item(4)->setContent($ban_info['reason']);
+        $ban_info_td_list->item(5)->setContent(date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']));
+        $ban_info_td_list->item(6)->setContent($ban_info['appeal']);
+        $ban_info_td_list->item(7)->setContent($ban_info['appeal_response']);
+        $ban_info_td_list->item(8)->setContent($ban_info['appeal_status']);
 
         $form_mod_ban = $temp_ban_info_row->getElementById('form-mod-ban-');
         $form_mod_ban->extSetAttribute('action', $dotdot . PHP_SELF);
-        $form_mod_ban->changeId('form-mod-ban-' . $baninfo['ban_id']);
-        $form_mod_ban->doXPathQuery(".//input[@name='ban_id']")->item(0)->extSetAttribute('value', $baninfo['ban_id']);
+        $form_mod_ban->changeId('form-mod-ban-' . $ban_info['ban_id']);
+        $form_mod_ban->doXPathQuery(".//input[@name='ban_id']")->item(0)->extSetAttribute('value', $ban_info['ban_id']);
 
         $form_remove_ban = $temp_ban_info_row->getElementById('form-remove-ban-');
         $form_remove_ban->extSetAttribute('action', $dotdot . PHP_SELF);
-        $form_remove_ban->changeId('form-remove-ban-' . $baninfo['ban_id']);
-        $form_remove_ban->doXPathQuery(".//input[@name='ban_id']")->item(0)->extSetAttribute('value', $baninfo['ban_id']);
+        $form_remove_ban->changeId('form-remove-ban-' . $ban_info['ban_id']);
+        $form_remove_ban->doXPathQuery(".//input[@name='ban_id']")->item(0)->extSetAttribute('value', $ban_info['ban_id']);
 
         $ban_info_table->appendChild($temp_ban_info_row);
         $i++;
