@@ -82,32 +82,22 @@ function nel_apply_ban($dataforce)
 {
     $dbh = nel_database();
     $ban_hammer = nel_ban_hammer();
-    $base_ip_address = $_SERVER["REMOTE_ADDR"];
+    $user_ip_address = $_SERVER["REMOTE_ADDR"];
 
-    if ($dataforce['mode'] === 'banappeal')
+    if ($dataforce['mode'] === 'ban_appeal')
     {
-        reset($_POST);
-
-        while ($item = each($_POST))
+        if($_POST['ban_ip'] != $user_ip_address)
         {
-            if ($item[0] === 'bawww')
-            {
-                $bawww = $item[1];
-            }
-            else if ($item[0] === 'banned_ip')
-            {
-                $banned_ip = $item[1];
-            }
+            nel_derp(0, array('origin' => 'SNACKS')); // TODO: Make a hax error here
         }
 
-        $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE . '" SET "appeal" = :bawww, "appeal_status" = ? WHERE "ip_address" = ?');
-        $prepared->bindParam(1, $bawww, PDO::PARAM_STR);
-        $prepared->bindParam(2, $banned_ip, PDO::PARAM_STR);
-        $prepared->execute();
-        $prepared->closeCursor();
+        $ip_address = $_POST['ban_ip'];
+        $bawww = $_POST['ban_appeal'];
+        $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ip_address" = ?');
+        $dbh->executePrepared($prepared, array($bawww, $ip_address));
     }
 
-    $ban_info = $ban_hammer->getBanByIp($base_ip_address);
+    $ban_info = $ban_hammer->getBanByIp($user_ip_address);
     $length = $ban_info['length'] + $ban_info['start_time'];
 
     if (time() >= $length)
