@@ -91,7 +91,16 @@ class BanHammer
         $prepared->bindParam(':ip_address', $ban_input['ip_address'], PDO::PARAM_STR);
         $prepared->bindParam(':reason', $ban_input['reason'], PDO::PARAM_STR);
         $prepared->bindParam(':length', $ban_input['length'], PDO::PARAM_INT);
-        $prepared->bindValue(':start_time', time(), PDO::PARAM_INT);
+
+        if (!is_null($ban_input['start_time']))
+        {
+            $prepared->bindValue(':start_time', $ban_input['start_time'], PDO::PARAM_INT);
+        }
+        else
+        {
+            $prepared->bindValue(':start_time', time(), PDO::PARAM_INT);
+        }
+
         $this->dbh->executePrepared($prepared);
     }
 

@@ -11,11 +11,11 @@ function nel_ban_spambots($dataforce)
 {
     if (BS_USE_SPAMBOT_TRAP && (!is_null($dataforce['sp_field1']) || !is_null($dataforce['sp_field2'])))
     {
-        $dataforce['banreason'] = "Spambot. Nobody wants any. GTFO";
-        $dataforce['bandays'] = 9001;
-        $dataforce['banip'] = $_SERVER["REMOTE_ADDR"];
-        $dataforce['snacks'] = 'addban';
-        nel_ban_hammer($dataforce);
+        $ban_info['type'] = 'SPAMBOT';
+        $ban_info['ip_address'] = $_SERVER['REMOTE_ADDR'];
+        $ban_info['reason'] = 'Ur a spambot. Nobody wants any. GTFO!';
+        $ban_info['length'] = 86400 * 9001;
+        nel_ban_hammer()->addBan($ban_input);
     }
 }
 

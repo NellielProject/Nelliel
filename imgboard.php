@@ -46,7 +46,6 @@ require_once INCLUDE_PATH . 'archive.php';
 require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'regen.php';
 require_once INCLUDE_PATH . 'thread-functions.php';
-//require_once INCLUDE_PATH . 'banhammer.php';
 require_once INCLUDE_PATH . 'snacks.php';
 require_once INCLUDE_PATH . 'admin/login.php';
 require_once INCLUDE_PATH . 'sessions.php';
