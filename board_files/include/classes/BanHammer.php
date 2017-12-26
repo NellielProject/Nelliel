@@ -144,9 +144,9 @@ class BanHammer
         $this->dbh->executePrepared($prepared);
     }
 
-    public function removeBan($ban_id)
+    public function removeBan($ban_id, $snacks = false)
     {
-        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_delete'))
+        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_delete') && !$snacks)
         {
             nel_derp(104, array('origin' => 'ADMIN'));
         }

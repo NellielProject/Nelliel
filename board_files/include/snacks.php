@@ -98,11 +98,16 @@ function nel_apply_ban($dataforce)
     }
 
     $ban_info = $ban_hammer->getBanByIp($user_ip_address);
+    if(empty($ban_info))
+    {
+        return;
+    }
+
     $length = $ban_info['length'] + $ban_info['start_time'];
 
     if (time() >= $length)
     {
-        $ban_hammer->removeBan($ban_info['ban_id']);
+        $ban_hammer->removeBan($ban_info['ban_id'], true);
     }
 
     nel_render_ban_page($dataforce, $ban_info);

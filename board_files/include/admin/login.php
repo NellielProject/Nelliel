@@ -80,4 +80,6 @@ function nel_login($dataforce)
         nel_insert_role_defaults(); // Also make sure the role exists
         nel_generate_login_page();
     }
+
+    nel_clean_exit($dataforce, true);
 }

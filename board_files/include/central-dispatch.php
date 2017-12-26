@@ -35,10 +35,16 @@ function nel_process_get($dataforce)
             }
 
             die();
+            break;
 
         case 'admin':
+            nel_verify_login_or_session($dataforce);
             nel_login($dataforce);
-            die();
+            break;
+
+        case 'log_out':
+            nel_initialize_session($dataforce);
+            break;
     }
 
     if(isset($_GET['about_nelliel']))
