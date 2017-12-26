@@ -11,11 +11,11 @@ function nel_ban_spambots($dataforce)
 {
     if (BS_USE_SPAMBOT_TRAP && (!is_null($dataforce['sp_field1']) || !is_null($dataforce['sp_field2'])))
     {
-        $dataforce['banreason'] = "Spambot. Nobody wants any. GTFO";
-        $dataforce['bandays'] = 9001;
-        $dataforce['banip'] = $_SERVER["REMOTE_ADDR"];
-        $dataforce['snacks'] = 'addban';
-        nel_ban_hammer($dataforce);
+        $ban_info['type'] = 'SPAMBOT';
+        $ban_info['ip_address'] = $_SERVER['REMOTE_ADDR'];
+        $ban_info['reason'] = 'Ur a spambot. Nobody wants any. GTFO!';
+        $ban_info['length'] = 86400 * 9001;
+        nel_ban_hammer()->addBan($ban_input);
     }
 }
 
@@ -81,53 +81,37 @@ function nel_banned_text($text, $file)
 function nel_apply_ban($dataforce)
 {
     $dbh = nel_database();
-    $base_ip_address = $_SERVER["REMOTE_ADDR"];
+    $ban_hammer = nel_ban_hammer();
+    $user_ip_address = $_SERVER["REMOTE_ADDR"];
 
-    if ($dataforce['mode'] === 'banappeal')
+    if ($dataforce['mode'] === 'ban_appeal')
     {
-        reset($_POST);
-
-        while ($item = each($_POST))
+        if($_POST['ban_ip'] != $user_ip_address)
         {
-            if ($item[0] === 'bawww')
-            {
-                $bawww = $item[1];
-            }
-            else if ($item[0] === 'banned_ip')
-            {
-                $banned_ip = $item[1];
-            }
+            nel_derp(0, array('origin' => 'SNACKS')); // TODO: Make a hax error here
         }
 
-        $prepared = $dbh->prepare('UPDATE ' . BAN_TABLE . ' SET appeal=:bawww, appeal_status=? WHERE ip_address=?');
-        $prepared->bindParam(1, $bawww, PDO::PARAM_STR);
-        $prepared->bindParam(2, $banned_ip, PDO::PARAM_STR);
-        $prepared->execute();
-        $prepared->closeCursor();
+        $ip_address = $_POST['ban_ip'];
+        $bawww = $_POST['ban_appeal'];
+        $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ip_address" = ?');
+        $dbh->executePrepared($prepared, array($bawww, $ip_address));
     }
 
-    $prepared = $dbh->prepare('SELECT * FROM ' . BAN_TABLE . ' WHERE ip_address=?');
-    $prepared->bindParam(1, $base_ip_address, PDO::PARAM_STR);
-    $prepared->execute();
-    $bandata = $prepared->fetch(PDO::FETCH_ASSOC);
-    $prepared->closeCursor();
+    $ban_info = $ban_hammer->getBanByIp($user_ip_address);
 
-    $bandata['length_base'] = $bandata['length'] + $bandata['ban_time'];
-
-    if (time() >= $bandata['length_base'])
+    if(empty($ban_info))
     {
-        $prepared = $dbh->prepare('DELETE FROM ' . BAN_TABLE . ' WHERE ban_id=?');
-        $prepared->bindParam(1, $bandata['ban_id'], PDO::PARAM_INT);
-        $prepared->execute();
-        $prepared->closeCursor();
         return;
     }
 
-    if (!empty($_SESSION))
+    $length = $ban_info['length'] + $ban_info['start_time'];
+
+    if (time() >= $length)
     {
-        nel_terminate_session();
+        $ban_hammer->removeBan($ban_info['ban_id'], true);
+        return;
     }
 
-    nel_render_ban_page($dataforce, $bandata);
-    die();
+    nel_render_ban_page($dataforce, $ban_info);
+    nel_clean_exit($dataforce, true);
 }

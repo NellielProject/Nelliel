@@ -155,12 +155,16 @@ $lang_singular = array(
     'MANAGE_BANMOD_GEN' => 'Ban generated on:',  // Ban date
     'MANAGE_BANMOD_EXP' => 'Ban expires on:',  // Ban expiration
     'MANAGE_BANMOD_LENGTH' => 'Ban length:',  // Ban length
-    'MANAGE_BANMOD_NAME' => 'Name used:',  // Name used
+    'MANAGE_BANMOD_BOARD' => 'Board:',  // Board
     'MANAGE_BANMOD_RSN' => 'B& reason (optional):',  // B& reason
     'MANAGE_BANMOD_APPLRES' => 'Appeal response:',  // Appeal response
     'MANAGE_BANMOD_MRKAPPL' => 'Mark appeal as reviewed',  // Mark appeal as reviews
-    'MANAGE_BANMOD_DAY' => 'Days:',  // Mark appeal as reviews
-    'MANAGE_BANMOD_HOUR' => 'Hours:',  // Mark appeal as reviews
+    'MANAGE_BANMOD_YEAR' => 'Years:',  // Years
+    'MANAGE_BANMOD_MONTH' => 'Months:',  // Months
+    'MANAGE_BANMOD_DAY' => 'Days:',  // Days
+    'MANAGE_BANMOD_HOUR' => 'Hours:',  // Hours
+    'MANAGE_BANMOD_MINUTES' => 'Minutes:',  // Minutes
+    'MANAGE_BANMOD_SECONDS' => 'Seconds:',  // Seconds
 
 
     'MANAGE_THREAD_EXPAND' => 'Expand',  // Expand

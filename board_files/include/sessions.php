@@ -49,35 +49,40 @@ function nel_initialize_session($dataforce)
             if ($dataforce['get_mode'] === 'log_out')
             {
                 nel_terminate_session();
-                echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF2 . PHP_EXT . '">';
-                die();
+                nel_clean_exit($dataforce);
             }
             else if ($dataforce['get_mode'] === 'admin')
             {
                 nel_login($dataforce);
-                die();
             }
         }
     }
     else
     {
-        if ($dataforce['login_valid'])
+        if (isset($dataforce['mode']) && $dataforce['mode'] === 'admin->login')
         {
-            $_SESSION['ignores'] = array('default' => false);
-            $_SESSION['active'] = true;
-            $_SESSION['username'] = $dataforce['username'];
-            $_SESSION['login_time'] = time();
-            $_SESSION['last_activity'] = time();
+            if($dataforce['login_valid'])
+            {
+                $_SESSION['ignores'] = array('default' => false);
+                $_SESSION['active'] = true;
+                $_SESSION['username'] = $dataforce['username'];
+                $_SESSION['login_time'] = time();
+                $_SESSION['last_activity'] = time();
+            }
+            else
+            {
+                nel_terminate_session();
+                nel_derp(107, array('origin' => 'SESSION_INIT'));
+            }
+
+            nel_set_session_cookie();
+            nel_login($dataforce);
         }
         else
         {
             nel_terminate_session();
-            nel_derp(107, array('origin' => 'SESSION_INIT'));
+            nel_login($dataforce);
         }
-
-        nel_set_session_cookie();
-        nel_login($dataforce);
-        die();
     }
 }
 

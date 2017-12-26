@@ -9,7 +9,7 @@
 			<th data-i18n="neltext">MANAGE_BAN_ID</th>
 			<th data-i18n="neltext">MANAGE_BAN_TYPE</th>
 			<th data-i18n="neltext">MANAGE_BAN_HOST</th>
-			<th data-i18n="neltext">MANAGE_BAN_NAME</th>
+			<th data-i18n="neltext">MANAGE_BAN_BOARD</th>
 			<th data-i18n="neltext">MANAGE_BAN_REASON</th>
 			<th data-i18n="neltext">MANAGE_BAN_EXPIRE</th>
 			<th data-i18n="neltext">MANAGE_BAN_APPEAL</th>
@@ -32,7 +32,7 @@
 				<form id="form-mod-ban-" accept-charset="utf-8" action="imgboard.php" method="post">
 					<div>
 						<input type="hidden" name="mode" value="admin->ban->modify">
-						<input type="hidden" name="banid" value="s">
+						<input type="hidden" name="ban_id" value="">
 						<input type="submit" value="FORM_MOD_BAN" data-i18n="neltext" data-i18n-attributes="value">
 					</div>
 				</form>
@@ -41,7 +41,7 @@
 				<form id="form-remove-ban-" accept-charset="utf-8" action="imgboard.php" method="post">
 					<div>
 						<input type="hidden" name="mode" value="admin->ban->remove">
-						<input type="hidden" name="banid" value="">
+						<input type="hidden" name="ban_id" value="">
 						<input type="submit" value="FORM_REMOVE_BAN" data-i18n="neltext" data-i18n-attributes="value">
 					</div>
 				</form>

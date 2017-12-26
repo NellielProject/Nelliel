@@ -218,12 +218,12 @@ function nel_create_bans_table($table_name)
     $schema = '
     CREATE TABLE ' . $table_name . ' (
         "ban_id"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "board"             VARCHAR(255) DEFAULT NULL,
         "type"              VARCHAR(255) DEFAULT NULL,
         "ip_address"        VARCHAR(45) DEFAULT NULL,
-        "name"              VARCHAR(255) DEFAULT NULL,
         "reason"            TEXT DEFAULT NULL,
         "length"            BIGINT NOT NULL DEFAULT 0,
-        "ban_time"          BIGINT NOT NULL DEFAULT 0,
+        "start_time"         BIGINT NOT NULL DEFAULT 0,
         "appeal"            TEXT DEFAULT NULL,
         "appeal_response"   TEXT DEFAULT NULL,
         "appeal_status"     SMALLINT NOT NULL DEFAULT 0

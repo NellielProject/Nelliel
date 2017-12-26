@@ -85,3 +85,15 @@ function nel_authorize()
 
     return $authorize;
 }
+
+function nel_ban_hammer()
+{
+    static $ban_hammer;
+
+    if (!isset($ban_hammer))
+    {
+        $ban_hammer= new \Nelliel\BanHammer();
+    }
+
+    return $ban_hammer;
+}
