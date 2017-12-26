@@ -96,7 +96,7 @@ function nel_render_ban_panel_modify($dataforce)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_modify_ban.html');
 
-    $ban_info = $ban_hammer->getBan($_POST['ban_id'], true);
+    $ban_info = $ban_hammer->getBanById($_POST['ban_id'], true);
     $dom->getElementById('ban-ip-field')->extSetAttribute('value', $ban_info['ip_address']);
     $dom->getElementById('ban-time-display')->setContent(date("D F jS Y  H:i:s", $ban_info['start_time']));
     $dom->getElementById('ban-expiration-display')->setContent(date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']));

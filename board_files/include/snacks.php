@@ -81,6 +81,7 @@ function nel_banned_text($text, $file)
 function nel_apply_ban($dataforce)
 {
     $dbh = nel_database();
+    $ban_hammer = nel_ban_hammer();
     $base_ip_address = $_SERVER["REMOTE_ADDR"];
 
     if ($dataforce['mode'] === 'banappeal')
@@ -99,35 +100,21 @@ function nel_apply_ban($dataforce)
             }
         }
 
-        $prepared = $dbh->prepare('UPDATE ' . BAN_TABLE . ' SET appeal=:bawww, appeal_status=? WHERE ip_address=?');
+        $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE . '" SET "appeal" = :bawww, "appeal_status" = ? WHERE "ip_address" = ?');
         $prepared->bindParam(1, $bawww, PDO::PARAM_STR);
         $prepared->bindParam(2, $banned_ip, PDO::PARAM_STR);
         $prepared->execute();
         $prepared->closeCursor();
     }
 
-    $prepared = $dbh->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ip_address" = ?');
-    $prepared->bindParam(1, $base_ip_address, PDO::PARAM_STR);
-    $prepared->execute();
-    $bandata = $prepared->fetch(PDO::FETCH_ASSOC);
-    $prepared->closeCursor();
-
-    $length = $bandata['length'] + $bandata['start_time'];
+    $ban_info = $ban_hammer->getBanByIp($base_ip_address);
+    $length = $ban_info['length'] + $ban_info['start_time'];
 
     if (time() >= $length)
     {
-        $prepared = $dbh->prepare('DELETE FROM ' . BAN_TABLE . ' WHERE ban_id=?');
-        $prepared->bindParam(1, $bandata['ban_id'], PDO::PARAM_INT);
-        $prepared->execute();
-        $prepared->closeCursor();
-        return;
+        $ban_hammer->removeBan($ban_info['ban_id']);
     }
 
-    if (!empty($_SESSION))
-    {
-        nel_terminate_session();
-    }
-
-    nel_render_ban_page($dataforce, $bandata);
+    nel_render_ban_page($dataforce, $ban_info);
     die();
 }

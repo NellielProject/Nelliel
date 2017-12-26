@@ -59,12 +59,30 @@ class BanHammer
              ($time['hours'] * 3600) + ($time['minutes'] * 60) + $time['seconds'];
     }
 
-    public function getBan($ban_id, $convert_length = false)
+    public function getBanById($ban_id, $convert_length = false)
     {
-        $prepared = $this->dbh->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ban_id" = ?');
+        $prepared = $this->dbh->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ban_id" = ? LIMIT 1');
         $ban_info = $this->dbh->executePreparedFetch($prepared, array($ban_id), PDO::FETCH_ASSOC);
 
-        if ($ban_id === false)
+        if ($ban_info === false)
+        {
+            return null;
+        }
+
+        if ($convert_length)
+        {
+            $ban_info = array_merge($ban_info, $this->splitSecondsToTime($ban_info['length']));
+        }
+
+        return $ban_info;
+    }
+
+    public function getBanByIp($ban_ip, $convert_length = false)
+    {
+        $prepared = $this->dbh->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ip_address" = ? LIMIT 1');
+        $ban_info = $this->dbh->executePreparedFetch($prepared, array($ban_ip), PDO::FETCH_ASSOC);
+
+        if ($ban_info === false)
         {
             return null;
         }
