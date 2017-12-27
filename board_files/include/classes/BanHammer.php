@@ -99,7 +99,7 @@ class BanHammer
     {
         if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'))
         {
-            nel_derp(104, array('origin' => 'ADMIN'));
+            nel_derp(104, nel_stext('ERROR_104'));
         }
 
         $prepared = $this->dbh->prepare('INSERT INTO "' . BAN_TABLE . '" ("board", "type", "ip_address", "reason", "length", "start_time")
@@ -126,7 +126,7 @@ class BanHammer
     {
         if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify'))
         {
-            nel_derp(104, array('origin' => 'ADMIN'));
+            nel_derp(104, nel_stext('ERROR_104'));
         }
 
         $prepared = $this->dbh->prepare('UPDATE "' . BAN_TABLE .
@@ -148,7 +148,7 @@ class BanHammer
     {
         if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_delete') && !$snacks)
         {
-            nel_derp(104, array('origin' => 'ADMIN'));
+            nel_derp(104, nel_stext('ERROR_104'));
         }
 
         $prepared = $this->dbh->prepare('DELETE FROM "' . BAN_TABLE . '" WHERE "ban_id" = ?');

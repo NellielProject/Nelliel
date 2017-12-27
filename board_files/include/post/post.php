@@ -46,24 +46,24 @@ function nel_process_new_post($dataforce)
 
         if (!$post_data['comment'])
         {
-            nel_derp(10, array('origin' => 'POST'));
+            nel_derp(10, array(), nel_stext('ERROR_10'));
         }
 
         if (BS_REQUIRE_IMAGE_ALWAYS)
         {
-            nel_derp(8, array('origin' => 'POST'));
+            nel_derp(8, array(), nel_stext('ERROR_8'));
         }
 
         if (BS_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
         {
-            nel_derp(9, array('origin' => 'POST'));
+            nel_derp(9, array(), nel_stext('ERROR_9'));
         }
     }
 
     // Cancer-fighting tools and lulz
     if (utf8_strlen($post_data['comment']) > BS_MAX_COMMENT_LENGTH)
     {
-        nel_derp(11, array('origin' => 'POST'));
+        nel_derp(11, array(), nel_stext('ERROR_11'));
     }
 
     if (isset($post_data['password']))
@@ -190,7 +190,7 @@ function nel_is_post_ok($dataforce, $time)
 
     if ($renzoku > 0)
     {
-        nel_derp(1, array('origin' => 'POST'));
+        nel_derp(1, nel_stext('ERROR_1'));
     }
 
     $post_count = 1;
@@ -204,17 +204,17 @@ function nel_is_post_ok($dataforce, $time)
         {
             if ($op_post['thread_id'] === '')
             {
-                nel_derp(2, array('origin' => 'POST'));
+                nel_derp(2, nel_stext('ERROR_2'));
             }
 
             if ($op_post['locked'] == 1)
             {
-                nel_derp(3, array('origin' => 'POST'));
+                nel_derp(3, nel_stext('ERROR_3'));
             }
 
             if ($op_post['archive_status'] != 0)
             {
-                nel_derp(14, array('origin' => 'POST'));
+                nel_derp(14, nel_stext('ERROR_14'));
             }
 
             $post_count = $op_post['post_count'];
@@ -222,7 +222,7 @@ function nel_is_post_ok($dataforce, $time)
 
         if ($post_count >= BS_MAX_POSTS)
         {
-            nel_derp(4, array('origin' => 'POST'));
+            nel_derp(4, nel_stext('ERROR_4'));
         }
     }
 

@@ -50,26 +50,26 @@ function nel_process_file_info()
 
 function nel_check_upload_errors($file, $files)
 {
-    $error_data = array('origin' => 'POST', 'bad-filename' => $file['name'], 'files' => $files);
+    $error_data = array('bad-filename' => $file['name'], 'files' => $files);
 
     if ($file['size'] > BS_MAX_FILESIZE * 1024)
     {
-        nel_derp(19, $error_data);
+        nel_derp(19, nel_stext('ERROR_19'), $error_data);
     }
 
     if ($file['error'] === UPLOAD_ERR_INI_SIZE)
     {
-        nel_derp(22, $error_data);
+        nel_derp(22, nel_stext('ERROR_22'), $error_data);
     }
 
     if ($file['error'] === UPLOAD_ERR_FORM_SIZE)
     {
-        nel_derp(23, $error_data);
+        nel_derp(23, nel_stext('ERROR_23'), $error_data);
     }
 
     if ($file['error'] === UPLOAD_ERR_PARTIAL)
     {
-        nel_derp(24, $error_data);
+        nel_derp(24, nel_stext('ERROR_24'), $error_data);
     }
 
     if ($file['error'] === UPLOAD_ERR_NO_FILE)
@@ -79,18 +79,19 @@ function nel_check_upload_errors($file, $files)
 
     if ($file['error'] === UPLOAD_ERR_NO_TMP_DIR || $file['error'] === UPLOAD_ERR_CANT_WRITE)
     {
-        nel_derp(26, $error_data);
+        nel_derp(26, nel_stext('ERROR_26'), $error_data);
     }
 
     if ($file['error'] !== UPLOAD_ERR_OK)
     {
-        nel_derp(27, $error_data);
+        nel_derp(27, nel_stext('ERROR_27'), $error_data);
     }
 }
 
 function nel_check_for_existing_file($file, $files)
 {
     $dbh = nel_database();
+    $error_data = array('bad-filename' => $file['name'], 'files' => $files);
     $file['md5'] = hash_file('md5', $file['dest'], FALSE);
     $file['sha1'] = hash_file('sha1', $file['dest'], FALSE);
 
@@ -107,7 +108,7 @@ function nel_check_for_existing_file($file, $files)
 
     if ($result)
     {
-        nel_derp(12, array('origin' => 'POST', 'bad-filename' => $file['fullname'], 'files' => $files));
+        nel_derp(12, nel_stext('ERROR_12'), $error_data);
     }
 
     return $file;
@@ -116,18 +117,18 @@ function nel_check_for_existing_file($file, $files)
 function nel_get_filetype($file, $files)
 {
     global $enabled_types, $filetypes;
+    $error_data = array('bad-filename' => $file['name'], 'files' => $files);
     $test_ext = utf8_strtolower($file['ext']);
     $file_test = file_get_contents($file['dest'], NULL, NULL, 0, 65535);
 
     if (!array_key_exists($test_ext, $filetypes))
     {
-        nel_derp(21, array('origin' => 'POST', 'bad-filename' => $file['fullname'],
-        'files' => $files));
+        nel_derp(21, nel_stext('ERROR_21'), $error_data);
     }
 
     if (!$enabled_types[$filetypes[$test_ext]['supertype']][$filetypes[$test_ext]['subtype']])
     {
-        nel_derp(6, array('origin' => 'POST', 'bad-filename' => $file['fullname'], 'files' => $files));
+        nel_derp(6, nel_stext('ERROR_6'), $error_data);
     }
 
     if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test))
@@ -138,8 +139,7 @@ function nel_get_filetype($file, $files)
     }
     else
     {
-        nel_derp(18, array('origin' => 'POST', 'bad-filename' => $file['fullname'],
-        'files' => $files));
+        nel_derp(18, nel_stext('ERROR_18'), $error_data);
     }
 
     return $file;

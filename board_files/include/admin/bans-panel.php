@@ -16,7 +16,7 @@ function nel_ban_control($dataforce)
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_access'))
     {
-        nel_derp(101, array('origin' => 'ADMIN'));
+        nel_derp(101, nel_stext('ERROR_101'));
     }
 
     if ($mode === 'admin->ban->modify')

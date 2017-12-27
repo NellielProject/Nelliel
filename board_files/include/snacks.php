@@ -31,7 +31,7 @@ function nel_banned_hash($hash, $file)
     {
         if ($hash === $cancer[$i])
         {
-            nel_derp(15, array('origin' => 'SNACKS', 'bad-filename' => $file['filename'] . $file['ext'], 'files' => array($file)));
+            nel_derp(15, nel_stext('ERROR_15'), array('bad-filename' => $file['filename'] . $file['ext'], 'files' => array($file)));
         }
     }
 }
@@ -48,7 +48,7 @@ function nel_banned_name($name)
     {
         if ($cancer[$i] === $name)
         {
-            nel_derp(16, array('origin' => 'SNACKS'));
+            nel_derp(16, nel_stext('ERROR_16'), array('cancer' => $cancer[$i]));
         }
     }
 }
@@ -69,7 +69,7 @@ function nel_banned_text($text, $file)
 
             if ($test !== FALSE)
             {
-                nel_derp(17, array('origin' => 'SNACKS', 'cancer' => $cancer[$i]));
+                nel_derp(17, nel_stext('ERROR_17'), array('cancer' => $cancer[$i]));
             }
         }
     }
@@ -88,7 +88,7 @@ function nel_apply_ban($dataforce)
     {
         if($_POST['ban_ip'] != $user_ip_address)
         {
-            nel_derp(0, array('origin' => 'SNACKS')); // TODO: Make a hax error here
+            nel_derp(0, nel_stext('ERROR_0')); // TODO: Make a hax error here
         }
 
         $ip_address = $_POST['ban_ip'];

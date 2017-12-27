@@ -92,7 +92,7 @@ function nel_process_post($dataforce)
                 {
                     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_delete'))
                     {
-                        nel_derp(108, array('origin' => 'DISPATCH'));
+                        nel_derp(108, nel_stext('ERROR_108'));
                     }
 
                     $updates = nel_thread_updates($dataforce);
@@ -204,7 +204,7 @@ function admin_dispatch($dataforce, $mode)
             break;
 
         default:
-            nel_derp(153, array('origin' => 'DISPATCH'));
+            nel_derp(153, nel_stext('ERROR_10'));
     }
 
     nel_clean_exit($dataforce, TRUE);

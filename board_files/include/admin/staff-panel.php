@@ -15,7 +15,7 @@ function nel_staff_panel($dataforce)
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access') && !$authorize->get_user_perm($_SESSION['username'], 'perm_role_access'))
     {
-        nel_derp(102, array('origin' => 'ADMIN'));
+        nel_derp(102, nel_stext('ERROR_102'));
     }
 
     //require_once INCLUDE_PATH . 'output/staff-panel-generation.php';
@@ -33,7 +33,7 @@ function nel_staff_panel($dataforce)
     {
         if (!$authorize->user_exists($user_id))
         {
-            nel_derp(150, array('origin' => 'ADMIN'));
+            nel_derp(150, nel_stext('ERROR_150'));
         }
 
         nel_render_staff_panel_user_edit($dataforce, $user_id);
