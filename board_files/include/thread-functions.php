@@ -465,7 +465,7 @@ function nel_verify_delete_perms($sub)
 
     if (!is_numeric($id))
     {
-        nel_derp(13, nel_stext('ERROR_13'));
+        nel_derp(30, nel_stext('ERROR_30'));
     }
 
     $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
@@ -490,6 +490,6 @@ function nel_verify_delete_perms($sub)
 
     if (!$flag)
     {
-        nel_derp(20, nel_stext('ERROR_20'));
+        nel_derp(31, nel_stext('ERROR_31'));
     }
 }

@@ -92,7 +92,7 @@ function nel_process_post($dataforce)
                 {
                     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_delete'))
                     {
-                        nel_derp(108, nel_stext('ERROR_108'));
+                        nel_derp(352, nel_stext('ERROR_352'));
                     }
 
                     $updates = nel_thread_updates($dataforce);

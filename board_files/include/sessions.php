@@ -27,7 +27,7 @@ function nel_regen_session()
     else
     {
         nel_terminate_session();
-        nel_derp(105, nel_stext('ERROR_105'));
+        nel_derp(310, nel_stext('ERROR_310'));
     }
 
     nel_set_session_cookie();
@@ -72,7 +72,7 @@ function nel_initialize_session($dataforce)
             else
             {
                 nel_terminate_session();
-                nel_derp(107, nel_stext('ERROR_107'));
+                nel_derp(311, nel_stext('ERROR_311'));
             }
 
             nel_set_session_cookie();

@@ -12,7 +12,7 @@ function nel_settings_control($dataforce)
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_change'))
     {
-        nel_derp(102, nel_stext('ERROR_102'));
+        nel_derp(331, nel_stext('ERROR_331'));
     }
 
     require_once INCLUDE_PATH . 'output/management/settings_panel.php';
