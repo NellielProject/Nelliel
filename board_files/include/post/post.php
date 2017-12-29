@@ -17,7 +17,7 @@ function nel_process_new_post($dataforce)
 
     // Get time
     $time = get_millisecond_time();
-    $reply_delay = $time - (BS_REPLY_DELAY * 1000);
+    $reply_delay = $time - (nel_board_settings('reply_delay')* 1000);
 
     // Check if post is ok
     $post_count = nel_is_post_ok($post_data, $time);
@@ -49,19 +49,19 @@ function nel_process_new_post($dataforce)
             nel_derp(10, array(), nel_stext('ERROR_10'));
         }
 
-        if (BS_REQUIRE_IMAGE_ALWAYS)
+        if (nel_board_settings('require_image_always'))
         {
             nel_derp(11, array(), nel_stext('ERROR_11'));
         }
 
-        if (BS_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
+        if (nel_board_settings('require_image_start')&& $dataforce['response_to'] === 0)
         {
             nel_derp(12, array(), nel_stext('ERROR_12'));
         }
     }
 
     // Cancer-fighting tools and lulz
-    if (utf8_strlen($post_data['comment']) > BS_MAX_COMMENT_LENGTH)
+    if (utf8_strlen($post_data['comment']) > nel_board_settings('max_comment_length'))
     {
         nel_derp(13, array(), nel_stext('ERROR_13'));
     }
@@ -125,7 +125,7 @@ function nel_process_new_post($dataforce)
         $thread_info['last_bump_time'] = $time;
         $thread_info['total_files'] = $current_thread['total_files'] + count($files);
 
-        if ($current_thread['post_count'] > BS_MAX_BUMPS || $fgsfds['sage'])
+        if ($current_thread['post_count'] > nel_board_settings('max_bumps')|| $fgsfds['sage'])
         {
             $thread_info['last_bump_time'] = $current_thread['last_bump_time'];
         }
@@ -168,7 +168,7 @@ function nel_is_post_ok($post_data, $time)
 
     if ($post_data['parent_thread'] == 0) // TODO: Update this, doesn't look right
     {
-        $thread_delay = $time - (BS_THREAD_DELAY * 1000);
+        $thread_delay = $time - (nel_board_settings('thread_delay')* 1000);
         $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE post_time > ? AND ip_address = ?');
         $prepared->bindValue(1, $thread_delay, PDO::PARAM_STR);
         $prepared->bindValue(2, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR);
@@ -176,7 +176,7 @@ function nel_is_post_ok($post_data, $time)
     }
     else
     {
-        $thread_delay = $time - (BS_REPLY_DELAY * 1000);
+        $thread_delay = $time - (nel_board_settings('reply_delay')* 1000);
         $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE .
              ' WHERE parent_thread = ? AND post_time > ? AND ip_address = ?');
         $prepared->bindValue(1, $post_data['parent_thread'], PDO::PARAM_INT);
@@ -216,7 +216,7 @@ function nel_is_post_ok($post_data, $time)
             nel_derp(4, nel_stext('ERROR_4'));
         }
 
-        if ($post_count >= BS_MAX_POSTS)
+        if ($post_count >= nel_board_settings('max_posts'))
         {
             nel_derp(5, nel_stext('ERROR_5'));
         }
