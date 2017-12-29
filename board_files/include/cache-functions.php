@@ -59,3 +59,36 @@ function nel_cache_board_settings()
 
     nel_write_file(CACHE_PATH . 'board_settings.nelcache', $vars1, FILE_PERM);
 }
+
+function nel_cache_board_settings_new()
+{
+    $dbh = nel_database();
+    $result =  $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'');
+    $config_list = $result->fetchAll(PDO::FETCH_ASSOC);
+    unset($result);
+
+    $result_count = count($config_list);
+    $settings_output = '<?php $board_settings = array();';
+
+    foreach ($config_list as $config)
+    {
+        if($config['data_type'] === 'bool')
+        {
+            $config['setting'] = var_export((bool)$config['setting'], true);
+        }
+
+        if($config['data_type'] === 'int')
+        {
+            $config['setting'] = intval($config['setting']);
+        }
+
+        if($config['data_type'] === 'str')
+        {
+            $config['setting'] = var_export($config['setting'], true);
+        }
+
+        $settings_output .= '$board_settings[\'' . $config['config_name'] . '\'] = ' . $config['setting'] . ';';
+    }
+
+    nel_write_file(CACHE_PATH . 'board_settings_new.nelcache', $settings_output, FILE_PERM);
+}

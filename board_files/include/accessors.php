@@ -97,3 +97,20 @@ function nel_ban_hammer()
 
     return $ban_hammer;
 }
+
+function nel_board_settings($setting)
+{
+    static $board_settings;
+
+    if (!isset($board_settings))
+    {
+        if (!file_exists(CACHE_PATH . 'board_settings_new.nelcache'))
+        {
+            nel_cache_board_settings_new();
+        }
+
+        require_once CACHE_PATH . 'board_settings_new.nelcache';
+    }
+
+    return $board_settings[$setting];
+}
