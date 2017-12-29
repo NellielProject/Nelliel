@@ -4,10 +4,12 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'output-filter.php';
+require_once INCLUDE_PATH . 'output/main-generation.php';
+require_once INCLUDE_PATH . 'output/thread-generation.php';
+
 function nel_regen_threads($dataforce, $write, $ids)
 {
-    require_once INCLUDE_PATH . 'output-filter.php';
-    require_once INCLUDE_PATH . 'output/thread-generation.php';
     $threads = count($ids);
     $i = 0;
 
@@ -26,8 +28,6 @@ function nel_regen_cache($dataforce)
 
 function nel_regen_index($dataforce)
 {
-    require_once INCLUDE_PATH . 'output-filter.php';
-    require_once INCLUDE_PATH . 'output/main-generation.php';
     nel_update_archive_status($dataforce);
     $dataforce['response_id'] = 0;
     $link_resno = 0;
