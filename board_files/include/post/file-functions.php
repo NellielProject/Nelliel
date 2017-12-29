@@ -116,7 +116,7 @@ function nel_check_for_existing_file($file, $files)
 
 function nel_get_filetype($file, $files)
 {
-    global $enabled_types, $filetypes;
+    global $filetype_settings, $filetypes;
     $error_data = array('bad-filename' => $file['name'], 'files' => $files);
     $test_ext = utf8_strtolower($file['ext']);
     $file_test = file_get_contents($file['dest'], NULL, NULL, 0, 65535);
@@ -126,7 +126,7 @@ function nel_get_filetype($file, $files)
         nel_derp(107, nel_stext('ERROR_107'), $error_data);
     }
 
-    if (!$enabled_types[$filetypes[$test_ext]['supertype']][$filetypes[$test_ext]['subtype']])
+    if (!$filetype_settings[$filetypes[$test_ext]['supertype']][$filetypes[$test_ext]['subtype']])
     {
         nel_derp(108, nel_stext('ERROR_108'), $error_data);
     }
