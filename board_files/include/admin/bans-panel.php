@@ -4,6 +4,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'output/management/ban_panel.php';
+
 //
 // Ban control panel
 //

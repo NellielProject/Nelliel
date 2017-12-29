@@ -14,7 +14,8 @@ function nel_staff_panel($dataforce)
     $authorize = nel_authorize();
     $temp_auth = array();
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access') && !$authorize->get_user_perm($_SESSION['username'], 'perm_role_access'))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access') &&
+         !$authorize->get_user_perm($_SESSION['username'], 'perm_role_access'))
     {
         nel_derp(340, nel_stext('ERROR_340'));
     }
@@ -23,8 +24,7 @@ function nel_staff_panel($dataforce)
     {
         nel_render_staff_panel_main($dataforce);
     }
-
-    if($dataforce['mode_segments'][2] === 'user')
+    else if ($dataforce['mode_segments'][2] === 'user')
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access'))
         {
@@ -42,7 +42,7 @@ function nel_staff_panel($dataforce)
         {
             nel_render_staff_panel_user_edit($dataforce, $user_id);
         }
-        else if($dataforce['mode_segments'][3] === 'update')
+        else if ($dataforce['mode_segments'][3] === 'update')
         {
             if (isset($_POST['change_pass']) && isset($_POST['user_password']))
             {
@@ -51,7 +51,7 @@ function nel_staff_panel($dataforce)
 
             foreach ($_POST as $key => $value)
             {
-                if($key === 'mode' || $key === 'user_password' || $key === 'change_pass')
+                if ($key === 'mode' || $key === 'user_password' || $key === 'change_pass')
                 {
                     continue;
                 }
@@ -62,7 +62,7 @@ function nel_staff_panel($dataforce)
             nel_render_staff_panel_user_edit($dataforce, $user_id);
         }
     }
-    else if($dataforce['mode_segments'][2] === 'role')
+    else if ($dataforce['mode_segments'][2] === 'role')
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_access'))
         {
@@ -80,16 +80,16 @@ function nel_staff_panel($dataforce)
         {
             nel_render_staff_panel_role_edit($dataforce, $role_id);
         }
-        else if($dataforce['mode_segments'][3] === 'update')
+        else if ($dataforce['mode_segments'][3] === 'update')
         {
             foreach ($_POST as $key => $value)
             {
-                if($key === 'mode')
+                if ($key === 'mode')
                 {
                     continue;
                 }
 
-                if(substr($key, 0, 5) === 'perm_')
+                if (substr($key, 0, 5) === 'perm_')
                 {
                     $value = ($value == 1) ? true : false;
                 }
