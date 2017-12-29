@@ -4,6 +4,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'output/management/settings_panel.php';
+
 function nel_settings_control($dataforce)
 {
     $dbh = nel_database();
@@ -15,7 +17,6 @@ function nel_settings_control($dataforce)
         nel_derp(331, nel_stext('ERROR_331'));
     }
 
-    require_once INCLUDE_PATH . 'output/management/settings_panel.php';
     $update = FALSE;
 
     if ($mode === 'admin->settings->update')
