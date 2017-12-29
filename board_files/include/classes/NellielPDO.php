@@ -1,7 +1,8 @@
 <?php
-namespace Nelliel;
-use PDO;
 
+namespace Nelliel;
+
+use PDO;
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -11,6 +12,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 class NellielPDO extends PDO
 {
+
     public function __construct($dsn, $username = null, $password = null, $options = array())
     {
         parent::__construct($dsn, $username, $password, $options);
@@ -28,16 +30,16 @@ class NellielPDO extends PDO
         switch (SQLTYPE)
         {
             case 'MYSQL':
-                $result = $this->query(
-                        "SELECT schema_name FROM information_schema.schemata WHERE schema_name = '" . $database . "';");
+                $result = $this->query("SELECT schema_name FROM information_schema.schemata WHERE schema_name = '" .
+                     $database . "';");
                 break;
             case 'SQLITE':
-                $result = $this->query(
-                        "SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $database . "'");
+                $result = $this->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $database .
+                     "'");
                 break;
             case 'POSTGRES':
-                $result = $this->query(
-                        "SELECT nspname FROM pg_catalog.pg_namespace WHERE nspname = '" . $database . "';");
+                $result = $this->query("SELECT nspname FROM pg_catalog.pg_namespace WHERE nspname = '" . $database .
+                     "';");
                 break;
             default:
                 return false;
@@ -52,17 +54,15 @@ class NellielPDO extends PDO
         switch (SQLTYPE)
         {
             case 'MYSQL':
-                $result = $this->query(
-                        "SELECT table_name FROM information_schema.tables WHERE table_schema = '" . MYSQL_DB .
-                                 "' AND table_name = '" . $table . "';");
+                $result = $this->query("SELECT table_name FROM information_schema.tables WHERE table_schema = '" .
+                     MYSQL_DB . "' AND table_name = '" . $table . "';");
                 break;
             case 'SQLITE':
                 $result = $this->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $table . "'");
                 break;
             case 'POSTGRES':
-                $result = $this->query(
-                        "SELECT table_name FROM information_schema.tables WHERE table_schema = '" . POSTGRES_SCHEMA .
-                                 "' AND table_name = '" . $table . "';");
+                $result = $this->query("SELECT table_name FROM information_schema.tables WHERE table_schema = '" .
+                     POSTGRES_SCHEMA . "' AND table_name = '" . $table . "';");
                 break;
             default:
                 return false;
@@ -75,6 +75,45 @@ class NellielPDO extends PDO
     public function tableFail($table)
     {
         die('Creation of ' . $table . ' failed! Check database settings and config.php then retry installation.');
+    }
+
+    public function executeFetch($query, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)
+    {
+        $result = $this->query($query);
+
+        if ($result !== false)
+        {
+            if ($fetch_style === PDO::FETCH_COLUMN)
+            {
+                $fetched_result = $result->fetchColumn();
+            }
+            else
+            {
+                $fetched_result = $result->fetch($fetch_style);
+            }
+        }
+        else
+        {
+            $fetched_result = false;
+        }
+
+        return $fetched_result;
+    }
+
+    public function executeFetchAll($query, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)
+    {
+        $result = $this->query($query);
+
+        if ($result !== false)
+        {
+            $fetched_result = $result->fetchAll($fetch_style);
+        }
+        else
+        {
+            $fetched_result = false;
+        }
+
+        return $fetched_result;
     }
 
     public function executePrepared($prepared, $parameters = null, $close_cursor = true)
@@ -192,7 +231,7 @@ class NellielPDO extends PDO
     public function buildBasicInsertQuery($table, $columns, $values)
     {
         $query = 'INSERT INTO "' . $table . '" ' . $this->formatColumns($columns) . ' VALUES ' .
-                 $this->formatValues($values);
+             $this->formatValues($values);
         return $query;
     }
 }
