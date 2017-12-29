@@ -73,9 +73,9 @@ function nel_process_post($dataforce)
     }
 
     $authorize = nel_authorize();
-    $mode = nel_process_mode_input($dataforce['mode']);
+    $dataforce['mode_segments'] = nel_process_mode_input($dataforce['mode']);
 
-    switch ($mode[0])
+    switch ($dataforce['mode_segments'][0])
     {
         case 'update':
             $updates = 0;
@@ -92,7 +92,7 @@ function nel_process_post($dataforce)
                 {
                     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_delete'))
                     {
-                        nel_derp(108, array('origin' => 'DISPATCH'));
+                        nel_derp(352, nel_stext('ERROR_352'));
                     }
 
                     $updates = nel_thread_updates($dataforce);
@@ -100,15 +100,13 @@ function nel_process_post($dataforce)
 
                 nel_regen_threads($dataforce, true, $updates);
                 nel_regen_index($dataforce);
-
-                //echo '<meta http-equiv="refresh" content="0;URL=' . PHP_SELF . '?mode=display&page=0">';
                 nel_clean_exit($dataforce, TRUE);
             }
 
             $updates = nel_thread_updates($dataforce);
             nel_regen_threads($dataforce, true, $updates);
             nel_regen_index($dataforce);
-            nel_clean_exit($dataforce, FALSE);
+            break;
 
         case 'new_post':
             nel_process_new_post($dataforce);
@@ -136,19 +134,25 @@ function nel_process_post($dataforce)
                 //}
             }
 
-            nel_clean_exit($dataforce, TRUE);
+            break;
 
         case 'admin':
-            admin_dispatch($dataforce, $mode);
+            admin_dispatch($dataforce);
+            break;
+
+        default:
+            nel_derp(200, nel_stext('ERROR_200'));
     }
+
+    nel_clean_exit($dataforce, true);
 }
 
-function admin_dispatch($dataforce, $mode)
+function admin_dispatch($dataforce)
 {
     $authorize = nel_authorize();
     nel_verify_login_or_session($dataforce);
 
-    switch ($mode[1])
+    switch ($dataforce['mode_segments'][1])
     {
         case 'staff':
             require_once INCLUDE_PATH . 'admin/staff-panel.php';
@@ -171,22 +175,22 @@ function admin_dispatch($dataforce, $mode)
             break;
 
         case 'regen':
-            if ($mode[2] === 'full')
+            if ($dataforce['mode_segments'][2] === 'full')
             {
                 nel_regen_all_pages($dataforce);
             }
 
-            if ($mode[2] === 'index')
+            if ($dataforce['mode_segments'][2] === 'index')
             {
                 nel_regen_index($dataforce);
             }
 
-            if ($mode[2] === 'thread')
+            if ($dataforce['mode_segments'][2] === 'thread')
             {
                 nel_regen_threads($dataforce, true, null);
             }
 
-            if ($mode[2] === 'cache')
+            if ($dataforce['mode_segments'][2] === 'cache')
             {
                 nel_regen_cache($dataforce);
             }
@@ -204,7 +208,7 @@ function admin_dispatch($dataforce, $mode)
             break;
 
         default:
-            nel_derp(153, array('origin' => 'DISPATCH'));
+            nel_derp(400, nel_stext('ERROR_400'));
     }
 
     nel_clean_exit($dataforce, TRUE);

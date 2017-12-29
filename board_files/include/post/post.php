@@ -20,7 +20,7 @@ function nel_process_new_post($dataforce)
     $reply_delay = $time - (BS_REPLY_DELAY * 1000);
 
     // Check if post is ok
-    $post_count = nel_is_post_ok($dataforce, $time);
+    $post_count = nel_is_post_ok($post_data, $time);
 
     // Process FGSFDS
     if (!is_null($post_data['fgsfds']))
@@ -46,24 +46,24 @@ function nel_process_new_post($dataforce)
 
         if (!$post_data['comment'])
         {
-            nel_derp(10, array('origin' => 'POST'));
+            nel_derp(10, array(), nel_stext('ERROR_10'));
         }
 
         if (BS_REQUIRE_IMAGE_ALWAYS)
         {
-            nel_derp(8, array('origin' => 'POST'));
+            nel_derp(11, array(), nel_stext('ERROR_11'));
         }
 
         if (BS_REQUIRE_IMAGE_START && $dataforce['response_to'] === 0)
         {
-            nel_derp(9, array('origin' => 'POST'));
+            nel_derp(12, array(), nel_stext('ERROR_12'));
         }
     }
 
     // Cancer-fighting tools and lulz
     if (utf8_strlen($post_data['comment']) > BS_MAX_COMMENT_LENGTH)
     {
-        nel_derp(11, array('origin' => 'POST'));
+        nel_derp(13, array(), nel_stext('ERROR_13'));
     }
 
     if (isset($post_data['password']))
@@ -105,7 +105,7 @@ function nel_process_new_post($dataforce)
     $new_post_info = $dbh->executePreparedFetch($prepared, array($time), PDO::FETCH_ASSOC, true);
     $thread_info = array();
 
-    if ($post_data['parent_thread']=== 0)
+    if ($post_data['parent_thread'] === 0)
     {
         $thread_info['last_update'] = $time;
         $thread_info['post_count'] = 1;
@@ -160,24 +160,13 @@ function nel_process_new_post($dataforce)
     return $thread_info['id'];
 }
 
-function nel_is_post_ok($dataforce, $time)
+function nel_is_post_ok($post_data, $time)
 {
     $dbh = nel_database();
     // Check for flood
     // If post is a reply, also check if the thread still exists
-    if ($dataforce['response_to'] !== 0)
-    {
-        $thread_delay = $time - (BS_REPLY_DELAY * 1000);
-        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE .
-             ' WHERE parent_thread = ? AND post_time > ? AND ip_address = ?');
-        $prepared->bindValue(1, $dataforce['response_to'], PDO::PARAM_INT);
-        $prepared->bindValue(2, $thread_delay, PDO::PARAM_STR);
-        $prepared->bindValue(3, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR);
-        $prepared->execute();
-        $renzoku = $prepared->fetchColumn();
-        $prepared->closeCursor();
-    }
-    else
+
+    if ($post_data['parent_thread'] == 0) // TODO: Update this, doesn't look right
     {
         $thread_delay = $time - (BS_THREAD_DELAY * 1000);
         $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE post_time > ? AND ip_address = ?');
@@ -187,42 +176,53 @@ function nel_is_post_ok($dataforce, $time)
         $renzoku = $prepared->fetchColumn();
         $prepared->closeCursor();
     }
+    else
+    {
+        $thread_delay = $time - (BS_REPLY_DELAY * 1000);
+        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE .
+             ' WHERE parent_thread = ? AND post_time > ? AND ip_address = ?');
+        $prepared->bindValue(1, $post_data['parent_thread'], PDO::PARAM_INT);
+        $prepared->bindValue(2, $thread_delay, PDO::PARAM_STR);
+        $prepared->bindValue(3, $_SERVER["REMOTE_ADDR"], PDO::PARAM_STR);
+        $prepared->execute();
+        $renzoku = $prepared->fetchColumn();
+        $prepared->closeCursor();
+    }
 
     if ($renzoku > 0)
     {
-        nel_derp(1, array('origin' => 'POST'));
+        nel_derp(1, nel_stext('ERROR_1'));
     }
 
     $post_count = 1;
 
-    if ($dataforce['response_to'] !== 0)
+    if ($post_data['parent_thread'] != 0)
     {
         $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1');
-        $op_post = $dbh->executePreparedFetch($prepared, array($dataforce['response_to']), PDO::FETCH_ASSOC, true);
+        $op_post = $dbh->executePreparedFetch($prepared, array($post_data['parent_thread']), PDO::FETCH_ASSOC, true);
 
         if (!empty($op_post))
         {
-            if ($op_post['thread_id'] === '')
-            {
-                nel_derp(2, array('origin' => 'POST'));
-            }
-
             if ($op_post['locked'] == 1)
             {
-                nel_derp(3, array('origin' => 'POST'));
+                nel_derp(2, nel_stext('ERROR_2'));
             }
 
             if ($op_post['archive_status'] != 0)
             {
-                nel_derp(14, array('origin' => 'POST'));
+                nel_derp(3, nel_stext('ERROR_3'));
             }
 
             $post_count = $op_post['post_count'];
         }
+        else
+        {
+            nel_derp(4, nel_stext('ERROR_4'));
+        }
 
         if ($post_count >= BS_MAX_POSTS)
         {
-            nel_derp(4, array('origin' => 'POST'));
+            nel_derp(5, nel_stext('ERROR_5'));
         }
     }
 

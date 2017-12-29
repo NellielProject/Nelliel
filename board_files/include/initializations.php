@@ -14,9 +14,6 @@ require_once INCLUDE_PATH . 'output/posting_form.php';
 require_once INCLUDE_PATH . 'output/header.php';
 require_once INCLUDE_PATH . 'output/post.php';
 require_once INCLUDE_PATH . 'output/footer.php';
-require_once INCLUDE_PATH . 'output/ban_page.php';
-require_once INCLUDE_PATH . 'output/management/ban_panel.php';
-require_once INCLUDE_PATH . 'output/management/staff_panel.php';
 
 if(RUN_SETUP_CHECK)
 {
@@ -25,11 +22,8 @@ if(RUN_SETUP_CHECK)
 
 require_once INCLUDE_PATH . 'language/language.php';
 
-$template_info = array();
 $dataforce = array();
 $enabled_types = array();
-
-$dataforce['page_gen'] = 'main';
 $dataforce['archive_update'] = FALSE;
 $dataforce['sp_field1'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD1')] : NULL;
 $dataforce['sp_field2'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD2')] : NULL;

@@ -52,7 +52,7 @@ function nel_verify_login_or_session($dataforce)
                 $prepared = $dbh->prepare('UPDATE "' . LOGINS_TABLE .
                 '" SET "failed_attempts" = ?, "last_attempt" = ? WHERE "ip" = ?');
                 $dbh->executePrepared($prepared, array($attempts, $last_attempt, $_SERVER['REMOTE_ADDR']), true);
-                nel_derp(0, array('origin' => 'LOGIN')); // TODO: Create error for too many login attempts
+                nel_derp(301, nel_stext('ERROR_301'));
             }
             else
             {
@@ -61,7 +61,7 @@ function nel_verify_login_or_session($dataforce)
                 $dbh->executePrepared($prepared, array($_SERVER['REMOTE_ADDR'], 1, time()), true);
             }
 
-            nel_derp(0, array('origin' => 'LOGIN')); // TODO: Create error for failed login
+            nel_derp(300, nel_stext('ERROR_300'));
         }
     }
 

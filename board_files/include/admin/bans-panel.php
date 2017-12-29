@@ -4,6 +4,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'output/management/ban_panel.php';
+
 //
 // Ban control panel
 //
@@ -16,7 +18,7 @@ function nel_ban_control($dataforce)
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_access'))
     {
-        nel_derp(101, array('origin' => 'ADMIN'));
+        nel_derp(320, nel_stext('ERROR_320'));
     }
 
     if ($mode === 'admin->ban->modify')
