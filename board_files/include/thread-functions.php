@@ -28,6 +28,8 @@ function nel_thread_updates($dataforce)
                 nel_remove_thread_from_database($id);
                 nel_delete_thread_directories($id);
                 nel_update_archive_status($dataforce);
+                nel_move_threads_to_archive();
+                nel_move_threads_from_archive();
                 break;
 
             case 'deletepost':
@@ -73,6 +75,8 @@ function nel_sticky_thread($dataforce, $sub)
     $prepared->bindValue(1, $id, PDO::PARAM_INT);
     $dbh->executePrepared($prepared, null, true);
     nel_update_archive_status($dataforce);
+    nel_move_threads_to_archive();
+    nel_move_threads_from_archive();
     nel_regen_threads($dataforce, true, array($id));
     nel_regen_index($dataforce);
     return;
@@ -86,7 +90,9 @@ function nel_unsticky_thread($dataforce, $sub)
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $id, PDO::PARAM_INT);
     $dbh->executePrepared($prepared, null, true);
-    nel_update_archive_status($dataforce, $dbh);
+    nel_update_archive_status($dataforce);
+    nel_move_threads_to_archive();
+    nel_move_threads_from_archive();
     $dataforce['response_id'] = $id;
     nel_regen_threads($dataforce, true, array($dataforce['response_id']));
     $dataforce['archive_update'] = TRUE;
@@ -461,7 +467,7 @@ function nel_verify_delete_perms($sub)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
-    $id = $sub[2];
+    $id = $sub[1];
 
     if (!is_numeric($id))
     {
