@@ -10,8 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_cache_filetype_settings()
 {
     $dbh = nel_database();
-    $result = $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'filetype_enable\'');
-    $config_list = $result->fetchAll(PDO::FETCH_ASSOC);
+    $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'filetype_enable\'', PDO::FETCH_ASSOC);
     $file_config = array();
 
     foreach ($config_list as $config)
@@ -30,10 +29,7 @@ function nel_cache_filetype_settings()
 function nel_cache_board_settings()
 {
     $dbh = nel_database();
-    $result =  $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'');
-    $config_list = $result->fetchAll(PDO::FETCH_ASSOC);
-    unset($result);
-
+    $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
     $result_count = count($config_list);
     $vars1 = '<?php ';
 
@@ -63,10 +59,7 @@ function nel_cache_board_settings()
 function nel_cache_board_settings_new()
 {
     $dbh = nel_database();
-    $result =  $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'');
-    $config_list = $result->fetchAll(PDO::FETCH_ASSOC);
-    unset($result);
-
+    $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
     $result_count = count($config_list);
     $settings_output = '<?php $board_settings = array();';
 

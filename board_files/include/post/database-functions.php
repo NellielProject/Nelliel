@@ -22,7 +22,7 @@ function nel_db_insert_initial_post($time, $post_data)
     $prepared->bindValue(':op', $post_data['op'], PDO::PARAM_INT);
     $prepared->bindValue(':sage', 0, PDO::PARAM_INT);
     $prepared->bindValue(':mod_post', $post_data['modpost'], PDO::PARAM_STR);
-    $dbh->executePrepared($prepared, null, true);
+    $dbh->executePrepared($prepared);
 }
 
 function nel_db_insert_new_thread($thread_info, $files_count) // TODO: Update for externals and other new data
@@ -40,7 +40,7 @@ function nel_db_insert_new_thread($thread_info, $files_count) // TODO: Update fo
     $prepared->bindValue(':total_files', $thread_info['total_files'], PDO::PARAM_INT);
     $prepared->bindValue(':last_update', $thread_info['last_update'], PDO::PARAM_INT);
     $prepared->bindValue(':post_count', 1, PDO::PARAM_INT);
-    $dbh->executePrepared($prepared, null, true);
+    $dbh->executePrepared($prepared);
 }
 
 function nel_db_update_thread($new_post_info, $thread_info)
@@ -55,7 +55,7 @@ function nel_db_update_thread($new_post_info, $thread_info)
     $prepared->bindValue(4, $thread_info['post_count'], PDO::PARAM_INT);
     $prepared->bindValue(5, $thread_info['total_files'], PDO::PARAM_INT);
     $prepared->bindValue(6, $thread_info['id'], PDO::PARAM_INT);
-    $dbh->executePrepared($prepared, null, true);
+    $dbh->executePrepared($prepared);
 }
 
 function nel_db_insert_new_files($parent_id, $new_post_info, $files)
@@ -89,8 +89,7 @@ function nel_db_insert_new_files($parent_id, $new_post_info, $files)
         $prepared->bindValue(':sha1', $file['sha1'], PDO::PARAM_STR);
         $prepared->bindValue(':source', $file['source'], PDO::PARAM_STR);
         $prepared->bindValue(':license', $file['license'], PDO::PARAM_STR);
-        $prepared->execute();
-        $prepared->closeCursor();
+        $dbh->executePrepared($prepared);
         ++ $i;
     }
 }
