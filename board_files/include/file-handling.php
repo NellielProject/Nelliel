@@ -106,9 +106,9 @@ function nel_path_join($path, $path2)
 //
 function nel_create_thread_directories($thread_id)
 {
-    nel_create_directory(SRC_PATH . $thread_id, octdec(DIRECTORY_PERM));
-    nel_create_directory(THUMB_PATH . $thread_id, octdec(DIRECTORY_PERM));
-    nel_create_directory(PAGE_PATH . $thread_id, octdec(DIRECTORY_PERM));
+    nel_create_directory(SRC_PATH . $thread_id, DIRECTORY_PERM);
+    nel_create_directory(THUMB_PATH . $thread_id, DIRECTORY_PERM);
+    nel_create_directory(PAGE_PATH . $thread_id, DIRECTORY_PERM);
 }
 
 function nel_delete_thread_directories($thread_id)
