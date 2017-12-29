@@ -4,6 +4,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'output/management/thread_panel.php';
+
 function nel_thread_panel($dataforce, $authorize)
 {
     $mode = $dataforce['mode'];
@@ -13,7 +15,6 @@ function nel_thread_panel($dataforce, $authorize)
         nel_derp(350, nel_stext('ERROR_350'));
     }
 
-    require_once INCLUDE_PATH . 'output/management/thread_panel.php';
     if (isset($dataforce['expand_thread']))
     {
         $expand = TRUE;
