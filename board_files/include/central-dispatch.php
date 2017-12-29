@@ -100,8 +100,6 @@ function nel_process_post($dataforce)
 
                 nel_regen_threads($dataforce, true, $updates);
                 nel_regen_index($dataforce);
-
-                //echo '<meta http-equiv="refresh" content="0;URL=' . PHP_SELF . '?mode=display&page=0">';
                 nel_clean_exit($dataforce, TRUE);
             }
 

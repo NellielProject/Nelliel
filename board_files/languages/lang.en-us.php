@@ -16,8 +16,6 @@ $lang_singular = array(
     'LANG_NAME' => 'United States English',  // Full language name
     'LANG_FORM' => 'singular',
 
-    'PLURAL_TEST %count%' => 'Plural Test - Count: Only 1',  // Plural test
-
 
     'LINK_HOME' => 'Home',  // Home page link
     'LINK_MANAGE' => 'Manage',  // Management page link
@@ -367,7 +365,6 @@ $lang_singular = array(
 
 
     'DELETE_FILES_ONLY' => 'Delete File Only',  // Prints text next to checkbox for file deletion (right)
-    'FAKE_STAFF_ATTEMPT' => 'I\'m a faggot',  // Attempts to imitate staff in name field are filtered to this
 
 
     'BAN_APPEAL_RESPONSE' => 'This is the response to your appeal: ',  // Response to appealed ban
@@ -376,11 +373,6 @@ $lang_singular = array(
     'ABOUT_APPEALS' => 'If you wish, you may appeal this ban. Enter your reason(s) why you should get unbanned in the box below. A staff member will (probably) review it.',  // Message about appealing a ban
     'APPEAL_REVIEWED' => 'You appeal has been reviewed. You cannot appeal again.',  // Appeal has been reviewed
     'BAN_ALTERED' => 'Your appeal has been reviewed and the ban has been altered.',  // Appeal accepted but ban changed, not removed
-
-
-// These are holdovers from the original Nelliel that are still in use. I need to clean them up.
-    'S_DELPICONLY' => 'Delete File Only',  // Prints text next to checkbox for file deletion (right)
-    'S_SHORT_MENU' => 'fff',  // Other boards menu
 
 
     'LANG_END' => '');
