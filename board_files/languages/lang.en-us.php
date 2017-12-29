@@ -119,8 +119,9 @@ $lang_singular = array(
     'ERROR_350' => 'You are not allowed to access the threads panel.',  // Error 350: No access to threads panel
     'ERROR_351' => 'You are not allowed to modify threads or posts.',  // Error 351: No modify thread or post
     'ERROR_352' => 'You are not allowed to delete threads or posts.',  // Error 352: No delete thread or post
-    'ERROR_440' => 'User specified does not exist.',  // Error 440: User does not exist
-
+    'ERROR_440' => 'The specified user does not exist.',  // Error 440: User does not exist
+    'ERROR_441' => 'The specified role does not exist.',  // Error 441: Role does not exist
+    'ERROR_442' => 'No valid action given for user or role panels.',  // Error 442: No valid user/role action
 
     'MANAGE_MODE' => 'Management Mode',  // Management
     'MANAGE_OPTIONS' => 'Options',  // Options
