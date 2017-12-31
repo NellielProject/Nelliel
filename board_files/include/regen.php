@@ -24,11 +24,15 @@ function nel_regen_cache($dataforce)
 {
     nel_cache_filetype_settings();
     nel_cache_board_settings();
+    nel_cache_board_settings_new();
 }
 
 function nel_regen_index($dataforce)
 {
-    nel_update_archive_status($dataforce);
+    $archive = nel_archive();
+    $archive->updateAllArchiveStatus();
+    $archive->moveThreadsToArchive();
+    $archive->moveThreadsFromArchive();
     $dataforce['response_id'] = 0;
     $link_resno = 0;
     nel_main_thread_generator($dataforce, true);

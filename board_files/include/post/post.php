@@ -151,11 +151,11 @@ function nel_process_new_post($dataforce)
     }
 
     // Run the archiving routine if this is a new thread or deleted/expired thread
-    nel_update_archive_status($dataforce);
+    nel_archive()->updateAllArchiveStatus();
+    nel_archive()->moveThreadsToArchive();
 
     // Generate response page if it doesn't exist, otherwise update
     nel_regen_threads($dataforce, true, array($thread_info['id']));
-    $dataforce['archive_update'] = TRUE;
     nel_regen_index($dataforce);
     return $thread_info['id'];
 }

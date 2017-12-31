@@ -42,7 +42,6 @@ require_once INCLUDE_PATH . 'accessors.php';
 require_once INCLUDE_PATH . 'general-functions.php';
 require_once INCLUDE_PATH . 'file-handling.php';
 require_once INCLUDE_PATH . 'initializations.php';
-require_once INCLUDE_PATH . 'archive.php';
 require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'regen.php';
 require_once INCLUDE_PATH . 'thread-functions.php';

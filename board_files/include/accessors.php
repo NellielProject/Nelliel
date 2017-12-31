@@ -114,3 +114,15 @@ function nel_board_settings($setting)
 
     return $board_settings[$setting];
 }
+
+function nel_archive()
+{
+    static $archive;
+
+    if (!isset($archive))
+    {
+        $archive = new \Nelliel\ArchiveAndPrune();
+    }
+
+    return $archive;
+}

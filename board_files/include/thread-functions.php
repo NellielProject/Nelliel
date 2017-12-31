@@ -6,11 +6,14 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_thread_updates($dataforce)
 {
+    $archive = nel_archive();
     $threadlist = array();
     $postlist = array();
     $filelist = array();
     $returned_list = array();
+    $update_archive = false;
 
+    var_dump($_POST);
     foreach ($_POST as $input)
     {
         $sub = explode('_', $input, 4);
@@ -27,9 +30,7 @@ function nel_thread_updates($dataforce)
                 nel_verify_delete_perms($sub);
                 nel_remove_thread_from_database($id);
                 nel_delete_thread_directories($id);
-                nel_update_archive_status($dataforce);
-                nel_move_threads_to_archive();
-                nel_move_threads_from_archive();
+                $update_archive = true;
                 break;
 
             case 'deletepost':
@@ -39,10 +40,12 @@ function nel_thread_updates($dataforce)
 
             case 'threadsticky':
                 nel_sticky_thread($dataforce, $sub);
+                $update_archive = true;
                 break;
 
             case 'threadunsticky':
                 nel_unsticky_thread($dataforce, $sub);
+                $update_archive = true;
                 break;
         }
 
@@ -50,6 +53,13 @@ function nel_thread_updates($dataforce)
         {
             array_push($returned_list, $sub[1]);
         }
+    }
+
+    if($update_archive)
+    {
+        $archive->updateAllArchiveStatus();
+        $archive->moveThreadsFromArchive();
+        $archive->moveThreadsToArchive();
     }
 
     return $returned_list;
@@ -74,9 +84,6 @@ function nel_sticky_thread($dataforce, $sub)
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $id, PDO::PARAM_INT);
     $dbh->executePrepared($prepared, null, true);
-    nel_update_archive_status($dataforce);
-    nel_move_threads_to_archive();
-    nel_move_threads_from_archive();
     nel_regen_threads($dataforce, true, array($id));
     nel_regen_index($dataforce);
     return;
@@ -90,12 +97,8 @@ function nel_unsticky_thread($dataforce, $sub)
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $id, PDO::PARAM_INT);
     $dbh->executePrepared($prepared, null, true);
-    nel_update_archive_status($dataforce);
-    nel_move_threads_to_archive();
-    nel_move_threads_from_archive();
     $dataforce['response_id'] = $id;
     nel_regen_threads($dataforce, true, array($dataforce['response_id']));
-    $dataforce['archive_update'] = TRUE;
     nel_regen_index($dataforce);
 }
 
@@ -484,7 +487,7 @@ function nel_verify_delete_perms($sub)
     {
         $flag = $authorize->role_level_check($authorize->get_user_role($_SESSION['username']), $authorize->get_user_role($post_data['mod_post']));
 
-        if(!flag)
+        if(!$flag)
         {
             $flag = nel_verify_salted_hash($_POST['sekrit'], $post_data['post_password']);
         }

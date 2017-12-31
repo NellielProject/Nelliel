@@ -543,7 +543,7 @@ function nel_insert_config_defaults()
                         ('board_setting', 'nelliel', 'general', 'int', 'max_license_length', '100'),
                         ('board_setting', 'nelliel', 'general', 'int', 'threads_per_page', '10'),
                         ('board_setting', 'nelliel', 'general', 'int', 'page_limit', '10'),
-                        ('board_setting', 'nelliel', 'general', 'int', 'page_buffer', '5'),
+                        ('board_setting', 'nelliel', 'general', 'int', 'page_buffer', '0'),
                         ('board_setting', 'nelliel', 'general', 'int', 'max_posts', '1000'),
                         ('board_setting', 'nelliel', 'general', 'int', 'max_bumps', '750'),
                         ('board_setting', 'nelliel', 'general', 'str', 'tripkey_marker', '!'),

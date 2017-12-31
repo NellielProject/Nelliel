@@ -2,7 +2,8 @@
 
 namespace Nelliel;
 
-use PDO;
+use \PDO;
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");

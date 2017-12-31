@@ -186,7 +186,7 @@ function nel_main_thread_generator($dataforce, $write)
             {
                 $pages[$i] = (($page > 1) ? PHP_SELF2 . PHP_EXT : '');
             }
-            else if ($i === ($page - 1) || $dataforce['max_pages'] === 1)
+            else if ($i === ($page - 1) || BS_PAGE_LIMIT === 1)
             {
                 $pages[$i] = '';
             }
@@ -198,7 +198,7 @@ function nel_main_thread_generator($dataforce, $write)
             ++ $i;
         }
 
-        if ($page === $page_count || $dataforce['max_pages'] === 1)
+        if ($page === $page_count || BS_PAGE_LIMIT === 1)
         {
             $pages['next'] = '';
         }

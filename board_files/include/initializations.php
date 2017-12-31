@@ -23,7 +23,6 @@ if(RUN_SETUP_CHECK)
 require_once INCLUDE_PATH . 'language/language.php';
 
 $dataforce = array();
-$dataforce['archive_update'] = FALSE;
 $dataforce['sp_field1'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD1')] : NULL;
 $dataforce['sp_field2'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD2')] : NULL;
 $dataforce['mode'] = NULL;
@@ -73,4 +72,3 @@ if (!file_exists(CACHE_PATH . 'filetype_settings.nelcache'))
 }
 
 require_once CACHE_PATH . 'filetype_settings.nelcache';
-$dataforce['max_pages'] = BS_PAGE_LIMIT;
