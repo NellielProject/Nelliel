@@ -55,11 +55,12 @@ function nel_render_staff_panel_role_edit($dataforce, $role_id)
     $dom->getElementById('role_title')->extSetAttribute('value', $role['role_title']);
     $dom->getElementById('capcode_text')->extSetAttribute('value', $role['capcode_text']);
 
-    array_walk($role['permissions'], create_function('&$item1', '$item1 = is_bool($item1) ? $item1 === true ? "checked" : "" : $item1;'));
-
     foreach($role['permissions'] as $key => $value)
     {
-        $dom->getElementById($key)->extSetAttribute('checked', $value);
+        if($value === true)
+        {
+            $dom->getElementById($key)->extSetAttribute('checked', $value);
+        }
     }
 
     nel_process_i18n($dom);
