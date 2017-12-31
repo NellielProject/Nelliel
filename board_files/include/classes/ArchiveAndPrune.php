@@ -178,6 +178,10 @@ class ArchiveAndPrune
 
     public function pruneThreads()
     {
-        $this->dbh->query('DELETE FROM "' . THREAD_TABLE . '" WHERE "archive_status" = 2');
+        foreach($this->getThreadListForStatus(2) as $thread_id)
+        {
+            nel_remove_thread_from_database($thread_id);
+            nel_delete_thread_directories($thread_id);
+        }
     }
 }
