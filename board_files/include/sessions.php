@@ -21,8 +21,6 @@ function nel_regen_session()
     if (hash_equals(session_id(), $_COOKIE['PHPSESSID']) && !nel_session_is_old())
     {
         session_regenerate_id(true);
-        $_SESSION['last_activity'] = time();
-        $_SESSION['ignores'] = array('default' => false);
     }
     else
     {
@@ -44,6 +42,9 @@ function nel_initialize_session($dataforce)
 
     if (!empty($_SESSION) && !nel_session_is_old())
     {
+        $_SESSION['last_activity'] = time();
+        $_SESSION['ignores'] = array('default' => false);
+
         if (isset($dataforce['get_mode']))
         {
             if ($dataforce['get_mode'] === 'log_out')
