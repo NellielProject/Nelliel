@@ -11,6 +11,7 @@ if (!defined('NELLIEL_VERSION'))
 
 class ArchiveAndPrune
 {
+    private $dbh;
     private $start_buffer;
     private $end_buffer;
 
