@@ -82,6 +82,7 @@ $lang_singular = array(
     'ERROR_3' => 'The thread you have tried posting in is currently inaccessible or archived.',  // Error 3: Thread inaccessible or gone
     'ERROR_4' => 'The thread you have tried posting in could not be found.',  // Error 4: Thread not found
     'ERROR_5' => 'The thread has reached maximum posts.',  // Error 5: Thread is full
+    'ERROR_6' => 'The thread is archived or buffered and cannot be posted to.',  // Error 6: Archived thread
     'ERROR_10' => 'Post contains no content or file. Dumbass.',  // Error 10: No comment or file
     'ERROR_11' => 'Image or file required when making a new post.',  // Error 11: Must upload file for post
     'ERROR_12' => 'Image or file required to make new thread.',  // Error 12: Must upload file for thread

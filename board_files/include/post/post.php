@@ -229,6 +229,11 @@ function nel_is_post_ok($post_data, $time)
         {
             nel_derp(5, nel_stext('ERROR_5'));
         }
+
+        if ($op_post['archive_status'] != 0)
+        {
+            nel_derp(6, nel_stext('ERROR_6'));
+        }
     }
 
     return $post_count;
