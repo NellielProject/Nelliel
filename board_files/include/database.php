@@ -26,9 +26,15 @@ function nel_default_database_connection()
     switch (SQLTYPE)
     {
         case 'MYSQL':
-            $dsn = 'mysql:host=' . MYSQL_HOST . ';port=' . MYSQL_PORT . ';dbname=' . MYSQL_DB . ';';
+            $dsn = 'mysql:host=' . MYSQL_HOST . ';port=' . MYSQL_PORT . ';dbname=' . MYSQL_DB . ';charset=' . MYSQL_ENCODING . ';';
             $connection = nel_new_database_connection($dsn, MYSQL_USER, MYSQL_PASS, $options);
-            $connection->exec("SET names '" . MYSQL_ENCODING . "'; SET SESSION sql_mode='ANSI';");
+
+            if (version_compare(PHP_VERSION, '5.3.6', '<')) {
+                $connection->exec("SET names '" . MYSQL_ENCODING . "';");
+            }
+
+            $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $connection->exec("SET SESSION sql_mode='ANSI';");
             break;
 
         case 'SQLITE':
@@ -43,12 +49,14 @@ function nel_default_database_connection()
 
             $dsn = 'sqlite:' . $path . SQLITE_DB_NAME;
             $connection = nel_new_database_connection($dsn);
+            $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $connection->exec('PRAGMA encoding = "' . SQLITE_ENCODING . '";');
             break;
 
         case 'POSTGRES':
             $dsn = 'pgsql:host=' . POSTGRES_HOST . ';port=' . POSTGRES_PORT . ';dbname=' . POSTGRES_DB . ';';
             $connection = nel_new_database_connection($dsn, POSTGRES_USER, POSTGRES_PASS, $options);
+            $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $connection->exec("SET search_path TO " . POSTGRES_SCHEMA . "; SET names '" . POSTGRES_ENCODING . "';");
             break;
 
