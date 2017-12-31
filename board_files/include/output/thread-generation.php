@@ -76,7 +76,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
 
         if ($gen_data['post']['op'] == 1)
         {
-            $new_post_element = nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
+            $base_new_post_node = nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
 
             $expand_div = $dom->getElementById('thread-expand-')->cloneNode(true);
             $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
@@ -106,7 +106,6 @@ function nel_thread_generator($dataforce, $write, $write_id)
             }
 
             $base_new_post_node = nel_render_post($dataforce, $render, TRUE, FALSE, $gen_data, $treeline, $dom);
-            $new_post_element = nel_render_post_adjust_relative($base_new_post_node, $gen_data);
 
             if ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD)
             {
@@ -121,6 +120,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
             $expand_dom->appendChild($import_node);
         }
 
+        $new_post_element = nel_render_post_adjust_relative($base_new_post_node, $gen_data);
         $imported = $dom->importNode($new_post_element, true);
         $dom->getElementById('outer-div')->appendChild($imported);
         ++ $gen_data['post_counter'];
