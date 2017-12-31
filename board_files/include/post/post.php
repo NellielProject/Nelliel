@@ -152,7 +152,15 @@ function nel_process_new_post($dataforce)
 
     // Run the archiving routine if this is a new thread or deleted/expired thread
     nel_archive()->updateAllArchiveStatus();
-    nel_archive()->moveThreadsToArchive();
+
+    if(nel_board_settings('old_threads') === 'ARCHIVE')
+    {
+        $archive->moveThreadsToArchive();
+    }
+    else if(nel_board_settings('old_threads') === 'PRUNE')
+    {
+        $archive->pruneThreads();
+    }
 
     // Generate response page if it doesn't exist, otherwise update
     nel_regen_threads($dataforce, true, array($thread_info['id']));

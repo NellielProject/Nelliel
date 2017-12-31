@@ -58,8 +58,16 @@ function nel_thread_updates($dataforce)
     if($update_archive)
     {
         $archive->updateAllArchiveStatus();
-        $archive->moveThreadsFromArchive();
-        $archive->moveThreadsToArchive();
+
+        if(nel_board_settings('old_threads') === 'ARCHIVE')
+        {
+            $archive->moveThreadsToArchive();
+            $archive->moveThreadsFromArchive();
+        }
+        else if(nel_board_settings('old_threads') === 'PRUNE')
+        {
+            $archive->pruneThreads();
+        }
     }
 
     return $returned_list;

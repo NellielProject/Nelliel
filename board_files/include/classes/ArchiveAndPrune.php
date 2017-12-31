@@ -32,7 +32,7 @@ class ArchiveAndPrune
         $this->dbh->executePrepared($prepared, array($status, $thread_id));
     }
 
-    public function getThreadList()
+    public function getFullThreadList()
     {
         $query = 'SELECT "thread_id", "archive_status" FROM "' . THREAD_TABLE .
         '" ORDER BY "sticky" DESC, "last_bump_time" DESC';
@@ -40,13 +40,22 @@ class ArchiveAndPrune
         return $thread_list;
     }
 
-    public function getArchiveThreadList()
+    public function getThreadListForStatus($status)
+    {
+        $prepared = $this->dbh->prepare('SELECT "thread_id" FROM "' . THREAD_TABLE .
+        '" WHERE "archive_status" = ?');
+        $thread_list = $this->dbh->executePreparedFetchAll($prepared, array($status), PDO::FETCH_COLUMN);
+        return $thread_list;
+    }
+
+    public function getFullArchiveThreadList()
     {
         $query = 'SELECT "thread_id", "archive_status" FROM "' . ARCHIVE_THREAD_TABLE .
         '" ORDER BY "sticky" DESC, "last_bump_time" DESC';
         $thread_list = $this->dbh->executeFetchAll($query, PDO::FETCH_ASSOC);
         return $thread_list;
     }
+
 
     public function updateAllArchiveStatus()
     {
@@ -57,7 +66,7 @@ class ArchiveAndPrune
 
         $line = 1;
 
-        foreach ($this->getThreadList() as $thread)
+        foreach ($this->getFullThreadList() as $thread)
         {
             if ($line <= $this->start_buffer && $thread['archive_status'] != 0)
             {
@@ -75,7 +84,7 @@ class ArchiveAndPrune
             ++ $line;
         }
 
-        foreach ($this->getArchiveThreadList() as $thread)
+        foreach ($this->getFullArchiveThreadList() as $thread)
         {
             if ($line <= $this->start_buffer && $thread['archive_status'] != 0)
             {
@@ -165,5 +174,10 @@ class ArchiveAndPrune
         {
             $this->moveFromArchive($thread_id);
         }
+    }
+
+    public function pruneThreads()
+    {
+        $this->dbh->query('DELETE FROM "' . THREAD_TABLE . '" WHERE "archive_status" = 2');
     }
 }

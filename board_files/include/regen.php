@@ -31,8 +31,17 @@ function nel_regen_index($dataforce)
 {
     $archive = nel_archive();
     $archive->updateAllArchiveStatus();
-    $archive->moveThreadsToArchive();
-    $archive->moveThreadsFromArchive();
+
+    if(nel_board_settings('old_threads') === 'ARCHIVE')
+    {
+        $archive->moveThreadsToArchive();
+        $archive->moveThreadsFromArchive();
+    }
+    else if(nel_board_settings('old_threads') === 'PRUNE')
+    {
+        $archive->pruneThreads();
+    }
+
     $dataforce['response_id'] = 0;
     $link_resno = 0;
     nel_main_thread_generator($dataforce, true);
