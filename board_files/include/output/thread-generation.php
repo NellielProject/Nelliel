@@ -127,10 +127,10 @@ function nel_thread_generator($dataforce, $write, $write_id)
     }
 
     $dom->getElementById('post-id-')->removeSelf();
+    nel_render_insert_hr($dom);
     $render->appendHTMLFromDOM($dom);
     $render->appendHTMLFromDOM($collapse_dom, 'collapse');
     $render->appendHTMLFromDOM($expand_dom, 'expand');
-    nel_render_insert_hr($dom);
     nel_render_footer($render, true);
 
     if ($write)
