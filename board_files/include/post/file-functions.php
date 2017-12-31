@@ -91,7 +91,7 @@ function nel_check_upload_errors($file, $files)
 function nel_check_for_existing_file($file, $files)
 {
     $dbh = nel_database();
-    $error_data = array('bad-filename' => $file['name'], 'files' => $files);
+    $error_data = array('bad-filename' => $file['filename'], 'files' => $files);
     $file['md5'] = hash_file('md5', $file['dest'], FALSE);
     $file['sha1'] = hash_file('sha1', $file['dest'], FALSE);
 
@@ -117,7 +117,7 @@ function nel_check_for_existing_file($file, $files)
 function nel_get_filetype($file, $files)
 {
     global $filetype_settings, $filetypes;
-    $error_data = array('bad-filename' => $file['name'], 'files' => $files);
+    $error_data = array('bad-filename' => $file['filename'], 'files' => $files);
     $test_ext = utf8_strtolower($file['ext']);
     $file_test = file_get_contents($file['dest'], NULL, NULL, 0, 65535);
 

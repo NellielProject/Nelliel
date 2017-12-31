@@ -11,6 +11,7 @@ require_once INCLUDE_PATH . 'post/post-data.php';
 function nel_process_new_post($dataforce)
 {
     global $enabled_types, $fgsfds, $plugins, $filetypes;
+    $archive = nel_archive();
     $dbh = nel_database();
     $post_data = nel_collect_post_data();
     $new_thread_dir = '';
@@ -151,7 +152,7 @@ function nel_process_new_post($dataforce)
     }
 
     // Run the archiving routine if this is a new thread or deleted/expired thread
-    nel_archive()->updateAllArchiveStatus();
+    $archive->updateAllArchiveStatus();
 
     if(nel_board_settings('old_threads') === 'ARCHIVE')
     {
