@@ -58,17 +58,16 @@ function nel_initialize_session($dataforce)
             }
         }
     }
+    else if (!empty($_SESSION) && nel_session_is_old())
+    {
+        nel_terminate_session();
+        nel_derp(311, nel_stext('ERROR_312'));
+    }
     else
     {
-        if(nel_session_is_old())
-        {
-            nel_terminate_session();
-            nel_derp(311, nel_stext('ERROR_312'));
-        }
-
         if (isset($dataforce['mode']) && $dataforce['mode'] === 'admin->login')
         {
-            if($dataforce['login_valid'])
+            if ($dataforce['login_valid'])
             {
                 $_SESSION['ignores'] = array('default' => false);
                 $_SESSION['active'] = true;
@@ -122,7 +121,7 @@ function nel_session_is_ignored($reason = 'default', $value = null)
         return true;
     }
 
-    if(!is_null($value))
+    if (!is_null($value))
     {
         $_SESSION['ignores'][$reason] = $value;
     }
