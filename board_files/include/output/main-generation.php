@@ -127,7 +127,6 @@ function nel_main_thread_generator($dataforce, $write)
                 $dom->getElementById('outer-div')->appendChild($expand_div);
                 $post_append_target = $dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id']);
                 $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
-                //nel_process_i18n($expand_div);
 
                 if ($abbreviate)
                 {
