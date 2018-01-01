@@ -50,7 +50,6 @@ if (!empty($_GET))
     $dataforce['response_id'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? (int) $_GET['post'] : NULL;
 }
 
-$fgsfds = array('noko' => FALSE, 'noko_topic' => 0, 'sage' => FALSE, 'sticky' => FALSE);
 $link_resno = 0;
 
 // Load caching routines and handle current cache files

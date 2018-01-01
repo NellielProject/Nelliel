@@ -10,7 +10,7 @@ require_once INCLUDE_PATH . 'post/post-data.php';
 
 function nel_process_new_post($dataforce)
 {
-    global $enabled_types, $fgsfds, $plugins, $filetypes;
+    global $enabled_types, $plugins, $filetypes;
     $archive = nel_archive();
     $dbh = nel_database();
     $post_data = nel_collect_post_data();
@@ -26,10 +26,11 @@ function nel_process_new_post($dataforce)
     // Process FGSFDS
     if (!is_null($post_data['fgsfds']))
     {
-        $fgsfds = $plugins->plugin_hook('fgsfds_field', FALSE, array($fgsfds));
-        $fgsfds['noko'] = nel_is_in_string($post_data['fgsfds'], 'noko');
-        $fgsfds['sage'] = nel_is_in_string($post_data['fgsfds'], 'sage');
+        nel_fgsfds('noko', nel_is_in_string($post_data['fgsfds'], 'noko'));
+        nel_fgsfds('sage', nel_is_in_string($post_data['fgsfds'], 'sage'));
     }
+
+    $post_data['sage'] = (is_null(nel_fgsfds('sage'))) ? 0 : nel_fgsfds('sage');
 
     // Start collecting file info
     $files = nel_process_file_info();
@@ -126,7 +127,7 @@ function nel_process_new_post($dataforce)
         $thread_info['last_bump_time'] = $time;
         $thread_info['total_files'] = $current_thread['total_files'] + count($files);
 
-        if ($current_thread['post_count'] > nel_board_settings('max_bumps')|| $fgsfds['sage'])
+        if ($current_thread['post_count'] > nel_board_settings('max_bumps') || nel_fgsfds('sage'))
         {
             $thread_info['last_bump_time'] = $current_thread['last_bump_time'];
         }
@@ -137,7 +138,7 @@ function nel_process_new_post($dataforce)
     $prepared = $dbh->prepare('UPDATE "' . POST_TABLE . '" SET parent_thread = ? WHERE post_number = ?');
     $dbh->executePrepared($prepared, array($thread_info['id'], $new_post_info['post_number']), true);
 
-    $fgsfds['noko_topic'] = $thread_info['id'];
+    nel_fgsfds('noko_topic', $thread_info['id']);
     $srcpath = SRC_PATH . $thread_info['id'] . '/';
     $thumbpath = THUMB_PATH . $thread_info['id'] . '/';
 

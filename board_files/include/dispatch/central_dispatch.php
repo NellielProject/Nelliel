@@ -68,8 +68,6 @@ function nel_process_get($dataforce)
 //
 function nel_process_post($dataforce)
 {
-    global $fgsfds;
-
     if (!isset($dataforce['mode']))
     {
         return;
@@ -92,65 +90,6 @@ function nel_process_post($dataforce)
 
     switch ($dataforce['mode_segments'][0])
     {
-        /*case 'update':
-            $updates = 0;
-
-            // TODO: this doesn't wurk rite
-            if (!empty($_SESSION) && isset($dataforce['admin_mode']) && $dataforce['admin_mode'] === 'modmode')
-            {
-                if ($dataforce['banpost'])
-                {
-                    nel_ban_hammer($dataforce);
-                }
-
-                if ($dataforce['delpost'])
-                {
-                    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_delete'))
-                    {
-                        nel_derp(352, nel_stext('ERROR_352'));
-                    }
-
-                    $updates = nel_thread_updates($dataforce);
-                }
-
-                nel_regen_threads($dataforce, true, $updates);
-                nel_regen_index($dataforce);
-                nel_clean_exit($dataforce, TRUE);
-            }
-
-            $updates = nel_thread_updates($dataforce);
-            nel_regen_threads($dataforce, true, $updates);
-            nel_regen_index($dataforce);
-            break;*/
-
-        /*case 'new_post':
-            nel_process_new_post($dataforce);
-
-            if ($fgsfds['noko'])
-            {
-                if (isset($dataforce['get_mode']))
-                {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF . '?mode=display&post=' . $fgsfds['noko_topic'] . '">';
-                }
-                else
-                {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . PAGE_DIR . $fgsfds['noko_topic'] . '/' . $fgsfds['noko_topic'] . '.html">';
-                }
-            }
-            else
-            {
-                if (!empty($_SESSION))
-                {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF . '?mode=display&page=0">';
-                }
-                else
-                {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF2 . PHP_EXT . '">';
-                }
-            }
-
-            break;*/
-
         default:
             nel_derp(200, nel_stext('ERROR_200'));
     }

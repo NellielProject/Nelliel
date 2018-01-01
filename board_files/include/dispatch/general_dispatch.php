@@ -20,9 +20,9 @@ function general_dispatch($dataforce)
             {
                 nel_process_new_post($dataforce);
 
-                if ($fgsfds['noko']) // TODO: Fix this
+                if (nel_fgsfds('noko'))
                 {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . PAGE_DIR . $fgsfds['noko_topic'] . '/' . $fgsfds['noko_topic'] . '.html">';
+                    echo '<meta http-equiv="refresh" content="1;URL=' . PAGE_DIR . nel_fgsfds('noko_topic') . '/' . nel_fgsfds('noko_topic') . '.html">';
                 }
                 else
                 {

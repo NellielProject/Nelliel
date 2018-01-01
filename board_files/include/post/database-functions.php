@@ -20,7 +20,7 @@ function nel_db_insert_initial_post($time, $post_data)
     $prepared->bindValue(':file_count', $post_data['file_count'], PDO::PARAM_INT);
     $prepared->bindValue(':post_time', $time, PDO::PARAM_INT);
     $prepared->bindValue(':op', $post_data['op'], PDO::PARAM_INT);
-    $prepared->bindValue(':sage', 0, PDO::PARAM_INT);
+    $prepared->bindValue(':sage', $post_data['sage'], PDO::PARAM_INT);
     $prepared->bindValue(':mod_post', $post_data['modpost'], PDO::PARAM_STR);
     $dbh->executePrepared($prepared);
 }
