@@ -59,7 +59,7 @@ function nel_parse_links($matches)
     global $link_resno;
     $dbh = nel_database();
     $back = ($link_resno === 0) ? PAGE_DIR : '../';
-    $prepared = $dbh->prepare('SELECT response_to FROM ' . POST_TABLE . ' WHERE post_number=?');
+    $prepared = $dbh->prepare('SELECT response_to FROM ' . POST_TABLE . ' WHERE post_number=? LIMIT 1');
     $prepared->bindParam(1, $matches[1], PDO::PARAM_INT);
     $prepared->execute();
     $link = $prepared->fetch(PDO::FETCH_NUM);

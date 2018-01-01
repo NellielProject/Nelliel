@@ -22,7 +22,7 @@ class ThreadHandler
     {
         if (!is_null($post_id))
         {
-            $prepared = $this->dbh->prepare('SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ?');
+            $prepared = $this->dbh->prepare('SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ? LIMIT 1');
             $post_data = $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_ASSOC, true);
 
             // If this is not already a thread, make the post into one
@@ -46,7 +46,7 @@ class ThreadHandler
 
     public function getPostData($post_id)
     {
-        $prepared = $this->dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE "post_number" = ?');
+        $prepared = $this->dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE "post_number" = ? LIMIT 1');
         return $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_ASSOC, true);
     }
 
@@ -58,13 +58,13 @@ class ThreadHandler
 
     public function getPostParentThreadId($post_id)
     {
-        $prepared = $this->dbh->prepare('SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ?');
+        $prepared = $this->dbh->prepare('SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ? LIMIT 1');
         return $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_COLUMN, true);
     }
 
     public function getThreadData($thread_id)
     {
-        $prepared = $this->dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ?');
+        $prepared = $this->dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1');
         return $this->dbh->executePreparedFetch($prepared, array($thread_id), PDO::FETCH_ASSOC, true);
     }
 
@@ -273,7 +273,7 @@ class ThreadHandler
     public function subtractFromFileCount($post_id, $quantity)
     {
         $prepared = $this->dbh->prepare('SELECT "parent_thread", "file_count", "has_file" FROM "' . POST_TABLE .
-             '" WHERE "post_number" = ?');
+             '" WHERE "post_number" = ? LIMIT 1');
         $post_files = $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_ASSOC, true);
         $post_files['file_count'] -= $quantity;
         $thread_id = $post_files['parent_thread'];
@@ -284,7 +284,7 @@ class ThreadHandler
             $post_files['has_file'] = 0;
         }
 
-        $prepared = $this->dbh->prepare('SELECT "total_files" FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ?');
+        $prepared = $this->dbh->prepare('SELECT "total_files" FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1');
         $total_files = $this->dbh->executePreparedFetch($prepared, array($thread_id), PDO::FETCH_COLUMN, true);
         $total_files -= $quantity;
 
@@ -310,7 +310,7 @@ class ThreadHandler
         }
 
         $prepared = $this->dbh->prepare('SELECT "post_password", "mod_post" FROM "' . POST_TABLE .
-             '" WHERE "post_number" = ?');
+             '" WHERE "post_number" = ? LIMIT 1');
         $post_data = $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_ASSOC, true);
 
         $flag = false;

@@ -109,7 +109,7 @@ class Authorization
 
     private function load_user($user_id)
     {
-        $query = 'SELECT * FROM "' . USER_TABLE . '" WHERE "user_id" = ?';
+        $query = 'SELECT * FROM "' . USER_TABLE . '" WHERE "user_id" = ? LIMIT 1';
         $prepared = $this->dbh->prepare($query);
         $prepared->bindValue(1, $user_id, PDO::PARAM_STR);
         return $this->dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
@@ -117,7 +117,7 @@ class Authorization
 
     private function load_role($role_id)
     {
-        $query = 'SELECT * FROM "' . ROLES_TABLE . '" WHERE "role_id" = ?';
+        $query = 'SELECT * FROM "' . ROLES_TABLE . '" WHERE "role_id" = ? LIMIT 1';
         $prepared = $this->dbh->prepare($query);
         $prepared->bindValue(1, $role_id, PDO::PARAM_STR);
         return $this->dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);

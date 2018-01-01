@@ -73,7 +73,7 @@ function nel_main_thread_generator($dataforce, $write)
         {
             if ($gen_data['post_counter'] === -1)
             {
-                $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ?');
+                $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1');
                 $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($front_page_list[$thread_counter]), PDO::FETCH_ASSOC);
 
                 $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE .

@@ -23,7 +23,7 @@ function nel_verify_login_or_session($dataforce)
         }
         else
         {
-            $prepared = $dbh->prepare('SELECT * FROM "' . LOGINS_TABLE . '" WHERE "ip" = ?');
+            $prepared = $dbh->prepare('SELECT * FROM "' . LOGINS_TABLE . '" WHERE "ip" = ? LIMIT 1');
             $result = $dbh->executePreparedFetch($prepared, array($_SERVER['REMOTE_ADDR']), PDO::FETCH_ASSOC, true);
 
             if ($result !== false)

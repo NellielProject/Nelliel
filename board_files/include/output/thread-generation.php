@@ -25,7 +25,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
     $dom->getElementById('form-post-index')->extSetAttribute('action', $dataforce['dotdot'] . PHP_SELF);
 
     $dataforce['response_id'] = $write_id;
-    $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ?');
+    $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1');
     $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($write_id), PDO::FETCH_ASSOC);
 
     $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
