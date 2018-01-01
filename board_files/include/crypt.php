@@ -156,6 +156,12 @@ function nel_generate_salted_hash($algorithm, $string, $salt = null)
 function nel_verify_salted_hash($string, $hash)
 {
     $info = nel_salted_hash_info($hash);
+
+    if($info['algoName'] === 'unknown')
+    {
+        return false;
+    }
+
     $new_hash = nel_generate_salted_hash($info['algoName'], $string, $info['salt']);
     return hash_equals($hash, $new_hash);
 }
