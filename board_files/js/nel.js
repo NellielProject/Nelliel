@@ -1,7 +1,6 @@
 function doImportantStuff(board_id)
 {
 	processCookie("style-"+board_id);
-	externalLinks();
 	fillForms(board_id);
 }
 
@@ -80,6 +79,7 @@ function fillForms(board)
     var P = getCookie("pwd-" + board);
     var N = getCookie("name-" + board);
     document.getElementById("posting-form-sekrit").value = P;
+    document.getElementById("update-sekrit").value = P;
     document.getElementById("not-anonymous").value = N;
 }
 

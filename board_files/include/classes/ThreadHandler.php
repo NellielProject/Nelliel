@@ -321,12 +321,12 @@ class ThreadHandler
 
             if (!$flag)
             {
-                $flag = nel_verify_salted_hash($_POST['sekrit'], $post_data['post_password']);
+                $flag = nel_verify_salted_hash($_POST['update_sekrit'], $post_data['post_password']);
             }
         }
         else
         {
-            $flag = nel_verify_salted_hash($_POST['sekrit'], $post_data['post_password']);
+            $flag = nel_verify_salted_hash($_POST['update_sekrit'], $post_data['post_password']);
         }
 
         if (!$flag)
