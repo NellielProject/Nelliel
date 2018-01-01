@@ -216,11 +216,11 @@ function nel_best_available_hashing()
             return PASSWORD_BCRYPT;
         }
     }
-    else if (defined('CRYPT_SHA512') && CRYPT_SHA512 == 1)
+    else if (DO_SHA2_FALLBACK && defined('CRYPT_SHA512') && CRYPT_SHA512 == 1)
     {
         return NEL_PASSWORD_SHA512;
     }
-    else if (defined('CRYPT_SHA256') && CRYPT_SHA256 == 1)
+    else if (DO_SHA2_FALLBACK && defined('CRYPT_SHA256') && CRYPT_SHA256 == 1)
     {
         return NEL_PASSWORD_SHA256;
     }

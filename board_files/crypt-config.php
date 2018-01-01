@@ -13,13 +13,14 @@ define('POST_PASSWORD_ALGORITHM', 'sha256');
 define('SECURE_TRIPCODE_ALGORITHM', 'sha256');
 
 // Choose whether a SHA256 hash is generated and stored for uploaded files
-define('GENERATE_FILE_SHA256', true);
+define('GENERATE_FILE_SHA256', false);
 
 // Whether to use SHA256 (if enabled) to check for duplicate uploads; otherwise SHA1 is used
-define('COMPARE_FILE_WITH_SHA256', true);
+// Generating SHA256 file hashes must be enabled for this to work!
+define('COMPARE_FILE_WITH_SHA256', false);
 
 // If a different hashing method or cost was used on something, then rehash it with the current settings
-// Leave this false unless permanently upgrading to a better algorithm
+// Generally you can leave this false unless you have increased the cost or are permanently upgrading to a better algorithm
 define('DO_PASSWORD_REHASH', false);
 
 // Whether to pass PHP's PASSWORD_DEFAULT to password_hash, which should pick the best algorithm available
@@ -27,9 +28,13 @@ define('DO_PASSWORD_REHASH', false);
 // If bcrypt or a better algorithm is not available for some reason Nelliel will try a fallback to SHA512 or SHA256
 define('USE_PASSWORD_DEFAULT', true);
 
+// If bcrypt or a better algorithm is not available for some reason Nelliel will try a fallback to SHA512 or SHA256
+// This is unlikely to be an issue though
+define('DO_SHA2_FALLBACK', true);
+
 // The hash settings for staff logins and other higher security things
 // Bcrypt - PHP default is 10; 04 is the minimum; 31 is maximum
 // SHA2 - PHP default is 5000; minimum is 1000; maximum is 999999999
 define('PASSWORD_BCRYPT_COST', 12);
-define('PASSWORD_SHA2_COST', 50000);
+define('PASSWORD_SHA2_COST', 200000);
 
