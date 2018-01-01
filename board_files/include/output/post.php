@@ -11,11 +11,11 @@ function nel_render_insert_hr($dom)
     $dom->getElementById('outer-div')->appendChild($hr);
 }
 
-function nel_render_index_navigation($render, $pages)
+function nel_render_index_navigation($dom, $render, $pages)
 {
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'index_navigation.html');
-    $index_bottom_nav_element = $dom->getElementById('index-bottom-nav');
+    $dom_nav = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom_nav, 'index_navigation.html');
+    $index_bottom_nav_element = $dom_nav->getElementById('index-bottom-nav');
     $inner_td_elements = $index_bottom_nav_element->doXPathQuery(".//td");
     $page_nav_td = $inner_td_elements->item(0);
 
@@ -43,15 +43,16 @@ function nel_render_index_navigation($render, $pages)
         }
         else
         {
-            $temp_page_nav_td->replaceChild($dom->createTextNode($content), $page_link);
+            $temp_page_nav_td->replaceChild($dom_nav->createTextNode($content), $page_link);
         }
 
         $page_nav_td->parentNode->insertBefore($temp_page_nav_td, $inner_td_elements->item(2));
     }
 
     $page_nav_td->removeSelf();
-    nel_process_i18n($dom);
-    $render->appendHTMLFromDOM($dom);
+    nel_process_i18n($dom_nav);
+    $imported = $dom->importNode($index_bottom_nav_element, true);
+    $dom->getElementById('outer-div')->appendChild($imported);
 }
 
 function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline, $dom)
@@ -439,4 +440,24 @@ function nel_render_post_adjust_relative($node, $gen_data)
     }
 
     return $new_post_dom->getElementById('post-id-' . $post_id);
+}
+
+function nel_render_thread_form_bottom($dom)
+{
+    $footer_form_element = $dom->getElementById('footer-form');
+    $form_td_list = $footer_form_element->doXPathQuery(".//input");
+
+    if (nel_session_is_ignored('render'))
+    {
+        $dom->getElementById('admin-input-set1')->removeSelf();
+        $dom->getElementById('bottom-submit-button')->setContent('FORM_SUBMIT');
+        $dom->getElementById('bottom-pass-input')->removeSelf();
+    }
+
+    if (!BS_USE_NEW_IMGDEL)
+    {
+        $form_td_list->item(4)->removeSelf();
+    }
+
+    $dom->getElementById('outer-div')->appendChild($footer_form_element);
 }

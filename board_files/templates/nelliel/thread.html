@@ -49,5 +49,22 @@
 			<div id="thread-expand-">
 				<span class="omitted-posts"><span></span><span data-i18n="neltext">TEXT_OMITTED_POSTS</span><br></span>
 			</div>
+			<table id="footer-form" class="footer-form">
+				<tr>
+					<td>
+						<input type="hidden" name="mode" value="update">
+						<span id="admin-input-set1">
+						<input type="checkbox" name="delpost" id="dpost"><label for="dpost" data-i18n="neltext">FORM_DELETE_POSTS</label><br>
+						<input type="checkbox" name="banpost" id="bpost"><label for="bpost" data-i18n="neltext">FORM_BAN_POSTS</label><br>
+						<input type="hidden" name="mode" value="admin->modmode">
+						</span>
+						<input type="checkbox" name="onlyimgdel" id="delfbox" value="on"><label for="delfbox" data-i18n="neltext">DELETE_FILES_ONLY</label><br>
+						<input id="bottom-submit-button" type="submit" value="FORM_DELETE" data-i18n="neltext" data-i18n-attributes="value">
+						<span id="bottom-pass-input">
+						<input type="password" name="sekrit" id="delpass" size="12" maxlength="16" value=""><label for="delpass" data-i18n="neltext">FORM_LABEL_PASS</label>
+						</span>
+					</td>
+				</tr>
+			</table>
 		</div>
 	</form>

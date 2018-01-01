@@ -155,7 +155,6 @@ function nel_main_thread_generator($dataforce, $write)
 
         $dom->getElementById('post-id-')->removeSelf();
         $dom->getElementById('thread-expand-')->removeSelf();
-        $render->appendHTMLFromDOM($dom);
         $dataforce['posts_ending'] = true;
 
         // if not in res display mode
@@ -207,7 +206,9 @@ function nel_main_thread_generator($dataforce, $write)
             $pages['next'] = PHP_SELF2 . ($page) . PHP_EXT;
         }
 
-        nel_render_index_navigation($render, $pages);
+        nel_render_index_navigation($dom, $render, $pages);
+        nel_render_thread_form_bottom($dom);
+        $render->appendHTMLFromDOM($dom);
         nel_render_footer($render, true);
 
         if (!$write)
