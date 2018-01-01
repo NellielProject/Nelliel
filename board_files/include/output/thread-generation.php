@@ -93,16 +93,10 @@ function nel_thread_generator($dataforce, $write, $write_id)
 
             $import_node = $collapse_dom->importNode($expand_div->cloneNode(true), true);
             $collapse_dom->appendChild($import_node);
+            $expand_div->removeSelf();
         }
         else
         {
-            $expand_div = $dom->getElementById('thread-expand-');
-
-            if(!is_null($expand_div))
-            {
-                $expand_div->removeSelf();
-            }
-
             $base_new_post_node = nel_render_post($dataforce, $render, TRUE, FALSE, $gen_data, $treeline, $dom);
 
             if ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD)
