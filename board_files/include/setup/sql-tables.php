@@ -117,10 +117,15 @@ function nel_create_posts_table($table_name)
         "sage"              SMALLINT NOT NULL DEFAULT 0,
         "mod_post"          VARCHAR(255) DEFAULT NULL,
         "mod_comment"       VARCHAR(255) DEFAULT NULL,
-        "post_hash"         CHAR(40) DEFAULT NULL
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
+
+    if ($result)
+    {
+        $dbh->query('CREATE INDEX index_parent_thread ON ' . $table_name . ' (parent_thread);');
+    }
+
     nel_setup_stuff_done($result);
 }
 
@@ -170,9 +175,9 @@ function nel_create_files_table($table_name)
         "preview_width"     SMALLINT DEFAULT NULL,
         "preview_height"    SMALLINT DEFAULT NULL,
         "filesize"          INTEGER DEFAULT 0,
-        "md5"               CHAR(32) DEFAULT NULL,
-        "sha1"              CHAR(40) DEFAULT NULL,
-        "sha256"            CHAR(64) DEFAULT NULL,
+        "md5"               CHAR(32) NOT NULL,
+        "sha1"              CHAR(40) NOT NULL,
+        "sha256"            CHAR(64) NOT NULL,
         "source"            VARCHAR(255) DEFAULT NULL,
         "license"           VARCHAR(255) DEFAULT NULL,
         "exif"              TEXT DEFAULT NULL,
@@ -213,6 +218,7 @@ function nel_create_external_table($table_name)
 
 function nel_create_bans_table($table_name)
 {
+    $dbh = nel_database();
     $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
@@ -220,7 +226,7 @@ function nel_create_bans_table($table_name)
         "ban_id"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "board"             VARCHAR(255) DEFAULT NULL,
         "type"              VARCHAR(255) DEFAULT NULL,
-        "ip_address"        VARCHAR(45) DEFAULT NULL,
+        "ip_address"        VARCHAR(45) NOT NULL,
         "reason"            TEXT DEFAULT NULL,
         "length"            BIGINT NOT NULL DEFAULT 0,
         "start_time"         BIGINT NOT NULL DEFAULT 0,
@@ -230,6 +236,12 @@ function nel_create_bans_table($table_name)
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
+
+    if ($result)
+    {
+        $dbh->query('CREATE INDEX index_ip_address ON ' . $table_name . ' (ip_address);');
+    }
+
     nel_setup_stuff_done($result);
 }
 
@@ -238,7 +250,8 @@ function nel_create_config_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "config_name"       VARCHAR(255) DEFAULT NULL UNIQUE,
+        "entry"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "config_name"       VARCHAR(255) NOT NULL,
         "config_type"       VARCHAR(255) DEFAULT NULL,
         "config_owner"      VARCHAR(255) DEFAULT NULL,
         "config_category"   VARCHAR(255) DEFAULT NULL,
@@ -261,7 +274,8 @@ function nel_create_user_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "user_id"           VARCHAR(255) DEFAULT NULL UNIQUE,
+        "entry"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "user_id"           VARCHAR(255) NOT NULL UNIQUE,
         "user_title"        VARCHAR(255) DEFAULT NULL,
         "user_password"     VARCHAR(255) DEFAULT NULL,
         "user_tripcode"     VARCHAR(255) DEFAULT NULL,
@@ -286,7 +300,8 @@ function nel_create_roles_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "role_id"               VARCHAR(255) DEFAULT NULL UNIQUE,
+        "entry"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "role_id"               VARCHAR(255) NOT NULL UNIQUE,
         "role_level"            SMALLINT NOT NULL DEFAULT 0,
         "role_title"            VARCHAR(255) DEFAULT NULL,
         "capcode_text"          VARCHAR(255) DEFAULT NULL
@@ -329,7 +344,8 @@ function nel_create_logins_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "ip"                    VARCHAR(45) DEFAULT NULL UNIQUE,
+        "entry"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "ip"                    VARCHAR(45) NOT NULL UNIQUE,
         "failed_attempts"       INTEGER NOT NULL DEFAULT 0,
         "last_attempt"          BIGINT DEFAULT NULL
     ) ' . $options . ';';
