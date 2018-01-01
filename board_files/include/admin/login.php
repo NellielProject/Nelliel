@@ -15,7 +15,7 @@ function nel_verify_login_or_session($dataforce)
     if (isset($dataforce['mode']) && $dataforce['mode'] === 'admin->login')
     {
         if ($dataforce['username'] !== '' &&
-        nel_password_verify($dataforce['admin_pass'], $authorize->get_user_info($dataforce['username'], 'user_password')))
+             nel_password_verify($dataforce['admin_pass'], $authorize->get_user_info($dataforce['username'], 'user_password')))
         {
             $dataforce['login_valid'] = true;
             $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip" = ?');
@@ -26,38 +26,32 @@ function nel_verify_login_or_session($dataforce)
             $prepared = $dbh->prepare('SELECT * FROM "' . LOGINS_TABLE . '" WHERE "ip" = ? LIMIT 1');
             $result = $dbh->executePreparedFetch($prepared, array($_SERVER['REMOTE_ADDR']), PDO::FETCH_ASSOC, true);
 
-            if ($result !== false)
+            if ($result !== false && !empty($result))
             {
-                $attempts = $result['failed_attempts'];
-                $last_attempt = $result['last_attempt'];
-                $remove = false;
+                $last_period = time() - $result['last_attempt'];
+                $attempts = ($result['failed_attempts'] < 21472483647) ? $result['failed_attempts'] : 21472483647;
 
-                if ($result['failed_attempts'] < 2147483647)
+                if ($last_period > 3600)
                 {
-                    ++ $attempts;
-                }
-
-                if (time() - $result['last_attempt'] > 3600)
-                {
-                    $last_attempt = time();
                     $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip" = ?');
                     $dbh->executePrepared($prepared, array($_SERVER['REMOTE_ADDR']), true);
                 }
-
-                if ($result['failed_attempts'] >= 5 && time() - $result['last_attempt'] > 15)
+                else if ($last_period > 5)
                 {
-                    $last_attempt = time();
+                    $attempts ++;
+                    $prepared = $dbh->prepare('UPDATE "' . LOGINS_TABLE .
+                         '" SET "last_attempt" = ?, "failed_attempts" = ? WHERE "ip" = ?');
+                    $dbh->executePrepared($prepared, array(time(), $attempts, $_SERVER['REMOTE_ADDR']), true);
                 }
-
-                $prepared = $dbh->prepare('UPDATE "' . LOGINS_TABLE .
-                '" SET "failed_attempts" = ?, "last_attempt" = ? WHERE "ip" = ?');
-                $dbh->executePrepared($prepared, array($attempts, $last_attempt, $_SERVER['REMOTE_ADDR']), true);
-                nel_derp(301, nel_stext('ERROR_301'));
+                else
+                {
+                    nel_derp(301, nel_stext('ERROR_301'));
+                }
             }
             else
             {
                 $prepared = $dbh->prepare('INSERT INTO "' . LOGINS_TABLE .
-                '" (ip, failed_attempts, last_attempt) VALUES (?, ?, ?)');
+                     '" (ip, failed_attempts, last_attempt) VALUES (?, ?, ?)');
                 $dbh->executePrepared($prepared, array($_SERVER['REMOTE_ADDR'], 1, time()), true);
             }
 
