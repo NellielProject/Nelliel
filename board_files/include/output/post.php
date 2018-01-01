@@ -451,6 +451,9 @@ function nel_render_thread_form_bottom($dom)
     {
         $dom->getElementById('admin-input-set1')->removeSelf();
         $dom->getElementById('bottom-submit-button')->setContent('FORM_SUBMIT');
+    }
+    else
+    {
         $dom->getElementById('bottom-pass-input')->removeSelf();
     }
 
