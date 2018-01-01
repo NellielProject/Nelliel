@@ -79,28 +79,8 @@ function fillForms(board)
 {
     var P = getCookie("pwd-" + board);
     var N = getCookie("name-" + board);
-
-    with(document)
-    {
-        for(i=0;i<forms.length;i++)
-        {
-            if(forms[i].sekrit)with(forms[i])
-            {
-                if(!sekrit.value && P != null)
-                {
-                    sekrit.value = P;
-                }
-            }
-            
-            if(forms[i].notanonymous)with(forms[i])
-            {
-                if(!notanonymous.value && N != null)
-                {
-                    notanonymous.value = unescape(N);
-                }
-            }
-        }
-    }
+    document.getElementById("posting-form-sekrit").value = P;
+    document.getElementById("not-anonymous").value = N;
 }
 
 function externalLinks()

@@ -23,8 +23,6 @@ function nel_render_posting_form($dataforce, $render)
     $posting_form = $dom->getElementById('posting-form');
     $posting_form->extSetAttribute('action', $dotdot . PHP_SELF);
 
-    //$render->add_data('response_id', (is_null($dataforce['response_id'])) ? '0' : $dataforce['response_id']);
-
     if ($response_id)
     {
         $post_form_return_link->doXPathQuery(".//a")->item(0)->extSetAttribute('href', $dotdot . $page_ref1);
