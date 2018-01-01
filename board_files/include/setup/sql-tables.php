@@ -131,6 +131,7 @@ function nel_create_posts_table($table_name)
 
 function nel_create_threads_table($table_name)
 {
+    $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
@@ -247,6 +248,7 @@ function nel_create_bans_table($table_name)
 
 function nel_create_config_table($table_name)
 {
+    $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
@@ -271,6 +273,7 @@ function nel_create_config_table($table_name)
 
 function nel_create_user_table($table_name)
 {
+    $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
@@ -297,6 +300,7 @@ function nel_create_user_table($table_name)
 
 function nel_create_roles_table($table_name)
 {
+    $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
@@ -341,6 +345,7 @@ function nel_create_permissions_table($table_name)
 
 function nel_create_logins_table($table_name)
 {
+    $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
