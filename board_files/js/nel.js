@@ -83,18 +83,6 @@ function fillForms(board)
     document.getElementById("not-anonymous").value = N;
 }
 
-function externalLinks()
-{
-    if (!document.getElementsByTagName) return;
-    var anchors = document.getElementsByTagName("a");
-    for (var i=0; i<anchors.length; i++)
-    {
-        var anchor = anchors[i];
-        if (anchor.getAttribute("href") && anchor.getAttribute("rel") == "external") anchor.target = "_blank";
-        if (anchor.getAttribute("href") && anchor.getAttribute("rel") == "home") anchor.target = "_top";
-    }
-}
-
 function clientSideInclude(id, id2, url, url2, link_text)
 {
     var req = false;
