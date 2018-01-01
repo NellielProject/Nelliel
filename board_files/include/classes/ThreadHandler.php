@@ -169,13 +169,14 @@ class ThreadHandler
     {
         $post_data = $this->getPostData($post_id);
         $post_files = $this->getPostFiles($post_id);
-        $this->removePostFilesFromDatabase($post_ref, $order, count($post_files));
+        $this->removePostFilesFromDatabase($post_id, null, count($post_files));
         $this->removePostFilesFromDisk($post_id);
         $this->removePostFromDatabase($post_id);
     }
 
     public function removePostFromDatabase($post_id)
     {
+        $post_data = $this->getPostData($post_id);
         $prepared = $this->dbh->prepare('DELETE FROM "' . POST_TABLE . '" WHERE "post_number" = ?');
         $this->dbh->executePrepared($prepared, array($post_id));
         $thread_id = $post_data['parent_thread'];

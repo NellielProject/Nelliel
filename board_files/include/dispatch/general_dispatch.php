@@ -20,7 +20,7 @@ function general_dispatch($dataforce)
             {
                 nel_process_new_post($dataforce);
 
-                if ($fgsfds['noko'])
+                if ($fgsfds['noko']) // TODO: Fix this
                 {
                     echo '<meta http-equiv="refresh" content="1;URL=' . PAGE_DIR . $fgsfds['noko_topic'] . '/' . $fgsfds['noko_topic'] . '.html">';
                 }
@@ -30,7 +30,7 @@ function general_dispatch($dataforce)
                 }
             }
 
-            nel_clean_exit($dataforce, $die);
+            nel_clean_exit($dataforce, true);
             break;
 
         case 'threads':

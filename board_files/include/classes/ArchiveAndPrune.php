@@ -12,12 +12,14 @@ if (!defined('NELLIEL_VERSION'))
 class ArchiveAndPrune
 {
     private $dbh;
+    private $thread_handler;
     private $start_buffer;
     private $end_buffer;
 
     function __construct()
     {
         $this->dbh = nel_database();
+        $this->thread_handler = nel_thread_handler();
         $this->start_buffer = nel_board_settings('threads_per_page') * nel_board_settings('page_limit');
         $this->end_buffer = nel_board_settings('threads_per_page') * nel_board_settings('page_buffer');
 
@@ -181,8 +183,7 @@ class ArchiveAndPrune
     {
         foreach($this->getThreadListForStatus(2) as $thread_id)
         {
-            nel_remove_thread_from_database($thread_id);
-            nel_delete_thread_directories($thread_id);
+            $this->thread_handler->removeThread($thread_id);
         }
     }
 }
