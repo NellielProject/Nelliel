@@ -86,7 +86,7 @@ function nel_apply_ban($dataforce)
     $ban_hammer = nel_ban_hammer();
     $user_ip_address = $_SERVER["REMOTE_ADDR"];
 
-    if ($dataforce['mode'] === 'ban_appeal')
+    if ($dataforce['mode_segments'][2] === 'appeal')
     {
         if($_POST['ban_ip'] != $user_ip_address)
         {

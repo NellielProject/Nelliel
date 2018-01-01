@@ -7,13 +7,10 @@ if (!defined('NELLIEL_VERSION'))
 function nel_thread_updates($dataforce)
 {
     $archive = nel_archive();
-    $threadlist = array();
-    $postlist = array();
-    $filelist = array();
+    $thread_handler = nel_thread_handler();
     $returned_list = array();
     $update_archive = false;
 
-    var_dump($_POST);
     foreach ($_POST as $input)
     {
         $sub = explode('_', $input, 4);
@@ -21,35 +18,33 @@ function nel_thread_updates($dataforce)
         switch ($sub[0])
         {
             case 'deletefile':
-                nel_verify_delete_perms($sub);
-                nel_delete_file($dataforce, $sub);
+                $thread_handler->verifyDeletePerms($sub[2]);
+                $thread_handler->removePostFilesFromDatabase($sub[2], $sub[3]);
+                $thread_handler->removePostFilesFromDisk($sub[2]);
                 break;
 
             case 'deletethread':
-                $id = $sub[1];
-                nel_verify_delete_perms($sub);
-                nel_remove_thread_from_database($id);
-                nel_delete_thread_directories($id);
+                $thread_handler->removeThread($sub[1]);
                 $update_archive = true;
                 break;
 
             case 'deletepost':
-                nel_verify_delete_perms($sub);
-                nel_delete_post($dataforce, $sub);
+                $thread_handler->verifyDeletePerms($sub[2]);
+                $thread_handler->removePost($sub[2]);
                 break;
 
             case 'threadsticky':
-                nel_sticky_thread($dataforce, $sub);
+                $thread_handler->stickyThread($sub[1]);
                 $update_archive = true;
                 break;
 
             case 'threadunsticky':
-                nel_unsticky_thread($dataforce, $sub);
+                $thread_handler->unStickyThread($sub[1]);
                 $update_archive = true;
                 break;
         }
 
-        if (!in_array($sub[1], $returned_list))
+        if (isset($sub[1]) && !in_array($sub[1], $returned_list))
         {
             array_push($returned_list, $sub[1]);
         }
@@ -73,7 +68,7 @@ function nel_thread_updates($dataforce)
     return $returned_list;
 }
 
-function nel_sticky_thread($dataforce, $sub)
+function nel_sticky_thread($dataforce, $sub) // Converted
 {
     $dbh = nel_database();
     $id = $sub[2];
@@ -97,7 +92,7 @@ function nel_sticky_thread($dataforce, $sub)
     return;
 }
 
-function nel_unsticky_thread($dataforce, $sub)
+function nel_unsticky_thread($dataforce, $sub) // Converted
 {
     $dbh = nel_database();
     $id = $sub[1];
@@ -110,7 +105,7 @@ function nel_unsticky_thread($dataforce, $sub)
     nel_regen_index($dataforce);
 }
 
-function nel_get_post_thread_id($post_number)
+function nel_get_post_thread_id($post_number) // Converted
 {
     $dbh = nel_database();
     $query = 'SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
@@ -119,7 +114,7 @@ function nel_get_post_thread_id($post_number)
     return $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
 }
 
-function nel_get_thread_data($thread_id)
+function nel_get_thread_data($thread_id) // Converted
 {
     $dbh = nel_database();
     $query = 'SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ?';
@@ -128,7 +123,7 @@ function nel_get_thread_data($thread_id)
     return $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
 }
 
-function nel_get_thread_all_posts($thread_id)
+function nel_get_thread_all_posts($thread_id) // Converted
 {
     $dbh = nel_database();
     $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "parent_thread" = ?';
@@ -137,7 +132,7 @@ function nel_get_thread_all_posts($thread_id)
     return $dbh->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
 }
 
-function nel_get_post_data($post_id)
+function nel_get_post_data($post_id) // Converted
 {
     $dbh = nel_database();
     $query = 'SELECT * FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
@@ -146,7 +141,7 @@ function nel_get_post_data($post_id)
     return $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
 }
 
-function nel_get_post_files($post_id)
+function nel_get_post_files($post_id) // Converted
 {
     $dbh = nel_database();
     $query = 'SELECT * FROM "' . FILE_TABLE . '" WHERE "post_ref" = ?';
@@ -155,7 +150,7 @@ function nel_get_post_files($post_id)
     return $dbh->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
 }
 
-function nel_get_thread_last_post($thread_id)
+function nel_get_thread_last_post($thread_id) // Converted
 {
     $dbh = nel_database();
     $query = 'SELECT *  FROM "' . POST_TABLE . '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1';
@@ -164,7 +159,7 @@ function nel_get_thread_last_post($thread_id)
     return $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
 }
 
-function nel_get_thread_last_nosage_post($thread_id)
+function nel_get_thread_last_nosage_post($thread_id) // Converted
 {
     $dbh = nel_database();
     $query = 'SELECT *  FROM "' . POST_TABLE .
@@ -174,7 +169,7 @@ function nel_get_thread_last_nosage_post($thread_id)
     return $dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
 }
 
-function nel_get_thread_second_last_post($thread_id)
+function nel_get_thread_second_last_post($thread_id) // Converted
 {
     $dbh = nel_database();
     $query = 'SELECT *  FROM "' . POST_TABLE . '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 2';
@@ -190,7 +185,7 @@ function nel_get_thread_second_last_post($thread_id)
     return false;
 }
 
-function nel_make_post_thread($dataforce, $post_id)
+function nel_make_post_thread($dataforce, $post_id) // Converted
 {
     $dbh = nel_database();
     nel_create_thread_directories($post_id);
@@ -299,7 +294,7 @@ function nel_update_thread_data($thread_id)
     unset($prepared);
 }
 
-function nel_remove_post_from_database($sub, $id, $post_data)
+function nel_remove_post_from_database($sub, $id, $post_data) // Converted
 {
     $dbh = nel_database();
     $query = 'DELETE FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
@@ -331,7 +326,7 @@ function nel_remove_post_from_database($sub, $id, $post_data)
     $dbh->executePrepared($prepared, null, true);
 }
 
-function nel_remove_thread_from_database($thread_id)
+function nel_remove_thread_from_database($thread_id) // Converted
 {
     $dbh = nel_database();
     $query = 'SELECT "post_number" FROM "' . POST_TABLE . '" WHERE "parent_thread" = ?';
@@ -354,7 +349,7 @@ function nel_remove_thread_from_database($thread_id)
     $dbh->executePrepared($prepared, null, true);
 }
 
-function nel_remove_files_from_database($post_ref, $order = null)
+function nel_remove_files_from_database($post_ref, $order = null) // Converted
 {
     $dbh = nel_database();
     if (is_null($order))
@@ -377,7 +372,7 @@ function nel_remove_files_from_database($post_ref, $order = null)
     subtract_from_file_count($post_ref, $thread_id, 1);
 }
 
-function subtract_from_file_count($post_number, $thread_id, $quantity)
+function subtract_from_file_count($post_number, $thread_id, $quantity) // Converted
 {
     $dbh = nel_database();
     $query = 'SELECT "file_count", "has_file" FROM "' . POST_TABLE . '" WHERE "post_number" = ?';
@@ -449,7 +444,7 @@ function nel_delete_file($dataforce, $sub)
     }
 }
 
-function nel_delete_post($dataforce, $sub)
+function nel_delete_post($dataforce, $sub) // Converted
 {
     $dbh = nel_database();
     $id = $sub[2];
@@ -478,7 +473,7 @@ function nel_verify_delete_perms($sub)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
-    $id = $sub[1];
+    $id = $sub[2];
 
     if (!is_numeric($id))
     {

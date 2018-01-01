@@ -4,6 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'dispatch/admin_dispatch.php';
+require_once INCLUDE_PATH . 'dispatch/general_dispatch.php';
+
 //
 // Process the mode field input
 //
@@ -77,7 +80,19 @@ function nel_process_post($dataforce)
 
     switch ($dataforce['mode_segments'][0])
     {
-        case 'update':
+        case 'admin':
+            admin_dispatch($dataforce);
+            break;
+
+        case 'general':
+            general_dispatch($dataforce);
+            break;
+    }
+
+
+    switch ($dataforce['mode_segments'][0])
+    {
+        /*case 'update':
             $updates = 0;
 
             // TODO: this doesn't wurk rite
@@ -106,39 +121,35 @@ function nel_process_post($dataforce)
             $updates = nel_thread_updates($dataforce);
             nel_regen_threads($dataforce, true, $updates);
             nel_regen_index($dataforce);
-            break;
+            break;*/
 
-        case 'new_post':
+        /*case 'new_post':
             nel_process_new_post($dataforce);
 
             if ($fgsfds['noko'])
             {
-                /*if (isset($dataforce['get_mode']))
+                if (isset($dataforce['get_mode']))
                 {
                     echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF . '?mode=display&post=' . $fgsfds['noko_topic'] . '">';
                 }
                 else
-                {*/
+                {
                     echo '<meta http-equiv="refresh" content="1;URL=' . PAGE_DIR . $fgsfds['noko_topic'] . '/' . $fgsfds['noko_topic'] . '.html">';
-                //}
+                }
             }
             else
             {
-                /*if (!empty($_SESSION))
+                if (!empty($_SESSION))
                 {
                     echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF . '?mode=display&page=0">';
                 }
                 else
-                {*/
+                {
                     echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF2 . PHP_EXT . '">';
-                //}
+                }
             }
 
-            break;
-
-        case 'admin':
-            admin_dispatch($dataforce);
-            break;
+            break;*/
 
         default:
             nel_derp(200, nel_stext('ERROR_200'));

@@ -89,10 +89,24 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     $post_header = $new_post_dom->getElementById('post-header-');
     $post_header->changeId('post-header-' . $post_id);
-    $post_checkbox = $new_post_dom->getElementById('post_post-id');
-    $post_checkbox->changeId('post_' . $post_id);
-    $post_checkbox->extSetAttribute('name', 'post_' . $rev_post_id);
-    $post_checkbox->extSetAttribute('value', 'deletepost_' . $post_id);
+
+    if($response)
+    {
+        $post_checkbox = $new_post_dom->getElementById('post_post-id');
+        $post_checkbox->changeId('post_' . $post_id);
+        $post_checkbox->extSetAttribute('name', 'post_' . $rev_post_id);
+        $post_checkbox->extSetAttribute('value', 'deletepost_' . $post_id);
+        $new_post_dom->getElementById('thread_thread-id')->removeSelf();
+    }
+    else
+    {
+        $thread_checkbox = $new_post_dom->getElementById('thread_thread-id');
+        $thread_checkbox->changeId('thread_' . $thread_id);
+        $thread_checkbox->extSetAttribute('name', 'thread_' . $thread_id);
+        $thread_checkbox->extSetAttribute('value', 'deletethread_' . $thread_id);
+        $new_post_dom->getElementById('post_post-id')->removeSelf();
+    }
+
     $subject_element = $new_post_dom->getElementById('-subject');
     $subject_element->changeId($post_id . '-subject');
     $subject_element->modifyAttribute('class', $post_type, 'before');
@@ -167,7 +181,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     $sticky_icon_element = $new_post_dom->getElementById('sticky-icon-');
 
-    if ($gen_data['thread']['sticky'])
+    if (!$response && $gen_data['thread']['sticky'])
     {
         $sticky_icon_element->extSetAttribute('src', BOARD_FILES . '/imagez/nelliel/' . nel_stext('THREAD_STICKY_ICON'), 'url');
         $sticky_icon_element->changeId('sticky-icon-' . $post_id);
@@ -264,7 +278,8 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
             $delete_file_element = $temp_file_dom->getElementById('delete-file-');
             $delete_file_element->changeId('delete-file-' . $file_id);
-            $delete_file_element->extSetAttribute('name', 'files' . $file_id);
+            $delete_file_element->extSetAttribute('name', 'file_' . $file_id);
+            $delete_file_element->extSetAttribute('value', 'deletefile_' . $file_id);
 
             $file['file_location'] = SRC_DIR . $thread_id . '/' . $file['filename'] . "." . $file['extension'];
             $file['display_filename'] = $file['filename'];

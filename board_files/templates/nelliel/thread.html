@@ -5,6 +5,7 @@
 				<div id="indents-" class="indents">&gt;&gt;</div>
 				<div id="post-container-" class="op-post">
 					<div id="post-header-" class="post-header">
+						<input id="thread_thread-id" type="checkbox" name="thread_thread-id" value="deletethread_thread-id" title="Delete entire thread">
 						<input id="post_post-id" type="checkbox" name="post_post-id" value="deletepost_post-id" title="Delete entire post">
 						<span id="-subject" class="-subject">subject</span>
 						<span id="-poster-name" class="-poster-name">
@@ -23,7 +24,7 @@
 					</div>
 					<div id="post-files-container-" class="op-files-container">
 						<div id="fileinfo-" class="">
-							<input id="delete-file-" type="checkbox" name="" value="delete" title="Delete file" class="file-delete-box">
+							<input id="delete-file-" type="checkbox" name="file_file-id" value="deletefile_file-id" title="Delete file" class="file-delete-box">
 							<a href="" rel="external" id="file-link-">filename</a>
 							<br><span id="filesize-display-">filesize</span>
 							<br>[<a id="show-file-meta-" href="" data-i18n="neltext">THREAD_MOAR_DATA</a>]
@@ -52,7 +53,7 @@
 			<table id="footer-form" class="footer-form">
 				<tr>
 					<td>
-						<input type="hidden" name="mode" value="update">
+						<input type="hidden" name="mode" value="general->threads->update">
 						<span id="admin-input-set1">
 						<input type="checkbox" name="delpost" id="dpost"><label for="dpost" data-i18n="neltext">FORM_DELETE_POSTS</label><br>
 						<input type="checkbox" name="banpost" id="bpost"><label for="bpost" data-i18n="neltext">FORM_BAN_POSTS</label><br>

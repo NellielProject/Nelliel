@@ -126,3 +126,15 @@ function nel_archive()
 
     return $archive;
 }
+
+function nel_thread_handler()
+{
+    static $thread_handler;
+
+    if (!isset($thread_handler))
+    {
+        $thread_handler= new \Nelliel\ThreadHandler();
+    }
+
+    return $thread_handler;
+}

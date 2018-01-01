@@ -54,7 +54,6 @@ nel_apply_ban($dataforce);
 nel_ban_spambots($dataforce);
 require_once INCLUDE_PATH . 'post/post.php';
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
-require_once INCLUDE_PATH . 'dispatch/admin_dispatch.php';
 nel_process_get($dataforce);
 nel_process_post($dataforce);
 nel_regen_index($dataforce);
