@@ -109,6 +109,7 @@ $lang_singular = array(
     'ERROR_301' => 'You have attempted to login too many times in a short period.',  // Error 301: Too many login attempts
     'ERROR_310' => 'The session id provided is invalid.',  // Error 310: Session bad match
     'ERROR_311' => 'Login has not been validated or was not correctly flagged. Cannot start session.',  // Error 311: Session can't start
+    'ERROR_312' => 'This session has expired. Please login again.',  // Error 312: Session expired
     'ERROR_320' => 'You are not allowed to access the bans panel.',  // Error 320: No access to ban panel
     'ERROR_321' => 'You are not allowed to add new bans.',  // Error 321: Not allowed to ban
     'ERROR_322' => 'You are not allowed to modify bans.',  // Error 322: Not allowed to modify ban

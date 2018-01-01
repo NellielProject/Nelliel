@@ -60,6 +60,12 @@ function nel_initialize_session($dataforce)
     }
     else
     {
+        if(nel_session_is_old())
+        {
+            nel_terminate_session();
+            nel_derp(311, nel_stext('ERROR_312'));
+        }
+
         if (isset($dataforce['mode']) && $dataforce['mode'] === 'admin->login')
         {
             if($dataforce['login_valid'])
