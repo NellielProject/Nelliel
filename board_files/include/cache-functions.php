@@ -10,6 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_cache_filetype_settings()
 {
     $dbh = nel_database();
+    $file_handler = nel_file_handler();
     $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'filetype_enable\'', PDO::FETCH_ASSOC);
     $file_config = array();
 
@@ -19,7 +20,7 @@ function nel_cache_filetype_settings()
     }
 
     $output = '<?php $filetype_settings = ' . var_export($file_config, true) . ';';
-    nel_write_file(CACHE_PATH . 'filetype_settings.nelcache', $output, FILE_PERM);
+    $file_handler->writeFile(CACHE_PATH . 'filetype_settings.nelcache', $output, FILE_PERM);
     return $file_config;
 }
 
@@ -29,6 +30,7 @@ function nel_cache_filetype_settings()
 function nel_cache_board_settings()
 {
     $dbh = nel_database();
+    $file_handler = nel_file_handler();
     $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
     $result_count = count($config_list);
     $vars1 = '<?php ';
@@ -53,12 +55,13 @@ function nel_cache_board_settings()
         $vars1 .= 'define(\'BS_' . utf8_strtoupper($config['config_name']) . '\', ' . $config['setting'] . ');';
     }
 
-    nel_write_file(CACHE_PATH . 'board_settings.nelcache', $vars1, FILE_PERM);
+    $file_handler->writeFile(CACHE_PATH . 'board_settings.nelcache', $vars1, FILE_PERM);
 }
 
 function nel_cache_board_settings_new()
 {
     $dbh = nel_database();
+    $file_handler = nel_file_handler();
     $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
     $result_count = count($config_list);
     $settings_output = '<?php $board_settings = array();';
@@ -83,5 +86,5 @@ function nel_cache_board_settings_new()
         $settings_output .= '$board_settings[\'' . $config['config_name'] . '\'] = ' . $config['setting'] . ';';
     }
 
-    nel_write_file(CACHE_PATH . 'board_settings_new.nelcache', $settings_output, FILE_PERM);
+    $file_handler->writeFile(CACHE_PATH . 'board_settings_new.nelcache', $settings_output, FILE_PERM);
 }

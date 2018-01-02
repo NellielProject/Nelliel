@@ -133,7 +133,7 @@ function nel_thread_handler()
 
     if (!isset($thread_handler))
     {
-        $thread_handler= new \Nelliel\ThreadHandler();
+        $thread_handler = new \Nelliel\ThreadHandler();
     }
 
     return $thread_handler;
@@ -159,4 +159,16 @@ function nel_fgsfds($entry, $new_value = null)
     }
 
     return null;
+}
+
+function nel_file_handler()
+{
+    static $file_handler;
+
+    if (!isset($file_handler))
+    {
+        $file_handler = new \Nelliel\FileHandler();
+    }
+
+    return $file_handler;
 }

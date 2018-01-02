@@ -10,6 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_main_thread_generator($dataforce, $write)
 {
     $dbh = nel_database();
+    $file_handler = nel_file_handler();
     $gen_data = array();
     $dataforce['dotdot'] = '';
 
@@ -40,7 +41,7 @@ function nel_main_thread_generator($dataforce, $write)
 
         if ($write)
         {
-            nel_write_file(PHP_SELF2 . PHP_EXT, $render->outputRenderSet(), FILE_PERM);
+            $file_handler->writeFile(PHP_SELF2 . PHP_EXT, $render->outputRenderSet(), FILE_PERM);
         }
         else
         {
@@ -223,7 +224,7 @@ function nel_main_thread_generator($dataforce, $write)
         else
         {
             $logfilename = ($page === 1) ? PHP_SELF2 . PHP_EXT : PHP_SELF2 . ($page - 1) . PHP_EXT;
-            nel_write_file($logfilename, $render->outputRenderSet(), FILE_PERM, true);
+            $file_handler->writeFile($logfilename, $render->outputRenderSet(), FILE_PERM, true);
         }
 
         ++ $page;

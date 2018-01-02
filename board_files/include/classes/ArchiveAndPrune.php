@@ -13,6 +13,7 @@ class ArchiveAndPrune
 {
     private $dbh;
     private $thread_handler;
+    private $file_handler;
     private $start_buffer;
     private $end_buffer;
 
@@ -22,6 +23,7 @@ class ArchiveAndPrune
         $this->thread_handler = nel_thread_handler();
         $this->start_buffer = nel_board_settings('threads_per_page') * nel_board_settings('page_limit');
         $this->end_buffer = nel_board_settings('threads_per_page') * nel_board_settings('page_buffer');
+        $this->file_handler = nel_file_handler();
 
         if ($this->end_buffer == 0)
         {
@@ -118,9 +120,9 @@ class ArchiveAndPrune
         $prepared = $this->dbh->prepare('INSERT INTO "' . ARCHIVE_FILE_TABLE . '" SELECT * FROM "' . FILE_TABLE .
         '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
-        nel_move_file(SRC_PATH . $thread_id, ARC_SRC_PATH . $thread_id);
-        nel_move_file(THUMB_PATH . $thread_id, ARC_THUMB_PATH . $thread_id);
-        nel_move_file(PAGE_PATH . $thread_id, ARC_PAGE_PATH . $thread_id);
+        $this->file_handler->moveFile(SRC_PATH . $thread_id, ARC_SRC_PATH . $thread_id);
+        $this->file_handler->moveFile(THUMB_PATH . $thread_id, ARC_THUMB_PATH . $thread_id);
+        $this->file_handler->moveFile(PAGE_PATH . $thread_id, ARC_PAGE_PATH . $thread_id);
         $prepared = $this->dbh->prepare('DELETE FROM "' . POST_TABLE . '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
         $prepared = $this->dbh->prepare('DELETE FROM "' . THREAD_TABLE . '" WHERE "thread_id"= ?');
@@ -140,9 +142,9 @@ class ArchiveAndPrune
         $prepared = $this->dbh->prepare('INSERT INTO "' . FILE_TABLE . '" SELECT * FROM "' . ARCHIVE_FILE_TABLE .
         '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
-        nel_move_file(ARC_SRC_PATH . $thread_id, SRC_PATH . $thread_id);
-        nel_move_file(ARC_THUMB_PATH . $thread_id, THUMB_PATH . $thread_id);
-        nel_move_file(ARC_PAGE_PATH . $thread_id, PAGE_PATH . $thread_id);
+        $this->file_handler->moveFile(ARC_SRC_PATH . $thread_id, SRC_PATH . $thread_id);
+        $this->file_handler->moveFile(ARC_THUMB_PATH . $thread_id, THUMB_PATH . $thread_id);
+        $this->file_handler->moveFile(ARC_PAGE_PATH . $thread_id, PAGE_PATH . $thread_id);
         $prepared = $this->dbh->prepare('DELETE FROM "' . ARCHIVE_POST_TABLE . '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
         $prepared = $this->dbh->prepare('DELETE FROM "' . ARCHIVE_THREAD_TABLE . '" WHERE "thread_id"= ?');

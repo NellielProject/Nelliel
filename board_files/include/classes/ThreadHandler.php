@@ -12,17 +12,20 @@ use \PDO;
 class ThreadHandler
 {
     private $dbh;
+    private $file_handler;
 
     function __construct()
     {
         $this->dbh = nel_database();
+        $this->file_handler = nel_file_handler();
     }
 
     public function stickyThread($thread_id, $post_id = null)
     {
         if (!is_null($post_id))
         {
-            $prepared = $this->dbh->prepare('SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ? LIMIT 1');
+            $prepared = $this->dbh->prepare('SELECT "parent_thread" FROM "' . POST_TABLE .
+                 '" WHERE "post_number" = ? LIMIT 1');
             $post_data = $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_ASSOC, true);
 
             // If this is not already a thread, make the post into one
@@ -58,7 +61,8 @@ class ThreadHandler
 
     public function getPostParentThreadId($post_id)
     {
-        $prepared = $this->dbh->prepare('SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ? LIMIT 1');
+        $prepared = $this->dbh->prepare('SELECT "parent_thread" FROM "' . POST_TABLE .
+             '" WHERE "post_number" = ? LIMIT 1');
         return $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_COLUMN, true);
     }
 
@@ -140,10 +144,10 @@ class ThreadHandler
 
         if ($post_data['has_file'])
         {
-            $src_path = nel_path_file_join(SRC_PATH, $post_data['parent_thread']);
-            $thumb_path = nel_path_file_join(THUMB_PATH, $post_data['parent_thread']);
-            $src_dest = nel_path_file_join(SRC_PATH, $post_id);
-            $thumb_dest = nel_path_file_join(THUMB_PATH, $post_id);
+            $src_path = $this->file_handler->pathFileJoin(SRC_PATH, $post_data['parent_thread']);
+            $thumb_path = $this->file_handler->pathFileJoin(THUMB_PATH, $post_data['parent_thread']);
+            $src_dest = $this->file_handler->pathFileJoin(SRC_PATH, $post_id);
+            $thumb_dest = $this->file_handler->pathFileJoin(THUMB_PATH, $post_id);
 
             $prepared = $this->dbh->prepare('UPDATE "' . FILE_TABLE . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
             $this->dbh->executePrepared($prepared, array($post_id, $post_id));
@@ -158,8 +162,8 @@ class ThreadHandler
             {
                 $filename = $file_data[$line]['filename'] . $file_data[$line]['extension'];
                 $preview = $file_data[$line]['preview_name'];
-                nel_move_file(nel_path_file_join($src_path, $filename), nel_path_file_join($src_dest, $filename));
-                nel_move_file(nel_path_file_join($thumb_path, $preview), nel_path_file_join($thumb_dest, $preview));
+                $this->file_handler->moveFile($this->file_handler->pathFileJoin($src_path, $filename), $this->file_handler->pathFileJoin($src_dest, $filename));
+                $this->file_handler->moveFile($this->file_handler->pathFileJoin($thumb_path, $preview), $this->file_handler->pathFileJoin($thumb_dest, $preview));
                 ++ $line;
             }
         }
@@ -226,12 +230,12 @@ class ThreadHandler
         if (is_null($file_order))
         {
             $prepared = $this->dbh->prepare('SELECT "filename", "extension", "preview_name" FROM "' . FILE_TABLE .
-            '" WHERE "post_ref" = ?');
+                 '" WHERE "post_ref" = ?');
         }
         else
         {
             $prepared = $this->dbh->prepare('SELECT "filename", "extension", "preview_name" FROM "' . FILE_TABLE .
-            '" WHERE "post_ref" = ? AND "file_order" = ?');
+                 '" WHERE "post_ref" = ? AND "file_order" = ?');
         }
 
         $file_data = $this->dbh->executePreparedFetchAll($prepared, array($post_id, $file_order), PDO::FETCH_ASSOC, true);
@@ -241,8 +245,8 @@ class ThreadHandler
             foreach ($file_data as $file)
             {
                 $filename = $file['filename'] . '.' . $file['extension'];
-                nel_eraser_gun(nel_path_join(SRC_PATH, $thread_id), $filename);
-                nel_eraser_gun(nel_path_join(THUMB_PATH, $thread_id), $file['preview_name']);
+                $this->file_handler->eraserGun($this->file_handler->pathJoin(SRC_PATH, $thread_id), $filename);
+                $this->file_handler->eraserGun($this->file_handler->pathJoin(THUMB_PATH, $thread_id), $file['preview_name']);
             }
         }
     }
@@ -298,6 +302,20 @@ class ThreadHandler
         $this->dbh->executePrepared($prepared, array($post_files['has_file'], $post_files['file_count'], $post_id));
         $prepared = $this->dbh->prepare('UPDATE "' . THREAD_TABLE . '" SET "total_files" = ? WHERE "thread_id" = ?');
         $this->dbh->executePrepared($prepared, array($total_files, $thread_id));
+    }
+
+    function createThreadDirectories($thread_id)
+    {
+        $this->file_handler->createDirectory(SRC_PATH . $thread_id, DIRECTORY_PERM);
+        $this->file_handler->createDirectory(THUMB_PATH . $thread_id, DIRECTORY_PERM);
+        $this->file_handler->createDirectory(PAGE_PATH . $thread_id, DIRECTORY_PERM);
+    }
+
+    function removeThreadDirectories($thread_id)
+    {
+        $this->file_handler->eraserGun($this->file_handler->pathJoin(PAGE_PATH, $thread_id), null, true);
+        $this->file_handler->eraserGun($this->file_handler->pathJoin(SRC_PATH, $thread_id), null, true);
+        $this->file_handler->eraserGun($this->file_handler->pathJoin(THUMB_PATH, $thread_id), null, true);
     }
 
     public function verifyDeletePerms($post_id)

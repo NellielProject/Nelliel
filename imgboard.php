@@ -40,18 +40,17 @@ require_once INCLUDE_PATH . 'autoload.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'accessors.php';
 require_once INCLUDE_PATH . 'general-functions.php';
-require_once INCLUDE_PATH . 'file-handling.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'regen.php';
 require_once INCLUDE_PATH . 'thread-functions.php';
 require_once INCLUDE_PATH . 'snacks.php';
-require_once INCLUDE_PATH . 'admin/login.php';
-require_once INCLUDE_PATH . 'sessions.php';
 
 // IT'S GO TIME!
 nel_apply_ban($dataforce);
 nel_ban_spambots($dataforce);
+require_once INCLUDE_PATH . 'admin/login.php';
+require_once INCLUDE_PATH . 'sessions.php';
 require_once INCLUDE_PATH . 'post/post.php';
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 nel_process_get($dataforce);

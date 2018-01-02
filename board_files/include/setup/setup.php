@@ -12,6 +12,7 @@ require_once INCLUDE_PATH . 'setup/sql-tables.php';
 //
 function setup_check()
 {
+    $file_handler = nel_file_handler();
     nel_create_posts_table(POST_TABLE);
     nel_create_posts_table(ARCHIVE_POST_TABLE);
     nel_create_threads_table(THREAD_TABLE);
@@ -27,14 +28,14 @@ function setup_check()
     nel_create_permissions_table(PERMISSIONS_TABLE);
     nel_create_logins_table(LOGINS_TABLE);
 
-    nel_create_directory(SRC_PATH, DIRECTORY_PERM);
-    nel_create_directory(THUMB_PATH, DIRECTORY_PERM);
-    nel_create_directory(PAGE_PATH, DIRECTORY_PERM);
-    nel_create_directory(CACHE_PATH, DIRECTORY_PERM);
-    nel_create_directory(ARCHIVE_PATH, DIRECTORY_PERM);
-    nel_create_directory(ARC_SRC_PATH, DIRECTORY_PERM);
-    nel_create_directory(ARC_THUMB_PATH, DIRECTORY_PERM);
-    nel_create_directory(ARC_PAGE_PATH, DIRECTORY_PERM);
+    $file_handler->createDirectory(SRC_PATH, DIRECTORY_PERM);
+    $file_handler->createDirectory(THUMB_PATH, DIRECTORY_PERM);
+    $file_handler->createDirectory(PAGE_PATH, DIRECTORY_PERM);
+    $file_handler->createDirectory(CACHE_PATH, DIRECTORY_PERM);
+    $file_handler->createDirectory(ARCHIVE_PATH, DIRECTORY_PERM);
+    $file_handler->createDirectory(ARC_SRC_PATH, DIRECTORY_PERM);
+    $file_handler->createDirectory(ARC_THUMB_PATH, DIRECTORY_PERM);
+    $file_handler->createDirectory(ARC_PAGE_PATH, DIRECTORY_PERM);
 
     nel_setup_stuff_done('check_done_nochange');
 

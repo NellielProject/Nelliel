@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_thread_generator($dataforce, $write, $write_id)
 {
     $dbh = nel_database();
+    $this->file_handler = nel_file_handler();
 
     if($write)
     {
@@ -70,7 +71,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
             $render_temp = clone $render;
             nel_render_insert_hr($dom);
             nel_render_footer($render_temp, true);
-            nel_write_file(PAGE_PATH . $write_id . '/' . $write_id. '-0-100.html', $render_temp->outputRenderSet(), FILE_PERM, true);
+            $file_handler->writeFile(PAGE_PATH . $write_id . '/' . $write_id. '-0-100.html', $render_temp->outputRenderSet(), FILE_PERM, true);
             unset($render_temp);
         }
 
@@ -128,9 +129,9 @@ function nel_thread_generator($dataforce, $write, $write_id)
 
     if ($write)
     {
-        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '.html', $render->outputRenderSet(), FILE_PERM, true);
-        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '-expand.html', $render->outputRenderSet('expand'), FILE_PERM, true);
-        nel_write_file(PAGE_PATH . $write_id . '/' . $write_id . '-collapse.html', $render->outputRenderSet('collapse'), FILE_PERM, true);
+        $file_handler->writeFile(PAGE_PATH . $write_id . '/' . $write_id . '.html', $render->outputRenderSet(), FILE_PERM, true);
+        $file_handler->writeFile(PAGE_PATH . $write_id . '/' . $write_id . '-expand.html', $render->outputRenderSet('expand'), FILE_PERM, true);
+        $file_handler->writeFile(PAGE_PATH . $write_id . '/' . $write_id . '-collapse.html', $render->outputRenderSet('collapse'), FILE_PERM, true);
     }
     else
     {
