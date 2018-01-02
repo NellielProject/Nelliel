@@ -105,6 +105,7 @@ $lang_singular = array(
     'ERROR_152' => 'Cancer detected in post: ',  // Error 152: Banned text
     'ERROR_160' => 'Your ip address does not match the one listed in the ban.',  // Error 160: IP mismatch
     'ERROR_200' => 'No valid action specified.',  // Error 200: Wut u try do?
+    'ERROR_201' => 'No acceptable hashing algorithm has been found. We can\'t function like this.',  // Error 201: No decent hash algorithm to work with
     'ERROR_300' => 'You have failed to login. Please wait a few seconds before trying again.',  // Error 300: Not authorized
     'ERROR_301' => 'JFC! Slow down on the failure!',  // Error 301: Too many login attempts
     'ERROR_310' => 'The session id provided is invalid.',  // Error 310: Session bad match

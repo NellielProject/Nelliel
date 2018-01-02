@@ -20,8 +20,6 @@ if(RUN_SETUP_CHECK)
     setup_check();
 }
 
-require_once INCLUDE_PATH . 'language/language.php';
-
 $dataforce = array();
 $dataforce['sp_field1'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD1')] : NULL;
 $dataforce['sp_field2'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD2')] : NULL;

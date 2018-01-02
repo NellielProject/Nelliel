@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_thread_generator($dataforce, $write, $write_id)
 {
     $dbh = nel_database();
-    $this->file_handler = nel_file_handler();
+    $file_handler = nel_file_handler();
 
     if($write)
     {

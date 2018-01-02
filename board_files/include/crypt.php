@@ -1,5 +1,7 @@
 <?php
 
+require_once LIBRARY_PATH . 'password_compat/password.php';
+
 //
 // Most of these functions are basically wrappers to extend or simplify PHP password and crypt functions
 //
@@ -28,6 +30,20 @@ if (!function_exists('hash_equals'))
 
             return !$return;
         }
+    }
+}
+
+function nel_verfiy_hash_algorithm()
+{
+    $best_hashing = nel_best_available_hashing();
+
+    if($best_hashing === 0)
+    {
+        nel_derp(201, nel_stext('ERROR_201'));
+    }
+    else
+    {
+        define('NELLIEL_PASS_ALGORITHM', $best_hashing);
     }
 }
 
