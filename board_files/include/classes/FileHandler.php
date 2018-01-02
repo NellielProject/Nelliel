@@ -7,8 +7,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use \PDO;
-
 class FileHandler
 {
     function __construct()
