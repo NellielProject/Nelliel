@@ -21,8 +21,6 @@ if(RUN_SETUP_CHECK)
 }
 
 $dataforce = array();
-$dataforce['sp_field1'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD1')] : NULL;
-$dataforce['sp_field2'] = (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])) ? $_POST[nel_stext('TEXT_SPAMBOT_FIELD2')] : NULL;
 $dataforce['mode'] = NULL;
 $dataforce['get_mode'] = NULL;
 $dataforce['login_valid'] = false;
@@ -40,8 +38,6 @@ if (!empty($_GET))
     $dataforce['collapse'] = (isset($_GET['collapse'])) ? TRUE : FALSE;
     $dataforce['response_id'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? (int) $_GET['post'] : NULL;
 }
-
-$link_resno = 0;
 
 // Load caching routines and handle current cache files
 
