@@ -8,7 +8,6 @@ ignore_user_abort(TRUE);
 
 // TODO: Clean all these up along with the other includes
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
-require_once INCLUDE_PATH . 'wat.php';
 require_once INCLUDE_PATH . 'setup/setup.php';
 require_once INCLUDE_PATH . 'output/posting_form.php';
 require_once INCLUDE_PATH . 'output/header.php';

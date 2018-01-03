@@ -21,7 +21,7 @@ function nel_about_nelliel_screen()
             Version: ' . NELLIEL_VERSION . '
         </p>
         <p class="text-center">
-            Copyright (c) 2010-2017, <a href="http://www.nelliel.com">Nelliel Project</a><br>
+            Copyright (c) 2010-2018, <a href="http://www.nelliel.com">Nelliel Project</a><br>
             All rights reserved.
         </p>
 		<div class="nelliel-license-div">

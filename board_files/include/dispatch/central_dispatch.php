@@ -52,13 +52,13 @@ function nel_process_get($dataforce)
 
     if(isset($_GET['about_nelliel']))
     {
-        require_once INCLUDE_PATH . 'about.php';
+        require_once INCLUDE_PATH . 'wat/about.php';
         nel_about_nelliel_screen();
     }
 
     if(isset($_GET['blank']) || isset($_GET['tpilb']))
     {
-        require_once INCLUDE_PATH . 'about.php';
+        require_once INCLUDE_PATH . 'wat/wat.php';
         nel_tpilb();
     }
 }
