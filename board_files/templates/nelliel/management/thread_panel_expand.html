@@ -1,0 +1,53 @@
+	<div class="pass-valid">
+		<span data-i18n="neltext">MANAGE_MODE</span>
+	</div>
+	<div class="del-list">
+		<span data-i18n="neltext">MANAGE_THREADS</span>
+	</div>
+	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="mode" value="admin->thread->update">
+		<table id="post-list" class="post-lists">
+			<tr class="manage-header">
+				<th data-i18n="neltext">MANAGE_POST_POST_NUM</th>
+				<th data-i18n="neltext">MANAGE_POST_DELETE</th>
+				<th data-i18n="neltext">MANAGE_POST_PARENT</th>
+				<th data-i18n="neltext">MANAGE_POST_TIME</th>
+				<th data-i18n="neltext">MANAGE_POST_IP</th>
+				<th data-i18n="neltext">MANAGE_POST_NAME</th>
+				<th data-i18n="neltext">MANAGE_POST_EMAIL</th>
+				<th data-i18n="neltext">MANAGE_POST_SUBJECT</th>
+				<th data-i18n="neltext">MANAGE_POST_COMMENT</th>
+			</tr>
+			<tr id="post-row-" class="row1">
+				<td id="post-post-number-"></td>
+				<td>
+					<input id="delete-post-" type="checkbox" name="post_" value="deletepost_" title="Delete entire post">
+				</td>
+				<td>
+					<span id="post-parent-"></span>
+				</td>
+				<td>
+					<span id="post-time-"></span>
+				</td>
+				<td>
+					<span id="post-ip-"></span>
+				</td>
+				<td>
+					<span id="post-name-"></span>
+				</td>
+				<td>
+					<span id="post-email-"></span>
+				</td>
+				<td>
+					<a id="post-subject-link-" href="" rel="external"></a>
+				</td>
+				<td>
+					<span id="post-comment-"></span>
+				</td>
+			</tr>
+		</table>
+		<div>
+			<input type="submit" name="dostuff" value="Update">&nbsp;
+			<input type=reset value="Reset">
+		</div>
+	</form>

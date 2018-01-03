@@ -15,15 +15,6 @@ function nel_thread_panel($dataforce, $authorize)
         nel_derp(350, nel_stext('ERROR_350'));
     }
 
-    if (isset($dataforce['expand_thread']))
-    {
-        $expand = TRUE;
-    }
-    else
-    {
-        $expand = FALSE;
-    }
-
     if ($mode === 'admin->thread->update')
     {
         $updates = nel_thread_updates($dataforce);
@@ -31,5 +22,14 @@ function nel_thread_panel($dataforce, $authorize)
         nel_regen_index($dataforce);
     }
 
-    nel_render_thread_panel_main($dataforce, $expand);
+    if(isset($_POST['expand_thread']))
+    {
+        $expand_data = explode(' ', $_POST['expand_thread']);
+        nel_render_thread_panel_expand($expand_data[1]);
+    }
+    else
+    {
+        nel_render_thread_panel_main();
+    }
+
 }

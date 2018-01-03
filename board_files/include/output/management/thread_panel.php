@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_thread_panel_main($dataforce)
+function nel_render_thread_panel_main()
 {
     $dbh = nel_database();
     $render = new NellielTemplates\RenderCore();
@@ -13,9 +13,7 @@ function nel_render_thread_panel_main($dataforce)
     nel_render_header(array(), $render, array());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel.html');
-    $result =  $dbh->query('SELECT * FROM "' . THREAD_TABLE . '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC');
-    $thread_data = $result->fetchAll(PDO::FETCH_ASSOC);
-    unset($result);
+    $thread_data = $dbh->executeFetchAll('SELECT * FROM "' . THREAD_TABLE . '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC', PDO::FETCH_ASSOC);
     $thread_list_table = $dom->getElementById('thread-list');
     $thread_row = $dom->getElementById('thread-row-');
     $i = 0;
@@ -26,7 +24,7 @@ function nel_render_thread_panel_main($dataforce)
         $temp_thread_row->changeId('thread_row-' . $thread['thread_id']);
 
         $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE "post_number" = ? LIMIT 1');
-        $prepared->bindValue(1, $thread['thread_id'], PDO::PARAM_INT);
+        $prepared->bindValue(1, $thread['first_post'], PDO::PARAM_INT);
         $prepared->execute();
         $op_post = $prepared->fetch(PDO::FETCH_ASSOC);
         unset($result);
@@ -69,11 +67,11 @@ function nel_render_thread_panel_main($dataforce)
 
         $thread_subject_link = $temp_thread_row->getElementById('thread-subject-link-');
         $thread_subject_link->setContent($op_post['subject']);
-        $thread_subject_link->extSetAttribute('href', PAGE_DIR . $thread['thread_id']. '/' . $thread['thread_id']. '.html', 'none');
+        $thread_subject_link->extSetAttribute('href', PAGE_DIR . $thread['thread_id'] . '/' . $thread['thread_id'] . '.html', 'none');
         $thread_subject_link->changeId('thread-subject-link-' . $thread['thread_id']);
 
         $thread_op_name = $temp_thread_row->getElementById('thread-op-name-');
-        $thread_op_name->setContent($op_post['poster_name']);
+        $thread_op_name->setContent($thread['thread_id']);
         $thread_op_name->changeId('thread-op-name-' . $thread['thread_id']);
         $thread_op_ip = $temp_thread_row->getElementById('thread-op-ip-');
         $thread_op_ip->setContent($op_post['ip_address']);
@@ -100,6 +98,70 @@ function nel_render_thread_panel_main($dataforce)
     }
 
     $thread_row->removeSelf();
+
+    nel_process_i18n($dom);
+    $render->appendHTMLFromDOM($dom);
+    nel_render_footer($render, false);
+    echo $render->outputRenderSet();
+}
+
+function nel_render_thread_panel_expand($thread_id)
+{
+    $dbh = nel_database();
+    $render = new NellielTemplates\RenderCore();
+    $render->startRenderTimer();
+    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    nel_render_header(array(), $render, array());
+    $dom = $render->newDOMDocument();
+    $render->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
+    $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE "parent_thread" = ?');
+    $post_data = $dbh->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
+    $post_list_table = $dom->getElementById('post-list');
+    $post_row = $dom->getElementById('post-row-');
+    $i = 0;
+
+    foreach($post_data as $post)
+    {
+        $temp_post_row = $post_row->cloneNode(true);
+        $temp_post_row->changeId('post-row-' . $post['post_number']);
+
+        $post_post_number = $temp_post_row->getElementById('post-post-number-');
+        $post_post_number->setContent($post['post_number']);
+        $post_post_number->changeId('post-post-number-' . $post['post_number']);
+        $delete_post = $temp_post_row->getElementById('delete-post-');
+        $delete_post->modifyAttribute('name', $post['post_number'], 'after');
+        $delete_post->modifyAttribute('value', $post['parent_thread'] . '_' . $post['post_number'], 'after');
+        $delete_post->changeId('delete-post-' . $post['post_number']);
+        $post_last_update = $temp_post_row->getElementById('post-time-');
+        $post_last_update->setContent(date("D F jS Y  H:i:s", $post['post_time'] / 1000));
+        $post_last_update->changeId('post-time-' . $post['post_number']);/////
+        $post_subject_link = $temp_post_row->getElementById('post-subject-link-');
+        $post_subject_link->setContent($post['subject']);
+        $post_subject_link->extSetAttribute('href', PAGE_DIR . $post['parent_thread']. '/' . $post['post_number']. '.html', 'none');
+        $post_subject_link->changeId('post-subject-link-' . $post['post_number']);
+
+        $post_name = $temp_post_row->getElementById('post-name-');
+        $post_name->setContent($post['poster_name']);
+        $post_name->changeId('post-name-' . $post['post_number']);
+        $post_ip = $temp_post_row->getElementById('post-ip-');
+        $post_ip->setContent($post['ip_address']);
+        $post_ip->changeId('post-ip-' . $post['post_number']);
+
+        if($i & 1)
+        {
+            $bgclass = 'row1';
+        }
+        else
+        {
+            $bgclass = 'row2';
+        }
+
+        $temp_post_row->extSetAttribute('class', $bgclass);
+        $post_list_table->appendChild($temp_post_row);
+        $i ++;
+    }
+
+    $post_row->removeSelf();
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
