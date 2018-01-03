@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_cleanse_the_aids($string)
+function nel_encode_and_clean_output(&$string)
 {
     if ($string === '' || preg_match("#^\s*$#", $string))
     {
@@ -18,42 +18,6 @@ function nel_cleanse_the_aids($string)
 
     $string = trim($string);
     $string = htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
-    return $string;
-}
-
-function nel_word_filters($text)
-{
-    $cancer = array('', '');
-    $chemo = array('', '');
-    $total_cancer = count($cancer);
-
-    for ($i = 0; $i < $total_cancer; ++ $i)
-    {
-        $text = preg_replace('#' . $cancer[$i] . '#', $chemo[$i], $text);
-    }
-
-    return $text;
-}
-
-// TODO: This probably needs wurk
-function nel_newline_cleanup($string)
-{
-    if (nel_clear_whitespace($string) !== '')
-    {
-        $string = utf8_str_replace("\r", "\n", $string);
-
-        if (utf8_substr_count($string, "\n") < BS_MAX_COMMENT_LINES)
-        {
-            $string = utf8_str_replace("\n\n", "<br>", $string);
-            $string = utf8_str_replace("\n", "<br>", $string);
-        }
-        else
-        {
-            $string = utf8_str_replace("\n", "", $string); // \n is erased
-        }
-    }
-
-    return $string;
 }
 
 function nel_clear_whitespace($string)
@@ -63,4 +27,61 @@ function nel_clear_whitespace($string)
         return '';
     }
 }
-?>
+
+function nel_newlines_to_array($input)
+{
+    $text_array = preg_split('#\r\n?|\n#', $input);
+    return $text_array;
+}
+
+function nel_post_quote($target_element, $text_input)
+{
+    if (preg_match('#^\s*>>#', $text_input) === 1)
+    {
+        $quote_span = $target_element->ownerDocument->createElement('span');
+        $quote_span->extSetAttribute('class', 'post-quote');
+        $target_element->appendChild($quote_span);
+        return $quote_span;
+    }
+
+    return false;
+}
+
+function nel_post_quote_link($target_element, $text_input)
+{
+    $dbh = nel_database();
+    $text_segments = preg_split('#(>>[0-9]+)#', $text_input, null, PREG_SPLIT_DELIM_CAPTURE);
+
+    foreach ($text_segments as $segment)
+    {
+        if(preg_match('#^>>([0-9]+)$#', $segment, $matches) === 1)
+        {
+            $prepared = $dbh->prepare('SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ? LIMIT 1');
+            $parent_thread = $dbh->executePreparedFetch($prepared, array($matches[1]), PDO::FETCH_COLUMN);
+
+            if ($parent_thread === false || empty($parent_thread))
+            {
+                $segment_node = $target_element->ownerDocument->createTextNode($segment);
+            }
+            else
+            {
+                $p_anchor = '';
+
+                if($matches[1] != $parent_thread)
+                {
+                    $p_anchor = '#p' . $matches[1];
+                }
+
+                $segment_node= $target_element->ownerDocument->createElement('a', $matches[0]);
+                $segment_node->extSetAttribute('class', 'link-quote');
+                $segment_node->extSetAttribute('href', PAGE_DIR . $parent_thread . '/' . $parent_thread . '.html' . $p_anchor, 'none');
+            }
+        }
+        else
+        {
+            $segment_node = $target_element->ownerDocument->createTextNode($segment);
+        }
+
+        $target_element->appendChild($segment_node);
+    }
+}

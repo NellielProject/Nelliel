@@ -58,7 +58,7 @@ function nel_render_index_navigation($dom, $render, $pages)
 function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline, $dom)
 {
     $authorize = nel_authorize();
-    global $link_resno;
+    $dbh = nel_database();
 
     $start = microtime(true);
     $post_data = $gen_data['post'];
@@ -313,8 +313,8 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             $show_file_meta_element->changeId('show-file-meta-' . $file_id);
             $temp_file_dom->getElementById('file-meta-')->changeId('file-meta-' . $file_id);
 
-            $file['source'] = nel_cleanse_the_aids($file['source']);
-            $file['license'] = nel_cleanse_the_aids($file['license']);
+            nel_encode_and_clean_output($file['source']);
+            nel_encode_and_clean_output($file['license']);
 
             $source_element = $temp_file_dom->getElementById('file-source-');
             $source_element->changeId('file-source-' . $file_id);
@@ -398,30 +398,39 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $post_files_container->removeSelf();
     }
 
-    $post_data['comment'] = nel_newline_cleanup($post_data['comment']);
-    //$post_data['comment'] = preg_replace_callback('#(>>)([0-9]+)#', 'nel_create_post_links', $post_data['comment']);
-    //$post_data['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $post_data['comment']);
-    //$post_data['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'nel_parse_links', $post_data['comment']);
-
-    if (nel_clear_whitespace($post_data['comment']) === '')
-    {
-        $post_data['comment'] = nel_stext('THREAD_NOTEXT');
-    }
-
-    $post_contents_element = $new_post_dom->getElementById('post-contents-');
-    $post_contents_element->changeId('post-contents-' . $post_id);
-    $post_contents_element->extSetAttribute('class', $post_type_class . 'post-text');
     $post_text_element = $new_post_dom->getElementById('-post-text');
     $post_text_element->changeId($post_id . '-post-text');
     $post_text_element->extSetAttribute('class', $post_type_class . 'post-contents');
     $post_comment_element = $new_post_dom->getElementById('post-comment-');
-    $post_comment_element->setContent($post_data['comment']);
     $post_comment_element->changeId('post-comment-' . $post_id);
     $mod_comment_element = $new_post_dom->getElementById('mod-comment-');
     $mod_comment_element->setContent($post_data['mod_comment']);
     $mod_comment_element->changeId('mod-comment-' . $post_id);
+
+    if (nel_clear_whitespace($post_data['comment']) === '')
+    {
+        $post_comment_element->setContent(nel_stext('THREAD_NOTEXT'));
+    }
+    else
+    {
+        nel_numeric_html_entities_to_utf8($post_data['comment']);
+
+        foreach (nel_newlines_to_array($post_data['comment']) as $line)
+        {
+            $append_target = $post_comment_element;
+            $quote_result = nel_post_quote($append_target, $line);
+
+            if($quote_result !== false)
+            {
+                $append_target = $quote_result;
+            }
+
+            nel_post_quote_link($append_target, $line);
+            $append_target->appendChild($new_post_dom->createElement('br'));
+        }
+    }
+
     $new_post_dom->getElementById('ban-')->changeId('ban' . $post_data['post_number']);
-    //nel_process_i18n($new_post_dom);
     return $new_post_element;
 }
 
@@ -477,19 +486,4 @@ function nel_render_thread_form_bottom($dom)
     }
 
     $dom->getElementById('outer-div')->appendChild($footer_form_element);
-}
-
-function nel_post_bits_dom()
-{
-    static $dom;
-
-    if(!isset($dom))
-    {
-        $render = new NellielTemplates\RenderCore();
-        $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-        $dom = $render->newDOMDocument();
-        $render->loadTemplateFromFile($dom, 'post_bits.html');
-    }
-
-    return $dom;
 }

@@ -43,7 +43,6 @@ function nel_regen_index($dataforce)
     }
 
     $dataforce['response_id'] = 0;
-    $link_resno = 0;
     nel_main_thread_generator($dataforce, true);
 }
 

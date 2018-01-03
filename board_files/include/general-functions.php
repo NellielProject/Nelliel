@@ -53,24 +53,6 @@ function nel_true_empty($var)
     return false;
 }
 
-function nel_create_post_links($matches)
-{
-    $dbh = nel_database();
-    $prepared = $dbh->prepare('SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ? LIMIT 1');
-    $parent_thread = $dbh->executePreparedFetch($prepared, array($matches[2]), PDO::FETCH_COLUMN);
-
-    if ($parent_thread === false)
-    {
-        return $matches[0];
-    }
-
-    $link_element = $dom->getElementsByClassName('post-link-quote')->item(0);
-    $link_element->extSetAttribute('href', PAGE_DIR . $parent_thread . '/' . $matches[2] . '.html', 'url');
-    $link_element->setContent($matches[1] . $matches[2]);
-
-
-}
-
 function nel_utf8_to_numeric_html_entities(&$input, $non_ascii_only = true)
 {
     if($non_ascii_only)
@@ -91,9 +73,9 @@ function nel_utf8_to_numeric_html_entities(&$input, $non_ascii_only = true)
 
 function nel_numeric_html_entities_to_utf8(&$input)
 {
-    $input = preg_replace_callback('#&#[0-9]+;#Su',
+    $input = preg_replace_callback('#&\#[0-9]+;#Su',
     function ($matches)
     {
-        return utf8_chr(substr($matches[0], 2, -1));
+        return utf8_chr(intval(substr($matches[0], 2, -1)));
     }, $input);
 }

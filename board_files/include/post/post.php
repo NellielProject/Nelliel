@@ -12,6 +12,7 @@ function nel_process_new_post($dataforce)
 {
     global $enabled_types, $plugins, $filetypes;
     $archive = nel_archive();
+    $thread_handler = nel_thread_handler();
     $dbh = nel_database();
     $post_data = nel_collect_post_data();
     $new_thread_dir = '';
@@ -115,7 +116,7 @@ function nel_process_new_post($dataforce)
         $thread_info['id'] = $new_post_info['post_number'];
         $thread_info['total_files'] = $files_count;
         nel_db_insert_new_thread($thread_info, $files_count);
-        nel_create_thread_directories($thread_info['id']);
+        $thread_handler->createThreadDirectories($thread_info['id']);
     }
     else
     {
