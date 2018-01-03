@@ -1,5 +1,5 @@
 <?php
-define('NELLIEL_VERSION', 'v0.9.4.7'); // Version
+define('NELLIEL_VERSION', 'v0.9.4.8'); // Version
 define('BASE_PATH', realpath('./')); // Base path for script
 define('BOARD_FILES', 'board_files/'); // Name of directory where the support and internal files go
 define('INCLUDE_PATH', BASE_PATH . '/' . BOARD_FILES . 'include/'); // Base cache path
