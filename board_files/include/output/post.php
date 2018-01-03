@@ -398,9 +398,11 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $post_files_container->removeSelf();
     }
 
+    $post_contents_element = $new_post_dom->getElementById('post-contents-');
+    $post_contents_element->changeId('post-contents-' . $post_id);
+    $post_contents_element->extSetAttribute('class', $post_type_class . 'post-contents');
     $post_text_element = $new_post_dom->getElementById('-post-text');
     $post_text_element->changeId($post_id . '-post-text');
-    $post_text_element->extSetAttribute('class', $post_type_class . 'post-contents');
     $post_comment_element = $new_post_dom->getElementById('post-comment-');
     $post_comment_element->changeId('post-comment-' . $post_id);
     $mod_comment_element = $new_post_dom->getElementById('mod-comment-');
