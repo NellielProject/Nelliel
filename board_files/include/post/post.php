@@ -49,24 +49,24 @@ function nel_process_new_post($dataforce)
 
         if (!$post_data['comment'])
         {
-            nel_derp(10, array(), nel_stext('ERROR_10'));
+            nel_derp(10, nel_stext('ERROR_10'), array());
         }
 
         if (nel_board_settings('require_image_always'))
         {
-            nel_derp(11, array(), nel_stext('ERROR_11'));
+            nel_derp(11, nel_stext('ERROR_11'), array());
         }
 
-        if (nel_board_settings('require_image_start')&& $dataforce['response_to'] === 0)
+        if (nel_board_settings('require_image_start') && $post_data['response_to'] === 0)
         {
-            nel_derp(12, array(), nel_stext('ERROR_12'));
+            nel_derp(12, nel_stext('ERROR_12'), array());
         }
     }
 
     // Cancer-fighting tools and lulz
     if (utf8_strlen($post_data['comment']) > nel_board_settings('max_comment_length'))
     {
-        nel_derp(13, array(), nel_stext('ERROR_13'));
+        nel_derp(13, nel_stext('ERROR_13'), array());
     }
 
     if (isset($post_data['password']))

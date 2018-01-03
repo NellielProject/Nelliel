@@ -10,6 +10,7 @@ function nel_collect_post_data()
     $post_data['comment'] = nel_check_post_entry($_POST['new_post']['post_info']['wordswordswords'], "string");
     $post_data['fgsfds'] = nel_check_post_entry($_POST['new_post']['post_info']['fgsfds'], "string");
     $post_data['password'] = nel_check_post_entry($_POST['new_post']['post_info']['sekrit'], "string");
+    $post_data['response_to'] = nel_check_post_entry($_POST['new_post']['post_info']['response_to'], "int");
 
     if ($post_data['name'] !== '')
     {
