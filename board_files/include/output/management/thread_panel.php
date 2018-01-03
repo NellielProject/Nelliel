@@ -132,6 +132,9 @@ function nel_render_thread_panel_expand($thread_id)
         $delete_post->modifyAttribute('name', $post['post_number'], 'after');
         $delete_post->modifyAttribute('value', $post['parent_thread'] . '_' . $post['post_number'], 'after');
         $delete_post->changeId('delete-post-' . $post['post_number']);
+        $post_parent_thread = $temp_post_row->getElementById('post-thread-');
+        $post_parent_thread->setContent($post['parent_thread']);
+        $post_parent_thread->changeId('post-thread-' . $post['parent_thread']);
         $post_last_update = $temp_post_row->getElementById('post-time-');
         $post_last_update->setContent(date("D F jS Y  H:i:s", $post['post_time'] / 1000));
         $post_last_update->changeId('post-time-' . $post['post_number']);/////
