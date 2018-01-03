@@ -30,13 +30,6 @@ $dataforce['login_valid'] = false;
 if (!empty($_POST))
 {
     $dataforce['mode'] = (isset($_POST['mode'])) ? $_POST['mode']: NULL;
-    $dataforce['admin_pass'] = (isset($_POST['super_sekrit'])) ? $_POST['super_sekrit'] : NULL;
-    $dataforce['username'] = (isset($_POST['username'])) ? $_POST['username'] : NULL;
-    $dataforce['expand_thread'] = (isset($_POST['expand_thread'])) ? $_POST['expand_thread'] : NULL;
-    $dataforce['delpost'] = (isset($_POST['delpost'])) ? TRUE : FALSE;
-    $dataforce['banpost'] = (isset($_POST['banpost'])) ? TRUE : FALSE;
-    $dataforce['response_to'] = (isset($_POST['response_to']) && is_numeric($_POST['response_to'])) ? (int) $_POST['response_to'] : NULL;
-    $dataforce['only_delete_file'] = (isset($_POST['onlyimgdel'])) ? TRUE : FALSE;
 }
 
 if (!empty($_GET))

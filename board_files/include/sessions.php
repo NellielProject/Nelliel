@@ -71,7 +71,7 @@ function nel_initialize_session($dataforce)
             {
                 $_SESSION['ignores'] = array('default' => false);
                 $_SESSION['active'] = true;
-                $_SESSION['username'] = $dataforce['username'];
+                $_SESSION['username'] = $_POST['username'];
                 $_SESSION['login_time'] = time();
                 $_SESSION['last_activity'] = time();
             }

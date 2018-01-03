@@ -14,8 +14,8 @@ function nel_verify_login_or_session($dataforce)
 
     if (isset($dataforce['mode']) && $dataforce['mode'] === 'admin->login')
     {
-        if ($dataforce['username'] !== '' &&
-             nel_password_verify($dataforce['admin_pass'], $authorize->get_user_info($dataforce['username'], 'user_password')))
+        if ($_POST['username']!== '' &&
+        nel_password_verify($_POST['super_sekrit'], $authorize->get_user_info($_POST['username'], 'user_password')))
         {
             $dataforce['login_valid'] = true;
             $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip" = ?');
