@@ -3,6 +3,10 @@
 function nel_db_insert_initial_post($time, $post_data)
 {
     $dbh = nel_database();
+    nel_utf8_to_numeric_html_entities($post_data['name']);
+    nel_utf8_to_numeric_html_entities($post_data['email']);
+    nel_utf8_to_numeric_html_entities($post_data['subject']);
+    nel_utf8_to_numeric_html_entities($post_data['comment']);
     $columns = array('poster_name', 'post_password', 'tripcode', 'secure_tripcode', 'email', 'subject', 'comment',
         'ip_address', 'has_file', 'file_count', 'post_time', 'op', 'sage', 'mod_post');
     $values = $dbh->generateParameterIds($columns);
@@ -60,11 +64,16 @@ function nel_db_update_thread($new_post_info, $thread_info)
 
 function nel_db_insert_new_files($parent_id, $new_post_info, $files)
 {
+    $dbh = nel_database();
     $i = 1;
 
     foreach ($files as $file)
     {
-        $dbh = nel_database();
+        nel_utf8_to_numeric_html_entities($file['filename']);
+        nel_utf8_to_numeric_html_entities($file['extension']);
+        nel_utf8_to_numeric_html_entities($file['preview_name']);
+        nel_utf8_to_numeric_html_entities($file['source']);
+        nel_utf8_to_numeric_html_entities($file['license']);
         $columns = array('parent_thread', 'post_ref', 'file_order', 'supertype', 'subtype', 'mime', 'filename',
         'extension', 'image_width', 'image_height', 'preview_name', 'preview_width', 'preview_height', 'filesize',
         'md5', 'sha1', 'source', 'license');

@@ -53,31 +53,47 @@ function nel_true_empty($var)
     return false;
 }
 
-// TODO: Update this, it probably doesn't even work
-function nel_parse_links($matches)
+function nel_create_post_links($matches)
 {
-    global $link_resno;
     $dbh = nel_database();
-    $back = ($link_resno === 0) ? PAGE_DIR : '../';
-    $prepared = $dbh->prepare('SELECT response_to FROM ' . POST_TABLE . ' WHERE post_number=? LIMIT 1');
-    $prepared->bindParam(1, $matches[1], PDO::PARAM_INT);
-    $prepared->execute();
-    $link = $prepared->fetch(PDO::FETCH_NUM);
-    $prepared->closeCursor();
+    $prepared = $dbh->prepare('SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ? LIMIT 1');
+    $parent_thread = $dbh->executePreparedFetch($prepared, array($matches[2]), PDO::FETCH_COLUMN);
 
-    if ($link === false)
+    if ($parent_thread === false)
     {
         return $matches[0];
     }
 
-    if ($link[0] == '0')
+    $link_element = $dom->getElementsByClassName('post-link-quote')->item(0);
+    $link_element->extSetAttribute('href', PAGE_DIR . $parent_thread . '/' . $matches[2] . '.html', 'url');
+    $link_element->setContent($matches[1] . $matches[2]);
+
+
+}
+
+function nel_utf8_to_numeric_html_entities(&$input, $non_ascii_only = true)
+{
+    if($non_ascii_only)
     {
-        return '<a href="' . $back . $matches[1] . '/' . $matches[1] . '.html" class="link_quote">>>' . $matches[1] .
-        '</a>';
+        $regex = '#([^[:ascii:]])#Su';
     }
     else
     {
-        return '<a href="' . $back . $link . '/' . $link . '.html#' . $matches[1] . '" class="link_quote">>>' .
-        $matches[1] . '</a>';
+        $regex = '#(.)#Su';
     }
+
+    $input = preg_replace_callback($regex,
+    function ($matches)
+    {
+        return '&#' . utf8_ord($matches[0]). ';';
+    }, $input);
+}
+
+function nel_numeric_html_entities_to_utf8(&$input)
+{
+    $input = preg_replace_callback('#&#[0-9]+;#Su',
+    function ($matches)
+    {
+        return utf8_chr(substr($matches[0], 2, -1));
+    }, $input);
 }

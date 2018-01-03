@@ -397,12 +397,11 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     {
         $post_files_container->removeSelf();
     }
-    // Up to 0.0041 (no file)
-    // Approx 0.00030 per file
 
     $post_data['comment'] = nel_newline_cleanup($post_data['comment']);
-    $post_data['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $post_data['comment']);
-    $post_data['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'nel_parse_links', $post_data['comment']);
+    //$post_data['comment'] = preg_replace_callback('#(>>)([0-9]+)#', 'nel_create_post_links', $post_data['comment']);
+    //$post_data['comment'] = preg_replace('#(^|>)(&gt;[^<]*|ÅÑ[^<]*)#', '$1<span class="post-quote">$2</span>', $post_data['comment']);
+    //$post_data['comment'] = preg_replace_callback('#&gt;&gt;([0-9]+)#', 'nel_parse_links', $post_data['comment']);
 
     if (nel_clear_whitespace($post_data['comment']) === '')
     {
@@ -478,4 +477,19 @@ function nel_render_thread_form_bottom($dom)
     }
 
     $dom->getElementById('outer-div')->appendChild($footer_form_element);
+}
+
+function nel_post_bits_dom()
+{
+    static $dom;
+
+    if(!isset($dom))
+    {
+        $render = new NellielTemplates\RenderCore();
+        $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+        $dom = $render->newDOMDocument();
+        $render->loadTemplateFromFile($dom, 'post_bits.html');
+    }
+
+    return $dom;
 }
