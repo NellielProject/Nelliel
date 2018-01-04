@@ -440,6 +440,7 @@ function nel_render_post_adjust_relative($node, $gen_data)
 {
     $post_id = $gen_data['post']['parent_thread'] . '_' . $gen_data['post']['post_number'];
     $new_post_dom = $node->ownerDocument->copyNodeIntoDocument($node, true);
+    $new_post_dom->getElementById('post-quote-link-' . $post_id)->modifyAttribute('href', '../../', 'before');
     $sticky_element = $new_post_dom->getElementById('sticky-icon-');
 
     if (!is_null($sticky_element))
