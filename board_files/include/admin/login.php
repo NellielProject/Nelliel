@@ -14,12 +14,39 @@ function nel_verify_login_or_session($dataforce)
 
     if (isset($dataforce['mode']) && $dataforce['mode'] === 'admin->login')
     {
-        if ($_POST['username']!== '' &&
-        nel_password_verify($_POST['super_sekrit'], $authorize->get_user_info($_POST['username'], 'user_password')))
+        if ($_POST['username'] !== '' && $authorize->user_exists($_POST['username']))
         {
-            $dataforce['login_valid'] = true;
-            $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip" = ?');
-            $dbh->executePrepared($prepared, array($_SERVER['REMOTE_ADDR']), true);
+            $user_login_fails = $authorize->get_user_info($_POST['username'], 'failed_logins');
+            $last_user_attempt = $authorize->get_user_info($_POST['username'], 'last_failed_login');
+
+            if($user_login_fails > 10 && time() - $last_user_attempt < 300)
+            {
+                nel_derp(302, nel_stext('ERROR_302'));
+            }
+
+            if($user_login_fails > 20 && time() - $last_user_attempt < 1800)
+            {
+                nel_derp(303, nel_stext('ERROR_303'));
+            }
+
+            if (nel_password_verify($_POST['super_sekrit'], $authorize->get_user_info($_POST['username'], 'user_password')))
+            {
+                $dataforce['login_valid'] = true;
+                $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip" = ?');
+                $dbh->executePrepared($prepared, array($_SERVER['REMOTE_ADDR']), true);
+                $user_login_fails = 0;
+                $attempt_time = 0;
+            }
+            else
+            {
+                $user_login_fails ++;
+                $attempt_time = time();
+            }
+
+            $prepared = $dbh->prepare('UPDATE "' . USER_TABLE . '" SET "failed_logins" = ?, "last_failed_login" = ? WHERE "user_id" = ?');
+            $dbh->executePrepared($prepared, array($user_login_fails, $attempt_time, $_POST['username']), true);
+
+            nel_derp(300, nel_stext('ERROR_300'));
         }
         else
         {
