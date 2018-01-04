@@ -46,7 +46,10 @@ function nel_verify_login_or_session($dataforce)
             $prepared = $dbh->prepare('UPDATE "' . USER_TABLE . '" SET "failed_logins" = ?, "last_failed_login" = ? WHERE "user_id" = ?');
             $dbh->executePrepared($prepared, array($user_login_fails, $attempt_time, $_POST['username']), true);
 
-            nel_derp(300, nel_stext('ERROR_300'));
+            if(!$dataforce['login_valid'])
+            {
+                nel_derp(300, nel_stext('ERROR_300'));
+            }
         }
         else
         {
