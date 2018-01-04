@@ -35,6 +35,7 @@ function nel_process_file_info()
 
         $new_file['source'] = nel_check_post_entry($post_file_info['sauce'], 'string');
         $new_file['license'] = nel_check_post_entry($post_file_info['lol_drama'], 'string');
+        $new_file['alt_text'] = nel_check_post_entry($post_file_info['alt_text'], 'string');
         array_push($files, $new_file);
 
         if ($file_count == BS_MAX_POST_FILES)

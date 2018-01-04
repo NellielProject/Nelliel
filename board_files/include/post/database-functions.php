@@ -76,7 +76,7 @@ function nel_db_insert_new_files($parent_id, $new_post_info, $files)
         nel_utf8_to_numeric_html_entities($file['license']);
         $columns = array('parent_thread', 'post_ref', 'file_order', 'supertype', 'subtype', 'mime', 'filename',
         'extension', 'image_width', 'image_height', 'preview_name', 'preview_width', 'preview_height', 'filesize',
-        'md5', 'sha1', 'source', 'license');
+        'md5', 'sha1', 'source', 'license', 'alt_text');
         $values = $dbh->generateParameterIds($columns);
         $query = $dbh->buildBasicInsertQuery(FILE_TABLE, $columns, $values);
         $prepared = $dbh->prepare($query);
@@ -98,6 +98,7 @@ function nel_db_insert_new_files($parent_id, $new_post_info, $files)
         $prepared->bindValue(':sha1', $file['sha1'], PDO::PARAM_STR);
         $prepared->bindValue(':source', $file['source'], PDO::PARAM_STR);
         $prepared->bindValue(':license', $file['license'], PDO::PARAM_STR);
+        $prepared->bindValue(':alt_text', $file['alt_text'], PDO::PARAM_STR);
         $dbh->executePrepared($prepared);
         ++ $i;
     }

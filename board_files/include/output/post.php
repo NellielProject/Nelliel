@@ -374,7 +374,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                 $preview_element->extSetAttribute('src', $file['preview_location'], 'none');
                 $preview_element->extSetAttribute('width', $file['preview_width']);
                 $preview_element->extSetAttribute('height', $file['preview_height']);
-                $preview_element->extSetAttribute('alt', $file['filesize'] . ' KB)');
+                $preview_element->extSetAttribute('alt', $file['alt_text']);
                 $preview_element->extSetAttribute('class', $post_type_class . $multiple_class . 'post-preview');
             }
             else

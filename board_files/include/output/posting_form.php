@@ -53,6 +53,7 @@ function nel_render_posting_form($dataforce, $render)
     $file_block = $dom->getElementById('form-file-1');
     $source_block = $dom->getElementById('form-sauce-1');
     $license_block = $dom->getElementById('form-lol_drama-1');
+    $alt_text_block = $dom->getElementById('form-alt_text-1');
     $posting_form_table = $dom->getElementById('posting-form-table');
     $source_block->getElementById('sauce-1')->extSetAttribute('maxlength', BS_MAX_SOURCE_LENGTH);
     $license_block->getElementById('lol_drama-1')->extSetAttribute('maxlength', BS_MAX_LICENSE_LENGTH);
@@ -66,6 +67,8 @@ function nel_render_posting_form($dataforce, $render)
         $temp_source_block->changeId('form-sauce-' . $i);
         $temp_license_block = $license_block->cloneNode(true);
         $temp_license_block->changeId('form-lol_drama-' . $i);
+        $temp_alt_text_block = $alt_text_block->cloneNode(true);
+        $temp_alt_text_block->changeId('form-alt_text-' . $i);
         $insert_before_point = $dom->getElementById('form-fgsfds');
         $posting_form_table->insertBefore($temp_file_block, $insert_before_point);
         $posting_form_table->insertBefore($temp_source_block, $insert_before_point);
@@ -86,6 +89,9 @@ function nel_render_posting_form($dataforce, $render)
         $add_license_element = $temp_file_block->getElementById('add-lol_drama-1');
         $add_license_element->extSetAttribute('onclick', 'addMoarInput(\'form-lol_drama-' . $i . '\',true)');
         $add_license_element->changeId('add-lol_drama-' . $i);
+        $add_alt_text_element = $temp_file_block->getElementById('add-alt_text-1');
+        $add_alt_text_element->extSetAttribute('onclick', 'addMoarInput(\'form-alt_text-' . $i . '\',true)');
+        $add_alt_text_element->changeId('add-alt_text-' . $i);
 
         $for_label_sauce = $temp_source_block->doXPathQuery(".//label[@for='sauce-1']")->item(0);
         $for_label_sauce->extSetAttribute('for', 'sauce-' . $i);
@@ -100,6 +106,13 @@ function nel_render_posting_form($dataforce, $render)
         $license_element->extSetAttribute('name', 'new_post[file_info][file_' . $i . '][lol_drama]');
         $license_element->extSetAttribute('maxlength', BS_MAX_LICENSE_LENGTH);
         $license_element->changeId('lol_drama-' . $i);
+
+        $for_label_alt_text = $temp_alt_text_block->doXPathQuery(".//label[@for='alt_text-1']")->item(0);
+        $for_label_alt_text->extSetAttribute('for', 'alt_text-' . $i);
+        $alt_text_element = $temp_alt_text_block->getElementById('alt_text-1');
+        $alt_text_element->extSetAttribute('name', 'new_post[file_info][file_' . $i . '][alt_text]');
+        $alt_text_element->extSetAttribute('maxlength', '255');
+        $alt_text_element->changeId('alt_text-' . $i);
     }
 
     $fgsfds_form = $dom->getElementById('form-fgsfds');

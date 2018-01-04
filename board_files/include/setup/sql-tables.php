@@ -181,6 +181,7 @@ function nel_create_files_table($table_name)
         "sha256"            CHAR(64) NOT NULL,
         "source"            VARCHAR(255) DEFAULT NULL,
         "license"           VARCHAR(255) DEFAULT NULL,
+        "alt_text"          VARCHAR(255) DEFAULT NULL,
         "exif"              TEXT DEFAULT NULL,
         "extra_meta"        TEXT DEFAULT NULL
     ) ' . $options . ';';
