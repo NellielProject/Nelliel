@@ -13,6 +13,7 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . CONF_BOARD_DIR . '\');};');
+    $dom->getElementById('js-style-set')->setContent('processCookie("style-' . CONF_BOARD_DIR . '");');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JSDIR . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
@@ -79,8 +80,8 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     foreach ($a_elements as $element)
     {
         $content = $element->getContent();
-        $element->extSetAttribute('onclick', 'changeCSS(\'' . $content . '\', \'style-' . CONF_BOARD_DIR .
-             '\'); return false;');
+        //$element->extSetAttribute('onclick', 'changeCSS(\'' . $content . '\', \'style-' . CONF_BOARD_DIR .
+       //      '\'); return false;');
     }
 
     $top_admin_span = $dom->getElementById('top-admin-span');
