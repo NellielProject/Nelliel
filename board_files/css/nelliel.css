@@ -152,15 +152,23 @@ a.post-link:visited {
 
 /* Files */
 .file-delete-box {
-    padding-left: 15px;
+
 }
 
 .multi-file-delete-box {
-    margin-left: 0px;
+
 }
 
 .op-fileinfo {
-    
+    float: left;
+    text-align: left;
+    text-decoration: none;
+	white-space: nowrap;
+    padding: 2px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 3px;
+    font-size: 0.95em;
 }
 
 .op-multiple-fileinfo {
@@ -176,7 +184,15 @@ a.post-link:visited {
 }
 
 .reply-fileinfo {
-    
+    float: left;
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 2px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin: 3px;
+    font-size: 0.95em;
 }
 
 .reply-multiple-fileinfo {
@@ -283,7 +299,6 @@ a.mailto-name:visited {
 .op-post-preview {
     text-align: left;
     float: left;
-    padding-left: 20px;
     padding-right: 15px;
     padding-top: 3px;
     padding-bottom: 3px;
@@ -300,7 +315,6 @@ a.mailto-name:visited {
 .reply-post {
     background: #77EEFF;
     border: 1px solid #77DDFF;
-    /*float: left;*/
     padding: 5px;
     min-width: 15em;
     max-width: 60em;
@@ -330,8 +344,6 @@ a.mailto-name:visited {
 
 .reply-post-preview {
     text-align: left;
-    /*float: left;*/
-    padding-left: 20px;
     padding-top: 3px;
     padding-bottom: 10px;
     border: 0;
@@ -383,3 +395,12 @@ a.mailto-name:visited {
     margin: auto;
     max-width: 60em;
 }
+
+.hidden {
+	display: none;
+}
+
+.post-corral {
+	
+}
+})
