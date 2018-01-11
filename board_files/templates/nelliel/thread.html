@@ -1,6 +1,6 @@
 	<form id="form-post-index" accept-charset="utf-8" action="" method="post">
 		<div id="outer-div" class="outer-div">
-			<div id="post-id-" class="corral">
+			<div id="post-id-" class="post-corral">
 				<a id="p-number"></a>
 				<div id="indents-" class="indents">&gt;&gt;</div>
 				<div id="post-container-" class="op-post">
@@ -16,7 +16,8 @@
 						<a id="post-quote-link-" href="" class="post-link">post number</a>&nbsp;
 						<img id="sticky-icon-" src="" width="22" height="22" alt="THREAD_STICKY" data-i18n="neltext" data-i18n-attributes="alt">
 						<span>[<a id="reply-to-link-" href="" data-i18n="neltext">LINK_REPLY</a>]</span>
-						<span>[<a href="" id="expLink" data-i18n="neltext">THREAD_EXPAND</a>]</span>
+						<span>[<a id="expandLink" data-i18n="neltext" data-command="expand-thread">THREAD_EXPAND</a>]</span>
+						<span class="hidden">[<a id="collapseLink" data-i18n="neltext" data-command="collapse-thread">THREAD_COLLAPSE</a>]</span>
 						<br>
 						<span id="mod-tools-1"><br>IP: <b id="ip-address-display">ip address</b>
 						<input id="set-ban-details" type="button" onclick="" value="Set Ban Details">
@@ -39,7 +40,7 @@
 						</div>
 					</div>
 					<div id="post-contents-" class="-post-contents">
-						<p id="-post-text" class="-post-text">
+						<p id="-post-text" class="-post-text" style="height: 3em; line-height:1em; overflow:hidden;">
 							<span id="post-comment-"></span>
 							<span id="mod-comment-" class="mod-comment"><b></b></span>
 						</p>

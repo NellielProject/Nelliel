@@ -53,6 +53,7 @@ $lang_singular = array(
     'FORM_LABEL_PASS' => 'Password',  // Password for deleting post
     'FORM_LABEL_SOURCE' => 'Source',  // Source field
     'FORM_LABEL_LICENSE' => 'License',  // License field
+    'FORM_LABEL_ALT_TEXT' => 'Alt Text', // Alt text
 
 
     'TEXT_REPLYMODE' => 'Posting mode: Reply',  // Reply mode
@@ -71,6 +72,7 @@ $lang_singular = array(
     'THREAD_STICKY' => 'Sticky',  // Sticky
     'THREAD_STICKY_ICON' => 'sticky.png',  // Sticky icon
     'THREAD_EXPAND' => 'Expand Thread',  // Expand thread
+    'THREAD_COLLAPSE' => 'Collapse Thread',  // Collapse thread
     'THREAD_MOAR_DATA' => 'Show more file info',  // Moar info
     'THREAD_LESS_DATA' => 'Show less file info',  // Less info
 
@@ -285,6 +287,7 @@ $lang_singular = array(
     'MANAGE_SET_MAX_SLENGTH' => 'Maximum length of subject (255 or less)',  // Subject length
     'MANAGE_SET_MAX_CLENGTH' => 'Maximum length of comment (# of characters)',  // Comment length
     'MANAGE_SET_MAX_CLINE' => 'Maximum number of lines in comment',  // Comment lines
+    'MANAGE_SET_DISPLAY_CLINE' => 'How many lines of comment to display',  // Comment lines
     'MANAGE_SET_MAX_SRCLENGTH' => 'Maximum length of source field (255 or less)',  // Source length
     'MANAGE_SET_MAX_LLENGTH' => 'Maximum length of license field (255 or less)',  // License length
     'MANAGE_SET_IMGREQ_T' => 'Require image or file to start new thread',  // Require file new thread

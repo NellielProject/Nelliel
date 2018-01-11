@@ -1,81 +1,92 @@
-function doImportantStuff(board_id)
-{
-	processCookie("style-"+board_id);
-	fillForms(board_id);
+function doImportantStuff(board_id) {
+    setupListeners();
+    processCookie("style-" + board_id);
+    fillForms(board_id);
 }
 
-function setCookie(c_name,value,expiredays)
-{
-    var exdate=new Date();
-    exdate.setDate(exdate.getDate()+expiredays);
-    document.cookie=c_name+ "=" +escape(value)+((expiredays==null) ? "" : ";expires="+exdate.toGMTString())+";path=/";
+function setupListeners() {
+    var post_elements = document.getElementsByClassName('post-corral');
+
+    for (var i = 0; i < post_elements.length; i++) {
+        post_elements[i].addEventListener('click', processPostClicks);
+    }
 }
 
-function processCookie(styledir)
-{
+function processPostClicks(event) {
+    if (event.target.hasAttribute("data-command")) {
+        var id1 = this.id.replace("post-id-", "");
+        var thread_id = id1.split("_")[0];
+        var post_id = id1.split("_")[1];
+        var command = event.target.getAttribute("data-command");
+
+        if (command === "expand-thread") {
+            expandCollapseThread(thread_id, "expand")
+        } else if (command === "collapse-thread") {
+            expandCollapseThread(thread_id, "collapse")
+        }
+    }
+
+}
+
+function setCookie(c_name, value, expiredays) {
+    var exdate = new Date();
+    exdate.setDate(exdate.getDate() + expiredays);
+    document.cookie = c_name + "=" + escape(value) + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString())
+            + ";path=/";
+}
+
+function processCookie(styledir) {
     var S = getCookie(styledir);
-    
-    with(document)
-    {
-        if(S != null)
-        {
-            changeCSS(S,styledir);
+
+    with (document) {
+        if (S != null) {
+            changeCSS(S, styledir);
         }
     }
 }
-    
-function getCookie(key)
-{
+
+function getCookie(key) {
     var csplit = document.cookie.split('; ');
-    for(var i=0;i < csplit.length;i++)
-    {
+
+    for (var i = 0; i < csplit.length; i++) {
         var s2 = csplit[i].split('=');
-        if(s2[0] == key)
-        {
+        if (s2[0] == key) {
             return s2[1];
         }
     }
+
     return null;
 }
 
-function displayImgMeta(img_element,link_element,display,link_text)
-{
+function displayImgMeta(img_element, link_element, display, link_text) {
     var element = document.getElementById(img_element);
     var element2 = document.getElementById(link_element);
-    if (!element || !element2)
-    {
+
+    if (!element || !element2) {
         return;
-    }
-    else
-    {
-        if (element.style.display == 'none' || element.style.display == '')
-        {
+    } else {
+        if (element.style.display == 'none' || element.style.display == '') {
             element.style.display = 'inline';
             initial_text = element2.innerHTML;
             element.style.display = 'inline';
             element2.innerHTML = link_text;
-        }
-        else
-        {
+        } else {
             element.style.display = 'none';
             element2.innerHTML = initial_text;
         }
     }
 }
 
-function addMoarInput(inputId,hide)
-{
-    document.getElementById(inputId).className = document.getElementById(inputId).className.replace(' none','');
+function addMoarInput(inputId, hide) {
+    document.getElementById(inputId).className = document.getElementById(inputId).className.replace(' none', '');
 
-    if(hide)
-    {
+    if (hide) {
         document.getElementById('add' + inputId).style.display = 'none';
     }
 
 }
 
-function fillForms(board)
-{
+function fillForms(board) {
     var P = getCookie("pwd-" + board);
     var N = getCookie("name-" + board);
     document.getElementById("posting-form-sekrit").value = P;
@@ -83,104 +94,65 @@ function fillForms(board)
     document.getElementById("not-anonymous").value = N;
 }
 
-function clientSideInclude(id, id2, url, url2, link_text)
-{
-    var req = false;
-    var element = document.getElementById(id);
-    var element2 = document.getElementById(id2);
+function expandCollapseThread(thread_id, command) {
+    var target_element = document.getElementById("thread-expand-" + thread_id);
+    var expand_element = document.getElementById("expandLink" + thread_id);
+    var collapse_element = document.getElementById("collapseLink" + thread_id);
 
-    if (!element)
-    {
+    if (!target_element) {
         return;
     }
-    else
-    {
-        // For Safari, Firefox, and other non-MS browsers
-        if (window.XMLHttpRequest)
-        {
-            try
-            {
-                req = new XMLHttpRequest();
-            }
-            catch (e)
-            {
-                req = false;
-            }
-        }
-        else if (window.ActiveXObject)
-        {
-            // For Internet Explorer on Windows
-            try
-            {
-                req = new ActiveXObject("Msxml2.XMLHTTP");
-            }
-            catch (e) 
-            {
-                try
-                {
-                    req = new ActiveXObject("Microsoft.XMLHTTP");
-                }
-                catch (e)
-                {
-                    req = false;
-                }
+
+    var url = "threads/" + thread_id + "/" + thread_id + "-" + command + ".html";
+    var request = new XMLHttpRequest();
+    request.open('GET', url);
+    request.onload = function() {
+        if (request.status === 200) {
+            if (command === "expand") {
+                target_element.innerHTML = request.responseText;
+                expand_element.parentNode.className += " hidden";
+                collapse_element.parentNode.className = collapse_element.className.replace(/\bhidden\b/g, "")
+            } else if (command === "collapse") {
+                target_element.innerHTML = request.responseText;
+                collapse_element.parentNode.className += " hidden";
+                expand_element.parentNode.className = expand_element.className.replace(/\bhidden\b/g, "")
             }
         }
-        if (req)
-        {
-            // Synchronous request, wait till we have it all
-            if (element2.innerHTML != link_text)
-            {
-                req.open('GET', url, false);
-                req.send(null);
-                element.innerHTML = req.responseText;
-                stored_text = element2.innerHTML;
-                element2.innerHTML = link_text;
-            }
-            else
-            {
-                req.open('GET', url2, false);
-                req.send(null);
-                element.innerHTML = req.responseText;
-                element2.innerHTML = stored_text;
-            }
-        }
-    }
+    };
+
+    request.send();
 }
 
 function addBanDetails(id, num, name, host) {
     var element = document.getElementById(id);
-    if (!element)
-    {
+    if (!element) {
         return;
     }
-    
-    element.innerHTML = '<table>' +
-    '<tr><td>B& from posting: <input type="checkbox" name="postban' + num + '" value=' + num + '></td><td class="text-center">Days: <input type="text" name="timedays' + num + '" size="4" maxlength="4" value="3">' +
-    ' &nbsp;&nbsp;&nbsp; Hours: <input type="text" name="timehours' + num + '" size="4" maxlength="4" value="0"></td></tr>' +
-    '<tr><td>B& post message (optional): </td><td><input type="text" name="banmessage' + num + '" size="32" maxlength="32" value=""></td></tr>' +
-    '<tr><td>B& reason (optional): </td><td><textarea name="banreason' + num + '" cols="32" rows="3"></textarea>' +
-    '<input type="hidden" name="banname' + num + '" value="' + name + '"><input type="hidden" name="banhost' + num + '" value="' + host + '"></td></tr>' +
-'</table>';
+
+    element.innerHTML = '<table>' + '<tr><td>B& from posting: <input type="checkbox" name="postban' + num + '" value='
+            + num + '></td><td class="text-center">Days: <input type="text" name="timedays' + num
+            + '" size="4" maxlength="4" value="3">' + ' &nbsp;&nbsp;&nbsp; Hours: <input type="text" name="timehours'
+            + num + '" size="4" maxlength="4" value="0"></td></tr>'
+            + '<tr><td>B& post message (optional): </td><td><input type="text" name="banmessage' + num
+            + '" size="32" maxlength="32" value=""></td></tr>'
+            + '<tr><td>B& reason (optional): </td><td><textarea name="banreason' + num
+            + '" cols="32" rows="3"></textarea>' + '<input type="hidden" name="banname' + num + '" value="' + name
+            + '"><input type="hidden" name="banhost' + num + '" value="' + host + '"></td></tr>' + '</table>';
 }
 
-function postQuote(num)
-{
+function postQuote(num) {
     document.postingform.wordswordswords.value = document.postingform.wordswordswords.value + '>>' + num + '\n';
 }
 
-function changeCSS(style,styledir)
-{
+function changeCSS(style, styledir) {
     var allstyles = document.getElementsByTagName("link");
-    
-    for ( i = 0; i < allstyles.length; i++ )
-    {
+
+    for (i = 0; i < allstyles.length; i++) {
         allstyles[i].disabled = true;
-        
-        if (allstyles[i].title == style)
-        {
+
+        if (allstyles[i].title == style) {
             allstyles[i].disabled = false;
         }
     }
-    setCookie(styledir,style,9001);
+    setCookie(styledir, style, 9001);
 }

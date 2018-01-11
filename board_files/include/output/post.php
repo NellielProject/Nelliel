@@ -215,17 +215,15 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     }
 
     $thread_link_html = PAGE_DIR . $thread_id . '/' . $thread_id;
-
-    $expand_js = 'javascript:clientSideInclude(\'thread-expand-' . $thread_id . '\',\'expLink' . $thread_id . '\',\'' .
-         $thread_link_html . '-expand.html\',\'' . $thread_link_html . '-collapse.html\',\'Collapse Thread\')';
-
-    $expand_link_element = $new_post_dom->getElementById('expLink');
-    $expand_link_element->changeId('expLink' . $thread_id);
-    $expand_link_element->extSetAttribute('href', $expand_js);
+    $expand_link_element = $new_post_dom->getElementById('expandLink');
+    $expand_link_element->changeId('expandLink' . $thread_id);
+    $collapse_link_element = $new_post_dom->getElementById('collapseLink');
+    $collapse_link_element->changeId('collapseLink' . $thread_id);
 
     if (!$dataforce['index_rendering'] || $response || !$dataforce['abbreviate'])
     {
         $expand_link_element->parentNode->removeSelf();
+        $collapse_link_element->parentNode->removeSelf();
     }
 
     $mod_tools_1 = $new_post_dom->getElementById('mod-tools-1');
