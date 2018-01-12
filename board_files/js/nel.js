@@ -89,14 +89,14 @@ function inlineExpandReduce(element, command) {
     if (element.hasAttribute("data-img-dims")) {
         var new_location = element.getAttribute("data-other-loc");
         var old_location = element.getAttribute("src");
-        var image_dims = element.getAttribute("data-img-dims");
+        var image_dims = element.getAttribute("data-other-dims");
         var width = image_dims.match(/w([0-9]+)/)[1]s;
         var height = image_dims.match(/h([0-9]+)/)[1];
         var old_width = element.getAttribute("width");
         var old_height = element.getAttribute("height");
         element.setAttribute("width", width);
         element.setAttribute("height", height);
-        element.setAttribute("data-img-dims", 'w' + old_width + 'h' + old_height);
+        element.setAttribute("data-other-dims", 'w' + old_width + 'h' + old_height);
         element.setAttribute("src", new_location);
         element.setAttribute("data-other-loc", old_location);
 

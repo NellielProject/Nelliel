@@ -370,7 +370,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
                 $preview_element->extSetAttribute('height', $file['preview_height']);
                 $preview_element->extSetAttribute('alt', $file['alt_text']);
                 $preview_element->extSetAttribute('class', $post_type_class . $multiple_class . 'post-preview');
-                $preview_element->extSetAttribute('data-img-dims', 'w' . $file['image_width'] . 'h' . $file['image_height']);
+                $preview_element->extSetAttribute('data-other-dims', 'w' . $file['image_width'] . 'h' . $file['image_height']);
                 $preview_element->extSetAttribute('data-other-loc', $file['file_location']);
             }
             else
