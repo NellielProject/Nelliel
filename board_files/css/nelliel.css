@@ -207,6 +207,10 @@ a.post-link:visited {
     font-size: 0.95em;
 }
 
+.file-meta {
+	display: inline;
+}
+
 .source {
     padding-left: 20px;
 }

@@ -295,10 +295,9 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             $filesize_display_element->setContent($filesize_display);
             $filesize_display_element->changeId('filesize-display-' . $file_id);
             $show_file_meta_element = $temp_file_dom->getElementById('show-file-meta-');
-            $show_script = 'javascript:displayImgMeta(\'file-meta-' . $file_id . '\',\'show-file-meta-' . $file_id .
-                 '\',\'none\',\'' . nel_stext('THREAD_LESS_DATA') . '\')';
-            $show_file_meta_element->extSetAttribute('href', $show_script, 'none');
             $show_file_meta_element->changeId('show-file-meta-' . $file_id);
+            $hide_file_meta_element = $temp_file_dom->getElementById('hide-file-meta-');
+            $hide_file_meta_element->changeId('hide-file-meta-' . $file_id);
             $temp_file_dom->getElementById('file-meta-')->changeId('file-meta-' . $file_id);
 
             nel_encode_and_clean_output($file['source']);

@@ -29,11 +29,13 @@ function processPostClicks(event) {
             changeBoardStyle(event.target.getAttribute("data-id"));
         } else if (command === "post-quote") {
             postQuote(post_id);
+        } else if (command === "show-file-meta" || command === "hide-file-meta") {
+            showHideFileMeta(event.target, command);
         }
-    }
 
-    if (event.target.getAttribute("href").match(/^#$/) !== null) {
-        event.preventDefault();
+        if (event.target.getAttribute("href").match(/^#$/) !== null) {
+            event.preventDefault();
+        }
     }
 }
 
@@ -67,23 +69,25 @@ function getCookie(key) {
     return null;
 }
 
-function displayImgMeta(img_element, link_element, display, link_text) {
-    var element = document.getElementById(img_element);
-    var element2 = document.getElementById(link_element);
-
-    if (!element || !element2) {
-        return;
-    } else {
-        if (element.style.display == 'none' || element.style.display == '') {
-            element.style.display = 'inline';
-            initial_text = element2.innerHTML;
-            element.style.display = 'inline';
-            element2.innerHTML = link_text;
-        } else {
-            element.style.display = 'none';
-            element2.innerHTML = initial_text;
-        }
+function showHideFileMeta(element, command) {
+    if (command === "show-file-meta") {
+        var full_id = element.id.replace("show-file-meta-", "");
+        var meta_element = document.getElementById("file-meta-" + full_id);
+        var hide_meta_element = document.getElementById("hide-file-meta-" + full_id);
+        element.parentNode.className += " hidden";
+        hide_meta_element.parentNode.className = hide_meta_element.parentNode.className.replace(/\bhidden\b/g, "");
+        meta_element.className = meta_element.className.replace(/\bhidden\b/g, "");
     }
+
+    if (command === "hide-file-meta") {
+        var full_id = element.id.replace("hide-file-meta-", "");
+        var meta_element = document.getElementById("file-meta-" + full_id);
+        var show_meta_element = document.getElementById("show-file-meta-" + full_id);
+        element.parentNode.className += " hidden";
+        show_meta_element.parentNode.className = show_meta_element.parentNode.className.replace(/\bhidden\b/g, "");
+        meta_element.className += " hidden";
+    }
+
 }
 
 function addMoarInput(inputId, hide) {
@@ -120,11 +124,11 @@ function expandCollapseThread(thread_id, command) {
             if (command === "expand") {
                 target_element.innerHTML = request.responseText;
                 expand_element.parentNode.className += " hidden";
-                collapse_element.parentNode.className = collapse_element.className.replace(/\bhidden\b/g, "")
+                collapse_element.parentNode.className = collapse_element.className.replace(/\bhidden\b/g, "");
             } else if (command === "collapse") {
                 target_element.innerHTML = request.responseText;
                 collapse_element.parentNode.className += " hidden";
-                expand_element.parentNode.className = expand_element.className.replace(/\bhidden\b/g, "")
+                expand_element.parentNode.className = expand_element.className.replace(/\bhidden\b/g, "");
             }
         }
     };
