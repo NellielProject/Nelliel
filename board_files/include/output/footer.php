@@ -9,18 +9,6 @@ function nel_render_footer($render, $footer_form, $styles = true, $extra_links =
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'footer.html');
 
-    if($styles)
-    {
-        $a_elements = $dom->getElementById('bottom-styles-span')->getElementsByTagName('a');
-
-        foreach ($a_elements as $element)
-        {
-            $content = $element->getContent();
-            $element->extSetAttribute('onclick', 'changeCSS(\'' . $content . '\', \'style-' . CONF_BOARD_DIR .
-            '\'); return false;');
-        }
-    }
-
     if(!$extra_links)
     {
         $dom->getElementById('bottom-extra-links')->removeSelf();
