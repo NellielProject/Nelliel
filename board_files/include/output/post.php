@@ -62,12 +62,13 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     $start = microtime(true);
     $post_data = $gen_data['post'];
-    $post_id = $post_data['parent_thread'] . '_' . $post_data['post_number'];
+    $thread_id = $post_data['parent_thread'];
+    $post_id = $thread_id . '_' . $post_data['post_number'];
     $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-'), true);
     $new_post_element = $new_post_dom->getElementById('post-id-');
     $new_post_element->changeId('post-id-' . $post_id);
     $post_container = $new_post_dom->getElementById('post-container-');
-    $post_container->changeId('post-container-' . $post_data['post_number']);
+    $post_container->changeId('post-container-' . $post_id);
 
     if ($response)
     {
@@ -85,7 +86,6 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     $new_post_dom->getElementById('p-number')->changeId('p' . $post_data['post_number']);
     $rev_post_id = $post_data['post_number'] . '_' . $post_data['parent_thread'];
-    $thread_id = $post_data['parent_thread'];
 
     $post_header = $new_post_dom->getElementById('post-header-');
     $post_header->changeId('post-header-' . $post_id);
@@ -169,6 +169,9 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $post_num_link_element->setContent($post_data['post_number']);
     $post_num_link_element->extSetAttribute('href', PAGE_DIR . $post_data['parent_thread'] . '/' . $post_data['parent_thread'] . '.html#p' . $post_data['post_number'], 'none');
     $post_num_link_element->changeId('post-num-link-' . $post_id);
+    $post_num_ref_element = $new_post_dom->getElementById('post-num-ref-');
+    $post_num_ref_element->extSetAttribute('data-id', $post_id);
+    $post_num_ref_element->changeId('post-num-ref-' . $post_id);
     $sticky_icon_element = $new_post_dom->getElementById('sticky-icon-');
 
     if (!$response && $gen_data['thread']['sticky'])
@@ -206,8 +209,10 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
 
     $thread_link_html = PAGE_DIR . $thread_id . '/' . $thread_id;
     $expand_link_element = $new_post_dom->getElementById('expandLink');
+    $expand_link_element->extSetAttribute('data-id', $post_id);
     $expand_link_element->changeId('expandLink' . $thread_id);
     $collapse_link_element = $new_post_dom->getElementById('collapseLink');
+    $collapse_link_element->extSetAttribute('data-id', $post_id);
     $collapse_link_element->changeId('collapseLink' . $thread_id);
 
     if (!$dataforce['index_rendering'] || $response || !$dataforce['abbreviate'])
@@ -295,8 +300,10 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
             $filesize_display_element->setContent($filesize_display);
             $filesize_display_element->changeId('filesize-display-' . $file_id);
             $show_file_meta_element = $temp_file_dom->getElementById('show-file-meta-');
+            $show_file_meta_element->extSetAttribute('data-id', $file_id);
             $show_file_meta_element->changeId('show-file-meta-' . $file_id);
             $hide_file_meta_element = $temp_file_dom->getElementById('hide-file-meta-');
+            $hide_file_meta_element->extSetAttribute('data-id', $file_id);
             $hide_file_meta_element->changeId('hide-file-meta-' . $file_id);
             $temp_file_dom->getElementById('file-meta-')->changeId('file-meta-' . $file_id);
 
@@ -389,6 +396,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $post_contents_element->changeId('post-contents-' . $post_id);
     $post_contents_element->extSetAttribute('class', $post_type_class . 'post-contents');
     $post_text_element = $new_post_dom->getElementById('-post-text');
+    $post_text_element->extSetAttribute('class', $post_type_class . 'post-text');
     $post_text_element->changeId($post_id . '-post-text');
     $post_comment_element = $new_post_dom->getElementById('post-comment-');
     $post_comment_element->changeId('post-comment-' . $post_id);

@@ -115,11 +115,12 @@ function nel_thread_generator($dataforce, $write, $write_id)
 
         $new_post_element = nel_render_post_adjust_relative($base_new_post_node, $gen_data);
         $imported = $dom->importNode($new_post_element, true);
-        $dom->getElementById('outer-div')->appendChild($imported);
+        $dom->getElementById('thread-')->appendChild($imported);
         ++ $gen_data['post_counter'];
     }
 
     $dom->getElementById('post-id-')->removeSelf();
+    $dom->getElementById('thread-')->changeId('thread-' . $write_id);
     nel_render_insert_hr($dom);
     nel_render_thread_form_bottom($dom);
     $render->appendHTMLFromDOM($dom);

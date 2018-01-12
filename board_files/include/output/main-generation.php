@@ -74,18 +74,21 @@ function nel_main_thread_generator($dataforce, $write)
         {
             if ($gen_data['post_counter'] === -1)
             {
+                $current_thread_id = $front_page_list[$thread_counter];
+                $thread_element = $dom->getElementById('thread-')->cloneNode();
+                $thread_element->changeId('thread-' . $current_thread_id);
+                $dom->getElementById('outer-div')->appendChild($thread_element);
+                $post_append_target = $thread_element;
                 $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1');
-                $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($front_page_list[$thread_counter]), PDO::FETCH_ASSOC);
+                $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($current_thread_id), PDO::FETCH_ASSOC);
 
                 $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE .
                      '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
-                $treeline = $dbh->executePreparedFetchAll($prepared, array($front_page_list[$thread_counter]), PDO::FETCH_ASSOC);
+                $treeline = $dbh->executePreparedFetchAll($prepared, array($current_thread_id), PDO::FETCH_ASSOC);
 
                 $gen_data['thread']['expand_post'] = ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD) ? TRUE : FALSE;
                 $gen_data['thread']['first100'] = ($gen_data['thread']['post_count'] > 100) ? TRUE : FALSE;
                 $gen_data['post_counter'] = 0;
-
-                $post_append_target = $dom->getElementById('outer-div');
             }
 
             $abbreviate = ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD) ? true : false;
@@ -125,8 +128,8 @@ function nel_main_thread_generator($dataforce, $write)
             {
                 $expand_div = $dom->getElementById('thread-expand-')->cloneNode(true);
                 $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
-                $dom->getElementById('outer-div')->appendChild($expand_div);
-                $post_append_target = $dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id']);
+                $post_append_target->appendChild($expand_div);
+                $post_append_target = $expand_div;
                 $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
 
                 if ($abbreviate)
@@ -154,7 +157,8 @@ function nel_main_thread_generator($dataforce, $write)
         }
 
         $dom->getElementById('post-id-')->removeSelf();
-        $dom->getElementById('thread-expand-')->removeSelf();
+        $dom->getElementById('thread-')->removeSelf();
+
         $dataforce['posts_ending'] = true;
 
         // if not in res display mode

@@ -1,58 +1,60 @@
 	<form id="form-post-index" accept-charset="utf-8" action="" method="post">
 		<div id="outer-div" class="outer-div">
-			<div id="post-id-" class="post-corral">
-				<a id="p-number"></a>
-				<div id="indents-" class="indents">&gt;&gt;</div>
-				<div id="post-container-" class="op-post">
-					<div id="post-header-" class="post-header">
-						<input id="thread_thread-id" type="checkbox" name="thread_thread-id" value="deletethread_thread-id" title="Delete entire thread">
-						<input id="post_post-id" type="checkbox" name="post_post-id" value="deletepost_post-id" title="Delete entire post">
-						<span id="-subject" class="-subject">subject</span>
-						<span id="-poster-name" class="-poster-name">
-						<a id="poster-mailto" href="mailto:" class="mailto-name">email</a>
-						<span id="trip-line-">trips</span>
-						</span>
-						<span id="post-time-">post time</span>&nbsp;<span>No. </span>
-						<a id="post-num-link-" href="" class="post-link">0</a>
-						<span>[<a href="#" data-i18n="neltext" data-command="post-quote">LINK_POST_NUM_REF</a>]</span>
-						<img id="sticky-icon-" src="" width="22" height="22" alt="THREAD_STICKY" data-i18n="neltext" data-i18n-attributes="alt">
-						<span>[<a id="reply-to-link-" href="" data-i18n="neltext">LINK_REPLY</a>]</span>
-						<span>[<a href="#" id="expandLink" data-i18n="neltext" data-command="expand-thread">THREAD_EXPAND</a>]</span>
-						<span class="hidden">[<a href="#" id="collapseLink" data-i18n="neltext" data-command="collapse-thread">THREAD_COLLAPSE</a>]</span>
-						<br>
-						<span id="mod-tools-1"><br>IP: <b id="ip-address-display">ip address</b>
-						<input id="set-ban-details" type="button" onclick="" value="Set Ban Details">
-						</span>
-					</div>
-					<div id="post-files-container-" class="op-files-container">
-						<div id="fileinfo-" class="">
-							<input id="delete-file-" type="checkbox" name="file_file-id" value="deletefile_file-id" title="Delete file" class="file-delete-box">
-							<a href="" id="file-link-" target="_blank">filename</a>
-							<br><span id="filesize-display-">filesize</span>
-							<br>
-							<span>[<a id="show-file-meta-" href="#" data-i18n="neltext" data-command="show-file-meta">THREAD_MOAR_DATA</a>]</span>
-							<span class="hidden">[<a id="hide-file-meta-" href="#" data-i18n="neltext" data-command="hide-file-meta">THREAD_LESS_DATA</a>]</span>
-							<span id="file-meta-" class="file-meta hidden">
-							<br><span class="source" id="file-source-">Source: </span>
-							<br><span class="license" id="file-license-">License: </span>
-							<br><span class="md5" id="file-md5-">MD5: </span>
-							<br><span class="sha1" id="file-sha1-">SHA1: </span>
+			<div id="thread-" class="thread-corral">
+				<div id="post-id-" class="post-corral">
+					<a id="p-number"></a>
+					<div id="indents-" class="indents">&gt;&gt;</div>
+					<div id="post-container-" class="op-post">
+						<div id="post-header-" class="post-header">
+							<input id="thread_thread-id" type="checkbox" name="thread_thread-id" value="deletethread_thread-id" title="Delete entire thread">
+							<input id="post_post-id" type="checkbox" name="post_post-id" value="deletepost_post-id" title="Delete entire post">
+							<span id="-subject" class="-subject">subject</span>
+							<span id="-poster-name" class="-poster-name">
+							<a id="poster-mailto" href="mailto:" class="mailto-name">email</a>
+							<span id="trip-line-">trips</span>
 							</span>
+							<span id="post-time-">post time</span>&nbsp;<span>No. </span>
+							<a id="post-num-link-" href="" class="post-link">0</a>
+							<span>[<a id="post-num-ref-" href="#" data-i18n="neltext" data-command="post-ref" data-id="">LINK_POST_NUM_REF</a>]</span>
+							<img id="sticky-icon-" src="" width="22" height="22" alt="THREAD_STICKY" data-i18n="neltext" data-i18n-attributes="alt">
+							<span>[<a id="reply-to-link-" href="" data-i18n="neltext">LINK_REPLY</a>]</span>
+							<span>[<a href="#" id="expandLink" data-i18n="neltext" data-command="expand-thread" data-id="">THREAD_EXPAND</a>]</span>
+							<span class="hidden">[<a href="#" id="collapseLink" data-i18n="neltext" data-command="collapse-thread" data-id="">THREAD_COLLAPSE</a>]</span>
 							<br>
-							<a href="" id="file-location-" target="_blank"><img id="file-preview-" src="" width="" height="" alt="" class=""></a>
+							<span id="mod-tools-1"><br>IP: <b id="ip-address-display">ip address</b>
+							<input id="set-ban-details" type="button" onclick="" value="Set Ban Details">
+							</span>
+						</div>
+						<div id="post-files-container-" class="op-files-container">
+							<div id="fileinfo-" class="">
+								<input id="delete-file-" type="checkbox" name="file_file-id" value="deletefile_file-id" title="Delete file" class="file-delete-box">
+								<a href="" id="file-link-" target="_blank">filename</a>
+								<br><span id="filesize-display-">filesize</span>
+								<br>
+								<span>[<a id="show-file-meta-" href="#" data-i18n="neltext" data-command="show-file-meta" data-id="">THREAD_MOAR_DATA</a>]</span>
+								<span class="hidden">[<a id="hide-file-meta-" href="#" data-i18n="neltext" data-command="hide-file-meta" data-id="">THREAD_LESS_DATA</a>]</span>
+								<span id="file-meta-" class="hidden">
+								<br><span class="source" id="file-source-">Source: </span>
+								<br><span class="license" id="file-license-">License: </span>
+								<br><span class="md5" id="file-md5-">MD5: </span>
+								<br><span class="sha1" id="file-sha1-">SHA1: </span>
+								</span>
+								<br>
+								<a href="" id="file-location-" target="_blank"><img id="file-preview-" src="" width="" height="" alt="" class=""></a>
+							</div>
+						</div>
+						<div id="post-contents-" class="">
+							<p id="-post-text" class="">
+								<span id="post-comment-"></span>
+								<span id="mod-comment-" class="mod-comment"><b></b></span>
+							</p>
+							<div id="ban-"></div>
 						</div>
 					</div>
-					<div id="post-contents-" class="-post-contents">
-						<p id="-post-text" class="-post-text" style="height: 3em; line-height:1em; overflow:hidden;">
-							<span id="post-comment-"></span>
-							<span id="mod-comment-" class="mod-comment"><b></b></span>
-						</p>
-						<div id="ban-"></div>
-					</div>
 				</div>
-			</div>
-			<div id="thread-expand-">
-				<span class="omitted-posts"><span></span><span data-i18n="neltext">TEXT_OMITTED_POSTS</span><br></span>
+				<div id="thread-expand-">
+					<span class="omitted-posts"><span></span><span data-i18n="neltext">TEXT_OMITTED_POSTS</span><br></span>
+				</div>
 			</div>
 			<table id="footer-form" class="footer-form">
 				<tr>

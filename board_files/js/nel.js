@@ -4,7 +4,7 @@ function doImportantStuff(board_id) {
 }
 
 function setupListeners() {
-    var post_elements = document.getElementsByClassName('post-corral');
+    var post_elements = document.getElementsByClassName('thread-corral');
 
     for (var i = 0; i < post_elements.length; i++) {
         addListenerIfElementExists(post_elements[i], "click", processPostClicks);
@@ -25,9 +25,13 @@ function addListenerIfElementExists(element, event, event_handler)
 
 function processPostClicks(event) {
     if (event.target.hasAttribute("data-command")) {
-        var id1 = this.id.replace("post-id-", "");
-        var thread_id = id1.split("_")[0];
-        var post_id = id1.split("_")[1];
+        if (event.target.hasAttribute("data-id")) {
+            var full_id = this.id.replace("post-id-", "");
+            var id_set = event.target.getAttribute("data-id").split("_");
+            var thread_id = id_set[0];
+            var post_id = id_set[1];
+            var file_id = id_set[2];
+        }
         var command = event.target.getAttribute("data-command");
 
         if (command === "expand-thread") {
@@ -36,8 +40,8 @@ function processPostClicks(event) {
             expandCollapseThread(thread_id, "collapse");
         } else if (command === "change-style") {
             changeBoardStyle(event.target.getAttribute("data-id"));
-        } else if (command === "post-quote") {
-            postQuote(post_id);
+        } else if (command === "post-ref") {
+            postRef(post_id);
         } else if (command === "show-file-meta" || command === "hide-file-meta") {
             showHideFileMeta(event.target, command);
         } else if (command === "add-file-meta") {
@@ -149,12 +153,6 @@ function expandCollapseThread(thread_id, command) {
                 collapse_element.parentNode.className += " hidden";
                 expand_element.parentNode.className = expand_element.className.replace(/\bhidden\b/g, "");
             }
-            
-            var post_elements = target_element.getElementsByClassName('post-corral');
-
-            for (var i = 0; i < post_elements.length; i++) {
-                addListenerIfElementExists(post_elements[i], "click", processPostClicks);
-            }
         }
     };
 
@@ -178,7 +176,7 @@ function addBanDetails(id, num, name, host) {
             + '"><input type="hidden" name="banhost' + num + '" value="' + host + '"></td></tr>' + '</table>';
 }
 
-function postQuote(num) {
+function postRef(num) {
     document.postingform.wordswordswords.value = document.postingform.wordswordswords.value + '>>' + num + '\n';
 }
 
