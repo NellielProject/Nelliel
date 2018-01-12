@@ -165,20 +165,10 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $post_time_element = $new_post_dom->getElementById('post-time-');
     $post_time_element->setContent($post_time);
     $post_time_element->changeId('post-time-' . $post_id);
-    $post_quote_element = $new_post_dom->getElementById('post-quote-link-');
-    $post_quote_element->setContent($post_data['post_number']);
-    $post_quote_element->changeId('post-quote-link-' . $post_id);
-
-    if ($response)
-    {
-        $post_quote_element->extSetAttribute('href', 'javascript:postQuote(\'' . $post_data['post_number'] . '\')', 'none');
-    }
-    else
-    {
-        $post_quote_element->extSetAttribute('href', PAGE_DIR . $post_data['parent_thread'] . '/' .
-             $post_data['parent_thread'] . '.html', 'none');
-    }
-
+    $post_num_link_element = $new_post_dom->getElementById('post-num-link-');
+    $post_num_link_element->setContent($post_data['post_number']);
+    $post_num_link_element->extSetAttribute('href', PAGE_DIR . $post_data['parent_thread'] . '/' . $post_data['parent_thread'] . '.html#p' . $post_data['post_number'], 'none');
+    $post_num_link_element->changeId('post-num-link-' . $post_id);
     $sticky_icon_element = $new_post_dom->getElementById('sticky-icon-');
 
     if (!$response && $gen_data['thread']['sticky'])
@@ -438,7 +428,7 @@ function nel_render_post_adjust_relative($node, $gen_data)
 {
     $post_id = $gen_data['post']['parent_thread'] . '_' . $gen_data['post']['post_number'];
     $new_post_dom = $node->ownerDocument->copyNodeIntoDocument($node, true);
-    $new_post_dom->getElementById('post-quote-link-' . $post_id)->modifyAttribute('href', '../../', 'before');
+    $new_post_dom->getElementById('post-num-link-' . $post_id)->modifyAttribute('href', '../../', 'before');
     $sticky_element = $new_post_dom->getElementById('sticky-icon-');
 
     if (!is_null($sticky_element))

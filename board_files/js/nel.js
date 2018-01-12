@@ -22,15 +22,17 @@ function processPostClicks(event) {
         var command = event.target.getAttribute("data-command");
 
         if (command === "expand-thread") {
-            expandCollapseThread(thread_id, "expand")
+            expandCollapseThread(thread_id, "expand");
         } else if (command === "collapse-thread") {
-            expandCollapseThread(thread_id, "collapse")
+            expandCollapseThread(thread_id, "collapse");
         } else if (command === "change-style") {
-            changeBoardStyle(event.target.getAttribute("data-id"))
+            changeBoardStyle(event.target.getAttribute("data-id"));
+        } else if (command === "post-quote") {
+            postQuote(post_id);
         }
     }
 
-    if (event.target.getAttribute("href").match(/#/) !== null) {
+    if (event.target.getAttribute("href").match(/^#$/) !== null) {
         event.preventDefault();
     }
 }
