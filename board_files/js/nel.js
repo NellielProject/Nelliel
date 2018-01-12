@@ -7,11 +7,19 @@ function setupListeners() {
     var post_elements = document.getElementsByClassName('post-corral');
 
     for (var i = 0; i < post_elements.length; i++) {
-        post_elements[i].addEventListener('click', processPostClicks);
+        addListenerIfElementExists(post_elements[i], "click", processPostClicks);
     }
+    
+    addListenerIfElementExists(document.getElementById("top-styles-div"), "click", processPostClicks);
+    addListenerIfElementExists(document.getElementById("bottom-styles-div"), "click", processPostClicks);
+}
 
-    document.getElementById("top-styles-div").addEventListener('click', processPostClicks);
-    document.getElementById("bottom-styles-div").addEventListener('click', processPostClicks);
+function addListenerIfElementExists(element, event, event_handler)
+{
+    if(element !== null)
+    {
+        element.addEventListener(event, event_handler);
+    }
 }
 
 function processPostClicks(event) {
