@@ -15,7 +15,7 @@
 							<!-- Why is this here?
 							Because Firefox password management and autofill is dumb.
 							-->
-							<input class="none" type="password" name="fuckoffmozilla" size="1">
+							<input class="hidden" type="password" name="fuckoffmozilla" size="1">
 						</td>
 					</tr>
 					<tr class="posting-form-row" id="form-not-anonymous">
@@ -56,12 +56,12 @@
 						</td>
 						<td class="posting-form-input">
 							<input type="file" name="up_file_1" id="up-file-1" onchange="addMoarInput('form-file-2',false)">&nbsp;
-							<input type="button" value="Add Source" id="add-sauce-1" onClick="addMoarInput('form-sauce-1',true)">&nbsp;
-							<input type="button" value="Add License" id="add-lol_drama-1" onClick="addMoarInput('form-lol_drama-1',true)">
-							<input type="button" value="Add Alt Description" id="add-alt_text-1" onClick="addMoarInput('form-alt_text-1',true)">
+							<input type="button" value="Add Source" id="add-sauce-1" data-command="add-file-meta">&nbsp;
+							<input type="button" value="Add License" id="add-lol_drama-1" data-command="add-file-meta">
+							<input type="button" value="Add Alt Description" id="add-alt_text-1" data-command="add-file-meta">
 						</td>
 					</tr>
-					<tr class="posting-form-row none" id="form-sauce-1">
+					<tr class="posting-form-row hidden" id="form-sauce-1">
 						<td class="posting-form-label">
 							<label for="sauce-1" data-i18n="neltext">FORM_LABEL_SOURCE</label>
 						</td>
@@ -69,7 +69,7 @@
 							<input type="text" name="new_post[file_info][file_1][sauce]" id="sauce-1" maxlength="">
 						</td>
 					</tr>
-					<tr class="posting-form-row none" id="form-lol_drama-1">
+					<tr class="posting-form-row hidden" id="form-lol_drama-1">
 						<td class="posting-form-label">
 							<label for="lol_drama-1" data-i18n="neltext">FORM_LABEL_LICENSE</label>
 						</td>
@@ -77,7 +77,7 @@
 							<input type="text" name="new_post[file_info][file_1][lol_drama]" id="lol_drama-1" maxlength="">
 						</td>
 					</tr>
-					<tr class="posting-form-row none" id="form-alt_text-1">
+					<tr class="posting-form-row hidden" id="form-alt_text-1">
 						<td class="posting-form-label">
 							<label for="alt_text-1" data-i18n="neltext">FORM_LABEL_ALT_TEXT</label>
 						</td>
@@ -117,7 +117,7 @@
 						<td id="form-rules-list" colspan="2" class="rules">
 						</td>
 					</tr>
-					<tr id="form-trap1" class="none">
+					<tr id="form-trap1" class="hidden">
 						<td>
 							<label for="website_url" data-i18n="neltext">TEXT_SPAMBOT_TRAP</label>
 						</td>
@@ -125,7 +125,7 @@
 							<input type="text" name="website_url" id="website_url" size="30" autocomplete="off">
 						</td>
 					</tr>
-					<tr id="form-trap2" class="none">
+					<tr id="form-trap2" class="hidden">
 						<td>
 							<label for="user_comments" data-i18n="neltext">TEXT_SPAMBOT_TRAP</label>
 						</td>

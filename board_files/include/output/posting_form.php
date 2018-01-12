@@ -84,7 +84,7 @@ function nel_render_posting_form($dataforce, $render)
         $up_file_element->extSetAttribute('onchange', 'addMoarInput(\'form-file-' . $j . '\',false)');
         $up_file_element->changeId('up-file-' . $i);
         $add_source_element = $temp_file_block->getElementById('add-sauce-1');
-        $add_source_element->extSetAttribute('onclick', 'addMoarInput(\'form-sauce-' . $i . '\',true)');
+        //$add_source_element->extSetAttribute('onclick', 'addMoarInput(\'form-sauce-' . $i . '\',true)');
         $add_source_element->changeId('add-sauce-' . $i);
         $add_license_element = $temp_file_block->getElementById('add-lol_drama-1');
         $add_license_element->extSetAttribute('onclick', 'addMoarInput(\'form-lol_drama-' . $i . '\',true)');

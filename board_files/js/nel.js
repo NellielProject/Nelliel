@@ -12,6 +12,7 @@ function setupListeners() {
     
     addListenerIfElementExists(document.getElementById("top-styles-div"), "click", processPostClicks);
     addListenerIfElementExists(document.getElementById("bottom-styles-div"), "click", processPostClicks);
+    addListenerIfElementExists(document.getElementById("posting-form"), "click", processPostClicks);
 }
 
 function addListenerIfElementExists(element, event, event_handler)
@@ -39,9 +40,11 @@ function processPostClicks(event) {
             postQuote(post_id);
         } else if (command === "show-file-meta" || command === "hide-file-meta") {
             showHideFileMeta(event.target, command);
+        } else if (command === "add-file-meta") {
+            addNewFileMeta(event.target, command);
         }
 
-        if (event.target.getAttribute("href").match(/^#$/) !== null) {
+        if (event.target.hasAttribute("href") && event.target.getAttribute("href").match(/^#$/) !== null) {
             event.preventDefault();
         }
     }
@@ -75,6 +78,14 @@ function getCookie(key) {
     }
 
     return null;
+}
+
+function addNewFileMeta(element, command)
+{
+    var target_id = element.id.replace("add-", "form-");
+    var target_element = document.getElementById(target_id);
+    target_element.className = target_element.className.replace(/\bhidden\b/g, "");
+    element.className += " hidden";
 }
 
 function showHideFileMeta(element, command) {
