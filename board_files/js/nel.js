@@ -9,16 +9,14 @@ function setupListeners() {
     for (var i = 0; i < post_elements.length; i++) {
         addListenerIfElementExists(post_elements[i], "click", processPostClicks);
     }
-    
+
     addListenerIfElementExists(document.getElementById("top-styles-div"), "click", processPostClicks);
     addListenerIfElementExists(document.getElementById("bottom-styles-div"), "click", processPostClicks);
     addListenerIfElementExists(document.getElementById("posting-form"), "click", processPostClicks);
 }
 
-function addListenerIfElementExists(element, event, event_handler)
-{
-    if(element !== null)
-    {
+function addListenerIfElementExists(element, event, event_handler) {
+    if (element !== null) {
         element.addEventListener(event, event_handler);
     }
 }
@@ -26,12 +24,12 @@ function addListenerIfElementExists(element, event, event_handler)
 function processPostClicks(event) {
     if (event.target.hasAttribute("data-command")) {
         if (event.target.hasAttribute("data-id")) {
-            var full_id = this.id.replace("post-id-", "");
             var id_set = event.target.getAttribute("data-id").split("_");
             var thread_id = id_set[0];
             var post_id = id_set[1];
             var file_id = id_set[2];
         }
+
         var command = event.target.getAttribute("data-command");
 
         if (command === "expand-thread") {
@@ -46,6 +44,9 @@ function processPostClicks(event) {
             showHideFileMeta(event.target, command);
         } else if (command === "add-file-meta") {
             addNewFileMeta(event.target, command);
+        } else if (command === "inline-expand" || command === "inline-reduce") {
+            inlineExpandReduce(event.target, command);
+            event.preventDefault();
         }
 
         if (event.target.hasAttribute("href") && event.target.getAttribute("href").match(/^#$/) !== null) {
@@ -84,8 +85,30 @@ function getCookie(key) {
     return null;
 }
 
-function addNewFileMeta(element, command)
-{
+function inlineExpandReduce(element, command) {
+    if (element.hasAttribute("data-img-dims")) {
+        var new_location = element.getAttribute("data-other-loc");
+        var old_location = element.getAttribute("src");
+        var image_dims = element.getAttribute("data-img-dims");
+        var width = image_dims.match(/w([0-9]+)/)[1]s;
+        var height = image_dims.match(/h([0-9]+)/)[1];
+        var old_width = element.getAttribute("width");
+        var old_height = element.getAttribute("height");
+        element.setAttribute("width", width);
+        element.setAttribute("height", height);
+        element.setAttribute("data-img-dims", 'w' + old_width + 'h' + old_height);
+        element.setAttribute("src", new_location);
+        element.setAttribute("data-other-loc", old_location);
+
+        if (command == "inline-expand") {
+            element.setAttribute("data-command", "inline-reduce");
+        } else if (command == "inline-reduce") {
+            element.setAttribute("data-command", "inline-expand");
+        }
+    }
+}
+
+function addNewFileMeta(element, command) {
     var target_id = element.id.replace("add-", "form-");
     var target_element = document.getElementById(target_id);
     target_element.className = target_element.className.replace(/\bhidden\b/g, "");
