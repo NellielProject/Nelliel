@@ -149,6 +149,12 @@ function expandCollapseThread(thread_id, command) {
                 collapse_element.parentNode.className += " hidden";
                 expand_element.parentNode.className = expand_element.className.replace(/\bhidden\b/g, "");
             }
+            
+            var post_elements = target_element.getElementsByClassName('post-corral');
+
+            for (var i = 0; i < post_elements.length; i++) {
+                addListenerIfElementExists(post_elements[i], "click", processPostClicks);
+            }
         }
     };
 
