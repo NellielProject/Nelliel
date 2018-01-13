@@ -24,7 +24,7 @@ $lang_singular = array(
     'LINK_REPLY' => 'Reply',  // Reply to a post
     'LINK_EXPAND' => 'Expand thread',  // Expand thread
     'LINK_LOGOUT' => 'Logout',  // Logout
-    'LINK_POST_NUM_REF' => 'Post Ref', // Reference post number
+    'LINK_POST_NUM_REF' => 'Link', // Reference post number
 
 
     'FORM_SUBMIT' => 'Submit',  // Submit button

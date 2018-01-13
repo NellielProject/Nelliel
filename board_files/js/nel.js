@@ -38,8 +38,8 @@ function processPostClicks(event) {
             expandCollapseThread(thread_id, "collapse");
         } else if (command === "change-style") {
             changeBoardStyle(event.target.getAttribute("data-id"));
-        } else if (command === "post-ref") {
-            postRef(post_id);
+        } else if (command === "link-post") {
+            linkPost(post_id);
         } else if (command === "show-file-meta" || command === "hide-file-meta") {
             showHideFileMeta(event.target, command);
         } else if (command === "add-file-meta") {
@@ -90,7 +90,7 @@ function inlineExpandReduce(element, command) {
         var new_location = element.getAttribute("data-other-loc");
         var old_location = element.getAttribute("src");
         var image_dims = element.getAttribute("data-other-dims");
-        var width = image_dims.match(/w([0-9]+)/)[1]s;
+        var width = image_dims.match(/w([0-9]+)/)[1];
         var height = image_dims.match(/h([0-9]+)/)[1];
         var old_width = element.getAttribute("width");
         var old_height = element.getAttribute("height");
@@ -199,7 +199,7 @@ function addBanDetails(id, num, name, host) {
             + '"><input type="hidden" name="banhost' + num + '" value="' + host + '"></td></tr>' + '</table>';
 }
 
-function postRef(num) {
+function linkPost(num) {
     document.postingform.wordswordswords.value = document.postingform.wordswordswords.value + '>>' + num + '\n';
 }
 

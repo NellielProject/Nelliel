@@ -169,9 +169,9 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $post_num_link_element->setContent($post_data['post_number']);
     $post_num_link_element->extSetAttribute('href', PAGE_DIR . $post_data['parent_thread'] . '/' . $post_data['parent_thread'] . '.html#p' . $post_data['post_number'], 'none');
     $post_num_link_element->changeId('post-num-link-' . $post_id);
-    $post_num_ref_element = $new_post_dom->getElementById('post-num-ref-');
+    $post_num_ref_element = $new_post_dom->getElementById('post-link-post-');
     $post_num_ref_element->extSetAttribute('data-id', $post_id);
-    $post_num_ref_element->changeId('post-num-ref-' . $post_id);
+    $post_num_ref_element->changeId('post-link-post-' . $post_id);
     $sticky_icon_element = $new_post_dom->getElementById('sticky-icon-');
 
     if (!$response && $gen_data['thread']['sticky'])
