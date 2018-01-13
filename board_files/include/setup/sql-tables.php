@@ -574,6 +574,7 @@ function nel_insert_config_defaults()
                         ('board_setting', 'nelliel', 'general', 'str', 'old_threads', 'ARCHIVE'),
                         ('board_setting', 'nelliel', 'general', 'str', 'date_separator', '/'),
                         ('board_setting', 'nelliel', 'general', 'str', 'fgsfds_name', 'FGSFDS'),
+                        ('board_setting', 'nelliel', 'general', 'str', 'indent_marker', '>>'),
                         ('filetype_enable', 'nelliel', 'graphics', 'bool', 'graphics', '1'),
                         ('filetype_enable', 'nelliel', 'graphics', 'bool', 'jpeg', '1'),
                         ('filetype_enable', 'nelliel', 'graphics', 'bool', 'gif', '1'),

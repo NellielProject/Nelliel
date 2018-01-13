@@ -307,6 +307,7 @@ $lang_singular = array(
     'MANAGE_SET_FGSFDS' => 'Use FGSFDS field for commands (noko, sage, etc) instead of the e-mail field',  // Use the FGSFDS field
     'MANAGE_SET_FGSFDS_NAME' => 'Name of the FGSFDS field',  // Name of the FGSFDS field
     'MANAGE_SET_LANGUAGE' => 'Set language for the board',  // Board language
+    'MANAGE_SET_INDENT_MARKER' => 'Set the indent marker next to replies',  // Indent marker
 
 
     'MANAGE_SET_ALW_GF' => 'Graphics files',  // Allow graphics files

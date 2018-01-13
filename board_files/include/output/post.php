@@ -75,7 +75,9 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
         $post_type = 'reply';
         $post_type_class = 'reply-';
         $post_container->extSetAttribute('class', 'reply-post');
-        $new_post_dom->getElementById('indents-')->changeId('indents-' . $post_id);
+        $indent_marker = $new_post_dom->getElementById('indents-');
+        $indent_marker->changeId('indents-' . $post_id);
+        $indent_marker->setContent(nel_board_settings('indent_marker'));
     }
     else
     {
