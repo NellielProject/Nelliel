@@ -86,16 +86,24 @@ function getCookie(key) {
     return null;
 }
 
-function hashHandler()
-{
+function hashHandler() {
     if (location.hash.match(/#p[0-9_]+/)) {
         highlightPost(location.hash.replace("#p", ""));
     }
 }
 
 function highlightPost(post_id) {
-    if (document.getElementById("post-container-" + post_id) !== null) {
-        document.getElementById("post-container-" + post_id).className += " post-highlight";
+    var post_elements = document.getElementsByClassName("post-corral");
+
+    for (i = 0; i < post_elements.length; i++) {
+        var current_id = post_elements[i].id.replace("post-id-", "");
+        var post_container = document.getElementById("post-container-" + current_id);
+
+        if (post_elements[i].id == "post-id-" + post_id) {
+            post_container.className += " post-highlight";
+        } else {
+            post_container.className = post_container.className.replace(/\post-highlight\b/g, "");
+        }
     }
 }
 
