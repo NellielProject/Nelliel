@@ -283,6 +283,10 @@ a.mailto-name:visited {
     padding-left: 20px;
 }
 
+.op-post.post-highlight {
+	background: #AABBFF;
+}
+
 .op-poster-name {
     text-decoration: none;
     color: #7700DD;
@@ -326,6 +330,10 @@ a.mailto-name:visited {
     margin: 5px;
     overflow: hidden;
     display: inline-block;
+}
+
+.reply-post.post-highlight {
+	background: #AABBFF;
 }
 
 .reply-poster-name {

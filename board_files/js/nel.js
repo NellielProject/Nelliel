@@ -1,6 +1,10 @@
 function doImportantStuff(board_id) {
     setupListeners();
     fillForms(board_id);
+
+    if (location.hash.match(/#p[0-9_]+/)) {
+        highlightPost(location.hash.replace("#p", ""));
+    }
 }
 
 function setupListeners() {
@@ -83,6 +87,12 @@ function getCookie(key) {
     }
 
     return null;
+}
+
+function highlightPost(post_id) {
+    if (document.getElementById("post-container-" + post_id) !== null) {
+        document.getElementById("post-container-" + post_id).className += " post-highlight";
+    }
 }
 
 function inlineExpandReduce(element, command) {

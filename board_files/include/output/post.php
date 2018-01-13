@@ -84,7 +84,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
         $new_post_dom->getElementById('indents-')->removeSelf();
     }
 
-    $new_post_dom->getElementById('p-number')->changeId('p' . $post_data['post_number']);
+    $new_post_dom->getElementById('p-number')->changeId('p' . $post_id);
     $rev_post_id = $post_data['post_number'] . '_' . $post_data['parent_thread'];
 
     $post_header = $new_post_dom->getElementById('post-header-');
@@ -167,7 +167,7 @@ function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $t
     $post_time_element->changeId('post-time-' . $post_id);
     $post_num_link_element = $new_post_dom->getElementById('post-num-link-');
     $post_num_link_element->setContent($post_data['post_number']);
-    $post_num_link_element->extSetAttribute('href', PAGE_DIR . $post_data['parent_thread'] . '/' . $post_data['parent_thread'] . '.html#p' . $post_data['post_number'], 'none');
+    $post_num_link_element->extSetAttribute('href', PAGE_DIR . $post_data['parent_thread'] . '/' . $post_data['parent_thread'] . '.html#p' . $post_id, 'none');
     $post_num_link_element->changeId('post-num-link-' . $post_id);
     $post_num_ref_element = $new_post_dom->getElementById('post-link-post-');
     $post_num_ref_element->extSetAttribute('data-id', $post_id);
