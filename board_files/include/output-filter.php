@@ -69,6 +69,7 @@ function nel_post_quote_link($target_element, $text_input)
                 $url = PAGE_DIR . $parent_thread . '/' . $parent_thread . '.html' . $p_anchor;
                 $segment_node= $target_element->ownerDocument->createElement('a', $matches[0]);
                 $segment_node->extSetAttribute('class', 'link-quote');
+                $segment_node->extSetAttribute('data-command', 'show-linked-post');
                 $segment_node->extSetAttribute('href', $url);
             }
         }

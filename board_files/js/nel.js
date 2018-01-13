@@ -9,6 +9,8 @@ function setupListeners() {
 
     for (var i = 0; i < post_elements.length; i++) {
         addListenerIfElementExists(post_elements[i], "click", processPostClicks);
+        addListenerIfElementExists(post_elements[i], "mouseover", processMouseOver);
+        addListenerIfElementExists(post_elements[i], "mouseout", processMouseOut);
     }
 
     addListenerIfElementExists(document.getElementById("top-styles-div"), "click", processPostClicks);
@@ -57,6 +59,26 @@ function processPostClicks(event) {
     }
 }
 
+function processMouseOver(event) {
+    if (event.target.hasAttribute("data-command")) {
+        var command = event.target.getAttribute("data-command");
+
+        if (command === "show-linked-post") {
+            showLinkedPost(event.target, event);
+        }
+    }
+}
+
+function processMouseOut(event) {
+    if (event.target.hasAttribute("data-command")) {
+        var command = event.target.getAttribute("data-command");
+
+        if (command === "show-linked-post") {
+            hideLinkedPost(event.target, event);
+        }
+    }
+}
+
 function processChanges(event) {
     if (event.target.hasAttribute("data-command")) {
         var command = event.target.getAttribute("data-command");
@@ -95,6 +117,55 @@ function getCookie(key) {
     }
 
     return null;
+}
+
+function showLinkedPost(element, event) {
+    var href = element.getAttribute("href");
+    var post_id = href.match(/#p([0-9_]+)/)[1];
+
+    if (document.getElementById("post-quote-popup-" + post_id) !== null) {
+        return;
+    }
+
+    var popup_div = document.createElement("div");
+    popup_div.id = "post-quote-popup-" + post_id;
+    popup_div.setAttribute("class", "post-quote-popup");
+    var x = event.pageX + 50;
+    var y = event.pageY;
+    popup_div.style.left = x + 'px';
+    popup_div.style.top = y + 'px';
+
+    if (document.getElementById("post-container-" + post_id) !== null) {
+        var quoted_post = document.getElementById("post-container-" + post_id).cloneNode(true);
+        quoted_post.className = quoted_post.className.replace(/\op-post\b/g, "reply-post");
+        quoted_post.className += " popup-mod";
+        popup_div.appendChild(quoted_post);
+        element.parentNode.insertBefore(popup_div, element);
+    } else {
+        var request = new XMLHttpRequest();
+        request.open('GET', element.getAttribute("href"));
+        request.responseType = "document";
+        request.onload = function() {
+            if (request.status === 200) {
+                var quoted_post = request.response.getElementById("post-container-" + post_id);
+                quoted_post.className = quoted_post.className.replace(/\op-post\b/g, "reply-post");
+                quoted_post.className += " popup-mod";
+                popup_div.appendChild(quoted_post);
+                element.parentNode.insertBefore(popup_div, element);
+            }
+        };
+        request.send();
+    }
+}
+
+function hideLinkedPost(element, event) {
+    var href = element.getAttribute("href");
+    var post_id = href.match(/#p([0-9_]+)/)[1];
+    var target_popup = document.getElementById("post-quote-popup-" + post_id);
+
+    if (target_popup !== null) {
+        target_popup.remove();
+    }
 }
 
 function showNextFileInput(element) {

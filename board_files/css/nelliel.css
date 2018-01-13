@@ -281,6 +281,7 @@ a.mailto-name:visited {
     height: 100%;
     padding-bottom: 6px;
     padding-left: 20px;
+    color: #000000;
 }
 
 .op-post.post-highlight {
@@ -330,6 +331,7 @@ a.mailto-name:visited {
     margin: 5px;
     overflow: hidden;
     display: inline-block;
+    color: #000000;
 }
 
 .reply-post.post-highlight {
@@ -351,7 +353,6 @@ a.mailto-name:visited {
 
 .reply-post-text {
     padding-left: 1.10em;
-    /*float: left;*/
 }
 
 .reply-post-preview {
@@ -414,5 +415,16 @@ a.mailto-name:visited {
 
 .post-corral {
 	
+}
+
+.post-quote-popup {
+	height: auto;
+	position: absolute;
+	display: block;
+}
+
+.reply-post.popup-mod {
+	border: 1px #000000;
+	border-style: solid;
 }
 })
