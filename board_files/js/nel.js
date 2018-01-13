@@ -1,10 +1,7 @@
 function doImportantStuff(board_id) {
     setupListeners();
     fillForms(board_id);
-
-    if (location.hash.match(/#p[0-9_]+/)) {
-        highlightPost(location.hash.replace("#p", ""));
-    }
+    hashHandler();
 }
 
 function setupListeners() {
@@ -17,6 +14,7 @@ function setupListeners() {
     addListenerIfElementExists(document.getElementById("top-styles-div"), "click", processPostClicks);
     addListenerIfElementExists(document.getElementById("bottom-styles-div"), "click", processPostClicks);
     addListenerIfElementExists(document.getElementById("posting-form"), "click", processPostClicks);
+    window.addEventListener("hashchange", hashHandler);
 }
 
 function addListenerIfElementExists(element, event, event_handler) {
@@ -86,6 +84,13 @@ function getCookie(key) {
     }
 
     return null;
+}
+
+function hashHandler()
+{
+    if (location.hash.match(/#p[0-9_]+/)) {
+        highlightPost(location.hash.replace("#p", ""));
+    }
 }
 
 function highlightPost(post_id) {

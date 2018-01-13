@@ -55,7 +55,7 @@ function nel_render_index_navigation($dom, $render, $pages)
     $dom->getElementById('outer-div')->appendChild($imported);
 }
 
-function nel_render_post($dataforce, $render, $response, $partial, $gen_data, $treeline, $dom)
+function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data, $treeline, $dom)
 {
     $authorize = nel_authorize();
     $dbh = nel_database();
@@ -439,6 +439,11 @@ function nel_render_post_adjust_relative($node, $gen_data)
     $new_post_dom = $node->ownerDocument->copyNodeIntoDocument($node, true);
     $new_post_dom->getElementById('post-num-link-' . $post_id)->modifyAttribute('href', '../../', 'before');
     $sticky_element = $new_post_dom->getElementById('sticky-icon-');
+
+    foreach ($new_post_dom->getElementById('post-comment-' . $post_id)->getElementsByClassName('link-quote') as $comment_element)
+    {
+        $comment_element->modifyAttribute('href', '../../', 'before');
+    }
 
     if (!is_null($sticky_element))
     {
