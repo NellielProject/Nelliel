@@ -35,7 +35,6 @@ function processPostClicks(event) {
         }
 
         var command = event.target.getAttribute("data-command");
-
         if (command === "expand-thread") {
             expandCollapseThread(thread_id, "expand");
         } else if (command === "collapse-thread") {
@@ -96,7 +95,7 @@ function highlightPost(post_id) {
 }
 
 function inlineExpandReduce(element, command) {
-    if (element.hasAttribute("data-img-dims")) {
+    if (element.hasAttribute("data-other-dims")) {
         var new_location = element.getAttribute("data-other-loc");
         var old_location = element.getAttribute("src");
         var image_dims = element.getAttribute("data-other-dims");
