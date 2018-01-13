@@ -119,6 +119,13 @@ function getCookie(key) {
     return null;
 }
 
+function addBoundingClientRectProperties(bounding_rect) {
+    bounding_rect.width = bounding_rect.width || bounding_rect.right - bounding_rect.left;
+    bounding_rect.height = bounding_rect.height || bounding_rect.bottom - bounding_rect.top;
+    bounding_rect.x = bounding_rect.x || bounding_rect.left + (bounding_rect.width / 2);
+    bounding_rect.y = bounding_rect.y || bounding_rect.top + (bounding_rect.height / 2);
+}
+
 function showLinkedPost(element, event) {
     var href = element.getAttribute("href");
     var post_id = href.match(/#p([0-9_]+)/)[1];
@@ -127,13 +134,13 @@ function showLinkedPost(element, event) {
         return;
     }
 
+    var offsetY = window.pageYOffset || document.documentElement.scrollTop;
+    var offsetX = window.pageXOffset || document.documentElement.scrollLeft;
     var popup_div = document.createElement("div");
     popup_div.id = "post-quote-popup-" + post_id;
     popup_div.setAttribute("class", "post-quote-popup");
-    var x = event.pageX + 50;
-    var y = event.pageY;
-    popup_div.style.left = x + 'px';
-    popup_div.style.top = y + 'px';
+    var element_rect = element.getBoundingClientRect();
+    addBoundingClientRectProperties(element_rect);
 
     if (document.getElementById("post-container-" + post_id) !== null) {
         var quoted_post = document.getElementById("post-container-" + post_id).cloneNode(true);
@@ -141,6 +148,10 @@ function showLinkedPost(element, event) {
         quoted_post.className += " popup-mod";
         popup_div.appendChild(quoted_post);
         element.parentNode.insertBefore(popup_div, element);
+        var popup_rect = quoted_post.getBoundingClientRect();
+        addBoundingClientRectProperties(popup_rect);
+        popup_div.style.left = (element_rect.right + offsetX + 10) + 'px';
+        popup_div.style.top = ((element_rect.y + offsetY) - (popup_rect.height / 2)) + 'px';
     } else {
         var request = new XMLHttpRequest();
         request.open('GET', element.getAttribute("href"));
@@ -152,6 +163,10 @@ function showLinkedPost(element, event) {
                 quoted_post.className += " popup-mod";
                 popup_div.appendChild(quoted_post);
                 element.parentNode.insertBefore(popup_div, element);
+                var popup_rect = quoted_post.getBoundingClientRect();
+                addBoundingClientRectProperties(popup_rect);
+                popup_div.style.left = (element_rect.right + offsetX + 5) + 'px';
+                popup_div.style.top = ((element_rect.y + offsetY) - (popup_rect.height / 2)) + 'px';
             }
         };
         request.send();
