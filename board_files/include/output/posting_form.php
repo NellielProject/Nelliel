@@ -62,7 +62,7 @@ function nel_render_posting_form($dataforce, $render)
     {
         $temp_file_block = $file_block->cloneNode(true);
         $temp_file_block->changeId('form-file-' . $i);
-        $temp_file_block->modifyAttribute('class', ' none', 'after');
+        $temp_file_block->modifyAttribute('class', ' hidden', 'after');
         $temp_source_block = $source_block->cloneNode(true);
         $temp_source_block->changeId('form-sauce-' . $i);
         $temp_license_block = $license_block->cloneNode(true);
@@ -81,16 +81,12 @@ function nel_render_posting_form($dataforce, $render)
         $file_num->changeId('file-num-' . $i);
         $up_file_element = $temp_file_block->getElementById('up-file-1');
         $up_file_element->extSetAttribute('name', 'up_file_' . $i);
-        $up_file_element->extSetAttribute('onchange', 'addMoarInput(\'form-file-' . $j . '\',false)');
         $up_file_element->changeId('up-file-' . $i);
         $add_source_element = $temp_file_block->getElementById('add-sauce-1');
-        //$add_source_element->extSetAttribute('onclick', 'addMoarInput(\'form-sauce-' . $i . '\',true)');
         $add_source_element->changeId('add-sauce-' . $i);
         $add_license_element = $temp_file_block->getElementById('add-lol_drama-1');
-        $add_license_element->extSetAttribute('onclick', 'addMoarInput(\'form-lol_drama-' . $i . '\',true)');
         $add_license_element->changeId('add-lol_drama-' . $i);
         $add_alt_text_element = $temp_file_block->getElementById('add-alt_text-1');
-        $add_alt_text_element->extSetAttribute('onclick', 'addMoarInput(\'form-alt_text-' . $i . '\',true)');
         $add_alt_text_element->changeId('add-alt_text-' . $i);
 
         $for_label_sauce = $temp_source_block->doXPathQuery(".//label[@for='sauce-1']")->item(0);

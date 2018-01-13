@@ -14,6 +14,7 @@ function setupListeners() {
     addListenerIfElementExists(document.getElementById("top-styles-div"), "click", processPostClicks);
     addListenerIfElementExists(document.getElementById("bottom-styles-div"), "click", processPostClicks);
     addListenerIfElementExists(document.getElementById("posting-form"), "click", processPostClicks);
+    addListenerIfElementExists(document.getElementById("posting-form"), "change", processChanges);
     window.addEventListener("hashchange", hashHandler);
 }
 
@@ -56,6 +57,16 @@ function processPostClicks(event) {
     }
 }
 
+function processChanges(event) {
+    if (event.target.hasAttribute("data-command")) {
+        var command = event.target.getAttribute("data-command");
+
+        if (command === "reveal-file-input") {
+            showNextFileInput(event.target);
+        }
+    }
+}
+
 function setCookie(c_name, value, expiredays) {
     var exdate = new Date();
     exdate.setDate(exdate.getDate() + expiredays);
@@ -84,6 +95,13 @@ function getCookie(key) {
     }
 
     return null;
+}
+
+function showNextFileInput(element) {
+    var file_num = element.id.replace("up-file-", "");
+    file_num++;
+    var next_file = document.getElementById("form-file-" + file_num);
+    next_file.className = next_file.className.replace(/\bhidden\b/g, "");
 }
 
 function hashHandler() {
