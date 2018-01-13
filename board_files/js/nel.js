@@ -94,12 +94,14 @@ function hashHandler() {
 
 function highlightPost(post_id) {
     var post_elements = document.getElementsByClassName("post-corral");
+    var id_sub = post_id.split("_");
+    var id_op = id_sub[0] == id_sub[1] ? true : false;
 
     for (i = 0; i < post_elements.length; i++) {
         var current_id = post_elements[i].id.replace("post-id-", "");
         var post_container = document.getElementById("post-container-" + current_id);
 
-        if (post_elements[i].id == "post-id-" + post_id) {
+        if (post_elements[i].id == "post-id-" + post_id && !id_op) {
             post_container.className += " post-highlight";
         } else {
             post_container.className = post_container.className.replace(/\post-highlight\b/g, "");
