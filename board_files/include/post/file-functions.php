@@ -93,18 +93,18 @@ function nel_check_for_existing_file($file, $files)
 {
     $dbh = nel_database();
     $error_data = array('bad-filename' => $file['filename'], 'files' => $files);
-    $file['md5'] = hash_file('md5', $file['dest'], FALSE);
-    $file['sha1'] = hash_file('sha1', $file['dest'], FALSE);
+    $file['md5'] = hash_file('md5', $file['dest'], true);
+    $file['sha1'] = hash_file('sha1', $file['dest'], true);
 
     if(GENERATE_FILE_SHA256)
     {
-        $file['sha256'] = hash_file('sha256', $file['dest'], FALSE);
+        $file['sha256'] = hash_file('sha256', $file['dest'], true);
     }
 
     nel_banned_hash($file['md5'], $files);
     $query = 'SELECT "post_ref" FROM "' . FILE_TABLE . '" WHERE "sha1" = ? LIMIT 1';
     $prepared = $dbh->prepare($query);
-    $prepared->bindValue(1, $file['sha1'], PDO::PARAM_STR);
+    $prepared->bindValue(1, $file['sha1'], PDO::PARAM_LOB);
     $result = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
 
     if ($result)

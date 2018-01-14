@@ -19,7 +19,7 @@ function nel_db_insert_initial_post($time, $post_data)
     $prepared->bindValue(':email', $post_data['email'], PDO::PARAM_STR);
     $prepared->bindValue(':subject', $post_data['subject'], PDO::PARAM_STR);
     $prepared->bindValue(':comment', $post_data['comment'], PDO::PARAM_STR);
-    $prepared->bindValue(':ip_address', @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_STR);
+    $prepared->bindValue(':ip_address', @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_LOB);
     $prepared->bindValue(':has_file', $post_data['has_file'], PDO::PARAM_INT);
     $prepared->bindValue(':file_count', $post_data['file_count'], PDO::PARAM_INT);
     $prepared->bindValue(':post_time', $time, PDO::PARAM_INT);
@@ -94,8 +94,8 @@ function nel_db_insert_new_files($parent_id, $new_post_info, $files)
         $prepared->bindValue(':preview_width', $file['pre_x'], PDO::PARAM_INT);
         $prepared->bindValue(':preview_height', $file['pre_y'], PDO::PARAM_INT);
         $prepared->bindValue(':filesize', $file['filesize'], PDO::PARAM_INT);
-        $prepared->bindValue(':md5', $file['md5'], PDO::PARAM_STR);
-        $prepared->bindValue(':sha1', $file['sha1'], PDO::PARAM_STR);
+        $prepared->bindValue(':md5', $file['md5'], PDO::PARAM_LOB);
+        $prepared->bindValue(':sha1', $file['sha1'], PDO::PARAM_LOB);
         $prepared->bindValue(':source', $file['source'], PDO::PARAM_STR);
         $prepared->bindValue(':license', $file['license'], PDO::PARAM_STR);
         $prepared->bindValue(':alt_text', $file['alt_text'], PDO::PARAM_STR);

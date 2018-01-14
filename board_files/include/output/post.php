@@ -322,11 +322,11 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
 
             $md5_element = $temp_file_dom->getElementById('file-md5-');
             $md5_element->changeId('file-md5-' . $file_id);
-            $md5_element->setContent('MD5: ' . $file['md5']);
+            $md5_element->setContent('MD5: ' . bin2hex($file['md5']));
 
             $sha1_element = $temp_file_dom->getElementById('file-sha1-');
             $sha1_element->changeId('file-sha1-' . $file_id);
-            $sha1_element->setContent('SHA1: ' . $file['sha1']);
+            $sha1_element->setContent('SHA1: ' . bin2hex($file['sha1']));
 
             $location_element = $temp_file_dom->getElementById('file-location-');
 
