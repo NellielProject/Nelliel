@@ -37,6 +37,43 @@ function nel_autoincrement_column($int_column)
     return array($int_column, $auto);
 }
 
+function nel_sql_binary_alternatives($datatype, $length)
+{
+    if (SQLTYPE === 'MYSQL')
+    {
+        if($datatype === "BINARY")
+        {
+            return 'BINARY(' . $length . ')';
+        }
+        else if($datatype === "VARBINARY")
+        {
+            return 'VARBINARY(' . $length . ')';
+        }
+    }
+    else if (SQLTYPE === 'POSTGRES')
+    {
+        if($datatype === "BINARY")
+        {
+            return 'BYTEA';
+        }
+        else if($datatype === "VARBINARY")
+        {
+            return 'BYTEA';
+        }
+    }
+    else if (SQLTYPE === 'SQLITE')
+    {
+        if($datatype === "BINARY")
+        {
+            return 'BLOB';
+        }
+        else if($datatype === "VARBINARY")
+        {
+            return 'BLOB';
+        }
+    }
+}
+
 function nel_table_options()
 {
     $options = '';
@@ -218,7 +255,7 @@ function nel_create_external_table($table_name)
     nel_setup_stuff_done($result);
 }
 
-function nel_create_bans_table($table_name)
+/*function nel_create_bans_table($table_name)
 {
     $dbh = nel_database();
     $auto_inc = nel_autoincrement_column('INTEGER');
@@ -245,7 +282,7 @@ function nel_create_bans_table($table_name)
     }
 
     nel_setup_stuff_done($result);
-}
+}*/
 
 function nel_create_config_table($table_name)
 {
@@ -361,6 +398,37 @@ function nel_create_logins_table($table_name)
     if ($result !== false)
     {
         nel_insert_permissions_defaults();
+    }
+
+    nel_setup_stuff_done($result);
+}
+
+function nel_create_bans_table($table_name)
+{
+    $dbh = nel_database();
+    $auto_inc = nel_autoincrement_column('INTEGER');
+    $options = nel_table_options();
+    $schema = '
+    CREATE TABLE ' . $table_name . ' (
+        "ban_id"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "board"             VARCHAR(255) DEFAULT NULL,
+        "type"              VARCHAR(255) DEFAULT NULL,
+        "creator"           VARCHAR(255) DEFAULT NULL,
+        "ip_address_start"  ' . nel_sql_binary_alternatives('VARBINARY', '16') . 'DEFAULT NULL,
+        "ip_address_end"    ' . nel_sql_binary_alternatives('VARBINARY', '16') . 'DEFAULT NULL,
+        "reason"            TEXT DEFAULT NULL,
+        "length"            BIGINT NOT NULL DEFAULT 0,
+        "start_time"        BIGINT NOT NULL DEFAULT 0,
+        "appeal"            TEXT DEFAULT NULL,
+        "appeal_response"   TEXT DEFAULT NULL,
+        "appeal_status"     SMALLINT NOT NULL DEFAULT 0
+    ) ' . $options . ';';
+
+    $result = nel_create_table_query($schema, $table_name);
+
+    if ($result)
+    {
+        $dbh->query('CREATE INDEX index_ip_address_start ON ' . $table_name . ' (ip_address_start);');
     }
 
     nel_setup_stuff_done($result);

@@ -26,7 +26,7 @@ class BanHammer
         $ban_input['ban_id'] = (isset($_POST['ban_id'])) ? $_POST['ban_id'] : null;
         $ban_input['board'] = (isset($_POST['ban_board'])) ? $_POST['ban_board'] : null;
         $ban_input['type'] = (isset($_POST['ban_type'])) ? $_POST['ban_type'] : null;
-        $ban_input['ip_address'] = (isset($_POST['ban_ip'])) ? $_POST['ban_ip'] : null;
+        $ban_input['ip_address_start'] = (isset($_POST['ban_ip'])) ? $_POST['ban_ip'] : null;
         $ban_input['years'] = (isset($_POST['ban_time_years'])) ? $_POST['ban_time_years'] : 0;
         $ban_input['months'] = (isset($_POST['ban_time_months'])) ? $_POST['ban_time_months'] : 0;
         $ban_input['days'] = (isset($_POST['ban_time_days'])) ? $_POST['ban_time_days'] : 0;
@@ -80,8 +80,8 @@ class BanHammer
 
     public function getBanByIp($ban_ip, $convert_length = false)
     {
-        $prepared = $this->dbh->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ip_address" = ? LIMIT 1');
-        $ban_info = $this->dbh->executePreparedFetch($prepared, array($ban_ip), PDO::FETCH_ASSOC);
+        $prepared = $this->dbh->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ip_address_start" = ? LIMIT 1');
+        $ban_info = $this->dbh->executePreparedFetch($prepared, array(@inet_pton($ban_ip)), PDO::FETCH_ASSOC);
 
         if ($ban_info === false)
         {
@@ -103,11 +103,11 @@ class BanHammer
             nel_derp(321, nel_stext('ERROR_321'));
         }
 
-        $prepared = $this->dbh->prepare('INSERT INTO "' . BAN_TABLE . '" ("board", "type", "ip_address", "reason", "length", "start_time")
-								VALUES (:board, :type, :ip_address, :reason, :length, :start_time)');
+        $prepared = $this->dbh->prepare('INSERT INTO "' . BAN_TABLE . '" ("board", "type", "ip_address_start", "reason", "length", "start_time")
+								VALUES (:board, :type, :ip_address_start, :reason, :length, :start_time)');
         $prepared->bindParam(':board', $ban_input['board'], PDO::PARAM_STR);
         $prepared->bindParam(':type', $ban_input['type'], PDO::PARAM_STR);
-        $prepared->bindParam(':ip_address', $ban_input['ip_address'], PDO::PARAM_STR);
+        $prepared->bindParam(':ip_address_start', @inet_pton($ban_input['ip_address_start']), PDO::PARAM_LOB);
         $prepared->bindParam(':reason', $ban_input['reason'], PDO::PARAM_STR);
         $prepared->bindParam(':length', $ban_input['length'], PDO::PARAM_INT);
 
@@ -131,11 +131,11 @@ class BanHammer
         }
 
         $prepared = $this->dbh->prepare('UPDATE "' . BAN_TABLE .
-             '" SET "board" = :board, "type" = :type, "ip_address" = :ip_address, "reason" = :reason, "length" = :length, "start_time" = :start_time, "appeal" = :appeal, "appeal_response" = :appeal_response, "appeal_status" = :appeal_status WHERE "ban_id" = :ban_id');
+             '" SET "board" = :board, "type" = :type, "ip_address_start" = :ip_address_start, "reason" = :reason, "length" = :length, "start_time" = :start_time, "appeal" = :appeal, "appeal_response" = :appeal_response, "appeal_status" = :appeal_status WHERE "ban_id" = :ban_id');
         $prepared->bindParam(':ban_id', $ban_input['ban_id'], PDO::PARAM_INT);
         $prepared->bindParam(':board', $ban_input['board'], PDO::PARAM_STR);
         $prepared->bindParam(':type', $ban_input['type'], PDO::PARAM_STR);
-        $prepared->bindParam(':ip_address', $ban_input['ip_address'], PDO::PARAM_STR);
+        $prepared->bindParam(':ip_address_start', @inet_pton($ban_input['ip_address_start']), PDO::PARAM_LOB);
         $prepared->bindParam(':reason', $ban_input['reason'], PDO::PARAM_STR);
         $prepared->bindParam(':length', $ban_input['length'], PDO::PARAM_INT);
         $prepared->bindValue(':start_time', $ban_input['start_time'], PDO::PARAM_INT);

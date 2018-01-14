@@ -34,16 +34,16 @@ require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'accessors.php';
 require_once INCLUDE_PATH . 'general-functions.php';
 require_once INCLUDE_PATH . 'initializations.php';
+require_once INCLUDE_PATH . 'sessions.php';
 require_once INCLUDE_PATH . 'snacks.php';
 
 // IT'S GO TIME!
-nel_apply_ban($dataforce);
 nel_ban_spambots($dataforce);
+nel_apply_ban($dataforce);
 
 require_once INCLUDE_PATH . 'regen.php';
 require_once INCLUDE_PATH . 'thread-functions.php';
 require_once INCLUDE_PATH . 'admin/login.php';
-require_once INCLUDE_PATH . 'sessions.php';
 require_once INCLUDE_PATH . 'post/post.php';
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 

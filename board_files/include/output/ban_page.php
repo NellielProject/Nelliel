@@ -17,13 +17,13 @@ function nel_render_ban_page($dataforce, $ban_info)
     $dom->getElementById('banned-time')->setContent(date("D F jS Y  H:i", $ban_info['start_time']));
     $dom->getElementById('banned-reason')->setContent($ban_info['reason']);
     $dom->getElementById('banned-length')->setContent(date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']));
-    $dom->getElementById('banned-ip')->setContent($ban_info['ip_address']);
+    $dom->getElementById('banned-ip')->setContent(@inet_ntop($ban_info['ip_address_start']));
     $appeal_form_element = $dom->getElementById('appeal-form');
 
     if ($ban_info['appeal_status'] == 0)
     {
         $appeal_form_element->extSetAttribute('action', $dotdot . PHP_SELF);
-        $appeal_form_element->doXPathQuery(".//input[@name='ban_ip']")->item(0)->extSetAttribute('value', $ban_info['ip_address']);
+        $appeal_form_element->doXPathQuery(".//input[@name='ban_ip']")->item(0)->extSetAttribute('value', @inet_ntop($ban_info['ip_address_start']));
         $appeal_form_element->doXPathQuery(".//input[@name='ban_board']")->item(0)->extSetAttribute('value', $ban_info['board']);
     }
     else

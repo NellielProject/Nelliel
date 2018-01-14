@@ -13,12 +13,12 @@ function nel_ban_spambots($dataforce)
 {
     $ban_hammer = nel_ban_hammer();
 
-    if (BS_USE_SPAMBOT_TRAP && (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')]) || !!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])))
+    if (BS_USE_SPAMBOT_TRAP && (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')]) || !empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])))
     {
-        $ban_info['type'] = 'SPAMBOT';
-        $ban_info['ip_address'] = $_SERVER['REMOTE_ADDR'];
-        $ban_info['reason'] = 'Ur a spambot. Nobody wants any. GTFO!';
-        $ban_info['length'] = 86400 * 9001;
+        $ban_input['type'] = 'SPAMBOT';
+        $ban_input['ip_address_start'] = $_SERVER['REMOTE_ADDR'];
+        $ban_input['reason'] = 'Ur a spambot. Nobody wants any. GTFO!';
+        $ban_input['length'] = 86400 * 9001;
         $ban_hammer->addBan($ban_input);
     }
 }
@@ -97,8 +97,8 @@ function nel_apply_ban($dataforce)
 
         $ip_address = $_POST['ban_ip'];
         $bawww = $_POST['ban_appeal'];
-        $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ip_address" = ?');
-        $dbh->executePrepared($prepared, array($bawww, $ip_address));
+        $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ip_address_starts" = ?');
+        $dbh->executePrepared($prepared, array($bawww, @inet_pton($ip_address)));
     }
 
     $ban_info = $ban_hammer->getBanByIp($user_ip_address);
