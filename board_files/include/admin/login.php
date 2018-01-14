@@ -19,12 +19,12 @@ function nel_verify_login_or_session($dataforce)
             $user_login_fails = $authorize->get_user_info($_POST['username'], 'failed_logins');
             $last_user_attempt = $authorize->get_user_info($_POST['username'], 'last_failed_login');
 
-            if($user_login_fails > 10 && time() - $last_user_attempt < 300)
+            if ($user_login_fails > 10 && time() - $last_user_attempt < 300)
             {
                 nel_derp(302, nel_stext('ERROR_302'));
             }
 
-            if($user_login_fails > 20 && time() - $last_user_attempt < 1800)
+            if ($user_login_fails > 20 && time() - $last_user_attempt < 1800)
             {
                 nel_derp(303, nel_stext('ERROR_303'));
             }
@@ -43,10 +43,11 @@ function nel_verify_login_or_session($dataforce)
                 $attempt_time = time();
             }
 
-            $prepared = $dbh->prepare('UPDATE "' . USER_TABLE . '" SET "failed_logins" = ?, "last_failed_login" = ? WHERE "user_id" = ?');
+            $prepared = $dbh->prepare('UPDATE "' . USER_TABLE .
+                 '" SET "failed_logins" = ?, "last_failed_login" = ? WHERE "user_id" = ?');
             $dbh->executePrepared($prepared, array($user_login_fails, $attempt_time, $_POST['username']), true);
 
-            if(!$dataforce['login_valid'])
+            if (!$dataforce['login_valid'])
             {
                 nel_derp(300, nel_stext('ERROR_300'));
             }
@@ -101,7 +102,7 @@ function nel_login($dataforce)
     else
     {
         nel_insert_default_admin(); // Let's make sure there's some kind of admin in the system
-        nel_insert_role_defaults(); // Also make sure the role exists
+        nel_insert_default_admin_role(); // And then be sure admin is assigned the role
         nel_generate_login_page();
     }
 

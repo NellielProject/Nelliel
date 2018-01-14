@@ -25,6 +25,7 @@ function setup_check()
     nel_create_config_table(CONFIG_TABLE);
     nel_create_user_table(USER_TABLE);
     nel_create_roles_table(ROLES_TABLE);
+    nel_create_user_role_table(USER_ROLE_TABLE);
     nel_create_permissions_table(PERMISSIONS_TABLE);
     nel_create_logins_table(LOGINS_TABLE);
 
@@ -48,13 +49,13 @@ function setup_check()
 
 function nel_setup_stuff_done($status)
 {
-    if(!defined('STUFF_DONE'))
+    if (!defined('STUFF_DONE'))
     {
-        if($status === 'check_done_nochange')
+        if ($status === 'check_done_nochange')
         {
             define('STUFF_DONE', false);
         }
-        else if(!$status !== false )
+        else if (!$status !== false)
         {
             define('STUFF_DONE', true);
         }

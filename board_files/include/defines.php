@@ -31,8 +31,9 @@ define('ARCHIVE_THREAD_TABLE', TABLEPREFIX . '_archive_threads'); // Stores arch
 define('ARCHIVE_FILE_TABLE', TABLEPREFIX . '_archive_files'); // Stores archived file data
 define('ARCHIVE_EXTERNAL_TABLE', TABLEPREFIX . '_archive_external'); // Stores archived external content
 define('CONFIG_TABLE', TABLEPREFIX . '_config'); // Table to store board configuration. Best to leave it as-is unless you really need to change it
-define('BAN_TABLE', TABLEPREFIX . '_bans'); // Table containing ban info
-define('USER_TABLE', TABLEPREFIX . '_users'); // Table used for post data
-define('ROLES_TABLE', TABLEPREFIX . '_roles'); // Table used for post data
-define('PERMISSIONS_TABLE', TABLEPREFIX . '_permissions'); // Table used for post data
-define('LOGINS_TABLE', TABLEPREFIX . '_login_attempts'); // Table used for post data
+define('BAN_TABLE', 'nelliel_bans'); // Table containing ban info
+define('USER_TABLE', 'nelliel_users'); // Table used for post data
+define('ROLES_TABLE', 'nelliel_roles'); // Table used for post data
+define('USER_ROLE_TABLE', 'nelliel_user_role'); // Table used for post data
+define('PERMISSIONS_TABLE', 'nelliel_permissions'); // Table used for post data
+define('LOGINS_TABLE', 'nelliel_login_attempts'); // Table used for post data

@@ -3,7 +3,6 @@
 namespace Nelliel;
 
 use \PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -98,7 +97,8 @@ class BanHammer
 
     public function addBan($ban_input)
     {
-        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_add'))
+        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_add', CONF_BOARD_DIR) &&
+             !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
         {
             nel_derp(321, nel_stext('ERROR_321'));
         }
@@ -125,7 +125,8 @@ class BanHammer
 
     public function modifyBan($ban_input)
     {
-        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify'))
+        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify', CONF_BOARD_DIR) &&
+             !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
         {
             nel_derp(322, nel_stext('ERROR_322'));
         }
@@ -147,7 +148,8 @@ class BanHammer
 
     public function removeBan($ban_id, $snacks = false)
     {
-        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_delete') && !$snacks)
+        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_delete', CONF_BOARD_DIR) &&
+             !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify') && !$snacks)
         {
             nel_derp(323, nel_stext('ERROR_323'));
         }

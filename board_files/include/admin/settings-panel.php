@@ -12,7 +12,8 @@ function nel_settings_control($dataforce)
     $authorize = nel_authorize();
     $mode = $dataforce['mode'];
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_change'))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_modify', CONF_BOARD_DIR) &&
+         !$authorize->get_user_perm($_SESSION['username'], 'perm_all_config_modify'))
     {
         nel_derp(331, nel_stext('ERROR_331'));
     }

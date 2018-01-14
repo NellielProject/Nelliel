@@ -2,6 +2,7 @@
 
 function nel_generate_main_panel()
 {
+    $authorize = nel_authorize();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -9,38 +10,46 @@ function nel_generate_main_panel()
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/main_panel.html');
 
-    if (nel_authorize()->get_user_perm($_SESSION['username'], 'perm_config_access'))
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_config_access', CONF_BOARD_DIR) ||
+         $authorize->get_user_perm($_SESSION['username'], 'perm_all_config_access'))
     {
         $dom->removeChild($dom->getElementById('select-settings-panel'));
     }
 
-    if (nel_authorize()->get_user_perm($_SESSION['username'], 'perm_ban_access'))
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban_access', CONF_BOARD_DIR) ||
+         $authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_access'))
     {
         $dom->removeChild($dom->getElementById('select-ban-panel'));
     }
 
-    if (nel_authorize()->get_user_perm($_SESSION['username'], 'perm_post_access'))
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_post_access', CONF_BOARD_DIR) ||
+         $authorize->get_user_perm($_SESSION['username'], 'perm_all_post_access'))
     {
         $dom->removeChild($dom->getElementById('select-thread-panel'));
     }
 
-    if (nel_authorize()->get_user_perm($_SESSION['username'], 'perm_user_access') ||
-    nel_authorize()->get_user_perm($_SESSION['username'], 'perm_role_access'))
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_user_access', CONF_BOARD_DIR) ||
+    $authorize->get_user_perm($_SESSION['username'], 'perm_role_access', CONF_BOARD_DIR) ||
+         $authorize->get_user_perm($_SESSION['username'], 'perm_all_user_access') ||
+         $authorize->get_user_perm($_SESSION['username'], 'perm_all_role_access'))
     {
         $dom->removeChild($dom->getElementById('select-staff-panel'));
     }
 
-    if (nel_authorize()->get_user_perm($_SESSION['username'], 'perm_modmode_access'))
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_modmode_access', CONF_BOARD_DIR) ||
+         $authorize->get_user_perm($_SESSION['username'], 'perm_all_modmode_access'))
     {
         $dom->removeChild($dom->getElementById('select-mod-mode'));
     }
 
-    if (nel_authorize()->get_user_perm($_SESSION['username'], 'perm_regen_index'))
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_regen_index', CONF_BOARD_DIR) ||
+         $authorize->get_user_perm($_SESSION['username'], 'perm_all_regen_index'))
     {
         $dom->removeChild($dom->getElementById('regen-index-form'));
     }
 
-    if (nel_authorize()->get_user_perm($_SESSION['username'], 'perm_regen_caches'))
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_regen_caches', CONF_BOARD_DIR) ||
+         $authorize->get_user_perm($_SESSION['username'], 'perm_all_regen_caches'))
     {
         $dom->removeChild($dom->getElementById('regen-index-form'));
     }

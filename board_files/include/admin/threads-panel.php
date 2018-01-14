@@ -10,7 +10,8 @@ function nel_thread_panel($dataforce, $authorize)
 {
     $mode = $dataforce['mode'];
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_access'))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_access', CONF_BOARD_DIR) &&
+         !$authorize->get_user_perm($_SESSION['username'], 'perm_all_post_access'))
     {
         nel_derp(350, nel_stext('ERROR_350'));
     }
@@ -22,7 +23,7 @@ function nel_thread_panel($dataforce, $authorize)
         nel_regen_index($dataforce);
     }
 
-    if(isset($_POST['expand_thread']))
+    if (isset($_POST['expand_thread']))
     {
         $expand_data = explode(' ', $_POST['expand_thread']);
         nel_render_thread_panel_expand($expand_data[1]);
@@ -31,5 +32,4 @@ function nel_thread_panel($dataforce, $authorize)
     {
         nel_render_thread_panel_main();
     }
-
 }

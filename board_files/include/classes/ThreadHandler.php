@@ -335,7 +335,7 @@ class ThreadHandler
 
         if (nel_session_is_active())
         {
-            $flag = $authorize->role_level_check($authorize->get_user_role($_SESSION['username']), $authorize->get_user_role($post_data['mod_post']));
+            $flag = $authorize->role_level_check($authorize->get_user_role($_SESSION['username']), $authorize->get_user_role($post_data['mod_post'], CONF_BOARD_DIR));
 
             if (!$flag)
             {

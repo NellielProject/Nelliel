@@ -41,33 +41,33 @@ function nel_sql_binary_alternatives($datatype, $length)
 {
     if (SQLTYPE === 'MYSQL')
     {
-        if($datatype === "BINARY")
+        if ($datatype === "BINARY")
         {
             return 'BINARY(' . $length . ')';
         }
-        else if($datatype === "VARBINARY")
+        else if ($datatype === "VARBINARY")
         {
             return 'VARBINARY(' . $length . ')';
         }
     }
     else if (SQLTYPE === 'POSTGRES')
     {
-        if($datatype === "BINARY")
+        if ($datatype === "BINARY")
         {
             return 'BYTEA';
         }
-        else if($datatype === "VARBINARY")
+        else if ($datatype === "VARBINARY")
         {
             return 'BYTEA';
         }
     }
     else if (SQLTYPE === 'SQLITE')
     {
-        if($datatype === "BINARY")
+        if ($datatype === "BINARY")
         {
             return 'BLOB';
         }
-        else if($datatype === "VARBINARY")
+        else if ($datatype === "VARBINARY")
         {
             return 'BLOB';
         }
@@ -134,26 +134,28 @@ function nel_create_posts_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "post_number"       ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        "parent_thread"     INTEGER NOT NULL DEFAULT 0,
-        "poster_name"       VARCHAR(255) DEFAULT NULL,
-        "post_password"     VARCHAR(255) DEFAULT NULL,
-        "tripcode"          VARCHAR(255) DEFAULT NULL,
-        "secure_tripcode"   VARCHAR(255) DEFAULT NULL,
-        "email"             VARCHAR(255) DEFAULT NULL,
-        "subject"           VARCHAR(255) DEFAULT NULL,
-        "comment"           TEXT,
-        "ip_address"        ' . nel_sql_binary_alternatives('VARBINARY', '16') . ' DEFAULT NULL,
-        "post_time"         BIGINT NOT NULL DEFAULT 0,
-        "has_file"          SMALLINT NOT NULL DEFAULT 0,
-        "file_count"        SMALLINT NOT NULL DEFAULT 0,
-        "external_content"  SMALLINT NOT NULL DEFAULT 0,
-        "external_count"    SMALLINT NOT NULL DEFAULT 0,
-        "license"           VARCHAR(255) DEFAULT NULL,
-        "op"                SMALLINT NOT NULL DEFAULT 0,
-        "sage"              SMALLINT NOT NULL DEFAULT 0,
-        "mod_post"          VARCHAR(255) DEFAULT NULL,
-        "mod_comment"       VARCHAR(255) DEFAULT NULL,
+        "post_number"           ' . $auto_inc[0] .
+         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "parent_thread"         INTEGER NOT NULL DEFAULT 0,
+        "poster_name"           VARCHAR(255) DEFAULT NULL,
+        "post_password"         VARCHAR(255) DEFAULT NULL,
+        "tripcode"              VARCHAR(255) DEFAULT NULL,
+        "secure_tripcode"       VARCHAR(255) DEFAULT NULL,
+        "email"                 VARCHAR(255) DEFAULT NULL,
+        "subject"               VARCHAR(255) DEFAULT NULL,
+        "comment"               TEXT,
+        "ip_address"            ' .
+         nel_sql_binary_alternatives('VARBINARY', '16') . ' DEFAULT NULL,
+        "post_time"             BIGINT NOT NULL DEFAULT 0,
+        "has_file"              SMALLINT NOT NULL DEFAULT 0,
+        "file_count"            SMALLINT NOT NULL DEFAULT 0,
+        "external_content"      SMALLINT NOT NULL DEFAULT 0,
+        "external_count"        SMALLINT NOT NULL DEFAULT 0,
+        "license"               VARCHAR(255) DEFAULT NULL,
+        "op"                    SMALLINT NOT NULL DEFAULT 0,
+        "sage"                  SMALLINT NOT NULL DEFAULT 0,
+        "mod_post"              VARCHAR(255) DEFAULT NULL,
+        "mod_comment"           VARCHAR(255) DEFAULT NULL,
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -172,19 +174,19 @@ function nel_create_threads_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "thread_id"         INTEGER NOT NULL PRIMARY KEY,
-        "first_post"        INTEGER NOT NULL DEFAULT 0,
-        "last_post"         INTEGER NOT NULL DEFAULT 0,
-        "second_last_post"  INTEGER NOT NULL DEFAULT 0,
-        "last_bump_time"    BIGINT NOT NULL DEFAULT 0,
-        "total_files"       INTEGER NOT NULL DEFAULT 0,
-        "total_external"    INTEGER NOT NULL DEFAULT 0,
-        "last_update"       BIGINT NOT NULL DEFAULT 0,
-        "post_count"        INTEGER NOT NULL DEFAULT 0,
-        "thread_sage"       SMALLINT NOT NULL DEFAULT 0,
-        "sticky"            SMALLINT NOT NULL DEFAULT 0,
-        "archive_status"    SMALLINT NOT NULL DEFAULT 0,
-        "locked"            SMALLINT NOT NULL DEFAULT 0
+        "thread_id"             INTEGER NOT NULL PRIMARY KEY,
+        "first_post"            INTEGER NOT NULL DEFAULT 0,
+        "last_post"             INTEGER NOT NULL DEFAULT 0,
+        "second_last_post"      INTEGER NOT NULL DEFAULT 0,
+        "last_bump_time"        BIGINT NOT NULL DEFAULT 0,
+        "total_files"           INTEGER NOT NULL DEFAULT 0,
+        "total_external"        INTEGER NOT NULL DEFAULT 0,
+        "last_update"           BIGINT NOT NULL DEFAULT 0,
+        "post_count"            INTEGER NOT NULL DEFAULT 0,
+        "thread_sage"           SMALLINT NOT NULL DEFAULT 0,
+        "sticky"                SMALLINT NOT NULL DEFAULT 0,
+        "archive_status"        SMALLINT NOT NULL DEFAULT 0,
+        "locked"                SMALLINT NOT NULL DEFAULT 0
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -198,29 +200,33 @@ function nel_create_files_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        "parent_thread"     INTEGER NOT NULL DEFAULT 0,
-        "post_ref"          INTEGER NOT NULL DEFAULT 0,
-        "file_order"        SMALLINT NOT NULL DEFAULT 1,
-        "supertype"         VARCHAR(255) DEFAULT NULL,
-        "subtype"           VARCHAR(255) DEFAULT NULL,
-        "mime"              VARCHAR(255) DEFAULT NULL,
-        "filename"          VARCHAR(255) DEFAULT NULL,
-        "extension"         VARCHAR(255) DEFAULT NULL,
-        "image_width"       INTEGER DEFAULT NULL,
-        "image_height"      INTEGER DEFAULT NULL,
-        "preview_name"      VARCHAR(255) DEFAULT NULL,
-        "preview_width"     SMALLINT DEFAULT NULL,
-        "preview_height"    SMALLINT DEFAULT NULL,
-        "filesize"          INTEGER DEFAULT 0,
-        "md5"               ' . nel_sql_binary_alternatives('VARBINARY', '16') . ' DEFAULT NULL,
-        "sha1"              ' . nel_sql_binary_alternatives('VARBINARY', '20') . ' DEFAULT NULL,
-        "sha256"            ' . nel_sql_binary_alternatives('VARBINARY', '32') . ' DEFAULT NULL,
-        "source"            VARCHAR(255) DEFAULT NULL,
-        "license"           VARCHAR(255) DEFAULT NULL,
-        "alt_text"          VARCHAR(255) DEFAULT NULL,
-        "exif"              TEXT DEFAULT NULL,
-        "extra_meta"        TEXT DEFAULT NULL
+        "entry"                 ' . $auto_inc[0] .
+         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "parent_thread"         INTEGER NOT NULL DEFAULT 0,
+        "post_ref"              INTEGER NOT NULL DEFAULT 0,
+        "file_order"            SMALLINT NOT NULL DEFAULT 1,
+        "supertype"             VARCHAR(255) DEFAULT NULL,
+        "subtype"               VARCHAR(255) DEFAULT NULL,
+        "mime"                  VARCHAR(255) DEFAULT NULL,
+        "filename"              VARCHAR(255) DEFAULT NULL,
+        "extension"             VARCHAR(255) DEFAULT NULL,
+        "image_width"           INTEGER DEFAULT NULL,
+        "image_height"          INTEGER DEFAULT NULL,
+        "preview_name"          VARCHAR(255) DEFAULT NULL,
+        "preview_width"         SMALLINT DEFAULT NULL,
+        "preview_height"        SMALLINT DEFAULT NULL,
+        "filesize"              INTEGER DEFAULT 0,
+        "md5"                   ' .
+         nel_sql_binary_alternatives('VARBINARY', '16') . ' DEFAULT NULL,
+        "sha1"                  ' .
+         nel_sql_binary_alternatives('VARBINARY', '20') . ' DEFAULT NULL,
+        "sha256"                ' .
+         nel_sql_binary_alternatives('VARBINARY', '32') . ' DEFAULT NULL,
+        "source"                VARCHAR(255) DEFAULT NULL,
+        "license"               VARCHAR(255) DEFAULT NULL,
+        "alt_text"              VARCHAR(255) DEFAULT NULL,
+        "exif"                  TEXT DEFAULT NULL,
+        "extra_meta"            TEXT DEFAULT NULL
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -241,14 +247,15 @@ function nel_create_external_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        "parent_thread"     INTEGER NOT NULL DEFAULT 0,
-        "post_ref"          INTEGER NOT NULL DEFAULT 0,
-        "content_order"     SMALLINT NOT NULL DEFAULT 1,
-        "content_type"      VARCHAR(255) DEFAULT NULL,
-        "content_url"       VARCHAR(2048) DEFAULT NULL,
-        "source"            VARCHAR(255) DEFAULT NULL,
-        "license"           VARCHAR(255) DEFAULT NULL
+        "entry"                 ' . $auto_inc[0] .
+         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "parent_thread"         INTEGER NOT NULL DEFAULT 0,
+        "post_ref"              INTEGER NOT NULL DEFAULT 0,
+        "content_order"         SMALLINT NOT NULL DEFAULT 1,
+        "content_type"          VARCHAR(255) DEFAULT NULL,
+        "content_url"           VARCHAR(2048) DEFAULT NULL,
+        "source"                VARCHAR(255) DEFAULT NULL,
+        "license"               VARCHAR(255) DEFAULT NULL
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -261,13 +268,14 @@ function nel_create_config_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        "config_name"       VARCHAR(255) NOT NULL,
-        "config_type"       VARCHAR(255) DEFAULT NULL,
-        "config_owner"      VARCHAR(255) DEFAULT NULL,
-        "config_category"   VARCHAR(255) DEFAULT NULL,
-        "data_type"         VARCHAR(255) DEFAULT NULL,
-        "setting"           VARCHAR(255) DEFAULT NULL
+        "entry"                 ' . $auto_inc[0] .
+         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "config_name"           VARCHAR(255) NOT NULL,
+        "config_type"           VARCHAR(255) DEFAULT NULL,
+        "config_owner"          VARCHAR(255) DEFAULT NULL,
+        "config_category"       VARCHAR(255) DEFAULT NULL,
+        "data_type"             VARCHAR(255) DEFAULT NULL,
+        "setting"               VARCHAR(255) DEFAULT NULL
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -286,15 +294,15 @@ function nel_create_user_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        "user_id"           VARCHAR(255) NOT NULL UNIQUE,
-        "user_title"        VARCHAR(255) DEFAULT NULL,
-        "user_password"     VARCHAR(255) DEFAULT NULL,
-        "user_tripcode"     VARCHAR(255) DEFAULT NULL,
-        "role_id"           VARCHAR(255) DEFAULT NULL,
-        "active"            SMALLINT NOT NULL DEFAULT 0,
-        "failed_logins"     SMALLINT NOT NULL DEFAULT 0,
-        "last_failed_login" BIGINT NOT NULL DEFAULT 0
+        "entry"                 ' . $auto_inc[0] .
+         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "user_id"               VARCHAR(255) NOT NULL UNIQUE,
+        "user_title"            VARCHAR(255) DEFAULT NULL,
+        "user_password"         VARCHAR(255) DEFAULT NULL,
+        "user_tripcode"         VARCHAR(255) DEFAULT NULL,
+        "active"                SMALLINT NOT NULL DEFAULT 0,
+        "failed_logins"         SMALLINT NOT NULL DEFAULT 0,
+        "last_failed_login"     BIGINT NOT NULL DEFAULT 0
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -313,8 +321,9 @@ function nel_create_roles_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        "role_id"               VARCHAR(255) NOT NULL UNIQUE,
+        "entry"                 ' . $auto_inc[0] .
+         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "role_id"               VARCHAR(255) NOT NULL,
         "role_level"            SMALLINT NOT NULL DEFAULT 0,
         "role_title"            VARCHAR(255) DEFAULT NULL,
         "capcode_text"          VARCHAR(255) DEFAULT NULL
@@ -330,13 +339,37 @@ function nel_create_roles_table($table_name)
     nel_setup_stuff_done($result);
 }
 
+function nel_create_user_role_table($table_name)
+{
+    $auto_inc = nel_autoincrement_column('INTEGER');
+    $options = nel_table_options();
+    $schema = '
+    CREATE TABLE ' . $table_name . ' (
+        "entry"                 ' . $auto_inc[0] .
+         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "user_id"               VARCHAR(255) NOT NULL,
+        "role_id"               VARCHAR(255) NOT NULL,
+        "board"                 VARCHAR(255) DEFAULT NULL
+    ) ' . $options . ';';
+
+    $result = nel_create_table_query($schema, $table_name);
+
+    if ($result !== false)
+    {
+        nel_insert_default_admin_role();
+    }
+
+    nel_setup_stuff_done($result);
+}
+
 function nel_create_permissions_table($table_name)
 {
     $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"                ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "entry"                 ' . $auto_inc[0] .
+         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "role_id"               VARCHAR(255) DEFAULT NULL,
         "perm_id"               VARCHAR(255) DEFAULT NULL,
         "perm_setting"          SMALLINT NOT NULL DEFAULT 0
@@ -358,19 +391,15 @@ function nel_create_logins_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"                 ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        "ip_address"            ' . nel_sql_binary_alternatives('VARBINARY', '16') . ' NOT NULL UNIQUE,
+        "entry"                 ' . $auto_inc[0] .
+         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "ip_address"            ' .
+         nel_sql_binary_alternatives('VARBINARY', '16') . ' NOT NULL UNIQUE,
         "failed_attempts"       INTEGER NOT NULL DEFAULT 0,
         "last_attempt"          BIGINT DEFAULT NULL
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
-
-    if ($result !== false)
-    {
-        nel_insert_permissions_defaults();
-    }
-
     nel_setup_stuff_done($result);
 }
 
@@ -381,18 +410,21 @@ function nel_create_bans_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "ban_id"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        "board"             VARCHAR(255) DEFAULT NULL,
-        "type"              VARCHAR(255) DEFAULT NULL,
-        "creator"           VARCHAR(255) DEFAULT NULL,
-        "ip_address_start"  ' . nel_sql_binary_alternatives('VARBINARY', '16') . 'DEFAULT NULL,
-        "ip_address_end"    ' . nel_sql_binary_alternatives('VARBINARY', '16') . 'DEFAULT NULL,
-        "reason"            TEXT DEFAULT NULL,
-        "length"            BIGINT NOT NULL DEFAULT 0,
-        "start_time"        BIGINT NOT NULL DEFAULT 0,
-        "appeal"            TEXT DEFAULT NULL,
-        "appeal_response"   TEXT DEFAULT NULL,
-        "appeal_status"     SMALLINT NOT NULL DEFAULT 0
+        "ban_id"                ' . $auto_inc[0] .
+         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "board"                 VARCHAR(255) DEFAULT NULL,
+        "type"                  VARCHAR(255) DEFAULT NULL,
+        "creator"               VARCHAR(255) DEFAULT NULL,
+        "ip_address_start"      ' .
+         nel_sql_binary_alternatives('VARBINARY', '16') . 'DEFAULT NULL,
+        "ip_address_end"        ' .
+         nel_sql_binary_alternatives('VARBINARY', '16') . 'DEFAULT NULL,
+        "reason"                TEXT DEFAULT NULL,
+        "length"                BIGINT NOT NULL DEFAULT 0,
+        "start_time"            BIGINT NOT NULL DEFAULT 0,
+        "appeal"                TEXT DEFAULT NULL,
+        "appeal_response"       TEXT DEFAULT NULL,
+        "appeal_status"         SMALLINT NOT NULL DEFAULT 0
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -405,20 +437,14 @@ function nel_create_bans_table($table_name)
     nel_setup_stuff_done($result);
 }
 
-function nel_insert_role_defaults()
+function nel_insert_role_defaults() // TODO: Make this specific check for each role, then re-add to login
 {
     $dbh = nel_database();
-    $result = $dbh->query("SELECT 1 FROM " . ROLES_TABLE . " WHERE role_id='ADMIN'");
-
-    if ($result->fetch() !== false)
-    {
-        return false;
-    }
-
     $result = $dbh->query("INSERT INTO " . ROLES_TABLE . "
     (role_id, role_level, role_title, capcode_text)
     VALUES
-    ('ADMIN', 100, 'Administrator', '## Administrator ##'),
+    ('SUPER_ADMIN', 1000, 'Site Administrator', '## Site Administrator ##'),
+    ('ADMIN', 100, 'Board Administrator', '## Board Administrator ##'),
     ('MOD', 50, 'Moderator', '## Moderator ##'),
     ('JANITOR', 10, 'Janitor', '## Janitor ##')");
 
@@ -429,40 +455,55 @@ function nel_insert_permissions_defaults()
 {
     $dbh = nel_database();
     $result = $dbh->query("INSERT INTO " . PERMISSIONS_TABLE . " (role_id, perm_id, perm_setting)
-                        VALUES  ('ADMIN', 'perm_config_access', 1),
-                                ('ADMIN', 'perm_config_change', 1),
-                                ('ADMIN', 'perm_user_access', 1),
-                                ('ADMIN', 'perm_user_add', 1),
-                                ('ADMIN', 'perm_user_modify', 1),
-                                ('ADMIN', 'perm_user_delete', 1),
-                                ('ADMIN', 'perm_user_change_pass', 1),
-                                ('ADMIN', 'perm_role_access', 1),
-                                ('ADMIN', 'perm_role_add', 1),
-                                ('ADMIN', 'perm_role_modify', 1),
-                                ('ADMIN', 'perm_role_delete', 1),
-                                ('ADMIN', 'perm_ban_access', 1),
-                                ('ADMIN', 'perm_ban_add', 1),
-                                ('ADMIN', 'perm_ban_modify', 1),
-                                ('ADMIN', 'perm_ban_delete', 1),
-                                ('ADMIN', 'perm_post_access', 1),
-                                ('ADMIN', 'perm_post_modify', 1),
-                                ('ADMIN', 'perm_post_delete', 1),
-                                ('ADMIN', 'perm_post_file_delete', 1),
-                                ('ADMIN', 'perm_post_default_name', 1),
-                                ('ADMIN', 'perm_post_custom_name', 1),
-                                ('ADMIN', 'perm_post_override_anon', 1),
-                                ('ADMIN', 'perm_post_sticky', 1),
-                                ('ADMIN', 'perm_post_unsticky', 1),
-                                ('ADMIN', 'perm_post_lock', 1),
-                                ('ADMIN', 'perm_post_unlock', 1),
-                                ('ADMIN', 'perm_post_in_locked', 1),
-                                ('ADMIN', 'perm_post_comment', 1),
-                                ('ADMIN', 'perm_post_permsage', 1),
-                                ('ADMIN', 'perm_regen_caches', 1),
-                                ('ADMIN', 'perm_regen_index', 1),
-                                ('ADMIN', 'perm_regen_threads', 1),
-                                ('ADMIN', 'perm_modmode_access', 1),
-                                ('ADMIN', 'perm_modmode_view_ips', 1),
+                        VALUES  ('SUPER_ADMIN', 'perm_all_config_access', 1),
+                                ('SUPER_ADMIN', 'perm_all_config_modify', 1),
+                                ('SUPER_ADMIN', 'perm_all_user_access', 1),
+                                ('SUPER_ADMIN', 'perm_all_user_modify', 1),
+                                ('SUPER_ADMIN', 'perm_all_role_access', 1),
+                                ('SUPER_ADMIN', 'perm_all_role_modify', 1),
+                                ('SUPER_ADMIN', 'perm_all_ban_access', 1),
+                                ('SUPER_ADMIN', 'perm_all_ban_modify', 1),
+                                ('SUPER_ADMIN', 'perm_all_post_access', 1),
+                                ('SUPER_ADMIN', 'perm_all_post_modify', 1),
+                                ('SUPER_ADMIN', 'perm_all_regen_caches', 1),
+                                ('SUPER_ADMIN', 'perm_all_regen_index', 1),
+                                ('SUPER_ADMIN', 'perm_all_regen_threads', 1),
+                                ('SUPER_ADMIN', 'perm_all_modmode_access', 1),
+                                ('SUPER_ADMIN', 'perm_all_modmode_view_ips', 1),
+                                ('BOARD_ADMIN', 'perm_config_access', 1),
+                                ('BOARD_ADMIN', 'perm_config_modify', 1),
+                                ('BOARD_ADMIN', 'perm_user_access', 1),
+                                ('BOARD_ADMIN', 'perm_user_add', 1),
+                                ('BOARD_ADMIN', 'perm_user_modify', 1),
+                                ('BOARD_ADMIN', 'perm_user_delete', 1),
+                                ('BOARD_ADMIN', 'perm_user_change_pass', 1),
+                                ('BOARD_ADMIN', 'perm_role_access', 1),
+                                ('BOARD_ADMIN', 'perm_role_add', 1),
+                                ('BOARD_ADMIN', 'perm_role_modify', 1),
+                                ('BOARD_ADMIN', 'perm_role_delete', 1),
+                                ('BOARD_ADMIN', 'perm_ban_access', 1),
+                                ('BOARD_ADMIN', 'perm_ban_add', 1),
+                                ('BOARD_ADMIN', 'perm_ban_modify', 1),
+                                ('BOARD_ADMIN', 'perm_ban_delete', 1),
+                                ('BOARD_ADMIN', 'perm_post_access', 1),
+                                ('BOARD_ADMIN', 'perm_post_modify', 1),
+                                ('BOARD_ADMIN', 'perm_post_delete', 1),
+                                ('BOARD_ADMIN', 'perm_post_file_delete', 1),
+                                ('BOARD_ADMIN', 'perm_post_default_name', 1),
+                                ('BOARD_ADMIN', 'perm_post_custom_name', 1),
+                                ('BOARD_ADMIN', 'perm_post_override_anon', 1),
+                                ('BOARD_ADMIN', 'perm_post_sticky', 1),
+                                ('BOARD_ADMIN', 'perm_post_unsticky', 1),
+                                ('BOARD_ADMIN', 'perm_post_lock', 1),
+                                ('BOARD_ADMIN', 'perm_post_unlock', 1),
+                                ('BOARD_ADMIN', 'perm_post_in_locked', 1),
+                                ('BOARD_ADMIN', 'perm_post_comment', 1),
+                                ('BOARD_ADMIN', 'perm_post_permsage', 1),
+                                ('BOARD_ADMIN', 'perm_regen_caches', 1),
+                                ('BOARD_ADMIN', 'perm_regen_index', 1),
+                                ('BOARD_ADMIN', 'perm_regen_threads', 1),
+                                ('BOARD_ADMIN', 'perm_modmode_access', 1),
+                                ('BOARD_ADMIN', 'perm_modmode_view_ips', 1),
                                 ('MOD', 'perm_config_access', 0),
                                 ('MOD', 'perm_config_change', 0),
                                 ('MOD', 'perm_user_access', 0),
@@ -543,18 +584,38 @@ function nel_insert_default_admin()
     }
 
     $dbh = nel_database();
-    $result = $dbh->query("SELECT 1 FROM " . USER_TABLE . " WHERE role_id='ADMIN'");
+    $result = $dbh->query('SELECT 1 FROM "' . USER_TABLE . '" WHERE "user_id" = \'' . DEFAULTADMIN . '\'');
 
     if ($result->fetch() !== false)
     {
         return false;
     }
 
-    $result = $dbh->query("INSERT INTO " . USER_TABLE . " (user_id, user_password, role_id, active, failed_logins, last_failed_login)
+    $result = $dbh->query('INSERT INTO "' . USER_TABLE . '" (user_id, user_password, active, failed_logins, last_failed_login)
+    VALUES (\'' .
+         DEFAULTADMIN . '\', \'' . nel_password_hash(DEFAULTADMIN_PASS, NELLIEL_PASS_ALGORITHM) . '\', 1, 1, 0)');
+
+    nel_setup_stuff_done($result);
+}
+
+function nel_insert_default_admin_role()
+{
+    if (DEFAULTADMIN === '' || DEFAULTADMIN_PASS === '')
+    {
+        return false;
+    }
+
+    $dbh = nel_database();
+    $result = $dbh->query('SELECT 1 FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = \'' . DEFAULTADMIN . '\'');
+
+    if ($result->fetch() !== false)
+    {
+        return false;
+    }
+
+    $result = $dbh->query('INSERT INTO "' . USER_ROLE_TABLE . '" (user_id, role_id)
     VALUES
-    ('" . DEFAULTADMIN .
-         "', '" . nel_password_hash(DEFAULTADMIN_PASS, NELLIEL_PASS_ALGORITHM) . "',
-    'ADMIN', 1, 1, 0)");
+    (\'' . DEFAULTADMIN . '\', \'SUPER_ADMIN\')');
 
     nel_setup_stuff_done($result);
 }
