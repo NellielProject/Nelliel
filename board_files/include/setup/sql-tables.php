@@ -255,35 +255,6 @@ function nel_create_external_table($table_name)
     nel_setup_stuff_done($result);
 }
 
-/*function nel_create_bans_table($table_name)
-{
-    $dbh = nel_database();
-    $auto_inc = nel_autoincrement_column('INTEGER');
-    $options = nel_table_options();
-    $schema = '
-    CREATE TABLE ' . $table_name . ' (
-        "ban_id"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        "board"             VARCHAR(255) DEFAULT NULL,
-        "type"              VARCHAR(255) DEFAULT NULL,
-        "ip_address"        VARCHAR(45) NOT NULL,
-        "reason"            TEXT DEFAULT NULL,
-        "length"            BIGINT NOT NULL DEFAULT 0,
-        "start_time"         BIGINT NOT NULL DEFAULT 0,
-        "appeal"            TEXT DEFAULT NULL,
-        "appeal_response"   TEXT DEFAULT NULL,
-        "appeal_status"     SMALLINT NOT NULL DEFAULT 0
-    ) ' . $options . ';';
-
-    $result = nel_create_table_query($schema, $table_name);
-
-    if ($result)
-    {
-        $dbh->query('CREATE INDEX index_ip_address ON ' . $table_name . ' (ip_address);');
-    }
-
-    nel_setup_stuff_done($result);
-}*/
-
 function nel_create_config_table($table_name)
 {
     $auto_inc = nel_autoincrement_column('INTEGER');
@@ -387,8 +358,8 @@ function nel_create_logins_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"            ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        "ip"                    VARCHAR(45) NOT NULL UNIQUE,
+        "entry"                 ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "ip_address"            ' . nel_sql_binary_alternatives('VARBINARY', '16') . ' NOT NULL UNIQUE,
         "failed_attempts"       INTEGER NOT NULL DEFAULT 0,
         "last_attempt"          BIGINT DEFAULT NULL
     ) ' . $options . ';';

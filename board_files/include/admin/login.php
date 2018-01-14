@@ -32,8 +32,8 @@ function nel_verify_login_or_session($dataforce)
             if (nel_password_verify($_POST['super_sekrit'], $authorize->get_user_info($_POST['username'], 'user_password')))
             {
                 $dataforce['login_valid'] = true;
-                $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip" = ?');
-                $dbh->executePrepared($prepared, array($_SERVER['REMOTE_ADDR']), true);
+                $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
+                $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), true);
                 $user_login_fails = 0;
                 $attempt_time = 0;
             }
@@ -53,8 +53,8 @@ function nel_verify_login_or_session($dataforce)
         }
         else
         {
-            $prepared = $dbh->prepare('SELECT * FROM "' . LOGINS_TABLE . '" WHERE "ip" = ? LIMIT 1');
-            $result = $dbh->executePreparedFetch($prepared, array($_SERVER['REMOTE_ADDR']), PDO::FETCH_ASSOC, true);
+            $prepared = $dbh->prepare('SELECT * FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ? LIMIT 1');
+            $result = $dbh->executePreparedFetch($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), PDO::FETCH_ASSOC, true);
 
             if ($result !== false && !empty($result))
             {
@@ -63,15 +63,15 @@ function nel_verify_login_or_session($dataforce)
 
                 if ($last_period > 3600)
                 {
-                    $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip" = ?');
-                    $dbh->executePrepared($prepared, array($_SERVER['REMOTE_ADDR']), true);
+                    $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
+                    $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), true);
                 }
                 else if ($last_period > 5)
                 {
                     $attempts ++;
                     $prepared = $dbh->prepare('UPDATE "' . LOGINS_TABLE .
-                         '" SET "last_attempt" = ?, "failed_attempts" = ? WHERE "ip" = ?');
-                    $dbh->executePrepared($prepared, array(time(), $attempts, $_SERVER['REMOTE_ADDR']), true);
+                         '" SET "last_attempt" = ?, "failed_attempts" = ? WHERE "ip_address" = ?');
+                    $dbh->executePrepared($prepared, array(time(), $attempts, @inet_pton($_SERVER['REMOTE_ADDR'])), true);
                 }
                 else
                 {
@@ -81,8 +81,8 @@ function nel_verify_login_or_session($dataforce)
             else
             {
                 $prepared = $dbh->prepare('INSERT INTO "' . LOGINS_TABLE .
-                     '" (ip, failed_attempts, last_attempt) VALUES (?, ?, ?)');
-                $dbh->executePrepared($prepared, array($_SERVER['REMOTE_ADDR'], 1, time()), true);
+                     '" (ip_address, failed_attempts, last_attempt) VALUES (?, ?, ?)');
+                $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR']), 1, time()), true);
             }
 
             nel_derp(300, nel_stext('ERROR_300'));
