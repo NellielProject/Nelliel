@@ -227,13 +227,13 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
 
     if (!nel_session_is_ignored('render'))
     {
-        $new_post_dom->getElementById('ip-address-display')->setContent($post_data['ip_address']);
+        $new_post_dom->getElementById('ip-address-display')->setContent(@inet_ntop($post_data['ip_address']));
         $set_ban_details = $new_post_dom->getElementById('set-ban-details');
 
         if (nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_ban_add'))
         {
             $ban_details = 'addBanDetails(\'ban' . $post_data['post_number'] . '\', \'' . $post_data['post_number'] .
-                 '\', \'' . $post_data['poster_name'] . '\', \'' . $post_data['ip_address'] . '\')';
+            '\', \'' . $post_data['poster_name'] . '\', \'' . @inet_ntop($post_data['ip_address']) . '\')';
             $set_ban_details->extSetAttribute('onclick', $ban_details, 'none');
         }
         else

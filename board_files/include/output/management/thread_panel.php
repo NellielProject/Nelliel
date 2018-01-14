@@ -74,7 +74,7 @@ function nel_render_thread_panel_main()
         $thread_op_name->setContent($thread['thread_id']);
         $thread_op_name->changeId('thread-op-name-' . $thread['thread_id']);
         $thread_op_ip = $temp_thread_row->getElementById('thread-op-ip-');
-        $thread_op_ip->setContent($op_post['ip_address']);
+        $thread_op_ip->setContent(@inet_ntop($op_post['ip_address']));
         $thread_op_ip->changeId('thread-op-ip-' . $thread['thread_id']);
         $thread_post_count = $temp_thread_row->getElementById('thread-post-count-');
         $thread_post_count->setContent($thread['post_count']);
@@ -147,7 +147,7 @@ function nel_render_thread_panel_expand($thread_id)
         $post_name->setContent($post['poster_name']);
         $post_name->changeId('post-name-' . $post['post_number']);
         $post_ip = $temp_post_row->getElementById('post-ip-');
-        $post_ip->setContent($post['ip_address']);
+        $post_ip->setContent(@inet_ntop($post['ip_address']));
         $post_ip->changeId('post-ip-' . $post['post_number']);
 
         if($i & 1)

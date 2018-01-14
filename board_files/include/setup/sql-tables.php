@@ -143,7 +143,7 @@ function nel_create_posts_table($table_name)
         "email"             VARCHAR(255) DEFAULT NULL,
         "subject"           VARCHAR(255) DEFAULT NULL,
         "comment"           TEXT,
-        "ip_address"        VARCHAR(45) DEFAULT NULL,
+        "ip_address"        ' . nel_sql_binary_alternatives('VARBINARY', '16') . ' DEFAULT NULL,
         "post_time"         BIGINT NOT NULL DEFAULT 0,
         "has_file"          SMALLINT NOT NULL DEFAULT 0,
         "file_count"        SMALLINT NOT NULL DEFAULT 0,
