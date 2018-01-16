@@ -83,8 +83,8 @@ function nel_process_new_post($dataforce)
     $cookie_name = $post_data['name'];
 
     // Cookies OM NOM NOM NOM
-    setcookie('pwd-' . CONF_BOARD_DIR, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
-    setcookie('name-' . CONF_BOARD_DIR, $cookie_name, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
+    setcookie('pwd-' . BOARD_ID, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
+    setcookie('name-' . BOARD_ID, $cookie_name, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
     $post_data = $plugins->plugin_hook('after-post-info-processing', TRUE, array($post_data));
     $i = 0;
 

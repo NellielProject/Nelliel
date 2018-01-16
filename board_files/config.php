@@ -15,6 +15,8 @@ if (!defined('NELLIEL_VERSION'))
 define('BOARD_LANGUAGE', 'en-us');
 
 // Be certain CONF_BOARD_DIR are unique for each board you set up!
+define('BOARD_DIRECTORY', ''); // Directory board will be in. Can be absolute location or relative to imgboard.php.
+define('BOARD_ID', ''); // ID of board. Does not have to match name or directory of board.
 define('CONF_BOARD_DIR', 'board'); // Name of the directory the imageboard is installed. Used for cookies and other things.
 define('HOME', '../'); // Site home directory (up one level by default). Can be a web-accessible directory or a URL.
 

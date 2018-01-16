@@ -215,7 +215,7 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
         /*$new_post_dom->getElementById('ip-address-display')->setContent(@inet_ntop($post_data['ip_address']));
          $set_ban_details = $new_post_dom->getElementById('set-ban-details');
 
-         if (nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_ban_add', CONF_BOARD_DIR) &&
+         if (nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_ban_add', BOARD_ID) &&
          !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
          {
          $ban_details = 'addBanDetails(\'ban' . $post_data['post_number'] . '\', \'' . $post_data['post_number'] .
