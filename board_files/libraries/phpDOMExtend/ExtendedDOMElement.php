@@ -125,6 +125,19 @@ class ExtendedDOMElement extends \DOMElement
         $this->setIdAttribute('id', true);
     }
 
+    public function getAssociativeNodeArray($attribute_name, $context_node = null)
+    {
+        $array = array();
+        $node_list = $this->doXPathQuery(".//*[@" . $attribute_name . "]", $context_node);
+
+        foreach($node_list as $node)
+        {
+            $array[$node->getAttribute($attribute_name)] = $node;
+        }
+
+        return $array;
+    }
+
     public function getElementById($id)
     {
         return $this->doXPathQuery("(.//*[@id='" . $id . "'])[1]", $this)->item(0);

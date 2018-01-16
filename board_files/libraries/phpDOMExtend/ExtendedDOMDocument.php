@@ -112,6 +112,19 @@ class ExtendedDOMDocument extends \DOMDocument
         $element->removeSelf();
     }
 
+    public function getAssociativeNodeArray($attribute_name, $context_node = null)
+    {
+        $array = array();
+        $node_list = $this->doXPathQuery(".//*[@" . $attribute_name . "]", $context_node);
+
+        foreach($node_list as $node)
+        {
+            $array[$node->getAttribute($attribute_name)] = $node;
+        }
+
+        return $array;
+    }
+
     public function copyNodeIntoDocument($node, $deep = false)
     {
         $new_dom = new ExtendedDOMDocument(true);
