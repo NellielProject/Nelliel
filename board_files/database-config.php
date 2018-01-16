@@ -7,10 +7,6 @@
 //
 
 
-// Prefix used for table names. Make sure this is unique for each board!
-define('TABLEPREFIX', 'nelliel'); // Prefix used for tables in the database.
-
-
 // Database type. Supported types: MYSQL, SQLITE, POSTGRES
 define('SQLTYPE', 'SQLITE'); // Database type
 
