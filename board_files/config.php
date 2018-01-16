@@ -14,10 +14,10 @@ if (!defined('NELLIEL_VERSION'))
 // Default Nelliel language files follow the IETF codes.
 define('BOARD_LANGUAGE', 'en-us');
 
-// Be certain CONF_BOARD_DIR are unique for each board you set up!
-define('BOARD_DIRECTORY', ''); // Directory board will be in. Can be absolute location or relative to imgboard.php.
-define('BOARD_ID', ''); // ID of board. Does not have to match name or directory of board.
-define('CONF_BOARD_DIR', 'board'); // Name of the directory the imageboard is installed. Used for cookies and other things.
+define('BOARD_DIRECTORY', ''); // Subdirectory the board will be in. Can be absolute location or relative to imgboard.php.
+// ID of board. Does not have to match name or directory of board.
+// Must consist of only letters, numbers and underscores.
+define('BOARD_ID', '');
 define('HOME', '../'); // Site home directory (up one level by default). Can be a web-accessible directory or a URL.
 
 
@@ -32,7 +32,7 @@ define('DEFAULTADMIN_PASS', ''); // Password for default admin
 // Change this setting ONCE when you begin your board. Changing it again will alter the tripcode output
 define('TRIPCODE_SALT', 'sodiumz');
 
-// Should Nelliel  go through the setup check
+// Should Nelliel go through the setup check
 // Basically this runs through the setup sequence and checks that files, directories and database stuff is in place.
 // Highly recommend setting this to false once your initial setup and testing is done! It can generate unnecessary load.
 define('RUN_SETUP_CHECK', true);
