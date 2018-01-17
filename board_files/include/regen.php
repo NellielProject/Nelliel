@@ -4,9 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'output-filter.php';
-require_once INCLUDE_PATH . 'output/main-generation.php';
-require_once INCLUDE_PATH . 'output/thread-generation.php';
+require_once INCLUDE_PATH . 'output_filter.php';
+require_once INCLUDE_PATH . 'output/main_generation.php';
+require_once INCLUDE_PATH . 'output/thread_generation.php';
 
 function nel_regen_threads($dataforce, $write, $ids)
 {

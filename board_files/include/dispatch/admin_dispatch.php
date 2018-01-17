@@ -12,12 +12,12 @@ function admin_dispatch($dataforce)
     switch ($dataforce['mode_segments'][1])
     {
         case 'staff':
-            require_once INCLUDE_PATH . 'admin/staff-panel.php';
+            require_once INCLUDE_PATH . 'admin/staff_panel.php';
             nel_staff_panel($dataforce);
             break;
 
         case 'ban':
-            require_once INCLUDE_PATH . 'admin/bans-panel.php';
+            require_once INCLUDE_PATH . 'admin/bans_panel.php';
             nel_ban_control($dataforce);
             break;
 
@@ -27,7 +27,7 @@ function admin_dispatch($dataforce)
             break;
 
         case 'settings':
-            require_once INCLUDE_PATH . 'admin/settings-panel.php';
+            require_once INCLUDE_PATH . 'admin/settings_panel.php';
             nel_settings_control($dataforce);
             break;
 
@@ -56,7 +56,7 @@ function admin_dispatch($dataforce)
             break;
 
         case 'thread':
-            require_once INCLUDE_PATH . 'admin/threads-panel.php';
+            require_once INCLUDE_PATH . 'admin/threads_panel.php';
             nel_thread_panel($dataforce, $authorize);
             break;
 

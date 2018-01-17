@@ -1,12 +1,14 @@
 <?php
-define('NELLIEL_VERSION', 'v0.9.4.11'); // Version
+define('NELLIEL_VERSION', 'v0.9.4.12'); // Version
 define('BASE_PATH', realpath('./')); // Base path for script
-define('BOARD_FILES', 'board_files/'); // Name of directory where the support and internal files go
-define('INCLUDE_PATH', BASE_PATH . '/' . BOARD_FILES . 'include/'); // Base cache path
-require_once BOARD_FILES . 'config.php';
-require_once BOARD_FILES . 'crypt-config.php';
-require_once BOARD_FILES . 'database-config.php';
-require_once INCLUDE_PATH . 'defines.php';
+define('FILES_PATH', BASE_PATH . '/' . 'board_files/'); // Base board files path
+
+require_once FILES_PATH . 'path_definitions.php';
+require_once CONFIG_PATH. 'config.php';
+require_once CONFIG_PATH. 'crypt_config.php';
+require_once CONFIG_PATH. 'board_config.php';
+require_once CONFIG_PATH. 'database_config.php';
+require_once INCLUDE_PATH . 'internal_config.php';
 require_once INCLUDE_PATH . 'language/language.php';
 require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'crypt.php';
@@ -32,7 +34,7 @@ require_once LIBRARY_PATH . 'NellielTemplates/autoload.php';
 require_once INCLUDE_PATH . 'autoload.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'accessors.php';
-require_once INCLUDE_PATH . 'general-functions.php';
+require_once INCLUDE_PATH . 'general_functions.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'sessions.php';
 require_once INCLUDE_PATH . 'snacks.php';
@@ -42,7 +44,7 @@ nel_ban_spambots($dataforce);
 nel_apply_ban($dataforce);
 
 require_once INCLUDE_PATH . 'regen.php';
-require_once INCLUDE_PATH . 'thread-functions.php';
+require_once INCLUDE_PATH . 'thread_functions.php';
 require_once INCLUDE_PATH . 'admin/login.php';
 require_once INCLUDE_PATH . 'post/post.php';
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';

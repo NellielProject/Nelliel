@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'setup/sql-tables.php';
+require_once INCLUDE_PATH . 'setup/sql_tables.php';
 
 //
 // First run - checks for database, directories

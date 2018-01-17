@@ -40,7 +40,7 @@ if (!empty($_GET))
 
 // Load caching routines and handle current cache files
 
-require_once INCLUDE_PATH . 'cache-functions.php'; // I liek cache
+require_once INCLUDE_PATH . 'cache_functions.php'; // I liek cache
 
 // Cached board settings
 if (!file_exists(CACHE_PATH . 'board_settings.nelcache'))

@@ -5,8 +5,8 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 require_once INCLUDE_PATH . 'post/filetypes.php';
-require_once INCLUDE_PATH . 'post/file-functions.php';
-require_once INCLUDE_PATH . 'post/post-data.php';
+require_once INCLUDE_PATH . 'post/file_functions.php';
+require_once INCLUDE_PATH . 'post/post_data.php';
 
 function nel_process_new_post($dataforce)
 {
@@ -89,7 +89,7 @@ function nel_process_new_post($dataforce)
     $i = 0;
 
     // Go ahead and put post into database
-    require_once INCLUDE_PATH . 'post/database-functions.php';
+    require_once INCLUDE_PATH . 'post/database_functions.php';
 
     if ($post_data['parent_thread'] === 0)
     {

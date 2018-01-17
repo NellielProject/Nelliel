@@ -40,7 +40,7 @@ function nel_about_nelliel_screen()
                 specific prior written permission.
             </p>
             <div>
-                <img src="board_files/imagez/luna_canterlot_disclaimer.png" alt="Canterlot Voice Disclaimer" width="320" height="180" style="padding-right: 10px; width: 330px; float: left;">
+                <img src="' . IMAGES_DIR . '/luna_canterlot_disclaimer.png" alt="Canterlot Voice Disclaimer" width="320" height="180" style="padding-right: 10px; width: 330px; float: left;">
                 <p style="overflow: hidden; min-width: 15em;">
                     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
                     THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE

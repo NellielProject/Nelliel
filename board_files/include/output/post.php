@@ -115,7 +115,7 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
     $post_header_node_array['poster-name']->modifyAttribute('class', $post_type, 'before');
     $tripcode = (!is_null($post_data['tripcode'])) ? BS_TRIPKEY_MARKER . $post_data['tripcode'] : '';
     $secure_tripcode = (!is_null($post_data['secure_tripcode'])) ? BS_TRIPKEY_MARKER . BS_TRIPKEY_MARKER .
-             $post_data['secure_tripcode'] : '';
+         $post_data['secure_tripcode'] : '';
     $capcode_text = '';
 
     if ($post_data['mod_post'])
@@ -143,31 +143,31 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
     {
         case 'ISO':
             $post_time = date("Y", $curr_time) . BS_DATE_SEPARATOR . date("m", $curr_time) . BS_DATE_SEPARATOR .
-                     date("d (D) H:i:s", $curr_time);
+                 date("d (D) H:i:s", $curr_time);
             break;
 
         case 'US':
             $post_time = date("m", $curr_time) . BS_DATE_SEPARATOR . date("d", $curr_time) . BS_DATE_SEPARATOR .
-                     date("Y (D) H:i:s", $curr_time);
+                 date("Y (D) H:i:s", $curr_time);
             break;
 
         case 'COM':
             $post_time = date("d", $curr_time) . BS_DATE_SEPARATOR . date("m", $curr_time) . BS_DATE_SEPARATOR .
-                     date("Y (D) H:i:s", $curr_time);
+                 date("Y (D) H:i:s", $curr_time);
             break;
     }
 
     $post_header_node_array['post-time-']->setContent($post_time);
     $post_header_node_array['post-num-link-']->setContent($post_data['post_number']);
-    $post_header_node_array['post-num-link-']->extSetAttribute('href',
-            PAGE_DIR . $post_data['parent_thread'] . '/' . $post_data['parent_thread'] . '.html#p' . $post_id, 'none');
+    $post_header_node_array['post-num-link-']->extSetAttribute('href', PAGE_DIR . $post_data['parent_thread'] . '/' .
+         $post_data['parent_thread'] . '.html#p' . $post_id, 'none');
     $post_header_node_array['post-num-link-']->changeId('post-num-link-' . $post_id);
     $post_header_node_array['post-link-post']->extSetAttribute('data-id', $post_id);
 
     if (!$response && $gen_data['thread']['sticky'])
     {
-        $post_header_node_array['sticky-icon']->extSetAttribute('src',
-                BOARD_FILES . '/imagez/nelliel/' . nel_stext('THREAD_STICKY_ICON'), 'url');
+        $post_header_node_array['sticky-icon']->extSetAttribute('src', IMAGES_DIR . '/nelliel/' .
+             nel_stext('THREAD_STICKY_ICON'), 'url');
         $post_header_node_array['sticky-icon']->changeId('sticky-icon-' . $post_id);
     }
     else
@@ -179,13 +179,13 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
     {
         if (!nel_session_is_ignored('render'))
         {
-            $post_header_node_array['reply-to-link']->extSetAttribute('href',
-                    PHP_SELF . '?mode=display&post=' . $post_data['post_number']);
+            $post_header_node_array['reply-to-link']->extSetAttribute('href', PHP_SELF . '?mode=display&post=' .
+                 $post_data['post_number']);
         }
         else
         {
-            $post_header_node_array['reply-to-link']->extSetAttribute('href',
-                    PAGE_DIR . $post_data['parent_thread'] . '/' . $post_data['post_number'] . '.html');
+            $post_header_node_array['reply-to-link']->extSetAttribute('href', PAGE_DIR . $post_data['parent_thread'] .
+                 '/' . $post_data['post_number'] . '.html');
         }
     }
 
@@ -314,20 +314,19 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
                     {
                         if ($file['preview_width'] > BS_MAX_MULTI_WIDTH || $file['preview_height'] > BS_MAX_MULTI_HEIGHT)
                         {
-                            $ratio = min((BS_MAX_MULTI_HEIGHT / $file['preview_height']),
-                                    (BS_MAX_MULTI_WIDTH / $file['preview_width']));
+                            $ratio = min((BS_MAX_MULTI_HEIGHT / $file['preview_height']), (BS_MAX_MULTI_WIDTH /
+                                 $file['preview_width']));
                             $file['preview_width'] = intval($ratio * $file['preview_width']);
                             $file['preview_height'] = intval($ratio * $file['preview_height']);
                         }
                     }
                 }
-                else if (BS_USE_FILE_ICON && file_exists(
-                        BOARD_FILES . 'imagez/nelliel/filetype/' . utf8_strtolower($file['supertype']) . '/' .
-                                 utf8_strtolower($file['subtype']) . '.png'))
+                else if (BS_USE_FILE_ICON && file_exists(IMAGES_DIR . '/nelliel/filetype/' .
+                     utf8_strtolower($file['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png'))
                 {
                     $file['has_preview'] = true;
-                    $file['preview_location'] = BOARD_FILES . '/imagez/nelliel/filetype/' .
-                             utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png';
+                    $file['preview_location'] = IMAGES_DIR . '/nelliel/filetype/' .
+                         utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png';
                     $file['preview_width'] = (BS_MAX_WIDTH < 64) ? BS_MAX_WIDTH : '128';
                     $file['preview_height'] = (BS_MAX_HEIGHT < 64) ? BS_MAX_HEIGHT : '128';
                 }
@@ -341,8 +340,8 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
                 $preview_element->extSetAttribute('height', $file['preview_height']);
                 $preview_element->extSetAttribute('alt', $file['alt_text']);
                 $preview_element->extSetAttribute('class', $post_type_class . $multiple_class . 'post-preview');
-                $preview_element->extSetAttribute('data-other-dims',
-                        'w' . $file['image_width'] . 'h' . $file['image_height']);
+                $preview_element->extSetAttribute('data-other-dims', 'w' . $file['image_width'] . 'h' .
+                     $file['image_height']);
                 $preview_element->extSetAttribute('data-other-loc', $file['file_location']);
             }
             else
@@ -425,8 +424,7 @@ function nel_render_post_adjust_relative($node, $gen_data)
             $file_id = $post_id . '_' . $file['file_order'];
             $new_post_dom->getElementById('file-link-' . $file_id)->modifyAttribute('href', '../../', 'before');
             $new_post_dom->getElementById('file-location-' . $file_id)->modifyAttribute('href', '../../', 'before');
-            $new_post_dom->getElementById('file-preview-' . $file_id)->modifyAttribute('data-other-loc', '../../',
-                    'before');
+            $new_post_dom->getElementById('file-preview-' . $file_id)->modifyAttribute('data-other-loc', '../../', 'before');
 
             $preview_element = $new_post_dom->getElementById('file-preview-' . $file_id);
 

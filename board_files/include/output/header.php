@@ -14,13 +14,13 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . BOARD_ID . '\');};');
     $dom->getElementById('js-style-set')->setContent('processCookie("style-' . BOARD_ID . '");');
-    $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JSDIR . 'html5shiv-printshiv.js"></script><![endif]';
+    $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
     foreach ($link_elements as $element)
     {
         $content = $element->getAttribute('title');
-        $element->extSetAttribute('href', $dotdot . CSSDIR . strtolower($content) . '.css');
+        $element->extSetAttribute('href', $dotdot . CSS_DIR . strtolower($content) . '.css');
     }
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
