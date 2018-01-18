@@ -133,6 +133,7 @@ $lang_singular = array(
 
     'MANAGE_MODE' => 'Management Mode',  // Management
     'MANAGE_OPTIONS' => 'Options',  // Options
+    'MANAGE_BOARD_OPTIONS' => 'Options for board: ',  // Board options
     'MANAGE_SETTINGS' => 'Board Settings',  // Settings
     'MANAGE_BANS' => 'Bans',  // Bans
     'MANAGE_STAFF' => 'Staff',  // Staff

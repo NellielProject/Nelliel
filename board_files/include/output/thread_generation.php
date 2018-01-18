@@ -14,7 +14,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
         nel_session_is_ignored('render', true);
     }
 
-    $dataforce['dotdot'] = '../../';
+    $dataforce['dotdot'] = '../../../';
     $render = new NellielTemplates\RenderCore();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $dom = $render->newDOMDocument();

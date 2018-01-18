@@ -14,15 +14,15 @@ if (!defined('NELLIEL_VERSION'))
 // Database tables
 //
 
-define('POST_TABLE', BOARD_ID . '_posts'); // Table used for post data
-define('THREAD_TABLE', BOARD_ID . '_threads'); // Table used for thread data
-define('FILE_TABLE', BOARD_ID . '_files'); // Table used for file data
-define('EXTERNAL_TABLE', BOARD_ID . '_external'); // Table used for external content
-define('ARCHIVE_POST_TABLE', BOARD_ID . '_archive_posts'); // Stores archived threads
-define('ARCHIVE_THREAD_TABLE', BOARD_ID . '_archive_threads'); // Stores archived thread data
-define('ARCHIVE_FILE_TABLE', BOARD_ID . '_archive_files'); // Stores archived file data
-define('ARCHIVE_EXTERNAL_TABLE', BOARD_ID . '_archive_external'); // Stores archived external content
-define('CONFIG_TABLE', BOARD_ID . '_config'); // Table to store board configuration. Best to leave it as-is unless you really need to change it
+define('POST_TABLE', INPUT_BOARD_ID . '_posts'); // Table used for post data
+define('THREAD_TABLE', INPUT_BOARD_ID . '_threads'); // Table used for thread data
+define('FILE_TABLE', INPUT_BOARD_ID . '_files'); // Table used for file data
+define('EXTERNAL_TABLE', INPUT_BOARD_ID . '_external'); // Table used for external content
+define('ARCHIVE_POST_TABLE', INPUT_BOARD_ID . '_archive_posts'); // Stores archived threads
+define('ARCHIVE_THREAD_TABLE', INPUT_BOARD_ID . '_archive_threads'); // Stores archived thread data
+define('ARCHIVE_FILE_TABLE', INPUT_BOARD_ID . '_archive_files'); // Stores archived file data
+define('ARCHIVE_EXTERNAL_TABLE', INPUT_BOARD_ID . '_archive_external'); // Stores archived external content
+define('CONFIG_TABLE', INPUT_BOARD_ID . '_config'); // Table to store board configuration. Best to leave it as-is unless you really need to change it
 define('BAN_TABLE', 'nelliel_bans'); // Table containing ban info
 define('USER_TABLE', 'nelliel_users'); // Table used for post data
 define('ROLES_TABLE', 'nelliel_roles'); // Table used for post data

@@ -2,31 +2,9 @@
     <div class="del-list"><span data-i18n="neltext">MANAGE_OPTIONS</span></div>
     <form action="imgboard.php" method="post" enctype="multipart/form-data">
         <div>
-            <input type="radio" name="mode" id="select-settings-panel" value="admin->settings->panel">
-            <label for="select-settings-panel" data-i18n="neltext">MANAGE_OPT_SETTINGS</label><br>
-            <input type="radio" name="mode" id="select-ban-panel" value="admin->ban->panel">
-            <label for="select-ban-panel" data-i18n="neltext">MANAGE_OPT_BAN</label><br>
-            <input type="radio" name="mode" id="select-thread-panel" value="admin->thread->panel">
-            <label for="select-thread-panel" data-i18n="neltext">MANAGE_OPT_THREAD</label><br>
-            <input type="radio" name="mode" id="select-staff-panel" value="admin->staff->main">
-            <label for="select-staff-panel" data-i18n="neltext">MANAGE_OPT_STAFF</label><br>
-            <input type="radio" name="mode" id="select-mod-mode" value="admin->modmode->enter">
-            <label for="select-mod-mode" data-i18n="neltext">MANAGE_OPT_MMODE</label><br>
+        	<input type="hidden" name="mode" value="admin->selectboard">
+            <input type="radio" name="board_id" id="board-select-" value="">
+            <label id="board-label-" for=""></label><br>
             <input type="submit" value="FORM_SUBMIT" data-i18n-attributes="value" data-i18n="neltext">
-        </div>
-    </form>
-    <hr>
-    <form action="imgboard.php" method="post" enctype="multipart/form-data" id="regen-index-form">
-        <div>
-            <input type="hidden" name="mode" value="admin->regen->full">
-            <input type="submit" value="FORM_UPDATE_PAGES" data-i18n-attributes="value" data-i18n="neltext"><br>
-            <span data-i18n="neltext">MANAGE_UPDATE_WARN</span><br><br>
-        </div>
-    </form>
-    <form action="imgboard.php" method="post" enctype="multipart/form-data" id="regen-caches-form">
-        <div>
-            <input type="hidden" name="mode" value="admin->regen->cache">
-            <input type="submit" value="FORM_UPDATE_CACHE" data-i18n-attributes="value" data-i18n="neltext"><br>
-            <span data-i18n="neltext">MANAGE_UPDATE_CACHE_WARN</span><br><br>
         </div>
     </form>

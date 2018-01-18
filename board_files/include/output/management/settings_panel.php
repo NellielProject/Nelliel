@@ -13,7 +13,7 @@ function nel_render_settings_panel($dataforce)
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/settings_panel.html');
-    $dom->getElementById('board_id_field')->extSetAttribute('value', BOARD_ID);
+    $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
     $result = $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '"');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);

@@ -18,18 +18,18 @@ function nel_neltext_variable($name, $value = null)
 
 function nel_stext($text)
 {
-    return nel_get_language(BOARD_LANGUAGE, 'singular', $text);
+    return nel_get_language(nel_board_settings('board_language'), 'singular', $text);
 }
 
 function nel_ptext($text, $num)
 {
     if ($num <= 1)
     {
-        return nel_get_language(BOARD_LANGUAGE, 'singular', $text);
+        return nel_get_language(nel_board_settings('board_language'), 'singular', $text);
     }
     else if ($num > 1)
     {
-        return nel_get_language(BOARD_LANGUAGE, 'plural', $text);
+        return nel_get_language(nel_board_settings('board_language'), 'plural', $text);
     }
 }
 

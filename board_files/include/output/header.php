@@ -8,12 +8,12 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
 {
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
-    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
+    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '../';
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
-    $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . BOARD_ID . '\');};');
-    $dom->getElementById('js-style-set')->setContent('processCookie("style-' . BOARD_ID . '");');
+    $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . INPUT_BOARD_ID . '\');};');
+    $dom->getElementById('js-style-set')->setContent('processCookie("style-' . INPUT_BOARD_ID . '");');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
@@ -80,7 +80,7 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     foreach ($a_elements as $element)
     {
         $content = $element->getContent();
-        //$element->extSetAttribute('onclick', 'changeCSS(\'' . $content . '\', \'style-' . BOARD_ID .
+        //$element->extSetAttribute('onclick', 'changeCSS(\'' . $content . '\', \'style-' . INPUT_BOARD_ID .
        //      '\'); return false;');
     }
 

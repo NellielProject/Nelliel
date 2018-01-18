@@ -12,7 +12,7 @@ function nel_render_ban_page($dataforce, $ban_info)
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'ban_page.html');
-    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
+    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '../';
     $dom->getElementById('banned-board')->setContent($ban_info['board']);
     $dom->getElementById('banned-time')->setContent(date("D F jS Y  H:i", $ban_info['start_time']));
     $dom->getElementById('banned-reason')->setContent($ban_info['reason']);

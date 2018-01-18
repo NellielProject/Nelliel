@@ -12,7 +12,7 @@ function nel_render_staff_panel_main($dataforce)
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_main.html');
-    $dom->getElementById('board_id_field')->extSetAttribute('value', BOARD_ID);
+    $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_footer($render, false);
@@ -29,7 +29,7 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_user_edit.html');
-    $dom->getElementById('board_id_field')->extSetAttribute('value', BOARD_ID);
+    $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
     $dom->getElementById('user-id-field')->extSetAttribute('value', $user['user_id']);
     $dom->getElementById('user-title-field')->extSetAttribute('value', $user['user_title']);
     $dom->getElementById('role-id-field')->extSetAttribute('value', $user['role_id']);
@@ -50,7 +50,7 @@ function nel_render_staff_panel_role_edit($dataforce, $role_id)
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_role_edit.html');
-    $dom->getElementById('board_id_field')->extSetAttribute('value', BOARD_ID);
+    $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
     $dom->getElementById('role_id')->extSetAttribute('value', $role['role_id']);
     $dom->getElementById('role_level')->extSetAttribute('value', $role['role_level']);
     $dom->getElementById('role_title')->extSetAttribute('value', $role['role_title']);

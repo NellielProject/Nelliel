@@ -26,7 +26,7 @@ function general_dispatch($dataforce)
                 }
                 else
                 {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF2 . PHP_EXT . '">';
+                    echo '<meta http-equiv="refresh" content="1;URL=' . INPUT_BOARD_ID . '/' . PHP_SELF2 . PHP_EXT . '">';
                 }
             }
 

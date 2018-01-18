@@ -13,6 +13,11 @@ require_once INCLUDE_PATH . 'setup/sql_tables.php';
 
 function setup_check()
 {
+    if(INPUT_BOARD_ID === '')
+    {
+        return;
+    }
+
     $file_handler = nel_file_handler();
     nel_create_posts_table(POST_TABLE);
     nel_create_posts_table(ARCHIVE_POST_TABLE);

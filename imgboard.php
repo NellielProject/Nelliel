@@ -1,12 +1,11 @@
 <?php
 define('NELLIEL_VERSION', 'v0.9.4.12'); // Version
-define('BASE_PATH', realpath('./')); // Base path for script
+define('BASE_PATH', realpath('./') . '/'); // Base path for script
 define('FILES_PATH', BASE_PATH . '/' . 'board_files/'); // Base board files path
 
 require_once FILES_PATH . 'path_definitions.php';
 require_once CONFIG_PATH. 'config.php';
 require_once CONFIG_PATH. 'crypt_config.php';
-require_once CONFIG_PATH. 'board_config.php';
 require_once CONFIG_PATH. 'database_config.php';
 require_once INCLUDE_PATH . 'internal_config.php';
 require_once INCLUDE_PATH . 'language/language.php';

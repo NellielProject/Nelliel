@@ -11,6 +11,7 @@ function nel_settings_control($dataforce)
     $dbh = nel_database();
     $authorize = nel_authorize();
     $mode = $dataforce['mode'];
+    var_dump($authorize->get_user_perm($_SESSION['username'], 'perm_all_config_modify'));
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_modify', INPUT_BOARD_ID) &&
          !$authorize->get_user_perm($_SESSION['username'], 'perm_all_config_modify'))

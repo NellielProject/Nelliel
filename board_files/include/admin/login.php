@@ -97,7 +97,14 @@ function nel_login($dataforce)
 {
     if (!nel_session_is_ignored())
     {
-        nel_generate_main_panel();
+        if(INPUT_BOARD_ID === '')
+        {
+            nel_generate_main_panel();
+        }
+        else
+        {
+            nel_generate_main_board_panel(INPUT_BOARD_ID);
+        }
     }
     else
     {

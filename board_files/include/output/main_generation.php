@@ -12,7 +12,7 @@ function nel_main_thread_generator($dataforce, $write)
     $dbh = nel_database();
     $file_handler = nel_file_handler();
     $gen_data = array();
-    $dataforce['dotdot'] = '';
+    $dataforce['dotdot'] = '../';
 
     if ($write)
     {
@@ -41,7 +41,7 @@ function nel_main_thread_generator($dataforce, $write)
 
         if ($write)
         {
-            $file_handler->writeFile(PHP_SELF2 . PHP_EXT, $render->outputRenderSet(), FILE_PERM);
+            $file_handler->writeFile(INPUT_BOARD_ID . '/' . PHP_SELF2 . PHP_EXT, $render->outputRenderSet(), FILE_PERM);
         }
         else
         {
@@ -227,7 +227,7 @@ function nel_main_thread_generator($dataforce, $write)
         }
         else
         {
-            $logfilename = ($page === 1) ? PHP_SELF2 . PHP_EXT : PHP_SELF2 . ($page - 1) . PHP_EXT;
+            $logfilename = ($page === 1) ? INPUT_BOARD_ID . '/' . PHP_SELF2 . PHP_EXT : INPUT_BOARD_ID . '/' . PHP_SELF2 . ($page - 1) . PHP_EXT;
             $file_handler->writeFile($logfilename, $render->outputRenderSet(), FILE_PERM, true);
         }
 

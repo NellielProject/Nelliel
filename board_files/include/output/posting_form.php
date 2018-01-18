@@ -17,12 +17,12 @@ function nel_render_posting_form($dataforce, $render)
     }
     else
     {
-        $page_ref1 = PHP_SELF2 . PHP_EXT;
+        $page_ref1 = INPUT_BOARD_ID . '/' . PHP_SELF2 . PHP_EXT;
     }
 
     $posting_form = $dom->getElementById('posting-form');
     $posting_form->extSetAttribute('action', $dotdot . PHP_SELF);
-    $dom->getElementById('board_id_field_post_form')->extSetAttribute('value', BOARD_ID);
+    $dom->getElementById('board_id_field_post_form')->extSetAttribute('value', INPUT_BOARD_ID);
 
     if ($response_id)
     {

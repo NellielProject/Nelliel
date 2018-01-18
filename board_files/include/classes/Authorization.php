@@ -263,7 +263,7 @@ class Authorization
     {
         if ($this->role_exists($role_id))
         {
-            return $this->roles[$role_id]['permissions'][$perm];
+            return isset($this->roles[$role_id]['permissions'][$perm]) && $this->roles[$role_id]['permissions'][$perm];
         }
 
         return false;
@@ -285,10 +285,7 @@ class Authorization
         {
             foreach ($this->user_roles[$user] as $key => $value)
             {
-                if ($value == $board && $this->get_role_perm($key, $perm))
-                {
-                    return $this->get_role_perm($key, $perm);
-                }
+                return $this->get_role_perm($key, $perm);
             }
         }
 

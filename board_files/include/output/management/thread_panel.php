@@ -13,7 +13,7 @@ function nel_render_thread_panel_main()
     nel_render_header(array(), $render, array());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel.html');
-    $dom->getElementById('board_id_field')->extSetAttribute('value', BOARD_ID);
+    $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
     $thread_data = $dbh->executeFetchAll('SELECT * FROM "' . THREAD_TABLE . '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC', PDO::FETCH_ASSOC);
     $thread_list_table = $dom->getElementById('thread-list');
     $thread_row = $dom->getElementById('thread-row-');
@@ -115,7 +115,7 @@ function nel_render_thread_panel_expand($thread_id)
     nel_render_header(array(), $render, array());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
-    $dom->getElementById('board_id_field')->extSetAttribute('value', BOARD_ID);
+    $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
     $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE "parent_thread" = ?');
     $post_data = $dbh->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
     $post_list_table = $dom->getElementById('post-list');

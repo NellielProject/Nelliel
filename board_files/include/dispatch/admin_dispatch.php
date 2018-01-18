@@ -64,6 +64,10 @@ function admin_dispatch($dataforce)
             nel_login($dataforce);
             break;
 
+        case 'selectboard':
+            nel_login($dataforce);
+            break;
+
         default:
             nel_derp(400, nel_stext('ERROR_400'));
     }

@@ -442,7 +442,7 @@ function nel_render_thread_form_bottom($dom)
 {
     $footer_form_element = $dom->getElementById('footer-form');
     $form_td_list = $footer_form_element->doXPathQuery(".//input");
-    $dom->getElementById('board_id_field_footer')->extSetAttribute('value', BOARD_ID);
+    $dom->getElementById('board_id_field_footer')->extSetAttribute('value', INPUT_BOARD_ID);
 
     if (nel_session_is_ignored('render'))
     {

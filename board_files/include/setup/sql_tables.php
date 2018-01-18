@@ -130,6 +130,7 @@ function nel_create_table_query($schema, $table_name)
 
 function nel_create_posts_table($table_name)
 {
+    $dbh = nel_database();
     $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
     $schema = '
@@ -155,7 +156,7 @@ function nel_create_posts_table($table_name)
         "op"                    SMALLINT NOT NULL DEFAULT 0,
         "sage"                  SMALLINT NOT NULL DEFAULT 0,
         "mod_post"              VARCHAR(255) DEFAULT NULL,
-        "mod_comment"           VARCHAR(255) DEFAULT NULL,
+        "mod_comment"           VARCHAR(255) DEFAULT NULL
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -447,7 +448,7 @@ function nel_create_board_data_table($table_name)
          ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "board_id"              VARCHAR(255) NOT NULL UNIQUE,
         "board_directory"       VARCHAR(255) NOT NULL,
-        "db_prefix"             VARCHAR(255) NOT NULL
+        "db_prefix"             VARCHAR(255) NOT NULL,
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);

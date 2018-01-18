@@ -27,7 +27,7 @@ function nel_clean_exit($dataforce, $die)
         die();
     }
 
-    echo '<meta http-equiv="refresh" content="2;URL=' . PHP_SELF2 . PHP_EXT . '">';
+    echo '<meta http-equiv="refresh" content="2;URL=' . INPUT_BOARD_ID . '/' . PHP_SELF2 . PHP_EXT . '">';
     die();
 }
 

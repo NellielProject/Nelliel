@@ -60,7 +60,7 @@ function nel_about_nelliel_screen()
                 <a href="https://github.com/ircmaxell/password_compat" title="password_compat">password_compat</a> library created by <a href="https://blog.ircmaxell.com/">Anthony Ferrara</a>.
             </p>
             <p class="text-center">
-                <a href="' . PHP_SELF2 . PHP_EXT . '">' . nel_stext('LINK_RETURN') . '</a>
+                <a href="' . INPUT_BOARD_ID . '/' . PHP_SELF2 . PHP_EXT . '">' . nel_stext('LINK_RETURN') . '</a>
             </p>
         </div>
 	</div>
