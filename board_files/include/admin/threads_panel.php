@@ -10,7 +10,7 @@ function nel_thread_panel($dataforce, $authorize)
 {
     $mode = $dataforce['mode'];
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_access', BOARD_ID) &&
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_access', $_POST['board_id']) &&
          !$authorize->get_user_perm($_SESSION['username'], 'perm_all_post_access'))
     {
         nel_derp(350, nel_stext('ERROR_350'));

@@ -14,8 +14,8 @@ function nel_staff_panel($dataforce)
     $authorize = nel_authorize();
     $temp_auth = array();
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access', BOARD_ID) &&
-         !$authorize->get_user_perm($_SESSION['username'], 'perm_role_access', BOARD_ID) &&
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access', $_POST['board_id']) &&
+    !$authorize->get_user_perm($_SESSION['username'], 'perm_role_access', $_POST['board_id']) &&
          !$authorize->get_user_perm($_SESSION['username'], 'perm_all_user_access') &&
          !$authorize->get_user_perm($_SESSION['username'], 'perm_all_role_access'))
     {
@@ -28,7 +28,7 @@ function nel_staff_panel($dataforce)
     }
     else if ($dataforce['mode_segments'][2] === 'user')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access', BOARD_ID) &&
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access', $_POST['board_id']) &&
              !$authorize->get_user_perm($_SESSION['username'], 'perm_all_user_access'))
         {
             nel_derp(341, nel_stext('ERROR_341'));
