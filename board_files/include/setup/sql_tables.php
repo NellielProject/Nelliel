@@ -134,8 +134,7 @@ function nel_create_posts_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "post_number"           ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "post_number"           ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "parent_thread"         INTEGER NOT NULL DEFAULT 0,
         "poster_name"           VARCHAR(255) DEFAULT NULL,
         "post_password"         VARCHAR(255) DEFAULT NULL,
@@ -144,8 +143,7 @@ function nel_create_posts_table($table_name)
         "email"                 VARCHAR(255) DEFAULT NULL,
         "subject"               VARCHAR(255) DEFAULT NULL,
         "comment"               TEXT,
-        "ip_address"            ' .
-         nel_sql_binary_alternatives('VARBINARY', '16') . ' DEFAULT NULL,
+        "ip_address"            ' . nel_sql_binary_alternatives('VARBINARY', '16') . ' DEFAULT NULL,
         "post_time"             BIGINT NOT NULL DEFAULT 0,
         "has_file"              SMALLINT NOT NULL DEFAULT 0,
         "file_count"            SMALLINT NOT NULL DEFAULT 0,
@@ -200,8 +198,7 @@ function nel_create_files_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"                 ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "entry"                 ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "parent_thread"         INTEGER NOT NULL DEFAULT 0,
         "post_ref"              INTEGER NOT NULL DEFAULT 0,
         "file_order"            SMALLINT NOT NULL DEFAULT 1,
@@ -216,12 +213,9 @@ function nel_create_files_table($table_name)
         "preview_width"         SMALLINT DEFAULT NULL,
         "preview_height"        SMALLINT DEFAULT NULL,
         "filesize"              INTEGER DEFAULT 0,
-        "md5"                   ' .
-         nel_sql_binary_alternatives('VARBINARY', '16') . ' DEFAULT NULL,
-        "sha1"                  ' .
-         nel_sql_binary_alternatives('VARBINARY', '20') . ' DEFAULT NULL,
-        "sha256"                ' .
-         nel_sql_binary_alternatives('VARBINARY', '32') . ' DEFAULT NULL,
+        "md5"                   ' . nel_sql_binary_alternatives('VARBINARY', '16') . ' DEFAULT NULL,
+        "sha1"                  ' . nel_sql_binary_alternatives('VARBINARY', '20') . ' DEFAULT NULL,
+        "sha256"                ' . nel_sql_binary_alternatives('VARBINARY', '32') . ' DEFAULT NULL,
         "source"                VARCHAR(255) DEFAULT NULL,
         "license"               VARCHAR(255) DEFAULT NULL,
         "alt_text"              VARCHAR(255) DEFAULT NULL,
@@ -247,8 +241,7 @@ function nel_create_external_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"                 ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "entry"                 ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "parent_thread"         INTEGER NOT NULL DEFAULT 0,
         "post_ref"              INTEGER NOT NULL DEFAULT 0,
         "content_order"         SMALLINT NOT NULL DEFAULT 1,
@@ -268,8 +261,7 @@ function nel_create_config_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"                 ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "entry"                 ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "config_name"           VARCHAR(255) NOT NULL,
         "config_type"           VARCHAR(255) DEFAULT NULL,
         "config_owner"          VARCHAR(255) DEFAULT NULL,
@@ -294,8 +286,7 @@ function nel_create_user_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"                 ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "entry"                 ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "user_id"               VARCHAR(255) NOT NULL UNIQUE,
         "user_title"            VARCHAR(255) DEFAULT NULL,
         "user_password"         VARCHAR(255) DEFAULT NULL,
@@ -321,8 +312,7 @@ function nel_create_roles_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"                 ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "entry"                 ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "role_id"               VARCHAR(255) NOT NULL,
         "role_level"            SMALLINT NOT NULL DEFAULT 0,
         "role_title"            VARCHAR(255) DEFAULT NULL,
@@ -345,8 +335,7 @@ function nel_create_user_role_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"                 ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "entry"                 ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "user_id"               VARCHAR(255) NOT NULL,
         "role_id"               VARCHAR(255) NOT NULL,
         "board"                 VARCHAR(255) DEFAULT NULL
@@ -368,8 +357,7 @@ function nel_create_permissions_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"                 ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "entry"                 ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "role_id"               VARCHAR(255) DEFAULT NULL,
         "perm_id"               VARCHAR(255) DEFAULT NULL,
         "perm_setting"          SMALLINT NOT NULL DEFAULT 0
@@ -391,10 +379,8 @@ function nel_create_logins_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "entry"                 ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        "ip_address"            ' .
-         nel_sql_binary_alternatives('VARBINARY', '16') . ' NOT NULL UNIQUE,
+        "entry"                 ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "ip_address"            ' . nel_sql_binary_alternatives('VARBINARY', '16') . ' NOT NULL UNIQUE,
         "failed_attempts"       INTEGER NOT NULL DEFAULT 0,
         "last_attempt"          BIGINT DEFAULT NULL
     ) ' . $options . ';';
@@ -410,15 +396,12 @@ function nel_create_bans_table($table_name)
     $options = nel_table_options();
     $schema = '
     CREATE TABLE ' . $table_name . ' (
-        "ban_id"                ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "ban_id"                ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "board"                 VARCHAR(255) DEFAULT NULL,
         "type"                  VARCHAR(255) DEFAULT NULL,
         "creator"               VARCHAR(255) DEFAULT NULL,
-        "ip_address_start"      ' .
-         nel_sql_binary_alternatives('VARBINARY', '16') . 'DEFAULT NULL,
-        "ip_address_end"        ' .
-         nel_sql_binary_alternatives('VARBINARY', '16') . 'DEFAULT NULL,
+        "ip_address_start"      ' . nel_sql_binary_alternatives('VARBINARY', '16') . 'DEFAULT NULL,
+        "ip_address_end"        ' . nel_sql_binary_alternatives('VARBINARY', '16') . 'DEFAULT NULL,
         "reason"                TEXT DEFAULT NULL,
         "length"                BIGINT NOT NULL DEFAULT 0,
         "start_time"            BIGINT NOT NULL DEFAULT 0,
@@ -434,6 +417,22 @@ function nel_create_bans_table($table_name)
         $dbh->query('CREATE INDEX index_ip_address_start ON ' . $table_name . ' (ip_address_start);');
     }
 
+    nel_setup_stuff_done($result);
+}
+
+function nel_create_board_data_table($table_name)
+{
+    $auto_inc = nel_autoincrement_column('INTEGER');
+    $options = nel_table_options();
+    $schema = '
+    CREATE TABLE ' . $table_name . ' (
+        "entry"                 ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "board_id"              VARCHAR(255) NOT NULL UNIQUE,
+        "board_directory"       VARCHAR(255) NOT NULL,
+        "db_prefix"             VARCHAR(255) NOT NULL
+    ) ' . $options . ';';
+
+    $result = nel_create_table_query($schema, $table_name);
     nel_setup_stuff_done($result);
 }
 
@@ -592,8 +591,8 @@ function nel_insert_default_admin()
     }
 
     $result = $dbh->query('INSERT INTO "' . USER_TABLE . '" (user_id, user_password, active, failed_logins, last_failed_login)
-    VALUES (\'' .
-         DEFAULTADMIN . '\', \'' . nel_password_hash(DEFAULTADMIN_PASS, NELLIEL_PASS_ALGORITHM) . '\', 1, 1, 0)');
+    VALUES (\'' . DEFAULTADMIN . '\', \'' . nel_password_hash(DEFAULTADMIN_PASS, NELLIEL_PASS_ALGORITHM) .
+         '\', 1, 1, 0)');
 
     nel_setup_stuff_done($result);
 }

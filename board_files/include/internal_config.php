@@ -29,3 +29,4 @@ define('ROLES_TABLE', 'nelliel_roles'); // Table used for post data
 define('USER_ROLE_TABLE', 'nelliel_user_role'); // Table used for post data
 define('PERMISSIONS_TABLE', 'nelliel_permissions'); // Table used for post data
 define('LOGINS_TABLE', 'nelliel_login_attempts'); // Table used for post data
+define('BOARD_DATA_TABLE', 'nelliel_board_data'); // Table used for post data

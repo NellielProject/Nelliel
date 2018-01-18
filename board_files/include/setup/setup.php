@@ -10,6 +10,7 @@ require_once INCLUDE_PATH . 'setup/sql_tables.php';
 // First run - checks for database, directories
 // If anything does not exist yet, create it
 //
+
 function setup_check()
 {
     $file_handler = nel_file_handler();
@@ -28,6 +29,7 @@ function setup_check()
     nel_create_user_role_table(USER_ROLE_TABLE);
     nel_create_permissions_table(PERMISSIONS_TABLE);
     nel_create_logins_table(LOGINS_TABLE);
+    nel_create_board_data_table(BOARD_DATA_TABLE);
 
     $file_handler->createDirectory(SRC_PATH, DIRECTORY_PERM);
     $file_handler->createDirectory(THUMB_PATH, DIRECTORY_PERM);
