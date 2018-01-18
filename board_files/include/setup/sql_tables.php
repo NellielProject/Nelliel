@@ -462,7 +462,7 @@ function nel_insert_role_defaults() // TODO: Make this specific check for each r
     (role_id, role_level, role_title, capcode_text)
     VALUES
     ('SUPER_ADMIN', 1000, 'Site Administrator', '## Site Administrator ##'),
-    ('ADMIN', 100, 'Board Administrator', '## Board Administrator ##'),
+    ('BOARD_ADMIN', 100, 'Board Administrator', '## Board Administrator ##'),
     ('MOD', 50, 'Moderator', '## Moderator ##'),
     ('JANITOR', 10, 'Janitor', '## Janitor ##')");
 

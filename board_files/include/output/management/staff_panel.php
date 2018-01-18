@@ -58,6 +58,8 @@ function nel_render_staff_panel_role_edit($dataforce, $role_id)
 
     foreach($role['permissions'] as $key => $value)
     {
+        echo "<pre>";
+        var_dump($key);
         if($value === true)
         {
             $dom->getElementById($key)->extSetAttribute('checked', $value);
