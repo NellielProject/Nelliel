@@ -97,7 +97,7 @@ class BanHammer
 
     public function addBan($ban_input)
     {
-        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_add', $_POST['board_id']) &&
+        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_add', INPUT_BOARD_ID) &&
              !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
         {
             nel_derp(321, nel_stext('ERROR_321'));
@@ -125,7 +125,7 @@ class BanHammer
 
     public function modifyBan($ban_input)
     {
-        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify', $_POST['board_id']) &&
+        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify', INPUT_BOARD_ID) &&
              !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
         {
             nel_derp(322, nel_stext('ERROR_322'));
@@ -148,7 +148,7 @@ class BanHammer
 
     public function removeBan($ban_id, $snacks = false)
     {
-        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_delete', $_POST['board_id']) &&
+        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_delete', INPUT_BOARD_ID) &&
              !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify') && !$snacks)
         {
             nel_derp(323, nel_stext('ERROR_323'));

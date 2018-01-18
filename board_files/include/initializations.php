@@ -27,6 +27,15 @@ $dataforce['login_valid'] = false;
 if (!empty($_POST))
 {
     $dataforce['mode'] = (isset($_POST['mode'])) ? $_POST['mode']: NULL;
+
+    if(isset($_POST['board_id']))
+    {
+        define('INPUT_BOARD_ID', $_POST['board_id']);
+    }
+    else
+    {
+        define('INPUT_BOARD_ID', null);
+    }
 }
 
 if (!empty($_GET))

@@ -34,6 +34,7 @@ function nel_render_main_ban_panel($dataforce)
 
         $temp_ban_info_row = $ban_info_row->cloneNode(true);
         $temp_ban_info_row->extSetAttribute('class', $bgclass);
+        $dom->getElementById('board_id_field')->extSetAttribute('value', BOARD_ID);
         $ban_info_td_list = $temp_ban_info_row->doXPathQuery(".//td");
         $ban_info_td_list->item(0)->setContent($ban_info['ban_id']);
         $ban_info_td_list->item(1)->setContent($ban_info['type']);
@@ -79,6 +80,7 @@ function nel_render_ban_panel_add($dataforce)
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
+    $dom->getElementById('board_id_field')->extSetAttribute('value', BOARD_ID);
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_footer($render, false);
@@ -96,6 +98,7 @@ function nel_render_ban_panel_modify($dataforce)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_modify_ban.html');
 
+    $dom->getElementById('board_id_field')->extSetAttribute('value', BOARD_ID);
     $ban_info = $ban_hammer->getBanById($_POST['ban_id'], true);
     $dom->getElementById('ban-ip-field')->extSetAttribute('value', @inet_ntop($ban_info['ip_address_start']));
     $dom->getElementById('ban-time-display')->setContent(date("D F jS Y  H:i:s", $ban_info['start_time']));
