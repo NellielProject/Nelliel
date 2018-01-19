@@ -335,13 +335,12 @@ class ThreadHandler
 
         if (nel_session_is_active())
         {
-            // TODO: Make this wurk.
-            //$flag = $authorize->role_level_check($authorize->get_user_role($_SESSION['username']), $authorize->get_user_role($post_data['mod_post'], INPUT_BOARD_ID));
+            $flag = $authorize->role_level_check($authorize->user_highest_level_role($_SESSION['username'], INPUT_BOARD_ID), $authorize->user_highest_level_role($post_data['mod_post'], INPUT_BOARD_ID));
 
-            //if (!$flag)
-            //{
+            if (!$flag)
+            {
                 $flag = nel_verify_salted_hash($_POST['update_sekrit'], $post_data['post_password']);
-            //}
+            }
         }
         else
         {

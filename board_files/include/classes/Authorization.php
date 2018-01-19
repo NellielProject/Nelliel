@@ -325,6 +325,8 @@ class Authorization
 
             if($update['all_boards'] == 1)
             {
+                unset($this->user_roles[$user_id][$board_id]);
+                $board_id = '_*';
                 $update['board'] = null;
             }
 
@@ -349,7 +351,34 @@ class Authorization
         return false;
     }
 
-    public function role_level_check($role1, $role2, $false_if_equal = false) // TODO: Redo for multiple roles
+    public function user_highest_level_role($user_id, $board_id = null)
+    {
+        $role_level = 0;
+        $role = '';
+
+        foreach($this->user_roles[$user_id] as $key => $value)
+        {
+            $level = $this->get_role_info($value['role_id'], 'role_level');
+
+            if(!is_null($board_id))
+            {
+                if($board_id !== $key || $key !== '_*')
+                {
+                    $level = 0;
+                }
+            }
+
+            if($level > $role_level)
+            {
+                $role_level = $this->get_role_info($user_role['role_id'], 'role_level');
+                $role = $user_role['role_id'];
+            }
+        }
+
+        return $role;
+    }
+
+    public function role_level_check($role1, $role2, $false_if_equal = false)
     {
         if (!$this->role_exists($role1))
         {
