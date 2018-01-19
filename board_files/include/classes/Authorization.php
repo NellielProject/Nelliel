@@ -118,7 +118,7 @@ class Authorization
 
     private function load_user_roles($user_id)
     {
-        $query = 'SELECT * FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ? LIMIT 1';
+        $query = 'SELECT * FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ?';
         $prepared = $this->dbh->prepare($query);
         $prepared->bindValue(1, $user_id, PDO::PARAM_STR);
         return $this->dbh->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
