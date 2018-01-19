@@ -322,6 +322,12 @@ class Authorization
         if ($this->user_exists($user_id))
         {
             $updated = false;
+
+            if($update['all_boards'] == 1)
+            {
+                $update['board'] = null;
+            }
+
             $this->user_roles[$user_id][$board_id] = $update;
             $this->user_roles[$user_id][$board_id]['remove'] = $remove;
             $this->user_roles_modified[$user_id] = true;
