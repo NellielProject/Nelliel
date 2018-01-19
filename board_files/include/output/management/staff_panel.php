@@ -37,19 +37,25 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
 
     $boards = $dbh->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
 
+    $new_board = $board_roles->cloneNode(true);
+    $board_roles->parentNode->insertBefore($new_board, $board_roles);
+    $new_board->removeAttribute('id');
+    $role_board_id_label = $new_board->getElementById('role-board-id-label-');
+    $role_board_id_label->setContent('All Boards');
+    $role_board_id_label->changeId('role-board-id-label-all--boards');
+    $new_board->getElementById('role-board-id-')->changeId('role-board-id-all--boards');
+
     if ($boards !== false)
     {
         foreach ($boards as $board)
         {
             $new_board = $board_roles->cloneNode(true);
-            $board_roles->parentNode->appendChild($new_board);
+            $board_roles->parentNode->insertBefore($new_board, $board_roles);
             $new_board->removeAttribute('id');
             $role_board_id_label = $new_board->getElementById('role-board-id-label-');
             $role_board_id_label->setContent($board);
             $role_board_id_label->changeId('role-board-id-label-' . $board);
             $new_board->getElementById('role-board-id-')->changeId('role-board-id-' . $board);
-            $new_board->getElementById('all-boards1-')->changeId('all-boards1-' . $board);
-            $new_board->getElementById('all-boards2-')->changeId('all-boards2-' . $board);
         }
     }
 
@@ -60,18 +66,14 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
     {
         foreach ($user_boards as $board_role)
         {
+            if($board_role['all_boards'] == 1)
+            {
+                $board_role['board'] = 'all--boards';
+            }
+
             $board_id_element = $dom->getElementById('role-board-id-' . $board_role['board']);
             $board_id_element->extSetAttribute('name', 'user_board_role_' . $board_role['board']);
             $board_id_element->extSetAttribute('value', $board_role['role_id']);
-            $dom->getElementById('all-boards1-' . $board_role['board'])->extSetAttribute('name', 'all_boards_' .
-                 $board_role['board']);
-            $board_id_element2 = $dom->getElementById('all-boards2-' . $board_role['board']);
-            $board_id_element2->extSetAttribute('name', 'all_boards_' . $board_role['board']);
-
-            if ($board_role['all_boards'] == 1)
-            {
-                $board_id_element2->extSetAttribute('checked', "true");
-            }
         }
     }
 
