@@ -56,46 +56,38 @@ function nel_generate_main_board_panel($board_id)
     $dom->getElementById('board-id-2')->extSetAttribute('value', $board_id);
     $dom->getElementById('board-id-3')->extSetAttribute('value', $board_id);
 
-    if ($authorize->get_user_perm($_SESSION['username'], 'perm_config_access', $board_id) ||
-    $authorize->get_user_perm($_SESSION['username'], 'perm_all_config_access'))
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_config_access', $board_id))
     {
         $dom->removeChild($dom->getElementById('select-settings-panel'));
     }
 
-    if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban_access', $board_id) ||
-    $authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_access'))
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban_access', $board_id))
     {
         $dom->removeChild($dom->getElementById('select-ban-panel'));
     }
 
-    if ($authorize->get_user_perm($_SESSION['username'], 'perm_post_access', $board_id) ||
-    $authorize->get_user_perm($_SESSION['username'], 'perm_all_post_access'))
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_post_access', $board_id))
     {
         $dom->removeChild($dom->getElementById('select-thread-panel'));
     }
 
     if ($authorize->get_user_perm($_SESSION['username'], 'perm_user_access', $board_id) ||
-    $authorize->get_user_perm($_SESSION['username'], 'perm_role_access', INPUT_BOARD_ID) ||
-    $authorize->get_user_perm($_SESSION['username'], 'perm_all_user_access') ||
-    $authorize->get_user_perm($_SESSION['username'], 'perm_all_role_access'))
+    $authorize->get_user_perm($_SESSION['username'], 'perm_role_access', INPUT_BOARD_ID))
     {
         $dom->removeChild($dom->getElementById('select-staff-panel'));
     }
 
-    if ($authorize->get_user_perm($_SESSION['username'], 'perm_modmode_access', $board_id) ||
-    $authorize->get_user_perm($_SESSION['username'], 'perm_all_modmode_access'))
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_modmode_access', $board_id))
     {
         $dom->removeChild($dom->getElementById('select-mod-mode'));
     }
 
-    if ($authorize->get_user_perm($_SESSION['username'], 'perm_regen_index', $board_id) ||
-    $authorize->get_user_perm($_SESSION['username'], 'perm_all_regen_index'))
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_regen_index', $board_id))
     {
         $dom->removeChild($dom->getElementById('regen-index-form'));
     }
 
-    if ($authorize->get_user_perm($_SESSION['username'], 'perm_regen_caches', $board_id) ||
-    $authorize->get_user_perm($_SESSION['username'], 'perm_all_regen_caches'))
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_regen_caches', $board_id))
     {
         $dom->removeChild($dom->getElementById('regen-index-form'));
     }

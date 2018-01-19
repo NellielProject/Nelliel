@@ -21,6 +21,7 @@ function nel_clean_exit($dataforce, $die)
     $authorize = nel_authorize();
     $authorize->save_users();
     $authorize->save_roles();
+    $authorize->save_user_roles();
 
     if ($die)
     {

@@ -15,9 +15,7 @@ function nel_staff_panel($dataforce)
     $temp_auth = array();
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access', INPUT_BOARD_ID) &&
-    !$authorize->get_user_perm($_SESSION['username'], 'perm_role_access', INPUT_BOARD_ID) &&
-         !$authorize->get_user_perm($_SESSION['username'], 'perm_all_user_access') &&
-         !$authorize->get_user_perm($_SESSION['username'], 'perm_all_role_access'))
+    !$authorize->get_user_perm($_SESSION['username'], 'perm_role_access', INPUT_BOARD_ID))
     {
         nel_derp(340, nel_stext('ERROR_340'));
     }
@@ -28,8 +26,7 @@ function nel_staff_panel($dataforce)
     }
     else if ($dataforce['mode_segments'][2] === 'user')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access', INPUT_BOARD_ID) &&
-             !$authorize->get_user_perm($_SESSION['username'], 'perm_all_user_access'))
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access', INPUT_BOARD_ID))
         {
             nel_derp(341, nel_stext('ERROR_341'));
         }
@@ -54,7 +51,28 @@ function nel_staff_panel($dataforce)
 
             foreach ($_POST as $key => $value)
             {
-                if ($key === 'mode' || $key === 'user_password' || $key === 'change_pass')
+                if(strpos($key, 'all_boards_') !== false)
+                {
+                    continue;
+                }
+
+                if(strpos($key, 'user_board_role_') !== false)
+                {
+                    $board = substr($key, 16);
+                    $remove = false;
+
+                    if($value === '')
+                    {
+                        $remove = true;
+                    }
+
+                    $all_boards = $_POST['all_boards_' . $board];
+                    $update = array('user_id' => $user_id, 'role_id' => $value, 'board' => $board, 'all_boards' => $all_boards);
+                    $authorize->update_user_role($user_id, $update, substr($key, 16), $remove);
+                    continue;
+                }
+
+                if ($key === 'mode' || $key === 'user_password' || $key === 'change_pass' || $key === 'board_id')
                 {
                     continue;
                 }
@@ -62,13 +80,14 @@ function nel_staff_panel($dataforce)
                 $authorize->update_user_info($user_id, $key, $value);
             }
 
+            $authorize->save_users();
+            $authorize->save_user_roles();
             nel_render_staff_panel_user_edit($dataforce, $user_id);
         }
     }
     else if ($dataforce['mode_segments'][2] === 'role')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_access') &&
-             !$authorize->get_user_perm($_SESSION['username'], 'perm_all_role_access'))
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_access', INPUT_BOARD_ID))
         {
             nel_derp(342, nel_stext('ERROR_342'));
         }
@@ -101,6 +120,7 @@ function nel_staff_panel($dataforce)
                 $authorize->update_perm($role_id, $key, $value);
             }
 
+            $authorize->save_roles();
             nel_render_staff_panel_role_edit($dataforce, $role_id);
         }
     }

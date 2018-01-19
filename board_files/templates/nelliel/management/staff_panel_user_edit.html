@@ -42,14 +42,17 @@
                     <input id="user-title-field" type="text" name="user_title" id="utitle" size="50" value="">
                 </td>
             </tr>
+            <tr id="board-roles">
+                <td>
+                    <label id="role-board-id-label-" for="role-board-id-"></label>
+                </td>
+                <td>
+                    <input type="text" name="user_board_role" id="role-board-id-" size="30" value="">
+                    <input type="hidden" name="all_boards" id="all-boards1-" value="0">
+                    <input type="checkbox" name="all_boards" id="all-boards2-" value="1">
+                    <label for="all-boards-"data-i18n="neltext">Apply role to all boards</label>
+                </td>
             <tr>
-                <td>
-                    <label for="rselect" data-i18n="neltext">MANAGE_STAFF_ROLE_ID</label>
-                </td>
-                <td>
-                    <input id="role-id-field" type="text" name="role_id" id="rselect" size="50" value="">
-                </td>
-            </tr>
             <tr>
                 <td>
                     <input type="submit" value="FORM_STAFF_USER_UPDATE" data-i18n="neltext" data-i18n-attributes="value">

@@ -13,6 +13,7 @@ require_once INCLUDE_PATH . 'setup/sql_tables.php';
 
 function setup_check()
 {
+    // TODO Do this better
     if(INPUT_BOARD_ID === '')
     {
         return;

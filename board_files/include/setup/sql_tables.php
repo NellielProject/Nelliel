@@ -350,7 +350,8 @@ function nel_create_user_role_table($table_name)
          ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "user_id"               VARCHAR(255) NOT NULL,
         "role_id"               VARCHAR(255) NOT NULL,
-        "board"                 VARCHAR(255) DEFAULT NULL
+        "board"                 VARCHAR(255) DEFAULT NULL;
+        "all_boards"            SMALLINT NOT NULL DEFAULT 0
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -473,21 +474,40 @@ function nel_insert_permissions_defaults()
 {
     $dbh = nel_database();
     $result = $dbh->query("INSERT INTO " . PERMISSIONS_TABLE . " (role_id, perm_id, perm_setting)
-                        VALUES  ('SUPER_ADMIN', 'perm_all_config_access', 1),
-                                ('SUPER_ADMIN', 'perm_all_config_modify', 1),
-                                ('SUPER_ADMIN', 'perm_all_user_access', 1),
-                                ('SUPER_ADMIN', 'perm_all_user_modify', 1),
-                                ('SUPER_ADMIN', 'perm_all_role_access', 1),
-                                ('SUPER_ADMIN', 'perm_all_role_modify', 1),
-                                ('SUPER_ADMIN', 'perm_all_ban_access', 1),
-                                ('SUPER_ADMIN', 'perm_all_ban_modify', 1),
-                                ('SUPER_ADMIN', 'perm_all_post_access', 1),
-                                ('SUPER_ADMIN', 'perm_all_post_modify', 1),
-                                ('SUPER_ADMIN', 'perm_all_regen_caches', 1),
-                                ('SUPER_ADMIN', 'perm_all_regen_index', 1),
-                                ('SUPER_ADMIN', 'perm_all_regen_threads', 1),
-                                ('SUPER_ADMIN', 'perm_all_modmode_access', 1),
-                                ('SUPER_ADMIN', 'perm_all_modmode_view_ips', 1),
+                        VALUES  ('SUPER_ADMIN', 'perm_config_access', 1),
+                                ('SUPER_ADMIN', 'perm_config_modify', 1),
+                                ('SUPER_ADMIN', 'perm_user_access', 1),
+                                ('SUPER_ADMIN', 'perm_user_add', 1),
+                                ('SUPER_ADMIN', 'perm_user_modify', 1),
+                                ('SUPER_ADMIN', 'perm_user_delete', 1),
+                                ('SUPER_ADMIN', 'perm_user_change_pass', 1),
+                                ('SUPER_ADMIN', 'perm_role_access', 1),
+                                ('SUPER_ADMIN', 'perm_role_add', 1),
+                                ('SUPER_ADMIN', 'perm_role_modify', 1),
+                                ('SUPER_ADMIN', 'perm_role_delete', 1),
+                                ('SUPER_ADMIN', 'perm_ban_access', 1),
+                                ('SUPER_ADMIN', 'perm_ban_add', 1),
+                                ('SUPER_ADMIN', 'perm_ban_modify', 1),
+                                ('SUPER_ADMIN', 'perm_ban_delete', 1),
+                                ('SUPER_ADMIN', 'perm_post_access', 1),
+                                ('SUPER_ADMIN', 'perm_post_modify', 1),
+                                ('SUPER_ADMIN', 'perm_post_delete', 1),
+                                ('SUPER_ADMIN', 'perm_post_file_delete', 1),
+                                ('SUPER_ADMIN', 'perm_post_default_name', 1),
+                                ('SUPER_ADMIN', 'perm_post_custom_name', 1),
+                                ('SUPER_ADMIN', 'perm_post_override_anon', 1),
+                                ('SUPER_ADMIN', 'perm_post_sticky', 1),
+                                ('SUPER_ADMIN', 'perm_post_unsticky', 1),
+                                ('SUPER_ADMIN', 'perm_post_lock', 1),
+                                ('SUPER_ADMIN', 'perm_post_unlock', 1),
+                                ('SUPER_ADMIN', 'perm_post_in_locked', 1),
+                                ('SUPER_ADMIN', 'perm_post_comment', 1),
+                                ('SUPER_ADMIN', 'perm_post_permsage', 1),
+                                ('SUPER_ADMIN', 'perm_regen_caches', 1),
+                                ('SUPER_ADMIN', 'perm_regen_index', 1),
+                                ('SUPER_ADMIN', 'perm_regen_threads', 1),
+                                ('SUPER_ADMIN', 'perm_modmode_access', 1),
+                                ('SUPER_ADMIN', 'perm_modmode_view_ips', 1),
                                 ('BOARD_ADMIN', 'perm_config_access', 1),
                                 ('BOARD_ADMIN', 'perm_config_modify', 1),
                                 ('BOARD_ADMIN', 'perm_user_access', 1),
@@ -631,9 +651,9 @@ function nel_insert_default_admin_role()
         return false;
     }
 
-    $result = $dbh->query('INSERT INTO "' . USER_ROLE_TABLE . '" (user_id, role_id)
+    $result = $dbh->query('INSERT INTO "' . USER_ROLE_TABLE . '" (user_id, role_id, all_boards)
     VALUES
-    (\'' . DEFAULTADMIN . '\', \'SUPER_ADMIN\')');
+    (\'' . DEFAULTADMIN . '\', \'SUPER_ADMIN\', 1)');
 
     nel_setup_stuff_done($result);
 }
