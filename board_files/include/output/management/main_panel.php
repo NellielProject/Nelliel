@@ -71,12 +71,6 @@ function nel_generate_main_board_panel($board_id)
         $dom->removeChild($dom->getElementById('select-thread-panel'));
     }
 
-    if ($authorize->get_user_perm($_SESSION['username'], 'perm_user_access', $board_id) ||
-    $authorize->get_user_perm($_SESSION['username'], 'perm_role_access', INPUT_BOARD_ID))
-    {
-        $dom->removeChild($dom->getElementById('select-staff-panel'));
-    }
-
     if ($authorize->get_user_perm($_SESSION['username'], 'perm_modmode_access', $board_id))
     {
         $dom->removeChild($dom->getElementById('select-mod-mode'));
