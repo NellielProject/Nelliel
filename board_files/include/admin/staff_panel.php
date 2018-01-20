@@ -14,8 +14,7 @@ function nel_staff_panel($dataforce)
     $authorize = nel_authorize();
     $temp_auth = array();
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access', INPUT_BOARD_ID) &&
-    !$authorize->get_user_perm($_SESSION['username'], 'perm_role_access', INPUT_BOARD_ID))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access', INPUT_BOARD_ID))
     {
         nel_derp(340, nel_stext('ERROR_340'));
     }
@@ -51,12 +50,7 @@ function nel_staff_panel($dataforce)
 
             foreach ($_POST as $key => $value)
             {
-                if(strpos($key, 'all_boards_') !== false)
-                {
-                    continue;
-                }
-
-                if(strpos($key, 'user_board_role_') !== false)
+                if(strpos($key, 'user_board_role') !== false)
                 {
                     $board = substr($key, 16);
                     $remove = false;
@@ -66,9 +60,9 @@ function nel_staff_panel($dataforce)
                         $remove = true;
                     }
 
-                    $all_boards = $_POST['all_boards_' . $board];
+                    $all_boards = ($board == '_*') ? 1 : 0;
                     $update = array('user_id' => $user_id, 'role_id' => $value, 'board' => $board, 'all_boards' => $all_boards);
-                    $authorize->update_user_role($user_id, $update, substr($key, 16), $remove);
+                    $authorize->update_user_role($user_id, $update, $board, $remove);
                     continue;
                 }
 

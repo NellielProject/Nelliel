@@ -73,8 +73,8 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
     $new_board->removeAttribute('id');
     $role_board_id_label = $new_board->getElementById('role-board-id-label-');
     $role_board_id_label->setContent('All Boards');
-    $role_board_id_label->changeId('role-board-id-label-all--boards');
-    $new_board->getElementById('role-board-id-')->changeId('role-board-id-all--boards');
+    $role_board_id_label->changeId('role-board-id-label-_*');
+    $new_board->getElementById('role-board-id-')->changeId('role-board-id-_*');
 
     if ($boards !== false)
     {
@@ -99,7 +99,7 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
         {
             if($board_role['all_boards'] == 1)
             {
-                $board_role['board'] = 'all--boards';
+                $board_role['board'] = '_*';
             }
 
             $board_id_element = $dom->getElementById('role-board-id-' . $board_role['board']);

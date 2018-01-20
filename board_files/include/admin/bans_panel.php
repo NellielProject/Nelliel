@@ -16,8 +16,7 @@ function nel_ban_control($dataforce)
     $ban_hammer = nel_ban_hammer();
     $mode = $dataforce['mode'];
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_access', INPUT_BOARD_ID) &&
-         !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_access'))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_access', INPUT_BOARD_ID))
     {
         nel_derp(320, nel_stext('ERROR_320'));
     }

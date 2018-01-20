@@ -140,9 +140,9 @@ class Authorization
         return $this->dbh->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
     }
 
-    public function set_up_user($user)
+    public function set_up_user($user_id)
     {
-        $user_data = $this->load_user($user);
+        $user_data = $this->load_user($user_id);
 
         if ($user_data === false)
         {
@@ -151,20 +151,16 @@ class Authorization
 
         foreach ($user_data as $key => $value)
         {
-            $this->users[$user][$key] = $value;
+            $this->users[$user_id][$key] = $value;
         }
 
-        $user_roles = $this->load_user_roles($user);
+        $user_roles = $this->load_user_roles($user_id);
 
         foreach ($user_roles as $role)
         {
-            if($role['all_boards'] == 1)
+            foreach($role as $key => $value)
             {
-                $this->user_roles[$user]['_*']['role_id'] = $role['role_id'];
-            }
-            else
-            {
-                $this->user_roles[$user][$role['board']]['role_id'] = $role['role_id'];
+                $this->user_roles[$user_id][$role['board']][$key] = $value;
             }
         }
 
@@ -269,13 +265,21 @@ class Authorization
         return false;
     }
 
-    public function get_user_perm($user_id, $perm, $board)
+    public function get_user_perm($user_id, $perm, $board = null)
     {
         if ($this->user_exists($user_id))
         {
-            $board_role = $this->user_roles[$user_id][$board]['role_id'];
-            $all_role = $this->user_roles[$user_id]['_*']['role_id'];
-            return $this->get_role_perm($board_role, $perm) || $this->get_role_perm($all_role, $perm);
+            if(is_null($board))
+            {
+                return $this->get_role_perm($this->user_roles[$user_id]['_*']['role_id'], $perm);
+            }
+            else
+            {
+                if(isset($this->user_roles[$user_id][$board]))
+                {
+                    return $this->get_role_perm($this->user_roles[$user_id][$board]['role_id'], $perm) || $this->get_role_perm($this->user_roles[$user_id]['_*']['role_id'], $perm);
+                }
+            }
         }
 
         return false;
@@ -334,11 +338,14 @@ class Authorization
             if($update['all_boards'] == 1)
             {
                 unset($this->user_roles[$user_id][$board_id]);
-                $board_id = '_*';
-                $update['board'] = null;
+                $update['board'] = '_*';
             }
 
-            $this->user_roles[$user_id][$board_id] = $update;
+            foreach($update as $key => $value)
+            {
+                $this->user_roles[$user_id][$board_id][$key] = $value;
+            }
+
             $this->user_roles[$user_id][$board_id]['remove'] = $remove;
             $this->user_roles_modified[$user_id] = true;
             return true;
@@ -370,7 +377,7 @@ class Authorization
 
             if(!is_null($board_id))
             {
-                if($board_id !== $key || $key !== '_*')
+                if($board_id !== $key && $key !== '_*')
                 {
                     $level = 0;
                 }

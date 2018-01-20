@@ -39,7 +39,7 @@ function nel_render_main_ban_panel($dataforce)
         $ban_info_td_list->item(0)->setContent($ban_info['ban_id']);
         $ban_info_td_list->item(1)->setContent($ban_info['type']);
         $ban_info_td_list->item(2)->setContent($ban_info['ip_address_start'] ? @inet_ntop($ban_info['ip_address_start']): 'Unknown');
-        $ban_info_td_list->item(3)->setContent($ban_info['board']);
+        $ban_info_td_list->item(3)->setContent($ban_info['board_id']);
         $ban_info_td_list->item(4)->setContent($ban_info['reason']);
         $ban_info_td_list->item(5)->setContent(date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']));
         $ban_info_td_list->item(6)->setContent($ban_info['appeal']);
