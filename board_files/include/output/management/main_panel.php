@@ -12,9 +12,8 @@ function nel_generate_main_panel()
     $render->loadTemplateFromFile($dom, 'management/main_panel.html');
     $board_listing = $dom->getElementById('board-select-');
     $board_label = $dom->getElementById('board-label-');
-
-    $prepared = $dbh->prepare('SELECT "board" FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ?');
-    $boards = $dbh->executePreparedFetchAll($prepared, array($_SESSION['username']), PDO::FETCH_COLUMN);
+    $insert_before = $board_listing->parentNode->lastChild;
+    $boards = $dbh->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
 
     if($boards !== false)
     {
@@ -22,8 +21,8 @@ function nel_generate_main_panel()
         {
             $listing = $board_listing->cloneNode(true);
             $label = $board_label->cloneNode(true);
-            $board_listing->parentNode->appendChild($listing);
-            $board_listing->parentNode->appendChild($label);
+            $board_listing->parentNode->insertBefore($listing, $insert_before);
+            $board_listing->parentNode->insertBefore($label, $insert_before);
             $listing->changeId('board-select-' . $board);
             $listing->extSetAttribute('value', $board);
             $label->removeAttribute('id');

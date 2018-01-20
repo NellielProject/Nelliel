@@ -158,8 +158,14 @@ class Authorization
 
         foreach ($user_roles as $role)
         {
-            $this->user_roles[$user][$role['board']]['role_id'] = $role['role_id'];
-            $this->user_roles[$user][$role['board']]['all_boards'] = $role['all_boards'];
+            if($role['all_boards'] == 1)
+            {
+                $this->user_roles[$user]['_*']['role_id'] = $role['role_id'];
+            }
+            else
+            {
+                $this->user_roles[$user][$role['board']]['role_id'] = $role['role_id'];
+            }
         }
 
         return true;
@@ -267,7 +273,9 @@ class Authorization
     {
         if ($this->user_exists($user_id))
         {
-            return $this->get_role_perm($this->user_roles[$user_id][$board]['role_id'], $perm);
+            $board_role = $this->user_roles[$user_id][$board]['role_id'];
+            $all_role = $this->user_roles[$user_id]['_*']['role_id'];
+            return $this->get_role_perm($board_role, $perm) || $this->get_role_perm($all_role, $perm);
         }
 
         return false;
