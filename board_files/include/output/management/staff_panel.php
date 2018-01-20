@@ -65,26 +65,19 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
     $dom->getElementById('user-id-field')->extSetAttribute('value', $user['user_id']);
     $dom->getElementById('user-title-field')->extSetAttribute('value', $user['user_title']);
     $board_roles = $dom->getElementById('board-roles');
-
+    $update_submit = $dom->getElementById('update-user-submit');
     $boards = $dbh->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
-
-    $new_board = $board_roles->cloneNode(true);
-    $board_roles->parentNode->insertBefore($new_board, $board_roles);
-    $new_board->removeAttribute('id');
-    $role_board_id_label = $new_board->getElementById('role-board-id-label-');
-    $role_board_id_label->setContent('All Boards');
-    $role_board_id_label->changeId('role-board-id-label-_*');
-    $new_board->getElementById('role-board-id-')->changeId('role-board-id-_*');
 
     if ($boards !== false)
     {
         foreach ($boards as $board)
         {
             $new_board = $board_roles->cloneNode(true);
-            $board_roles->parentNode->insertBefore($new_board, $board_roles);
+            $board_roles->parentNode->appendChild($new_board);
             $new_board->removeAttribute('id');
             $role_board_id_label = $new_board->getElementById('role-board-id-label-');
             $role_board_id_label->setContent($board);
+            $role_board_id_label->extSetAttribute('for', 'role-board-id-' . $board);
             $role_board_id_label->changeId('role-board-id-label-' . $board);
             $new_board->getElementById('role-board-id-')->changeId('role-board-id-' . $board);
         }
@@ -97,18 +90,17 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
     {
         foreach ($user_boards as $board_role)
         {
-            if($board_role['all_boards'] == 1)
-            {
-                $board_role['board'] = '_*';
-            }
-
             $board_id_element = $dom->getElementById('role-board-id-' . $board_role['board']);
             $board_id_element->extSetAttribute('name', 'user_board_role_' . $board_role['board']);
             $board_id_element->extSetAttribute('value', $board_role['role_id']);
         }
     }
 
-    $board_roles->removeSelf();
+    $role_board_id_label = $board_roles->getElementById('role-board-id-label-');
+    $role_board_id_label->setContent('All Boards');
+    $board_roles->parentNode->appendChild($update_submit);
+
+    //$board_roles->removeSelf();
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_footer($render, false);

@@ -25,11 +25,6 @@ function nel_staff_panel($dataforce)
     }
     else if ($dataforce['mode_segments'][2] === 'user')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access', INPUT_BOARD_ID))
-        {
-            nel_derp(341, nel_stext('ERROR_341'));
-        }
-
         $user_id = (isset($_POST['user_id'])) ? $_POST['user_id'] : null;
 
         if (!$authorize->user_exists($user_id))
@@ -39,10 +34,20 @@ function nel_staff_panel($dataforce)
 
         if ($dataforce['mode_segments'][3] === 'edit')
         {
+            if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_modify', INPUT_BOARD_ID))
+            {
+                nel_derp(341, nel_stext('ERROR_341'));
+            }
+
             nel_render_staff_panel_user_edit($dataforce, $user_id);
         }
         else if ($dataforce['mode_segments'][3] === 'update')
         {
+            if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_modify', INPUT_BOARD_ID))
+            {
+                nel_derp(341, nel_stext('ERROR_341'));
+            }
+
             if (isset($_POST['change_pass']) && isset($_POST['user_password']))
             {
                 $authorize->update_user_info($user_id, 'user_password', nel_password_hash($_POST['user_password'], NELLIEL_PASS_ALGORITHM));
@@ -60,7 +65,13 @@ function nel_staff_panel($dataforce)
                         $remove = true;
                     }
 
-                    $all_boards = ($board == '_*') ? 1 : 0;
+                    $all_boards = 0;
+
+                    if($board == '')
+                    {
+                        $all_boards = 1;
+                    }
+
                     $update = array('user_id' => $user_id, 'role_id' => $value, 'board' => $board, 'all_boards' => $all_boards);
                     $authorize->update_user_role($user_id, $update, $board, $remove);
                     continue;
@@ -95,10 +106,20 @@ function nel_staff_panel($dataforce)
 
         if ($dataforce['mode_segments'][3] === 'edit')
         {
+            if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_modify', INPUT_BOARD_ID))
+            {
+                nel_derp(342, nel_stext('ERROR_342'));
+            }
+
             nel_render_staff_panel_role_edit($dataforce, $role_id);
         }
         else if ($dataforce['mode_segments'][3] === 'update')
         {
+            if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_modify', INPUT_BOARD_ID))
+            {
+                nel_derp(342, nel_stext('ERROR_342'));
+            }
+
             foreach ($_POST as $key => $value)
             {
                 if ($key === 'mode')

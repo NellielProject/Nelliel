@@ -158,7 +158,7 @@ class Authorization
 
         foreach ($user_roles as $role)
         {
-            foreach($role as $key => $value)
+            foreach ($role as $key => $value)
             {
                 $this->user_roles[$user_id][$role['board']][$key] = $value;
             }
@@ -265,20 +265,14 @@ class Authorization
         return false;
     }
 
-    public function get_user_perm($user_id, $perm, $board = null)
+    public function get_user_perm($user_id, $perm, $board = '')
     {
         if ($this->user_exists($user_id))
         {
-            if(is_null($board))
+            if (isset($this->user_roles[$user_id][$board]))
             {
-                return $this->get_role_perm($this->user_roles[$user_id]['_*']['role_id'], $perm);
-            }
-            else
-            {
-                if(isset($this->user_roles[$user_id][$board]))
-                {
-                    return $this->get_role_perm($this->user_roles[$user_id][$board]['role_id'], $perm) || $this->get_role_perm($this->user_roles[$user_id]['_*']['role_id'], $perm);
-                }
+                return $this->get_role_perm($this->user_roles[$user_id][$board]['role_id'], $perm) ||
+                     $this->get_role_perm($this->user_roles[$user_id]['']['role_id'], $perm);
             }
         }
 
@@ -335,13 +329,12 @@ class Authorization
         {
             $updated = false;
 
-            if($update['all_boards'] == 1)
+            if ($update['all_boards'] == 1)
             {
-                unset($this->user_roles[$user_id][$board_id]);
-                $update['board'] = '_*';
+                $update['board'] = '';
             }
 
-            foreach($update as $key => $value)
+            foreach ($update as $key => $value)
             {
                 $this->user_roles[$user_id][$board_id][$key] = $value;
             }
@@ -371,19 +364,16 @@ class Authorization
         $role_level = 0;
         $role = '';
 
-        foreach($this->user_roles[$user_id] as $key => $value)
+        foreach ($this->user_roles[$user_id] as $key => $value)
         {
             $level = $this->get_role_info($value['role_id'], 'role_level');
 
-            if(!is_null($board_id))
+            if (!is_null($board_id) && $board_id !== $key && $key !== '')
             {
-                if($board_id !== $key && $key !== '_*')
-                {
-                    $level = 0;
-                }
+                $level = 0;
             }
 
-            if($level > $role_level)
+            if ($level > $role_level)
             {
                 $role_level = $this->get_role_info($user_role['role_id'], 'role_level');
                 $role = $user_role['role_id'];
