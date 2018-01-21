@@ -252,6 +252,7 @@ $lang_singular = array(
     'MANAGE_STAFF_TJAN' => 'Janitor',  // Janitor
     'MANAGE_STAFF_ADD' => 'Username of staff to add',  // Add staff
     'MANAGE_STAFF_EDIT' => 'Username of staff to edit',  // Edit staff
+    'MANAGE_STAFF_ROLE_LEVEL' => 'Role Lvel', // Role level
 
 
     'MANAGE_SET_BOARD_NAME' => 'Board Name',  // Board name
