@@ -68,6 +68,19 @@ function admin_dispatch($dataforce)
             nel_login($dataforce);
             break;
 
+        case 'board':
+            require_once INCLUDE_PATH . 'admin/create_board.php';
+            nel_create_new_board();
+            nel_regen_all_pages($dataforce);
+            nel_regen_cache($dataforce);
+            nel_login($dataforce);
+            break;
+
+        case 'createboard':
+            require_once INCLUDE_PATH . 'output/management/create_board.php';
+            nel_generate_create_board_panel();
+            break;
+
         default:
             nel_derp(400, nel_stext('ERROR_400'));
     }

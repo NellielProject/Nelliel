@@ -28,8 +28,8 @@ function setup_check()
     nel_create_files_table(ARCHIVE_FILE_TABLE);
     nel_create_external_table(EXTERNAL_TABLE);
     nel_create_external_table(ARCHIVE_EXTERNAL_TABLE);
-    nel_create_bans_table(BAN_TABLE);
     nel_create_config_table(CONFIG_TABLE);
+    nel_create_bans_table(BAN_TABLE);
     nel_create_user_table(USER_TABLE);
     nel_create_roles_table(ROLES_TABLE);
     nel_create_user_role_table(USER_ROLE_TABLE);

@@ -10,6 +10,13 @@
     </form>
     <form action="imgboard.php" method="post" enctype="multipart/form-data" id="regen-index-form">
         <div>
+            <input type="hidden" name="mode" value="admin->createboard">
+            <input id="create-new-board" type="submit" value="Create new board" data-i18n-attributes="value" data-i18n="neltext">
+            <label for="create-new-board" data-i18n="neltext">BOARD</label>
+        </div>
+    </form>
+    <form action="imgboard.php" method="post" enctype="multipart/form-data" id="regen-index-form">
+        <div>
             <input type="hidden" name="mode" value="admin->staff->main">
             <input id="select-staff-panel" type="submit" value="Manage Staff" data-i18n-attributes="value" data-i18n="neltext">
             <label for="select-staff-panel" data-i18n="neltext">MANAGE_OPT_STAFF</label>
