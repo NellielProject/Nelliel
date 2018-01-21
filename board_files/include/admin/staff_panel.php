@@ -14,7 +14,8 @@ function nel_staff_panel($dataforce)
     $authorize = nel_authorize();
     $temp_auth = array();
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access', INPUT_BOARD_ID))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access', INPUT_BOARD_ID) &&
+         !$authorize->get_user_perm($_SESSION['username'], 'perm_role_access', INPUT_BOARD_ID))
     {
         nel_derp(340, nel_stext('ERROR_340'));
     }
@@ -25,6 +26,11 @@ function nel_staff_panel($dataforce)
     }
     else if ($dataforce['mode_segments'][2] === 'user')
     {
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access', INPUT_BOARD_ID))
+        {
+            nel_derp(340, nel_stext('ERROR_340'));
+        }
+
         $user_id = (isset($_POST['user_id'])) ? $_POST['user_id'] : null;
 
         if (!$authorize->user_exists($user_id))
@@ -55,24 +61,25 @@ function nel_staff_panel($dataforce)
 
             foreach ($_POST as $key => $value)
             {
-                if(strpos($key, 'user_board_role') !== false)
+                if (strpos($key, 'user_board_role') !== false)
                 {
                     $board = substr($key, 16);
                     $remove = false;
 
-                    if($value === '')
+                    if ($value === '')
                     {
                         $remove = true;
                     }
 
                     $all_boards = 0;
 
-                    if($board == '')
+                    if ($board == '')
                     {
                         $all_boards = 1;
                     }
 
-                    $update = array('user_id' => $user_id, 'role_id' => $value, 'board' => $board, 'all_boards' => $all_boards);
+                    $update = array('user_id' => $user_id, 'role_id' => $value, 'board' => $board,
+                        'all_boards' => $all_boards);
                     $authorize->update_user_role($user_id, $update, $board, $remove);
                     continue;
                 }

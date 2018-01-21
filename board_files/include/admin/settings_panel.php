@@ -11,16 +11,15 @@ function nel_settings_control($dataforce)
     $dbh = nel_database();
     $authorize = nel_authorize();
     $mode = $dataforce['mode'];
-
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_modify', INPUT_BOARD_ID))
-    {
-        nel_derp(331, nel_stext('ERROR_331'));
-    }
-
     $update = FALSE;
 
     if ($mode === 'admin->settings->update')
     {
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_modify', INPUT_BOARD_ID))
+        {
+            nel_derp(331, nel_stext('ERROR_331'));
+        }
+
         while ($item = each($_POST))
         {
             if ($item[0] !== 'mode' && $item[0] !== 'username' && $item[0] !== 'super_sekrit')

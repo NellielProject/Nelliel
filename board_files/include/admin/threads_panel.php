@@ -17,6 +17,11 @@ function nel_thread_panel($dataforce, $authorize)
 
     if ($mode === 'admin->thread->update')
     {
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_modify', INPUT_BOARD_ID))
+        {
+            nel_derp(351, nel_stext('ERROR_351'));
+        }
+
         $updates = nel_thread_updates($dataforce);
         nel_regen_threads($dataforce, true, $updates);
         nel_regen_index($dataforce);

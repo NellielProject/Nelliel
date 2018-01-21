@@ -23,26 +23,51 @@ function nel_ban_control($dataforce)
 
     if ($mode === 'admin->ban->modify')
     {
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify', INPUT_BOARD_ID))
+        {
+            nel_derp(322, nel_stext('ERROR_322'));
+        }
+
         nel_render_ban_panel_modify($dataforce);
     }
     else if ($mode === 'admin->ban->new')
     {
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_add', INPUT_BOARD_ID))
+        {
+            nel_derp(321, nel_stext('ERROR_321'));
+        }
+
         nel_render_ban_panel_add($dataforce);
     }
     else if ($mode === 'admin->ban->add')
     {
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_add', INPUT_BOARD_ID))
+        {
+            nel_derp(321, nel_stext('ERROR_321'));
+        }
+
         $ban_input = $ban_hammer->postToArray();
         $ban_hammer->addBan($ban_input);
         nel_render_main_ban_panel($dataforce);
     }
     else if ($mode === 'admin->ban->remove')
     {
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_delete', INPUT_BOARD_ID))
+        {
+            nel_derp(323, nel_stext('ERROR_323'));
+        }
+
         $ban_input = $ban_hammer->postToArray();
         $ban_hammer->removeBan($ban_input['ban_id']);
         nel_render_main_ban_panel($dataforce);
     }
     else if ($mode === 'admin->ban->update')
     {
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify', INPUT_BOARD_ID))
+        {
+            nel_derp(322, nel_stext('ERROR_322'));
+        }
+
         $ban_input = $ban_hammer->postToArray();
         $ban_hammer->modifyBan($ban_input);
         nel_render_main_ban_panel($dataforce);
