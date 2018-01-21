@@ -269,10 +269,16 @@ class Authorization
     {
         if ($this->user_exists($user_id))
         {
-            if (isset($this->user_roles[$user_id][$board]))
+            if (isset($this->user_roles[$user_id][$board]) &&
+                 $this->get_role_perm($this->user_roles[$user_id][$board]['role_id'], $perm))
             {
-                return $this->get_role_perm($this->user_roles[$user_id][$board]['role_id'], $perm) ||
-                     $this->get_role_perm($this->user_roles[$user_id]['']['role_id'], $perm);
+                return true;
+            }
+
+            if (isset($this->user_roles[$user_id]['']) &&
+                 $this->get_role_perm($this->user_roles[$user_id]['']['role_id'], $perm))
+            {
+                return true;
             }
         }
 
