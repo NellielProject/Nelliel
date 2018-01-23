@@ -31,6 +31,17 @@ function nel_staff_panel($dataforce)
             nel_derp(340, nel_stext('ERROR_340'));
         }
 
+        if ($dataforce['mode_segments'][3] === 'new')
+        {
+            if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_add', INPUT_BOARD_ID))
+            {
+                nel_derp(341, nel_stext('ERROR_341'));
+            }
+
+            nel_render_staff_panel_user_edit($dataforce, null);
+            return;
+        }
+
         $user_id = (isset($_POST['user_id'])) ? $_POST['user_id'] : null;
 
         if (!$authorize->user_exists($user_id))
@@ -102,6 +113,17 @@ function nel_staff_panel($dataforce)
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_access', INPUT_BOARD_ID))
         {
             nel_derp(342, nel_stext('ERROR_342'));
+        }
+
+        if ($dataforce['mode_segments'][3] === 'new')
+        {
+            if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_add', INPUT_BOARD_ID))
+            {
+                nel_derp(341, nel_stext('ERROR_341'));
+            }
+
+            nel_render_staff_panel_role_edit($dataforce, null);
+            return;
         }
 
         $role_id = (isset($_POST['role_id'])) ? $_POST['role_id'] : null;

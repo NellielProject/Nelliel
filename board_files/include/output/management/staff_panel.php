@@ -18,7 +18,7 @@ function nel_render_staff_panel_main($dataforce)
     $user_node_array = $dom->getAssociativeNodeArray('data-parse-id', $user_table);
     $users = $dbh->executeFetchAll('SELECT "user_id", "user_title" FROM "' . USER_TABLE . '"', PDO::FETCH_ASSOC);
 
-    foreach($users as $user)
+    foreach ($users as $user)
     {
         $user_row = $user_table->insertBefore($user_node_array['user-row']->cloneNode(true), $user_node_array['submit-row']);
         $row_node_array = $user_row->getAssociativeNodeArray('data-parse-id');
@@ -33,7 +33,7 @@ function nel_render_staff_panel_main($dataforce)
     $role_node_array = $dom->getAssociativeNodeArray('data-parse-id', $role_table);
     $roles = $dbh->executeFetchAll('SELECT "role_id", "role_title" FROM "' . ROLES_TABLE . '"', PDO::FETCH_ASSOC);
 
-    foreach($roles as $role)
+    foreach ($roles as $role)
     {
         $role_row = $role_table->insertBefore($role_node_array['role-row']->cloneNode(true), $role_node_array['submit-row']);
         $row_node_array = $role_row->getAssociativeNodeArray('data-parse-id');
@@ -54,16 +54,21 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
-    $user = $authorize->get_user($user_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_user_edit.html');
+
+    if (!is_null($user_id))
+    {
+        $user = $authorize->get_user($user_id);
+        $dom->getElementById('user-id-field')->extSetAttribute('value', $user['user_id']);
+        $dom->getElementById('user-title-field')->extSetAttribute('value', $user['user_title']);
+    }
+
     $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
-    $dom->getElementById('user-id-field')->extSetAttribute('value', $user['user_id']);
-    $dom->getElementById('user-title-field')->extSetAttribute('value', $user['user_title']);
     $board_roles = $dom->getElementById('board-roles');
     $update_submit = $dom->getElementById('update-user-submit');
     $boards = $dbh->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
@@ -84,7 +89,7 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
     }
 
     $prepared = $dbh->prepare('SELECT * FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ?');
-    $user_boards = $dbh->executePreparedFetchAll($prepared, array($_SESSION['username']), PDO::FETCH_ASSOC);
+    $user_boards = $dbh->executePreparedFetchAll($prepared, array($user_id), PDO::FETCH_ASSOC);
 
     if ($user_boards !== false)
     {
@@ -117,17 +122,21 @@ function nel_render_staff_panel_role_edit($dataforce, $role_id)
     nel_render_header($dataforce, $render, array());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_role_edit.html');
-    $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
-    $dom->getElementById('role_id')->extSetAttribute('value', $role['role_id']);
-    $dom->getElementById('role_level')->extSetAttribute('value', $role['role_level']);
-    $dom->getElementById('role_title')->extSetAttribute('value', $role['role_title']);
-    $dom->getElementById('capcode_text')->extSetAttribute('value', $role['capcode_text']);
 
-    foreach ($role['permissions'] as $key => $value)
+    if (!is_null($role_id))
     {
-        if ($value === true)
+        $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
+        $dom->getElementById('role_id')->extSetAttribute('value', $role['role_id']);
+        $dom->getElementById('role_level')->extSetAttribute('value', $role['role_level']);
+        $dom->getElementById('role_title')->extSetAttribute('value', $role['role_title']);
+        $dom->getElementById('capcode_text')->extSetAttribute('value', $role['capcode_text']);
+
+        foreach ($role['permissions'] as $key => $value)
         {
-            $dom->getElementById($key)->extSetAttribute('checked', $value);
+            if ($value === true)
+            {
+                $dom->getElementById($key)->extSetAttribute('checked', $value);
+            }
         }
     }
 

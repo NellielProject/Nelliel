@@ -19,6 +19,11 @@
 			</tr>
 		</table>
 	</form>
+	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="mode" value="admin->staff->user->new">
+		<input data-parse-id="user-select" type="radio" name="user_id" value="">
+		<input type="submit" value="FORM_STAFF_USER_NEW" data-i18n="neltext" data-i18n-attributes="value">
+	</form>
 	<hr>
 	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="mode" value="admin->staff->role->edit">
@@ -34,5 +39,10 @@
 				</td>
 			</tr>
 		</table>
+	</form>
+	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="mode" value="admin->staff->role->new">
+		<input data-parse-id="role-select" type="radio" name="role_id" value="">
+		<input type="submit" value="FORM_STAFF_ROLE_NEW" data-i18n="neltext" data-i18n-attributes="value">
 	</form>
 	<hr>
