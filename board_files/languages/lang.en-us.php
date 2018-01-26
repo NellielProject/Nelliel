@@ -148,11 +148,15 @@ $lang_singular = array(
     'MANAGE_OPT_SETTINGS' => 'Board settings',  // Settings
     'MANAGE_OPT_BAN' => 'Ban controls',  // Bans
     'MANAGE_OPT_STAFF' => 'Staff controls',  // Staff
+    'MANAGE_OPT_STAFF_LABEL' => 'Manage users and roles',  // Staff
     'MANAGE_OPT_THREAD' => 'Thread management',  // Threads
     'MANAGE_OPT_MMODE' => 'Enter Mod mode',  // Threads
     'MANAGE_UPDATE_WARN' => 'Forces an update of all pages. May cause heavy server load.',  // May cause high load
     'MANAGE_UPDATE_CACHE_WARN' => 'Regenerates all the internal caches.',  // May cause high load
-
+    'MANAGE_NEW_BOARD' => 'New board',  // New board
+    'MANAGE_NEW_BOARD_LABEL' => 'Create a new board.',  // New board
+    'MANAGE_NEW_BOARD_DIR' => 'Board directory',  // New board directory
+    'MANAGE_NEW_BOARD_ID' => 'Board ID',  // New board ID
 
     'MANAGE_BAN_ID' => 'Ban ID',  // Ban ID
     'MANAGE_BAN_BOARD' => 'Board',  // Ban board

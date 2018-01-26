@@ -23,6 +23,7 @@ function nel_generate_main_panel()
             $label = $board_label->cloneNode(true);
             $board_listing->parentNode->insertBefore($listing, $insert_before);
             $board_listing->parentNode->insertBefore($label, $insert_before);
+            $board_listing->parentNode->insertBefore($dom->createElement('br'), $insert_before);
             $listing->changeId('board-select-' . $board);
             $listing->extSetAttribute('value', $board);
             $label->removeAttribute('id');
