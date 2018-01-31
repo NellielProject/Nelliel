@@ -40,7 +40,7 @@ function nel_settings_control($dataforce)
         }
 
         nel_regen_cache($dataforce);
-        nel_regen_all_pages($dataforce);
+        nel_regen_all_pages($dataforce, INPUT_BOARD_ID);
     }
 
     nel_render_settings_panel($dataforce);

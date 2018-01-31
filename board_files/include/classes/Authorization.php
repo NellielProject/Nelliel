@@ -365,7 +365,7 @@ class Authorization
         return false;
     }
 
-    public function user_highest_level_role($user_id, $board_id = null)
+    public function user_highest_level_role($user_id, $board_id = null) // TODO: User exists checks here
     {
         $role_level = 0;
         $role = '';
@@ -381,8 +381,8 @@ class Authorization
 
             if ($level > $role_level)
             {
-                $role_level = $this->get_role_info($user_role['role_id'], 'role_level');
-                $role = $user_role['role_id'];
+                $role_level = $this->get_role_info($value['role_id'], 'role_level');
+                $role = $value['role_id'];
             }
         }
 

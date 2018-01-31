@@ -12,8 +12,9 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
-    $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . INPUT_BOARD_ID . '\');};');
-    $dom->getElementById('js-style-set')->setContent('processCookie("style-' . INPUT_BOARD_ID . '");');
+    $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . INPUT_BOARD_ID .
+         '\');};');
+    $dom->getElementById('js-style-set')->setContent('processCookie("style-' . BOARD_DIR . '");');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
@@ -34,18 +35,17 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
 
         case 'NORMAL':
 
-                if (!empty($treeline))
+            if (!empty($treeline))
+            {
+                if ($treeline[0]['subject'] === '')
                 {
-                    if ($treeline[0]['subject'] === '')
-                    {
-                        $title_content = BS_BOARD_NAME . ' > Thread #' . $treeline[0]['post_number'];
-                    }
-                    else
-                    {
-                        $title_content = BS_BOARD_NAME . ' > ' . $treeline[0]['subject'];
-                    }
+                    $title_content = BS_BOARD_NAME . ' > Thread #' . $treeline[0]['post_number'];
                 }
-
+                else
+                {
+                    $title_content = BS_BOARD_NAME . ' > ' . $treeline[0]['subject'];
+                }
+            }
 
             break;
     }
@@ -80,8 +80,8 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     foreach ($a_elements as $element)
     {
         $content = $element->getContent();
-        //$element->extSetAttribute('onclick', 'changeCSS(\'' . $content . '\', \'style-' . INPUT_BOARD_ID .
-       //      '\'); return false;');
+        //$element->extSetAttribute('onclick', 'changeCSS(\'' . $content . '\', \'style-' . BOARD_DIR .
+        //      '\'); return false;');
     }
 
     $top_admin_span = $dom->getElementById('top-admin-span');

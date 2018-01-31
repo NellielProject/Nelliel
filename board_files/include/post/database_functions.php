@@ -1,8 +1,9 @@
 <?php
 
-function nel_db_insert_initial_post($time, $post_data)
+function nel_db_insert_initial_post($board_id, $time, $post_data)
 {
     $dbh = nel_database();
+    $references = nel_board_references($board_id);
     nel_utf8_to_numeric_html_entities($post_data['name']);
     nel_utf8_to_numeric_html_entities($post_data['email']);
     nel_utf8_to_numeric_html_entities($post_data['subject']);
@@ -10,7 +11,7 @@ function nel_db_insert_initial_post($time, $post_data)
     $columns = array('poster_name', 'post_password', 'tripcode', 'secure_tripcode', 'email', 'subject', 'comment',
         'ip_address', 'has_file', 'file_count', 'post_time', 'op', 'sage', 'mod_post');
     $values = $dbh->generateParameterIds($columns);
-    $query = $dbh->buildBasicInsertQuery(POST_TABLE, $columns, $values);
+    $query = $dbh->buildBasicInsertQuery($references['post_table'], $columns, $values);
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(':poster_name', $post_data['name'], PDO::PARAM_STR);
     $prepared->bindValue(':post_password', $post_data['password'], PDO::PARAM_STR);
@@ -29,13 +30,14 @@ function nel_db_insert_initial_post($time, $post_data)
     $dbh->executePrepared($prepared);
 }
 
-function nel_db_insert_new_thread($thread_info, $files_count) // TODO: Update for externals and other new data
+function nel_db_insert_new_thread($board_id, $thread_info, $files_count) // TODO: Update for externals and other new data
 {
     $dbh = nel_database();
+    $references = nel_board_references($board_id);
     $columns = array('thread_id', 'first_post', 'last_post', 'last_bump_time', 'total_files', 'last_update',
         'post_count');
     $values = $dbh->generateParameterIds($columns);
-    $query = $dbh->buildBasicInsertQuery(THREAD_TABLE, $columns, $values);
+    $query = $dbh->buildBasicInsertQuery($references['thread_table'], $columns, $values);
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(':thread_id', $thread_info['id'], PDO::PARAM_INT);
     $prepared->bindValue(':first_post', $thread_info['id'], PDO::PARAM_INT);
@@ -47,10 +49,11 @@ function nel_db_insert_new_thread($thread_info, $files_count) // TODO: Update fo
     $dbh->executePrepared($prepared);
 }
 
-function nel_db_update_thread($new_post_info, $thread_info)
+function nel_db_update_thread($board_id, $new_post_info, $thread_info)
 {
     $dbh = nel_database();
-    $query = 'UPDATE "' . THREAD_TABLE .
+    $references = nel_board_references($board_id);
+    $query = 'UPDATE "' . $references['thread_table'].
          '" SET "last_post" = ?, "last_bump_time" = ?, "last_update" = ?, "post_count" = ?, "total_files" = ? WHERE "thread_id" = ?';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $new_post_info['post_number'], PDO::PARAM_INT);
@@ -62,9 +65,10 @@ function nel_db_update_thread($new_post_info, $thread_info)
     $dbh->executePrepared($prepared);
 }
 
-function nel_db_insert_new_files($parent_id, $new_post_info, $files)
+function nel_db_insert_new_files($board_id, $parent_id, $new_post_info, $files)
 {
     $dbh = nel_database();
+    $references = nel_board_references($board_id);
     $i = 1;
 
     foreach ($files as $file)
@@ -78,7 +82,7 @@ function nel_db_insert_new_files($parent_id, $new_post_info, $files)
         'extension', 'image_width', 'image_height', 'preview_name', 'preview_width', 'preview_height', 'filesize',
         'md5', 'sha1', 'source', 'license', 'alt_text');
         $values = $dbh->generateParameterIds($columns);
-        $query = $dbh->buildBasicInsertQuery(FILE_TABLE, $columns, $values);
+        $query = $dbh->buildBasicInsertQuery($references['file_table'], $columns, $values);
         $prepared = $dbh->prepare($query);
         $prepared->bindValue(':parent_thread', $parent_id, PDO::PARAM_INT);
         $prepared->bindValue(':post_ref', $new_post_info['post_number'], PDO::PARAM_INT);

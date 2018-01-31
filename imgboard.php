@@ -4,9 +4,14 @@ define('BASE_PATH', realpath('./') . '/'); // Base path for script
 define('FILES_PATH', BASE_PATH . '/' . 'board_files/'); // Base board files path
 
 require_once FILES_PATH . 'path_definitions.php';
+require_once INCLUDE_PATH . 'autoload.php';
+require_once LIBRARY_PATH . 'phpDOMExtend/autoload.php';
+require_once LIBRARY_PATH . 'NellielTemplates/autoload.php';
 require_once CONFIG_PATH. 'config.php';
 require_once CONFIG_PATH. 'crypt_config.php';
 require_once CONFIG_PATH. 'database_config.php';
+require_once INCLUDE_PATH . 'database.php';
+require_once INCLUDE_PATH . 'accessors.php';
 require_once INCLUDE_PATH . 'internal_config.php';
 require_once INCLUDE_PATH . 'language/language.php';
 require_once INCLUDE_PATH . 'derp.php';
@@ -28,11 +33,6 @@ $plugins->activate();
 // A demo point. Does nothing, really
 $example_result = $plugins->plugin_hook('plugin-example', TRUE, array(5));
 
-require_once LIBRARY_PATH . 'phpDOMExtend/autoload.php';
-require_once LIBRARY_PATH . 'NellielTemplates/autoload.php';
-require_once INCLUDE_PATH . 'autoload.php';
-require_once INCLUDE_PATH . 'database.php';
-require_once INCLUDE_PATH . 'accessors.php';
 require_once INCLUDE_PATH . 'general_functions.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'sessions.php';

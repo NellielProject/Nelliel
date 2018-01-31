@@ -10,19 +10,57 @@ if (!defined('NELLIEL_VERSION'))
 // Changes may be overwritten by updates as well.
 //
 
-//
-// Database tables
-//
+if(isset($_POST['board_id']))
+{
+    define('INPUT_BOARD_ID', $_POST['board_id']);
 
-define('POST_TABLE', INPUT_BOARD_ID . '_posts'); // Table used for post data
-define('THREAD_TABLE', INPUT_BOARD_ID . '_threads'); // Table used for thread data
-define('FILE_TABLE', INPUT_BOARD_ID . '_files'); // Table used for file data
-define('EXTERNAL_TABLE', INPUT_BOARD_ID . '_external'); // Table used for external content
-define('ARCHIVE_POST_TABLE', INPUT_BOARD_ID . '_archive_posts'); // Stores archived threads
-define('ARCHIVE_THREAD_TABLE', INPUT_BOARD_ID . '_archive_threads'); // Stores archived thread data
-define('ARCHIVE_FILE_TABLE', INPUT_BOARD_ID . '_archive_files'); // Stores archived file data
-define('ARCHIVE_EXTERNAL_TABLE', INPUT_BOARD_ID . '_archive_external'); // Stores archived external content
-define('CONFIG_TABLE', INPUT_BOARD_ID . '_config'); // Table to store board configuration. Best to leave it as-is unless you really need to change it
+    $dbh = nel_database();
+    $prepared = $dbh->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
+    $board_data = $dbh->executePreparedFetch($prepared, array(INPUT_BOARD_ID), PDO::FETCH_ASSOC);
+
+    define('BOARD_DIR', $board_data['board_directory']);
+    define('BOARD_PREFIX', $board_data['db_prefix']);
+    define('BOARD_PATH', BASE_PATH . BOARD_DIR . '/'); // Base board path
+}
+else
+{
+    define('INPUT_BOARD_ID', '');
+    define('BOARD_DIR', '');
+    define('BOARD_PREFIX', '');
+    define('BOARD_PATH', BASE_PATH . BOARD_DIR . '/'); // Base board path
+}
+
+define('WEB_FILES', 'web/'); // Name of directory where the support and internal files go
+define('IMAGES_DIR', WEB_FILES . 'imagez/'); // Web location of the javascript files
+define('CSS_DIR', WEB_FILES . 'css/'); // Web location of the css files
+define('JS_DIR', WEB_FILES . 'js/'); // Web location of the javascript files
+
+define('PHP_SELF', 'imgboard.php'); // Name of main script file
+define('PHP_SELF2', 'imgboard'); // Name of main html file
+define('PHP_EXT', '.html'); // Extension used for board pages
+define('SRC_DIR', 'src/'); // Image directory
+define('THUMB_DIR', 'thumb/'); // Thumbnail directory
+define('PAGE_DIR', 'threads/'); // Response page directory
+define('ARCHIVE_DIR', 'archive/'); // Archive directory
+
+define('SRC_PATH', BOARD_PATH . SRC_DIR); // Base src path
+define('THUMB_PATH', BOARD_PATH . THUMB_DIR); // Base thumbnail path
+define('PAGE_PATH', BOARD_PATH . PAGE_DIR); // Base page path
+define('ARCHIVE_PATH', BOARD_PATH . ARCHIVE_DIR); // Base archive path
+define('ARC_SRC_PATH', BOARD_PATH . ARCHIVE_DIR . SRC_DIR); // Archive src path
+define('ARC_THUMB_PATH', BOARD_PATH . ARCHIVE_DIR . THUMB_DIR); // Archive thumbnail path
+define('ARC_PAGE_PATH', BOARD_PATH . ARCHIVE_DIR . PAGE_DIR); // Archive page path
+
+
+define('POST_TABLE', BOARD_PREFIX . '_posts'); // Table used for post data
+define('THREAD_TABLE', BOARD_PREFIX . '_threads'); // Table used for thread data
+define('FILE_TABLE', BOARD_PREFIX . '_files'); // Table used for file data
+define('EXTERNAL_TABLE', BOARD_PREFIX . '_external'); // Table used for external content
+define('ARCHIVE_POST_TABLE', BOARD_PREFIX . '_archive_posts'); // Stores archived threads
+define('ARCHIVE_THREAD_TABLE', BOARD_PREFIX . '_archive_threads'); // Stores archived thread data
+define('ARCHIVE_FILE_TABLE', BOARD_PREFIX . '_archive_files'); // Stores archived file data
+define('ARCHIVE_EXTERNAL_TABLE', BOARD_PREFIX . '_archive_external'); // Stores archived external content
+define('CONFIG_TABLE', BOARD_PREFIX . '_config'); // Table to store board configuration. Best to leave it as-is unless you really need to change it
 define('BAN_TABLE', 'nelliel_bans'); // Table containing ban info
 define('USER_TABLE', 'nelliel_users'); // Table used for post data
 define('ROLES_TABLE', 'nelliel_roles'); // Table used for post data

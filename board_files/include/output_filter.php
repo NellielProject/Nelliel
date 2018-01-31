@@ -47,7 +47,7 @@ function nel_post_quote($target_element, $text_input)
     return false;
 }
 
-function nel_post_quote_link($target_element, $text_input)
+function nel_post_quote_link($board_id, $target_element, $text_input)
 {
     $dbh = nel_database();
     $text_segments = preg_split('#(>>[0-9]+)#', $text_input, null, PREG_SPLIT_DELIM_CAPTURE);
@@ -56,7 +56,7 @@ function nel_post_quote_link($target_element, $text_input)
     {
         if(preg_match('#^>>([0-9]+)$#', $segment, $matches) === 1)
         {
-            $prepared = $dbh->prepare('SELECT "parent_thread" FROM "' . POST_TABLE . '" WHERE "post_number" = ? LIMIT 1');
+            $prepared = $dbh->prepare('SELECT "parent_thread" FROM "' . nel_board_references($board_id, 'post_table') . '" WHERE "post_number" = ? LIMIT 1');
             $parent_thread = $dbh->executePreparedFetch($prepared, array($matches[1]), PDO::FETCH_COLUMN);
 
             if ($parent_thread === false || empty($parent_thread))
@@ -66,7 +66,7 @@ function nel_post_quote_link($target_element, $text_input)
             else
             {
                 $p_anchor = '#p' . $parent_thread. '_' . $matches[1];
-                $url = PAGE_DIR . $parent_thread . '/' . $parent_thread . '.html' . $p_anchor;
+                $url = nel_board_references($board_id, 'page_dir') . $parent_thread . '/' . $parent_thread . '.html' . $p_anchor;
                 $segment_node= $target_element->ownerDocument->createElement('a', $matches[0]);
                 $segment_node->extSetAttribute('class', 'link-quote');
                 $segment_node->extSetAttribute('data-command', 'show-linked-post');

@@ -11,9 +11,11 @@ require_once INCLUDE_PATH . 'post/post_data.php';
 function nel_process_new_post($dataforce)
 {
     global $enabled_types, $plugins, $filetypes;
-    $archive = nel_archive();
-    $thread_handler = nel_thread_handler();
     $dbh = nel_database();
+    $board_id = INPUT_BOARD_ID;
+    $references = nel_board_references($board_id);
+    $archive = nel_archive($board_id);
+    $thread_handler = nel_thread_handler($board_id);
     $post_data = nel_collect_post_data();
     $new_thread_dir = '';
 
@@ -22,7 +24,7 @@ function nel_process_new_post($dataforce)
     $reply_delay = $time - (nel_board_settings('reply_delay')* 1000);
 
     // Check if post is ok
-    $post_count = nel_is_post_ok($post_data, $time);
+    $post_count = nel_is_post_ok($board_id, $post_data, $time);
 
     // Process FGSFDS
     if (!is_null($post_data['fgsfds']))
@@ -34,7 +36,7 @@ function nel_process_new_post($dataforce)
     $post_data['sage'] = (is_null(nel_fgsfds('sage'))) ? 0 : nel_fgsfds('sage');
 
     // Start collecting file info
-    $files = nel_process_file_info();
+    $files = nel_process_file_info($board_id);
     $spoon = false;
     $files_count = 0;
 
@@ -83,8 +85,8 @@ function nel_process_new_post($dataforce)
     $cookie_name = $post_data['name'];
 
     // Cookies OM NOM NOM NOM
-    setcookie('pwd-' . INPUT_BOARD_ID, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
-    setcookie('name-' . INPUT_BOARD_ID, $cookie_name, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
+    setcookie('pwd-' . $board_id, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
+    setcookie('name-' . $board_id, $cookie_name, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
     $post_data = $plugins->plugin_hook('after-post-info-processing', TRUE, array($post_data));
     $i = 0;
 
@@ -103,8 +105,8 @@ function nel_process_new_post($dataforce)
     $files_count = count($files);
     $post_data['file_count'] = $files_count;
     $post_data['has_file'] = ($files_count > 0) ? 1 : 0;
-    nel_db_insert_initial_post($time, $post_data);
-    $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE "post_time" = ? LIMIT 1');
+    nel_db_insert_initial_post($board_id, $time, $post_data);
+    $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "post_time" = ? LIMIT 1');
     $new_post_info = $dbh->executePreparedFetch($prepared, array($time), PDO::FETCH_ASSOC, true);
     $thread_info = array();
 
@@ -115,13 +117,13 @@ function nel_process_new_post($dataforce)
         $thread_info['last_bump_time'] = $time;
         $thread_info['id'] = $new_post_info['post_number'];
         $thread_info['total_files'] = $files_count;
-        nel_db_insert_new_thread($thread_info, $files_count);
+        nel_db_insert_new_thread($board_id, $thread_info, $files_count);
         $thread_handler->createThreadDirectories($thread_info['id']);
     }
     else
     {
         $thread_info['id'] = $post_data['parent_thread'];
-        $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1');
+        $prepared = $dbh->prepare('SELECT * FROM "' . $references['thread_table']. '" WHERE "thread_id" = ? LIMIT 1');
         $current_thread = $dbh->executePreparedFetch($prepared, array($thread_info['id']), PDO::FETCH_ASSOC, true);
         $thread_info['last_update'] = $current_thread['last_update'];
         $thread_info['post_count'] = $current_thread['post_count'] + 1;
@@ -133,24 +135,24 @@ function nel_process_new_post($dataforce)
             $thread_info['last_bump_time'] = $current_thread['last_bump_time'];
         }
 
-        nel_db_update_thread($new_post_info, $thread_info);
+        nel_db_update_thread($board_id, $new_post_info, $thread_info);
     }
 
-    $prepared = $dbh->prepare('UPDATE "' . POST_TABLE . '" SET parent_thread = ? WHERE post_number = ?');
+    $prepared = $dbh->prepare('UPDATE "' . $references['post_table']. '" SET parent_thread = ? WHERE post_number = ?');
     $dbh->executePrepared($prepared, array($thread_info['id'], $new_post_info['post_number']), true);
 
     nel_fgsfds('noko_topic', $thread_info['id']);
-    $srcpath = SRC_PATH . $thread_info['id'] . '/';
-    $thumbpath = THUMB_PATH . $thread_info['id'] . '/';
+    $srcpath = $references['src_path'] . $thread_info['id'] . '/';
+    $thumbpath = $references['thumb_path'] . $thread_info['id'] . '/';
 
     // Make thumbnails and do final file processing
-    $files = nel_generate_thumbnails($files, $srcpath, $thumbpath);
+    $files = nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath);
     clearstatcache();
 
     // Add file data if applicable
     if ($spoon)
     {
-        nel_db_insert_new_files($thread_info['id'], $new_post_info, $files);
+        nel_db_insert_new_files($board_id, $thread_info['id'], $new_post_info, $files);
     }
 
     // Run the archiving routine if this is a new thread or deleted/expired thread
@@ -166,30 +168,32 @@ function nel_process_new_post($dataforce)
     }
 
     // Generate response page if it doesn't exist, otherwise update
-    nel_regen_threads($dataforce, true, array($thread_info['id']));
-    nel_regen_index($dataforce);
+    nel_regen_threads($dataforce, $board_id, true, array($thread_info['id']));
+    nel_regen_index($dataforce, $board_id);
     return $thread_info['id'];
 }
 
-function nel_is_post_ok($post_data, $time)
+function nel_is_post_ok($board_id, $post_data, $time)
 {
     $dbh = nel_database();
+    $references = nel_board_references($board_id);
+
     // Check for flood
     // If post is a reply, also check if the thread still exists
 
     if ($post_data['parent_thread'] == 0) // TODO: Update this, doesn't look right
     {
-        $thread_delay = $time - (nel_board_settings('thread_delay')* 1000);
-        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE . ' WHERE post_time > ? AND ip_address = ?');
+        $thread_delay = $time - (nel_board_settings('thread_delay') * 1000);
+        $prepared = $dbh->prepare('SELECT COUNT(*) FROM "' . $references['post_table']. '" WHERE "post_time" > ? AND "ip_address" = ?');
         $prepared->bindValue(1, $thread_delay, PDO::PARAM_STR);
         $prepared->bindValue(2, @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_LOB);
         $renzoku = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
     }
     else
     {
-        $thread_delay = $time - (nel_board_settings('reply_delay')* 1000);
-        $prepared = $dbh->prepare('SELECT COUNT(*) FROM ' . POST_TABLE .
-             ' WHERE parent_thread = ? AND post_time > ? AND ip_address = ?');
+        $thread_delay = $time - (nel_board_settings('reply_delay') * 1000);
+        $prepared = $dbh->prepare('SELECT COUNT(*) FROM "' . $references['post_table'].
+             '" WHERE "parent_thread" = ? AND "post_time" > ? AND "ip_address" = ?');
         $prepared->bindValue(1, $post_data['parent_thread'], PDO::PARAM_INT);
         $prepared->bindValue(2, $thread_delay, PDO::PARAM_STR);
         $prepared->bindValue(3, @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_LOB);
@@ -205,7 +209,7 @@ function nel_is_post_ok($post_data, $time)
 
     if ($post_data['parent_thread'] != 0)
     {
-        $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1');
+        $prepared = $dbh->prepare('SELECT * FROM "' . $references['thread_table']. '" WHERE "thread_id" = ? LIMIT 1');
         $op_post = $dbh->executePreparedFetch($prepared, array($post_data['parent_thread']), PDO::FETCH_ASSOC, true);
 
         if (!empty($op_post))

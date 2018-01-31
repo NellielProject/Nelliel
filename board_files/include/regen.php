@@ -8,14 +8,14 @@ require_once INCLUDE_PATH . 'output_filter.php';
 require_once INCLUDE_PATH . 'output/main_generation.php';
 require_once INCLUDE_PATH . 'output/thread_generation.php';
 
-function nel_regen_threads($dataforce, $write, $ids)
+function nel_regen_threads($dataforce, $board_id, $write, $ids)
 {
     $threads = count($ids);
     $i = 0;
 
     while ($i < $threads)
     {
-        nel_thread_generator($dataforce, $write, $ids[$i]);
+        nel_thread_generator($dataforce, $board_id, $write, $ids[$i]);
         ++ $i;
     }
 }
@@ -27,9 +27,9 @@ function nel_regen_cache($dataforce)
     nel_cache_board_settings_new();
 }
 
-function nel_regen_index($dataforce)
+function nel_regen_index($dataforce, $board_id)
 {
-    $archive = nel_archive();
+    $archive = nel_archive($board_id);
     $archive->updateAllArchiveStatus();
 
     if(nel_board_settings('old_threads') === 'ARCHIVE')
@@ -43,15 +43,15 @@ function nel_regen_index($dataforce)
     }
 
     $dataforce['response_id'] = 0;
-    nel_main_thread_generator($dataforce, true);
+    nel_main_thread_generator($dataforce, $board_id, true);
 }
 
-function nel_regen_all_pages($dataforce)
+function nel_regen_all_pages($dataforce, $board_id)
 {
     $dbh = nel_database();
-    $result =  $dbh->query('SELECT "thread_id" FROM "' . THREAD_TABLE . '" WHERE "archive_status" = 0');
+    $result =  $dbh->query('SELECT "thread_id" FROM "' . nel_board_references($board_id, 'thread_table') . '" WHERE "archive_status" = 0');
     $ids = $result->fetchAll(PDO::FETCH_COLUMN);
-    nel_regen_threads($dataforce, true, $ids);
-    nel_regen_index($dataforce);
+    nel_regen_threads($dataforce, $board_id, true, $ids);
+    nel_regen_index($dataforce, $board_id);
 }
 

@@ -1,6 +1,6 @@
 <?php
 
-function nel_process_file_info()
+function nel_process_file_info($board_id)
 {
     $files = array();
     $file_count = 1;
@@ -15,7 +15,7 @@ function nel_process_file_info()
             continue;
         }
 
-        nel_check_upload_errors($file, $files);
+        nel_check_upload_errors($board_id, $file, $files);
         preg_match('#[0-9]+$#', $entry, $matches);
         $file_order = $matches[0];
         $post_file_info = $_POST['new_post']['file_info']['file_' . $file_order . ''];
@@ -27,9 +27,9 @@ function nel_process_file_info()
         $new_file['fullname'] = $info['basename'];
         $new_file['dest'] = $file['tmp_name'];
         $new_file['filesize'] = $file['size'];
-        $new_file = nel_check_for_existing_file($new_file, $files);
+        $new_file = nel_check_for_existing_file($board_id, $new_file, $files);
         $new_file = nel_get_filetype($new_file, $files);
-        $new_file['dest'] = SRC_PATH . $file['name'] . '.tmp';
+        $new_file['dest'] = nel_board_references($board_id, 'src_path') . $file['name'] . '.tmp';
         move_uploaded_file($file['tmp_name'], $new_file['dest']);
         chmod($new_file['dest'], octdec(FILE_PERM));
 
@@ -49,7 +49,7 @@ function nel_process_file_info()
     return $files;
 }
 
-function nel_check_upload_errors($file, $files)
+function nel_check_upload_errors($board_id, $file, $files)
 {
     $error_data = array('bad-filename' => $file['name'], 'files' => $files);
 
@@ -89,20 +89,21 @@ function nel_check_upload_errors($file, $files)
     }
 }
 
-function nel_check_for_existing_file($file, $files)
+function nel_check_for_existing_file($board_id, $file, $files)
 {
     $dbh = nel_database();
+    $references = nel_board_references($board_id);
     $error_data = array('bad-filename' => $file['filename'], 'files' => $files);
     $file['md5'] = hash_file('md5', $file['dest'], true);
     $file['sha1'] = hash_file('sha1', $file['dest'], true);
 
-    if(GENERATE_FILE_SHA256)
+    if (GENERATE_FILE_SHA256)
     {
         $file['sha256'] = hash_file('sha256', $file['dest'], true);
     }
 
     nel_banned_hash($file['md5'], $files);
-    $query = 'SELECT "post_ref" FROM "' . FILE_TABLE . '" WHERE "sha1" = ? LIMIT 1';
+    $query = 'SELECT "post_ref" FROM "' . $references['file_table']. '" WHERE "sha1" = ? LIMIT 1';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $file['sha1'], PDO::PARAM_LOB);
     $result = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
@@ -146,7 +147,7 @@ function nel_get_filetype($file, $files)
     return $file;
 }
 
-function nel_generate_thumbnails($files, $srcpath, $thumbpath)
+function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
 {
     $i = 0;
     $files_count = count($files);

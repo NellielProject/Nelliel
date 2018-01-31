@@ -22,9 +22,9 @@ function nel_thread_panel($dataforce, $authorize)
             nel_derp(351, nel_stext('ERROR_351'));
         }
 
-        $updates = nel_thread_updates($dataforce);
-        nel_regen_threads($dataforce, true, $updates);
-        nel_regen_index($dataforce);
+        $updates = nel_thread_updates($dataforce, INPUT_BOARD_ID);
+        nel_regen_threads($dataforce, INPUT_BOARD_ID, true, $updates);
+        nel_regen_index($dataforce, INPUT_BOARD_ID);
     }
 
     if (isset($_POST['expand_thread']))

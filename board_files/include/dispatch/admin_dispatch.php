@@ -22,7 +22,7 @@ function admin_dispatch($dataforce)
             break;
 
         case 'modmode':
-            nel_thread_updates($dataforce);
+            nel_thread_updates($dataforce, INPUT_BOARD_ID);
             echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF . '?mode=display&page=0">';
             break;
 
@@ -34,17 +34,17 @@ function admin_dispatch($dataforce)
         case 'regen':
             if ($dataforce['mode_segments'][2] === 'full')
             {
-                nel_regen_all_pages($dataforce);
+                nel_regen_all_pages($dataforce, INPUT_BOARD_ID);
             }
 
             if ($dataforce['mode_segments'][2] === 'index')
             {
-                nel_regen_index($dataforce);
+                nel_regen_index($dataforce, INPUT_BOARD_ID);
             }
 
             if ($dataforce['mode_segments'][2] === 'thread')
             {
-                nel_regen_threads($dataforce, true, null);
+                nel_regen_threads($dataforce, INPUT_BOARD_ID, true, null);
             }
 
             if ($dataforce['mode_segments'][2] === 'cache')

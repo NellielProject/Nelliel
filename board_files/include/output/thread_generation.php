@@ -4,9 +4,10 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_thread_generator($dataforce, $write, $write_id)
+function nel_thread_generator($dataforce, $board_id, $write, $write_id)
 {
     $dbh = nel_database();
+    $references = nel_board_references($board_id);
     $file_handler = nel_file_handler();
 
     if($write)
@@ -26,10 +27,10 @@ function nel_thread_generator($dataforce, $write, $write_id)
     $dom->getElementById('form-post-index')->extSetAttribute('action', $dataforce['dotdot'] . PHP_SELF);
 
     $dataforce['response_id'] = $write_id;
-    $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1');
+    $prepared = $dbh->prepare('SELECT * FROM "' . $references['thread_table'] . '" WHERE "thread_id" = ? LIMIT 1');
     $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($write_id), PDO::FETCH_ASSOC);
 
-    $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+    $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
     $treeline = $dbh->executePreparedFetchAll($prepared, array($write_id), PDO::FETCH_ASSOC);
 
     if (empty($treeline))
@@ -62,7 +63,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
 
         if ($gen_data['post']['has_file'] == 1)
         {
-            $prepared = $dbh->prepare('SELECT * FROM "' . FILE_TABLE . '" WHERE "post_ref" = ? ORDER BY "file_order" ASC');
+            $prepared = $dbh->prepare('SELECT * FROM "' . $references['file_table'] . '" WHERE "post_ref" = ? ORDER BY "file_order" ASC');
             $gen_data['files'] = $dbh->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']), PDO::FETCH_ASSOC);
         }
 
@@ -71,7 +72,7 @@ function nel_thread_generator($dataforce, $write, $write_id)
             $render_temp = clone $render;
             nel_render_insert_hr($dom);
             nel_render_footer($render_temp, true);
-            $file_handler->writeFile(PAGE_PATH . $write_id . '/' . $write_id. '-0-100.html', $render_temp->outputRenderSet(), FILE_PERM, true);
+            $file_handler->writeFile($references['page_path']. $write_id . '/' . $write_id. '-0-100.html', $render_temp->outputRenderSet(), FILE_PERM, true);
             unset($render_temp);
         }
 
@@ -130,9 +131,9 @@ function nel_thread_generator($dataforce, $write, $write_id)
 
     if ($write)
     {
-        $file_handler->writeFile(PAGE_PATH . $write_id . '/' . $write_id . '.html', $render->outputRenderSet(), FILE_PERM, true);
-        $file_handler->writeFile(PAGE_PATH . $write_id . '/' . $write_id . '-expand.html', $render->outputRenderSet('expand'), FILE_PERM, true);
-        $file_handler->writeFile(PAGE_PATH . $write_id . '/' . $write_id . '-collapse.html', $render->outputRenderSet('collapse'), FILE_PERM, true);
+        $file_handler->writeFile($references['page_path'] . $write_id . '/' . $write_id . '.html', $render->outputRenderSet(), FILE_PERM, true);
+        $file_handler->writeFile($references['page_path'] . $write_id . '/' . $write_id . '-expand.html', $render->outputRenderSet('expand'), FILE_PERM, true);
+        $file_handler->writeFile($references['page_path'] . $write_id . '/' . $write_id . '-collapse.html', $render->outputRenderSet('collapse'), FILE_PERM, true);
     }
     else
     {

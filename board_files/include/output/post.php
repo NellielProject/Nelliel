@@ -59,6 +59,7 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
 {
     $authorize = nel_authorize();
     $dbh = nel_database();
+    $references = nel_board_references(INPUT_BOARD_ID);
 
     $start = microtime(true);
     $post_data = $gen_data['post'];
@@ -159,8 +160,8 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
 
     $post_header_node_array['post-time-']->setContent($post_time);
     $post_header_node_array['post-num-link-']->setContent($post_data['post_number']);
-    $post_header_node_array['post-num-link-']->extSetAttribute('href', PAGE_DIR . $post_data['parent_thread'] . '/' .
-         $post_data['parent_thread'] . '.html#p' . $post_id, 'none');
+    $post_header_node_array['post-num-link-']->extSetAttribute('href', $references['page_dir'] .
+         $post_data['parent_thread'] . '/' . $post_data['parent_thread'] . '.html#p' . $post_id, 'none');
     $post_header_node_array['post-num-link-']->changeId('post-num-link-' . $post_id);
     $post_header_node_array['post-link-post']->extSetAttribute('data-id', $post_id);
 
@@ -184,8 +185,8 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
         }
         else
         {
-            $post_header_node_array['reply-to-link']->extSetAttribute('href', PAGE_DIR . $post_data['parent_thread'] .
-                 '/' . $post_data['post_number'] . '.html');
+            $post_header_node_array['reply-to-link']->extSetAttribute('href', $references['page_dir'] .
+                 $post_data['parent_thread'] . '/' . $post_data['post_number'] . '.html');
         }
     }
 
@@ -194,7 +195,7 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
         $post_header_node_array['reply-to-link']->parentNode->removeSelf();
     }
 
-    $thread_link_html = PAGE_DIR . $thread_id . '/' . $thread_id;
+    $thread_link_html = $references['page_dir'] . $thread_id . '/' . $thread_id;
     $expand_link_element = $new_post_dom->getElementById('expandLink');
     $expand_link_element->extSetAttribute('data-id', $post_id);
     $expand_link_element->changeId('expandLink' . $thread_id);
@@ -215,7 +216,7 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
         /*$new_post_dom->getElementById('ip-address-display')->setContent(@inet_ntop($post_data['ip_address']));
          $set_ban_details = $new_post_dom->getElementById('set-ban-details');
 
-         if (nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_ban_add', INPUT_BOARD_ID) &&
+         if (nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_ban_add', $references['directory']) &&
          !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
          {
          $ban_details = 'addBanDetails(\'ban' . $post_data['post_number'] . '\', \'' . $post_data['post_number'] .
@@ -260,7 +261,8 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
             $temp_file_node_array['delete-file']->extSetAttribute('name', 'file_' . $file_id);
             $temp_file_node_array['delete-file']->extSetAttribute('value', 'deletefile_' . $file_id);
 
-            $file['file_location'] = SRC_DIR . $thread_id . '/' . $file['filename'] . "." . $file['extension'];
+            $file['file_location'] = $references['src_dir'] . $thread_id . '/' . $file['filename'] . "." .
+                 $file['extension'];
             $file['display_filename'] = $file['filename'];
 
             if (strlen($file['filename']) > 32)
@@ -308,7 +310,7 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
                 if (isset($file['preview_name']))
                 {
                     $file['has_preview'] = true;
-                    $file['preview_location'] = THUMB_DIR . $thread_id . '/' . $file['preview_name'];
+                    $file['preview_location'] = $references['thumb_dir'] . $thread_id . '/' . $file['preview_name'];
 
                     if ($filecount > 1)
                     {
@@ -391,7 +393,7 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
                 $append_target = $quote_result;
             }
 
-            nel_post_quote_link($append_target, $line);
+            nel_post_quote_link(INPUT_BOARD_ID, $append_target, $line);
             $append_target->appendChild($new_post_dom->createElement('br'));
         }
     }
@@ -442,7 +444,7 @@ function nel_render_thread_form_bottom($dom)
 {
     $footer_form_element = $dom->getElementById('footer-form');
     $form_td_list = $footer_form_element->doXPathQuery(".//input");
-    $dom->getElementById('board_id_field_footer')->extSetAttribute('value', INPUT_BOARD_ID);
+    $dom->getElementById('board_id_field_footer')->extSetAttribute('value', nel_board_references(INPUT_BOARD_ID, 'directory'));
 
     if (nel_session_is_ignored('render'))
     {

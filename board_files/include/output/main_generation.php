@@ -7,10 +7,12 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Genrerates the main thread listings
 //
-function nel_main_thread_generator($dataforce, $write)
+function nel_main_thread_generator($dataforce, $board_id, $write)
 {
     $dbh = nel_database();
+    $references = nel_board_references($board_id);
     $file_handler = nel_file_handler();
+    $thread_table =
     $gen_data = array();
     $dataforce['dotdot'] = '../';
 
@@ -19,7 +21,7 @@ function nel_main_thread_generator($dataforce, $write)
         nel_session_is_ignored('render', true);
     }
 
-    $result = $dbh->query('SELECT "thread_id" FROM "' . THREAD_TABLE .
+    $result = $dbh->query('SELECT "thread_id" FROM "' . $references['thread_table'] .
          '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC');
     $front_page_list = $result->fetchAll(PDO::FETCH_COLUMN);
     unset($result);
@@ -41,7 +43,7 @@ function nel_main_thread_generator($dataforce, $write)
 
         if ($write)
         {
-            $file_handler->writeFile(INPUT_BOARD_ID . '/' . PHP_SELF2 . PHP_EXT, $render->outputRenderSet(), FILE_PERM);
+            $file_handler->writeFile($board_id . '/' . PHP_SELF2 . PHP_EXT, $render->outputRenderSet(), FILE_PERM);
         }
         else
         {
@@ -79,10 +81,10 @@ function nel_main_thread_generator($dataforce, $write)
                 $thread_element->changeId('thread-' . $current_thread_id);
                 $dom->getElementById('outer-div')->appendChild($thread_element);
                 $post_append_target = $thread_element;
-                $prepared = $dbh->prepare('SELECT * FROM "' . THREAD_TABLE . '" WHERE "thread_id" = ? LIMIT 1');
+                $prepared = $dbh->prepare('SELECT * FROM "' . $references['thread_table'] . '" WHERE "thread_id" = ? LIMIT 1');
                 $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($current_thread_id), PDO::FETCH_ASSOC);
 
-                $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE .
+                $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] .
                      '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
                 $treeline = $dbh->executePreparedFetchAll($prepared, array($current_thread_id), PDO::FETCH_ASSOC);
 
@@ -97,7 +99,7 @@ function nel_main_thread_generator($dataforce, $write)
 
             if ($gen_data['post']['has_file'] == 1)
             {
-                $prepared = $dbh->prepare('SELECT * FROM "' . FILE_TABLE .
+                $prepared = $dbh->prepare('SELECT * FROM "' . $references['file_table'] .
                      '" WHERE "post_ref" = ? ORDER BY "file_order" ASC');
                 $gen_data['files'] = $dbh->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']), PDO::FETCH_ASSOC);
             }
@@ -227,7 +229,7 @@ function nel_main_thread_generator($dataforce, $write)
         }
         else
         {
-            $logfilename = ($page === 1) ? INPUT_BOARD_ID . '/' . PHP_SELF2 . PHP_EXT : INPUT_BOARD_ID . '/' . PHP_SELF2 . ($page - 1) . PHP_EXT;
+            $logfilename = ($page === 1) ? $board_id . '/' . PHP_SELF2 . PHP_EXT : $board_id. '/' . PHP_SELF2 . ($page - 1) . PHP_EXT;
             $file_handler->writeFile($logfilename, $render->outputRenderSet(), FILE_PERM, true);
         }
 

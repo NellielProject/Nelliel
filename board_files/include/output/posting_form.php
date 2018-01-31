@@ -1,9 +1,9 @@
 <?php
-
 require_once INCLUDE_PATH . 'output/rules.php';
 
 function nel_render_posting_form($dataforce, $render)
 {
+    $references = nel_board_references(INPUT_BOARD_ID);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'posting_form.html');
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
@@ -17,12 +17,12 @@ function nel_render_posting_form($dataforce, $render)
     }
     else
     {
-        $page_ref1 = INPUT_BOARD_ID . '/' . PHP_SELF2 . PHP_EXT;
+        $page_ref1 = $references['directory'] . '/' . PHP_SELF2 . PHP_EXT;
     }
 
     $posting_form = $dom->getElementById('posting-form');
     $posting_form->extSetAttribute('action', $dotdot . PHP_SELF);
-    $dom->getElementById('board_id_field_post_form')->extSetAttribute('value', INPUT_BOARD_ID);
+    $dom->getElementById('board_id_field_post_form')->extSetAttribute('value', $references['directory']);
 
     if ($response_id)
     {
@@ -114,7 +114,7 @@ function nel_render_posting_form($dataforce, $render)
 
     $fgsfds_form = $dom->getElementById('form-fgsfds');
 
-    if(!BS_USE_FGSFDS)
+    if (!BS_USE_FGSFDS)
     {
         $dom->removeChild($fgsfds_form);
     }
@@ -124,7 +124,7 @@ function nel_render_posting_form($dataforce, $render)
         $fgsfds_label->setContent(BS_FGSFDS_NAME);
     }
 
-    if($response_id)
+    if ($response_id)
     {
         $dom->getElementById('which-post-mode')->setContent('TEXT_REPLYMODE');
     }
@@ -133,7 +133,7 @@ function nel_render_posting_form($dataforce, $render)
     $rules = $dom->importNode(nel_render_rules_list($rl), true);
     $dom->getElementById('form-rules-list')->appendChild($rules);
 
-    if(!BS_USE_SPAMBOT_TRAP)
+    if (!BS_USE_SPAMBOT_TRAP)
     {
         $dom->removeChild($dom->getElementById('form-trap1'));
         $dom->removeChild($dom->getElementById('form-trap2'));
