@@ -37,8 +37,8 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
         $render = new NellielTemplates\RenderCore();
         $render->startRenderTimer();
         $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-        nel_render_header($dataforce, $render, $treeline);
-        nel_render_posting_form($dataforce, $render);
+        nel_render_header($board_id, $dataforce, $render, $treeline);
+        nel_render_posting_form($board_id, $dataforce, $render);
         nel_render_footer($render, true);
 
         if ($write)
@@ -110,17 +110,17 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
                 {
                     $gen_data['post_counter'] = $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD;
                     $dataforce['omitted_done'] = FALSE;
-                    $new_post_element = nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
+                    $new_post_element = nel_render_post($board_id, $dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
                     $dataforce['omitted_done'] = TRUE;
                 }
                 else
                 {
-                    $new_post_element = nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
+                    $new_post_element = nel_render_post($board_id, $dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
                 }
             }
             else
             {
-                $new_post_element = nel_render_post($dataforce, $render, TRUE, TRUE, $gen_data, $treeline, $dom);
+                $new_post_element = nel_render_post($board_id, $dataforce, $render, TRUE, TRUE, $gen_data, $treeline, $dom);
             }
 
             $imported = $dom->importNode($new_post_element, true);
@@ -213,7 +213,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
         }
 
         nel_render_index_navigation($dom, $render, $pages);
-        nel_render_thread_form_bottom($dom);
+        nel_render_thread_form_bottom($board_id, $dom);
         $render->appendHTMLFromDOM($dom);
         nel_render_footer($render, true);
 

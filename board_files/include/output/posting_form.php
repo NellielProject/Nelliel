@@ -1,9 +1,9 @@
 <?php
 require_once INCLUDE_PATH . 'output/rules.php';
 
-function nel_render_posting_form($dataforce, $render)
+function nel_render_posting_form($board_id, $dataforce, $render)
 {
-    $references = nel_board_references(INPUT_BOARD_ID);
+    $references = nel_board_references($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'posting_form.html');
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';

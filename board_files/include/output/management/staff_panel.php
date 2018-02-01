@@ -10,7 +10,7 @@ function nel_render_staff_panel_main($dataforce)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_header($dataforce, $render, array());
+    nel_render_header($board_id, $dataforce, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_main.html');
 
@@ -57,7 +57,7 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_header($dataforce, $render, array());
+    nel_render_header($board_id, $dataforce, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_user_edit.html');
 
@@ -119,7 +119,7 @@ function nel_render_staff_panel_role_edit($dataforce, $role_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_header($dataforce, $render, array());
+    nel_render_header($board_id, $dataforce, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_role_edit.html');
 

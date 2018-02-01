@@ -8,11 +8,10 @@ require_once INCLUDE_PATH . 'post/filetypes.php';
 require_once INCLUDE_PATH . 'post/file_functions.php';
 require_once INCLUDE_PATH . 'post/post_data.php';
 
-function nel_process_new_post($dataforce)
+function nel_process_new_post($board_id, $dataforce)
 {
     global $enabled_types, $plugins, $filetypes;
     $dbh = nel_database();
-    $board_id = INPUT_BOARD_ID;
     $references = nel_board_references($board_id);
     $archive = nel_archive($board_id);
     $thread_handler = nel_thread_handler($board_id);

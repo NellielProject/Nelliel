@@ -82,7 +82,7 @@ function nel_banned_text($text, $file)
 //
 // Apply b&hammer
 //
-function nel_apply_ban($dataforce)
+function nel_apply_ban($dataforce, $board_id)
 {
     $dbh = nel_database();
     $ban_hammer = nel_ban_hammer();
@@ -112,7 +112,7 @@ function nel_apply_ban($dataforce)
 
     if (time() >= $length)
     {
-        $ban_hammer->removeBan($ban_info['ban_id'], true);
+        $ban_hammer->removeBan($board_id, $ban_info['ban_id'], true);
         return;
     }
 

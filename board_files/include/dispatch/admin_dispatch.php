@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function admin_dispatch($dataforce)
+function admin_dispatch($board_id, $dataforce)
 {
     $authorize = nel_authorize();
     nel_verify_login_or_session($dataforce);
@@ -18,33 +18,33 @@ function admin_dispatch($dataforce)
 
         case 'ban':
             require_once INCLUDE_PATH . 'admin/bans_panel.php';
-            nel_ban_control($dataforce);
+            nel_ban_control($board_id, $dataforce);
             break;
 
         case 'modmode':
-            nel_thread_updates($dataforce, INPUT_BOARD_ID);
+            nel_thread_updates($dataforce, $board_id);
             echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF . '?mode=display&page=0">';
             break;
 
         case 'settings':
             require_once INCLUDE_PATH . 'admin/settings_panel.php';
-            nel_settings_control($dataforce);
+            nel_settings_control($board_id, $dataforce);
             break;
 
         case 'regen':
             if ($dataforce['mode_segments'][2] === 'full')
             {
-                nel_regen_all_pages($dataforce, INPUT_BOARD_ID);
+                nel_regen_all_pages($dataforce, $board_id);
             }
 
             if ($dataforce['mode_segments'][2] === 'index')
             {
-                nel_regen_index($dataforce, INPUT_BOARD_ID);
+                nel_regen_index($dataforce, $board_id);
             }
 
             if ($dataforce['mode_segments'][2] === 'thread')
             {
-                nel_regen_threads($dataforce, INPUT_BOARD_ID, true, null);
+                nel_regen_threads($dataforce, $board_id, true, null);
             }
 
             if ($dataforce['mode_segments'][2] === 'cache')
@@ -57,7 +57,7 @@ function admin_dispatch($dataforce)
 
         case 'thread':
             require_once INCLUDE_PATH . 'admin/threads_panel.php';
-            nel_thread_panel($dataforce, $authorize);
+            nel_thread_panel($board_id, $dataforce, $authorize);
             break;
 
         case 'login':

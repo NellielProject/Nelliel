@@ -55,11 +55,11 @@ function nel_render_index_navigation($dom, $render, $pages)
     $dom->getElementById('outer-div')->appendChild($imported);
 }
 
-function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data, $treeline, $dom)
+function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent, $gen_data, $treeline, $dom)
 {
     $authorize = nel_authorize();
     $dbh = nel_database();
-    $references = nel_board_references(INPUT_BOARD_ID);
+    $references = nel_board_references($board_id);
 
     $start = microtime(true);
     $post_data = $gen_data['post'];
@@ -393,7 +393,7 @@ function nel_render_post($dataforce, $render, $response, $ref_parent, $gen_data,
                 $append_target = $quote_result;
             }
 
-            nel_post_quote_link(INPUT_BOARD_ID, $append_target, $line);
+            nel_post_quote_link($board_id, $append_target, $line);
             $append_target->appendChild($new_post_dom->createElement('br'));
         }
     }
@@ -440,11 +440,11 @@ function nel_render_post_adjust_relative($node, $gen_data)
     return $new_post_dom->getElementById('post-id-' . $post_id);
 }
 
-function nel_render_thread_form_bottom($dom)
+function nel_render_thread_form_bottom($board_id, $dom)
 {
     $footer_form_element = $dom->getElementById('footer-form');
     $form_td_list = $footer_form_element->doXPathQuery(".//input");
-    $dom->getElementById('board_id_field_footer')->extSetAttribute('value', nel_board_references(INPUT_BOARD_ID, 'directory'));
+    $dom->getElementById('board_id_field_footer')->extSetAttribute('value', nel_board_references($board_id, 'directory'));
 
     if (nel_session_is_ignored('render'))
     {

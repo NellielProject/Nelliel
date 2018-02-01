@@ -6,34 +6,34 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/thread_panel.php';
 
-function nel_thread_panel($dataforce, $authorize)
+function nel_thread_panel($board_id, $dataforce, $authorize)
 {
     $mode = $dataforce['mode'];
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_access', INPUT_BOARD_ID))
+    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_access', $board_id))
     {
         nel_derp(350, nel_stext('ERROR_350'));
     }
 
     if ($mode === 'admin->thread->update')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_modify', INPUT_BOARD_ID))
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_modify', $board_id))
         {
             nel_derp(351, nel_stext('ERROR_351'));
         }
 
-        $updates = nel_thread_updates($dataforce, INPUT_BOARD_ID);
-        nel_regen_threads($dataforce, INPUT_BOARD_ID, true, $updates);
-        nel_regen_index($dataforce, INPUT_BOARD_ID);
+        $updates = nel_thread_updates($dataforce, $board_id);
+        nel_regen_threads($dataforce, $board_id, true, $updates);
+        nel_regen_index($dataforce, $board_id);
     }
 
     if (isset($_POST['expand_thread']))
     {
         $expand_data = explode(' ', $_POST['expand_thread']);
-        nel_render_thread_panel_expand($expand_data[1]);
+        nel_render_thread_panel_expand($board_id, $expand_data[1]);
     }
     else
     {
-        nel_render_thread_panel_main();
+        nel_render_thread_panel_main($board_id);
     }
 }

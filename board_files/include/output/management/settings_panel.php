@@ -4,16 +4,16 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_settings_panel($dataforce)
+function nel_render_settings_panel($board_id, $dataforce)
 {
     $dbh = nel_database();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_header($dataforce, $render, array());
+    nel_render_header($board_id, $dataforce, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/settings_panel.html');
-    $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
+    $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
     $result = $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '"');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);

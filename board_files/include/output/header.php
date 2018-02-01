@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
+function nel_render_header($board_id, $dataforce, $render, $treeline = null, $type = 'NORMAL') // TODO:Separate functions for admin and post/thread headers
 {
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
@@ -12,7 +12,7 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
-    $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . INPUT_BOARD_ID .
+    $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . $board_id .
          '\');};');
     $dom->getElementById('js-style-set')->setContent('processCookie("style-' . BOARD_DIR . '");');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
@@ -35,7 +35,7 @@ function nel_render_header($dataforce, $render, $treeline, $type = 'NORMAL')
 
         case 'NORMAL':
 
-            if (!empty($treeline))
+            if (!is_null($treeline))
             {
                 if ($treeline[0]['subject'] === '')
                 {

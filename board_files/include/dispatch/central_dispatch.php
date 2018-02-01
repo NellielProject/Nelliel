@@ -79,11 +79,11 @@ function nel_process_post($dataforce)
     switch ($dataforce['mode_segments'][0])
     {
         case 'admin':
-            admin_dispatch($dataforce);
+            admin_dispatch(INPUT_BOARD_ID, $dataforce);
             break;
 
         case 'general':
-            general_dispatch($dataforce);
+            general_dispatch(INPUT_BOARD_ID, $dataforce);
             break;
     }
 

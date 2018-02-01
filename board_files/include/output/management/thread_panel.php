@@ -4,17 +4,17 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_thread_panel_main()
+function nel_render_thread_panel_main($board_id)
 {
     $dbh = nel_database();
-    $references = nel_board_references(INPUT_BOARD_ID);
+    $references = nel_board_references($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_header(array(), $render, array());
+    nel_render_header($board_id, array(), $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel.html');
-    $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
+    $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
     $thread_data = $dbh->executeFetchAll('SELECT * FROM "' . $references['thread_table'] .
          '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC', PDO::FETCH_ASSOC);
     $thread_list_table = $dom->getElementById('thread-list');
@@ -109,17 +109,17 @@ function nel_render_thread_panel_main()
     echo $render->outputRenderSet();
 }
 
-function nel_render_thread_panel_expand($thread_id)
+function nel_render_thread_panel_expand($board_id, $thread_id)
 {
     $dbh = nel_database();
-    $references = nel_board_references(INPUT_BOARD_ID);
+    $references = nel_board_references($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_header(array(), $render, array());
+    nel_render_header($board_id, array(), $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
-    $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
+    $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
     $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "parent_thread" = ?');
     $post_data = $dbh->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
     $post_list_table = $dom->getElementById('post-list');

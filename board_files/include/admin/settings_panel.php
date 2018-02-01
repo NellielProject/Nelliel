@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/settings_panel.php';
 
-function nel_settings_control($dataforce)
+function nel_settings_control($board_id, $dataforce)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
@@ -15,7 +15,7 @@ function nel_settings_control($dataforce)
 
     if ($mode === 'admin->settings->update')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_modify', INPUT_BOARD_ID))
+        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_modify', $board_id))
         {
             nel_derp(331, nel_stext('ERROR_331'));
         }
@@ -40,8 +40,8 @@ function nel_settings_control($dataforce)
         }
 
         nel_regen_cache($dataforce);
-        nel_regen_all_pages($dataforce, INPUT_BOARD_ID);
+        nel_regen_all_pages($dataforce, $board_id);
     }
 
-    nel_render_settings_panel($dataforce);
+    nel_render_settings_panel($board_id, $dataforce);
 }

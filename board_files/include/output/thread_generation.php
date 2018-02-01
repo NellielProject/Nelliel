@@ -52,8 +52,8 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
 
         if ($gen_data['post_counter'] === 0)
         {
-            nel_render_header($dataforce, $render, $treeline);
-            nel_render_posting_form($dataforce, $render);
+            nel_render_header($board_id, $dataforce, $render, $treeline);
+            nel_render_posting_form($board_id, $dataforce, $render);
         }
 
         if($gen_data['post_counter'] == $gen_data['thread']['post_count'] - 1)
@@ -78,7 +78,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
 
         if ($gen_data['post']['op'] == 1)
         {
-            $base_new_post_node = nel_render_post($dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
+            $base_new_post_node = nel_render_post($board_id, $dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
             $expand_div = $dom->getElementById('thread-expand-');
             $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
             $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
@@ -99,7 +99,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
         }
         else
         {
-            $base_new_post_node = nel_render_post($dataforce, $render, TRUE, FALSE, $gen_data, $treeline, $dom);
+            $base_new_post_node = nel_render_post($board_id, $dataforce, $render, TRUE, FALSE, $gen_data, $treeline, $dom);
 
             if ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD)
             {
@@ -123,7 +123,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
     $dom->getElementById('post-id-')->removeSelf();
     $dom->getElementById('thread-')->changeId('thread-' . $write_id);
     nel_render_insert_hr($dom);
-    nel_render_thread_form_bottom($dom);
+    nel_render_thread_form_bottom($board_id, $dom);
     $render->appendHTMLFromDOM($dom);
     $render->appendHTMLFromDOM($collapse_dom, 'collapse');
     $render->appendHTMLFromDOM($expand_dom, 'expand');
