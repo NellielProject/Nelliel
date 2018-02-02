@@ -10,7 +10,7 @@ function nel_render_settings_panel($board_id, $dataforce)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_header($board_id, $dataforce, $render);
+    nel_render_general_header($dataforce, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/settings_panel.html');
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);

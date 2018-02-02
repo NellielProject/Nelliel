@@ -52,7 +52,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
 
         if ($gen_data['post_counter'] === 0)
         {
-            nel_render_header($board_id, $dataforce, $render, $treeline);
+            nel_render_board_header($board_id, $dataforce, $render, $treeline);
             nel_render_posting_form($board_id, $dataforce, $render);
         }
 

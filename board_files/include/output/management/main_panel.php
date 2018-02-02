@@ -7,7 +7,7 @@ function nel_generate_main_panel()
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_header(INPUT_BOARD_ID, array(), $render);
+    nel_render_general_header(array(), $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/main_panel.html');
     $board_listing = $dom->getElementById('board-select-');
@@ -47,7 +47,7 @@ function nel_generate_main_board_panel($board_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_header($board_id, array(), $render);
+    nel_render_general_header(array(), $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/main_board_panel.html');
 
