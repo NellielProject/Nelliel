@@ -683,6 +683,7 @@ function nel_insert_config_defaults()
                         ('board_setting', 'nelliel', 'general', 'str', 'board_name', 'Nelliel-powered image board'),
                         ('board_setting', 'nelliel', 'general', 'str', 'board_favicon', ''),
                         ('board_setting', 'nelliel', 'general', 'str', 'board_logo', ''),
+                        ('board_setting', 'nelliel', 'general', 'int', 'board_language', 'en-us'),
                         ('board_setting', 'nelliel', 'general', 'int', 'thread_delay', '60'),
                         ('board_setting', 'nelliel', 'general', 'int', 'reply_delay', '15'),
                         ('board_setting', 'nelliel', 'general', 'int', 'abbreviate_thread', '5'),

@@ -20,11 +20,11 @@ function nel_regen_threads($dataforce, $board_id, $write, $ids)
     }
 }
 
-function nel_regen_cache($dataforce)
+function nel_regen_cache($board_id, $dataforce)
 {
-    nel_cache_filetype_settings();
-    nel_cache_board_settings();
-    nel_cache_board_settings_new();
+    nel_cache_filetype_settings($board_id);
+    nel_cache_board_settings($board_id);
+    nel_cache_board_settings_new($board_id);
 }
 
 function nel_regen_index($dataforce, $board_id)
@@ -32,12 +32,12 @@ function nel_regen_index($dataforce, $board_id)
     $archive = nel_archive($board_id);
     $archive->updateAllArchiveStatus();
 
-    if(nel_board_settings('old_threads') === 'ARCHIVE')
+    if(nel_board_settings($board_id, 'old_threads') === 'ARCHIVE')
     {
         $archive->moveThreadsToArchive();
         $archive->moveThreadsFromArchive();
     }
-    else if(nel_board_settings('old_threads') === 'PRUNE')
+    else if(nel_board_settings($board_id, 'old_threads') === 'PRUNE')
     {
         $archive->pruneThreads();
     }

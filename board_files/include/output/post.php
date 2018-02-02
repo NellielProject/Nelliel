@@ -11,7 +11,7 @@ function nel_render_insert_hr($dom)
     $dom->getElementById('outer-div')->appendChild($hr);
 }
 
-function nel_render_index_navigation($dom, $render, $pages)
+function nel_render_index_navigation($board_id, $dom, $render, $pages)
 {
     $dom_nav = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom_nav, 'index_navigation.html');
@@ -50,7 +50,7 @@ function nel_render_index_navigation($dom, $render, $pages)
     }
 
     $page_nav_td->removeSelf();
-    nel_process_i18n($dom_nav);
+    nel_process_i18n($dom_nav, nel_board_settings($board_id, 'board_language'));
     $imported = $dom->importNode($index_bottom_nav_element, true);
     $dom->getElementById('outer-div')->appendChild($imported);
 }
@@ -81,7 +81,7 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
         $post_type = 'reply';
         $post_type_class = 'reply-';
         $post_container->extSetAttribute('class', 'reply-post');
-        $indents_element->setContent(nel_board_settings('indent_marker'));
+        $indents_element->setContent(nel_board_settings($board_id, 'indent_marker'));
         $indents_element->removeAttribute('id');
     }
     else

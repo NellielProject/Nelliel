@@ -28,7 +28,7 @@ function nel_process_file_info($board_id)
         $new_file['dest'] = $file['tmp_name'];
         $new_file['filesize'] = $file['size'];
         $new_file = nel_check_for_existing_file($board_id, $new_file, $files);
-        $new_file = nel_get_filetype($new_file, $files);
+        $new_file = nel_get_filetype($board_id, $new_file, $files);
         $new_file['dest'] = nel_board_references($board_id, 'src_path') . $file['name'] . '.tmp';
         move_uploaded_file($file['tmp_name'], $new_file['dest']);
         chmod($new_file['dest'], octdec(FILE_PERM));
@@ -116,9 +116,10 @@ function nel_check_for_existing_file($board_id, $file, $files)
     return $file;
 }
 
-function nel_get_filetype($file, $files)
+function nel_get_filetype($board_id, $file, $files)
 {
-    global $filetype_settings, $filetypes;
+    global $filetypes;
+    $filetype_settings = nel_filetype_settings($board_id);
     $error_data = array('bad-filename' => $file['filename'], 'files' => $files);
     $test_ext = utf8_strtolower($file['ext']);
     $file_test = file_get_contents($file['dest'], NULL, NULL, 0, 65535);

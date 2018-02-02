@@ -129,8 +129,7 @@ function nel_render_posting_form($board_id, $dataforce, $render)
         $dom->getElementById('which-post-mode')->setContent('TEXT_REPLYMODE');
     }
 
-    $rl = nel_cache_filetype_settings();
-    $rules = $dom->importNode(nel_render_rules_list($rl), true);
+    $rules = $dom->importNode(nel_render_rules_list($board_id), true);
     $dom->getElementById('form-rules-list')->appendChild($rules);
 
     if (!BS_USE_SPAMBOT_TRAP)
@@ -139,6 +138,6 @@ function nel_render_posting_form($board_id, $dataforce, $render)
         $dom->removeChild($dom->getElementById('form-trap2'));
     }
 
-    nel_process_i18n($dom);
+    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
 }

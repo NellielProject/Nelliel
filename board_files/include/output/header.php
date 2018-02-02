@@ -99,7 +99,7 @@ function nel_render_header($board_id, $dataforce, $render, $treeline = null, $ty
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?mode=log_out');
     }
 
-    nel_process_i18n($dom);
+    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
 
     $render->appendHTMLFromDOM($dom);
 }

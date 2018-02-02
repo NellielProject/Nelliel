@@ -54,12 +54,12 @@ function nel_thread_updates($dataforce, $board_id)
     {
         $archive->updateAllArchiveStatus();
 
-        if(nel_board_settings('old_threads') === 'ARCHIVE')
+        if(nel_board_settings($board_id, 'old_threads') === 'ARCHIVE')
         {
             $archive->moveThreadsToArchive();
             $archive->moveThreadsFromArchive();
         }
-        else if(nel_board_settings('old_threads') === 'PRUNE')
+        else if(nel_board_settings($board_id, 'old_threads') === 'PRUNE')
         {
             $archive->pruneThreads();
         }

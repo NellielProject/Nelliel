@@ -69,8 +69,8 @@ function nel_render_settings_panel($board_id, $dataforce)
         }
     }
 
-    nel_process_i18n($dom);
+    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($render, false);
+    nel_render_footer($board_id, $render, false);
     echo $render->outputRenderSet();
 }

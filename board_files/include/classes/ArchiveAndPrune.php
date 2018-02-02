@@ -22,8 +22,8 @@ class ArchiveAndPrune
     {
         $this->dbh = nel_database();
         $this->thread_handler = nel_thread_handler($board_id);
-        $this->start_buffer = nel_board_settings('threads_per_page') * nel_board_settings('page_limit');
-        $this->end_buffer = nel_board_settings('threads_per_page') * nel_board_settings('page_buffer');
+        $this->start_buffer = nel_board_settings($board_id, 'threads_per_page') * nel_board_settings($board_id, 'page_limit');
+        $this->end_buffer = nel_board_settings($board_id, 'threads_per_page') * nel_board_settings($board_id, 'page_buffer');
         $this->file_handler = nel_file_handler();
         $this->board_id = $board_id;
         $this->references = nel_board_references($board_id);

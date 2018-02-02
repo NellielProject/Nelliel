@@ -66,9 +66,9 @@ function nel_render_main_ban_panel($board_id, $dataforce)
     $form_add_ban = $dom->getElementById('form-add-ban');
     $form_add_ban->extSetAttribute('action', $dotdot . PHP_SELF);
 
-    nel_process_i18n($dom);
+    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($render, false);
+    nel_render_footer($board_id, $render, false);
     echo $render->outputRenderSet();
 }
 
@@ -81,9 +81,9 @@ function nel_render_ban_panel_add($dataforce)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
-    nel_process_i18n($dom);
+    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($render, false);
+    nel_render_footer($board_id, $render, false);
     echo $render->outputRenderSet();
 }
 
@@ -136,8 +136,8 @@ function nel_render_ban_panel_modify($dataforce)
         $dom->getElementById('ban-appealed-field')->extSetAttribute('checked', 'checked');
     }
 
-    nel_process_i18n($dom);
+    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($render, false);
+    nel_render_footer($board_id, $render, false);
     echo $render->outputRenderSet();
 }

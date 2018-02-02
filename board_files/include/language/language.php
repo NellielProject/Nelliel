@@ -28,8 +28,13 @@ function nel_get_language($language, $form, $text)
     return $lang_arrays[$language][$form][$text];
 }
 
-function nel_process_i18n($dom)
+function nel_process_i18n($dom, $language = 'en-us')
 {
+    if(empty($language))
+    {
+        $language = 'en-us';
+    }
+
     $content_node_list = $dom->getElementsByAttributeName('data-i18n');
     $attribute_node_list = $dom->getElementsByAttributeName('data-i18n-attributes');
 
@@ -37,7 +42,7 @@ function nel_process_i18n($dom)
     {
         if ($node->getAttribute('data-i18n') === 'neltext')
         {
-            nel_process_neltext_attribute($node);
+            nel_process_neltext_attribute($language, $node);
         }
 
         $node->removeAttribute('data-i18n-attributes');
@@ -47,7 +52,7 @@ function nel_process_i18n($dom)
     {
         if ($node->getAttribute('data-i18n') === 'neltext')
         {
-            nel_process_neltext_content($node);
+            nel_process_neltext_content($language, $node);
         }
 
         $node->removeAttribute('data-i18n');

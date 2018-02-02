@@ -39,7 +39,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
         $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
         nel_render_header($board_id, $dataforce, $render, $treeline);
         nel_render_posting_form($board_id, $dataforce, $render);
-        nel_render_footer($render, true);
+        nel_render_footer($board_id, $render, true);
 
         if ($write)
         {
@@ -64,11 +64,11 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
         $dom = $render->newDOMDocument();
         $render->loadTemplateFromFile($dom, 'thread.html');
         $render->startRenderTimer();
-        nel_process_i18n($dom);
+        nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
         $dom->getElementById('form-post-index')->extSetAttribute('action', $dataforce['dotdot'] . PHP_SELF);
         $dataforce['omitted_done'] = TRUE;
-        nel_render_header($dataforce, $render, $treeline);
-        nel_render_posting_form($dataforce, $render);
+        nel_render_header($board_id, $dataforce, $render, $treeline);
+        nel_render_posting_form($board_id, $dataforce, $render);
         $sub_page_thread_counter = 0;
         $gen_data['first100'] = FALSE;
 
@@ -212,10 +212,10 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
             $pages['next'] = PHP_SELF2 . ($page) . PHP_EXT;
         }
 
-        nel_render_index_navigation($dom, $render, $pages);
+        nel_render_index_navigation($board_id, $dom, $render, $pages);
         nel_render_thread_form_bottom($board_id, $dom);
         $render->appendHTMLFromDOM($dom);
-        nel_render_footer($render, true);
+        nel_render_footer($board_id, $render, true);
 
         if (!$write)
         {

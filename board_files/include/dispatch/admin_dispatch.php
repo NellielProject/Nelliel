@@ -49,7 +49,7 @@ function admin_dispatch($board_id, $dataforce)
 
             if ($dataforce['mode_segments'][2] === 'cache')
             {
-                nel_regen_cache($dataforce);
+                nel_regen_cache($board_id, $dataforce);
             }
 
             nel_login($dataforce);
@@ -72,7 +72,7 @@ function admin_dispatch($board_id, $dataforce)
             require_once INCLUDE_PATH . 'admin/create_board.php';
             nel_create_new_board();
             nel_regen_all_pages($dataforce);
-            nel_regen_cache($dataforce);
+            nel_regen_cache($board_id, $dataforce);
             nel_login($dataforce);
             break;
 

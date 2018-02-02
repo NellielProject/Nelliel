@@ -18,6 +18,6 @@ function nel_render_derp($diagnostic)
          '/' . PHP_SELF2 . PHP_EXT);
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($render, false);
+    nel_render_footer(INPUT_BOARD_ID, $render, false);
     echo $render->outputRenderSet();
 }

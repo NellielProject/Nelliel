@@ -7,11 +7,17 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Cache filetype settings
 //
-function nel_cache_filetype_settings()
+function nel_cache_filetype_settings($board_id)
 {
+    if(empty($board_id))
+    {
+        return false;
+    }
+
     $dbh = nel_database();
+    $references = nel_board_references($board_id);
     $file_handler = nel_file_handler();
-    $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'filetype_enable\'', PDO::FETCH_ASSOC);
+    $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . $references['config_table'] . '" WHERE "config_type" = \'filetype_enable\'', PDO::FETCH_ASSOC);
     $file_config = array();
 
     foreach ($config_list as $config)
@@ -20,18 +26,24 @@ function nel_cache_filetype_settings()
     }
 
     $output = '<?php $filetype_settings = ' . var_export($file_config, true) . ';';
-    $file_handler->writeFile(CACHE_PATH . 'filetype_settings.nelcache', $output, FILE_PERM);
+    $file_handler->writeFile(CACHE_PATH . $board_id . '/filetype_settings.nelcache', $output, FILE_PERM, true);
     return $file_config;
 }
 
 //
 // Cache the board settings
 //
-function nel_cache_board_settings()
+function nel_cache_board_settings($board_id)
 {
+    if(empty($board_id))
+    {
+        return false;
+    }
+
     $dbh = nel_database();
+    $references = nel_board_references($board_id);
     $file_handler = nel_file_handler();
-    $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
+    $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . $references['config_table'] . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
     $result_count = count($config_list);
     $vars1 = '<?php ';
 
@@ -55,14 +67,20 @@ function nel_cache_board_settings()
         $vars1 .= 'define(\'BS_' . utf8_strtoupper($config['config_name']) . '\', ' . $config['setting'] . ');';
     }
 
-    $file_handler->writeFile(CACHE_PATH . 'board_settings.nelcache', $vars1, FILE_PERM);
+    $file_handler->writeFile(CACHE_PATH . $board_id . '/board_settings.nelcache', $vars1, FILE_PERM, true);
 }
 
-function nel_cache_board_settings_new()
+function nel_cache_board_settings_new($board_id)
 {
+    if(empty($board_id))
+    {
+        return false;
+    }
+
     $dbh = nel_database();
+    $references = nel_board_references($board_id);
     $file_handler = nel_file_handler();
-    $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . CONFIG_TABLE . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
+    $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . $references['config_table'] . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
     $result_count = count($config_list);
     $settings_output = '<?php $board_settings = array();';
 
@@ -86,5 +104,5 @@ function nel_cache_board_settings_new()
         $settings_output .= '$board_settings[\'' . $config['config_name'] . '\'] = ' . $config['setting'] . ';';
     }
 
-    $file_handler->writeFile(CACHE_PATH . 'board_settings_new.nelcache', $settings_output, FILE_PERM);
+    $file_handler->writeFile(CACHE_PATH . $board_id . '/board_settings_new.nelcache', $settings_output, FILE_PERM, true);
 }

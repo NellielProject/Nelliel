@@ -97,21 +97,55 @@ function nel_ban_hammer()
     return $ban_hammer;
 }
 
-function nel_board_settings($setting)
+function nel_board_settings($board_id, $setting = null)
 {
-    static $board_settings;
+    static $settings;
 
-    if (!isset($board_settings))
+    if (!isset($settings))
     {
-        if (!file_exists(CACHE_PATH . 'board_settings_new.nelcache'))
-        {
-            nel_cache_board_settings_new();
-        }
-
-        require_once CACHE_PATH . 'board_settings_new.nelcache';
+        $settings = array();
     }
 
-    return $board_settings[$setting];
+    if (!isset($settings[$board_id]))
+    {
+        if (!file_exists(CACHE_PATH . $board_id . '/board_settings_new.nelcache'))
+        {
+            nel_cache_board_settings_new($board_id);
+        }
+
+        include CACHE_PATH . $board_id . '/board_settings_new.nelcache';
+        $settings[$board_id] = $board_settings;
+    }
+
+    if(is_null($setting))
+    {
+        return $settings[$board_id];
+    }
+
+    return $settings[$board_id][$setting];
+}
+
+function nel_filetype_settings($board_id, $setting = null)
+{
+    static $settings;
+
+    if (!isset($settings))
+    {
+        if (!file_exists(CACHE_PATH . $board_id . '/filetype_settings.nelcache'))
+        {
+            nel_cache_filetype_settings($board_id);
+        }
+
+        include CACHE_PATH . $board_id . '/filetype_settings.nelcache';
+        $settings[$board_id] = $filetype_settings;
+    }
+
+    if(is_null($setting))
+    {
+        return $settings[$board_id];
+    }
+
+    return $settings[$board_id][$setting];
 }
 
 function nel_archive($board_id)

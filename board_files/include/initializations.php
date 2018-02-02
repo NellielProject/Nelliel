@@ -43,17 +43,24 @@ if (!empty($_GET))
 require_once INCLUDE_PATH . 'cache_functions.php'; // I liek cache
 
 // Cached board settings
-if (!file_exists(CACHE_PATH . 'board_settings.nelcache'))
+if (!file_exists(CACHE_PATH . INPUT_BOARD_ID . '/board_settings.nelcache')) // TODO: Clear this out once we're converted to the new board setting system
 {
-    nel_cache_board_settings();
+    if(nel_cache_board_settings(INPUT_BOARD_ID) !== false)
+    {
+        require_once CACHE_PATH . INPUT_BOARD_ID . '/board_settings.nelcache';
+    }
+}
+else
+{
+    require_once CACHE_PATH . INPUT_BOARD_ID . '/board_settings.nelcache';
 }
 
-require_once CACHE_PATH . 'board_settings.nelcache';
 
-// Cached filetype settings
-if (!file_exists(CACHE_PATH . 'filetype_settings.nelcache'))
+/*// Cached filetype settings
+
+if (!file_exists(CACHE_PATH . INPUT_BOARD_ID . '/filetype_settings.nelcache'))
 {
-    nel_cache_filetype_settings();
+    nel_cache_filetype_settings(INPUT_BOARD_ID);
 }
 
-require_once CACHE_PATH . 'filetype_settings.nelcache';
+require_once CACHE_PATH . INPUT_BOARD_ID . '/filetype_settings.nelcache';*/

@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_ban_page($dataforce, $ban_info)
+function nel_render_ban_page($board_id, $dataforce, $ban_info)
 {
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -62,8 +62,8 @@ function nel_render_ban_page($dataforce, $ban_info)
         }
     }
 
-    nel_process_i18n($dom);
+    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($render, false);
+    nel_render_footer($board_id, $render, false);
     echo $render->outputRenderSet();
 }

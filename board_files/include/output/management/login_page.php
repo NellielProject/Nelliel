@@ -9,12 +9,12 @@ function nel_generate_login_page()
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_header('', array(), $render);
+    nel_render_header(INPUT_BOARD_ID, array(), $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/login.html');
     $dom->getElementById('login-form')->extSetAttribute('action', PHP_SELF);
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($render, false);
+    nel_render_footer(INPUT_BOARD_ID, $render, false);
     echo $render->outputRenderSet();
 }

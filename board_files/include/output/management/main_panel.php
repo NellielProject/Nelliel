@@ -7,7 +7,7 @@ function nel_generate_main_panel()
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_header('', array(), $render);
+    nel_render_header(INPUT_BOARD_ID, array(), $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/main_panel.html');
     $board_listing = $dom->getElementById('board-select-');
@@ -37,7 +37,7 @@ function nel_generate_main_panel()
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($render, false);
+    nel_render_footer(INPUT_BOARD_ID, $render, false);
     echo $render->outputRenderSet();
 }
 
@@ -88,6 +88,6 @@ function nel_generate_main_board_panel($board_id)
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($render, false);
+    nel_render_footer($board_id, $render, false);
     echo $render->outputRenderSet();
 }

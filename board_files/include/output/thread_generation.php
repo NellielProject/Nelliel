@@ -20,7 +20,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'thread.html');
-    nel_process_i18n($dom);
+    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
     $expand_dom = $render->newDOMDocument();
     $collapse_dom = $render->newDOMDocument();
     $render->startRenderTimer();
@@ -71,7 +71,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
         {
             $render_temp = clone $render;
             nel_render_insert_hr($dom);
-            nel_render_footer($render_temp, true);
+            nel_render_footer($board_id, $render_temp, true);
             $file_handler->writeFile($references['page_path']. $write_id . '/' . $write_id. '-0-100.html', $render_temp->outputRenderSet(), FILE_PERM, true);
             unset($render_temp);
         }
@@ -127,7 +127,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
     $render->appendHTMLFromDOM($dom);
     $render->appendHTMLFromDOM($collapse_dom, 'collapse');
     $render->appendHTMLFromDOM($expand_dom, 'expand');
-    nel_render_footer($render, true);
+    nel_render_footer($board_id, $render, true);
 
     if ($write)
     {

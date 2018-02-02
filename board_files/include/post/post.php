@@ -20,7 +20,7 @@ function nel_process_new_post($board_id, $dataforce)
 
     // Get time
     $time = get_millisecond_time();
-    $reply_delay = $time - (nel_board_settings('reply_delay')* 1000);
+    $reply_delay = $time - (nel_board_settings($board_id, 'reply_delay')* 1000);
 
     // Check if post is ok
     $post_count = nel_is_post_ok($board_id, $post_data, $time);
@@ -53,19 +53,19 @@ function nel_process_new_post($board_id, $dataforce)
             nel_derp(10, nel_stext('ERROR_10'), array());
         }
 
-        if (nel_board_settings('require_image_always'))
+        if (nel_board_settings($board_id, 'require_image_always'))
         {
             nel_derp(11, nel_stext('ERROR_11'), array());
         }
 
-        if (nel_board_settings('require_image_start') && $post_data['response_to'] === 0)
+        if (nel_board_settings($board_id, 'require_image_start') && $post_data['response_to'] === 0)
         {
             nel_derp(12, nel_stext('ERROR_12'), array());
         }
     }
 
     // Cancer-fighting tools and lulz
-    if (utf8_strlen($post_data['comment']) > nel_board_settings('max_comment_length'))
+    if (utf8_strlen($post_data['comment']) > nel_board_settings($board_id, 'max_comment_length'))
     {
         nel_derp(13, nel_stext('ERROR_13'), array());
     }
@@ -129,7 +129,7 @@ function nel_process_new_post($board_id, $dataforce)
         $thread_info['last_bump_time'] = $time;
         $thread_info['total_files'] = $current_thread['total_files'] + count($files);
 
-        if ($current_thread['post_count'] > nel_board_settings('max_bumps') || nel_fgsfds('sage'))
+        if ($current_thread['post_count'] > nel_board_settings($board_id, 'max_bumps') || nel_fgsfds('sage'))
         {
             $thread_info['last_bump_time'] = $current_thread['last_bump_time'];
         }
@@ -157,11 +157,11 @@ function nel_process_new_post($board_id, $dataforce)
     // Run the archiving routine if this is a new thread or deleted/expired thread
     $archive->updateAllArchiveStatus();
 
-    if(nel_board_settings('old_threads') === 'ARCHIVE')
+    if(nel_board_settings($board_id, 'old_threads') === 'ARCHIVE')
     {
         $archive->moveThreadsToArchive();
     }
-    else if(nel_board_settings('old_threads') === 'PRUNE')
+    else if(nel_board_settings($board_id, 'old_threads') === 'PRUNE')
     {
         $archive->pruneThreads();
     }
@@ -182,7 +182,7 @@ function nel_is_post_ok($board_id, $post_data, $time)
 
     if ($post_data['parent_thread'] == 0) // TODO: Update this, doesn't look right
     {
-        $thread_delay = $time - (nel_board_settings('thread_delay') * 1000);
+        $thread_delay = $time - (nel_board_settings($board_id, 'thread_delay') * 1000);
         $prepared = $dbh->prepare('SELECT COUNT(*) FROM "' . $references['post_table']. '" WHERE "post_time" > ? AND "ip_address" = ?');
         $prepared->bindValue(1, $thread_delay, PDO::PARAM_STR);
         $prepared->bindValue(2, @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_LOB);
@@ -190,7 +190,7 @@ function nel_is_post_ok($board_id, $post_data, $time)
     }
     else
     {
-        $thread_delay = $time - (nel_board_settings('reply_delay') * 1000);
+        $thread_delay = $time - (nel_board_settings($board_id, 'reply_delay') * 1000);
         $prepared = $dbh->prepare('SELECT COUNT(*) FROM "' . $references['post_table'].
              '" WHERE "parent_thread" = ? AND "post_time" > ? AND "ip_address" = ?');
         $prepared->bindValue(1, $post_data['parent_thread'], PDO::PARAM_INT);
@@ -230,7 +230,7 @@ function nel_is_post_ok($board_id, $post_data, $time)
             nel_derp(4, nel_stext('ERROR_4'));
         }
 
-        if ($post_count >= nel_board_settings('max_posts'))
+        if ($post_count >= nel_board_settings($board_id, 'max_posts'))
         {
             nel_derp(5, nel_stext('ERROR_5'));
         }
