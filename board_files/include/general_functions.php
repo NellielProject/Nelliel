@@ -35,7 +35,7 @@ function get_millisecond_time()
 
 //
 // PHP's empty() does typecasting and treats 0 or false as empty when they are still technically values.
-// true_empty() checks that there is no actual value present, only an empty variable.
+// true_empty() checks that there is no actual value present, only an empty or unset variable.
 //
 function true_empty($var)
 {
@@ -44,7 +44,7 @@ function true_empty($var)
         return false;
     }
 
-    return is_null($var) || (is_string($var) && $var === '') || (is_array($var) && $var === array());
+    return !isset($var) || is_null($var) || (is_string($var) && $var === '') || (is_array($var) && $var === array());
 }
 
 function nel_utf8_to_numeric_html_entities(&$input, $non_ascii_only = true)
