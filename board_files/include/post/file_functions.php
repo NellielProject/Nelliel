@@ -99,12 +99,23 @@ function nel_check_for_existing_file($board_id, $file, $files)
     $error_data = array('bad-filename' => $file['filename'], 'files' => $files);
     $file['md5'] = hash_file('md5', $file['dest'], true);
     $file['sha1'] = hash_file('sha1', $file['dest'], true);
-    $file['sha256'] = (GENERATE_FILE_SHA256) ? hash_file('sha256', $file['dest'], true) : null;
 
-    $query = 'SELECT "post_ref" FROM "' . $references['file_table'] . '" WHERE "sha256" = ? OR "sha1" = ? LIMIT 1';
-    $prepared = $dbh->prepare($query);
-    $prepared->bindValue(1, $file['sha256'], PDO::PARAM_LOB);
-    $prepared->bindValue(2, $file['sha1'], PDO::PARAM_LOB);
+    if(GENERATE_FILE_SHA256)
+    {
+        $file['sha256'] = hash_file('sha256', $file['dest'], true);
+        $query = 'SELECT 1 FROM "' . $references['file_table'] . '" WHERE "sha256" = ? OR "sha1" = ? LIMIT 1';
+        $prepared = $dbh->prepare($query);
+        $prepared->bindValue(1, $file['sha256'], PDO::PARAM_LOB);
+        $prepared->bindValue(2, $file['sha1'], PDO::PARAM_LOB);
+    }
+    else
+    {
+        $file['sha256'] = null;
+        $query = 'SELECT 1 FROM "' . $references['file_table'] . '" WHERE "sha1" = ? LIMIT 1';
+        $prepared = $dbh->prepare($query);
+        $prepared->bindValue(1, $file['sha1'], PDO::PARAM_LOB);
+    }
+
     $result = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
     nel_banned_hash($file['md5'], $files);
 
