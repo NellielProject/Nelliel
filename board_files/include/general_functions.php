@@ -6,14 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_is_in_string($string, $substring)
 {
-    if (utf8_strripos($string, $substring) !== false)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return utf8_strripos($string, $substring) !== false;
 }
 
 function nel_clean_exit($dataforce, $die)
@@ -28,7 +21,8 @@ function nel_clean_exit($dataforce, $die)
         die();
     }
 
-    echo '<meta http-equiv="refresh" content="2;URL=' . nel_board_references(INPUT_BOARD_ID, 'directory'). '/' . PHP_SELF2 . PHP_EXT . '">';
+    echo '<meta http-equiv="refresh" content="2;URL=' . nel_board_references(INPUT_BOARD_ID, 'directory') . '/' .
+         PHP_SELF2 . PHP_EXT . '">';
     die();
 }
 
@@ -39,43 +33,33 @@ function get_millisecond_time()
     return $time[1] . $time[0];
 }
 
-function nel_true_empty($var)
+//
+// PHP's empty() does typecasting and treats 0 or false as empty when they are still technically values.
+// true_empty() checks that there is no actual value present, only an empty variable.
+//
+function true_empty($var)
 {
     if (!empty($var))
     {
         return false;
     }
 
-    if(is_null($var) || (is_string($var) && $var === '') || (is_array($var) && $var === array()))
-    {
-        return true;
-    }
-
-    return false;
+    return is_null($var) || (is_string($var) && $var === '') || (is_array($var) && $var === array());
 }
 
 function nel_utf8_to_numeric_html_entities(&$input, $non_ascii_only = true)
 {
-    if($non_ascii_only)
-    {
-        $regex = '#([^[:ascii:]])#Su';
-    }
-    else
-    {
-        $regex = '#(.)#Su';
-    }
+    $regex = ($non_ascii_only) ? '#([^[:ascii:]])#Su' : '#(.)#Su';
 
-    $input = preg_replace_callback($regex,
-    function ($matches)
+    $input = preg_replace_callback($regex, function ($matches)
     {
-        return '&#' . utf8_ord($matches[0]). ';';
+        return '&#' . utf8_ord($matches[0]) . ';';
     }, $input);
 }
 
 function nel_numeric_html_entities_to_utf8(&$input)
 {
-    $input = preg_replace_callback('#&\#[0-9]+;#Su',
-    function ($matches)
+    $input = preg_replace_callback('#&\#[0-9]+;#Su', function ($matches)
     {
         return utf8_chr(intval(substr($matches[0], 2, -1)));
     }, $input);
