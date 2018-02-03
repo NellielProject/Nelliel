@@ -11,24 +11,10 @@ require_once INCLUDE_PATH . 'setup/sql_tables.php';
 // If anything does not exist yet, create it
 //
 
-function setup_check()
+function setup_check($board_id)    // TODO Do this better
 {
-    // TODO Do this better
-    if(INPUT_BOARD_ID === '')
-    {
-        return;
-    }
-
     $file_handler = nel_file_handler();
-    nel_create_posts_table(POST_TABLE);
-    nel_create_posts_table(ARCHIVE_POST_TABLE);
-    nel_create_threads_table(THREAD_TABLE);
-    nel_create_threads_table(ARCHIVE_THREAD_TABLE);
-    nel_create_files_table(FILE_TABLE);
-    nel_create_files_table(ARCHIVE_FILE_TABLE);
-    nel_create_external_table(EXTERNAL_TABLE);
-    nel_create_external_table(ARCHIVE_EXTERNAL_TABLE);
-    nel_create_config_table(CONFIG_TABLE);
+
     nel_create_bans_table(BAN_TABLE);
     nel_create_user_table(USER_TABLE);
     nel_create_roles_table(ROLES_TABLE);
@@ -37,14 +23,32 @@ function setup_check()
     nel_create_logins_table(LOGINS_TABLE);
     nel_create_board_data_table(BOARD_DATA_TABLE);
 
-    $file_handler->createDirectory(SRC_PATH, DIRECTORY_PERM);
-    $file_handler->createDirectory(THUMB_PATH, DIRECTORY_PERM);
-    $file_handler->createDirectory(PAGE_PATH, DIRECTORY_PERM);
     $file_handler->createDirectory(CACHE_PATH, DIRECTORY_PERM);
-    $file_handler->createDirectory(ARCHIVE_PATH, DIRECTORY_PERM);
-    $file_handler->createDirectory(ARC_SRC_PATH, DIRECTORY_PERM);
-    $file_handler->createDirectory(ARC_THUMB_PATH, DIRECTORY_PERM);
-    $file_handler->createDirectory(ARC_PAGE_PATH, DIRECTORY_PERM);
+
+    if($board_id === '')
+    {
+        return;
+    }
+
+    $references = nel_board_references($board_id);
+
+    nel_create_posts_table($references['post_table']);
+    nel_create_posts_table($references['archive_post_table']);
+    nel_create_threads_table($references['thread_table']);
+    nel_create_threads_table($references['archive_thread_table']);
+    nel_create_files_table($references['file_table']);
+    nel_create_files_table($references['archive_file_table']);
+    nel_create_external_table($references['external_table']);
+    nel_create_external_table($references['archive_external_table']);
+    nel_create_config_table($references['config_table']);
+
+    $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM);
+    $file_handler->createDirectory($references['thumb_path'], DIRECTORY_PERM);
+    $file_handler->createDirectory($references['page_path'], DIRECTORY_PERM);
+    $file_handler->createDirectory($references['archive_path'], DIRECTORY_PERM);
+    $file_handler->createDirectory($references['archive_src_path'], DIRECTORY_PERM);
+    $file_handler->createDirectory($references['archive_thumb_path'], DIRECTORY_PERM);
+    $file_handler->createDirectory($references['archive_page_path'], DIRECTORY_PERM);
 
     nel_setup_stuff_done('check_done_nochange');
 

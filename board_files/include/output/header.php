@@ -99,7 +99,7 @@ function nel_render_general_header($dataforce, $render)
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
-    $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . $board_id .
+    $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . INPUT_BOARD_ID .
     '\');};');
     $dom->getElementById('js-style-set')->setContent('processCookie("style-' . BOARD_DIR . '");');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
@@ -137,7 +137,7 @@ function nel_render_general_header($dataforce, $render)
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?mode=log_out');
     }
 
-    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
+    nel_process_i18n($dom);
 
     $render->appendHTMLFromDOM($dom);
 }

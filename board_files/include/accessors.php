@@ -242,6 +242,7 @@ function nel_board_references($board_id, $reference = null)
         $new_reference['src_path'] = $board_path . $new_reference['src_dir'];
         $new_reference['thumb_path'] = $board_path . $new_reference['thumb_dir'];
         $new_reference['page_path'] = $board_path . $new_reference['page_dir'];
+        $new_reference['archive_path'] = $board_path . $new_reference['archive_dir'];
         $new_reference['archive_src_path'] = $board_path . $new_reference['archive_dir'] . $new_reference['src_dir'];
         $new_reference['archive_thumb_path'] = $board_path . $new_reference['archive_dir'] . $new_reference['thumb_dir'];
         $new_reference['archive_page_path'] = $board_path . $new_reference['archive_dir'] . $new_reference['page_dir'];
