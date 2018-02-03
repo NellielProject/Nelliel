@@ -4,6 +4,7 @@
 // This config file is for the crypt, hash and security settings
 // The defaults are a balance of relative security and resource cost
 // If you have performance issues or want greater security you can change these settings
+// Otherwise just leave things as-is
 //
 
 // This is the hash algorithm used for post edit/deletion passwords
@@ -15,21 +16,15 @@ define('SECURE_TRIPCODE_ALGORITHM', 'sha256');
 // Choose whether a SHA256 hash is generated and stored for uploaded files
 define('GENERATE_FILE_SHA256', false);
 
-// Whether to use SHA256 (if enabled) to check for duplicate uploads; otherwise SHA1 is used
-// Generating SHA256 file hashes must be enabled for this to work!
-define('COMPARE_FILE_WITH_SHA256', false);
-
 // If a different hashing method or cost was used on something, then rehash it with the current settings
 // Generally you can leave this false unless you have increased the cost or are permanently upgrading to a better algorithm
 define('DO_PASSWORD_REHASH', false);
 
 // Whether to pass PHP's PASSWORD_DEFAULT to password_hash, which should pick the best algorithm available
 // If set to false we will try using bcrypt specifically regardless of PHP's default
-// If bcrypt or a better algorithm is not available for some reason Nelliel will try a fallback to SHA512 or SHA256
 define('USE_PASSWORD_DEFAULT', true);
 
-// If bcrypt or a better algorithm is not available for some reason Nelliel will try a fallback to SHA512 or SHA256
-// This is unlikely to be an issue though
+// If bcrypt or a better algorithm is not available for some reason, Nelliel can try a fallback to SHA512 or SHA256
 define('DO_SHA2_FALLBACK', true);
 
 // The hash settings for staff logins and other higher security things

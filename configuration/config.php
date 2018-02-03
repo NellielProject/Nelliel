@@ -9,7 +9,9 @@ if (!defined('NELLIEL_VERSION'))
 // Board-specific config can be found in the management section or board-config.php.
 //
 
-// Site home directory (up one level by default). Can be a web-accessible directory or a URL.
+// The home location/portal
+// This can be a full URL or a relative URL targeting a web-accessible directory.
+// Defaults to the parent directory of the imageboard.
 define('HOME', '../');
 
 
@@ -27,7 +29,8 @@ define('TRIPCODE_SALT', 'sodiumz');
 
 // Should Nelliel go through the setup check
 // Basically this runs through the setup sequence and checks that files, directories and database stuff is in place.
-// Highly recommend setting this to false once your initial setup and testing is done! It can generate unnecessary load.
+// Once initial setup and testing is finished this isn't really necessary and should be set to false.
+// Note: Upgrades will run relevant setup checks regardless of this setting.
 define('RUN_SETUP_CHECK', true);
 
 

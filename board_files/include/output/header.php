@@ -74,7 +74,7 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
 
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
-    $a_elements->item(1)->extSetAttribute('href', $dotdot . HOME);
+    $a_elements->item(1)->extSetAttribute('href', HOME);
     $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?mode=admin');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
@@ -125,7 +125,7 @@ function nel_render_general_header($dataforce, $render)
 
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
-    $a_elements->item(1)->extSetAttribute('href', $dotdot . HOME);
+    $a_elements->item(1)->extSetAttribute('href', HOME);
     $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?mode=admin');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
