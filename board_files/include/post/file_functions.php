@@ -103,13 +103,20 @@ function nel_check_for_existing_file($board_id, $file, $files)
     if (GENERATE_FILE_SHA256)
     {
         $file['sha256'] = hash_file('sha256', $file['dest'], true);
+        $query = 'SELECT "post_ref" FROM "' . $references['file_table'] . '" WHERE "sha256" = ? OR "sha1" = ? LIMIT 1';
+        $prepared = $dbh->prepare($query);
+        $prepared->bindValue(1, $file['sha256'], PDO::PARAM_LOB);
+        $prepared->bindValue(2, $file['sha1'], PDO::PARAM_LOB);
+    }
+    else
+    {
+        $query = 'SELECT "post_ref" FROM "' . $references['file_table'] . '" WHERE "sha1" = ? LIMIT 1';
+        $prepared = $dbh->prepare($query);
+        $prepared->bindValue(1, $file['sha1'], PDO::PARAM_LOB);
     }
 
-    nel_banned_hash($file['md5'], $files);
-    $query = 'SELECT "post_ref" FROM "' . $references['file_table'] . '" WHERE "sha1" = ? LIMIT 1';
-    $prepared = $dbh->prepare($query);
-    $prepared->bindValue(1, $file['sha1'], PDO::PARAM_LOB);
     $result = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
+    nel_banned_hash($file['md5'], $files);
 
     if ($result)
     {
@@ -155,6 +162,7 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
 {
     $i = 0;
     $files_count = count($files);
+    $board_settings = nel_board_settings($board_id);
 
     while ($i < $files_count)
     {
@@ -164,35 +172,35 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
         $files[$i]['pre_y'] = null;
         $files[$i]['thumbfile'] = null;
 
-        if ($files[$i]['subtype'] === 'swf' || ($files[$i]['supertype'] === 'graphics' && !$references['use_magick']))
+        if ($files[$i]['subtype'] === 'swf' || ($files[$i]['supertype'] === 'graphics' && !$board_settings['use_magick']))
         {
             $dim = getimagesize($files[$i]['dest']);
             $files[$i]['im_x'] = $dim[0];
             $files[$i]['im_y'] = $dim[1];
-            $ratio = min(($references['max_height'] / $files[$i]['im_y']), ($references['max_width'] /
+            $ratio = min(($board_settings['max_height'] / $files[$i]['im_y']), ($board_settings['max_width'] /
                  $files[$i]['im_x']));
-            $files[$i]['pre_x'] = ($files[$i]['im_x'] > $references['max_width']) ? intval($ratio * $files[$i]['im_x']) : $files[$i]['im_x'];
-            $files[$i]['pre_y'] = ($files[$i]['im_y'] > $references['max_height']) ? intval($ratio * $files[$i]['im_y']) : $files[$i]['im_y'];
+            $files[$i]['pre_x'] = ($files[$i]['im_x'] > $board_settings['max_width']) ? intval($ratio * $files[$i]['im_x']) : $files[$i]['im_x'];
+            $files[$i]['pre_y'] = ($files[$i]['im_y'] > $board_settings['max_height']) ? intval($ratio * $files[$i]['im_y']) : $files[$i]['im_y'];
         }
 
-        if ($references['use_thumb'] && $files[$i]['supertype'] === 'graphics')
+        if ($board_settings['use_thumb'] && $files[$i]['supertype'] === 'graphics')
         {
             exec("convert -version 2>/dev/null", $out, $rescode);
             //var_dump($out);
             //var_dump($rescode);
 
-            if ($rescode === 0 && $references['use_magick'])
+            if ($rescode === 0 && $board_settings['use_magick'])
             {
                 $cmd_getinfo = 'identify -format "%wx%h" ' . escapeshellarg($files[$i]['dest'] . '[0]');
                 exec($cmd_getinfo, $res);
                 $dims = explode('x', $res[0]);
                 $files[$i]['im_x'] = $dims[0];
                 $files[$i]['im_y'] = $dims[1];
-                $ratio = min(($references['max_height'] / $files[$i]['im_y']), ($references['max_width'] /
+                $ratio = min(($board_settings['max_height'] / $files[$i]['im_y']), ($board_settings['max_width'] /
                      $files[$i]['im_x']));
-                $files[$i]['pre_x'] = ($files[$i]['im_x'] > $references['max_width']) ? intval($ratio *
+                $files[$i]['pre_x'] = ($files[$i]['im_x'] > $board_settings['max_width']) ? intval($ratio *
                      $files[$i]['im_x']) : $files[$i]['im_x'];
-                $files[$i]['pre_y'] = ($files[$i]['im_y'] > $references['max_height']) ? intval($ratio *
+                     $files[$i]['pre_y'] = ($files[$i]['im_y'] > $board_settings['max_height']) ? intval($ratio *
                      $files[$i]['im_y']) : $files[$i]['im_y'];
 
                 if ($files[$i]['subtype'] === 'gif')
@@ -201,7 +209,7 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
                     $cmd_coalesce = 'convert ' . escapeshellarg($files[$i]['dest']) . ' -coalesce ' .
                          escapeshellarg($thumbpath . 'tmp' . $files[$i]['thumbfile']);
                     $cmd_resize = 'convert ' . escapeshellarg($thumbpath . 'tmp' . $files[$i]['thumbfile']) . ' -resize ' .
-                         $references['max_width'] . 'x' . $references['max_height'] . '\> -layers optimize ' .
+                    $board_settings['max_width'] . 'x' . $board_settings['max_height'] . '\> -layers optimize ' .
                          escapeshellarg($thumbpath . $files[$i]['thumbfile']);
                     exec($cmd_coalesce);
                     exec($cmd_resize);
@@ -210,19 +218,19 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
                 }
                 else
                 {
-                    if ($references['use_png_thumb'])
+                    if ($board_settings['use_png_thumb'])
                     {
                         $files[$i]['thumbfile'] = $files[$i]['filename'] . '-preview.png';
                         $cmd_resize = 'convert ' . escapeshellarg($files[$i]['dest']) . ' -resize ' .
-                             $references['max_width'] . 'x' . $references['max_height'] .
+                        $board_settings['max_width'] . 'x' . $board_settings['max_height'] .
                              '\> -quality 00 -sharpen 0x0.5 ' . escapeshellarg($thumbpath . $files[$i]['thumbfile']);
                     }
                     else
                     {
                         $files[$i]['thumbfile'] = $files[$i]['filename'] . '-preview.jpg';
                         $cmd_resize = 'convert ' . escapeshellarg($files[$i]['dest']) . ' -resize ' .
-                             $references['max_width'] . 'x' . $references['max_height'] . '\> -quality ' .
-                             $references['jpeg_quality'] . ' -sharpen 0x0.5 ' .
+                        $board_settings['max_width'] . 'x' . $board_settings['max_height'] . '\> -quality ' .
+                        $board_settings['jpeg_quality'] . ' -sharpen 0x0.5 ' .
                              escapeshellarg($thumbpath . $files[$i]['thumbfile']);
                     }
 
@@ -255,13 +263,13 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
                 $files[$i]['thumbfile'] = $files[$i]['filename'] . '-preview.jpg';
                 imagecopyresampled($files[$i]['thumbnail'], $image, 0, 0, 0, 0, $files[$i]['pre_x'], $files[$i]['pre_y'], $files[$i]['im_x'], $files[$i]['im_y']);
 
-                if ($references['use_png_thumb'])
+                if ($board_settings['use_png_thumb'])
                 {
                     imagepng($files[$i]['thumbnail'], $thumbpath . $files[$i]['thumbfile'], -1); // Quality
                 }
                 else
                 {
-                    imagejpeg($files[$i]['thumbnail'], $thumbpath . $files[$i]['thumbfile'], $references['jpeg_quality']);
+                    imagejpeg($files[$i]['thumbnail'], $thumbpath . $files[$i]['thumbfile'], $board_settings['jpeg_quality']);
                 }
             }
         }
