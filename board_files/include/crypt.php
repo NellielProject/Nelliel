@@ -8,7 +8,6 @@ require_once LIBRARY_PATH . 'password_compat/password.php';
 define('NEL_PASSWORD_MD5', 100);
 define('NEL_PASSWORD_SHA256', 101);
 define('NEL_PASSWORD_SHA512', 102);
-define('NEL_BASIC_HASH', 999);
 
 if (!function_exists('hash_equals'))
 {
