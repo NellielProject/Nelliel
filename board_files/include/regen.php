@@ -5,8 +5,13 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 require_once INCLUDE_PATH . 'output_filter.php';
+require_once INCLUDE_PATH . 'output/posting_form.php';
+require_once INCLUDE_PATH . 'output/header.php';
+require_once INCLUDE_PATH . 'output/post.php';
+require_once INCLUDE_PATH . 'output/footer.php';
 require_once INCLUDE_PATH . 'output/main_generation.php';
 require_once INCLUDE_PATH . 'output/thread_generation.php';
+
 
 function nel_regen_threads($dataforce, $board_id, $write, $ids)
 {
