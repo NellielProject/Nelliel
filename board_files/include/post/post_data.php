@@ -1,7 +1,8 @@
 <?php
 
-function nel_collect_post_data()
+function nel_collect_post_data($board_id)
 {
+    $board_settings = nel_board_settings($board_id);
     $post_data = array();
     $post_data['parent_thread'] = nel_check_post_entry($_POST['new_post']['post_info']['response_to'], "int");
     $post_data['name'] = nel_check_post_entry($_POST['new_post']['post_info']['not_anonymous'], "string");
@@ -16,11 +17,11 @@ function nel_collect_post_data()
     {
         preg_match('/^([^#]*)(#(?!#))?([^#]*)(##)?(.*)$/', $post_data['name'], $name_pieces);
         $post_data['name'] = $name_pieces[1];
-        $post_data = nel_get_tripcodes($post_data, $name_pieces);
+        $post_data = nel_get_tripcodes($board_id, $post_data, $name_pieces);
         $post_data = nel_get_staff_post($post_data, $name_pieces);
     }
 
-    if (BS_FORCE_ANONYMOUS || $post_data['name'] === '')
+    if ($board_settings['force_anonymous'] || $post_data['name'] === '')
     {
         $post_data['name'] = nel_stext('THREAD_NONAME');
         $post_data['email'] = '';
@@ -86,16 +87,17 @@ function nel_get_staff_post($post_data, $name_pieces)
     return $post_data;
 }
 
-function nel_get_tripcodes($post_data, $name_pieces)
+function nel_get_tripcodes($board_id, $post_data, $name_pieces)
 {
     global $plugins;
 
+    $references = nel_board_references($board_id);
     $authorize = nel_authorize();
     $post_data['tripcode'] = '';
     $post_data['secure_tripcode'] = '';
     $post_data = $plugins->plugin_hook('in-before-tripcode-processing', TRUE, array($post_data, $name_pieces));
 
-    if ($name_pieces[3] !== '' && BS_ALLOW_TRIPKEYS)
+    if ($name_pieces[3] !== '' && $references['allow_tripkeys'])
     {
         $raw_trip = iconv('UTF-8', 'SHIFT_JIS//IGNORE', $name_pieces[3]);
         $cap = strtr($raw_trip, '&amp;', '&');

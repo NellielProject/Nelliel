@@ -60,7 +60,7 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
     $authorize = nel_authorize();
     $dbh = nel_database();
     $references = nel_board_references($board_id);
-
+    $board_settings = nel_board_settings($board_id);
     $start = microtime(true);
     $post_data = $gen_data['post'];
     $thread_id = $post_data['parent_thread'];
@@ -114,9 +114,9 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
     $post_header_node_array['subject']->modifyAttribute('class', $post_type, 'before');
     $post_header_node_array['subject']->setContent($post_data['subject']);
     $post_header_node_array['poster-name']->modifyAttribute('class', $post_type, 'before');
-    $tripcode = (!is_null($post_data['tripcode'])) ? BS_TRIPKEY_MARKER . $post_data['tripcode'] : '';
-    $secure_tripcode = (!is_null($post_data['secure_tripcode'])) ? BS_TRIPKEY_MARKER . BS_TRIPKEY_MARKER .
-         $post_data['secure_tripcode'] : '';
+    $tripcode = (!is_null($post_data['tripcode'])) ? $board_settings['tripkey_marker'] . $post_data['tripcode'] : '';
+    $secure_tripcode = (!is_null($post_data['secure_tripcode'])) ? $board_settings['tripkey_marker'] .
+         $board_settings['tripkey_marker'] . $post_data['secure_tripcode'] : '';
     $capcode_text = '';
 
     if ($post_data['mod_post'])
@@ -140,21 +140,21 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
 
     $curr_time = floor($gen_data['post']['post_time'] / 1000);
 
-    switch (BS_DATE_FORMAT)
+    switch ($board_settings['date_format'])
     {
         case 'ISO':
-            $post_time = date("Y", $curr_time) . BS_DATE_SEPARATOR . date("m", $curr_time) . BS_DATE_SEPARATOR .
-                 date("d (D) H:i:s", $curr_time);
+            $post_time = date("Y", $curr_time) . $board_settings['date_separator'] . date("m", $curr_time) .
+                 $board_settings['date_separator'] . date("d (D) H:i:s", $curr_time);
             break;
 
         case 'US':
-            $post_time = date("m", $curr_time) . BS_DATE_SEPARATOR . date("d", $curr_time) . BS_DATE_SEPARATOR .
-                 date("Y (D) H:i:s", $curr_time);
+            $post_time = date("m", $curr_time) . $board_settings['date_separator'] . date("d", $curr_time) .
+                 $board_settings['date_separator'] . date("Y (D) H:i:s", $curr_time);
             break;
 
         case 'COM':
-            $post_time = date("d", $curr_time) . BS_DATE_SEPARATOR . date("m", $curr_time) . BS_DATE_SEPARATOR .
-                 date("Y (D) H:i:s", $curr_time);
+            $post_time = date("d", $curr_time) . $board_settings['date_separator'] . date("m", $curr_time) .
+                 $board_settings['date_separator'] . date("Y (D) H:i:s", $curr_time);
             break;
     }
 
@@ -300,7 +300,7 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
             $temp_file_node_array['file-sha1']->setContent('SHA1: ' . bin2hex($file['sha1']));
             $location_element = $temp_file_dom->getElementById('file-location-');
 
-            if (BS_USE_THUMB)
+            if ($board_settings['use_thumb'])
             {
                 $location_element->extSetAttribute('href', $file['file_location'], 'none');
                 $location_element->changeId('file-location-' . $file_id);
@@ -314,23 +314,24 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
 
                     if ($filecount > 1)
                     {
-                        if ($file['preview_width'] > BS_MAX_MULTI_WIDTH || $file['preview_height'] > BS_MAX_MULTI_HEIGHT)
+                        if ($file['preview_width'] > $board_settings['max_multi_width'] ||
+                             $file['preview_height'] > $board_settings['max_multi_height'])
                         {
-                            $ratio = min((BS_MAX_MULTI_HEIGHT / $file['preview_height']), (BS_MAX_MULTI_WIDTH /
-                                 $file['preview_width']));
+                            $ratio = min(($board_settings['max_multi_height'] / $file['preview_height']), ($board_settings['max_multi_width'] /
+                             $file['preview_width']));
                             $file['preview_width'] = intval($ratio * $file['preview_width']);
                             $file['preview_height'] = intval($ratio * $file['preview_height']);
                         }
                     }
                 }
-                else if (BS_USE_FILE_ICON && file_exists(IMAGES_DIR . '/nelliel/filetype/' .
+                else if ($board_settings['use_file_icon'] && file_exists(IMAGES_DIR . '/nelliel/filetype/' .
                      utf8_strtolower($file['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png'))
                 {
                     $file['has_preview'] = true;
                     $file['preview_location'] = IMAGES_DIR . '/nelliel/filetype/' .
                          utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png';
-                    $file['preview_width'] = (BS_MAX_WIDTH < 64) ? BS_MAX_WIDTH : '128';
-                    $file['preview_height'] = (BS_MAX_HEIGHT < 64) ? BS_MAX_HEIGHT : '128';
+                    $file['preview_width'] = ($board_settings['max_width'] < 64) ? $board_settings['max_width'] : '128';
+                    $file['preview_height'] = ($board_settings['max_height'] < 64) ? $board_settings['max_height'] : '128';
                 }
                 else
                 {
@@ -442,6 +443,7 @@ function nel_render_post_adjust_relative($node, $gen_data)
 
 function nel_render_thread_form_bottom($board_id, $dom)
 {
+    $board_settings = nel_board_settings($board_id);
     $footer_form_element = $dom->getElementById('footer-form');
     $form_td_list = $footer_form_element->doXPathQuery(".//input");
     $dom->getElementById('board_id_field_footer')->extSetAttribute('value', nel_board_references($board_id, 'directory'));
@@ -456,7 +458,7 @@ function nel_render_thread_form_bottom($board_id, $dom)
         $dom->getElementById('bottom-pass-input')->removeSelf();
     }
 
-    if (!BS_USE_NEW_IMGDEL)
+    if (!$board_settings['use_new_imgdel'])
     {
         $form_td_list->item(4)->removeSelf();
     }

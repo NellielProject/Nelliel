@@ -15,7 +15,7 @@ function nel_process_new_post($board_id, $dataforce)
     $references = nel_board_references($board_id);
     $archive = nel_archive($board_id);
     $thread_handler = nel_thread_handler($board_id);
-    $post_data = nel_collect_post_data();
+    $post_data = nel_collect_post_data($board_id);
     $new_thread_dir = '';
 
     // Get time

@@ -36,6 +36,7 @@ $example_result = $plugins->plugin_hook('plugin-example', TRUE, array(5));
 require_once INCLUDE_PATH . 'general_functions.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
 require_once INCLUDE_PATH . 'setup/setup.php';
+require_once INCLUDE_PATH . 'cache_functions.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'sessions.php';
 require_once INCLUDE_PATH . 'snacks.php';

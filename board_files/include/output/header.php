@@ -4,8 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_board_header($board_id, $dataforce, $render, $treeline = null) // TODO:Separate functions for admin and post/thread headers
+function nel_render_board_header($board_id, $dataforce, $render, $treeline = null)
 {
+    $board_settings = nel_board_settings($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '../';
@@ -25,19 +26,19 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
     }
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
-    $title_content = BS_BOARD_NAME;
+    $title_content = $board_settings['board_name'];
 
-            if (!is_null($treeline))
-            {
-                if ($treeline[0]['subject'] === '')
-                {
-                    $title_content = BS_BOARD_NAME . ' > Thread #' . $treeline[0]['post_number'];
-                }
-                else
-                {
-                    $title_content = BS_BOARD_NAME . ' > ' . $treeline[0]['subject'];
-                }
-            }
+    if (!is_null($treeline))
+    {
+        if ($treeline[0]['subject'] === '')
+        {
+            $title_content = $board_settings['board_name'] . ' > Thread #' . $treeline[0]['post_number'];
+        }
+        else
+        {
+            $title_content = $board_settings['board_name'] . ' > ' . $treeline[0]['subject'];
+        }
+    }
 
     $title_element->setContent($title_content);
 
@@ -45,19 +46,19 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
     $logo_image = $dom->getElementById('top-logo-image');
     $logo_text = $dom->getElementById('top-logo-text');
 
-    if (BS_SHOW_LOGO)
+    if ($board_settings['show_logo'])
     {
-        $logo_image->extSetAttribute('src', BS_BOARD_LOGO);
-        $logo_image->extSetAttribute('alt', BS_BOARD_NAME);
+        $logo_image->extSetAttribute('src', $board_settings['board_logo']);
+        $logo_image->extSetAttribute('alt', $board_settings['board_name']);
     }
     else
     {
         $logo_element->removeChild($logo_image);
     }
 
-    if (BS_SHOW_TITLE)
+    if ($board_settings['show_title'])
     {
-        $logo_text->setContent(BS_BOARD_NAME);
+        $logo_text->setContent($board_settings['board_name']);
     }
     else
     {
@@ -100,7 +101,7 @@ function nel_render_general_header($dataforce, $render)
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . INPUT_BOARD_ID .
-    '\');};');
+         '\');};');
     $dom->getElementById('js-style-set')->setContent('processCookie("style-' . BOARD_DIR . '");');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;

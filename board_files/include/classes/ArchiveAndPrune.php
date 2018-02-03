@@ -17,6 +17,7 @@ class ArchiveAndPrune
     private $end_buffer;
     private $board_id;
     private $references;
+    private $board_settings;
 
     function __construct($board_id)
     {
@@ -27,6 +28,7 @@ class ArchiveAndPrune
         $this->file_handler = nel_file_handler();
         $this->board_id = $board_id;
         $this->references = nel_board_references($board_id);
+        $this->board_settings = nel_board_settings($board_id);
 
         if ($this->end_buffer == 0)
         {
@@ -66,7 +68,7 @@ class ArchiveAndPrune
 
     public function updateAllArchiveStatus()
     {
-        if (BS_OLD_THREADS === 'NOTHING')
+        if ($this->board_settings['old_threads'] === 'NOTHING')
         {
             return;
         }

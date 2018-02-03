@@ -101,6 +101,11 @@ function nel_board_settings($board_id, $setting = null)
 {
     static $settings;
 
+    if ($board_id === '' || is_null($board_id))
+    {
+        return;
+    }
+
     if (!isset($settings))
     {
         $settings = array();
@@ -108,16 +113,16 @@ function nel_board_settings($board_id, $setting = null)
 
     if (!isset($settings[$board_id]))
     {
-        if (!file_exists(CACHE_PATH . $board_id . '/board_settings_new.nelcache'))
+        if (!file_exists(CACHE_PATH . $board_id . '/board_settings.nelcache'))
         {
-            nel_cache_board_settings_new($board_id);
+            nel_cache_board_settings($board_id);
         }
 
-        include CACHE_PATH . $board_id . '/board_settings_new.nelcache';
+        include CACHE_PATH . $board_id . '/board_settings.nelcache';
         $settings[$board_id] = $board_settings;
     }
 
-    if(is_null($setting))
+    if (is_null($setting))
     {
         return $settings[$board_id];
     }
@@ -128,6 +133,11 @@ function nel_board_settings($board_id, $setting = null)
 function nel_filetype_settings($board_id, $setting = null)
 {
     static $settings;
+
+    if ($board_id === '' || is_null($board_id))
+    {
+        return;
+    }
 
     if (!isset($settings))
     {
@@ -140,7 +150,7 @@ function nel_filetype_settings($board_id, $setting = null)
         $settings[$board_id] = $filetype_settings;
     }
 
-    if(is_null($setting))
+    if (is_null($setting))
     {
         return $settings[$board_id];
     }
@@ -219,6 +229,11 @@ function nel_file_handler()
 function nel_board_references($board_id, $reference = null)
 {
     static $references;
+
+    if ($board_id === '' || is_null($board_id))
+    {
+        return;
+    }
 
     if (!isset($references))
     {

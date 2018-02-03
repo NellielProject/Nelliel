@@ -4,6 +4,7 @@ require_once INCLUDE_PATH . 'output/rules.php';
 function nel_render_posting_form($board_id, $dataforce, $render)
 {
     $references = nel_board_references($board_id);
+    $board_settings = nel_board_settings($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'posting_form.html');
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
@@ -40,11 +41,11 @@ function nel_render_posting_form($board_id, $dataforce, $render)
 
     $new_post_element = $posting_form->doXPathQuery(".//input[@name='new_post[post_info][response_to]']", $posting_form)->item(0);
     $new_post_element->extSetAttribute('value', $response_id);
-    $dom->getElementById('not-anonymous')->extSetAttribute('maxlength', BS_MAX_NAME_LENGTH);
-    $dom->getElementById('spam-target')->extSetAttribute('maxlength', BS_MAX_EMAIL_LENGTH);
-    $dom->getElementById('verb')->extSetAttribute('maxlength', BS_MAX_SUBJECT_LENGTH);
+    $dom->getElementById('not-anonymous')->extSetAttribute('maxlength', $board_settings['max_name_length']);
+    $dom->getElementById('spam-target')->extSetAttribute('maxlength', $board_settings['max_email_length']);
+    $dom->getElementById('verb')->extSetAttribute('maxlength', $board_settings['max_subject_length']);
 
-    if (BS_FORCE_ANONYMOUS)
+    if ($board_settings['force_anonymous'])
     {
         $dom->getElementById('form-not-anonymous');
         $dom->getElementById('form-spam-target');
@@ -56,10 +57,10 @@ function nel_render_posting_form($board_id, $dataforce, $render)
     $license_block = $dom->getElementById('form-lol_drama-1');
     $alt_text_block = $dom->getElementById('form-alt_text-1');
     $posting_form_table = $dom->getElementById('posting-form-table');
-    $source_block->getElementById('sauce-1')->extSetAttribute('maxlength', BS_MAX_SOURCE_LENGTH);
-    $license_block->getElementById('lol_drama-1')->extSetAttribute('maxlength', BS_MAX_LICENSE_LENGTH);
+    $source_block->getElementById('sauce-1')->extSetAttribute('maxlength', $board_settings['max_source_length']);
+    $license_block->getElementById('lol_drama-1')->extSetAttribute('maxlength', $board_settings['max_license_length']);
 
-    for ($i = 2, $j = 3; $i <= BS_MAX_POST_FILES; ++ $i, ++ $j)
+    for ($i = 2, $j = 3; $i <= $board_settings['max_post_files']; ++ $i, ++ $j)
     {
         $temp_file_block = $file_block->cloneNode(true);
         $temp_file_block->changeId('form-file-' . $i);
@@ -94,14 +95,14 @@ function nel_render_posting_form($board_id, $dataforce, $render)
         $for_label_sauce->extSetAttribute('for', 'sauce-' . $i);
         $source_element = $temp_source_block->getElementById('sauce-1');
         $source_element->extSetAttribute('name', 'new_post[file_info][file_' . $i . '][sauce]');
-        $source_element->extSetAttribute('maxlength', BS_MAX_SOURCE_LENGTH);
+        $source_element->extSetAttribute('maxlength', $board_settings['max_source_length']);
         $source_element->changeId('sauce-' . $i);
 
         $for_label_license = $temp_license_block->doXPathQuery(".//label[@for='lol_drama-1']")->item(0);
         $for_label_license->extSetAttribute('for', 'lol_drama-' . $i);
         $license_element = $temp_license_block->getElementById('lol_drama-1');
         $license_element->extSetAttribute('name', 'new_post[file_info][file_' . $i . '][lol_drama]');
-        $license_element->extSetAttribute('maxlength', BS_MAX_LICENSE_LENGTH);
+        $license_element->extSetAttribute('maxlength', $board_settings['max_license_length']);
         $license_element->changeId('lol_drama-' . $i);
 
         $for_label_alt_text = $temp_alt_text_block->doXPathQuery(".//label[@for='alt_text-1']")->item(0);
@@ -114,14 +115,14 @@ function nel_render_posting_form($board_id, $dataforce, $render)
 
     $fgsfds_form = $dom->getElementById('form-fgsfds');
 
-    if (!BS_USE_FGSFDS)
+    if (!$board_settings['use_fgsfds'])
     {
         $dom->removeChild($fgsfds_form);
     }
     else
     {
         $fgsfds_label = $fgsfds_form->doXPathQuery(".//label[@for='fgsfds']")->item(0);
-        $fgsfds_label->setContent(BS_FGSFDS_NAME);
+        $fgsfds_label->setContent($board_settings['fgsfds_name']);
     }
 
     if ($response_id)
@@ -132,7 +133,7 @@ function nel_render_posting_form($board_id, $dataforce, $render)
     $rules = $dom->importNode(nel_render_rules_list($board_id), true);
     $dom->getElementById('form-rules-list')->appendChild($rules);
 
-    if (!BS_USE_SPAMBOT_TRAP)
+    if (!$board_settings['use_spambot_trap'])
     {
         $dom->removeChild($dom->getElementById('form-trap1'));
         $dom->removeChild($dom->getElementById('form-trap2'));

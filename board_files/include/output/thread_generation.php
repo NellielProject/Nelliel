@@ -8,9 +8,10 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
 {
     $dbh = nel_database();
     $references = nel_board_references($board_id);
+    $board_settings = nel_board_settings($board_id);
     $file_handler = nel_file_handler();
 
-    if($write)
+    if ($write)
     {
         nel_session_is_ignored('render', true);
     }
@@ -30,7 +31,8 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
     $prepared = $dbh->prepare('SELECT * FROM "' . $references['thread_table'] . '" WHERE "thread_id" = ? LIMIT 1');
     $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($write_id), PDO::FETCH_ASSOC);
 
-    $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+    $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] .
+         '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
     $treeline = $dbh->executePreparedFetchAll($prepared, array($write_id), PDO::FETCH_ASSOC);
 
     if (empty($treeline))
@@ -56,14 +58,15 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
             nel_render_posting_form($board_id, $dataforce, $render);
         }
 
-        if($gen_data['post_counter'] == $gen_data['thread']['post_count'] - 1)
+        if ($gen_data['post_counter'] == $gen_data['thread']['post_count'] - 1)
         {
             $dataforce['posts_ending'] = true;
         }
 
         if ($gen_data['post']['has_file'] == 1)
         {
-            $prepared = $dbh->prepare('SELECT * FROM "' . $references['file_table'] . '" WHERE "post_ref" = ? ORDER BY "file_order" ASC');
+            $prepared = $dbh->prepare('SELECT * FROM "' . $references['file_table'] .
+                 '" WHERE "post_ref" = ? ORDER BY "file_order" ASC');
             $gen_data['files'] = $dbh->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']), PDO::FETCH_ASSOC);
         }
 
@@ -72,7 +75,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
             $render_temp = clone $render;
             nel_render_insert_hr($dom);
             nel_render_footer($board_id, $render_temp, true);
-            $file_handler->writeFile($references['page_path']. $write_id . '/' . $write_id. '-0-100.html', $render_temp->outputRenderSet(), FILE_PERM, true);
+            $file_handler->writeFile($references['page_path'] . $write_id . '/' . $write_id . '-0-100.html', $render_temp->outputRenderSet(), FILE_PERM, true);
             unset($render_temp);
         }
 
@@ -83,9 +86,9 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
             $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
             $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
 
-            if ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD)
+            if ($gen_data['thread']['post_count'] > $board_settings['abbreviate_thread'])
             {
-                $omitted_count = $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD;
+                $omitted_count = $gen_data['thread']['post_count'] - $board_settings['abbreviate_thread'];
                 $omitted_element->firstChild->setContent($omitted_count);
             }
             else
@@ -101,9 +104,9 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
         {
             $base_new_post_node = nel_render_post($board_id, $dataforce, $render, TRUE, FALSE, $gen_data, $treeline, $dom);
 
-            if ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD)
+            if ($gen_data['thread']['post_count'] > $board_settings['abbreviate_thread'])
             {
-                if ($gen_data['post_counter'] > $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD)
+                if ($gen_data['post_counter'] > $gen_data['thread']['post_count'] - $board_settings['abbreviate_thread'])
                 {
                     $import_node = $collapse_dom->importNode($base_new_post_node, true);
                     $collapse_dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id'])->appendChild($import_node);
@@ -153,7 +156,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
         die();
     }
 
-    if($write)
+    if ($write)
     {
         nel_session_is_ignored('render', false);
     }

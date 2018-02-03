@@ -35,30 +35,3 @@ if (!empty($_GET))
     $dataforce['collapse'] = (isset($_GET['collapse'])) ? TRUE : FALSE;
     $dataforce['response_id'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? (int) $_GET['post'] : NULL;
 }
-
-// Load caching routines and handle current cache files
-
-require_once INCLUDE_PATH . 'cache_functions.php'; // I liek cache
-
-// Cached board settings
-if (!file_exists(CACHE_PATH . INPUT_BOARD_ID . '/board_settings.nelcache')) // TODO: Clear this out once we're converted to the new board setting system
-{
-    if(nel_cache_board_settings(INPUT_BOARD_ID) !== false)
-    {
-        require_once CACHE_PATH . INPUT_BOARD_ID . '/board_settings.nelcache';
-    }
-}
-else
-{
-    require_once CACHE_PATH . INPUT_BOARD_ID . '/board_settings.nelcache';
-}
-
-
-/*// Cached filetype settings
-
-if (!file_exists(CACHE_PATH . INPUT_BOARD_ID . '/filetype_settings.nelcache'))
-{
-    nel_cache_filetype_settings(INPUT_BOARD_ID);
-}
-
-require_once CACHE_PATH . INPUT_BOARD_ID . '/filetype_settings.nelcache';*/

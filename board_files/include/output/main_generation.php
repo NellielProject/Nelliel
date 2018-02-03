@@ -11,9 +11,9 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
 {
     $dbh = nel_database();
     $references = nel_board_references($board_id);
+    $board_settings = nel_board_settings($board_id);
     $file_handler = nel_file_handler();
-    $thread_table =
-    $gen_data = array();
+    $thread_table = $gen_data = array();
     $dataforce['dotdot'] = '../';
 
     if ($write)
@@ -72,7 +72,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
         $sub_page_thread_counter = 0;
         $gen_data['first100'] = FALSE;
 
-        while ($sub_page_thread_counter < BS_THREADS_PER_PAGE)
+        while ($sub_page_thread_counter < $board_settings['threads_per_page'])
         {
             if ($gen_data['post_counter'] === -1)
             {
@@ -81,19 +81,21 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
                 $thread_element->changeId('thread-' . $current_thread_id);
                 $dom->getElementById('outer-div')->appendChild($thread_element);
                 $post_append_target = $thread_element;
-                $prepared = $dbh->prepare('SELECT * FROM "' . $references['thread_table'] . '" WHERE "thread_id" = ? LIMIT 1');
+                $prepared = $dbh->prepare('SELECT * FROM "' . $references['thread_table'] .
+                     '" WHERE "thread_id" = ? LIMIT 1');
                 $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($current_thread_id), PDO::FETCH_ASSOC);
 
                 $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] .
                      '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
                 $treeline = $dbh->executePreparedFetchAll($prepared, array($current_thread_id), PDO::FETCH_ASSOC);
 
-                $gen_data['thread']['expand_post'] = ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD) ? TRUE : FALSE;
+                $gen_data['thread']['expand_post'] = ($gen_data['thread']['post_count'] >
+                     $board_settings['abbreviate_thread']) ? TRUE : FALSE;
                 $gen_data['thread']['first100'] = ($gen_data['thread']['post_count'] > 100) ? TRUE : FALSE;
                 $gen_data['post_counter'] = 0;
             }
 
-            $abbreviate = ($gen_data['thread']['post_count'] > BS_ABBREVIATE_THREAD) ? true : false;
+            $abbreviate = ($gen_data['thread']['post_count'] > $board_settings['abbreviate_thread']) ? true : false;
             $dataforce['abbreviate'] = $abbreviate;
             $gen_data['post'] = $treeline[$gen_data['post_counter']];
 
@@ -108,7 +110,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
             {
                 if ($abbreviate)
                 {
-                    $gen_data['post_counter'] = $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD;
+                    $gen_data['post_counter'] = $gen_data['thread']['post_count'] - $board_settings['abbreviate_thread'];
                     $dataforce['omitted_done'] = FALSE;
                     $new_post_element = nel_render_post($board_id, $dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
                     $dataforce['omitted_done'] = TRUE;
@@ -136,7 +138,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
 
                 if ($abbreviate)
                 {
-                    $omitted_count = $gen_data['thread']['post_count'] - BS_ABBREVIATE_THREAD;
+                    $omitted_count = $gen_data['thread']['post_count'] - $board_settings['abbreviate_thread'];
                     $omitted_element->firstChild->setContent($omitted_count);
                 }
                 else
@@ -147,7 +149,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
 
             if (empty($treeline[$gen_data['post_counter'] + 1]))
             {
-                $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? BS_THREADS_PER_PAGE : ++ $sub_page_thread_counter;
+                $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? $board_settings['threads_per_page'] : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
                 nel_render_insert_hr($dom);
                 $gen_data['post_counter'] = -1;
@@ -167,7 +169,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
         $prev = $page - 1;
         $next = $page + 1;
 
-        $page_count = (int) ceil($counttree / BS_THREADS_PER_PAGE);
+        $page_count = (int) ceil($counttree / $board_settings['threads_per_page']);
         $pages = array();
 
         if ($page === 1)
@@ -191,7 +193,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
             {
                 $pages[$i] = (($page > 1) ? PHP_SELF2 . PHP_EXT : '');
             }
-            else if ($i === ($page - 1) || BS_PAGE_LIMIT === 1)
+            else if ($i === ($page - 1) || $board_settings['page_limit'] === 1)
             {
                 $pages[$i] = '';
             }
@@ -203,7 +205,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
             ++ $i;
         }
 
-        if ($page === $page_count || BS_PAGE_LIMIT === 1)
+        if ($page === $page_count || $board_settings['page_limit'] === 1)
         {
             $pages['next'] = '';
         }
@@ -229,7 +231,8 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
         }
         else
         {
-            $logfilename = ($page === 1) ? $board_id . '/' . PHP_SELF2 . PHP_EXT : $board_id. '/' . PHP_SELF2 . ($page - 1) . PHP_EXT;
+            $logfilename = ($page === 1) ? $board_id . '/' . PHP_SELF2 . PHP_EXT : $board_id . '/' . PHP_SELF2 .
+                 ($page - 1) . PHP_EXT;
             $file_handler->writeFile($logfilename, $render->outputRenderSet(), FILE_PERM, true);
         }
 

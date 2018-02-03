@@ -13,7 +13,7 @@ function nel_ban_spambots($dataforce)
 {
     $ban_hammer = nel_ban_hammer();
 
-    if (BS_USE_SPAMBOT_TRAP && (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')]) || !empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])))
+    if (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')]) || !empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')]))
     {
         $ban_input['type'] = 'SPAMBOT';
         $ban_input['ip_address_start'] = $_SERVER['REMOTE_ADDR'];
