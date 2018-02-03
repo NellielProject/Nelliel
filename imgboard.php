@@ -3,8 +3,15 @@ define('NELLIEL_VERSION', 'v0.9.4.12'); // Version
 define('BASE_PATH', realpath('./') . '/'); // Base path for script
 define('FILES_PATH', BASE_PATH . '/' . 'board_files/'); // Base board files path
 define('INCLUDE_PATH', FILES_PATH . 'include/'); // Base include files path
+define('CONFIG_PATH', BASE_PATH . 'configuration/'); // Base cache path
+define('LIBRARY_PATH', FILES_PATH . 'libraries/'); // Libraries path
+define('PLUGINS_PATH', FILES_PATH . 'plugins/'); // Base plugins path
+define('TEMPLATE_PATH', FILES_PATH . 'templates/nelliel/'); // Base template path
+define('LANGUAGE_PATH', FILES_PATH . 'languages/'); // Language files path
+define('CACHE_PATH', FILES_PATH . 'cache/'); // Base cache path
+define('WEB_PATH', FILES_PATH . 'web/'); // Base cache path
+define('SQLITE_DB_DEFAULT_PATH', FILES_PATH); // Base SQLite DB location
 
-require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'autoload.php';
 require_once LIBRARY_PATH . 'phpDOMExtend/autoload.php';
 require_once LIBRARY_PATH . 'NellielTemplates/autoload.php';
@@ -13,7 +20,7 @@ require_once CONFIG_PATH. 'crypt_config.php';
 require_once CONFIG_PATH. 'database_config.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'accessors.php';
-require_once INCLUDE_PATH . 'internal_config.php';
+require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'language/language.php';
 require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'setup/setup.php';
