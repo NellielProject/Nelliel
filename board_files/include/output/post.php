@@ -233,6 +233,7 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
         $mod_tools_1->removeSelf();
     }
 
+    $multiple_files = false;
     $post_files_container = $new_post_dom->getElementById('post-files-container-');
 
     if ($post_data['has_file'] == 1)
@@ -242,7 +243,6 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
         $filecount = count($gen_data['files']);
         $file_node = $new_post_dom->getElementById('fileinfo-');
         $multiple_class = '';
-        $multiple_files = false;
 
         if ($filecount > 1)
         {
@@ -370,7 +370,15 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
 
     $post_contents_element = $new_post_dom->getElementById('post-contents');
     $post_contents_node_array = $new_post_dom->getAssociativeNodeArray('data-parse-id', $post_contents_element);
-    $post_contents_node_array['post-contents']->extSetAttribute('class', $post_type_class . 'post-contents');
+    if($multiple_files)
+    {
+        $post_contents_node_array['post-contents']->extSetAttribute('class', $post_type_class . 'post-contents-multifile');
+    }
+    else
+    {
+        $post_contents_node_array['post-contents']->extSetAttribute('class', $post_type_class . 'post-contents');
+    }
+
     $post_contents_node_array['post-contents']->removeAttribute('id');
     $post_contents_node_array['post-text']->extSetAttribute('class', $post_type_class . 'post-text');
     $post_contents_node_array['mod-comment']->setContent($post_data['mod_comment']);
