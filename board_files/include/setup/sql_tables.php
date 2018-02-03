@@ -283,7 +283,7 @@ function nel_create_config_table($table_name)
 
     if ($result !== false)
     {
-        nel_insert_config_defaults();
+        nel_insert_config_defaults($table_name);
     }
 
     nel_setup_stuff_done($result);
@@ -658,10 +658,10 @@ function nel_insert_default_admin_role()
     nel_setup_stuff_done($result);
 }
 
-function nel_insert_config_defaults()
+function nel_insert_config_defaults($config_table)
 {
     $dbh = nel_database();
-    $result = $dbh->query("INSERT INTO " . CONFIG_TABLE . " (config_type, config_owner, config_category, data_type, config_name, setting)
+    $result = $dbh->query("INSERT INTO " . $config_table . " (config_type, config_owner, config_category, data_type, config_name, setting)
                 VALUES  ('technical', 'nelliel', 'database', 'str', 'original_schema_version', '003'),
                         ('technical', 'nelliel', 'database', 'str', 'current_schema_version', '003'),
                         ('board_setting', 'nelliel', 'general', 'bool', 'allow_tripkeys', '1'),

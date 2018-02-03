@@ -37,7 +37,6 @@ define('THUMB_DIR', 'thumb/'); // Thumbnail directory
 define('PAGE_DIR', 'threads/'); // Response page directory
 define('ARCHIVE_DIR', 'archive/'); // Archive directory
 
-define('CONFIG_TABLE', BOARD_PREFIX . '_config'); // Table to store board configuration. Best to leave it as-is unless you really need to change it
 define('BAN_TABLE', 'nelliel_bans'); // Table containing ban info
 define('USER_TABLE', 'nelliel_users'); // Table used for post data
 define('ROLES_TABLE', 'nelliel_roles'); // Table used for post data

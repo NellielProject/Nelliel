@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_settings_panel($board_id, $dataforce)
 {
     $dbh = nel_database();
+    $references = nel_board_references($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -14,7 +15,7 @@ function nel_render_settings_panel($board_id, $dataforce)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/settings_panel.html');
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
-    $result = $dbh->query('SELECT * FROM "' . CONFIG_TABLE . '"');
+    $result = $dbh->query('SELECT * FROM "' . $references['config_table'] . '"');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
 

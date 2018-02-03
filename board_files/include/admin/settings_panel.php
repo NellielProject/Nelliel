@@ -10,6 +10,7 @@ function nel_settings_control($board_id, $dataforce)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
+    $references = nel_board_references($board_id);
     $mode = $dataforce['mode'];
     $update = FALSE;
 
@@ -34,7 +35,7 @@ function nel_settings_control($board_id, $dataforce)
                     $dataforce['max_pages'] = (int) $item[1];
                 }
 
-                $prepared = $dbh->prepare('UPDATE "' . CONFIG_TABLE . '" SET "setting" = ? WHERE "config_name" = ?');
+                $prepared = $dbh->prepare('UPDATE "' . $references['config_table'] . '" SET "setting" = ? WHERE "config_name" = ?');
                 $dbh->executePrepared($prepared, array($item[1], $item[0]), true);
             }
         }
