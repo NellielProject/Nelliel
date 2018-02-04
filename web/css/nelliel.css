@@ -19,7 +19,7 @@ a {
 }
 
 img {
-
+	
 }
 
 a:visited {
@@ -306,6 +306,7 @@ a.mailto-name:visited {
 }
 
 .op-post-text {
+    padding-left: 1.10em;
     max-width: 70em;
 }
 
@@ -370,7 +371,7 @@ a.mailto-name:visited {
 }
 
 .reply-post-contents {
-	
+
 }
 
 .reply-post-contents-multifile {
