@@ -35,7 +35,7 @@ function nel_banned_hash($hash, $file)
     {
         if ($hash === $cancer[$i])
         {
-            nel_derp(150, nel_stext('ERROR_150'), array('bad-filename' => $file['filename'] . $file['ext'], 'files' => array($file)));
+            nel_derp(150, nel_stext('ERROR_150'), null, array('bad-filename' => $file['filename'] . $file['ext'], 'files' => array($file)));
         }
     }
 }
@@ -52,7 +52,7 @@ function nel_banned_name($name)
     {
         if ($cancer[$i] === $name)
         {
-            nel_derp(151, nel_stext('ERROR_151'), array('cancer' => $cancer[$i]));
+            nel_derp(151, nel_stext('ERROR_151'), null, array('cancer' => $cancer[$i]));
         }
     }
 }
@@ -73,7 +73,7 @@ function nel_banned_text($text, $file)
 
             if ($test !== FALSE)
             {
-                nel_derp(152, nel_stext('ERROR_152'), array('cancer' => $cancer[$i]));
+                nel_derp(152, nel_stext('ERROR_152'), $board_id, array('cancer' => $cancer[$i]));
             }
         }
     }
@@ -92,7 +92,7 @@ function nel_apply_ban($dataforce, $board_id)
     {
         if($_POST['ban_ip'] != $user_ip_address)
         {
-            nel_derp(160, nel_stext('ERROR_160'));
+            nel_derp(160, nel_stext('ERROR_160'), $board_id);
         }
 
         $ip_address = $_POST['ban_ip'];

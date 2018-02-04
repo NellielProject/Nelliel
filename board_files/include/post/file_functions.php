@@ -58,37 +58,37 @@ function nel_check_upload_errors($board_id, $file, $files)
 
     if ($file['size'] > $board_settings['max_filesize'] * 1024)
     {
-        nel_derp(100, nel_stext('ERROR_100'), $error_data);
+        nel_derp(100, nel_stext('ERROR_100'), $board_id, $error_data);
     }
 
     if ($file['error'] === UPLOAD_ERR_INI_SIZE)
     {
-        nel_derp(101, nel_stext('ERROR_101'), $error_data);
+        nel_derp(101, nel_stext('ERROR_101'), $board_id, $error_data);
     }
 
     if ($file['error'] === UPLOAD_ERR_FORM_SIZE)
     {
-        nel_derp(102, nel_stext('ERROR_102'), $error_data);
+        nel_derp(102, nel_stext('ERROR_102'), $board_id, $error_data);
     }
 
     if ($file['error'] === UPLOAD_ERR_PARTIAL)
     {
-        nel_derp(103, nel_stext('ERROR_103'), $error_data);
+        nel_derp(103, nel_stext('ERROR_103'), $board_id, $error_data);
     }
 
     if ($file['error'] === UPLOAD_ERR_NO_FILE)
     {
-        nel_derp(104, nel_stext('ERROR_104'), $error_data);
+        nel_derp(104, nel_stext('ERROR_104'), $board_id, $error_data);
     }
 
     if ($file['error'] === UPLOAD_ERR_NO_TMP_DIR || $file['error'] === UPLOAD_ERR_CANT_WRITE)
     {
-        nel_derp(105, nel_stext('ERROR_105'), $error_data);
+        nel_derp(105, nel_stext('ERROR_105'), $board_id, $error_data);
     }
 
     if ($file['error'] !== UPLOAD_ERR_OK)
     {
-        nel_derp(106, nel_stext('ERROR_106'), $error_data);
+        nel_derp(106, nel_stext('ERROR_106'), $board_id, $error_data);
     }
 }
 
@@ -121,7 +121,7 @@ function nel_check_for_existing_file($board_id, $file, $files)
 
     if ($result)
     {
-        nel_derp(110, nel_stext('ERROR_110'), $error_data);
+        nel_derp(110, nel_stext('ERROR_110'), $board_id, $error_data);
     }
 
     return $file;
@@ -137,12 +137,12 @@ function nel_get_filetype($board_id, $file, $files)
 
     if (!array_key_exists($test_ext, $filetypes))
     {
-        nel_derp(107, nel_stext('ERROR_107'), $error_data);
+        nel_derp(107, nel_stext('ERROR_107'), $board_id, $error_data);
     }
 
     if (!$filetype_settings[$filetypes[$test_ext]['supertype']][$filetypes[$test_ext]['subtype']])
     {
-        nel_derp(108, nel_stext('ERROR_108'), $error_data);
+        nel_derp(108, nel_stext('ERROR_108'), $board_id, $error_data);
     }
 
     if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test))
@@ -153,7 +153,7 @@ function nel_get_filetype($board_id, $file, $files)
     }
     else
     {
-        nel_derp(109, nel_stext('ERROR_109'), $error_data);
+        nel_derp(109, nel_stext('ERROR_109'), $board_id, $error_data);
     }
 
     return $file;

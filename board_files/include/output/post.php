@@ -329,7 +329,7 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
                 {
                     $file['has_preview'] = true;
                     $file['preview_location'] = IMAGES_DIR . '/nelliel/filetype/' .
-                         utf8_strtolower($files[$i]['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png';
+                         utf8_strtolower($file['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png';
                     $file['preview_width'] = ($board_settings['max_width'] < 64) ? $board_settings['max_width'] : '128';
                     $file['preview_height'] = ($board_settings['max_height'] < 64) ? $board_settings['max_height'] : '128';
                 }

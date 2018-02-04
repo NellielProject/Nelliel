@@ -50,24 +50,24 @@ function nel_process_new_post($board_id, $dataforce)
 
         if (!$post_data['comment'])
         {
-            nel_derp(10, nel_stext('ERROR_10'), array());
+            nel_derp(10, nel_stext('ERROR_10'), $board_id);
         }
 
         if (nel_board_settings($board_id, 'require_image_always'))
         {
-            nel_derp(11, nel_stext('ERROR_11'), array());
+            nel_derp(11, nel_stext('ERROR_11'), $board_id);
         }
 
         if (nel_board_settings($board_id, 'require_image_start') && $post_data['response_to'] === 0)
         {
-            nel_derp(12, nel_stext('ERROR_12'), array());
+            nel_derp(12, nel_stext('ERROR_12'), $board_id);
         }
     }
 
     // Cancer-fighting tools and lulz
     if (utf8_strlen($post_data['comment']) > nel_board_settings($board_id, 'max_comment_length'))
     {
-        nel_derp(13, nel_stext('ERROR_13'), array());
+        nel_derp(13, nel_stext('ERROR_13'), $board_id);
     }
 
     if (isset($post_data['password']))
@@ -201,7 +201,7 @@ function nel_is_post_ok($board_id, $post_data, $time)
 
     if ($renzoku > 0)
     {
-        nel_derp(1, nel_stext('ERROR_1'));
+        nel_derp(1, nel_stext('ERROR_1'), $board_id);
     }
 
     $post_count = 1;
@@ -215,29 +215,29 @@ function nel_is_post_ok($board_id, $post_data, $time)
         {
             if ($op_post['locked'] == 1)
             {
-                nel_derp(2, nel_stext('ERROR_2'));
+                nel_derp(2, nel_stext('ERROR_2'), $board_id);
             }
 
             if ($op_post['archive_status'] != 0)
             {
-                nel_derp(3, nel_stext('ERROR_3'));
+                nel_derp(3, nel_stext('ERROR_3'), $board_id);
             }
 
             $post_count = $op_post['post_count'];
         }
         else
         {
-            nel_derp(4, nel_stext('ERROR_4'));
+            nel_derp(4, nel_stext('ERROR_4'), $board_id);
         }
 
         if ($post_count >= nel_board_settings($board_id, 'max_posts'))
         {
-            nel_derp(5, nel_stext('ERROR_5'));
+            nel_derp(5, nel_stext('ERROR_5'), $board_id);
         }
 
         if ($op_post['archive_status'] != 0)
         {
-            nel_derp(6, nel_stext('ERROR_6'));
+            nel_derp(6, nel_stext('ERROR_6'), $board_id);
         }
     }
 
