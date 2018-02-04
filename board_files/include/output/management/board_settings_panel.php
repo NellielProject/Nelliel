@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_settings_panel($board_id, $dataforce)
+function nel_render_board_settings_panel($board_id, $dataforce)
 {
     $dbh = nel_database();
     $references = nel_board_references($board_id);
@@ -13,7 +13,7 @@ function nel_render_settings_panel($board_id, $dataforce)
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     nel_render_general_header($dataforce, $render);
     $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'management/settings_panel.html');
+    $render->loadTemplateFromFile($dom, 'management/board_settings_panel.html');
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
     $result = $dbh->query('SELECT * FROM "' . $references['config_table'] . '"');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);

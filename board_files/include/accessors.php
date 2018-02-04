@@ -97,6 +97,31 @@ function nel_ban_hammer()
     return $ban_hammer;
 }
 
+function nel_site_settings($setting = null)
+{
+    static $settings;
+
+    if (!isset($settings))
+    {
+        $settings = array();
+
+        if (!file_exists(CACHE_PATH . 'site_settings.nelcache'))
+        {
+            nel_cache_site_settings();
+        }
+
+        include CACHE_PATH . 'site_settings.nelcache';
+        $settings = $site_settings;
+    }
+
+    if (is_null($setting))
+    {
+        return $settings;
+    }
+
+    return $settings[$setting];
+}
+
 function nel_board_settings($board_id, $setting = null)
 {
     static $settings;

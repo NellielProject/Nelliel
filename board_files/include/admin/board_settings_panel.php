@@ -4,9 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'output/management/settings_panel.php';
+require_once INCLUDE_PATH . 'output/management/board_settings_panel.php';
 
-function nel_settings_control($board_id, $dataforce)
+function nel_board_settings_control($board_id, $dataforce)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
@@ -14,7 +14,7 @@ function nel_settings_control($board_id, $dataforce)
     $mode = $dataforce['mode'];
     $update = FALSE;
 
-    if ($mode === 'admin->settings->update')
+    if ($mode === 'admin->board-settings->update')
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_modify', $board_id))
         {
@@ -44,5 +44,5 @@ function nel_settings_control($board_id, $dataforce)
         nel_regen_all_pages($dataforce, $board_id);
     }
 
-    nel_render_settings_panel($board_id, $dataforce);
+    nel_render_board_settings_panel($board_id, $dataforce);
 }

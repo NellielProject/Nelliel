@@ -9,28 +9,20 @@ if (!defined('NELLIEL_VERSION'))
 // Board-specific config can be found in the management section or board-config.php.
 //
 
-// The home location/portal
-// This can be a full URL or a relative URL targeting a web-accessible directory.
-// Defaults to the parent directory of the imageboard.
-define('HOME', '../');
-
-
-// If on a new install or no users are found, it will use DEFAULTADMIN and DEFAULTADMIN_PASS to create a default admin.
-// Once able to login you can then set up other staff and even delete the default user if desired.
+// If on a new install or no users are found, it will use DEFAULTADMIN and DEFAULTADMIN_PASS to create an admin account.
+// Once created the default admin can be used for the rest of setup, managing staff, etc.
 // Once the default admin account is created, make sure to set both of these back to ''
 define('DEFAULTADMIN', ''); // Sets a default admin with all permissions
 define('DEFAULTADMIN_PASS', ''); // Password for default admin
 
 
 // Salt used for secure tripcodes
-// Change this setting ONCE when you begin your board. Changing it again will alter the tripcode output
+// Change this setting ONCE when you do initial setup. Changing it again will alter the secure tripcode output.
 define('TRIPCODE_SALT', 'sodiumz');
 
 
-// Should Nelliel go through the setup check
-// Basically this runs through the setup sequence and checks that files, directories and database stuff is in place.
+// Each time the script is run, this runs through the setup sequence and checks that files, directories and database stuff is in place.
 // Once initial setup and testing is finished this isn't really necessary and should be set to false.
-// Note: Upgrades will run relevant setup checks regardless of this setting.
 define('RUN_SETUP_CHECK', true);
 
 

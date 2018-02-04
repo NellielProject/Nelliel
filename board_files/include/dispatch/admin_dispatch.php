@@ -26,9 +26,14 @@ function admin_dispatch($board_id, $dataforce)
             echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF . '?mode=display&page=0">';
             break;
 
-        case 'settings':
-            require_once INCLUDE_PATH . 'admin/settings_panel.php';
-            nel_settings_control($board_id, $dataforce);
+        case 'board-settings':
+            require_once INCLUDE_PATH . 'admin/board_settings_panel.php';
+            nel_board_settings_control($board_id, $dataforce);
+            break;
+
+        case 'site-settings':
+            require_once INCLUDE_PATH . 'admin/site_settings_panel.php';
+            nel_site_settings_control($dataforce);
             break;
 
         case 'regen':

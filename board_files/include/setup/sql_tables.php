@@ -263,7 +263,7 @@ function nel_create_external_table($table_name)
     nel_setup_stuff_done($result);
 }
 
-function nel_create_config_table($table_name)
+function nel_create_board_config_table($table_name)
 {
     $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
@@ -283,7 +283,33 @@ function nel_create_config_table($table_name)
 
     if ($result !== false)
     {
-        nel_insert_config_defaults($table_name);
+        nel_insert_board_config_defaults($table_name);
+    }
+
+    nel_setup_stuff_done($result);
+}
+
+function nel_create_site_config_table($table_name)
+{
+    $auto_inc = nel_autoincrement_column('INTEGER');
+    $options = nel_table_options();
+    $schema = '
+    CREATE TABLE ' . $table_name . ' (
+        "entry"                 ' . $auto_inc[0] .
+        ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "config_name"           VARCHAR(255) NOT NULL,
+        "config_type"           VARCHAR(255) DEFAULT NULL,
+        "config_owner"          VARCHAR(255) DEFAULT NULL,
+        "config_category"       VARCHAR(255) DEFAULT NULL,
+        "data_type"             VARCHAR(255) DEFAULT NULL,
+        "setting"               VARCHAR(255) DEFAULT NULL
+    ) ' . $options . ';';
+
+    $result = nel_create_table_query($schema, $table_name);
+
+    if ($result !== false)
+    {
+        nel_insert_site_config_defaults($table_name);
     }
 
     nel_setup_stuff_done($result);
@@ -659,7 +685,7 @@ function nel_insert_default_admin_role()
     nel_setup_stuff_done($result);
 }
 
-function nel_insert_config_defaults($config_table)
+function nel_insert_board_config_defaults($config_table)
 {
     $dbh = nel_database();
     $result = $dbh->query("INSERT INTO " . $config_table . " (config_type, config_owner, config_category, data_type, config_name, setting)
@@ -769,6 +795,16 @@ function nel_insert_config_defaults($config_table)
                         ('filetype_enable', 'nelliel', 'other', 'bool', 'other', '0'),
                         ('filetype_enable', 'nelliel', 'other', 'bool', 'swf', '0'),
                         ('filetype_enable', 'nelliel', 'other', 'bool', 'blorb', '0')
+                        ");
+
+    nel_setup_stuff_done($result);
+}
+
+function nel_insert_site_config_defaults($config_table)
+{
+    $dbh = nel_database();
+    $result = $dbh->query("INSERT INTO " . $config_table . " (config_type, config_owner, config_category, data_type, config_name, setting)
+                VALUES  ('core_setting', 'nelliel', 'general', 'str', 'home_page', '../')
                         ");
 
     nel_setup_stuff_done($result);

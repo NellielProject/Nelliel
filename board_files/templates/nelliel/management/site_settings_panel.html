@@ -1,0 +1,33 @@
+	<div class="pass-valid">
+		<span data-i18n="neltext">MANAGE_MODE</span>
+	</div>
+	<div class="del-list">
+		<span data-i18n="neltext">MANAGE_SETTINGS</span>
+	</div>
+	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
+		<table>
+			<tr>
+				<td>
+					<input type="hidden" name="mode" value="admin->site-settings->update">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<br><b>Basic settings</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="home_page" data-i18n="neltext">MANAGE_SET_HOME_PAGE</label>
+				</td>
+				<td>
+					<input type="text" name="home_page" id="home_page" size="50" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="submit" value="MANAGE_FORM_UPDSET" data-i18n="neltext" data-i18n-attributes="value">
+				</td>
+			</tr>
+		</table>
+	</form>

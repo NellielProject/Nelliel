@@ -22,6 +22,7 @@ function setup_check($board_id)    // TODO Do this better
     nel_create_permissions_table(PERMISSIONS_TABLE);
     nel_create_logins_table(LOGINS_TABLE);
     nel_create_board_data_table(BOARD_DATA_TABLE);
+    nel_create_site_config_table(SITE_CONFIG_TABLE);
 
     $file_handler->createDirectory(CACHE_PATH, DIRECTORY_PERM, true);
 
@@ -40,7 +41,7 @@ function setup_check($board_id)    // TODO Do this better
     nel_create_files_table($references['archive_file_table']);
     nel_create_external_table($references['external_table']);
     nel_create_external_table($references['archive_external_table']);
-    nel_create_config_table($references['config_table']);
+    nel_create_board_config_table($references['config_table']);
 
     $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM, true);
     $file_handler->createDirectory($references['thumb_path'], DIRECTORY_PERM, true);

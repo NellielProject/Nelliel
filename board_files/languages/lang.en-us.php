@@ -140,6 +140,8 @@ $lang_singular = array(
     'MANAGE_OPTIONS' => 'Options',  // Options
     'MANAGE_BOARD_OPTIONS' => 'Options for board: ',  // Board options
     'MANAGE_SETTINGS' => 'Board Settings',  // Settings
+    'MANAGE_SITE_SETTINGS' => 'Site Settings',  // Settings
+    'MANAGE_SITE_SETTINGS_LABEL' => 'View and change the site-wide settings.',  // Settings
     'MANAGE_BANS' => 'Bans',  // Bans
     'MANAGE_STAFF' => 'Staff',  // Staff
     'MANAGE_LOGIN' => 'Management login',  // Login
@@ -262,6 +264,7 @@ $lang_singular = array(
     'MANAGE_STAFF_EDIT' => 'Username of staff to edit',  // Edit staff
     'MANAGE_STAFF_ROLE_LEVEL' => 'Role Lvel', // Role level
 
+    'MANAGE_SET_HOME_PAGE' => 'Site home page. Can be absolute or relative URL.', // Home page
 
     'MANAGE_SET_BOARD_NAME' => 'Board Name',  // Board name
     'MANAGE_SET_SHOW_NAME' => 'Show board name at top',  // Board name at top

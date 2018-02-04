@@ -17,7 +17,7 @@ define('SECURE_TRIPCODE_ALGORITHM', 'sha256');
 define('GENERATE_FILE_SHA256', false);
 
 // If a different hashing method or cost was used on something, then rehash it with the current settings
-// Generally you can leave this false unless you have increased the cost or are permanently upgrading to a better algorithm
+// Generally you can leave this false unless you have changed the cost or are permanently upgrading to a better algorithm
 define('DO_PASSWORD_REHASH', false);
 
 // Whether to pass PHP's PASSWORD_DEFAULT to password_hash, which should pick the best algorithm available
