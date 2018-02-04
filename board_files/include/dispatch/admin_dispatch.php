@@ -70,8 +70,8 @@ function admin_dispatch($board_id, $dataforce)
 
         case 'board':
             require_once INCLUDE_PATH . 'admin/create_board.php';
-            nel_create_new_board();
-            nel_regen_all_pages($dataforce);
+            $board_id = nel_create_new_board();
+            nel_regen_all_pages($dataforce, $board_id);
             nel_regen_cache($board_id, $dataforce);
             nel_login($dataforce);
             break;

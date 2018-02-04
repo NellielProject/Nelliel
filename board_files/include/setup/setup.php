@@ -23,9 +23,9 @@ function setup_check($board_id)    // TODO Do this better
     nel_create_logins_table(LOGINS_TABLE);
     nel_create_board_data_table(BOARD_DATA_TABLE);
 
-    $file_handler->createDirectory(CACHE_PATH, DIRECTORY_PERM);
+    $file_handler->createDirectory(CACHE_PATH, DIRECTORY_PERM, true);
 
-    if($board_id === '')
+    if(true_empty($board_id))
     {
         return;
     }
@@ -42,13 +42,13 @@ function setup_check($board_id)    // TODO Do this better
     nel_create_external_table($references['archive_external_table']);
     nel_create_config_table($references['config_table']);
 
-    $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM);
-    $file_handler->createDirectory($references['thumb_path'], DIRECTORY_PERM);
-    $file_handler->createDirectory($references['page_path'], DIRECTORY_PERM);
-    $file_handler->createDirectory($references['archive_path'], DIRECTORY_PERM);
-    $file_handler->createDirectory($references['archive_src_path'], DIRECTORY_PERM);
-    $file_handler->createDirectory($references['archive_thumb_path'], DIRECTORY_PERM);
-    $file_handler->createDirectory($references['archive_page_path'], DIRECTORY_PERM);
+    $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM, true);
+    $file_handler->createDirectory($references['thumb_path'], DIRECTORY_PERM, true);
+    $file_handler->createDirectory($references['page_path'], DIRECTORY_PERM, true);
+    $file_handler->createDirectory($references['archive_path'], DIRECTORY_PERM, true);
+    $file_handler->createDirectory($references['archive_src_path'], DIRECTORY_PERM, true);
+    $file_handler->createDirectory($references['archive_thumb_path'], DIRECTORY_PERM, true);
+    $file_handler->createDirectory($references['archive_page_path'], DIRECTORY_PERM, true);
 
     nel_setup_stuff_done('check_done_nochange');
 
