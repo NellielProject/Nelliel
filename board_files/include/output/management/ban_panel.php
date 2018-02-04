@@ -4,7 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-
 function nel_render_main_ban_panel($board_id, $dataforce)
 {
     $dbh = nel_database();
@@ -16,14 +15,14 @@ function nel_render_main_ban_panel($board_id, $dataforce)
     $render->loadTemplateFromFile($dom, 'management/bans_panel_main.html');
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '../';
 
-    $result =  $dbh->query('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "ban_id" DESC');
+    $result = $dbh->query('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "ban_id" DESC');
     $ban_info_table = $dom->getElementById('ban-info-table');
     $ban_info_row = $dom->getElementById('ban-info-row');
     $i = 0;
 
     while ($result && $ban_info = $result->fetch(PDO::FETCH_ASSOC))
     {
-        if($i & 1)
+        if ($i & 1)
         {
             $bgclass = 'row1';
         }
@@ -38,7 +37,7 @@ function nel_render_main_ban_panel($board_id, $dataforce)
         $ban_info_td_list = $temp_ban_info_row->doXPathQuery(".//td");
         $ban_info_td_list->item(0)->setContent($ban_info['ban_id']);
         $ban_info_td_list->item(1)->setContent($ban_info['type']);
-        $ban_info_td_list->item(2)->setContent($ban_info['ip_address_start'] ? @inet_ntop($ban_info['ip_address_start']): 'Unknown');
+        $ban_info_td_list->item(2)->setContent($ban_info['ip_address_start'] ? @inet_ntop($ban_info['ip_address_start']) : 'Unknown');
         $ban_info_td_list->item(3)->setContent($ban_info['board_id']);
         $ban_info_td_list->item(4)->setContent($ban_info['reason']);
         $ban_info_td_list->item(5)->setContent(date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']));
@@ -57,7 +56,7 @@ function nel_render_main_ban_panel($board_id, $dataforce)
         $form_remove_ban->doXPathQuery(".//input[@name='ban_id']")->item(0)->extSetAttribute('value', $ban_info['ban_id']);
 
         $ban_info_table->appendChild($temp_ban_info_row);
-        $i++;
+        $i ++;
     }
 
     unset($result);
@@ -102,13 +101,20 @@ function nel_render_ban_panel_modify($dataforce)
     $ban_info = $ban_hammer->getBanById($_POST['ban_id'], true);
     $dom->getElementById('ban-ip-field')->extSetAttribute('value', @inet_ntop($ban_info['ip_address_start']));
     $dom->getElementById('ban-time-display')->setContent(date("D F jS Y  H:i:s", $ban_info['start_time']));
-    $dom->getElementById('ban-expiration-display')->setContent(date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']));
+    $dom->getElementById('ban-expiration-display')->setContent(date("D F jS Y  H:i:s", $ban_info['length'] +
+         $ban_info['start_time']));
     $dom->getElementById('ban-time-years')->extSetAttribute('value', $ban_info['years']);
     $dom->getElementById('ban-time-months')->extSetAttribute('value', $ban_info['months']);
     $dom->getElementById('ban-time-days')->extSetAttribute('value', $ban_info['days']);
     $dom->getElementById('ban-time-hours')->extSetAttribute('value', $ban_info['hours']);
     $dom->getElementById('ban-time-minutes')->extSetAttribute('value', $ban_info['minutes']);
     $dom->getElementById('ban-time-seconds')->extSetAttribute('value', $ban_info['seconds']);
+
+    if (($ban_info['all_boards'] > 0))
+    {
+        $dom->getElementById('ban-all-boards-field')->extSetAttribute('checked', true);
+    }
+
     $dom->getElementById('ban-id-field')->extSetAttribute('value', $ban_info['ban_id']);
     $dom->getElementById('ban-start-field')->extSetAttribute('value', $ban_info['start_time']);
     $dom->getElementById('ban-reason-field')->setContent($ban_info['reason']);

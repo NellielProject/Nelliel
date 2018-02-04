@@ -24,6 +24,7 @@ class BanHammer
         $ban_input = array();
         $ban_input['ban_id'] = (isset($_POST['ban_id'])) ? $_POST['ban_id'] : null;
         $ban_input['board'] = (isset($_POST['ban_board'])) ? $_POST['ban_board'] : null;
+        $ban_input['all_boards'] = (isset($_POST['ban_all_boards'])) ? $_POST['ban_all_boards'] : 0;
         $ban_input['type'] = (isset($_POST['ban_type'])) ? $_POST['ban_type'] : null;
         $ban_input['ip_address_start'] = (isset($_POST['ban_ip'])) ? $_POST['ban_ip'] : null;
         $ban_input['years'] = (isset($_POST['ban_time_years'])) ? $_POST['ban_time_years'] : 0;
@@ -103,9 +104,10 @@ class BanHammer
             nel_derp(321, nel_stext('ERROR_321'));
         }
 
-        $prepared = $this->dbh->prepare('INSERT INTO "' . BAN_TABLE . '" ("board", "type", "ip_address_start", "reason", "length", "start_time")
-								VALUES (:board, :type, :ip_address_start, :reason, :length, :start_time)');
-        $prepared->bindParam(':board', $ban_input['board'], PDO::PARAM_STR);
+        $prepared = $this->dbh->prepare('INSERT INTO "' . BAN_TABLE . '" ("board_id", "all_boards", "type", "ip_address_start", "reason", "length", "start_time")
+								VALUES (:board_id, :all_boards, :type, :ip_address_start, :reason, :length, :start_time)');
+        $prepared->bindParam(':board_id', $ban_input['board'], PDO::PARAM_STR);
+        $prepared->bindParam(':all_boards', $ban_input['all_boards'], PDO::PARAM_INT);
         $prepared->bindParam(':type', $ban_input['type'], PDO::PARAM_STR);
         $prepared->bindParam(':ip_address_start', @inet_pton($ban_input['ip_address_start']), PDO::PARAM_LOB);
         $prepared->bindParam(':reason', $ban_input['reason'], PDO::PARAM_STR);
@@ -132,9 +134,10 @@ class BanHammer
         }
 
         $prepared = $this->dbh->prepare('UPDATE "' . BAN_TABLE .
-             '" SET "board" = :board, "type" = :type, "ip_address_start" = :ip_address_start, "reason" = :reason, "length" = :length, "start_time" = :start_time, "appeal" = :appeal, "appeal_response" = :appeal_response, "appeal_status" = :appeal_status WHERE "ban_id" = :ban_id');
+             '" SET "board_id" = :board_id, "all_boards" = :all_boards, "type" = :type, "ip_address_start" = :ip_address_start, "reason" = :reason, "length" = :length, "start_time" = :start_time, "appeal" = :appeal, "appeal_response" = :appeal_response, "appeal_status" = :appeal_status WHERE "ban_id" = :ban_id');
         $prepared->bindParam(':ban_id', $ban_input['ban_id'], PDO::PARAM_INT);
-        $prepared->bindParam(':board', $ban_input['board'], PDO::PARAM_STR);
+        $prepared->bindParam(':board_id', $ban_input['board'], PDO::PARAM_STR);
+        $prepared->bindParam(':all_boards', $ban_input['all_boards'], PDO::PARAM_INT);
         $prepared->bindParam(':type', $ban_input['type'], PDO::PARAM_STR);
         $prepared->bindParam(':ip_address_start', @inet_pton($ban_input['ip_address_start']), PDO::PARAM_LOB);
         $prepared->bindParam(':reason', $ban_input['reason'], PDO::PARAM_STR);

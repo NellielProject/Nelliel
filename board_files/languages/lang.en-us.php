@@ -184,6 +184,7 @@ $lang_singular = array(
     'MANAGE_BANMOD_HOUR' => 'Hours:',  // Hours
     'MANAGE_BANMOD_MINUTES' => 'Minutes:',  // Minutes
     'MANAGE_BANMOD_SECONDS' => 'Seconds:',  // Seconds
+    'MANAGE_BANMOD_ALL_BOARDS' => 'Ban from all boards', // All boards ban
 
 
     'MANAGE_THREAD_EXPAND' => 'Expand',  // Expand

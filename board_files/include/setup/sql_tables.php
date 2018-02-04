@@ -415,6 +415,7 @@ function nel_create_bans_table($table_name)
         "ban_id"                ' . $auto_inc[0] .
          ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "board_id"              VARCHAR(255) DEFAULT NULL,
+        "all_boards"            SMALLINT NOT NULL DEFAULT 0,
         "type"                  VARCHAR(255) DEFAULT NULL,
         "creator"               VARCHAR(255) DEFAULT NULL,
         "ip_address_start"      ' .
