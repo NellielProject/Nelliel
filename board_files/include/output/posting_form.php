@@ -23,7 +23,7 @@ function nel_render_posting_form($board_id, $dataforce, $render)
 
     $posting_form = $dom->getElementById('posting-form');
     $posting_form->extSetAttribute('action', $dotdot . PHP_SELF);
-    $dom->getElementById('board_id_field_post_form')->extSetAttribute('value', $references['directory']);
+    $dom->getElementById('board_id_field_post_form')->extSetAttribute('value', $board_id);
 
     if ($response_id)
     {

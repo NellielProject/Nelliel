@@ -128,47 +128,6 @@ function nel_create_table_query($schema, $table_name)
     return $result;
 }
 
-function nel_create_posts_table($table_name)
-{
-    $dbh = nel_database();
-    $auto_inc = nel_autoincrement_column('INTEGER');
-    $options = nel_table_options();
-    $schema = '
-    CREATE TABLE ' . $table_name . ' (
-        "post_number"           ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        "parent_thread"         INTEGER NOT NULL DEFAULT 0,
-        "poster_name"           VARCHAR(255) DEFAULT NULL,
-        "post_password"         VARCHAR(255) DEFAULT NULL,
-        "tripcode"              VARCHAR(255) DEFAULT NULL,
-        "secure_tripcode"       VARCHAR(255) DEFAULT NULL,
-        "email"                 VARCHAR(255) DEFAULT NULL,
-        "subject"               VARCHAR(255) DEFAULT NULL,
-        "comment"               TEXT,
-        "ip_address"            ' .
-         nel_sql_binary_alternatives('VARBINARY', '16') . ' DEFAULT NULL,
-        "post_time"             BIGINT NOT NULL DEFAULT 0,
-        "has_file"              SMALLINT NOT NULL DEFAULT 0,
-        "file_count"            SMALLINT NOT NULL DEFAULT 0,
-        "external_content"      SMALLINT NOT NULL DEFAULT 0,
-        "external_count"        SMALLINT NOT NULL DEFAULT 0,
-        "license"               VARCHAR(255) DEFAULT NULL,
-        "op"                    SMALLINT NOT NULL DEFAULT 0,
-        "sage"                  SMALLINT NOT NULL DEFAULT 0,
-        "mod_post"              VARCHAR(255) DEFAULT NULL,
-        "mod_comment"           VARCHAR(255) DEFAULT NULL
-    ) ' . $options . ';';
-
-    $result = nel_create_table_query($schema, $table_name);
-
-    if ($result)
-    {
-        $dbh->query('CREATE INDEX index_parent_thread ON ' . $table_name . ' (parent_thread);');
-    }
-
-    nel_setup_stuff_done($result);
-}
-
 function nel_create_threads_table($table_name)
 {
     $auto_inc = nel_autoincrement_column('INTEGER');
@@ -194,7 +153,49 @@ function nel_create_threads_table($table_name)
     nel_setup_stuff_done($result);
 }
 
-function nel_create_files_table($table_name)
+function nel_create_posts_table($table_name, $threads_table)
+{
+    $dbh = nel_database();
+    $auto_inc = nel_autoincrement_column('INTEGER');
+    $options = nel_table_options();
+    $schema = '
+    CREATE TABLE ' . $table_name . ' (
+        "post_number"           ' . $auto_inc[0] .
+        ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        "parent_thread"         INTEGER DEFAULT NULL,
+        "poster_name"           VARCHAR(255) DEFAULT NULL,
+        "post_password"         VARCHAR(255) DEFAULT NULL,
+        "tripcode"              VARCHAR(255) DEFAULT NULL,
+        "secure_tripcode"       VARCHAR(255) DEFAULT NULL,
+        "email"                 VARCHAR(255) DEFAULT NULL,
+        "subject"               VARCHAR(255) DEFAULT NULL,
+        "comment"               TEXT,
+        "ip_address"            ' .
+        nel_sql_binary_alternatives('VARBINARY', '16') . ' DEFAULT NULL,
+        "post_time"             BIGINT NOT NULL DEFAULT 0,
+        "has_file"              SMALLINT NOT NULL DEFAULT 0,
+        "file_count"            SMALLINT NOT NULL DEFAULT 0,
+        "external_content"      SMALLINT NOT NULL DEFAULT 0,
+        "external_count"        SMALLINT NOT NULL DEFAULT 0,
+        "license"               VARCHAR(255) DEFAULT NULL,
+        "op"                    SMALLINT NOT NULL DEFAULT 0,
+        "sage"                  SMALLINT NOT NULL DEFAULT 0,
+        "mod_post"              VARCHAR(255) DEFAULT NULL,
+        "mod_comment"           VARCHAR(255) DEFAULT NULL,
+        FOREIGN KEY(parent_thread) REFERENCES ' . $threads_table . '(thread_id) ON DELETE CASCADE
+    ) ' . $options . ';';
+
+        $result = nel_create_table_query($schema, $table_name);
+
+        if ($result)
+        {
+            $dbh->query('CREATE INDEX index_parent_thread ON ' . $table_name . ' (parent_thread);');
+        }
+
+        nel_setup_stuff_done($result);
+}
+
+function nel_create_files_table($table_name, $posts_table)
 {
     $dbh = nel_database();
     $auto_inc = nel_autoincrement_column('INTEGER');
@@ -204,7 +205,7 @@ function nel_create_files_table($table_name)
         "entry"                 ' . $auto_inc[0] .
          ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "parent_thread"         INTEGER NOT NULL DEFAULT 0,
-        "post_ref"              INTEGER NOT NULL DEFAULT 0,
+        "post_ref"              INTEGER DEFAULT NULL,
         "file_order"            SMALLINT NOT NULL DEFAULT 1,
         "supertype"             VARCHAR(255) DEFAULT NULL,
         "subtype"               VARCHAR(255) DEFAULT NULL,
@@ -227,7 +228,8 @@ function nel_create_files_table($table_name)
         "license"               VARCHAR(255) DEFAULT NULL,
         "alt_text"              VARCHAR(255) DEFAULT NULL,
         "exif"                  TEXT DEFAULT NULL,
-        "extra_meta"            TEXT DEFAULT NULL
+        "extra_meta"            TEXT DEFAULT NULL,
+        FOREIGN KEY(post_ref) REFERENCES ' . $posts_table . '(parent_thread) ON DELETE CASCADE
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -242,7 +244,7 @@ function nel_create_files_table($table_name)
     nel_setup_stuff_done($result);
 }
 
-function nel_create_external_table($table_name)
+function nel_create_external_table($table_name, $posts_table)
 {
     $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
@@ -251,12 +253,13 @@ function nel_create_external_table($table_name)
         "entry"                 ' . $auto_inc[0] .
          ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "parent_thread"         INTEGER NOT NULL DEFAULT 0,
-        "post_ref"              INTEGER NOT NULL DEFAULT 0,
+        "post_ref"              INTEGER DEFAULT NULL,
         "content_order"         SMALLINT NOT NULL DEFAULT 1,
         "content_type"          VARCHAR(255) DEFAULT NULL,
         "content_url"           VARCHAR(2048) DEFAULT NULL,
         "source"                VARCHAR(255) DEFAULT NULL,
-        "license"               VARCHAR(255) DEFAULT NULL
+        "license"               VARCHAR(255) DEFAULT NULL,
+        FOREIGN KEY(post_ref) REFERENCES ' . $posts_table . '(parent_thread) ON DELETE CASCADE
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);

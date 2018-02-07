@@ -33,14 +33,14 @@ function setup_check($board_id)    // TODO Do this better
 
     $references = nel_board_references($board_id);
 
-    nel_create_posts_table($references['post_table']);
-    nel_create_posts_table($references['archive_post_table']);
     nel_create_threads_table($references['thread_table']);
     nel_create_threads_table($references['archive_thread_table']);
-    nel_create_files_table($references['file_table']);
-    nel_create_files_table($references['archive_file_table']);
-    nel_create_external_table($references['external_table']);
-    nel_create_external_table($references['archive_external_table']);
+    nel_create_posts_table($references['post_table'], $references['thread_table']);
+    nel_create_posts_table($references['archive_post_table'], $references['archive_thread_table']);
+    nel_create_files_table($references['file_table'], $references['post_table']);
+    nel_create_files_table($references['archive_file_table'], $references['archive_post_table']);
+    nel_create_external_table($references['external_table'], $references['post_table']);
+    nel_create_external_table($references['archive_external_table'], $references['archive_post_table']);
     nel_create_board_config_table($references['config_table']);
 
     $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM, true);

@@ -255,7 +255,7 @@ function nel_board_references($board_id, $reference = null)
 {
     static $references;
 
-    if ($board_id === '' || is_null($board_id))
+    if (true_empty($board_id))
     {
         return;
     }
