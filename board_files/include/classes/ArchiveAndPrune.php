@@ -23,8 +23,10 @@ class ArchiveAndPrune
     {
         $this->dbh = nel_database();
         $this->thread_handler = nel_thread_handler($board_id);
-        $this->start_buffer = nel_board_settings($board_id, 'threads_per_page') * nel_board_settings($board_id, 'page_limit');
-        $this->end_buffer = nel_board_settings($board_id, 'threads_per_page') * nel_board_settings($board_id, 'page_buffer');
+        $this->start_buffer = nel_board_settings($board_id, 'threads_per_page') *
+             nel_board_settings($board_id, 'page_limit');
+        $this->end_buffer = nel_board_settings($board_id, 'threads_per_page') *
+             nel_board_settings($board_id, 'page_buffer');
         $this->file_handler = nel_file_handler();
         $this->board_id = $board_id;
         $this->references = nel_board_references($board_id);
@@ -114,11 +116,12 @@ class ArchiveAndPrune
 
     public function moveToArchive($thread_id)
     {
-        $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['archive_post_table'] . '" SELECT * FROM "' .
-             $this->references['post_table'] . '" WHERE "parent_thread" = ?');
-        $this->dbh->executePrepared($prepared, array($thread_id));
+        // Threads must be moved first, then posts, then files otherwise the db foreign keys will bitch
         $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['archive_thread_table'] .
              '" SELECT * FROM "' . $this->references['thread_table'] . '" WHERE "thread_id" = ?');
+        $this->dbh->executePrepared($prepared, array($thread_id));
+        $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['archive_post_table'] . '" SELECT * FROM "' .
+             $this->references['post_table'] . '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
         $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['archive_file_table'] . '" SELECT * FROM "' .
              $this->references['file_table'] . '" WHERE "parent_thread" = ?');
@@ -129,10 +132,10 @@ class ArchiveAndPrune
              $thread_id);
         $this->file_handler->moveFile($references['page_path'] . $thread_id, $this->references['archive_page_path'] .
              $thread_id);
-        $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['post_table'] .
-             '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
         $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['thread_table'] . '" WHERE "thread_id"= ?');
+        $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['post_table'] .
+             '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
         $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['file_table'] . '" WHERE "parent_thread"= ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
@@ -140,11 +143,12 @@ class ArchiveAndPrune
 
     public function moveFromArchive($thread_id)
     {
-        $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['post_table'] . '" SELECT * FROM "' .
-             $this->references['archive_post_table'] . '" WHERE "parent_thread" = ?');
-        $this->dbh->executePrepared($prepared, array($thread_id));
+        // Threads must be moved first, then posts, then files otherwise the db foreign keys will bitch
         $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['thread_table'] . '" SELECT * FROM "' .
              $this->references['archive_thread_table'] . '" WHERE "thread_id" = ?');
+        $this->dbh->executePrepared($prepared, array($thread_id));
+        $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['post_table'] . '" SELECT * FROM "' .
+        $this->references['archive_post_table'] . '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
         $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['file_table'] . '" SELECT * FROM "' .
              $this->references['archive_file_table'] . '" WHERE "parent_thread" = ?');
@@ -155,11 +159,11 @@ class ArchiveAndPrune
              $thread_id);
         $this->file_handler->moveFile($this->references['archive_page_path'] . $thread_id, $this->references['page_path'] .
              $thread_id);
-        $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['archive_post_table'] .
-             '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
         $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['archive_thread_table'] .
              '" WHERE "thread_id"= ?');
+        $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['archive_post_table'] .
+        '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
         $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['archive_file_table'] .
              '" WHERE "parent_thread"= ?');
