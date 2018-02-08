@@ -10,9 +10,13 @@ require_once INCLUDE_PATH . 'setup/sql_tables.php';
 // First run - checks for database, directories
 // If anything does not exist yet, create it
 //
-
-function setup_check($board_id)    // TODO Do this better
+function setup_check($board_id) // TODO Do this better
 {
+    if (SQLTYPE === 'MYSQL' && !nel_check_for_innodb())
+    {
+        die('InnoDB engine is required for MySQL support. However the engine has been disabled for some stupid reason. We can\'t function like this.');
+    }
+
     $file_handler = nel_file_handler();
 
     nel_create_bans_table(BAN_TABLE);
@@ -26,7 +30,7 @@ function setup_check($board_id)    // TODO Do this better
 
     $file_handler->createDirectory(CACHE_PATH, DIRECTORY_PERM, true);
 
-    if(true_empty($board_id))
+    if (true_empty($board_id))
     {
         return;
     }
@@ -71,4 +75,22 @@ function nel_setup_stuff_done($status)
             define('STUFF_DONE', true);
         }
     }
+}
+
+
+function nel_check_for_innodb()
+{
+    $dbh = nel_database();
+    $result = $dbh->query("SHOW ENGINES");
+    $list = $result->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach ($list as $entry)
+    {
+        if ($entry['Engine'] === 'InnoDB' && ($entry['Support'] === 'DEFAULT' || $entry['Support'] === 'YES'))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
