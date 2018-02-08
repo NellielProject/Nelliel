@@ -130,8 +130,8 @@ class ThreadHandler
     {
         nel_create_thread_directories($post_id);
         $post_data = $this->getPostData($post_id);
-        $columns = array('thread_id', 'first_post', 'last_post', 'last_bump_time', 'total_files', 'total_externals',
-            'last_update', 'post_count', 'sticky');
+        $columns = array('thread_id', 'first_post', 'last_post', 'last_bump_time', 'total_files', 'last_update',
+            'post_count', 'sticky');
         $values = $this->dbh->generateParameterIds($columns);
         $query = $this->dbh->buildBasicInsertQuery($this->references['thread_table'], $columns, $values);
         $prepared = $this->dbh->prepare($query);
@@ -140,7 +140,6 @@ class ThreadHandler
         $prepared->bindValue(':last_post', $post_id, PDO::PARAM_INT);
         $prepared->bindValue(':last_bump_time', $post_data['post_time'], PDO::PARAM_INT);
         $prepared->bindValue(':total_files', $post_data['file_count'], PDO::PARAM_INT);
-        $prepared->bindValue(':total_externals', $post_data['external_count'], PDO::PARAM_INT);
         $prepared->bindValue(':last_update', $thread_info['last_update'], PDO::PARAM_INT);
         $prepared->bindValue(':post_count', 1, PDO::PARAM_INT);
         $prepared->bindValue(':sticky', 1, PDO::PARAM_INT);
@@ -272,8 +271,8 @@ class ThreadHandler
     public function removeThreadFromDatabase($thread_id)
     {
         /*$prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['post_table'] .
-             '" WHERE "parent_thread" = ?');
-        $this->dbh->executePrepared($prepared, array($thread_id));*/
+         '" WHERE "parent_thread" = ?');
+         $this->dbh->executePrepared($prepared, array($thread_id));*/
         $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['thread_table'] . '" WHERE "thread_id" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
         //$this->removeThreadFilesFromDatabase($thread_id);

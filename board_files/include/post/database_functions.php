@@ -30,7 +30,7 @@ function nel_db_insert_initial_post($board_id, $time, $post_data)
     $dbh->executePrepared($prepared);
 }
 
-function nel_db_insert_new_thread($board_id, $thread_info, $files_count) // TODO: Update for externals and other new data
+function nel_db_insert_new_thread($board_id, $thread_info, $files_count)
 {
     $dbh = nel_database();
     $references = nel_board_references($board_id);

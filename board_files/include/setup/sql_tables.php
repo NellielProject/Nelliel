@@ -140,7 +140,6 @@ function nel_create_threads_table($table_name)
         "second_last_post"      INTEGER NOT NULL DEFAULT 0,
         "last_bump_time"        BIGINT NOT NULL DEFAULT 0,
         "total_files"           INTEGER NOT NULL DEFAULT 0,
-        "total_external"        INTEGER NOT NULL DEFAULT 0,
         "last_update"           BIGINT NOT NULL DEFAULT 0,
         "post_count"            INTEGER NOT NULL DEFAULT 0,
         "thread_sage"           SMALLINT NOT NULL DEFAULT 0,
@@ -175,14 +174,12 @@ function nel_create_posts_table($table_name, $threads_table)
         "post_time"             BIGINT NOT NULL DEFAULT 0,
         "has_file"              SMALLINT NOT NULL DEFAULT 0,
         "file_count"            SMALLINT NOT NULL DEFAULT 0,
-        "external_content"      SMALLINT NOT NULL DEFAULT 0,
-        "external_count"        SMALLINT NOT NULL DEFAULT 0,
-        "license"               VARCHAR(255) DEFAULT NULL,
         "op"                    SMALLINT NOT NULL DEFAULT 0,
         "sage"                  SMALLINT NOT NULL DEFAULT 0,
         "mod_post"              VARCHAR(255) DEFAULT NULL,
         "mod_comment"           VARCHAR(255) DEFAULT NULL,
-        FOREIGN KEY(parent_thread) REFERENCES ' . $threads_table . '(thread_id) ON DELETE CASCADE
+        CONSTRAINT fk_parent_thread_' . $threads_table . '_thread_id
+        FOREIGN KEY (parent_thread) REFERENCES ' . $threads_table . '(thread_id) ON DELETE CASCADE
     ) ' . $options . ';';
 
         $result = nel_create_table_query($schema, $table_name);
@@ -210,26 +207,26 @@ function nel_create_files_table($table_name, $posts_table)
         "supertype"             VARCHAR(255) DEFAULT NULL,
         "subtype"               VARCHAR(255) DEFAULT NULL,
         "mime"                  VARCHAR(255) DEFAULT NULL,
-        "filename"              VARCHAR(255) DEFAULT NULL,
+        "filename"              VARCHAR(255) NOT NULL,
         "extension"             VARCHAR(255) DEFAULT NULL,
         "image_width"           INTEGER DEFAULT NULL,
         "image_height"          INTEGER DEFAULT NULL,
         "preview_name"          VARCHAR(255) DEFAULT NULL,
         "preview_width"         SMALLINT DEFAULT NULL,
         "preview_height"        SMALLINT DEFAULT NULL,
-        "filesize"              INTEGER DEFAULT 0,
+        "filesize"              INTEGER NOT NULL DEFAULT 0,
         "md5"                   ' .
-         nel_sql_binary_alternatives('VARBINARY', '16') . ' DEFAULT NULL,
+         nel_sql_binary_alternatives('VARBINARY', '16') . ' NOT NULL,
         "sha1"                  ' .
-         nel_sql_binary_alternatives('VARBINARY', '20') . ' DEFAULT NULL,
+         nel_sql_binary_alternatives('VARBINARY', '20') . ' NOT NULL,
         "sha256"                ' .
-         nel_sql_binary_alternatives('VARBINARY', '32') . ' DEFAULT NULL,
+         nel_sql_binary_alternatives('VARBINARY', '32') . ' NOT NULL,
         "source"                VARCHAR(255) DEFAULT NULL,
         "license"               VARCHAR(255) DEFAULT NULL,
         "alt_text"              VARCHAR(255) DEFAULT NULL,
         "exif"                  TEXT DEFAULT NULL,
-        "extra_meta"            TEXT DEFAULT NULL,
-        FOREIGN KEY(post_ref) REFERENCES ' . $posts_table . '(parent_thread) ON DELETE CASCADE
+        CONSTRAINT fk_post_ref_' . $posts_table . '_post_number
+        FOREIGN KEY(post_ref) REFERENCES ' . $posts_table . '(post_number) ON DELETE CASCADE
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -244,28 +241,6 @@ function nel_create_files_table($table_name, $posts_table)
     nel_setup_stuff_done($result);
 }
 
-function nel_create_external_table($table_name, $posts_table)
-{
-    $auto_inc = nel_autoincrement_column('INTEGER');
-    $options = nel_table_options();
-    $schema = '
-    CREATE TABLE ' . $table_name . ' (
-        "entry"                 ' . $auto_inc[0] .
-         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        "parent_thread"         INTEGER NOT NULL DEFAULT 0,
-        "post_ref"              INTEGER DEFAULT NULL,
-        "content_order"         SMALLINT NOT NULL DEFAULT 1,
-        "content_type"          VARCHAR(255) DEFAULT NULL,
-        "content_url"           VARCHAR(2048) DEFAULT NULL,
-        "source"                VARCHAR(255) DEFAULT NULL,
-        "license"               VARCHAR(255) DEFAULT NULL,
-        FOREIGN KEY(post_ref) REFERENCES ' . $posts_table . '(parent_thread) ON DELETE CASCADE
-    ) ' . $options . ';';
-
-    $result = nel_create_table_query($schema, $table_name);
-    nel_setup_stuff_done($result);
-}
-
 function nel_create_board_config_table($table_name)
 {
     $auto_inc = nel_autoincrement_column('INTEGER');
@@ -276,10 +251,10 @@ function nel_create_board_config_table($table_name)
          ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "config_name"           VARCHAR(255) NOT NULL,
         "config_type"           VARCHAR(255) DEFAULT NULL,
-        "config_owner"          VARCHAR(255) DEFAULT NULL,
-        "config_category"       VARCHAR(255) DEFAULT NULL,
+        "config_owner"          VARCHAR(255) NOT NULL DEFAULT \'nelliel\',
+        "config_category"       VARCHAR(255) NOT NULL DEFAULT \'general\',
         "data_type"             VARCHAR(255) DEFAULT NULL,
-        "setting"               VARCHAR(255) DEFAULT NULL
+        "setting"               VARCHAR(255) NOT NULL
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -302,10 +277,10 @@ function nel_create_site_config_table($table_name)
         ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "config_name"           VARCHAR(255) NOT NULL,
         "config_type"           VARCHAR(255) DEFAULT NULL,
-        "config_owner"          VARCHAR(255) DEFAULT NULL,
-        "config_category"       VARCHAR(255) DEFAULT NULL,
+        "config_owner"          VARCHAR(255) NOT NULL DEFAULT \'nelliel\',
+        "config_category"       VARCHAR(255) NOT NULL DEFAULT \'general\',
         "data_type"             VARCHAR(255) DEFAULT NULL,
-        "setting"               VARCHAR(255) DEFAULT NULL
+        "setting"               VARCHAR(255) NOT NULL
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
@@ -402,7 +377,7 @@ function nel_create_permissions_table($table_name)
         "entry"                 ' . $auto_inc[0] .
          ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         "role_id"               VARCHAR(255) DEFAULT NULL,
-        "perm_id"               VARCHAR(255) DEFAULT NULL,
+        "perm_id"               VARCHAR(255) NOT NULL,
         "perm_setting"          SMALLINT NOT NULL DEFAULT 0
     ) ' . $options . ';';
 
