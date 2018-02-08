@@ -182,7 +182,7 @@ class ThreadHandler
     {
         $post_data = $this->getPostData($post_id);
         $post_files = $this->getPostFiles($post_id);
-        $this->removePostFilesFromDatabase($post_id, null, count($post_files));
+        //$this->removePostFilesFromDatabase($post_id, null, count($post_files));
         $this->removePostFilesFromDisk($post_id);
         $this->removePostFromDatabase($post_id);
     }
@@ -265,18 +265,18 @@ class ThreadHandler
     {
         $this->verifyDeletePerms($thread_id);
         $this->removeThreadFromDatabase($thread_id);
-        $this->removeThreadFilesFromDatabase($thread_id);
+        //$this->removeThreadFilesFromDatabase($thread_id);
         $this->removeThreadDirectories($thread_id);
     }
 
     public function removeThreadFromDatabase($thread_id)
     {
-        $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['post_table'] .
+        /*$prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['post_table'] .
              '" WHERE "parent_thread" = ?');
-        $this->dbh->executePrepared($prepared, array($thread_id));
+        $this->dbh->executePrepared($prepared, array($thread_id));*/
         $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['thread_table'] . '" WHERE "thread_id" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
-        $this->removeThreadFilesFromDatabase($thread_id);
+        //$this->removeThreadFilesFromDatabase($thread_id);
     }
 
     public function removeThreadFilesFromDatabase($thread_id)
