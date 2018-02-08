@@ -134,11 +134,6 @@ class ArchiveAndPrune
              $thread_id);
         $this->dbh->executePrepared($prepared, array($thread_id));
         $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['thread_table'] . '" WHERE "thread_id"= ?');
-        $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['post_table'] .
-             '" WHERE "parent_thread" = ?');
-        $this->dbh->executePrepared($prepared, array($thread_id));
-        $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['file_table'] . '" WHERE "parent_thread"= ?');
-        $this->dbh->executePrepared($prepared, array($thread_id));
     }
 
     public function moveFromArchive($thread_id)
@@ -162,12 +157,6 @@ class ArchiveAndPrune
         $this->dbh->executePrepared($prepared, array($thread_id));
         $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['archive_thread_table'] .
              '" WHERE "thread_id"= ?');
-        $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['archive_post_table'] .
-        '" WHERE "parent_thread" = ?');
-        $this->dbh->executePrepared($prepared, array($thread_id));
-        $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['archive_file_table'] .
-             '" WHERE "parent_thread"= ?');
-        $this->dbh->executePrepared($prepared, array($thread_id));
     }
 
     public function moveThreadsToArchive($move_list = array())
