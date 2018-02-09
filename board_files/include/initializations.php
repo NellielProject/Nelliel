@@ -30,7 +30,7 @@ define('CSS_DIR', WEB_FILES . 'css/'); // Web location of the css files
 define('JS_DIR', WEB_FILES . 'js/'); // Web location of the javascript files
 
 define('PHP_SELF', 'imgboard.php'); // Name of main script file
-define('PHP_SELF2', 'imgboard'); // Name of main html file
+define('PHP_SELF2', 'index'); // Name of main html file
 define('PHP_EXT', '.html'); // Extension used for board pages
 define('SRC_DIR', 'src/'); // Image directory
 define('THUMB_DIR', 'thumb/'); // Thumbnail directory
