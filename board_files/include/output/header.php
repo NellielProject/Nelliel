@@ -6,6 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_board_header($board_id, $dataforce, $render, $treeline = null)
 {
+    $dbh = nel_database();
     $board_settings = nel_board_settings($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
@@ -41,6 +42,19 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
     }
 
     $title_element->setContent($title_content);
+
+    $board_navigation = $dom->getElementById("board-navigation");
+    $board_data = $dbh->executeFetchAll('SELECT * FROM "nelliel_board_data"', PDO::FETCH_ASSOC);
+
+    foreach ($board_data as $board)
+    {
+        $board_link = $dom->createElement('a');
+        $board_link->extSetAttribute('href', $board['board_directory']);
+        $board_link->extSetAttribute('title', nel_board_settings($board['board_id'], 'board_name'));
+        $board_link->setContent($board['board_directory']);
+        $board_navigation->appendChild($board_link);
+        $board_navigation->appendChild($dom->createTextNode(' / '));
+    }
 
     $logo_element = $dom->getElementById('logo');
     $logo_image = $dom->getElementById('top-logo-image');
