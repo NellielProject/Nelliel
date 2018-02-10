@@ -47,9 +47,11 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
     $dataforce['posts_ending'] = false;
     $dataforce['index_rendering'] = false;
     $dataforce['abbreviate'] = false;
+    $hr_added = false;
 
     while ($gen_data['post_counter'] < $gen_data['thread']['post_count'])
     {
+
         $gen_data['post'] = $treeline[$gen_data['post_counter']];
 
         if ($gen_data['post_counter'] === 0)
@@ -74,6 +76,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
         {
             $render_temp = clone $render;
             nel_render_insert_hr($dom);
+            $hr_added = true;
             nel_render_board_footer($board_id, $render_temp, true);
             $file_handler->writeFile($references['page_path'] . $write_id . '/' . $write_id . '-0-100.html', $render_temp->outputRenderSet(), FILE_PERM, true);
             unset($render_temp);
@@ -125,7 +128,12 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
 
     $dom->getElementById('post-id-')->removeSelf();
     $dom->getElementById('thread-')->changeId('thread-' . $write_id);
-    nel_render_insert_hr($dom);
+
+    if(!$hr_added)
+    {
+        nel_render_insert_hr($dom);
+    }
+
     nel_render_thread_form_bottom($board_id, $dom);
     $render->appendHTMLFromDOM($dom);
     $render->appendHTMLFromDOM($collapse_dom, 'collapse');
