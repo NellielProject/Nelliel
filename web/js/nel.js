@@ -1,7 +1,15 @@
+function dataBin() {
+    ;
+}
+
 function doImportantStuff(board_id) {
+    dataBin.board_id = board_id;
     setupListeners();
-    fillForms(board_id);
     hashHandler();
+    
+    if(board_id !== "") {
+        fillForms(board_id);
+    }
 }
 
 function setupListeners() {
@@ -41,7 +49,7 @@ function processPostClicks(event) {
         } else if (command === "collapse-thread") {
             expandCollapseThread(thread_id, "collapse");
         } else if (command === "change-style") {
-            changeBoardStyle(event.target.getAttribute("data-id"));
+            changeBoardStyle(dataBin.board_id, event.target.getAttribute("data-id"));
         } else if (command === "link-post") {
             linkPost(post_id);
         } else if (command === "show-file-meta" || command === "hide-file-meta") {
@@ -96,12 +104,12 @@ function setCookie(c_name, value, expiredays) {
             + ";path=/";
 }
 
-function processCookie(style_cookie) {
-    var style = getCookie(style_cookie);
+function processCookies(board_id) {
+    var style_cookie = getCookie("style-" + board_id);
 
     with (document) {
-        if (style != null) {
-            changeBoardStyle(style);
+        if (style_cookie != null) {
+            changeBoardStyle(style_cookie, style);
         }
     }
 }
@@ -331,20 +339,26 @@ function linkPost(num) {
     document.postingform.wordswordswords.value = document.postingform.wordswordswords.value + '>>' + num + '\n';
 }
 
-function changeBoardStyle(style) {
+function changeBoardStyle(board_id, style) {
     var allstyles = document.getElementsByTagName("link");
-    var style_board = "style-board";
+    
+    if(board_id == "") {
+        style_cookie = "base-style";
+    }
+    else {
+        style_cookie = "style-" + board_id;
+    }
+        
 
     for (i = 0; i < allstyles.length; i++) {
         if (allstyles[i].getAttribute("data-id") == "style-board") {
             if (allstyles[i].title == style) {
                 allstyles[i].disabled = false;
-                style_board = allstyles[i].getAttribute("data-id");
             } else {
                 allstyles[i].disabled = true;
             }
         }
     }
 
-    setCookie(style_board, style, 9001);
+    setCookie(style_cookie, style, 9001);
 }

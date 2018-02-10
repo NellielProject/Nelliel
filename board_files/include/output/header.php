@@ -8,6 +8,7 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
 {
     $dbh = nel_database();
     $board_settings = nel_board_settings($board_id);
+    $references = nel_board_references($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '../';
@@ -16,7 +17,7 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . $board_id .
          '\');};');
-    $dom->getElementById('js-style-set')->setContent('processCookie("style-' . BOARD_DIR . '");');
+    $dom->getElementById('js-style-set')->setContent('changeBoardStyle("' .$board_id . '", getCookie("style-' . $board_id . '"));');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
@@ -119,13 +120,14 @@ function nel_render_general_header($dataforce, $render)
 {
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
+    $references = nel_board_references($board_id);
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '../';
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . INPUT_BOARD_ID .
          '\');};');
-    $dom->getElementById('js-style-set')->setContent('processCookie("style-' . BOARD_DIR . '");');
+    $dom->getElementById('js-style-set')->setContent('changeBoardStyle("", getCookie("base-style"));');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
