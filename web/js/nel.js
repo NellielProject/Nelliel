@@ -340,12 +340,16 @@ function linkPost(num) {
 }
 
 function changeBoardStyle(board_id, style) {
+    if(style == null)
+    {
+        return;
+    }
+    
     var allstyles = document.getElementsByTagName("link");
     
     if(board_id == "") {
         style_cookie = "base-style";
-    }
-    else {
+    } else {
         style_cookie = "style-" + board_id;
     }
         
