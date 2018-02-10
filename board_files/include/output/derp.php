@@ -18,7 +18,7 @@ function nel_render_derp($diagnostic)
          '/' . PHP_SELF2 . PHP_EXT);
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer(INPUT_BOARD_ID, $render, false);
+    nel_render_general_footer($render);
     echo $render->outputRenderSet();
 }
 
@@ -36,6 +36,6 @@ function nel_render_board_derp($board_id, $diagnostic)
     '/' . PHP_SELF2 . PHP_EXT);
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer(INPUT_BOARD_ID, $render, false);
+    nel_render_board_footer($board_id, $render);
     echo $render->outputRenderSet();
 }

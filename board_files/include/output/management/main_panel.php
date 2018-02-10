@@ -37,7 +37,7 @@ function nel_generate_main_panel()
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer(INPUT_BOARD_ID, $render, false);
+    nel_render_general_footer($render);
     echo $render->outputRenderSet();
 }
 
@@ -88,6 +88,6 @@ function nel_generate_main_board_panel($board_id)
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($board_id, $render, false);
+    nel_render_general_footer($render);
     echo $render->outputRenderSet();
 }

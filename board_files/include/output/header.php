@@ -89,13 +89,6 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
         $logo_element->removeChild($logo_text);
     }
 
-    $a_elements = $dom->getElementById('top-styles-span')->getElementsByTagName('a');
-
-    foreach ($a_elements as $element)
-    {
-        $content = $element->getContent();
-    }
-
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', nel_site_settings('home_page'));
@@ -140,14 +133,6 @@ function nel_render_general_header($dataforce, $render)
     $title_element = $head_element->getElementsByTagName('title')->item(0);
     $title_element->setContent('Nelliel Imageboard');
     $dom->getElementById('logo')->removeSelf();
-
-    $a_elements = $dom->getElementById('top-styles-span')->getElementsByTagName('a');
-
-    foreach ($a_elements as $element)
-    {
-        $content = $element->getContent();
-    }
-
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', nel_site_settings('home_page'));

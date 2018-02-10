@@ -46,7 +46,7 @@ function nel_render_staff_panel_main($dataforce)
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer(INPUT_BOARD_ID, $render, false);
+    nel_render_general_footer($render);
     echo $render->outputRenderSet();
 }
 
@@ -108,7 +108,7 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
     //$board_roles->removeSelf();
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer(INPUT_BOARD_ID, $render, false);
+    nel_render_general_footer($render);
     echo $render->outputRenderSet();
 }
 
@@ -142,6 +142,6 @@ function nel_render_staff_panel_role_edit($dataforce, $role_id)
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer(INPUT_BOARD_ID, $render, false);
+    nel_render_general_footer($render);
     echo $render->outputRenderSet();
 }

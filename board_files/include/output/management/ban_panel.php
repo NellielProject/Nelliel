@@ -67,7 +67,7 @@ function nel_render_main_ban_panel($board_id, $dataforce)
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($board_id, $render, false);
+    nel_render_general_footer($render);
     echo $render->outputRenderSet();
 }
 
@@ -82,7 +82,7 @@ function nel_render_ban_panel_add($dataforce)
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($board_id, $render, false);
+    nel_render_general_footer($render);
     echo $render->outputRenderSet();
 }
 
@@ -144,6 +144,6 @@ function nel_render_ban_panel_modify($dataforce)
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($board_id, $render, false);
+    nel_render_general_footer($render);
     echo $render->outputRenderSet();
 }

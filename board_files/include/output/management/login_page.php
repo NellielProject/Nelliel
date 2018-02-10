@@ -15,6 +15,6 @@ function nel_generate_login_page()
     $dom->getElementById('login-form')->extSetAttribute('action', PHP_SELF);
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer(INPUT_BOARD_ID, $render, false);
+    nel_render_general_footer($render);
     echo $render->outputRenderSet();
 }
