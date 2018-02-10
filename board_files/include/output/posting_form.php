@@ -18,7 +18,7 @@ function nel_render_posting_form($board_id, $dataforce, $render)
     }
     else
     {
-        $page_ref1 = $references['directory'] . '/' . PHP_SELF2 . PHP_EXT;
+        $page_ref1 = $references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT;
     }
 
     $posting_form = $dom->getElementById('posting-form');

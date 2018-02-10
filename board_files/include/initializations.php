@@ -4,38 +4,15 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-if(isset($_POST['board_id']))
-{
-    define('INPUT_BOARD_ID', $_POST['board_id']);
-
-    $dbh = nel_database();
-    $prepared = $dbh->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
-    $board_data = $dbh->executePreparedFetch($prepared, array(INPUT_BOARD_ID), PDO::FETCH_ASSOC);
-
-    define('BOARD_DIR', $board_data['board_directory']);
-    define('BOARD_PREFIX', $board_data['db_prefix']);
-    define('BOARD_PATH', BASE_PATH . BOARD_DIR . '/'); // Base board path
-}
-else
-{
-    define('INPUT_BOARD_ID', '');
-    define('BOARD_DIR', '');
-    define('BOARD_PREFIX', '');
-    define('BOARD_PATH', BASE_PATH . BOARD_DIR . '/'); // Base board path
-}
-
+define('INPUT_BOARD_ID', isset($_POST['board_id']) ? $_POST['board_id'] : '');
 define('WEB_FILES', 'web/'); // Name of directory where the support and internal files go
 define('IMAGES_DIR', WEB_FILES . 'imagez/'); // Web location of the javascript files
 define('CSS_DIR', WEB_FILES . 'css/'); // Web location of the css files
 define('JS_DIR', WEB_FILES . 'js/'); // Web location of the javascript files
 
 define('PHP_SELF', 'imgboard.php'); // Name of main script file
-define('PHP_SELF2', 'index'); // Name of main html file
+define('PHP_SELF2', 'index'); // Name of board index
 define('PHP_EXT', '.html'); // Extension used for board pages
-define('SRC_DIR', 'src/'); // Image directory
-define('THUMB_DIR', 'thumb/'); // Thumbnail directory
-define('PAGE_DIR', 'threads/'); // Response page directory
-define('ARCHIVE_DIR', 'archive/'); // Archive directory
 
 define('BAN_TABLE', 'nelliel_bans'); // Table containing ban info
 define('USER_TABLE', 'nelliel_users'); // Table used for post data

@@ -43,7 +43,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
 
         if ($write)
         {
-            $file_handler->writeFile($references['directory'] . '/' . PHP_SELF2 . PHP_EXT, $render->outputRenderSet(), FILE_PERM);
+            $file_handler->writeFile($references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT, $render->outputRenderSet(), FILE_PERM);
         }
         else
         {
@@ -231,7 +231,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
         }
         else
         {
-            $logfilename = ($page === 1) ? $references['directory'] . '/' . PHP_SELF2 . PHP_EXT : $references['directory']. '/' . PHP_SELF2 .
+            $logfilename = ($page === 1) ? $references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT : $references['board_directory']. '/' . PHP_SELF2 .
                  ($page - 1) . PHP_EXT;
             $file_handler->writeFile($logfilename, $render->outputRenderSet(), FILE_PERM, true);
         }
