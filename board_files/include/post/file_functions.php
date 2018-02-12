@@ -110,7 +110,7 @@ function nel_check_for_existing_file($board_id, $file, $files)
     }
     else
     {
-        $file['sha256'] = null;
+        $file['sha256'] = '';
         $query = 'SELECT 1 FROM "' . $references['file_table'] . '" WHERE "sha1" = ? LIMIT 1';
         $prepared = $dbh->prepare($query);
         $prepared->bindValue(1, $file['sha1'], PDO::PARAM_LOB);
