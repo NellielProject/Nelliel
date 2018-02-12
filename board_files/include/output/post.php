@@ -328,7 +328,7 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
                      utf8_strtolower($file['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png'))
                 {
                     $file['has_preview'] = true;
-                    $file['preview_location'] = IMAGES_DIR . '/nelliel/filetype/' .
+                    $file['preview_location'] = '../' . IMAGES_DIR . '/nelliel/filetype/' .
                          utf8_strtolower($file['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png';
                     $file['preview_width'] = ($board_settings['max_width'] < 64) ? $board_settings['max_width'] : '128';
                     $file['preview_height'] = ($board_settings['max_height'] < 64) ? $board_settings['max_height'] : '128';
@@ -435,9 +435,9 @@ function nel_render_post_adjust_relative($node, $gen_data)
             $file_id = $post_id . '_' . $file['file_order'];
             $new_post_dom->getElementById('file-link-' . $file_id)->modifyAttribute('href', '../../', 'before');
             $new_post_dom->getElementById('file-location-' . $file_id)->modifyAttribute('href', '../../', 'before');
-            $new_post_dom->getElementById('file-preview-' . $file_id)->modifyAttribute('data-other-loc', '../../', 'before');
 
             $preview_element = $new_post_dom->getElementById('file-preview-' . $file_id);
+            $preview_element->modifyAttribute('data-other-loc', '../../', 'before');
 
             if (!is_null($preview_element))
             {
