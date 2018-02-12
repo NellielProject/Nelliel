@@ -1,8 +1,9 @@
 /* General formatting */
 body {
+	background: #FFFFEE;
+	color: #800000;
     font-size: 1.0em;
-    background: #FFFFEE;
-    color: #800000;
+    font-family: serif;
     padding-left: 6px;
     padding-right: 6px;
 }
@@ -13,19 +14,21 @@ body {
     padding: 4px;
 }
 
+img {
+	
+}
+
+
 a {
     color: #0000EE;
-    font-family: serif;
 }
 
 a:visited {
     color: #0000EE;
-    font-family: serif;
 }
 
 a:hover {
     color: #DD0000;
-    font-family: serif;
 }
 
 a.post-link:active {
@@ -47,22 +50,29 @@ a.post-link:visited {
 }
 
 .logo {
-    clear: both;
+    color: #800000;
     text-align: center;
     font-weight: bold;
-    color: #800000;
     width: 100%;
+    clear: both;
 }
 
 .logo-alt-text {
     font-size: 2.0em;
 }
 
+.board-navigation {
+	text-align: center;
+}
+
+.board-navigation-link {
+
+}
+
 /* Footer */
 .footer {
     clear: both;
     text-align: center;
-    font-family: serif;
     font-size: 0.8em;
 }
 
@@ -86,20 +96,20 @@ a.post-link:visited {
 .pass-valid {
     background: #EEAA88;
     text-align: center;
+    font-weight: bold;
     width: 100%;
-    color: #ffffff;
+    color: #FFFFFF;
 }
 
 .del-list {
     text-align: center;
+    font-weight: bold;
     width: 100%;
 }
 
 .manage-header {
     background: #0F8FE1;
-    color: #800000;
     font-family: sans-serif;
-    font-size: 1.08em;
     padding: 0px;
 }
 
@@ -107,19 +117,16 @@ a.post-link:visited {
     background: #FFFFFF;
     width: 100%;
     padding: 0px;
-    color: #800000;
 }
 
 .row1 {
     background: #9AD2F6;
     font-family: sans-serif;
-    color: #800000;
 }
 
 .row2 {
     background: #FFFFFF;
     font-family: sans-serif;
-    color: #800000;
 }
 
 /* Posting form formatting */
@@ -139,7 +146,6 @@ a.post-link:visited {
 
 .posting-form-label {
     background: #EEAA88;
-    color: #800000;
     font-weight: bold;
     padding: 3px;
 }
@@ -154,36 +160,31 @@ a.post-link:visited {
 }
 
 /* Files */
-.file-delete-box {
-    padding-left: 15px;
-}
-
-.multi-file-delete-box {
-    margin-left: 0px;
-}
-
 .op-fileinfo {
-    font-family: serif;
+    float: left;
+    text-align: left;
+    text-decoration: none;
+	white-space: nowrap;
+    padding: 2px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 3px;
+    font-size: 0.95em;
 }
 
 .op-multiple-fileinfo {
-    font-family: serif;
     float: left;
     text-align: left;
     text-decoration: none;
-    white-space: nowrap;
+	white-space: nowrap;
     padding: 2px;
-    padding-right: 15px;
     padding-left: 15px;
+    padding-right: 15px;
     margin: 3px;
+    font-size: 0.95em;
 }
 
 .reply-fileinfo {
-    font-family: serif;
-}
-
-.reply-multiple-fileinfo {
-    font-family: serif;
     float: left;
     text-align: left;
     text-decoration: none;
@@ -192,37 +193,42 @@ a.post-link:visited {
     padding-right: 15px;
     padding-left: 15px;
     margin: 3px;
+    font-size: 0.95em;
+}
+
+.reply-multiple-fileinfo {
+    float: left;
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 2px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin: 3px;
+    font-size: 0.95em;
+}
+
+.file-meta {
+
 }
 
 .source {
-    padding-left: 20px;
+    padding-left: 2px;
 }
 
 .license {
-    padding-left: 20px;
+    padding-left: 2px;
 }
 
 .md5 {
-    padding-left: 20px;
+    padding-left: 2px;
 }
 
 .sha1 {
-    padding-left: 20px;
+    padding-left: 2px;
 }
 
 /* General post formatting */
-a.mailto-name:active {
-    
-}
-
-a.mailto-name:link {
-    
-}
-
-a.mailto-name:visited {
-    
-}
-
 .none {
     display: none;
 }
@@ -230,19 +236,18 @@ a.mailto-name:visited {
 .mod-comment {
     color: #FF0000;
     font-size: 1.10em;
+    font-weight: bold;
 }
 
 .old-post {
+	color: #CC1105;
     font-size: 1.10em;
-    font-family: serif;
-    color: #CC1105;
     font-weight: bold;
 }
 
 .omitted-posts {
+	color: #070707;
     font-size: 1.10em;
-    font-family: serif;
-    color: #070707;
     font-weight: bold;
 }
 
@@ -260,92 +265,100 @@ a.mailto-name:visited {
 
 /* OP post formatting */
 .op-post {
+	color: #800000;
     min-width: 15em;
-    max-width: 60em;
+    max-width: 100%;
     height: 100%;
     padding-bottom: 6px;
     padding-left: 20px;
 }
 
+.op-post.post-highlight {
+	background: #AABBFF;
+}
+
 .op-poster-name {
+	color: #117743;
     text-decoration: none;
-    font-family: serif;
-    color: #117743;
-    font-weight: bold
+    font-weight: bold;
 }
 
 .op-subject {
-    font-family: serif;
+	color: #CC1105;
     font-size: 1.10em;
-    color: #CC1105;
     font-weight: bold;
 }
 
 .op-post-text {
-    
+    padding-left: 1.10em;
+    max-width: 70em;
 }
 
 .op-post-preview {
-    text-align: left;
-    float: left;
-    padding-left: 20px;
-    padding-right: 15px;
-    padding-top: 3px;
-    padding-bottom: 3px;
+    padding: 3px;
     border: 0;
 }
 
 .op-post-multiple-preview {
-    text-align: left;
-    padding: 2px;
+    padding: 3px;
     border: 0;
+}
+
+.op-post-contents-multifile {
+	clear: both;
 }
 
 /* Reply post formatting */
 .reply-post {
     background: #F0E0D6;
-    border: 1px solid #FFFFEE;
     color: #800000;
-    font-family: serif;
-    float: left;
+    border: 1px solid #FFFFEE;
     padding: 5px;
-    min-width: 25em;
-    max-width: 60em;
+    min-width: 15em;
+    max-width: 95%;
+    height: 100%;
     margin: 5px;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.reply-post.post-highlight {
+	background: #AABBFF;
 }
 
 .reply-poster-name {
+	color: #117743;
     text-decoration: none;
-    font-family: serif;
-    color: #117743;
-    font-weight: bold
+    font-weight: bold;
 }
 
 .reply-subject {
-    font-family: serif;
-    font-size: 1.10em;
     color: #CC1105;
+    font-size: 1.10em;
     font-weight: bold;
 }
 
 .reply-post-text {
     padding-left: 1.10em;
-    float: left;
+    max-width: 70em;
 }
 
 .reply-post-preview {
-    text-align: left;
-    float: left;
-    padding-left: 20px;
-    padding-top: 3px;
-    padding-bottom: 10px;
+    padding: 3px;
     border: 0;
 }
 
 .reply-post-multiple-preview {
-    text-align: left;
-    padding: 2px;
+    padding: 3px;
     border: 0;
+}
+
+.reply-post-contents {
+
+}
+
+.reply-post-contents-multifile {
+	clear: both;
 }
 
 .indents {
@@ -387,4 +400,22 @@ a.mailto-name:visited {
     text-align: left;
     margin: auto;
     max-width: 60em;
+}
+
+.hidden {
+	display: none;
+}
+
+.post-corral {
+	
+}
+
+.post-quote-popup {
+	height: auto;
+	position: absolute;
+	display: block;
+}
+
+.reply-post.popup-mod {
+    border: 1px solid #FFFFEE;
 }

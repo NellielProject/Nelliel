@@ -1,8 +1,8 @@
 /* General formatting */
 body {
-    font-size: 1.0em;
-    background: #77FFBB;
+	background: #77FFBB;
     color: #000000;
+    font-size: 1.0em;
     font-family: serif;
     padding-left: 6px;
     padding-right: 6px;
@@ -14,12 +14,12 @@ body {
     padding: 4px;
 }
 
-a {
-    color: #0000EE;
-}
-
 img {
 	
+}
+
+a {
+    color: #0000EE;
 }
 
 a:visited {
@@ -49,11 +49,15 @@ a.post-link:visited {
 }
 
 .logo {
-    clear: both;
+    color: #6600CC;
     text-align: center;
     font-weight: bold;
-    color: #6600CC;
     width: 100%;
+    clear: both;
+}
+
+.logo-alt-text {
+    font-size: 2.0em;
 }
 
 .board-navigation {
@@ -62,10 +66,6 @@ a.post-link:visited {
 
 .board-navigation-link {
 
-}
-
-.logo-alt-text {
-    font-size: 2.0em;
 }
 
 /* Footer */
@@ -160,7 +160,7 @@ a.post-link:visited {
 
 /* Files */
 .post-files-container {
-	
+
 }
 
 .file-delete-box {
@@ -240,18 +240,6 @@ a.post-link:visited {
 }
 
 /* General post formatting */
-a.mailto-name:active {
-    
-}
-
-a.mailto-name:link {
-    
-}
-
-a.mailto-name:visited {
-    
-}
-
 .none {
     display: none;
 }
@@ -263,8 +251,8 @@ a.mailto-name:visited {
 }
 
 .old-post {
+	color: #CC1105;
     font-size: 1.10em;
-    color: #CC1105;
     font-weight: bold;
 }
 
@@ -288,12 +276,12 @@ a.mailto-name:visited {
 
 /* OP post formatting */
 .op-post {
+	color: #000000;
     min-width: 15em;
     max-width: 100%;
     height: 100%;
     padding-bottom: 6px;
     padding-left: 20px;
-    color: #000000;
 }
 
 .op-post.post-highlight {
@@ -301,15 +289,14 @@ a.mailto-name:visited {
 }
 
 .op-poster-name {
+	color: #7700DD;
     text-decoration: none;
-    color: #7700DD;
     font-weight: bold;
 }
 
 .op-subject {
-    font-family: serif;
+	color: #0033FF;
     font-size: 1.10em;
-    color: #0033FF;
     font-weight: bold;
 }
 
@@ -334,7 +321,8 @@ a.mailto-name:visited {
 
 /* Reply post formatting */
 .reply-post {
-    background: #77EEFF;
+    background: #77EEFF;\
+    color: #000000;
     border: 1px solid #77DDFF;
     padding: 5px;
     min-width: 15em;
@@ -343,7 +331,6 @@ a.mailto-name:visited {
     margin: 5px;
     overflow: hidden;
     display: inline-block;
-    color: #000000;
 }
 
 .reply-post.post-highlight {
@@ -351,15 +338,14 @@ a.mailto-name:visited {
 }
 
 .reply-poster-name {
+	color: #7700DD;
     text-decoration: none;
-    color: #7700DD;
     font-weight: bold;
 }
 
 .reply-subject {
-    font-family: serif;
+	color: #0033FF;
     font-size: 1.10em;
-    color: #0033FF;
     font-weight: bold;
 }
 
@@ -442,7 +428,5 @@ a.mailto-name:visited {
 }
 
 .reply-post.popup-mod {
-	border: 1px #000000;
-	border-style: solid;
+    border: 1px solid #77DDFF;
 }
-})
