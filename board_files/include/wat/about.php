@@ -51,7 +51,7 @@ function nel_about_nelliel_screen()
             </div>
             <hr class="clear">
             <p>
-                Default filetype icons are from the Soft Scraps pack made by <a href="http://deleket.deviantart.com/" title="Deleket">Deleket</a>
+                Default filetype icons are from the <a href="https://deleket.deviantart.com/art/Soft-Scraps-150451162" title="Soft Scraps">Soft Scraps</a> pack made by <a href="http://deleket.deviantart.com/" title="Deleket">Deleket</a>
             </p>
             <p>
                 <a href="http://pageconfig.com/post/portable-utf8" title="Portable UTF-8">Portable UTF-8</a> library created by <a href="http://pageconfig.com">Hamid Sarfraz</a>.

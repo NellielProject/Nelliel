@@ -241,7 +241,7 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
                     chmod($thumbpath . $files[$i]['thumbfile'], octdec(FILE_PERM));
                 }
             }
-            else
+            else if($files[$i]['subtype'] === 'gif' || $files[$i]['subtype'] === 'jpeg' || $files[$i]['subtype'] === 'png')
             {
                 // Test is really only for GIF support, which had a long absence
                 // If your GD is somehow so old (or dumb) it can't do JPEG or PNG get a new host. Srsly.
@@ -274,6 +274,11 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
                 {
                     imagejpeg($files[$i]['thumbnail'], $thumbpath . $files[$i]['thumbfile'], $board_settings['jpeg_quality']);
                 }
+            }
+            else
+            {
+                $files[$i]['pre_x'] = null;
+                $files[$i]['pre_y'] = null;
             }
         }
 

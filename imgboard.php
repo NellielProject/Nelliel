@@ -9,7 +9,7 @@ define('PLUGINS_PATH', FILES_PATH . 'plugins/'); // Base plugins path
 define('TEMPLATE_PATH', FILES_PATH . 'templates/nelliel/'); // Base template path
 define('LANGUAGE_PATH', FILES_PATH . 'languages/'); // Language files path
 define('CACHE_PATH', FILES_PATH . 'cache/'); // Base cache path
-define('WEB_PATH', FILES_PATH . 'web/'); // Base cache path
+define('WEB_PATH', BASE_PATH . '/web/'); // Base cache path
 define('SQLITE_DB_DEFAULT_PATH', FILES_PATH); // Base SQLite DB location
 
 require_once INCLUDE_PATH . 'autoload.php';

@@ -324,11 +324,11 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
                         }
                     }
                 }
-                else if ($board_settings['use_file_icon'] && file_exists(IMAGES_DIR . '/nelliel/filetype/' .
+                else if ($board_settings['use_file_icon'] && file_exists(WEB_PATH . 'imagez/nelliel/filetype/' .
                      utf8_strtolower($file['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png'))
                 {
                     $file['has_preview'] = true;
-                    $file['preview_location'] = '../' . IMAGES_DIR . '/nelliel/filetype/' .
+                    $file['preview_location'] = '../' . IMAGES_DIR . 'nelliel/filetype/' .
                          utf8_strtolower($file['supertype']) . '/' . utf8_strtolower($file['subtype']) . '.png';
                     $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
                     $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
