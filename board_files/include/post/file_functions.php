@@ -241,44 +241,27 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
                     chmod($thumbpath . $files[$i]['thumbfile'], octdec(FILE_PERM));
                 }
             }
-            else if($files[$i]['subtype'] === 'gif' || $files[$i]['subtype'] === 'jpeg' || $files[$i]['subtype'] === 'png')
+            else
             {
-                // Test is really only for GIF support, which had a long absence
-                // If your GD is somehow so old (or dumb) it can't do JPEG or PNG get a new host. Srsly.
-                $gd_test = gd_info();
-
-                switch ($files[$i]['subtype'])
-                {
-                    case 'jpeg':
-                        $image = imagecreatefromjpeg($files[$i]['dest']);
-                        break;
-
-                    case 'gif':
-                        $image = imagecreatefromgif($files[$i]['dest']);
-                        break;
-
-                    case 'png':
-                        $image = imagecreatefrompng($files[$i]['dest']);
-                        break;
-                }
-
-                $files[$i]['thumbnail'] = imagecreatetruecolor($files[$i]['pre_x'], $files[$i]['pre_y']);
+                $files[$i]['thumbnail'] = nel_create_gd_preview($files[$i]);
                 $files[$i]['thumbfile'] = $files[$i]['filename'] . '-preview.jpg';
-                imagecopyresampled($files[$i]['thumbnail'], $image, 0, 0, 0, 0, $files[$i]['pre_x'], $files[$i]['pre_y'], $files[$i]['im_x'], $files[$i]['im_y']);
 
-                if ($board_settings['use_png_thumb'])
+                if($files[$i]['thumbnail'] === false)
                 {
-                    imagepng($files[$i]['thumbnail'], $thumbpath . $files[$i]['thumbfile'], -1); // Quality
+                    $files[$i]['pre_x'] = null;
+                    $files[$i]['pre_y'] = null;
                 }
                 else
                 {
-                    imagejpeg($files[$i]['thumbnail'], $thumbpath . $files[$i]['thumbfile'], $board_settings['jpeg_quality']);
+                    if ($board_settings['use_png_thumb'])
+                    {
+                        imagepng($files[$i]['thumbnail'], $thumbpath . $files[$i]['thumbfile'], -1);
+                    }
+                    else
+                    {
+                        imagejpeg($files[$i]['thumbnail'], $thumbpath . $files[$i]['thumbfile'], $board_settings['jpeg_quality']);
+                    }
                 }
-            }
-            else
-            {
-                $files[$i]['pre_x'] = null;
-                $files[$i]['pre_y'] = null;
             }
         }
 
@@ -297,4 +280,32 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
     }
 
     return $files;
+}
+
+function nel_create_gd_preview($file)
+{
+    // This shouldn't be needed, really. If your host actually doesn't have these, it sucks. Get a new one, srsly.
+    $gd_test = gd_info();
+
+    if($file['subtype'] === 'jpeg' && $gd_test["JPEG Support"])
+    {
+        $image = imagecreatefromjpeg($file['dest']);
+    }
+    else if($file['subtype'] === 'gif' && $gd_test["GIF Read Support"])
+    {
+        $image = imagecreatefromgif($file['dest']);
+    }
+    else if($file['subtype'] === 'png' && $gd_test["PNG Support"])
+    {
+        $image = imagecreatefrompng($file['dest']);
+    }
+    else
+    {
+        return false;
+    }
+
+    $preview = imagecreatetruecolor($file['pre_x'], $file['pre_y']);
+    imagecopyresampled($preview, $image, 0, 0, 0, 0, $file['pre_x'], $file['pre_y'], $file['im_x'], $file['im_y']);
+
+    return $preview;
 }
