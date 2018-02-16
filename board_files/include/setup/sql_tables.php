@@ -645,6 +645,7 @@ function nel_insert_board_config_defaults($config_table)
                         ('board_setting', 'nelliel', 'general', 'bool', 'use_magick', '0'),
                         ('board_setting', 'nelliel', 'general', 'bool', 'use_file_icon', '1'),
                         ('board_setting', 'nelliel', 'general', 'bool', 'use_png_thumb', '0'),
+                        ('board_setting', 'nelliel', 'general', 'bool', 'animated_gif_preview', '0'),
                         ('board_setting', 'nelliel', 'general', 'bool', 'require_image_start', '1'),
                         ('board_setting', 'nelliel', 'general', 'bool', 'require_image_always', '0'),
                         ('board_setting', 'nelliel', 'general', 'bool', 'allow_multifile', '0'),

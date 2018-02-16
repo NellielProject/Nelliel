@@ -249,6 +249,7 @@ function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
 {
     $image = new Imagick($file['dest']);
     $iterations = $image->getImageIterations();
+    $image = $image->coalesceimages();
     $board_settings = nel_board_settings($board_id);
     $file['im_x'] = $image->getImageWidth();
     $file['im_y'] = $image->getImageHeight();
@@ -256,17 +257,11 @@ function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
     $file['pre_x'] = ($file['im_x'] > $board_settings['max_width']) ? intval($ratio * $file['im_x']) : $file['im_x'];
     $file['pre_y'] = ($file['im_y'] > $board_settings['max_height']) ? intval($ratio * $file['im_y']) : $file['im_y'];
 
-    if ($file['subtype'] === 'gif' && $iterations > 0)
+    if ($file['subtype'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
     {
         $file['thumbfile'] = $file['filename'] . '-preview.gif';
-        $image = $image->coalesceimages();
-        $file['im_x'] = $image->getImageWidth();
-        $file['im_y'] = $image->getImageHeight();
-        $ratio = min(($board_settings['max_height'] / $file['im_y']), ($board_settings['max_width'] / $file['im_x']));
-        $file['pre_x'] = ($file['im_x'] > $board_settings['max_width']) ? intval($ratio * $file['im_x']) : $file['im_x'];
-        $file['pre_y'] = ($file['im_y'] > $board_settings['max_height']) ? intval($ratio * $file['im_y']) : $file['im_y'];
 
-        if($file['im_x'] <= $board_settings['max_width'] && $file['im_y'] <= $board_settings['max_height'])
+        if ($file['im_x'] <= $board_settings['max_width'] && $file['im_y'] <= $board_settings['max_height'])
         {
             copy($file['dest'], $thumbpath . $file['thumbfile']);
         }
@@ -282,7 +277,8 @@ function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
     }
     else
     {
-        $image->scaleImage($file['pre_x'], $file['pre_y'], true);
+        $image->thumbnailImage($file['pre_x'], $file['pre_y'], true);
+        $image->sharpenImage(0, 0.5);
 
         if ($board_settings['use_png_thumb'])
         {
@@ -312,12 +308,11 @@ function nel_create_imagemagick_preview(&$file, $thumbpath, $board_id)
     $file['pre_x'] = ($file['im_x'] > $board_settings['max_width']) ? intval($ratio * $file['im_x']) : $file['im_x'];
     $file['pre_y'] = ($file['im_y'] > $board_settings['max_height']) ? intval($ratio * $file['im_y']) : $file['im_y'];
 
-    if ($file['subtype'] === 'gif')
+    if ($file['subtype'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
     {
         $file['thumbfile'] = $file['filename'] . '-preview.gif';
         $cmd_resize = 'convert ' . escapeshellarg($file['dest']) . ' -coalesce -thumbnail ' .
-             $board_settings['max_width'] . 'x' . $board_settings['max_height'] . ' -layers optimize ' .
-             escapeshellarg($thumbpath . $file['thumbfile']);
+             $board_settings['max_width'] . 'x' . $board_settings['max_height'] . escapeshellarg($thumbpath . $file['thumbfile']);
         exec($cmd_resize);
         chmod($thumbpath . $file['thumbfile'], octdec(FILE_PERM));
     }
