@@ -240,14 +240,14 @@ class ThreadHandler
         {
             $prepared = $this->dbh->prepare('SELECT "filename", "extension", "preview_name" FROM "' .
                  $this->references['file_table'] . '" WHERE "post_ref" = ?');
+            $file_data = $this->dbh->executePreparedFetchAll($prepared, array($post_id), PDO::FETCH_ASSOC);
         }
         else
         {
             $prepared = $this->dbh->prepare('SELECT "filename", "extension", "preview_name" FROM "' .
                  $this->references['file_table'] . '" WHERE "post_ref" = ? AND "file_order" = ?');
+            $file_data = $this->dbh->executePreparedFetchAll($prepared, array($post_id, $file_order), PDO::FETCH_ASSOC);
         }
-
-        $file_data = $this->dbh->executePreparedFetchAll($prepared, array($post_id, $file_order), PDO::FETCH_ASSOC, true);
 
         if ($file_data !== false)
         {
