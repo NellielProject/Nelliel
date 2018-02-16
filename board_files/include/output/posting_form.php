@@ -60,57 +60,65 @@ function nel_render_posting_form($board_id, $dataforce, $render)
     $source_block->getElementById('sauce-1')->extSetAttribute('maxlength', $board_settings['max_source_length']);
     $license_block->getElementById('lol_drama-1')->extSetAttribute('maxlength', $board_settings['max_license_length']);
 
-    for ($i = 2, $j = 3; $i <= $board_settings['max_post_files']; ++ $i, ++ $j)
+    if ($board_settings['allow_multifile'] && $board_settings['max_post_files'] > 1)
     {
-        $temp_file_block = $file_block->cloneNode(true);
-        $temp_file_block->changeId('form-file-' . $i);
-        $temp_file_block->modifyAttribute('class', ' hidden', 'after');
-        $temp_source_block = $source_block->cloneNode(true);
-        $temp_source_block->changeId('form-sauce-' . $i);
-        $temp_license_block = $license_block->cloneNode(true);
-        $temp_license_block->changeId('form-lol_drama-' . $i);
-        $temp_alt_text_block = $alt_text_block->cloneNode(true);
-        $temp_alt_text_block->changeId('form-alt_text-' . $i);
-        $insert_before_point = $dom->getElementById('form-fgsfds');
-        $posting_form_table->insertBefore($temp_file_block, $insert_before_point);
-        $posting_form_table->insertBefore($temp_source_block, $insert_before_point);
-        $posting_form_table->insertBefore($temp_license_block, $insert_before_point);
+        for ($i = 2, $j = 3; $i <= $board_settings['max_post_files']; ++ $i, ++ $j)
+        {
+            if(!$response_id && !$board_settings['allow_op_multifile'])
+            {
+                break;
+            }
 
-        $for_label_file = $temp_file_block->doXPathQuery(".//label[@for='up-file-1']")->item(0);
-        $for_label_file->extSetAttribute('for', 'up-file-' . $i);
-        $file_num = $temp_file_block->getElementById('file-num-1');
-        $file_num->setContent($i);
-        $file_num->changeId('file-num-' . $i);
-        $up_file_element = $temp_file_block->getElementById('up-file-1');
-        $up_file_element->extSetAttribute('name', 'up_file_' . $i);
-        $up_file_element->changeId('up-file-' . $i);
-        $add_source_element = $temp_file_block->getElementById('add-sauce-1');
-        $add_source_element->changeId('add-sauce-' . $i);
-        $add_license_element = $temp_file_block->getElementById('add-lol_drama-1');
-        $add_license_element->changeId('add-lol_drama-' . $i);
-        $add_alt_text_element = $temp_file_block->getElementById('add-alt_text-1');
-        $add_alt_text_element->changeId('add-alt_text-' . $i);
+            $temp_file_block = $file_block->cloneNode(true);
+            $temp_file_block->changeId('form-file-' . $i);
+            $temp_file_block->modifyAttribute('class', ' hidden', 'after');
+            $temp_source_block = $source_block->cloneNode(true);
+            $temp_source_block->changeId('form-sauce-' . $i);
+            $temp_license_block = $license_block->cloneNode(true);
+            $temp_license_block->changeId('form-lol_drama-' . $i);
+            $temp_alt_text_block = $alt_text_block->cloneNode(true);
+            $temp_alt_text_block->changeId('form-alt_text-' . $i);
+            $insert_before_point = $dom->getElementById('form-fgsfds');
+            $posting_form_table->insertBefore($temp_file_block, $insert_before_point);
+            $posting_form_table->insertBefore($temp_source_block, $insert_before_point);
+            $posting_form_table->insertBefore($temp_license_block, $insert_before_point);
 
-        $for_label_sauce = $temp_source_block->doXPathQuery(".//label[@for='sauce-1']")->item(0);
-        $for_label_sauce->extSetAttribute('for', 'sauce-' . $i);
-        $source_element = $temp_source_block->getElementById('sauce-1');
-        $source_element->extSetAttribute('name', 'new_post[file_info][file_' . $i . '][sauce]');
-        $source_element->extSetAttribute('maxlength', $board_settings['max_source_length']);
-        $source_element->changeId('sauce-' . $i);
+            $for_label_file = $temp_file_block->doXPathQuery(".//label[@for='up-file-1']")->item(0);
+            $for_label_file->extSetAttribute('for', 'up-file-' . $i);
+            $file_num = $temp_file_block->getElementById('file-num-1');
+            $file_num->setContent($i);
+            $file_num->changeId('file-num-' . $i);
+            $up_file_element = $temp_file_block->getElementById('up-file-1');
+            $up_file_element->extSetAttribute('name', 'up_file_' . $i);
+            $up_file_element->changeId('up-file-' . $i);
+            $add_source_element = $temp_file_block->getElementById('add-sauce-1');
+            $add_source_element->changeId('add-sauce-' . $i);
+            $add_license_element = $temp_file_block->getElementById('add-lol_drama-1');
+            $add_license_element->changeId('add-lol_drama-' . $i);
+            $add_alt_text_element = $temp_file_block->getElementById('add-alt_text-1');
+            $add_alt_text_element->changeId('add-alt_text-' . $i);
 
-        $for_label_license = $temp_license_block->doXPathQuery(".//label[@for='lol_drama-1']")->item(0);
-        $for_label_license->extSetAttribute('for', 'lol_drama-' . $i);
-        $license_element = $temp_license_block->getElementById('lol_drama-1');
-        $license_element->extSetAttribute('name', 'new_post[file_info][file_' . $i . '][lol_drama]');
-        $license_element->extSetAttribute('maxlength', $board_settings['max_license_length']);
-        $license_element->changeId('lol_drama-' . $i);
+            $for_label_sauce = $temp_source_block->doXPathQuery(".//label[@for='sauce-1']")->item(0);
+            $for_label_sauce->extSetAttribute('for', 'sauce-' . $i);
+            $source_element = $temp_source_block->getElementById('sauce-1');
+            $source_element->extSetAttribute('name', 'new_post[file_info][file_' . $i . '][sauce]');
+            $source_element->extSetAttribute('maxlength', $board_settings['max_source_length']);
+            $source_element->changeId('sauce-' . $i);
 
-        $for_label_alt_text = $temp_alt_text_block->doXPathQuery(".//label[@for='alt_text-1']")->item(0);
-        $for_label_alt_text->extSetAttribute('for', 'alt_text-' . $i);
-        $alt_text_element = $temp_alt_text_block->getElementById('alt_text-1');
-        $alt_text_element->extSetAttribute('name', 'new_post[file_info][file_' . $i . '][alt_text]');
-        $alt_text_element->extSetAttribute('maxlength', '255');
-        $alt_text_element->changeId('alt_text-' . $i);
+            $for_label_license = $temp_license_block->doXPathQuery(".//label[@for='lol_drama-1']")->item(0);
+            $for_label_license->extSetAttribute('for', 'lol_drama-' . $i);
+            $license_element = $temp_license_block->getElementById('lol_drama-1');
+            $license_element->extSetAttribute('name', 'new_post[file_info][file_' . $i . '][lol_drama]');
+            $license_element->extSetAttribute('maxlength', $board_settings['max_license_length']);
+            $license_element->changeId('lol_drama-' . $i);
+
+            $for_label_alt_text = $temp_alt_text_block->doXPathQuery(".//label[@for='alt_text-1']")->item(0);
+            $for_label_alt_text->extSetAttribute('for', 'alt_text-' . $i);
+            $alt_text_element = $temp_alt_text_block->getElementById('alt_text-1');
+            $alt_text_element->extSetAttribute('name', 'new_post[file_info][file_' . $i . '][alt_text]');
+            $alt_text_element->extSetAttribute('maxlength', '255');
+            $alt_text_element->changeId('alt_text-' . $i);
+        }
     }
 
     $fgsfds_form = $dom->getElementById('form-fgsfds');
