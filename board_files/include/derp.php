@@ -27,7 +27,7 @@ function nel_derp($error_id, $error_message, $board_id = null, $error_data = arr
     }
     else
     {
-        nel_render_board_derp($diagnostic);
+        nel_render_board_derp($board_id, $diagnostic);
     }
 
     nel_clean_exit(null, true);
