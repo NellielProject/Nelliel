@@ -2,20 +2,12 @@
 
 //
 // This holds the configuration options for database access.
-// Nelliel is set to use SQLite by default. However you can utilize a number of other relational databases as well.
+// Nelliel is set to use MYSQL by default. However you can utilize a number of other relational databases as well.
 // You only need to configure one database option for use. The others can be left as-is.
 //
 
 // Database type. Supported types: MYSQL, SQLITE, POSTGRES
-define('SQLTYPE', 'SQLITE'); // Database type
-
-//
-// Configuration for SQLite
-//
-
-define('SQLITE_DB_NAME', 'nelliel.sqlite'); // Filename of SQLite database
-define('SQLITE_DB_PATH', ''); // Alternative path where the database is to be located. Defaults to board_files if left blank
-define('SQLITE_ENCODING', 'UTF-8'); // The character encoding to use. Usually fine as-is
+define('SQLTYPE', 'MYSQL'); // Database type
 
 //
 // Configuration for MySQL
@@ -27,6 +19,18 @@ define('MYSQL_PORT', '3306'); // Server port. MySQL default is 3306
 define('MYSQL_USER', 'username'); // User that will access the database
 define('MYSQL_PASS', 'password'); // Password of user
 define('MYSQL_ENCODING', 'utf8'); // The character encoding to use. Usually fine as-is
+
+//
+// Configuration for SQLite
+//
+
+// WARNING: The database path must be a location outside of web-accessible directories!
+// Otherwise someone could just download the whole thing.
+// If this is not possible on your host, do not use SQLite for your database!
+
+define('SQLITE_DB_NAME', 'nelliel.sqlite'); // Filename of SQLite database
+define('SQLITE_DB_PATH', ''); // Path where the database is to be located
+define('SQLITE_ENCODING', 'UTF-8'); // The character encoding to use. Usually fine as-is
 
 //
 // Configuration for PostgreSQL
