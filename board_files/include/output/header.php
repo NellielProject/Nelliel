@@ -113,7 +113,6 @@ function nel_render_general_header($dataforce, $render)
 {
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
-    $references = nel_board_references($board_id);
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '../';
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
