@@ -266,12 +266,19 @@ function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
         $file['pre_x'] = ($file['im_x'] > $board_settings['max_width']) ? intval($ratio * $file['im_x']) : $file['im_x'];
         $file['pre_y'] = ($file['im_y'] > $board_settings['max_height']) ? intval($ratio * $file['im_y']) : $file['im_y'];
 
-        foreach ($image as $frame)
+        if($file['im_x'] <= $board_settings['max_width'] && $file['im_y'] <= $board_settings['max_height'])
         {
-            $frame->scaleImage($file['pre_x'], $file['pre_y'], true);
+            copy($file['dest'], $thumbpath . $file['thumbfile']);
         }
+        else
+        {
+            foreach ($image as $frame)
+            {
+                $frame->scaleImage($file['pre_x'], $file['pre_y'], true);
+            }
 
-        $image->writeImages($thumbpath . $file['thumbfile'], true);
+            $image->writeImages($thumbpath . $file['thumbfile'], true);
+        }
     }
     else
     {
