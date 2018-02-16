@@ -9,9 +9,9 @@ if (!defined('NELLIEL_VERSION'))
 
 class FileHandler
 {
+
     function __construct()
     {
-
     }
 
     public function writeFile($file, $output, $chmod = FILE_PERM, $create_directories = false, $dir_chmod = DIRECTORY_PERM)
@@ -84,7 +84,7 @@ class FileHandler
     {
         $separator = DIRECTORY_SEPARATOR;
 
-        if(substr($path,-1) == DIRECTORY_SEPARATOR)
+        if (substr($path, -1) == DIRECTORY_SEPARATOR)
         {
             $separator = '';
         }
@@ -95,7 +95,7 @@ class FileHandler
     {
         $separator = DIRECTORY_SEPARATOR;
 
-        if(substr($path,-1) == DIRECTORY_SEPARATOR)
+        if (substr($path, -1) == DIRECTORY_SEPARATOR)
         {
             $separator = '';
         }
@@ -112,13 +112,25 @@ class FileHandler
         $filtered = preg_replace('#(com[1-9]|lpt[1-9]|con|prn|aux|nul)\.?[a-zA-Z0-9]*#ui', '', $filtered); // Reserved names for Windows
 
         $filtered = preg_replace('#^[ -.]|\'#', '', $filtered); // Other potentially troublesome characters
+        $cleared = false;
 
-        if($filtered === '')
+        while (!$cleared)
         {
-            // TODO: completely invalid filename error
+            if (preg_match('#.php#ui', $filtered) > 0)
+            {
+                $filtered = preg_replace('#.php#ui', '', $filtered);
+            }
+            else
+            {
+                $cleared = true;
+            }
+        }
+
+        if ($filtered === '')
+        {
+            nel_derp(111, nel_stext('ERROR_111'));
         }
 
         return $filtered;
     }
-
 }

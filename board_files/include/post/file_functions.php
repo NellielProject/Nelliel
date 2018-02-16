@@ -4,6 +4,7 @@ function nel_process_file_info($board_id)
 {
     $references = nel_board_references($board_id);
     $board_settings = nel_board_settings($board_id);
+    $file_handler = nel_file_handler();
     $files = array();
     $file_count = 1;
 
@@ -18,6 +19,7 @@ function nel_process_file_info($board_id)
         }
 
         nel_check_upload_errors($board_id, $file, $files);
+        $file['name'] = $file_handler->filterFilename($file['name']);
         preg_match('#[0-9]+$#', $entry, $matches);
         $file_order = $matches[0];
         $post_file_info = $_POST['new_post']['file_info']['file_' . $file_order . ''];

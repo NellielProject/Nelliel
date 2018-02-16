@@ -105,6 +105,7 @@ $lang_singular = array(
     'ERROR_108' => 'Filetype is not allowed.',  // Error 108: Filetype not allowed
     'ERROR_109' => 'Incorrect file type detected (does not match extension). Possible Hax.',  // Error 109: filetype/extension mismatch
     'ERROR_110' => 'Duplicate file detected.',  // Error 110: Duplicate file
+    'ERROR_111' => 'Filename was empty or was purged by filter.',  // Error 111: Invalid or purged filename
     'ERROR_150' => 'That file is banned.',  // Error 150: Banned file
     'ERROR_151' => 'That name is banned.',  // Error 151: Banned name
     'ERROR_152' => 'Cancer detected in post: ',  // Error 152: Banned text
