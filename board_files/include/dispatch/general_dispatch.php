@@ -26,7 +26,7 @@ function general_dispatch($board_id, $dataforce)
                 }
                 else
                 {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . nel_board_references($board_id, 'directory'). '/' . PHP_SELF2 . PHP_EXT . '">';
+                    echo '<meta http-equiv="refresh" content="1;URL=' . nel_board_references($board_id, 'board_directory'). '/' . PHP_SELF2 . PHP_EXT . '">';
                 }
             }
 

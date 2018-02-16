@@ -21,7 +21,7 @@ function nel_clean_exit($dataforce, $die)
         die();
     }
 
-    echo '<meta http-equiv="refresh" content="2;URL=' . nel_board_references(INPUT_BOARD_ID, 'directory') . '/' .
+    echo '<meta http-equiv="refresh" content="2;URL=' . nel_board_references(INPUT_BOARD_ID, 'board_directory') . '/' .
          PHP_SELF2 . PHP_EXT . '">';
     die();
 }
