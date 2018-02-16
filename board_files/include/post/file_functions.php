@@ -248,6 +248,7 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
 function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
 {
     $image = new Imagick($file['dest']);
+    $iterations = $image->getImageIterations();
     $board_settings = nel_board_settings($board_id);
     $file['im_x'] = $image->getImageWidth();
     $file['im_y'] = $image->getImageHeight();
@@ -255,7 +256,7 @@ function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
     $file['pre_x'] = ($file['im_x'] > $board_settings['max_width']) ? intval($ratio * $file['im_x']) : $file['im_x'];
     $file['pre_y'] = ($file['im_y'] > $board_settings['max_height']) ? intval($ratio * $file['im_y']) : $file['im_y'];
 
-    if ($file['subtype'] === 'gif')
+    if ($file['subtype'] === 'gif' && $iterations > 0)
     {
         $file['thumbfile'] = $file['filename'] . '-preview.gif';
         $image = $image->coalesceimages();
