@@ -24,9 +24,12 @@ function nel_cache_filetype_settings($board_id)
     {
         $file_config[$config['config_category']][utf8_strtolower($config['config_name'])] = (bool)$config['setting'];
     }
-
-    $output = '<?php $filetype_settings = ' . var_export($file_config, true) . ';';
-    $file_handler->writeFile(CACHE_PATH . $board_id . '/filetype_settings.nelcache', $output, FILE_PERM, true);
+    if (!defined('NELLIEL_VERSION'))
+    {
+        die("NOPE.AVI");
+    }
+    $output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} $filetype_settings = ' . var_export($file_config, true) . ';';
+    $file_handler->writeFile(CACHE_PATH . $board_id . '/filetype_settings.php', $output, FILE_PERM, true);
     return $file_config;
 }
 
@@ -35,7 +38,7 @@ function nel_cache_site_settings()
     $dbh = nel_database();
     $file_handler = nel_file_handler();
     $config_list =  $dbh->executeFetchAll('SELECT * FROM "nelliel_site_config"', PDO::FETCH_ASSOC);
-    $settings_output = '<?php $site_settings = array();';
+    $settings_output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} $site_settings = array();';
 
     foreach ($config_list as $config)
     {
@@ -57,7 +60,7 @@ function nel_cache_site_settings()
         $settings_output .= '$site_settings[\'' . $config['config_name'] . '\'] = ' . $config['setting'] . ';';
     }
 
-    $file_handler->writeFile(CACHE_PATH . 'site_settings.nelcache', $settings_output, FILE_PERM, true);
+    $file_handler->writeFile(CACHE_PATH . 'site_settings.php', $settings_output, FILE_PERM, true);
 }
 
 function nel_cache_board_settings($board_id)
@@ -71,7 +74,7 @@ function nel_cache_board_settings($board_id)
     $references = nel_board_references($board_id);
     $file_handler = nel_file_handler();
     $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . $references['config_table'] . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
-    $settings_output = '<?php $board_settings = array();';
+    $settings_output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} $board_settings = array();';
 
     foreach ($config_list as $config)
     {
@@ -93,5 +96,5 @@ function nel_cache_board_settings($board_id)
         $settings_output .= '$board_settings[\'' . $config['config_name'] . '\'] = ' . $config['setting'] . ';';
     }
 
-    $file_handler->writeFile(CACHE_PATH . $board_id . '/board_settings.nelcache', $settings_output, FILE_PERM, true);
+    $file_handler->writeFile(CACHE_PATH . $board_id . '/board_settings.php', $settings_output, FILE_PERM, true);
 }

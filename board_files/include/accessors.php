@@ -105,12 +105,12 @@ function nel_site_settings($setting = null)
     {
         $settings = array();
 
-        if (!file_exists(CACHE_PATH . 'site_settings.nelcache'))
+        if (!file_exists(CACHE_PATH . 'site_settings.php'))
         {
             nel_cache_site_settings();
         }
 
-        include CACHE_PATH . 'site_settings.nelcache';
+        include CACHE_PATH . 'site_settings.php';
         $settings = $site_settings;
     }
 
@@ -138,12 +138,12 @@ function nel_board_settings($board_id, $setting = null)
 
     if (!isset($settings[$board_id]))
     {
-        if (!file_exists(CACHE_PATH . $board_id . '/board_settings.nelcache'))
+        if (!file_exists(CACHE_PATH . $board_id . '/board_settings.php'))
         {
             nel_cache_board_settings($board_id);
         }
 
-        include CACHE_PATH . $board_id . '/board_settings.nelcache';
+        include CACHE_PATH . $board_id . '/board_settings.php';
         $settings[$board_id] = $board_settings;
     }
 
@@ -166,12 +166,12 @@ function nel_filetype_settings($board_id, $setting = null)
 
     if (!isset($settings))
     {
-        if (!file_exists(CACHE_PATH . $board_id . '/filetype_settings.nelcache'))
+        if (!file_exists(CACHE_PATH . $board_id . '/filetype_settings.php'))
         {
             nel_cache_filetype_settings($board_id);
         }
 
-        include CACHE_PATH . $board_id . '/filetype_settings.nelcache';
+        include CACHE_PATH . $board_id . '/filetype_settings.php';
         $settings[$board_id] = $filetype_settings;
     }
 
