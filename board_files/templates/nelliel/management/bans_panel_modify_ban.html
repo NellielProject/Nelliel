@@ -1,4 +1,4 @@
-	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
+	<form id="modify-ban-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<td><span data-i18n="neltext">MANAGE_BANMOD_GEN</span> <span id="ban-time-display"></span></td>
@@ -31,6 +31,7 @@
 			</tr>
 			<tr>
 				<td>
+					<input id="ban-all-boards-field" type="hidden" name="ban_all_boards" value="0">
 					<input id="ban-all-boards-field" type="checkbox" name="ban_all_boards" value="1">
 					<span data-i18n="neltext">MANAGE_BANMOD_ALL_BOARDS</span>
 				</td>
@@ -68,7 +69,7 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="mode" value="admin->ban->update">
+					<input type="hidden" name="action" value="update">
 					<input id="board_id_field" type="hidden" name="board_id" value="">
 					<input type="submit" value="FORM_UPDATE" data-i18n="neltext" data-i18n-attributes="value">
 				</td>

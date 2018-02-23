@@ -69,7 +69,7 @@ function nel_generate_main_board_panel($board_id)
     if ($authorize->get_user_perm($_SESSION['username'], 'perm_config_access', $board_id))
     {
         $settings_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $settings);
-        $settings_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=board&module=board-settings&board_id=' . $board_id);
+        $settings_elements['board-settings-link']->extSetAttribute('href', PHP_SELF . '?manage=board&module=board-settings&board_id=' . $board_id);
     }
     else
     {
@@ -81,7 +81,7 @@ function nel_generate_main_board_panel($board_id)
     if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban_access', $board_id))
     {
         $bans_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $bans);
-        $bans_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=board&module=bans&board_id=' . $board_id);
+        $bans_elements['bans-link']->extSetAttribute('href', PHP_SELF . '?manage=board&module=bans&board_id=' . $board_id);
     }
     else
     {
@@ -93,7 +93,7 @@ function nel_generate_main_board_panel($board_id)
     if ($authorize->get_user_perm($_SESSION['username'], 'perm_post_access', $board_id))
     {
         $threads_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $threads);
-        $threads_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=board&module=threads&board_id=' . $board_id);
+        $threads_elements['threads-link']->extSetAttribute('href', PHP_SELF . '?manage=board&module=threads&board_id=' . $board_id);
     }
     else
     {

@@ -14,6 +14,7 @@ function nel_render_board_settings_panel($board_id, $dataforce)
     nel_render_general_header($dataforce, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/board_settings_panel.html');
+    $dom->getElementById('board-settings-form')->extSetAttribute('action', PHP_SELF . '?manage=board&module=board-settings&board_id=' . $board_id);
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
     $result = $dbh->query('SELECT * FROM "' . $references['config_table'] . '"');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);

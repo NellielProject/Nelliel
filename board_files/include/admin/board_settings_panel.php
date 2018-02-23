@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/board_settings_panel.php';
 
-function nel_board_settings_control($board_id, $dataforce)
+function nel_board_settings_control($board_id, $action, $dataforce)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
@@ -14,7 +14,7 @@ function nel_board_settings_control($board_id, $dataforce)
     $mode = $dataforce['mode'];
     $update = FALSE;
 
-    if ($mode === 'admin->board-settings->update')
+    if ($action = 'update')
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_modify', $board_id))
         {

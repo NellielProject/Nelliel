@@ -1,4 +1,4 @@
-    <form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
+    <form id="add-ban-form" accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
         <table>
             <tr>
                 <td data-i18n="neltext">MANAGE_BANMOD_IP</td>
@@ -25,7 +25,7 @@
             </tr>
             <tr>
                 <td>
-                    <input type="hidden" name="mode" value="admin->ban->add">
+                    <input type="hidden" name="action" value="add">
                     <input id="board_id_field" type="hidden" name="board_id" value="">
                 </td>
             </tr>
@@ -43,7 +43,6 @@
             </tr>
             <tr>
                 <td>
-                	<input type="hidden" name="mode" value="admin->ban->add">
                     <input type="submit" value="FORM_UPDATE"  data-i18n="neltext" data-i18n-attributes="value">
                 </td>
             </tr>

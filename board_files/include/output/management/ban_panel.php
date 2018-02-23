@@ -46,12 +46,12 @@ function nel_render_main_ban_panel($board_id, $dataforce)
         $ban_info_td_list->item(8)->setContent($ban_info['appeal_status']);
 
         $form_mod_ban = $temp_ban_info_row->getElementById('form-mod-ban-');
-        $form_mod_ban->extSetAttribute('action', $dotdot . PHP_SELF);
+        $form_mod_ban->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&board_id=' . $board_id);
         $form_mod_ban->changeId('form-mod-ban-' . $ban_info['ban_id']);
         $form_mod_ban->doXPathQuery(".//input[@name='ban_id']")->item(0)->extSetAttribute('value', $ban_info['ban_id']);
 
         $form_remove_ban = $temp_ban_info_row->getElementById('form-remove-ban-');
-        $form_remove_ban->extSetAttribute('action', $dotdot . PHP_SELF);
+        $form_remove_ban->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&board_id=' . $board_id);
         $form_remove_ban->changeId('form-remove-ban-' . $ban_info['ban_id']);
         $form_remove_ban->doXPathQuery(".//input[@name='ban_id']")->item(0)->extSetAttribute('value', $ban_info['ban_id']);
 
@@ -63,12 +63,13 @@ function nel_render_main_ban_panel($board_id, $dataforce)
     $ban_info_row->removeSelf();
 
     $form_add_ban = $dom->getElementById('form-add-ban');
-    $form_add_ban->extSetAttribute('action', $dotdot . PHP_SELF);
+    $form_add_ban->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&board_id=' . $board_id);
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    die();
 }
 
 function nel_render_ban_panel_add($dataforce)
@@ -79,14 +80,17 @@ function nel_render_ban_panel_add($dataforce)
     nel_render_general_header($dataforce, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
+    $dom->getElementById('add-ban-form')->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&board_id=' .
+         $board_id);
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    die();
 }
 
-function nel_render_ban_panel_modify($dataforce)
+function nel_render_ban_panel_modify($board_id, $dataforce)
 {
     $ban_hammer = nel_ban_hammer();
     $dbh = nel_database();
@@ -97,6 +101,8 @@ function nel_render_ban_panel_modify($dataforce)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_modify_ban.html');
 
+    $dom->getElementById('modify-ban-form')->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&board_id=' .
+         $board_id);
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
     $ban_info = $ban_hammer->getBanById($_POST['ban_id'], true);
     $dom->getElementById('ban-ip-field')->extSetAttribute('value', @inet_ntop($ban_info['ip_address_start']));
@@ -146,4 +152,5 @@ function nel_render_ban_panel_modify($dataforce)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    die();
 }

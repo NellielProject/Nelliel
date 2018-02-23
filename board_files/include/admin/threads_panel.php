@@ -6,16 +6,14 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/thread_panel.php';
 
-function nel_thread_panel($board_id, $dataforce, $authorize)
+function nel_thread_panel($board_id, $action, $dataforce, $authorize)
 {
-    $mode = $dataforce['mode'];
-
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_access', $board_id))
     {
         nel_derp(350, nel_stext('ERROR_350'));
     }
 
-    if ($mode === 'admin->thread->update')
+    if ($action = 'update')
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_modify', $board_id))
         {
