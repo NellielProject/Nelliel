@@ -1,33 +1,24 @@
-    <div class="pass-valid"><span data-i18n="neltext">MANAGE_MODE</span></div>
-    <div class="del-list"><span data-i18n="neltext">MANAGE_BOARD_OPTIONS</span><span id="board-name"></span></div>
-    <form action="imgboard.php" method="post" enctype="multipart/form-data">
-        <div>
-        	<input type="hidden" id="board-id-1" name="board_id" value="">
-            <input type="radio" name="mode" id="select-settings-panel" value="admin->board-settings->panel">
-            <label for="select-settings-panel" data-i18n="neltext">MANAGE_OPT_SETTINGS</label><br>
-            <input type="radio" name="mode" id="select-ban-panel" value="admin->ban->panel">
-            <label for="select-ban-panel" data-i18n="neltext">MANAGE_OPT_BAN</label><br>
-            <input type="radio" name="mode" id="select-thread-panel" value="admin->thread->panel">
-            <label for="select-thread-panel" data-i18n="neltext">MANAGE_OPT_THREAD</label><br>
-            <input type="radio" name="mode" id="select-mod-mode" value="admin->modmode->enter">
-            <label for="select-mod-mode" data-i18n="neltext">MANAGE_OPT_MMODE</label><br>
-            <input type="submit" value="FORM_SUBMIT" data-i18n-attributes="value" data-i18n="neltext">
-        </div>
-    </form>
-    <hr>
-    <form action="imgboard.php" method="post" enctype="multipart/form-data" id="regen-index-form">
-        <div>
-        	<input type="hidden" id="board-id-2" name="board_id" value="">
-            <input type="hidden" name="mode" value="admin->regen->full">
-            <input type="submit" value="FORM_UPDATE_PAGES" data-i18n-attributes="value" data-i18n="neltext"><br>
-            <span data-i18n="neltext">MANAGE_UPDATE_WARN</span><br><br>
-        </div>
-    </form>
-    <form action="imgboard.php" method="post" enctype="multipart/form-data" id="regen-caches-form">
-        <div>
-        	<input type="hidden" id="board-id-3" name="board_id" value="">
-            <input type="hidden" name="mode" value="admin->regen->cache">
-            <input type="submit" value="FORM_UPDATE_CACHE" data-i18n-attributes="value" data-i18n="neltext"><br>
-            <span data-i18n="neltext">MANAGE_UPDATE_CACHE_WARN</span><br><br>
-        </div>
-    </form>
+	<div class="pass-valid"><span data-i18n="neltext">MANAGE_MODE</span></div>
+	<div class="del-list"><span data-i18n="neltext">MANAGE_BOARD_OPTIONS</span><span id="board-name"></span></div>
+	<div id="manage-options">
+		<div id="module-board-settings"><a data-parse-id="board-settings-link" href="" title="" data-i18n="neltext">MANAGE_OPT_SETTINGS</a></div>
+		<div id="module-bans"><a data-parse-id="bans-link" href="" title="" data-i18n="neltext">MANAGE_OPT_BAN</a></div>
+		<div id="module-threads"><a data-parse-id="threads-link" href="" title="" data-i18n="neltext">MANAGE_OPT_THREAD</a></div>
+	</div>
+	<hr>
+	<form action="imgboard.php" method="post" enctype="multipart/form-data" id="regen-index-form">
+		<div>
+			<input type="hidden" id="board-id-2" name="board_id" value="">
+			<input type="hidden" name="mode" value="admin->regen->full">
+			<input type="submit" value="FORM_UPDATE_PAGES" data-i18n-attributes="value" data-i18n="neltext"><br>
+			<span data-i18n="neltext">MANAGE_UPDATE_WARN</span><br><br>
+		</div>
+	</form>
+	<form action="imgboard.php" method="post" enctype="multipart/form-data" id="regen-caches-form">
+		<div>
+			<input type="hidden" id="board-id-3" name="board_id" value="">
+			<input type="hidden" name="mode" value="admin->regen->cache">
+			<input type="submit" value="FORM_UPDATE_CACHE" data-i18n-attributes="value" data-i18n="neltext"><br>
+			<span data-i18n="neltext">MANAGE_UPDATE_CACHE_WARN</span><br><br>
+		</div>
+	</form>

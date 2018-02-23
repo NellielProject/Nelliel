@@ -107,6 +107,7 @@ function nel_render_thread_panel_main($board_id)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    die();
 }
 
 function nel_render_thread_panel_expand($board_id, $thread_id)
@@ -177,4 +178,5 @@ function nel_render_thread_panel_expand($board_id, $thread_id)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    die();
 }

@@ -1,32 +1,11 @@
-    <div class="pass-valid"><span data-i18n="neltext">MANAGE_MODE</span></div>
-    <div class="del-list"><span data-i18n="neltext">MANAGE_OPTIONS</span></div>
-    <form action="imgboard.php" method="post" enctype="multipart/form-data">
-        <div>
-        	<input type="hidden" name="mode" value="admin->selectboard">
-            <input type="radio" name="board_id" id="board-select-" value="">
-            <label id="board-label-" for=""></label>
-            <input type="submit" value="FORM_SUBMIT" data-i18n-attributes="value" data-i18n="neltext">
-        </div>
-    </form>
-    <hr>
-    <form action="imgboard.php" method="post" enctype="multipart/form-data" id="regen-index-form">
-        <div>
-            <input type="hidden" name="mode" value="admin->createboard">
-            <input id="create-new-board" type="submit" value="MANAGE_NEW_BOARD" data-i18n-attributes="value" data-i18n="neltext">
-            <label for="create-new-board" data-i18n="neltext">MANAGE_NEW_BOARD_LABEL</label>
-        </div>
-    </form>
-    <form action="imgboard.php" method="post" enctype="multipart/form-data" id="regen-index-form">
-        <div>
-            <input type="hidden" name="mode" value="admin->staff->main">
-            <input id="select-staff-panel" type="submit" value="MANAGE_OPT_STAFF" data-i18n-attributes="value" data-i18n="neltext">
-            <label for="select-staff-panel" data-i18n="neltext">MANAGE_OPT_STAFF_LABEL</label>
-        </div>
-    </form>
-    <form action="imgboard.php" method="post" enctype="multipart/form-data" id="regen-index-form">
-        <div>
-            <input type="hidden" name="mode" value="admin->site-settings">
-            <input id="site-settings" type="submit" value="MANAGE_SITE_SETTINGS" data-i18n-attributes="value" data-i18n="neltext">
-            <label for="site-settings" data-i18n="neltext">MANAGE_SITE_SETTINGS_LABEL</label>
-        </div>
-    </form>
+	<div class="pass-valid"><span data-i18n="neltext">MANAGE_MODE</span></div>
+	<div class="del-list"><span data-i18n="neltext">MANAGE_OPTIONS</span></div>
+	<div id="board-list">
+		<div id="board-entry"><a data-parse-id="board-link" href="" title=""></a></div>
+	</div>
+	<hr>
+	<div id="manage-options">
+		<div id="module-create-board"><a data-parse-id="module-link" href="" title="" data-i18n="neltext">MANAGE_NEW_BOARD</a></div>
+		<div id="module-staff"><a data-parse-id="module-link" href="" title="" data-i18n="neltext">MANAGE_OPT_STAFF</a></div>
+		<div id="module-site-settings"><a data-parse-id="module-link" href="" title="" data-i18n="neltext">MANAGE_SITE_SETTINGS</a></div>
+	</div>

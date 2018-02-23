@@ -15,15 +15,55 @@ function nel_process_mode_input($mode)
     return preg_split('#->#', $mode);
 }
 
+
+function nel_assemble_dispatch_data()
+{
+    if(!empty($_GET))
+    {
+        return;
+    }
+}
+
+
+function nel_central_dispatch($dataforce)
+{
+    $authorize = nel_authorize();
+
+    if(empty($_GET) && empty($_POST))
+    {
+        return;
+    }
+
+    if(isset($_GET['manage']))
+    {
+        nel_new_admin_dispatch($dataforce);
+    }
+}
 //
 // This handles the GET requests
 //
 function nel_process_get($dataforce)
 {
     $authorize = nel_authorize();
+    $board_id = (isset($_GET['board_id'])) ? $_GET['board_id'] : null;
 
-    switch ($dataforce['get_mode']) // Moar modes
+    if(empty($_GET))
     {
+        return;
+    }
+
+    if(isset($_GET['manage']))
+    {
+        nel_new_admin_dispatch($dataforce, $board_id);
+    }
+
+    switch ($_GET['mode'])
+    {
+        case 'manage':
+            nel_verify_login_or_session($dataforce);
+            nel_login($dataforce);
+            break;
+
         case 'display':
             if (!empty($_SESSION)) // For expanding a thread TODO: Fix this
             {

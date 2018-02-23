@@ -10,35 +10,41 @@ function nel_generate_main_panel()
     nel_render_general_header(array(), $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/main_panel.html');
-    $board_listing = $dom->getElementById('board-select-');
-    $board_label = $dom->getElementById('board-label-');
-    $insert_before = $board_listing->parentNode->lastChild;
-    $boards = $dbh->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+    $board_entry = $dom->getElementById('board-entry');
+    $insert_before = $board_entry->parentNode->lastChild;
+    $boards = $dbh->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
 
     if($boards !== false)
     {
         foreach($boards as $board)
         {
-            $listing = $board_listing->cloneNode(true);
-            $label = $board_label->cloneNode(true);
-            $board_listing->parentNode->insertBefore($listing, $insert_before);
-            $board_listing->parentNode->insertBefore($label, $insert_before);
-            $board_listing->parentNode->insertBefore($dom->createElement('br'), $insert_before);
-            $listing->changeId('board-select-' . $board);
-            $listing->extSetAttribute('value', $board);
-            $label->removeAttribute('id');
-            $label->extSetAttribute('for', 'board-select-' . $board);
-            $label->setContent($board);
+            $entry = $board_entry->cloneNode(true);
+            $board_entry->parentNode->insertBefore($entry, $insert_before);
+            $entry->removeAttribute('id');
+            $entry_elements = $entry->getAssociativeNodeArray('data-parse-id', $entry);
+            $entry_elements['board-link']->extSetAttribute('href', PHP_SELF . '?manage=board&module=main-panel&board_id=' . $board['board_id']);
+            $entry_elements['board-link']->extSetAttribute('title', $board['board_id']);
+            $entry_elements['board-link']->setContent('/' . $board['board_id'] . '/');
         }
     }
 
-    $board_listing->removeSelf();
-    $board_label->removeSelf();
+    $manage_options = $dom->getElementById('manage-options');
+    $create_board = $dom->getElementById('module-create-board');
+    $create_board_elements = $create_board->getAssociativeNodeArray('data-parse-id', $create_board);
+    $create_board_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=create-board');
+    $staff = $dom->getElementById('module-staff');
+    $staff_elements = $create_board->getAssociativeNodeArray('data-parse-id', $staff);
+    $staff_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff');
+    $site_settings = $dom->getElementById('module-site-settings');
+    $site_settings_elements = $create_board->getAssociativeNodeArray('data-parse-id', $staff);
+    $site_settings_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=site-settings');
+    $board_entry->removeSelf();
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    die();
 }
 
 function nel_generate_main_board_panel($board_id)
@@ -52,11 +58,49 @@ function nel_generate_main_board_panel($board_id)
     $render->loadTemplateFromFile($dom, 'management/main_board_panel.html');
 
     $dom->getElementById('board-name')->setContent($board_id);
-    $dom->getElementById('board-id-1')->extSetAttribute('value', $board_id);
+    //$dom->getElementById('board-id-1')->extSetAttribute('value', $board_id);
     $dom->getElementById('board-id-2')->extSetAttribute('value', $board_id);
     $dom->getElementById('board-id-3')->extSetAttribute('value', $board_id);
 
+    $manage_options = $dom->getElementById('manage-options');
+
+    $settings = $dom->getElementById('module-board-settings');
+
     if ($authorize->get_user_perm($_SESSION['username'], 'perm_config_access', $board_id))
+    {
+        $settings_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $settings);
+        $settings_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=board&module=board-settings&board_id=' . $board_id);
+    }
+    else
+    {
+        $settings->removeSelf();
+    }
+
+    $bans = $dom->getElementById('module-bans');
+
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban_access', $board_id))
+    {
+        $bans_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $bans);
+        $bans_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=board&module=bans&board_id=' . $board_id);
+    }
+    else
+    {
+        $bans->removeSelf();
+    }
+
+    $threads = $dom->getElementById('module-threads');
+
+    if ($authorize->get_user_perm($_SESSION['username'], 'perm_post_access', $board_id))
+    {
+        $threads_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $threads);
+        $threads_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=board&module=threads&board_id=' . $board_id);
+    }
+    else
+    {
+        $bans->removeSelf();
+    }
+
+    /*if ($authorize->get_user_perm($_SESSION['username'], 'perm_config_access', $board_id))
     {
         $dom->removeChild($dom->getElementById('select-settings-panel'));
     }
@@ -74,7 +118,7 @@ function nel_generate_main_board_panel($board_id)
     if ($authorize->get_user_perm($_SESSION['username'], 'perm_modmode_access', $board_id))
     {
         $dom->removeChild($dom->getElementById('select-mod-mode'));
-    }
+    }*/
 
     if ($authorize->get_user_perm($_SESSION['username'], 'perm_regen_index', $board_id))
     {
@@ -90,4 +134,5 @@ function nel_generate_main_board_panel($board_id)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    die();
 }

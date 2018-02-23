@@ -16,4 +16,5 @@ function nel_generate_create_board_panel()
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    die();
 }

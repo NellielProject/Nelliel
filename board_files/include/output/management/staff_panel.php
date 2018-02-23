@@ -48,6 +48,7 @@ function nel_render_staff_panel_main($dataforce)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    die();
 }
 
 function nel_render_staff_panel_user_edit($dataforce, $user_id)
@@ -110,6 +111,7 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    die();
 }
 
 function nel_render_staff_panel_role_edit($dataforce, $role_id)
@@ -144,4 +146,5 @@ function nel_render_staff_panel_role_edit($dataforce, $role_id)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    die();
 }

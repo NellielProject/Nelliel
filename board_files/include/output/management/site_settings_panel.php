@@ -43,4 +43,5 @@ function nel_render_site_settings_panel($dataforce)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    die();
 }
