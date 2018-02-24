@@ -70,22 +70,12 @@ function nel_admin_dispatch($dataforce)
                 break;
 
             case 'regen':
-                if ($dataforce['mode_segments'][2] === 'full')
+                if ($action === 'pages-all')
                 {
                     nel_regen_all_pages($dataforce, $board_id);
                 }
 
-                if ($dataforce['mode_segments'][2] === 'index')
-                {
-                    nel_regen_index($dataforce, $board_id);
-                }
-
-                if ($dataforce['mode_segments'][2] === 'thread')
-                {
-                    nel_regen_threads($dataforce, $board_id, true, null);
-                }
-
-                if ($dataforce['mode_segments'][2] === 'cache')
+                if ($action === 'cache-all')
                 {
                     nel_regen_cache($board_id, $dataforce);
                 }

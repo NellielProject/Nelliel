@@ -57,13 +57,14 @@ function nel_generate_main_board_panel($board_id)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/main_board_panel.html');
 
+    $dom->getElementById('cache-regen-form')->extSetAttribute('action', PHP_SELF . '?manage=board&module=regen&board_id=' . $board_id);
+    $dom->getElementById('page-regen-form')->extSetAttribute('action', PHP_SELF . '?manage=board&module=regen&board_id=' . $board_id);
     $dom->getElementById('board-name')->setContent($board_id);
     //$dom->getElementById('board-id-1')->extSetAttribute('value', $board_id);
-    $dom->getElementById('board-id-2')->extSetAttribute('value', $board_id);
-    $dom->getElementById('board-id-3')->extSetAttribute('value', $board_id);
+    //$dom->getElementById('board-id-2')->extSetAttribute('value', $board_id);
+    //$dom->getElementById('board-id-3')->extSetAttribute('value', $board_id);
 
     $manage_options = $dom->getElementById('manage-options');
-
     $settings = $dom->getElementById('module-board-settings');
 
     if ($authorize->get_user_perm($_SESSION['username'], 'perm_config_access', $board_id))
@@ -122,12 +123,12 @@ function nel_generate_main_board_panel($board_id)
 
     if ($authorize->get_user_perm($_SESSION['username'], 'perm_regen_index', $board_id))
     {
-        $dom->removeChild($dom->getElementById('regen-index-form'));
+        $dom->removeChild($dom->getElementById('page-regen-form'));
     }
 
     if ($authorize->get_user_perm($_SESSION['username'], 'perm_regen_caches', $board_id))
     {
-        $dom->removeChild($dom->getElementById('regen-index-form'));
+        $dom->removeChild($dom->getElementById('cache-regen-form'));
     }
 
     nel_process_i18n($dom);

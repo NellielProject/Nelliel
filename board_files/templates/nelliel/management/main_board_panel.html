@@ -6,18 +6,16 @@
 		<div id="module-threads"><a data-parse-id="threads-link" href="" title="" data-i18n="neltext">MANAGE_OPT_THREAD</a></div>
 	</div>
 	<hr>
-	<form action="imgboard.php" method="post" enctype="multipart/form-data" id="regen-index-form">
+	<form id="page-regen-form" action="" method="post" enctype="multipart/form-data">
 		<div>
-			<input type="hidden" id="board-id-2" name="board_id" value="">
-			<input type="hidden" name="mode" value="admin->regen->full">
+			<input type="hidden" name="action" value="pages-all">
 			<input type="submit" value="FORM_UPDATE_PAGES" data-i18n-attributes="value" data-i18n="neltext"><br>
 			<span data-i18n="neltext">MANAGE_UPDATE_WARN</span><br><br>
 		</div>
 	</form>
-	<form action="imgboard.php" method="post" enctype="multipart/form-data" id="regen-caches-form">
+	<form id="cache-regen-form" action="" method="post" enctype="multipart/form-data">
 		<div>
-			<input type="hidden" id="board-id-3" name="board_id" value="">
-			<input type="hidden" name="mode" value="admin->regen->cache">
+			<input type="hidden" name="action" value="cache-all">
 			<input type="submit" value="FORM_UPDATE_CACHE" data-i18n-attributes="value" data-i18n="neltext"><br>
 			<span data-i18n="neltext">MANAGE_UPDATE_CACHE_WARN</span><br><br>
 		</div>
