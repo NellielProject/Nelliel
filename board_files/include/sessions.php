@@ -35,7 +35,7 @@ function nel_regen_session()
 // Check for existing session and process
 // If no session exists, confirm login info and set up a new one
 //
-function nel_initialize_session($dataforce)
+function nel_initialize_session($manage, $action, $dataforce)
 {
     $authorize = nel_authorize();
     session_start();
@@ -45,18 +45,18 @@ function nel_initialize_session($dataforce)
         $_SESSION['last_activity'] = time();
         $_SESSION['ignores'] = array('default' => false);
 
-        if (isset($dataforce['get_mode']))
-        {
-            if ($dataforce['get_mode'] === 'log_out')
+        //if (isset($dataforce['get_mode']))
+        //{
+            if ($manage === 'logout')
             {
                 nel_terminate_session();
                 nel_clean_exit($dataforce);
             }
-            else if ($dataforce['get_mode'] === 'admin')
+            else if ($manage === 'login')
             {
                 nel_login($dataforce);
             }
-        }
+        //}
     }
     else if (!empty($_SESSION) && nel_session_is_old())
     {
@@ -65,7 +65,7 @@ function nel_initialize_session($dataforce)
     }
     else
     {
-        if (isset($dataforce['mode']) && $dataforce['mode'] === 'admin->login')
+        if ($manage === 'login' && !is_null($action))
         {
             if ($dataforce['login_valid'])
             {

@@ -14,7 +14,6 @@ function nel_ban_control($board_id, $action, $dataforce)
     $dbh = nel_database();
     $authorize = nel_authorize();
     $ban_hammer = nel_ban_hammer();
-    $mode = $dataforce['mode'];
 
     if ($action === 'modify')
     {

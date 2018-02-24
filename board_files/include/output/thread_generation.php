@@ -25,7 +25,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
     $expand_dom = $render->newDOMDocument();
     $collapse_dom = $render->newDOMDocument();
     $render->startRenderTimer();
-    $dom->getElementById('form-post-index')->extSetAttribute('action', $dataforce['dotdot'] . PHP_SELF);
+    $dom->getElementById('form-post-index')->extSetAttribute('action', $dataforce['dotdot'] . PHP_SELF . '?module=post&board_id=' . $board_id);
 
     $dataforce['response_id'] = $write_id;
     $prepared = $dbh->prepare('SELECT * FROM "' . $references['thread_table'] . '" WHERE "thread_id" = ? LIMIT 1');

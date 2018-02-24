@@ -4,7 +4,40 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function general_dispatch($board_id, $dataforce)
+function nel_general_dispatch($board_id, $dataforce)
+{
+    $module = (isset($_GET['module'])) ? $_GET['module'] : null;
+    $board_id = (isset($_GET['board_id'])) ? $_GET['board_id'] : null;
+    $action = (isset($_POST['action'])) ? $_POST['action'] : null;
+
+    if ($manage === 'general')
+    {
+        switch ($module)
+        {
+            case 'post':
+                if ($action === 'new-post')
+                {
+                    nel_process_new_post($board_id, $dataforce);
+
+                    if (nel_fgsfds('noko'))
+                    {
+                        echo '<meta http-equiv="refresh" content="1;URL=' . nel_board_references($board_id, 'page_dir') .
+                             nel_fgsfds('noko_topic') . '/' . nel_fgsfds('noko_topic') . '.html">';
+                    }
+                    else
+                    {
+                        echo '<meta http-equiv="refresh" content="1;URL=' .
+                             nel_board_references($board_id, 'board_directory') . '/' . PHP_SELF2 . PHP_EXT . '">';
+                    }
+                }
+
+                nel_clean_exit($dataforce, true);
+                break;
+        }
+    }
+}
+
+/*function general_dispatch($board_id, $dataforce)
 {
     switch ($dataforce['mode_segments'][1])
     {
@@ -22,11 +55,13 @@ function general_dispatch($board_id, $dataforce)
 
                 if (nel_fgsfds('noko'))
                 {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . nel_board_references($board_id, 'page_dir') . nel_fgsfds('noko_topic') . '/' . nel_fgsfds('noko_topic') . '.html">';
+                    echo '<meta http-equiv="refresh" content="1;URL=' . nel_board_references($board_id, 'page_dir') .
+                         nel_fgsfds('noko_topic') . '/' . nel_fgsfds('noko_topic') . '.html">';
                 }
                 else
                 {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . nel_board_references($board_id, 'board_directory'). '/' . PHP_SELF2 . PHP_EXT . '">';
+                    echo '<meta http-equiv="refresh" content="1;URL=' .
+                         nel_board_references($board_id, 'board_directory') . '/' . PHP_SELF2 . PHP_EXT . '">';
                 }
             }
 
@@ -44,4 +79,4 @@ function general_dispatch($board_id, $dataforce)
 
             break;
     }
-}
+}*/

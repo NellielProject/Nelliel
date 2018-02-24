@@ -4,13 +4,10 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'dispatch/admin_dispatch.php';
-require_once INCLUDE_PATH . 'dispatch/general_dispatch.php';
-
 //
 // Process the mode field input
 //
-function nel_process_mode_input($mode)
+/*function nel_process_mode_input($mode)
 {
     return preg_split('#->#', $mode);
 }
@@ -22,7 +19,7 @@ function nel_assemble_dispatch_data()
     {
         return;
     }
-}
+}*/
 
 
 function nel_central_dispatch($dataforce)
@@ -34,15 +31,34 @@ function nel_central_dispatch($dataforce)
         return;
     }
 
+    if(isset($_GET['about_nelliel']))
+    {
+        require_once INCLUDE_PATH . 'wat/about.php';
+        nel_about_nelliel_screen();
+    }
+
+    if(isset($_GET['blank']) || isset($_GET['tpilb']))
+    {
+        require_once INCLUDE_PATH . 'wat/wat.php';
+        nel_tpilb();
+    }
+
     if(isset($_GET['manage']))
     {
-        nel_new_admin_dispatch($dataforce);
+        require_once INCLUDE_PATH . 'dispatch/admin_dispatch.php';
+        nel_admin_dispatch($dataforce);
+    }
+
+    if(isset($_GET['module']))
+    {
+        require_once INCLUDE_PATH . 'dispatch/general_dispatch.php';
+        nel_general_dispatch($dataforce);
     }
 }
 //
 // This handles the GET requests
 //
-function nel_process_get($dataforce)
+/*function nel_process_get($dataforce)
 {
     $authorize = nel_authorize();
     $board_id = (isset($_GET['board_id'])) ? $_GET['board_id'] : null;
@@ -101,12 +117,12 @@ function nel_process_get($dataforce)
         require_once INCLUDE_PATH . 'wat/wat.php';
         nel_tpilb();
     }
-}
+}*/
 
 //
 // This handles the POST requests
 //
-function nel_process_post($dataforce)
+/*function nel_process_post($dataforce)
 {
     if (!isset($dataforce['mode']))
     {
@@ -135,4 +151,4 @@ function nel_process_post($dataforce)
     }
 
     nel_clean_exit($dataforce, true);
-}
+}*/

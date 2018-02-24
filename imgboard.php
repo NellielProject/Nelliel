@@ -66,7 +66,7 @@ require_once INCLUDE_PATH . 'post/post.php';
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 
 nel_central_dispatch($dataforce);
-nel_process_get($dataforce);
-nel_process_post($dataforce);
+//nel_process_get($dataforce);
+//nel_process_post($dataforce);
 nel_clean_exit($dataforce, false);
 

@@ -92,7 +92,7 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', nel_site_settings('home_page'));
-    $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage');
+    $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
     if (nel_session_is_ignored('render'))
@@ -101,7 +101,7 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
     }
     else
     {
-        $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?mode=log_out');
+        $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');
     }
 
     nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
@@ -135,7 +135,7 @@ function nel_render_general_header($dataforce, $render)
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', nel_site_settings('home_page'));
-    $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?mode=admin');
+    $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
     if (nel_session_is_ignored('render'))
@@ -144,7 +144,7 @@ function nel_render_general_header($dataforce, $render)
     }
     else
     {
-        $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?mode=log_out');
+        $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');
     }
 
     nel_process_i18n($dom);

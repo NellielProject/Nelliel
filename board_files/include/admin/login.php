@@ -7,12 +7,12 @@ if (!defined('NELLIEL_VERSION'))
 require_once INCLUDE_PATH . 'output/management/main_panel.php';
 require_once INCLUDE_PATH . 'output/management/login_page.php';
 
-function nel_verify_login_or_session($dataforce)
+function nel_verify_login_or_session($manage, $action, $dataforce)
 {
     $authorize = nel_authorize();
     $dbh = nel_database();
 
-    if (isset($dataforce['mode']) && $dataforce['mode'] === 'admin->login')
+    if ($manage === 'login' && !is_null($action))
     {
         if ($_POST['username'] !== '' && $authorize->user_exists($_POST['username']))
         {
@@ -85,12 +85,10 @@ function nel_verify_login_or_session($dataforce)
                      '" (ip_address, failed_attempts, last_attempt) VALUES (?, ?, ?)');
                 $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR']), 1, time()), true);
             }
-
-            nel_derp(300, nel_stext('ERROR_300'));
         }
     }
 
-    nel_initialize_session($dataforce);
+    nel_initialize_session($manage, $action, $dataforce);
 }
 
 function nel_login($dataforce)
