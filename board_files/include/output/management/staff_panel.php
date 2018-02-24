@@ -75,7 +75,7 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
 
     $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
     $board_roles = $dom->getElementById('board-roles');
-    $update_submit = $dom->getElementById('update-user-submit');
+    $update_submit = $dom->getElementById('user-edit-submit');
     $boards = $dbh->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
 
     if ($boards !== false)
