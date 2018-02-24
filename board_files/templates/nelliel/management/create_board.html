@@ -1,6 +1,6 @@
 	<div class="pass-valid"><span data-i18n="neltext">MANAGE_MODE</span></div>
 	<div class="del-list"><span data-i18n="neltext">MANAGE_OPTIONS</span></div>
-	<form action="imgboard.php" method="post" enctype="multipart/form-data">
+	<form id="create-board-form" action="" method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<td>
@@ -20,7 +20,7 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="mode" value="admin->board->create">
+					<input type="hidden" name="action" value="create">
 				</td>
 				<td>
 					<input type="submit" value="FORM_SUBMIT" data-i18n-attributes="value" data-i18n="neltext">

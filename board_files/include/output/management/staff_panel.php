@@ -13,10 +13,13 @@ function nel_render_staff_panel_main($dataforce)
     nel_render_general_header($dataforce, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_main.html');
-
     $user_table = $dom->getElementById('user-table');
     $user_node_array = $dom->getAssociativeNodeArray('data-parse-id', $user_table);
     $users = $dbh->executeFetchAll('SELECT "user_id", "user_title" FROM "' . USER_TABLE . '"', PDO::FETCH_ASSOC);
+    $dom->getElementById('edit-user-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=user');
+    $dom->getElementById('new-user-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=user');
+    $dom->getElementById('edit-role-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=role');
+    $dom->getElementById('new-role-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=role');
 
     foreach ($users as $user)
     {
@@ -61,6 +64,7 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
     nel_render_general_header($dataforce, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_user_edit.html');
+    $dom->getElementById('user-edit-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=user');
 
     if (!is_null($user_id))
     {
@@ -85,7 +89,9 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
             $role_board_id_label->setContent($board);
             $role_board_id_label->extSetAttribute('for', 'role-board-id-' . $board);
             $role_board_id_label->changeId('role-board-id-label-' . $board);
-            $new_board->getElementById('role-board-id-')->changeId('role-board-id-' . $board);
+            $board_id_element = $new_board->getElementById('role-board-id-');
+            $board_id_element->changeId('role-board-id-' . $board);
+            $board_id_element->extSetAttribute('name', 'user_board_role_' . $board);
         }
     }
 
@@ -97,7 +103,6 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
         foreach ($user_boards as $board_role)
         {
             $board_id_element = $dom->getElementById('role-board-id-' . $board_role['board']);
-            $board_id_element->extSetAttribute('name', 'user_board_role_' . $board_role['board']);
             $board_id_element->extSetAttribute('value', $board_role['role_id']);
         }
     }
@@ -124,6 +129,7 @@ function nel_render_staff_panel_role_edit($dataforce, $role_id)
     nel_render_general_header($dataforce, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_role_edit.html');
+    $dom->getElementById('role-edit-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=role');
 
     if (!is_null($role_id))
     {

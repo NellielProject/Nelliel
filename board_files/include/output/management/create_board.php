@@ -12,6 +12,7 @@ function nel_generate_create_board_panel()
     nel_render_general_header(array(), $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/create_board.html');
+    $dom->getElementById('create-board-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=create-board');
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);

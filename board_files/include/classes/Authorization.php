@@ -528,6 +528,11 @@ class Authorization
 
         foreach ($role_data as $key => $value)
         {
+            if ($key === 'permissions')
+            {
+                continue;
+            }
+
             $prepared->bindValue(':' . $key, $value);
         }
 

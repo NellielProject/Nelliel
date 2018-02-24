@@ -9,6 +9,7 @@ function nel_admin_dispatch($dataforce)
     $authorize = nel_authorize();
     $manage = (isset($_GET['manage'])) ? $_GET['manage'] : null;
     $module = (isset($_GET['module'])) ? $_GET['module'] : null;
+    $section = (isset($_GET['section'])) ? $_GET['section'] : null;
     $board_id = (isset($_GET['board_id'])) ? $_GET['board_id'] : null;
     $action = (isset($_POST['action'])) ? $_POST['action'] : null;
     nel_verify_login_or_session($manage, $action, $dataforce);
@@ -31,7 +32,7 @@ function nel_admin_dispatch($dataforce)
 
             case 'staff':
                 require_once INCLUDE_PATH . 'admin/staff_panel.php';
-                nel_staff_panel($dataforce);
+                nel_staff_panel($section, $action, $dataforce);
                 break;
 
             case 'site-settings':

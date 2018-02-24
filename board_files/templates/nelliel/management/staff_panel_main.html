@@ -4,8 +4,8 @@
 	<div class="del-list">
 		<span data-i18n="neltext">MANAGE_STAFF</span>
 	</div>
-	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="mode" value="admin->staff->user->edit">
+	<form id="edit-user-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="action" value="edit">
 		<table id="user-table">
 			<tr data-parse-id="user-row">
 			    <td><input data-parse-id="user-select" type="radio" name="user_id" value=""></td>
@@ -19,14 +19,14 @@
 			</tr>
 		</table>
 	</form>
-	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="mode" value="admin->staff->user->new">
+	<form id="new-user-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="action" value="new">
 		<input type="hidden" name="user_id" value="">
 		<input type="submit" value="FORM_STAFF_USER_NEW" data-i18n="neltext" data-i18n-attributes="value">
 	</form>
 	<hr>
-	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="mode" value="admin->staff->role->edit">
+	<form id="edit-role-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="action" value="edit">
 		<table id="role-table">
 			<tr data-parse-id="role-row">
 			    <td><input data-parse-id="role-select" type="radio" name="role_id" value=""></td>
@@ -40,8 +40,8 @@
 			</tr>
 		</table>
 	</form>
-	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="mode" value="admin->staff->role->new">
+	<form id="new-role-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="action" value="new">
 		<input type="hidden" name="role_id" value="">
 		<input type="submit" value="FORM_STAFF_ROLE_NEW" data-i18n="neltext" data-i18n-attributes="value">
 	</form>

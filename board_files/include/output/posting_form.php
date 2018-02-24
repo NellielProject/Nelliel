@@ -34,11 +34,6 @@ function nel_render_posting_form($board_id, $dataforce, $render)
         $post_form_return_link->removeSelf();
     }
 
-    if ($dataforce['get_mode'] !== 'display')
-    {
-        $posting_form->doXPathQuery(".//input[@name='mode2']")->item(0)->removeSelf();
-    }
-
     $new_post_element = $posting_form->doXPathQuery(".//input[@name='new_post[post_info][response_to]']", $posting_form)->item(0);
     $new_post_element->extSetAttribute('value', $response_id);
     $dom->getElementById('not-anonymous')->extSetAttribute('maxlength', $board_settings['max_name_length']);

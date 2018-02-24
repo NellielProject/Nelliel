@@ -36,7 +36,7 @@ function nel_generate_main_panel()
     $staff_elements = $create_board->getAssociativeNodeArray('data-parse-id', $staff);
     $staff_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff');
     $site_settings = $dom->getElementById('module-site-settings');
-    $site_settings_elements = $create_board->getAssociativeNodeArray('data-parse-id', $staff);
+    $site_settings_elements = $create_board->getAssociativeNodeArray('data-parse-id', $site_settings);
     $site_settings_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=site-settings');
     $board_entry->removeSelf();
 

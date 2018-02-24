@@ -7,33 +7,31 @@ if (!defined('NELLIEL_VERSION'))
 function nel_general_dispatch($board_id, $dataforce)
 {
     $module = (isset($_GET['module'])) ? $_GET['module'] : null;
+    $section = (isset($_GET['section'])) ? $_GET['section'] : null;
     $board_id = (isset($_GET['board_id'])) ? $_GET['board_id'] : null;
     $action = (isset($_POST['action'])) ? $_POST['action'] : null;
 
-    if ($manage === 'general')
+    switch ($module)
     {
-        switch ($module)
-        {
-            case 'post':
-                if ($action === 'new-post')
+        case 'post':
+            if ($action === 'new-post')
+            {
+                nel_process_new_post($board_id, $dataforce);
+
+                if (nel_fgsfds('noko'))
                 {
-                    nel_process_new_post($board_id, $dataforce);
-
-                    if (nel_fgsfds('noko'))
-                    {
-                        echo '<meta http-equiv="refresh" content="1;URL=' . nel_board_references($board_id, 'page_dir') .
-                             nel_fgsfds('noko_topic') . '/' . nel_fgsfds('noko_topic') . '.html">';
-                    }
-                    else
-                    {
-                        echo '<meta http-equiv="refresh" content="1;URL=' .
-                             nel_board_references($board_id, 'board_directory') . '/' . PHP_SELF2 . PHP_EXT . '">';
-                    }
+                    echo '<meta http-equiv="refresh" content="1;URL=' . nel_board_references($board_id, 'page_dir') .
+                         nel_fgsfds('noko_topic') . '/' . nel_fgsfds('noko_topic') . '.html">';
                 }
+                else
+                {
+                    echo '<meta http-equiv="refresh" content="1;URL=' .
+                         nel_board_references($board_id, 'board_directory') . '/' . PHP_SELF2 . PHP_EXT . '">';
+                }
+            }
 
-                nel_clean_exit($dataforce, true);
-                break;
-        }
+            nel_clean_exit($dataforce, true);
+            break;
     }
 }
 

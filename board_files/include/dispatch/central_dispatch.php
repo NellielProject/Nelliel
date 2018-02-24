@@ -52,7 +52,7 @@ function nel_central_dispatch($dataforce)
     if(isset($_GET['module']))
     {
         require_once INCLUDE_PATH . 'dispatch/general_dispatch.php';
-        nel_general_dispatch($dataforce);
+        nel_general_dispatch(INPUT_BOARD_ID, $dataforce);
     }
 }
 //
