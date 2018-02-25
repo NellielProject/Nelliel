@@ -16,8 +16,8 @@ function nel_about_nelliel_screen()
 
     echo '
     <div class="text-center">
+        <h1 class="logo">Nelliel Imageboard</h1>
         <p>
-            <span style="font-weight: bold; font-size: 1.25em; color: blue;">Nelliel Imageboard</span><br>
             Version: ' . NELLIEL_VERSION . '
         </p>
         <p class="text-center">
