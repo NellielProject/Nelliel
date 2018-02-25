@@ -18,6 +18,10 @@ img {
 	
 }
 
+hr {
+	color: #000000;
+}
+
 a {
     color: #34345C;
     text-decoration: none;
@@ -95,25 +99,23 @@ a.post-link:visited {
     float: right;
 }
 
-.pass-valid {
-    background: #9988EE;
-    color: #ffffff;
-    text-align: center;
-    font-weight: bold;
-    width: 100%;
-}
-
-.del-list {
-    background: #33AAFF;
-    text-align: center;
-    font-weight: bold;
-    width: 100%;
-}
-
 .manage-header {
-    background: #0F8FE1;
+    background: #9988EE;
+    color: #FFFFFF;
     font-family: sans-serif;
-    padding: 0px;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px;
+    width: 100%;
+}
+
+.manage-sub-header {
+    background: #BBAAFF;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px;
+    width: 100%;
 }
 
 .post-lists {
@@ -250,19 +252,19 @@ a.post-link:visited {
 
 .mod-comment {
     color: #FF0000;
-    font-size: 1.10em;
+    font-size: 1.05em;
     font-weight: bold;
 }
 
 .old-post {
 	color: #CC1105;
-    font-size: 1.10em;
+    font-size: 1.05em;
     font-weight: bold;
 }
 
 .omitted-posts {
     color: #070707;
-    font-size: 1.10em;
+    font-size: 1.05em;
     font-weight: bold;
 }
 

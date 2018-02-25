@@ -1,7 +1,7 @@
 /* General formatting */
 body {
-    background: #000000;
-    color: #FFFFFF;
+    background: #101010;
+    color: #EEEEEE;
     font-size: 1.0em;
     font-family: serif;
     padding-left: 6px;
@@ -18,16 +18,20 @@ img {
 	
 }
 
+hr {
+	color: #222222;
+}
+
 a {
-    color: #0147FA;
+    color: #00FFCC;
 }
 
 a:visited {
-    color: #5500FF;
+    color: #00FFCC;
 }
 
 a:hover {
-    color: #3322AA;
+    color: #00BB88;
 }
 
 a.post-link:active {
@@ -49,7 +53,7 @@ a.post-link:visited {
 }
 
 .logo {
-	color: #AA0000;
+	color: #CC0000;
     text-align: center;
     font-weight: bold;
     width: 100%;
@@ -92,39 +96,39 @@ a.post-link:visited {
     float: right;
 }
 
-.pass-valid {
-    background: #33AAFF;
-    text-align: center;
-    font-weight: bold;
-    width: 100%;
-}
-
-.del-list {
-    background: #33AAFF;
-    text-align: center;
-    font-weight: bold;
-    width: 100%;
-}
-
 .manage-header {
-    background: #0F8FE1;
+    background: #404040;
+    color: #00CC44;
     font-family: sans-serif;
-    padding: 0px;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px;
+    width: 100%;
+}
+
+.manage-sub-header {
+    background: #606060;
+    color: #00CC44;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px;
+    width: 100%;
 }
 
 .post-lists {
-    background: #FFFFFF;
+    background: #202020;
     width: 100%;
     padding: 0px;
 }
 
 .row1 {
-    background: #9AD2F6;
+    background: #303030;
     font-family: sans-serif;
 }
 
 .row2 {
-    background: #FFFFFF;
+    background: #505050;
     font-family: sans-serif;
 }
 
@@ -144,7 +148,7 @@ a.post-link:visited {
 }
 
 .posting-form-label {
-    background: #151515;
+    background: #303030;
     color: #00DD66;
     font-weight: bold;
     padding: 3px;
@@ -246,20 +250,20 @@ a.post-link:visited {
 }
 
 .mod-comment {
-    color: #CC1105;
-    font-size: 1.10em;
+    color: #FF0000;
+    font-size: 1.05em;
     font-weight: bold;
 }
 
 .old-post {
-    color: #CC1105;
-    font-size: 1.10em;
+    color: #DD1100;
+    font-size: 1.05em;
     font-weight: bold;
 }
 
 .omitted-posts {
-    color: #00DD66;
-    font-size: 1.10em;
+    color: #00CC66;
+    font-size: 1.05em;
     font-weight: bold;
 }
 
@@ -277,7 +281,7 @@ a.post-link:visited {
 
 /* OP post formatting */
 .op-post {
-    color: #FFFFFF;
+    color: #EEEEEE;
     min-width: 15em;
     max-width: 100%;
     height: 100%;
@@ -286,17 +290,17 @@ a.post-link:visited {
 }
 
 .op-post.post-highlight {
-	background: #AABBFF;
+	background: #777777;
 }
 
 .op-poster-name {
-    color: #FFFF00;
+    color: #EEEE00;
     text-decoration: none;
     font-weight: bold;
 }
 
 .op-subject {
-    color: #00FFDD;
+    color: #0088EE;
     font-size: 1.10em;
     font-weight: bold;
 }
@@ -322,9 +326,9 @@ a.post-link:visited {
 
 /* Reply post formatting */
 .reply-post {
-    background: #151515;
-    color: #FFFFFF;
-    border: 1px solid #0276FD;
+    background: #222222;
+    color: #EEEEEE;
+    border: 1px solid #666666;
     padding: 5px;
     min-width: 15em;
     max-width: 95%;
@@ -335,17 +339,17 @@ a.post-link:visited {
 }
 
 .reply-post.post-highlight {
-	background: #AABBFF;
+	background: #777777;
 }
 
 .reply-poster-name {
-    color: #FFFF00;
+    color: #EEEE00;
     text-decoration: none;
     font-weight: bold;
 }
 
 .reply-subject {
-    color: #00FFDD;
+    color: #0088EE;
     font-size: 1.10em;
     font-weight: bold;
 }
@@ -374,7 +378,7 @@ a.post-link:visited {
 }
 
 .indents {
-	color: #009900;
+	color: #00DD66;
     padding: 1px;
     float: left;
 }

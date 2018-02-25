@@ -18,6 +18,9 @@ img {
 	
 }
 
+hr {
+	color: #800000;
+}
 
 a {
     color: #0000EE;
@@ -93,24 +96,22 @@ a.post-link:visited {
     float: right;
 }
 
-.pass-valid {
-    background: #EEAA88;
-    text-align: center;
-    font-weight: bold;
-    width: 100%;
-    color: #FFFFFF;
-}
-
-.del-list {
-    text-align: center;
-    font-weight: bold;
-    width: 100%;
-}
-
 .manage-header {
-    background: #0F8FE1;
+    background: #EEAA88;
     font-family: sans-serif;
-    padding: 0px;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px;
+    width: 100%;
+}
+
+.manage-sub-header {
+	background: #FFCCAA;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px;
+    width: 100%;
 }
 
 .post-lists {
@@ -235,19 +236,19 @@ a.post-link:visited {
 
 .mod-comment {
     color: #FF0000;
-    font-size: 1.10em;
+    font-size: 1.05em;
     font-weight: bold;
 }
 
 .old-post {
 	color: #CC1105;
-    font-size: 1.10em;
+    font-size: 1.05em;
     font-weight: bold;
 }
 
 .omitted-posts {
 	color: #070707;
-    font-size: 1.10em;
+    font-size: 1.05em;
     font-weight: bold;
 }
 
