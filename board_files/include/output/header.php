@@ -17,7 +17,8 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . $board_id .
          '\');};');
-    $dom->getElementById('js-style-set')->setContent('changeBoardStyle("' .$board_id . '", getCookie("style-' . $board_id . '"));');
+    $dom->getElementById('js-style-set')->setContent('changeBoardStyle("' . $board_id . '", getCookie("style-' .
+         $board_id . '"));');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
@@ -111,7 +112,7 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
     $render->appendHTMLFromDOM($dom);
 }
 
-function nel_render_general_header($dataforce, $render, $panel_data = null)
+function nel_render_general_header($dataforce, $render, $board_id = null, $panel_data = array())
 {
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
@@ -148,7 +149,18 @@ function nel_render_general_header($dataforce, $render, $panel_data = null)
     }
     else
     {
-        if(!is_null($panel_data))
+        if (isset($panel_data['header']))
+        {
+            $dom->getElementById('manage-header-text')->setContent($panel_data['header']);
+        }
+
+        if (!is_null($board_id))
+        {
+            $board_data = nel_stext('MANAGE_CURRENT_BOARD') . ' ' . $board_id;
+            $dom->getElementById('manage-board-header-data')->setContent($board_data);
+        }
+
+        if (isset($panel_data['sub_header']))
         {
             $dom->getElementById('manage-sub-header-text')->setContent($panel_data['sub_header']);
         }

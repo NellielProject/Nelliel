@@ -109,6 +109,15 @@ a.post-link:visited {
     width: 100%;
 }
 
+.manage-board-header {
+    background: #9988EE;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px;
+    width: 100%;
+}
+
 .manage-sub-header {
     background: #BBAAFF;
     font-family: sans-serif;

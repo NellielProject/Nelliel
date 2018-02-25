@@ -7,7 +7,7 @@ function nel_generate_main_panel()
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header(array(), $render, array('sub_header' => 'MANAGE_OPTIONS'));
+    nel_render_general_header(array(), $render, null, array('header' => 'MANAGE_GENERAL', 'sub_header' => 'MANAGE_OPTIONS'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/main_panel.html');
     $board_entry = $dom->getElementById('board-entry');
@@ -53,17 +53,11 @@ function nel_generate_main_board_panel($board_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header(array(), $render, array('sub_header' => 'MANAGE_BOARD_OPTIONS'));
+    nel_render_general_header(array(), $render, $board_id, array('header' => 'MANAGE_BOARD', 'sub_header' => 'MANAGE_OPTIONS'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/main_board_panel.html');
-
     $dom->getElementById('cache-regen-form')->extSetAttribute('action', PHP_SELF . '?manage=board&module=regen&board_id=' . $board_id);
     $dom->getElementById('page-regen-form')->extSetAttribute('action', PHP_SELF . '?manage=board&module=regen&board_id=' . $board_id);
-    //$dom->getElementById('board-name')->setContent($board_id);
-    //$dom->getElementById('board-id-1')->extSetAttribute('value', $board_id);
-    //$dom->getElementById('board-id-2')->extSetAttribute('value', $board_id);
-    //$dom->getElementById('board-id-3')->extSetAttribute('value', $board_id);
-
     $manage_options = $dom->getElementById('manage-options');
     $settings = $dom->getElementById('module-board-settings');
 

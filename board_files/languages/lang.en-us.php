@@ -137,9 +137,10 @@ $lang_singular = array(
     'ERROR_441' => 'The specified role does not exist.',  // Error 441: Role does not exist
     'ERROR_442' => 'No valid action given for user or role panels.',  // Error 442: No valid user/role action
 
-    'MANAGE_MODE' => 'Management Mode',  // Management
+    'MANAGE_GENERAL' => 'General Management',  // General Management
+    'MANAGE_BOARD' => 'Board Management',  // Board Management
+    'MANAGE_CURRENT_BOARD' => 'Current Board:',  // Current Board
     'MANAGE_OPTIONS' => 'Options',  // Options
-    'MANAGE_BOARD_OPTIONS' => 'Options for board: ',  // Board options
     'MANAGE_SETTINGS' => 'Board Settings',  // Settings
     'MANAGE_SITE_SETTINGS' => 'Site Settings',  // Settings
     'MANAGE_SITE_SETTINGS_LABEL' => 'View and change the site-wide settings.',  // Settings

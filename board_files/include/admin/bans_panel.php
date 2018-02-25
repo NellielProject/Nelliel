@@ -31,7 +31,7 @@ function nel_ban_control($board_id, $action, $dataforce)
             nel_derp(321, nel_stext('ERROR_321'));
         }
 
-        nel_render_ban_panel_add($dataforce);
+        nel_render_ban_panel_add($board_id, $dataforce);
     }
     else if ($action === 'add')
     {
