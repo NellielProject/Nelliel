@@ -98,6 +98,8 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
     if (nel_session_is_ignored('render'))
     {
         $top_admin_span->removeChild($a_elements->item(0)->parentNode);
+        $dom->getElementById('manage-header')->removeSelf();
+        $dom->getElementById('manage-sub-header')->removeSelf();
     }
     else
     {
@@ -109,7 +111,7 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
     $render->appendHTMLFromDOM($dom);
 }
 
-function nel_render_general_header($dataforce, $render)
+function nel_render_general_header($dataforce, $render, $panel_data = null)
 {
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
@@ -141,9 +143,16 @@ function nel_render_general_header($dataforce, $render)
     if (nel_session_is_ignored('render'))
     {
         $top_admin_span->removeChild($a_elements->item(0)->parentNode);
+        $dom->getElementById('manage-header')->removeSelf();
+        $dom->getElementById('manage-sub-header')->removeSelf();
     }
     else
     {
+        if(!is_null($panel_data))
+        {
+            $dom->getElementById('manage-sub-header-text')->setContent($panel_data['sub_header']);
+        }
+
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');
     }
 

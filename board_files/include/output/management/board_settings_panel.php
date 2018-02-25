@@ -11,7 +11,7 @@ function nel_render_board_settings_panel($board_id, $dataforce)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($dataforce, $render);
+    nel_render_general_header($dataforce, $render, array('sub_header' => 'MANAGE_SETTINGS'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/board_settings_panel.html');
     $dom->getElementById('board-settings-form')->extSetAttribute('action', PHP_SELF . '?manage=board&module=board-settings&board_id=' . $board_id);

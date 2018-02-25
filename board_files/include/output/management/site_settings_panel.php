@@ -10,7 +10,7 @@ function nel_render_site_settings_panel($dataforce)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($dataforce, $render);
+    nel_render_general_header($dataforce, $render, array('sub_header' => 'MANAGE_SETTINGS'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/site_settings_panel.html');
     $result = $dbh->query('SELECT * FROM "nelliel_site_config"');
