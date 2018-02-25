@@ -100,6 +100,7 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
     {
         $top_admin_span->removeChild($a_elements->item(0)->parentNode);
         $dom->getElementById('manage-header')->removeSelf();
+        $dom->getElementById('manage-board-header')->removeSelf();
         $dom->getElementById('manage-sub-header')->removeSelf();
     }
     else
@@ -145,6 +146,7 @@ function nel_render_general_header($dataforce, $render, $board_id = null, $panel
     {
         $top_admin_span->removeChild($a_elements->item(0)->parentNode);
         $dom->getElementById('manage-header')->removeSelf();
+        $dom->getElementById('manage-board-header')->removeSelf();
         $dom->getElementById('manage-sub-header')->removeSelf();
     }
     else
