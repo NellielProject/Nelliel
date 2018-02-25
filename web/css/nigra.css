@@ -98,7 +98,7 @@ a.post-link:visited {
 
 .manage-header {
     background: #404040;
-    color: #00CC44;
+
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
@@ -108,6 +108,7 @@ a.post-link:visited {
 
 .manage-board-header {
     background: #404040;
+
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
@@ -117,7 +118,7 @@ a.post-link:visited {
 
 .manage-sub-header {
     background: #606060;
-    color: #00CC44;
+
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
