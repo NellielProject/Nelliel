@@ -25,8 +25,6 @@ define('SITE_CONFIG_TABLE', 'nelliel_site_config'); // Table containing site-wid
 
 $dataforce = array();
 $dataforce['login_valid'] = false;
-//$dataforce['mode'] = (isset($_POST['mode'])) ? $_POST['mode'] : NULL;
-//$dataforce['get_mode'] = (isset($_GET['mode'])) ? $_GET['mode'] : NULL;
 $dataforce['current_page'] = (isset($_GET['page'])) ? $_GET['page'] : NULL;
 $dataforce['expand'] = (isset($_GET['expand'])) ? TRUE : FALSE;
 $dataforce['collapse'] = (isset($_GET['collapse'])) ? TRUE : FALSE;

@@ -45,18 +45,15 @@ function nel_initialize_session($manage, $action, $dataforce)
         $_SESSION['last_activity'] = time();
         $_SESSION['ignores'] = array('default' => false);
 
-        //if (isset($dataforce['get_mode']))
-        //{
-            if ($manage === 'logout')
-            {
-                nel_terminate_session();
-                nel_clean_exit($dataforce);
-            }
-            else if ($manage === 'login')
-            {
-                nel_login($dataforce);
-            }
-        //}
+        if ($manage === 'logout')
+        {
+            nel_terminate_session();
+            nel_clean_exit();
+        }
+        else if ($manage === 'login')
+        {
+            nel_login($dataforce);
+        }
     }
     else if (!empty($_SESSION) && nel_session_is_old())
     {

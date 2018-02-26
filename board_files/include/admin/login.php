@@ -111,5 +111,5 @@ function nel_login($dataforce)
         nel_render_login_page();
     }
 
-    nel_clean_exit($dataforce, true);
+    nel_clean_exit();
 }

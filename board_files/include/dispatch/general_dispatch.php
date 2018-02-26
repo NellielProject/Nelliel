@@ -35,13 +35,13 @@ function nel_general_dispatch($board_id, $dataforce)
         case 'threads':
             if ($action === 'update')
             {
-                $updates = nel_thread_updates($dataforce, $board_id);
+                $updates = nel_thread_updates($board_id);
                 nel_regen_threads($dataforce, $board_id, true, $updates);
                 nel_regen_index($dataforce, $board_id);
-                nel_clean_exit($dataforce, false);
+                nel_clean_exit(true);
             }
 
-            nel_clean_exit($dataforce, true);
+            nel_clean_exit();
             break;
     }
 }

@@ -20,7 +20,7 @@ function nel_thread_panel($board_id, $action, $dataforce, $authorize)
             nel_derp(351, nel_stext('ERROR_351'));
         }
 
-        $updates = nel_thread_updates($dataforce, $board_id);
+        $updates = nel_thread_updates($board_id);
         nel_regen_threads($dataforce, $board_id, true, $updates);
         nel_regen_index($dataforce, $board_id);
     }

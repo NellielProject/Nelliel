@@ -117,5 +117,5 @@ function nel_apply_ban($dataforce, $board_id)
     }
 
     nel_render_ban_page($board_id, $dataforce, $ban_info);
-    nel_clean_exit($dataforce, true);
+    nel_clean_exit();
 }

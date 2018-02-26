@@ -77,7 +77,7 @@ function nel_admin_dispatch($dataforce)
 
                 if ($action === 'cache-all')
                 {
-                    nel_regen_cache($board_id, $dataforce);
+                    nel_regen_cache($board_id);
                 }
 
                 nel_login($dataforce);

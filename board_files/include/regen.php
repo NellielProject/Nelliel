@@ -25,7 +25,7 @@ function nel_regen_threads($dataforce, $board_id, $write, $ids)
     }
 }
 
-function nel_regen_cache($board_id, $dataforce)
+function nel_regen_cache($board_id)
 {
     nel_cache_filetype_settings($board_id);
     nel_cache_board_settings($board_id);

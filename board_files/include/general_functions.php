@@ -9,20 +9,19 @@ function nel_is_in_string($string, $substring)
     return utf8_strripos($string, $substring) !== false;
 }
 
-function nel_clean_exit($dataforce, $die)
+function nel_clean_exit($redirect = false)
 {
     $authorize = nel_authorize();
     $authorize->save_users();
     $authorize->save_roles();
     $authorize->save_user_roles();
 
-    if ($die)
+    if($redirect)
     {
-        die();
+        echo '<meta http-equiv="refresh" content="2;URL=' . nel_board_references(INPUT_BOARD_ID, 'board_directory') . '/' .
+        PHP_SELF2 . PHP_EXT . '">';
     }
 
-    echo '<meta http-equiv="refresh" content="2;URL=' . nel_board_references(INPUT_BOARD_ID, 'board_directory') . '/' .
-         PHP_SELF2 . PHP_EXT . '">';
     die();
 }
 

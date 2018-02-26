@@ -39,7 +39,7 @@ function nel_board_settings_control($board_id, $action, $dataforce)
             }
         }
 
-        nel_regen_cache($board_id, $dataforce);
+        nel_regen_cache($board_id);
         nel_regen_all_pages($dataforce, $board_id);
     }
 

@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_thread_updates($dataforce, $board_id)
+function nel_thread_updates($board_id)
 {
     $archive = nel_archive($board_id);
     $thread_handler = nel_thread_handler($board_id);
