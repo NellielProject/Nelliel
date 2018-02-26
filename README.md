@@ -11,7 +11,7 @@ Nelliel's minimum requirements are kept to the lowest reasonable level for curre
 
 Required:
 - PHP 5.3.3+
-- GD 2.0.35+
+- GD 2.0.34+
 - PDO with MySQL, SQLite or PostgreSQL
 - MySQL 5.1.73+ or SQLite 3.6.20+ or PostgreSQL 8.4.20+
 - iconv 2.12+
@@ -23,6 +23,7 @@ In most cases these requirements will be fulfilled by a standard PHP install and
 ## Optional Requirements ##
 These are optional things that Nelliel or one of its libraries can utilize for extra features or performance increases. They are not required and the software will work fine without them:
 - ImageMagick
+- Imagick (PECL extension)
 - mbstring
 
 ## Plugin API ##
