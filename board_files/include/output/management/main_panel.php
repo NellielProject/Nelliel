@@ -1,6 +1,6 @@
 <?php
 
-function nel_generate_main_panel()
+function nel_render_main_panel()
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
@@ -47,7 +47,7 @@ function nel_generate_main_panel()
     die();
 }
 
-function nel_generate_main_board_panel($board_id)
+function nel_render_main_board_panel($board_id)
 {
     $authorize = nel_authorize();
     $render = new NellielTemplates\RenderCore();

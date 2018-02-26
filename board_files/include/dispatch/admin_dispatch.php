@@ -27,7 +27,7 @@ function nel_admin_dispatch($dataforce)
         switch ($module)
         {
             case 'main-panel':
-                nel_generate_main_panel();
+                nel_render_main_panel();
                 break;
 
             case 'staff':
@@ -42,7 +42,7 @@ function nel_admin_dispatch($dataforce)
 
             case 'create-board':
                 require_once INCLUDE_PATH . 'output/management/create_board.php';
-                nel_generate_create_board_panel();
+                nel_render_create_board_panel();
                 break;
 
             default:
@@ -84,7 +84,7 @@ function nel_admin_dispatch($dataforce)
                 break;
 
             case 'main-panel':
-                nel_generate_main_board_panel($board_id);
+                nel_render_main_board_panel($board_id);
                 break;
         }
     }

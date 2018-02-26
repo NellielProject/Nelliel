@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_generate_create_board_panel()
+function nel_render_create_board_panel()
 {
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();

@@ -97,18 +97,18 @@ function nel_login($dataforce)
     {
         if(INPUT_BOARD_ID === '')
         {
-            nel_generate_main_panel();
+            nel_render_main_panel();
         }
         else
         {
-            nel_generate_main_board_panel(INPUT_BOARD_ID);
+            nel_render_main_board_panel(INPUT_BOARD_ID);
         }
     }
     else
     {
         nel_insert_default_admin(); // Let's make sure there's some kind of admin in the system
         nel_insert_default_admin_role(); // And then be sure admin is assigned the role
-        nel_generate_login_page();
+        nel_render_login_page();
     }
 
     nel_clean_exit($dataforce, true);
