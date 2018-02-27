@@ -82,7 +82,7 @@ function nel_thread_generator($board_id, $write, $response_to)
 
         if ($gen_data['post']['op'] == 1)
         {
-            $base_new_post_node = nel_render_post($board_id, $gen_params, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
+            $base_new_post_node = nel_render_post($board_id, $gen_params, true, $gen_data, $dom);
             $expand_div = $dom->getElementById('thread-expand-');
             $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
             $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
@@ -103,7 +103,7 @@ function nel_thread_generator($board_id, $write, $response_to)
         }
         else
         {
-            $base_new_post_node = nel_render_post($board_id, $gen_params, $render, TRUE, FALSE, $gen_data, $treeline, $dom);
+            $base_new_post_node = nel_render_post($board_id, $gen_params, true, $gen_data, $dom);
 
             if ($gen_data['thread']['post_count'] > $board_settings['abbreviate_thread'])
             {

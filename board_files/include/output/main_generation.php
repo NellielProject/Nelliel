@@ -111,16 +111,16 @@ function nel_main_thread_generator($board_id, $response_to, $write)
                 if ($abbreviate)
                 {
                     $gen_data['post_counter'] = $gen_data['thread']['post_count'] - $board_settings['abbreviate_thread'];
-                    $new_post_element = nel_render_post($board_id, $gen_params, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
+                    $new_post_element = nel_render_post($board_id, $gen_params, false, $gen_data, $dom);
                 }
                 else
                 {
-                    $new_post_element = nel_render_post($board_id, $gen_params, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
+                    $new_post_element = nel_render_post($board_id, $gen_params, false, $gen_data, $dom);
                 }
             }
             else
             {
-                $new_post_element = nel_render_post($board_id, $gen_params, $render, TRUE, TRUE, $gen_data, $treeline, $dom);
+                $new_post_element = nel_render_post($board_id, $gen_params, true, $gen_data, $dom);
             }
 
             $imported = $dom->importNode($new_post_element, true);

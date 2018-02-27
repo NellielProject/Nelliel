@@ -55,10 +55,9 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
     $dom->getElementById('outer-div')->appendChild($imported);
 }
 
-function nel_render_post($board_id, $gen_params, $render, $response, $ref_parent, $gen_data, $treeline, $dom)
+function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 {
     $authorize = nel_authorize();
-    $dbh = nel_database();
     $references = nel_board_references($board_id);
     $board_settings = nel_board_settings($board_id);
     $start = microtime(true);
