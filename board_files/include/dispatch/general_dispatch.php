@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_general_dispatch($board_id)
+function nel_general_dispatch()
 {
     $module = (isset($_GET['module'])) ? $_GET['module'] : null;
     $section = (isset($_GET['section'])) ? $_GET['section'] : null;

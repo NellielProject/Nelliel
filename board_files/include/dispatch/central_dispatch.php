@@ -34,6 +34,6 @@ function nel_central_dispatch()
     if(isset($_GET['module']))
     {
         require_once INCLUDE_PATH . 'dispatch/general_dispatch.php';
-        nel_general_dispatch(INPUT_BOARD_ID);
+        nel_general_dispatch();
     }
 }
