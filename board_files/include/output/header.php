@@ -119,9 +119,10 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $render->loadTemplateFromFile($dom, 'header.html');
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $dotdot = (!is_null($dotdot)) ? $dotdot : '';
+    $board_id = (!is_null($board_id)) ? $board_id : '';
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
-    $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . INPUT_BOARD_ID .
+    $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . $board_id .
          '\');};');
     $dom->getElementById('js-style-set')->setContent('changeBoardStyle("", getCookie("base-style"));');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
@@ -156,7 +157,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
             $dom->getElementById('manage-header-text')->setContent($extra_data['header']);
         }
 
-        if (!is_null($board_id))
+        if ($board_id !== '')
         {
             $board_data = nel_stext('MANAGE_CURRENT_BOARD') . ' ' . $board_id;
             $dom->getElementById('manage-board-header-data')->setContent($board_data);

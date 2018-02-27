@@ -22,7 +22,7 @@ function nel_site_settings_control($action)
             }
         }
 
-        nel_regen_cache(INPUT_BOARD_ID);
+        nel_regen_cache();
     }
 
     nel_render_site_settings_panel();
