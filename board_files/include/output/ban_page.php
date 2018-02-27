@@ -9,7 +9,7 @@ function nel_render_ban_page($board_id, $dataforce, $ban_info)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_board_header($board_id, $dataforce, $render);
+    nel_render_board_header($board_id, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'ban_page.html');
     $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '../';

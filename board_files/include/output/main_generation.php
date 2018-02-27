@@ -14,6 +14,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
     $board_settings = nel_board_settings($board_id);
     $file_handler = nel_file_handler();
     $thread_table = $gen_data = array();
+    $dotdot = '../';
     $dataforce['dotdot'] = '../';
 
     if ($write)
@@ -37,7 +38,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
         $render = new NellielTemplates\RenderCore();
         $render->startRenderTimer();
         $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-        nel_render_board_header($board_id, $dataforce, $render, $treeline);
+        nel_render_board_header($board_id, $render, $dotdot, $treeline);
         nel_render_posting_form($board_id, $dataforce, $render);
         nel_render_board_footer($board_id, $render, true);
 

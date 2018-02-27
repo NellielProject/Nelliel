@@ -4,14 +4,14 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_board_header($board_id, $dataforce, $render, $treeline = null)
+function nel_render_board_header($board_id, $render, $dotdot = null, $treeline = null)
 {
     $dbh = nel_database();
     $board_settings = nel_board_settings($board_id);
     $references = nel_board_references($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
-    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '../';
+    $dotdot = (is_null($dotdot)) ? $dotdot : '';
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');

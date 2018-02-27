@@ -27,7 +27,7 @@ function nel_render_board_derp($board_id, $diagnostic)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_board_header($board_id, array(), $render);
+    nel_render_board_header($board_id, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'derp.html');
     $dom->getElementById('error-message')->setContent($diagnostic['error-message']);
