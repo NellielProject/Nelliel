@@ -35,7 +35,8 @@ function nel_banned_hash($hash, $file)
     {
         if ($hash === $cancer[$i])
         {
-            nel_derp(150, nel_stext('ERROR_150'), null, array('bad-filename' => $file['filename'] . $file['ext'], 'files' => array($file)));
+            nel_derp(150, nel_stext('ERROR_150'), null, array('bad-filename' => $file['filename'] . $file['ext'],
+                'files' => array($file)));
         }
     }
 }
@@ -79,33 +80,45 @@ function nel_banned_text($text, $file)
     }
 }
 
+function nel_ban_appeal($board_id)
+{
+    if ($_POST['ban_ip'] != $user_ip_address)
+    {
+        nel_derp(160, nel_stext('ERROR_160'), $board_id);
+    }
+
+    $ip_address = $_POST['ban_ip'];
+    $bawww = $_POST['ban_appeal'];
+    $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE .
+         '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ip_address_starts" = ?');
+    $dbh->executePrepared($prepared, array($bawww, @inet_pton($ip_address)));
+
+    nel_apply_ban($board_id);
+}
+
 //
 // Apply b&hammer
 //
-function nel_apply_ban($dataforce, $board_id)
+function nel_apply_ban($board_id)
 {
     $dbh = nel_database();
     $ban_hammer = nel_ban_hammer();
     $user_ip_address = $_SERVER["REMOTE_ADDR"];
-
-    if (isset($dataforce['mode_segments'][2]) && $dataforce['mode_segments'][2] === 'appeal')
-    {
-        if($_POST['ban_ip'] != $user_ip_address)
-        {
-            nel_derp(160, nel_stext('ERROR_160'), $board_id);
-        }
-
-        $ip_address = $_POST['ban_ip'];
-        $bawww = $_POST['ban_appeal'];
-        $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ip_address_starts" = ?');
-        $dbh->executePrepared($prepared, array($bawww, @inet_pton($ip_address)));
-    }
-
     $ban_info = $ban_hammer->getBanByIp($user_ip_address);
+    $module = (isset($_GET['module'])) ? $_GET['module'] : null;
+    $action = (isset($_POST['action'])) ? $_POST['action'] : null;
 
-    if(empty($ban_info))
+    if (empty($ban_info))
     {
         return;
+    }
+
+    if($module === 'ban-page')
+    {
+        if($action === 'add-appeal')
+        {
+            nel_ban_appeal($board_id);
+        }
     }
 
     $length = $ban_info['length'] + $ban_info['start_time'];
@@ -116,6 +129,6 @@ function nel_apply_ban($dataforce, $board_id)
         return;
     }
 
-    nel_render_ban_page($board_id, $dataforce, $ban_info);
+    nel_render_ban_page($board_id, $ban_info);
     nel_clean_exit();
 }

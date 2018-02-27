@@ -57,7 +57,7 @@ ignore_user_abort(true);
 
 // IT'S GO TIME!
 nel_ban_spambots($dataforce);
-nel_apply_ban($dataforce, INPUT_BOARD_ID);
+nel_apply_ban(INPUT_BOARD_ID);
 
 require_once INCLUDE_PATH . 'regen.php';
 require_once INCLUDE_PATH . 'thread_functions.php';

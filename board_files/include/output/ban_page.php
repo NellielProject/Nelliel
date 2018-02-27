@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_ban_page($board_id, $dataforce, $ban_info)
+function nel_render_ban_page($board_id, $ban_info)
 {
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -12,7 +12,6 @@ function nel_render_ban_page($board_id, $dataforce, $ban_info)
     nel_render_board_header($board_id, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'ban_page.html');
-    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '../';
     $banned_board = ($ban_info['all_boards'] > 0) ? 'All Boards' : $ban_info['board'];
     $dom->getElementById('banned-board')->setContent($banned_board);
     $dom->getElementById('banned-time')->setContent(date("D F jS Y  H:i", $ban_info['start_time']));
@@ -23,7 +22,7 @@ function nel_render_ban_page($board_id, $dataforce, $ban_info)
 
     if ($ban_info['appeal_status'] == 0)
     {
-        $appeal_form_element->extSetAttribute('action', $dotdot . PHP_SELF);
+        $appeal_form_element->extSetAttribute('action', PHP_SELF . '?module=ban-page');
         $appeal_form_element->doXPathQuery(".//input[@name='ban_ip']")->item(0)->extSetAttribute('value', @inet_ntop($ban_info['ip_address_start']));
         $appeal_form_element->doXPathQuery(".//input[@name='ban_board']")->item(0)->extSetAttribute('value', $ban_info['board']);
     }

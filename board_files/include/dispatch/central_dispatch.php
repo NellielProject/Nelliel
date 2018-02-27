@@ -4,24 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-//
-// Process the mode field input
-//
-/*function nel_process_mode_input($mode)
-{
-    return preg_split('#->#', $mode);
-}
-
-
-function nel_assemble_dispatch_data()
-{
-    if(!empty($_GET))
-    {
-        return;
-    }
-}*/
-
-
 function nel_central_dispatch($dataforce)
 {
     $authorize = nel_authorize();
