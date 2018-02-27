@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_thread_generator($dataforce, $board_id, $write, $write_id)
+function nel_thread_generator($dataforce, $board_id, $write, $response_to)
 {
     $dbh = nel_database();
     $references = nel_board_references($board_id);
@@ -26,15 +26,13 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
     $expand_dom = $render->newDOMDocument();
     $collapse_dom = $render->newDOMDocument();
     $render->startRenderTimer();
-    $dom->getElementById('form-post-index')->extSetAttribute('action', $dotdot . PHP_SELF . '?module=post&board_id=' . $board_id);
-
-    $dataforce['response_id'] = $write_id;
+    $dom->getElementById('form-post-index')->extSetAttribute('action', $dotdot . PHP_SELF . '?module=post&board_id=' .
+         $board_id);
     $prepared = $dbh->prepare('SELECT * FROM "' . $references['thread_table'] . '" WHERE "thread_id" = ? LIMIT 1');
-    $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($write_id), PDO::FETCH_ASSOC);
-
+    $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($response_to), PDO::FETCH_ASSOC);
     $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] .
          '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
-    $treeline = $dbh->executePreparedFetchAll($prepared, array($write_id), PDO::FETCH_ASSOC);
+    $treeline = $dbh->executePreparedFetchAll($prepared, array($response_to), PDO::FETCH_ASSOC);
 
     if (empty($treeline))
     {
@@ -58,7 +56,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
         if ($gen_data['post_counter'] === 0)
         {
             nel_render_board_header($board_id, $render, $dotdot, $treeline);
-            nel_render_posting_form($board_id, $dataforce, $render);
+            nel_render_posting_form($board_id, $render, $response_to, $dotdot);
         }
 
         if ($gen_data['post_counter'] == $gen_data['thread']['post_count'] - 1)
@@ -79,7 +77,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
             nel_render_insert_hr($dom);
             $hr_added = true;
             nel_render_board_footer($board_id, $render_temp, true);
-            $file_handler->writeFile($references['page_path'] . $write_id . '/' . $write_id . '-0-100.html', $render_temp->outputRenderSet(), FILE_PERM, true);
+            $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '-0-100.html', $render_temp->outputRenderSet(), FILE_PERM, true);
             unset($render_temp);
         }
 
@@ -128,9 +126,9 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
     }
 
     $dom->getElementById('post-id-')->removeSelf();
-    $dom->getElementById('thread-')->changeId('thread-' . $write_id);
+    $dom->getElementById('thread-')->changeId('thread-' . $response_to);
 
-    if(!$hr_added)
+    if (!$hr_added)
     {
         nel_render_insert_hr($dom);
     }
@@ -143,9 +141,9 @@ function nel_thread_generator($dataforce, $board_id, $write, $write_id)
 
     if ($write)
     {
-        $file_handler->writeFile($references['page_path'] . $write_id . '/' . $write_id . '.html', $render->outputRenderSet(), FILE_PERM, true);
-        $file_handler->writeFile($references['page_path'] . $write_id . '/' . $write_id . '-expand.html', $render->outputRenderSet('expand'), FILE_PERM, true);
-        $file_handler->writeFile($references['page_path'] . $write_id . '/' . $write_id . '-collapse.html', $render->outputRenderSet('collapse'), FILE_PERM, true);
+        $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '.html', $render->outputRenderSet(), FILE_PERM, true);
+        $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '-expand.html', $render->outputRenderSet('expand'), FILE_PERM, true);
+        $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '-collapse.html', $render->outputRenderSet('collapse'), FILE_PERM, true);
     }
     else
     {

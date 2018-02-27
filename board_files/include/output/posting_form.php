@@ -1,14 +1,13 @@
 <?php
 require_once INCLUDE_PATH . 'output/rules.php';
 
-function nel_render_posting_form($board_id, $dataforce, $render)
+function nel_render_posting_form($board_id, $render, $response_to, $dotdot = null)
 {
     $references = nel_board_references($board_id);
     $board_settings = nel_board_settings($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'posting_form.html');
-    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '';
-    $response_id = (is_null($dataforce['response_id'])) ? '0' : $dataforce['response_id'];
+    $dotdot = (is_null($dotdot)) ? $dotdot : '';
     $post_form_return_link = $dom->getElementById('post-form-return-link');
 
     if (!nel_session_is_ignored('render'))
@@ -25,7 +24,7 @@ function nel_render_posting_form($board_id, $dataforce, $render)
     $posting_form->extSetAttribute('action', $dotdot . PHP_SELF . '?module=post&board_id=' . $board_id);
     $dom->getElementById('board_id_field_post_form')->extSetAttribute('value', $board_id);
 
-    if ($response_id)
+    if ($response_to)
     {
         $post_form_return_link->doXPathQuery(".//a")->item(0)->extSetAttribute('href', $dotdot . $page_ref1);
     }
@@ -35,7 +34,7 @@ function nel_render_posting_form($board_id, $dataforce, $render)
     }
 
     $new_post_element = $posting_form->doXPathQuery(".//input[@name='new_post[post_info][response_to]']", $posting_form)->item(0);
-    $new_post_element->extSetAttribute('value', $response_id);
+    $new_post_element->extSetAttribute('value', $response_to);
     $dom->getElementById('not-anonymous')->extSetAttribute('maxlength', $board_settings['max_name_length']);
     $dom->getElementById('spam-target')->extSetAttribute('maxlength', $board_settings['max_email_length']);
     $dom->getElementById('verb')->extSetAttribute('maxlength', $board_settings['max_subject_length']);
@@ -59,7 +58,7 @@ function nel_render_posting_form($board_id, $dataforce, $render)
     {
         for ($i = 2, $j = 3; $i <= $board_settings['max_post_files']; ++ $i, ++ $j)
         {
-            if(!$response_id && !$board_settings['allow_op_multifile'])
+            if(!$response_to && !$board_settings['allow_op_multifile'])
             {
                 break;
             }
@@ -128,7 +127,7 @@ function nel_render_posting_form($board_id, $dataforce, $render)
         $fgsfds_label->setContent($board_settings['fgsfds_name']);
     }
 
-    if ($response_id)
+    if ($response_to)
     {
         $dom->getElementById('which-post-mode')->setContent('TEXT_REPLYMODE');
     }

@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Genrerates the main thread listings
 //
-function nel_main_thread_generator($dataforce, $board_id, $write)
+function nel_main_thread_generator($dataforce, $board_id, $response_to, $write)
 {
     $dbh = nel_database();
     $references = nel_board_references($board_id);
@@ -39,7 +39,7 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
         $render->startRenderTimer();
         $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
         nel_render_board_header($board_id, $render, $dotdot, $treeline);
-        nel_render_posting_form($board_id, $dataforce, $render);
+        nel_render_posting_form($board_id, $render, $response_to, $dotdot);
         nel_render_board_footer($board_id, $render, true);
 
         if ($write)
@@ -68,8 +68,8 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
         nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
         $dom->getElementById('form-post-index')->extSetAttribute('action', $dataforce['dotdot'] . PHP_SELF);
         $dataforce['omitted_done'] = TRUE;
-        nel_render_board_header($board_id, $dataforce, $render, $treeline);
-        nel_render_posting_form($board_id, $dataforce, $render);
+        nel_render_board_header($board_id, $render, $dotdot, $treeline);
+        nel_render_posting_form($board_id, $render, $response_to, $dotdot);
         $sub_page_thread_counter = 0;
         $gen_data['first100'] = FALSE;
 
@@ -232,8 +232,8 @@ function nel_main_thread_generator($dataforce, $board_id, $write)
         }
         else
         {
-            $logfilename = ($page === 1) ? $references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT : $references['board_directory']. '/' . PHP_SELF2 .
-                 ($page - 1) . PHP_EXT;
+            $logfilename = ($page === 1) ? $references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT : $references['board_directory'] .
+                 '/' . PHP_SELF2 . ($page - 1) . PHP_EXT;
             $file_handler->writeFile($logfilename, $render->outputRenderSet(), FILE_PERM, true);
         }
 

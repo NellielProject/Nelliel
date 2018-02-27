@@ -46,8 +46,7 @@ function nel_regen_index($dataforce, $board_id)
         $archive->pruneThreads();
     }
 
-    $dataforce['response_id'] = 0;
-    nel_main_thread_generator($dataforce, $board_id, true);
+    nel_main_thread_generator($dataforce, $board_id, 0, true);
 }
 
 function nel_regen_all_pages($dataforce, $board_id)
