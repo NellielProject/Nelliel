@@ -55,7 +55,7 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
     $dom->getElementById('outer-div')->appendChild($imported);
 }
 
-function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent, $gen_data, $treeline, $dom)
+function nel_render_post($board_id, $gen_params, $render, $response, $ref_parent, $gen_data, $treeline, $dom)
 {
     $authorize = nel_authorize();
     $dbh = nel_database();
@@ -190,7 +190,7 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
         }
     }
 
-    if (!$dataforce['index_rendering'] || $response)
+    if (!$gen_params['index_rendering'] || $response)
     {
         $post_header_node_array['reply-to-link']->parentNode->removeSelf();
     }
@@ -203,7 +203,7 @@ function nel_render_post($board_id, $dataforce, $render, $response, $ref_parent,
     $collapse_link_element->extSetAttribute('data-id', $post_id);
     $collapse_link_element->changeId('collapseLink' . $thread_id);
 
-    if (!$dataforce['index_rendering'] || $response || !$dataforce['abbreviate'])
+    if (!$gen_params['index_rendering'] || $response || !$gen_params['abbreviate'])
     {
         $expand_link_element->parentNode->removeSelf();
         $collapse_link_element->parentNode->removeSelf();

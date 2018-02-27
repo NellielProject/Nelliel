@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/board_settings_panel.php';
 
-function nel_board_settings_control($board_id, $action, $dataforce)
+function nel_board_settings_control($board_id, $action)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
@@ -29,18 +29,13 @@ function nel_board_settings_control($board_id, $action, $dataforce)
                     $item[0] = 100;
                 }
 
-                if ($item[0] === 'page_limit')
-                {
-                    $dataforce['max_pages'] = (int) $item[1];
-                }
-
                 $prepared = $dbh->prepare('UPDATE "' . $references['config_table'] . '" SET "setting" = ? WHERE "config_name" = ?');
                 $dbh->executePrepared($prepared, array($item[1], $item[0]), true);
             }
         }
 
         nel_regen_cache($board_id);
-        nel_regen_all_pages($dataforce, $board_id);
+        nel_regen_all_pages($board_id);
     }
 
     nel_render_board_settings_panel($board_id);

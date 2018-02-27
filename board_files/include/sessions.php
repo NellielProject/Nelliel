@@ -35,7 +35,7 @@ function nel_regen_session()
 // Check for existing session and process
 // If no session exists, confirm login info and set up a new one
 //
-function nel_initialize_session($manage, $action, $dataforce)
+function nel_initialize_session($manage, $action, $login_valid = false)
 {
     $authorize = nel_authorize();
     session_start();
@@ -52,7 +52,7 @@ function nel_initialize_session($manage, $action, $dataforce)
         }
         else if ($manage === 'login')
         {
-            nel_login($dataforce);
+            nel_login();
         }
     }
     else if (!empty($_SESSION) && nel_session_is_old())
@@ -64,7 +64,7 @@ function nel_initialize_session($manage, $action, $dataforce)
     {
         if ($manage === 'login' && !is_null($action))
         {
-            if ($dataforce['login_valid'])
+            if ($login_valid)
             {
                 $_SESSION['ignores'] = array('default' => false);
                 $_SESSION['active'] = true;
@@ -79,12 +79,12 @@ function nel_initialize_session($manage, $action, $dataforce)
             }
 
             nel_set_session_cookie();
-            nel_login($dataforce);
+            nel_login();
         }
         else
         {
             nel_terminate_session();
-            nel_login($dataforce);
+            nel_login();
         }
     }
 }

@@ -8,7 +8,7 @@ require_once INCLUDE_PATH . 'post/filetypes.php';
 require_once INCLUDE_PATH . 'post/file_functions.php';
 require_once INCLUDE_PATH . 'post/post_data.php';
 
-function nel_process_new_post($board_id, $dataforce)
+function nel_process_new_post($board_id)
 {
     global $enabled_types, $plugins, $filetypes;
     $dbh = nel_database();
@@ -167,8 +167,8 @@ function nel_process_new_post($board_id, $dataforce)
     }
 
     // Generate response page if it doesn't exist, otherwise update
-    nel_regen_threads($dataforce, $board_id, true, array($thread_info['id']));
-    nel_regen_index($dataforce, $board_id);
+    nel_regen_threads($board_id, true, array($thread_info['id']));
+    nel_regen_index($board_id);
     return $thread_info['id'];
 }
 

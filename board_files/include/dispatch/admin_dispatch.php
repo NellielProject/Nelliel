@@ -4,23 +4,22 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_admin_dispatch($dataforce)
+function nel_admin_dispatch()
 {
-    $authorize = nel_authorize();
     $manage = (isset($_GET['manage'])) ? $_GET['manage'] : null;
     $module = (isset($_GET['module'])) ? $_GET['module'] : null;
     $section = (isset($_GET['section'])) ? $_GET['section'] : null;
     $board_id = (isset($_GET['board_id'])) ? $_GET['board_id'] : null;
     $action = (isset($_POST['action'])) ? $_POST['action'] : null;
-    nel_verify_login_or_session($manage, $action, $dataforce);
+    nel_verify_login_or_session($manage, $action);
 
     if ($manage === 'login')
     {
-        nel_login($dataforce);
+        nel_login();
     }
     else if ($manage === 'logout')
     {
-        nel_initialize_session($manage, $action, $dataforce);
+        nel_initialize_session($manage, $action);
     }
     else if ($manage === 'general')
     {
@@ -46,7 +45,7 @@ function nel_admin_dispatch($dataforce)
                 break;
 
             default:
-                nel_login($dataforce);
+                nel_login();
                 break;
         }
     }
@@ -56,7 +55,7 @@ function nel_admin_dispatch($dataforce)
         {
             case 'board-settings':
                 require_once INCLUDE_PATH . 'admin/board_settings_panel.php';
-                nel_board_settings_control($board_id, $action, $dataforce);
+                nel_board_settings_control($board_id, $action);
                 break;
 
             case 'bans':
@@ -66,13 +65,13 @@ function nel_admin_dispatch($dataforce)
 
             case 'threads':
                 require_once INCLUDE_PATH . 'admin/threads_panel.php';
-                nel_thread_panel($board_id, $action, $dataforce, $authorize);
+                nel_thread_panel($board_id, $action);
                 break;
 
             case 'regen':
                 if ($action === 'pages-all')
                 {
-                    nel_regen_all_pages($dataforce, $board_id);
+                    nel_regen_all_pages($board_id);
                 }
 
                 if ($action === 'cache-all')
@@ -80,7 +79,7 @@ function nel_admin_dispatch($dataforce)
                     nel_regen_cache($board_id);
                 }
 
-                nel_login($dataforce);
+                nel_login();
                 break;
 
             case 'main-panel':

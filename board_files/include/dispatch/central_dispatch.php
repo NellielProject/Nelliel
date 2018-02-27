@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_central_dispatch($dataforce)
+function nel_central_dispatch()
 {
     $authorize = nel_authorize();
 
@@ -28,12 +28,12 @@ function nel_central_dispatch($dataforce)
     if(isset($_GET['manage']))
     {
         require_once INCLUDE_PATH . 'dispatch/admin_dispatch.php';
-        nel_admin_dispatch($dataforce);
+        nel_admin_dispatch();
     }
 
     if(isset($_GET['module']))
     {
         require_once INCLUDE_PATH . 'dispatch/general_dispatch.php';
-        nel_general_dispatch(INPUT_BOARD_ID, $dataforce);
+        nel_general_dispatch(INPUT_BOARD_ID);
     }
 }

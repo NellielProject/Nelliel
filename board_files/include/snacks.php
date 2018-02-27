@@ -9,7 +9,7 @@ require_once INCLUDE_PATH . 'output/ban_page.php';
 //
 // Auto-ban on Spambot detection
 //
-function nel_ban_spambots($dataforce)
+function nel_ban_spambots()
 {
     $ban_hammer = nel_ban_hammer();
 

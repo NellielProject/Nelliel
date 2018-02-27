@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_thread_generator($dataforce, $board_id, $write, $response_to)
+function nel_thread_generator($board_id, $write, $response_to)
 {
     $dbh = nel_database();
     $references = nel_board_references($board_id);
@@ -16,7 +16,6 @@ function nel_thread_generator($dataforce, $board_id, $write, $response_to)
         nel_session_is_ignored('render', true);
     }
 
-    $dataforce['dotdot'] = '../../../';
     $dotdot = '../../../';
     $render = new NellielTemplates\RenderCore();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -41,11 +40,11 @@ function nel_thread_generator($dataforce, $board_id, $write, $response_to)
 
     $gen_data['post_counter'] = 0;
     $gen_data['expand_post'] = FALSE;
-    $dataforce['omitted_done'] = TRUE;
     $gen_data['first100'] = FALSE;
-    $dataforce['posts_ending'] = false;
-    $dataforce['index_rendering'] = false;
-    $dataforce['abbreviate'] = false;
+    $gen_params = array();
+    $gen_params['posts_ending'] = false;
+    $gen_params['index_rendering'] = false;
+    $gen_params['abbreviate'] = false;
     $hr_added = false;
 
     while ($gen_data['post_counter'] < $gen_data['thread']['post_count'])
@@ -61,7 +60,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $response_to)
 
         if ($gen_data['post_counter'] == $gen_data['thread']['post_count'] - 1)
         {
-            $dataforce['posts_ending'] = true;
+            $gen_params['posts_ending'] = true;
         }
 
         if ($gen_data['post']['has_file'] == 1)
@@ -83,7 +82,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $response_to)
 
         if ($gen_data['post']['op'] == 1)
         {
-            $base_new_post_node = nel_render_post($board_id, $dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
+            $base_new_post_node = nel_render_post($board_id, $gen_params, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
             $expand_div = $dom->getElementById('thread-expand-');
             $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
             $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
@@ -104,7 +103,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $response_to)
         }
         else
         {
-            $base_new_post_node = nel_render_post($board_id, $dataforce, $render, TRUE, FALSE, $gen_data, $treeline, $dom);
+            $base_new_post_node = nel_render_post($board_id, $gen_params, $render, TRUE, FALSE, $gen_data, $treeline, $dom);
 
             if ($gen_data['thread']['post_count'] > $board_settings['abbreviate_thread'])
             {
@@ -147,7 +146,7 @@ function nel_thread_generator($dataforce, $board_id, $write, $response_to)
     }
     else
     {
-        if ($dataforce['expand'])
+        /*if ($dataforce['expand'])
         {
             echo $render->outputRenderSet('expand');
         }
@@ -160,7 +159,8 @@ function nel_thread_generator($dataforce, $board_id, $write, $response_to)
             echo $render->outputRenderSet();
         }
 
-        die();
+        die();*/
+        // TODO: Modmode stuff
     }
 
     if ($write)

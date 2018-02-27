@@ -56,7 +56,7 @@ require_once INCLUDE_PATH . 'snacks.php';
 ignore_user_abort(true);
 
 // IT'S GO TIME!
-nel_ban_spambots($dataforce);
+nel_ban_spambots();
 nel_apply_ban(INPUT_BOARD_ID);
 
 require_once INCLUDE_PATH . 'regen.php';
@@ -65,6 +65,6 @@ require_once INCLUDE_PATH . 'admin/login.php';
 require_once INCLUDE_PATH . 'post/post.php';
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 
-nel_central_dispatch($dataforce);
+nel_central_dispatch();
 nel_clean_exit();
 

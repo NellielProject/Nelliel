@@ -23,9 +23,3 @@ define('LOGINS_TABLE', 'nelliel_login_attempts'); // Table used for post data
 define('BOARD_DATA_TABLE', 'nelliel_board_data'); // Table used for post data
 define('SITE_CONFIG_TABLE', 'nelliel_site_config'); // Table containing site-wide config
 
-$dataforce = array();
-$dataforce['login_valid'] = false;
-$dataforce['current_page'] = (isset($_GET['page'])) ? $_GET['page'] : NULL;
-$dataforce['expand'] = (isset($_GET['expand'])) ? TRUE : FALSE;
-$dataforce['collapse'] = (isset($_GET['collapse'])) ? TRUE : FALSE;
-$dataforce['response_id'] = (isset($_GET['post']) && is_numeric($_GET['post'])) ? (int) $_GET['post'] : NULL;

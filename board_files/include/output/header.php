@@ -11,7 +11,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $references = nel_board_references($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
-    $dotdot = (is_null($dotdot)) ? $dotdot : '';
+    $dotdot = (!is_null($dotdot)) ? $dotdot : '';
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
@@ -118,7 +118,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
     $head_element = $dom->getElementsByTagName('head')->item(0);
-    $dotdot = (is_null($dotdot)) ? $dotdot : '';
+    $dotdot = (!is_null($dotdot)) ? $dotdot : '';
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . INPUT_BOARD_ID .

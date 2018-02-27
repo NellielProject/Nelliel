@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_general_dispatch($board_id, $dataforce)
+function nel_general_dispatch($board_id)
 {
     $module = (isset($_GET['module'])) ? $_GET['module'] : null;
     $section = (isset($_GET['section'])) ? $_GET['section'] : null;
@@ -16,7 +16,7 @@ function nel_general_dispatch($board_id, $dataforce)
         case 'post':
             if ($action === 'new-post')
             {
-                nel_process_new_post($board_id, $dataforce);
+                nel_process_new_post($board_id);
 
                 if (nel_fgsfds('noko'))
                 {
@@ -36,8 +36,8 @@ function nel_general_dispatch($board_id, $dataforce)
             if ($action === 'update')
             {
                 $updates = nel_thread_updates($board_id);
-                nel_regen_threads($dataforce, $board_id, true, $updates);
-                nel_regen_index($dataforce, $board_id);
+                nel_regen_threads($board_id, true, $updates);
+                nel_regen_index($board_id);
                 nel_clean_exit(true);
             }
 

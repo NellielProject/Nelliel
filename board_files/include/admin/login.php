@@ -7,10 +7,11 @@ if (!defined('NELLIEL_VERSION'))
 require_once INCLUDE_PATH . 'output/management/main_panel.php';
 require_once INCLUDE_PATH . 'output/management/login_page.php';
 
-function nel_verify_login_or_session($manage, $action, $dataforce)
+function nel_verify_login_or_session($manage, $action)
 {
     $authorize = nel_authorize();
     $dbh = nel_database();
+    $login_valid = false;
 
     if ($manage === 'login' && !is_null($action))
     {
@@ -31,7 +32,7 @@ function nel_verify_login_or_session($manage, $action, $dataforce)
 
             if (nel_password_verify($_POST['super_sekrit'], $authorize->get_user_info($_POST['username'], 'user_password')))
             {
-                $dataforce['login_valid'] = true;
+                $login_valid = true;
                 $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
                 $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), true);
                 $user_login_fails = 0;
@@ -47,7 +48,7 @@ function nel_verify_login_or_session($manage, $action, $dataforce)
                  '" SET "failed_logins" = ?, "last_failed_login" = ? WHERE "user_id" = ?');
             $dbh->executePrepared($prepared, array($user_login_fails, $attempt_time, $_POST['username']), true);
 
-            if (!$dataforce['login_valid'])
+            if (!$login_valid)
             {
                 nel_derp(300, nel_stext('ERROR_300'));
             }
@@ -88,10 +89,10 @@ function nel_verify_login_or_session($manage, $action, $dataforce)
         }
     }
 
-    nel_initialize_session($manage, $action, $dataforce);
+    nel_initialize_session($manage, $action, $login_valid);
 }
 
-function nel_login($dataforce)
+function nel_login()
 {
     if (!nel_session_is_ignored())
     {

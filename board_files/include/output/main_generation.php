@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Genrerates the main thread listings
 //
-function nel_main_thread_generator($dataforce, $board_id, $response_to, $write)
+function nel_main_thread_generator($board_id, $response_to, $write)
 {
     $dbh = nel_database();
     $references = nel_board_references($board_id);
@@ -15,7 +15,7 @@ function nel_main_thread_generator($dataforce, $board_id, $response_to, $write)
     $file_handler = nel_file_handler();
     $thread_table = $gen_data = array();
     $dotdot = '../';
-    $dataforce['dotdot'] = '../';
+    $gen_params = array();
 
     if ($write)
     {
@@ -29,8 +29,8 @@ function nel_main_thread_generator($dataforce, $board_id, $response_to, $write)
 
     $treeline = array(0);
     $counttree = count($front_page_list);
-    $dataforce['posts_ending'] = false;
-    $dataforce['index_rendering'] = true;
+    $gen_params['posts_ending'] = false;
+    $gen_params['index_rendering'] = true;
 
     // Special handling when there's no content
     if ($counttree === 0)
@@ -66,8 +66,7 @@ function nel_main_thread_generator($dataforce, $board_id, $response_to, $write)
         $render->loadTemplateFromFile($dom, 'thread.html');
         $render->startRenderTimer();
         nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
-        $dom->getElementById('form-post-index')->extSetAttribute('action', $dataforce['dotdot'] . PHP_SELF);
-        $dataforce['omitted_done'] = TRUE;
+        $dom->getElementById('form-post-index')->extSetAttribute('action', $dotdot . PHP_SELF);
         nel_render_board_header($board_id, $render, $dotdot, $treeline);
         nel_render_posting_form($board_id, $render, $response_to, $dotdot);
         $sub_page_thread_counter = 0;
@@ -97,7 +96,7 @@ function nel_main_thread_generator($dataforce, $board_id, $response_to, $write)
             }
 
             $abbreviate = ($gen_data['thread']['post_count'] > $board_settings['abbreviate_thread']) ? true : false;
-            $dataforce['abbreviate'] = $abbreviate;
+            $gen_params['abbreviate'] = $abbreviate;
             $gen_data['post'] = $treeline[$gen_data['post_counter']];
 
             if ($gen_data['post']['has_file'] == 1)
@@ -112,18 +111,16 @@ function nel_main_thread_generator($dataforce, $board_id, $response_to, $write)
                 if ($abbreviate)
                 {
                     $gen_data['post_counter'] = $gen_data['thread']['post_count'] - $board_settings['abbreviate_thread'];
-                    $dataforce['omitted_done'] = FALSE;
-                    $new_post_element = nel_render_post($board_id, $dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
-                    $dataforce['omitted_done'] = TRUE;
+                    $new_post_element = nel_render_post($board_id, $gen_params, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
                 }
                 else
                 {
-                    $new_post_element = nel_render_post($board_id, $dataforce, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
+                    $new_post_element = nel_render_post($board_id, $gen_params, $render, FALSE, FALSE, $gen_data, $treeline, $dom);
                 }
             }
             else
             {
-                $new_post_element = nel_render_post($board_id, $dataforce, $render, TRUE, TRUE, $gen_data, $treeline, $dom);
+                $new_post_element = nel_render_post($board_id, $gen_params, $render, TRUE, TRUE, $gen_data, $treeline, $dom);
             }
 
             $imported = $dom->importNode($new_post_element, true);
@@ -163,13 +160,11 @@ function nel_main_thread_generator($dataforce, $board_id, $response_to, $write)
 
         $dom->getElementById('post-id-')->removeSelf();
         $dom->getElementById('thread-')->removeSelf();
-
-        $dataforce['posts_ending'] = true;
+        $gen_params['posts_ending'] = true;
 
         // if not in res display mode
         $prev = $page - 1;
         $next = $page + 1;
-
         $page_count = (int) ceil($counttree / $board_settings['threads_per_page']);
         $pages = array();
 
@@ -222,13 +217,14 @@ function nel_main_thread_generator($dataforce, $board_id, $response_to, $write)
 
         if (!$write)
         {
-            if ($page >= $dataforce['current_page'])
+            // TODO: Modmode stuff
+            /*if ($page >= $dataforce['current_page'])
             {
                 $page = $counttree;
             }
 
             echo $render->outputRenderSet();
-            die();
+            die();*/
         }
         else
         {
