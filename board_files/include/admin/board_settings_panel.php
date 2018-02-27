@@ -43,5 +43,5 @@ function nel_board_settings_control($board_id, $action, $dataforce)
         nel_regen_all_pages($dataforce, $board_id);
     }
 
-    nel_render_board_settings_panel($board_id, $dataforce);
+    nel_render_board_settings_panel($board_id);
 }

@@ -9,7 +9,7 @@ require_once INCLUDE_PATH . 'output/management/staff_panel.php';
 //
 // Staff control panel
 //
-function nel_staff_panel($section, $action, $dataforce)
+function nel_staff_panel($section, $action)
 {
     $authorize = nel_authorize();
     $temp_auth = array();
@@ -24,7 +24,7 @@ function nel_staff_panel($section, $action, $dataforce)
 
     if (is_null($section) || $section === 'main')
     {
-        nel_render_staff_panel_main($dataforce);
+        nel_render_staff_panel_main();
     }
     else if ($section === 'user')
     {
@@ -40,7 +40,7 @@ function nel_staff_panel($section, $action, $dataforce)
                 nel_derp(341, nel_stext('ERROR_341'));
             }
 
-            nel_render_staff_panel_user_edit($dataforce, null);
+            nel_render_staff_panel_user_edit(null);
             return;
         }
 
@@ -58,7 +58,7 @@ function nel_staff_panel($section, $action, $dataforce)
                 nel_derp(341, nel_stext('ERROR_341'));
             }
 
-            nel_render_staff_panel_user_edit($dataforce, $user_id);
+            nel_render_staff_panel_user_edit($user_id);
         }
         else if ($action === 'update')
         {
@@ -107,7 +107,7 @@ function nel_staff_panel($section, $action, $dataforce)
 
             $authorize->save_users();
             $authorize->save_user_roles();
-            nel_render_staff_panel_user_edit($dataforce, $user_id);
+            nel_render_staff_panel_user_edit($user_id);
         }
     }
     else if ($section === 'role')
@@ -124,7 +124,7 @@ function nel_staff_panel($section, $action, $dataforce)
                 nel_derp(341, nel_stext('ERROR_341'));
             }
 
-            nel_render_staff_panel_role_edit($dataforce, null);
+            nel_render_staff_panel_role_edit(null);
             return;
         }
 
@@ -142,7 +142,7 @@ function nel_staff_panel($section, $action, $dataforce)
                 nel_derp(342, nel_stext('ERROR_342'));
             }
 
-            nel_render_staff_panel_role_edit($dataforce, $role_id);
+            nel_render_staff_panel_role_edit($role_id);
         }
         else if ($action === 'update')
         {
@@ -167,7 +167,7 @@ function nel_staff_panel($section, $action, $dataforce)
             }
 
             $authorize->save_roles();
-            nel_render_staff_panel_role_edit($dataforce, $role_id);
+            nel_render_staff_panel_role_edit($role_id);
         }
     }
     else

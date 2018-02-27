@@ -9,7 +9,7 @@ function nel_render_derp($diagnostic)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header(array(), $render);
+    nel_render_general_header($render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'derp.html');
     $dom->getElementById('error-message')->setContent($diagnostic['error-message']);

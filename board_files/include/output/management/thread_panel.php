@@ -11,7 +11,7 @@ function nel_render_thread_panel_main($board_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header(array(), $render, $board_id, array('header' => 'MANAGE_BOARD', 'sub_header' => 'MANAGE_THREADS'));
+    nel_render_general_header($render, null, $board_id, array('header' => 'MANAGE_BOARD', 'sub_header' => 'MANAGE_THREADS'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel.html');
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
@@ -119,7 +119,7 @@ function nel_render_thread_panel_expand($board_id, $thread_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header(array(), $render, $board_id, array('header' => 'MANAGE_BOARD', 'sub_header' => 'MANAGE_THREADS'));
+    nel_render_general_header($render, null, $board_id, array('header' => 'MANAGE_BOARD', 'sub_header' => 'MANAGE_THREADS'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
     $dom->getElementById('thread-list-form')->extSetAttribute('action', PHP_SELF .

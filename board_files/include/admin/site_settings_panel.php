@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/site_settings_panel.php';
 
-function nel_site_settings_control($action, $dataforce)
+function nel_site_settings_control($action)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
@@ -25,5 +25,5 @@ function nel_site_settings_control($action, $dataforce)
         nel_regen_cache(INPUT_BOARD_ID);
     }
 
-    nel_render_site_settings_panel($dataforce);
+    nel_render_site_settings_panel();
 }

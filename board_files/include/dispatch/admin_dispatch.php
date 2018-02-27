@@ -32,12 +32,12 @@ function nel_admin_dispatch($dataforce)
 
             case 'staff':
                 require_once INCLUDE_PATH . 'admin/staff_panel.php';
-                nel_staff_panel($section, $action, $dataforce);
+                nel_staff_panel($section, $action);
                 break;
 
             case 'site-settings':
                 require_once INCLUDE_PATH . 'admin/site_settings_panel.php';
-                nel_site_settings_control($action, $dataforce);
+                nel_site_settings_control($action);
                 break;
 
             case 'create-board':
@@ -61,7 +61,7 @@ function nel_admin_dispatch($dataforce)
 
             case 'bans':
                 require_once INCLUDE_PATH . 'admin/bans_panel.php';
-                nel_ban_control($board_id, $action, $dataforce);
+                nel_ban_control($board_id, $action);
                 break;
 
             case 'threads':

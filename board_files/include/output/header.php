@@ -113,12 +113,12 @@ function nel_render_board_header($board_id, $dataforce, $render, $treeline = nul
     $render->appendHTMLFromDOM($dom);
 }
 
-function nel_render_general_header($dataforce, $render, $board_id = null, $panel_data = array())
+function nel_render_general_header($render, $dotdot = null, $board_id = null, $extra_data = array())
 {
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
-    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '../';
     $head_element = $dom->getElementsByTagName('head')->item(0);
+    $dotdot = (is_null($dotdot)) ? $dotdot : '';
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . INPUT_BOARD_ID .
@@ -151,9 +151,9 @@ function nel_render_general_header($dataforce, $render, $board_id = null, $panel
     }
     else
     {
-        if (isset($panel_data['header']))
+        if (isset($pextra_data['header']))
         {
-            $dom->getElementById('manage-header-text')->setContent($panel_data['header']);
+            $dom->getElementById('manage-header-text')->setContent($extra_data['header']);
         }
 
         if (!is_null($board_id))
@@ -162,9 +162,9 @@ function nel_render_general_header($dataforce, $render, $board_id = null, $panel
             $dom->getElementById('manage-board-header-data')->setContent($board_data);
         }
 
-        if (isset($panel_data['sub_header']))
+        if (isset($extra_data['sub_header']))
         {
-            $dom->getElementById('manage-sub-header-text')->setContent($panel_data['sub_header']);
+            $dom->getElementById('manage-sub-header-text')->setContent($extra_data['sub_header']);
         }
 
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');

@@ -4,16 +4,15 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_main_ban_panel($board_id, $dataforce)
+function nel_render_main_ban_panel($board_id)
 {
     $dbh = nel_database();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($dataforce, $render, $board_id, array('header' => 'MANAGE_BOARD', 'sub_header' => 'MANAGE_BANS'));
+    nel_render_general_header($render, null, $board_id, array('header' => 'MANAGE_BOARD', 'sub_header' => 'MANAGE_BANS'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_main.html');
-    $dotdot = isset($dataforce['dotdot']) ? $dataforce['dotdot'] : '../';
 
     $result = $dbh->query('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "ban_id" DESC');
     $ban_info_table = $dom->getElementById('ban-info-table');
@@ -72,12 +71,12 @@ function nel_render_main_ban_panel($board_id, $dataforce)
     die();
 }
 
-function nel_render_ban_panel_add($board_id, $dataforce)
+function nel_render_ban_panel_add($board_id)
 {
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($dataforce, $render, $board_id, array('header' => 'MANAGE_BOARD', 'sub_header' => 'MANAGE_BANS'));
+    nel_render_general_header($render, null, $board_id, array('header' => 'MANAGE_BOARD', 'sub_header' => 'MANAGE_BANS'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
     $dom->getElementById('add-ban-form')->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&board_id=' .
@@ -90,14 +89,14 @@ function nel_render_ban_panel_add($board_id, $dataforce)
     die();
 }
 
-function nel_render_ban_panel_modify($board_id, $dataforce)
+function nel_render_ban_panel_modify($board_id)
 {
     $ban_hammer = nel_ban_hammer();
     $dbh = nel_database();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($dataforce, $render, $board_id, array('header' => 'MANAGE_BOARD', 'sub_header' => 'MANAGE_BANS'));
+    nel_render_general_header($render, null, $board_id, array('header' => 'MANAGE_BOARD', 'sub_header' => 'MANAGE_BANS'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_modify_ban.html');
 

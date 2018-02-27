@@ -4,13 +4,13 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_staff_panel_main($dataforce)
+function nel_render_staff_panel_main()
 {
     $dbh = nel_database();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($dataforce, $render, null, array('header' => 'MANAGE_GENERAL', 'sub_header' => 'MANAGE_STAFF'));
+    nel_render_general_header($render, null, null, array('header' => 'MANAGE_GENERAL', 'sub_header' => 'MANAGE_STAFF'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_main.html');
     $user_table = $dom->getElementById('user-table');
@@ -54,14 +54,14 @@ function nel_render_staff_panel_main($dataforce)
     die();
 }
 
-function nel_render_staff_panel_user_edit($dataforce, $user_id)
+function nel_render_staff_panel_user_edit($user_id)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($dataforce, $render, null, array('header' => 'MANAGE_GENERAL', 'sub_header' => 'MANAGE_STAFF'));
+    nel_render_general_header($render, null, null, array('header' => 'MANAGE_GENERAL', 'sub_header' => 'MANAGE_STAFF'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_user_edit.html');
     $dom->getElementById('user-edit-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=user');
@@ -119,14 +119,14 @@ function nel_render_staff_panel_user_edit($dataforce, $user_id)
     die();
 }
 
-function nel_render_staff_panel_role_edit($dataforce, $role_id)
+function nel_render_staff_panel_role_edit($role_id)
 {
     $authorize = nel_authorize();
     $role = $authorize->get_role($role_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($dataforce, $render, null, array('header' => 'MANAGE_GENERAL', 'sub_header' => 'MANAGE_STAFF'));
+    nel_render_general_header($render, null, null, array('header' => 'MANAGE_GENERAL', 'sub_header' => 'MANAGE_STAFF'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_role_edit.html');
     $dom->getElementById('role-edit-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=role');

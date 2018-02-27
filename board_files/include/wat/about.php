@@ -11,7 +11,7 @@ function nel_about_nelliel_screen()
 {
     $render = new NellielTemplates\RenderCore();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header(array(), $render);
+    nel_render_general_header($render);
     echo $render->outputRenderSet();
 
     echo '
