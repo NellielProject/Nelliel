@@ -151,7 +151,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     }
     else
     {
-        if (isset($pextra_data['header']))
+        if (isset($extra_data['header']))
         {
             $dom->getElementById('manage-header-text')->setContent($extra_data['header']);
         }
