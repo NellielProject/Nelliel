@@ -687,6 +687,7 @@ function nel_insert_board_config_defaults($config_table)
                         ('board_setting', 'nelliel', 'general', 'str', 'date_separator', '/'),
                         ('board_setting', 'nelliel', 'general', 'str', 'fgsfds_name', 'FGSFDS'),
                         ('board_setting', 'nelliel', 'general', 'str', 'indent_marker', '>>'),
+                        ('board_setting', 'nelliel', 'general', 'bool', 'file_sha256', '0'),
                         ('filetype_enable', 'nelliel', 'graphics', 'bool', 'graphics', '1'),
                         ('filetype_enable', 'nelliel', 'graphics', 'bool', 'jpeg', '1'),
                         ('filetype_enable', 'nelliel', 'graphics', 'bool', 'gif', '1'),
@@ -750,7 +751,12 @@ function nel_insert_site_config_defaults($config_table)
 {
     $dbh = nel_database();
     $result = $dbh->query("INSERT INTO " . $config_table . " (config_type, config_owner, config_category, data_type, config_name, setting)
-                VALUES  ('core_setting', 'nelliel', 'general', 'str', 'home_page', '../')
+                VALUES  ('core_setting', 'nelliel', 'general', 'str', 'home_page', '../'),
+                        ('core_setting', 'nelliel', 'crypt', 'str', 'post_password_algorithm', 'sha256'),
+                        ('core_setting', 'nelliel', 'crypt', 'str', 'secure_tripcode_algorithm', 'sha256'),
+                        ('core_setting', 'nelliel', 'crypt', 'bool', 'use_password_default_algorithm', '1'),
+                        ('core_setting', 'nelliel', 'crypt', 'bool', 'do_password_rehash', '0'),
+                        ('core_setting', 'nelliel', 'crypt', 'bool', 'do_sha2_fallback', '1')
                         ");
 
     nel_setup_stuff_done($result);

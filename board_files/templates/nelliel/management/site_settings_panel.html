@@ -1,8 +1,8 @@
-	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
+	<form id="site-settings-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<td>
-					<input type="hidden" name="mode" value="admin->site-settings->update">
+					<input type="hidden" name="action" value="update">
 				</td>
 			</tr>
 			<tr>
@@ -16,6 +16,48 @@
 				</td>
 				<td>
 					<input type="text" name="home_page" id="home_page" size="50" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<br><b>Hashing and Passwords</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="post_password_algorithm" data-i18n="neltext">MANAGE_SET_POST_PASS_ALGO</label>
+				</td>
+				<td>
+					<input type="text" name="post_password_algorithm" id="post_password_algorithm" size="30" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="secure_tripcode_algorithm" data-i18n="neltext">MANAGE_SET_SECURE_TRIP_ALGO</label>
+				</td>
+				<td>
+					<input type="text" name="secure_tripcode_algorithm" id="secure_tripcode_algorithm" size="30" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="use_password_default_algorithm" value="0">
+					<input type="checkbox" name="use_password_default_algorithm" id="use_password_default_algorithm" value="1">
+					<label for="use_password_default_algorithm" data-i18n="neltext">MANAGE_SET_USE_PASS_DEFAULT</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="do_password_rehash" value="0">
+					<input type="checkbox" name="do_password_rehash" id="do_password_rehash" value="1">
+					<label for="do_password_rehash" data-i18n="neltext">MANAGE_SET_DO_PASS_REHASH</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="do_sha2_fallback" value="0">
+					<input type="checkbox" name="do_sha2_fallback" id="do_sha2_fallback" value="1">
+					<label for="do_sha2_fallback" data-i18n="neltext">MANAGE_SET_DO_SHA2_FALLBACK</label>
 				</td>
 			</tr>
 			<tr>

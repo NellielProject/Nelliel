@@ -27,8 +27,15 @@ function nel_regen_threads($board_id, $write, $ids)
 
 function nel_regen_cache($board_id = '')
 {
-    nel_cache_filetype_settings($board_id);
-    nel_cache_board_settings($board_id);
+    if($board_id === '')
+    {
+        nel_cache_site_settings();
+    }
+    else
+    {
+        nel_cache_filetype_settings($board_id);
+        nel_cache_board_settings($board_id);
+    }
 }
 
 function nel_regen_index($board_id)

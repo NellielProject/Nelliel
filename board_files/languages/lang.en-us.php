@@ -326,7 +326,12 @@ $lang_singular = array(
     'MANAGE_SET_BOARD_LANGUAGE' => 'Set language for the board',  // Board language
     'MANAGE_SET_INDENT_MARKER' => 'Set the indent marker next to replies',  // Indent marker
     'MANAGE_SET_ANIMATED_GIF_PRE' => 'Create animated GIF preview',  // Animated GIF previews
-
+    'MANAGE_SET_FILE_SHA256' => 'Generate a SHA256 hash for uploaded files',  // SHA256 file hash
+    'MANAGE_SET_POST_PASS_ALGO' => 'Hash algorithm for post passwords',  // Post password algorithm
+    'MANAGE_SET_SECURE_TRIP_ALGO' => 'Hash algorithm for secure tripcodes',  // Secure tripcode algorithm
+    'MANAGE_SET_USE_PASS_DEFAULT' => 'Use PHP\'s default algorithm for user and site passwords',  // PHP default pass algorithm
+    'MANAGE_SET_DO_PASS_REHASH' => 'Do password rehash as needed. Usually used when changing algorithms or cost',  // Password rehash
+    'MANAGE_SET_DO_SHA2_FALLBACK' => 'In case bcrypt or other default is not available, fallback to SHA2 for password',  // Password fallback SHA2
 
     'MANAGE_SET_ALW_GF' => 'Graphics files',  // Allow graphics files
     'MANAGE_SET_ALW_JPEG' => 'JPEG - .jpg, .jpe, .jpeg',  // JPEG

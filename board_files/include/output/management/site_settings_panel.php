@@ -13,6 +13,7 @@ function nel_render_site_settings_panel()
     nel_render_general_header($render, null, null, array('header' => 'MANAGE_GENERAL', 'sub_header' => 'MANAGE_SETTINGS'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/site_settings_panel.html');
+    $dom->getElementById('site-settings-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=site-settings');
     $result = $dbh->query('SELECT * FROM "nelliel_site_config"');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);

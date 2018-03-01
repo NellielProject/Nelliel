@@ -71,7 +71,7 @@ function nel_password_verify($password, $hash)
 
 function nel_password_needs_rehash($hash, $algorithm, array $options = array())
 {
-    if (!DO_PASSWORD_REHASH)
+    if (!nel_site_settings('do_password_rehash'))
     {
         return false;
     }
@@ -228,7 +228,7 @@ function nel_best_available_hashing()
 {
     if (PasswordCompat\binary\check())
     {
-        if (USE_PASSWORD_DEFAULT)
+        if (nel_site_settings('use_password_default_algorithm'))
         {
             return PASSWORD_DEFAULT;
         }
@@ -237,11 +237,11 @@ function nel_best_available_hashing()
             return PASSWORD_BCRYPT;
         }
     }
-    else if (DO_SHA2_FALLBACK && defined('CRYPT_SHA512') && CRYPT_SHA512 == 1)
+    else if (nel_site_settings('do_sha2_fallback') && defined('CRYPT_SHA512') && CRYPT_SHA512 == 1)
     {
         return NEL_PASSWORD_SHA512;
     }
-    else if (DO_SHA2_FALLBACK && defined('CRYPT_SHA256') && CRYPT_SHA256 == 1)
+    else if (nel_site_settings('do_sha2_fallback') && defined('CRYPT_SHA256') && CRYPT_SHA256 == 1)
     {
         return NEL_PASSWORD_SHA256;
     }

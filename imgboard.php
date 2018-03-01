@@ -15,14 +15,12 @@ define('SQLITE_DB_DEFAULT_PATH', FILES_PATH); // Base SQLite DB location
 require_once INCLUDE_PATH . 'autoload.php';
 require_once LIBRARY_PATH . 'phpDOMExtend/autoload.php';
 require_once LIBRARY_PATH . 'NellielTemplates/autoload.php';
+require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'general_functions.php';
-require_once CONFIG_PATH. 'config.php';
-require_once CONFIG_PATH. 'crypt_config.php';
 require_once CONFIG_PATH. 'database_config.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'cache_functions.php';
 require_once INCLUDE_PATH . 'accessors.php';
-require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'setup/setup.php';
 
 if(RUN_SETUP_CHECK)

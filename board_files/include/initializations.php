@@ -23,3 +23,13 @@ define('LOGINS_TABLE', 'nelliel_login_attempts'); // Table used for post data
 define('BOARD_DATA_TABLE', 'nelliel_board_data'); // Table used for post data
 define('SITE_CONFIG_TABLE', 'nelliel_site_config'); // Table containing site-wide config
 
+$config_array = parse_ini_file(CONFIG_PATH. 'config.php', true, INI_SCANNER_RAW);
+
+define('DEFAULTADMIN', $config_array['General']['defaultadmin']);
+define('DEFAULTADMIN_PASS', $config_array['General']['defaultadmin_pass']);
+define('TRIPCODE_SALT', $config_array['General']['tripcode_salt']);
+define('RUN_SETUP_CHECK', (bool)$config_array['General']['run_setup_check']);
+define('DIRECTORY_PERM', $config_array['General']['directory_perm']);
+define('FILE_PERM', $config_array['General']['file_perm']);
+define('PASSWORD_BCRYPT_COST', $config_array['Crypt']['password_bcrypt_cost']);
+define('PASSWORD_SHA2_COST', $config_array['Crypt']['password_sha2_cost']);

@@ -98,11 +98,12 @@ function nel_check_for_existing_file($board_id, $file, $files)
 {
     $dbh = nel_database();
     $references = nel_board_references($board_id);
+    $BOARD_SETTINGS = nel_board_settings($board_id);
     $error_data = array('bad-filename' => $file['filename'], 'files' => $files);
     $file['md5'] = hash_file('md5', $file['dest'], true);
     $file['sha1'] = hash_file('sha1', $file['dest'], true);
 
-    if (GENERATE_FILE_SHA256)
+    if ($board_settings['file_sha256'])
     {
         $file['sha256'] = hash_file('sha256', $file['dest'], true);
         $query = 'SELECT 1 FROM "' . $references['file_table'] . '" WHERE "sha256" = ? OR "sha1" = ? LIMIT 1';

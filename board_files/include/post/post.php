@@ -73,7 +73,7 @@ function nel_process_new_post($board_id)
     if (isset($post_data['password']))
     {
         $cpass = $post_data['password'];
-        $post_data['password'] = nel_generate_salted_hash(POST_PASSWORD_ALGORITHM, $post_data['password']);
+        $post_data['password'] = nel_generate_salted_hash(nel_site_settings('post_password_algorithm'), $post_data['password']);
     }
     else
     {
