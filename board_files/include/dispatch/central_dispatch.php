@@ -15,13 +15,13 @@ function nel_central_dispatch()
 
     if(isset($_GET['about_nelliel']))
     {
-        require_once INCLUDE_PATH . 'wat/about.php';
+        require_once INCLUDE_PATH . 'wat/about_nelliel.php';
         nel_about_nelliel_screen();
     }
 
     if(isset($_GET['blank']) || isset($_GET['tpilb']))
     {
-        require_once INCLUDE_PATH . 'wat/wat.php';
+        require_once INCLUDE_PATH . 'wat/blank.php';
         nel_tpilb();
     }
 

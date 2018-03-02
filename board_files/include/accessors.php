@@ -8,13 +8,13 @@ if (!defined('NELLIEL_VERSION'))
 // Access point for database connections.
 // Databases connection can be added, retrieved or removed using the hash table ID.
 //
-function nel_database($input = null, $wat_do = null)
+function nel_database($input = null, $wut_do = null)
 {
     static $databases = array();
     static $default_database;
 
     // No arguments provided: send back the default database
-    if (is_null($wat_do) && is_null($input))
+    if (is_null($wut_do) && is_null($input))
     {
         if (!isset($default_database))
         {
@@ -25,7 +25,7 @@ function nel_database($input = null, $wat_do = null)
     }
 
     // ID provided but no instructions: send back the requested database if available
-    if (is_null($wat_do) && !is_null($input))
+    if (is_null($wut_do) && !is_null($input))
     {
         if (array_key_exists($input, $databases))
         {
@@ -34,9 +34,9 @@ function nel_database($input = null, $wat_do = null)
     }
 
     // Both ID and instructions provided
-    if (!is_null($wat_do) && !is_null($input))
+    if (!is_null($wut_do) && !is_null($input))
     {
-        switch ($wat_do)
+        switch ($wut_do)
         {
             case 'store':
                 $id = spl_object_hash($input);

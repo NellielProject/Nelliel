@@ -1,31 +1,13 @@
-<?php
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
-
-//
-// The content this function presents must remain intact and be accessible to users
-//
-function nel_about_nelliel_screen()
-{
-    $render = new NellielTemplates\RenderCore();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render);
-    echo $render->outputRenderSet();
-
-    echo '
-    <div class="text-center">
+	<div class="text-center">
         <h1 class="logo">Nelliel Imageboard</h1>
-        <p>
-            Version: ' . NELLIEL_VERSION . '
+        <p id="version">
         </p>
         <p class="text-center">
             Copyright (c) 2010-2018, <a href="http://www.nelliel.com">Nelliel Project</a><br>
             All rights reserved.
         </p>
 		<div class="nelliel-license-div">
-            <p style="max-width: 40em;">
+            <p style="max-width: 50em;">
                 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
             </p>
             <p>
@@ -40,7 +22,7 @@ function nel_about_nelliel_screen()
                 specific prior written permission.
             </p>
             <div>
-                <img src="' . IMAGES_DIR . '/luna_canterlot_disclaimer.png" alt="Canterlot Voice Disclaimer" width="320" height="180" style="padding-right: 10px; width: 330px; float: left;">
+                <img id="disclaimer-image" src="" alt="Canterlot Voice Disclaimer" width="320" height="180" style="padding-right: 10px; width: 330px; float: left;">
                 <p style="overflow: hidden; min-width: 15em;">
                     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
                     THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
@@ -65,6 +47,4 @@ function nel_about_nelliel_screen()
 	</div>
     <hr>
 </body>
-</html>';
-    die();
-}
+</html>

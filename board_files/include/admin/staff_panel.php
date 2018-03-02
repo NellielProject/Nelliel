@@ -17,8 +17,6 @@ function nel_staff_panel($section, $action)
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access') &&
          !$authorize->get_user_perm($_SESSION['username'], 'perm_role_access'))
     {
-        echo "wat";
-        var_dump($_SESSION);
         nel_derp(340, nel_stext('ERROR_340'));
     }
 
