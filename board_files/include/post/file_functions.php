@@ -136,7 +136,10 @@ function nel_get_filetype($board_id, $file, $files)
     $filetype_settings = nel_filetype_settings($board_id);
     $error_data = array('bad-filename' => $file['filename'], 'files' => $files);
     $test_ext = utf8_strtolower($file['ext']);
-    $file_test = file_get_contents($file['dest'], NULL, NULL, 0, 65535);
+    $file_length = filesize($file['dest']);
+    $end_offset = ($file_length < 65535) ? $file_length : $file_length - 65535;
+    $file_test_begin = file_get_contents($file['dest'], NULL, NULL, 0, 65535);
+    $file_test_end = file_get_contents($file['dest'], NULL, NULL, $end_offset);
 
     if (!array_key_exists($test_ext, $filetypes))
     {
@@ -148,7 +151,8 @@ function nel_get_filetype($board_id, $file, $files)
         nel_derp(108, nel_stext('ERROR_108'), $board_id, $error_data);
     }
 
-    if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test))
+    if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test_begin) ||
+         preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test_end))
     {
         $file['type'] = $filetypes[$test_ext]['type'];
         $file['format'] = $filetypes[$test_ext]['format'];
@@ -315,7 +319,8 @@ function nel_create_imagemagick_preview(&$file, $thumbpath, $board_id)
     {
         $file['thumbfile'] = $file['filename'] . '-preview.gif';
         $cmd_resize = 'convert ' . escapeshellarg($file['dest']) . ' -coalesce -thumbnail ' .
-             $board_settings['max_width'] . 'x' . $board_settings['max_height'] . escapeshellarg($thumbpath . $file['thumbfile']);
+             $board_settings['max_width'] . 'x' . $board_settings['max_height'] .
+             escapeshellarg($thumbpath . $file['thumbfile']);
         exec($cmd_resize);
         chmod($thumbpath . $file['thumbfile'], octdec(FILE_PERM));
     }

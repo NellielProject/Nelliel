@@ -59,7 +59,6 @@ nel_apply_ban(INPUT_BOARD_ID);
 require_once INCLUDE_PATH . 'regen.php';
 require_once INCLUDE_PATH . 'thread_functions.php';
 require_once INCLUDE_PATH . 'admin/login.php';
-require_once INCLUDE_PATH . 'post/post.php';
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 
 nel_central_dispatch();

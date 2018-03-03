@@ -14,6 +14,8 @@ function nel_general_dispatch()
     switch ($module)
     {
         case 'post':
+            require_once INCLUDE_PATH . 'post/post.php';
+
             if ($action === 'new-post')
             {
                 nel_process_new_post($board_id);
