@@ -71,6 +71,21 @@ $filetypes['pict']['id_regex'] = '^.{522}(?:\x11\x01|\x00\x11\x02\xFF\x0C\x00)';
 
 $filetypes['pct'] = $filetypes['pict'];
 
+$filetypes['art']['supertype'] = 'graphics';
+$filetypes['art']['subtype'] = 'aol-art';
+$filetypes['art']['mime'] = 'image/x-jg';
+$filetypes['art']['id_regex'] = '^JG[\x03-\x04]\x0E';
+
+$filetypes['cel']['supertype'] = 'graphics';
+$filetypes['cel']['subtype'] = 'kiss-cel';
+$filetypes['cel']['mime'] = 'application/octet-stream';
+$filetypes['cel']['id_regex'] = '^KiSS(?:\x20\x04|\x20\x08|\x21\x20|\x20\x20)';
+
+$filetypes['kcf']['supertype'] = 'graphics';
+$filetypes['kcf']['subtype'] = 'kiss-palette';
+$filetypes['kcf']['mime'] = 'application/octet-stream';
+$filetypes['kcf']['id_regex'] = '^KiSS\x10)';
+
 $filetypes['wav']['supertype'] = 'audio';
 $filetypes['wav']['subtype'] = 'wave';
 $filetypes['wav']['mime'] = 'audio/x-wave';

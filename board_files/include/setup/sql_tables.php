@@ -700,6 +700,8 @@ function nel_insert_board_config_defaults($config_table)
                         ('filetype_enable', 'nelliel', 'graphics', 'bool', 'tga', '0'),
                         ('filetype_enable', 'nelliel', 'graphics', 'bool', 'pict', '0'),
                         ('filetype_enable', 'nelliel', 'graphics', 'bool', 'art', '0'),
+                        ('filetype_enable', 'nelliel', 'graphics', 'bool', 'cel', '0'),
+                        ('filetype_enable', 'nelliel', 'graphics', 'bool', 'kcf', '0'),
                         ('filetype_enable', 'nelliel', 'audio', 'bool', 'audio', '0'),
                         ('filetype_enable', 'nelliel', 'audio', 'bool', 'wav', '0'),
                         ('filetype_enable', 'nelliel', 'audio', 'bool', 'aiff', '0'),
