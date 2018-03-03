@@ -66,7 +66,8 @@ function nel_main_thread_generator($board_id, $response_to, $write)
         $render->loadTemplateFromFile($dom, 'thread.html');
         $render->startRenderTimer();
         nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
-        $dom->getElementById('form-post-index')->extSetAttribute('action', $dotdot . PHP_SELF);
+        $dom->getElementById('form-post-index')->extSetAttribute('action', $dotdot . PHP_SELF .
+             '?module=threads&board_id=' . $board_id);
         nel_render_board_header($board_id, $render, $dotdot, $treeline);
         nel_render_posting_form($board_id, $render, $response_to, $dotdot);
         $sub_page_thread_counter = 0;
@@ -219,12 +220,12 @@ function nel_main_thread_generator($board_id, $response_to, $write)
         {
             // TODO: Modmode stuff
             /*if ($page >= $dataforce['current_page'])
-            {
-                $page = $counttree;
-            }
+             {
+             $page = $counttree;
+             }
 
-            echo $render->outputRenderSet();
-            die();*/
+             echo $render->outputRenderSet();
+             die();*/
         }
         else
         {
