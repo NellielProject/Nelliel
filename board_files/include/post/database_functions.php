@@ -78,7 +78,7 @@ function nel_db_insert_new_files($board_id, $parent_id, $new_post_info, $files)
         nel_utf8_to_numeric_html_entities($file['preview_name']);
         nel_utf8_to_numeric_html_entities($file['source']);
         nel_utf8_to_numeric_html_entities($file['license']);
-        $columns = array('parent_thread', 'post_ref', 'file_order', 'supertype', 'subtype', 'mime', 'filename',
+        $columns = array('parent_thread', 'post_ref', 'file_order', 'type', 'format', 'mime', 'filename',
         'extension', 'image_width', 'image_height', 'preview_name', 'preview_width', 'preview_height', 'filesize',
         'md5', 'sha1', 'sha256', 'source', 'license', 'alt_text');
         $values = $dbh->generateParameterIds($columns);
@@ -87,8 +87,8 @@ function nel_db_insert_new_files($board_id, $parent_id, $new_post_info, $files)
         $prepared->bindValue(':parent_thread', $parent_id, PDO::PARAM_INT);
         $prepared->bindValue(':post_ref', $new_post_info['post_number'], PDO::PARAM_INT);
         $prepared->bindValue(':file_order', $i, PDO::PARAM_INT);
-        $prepared->bindValue(':supertype', $file['supertype'], PDO::PARAM_STR);
-        $prepared->bindValue(':subtype', $file['subtype'], PDO::PARAM_STR);
+        $prepared->bindValue(':type', $file['type'], PDO::PARAM_STR);
+        $prepared->bindValue(':format', $file['format'], PDO::PARAM_STR);
         $prepared->bindValue(':mime', $file['mime'], PDO::PARAM_STR);
         $prepared->bindValue(':filename', $file['filename'], PDO::PARAM_STR);
         $prepared->bindValue(':extension', $file['ext'], PDO::PARAM_STR);

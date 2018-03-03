@@ -143,15 +143,15 @@ function nel_get_filetype($board_id, $file, $files)
         nel_derp(107, nel_stext('ERROR_107'), $board_id, $error_data);
     }
 
-    if (!$filetype_settings[$filetypes[$test_ext]['supertype']][$filetypes[$test_ext]['subtype']])
+    if (!$filetype_settings[$filetypes[$test_ext]['type']][$filetypes[$test_ext]['format']])
     {
         nel_derp(108, nel_stext('ERROR_108'), $board_id, $error_data);
     }
 
     if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test))
     {
-        $file['supertype'] = $filetypes[$test_ext]['supertype'];
-        $file['subtype'] = $filetypes[$test_ext]['subtype'];
+        $file['type'] = $filetypes[$test_ext]['type'];
+        $file['format'] = $filetypes[$test_ext]['format'];
         $file['mime'] = $filetypes[$test_ext]['mime'];
     }
     else
@@ -176,7 +176,7 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
         $files[$i]['pre_y'] = null;
         $files[$i]['thumbfile'] = null;
 
-        if ($files[$i]['subtype'] === 'swf' || ($files[$i]['supertype'] === 'graphics' && !$board_settings['use_magick']))
+        if ($files[$i]['format'] === 'swf' || ($files[$i]['type'] === 'graphics' && !$board_settings['use_magick']))
         {
             $dim = getimagesize($files[$i]['dest']);
             $files[$i]['im_x'] = $dim[0];
@@ -189,7 +189,7 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
                  $files[$i]['im_y']) : $files[$i]['im_y'];
         }
 
-        if ($board_settings['use_thumb'] && $files[$i]['supertype'] === 'graphics')
+        if ($board_settings['use_thumb'] && $files[$i]['type'] === 'graphics')
         {
             if ($board_settings['use_magick'])
             {
@@ -260,7 +260,7 @@ function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
     $file['pre_x'] = ($file['im_x'] > $board_settings['max_width']) ? intval($ratio * $file['im_x']) : $file['im_x'];
     $file['pre_y'] = ($file['im_y'] > $board_settings['max_height']) ? intval($ratio * $file['im_y']) : $file['im_y'];
 
-    if ($file['subtype'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
+    if ($file['format'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
     {
         $file['thumbfile'] = $file['filename'] . '-preview.gif';
 
@@ -311,7 +311,7 @@ function nel_create_imagemagick_preview(&$file, $thumbpath, $board_id)
     $file['pre_x'] = ($file['im_x'] > $board_settings['max_width']) ? intval($ratio * $file['im_x']) : $file['im_x'];
     $file['pre_y'] = ($file['im_y'] > $board_settings['max_height']) ? intval($ratio * $file['im_y']) : $file['im_y'];
 
-    if ($file['subtype'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
+    if ($file['format'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
     {
         $file['thumbfile'] = $file['filename'] . '-preview.gif';
         $cmd_resize = 'convert ' . escapeshellarg($file['dest']) . ' -coalesce -thumbnail ' .
@@ -346,15 +346,15 @@ function nel_create_gd_preview($file)
     // This shouldn't be needed, really. If your host actually doesn't have these, it sucks. Get a new one, srsly.
     $gd_test = gd_info();
 
-    if ($file['subtype'] === 'jpeg' && $gd_test["JPEG Support"])
+    if ($file['format'] === 'jpeg' && $gd_test["JPEG Support"])
     {
         $image = imagecreatefromjpeg($file['dest']);
     }
-    else if ($file['subtype'] === 'gif' && $gd_test["GIF Read Support"])
+    else if ($file['format'] === 'gif' && $gd_test["GIF Read Support"])
     {
         $image = imagecreatefromgif($file['dest']);
     }
-    else if ($file['subtype'] === 'png' && $gd_test["PNG Support"])
+    else if ($file['format'] === 'png' && $gd_test["PNG Support"])
     {
         $image = imagecreatefrompng($file['dest']);
     }
