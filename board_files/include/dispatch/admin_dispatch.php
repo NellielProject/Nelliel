@@ -4,6 +4,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'admin/login.php';
+
 function nel_admin_dispatch()
 {
     $manage = (isset($_GET['manage'])) ? $_GET['manage'] : null;

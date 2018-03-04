@@ -10,7 +10,7 @@ require_once INCLUDE_PATH . 'post/post_data.php';
 
 function nel_process_new_post($board_id)
 {
-    global $enabled_types, $plugins, $filetypes;
+    global $plugins;
     $dbh = nel_database();
     $references = nel_board_references($board_id);
     $archive = nel_archive($board_id);
