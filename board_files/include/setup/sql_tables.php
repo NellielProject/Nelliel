@@ -634,8 +634,12 @@ function nel_insert_board_config_defaults($config_table)
 {
     $dbh = nel_database();
     $result = $dbh->query("INSERT INTO " . $config_table . " (config_type, config_owner, config_category, data_type, config_name, setting)
-                VALUES  ('technical', 'nelliel', 'database', 'str', 'original_schema_version', '003'),
-                        ('technical', 'nelliel', 'database', 'str', 'current_schema_version', '003'),
+                VALUES  ('schema_version', 'nelliel', 'database', 'str', 'original_posts_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'current_posts_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'original_threads_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'current_threads_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'original_files_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'current_files_schema', '001'),
                         ('board_setting', 'nelliel', 'general', 'bool', 'allow_tripkeys', '1'),
                         ('board_setting', 'nelliel', 'general', 'bool', 'force_anonymous', '0'),
                         ('board_setting', 'nelliel', 'general', 'bool', 'show_title', '1'),
@@ -761,7 +765,23 @@ function nel_insert_site_config_defaults($config_table)
                         ('core_setting', 'nelliel', 'crypt', 'str', 'secure_tripcode_algorithm', 'sha256'),
                         ('core_setting', 'nelliel', 'crypt', 'bool', 'use_password_default_algorithm', '1'),
                         ('core_setting', 'nelliel', 'crypt', 'bool', 'do_password_rehash', '0'),
-                        ('core_setting', 'nelliel', 'crypt', 'bool', 'do_sha2_fallback', '1')
+                        ('core_setting', 'nelliel', 'crypt', 'bool', 'do_sha2_fallback', '1'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'original_bans_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'current_bans_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'original_user_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'current_user_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'original_roles_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'current_roles_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'original_user_role_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'current_user_role_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'original_permissions_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'current_permissions_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'original_logins_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'current_logins_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'original_board_data_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'current_board_data_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'original_site_config_schema', '001'),
+                        ('schema_version', 'nelliel', 'database', 'str', 'current_site_config_schema', '001')
                         ");
 
     nel_setup_stuff_done($result);
