@@ -4,6 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'thread_functions.php';
+require_once INCLUDE_PATH . 'regen.php';
+
 function nel_general_dispatch()
 {
     $module = (isset($_GET['module'])) ? $_GET['module'] : null;

@@ -50,14 +50,11 @@ $example_result = $plugins->plugin_hook('plugin-example', TRUE, array(5));
 require_once INCLUDE_PATH . 'sessions.php';
 require_once INCLUDE_PATH . 'snacks.php';
 
-ignore_user_abort(true);
-
 // IT'S GO TIME!
+ignore_user_abort(true);
 nel_ban_spambots();
 nel_apply_ban(INPUT_BOARD_ID);
 
-require_once INCLUDE_PATH . 'regen.php';
-require_once INCLUDE_PATH . 'thread_functions.php';
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 
 nel_central_dispatch();
