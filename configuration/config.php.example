@@ -5,8 +5,9 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 //
-// This holds the very basic configuration needed for Nelliel to function and setup.
-// Other settings and board-specific config can be found in the management section.
+// This file has only the very basic configuration needed to function and do setup.
+// It is intentionally kept as short and simple as possible.
+// Board management and all other settings are accessible from the management area.
 //
 
 //
@@ -27,7 +28,8 @@ $base_config['tripcode_salt'] = 'sodiumz';
 // Once initial setup and testing is finished this isn't really necessary and can be set to false.
 $base_config['run_setup_check'] = true;
 
-// Default file and directory permissions. There shouldn't be any need to change these.
+// Default file and directory permissions.
+// In most cases you don't need to touch these.
 // If they are changed, format must be in the proper octal format.
 $base_config['directory_perm'] = '0775';
 $base_config['file_perm'] = '0664';
@@ -36,7 +38,8 @@ $base_config['file_perm'] = '0664';
 // === Database Access Settings ===
 //
 
-// Database type. Supported types: MYSQL, SQLITE, POSTGRES
+// Database type
+// Currently supported types: MYSQL, SQLITE, POSTGRES
 $db_config['sqltype'] = 'MYSQL';
 
 //
