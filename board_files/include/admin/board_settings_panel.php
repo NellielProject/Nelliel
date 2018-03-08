@@ -22,7 +22,7 @@ function nel_board_settings_control($board_id, $action)
 
         while ($item = each($_POST))
         {
-            if ($item[0] !== 'action' && $item[0] !== 'username' && $item[0] !== 'super_sekrit')
+            if ($item[0] !== 'action' && $item[0] !== 'board_id')
             {
                 if ($item[0] === 'jpeg_quality' && $item[1] > 100)
                 {

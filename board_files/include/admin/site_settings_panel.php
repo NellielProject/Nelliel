@@ -15,7 +15,7 @@ function nel_site_settings_control($action)
     {
         while ($item = each($_POST))
         {
-            if ($item[0] !== 'action' && $item[0] !== 'username' && $item[0] !== 'super_sekrit')
+            if ($item[0] !== 'action')
             {
                 $prepared = $dbh->prepare('UPDATE "nelliel_site_config" SET "setting" = ? WHERE "config_name" = ?');
                 $dbh->executePrepared($prepared, array($item[1], $item[0]), true);
