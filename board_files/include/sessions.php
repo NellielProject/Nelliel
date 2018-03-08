@@ -48,11 +48,6 @@ function nel_initialize_session($manage, $action, $login_valid = false)
         if ($manage === 'logout')
         {
             nel_terminate_session();
-            nel_clean_exit();
-        }
-        else if ($manage === 'login')
-        {
-            nel_login();
         }
     }
     else if (!empty($_SESSION) && nel_session_is_old())

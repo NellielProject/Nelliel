@@ -225,7 +225,7 @@ function nel_main_thread_generator($board_id, $response_to, $write)
              }
 
              echo $render->outputRenderSet();
-             die();*/
+             nel_clean_exit();*/
         }
         else
         {

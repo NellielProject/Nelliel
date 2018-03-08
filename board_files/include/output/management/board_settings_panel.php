@@ -94,5 +94,5 @@ function nel_render_board_settings_panel($board_id)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
-    die();
+    nel_clean_exit();
 }

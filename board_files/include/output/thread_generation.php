@@ -159,7 +159,7 @@ function nel_thread_generator($board_id, $write, $response_to)
             echo $render->outputRenderSet();
         }
 
-        die();*/
+        nel_clean_exit();*/
         // TODO: Modmode stuff
     }
 

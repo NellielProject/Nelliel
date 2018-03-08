@@ -51,7 +51,7 @@ function nel_render_staff_panel_main()
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
-    die();
+    nel_clean_exit();
 }
 
 function nel_render_staff_panel_user_edit($user_id)
@@ -116,7 +116,7 @@ function nel_render_staff_panel_user_edit($user_id)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
-    die();
+    nel_clean_exit();
 }
 
 function nel_render_staff_panel_role_edit($role_id)
@@ -152,5 +152,5 @@ function nel_render_staff_panel_role_edit($role_id)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
-    die();
+    nel_clean_exit();
 }

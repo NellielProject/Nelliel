@@ -18,5 +18,5 @@ function nel_tpilb()
         </div>
     </body>
 </html>';
-    die();
+    nel_clean_exit();
 }

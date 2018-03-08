@@ -18,5 +18,5 @@ function nel_about_nelliel_screen()
     $dom->getElementById('disclaimer-image')->extSetAttribute('src', IMAGES_DIR . 'wat/luna_canterlot_disclaimer.png');
     $render->appendHTMLFromDOM($dom);
     echo $render->outputRenderSet();
-    die();
+    nel_clean_exit();
 }

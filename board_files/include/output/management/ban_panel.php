@@ -68,7 +68,7 @@ function nel_render_main_ban_panel($board_id)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
-    die();
+    nel_clean_exit();
 }
 
 function nel_render_ban_panel_add($board_id)
@@ -86,7 +86,7 @@ function nel_render_ban_panel_add($board_id)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
-    die();
+    nel_clean_exit();
 }
 
 function nel_render_ban_panel_modify($board_id)
@@ -151,5 +151,5 @@ function nel_render_ban_panel_modify($board_id)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
-    die();
+    nel_clean_exit();
 }

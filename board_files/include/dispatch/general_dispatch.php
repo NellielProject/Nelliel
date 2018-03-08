@@ -5,7 +5,6 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 require_once INCLUDE_PATH . 'thread_functions.php';
-require_once INCLUDE_PATH . 'regen.php';
 
 function nel_general_dispatch()
 {
@@ -43,10 +42,9 @@ function nel_general_dispatch()
                 $updates = nel_thread_updates($board_id);
                 nel_regen_threads($board_id, true, $updates);
                 nel_regen_index($board_id);
-                nel_clean_exit(true);
+                nel_clean_exit(true, $board_id);
             }
 
-            nel_clean_exit();
             break;
     }
 }

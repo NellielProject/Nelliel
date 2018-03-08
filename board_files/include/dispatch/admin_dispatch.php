@@ -6,7 +6,6 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'admin/login.php';
 require_once INCLUDE_PATH . 'thread_functions.php';
-require_once INCLUDE_PATH . 'regen.php';
 
 function nel_admin_dispatch()
 {
@@ -83,7 +82,7 @@ function nel_admin_dispatch()
                     nel_regen_cache($board_id);
                 }
 
-                nel_login();
+                nel_render_main_board_panel($board_id);
                 break;
 
             case 'main-panel':

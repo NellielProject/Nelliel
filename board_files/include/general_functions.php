@@ -9,17 +9,24 @@ function nel_is_in_string($string, $substring)
     return utf8_strripos($string, $substring) !== false;
 }
 
-function nel_clean_exit($redirect = false)
+function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_delay = 2)
 {
     $authorize = nel_authorize();
     $authorize->save_users();
     $authorize->save_roles();
     $authorize->save_user_roles();
 
-    if($redirect)
+    if ($redirect)
     {
-        echo '<meta http-equiv="refresh" content="2;URL=' . nel_board_references(INPUT_BOARD_ID, 'board_directory') . '/' .
-        PHP_SELF2 . PHP_EXT . '">';
+        if (is_null($redirect_board))
+        {
+            echo '<meta http-equiv="refresh" content="' . $redirect_delay . ';URL=' . nel_site_settings('home_page') . '">';
+        }
+        else
+        {
+            echo '<meta http-equiv="refresh" content="' . $redirect_delay . ';URL=' .
+                 nel_board_references($redirect_board, 'board_directory') . '/' . PHP_SELF2 . PHP_EXT . '">';
+        }
     }
 
     die();

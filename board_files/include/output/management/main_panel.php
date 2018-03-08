@@ -44,7 +44,7 @@ function nel_render_main_panel()
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
-    die();
+    nel_clean_exit();
 }
 
 function nel_render_main_board_panel($board_id)
@@ -129,5 +129,5 @@ function nel_render_main_board_panel($board_id)
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
-    die();
+    nel_clean_exit();
 }
