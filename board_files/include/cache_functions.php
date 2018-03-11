@@ -24,10 +24,7 @@ function nel_cache_filetype_settings($board_id)
     {
         $file_config[$config['config_category']][utf8_strtolower($config['config_name'])] = (bool)$config['setting'];
     }
-    if (!defined('NELLIEL_VERSION'))
-    {
-        die("NOPE.AVI");
-    }
+
     $output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} $filetype_settings = ' . var_export($file_config, true) . ';';
     $file_handler->writeFile(CACHE_PATH . $board_id . '/filetype_settings.php', $output, FILE_PERM, true);
     return $file_config;
