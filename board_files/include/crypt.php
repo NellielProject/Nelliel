@@ -53,8 +53,6 @@ function nel_verify_hash_algorithm()
 
 function nel_password_hash($password, $algorithm, array $options = array())
 {
-    nel_verify_hash_algorithm();
-
     if ($algorithm === 1)
     {
         if (!array_key_exists('cost', $options))
