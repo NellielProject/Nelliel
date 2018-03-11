@@ -406,7 +406,7 @@ function nel_create_bans_table($table_name)
     if ($result)
     {
         $dbh->query('CREATE INDEX index_' . $table_name . '_ip_address_start ON ' . $table_name . ' (ip_address_start);');
-        $dbh->query('CREATE INDEX index_' . $table_name . '_ip_address_stop ON ' . $table_name . ' (ip_address_stop);');
+        $dbh->query('CREATE INDEX index_' . $table_name . '_ip_address_end ON ' . $table_name . ' (ip_address_end);');
     }
 
     nel_setup_stuff_done($result);
