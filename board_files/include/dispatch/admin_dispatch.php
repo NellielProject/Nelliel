@@ -44,6 +44,13 @@ function nel_admin_dispatch()
 
             case 'create-board':
                 require_once INCLUDE_PATH . 'output/management/create_board.php';
+
+                if ($action === 'create')
+                {
+                    require_once INCLUDE_PATH . 'admin/create_board.php';
+                    nel_create_new_board();
+                }
+
                 nel_render_create_board_panel();
                 break;
 
