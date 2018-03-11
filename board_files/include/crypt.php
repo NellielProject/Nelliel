@@ -32,8 +32,13 @@ if (!function_exists('hash_equals'))
     }
 }
 
-function nel_verfiy_hash_algorithm()
+function nel_verify_hash_algorithm()
 {
+    if(defined('NELLIEL_PASS_ALGORITHM'))
+    {
+        return;
+    }
+
     $best_hashing = nel_best_available_hashing();
 
     if($best_hashing === 0)
@@ -48,6 +53,8 @@ function nel_verfiy_hash_algorithm()
 
 function nel_password_hash($password, $algorithm, array $options = array())
 {
+    nel_verify_hash_algorithm();
+
     if ($algorithm === 1)
     {
         if (!array_key_exists('cost', $options))

@@ -4,6 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'setup/insert_data.php';
 require_once INCLUDE_PATH . 'setup/sql_tables.php';
 
 //
@@ -59,6 +60,8 @@ function nel_create_core_directories()
 
 function nel_create_core_tables()
 {
+    // TODO: Remove passed table names
+    nel_create_site_config_table(SITE_CONFIG_TABLE);
     nel_create_bans_table(BAN_TABLE);
     nel_create_user_table(USER_TABLE);
     nel_create_roles_table(ROLES_TABLE);
@@ -66,7 +69,6 @@ function nel_create_core_tables()
     nel_create_permissions_table(PERMISSIONS_TABLE);
     nel_create_logins_table(LOGINS_TABLE);
     nel_create_board_data_table(BOARD_DATA_TABLE);
-    nel_create_site_config_table(SITE_CONFIG_TABLE);
 }
 
 function nel_create_board_directories($board_id)
