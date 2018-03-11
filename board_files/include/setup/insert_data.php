@@ -200,6 +200,8 @@ function nel_insert_default_admin()
         return false;
     }
 
+    nel_verify_hash_algorithm();
+
     $dbh = nel_database();
     $result = $dbh->query('SELECT 1 FROM "' . USER_TABLE . '" WHERE "user_id" = \'' . DEFAULTADMIN . '\'');
 
