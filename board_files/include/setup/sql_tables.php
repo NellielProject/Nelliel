@@ -425,7 +425,7 @@ function nel_create_board_data_table($table_name)
         entry                   ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         board_id                VARCHAR(255) NOT NULL UNIQUE,
         board_directory         VARCHAR(255) NOT NULL,
-        db_prefix               VARCHAR(255) NOT NULL,
+        db_prefix               VARCHAR(255) NOT NULL
     ) ' . $options . ';';
 
     $result = nel_create_table_query($schema, $table_name);
