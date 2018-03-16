@@ -15,9 +15,11 @@ function nel_cache_filetype_settings($board_id)
     }
 
     $dbh = nel_database();
-    $references = nel_board_references($board_id);
-    $file_handler = nel_file_handler();
-    $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . $references['config_table'] . '" WHERE "config_type" = \'filetype_enable\'', PDO::FETCH_ASSOC);
+    $file_handler = new \Nelliel\FileHandler();
+    $prepared = $dbh->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
+    $db_prefix = $dbh->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
+    $config_table = $db_prefix . '_config';
+    $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'filetype_enable\'', PDO::FETCH_ASSOC);
     $file_config = array();
 
     foreach ($config_list as $config)
@@ -33,7 +35,7 @@ function nel_cache_filetype_settings($board_id)
 function nel_cache_site_settings()
 {
     $dbh = nel_database();
-    $file_handler = nel_file_handler();
+    $file_handler = new \Nelliel\FileHandler();
     $config_list =  $dbh->executeFetchAll('SELECT * FROM "nelliel_site_config"', PDO::FETCH_ASSOC);
     $settings_output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} $site_settings = array();';
 
@@ -68,9 +70,11 @@ function nel_cache_board_settings($board_id)
     }
 
     $dbh = nel_database();
-    $references = nel_board_references($board_id);
-    $file_handler = nel_file_handler();
-    $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . $references['config_table'] . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
+    $file_handler = new \Nelliel\FileHandler();
+    $prepared = $dbh->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
+    $db_prefix = $dbh->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
+    $config_table = $db_prefix . '_config';
+    $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
     $settings_output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} $board_settings = array();';
 
     foreach ($config_list as $config)

@@ -54,7 +54,7 @@ function nel_setup_stuff_done($status)
 
 function nel_create_core_directories()
 {
-    $file_handler = nel_file_handler();
+    $file_handler = new \Nelliel\FileHandler();
     $file_handler->createDirectory(CACHE_PATH, DIRECTORY_PERM, true);
 }
 
@@ -73,7 +73,7 @@ function nel_create_core_tables()
 
 function nel_create_board_directories($board_id)
 {
-    $file_handler = nel_file_handler();
+    $file_handler = new \Nelliel\FileHandler();
     $references = nel_board_references($board_id);
     $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM, true);
     $file_handler->createDirectory($references['thumb_path'], DIRECTORY_PERM, true);
