@@ -1,5 +1,4 @@
 <?php
-
 require_once LIBRARY_PATH . 'password_compat/password.php';
 
 //
@@ -11,6 +10,7 @@ define('NEL_PASSWORD_SHA512', 102);
 
 if (!function_exists('hash_equals'))
 {
+
     function hash_equals($known_string, $user_string)
     {
         if (strlen($known_string) != strlen($user_string))
@@ -19,7 +19,7 @@ if (!function_exists('hash_equals'))
         }
         else
         {
-            $res = $known_string^ $user_string;
+            $res = $known_string ^ $user_string;
             $return = 0;
 
             for ($i = strlen($res) - 1; $i >= 0; $i --)
@@ -34,14 +34,14 @@ if (!function_exists('hash_equals'))
 
 function nel_verify_hash_algorithm()
 {
-    if(defined('NELLIEL_PASS_ALGORITHM'))
+    if (defined('NELLIEL_PASS_ALGORITHM'))
     {
         return;
     }
 
     $best_hashing = nel_best_available_hashing();
 
-    if($best_hashing === 0)
+    if ($best_hashing === 0)
     {
         nel_derp(201, nel_stext('ERROR_201'));
     }
@@ -76,7 +76,11 @@ function nel_password_verify($password, $hash)
 
 function nel_password_needs_rehash($hash, $algorithm, array $options = array())
 {
-    if (!nel_site_settings('do_password_rehash'))
+    $dbh = nel_database();
+    $do_rehash = $dbh->executeFetch('SELECT "setting" FROM "' . SITE_CONFIG_TABLE .
+         '" WHERE "config_name" = \'do_password_rehash\'', PDO::FETCH_COLUMN);
+
+    if (!$do_rehash)
     {
         return false;
     }
@@ -163,7 +167,7 @@ function nel_salted_hash_info($hash)
 
 function nel_generate_salted_hash($algorithm, $string, $salt = null)
 {
-    if(is_null($salt))
+    if (is_null($salt))
     {
         $salt = nel_gen_salt(16);
     }
@@ -177,7 +181,7 @@ function nel_verify_salted_hash($string, $hash)
 {
     $info = nel_salted_hash_info($hash);
 
-    if($info['algoName'] === 'unknown')
+    if ($info['algoName'] === 'unknown')
     {
         return false;
     }
@@ -231,9 +235,15 @@ function nel_crypt($password, $algorithm, $type, array $options = array())
 
 function nel_best_available_hashing()
 {
+    $dbh = nel_database();
+    $default_algorithm = $dbh->executeFetch('SELECT "setting" FROM "' . SITE_CONFIG_TABLE .
+         '" WHERE "config_name" = \'use_password_default_algorithm\'', PDO::FETCH_COLUMN);
+    $sha_fallback = $dbh->executeFetch('SELECT "setting" FROM "' . SITE_CONFIG_TABLE .
+         '" WHERE "config_name" = \'do_sha2_fallback\'', PDO::FETCH_COLUMN);
+
     if (PasswordCompat\binary\check())
     {
-        if (nel_site_settings('use_password_default_algorithm'))
+        if ($default_algorithm)
         {
             return PASSWORD_DEFAULT;
         }
@@ -242,11 +252,11 @@ function nel_best_available_hashing()
             return PASSWORD_BCRYPT;
         }
     }
-    else if (nel_site_settings('do_sha2_fallback') && defined('CRYPT_SHA512') && CRYPT_SHA512 == 1)
+    else if ($sha_fallback && defined('CRYPT_SHA512') && CRYPT_SHA512 == 1)
     {
         return NEL_PASSWORD_SHA512;
     }
-    else if (nel_site_settings('do_sha2_fallback') && defined('CRYPT_SHA256') && CRYPT_SHA256 == 1)
+    else if ($sha_fallback && defined('CRYPT_SHA256') && CRYPT_SHA256 == 1)
     {
         return NEL_PASSWORD_SHA256;
     }
