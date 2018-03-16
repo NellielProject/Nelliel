@@ -10,7 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 class OutputFilter
 {
 
-    function __construct($board_id)
+    function __construct()
     {
     }
 
