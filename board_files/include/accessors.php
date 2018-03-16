@@ -103,10 +103,22 @@ function nel_output_filter()
 
     if (!isset($output_filter))
     {
-        $output_filter= new \Nelliel\OutputFilter();
+        $output_filter = new \Nelliel\OutputFilter();
     }
 
     return $output_filter;
+}
+
+function nel_sessions()
+{
+    static $sessions;
+
+    if (!isset($sessions))
+    {
+        $sessions = new \Nelliel\Sessions();
+    }
+
+    return $sessions;
 }
 
 function nel_site_settings($setting = null)

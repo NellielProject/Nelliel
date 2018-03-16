@@ -22,7 +22,7 @@ function nel_admin_dispatch()
     }
     else if ($manage === 'logout')
     {
-        nel_initialize_session($manage, $action);
+        nel_sessions()->initializeSession($manage, $action);
     }
     else if ($manage === 'general')
     {

@@ -89,12 +89,12 @@ function nel_verify_login_or_session($manage, $action)
         }
     }
 
-    nel_initialize_session($manage, $action, $login_valid);
+    nel_sessions()->initializeSession($manage, $action, $login_valid);
 }
 
 function nel_login()
 {
-    if (!nel_session_is_ignored())
+    if (!nel_sessions()->sessionIsIgnored())
     {
         if(INPUT_BOARD_ID === '')
         {

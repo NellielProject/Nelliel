@@ -346,7 +346,7 @@ class ThreadHandler
 
         $flag = false;
 
-        if (nel_session_is_active())
+        if (nel_sessions()->sessionIsActive())
         {
             $flag = $authorize->role_level_check($authorize->user_highest_level_role($_SESSION['username'], $this->board_id), $authorize->user_highest_level_role($post_data['mod_post'], $this->board_id));
 
