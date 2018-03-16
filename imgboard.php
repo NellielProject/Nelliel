@@ -19,6 +19,7 @@ require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'general_functions.php';
+require_once INCLUDE_PATH . 'language/language.php';
 require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'crypt.php';
 require_once INCLUDE_PATH . 'setup/setup.php';
@@ -31,7 +32,6 @@ if(RUN_SETUP_CHECK)
 nel_verify_hash_algorithm();
 require_once INCLUDE_PATH . 'cache_functions.php';
 require_once INCLUDE_PATH . 'accessors.php';
-require_once INCLUDE_PATH . 'language/language.php';
 require_once INCLUDE_PATH . 'plugins.php';
 $plugin_files = glob(PLUGINS_PATH . '*.nel.php');
 $plugins = new nel_plugin_handler();
