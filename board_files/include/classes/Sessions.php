@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-class OutputFilter
+class Sessions
 {
 
     function __construct()
