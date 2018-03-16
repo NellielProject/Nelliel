@@ -97,6 +97,18 @@ function nel_ban_hammer()
     return $ban_hammer;
 }
 
+function nel_output_filter()
+{
+    static $output_filter;
+
+    if (!isset($output_filter))
+    {
+        $output_filter= new \Nelliel\OutputFilter();
+    }
+
+    return $output_filter;
+}
+
 function nel_site_settings($setting = null)
 {
     static $settings;

@@ -60,6 +60,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $authorize = nel_authorize();
     $references = nel_board_references($board_id);
     $board_settings = nel_board_settings($board_id);
+    $output_filter - nel_output_filter();
     $start = microtime(true);
     $post_data = $gen_data['post'];
     $thread_id = $post_data['parent_thread'];
@@ -290,8 +291,8 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
             $temp_file_node_array['hide-file-meta']->changeId('hide-file-meta-' . $file_id);
             $temp_file_node_array['file-meta']->changeId('file-meta-' . $file_id);
 
-            nel_encode_and_clean_output($file['source']);
-            nel_encode_and_clean_output($file['license']);
+            $output_filter->cleanAndEncode($file['source']);
+            $output_filter->cleanAndEncode($file['license']);
 
             $temp_file_node_array['file-source']->setContent('Source: ' . $file['source']);
             $temp_file_node_array['file-license']->setContent('License: ' . $file['license']);
@@ -382,8 +383,9 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $post_contents_node_array['post-text']->extSetAttribute('class', $post_type_class . 'post-text');
     $post_contents_node_array['mod-comment']->setContent($post_data['mod_comment']);
     $post_contents_node_array['post-comment']->changeId('post-comment-' . $post_id);
+    $output_filter->clearWhitespace($post_data['comment']);
 
-    if (nel_clear_whitespace($post_data['comment']) === '')
+    if ($post_data['comment'] === '')
     {
         $post_contents_node_array['post-comment']->setContent(nel_stext('THREAD_NOTEXT'));
     }
@@ -391,17 +393,17 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     {
         nel_numeric_html_entities_to_utf8($post_data['comment']);
 
-        foreach (nel_newlines_to_array($post_data['comment']) as $line)
+        foreach ($output_filter->newlinesToArray($post_data['comment']) as $line)
         {
             $append_target = $post_contents_node_array['post-comment'];
-            $quote_result = nel_post_quote($append_target, $line);
+            $quote_result = $output_filter->postQuote($append_target, $line);
 
             if ($quote_result !== false)
             {
                 $append_target = $quote_result;
             }
 
-            nel_post_quote_link($board_id, $append_target, $line);
+            $output_filter->postQuoteLink($board_id, $append_target, $line);
             $append_target->appendChild($new_post_dom->createElement('br'));
         }
     }
