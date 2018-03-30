@@ -60,7 +60,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $authorize = nel_authorize();
     $references = nel_board_references($board_id);
     $board_settings = nel_board_settings($board_id);
-    $output_filter - nel_output_filter();
+    $output_filter = nel_output_filter();
     $start = microtime(true);
     $post_data = $gen_data['post'];
     $thread_id = $post_data['parent_thread'];
