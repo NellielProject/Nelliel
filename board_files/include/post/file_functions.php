@@ -132,7 +132,7 @@ function nel_check_for_existing_file($board_id, $file, $files)
 
 function nel_get_filetype($board_id, $file, $files)
 {
-    global $filetypes;
+    require_once INCLUDE_PATH . 'post/filetypes.php';
     $filetype_settings = nel_filetype_settings($board_id);
     $error_data = array('bad-filename' => $file['filename'], 'files' => $files);
     $test_ext = utf8_strtolower($file['ext']);

@@ -4,7 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'post/filetypes.php';
 require_once INCLUDE_PATH . 'post/file_functions.php';
 require_once INCLUDE_PATH . 'post/post_data.php';
 
