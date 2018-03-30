@@ -26,8 +26,8 @@ function setup_check($board_id) // TODO Do this better
         return;
     }
 
-    nel_create_board_tables($board_id);
-    nel_create_board_directories($board_id);
+    //nel_create_board_tables($board_id);
+    //nel_create_board_directories($board_id);
     nel_setup_stuff_done('check_done_nochange');
 
     if (STUFF_DONE === true)
