@@ -94,7 +94,7 @@ function nel_db_insert_new_files($board_id, $parent_id, $new_post_info, $files)
         $prepared->bindValue(':extension', $file['ext'], PDO::PARAM_STR);
         $prepared->bindValue(':image_width', $file['im_x'], PDO::PARAM_INT);
         $prepared->bindValue(':image_height', $file['im_y'], PDO::PARAM_INT);
-        $prepared->bindValue(':preview_name', $file['thumbfile'], PDO::PARAM_STR);
+        $prepared->bindValue(':preview_name', $file['preview_name'], PDO::PARAM_STR);
         $prepared->bindValue(':preview_width', $file['pre_x'], PDO::PARAM_INT);
         $prepared->bindValue(':preview_height', $file['pre_y'], PDO::PARAM_INT);
         $prepared->bindValue(':filesize', $file['filesize'], PDO::PARAM_INT);

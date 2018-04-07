@@ -177,7 +177,7 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
         $files[$i]['im_y'] = null;
         $files[$i]['pre_x'] = null;
         $files[$i]['pre_y'] = null;
-        $files[$i]['thumbfile'] = null;
+        $files[$i]['preview_name'] = null;
 
         if ($files[$i]['format'] === 'swf' || ($files[$i]['type'] === 'graphics' && !$board_settings['use_magick']))
         {
@@ -213,7 +213,7 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
             else
             {
                 $files[$i]['thumbnail'] = nel_create_gd_preview($files[$i]);
-                $files[$i]['thumbfile'] = $files[$i]['filename'] . '-preview.jpg';
+                $files[$i]['preview_name'] = $files[$i]['filename'] . '-preview.jpg';
 
                 if ($files[$i]['thumbnail'] === false)
                 {
@@ -224,11 +224,11 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
                 {
                     if ($board_settings['use_png_thumb'])
                     {
-                        imagepng($files[$i]['thumbnail'], $thumbpath . $files[$i]['thumbfile'], -1);
+                        imagepng($files[$i]['thumbnail'], $thumbpath . $files[$i]['preview_name'], -1);
                     }
                     else
                     {
-                        imagejpeg($files[$i]['thumbnail'], $thumbpath . $files[$i]['thumbfile'], $board_settings['jpeg_quality']);
+                        imagejpeg($files[$i]['thumbnail'], $thumbpath . $files[$i]['preview_name'], $board_settings['jpeg_quality']);
                     }
                 }
             }
@@ -265,11 +265,11 @@ function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
 
     if ($file['format'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
     {
-        $file['thumbfile'] = $file['filename'] . '-preview.gif';
+        $file['preview_name'] = $file['filename'] . '-preview.gif';
 
         if ($file['im_x'] <= $board_settings['max_width'] && $file['im_y'] <= $board_settings['max_height'])
         {
-            copy($file['dest'], $thumbpath . $file['thumbfile']);
+            copy($file['dest'], $thumbpath . $file['preview_name']);
         }
         else
         {
@@ -278,7 +278,7 @@ function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
                 $frame->scaleImage($file['pre_x'], $file['pre_y'], true);
             }
 
-            $image->writeImages($thumbpath . $file['thumbfile'], true);
+            $image->writeImages($thumbpath . $file['preview_name'], true);
         }
     }
     else
@@ -288,17 +288,17 @@ function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
 
         if ($board_settings['use_png_thumb'])
         {
-            $file['thumbfile'] = $file['filename'] . '-preview.png';
+            $file['preview_name'] = $file['filename'] . '-preview.png';
             $image->setImageFormat('png');
         }
         else
         {
-            $file['thumbfile'] = $file['filename'] . '-preview.jpg';
+            $file['preview_name'] = $file['filename'] . '-preview.jpg';
             $image->setImageFormat('jpeg');
             $image->setImageCompressionQuality($board_settings['jpeg_quality']);
         }
 
-        $image->writeImage($thumbpath . $file['thumbfile']);
+        $image->writeImage($thumbpath . $file['preview_name']);
     }
 }
 
@@ -316,32 +316,32 @@ function nel_create_imagemagick_preview(&$file, $thumbpath, $board_id)
 
     if ($file['format'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
     {
-        $file['thumbfile'] = $file['filename'] . '-preview.gif';
+        $file['preview_name'] = $file['filename'] . '-preview.gif';
         $cmd_resize = 'convert ' . escapeshellarg($file['dest']) . ' -coalesce -thumbnail ' .
              $board_settings['max_width'] . 'x' . $board_settings['max_height'] .
-             escapeshellarg($thumbpath . $file['thumbfile']);
+             escapeshellarg($thumbpath . $file['preview_name']);
         exec($cmd_resize);
-        chmod($thumbpath . $file['thumbfile'], octdec(FILE_PERM));
+        chmod($thumbpath . $file['preview_name'], octdec(FILE_PERM));
     }
     else
     {
         if ($board_settings['use_png_thumb'])
         {
-            $file['thumbfile'] = $file['filename'] . '-preview.png';
+            $file['preview_name'] = $file['filename'] . '-preview.png';
             $cmd_resize = 'convert ' . escapeshellarg($file['dest']) . ' -resize ' . $board_settings['max_width'] . 'x' .
                  $board_settings['max_height'] . '\> -quality 00 -sharpen 0x0.5 ' .
-                 escapeshellarg($thumbpath . $file['thumbfile']);
+                 escapeshellarg($thumbpath . $file['preview_name']);
         }
         else
         {
-            $file['thumbfile'] = $file['filename'] . '-preview.jpg';
+            $file['preview_name'] = $file['filename'] . '-preview.jpg';
             $cmd_resize = 'convert ' . escapeshellarg($file['dest']) . ' -resize ' . $board_settings['max_width'] . 'x' .
                  $board_settings['max_height'] . '\> -quality ' . $board_settings['jpeg_quality'] . ' -sharpen 0x0.5 ' .
-                 escapeshellarg($thumbpath . $file['thumbfile']);
+                 escapeshellarg($thumbpath . $file['preview_name']);
         }
 
         exec($cmd_resize);
-        chmod($thumbpath . $file['thumbfile'], octdec(FILE_PERM));
+        chmod($thumbpath . $file['preview_name'], octdec(FILE_PERM));
     }
 }
 
