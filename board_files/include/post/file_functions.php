@@ -23,12 +23,11 @@ function nel_process_file_info($board_id)
         preg_match('#[0-9]+$#', $entry, $matches);
         $file_order = $matches[0];
         $post_file_info = $_POST['new_post']['file_info']['file_' . $file_order . ''];
-
-        // Grab/strip the file extension
+        $file['name'] = '_' . $file['name']; // Workaround for pahtinfo not handling Unicode properly
         $info = pathinfo($file['name']);
         $new_file['ext'] = $info['extension'];
-        $new_file['filename'] = $info['filename'];
-        $new_file['fullname'] = $info['basename'];
+        $new_file['filename'] = substr($info['filename'], 1);
+        $new_file['fullname'] = substr($info['basename'], 1);
         $new_file['dest'] = $file['tmp_name'];
         $new_file['filesize'] = $file['size'];
         $new_file = nel_check_for_existing_file($board_id, $new_file, $files);
