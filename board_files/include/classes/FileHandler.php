@@ -104,8 +104,8 @@ class FileHandler
 
     function filterFilename($filename)
     {
-        // https://stackoverflow.com/a/23066553
-        $filtered = preg_replace('#[^\PC\s]#u', '', $filename); // Filter control and unprintable characters
+        $filtered = preg_replace('#[[:cntrl:]]#u', '', $filename); // Filter out the ASCII control characters
+        $filtered = preg_replace('#[^\PC\s\p{Cn}]#u', '', $filename); // Filter out invisible Unicode characters
 
         // https://msdn.microsoft.com/en-us/library/aa365247(VS.85).aspx
         $filtered = preg_replace('#[<>:"\/\\|?*]#u', '', $filtered); // Reserved characters for Windows
