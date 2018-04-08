@@ -63,10 +63,6 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $output_filter = nel_output_filter();
     $start = microtime(true);
     $post_data = $gen_data['post'];
-    nel_numeric_html_entities_to_utf8($post_data['name']);
-    nel_numeric_html_entities_to_utf8($post_data['email']);
-    nel_numeric_html_entities_to_utf8($post_data['subject']);
-    nel_numeric_html_entities_to_utf8($post_data['comment']);
     $thread_id = $post_data['parent_thread'];
     $post_id = $thread_id . '_' . $post_data['post_number'];
     $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-'), true);
@@ -259,8 +255,6 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
             nel_numeric_html_entities_to_utf8($file['filename']);
             nel_numeric_html_entities_to_utf8($file['extension']);
             nel_numeric_html_entities_to_utf8($file['preview_name']);
-            nel_numeric_html_entities_to_utf8($file['source']);
-            nel_numeric_html_entities_to_utf8($file['license']);
             $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['file_order'];
             $temp_file_dom = $new_post_dom->copyNodeIntoDocument($new_post_dom->getElementById('fileinfo-'), true);
             $temp_file_node = $temp_file_dom->getElementById('fileinfo-');
@@ -281,7 +275,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
             $file_text_link = $temp_file_dom->getElementById('file-link-');
             $file_text_link->changeId('file-link-' . $file_id);
-            $file_text_link->extSetAttribute('href', $file['file_location'], 'attribute');
+            $file_text_link->extSetAttribute('href', $file['file_location'], 'none');
             $file_text_link->setContent($file['display_filename'] . '.' . $file['extension']);
 
             $file['img_dim'] = (!is_null($file['image_width']) && !is_null($file['image_height'])) ? true : false;
@@ -311,7 +305,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
             if ($board_settings['use_thumb'])
             {
-                $location_element->extSetAttribute('href', $file['file_location'], 'attribute');
+                $location_element->extSetAttribute('href', $file['file_location'], 'none');
                 $location_element->changeId('file-location-' . $file_id);
                 $preview_element = $temp_file_dom->getElementById('file-preview-');
                 $preview_element->changeId('file-preview-' . $file_id);
