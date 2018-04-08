@@ -86,12 +86,12 @@ class Sessions
     {
         session_unset();
         session_destroy();
-        setcookie("PHPSESSID", "", time() - 3600, "/");
+        setrawcookie("PHPSESSID", "", time() - 3600, "/");
     }
 
     private function setSessionCookie()
     {
-        setcookie(session_name(), session_id(), 0, '/', '; HttpOnly');
+        setrawcookie(session_name(), session_id(), 0, '/', '; HttpOnly');
     }
 
     private function sessionIsOld()
