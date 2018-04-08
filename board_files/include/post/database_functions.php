@@ -7,10 +7,10 @@ function nel_db_insert_initial_post($board_id, $time, $post_data)
 
     if (SQLTYPE === 'MYSQL')
     {
-        nel_utf8_to_numeric_html_entities($post_data['name']);
-        nel_utf8_to_numeric_html_entities($post_data['email']);
-        nel_utf8_to_numeric_html_entities($post_data['subject']);
-        nel_utf8_to_numeric_html_entities($post_data['comment']);
+        nel_utf8_4byte_to_entities($post_data['name']);
+        nel_utf8_4byte_to_entities($post_data['email']);
+        nel_utf8_4byte_to_entities($post_data['subject']);
+        nel_utf8_4byte_to_entities($post_data['comment']);
     }
 
     $columns = array('poster_name', 'post_password', 'tripcode', 'secure_tripcode', 'email', 'subject', 'comment',
@@ -80,11 +80,14 @@ function nel_db_insert_new_files($board_id, $parent_id, $new_post_info, $files)
     {
         if (SQLTYPE === 'MYSQL')
         {
-            nel_utf8_to_numeric_html_entities($file['filename']);
-            nel_utf8_to_numeric_html_entities($file['extension']);
-            nel_utf8_to_numeric_html_entities($file['preview_name']);
-            nel_utf8_to_numeric_html_entities($file['source']);
-            nel_utf8_to_numeric_html_entities($file['license']);
+            nel_utf8_4byte_to_entities($file['type']);
+            nel_utf8_4byte_to_entities($file['mime']);
+            nel_utf8_4byte_to_entities($file['filename']);
+            nel_utf8_4byte_to_entities($file['extension']);
+            nel_utf8_4byte_to_entities($file['preview_name']);
+            nel_utf8_4byte_to_entities($file['source']);
+            nel_utf8_4byte_to_entities($file['license']);
+            nel_utf8_4byte_to_entities($file['alt_text']);
         }
 
         $columns = array('parent_thread', 'post_ref', 'file_order', 'type', 'format', 'mime', 'filename', 'extension',

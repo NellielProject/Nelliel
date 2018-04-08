@@ -104,6 +104,13 @@ class BanHammer
             nel_derp(321, nel_stext('ERROR_321'));
         }
 
+        if (SQLTYPE === 'MYSQL')
+        {
+            nel_utf8_4byte_to_entities($post_data['board_id']);
+            nel_utf8_4byte_to_entities($post_data['type']);
+            nel_utf8_4byte_to_entities($post_data['reason']);
+        }
+
         $prepared = $this->dbh->prepare('INSERT INTO "' . BAN_TABLE . '" ("board_id", "all_boards", "type", "ip_address_start", "reason", "length", "start_time")
 								VALUES (:board_id, :all_boards, :type, :ip_address_start, :reason, :length, :start_time)');
         $prepared->bindParam(':board_id', $ban_input['board'], PDO::PARAM_STR);
@@ -131,6 +138,15 @@ class BanHammer
              !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
         {
             nel_derp(322, nel_stext('ERROR_322'));
+        }
+
+        if (SQLTYPE === 'MYSQL')
+        {
+            nel_utf8_4byte_to_entities($post_data['board_id']);
+            nel_utf8_4byte_to_entities($post_data['type']);
+            nel_utf8_4byte_to_entities($post_data['reason']);
+            nel_utf8_4byte_to_entities($post_data['appeal']);
+            nel_utf8_4byte_to_entities($post_data['appeal_response']);
         }
 
         $prepared = $this->dbh->prepare('UPDATE "' . BAN_TABLE .
