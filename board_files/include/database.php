@@ -12,13 +12,13 @@ function nel_database($input = null, $wut_do = null)
 {
     // TODO: Actually create/remove/handle secondary databases
     static $databases = array();
-    static $default_database_key;
+    static $default_database_key = null;
 
     $current_database = false;
 
     if (is_null($input))
     {
-        if (!isset($default_database))
+        if (!array_key_exists($default_database_key, $databases))
         {
             $new_database = nel_default_database_connection();
             $default_database_key = spl_object_hash($new_database);
