@@ -6,65 +6,47 @@ if (!defined('NELLIEL_VERSION'))
 
 //
 // Access point for database connections.
-// Database connections can be added, retrieved or removed using the hash table ID.
+// Database connections can be added, retrieved or removed using the hash table ID ($input).
 //
-
 function nel_database($input = null, $wut_do = null)
 {
+    // TODO: Actually create/remove/handle secondary databases
     static $databases = array();
-    static $default_database;
+    static $default_database_key;
 
-    // No arguments provided: send back the default database
-    if (is_null($wut_do) && is_null($input))
+    $current_database = false;
+
+    if (is_null($input))
     {
         if (!isset($default_database))
         {
-            $default_database = nel_default_database_connection();
+            $new_database = nel_default_database_connection();
+            $default_database_key = spl_object_hash($new_database);
+            $databases[$default_database_key] = $new_database;
         }
 
-        return $default_database;
+        $current_database = $databases[$default_database_key];
     }
-
-    // ID provided but no instructions: send back the requested database if available
-    if (is_null($wut_do) && !is_null($input))
+    else
     {
         if (array_key_exists($input, $databases))
         {
-            return $databases[$input];
+            $current_database = $databases[$input];
         }
     }
 
-    // Both ID and instructions provided
-    if (!is_null($wut_do) && !is_null($input))
+    if (is_null($wut_do) || $current_database === false)
+    {
+        return $current_database;
+    }
+    else
     {
         switch ($wut_do)
         {
-            case 'store':
-                $id = spl_object_hash($input);
-                $databases[$id] = $input;
-                return $id;
-                break;
-
-            case 'retrieve':
+            case 'version':
                 if (array_key_exists($input, $databases))
                 {
-                    return $databases[$input];
-                }
-
-                break;
-
-            case 'identify':
-                if (in_array($input, $databases))
-                {
-                    return array_search($input, $databases);
-                }
-                break;
-
-            case 'remove':
-                if (array_key_exists($input, $databases))
-                {
-                    unset($input);
-                    return true;
+                    return $databases[$input]->getAttribute(PDO::ATTR_SERVER_VERSION);
                 }
 
                 break;
@@ -77,7 +59,6 @@ function nel_database($input = null, $wut_do = null)
 //
 // Initialize new database connections using the NellielPDO class.
 //
-
 function nel_new_database_connection($dsn, $username = null, $password = null, $options = array())
 {
     $connection = new \Nelliel\NellielPDO($dsn, $username, $password, $options);
@@ -87,19 +68,20 @@ function nel_new_database_connection($dsn, $username = null, $password = null, $
 //
 // Initialize the default/main database connection here.
 //
-
 function nel_default_database_connection()
 {
     $options = array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_EMULATE_PREPARES => false,
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
 
     switch (SQLTYPE)
     {
         case 'MYSQL':
-            $dsn = 'mysql:host=' . MYSQL_HOST . ';port=' . MYSQL_PORT . ';dbname=' . MYSQL_DB . ';charset=' . MYSQL_ENCODING . ';';
+            $dsn = 'mysql:host=' . MYSQL_HOST . ';port=' . MYSQL_PORT . ';dbname=' . MYSQL_DB . ';charset=' .
+                 MYSQL_ENCODING . ';';
             $connection = nel_new_database_connection($dsn, MYSQL_USER, MYSQL_PASS, $options);
 
-            if (version_compare(PHP_VERSION, '5.3.6', '<')) {
+            if (version_compare(PHP_VERSION, '5.3.6', '<'))
+            {
                 $connection->exec("SET names '" . MYSQL_ENCODING . "';");
             }
 
