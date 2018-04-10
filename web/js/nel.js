@@ -352,14 +352,13 @@ function changeBoardStyle(board_id, style) {
     } else {
         style_cookie = "style-" + board_id;
     }
-        
 
     for (i = 0; i < allstyles.length; i++) {
+        allstyles[i].disabled = true;
+        
         if (allstyles[i].getAttribute("data-id") == "style-board") {
             if (allstyles[i].title == style) {
                 allstyles[i].disabled = false;
-            } else {
-                allstyles[i].disabled = true;
             }
         }
     }
