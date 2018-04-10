@@ -17,8 +17,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . $board_id .
          '\');};');
-    $dom->getElementById('js-style-set')->setContent('changeBoardStyle("' . $board_id . '", getCookie("style-' .
-         $board_id . '"));');
+    $dom->getElementById('js-style-set')->setContent('setStyle(getCookie("style-' . $board_id . '"));');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
@@ -124,7 +123,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . $board_id .
          '\');};');
-    $dom->getElementById('js-style-set')->setContent('changeBoardStyle("", getCookie("base-style"));');
+    $dom->getElementById('js-style-set')->setContent('setStyle(getCookie("base-style"));');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 

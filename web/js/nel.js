@@ -339,19 +339,8 @@ function linkPost(num) {
     document.postingform.wordswordswords.value = document.postingform.wordswordswords.value + '>>' + num + '\n';
 }
 
-function changeBoardStyle(board_id, style) {
-    if(style == null)
-    {
-        return;
-    }
-    
+function setStyle(style) {
     var allstyles = document.getElementsByTagName("link");
-    
-    if(board_id == "") {
-        style_cookie = "base-style";
-    } else {
-        style_cookie = "style-" + board_id;
-    }
 
     for (i = 0; i < allstyles.length; i++) {
         allstyles[i].disabled = true;
@@ -362,6 +351,21 @@ function changeBoardStyle(board_id, style) {
             }
         }
     }
+}
 
+function changeBoardStyle(board_id, style) {
+    if(style == null) {
+        return;
+    }
+    
+    var allstyles = document.getElementsByTagName("link");
+    
+    if(board_id == "") {
+        style_cookie = "base-style";
+    } else {
+        style_cookie = "style-" + board_id;
+    }
+    
+    setStyle(style);
     setCookie(style_cookie, style, 9001);
 }
