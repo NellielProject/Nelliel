@@ -45,6 +45,7 @@ function nel_main_thread_generator($board_id, $response_to, $write)
         if ($write)
         {
             $file_handler->writeFile($references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT, $render->outputRenderSet(), FILE_PERM);
+            nel_session_is_ignored('render', false);
         }
         else
         {

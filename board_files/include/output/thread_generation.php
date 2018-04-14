@@ -35,6 +35,7 @@ function nel_thread_generator($board_id, $write, $response_to)
 
     if (empty($treeline))
     {
+        nel_session_is_ignored('render', false);
         return;
     }
 
