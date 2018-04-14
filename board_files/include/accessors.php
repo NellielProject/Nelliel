@@ -279,14 +279,7 @@ function nel_get_filetype_data($extension = null)
             }
             else
             {
-                if(array_key_exists($result['parent_extension'], $filetypes))
-                {
-                    $filetypes[$result['extension']] = $filetypes[$result['parent_extension']];
-                }
-                else
-                {
-                    $sub_extensions[] = $result;
-                }
+                $sub_extensions[] = $result;
             }
         }
 
@@ -295,6 +288,7 @@ function nel_get_filetype_data($extension = null)
             if(array_key_exists($sub_extension['parent_extension'], $filetypes))
             {
                 $filetypes[$sub_extension['extension']] = $filetypes[$sub_extension['parent_extension']];
+                $filetypes[$sub_extension['extension']]['extension'] = $sub_extension['extension'];
             }
         }
     }
