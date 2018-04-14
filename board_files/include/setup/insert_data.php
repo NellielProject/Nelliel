@@ -432,7 +432,7 @@ function nel_insert_filetypes()
     ('tbz', 'bz2', null, null, null, null, null),
     ('tar', 'tar', 'archive', 'tar', 'application/x-tar', '^.{257}ustar', 'TAR'),
     ('7z', '7z', 'archive', '7z', 'application/x-7z-compressed', '^\\\\x37\\\\x7A\\\\xBC\\\\xAF\\\\x27\\\\\\x1C', '7z'),
-    ('hqx', 'hqx', 'archive', 'hqx', 'application/binhex', '^(This file must be converted with BinHex)', 'Binhex'),
+    ('hqx', 'hqx', 'archive', 'binhex', 'application/binhex', '^(This file must be converted with BinHex)', 'Binhex'),
     ('hex', 'hqx', null, null, null, null, null),
     ('lzh', 'lzh', 'archive', 'lzh', 'application/x-lzh-compressed', '^.{2}\\\\x2D\\\\x6C\\\\x68', 'LZH'),
     ('lha', 'lzh', null, null, null, null, null),
