@@ -7,8 +7,8 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_board_settings_panel($board_id)
 {
     $dbh = nel_database();
+    $filetypes = nel_get_filetype_data();
     $references = nel_board_references($board_id);
-    require_once INCLUDE_PATH . 'post/filetypes.php';
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -38,9 +38,18 @@ function nel_render_board_settings_panel($board_id)
             {
                 foreach ($filetypes as $filetype)
                 {
-                    if ($filetype['format'] === $config_line['config_name'])
+                    if($filetype['format'] != $config_line['config_name'])
                     {
-                        $dom->getElementById('l_' . $filetype['format'])->setContent($filetype['label']);
+                        continue;
+                    }
+
+                    if($filetype['extension'] == $filetype['parent_extension'])
+                    {
+                        $dom->getElementById('l_' . $filetype['format'])->setContent($filetype['label'] . ' - .' . $filetype['extension'], 'before');
+                    }
+                    else
+                    {
+                        $dom->getElementById('l_' . $filetype['format'])->setContent(', .' . $filetype['extension'], 'after');
                     }
                 }
             }
