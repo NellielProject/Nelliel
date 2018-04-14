@@ -310,7 +310,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                 $preview_element = $temp_file_dom->getElementById('file-preview-');
                 $preview_element->changeId('file-preview-' . $file_id);
 
-                if (isset($file['preview_name']))
+                if (!empty($file['preview_name']))
                 {
                     $file['has_preview'] = true;
                     $file['preview_location'] = $references['thumb_dir'] . $thread_id . '/' . rawurlencode($file['preview_name']);
@@ -328,11 +328,11 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                     }
                 }
                 else if ($board_settings['use_file_icon'] && file_exists(WEB_PATH . 'imagez/nelliel/filetype/' .
-                     utf8_strtolower($file['type']) . '/' . utf8_strtolower($file['format']) . '.png'))
+                utf8_strtolower($file['type']) . '/' . utf8_strtolower($file['format']) . '.png'))
                 {
                     $file['has_preview'] = true;
                     $file['preview_location'] = '../' . IMAGES_DIR . 'nelliel/filetype/' .
-                         utf8_strtolower($file['type']) . '/' . utf8_strtolower($file['format']) . '.png';
+                    utf8_strtolower($file['type']) . '/' . utf8_strtolower($file['format']) . '.png';
                     $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
                     $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
                 }
