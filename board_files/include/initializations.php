@@ -22,6 +22,7 @@ define('PERMISSIONS_TABLE', 'nelliel_permissions'); // Permissions
 define('LOGINS_TABLE', 'nelliel_login_attempts'); // Record of failed login attempts
 define('BOARD_DATA_TABLE', 'nelliel_board_data'); // Basic data on each board
 define('SITE_CONFIG_TABLE', 'nelliel_site_config'); // Site-wide config settings
+define('FILETYPE_TABLE', 'nelliel_filetypes'); // Site-wide config settings
 
 // Set default values here in case the config is missing something
 $base_config['defaultadmin'] = '';

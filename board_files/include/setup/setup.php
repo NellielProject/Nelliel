@@ -69,6 +69,7 @@ function nel_create_core_tables()
     nel_create_permissions_table(PERMISSIONS_TABLE);
     nel_create_logins_table(LOGINS_TABLE);
     nel_create_board_data_table(BOARD_DATA_TABLE);
+    nel_create_filetype_table(FILETYPE_TABLE);
 }
 
 function nel_create_board_directories($board_id)

@@ -432,3 +432,29 @@ function nel_create_board_data_table($table_name)
     $result = nel_create_table_query($schema, $table_name);
     nel_setup_stuff_done($result);
 }
+
+function nel_create_filetype_table($table_name)
+{
+    $auto_inc = nel_autoincrement_column('INTEGER');
+    $options = nel_table_options();
+    $schema = '
+    CREATE TABLE ' . $table_name . ' (
+        entry                   ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        extension               VARCHAR(255) NOT NULL UNIQUE,
+        parent_extension        VARCHAR(255) NOT NULL,
+        type                    VARCHAR(255) DEFAULT NULL,
+        format                  VARCHAR(255) DEFAULT NULL,
+        mime                    VARCHAR(255) DEFAULT NULL,
+        id_regex                VARCHAR(512) DEFAULT NULL,
+        label                   VARCHAR(255) DEFAULT NULL
+    ) ' . $options . ';';
+
+    $result = nel_create_table_query($schema, $table_name);
+
+    if ($result !== false)
+    {
+        nel_insert_filetypes();
+    }
+
+    nel_setup_stuff_done($result);
+}
