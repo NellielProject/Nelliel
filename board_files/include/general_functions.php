@@ -55,7 +55,7 @@ function true_empty($var)
 
 function nel_utf8_4byte_to_entities(&$input)
 {
-    $regex = ($non_ascii_only) ? '#([^[:ascii:]])#Su' : '#(.)#Su';
+    $regex = '#(.)#Su';
 
     $input = preg_replace_callback($regex, function ($matches)
     {
