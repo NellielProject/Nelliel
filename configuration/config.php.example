@@ -34,6 +34,13 @@ $base_config['run_setup_check'] = true;
 $base_config['directory_perm'] = '0775';
 $base_config['file_perm'] = '0664';
 
+
+// Enable/disable internal caching.
+// When enabled Nelliel will use its internal caching system. This speeds things up considerably.
+// The only time this should need to be disabled is for testing or troubleshooting.
+$base_config['use_internal_cache'] = true;
+
+
 //
 // === Database Access Settings ===
 //

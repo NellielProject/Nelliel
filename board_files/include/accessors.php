@@ -60,35 +60,49 @@ function nel_site_settings($setting = null)
     {
         $settings = array();
         $site_settings = array();
-        $dbh = nel_database();
-        $config_list =  $dbh->executeFetchAll('SELECT * FROM "nelliel_site_config"', PDO::FETCH_ASSOC);
+        $loaded = false;
 
-        foreach ($config_list as $config)
+        if (USE_INTERNAL_CACHE)
         {
-            if($config['data_type'] === 'bool')
+            if (file_exists(CACHE_PATH . 'site_settings.php'))
             {
-                $config['setting'] = var_export((bool)$config['setting'], true);
+                include CACHE_PATH . 'site_settings.php';
+                $loaded = true;
             }
-
-            if($config['data_type'] === 'int')
-            {
-                $config['setting'] = intval($config['setting']);
-            }
-
-            if($config['data_type'] === 'str')
-            {
-                $config['setting'] = print_r($config['setting'], true);
-            }
-
-            $site_settings[$config['config_name']] = $config['setting'];
         }
 
-        /*if (!file_exists(CACHE_PATH . 'site_settings.php'))
+        if (!$loaded)
         {
-            nel_cache_site_settings();
+            $dbh = nel_database();
+            $config_list = $dbh->executeFetchAll('SELECT * FROM "nelliel_site_config"', PDO::FETCH_ASSOC);
+
+            foreach ($config_list as $config)
+            {
+                if ($config['data_type'] === 'bool')
+                {
+                    $config['setting'] = (bool) $config['setting'];
+                }
+                else if ($config['data_type'] === 'int')
+                {
+                    $config['setting'] = intval($config['setting']);
+                }
+                else if ($config['data_type'] === 'str')
+                {
+                    $config['setting'] = print_r($config['setting'], true);
+                }
+
+                $site_settings[$config['config_name']] = $config['setting'];
+            }
+
+            if (USE_INTERNAL_CACHE)
+            {
+                $file_handler = new \Nelliel\FileHandler();
+                $settings_output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} $site_settings=' .
+                     var_export($site_settings, true) . ';';
+                $file_handler->writeFile(CACHE_PATH . 'site_settings.php', $settings_output, FILE_PERM, true);
+            }
         }
 
-        include CACHE_PATH . 'site_settings.php';*/
         $settings = $site_settings;
     }
 
@@ -116,38 +130,52 @@ function nel_board_settings($board_id, $setting = null)
 
     if (!isset($settings[$board_id]))
     {
-        /*if (!file_exists(CACHE_PATH . $board_id . '/board_settings.php'))
+        $board_settings = array();
+        $loaded = false;
+
+        if (USE_INTERNAL_CACHE)
         {
-            nel_cache_board_settings($board_id);
+            if (file_exists(CACHE_PATH . $board_id . '/board_settings.php'))
+            {
+                include CACHE_PATH . $board_id . '/board_settings.php';
+                $loaded = true;
+            }
         }
 
-        include CACHE_PATH . $board_id . '/board_settings.php';*/
-        $board_settings = array();
-        $dbh = nel_database();
-        $prepared = $dbh->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
-        $db_prefix = $dbh->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
-        $config_table = $db_prefix . '_config';
-        $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
-        $settings_output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} $board_settings = array();';
-
-        foreach ($config_list as $config)
+        if (!$loaded)
         {
-            if($config['data_type'] === 'bool')
+            $dbh = nel_database();
+            $prepared = $dbh->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
+            $db_prefix = $dbh->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
+            $config_table = $db_prefix . '_config';
+            $config_list = $dbh->executeFetchAll('SELECT * FROM "' . $config_table .
+                 '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
+
+            foreach ($config_list as $config)
             {
-                $config['setting'] = var_export((bool)$config['setting'], true);
+                if ($config['data_type'] === 'bool')
+                {
+                    $config['setting'] = (bool) $config['setting'];
+                }
+                else if ($config['data_type'] === 'int')
+                {
+                    $config['setting'] = intval($config['setting']);
+                }
+                else if ($config['data_type'] === 'str')
+                {
+                    $config['setting'] = print_r($config['setting'], true);
+                }
+
+                $board_settings[$config['config_name']] = $config['setting'];
             }
 
-            if($config['data_type'] === 'int')
+            if (USE_INTERNAL_CACHE)
             {
-                $config['setting'] = intval($config['setting']);
+                $file_handler = new \Nelliel\FileHandler();
+                $settings_output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} $board_settings=' .
+                     var_export($board_settings, true) . ';';
+                $file_handler->writeFile(CACHE_PATH . $board_id . 'board_settings.php', $settings_output, FILE_PERM, true);
             }
-
-            if($config['data_type'] === 'str')
-            {
-                $config['setting'] = print_r($config['setting'], true);
-            }
-
-            $board_settings[$config['config_name']] = $config['setting'];
         }
 
         $settings[$board_id] = $board_settings;
@@ -172,30 +200,47 @@ function nel_filetype_settings($board_id, $setting = null)
 
     if (!isset($settings))
     {
-        if(empty($board_id))
+        $settings = array();
+    }
+
+    if (!isset($settings[$board_id]))
+    {
+        $filetype_settings = array();
+        $loaded = false;
+
+        if (USE_INTERNAL_CACHE)
         {
-            return false;
+            if (file_exists(CACHE_PATH . $board_id . '/filetype_settings.php'))
+            {
+                include CACHE_PATH . $board_id . '/filetype_settings.php';
+                $loaded = true;
+            }
         }
 
-        $dbh = nel_database();
-        $prepared = $dbh->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
-        $db_prefix = $dbh->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
-        $config_table = $db_prefix . '_config';
-        $config_list =  $dbh->executeFetchAll('SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'filetype_enable\'', PDO::FETCH_ASSOC);
-        $file_config = array();
-
-        foreach ($config_list as $config)
+        if (!$loaded)
         {
-            $file_config[$config['config_category']][utf8_strtolower($config['config_name'])] = (bool)$config['setting'];
-        }
+            $dbh = nel_database();
+            $prepared = $dbh->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
+            $db_prefix = $dbh->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
+            $config_table = $db_prefix . '_config';
+            $config_list = $dbh->executeFetchAll('SELECT * FROM "' . $config_table .
+                 '" WHERE "config_type" = \'filetype_enable\'', PDO::FETCH_ASSOC);
 
-        /*if (!file_exists(CACHE_PATH . $board_id . '/filetype_settings.php'))
-        {
-            nel_cache_filetype_settings($board_id);
-        }
+            foreach ($config_list as $config)
+            {
+                $filetype_settings[$config['config_category']][utf8_strtolower($config['config_name'])] = (bool) $config['setting'];
+            }
 
-        include CACHE_PATH . $board_id . '/filetype_settings.php';*/
-        $settings[$board_id] = $file_config;
+            if (USE_INTERNAL_CACHE)
+            {
+                $file_handler = new \Nelliel\FileHandler();
+                $settings_output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} $filetype_settings=' .
+                     var_export($filetype_settings, true) . ';';
+                $file_handler->writeFile(CACHE_PATH . $board_id . '/filetype_settings.php', $settings_output, FILE_PERM, true);
+            }
+
+            $settings[$board_id] = $filetype_settings;
+        }
     }
 
     if (is_null($setting))
@@ -343,7 +388,7 @@ function nel_get_filetype_data($extension = null)
 
         foreach ($db_results as $result)
         {
-            if($result['extension'] == $result['parent_extension'])
+            if ($result['extension'] == $result['parent_extension'])
             {
                 $filetypes[$result['extension']] = $result;
             }
@@ -353,9 +398,9 @@ function nel_get_filetype_data($extension = null)
             }
         }
 
-        foreach($sub_extensions as $sub_extension)
+        foreach ($sub_extensions as $sub_extension)
         {
-            if(array_key_exists($sub_extension['parent_extension'], $filetypes))
+            if (array_key_exists($sub_extension['parent_extension'], $filetypes))
             {
                 $filetypes[$sub_extension['extension']] = $filetypes[$sub_extension['parent_extension']];
                 $filetypes[$sub_extension['extension']]['extension'] = $sub_extension['extension'];
@@ -363,7 +408,7 @@ function nel_get_filetype_data($extension = null)
         }
     }
 
-    if(is_null($extension))
+    if (is_null($extension))
     {
         return $filetypes;
     }

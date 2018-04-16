@@ -31,6 +31,7 @@ $base_config['tripcode_salt'] = 'sodiumz';
 $base_config['run_setup_check'] = true;
 $base_config['directory_perm'] = '0775';
 $base_config['file_perm'] = '0664';
+$base_config['use_internal_cache'] = true;
 $crypt_config['password_bcrypt_cost'] = 12;
 $crypt_config['password_sha2_cost'] = 200000;
 
@@ -42,6 +43,7 @@ define('TRIPCODE_SALT', $base_config['tripcode_salt']);
 define('RUN_SETUP_CHECK', (bool)$base_config['run_setup_check']);
 define('DIRECTORY_PERM', $base_config['directory_perm']);
 define('FILE_PERM', $base_config['file_perm']);
+define('USE_INTERNAL_CACHE', $base_config['use_internal_cache']);
 define('SQLTYPE', $db_config['sqltype']);
 define('MYSQL_DB', $db_config['mysql_db']);
 define('MYSQL_HOST', $db_config['mysql_host']);
