@@ -277,7 +277,6 @@ a.post-link:visited {
 .op-post {
 	color: #800000;
     min-width: 15em;
-    max-width: 100%;
     height: 100%;
     padding-bottom: 6px;
     padding-left: 20px;
@@ -325,10 +324,8 @@ a.post-link:visited {
     border: 1px solid #FFFFEE;
     padding: 5px;
     min-width: 15em;
-    max-width: 95%;
     height: 100%;
     margin: 5px;
-    overflow: hidden;
     display: inline-block;
 }
 
@@ -364,7 +361,7 @@ a.post-link:visited {
 }
 
 .reply-post-contents {
-
+	word-wrap: break-word;
 }
 
 .reply-post-contents-multifile {
