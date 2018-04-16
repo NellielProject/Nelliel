@@ -7,7 +7,6 @@ if (!defined('NELLIEL_VERSION'))
 function nel_create_new_board()
 {
     $dbh = nel_database();
-    $file_handler = nel_file_handler();
     $board_id = $_POST['new_board_id'];
     $board_directory = $_POST['board_directory'];
     $db_prefix = $board_id;

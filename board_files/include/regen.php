@@ -40,7 +40,7 @@ function nel_regen_cache($board_id = '')
 
 function nel_regen_index($board_id)
 {
-    $archive = nel_archive($board_id);
+    $archive = new \Nelliel\ArchiveAndPrune($board_id);
     $archive->updateAllArchiveStatus();
 
     if(nel_board_settings($board_id, 'old_threads') === 'ARCHIVE')

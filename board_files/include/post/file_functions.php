@@ -4,7 +4,7 @@ function nel_process_file_info($board_id)
 {
     $references = nel_board_references($board_id);
     $board_settings = nel_board_settings($board_id);
-    $file_handler = nel_file_handler();
+    $file_handler = new \Nelliel\FileHandler();
     $files = array();
     $file_count = 1;
 

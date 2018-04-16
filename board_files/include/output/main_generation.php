@@ -12,7 +12,7 @@ function nel_main_thread_generator($board_id, $response_to, $write)
     $dbh = nel_database();
     $references = nel_board_references($board_id);
     $board_settings = nel_board_settings($board_id);
-    $file_handler = nel_file_handler();
+    $file_handler = new \Nelliel\FileHandler();
     $thread_table = $gen_data = array();
     $dotdot = '../';
     $gen_params = array();

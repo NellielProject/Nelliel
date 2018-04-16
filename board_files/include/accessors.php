@@ -16,30 +16,6 @@ function nel_authorize()
     return $authorize;
 }
 
-function nel_ban_hammer()
-{
-    static $ban_hammer;
-
-    if (!isset($ban_hammer))
-    {
-        $ban_hammer = new \Nelliel\BanHammer();
-    }
-
-    return $ban_hammer;
-}
-
-function nel_output_filter()
-{
-    static $output_filter;
-
-    if (!isset($output_filter))
-    {
-        $output_filter = new \Nelliel\OutputFilter();
-    }
-
-    return $output_filter;
-}
-
 function nel_sessions()
 {
     static $sessions;
@@ -253,40 +229,6 @@ function nel_filetype_settings($board_id, $setting = null)
     }
 }
 
-function nel_archive($board_id)
-{
-    static $archives;
-
-    if (!isset($archives))
-    {
-        $archives = array();
-    }
-
-    if (!isset($archives[$board_id]))
-    {
-        $archives[$board_id] = new \Nelliel\ArchiveAndPrune($board_id);
-    }
-
-    return $archives[$board_id];
-}
-
-function nel_thread_handler($board_id)
-{
-    static $thread_handlers;
-
-    if (!isset($thread_handlers))
-    {
-        $thread_handlers = array();
-    }
-
-    if (!isset($thread_handlers[$board_id]))
-    {
-        $thread_handlers[$board_id] = new \Nelliel\ThreadHandler($board_id);
-    }
-
-    return $thread_handlers[$board_id];
-}
-
 function nel_fgsfds($entry, $new_value = null)
 {
     static $fgsfds;
@@ -307,18 +249,6 @@ function nel_fgsfds($entry, $new_value = null)
     }
 
     return null;
-}
-
-function nel_file_handler()
-{
-    static $file_handler;
-
-    if (!isset($file_handler))
-    {
-        $file_handler = new \Nelliel\FileHandler();
-    }
-
-    return $file_handler;
 }
 
 function nel_board_references($board_id, $reference = null)

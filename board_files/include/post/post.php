@@ -12,8 +12,8 @@ function nel_process_new_post($board_id)
     global $plugins;
     $dbh = nel_database();
     $references = nel_board_references($board_id);
-    $archive = nel_archive($board_id);
-    $thread_handler = nel_thread_handler($board_id);
+    $archive = new \Nelliel\ArchiveAndPrune($board_id);
+    $thread_handler = new \Nelliel\ThreadHandler($board_id);
     $post_data = nel_collect_post_data($board_id);
     $new_thread_dir = '';
 

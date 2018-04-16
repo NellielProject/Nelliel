@@ -9,7 +9,7 @@ function nel_thread_generator($board_id, $write, $response_to)
     $dbh = nel_database();
     $references = nel_board_references($board_id);
     $board_settings = nel_board_settings($board_id);
-    $file_handler = nel_file_handler();
+    $file_handler = new \Nelliel\FileHandler();
 
     if ($write)
     {

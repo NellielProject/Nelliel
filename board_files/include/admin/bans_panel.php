@@ -13,7 +13,7 @@ function nel_ban_control($board_id, $action)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
-    $ban_hammer = nel_ban_hammer();
+    $ban_hammer = new \Nelliel\BanHammer();
 
     if ($action === 'modify')
     {

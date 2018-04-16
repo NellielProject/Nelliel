@@ -91,7 +91,7 @@ function nel_render_ban_panel_add($board_id)
 
 function nel_render_ban_panel_modify($board_id)
 {
-    $ban_hammer = nel_ban_hammer();
+    $ban_hammer = new \Nelliel\BanHammer();
     $dbh = nel_database();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();

@@ -6,8 +6,8 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_thread_updates($board_id)
 {
-    $archive = nel_archive($board_id);
-    $thread_handler = nel_thread_handler($board_id);
+    $archive = new \Nelliel\ArchiveAndPrune($board_id);
+    $thread_handler = new \Nelliel\ThreadHandler($board_id);
     $returned_list = array();
     $update_archive = false;
 

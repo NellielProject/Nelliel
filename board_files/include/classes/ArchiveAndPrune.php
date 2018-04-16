@@ -22,12 +22,12 @@ class ArchiveAndPrune
     function __construct($board_id)
     {
         $this->dbh = nel_database();
-        $this->thread_handler = nel_thread_handler($board_id);
+        $this->thread_handler = new \Nelliel\ThreadHandler($board_id);
         $this->start_buffer = nel_board_settings($board_id, 'threads_per_page') *
              nel_board_settings($board_id, 'page_limit');
         $this->end_buffer = nel_board_settings($board_id, 'threads_per_page') *
              nel_board_settings($board_id, 'page_buffer');
-        $this->file_handler = nel_file_handler();
+             $this->file_handler = new \Nelliel\FileHandler();
         $this->board_id = $board_id;
         $this->references = nel_board_references($board_id);
         $this->board_settings = nel_board_settings($board_id);

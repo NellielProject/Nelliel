@@ -19,7 +19,7 @@ class ThreadHandler
     function __construct($board_id)
     {
         $this->dbh = nel_database();
-        $this->file_handler = nel_file_handler();
+        $this->file_handler = new \Nelliel\FileHandler();
         $this->board_id = $board_id;
         $this->references = nel_board_references($board_id);
     }
