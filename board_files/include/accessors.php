@@ -214,9 +214,9 @@ function nel_filetype_settings($board_id, $setting = null)
                      var_export($filetype_settings, true) . ';';
                 $file_handler->writeFile(CACHE_PATH . $board_id . '/filetype_settings.php', $settings_output, FILE_PERM, true);
             }
-
-            $settings[$board_id] = $filetype_settings;
         }
+
+        $settings[$board_id] = $filetype_settings;
     }
 
     if (is_null($setting))
