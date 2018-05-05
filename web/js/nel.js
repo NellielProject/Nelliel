@@ -340,6 +340,10 @@ function linkPost(num) {
 }
 
 function setStyle(style) {
+    if(style == null) {
+        return;
+    }
+
     var allstyles = document.getElementsByTagName("link");
 
     for (i = 0; i < allstyles.length; i++) {
