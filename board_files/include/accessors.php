@@ -28,17 +28,17 @@ function nel_sessions()
     return $sessions;
 }
 
-function nel_site_settings($setting = null)
+function nel_site_settings($setting = null, $cache_regen = false)
 {
     static $settings;
 
-    if (!isset($settings))
+    if (!isset($settings) || $cache_regen)
     {
         $settings = array();
         $site_settings = array();
         $loaded = false;
 
-        if (USE_INTERNAL_CACHE)
+        if (USE_INTERNAL_CACHE && !cache_regen)
         {
             if (file_exists(CACHE_PATH . 'site_settings.php'))
             {
@@ -70,12 +70,12 @@ function nel_site_settings($setting = null)
                 $site_settings[$config['config_name']] = $config['setting'];
             }
 
-            if (USE_INTERNAL_CACHE)
+            if (USE_INTERNAL_CACHE || $cache_regen)
             {
-                $file_handler = new \Nelliel\FileHandler();
-                $settings_output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} $site_settings=' .
-                     var_export($site_settings, true) . ';';
-                $file_handler->writeFile(CACHE_PATH . 'site_settings.php', $settings_output, FILE_PERM, true);
+                $cacheHandler = new \Nelliel\CacheHandler();
+                $header = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}';
+                $cacheHandler->writeCacheFile(CACHE_PATH . $board_id . '/', 'site_settings.php', '$site_settings = ' .
+                     var_export($site_settings, true) . ';', $header);
             }
         }
 
@@ -90,7 +90,7 @@ function nel_site_settings($setting = null)
     return $settings[$setting];
 }
 
-function nel_board_settings($board_id, $setting = null)
+function nel_board_settings($board_id, $setting = null, $cache_regen = false)
 {
     static $settings;
 
@@ -104,12 +104,12 @@ function nel_board_settings($board_id, $setting = null)
         $settings = array();
     }
 
-    if (!isset($settings[$board_id]))
+    if (!isset($settings[$board_id]) || $cache_regen)
     {
         $board_settings = array();
         $loaded = false;
 
-        if (USE_INTERNAL_CACHE)
+        if (USE_INTERNAL_CACHE && !$cache_regen)
         {
             if (file_exists(CACHE_PATH . $board_id . '/board_settings.php'))
             {
@@ -145,12 +145,12 @@ function nel_board_settings($board_id, $setting = null)
                 $board_settings[$config['config_name']] = $config['setting'];
             }
 
-            if (USE_INTERNAL_CACHE)
+            if (USE_INTERNAL_CACHE || $cache_regen)
             {
-                $file_handler = new \Nelliel\FileHandler();
-                $settings_output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} $board_settings=' .
-                     var_export($board_settings, true) . ';';
-                $file_handler->writeFile(CACHE_PATH . $board_id . 'board_settings.php', $settings_output, FILE_PERM, true);
+                $cacheHandler = new \Nelliel\CacheHandler();
+                $header = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}';
+                $cacheHandler->writeCacheFile(CACHE_PATH . $board_id . '/', 'board_settings.php', '$board_settings = ' .
+                     var_export($board_settings, true) . ';', $header);
             }
         }
 
@@ -165,7 +165,7 @@ function nel_board_settings($board_id, $setting = null)
     return $settings[$board_id][$setting];
 }
 
-function nel_filetype_settings($board_id, $setting = null)
+function nel_filetype_settings($board_id, $setting = null, $cache_regen = false)
 {
     static $settings;
 
@@ -179,12 +179,12 @@ function nel_filetype_settings($board_id, $setting = null)
         $settings = array();
     }
 
-    if (!isset($settings[$board_id]))
+    if (!isset($settings[$board_id]) || $cache_regen)
     {
         $filetype_settings = array();
         $loaded = false;
 
-        if (USE_INTERNAL_CACHE)
+        if (USE_INTERNAL_CACHE && !$cache_regen)
         {
             if (file_exists(CACHE_PATH . $board_id . '/filetype_settings.php'))
             {
@@ -201,18 +201,19 @@ function nel_filetype_settings($board_id, $setting = null)
             $config_table = $db_prefix . '_config';
             $config_list = $dbh->executeFetchAll('SELECT * FROM "' . $config_table .
                  '" WHERE "config_type" = \'filetype_enable\'', PDO::FETCH_ASSOC);
+            $filetype_settings = array();
 
             foreach ($config_list as $config)
             {
                 $filetype_settings[$config['config_category']][utf8_strtolower($config['config_name'])] = (bool) $config['setting'];
             }
 
-            if (USE_INTERNAL_CACHE)
+            if (USE_INTERNAL_CACHE || $cache_regen)
             {
-                $file_handler = new \Nelliel\FileHandler();
-                $settings_output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} $filetype_settings=' .
-                     var_export($filetype_settings, true) . ';';
-                $file_handler->writeFile(CACHE_PATH . $board_id . '/filetype_settings.php', $settings_output, FILE_PERM, true);
+                $cacheHandler = new \Nelliel\CacheHandler();
+                $header = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}';
+                $cacheHandler->writeCacheFile(CACHE_PATH . $board_id . '/', 'filetype_settings.php', '$filetype_settings = ' .
+                     var_export($filetype_settings, true) . ';', $header);
             }
         }
 
