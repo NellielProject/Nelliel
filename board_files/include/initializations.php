@@ -40,6 +40,7 @@ require_once CONFIG_PATH . 'config.php';
 define('DEFAULTADMIN', $base_config['defaultadmin']);
 define('DEFAULTADMIN_PASS', $base_config['defaultadmin_pass']);
 define('TRIPCODE_SALT', $base_config['tripcode_salt']);
+define('GENERAL_SALT', $base_config['general_salt']);
 define('RUN_SETUP_CHECK', (bool)$base_config['run_setup_check']);
 define('DIRECTORY_PERM', $base_config['directory_perm']);
 define('FILE_PERM', $base_config['file_perm']);

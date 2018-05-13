@@ -12,7 +12,7 @@ if (!defined('NELLIEL_VERSION'))
 
 //
 // === General Settings ===
-///
+//
 
 // If on a new install or no users are found, Nelliel will use 'defaultadmin' and 'defaultadmin_pass' to create an admin account.
 // Once created the default admin can be used for the rest of setup, managing staff, etc.
@@ -23,6 +23,10 @@ $base_config['defaultadmin_pass'] = '';
 // Salt used for secure tripcodes
 // Change this setting ONCE when you do initial setup. Changing it again will alter the secure tripcode output.
 $base_config['tripcode_salt'] = 'sodiumz';
+
+// Salt used for other hashing
+// A different salt from the one for secure tripcodes. May have various uses
+$base_config['general_salt'] = 'moarsodiumz';
 
 // Each time the script is run, this goes through the setup sequence and checks that everything is in place.
 // Once initial setup and testing is finished this isn't really necessary and can be set to false.
