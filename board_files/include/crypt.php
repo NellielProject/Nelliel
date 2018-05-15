@@ -4,9 +4,9 @@ require_once LIBRARY_PATH . 'password_compat/password.php';
 //
 // Most of these functions are basically wrappers to extend or simplify PHP password and crypt functions
 //
-define('NEL_PASSWORD_MD5', 100);
-define('NEL_PASSWORD_SHA256', 101);
-define('NEL_PASSWORD_SHA512', 102);
+
+define('NEL_PASSWORD_SHA256', 100);
+define('NEL_PASSWORD_SHA512', 101);
 
 if (!function_exists('hash_equals'))
 {
@@ -116,13 +116,7 @@ function nel_password_info($hash)
         $id = substr($hash, 0, 3);
         list ($cost) = sscanf($hash, $id);
 
-        if ($id === '$1$')
-        {
-            $return['algo'] = NEL_PASSWORD_MD5;
-            $return['algoName'] = 'md5';
-            $return['options']['cost'] = 1000;
-        }
-        else if ($id === '$5$')
+        if ($id === '$5$')
         {
             $return['algo'] = NEL_PASSWORD_SHA256;
             $return['algoName'] = 'sha256';
