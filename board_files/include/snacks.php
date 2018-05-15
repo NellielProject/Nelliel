@@ -131,7 +131,7 @@ function nel_apply_ban($board_id)
 
     if (time() >= $length)
     {
-        $ban_hammer->removeBan($board_id, $ban_info['ban_id'], true);
+        $ban_hammer->removeBan($ban_info['ban_id'], true);
         return;
     }
 

@@ -24,7 +24,7 @@ class BanHammer
         $ban_input = array();
         $ban_input['ban_id'] = (isset($_POST['ban_id'])) ? $_POST['ban_id'] : null;
         $ban_input['board'] = (isset($_POST['ban_board'])) ? $_POST['ban_board'] : null;
-        $ban_input['all_boards'] = (isset($_POST['ban_all_boards'])) ? $_POST['ban_all_boards'] : 0;
+        $ban_input['all_boards'] = ($_POST['ban_all_boards'] > 0) ? 1 : 0;
         $ban_input['type'] = (isset($_POST['ban_type'])) ? $_POST['ban_type'] : null;
         $ban_input['ip_address_start'] = (isset($_POST['ban_ip'])) ? $_POST['ban_ip'] : null;
         $ban_input['years'] = (isset($_POST['ban_time_years'])) ? $_POST['ban_time_years'] : 0;
@@ -167,12 +167,16 @@ class BanHammer
 
     public function removeBan($ban_id, $snacks = false)
     {
-        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_delete', INPUT_BOARD_ID) &&
-             !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify') && !$snacks)
+        if (isset($_SESSION))
         {
-            nel_derp(323, nel_stext('ERROR_323'));
+            if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_delete', INPUT_BOARD_ID) &&
+                 !$this->authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify') && !$snacks)
+            {
+                nel_derp(323, nel_stext('ERROR_323'));
+            }
         }
 
+        var_dump($ban_id);
         $prepared = $this->dbh->prepare('DELETE FROM "' . BAN_TABLE . '" WHERE "ban_id" = ?');
         $this->dbh->executePrepared($prepared, array($ban_id));
     }

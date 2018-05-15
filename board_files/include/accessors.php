@@ -38,7 +38,7 @@ function nel_site_settings($setting = null, $cache_regen = false)
         $site_settings = array();
         $loaded = false;
 
-        if (USE_INTERNAL_CACHE && !cache_regen)
+        if (USE_INTERNAL_CACHE && !$cache_regen)
         {
             if (file_exists(CACHE_PATH . 'site_settings.php'))
             {
