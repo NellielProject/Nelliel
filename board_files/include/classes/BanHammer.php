@@ -167,7 +167,7 @@ class BanHammer
 
     public function removeBan($ban_id, $snacks = false)
     {
-        if (isset($_SESSION))
+        if (!$snacks)
         {
             if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_delete', INPUT_BOARD_ID) &&
                  !$this->authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify') && !$snacks)
@@ -176,7 +176,6 @@ class BanHammer
             }
         }
 
-        var_dump($ban_id);
         $prepared = $this->dbh->prepare('DELETE FROM "' . BAN_TABLE . '" WHERE "ban_id" = ?');
         $this->dbh->executePrepared($prepared, array($ban_id));
     }
