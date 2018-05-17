@@ -19,7 +19,7 @@ function nel_main_thread_generator($board_id, $response_to, $write)
 
     if ($write)
     {
-        nel_session_is_ignored('render', true);
+        nel_sessions()->sessionIsIgnored('render', true);
     }
 
     $result = $dbh->query('SELECT "thread_id" FROM "' . $references['thread_table'] .
@@ -45,7 +45,7 @@ function nel_main_thread_generator($board_id, $response_to, $write)
         if ($write)
         {
             $file_handler->writeFile($references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT, $render->outputRenderSet(), FILE_PERM);
-            nel_session_is_ignored('render', false);
+            nel_sessions()->sessionIsIgnored('render', false);
         }
         else
         {
@@ -241,6 +241,6 @@ function nel_main_thread_generator($board_id, $response_to, $write)
 
     if ($write)
     {
-        nel_session_is_ignored('render', false);
+        nel_sessions()->sessionIsIgnored('render', false);
     }
 }

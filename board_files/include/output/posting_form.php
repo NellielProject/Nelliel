@@ -10,7 +10,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     $dotdot = (!is_null($dotdot)) ? $dotdot : '';
     $post_form_return_link = $dom->getElementById('post-form-return-link');
 
-    if (!nel_session_is_ignored('render'))
+    if (!nel_sessions()->sessionIsIgnored('render'))
     {
         $page_ref1 = PHP_SELF . '?mode=display&page=0';
         $page_ref2 = PHP_SELF . '?page=';

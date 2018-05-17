@@ -178,7 +178,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
     if (!$response)
     {
-        if (!nel_session_is_ignored('render'))
+        if (!nel_sessions()->sessionIsIgnored('render'))
         {
             $post_header_node_array['reply-to-link']->extSetAttribute('href', PHP_SELF . '?mode=display&post=' .
                  $post_data['post_number']);
@@ -211,7 +211,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
     $mod_tools_1 = $new_post_dom->getElementById('mod-tools-1');
 
-    if (!nel_session_is_ignored('render'))
+    if (!nel_sessions()->sessionIsIgnored('render'))
     {
         /*$new_post_dom->getElementById('ip-address-display')->setContent(@inet_ntop($post_data['ip_address']));
          $set_ban_details = $new_post_dom->getElementById('set-ban-details');
@@ -460,7 +460,7 @@ function nel_render_thread_form_bottom($board_id, $dom)
     $form_td_list = $footer_form_element->doXPathQuery(".//input");
     $dom->getElementById('board_id_field_footer')->extSetAttribute('value', $board_id);
 
-    if (nel_session_is_ignored('render'))
+    if (nel_sessions()->sessionIsIgnored('render'))
     {
         $dom->getElementById('admin-input-set1')->removeSelf();
         $dom->getElementById('bottom-submit-button')->setContent('FORM_SUBMIT');

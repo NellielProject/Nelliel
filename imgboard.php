@@ -30,7 +30,6 @@ if(RUN_SETUP_CHECK)
 }
 
 nel_verify_hash_algorithm();
-require_once INCLUDE_PATH . 'cache_functions.php';
 require_once INCLUDE_PATH . 'accessors.php';
 require_once INCLUDE_PATH . 'plugins.php';
 $plugin_files = glob(PLUGINS_PATH . '*.nel.php');
@@ -46,7 +45,6 @@ $plugins->activate();
 // A demo point. Does nothing, really
 $example_result = $plugins->plugin_hook('plugin-example', TRUE, array(5));
 
-require_once INCLUDE_PATH . 'sessions.php';
 require_once INCLUDE_PATH . 'snacks.php';
 
 // IT'S GO TIME!
