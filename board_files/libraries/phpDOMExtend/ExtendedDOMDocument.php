@@ -18,36 +18,71 @@ class ExtendedDOMDocument extends \DOMDocument
         }
     }
 
+    /**
+     * This method will register ExtendedDOMDocument and/or ExtendedDOMElement as the classes for the DOM extension to
+     * use.
+     *
+     * @param boolean $dom_document Register ExtendedDOMDocument
+     * @param boolean $dom_element Register ExtendedDOMElement
+     */
     public function registerNodeClasses($dom_document = true, $dom_element = true)
     {
-        if($dom_document)
+        if ($dom_document)
         {
             $this->registerNodeClass('DOMDocument', 'phpDOMExtend\ExtendedDOMDocument');
         }
 
-        if($dom_element)
+        if ($dom_element)
         {
             $this->registerNodeClass('DOMElement', 'phpDOMExtend\ExtendedDOMElement');
         }
     }
 
+    /**
+     * Execute an XPath query on the current document and return the result.
+     *
+     * @param string $expression The XPath query
+     * @param DOMNode[optional] $context_node Optional context node to limit the query scope
+     * @return DOMNodeList Result of the query as a DOMNodeList object
+     */
     public function doXPathQuery($expression, $context_node = null)
     {
         $xpath = new \DOMXPath($this);
         return $xpath->query($expression, $context_node);
     }
 
+    /**
+     * Use the defined escaper to escape the passed content before output.
+     *
+     * @param string $content The content to escape
+     * @param string $escape_type Type of escaping to use
+     */
     public function doEscaping(&$content, $escape_type)
     {
         $this->escaper_instance->doEscaping($content, $escape_type);
     }
 
+    /**
+     * Extended createTextNode that adds escaping to the content.
+     *
+     * @param string $content TextNode content
+     * @param string $escape_type Type of escaping to use
+     * @return DOMText The new DOMText object or false if error ocurred
+     */
     public function extCreateTextNode($content, $escape_type = 'html')
     {
         $this->doEscaping($content, $escape_type);
         return parent::createTextNode($content);
     }
 
+    /**
+     * Extended createElement that adds escaping to the value.
+     *
+     * @param string $name Tag name of the element
+     * @param string[optional] $value The value of the element
+     * @param string $escape_type Type of escaping to use
+     * @return DOMElement The new DOMElement object or false if error ocurred
+     */
     public function extCreateElement($name, $value = null, $escape_type = 'html')
     {
         if (!is_null($value))
@@ -58,6 +93,15 @@ class ExtendedDOMDocument extends \DOMDocument
         return parent::createElement($name, $value);
     }
 
+    /**
+     * Extended createElementNS that adds escaping to the value.
+     *
+     * @param string $namespaceURI The URI of the namespace
+     * @param string $qualifiedName The qualified name of the element, as prefix:tagname
+     * @param string[optional] $value The value of the element
+     * @param string $escape_type Type of escaping to use
+     * @return DOMElement The new DOMElement object or false if error ocurred
+     */
     public function extCreateElementNS($namespaceURI, $qualifiedName, $value = null, $escape_type = 'html')
     {
         if (!is_null($value))
@@ -68,38 +112,82 @@ class ExtendedDOMDocument extends \DOMDocument
         return parent::createElementNS($namespaceURI, $qualifiedName, $value);
     }
 
-    public function createFullAttribute($name, $content, $escape_type = 'attribute')
+    /**
+     * Creates a complete DOM attribute node with a value.
+     *
+     * @param string $name Name of the attribute
+     * @param string $value Attribute value
+     * @param string $escape_type Type of escaping to use
+     * @return DOMAttr The new DOMAttr object or false if error ocurred
+     */
+    public function createFullAttribute($name, $value, $escape_type = 'attribute')
     {
-        $this->doEscaping($content, $escape_type);
+        $this->doEscaping($value, $escape_type);
         $attribute = $this->createAttribute($name);
-        $attribute->value = $content;
+        $attribute->value = $value;
         return $attribute;
     }
 
-    public function createFullAttributeNS($namespaceURI, $qualifiedName, $content, $escape_type = 'attribute')
+    /**
+     * Creates a complete namespaced DOM attribute node with a value.
+     *
+     * @param string $namespaceURI The URI of the namespace
+     * @param string $qualifiedName The qualified name of the element, as prefix:tagname
+     * @param string $value Attribute value
+     * @param string $escape_type Type of escaping to use
+     * @return DOMAttr The new DOMAttr object or false if error ocurred
+     */
+    public function createFullAttributeNS($namespaceURI, $qualifiedName, $value, $escape_type = 'attribute')
     {
-        $this->doEscaping($content, $escape_type);
+        $this->doEscaping($value, $escape_type);
         $attribute = $this->createAttributeNS($namespaceURI, $qualifiedName);
-        $attribute->value = $content;
+        $attribute->value = $value;
         return $attribute;
     }
 
-    public function getElementsByAttributeName($attribute_name, $context_node = null)
+    /**
+     * Get elements which contain the given attribute name.
+     *
+     * @param string $name Name of the attribute
+     * @param DOMNode[optional] $context_node Optional context node to search within
+     * @return DOMNodeList A DOMNodeList of matching elements
+     */
+    public function getElementsByAttributeName($name, $context_node = null)
     {
-        return $this->doXPathQuery('.//*[@' . $attribute_name . ']', $context_node);
+        return $this->doXPathQuery('.//*[@' . $name . ']', $context_node);
     }
 
-    public function getElementsByAttributeValue($attribute, $attribute_name, $context_node = null)
+    /**
+     * Get elements which contain the given attribute value.
+     *
+     * @param string $name Name of the attribute
+     * @param string $value Attribute value to match
+     * @param DOMNode[optional] $context_node Optional context node to search within
+     * @return DOMNodeList A DOMNodeList of matching elements
+     */
+    public function getElementsByAttributeValue($name, $value, $context_node = null)
     {
-        return $this->doXPathQuery('.//*[@' . $attribute . '=\'' . $attribute_name . '\']', $context_node);
+        return $this->doXPathQuery('.//*[@' . $name . '=\'' . $value . '\']', $context_node);
     }
 
-    public function getElementsByClassName($class_name, $context_node = null)
+    /**
+     * Get elements which contain the given class name.
+     *
+     * @param string $name Name of the class
+     * @param DOMNode[optional] $context_node Optional context node to search within
+     * @return DOMNodeList A DOMNodeList of matching elements
+     */
+    public function getElementsByClassName($name, $context_node = null)
     {
-        return $this->getElementsByAttributeValue('class', $class_name, $context_node);
+        return $this->getElementsByAttributeValue('class', $name, $context_node);
     }
 
-    public function removeElementKeepChildren($element)
+    /**
+     * Remove a parent node while keeping any child nodes in place.
+     *
+     * @param DOMNode $node
+     */
+    public function removeElementKeepChildren($node)
     {
         $children = $element->getInnerNode(true);
         $parent = $element->parentNode;
@@ -112,19 +200,34 @@ class ExtendedDOMDocument extends \DOMDocument
         $element->removeSelf();
     }
 
-    public function getAssociativeNodeArray($attribute_name, $context_node = null)
+    /**
+     * Searches for nodes containing the given attribute and returns the nodes as a PHP associative array indexed
+     * by attribute values.
+     *
+     * @param string $name Name of attribute to search for
+     * @param DOMNode[optional] $context_node Optional context node to search within
+     * @return array Associative array of nodes
+     */
+    public function getAssociativeNodeArray($name, $context_node = null)
     {
         $array = array();
-        $node_list = $this->doXPathQuery(".//*[@" . $attribute_name . "]", $context_node);
+        $node_list = $this->doXPathQuery(".//*[@" . $name . "]", $context_node);
 
-        foreach($node_list as $node)
+        foreach ($node_list as $node)
         {
-            $array[$node->getAttribute($attribute_name)] = $node;
+            $array[$node->getAttribute($name)] = $node;
         }
 
         return $array;
     }
 
+    /**
+     * Copies the given node into a new ExtendedDOMDocument
+     *
+     * @param DOMNode $node Node to be copied
+     * @param boolean $deep Deep copy
+     * @return ExtendedDOMDocument The new ExtendedDOMDocument containing the copied node
+     */
     public function copyNodeIntoDocument($node, $deep = false)
     {
         $new_dom = new ExtendedDOMDocument(true);

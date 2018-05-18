@@ -23,6 +23,13 @@ class ExtendedDOMElement extends \DOMElement
         return $this->escaper_instance->doEscaping($content, $escape_type);
     }
 
+    /**
+     * Execute an XPath query on the current document and return the result.
+     *
+     * @param string $expression The XPath query
+     * @param DOMNode[optional] $context_node Optional context node to limit the query scope
+     * @return DOMNodeList Returns result of the query as a DOMNodeList object
+     */
     public function doXPathQuery($expression, $context_node = null)
     {
         $xpath = new \DOMXPath($this->ownerDocument);
@@ -35,6 +42,14 @@ class ExtendedDOMElement extends \DOMElement
         return $xpath->query($expression, $context_node);
     }
 
+    /**
+     * Extended setAttribute that adds escaping to the value.
+     *
+     * @param string $name Attribute name
+     * @param string $value Attribute value
+     * @param string $escape_type Type of escaping to use
+     * @return DOMAttr The old node if replaced, otherwise null
+     */
     public function extSetAttribute($name, $value, $escape_type = 'attribute')
     {
         $this->doEscaping($value, $escape_type);
@@ -43,6 +58,14 @@ class ExtendedDOMElement extends \DOMElement
         return $this->setAttributeNode($attribute);
     }
 
+    /**
+     * Extended setAttributeNS that adds escaping to the value.
+     * @param string $namespaceURI The URI of the namespace
+     * @param string $qualifiedName The qualified name of the element
+     * @param string $value Attribute value
+     * @param string $escape_type Type of escaping to use
+     * @return DOMAttr The old node if replaced, otherwise null
+     */
     public function extSetAttributeNS($namespaceURI, $qualifiedName, $value, $escape_type = 'attribute')
     {
         $this->doEscaping($value, $escape_type);
@@ -51,8 +74,19 @@ class ExtendedDOMElement extends \DOMElement
         return $this->setAttributeNodeNS($attribute);
     }
 
+    /**
+     * Modify an existing attribute or add if the attribute does not exist yet.
+     *
+     * @param string $name Attribute name
+     * @param string $value Attribute value
+     * @param string $relative How to modify the existing value
+     * @param string $escape_type Type of escaping to use
+     * @return string The original attribute value
+     */
     public function modifyAttribute($name, $value, $relative = 'replace', $escape_type = 'attribute')
     {
+        $existing_content = '';
+
         if ($this->hasAttribute($name))
         {
             $existing_content = $this->getAttribute($name);
@@ -67,11 +101,24 @@ class ExtendedDOMElement extends \DOMElement
             }
         }
 
-        return $this->extSetAttribute($name, $value, $escape_type);
+        $this->extSetAttribute($name, $value, $escape_type);
+        return $existing_content;
     }
 
+    /**
+     * Modify an existing namespaced attribute or add if the attribute does not exist yet.
+     *
+     * @param string $namespaceURI The URI of the namespace
+     * @param string $qualifiedName The qualified name of the element
+     * @param string $value Attribute value
+     * @param string $relative How to modify the existing value
+     * @param string $escape_type Type of escaping to use
+     * @return string The original attribute value
+     */
     public function modifyAttributeNS($namespaceURI, $qualifiedName, $value, $relative = 'replace', $escape_type = 'attribute')
     {
+        $existing_content = '';
+
         if ($this->hasAttributeNS($namespaceURI, $localName))
         {
             $existing_content = $this->getAttributeNodeNS($namespaceURI, $localName);
@@ -86,14 +133,28 @@ class ExtendedDOMElement extends \DOMElement
             }
         }
 
-        return $this->extSetAttributeNS($namespaceURI, $qualifiedName, $value, $escape_type);
+        $this->extSetAttributeNS($namespaceURI, $qualifiedName, $value, $escape_type);
+        return $existing_content;
     }
 
+    /**
+     * Gets the current node value.
+     *
+     * @return string The current node value
+     */
     public function getContent()
     {
         return $this->nodeValue;
     }
 
+    /**
+     * Sets the current node value.
+     *
+     * @param string $value Node value
+     * @param string $relative How to modify the existing value
+     * @param string $escape_type Type of escaping to use
+     * @return string The old node value
+     */
     public function setContent($value, $relative = 'replace', $escape_type = 'html')
     {
         $this->doEscaping($value, $escape_type);
@@ -112,6 +173,11 @@ class ExtendedDOMElement extends \DOMElement
         return $existing_value;
     }
 
+    /**
+     * Remove the node value.
+     *
+     * @return string The old node value
+     */
     public function removeContent()
     {
         $old_value = $this->nodeValue;
@@ -119,46 +185,90 @@ class ExtendedDOMElement extends \DOMElement
         return $old_value;
     }
 
+    /**
+     * Change the node ID.
+     *
+     * @param string $new_id The new ID
+     */
     public function changeId($new_id)
     {
         $this->setAttribute('id', $new_id);
         $this->setIdAttribute('id', true);
     }
 
-    public function getAssociativeNodeArray($attribute_name, $context_node = null)
+    /**
+     * Searches for nodes containing the given attribute and returns the nodes as a PHP associative array indexed
+     * by attribute values.
+     *
+     * @param string $name Name of attribute to search for
+     * @param DOMNode[optional] $context_node Optional context node to search within
+     * @return array Associative array of nodes
+     */
+    public function getAssociativeNodeArray($name, $context_node = null)
     {
         $array = array();
-        $node_list = $this->doXPathQuery(".//*[@" . $attribute_name . "]", $context_node);
+        $node_list = $this->doXPathQuery(".//*[@" . $name . "]", $context_node);
 
         foreach($node_list as $node)
         {
-            $array[$node->getAttribute($attribute_name)] = $node;
+            $array[$node->getAttribute($name)] = $node;
         }
 
         return $array;
     }
 
+    /**
+     * Get child element matching the given ID.
+     *
+     * @param string $id The ID to search for
+     * @return DOMElement The first matching element
+     */
     public function getElementById($id)
     {
         return $this->doXPathQuery("(.//*[@id='" . $id . "'])[1]", $this)->item(0);
     }
 
-    public function getElementsByAttributeName($attribute_name)
+    /**
+     * Get child elements which contain the given attribute name.
+     *
+     * @param string $name Name of the attribute
+     * @return DOMNodeList A DOMNodeList of matching elements
+     */
+    public function getElementsByAttributeName($name)
     {
-        return $this->doXPathQuery('.//*[@' . $attribute_name . ']', $this);
+        return $this->doXPathQuery('.//*[@' . $name . ']', $this);
     }
 
-    public function getElementsByAttributeValue($attribute, $attribute_name)
+    /**
+     * Get child elements which contain the given attribute value.
+     *
+     * @param string $name Name of the attribute
+     * @param string $value Attribute value to match
+     * @return DOMNodeList A DOMNodeList of matching elements
+     */
+    public function getElementsByAttributeValue($name, $value)
     {
-        return $this->doXPathQuery('.//*[@' . $attribute . '=\'' . $attribute_name . '\']', $this);
+        return $this->doXPathQuery('.//*[@' . $name . '=\'' . $value . '\']', $this);
     }
 
-    public function getElementsByClassName($class_name, $context_node = null)
+    /**
+     * Get child elements which contain the given class name.
+     *
+     * @param string $name Name of the class
+     * @return DOMNodeList A DOMNodeList of matching elements
+     */
+    public function getElementsByClassName($name)
     {
-        return $this->getElementsByAttributeValue('class', $class_name);
+        return $this->getElementsByAttributeValue('class', $name);
     }
 
-    public function getInnerNode($as_list)
+    /**
+     * Get the innder nodes of this element.
+     *
+     * @param boolean $as_list True to return nodes as a list or false to return a DOMDocument containing the nodes.
+     * @return DOMNodeList|ExtendedDOMDocument
+     */
+    public function getInnerNode($as_list = false)
     {
         $nodes = $this->childNodes;
 
@@ -177,6 +287,9 @@ class ExtendedDOMElement extends \DOMElement
         return $inner_dom;
     }
 
+    /**
+     * Delete this node.
+     */
     public function removeSelf()
     {
         $parent = $this->parentNode;
