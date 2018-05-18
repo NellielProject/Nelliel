@@ -4,26 +4,31 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_thread_panel_main()
+function nel_render_thread_panel_main($board_id)
 {
     $dbh = nel_database();
+    $references = nel_board_references($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_header(array(), $render, array());
+    nel_render_general_header($render, null, $board_id, array('header' => 'MANAGE_BOARD', 'sub_header' => 'MANAGE_THREADS'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel.html');
-    $thread_data = $dbh->executeFetchAll('SELECT * FROM "' . THREAD_TABLE . '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC', PDO::FETCH_ASSOC);
+    $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
+    $dom->getElementById('thread-list-form')->extSetAttribute('action', PHP_SELF .
+         '?manage=board&module=threads&board_id=' . $board_id);
+    $thread_data = $dbh->executeFetchAll('SELECT * FROM "' . $references['thread_table'] .
+         '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC', PDO::FETCH_ASSOC);
     $thread_list_table = $dom->getElementById('thread-list');
     $thread_row = $dom->getElementById('thread-row-');
     $i = 0;
 
-    foreach($thread_data as $thread)
+    foreach ($thread_data as $thread)
     {
         $temp_thread_row = $thread_row->cloneNode(true);
         $temp_thread_row->changeId('thread_row-' . $thread['thread_id']);
 
-        $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE "post_number" = ? LIMIT 1');
+        $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "post_number" = ? LIMIT 1');
         $prepared->bindValue(1, $thread['first_post'], PDO::PARAM_INT);
         $prepared->execute();
         $op_post = $prepared->fetch(PDO::FETCH_ASSOC);
@@ -40,7 +45,7 @@ function nel_render_thread_panel_main()
         $delete_thread->modifyAttribute('value', $thread['thread_id'], 'after');
         $delete_thread->changeId('delete-thread-' . $thread['thread_id']);
 
-        if($thread['sticky'] == 1)
+        if ($thread['sticky'] == 1)
         {
             $unsticky_thread = $temp_thread_row->getElementById('unsticky-thread-');
             $unsticky_thread->modifyAttribute('name', $thread['thread_id'], 'after');
@@ -67,14 +72,15 @@ function nel_render_thread_panel_main()
 
         $thread_subject_link = $temp_thread_row->getElementById('thread-subject-link-');
         $thread_subject_link->setContent($op_post['subject']);
-        $thread_subject_link->extSetAttribute('href', PAGE_DIR . $thread['thread_id'] . '/' . $thread['thread_id'] . '.html', 'none');
+        $thread_subject_link->extSetAttribute('href', $references['page_dir'] . $thread['thread_id'] . '/' .
+             $thread['thread_id'] . '.html', 'none');
         $thread_subject_link->changeId('thread-subject-link-' . $thread['thread_id']);
 
         $thread_op_name = $temp_thread_row->getElementById('thread-op-name-');
         $thread_op_name->setContent($thread['thread_id']);
         $thread_op_name->changeId('thread-op-name-' . $thread['thread_id']);
         $thread_op_ip = $temp_thread_row->getElementById('thread-op-ip-');
-        $thread_op_ip->setContent($op_post['ip_address']);
+        $thread_op_ip->setContent(@inet_ntop($op_post['ip_address']));
         $thread_op_ip->changeId('thread-op-ip-' . $thread['thread_id']);
         $thread_post_count = $temp_thread_row->getElementById('thread-post-count-');
         $thread_post_count->setContent($thread['post_count']);
@@ -83,7 +89,7 @@ function nel_render_thread_panel_main()
         $thread_total_files->setContent($thread['total_files']);
         $thread_total_files->changeId('thread-total-files-' . $thread['thread_id']);
 
-        if($i & 1)
+        if ($i & 1)
         {
             $bgclass = 'row1';
         }
@@ -101,26 +107,31 @@ function nel_render_thread_panel_main()
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($render, false);
+    nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    nel_clean_exit();
 }
 
-function nel_render_thread_panel_expand($thread_id)
+function nel_render_thread_panel_expand($board_id, $thread_id)
 {
     $dbh = nel_database();
+    $references = nel_board_references($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_header(array(), $render, array());
+    nel_render_general_header($render, null, $board_id, array('header' => 'MANAGE_BOARD', 'sub_header' => 'MANAGE_THREADS'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
-    $prepared = $dbh->prepare('SELECT * FROM "' . POST_TABLE . '" WHERE "parent_thread" = ?');
+    $dom->getElementById('thread-list-form')->extSetAttribute('action', PHP_SELF .
+         '?manage=board&module=threads&board_id=' . $board_id);
+    $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
+    $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "parent_thread" = ?');
     $post_data = $dbh->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
     $post_list_table = $dom->getElementById('post-list');
     $post_row = $dom->getElementById('post-row-');
     $i = 0;
 
-    foreach($post_data as $post)
+    foreach ($post_data as $post)
     {
         $temp_post_row = $post_row->cloneNode(true);
         $temp_post_row->changeId('post-row-' . $post['post_number']);
@@ -137,20 +148,21 @@ function nel_render_thread_panel_expand($thread_id)
         $post_parent_thread->changeId('post-thread-' . $post['parent_thread']);
         $post_last_update = $temp_post_row->getElementById('post-time-');
         $post_last_update->setContent(date("D F jS Y  H:i:s", $post['post_time'] / 1000));
-        $post_last_update->changeId('post-time-' . $post['post_number']);/////
+        $post_last_update->changeId('post-time-' . $post['post_number']); /////
         $post_subject_link = $temp_post_row->getElementById('post-subject-link-');
         $post_subject_link->setContent($post['subject']);
-        $post_subject_link->extSetAttribute('href', PAGE_DIR . $post['parent_thread']. '/' . $post['post_number']. '.html', 'none');
+        $post_subject_link->extSetAttribute('href', $references['page_dir'] . $post['parent_thread'] . '/' .
+             $post['post_number'] . '.html', 'none');
         $post_subject_link->changeId('post-subject-link-' . $post['post_number']);
 
         $post_name = $temp_post_row->getElementById('post-name-');
         $post_name->setContent($post['poster_name']);
         $post_name->changeId('post-name-' . $post['post_number']);
         $post_ip = $temp_post_row->getElementById('post-ip-');
-        $post_ip->setContent($post['ip_address']);
+        $post_ip->setContent(@inet_ntop($post['ip_address']));
         $post_ip->changeId('post-ip-' . $post['post_number']);
 
-        if($i & 1)
+        if ($i & 1)
         {
             $bgclass = 'row1';
         }
@@ -168,6 +180,7 @@ function nel_render_thread_panel_expand($thread_id)
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_footer($render, false);
+    nel_render_general_footer($render);
     echo $render->outputRenderSet();
+    nel_clean_exit();
 }

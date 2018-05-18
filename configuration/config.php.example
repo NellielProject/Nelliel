@@ -1,0 +1,134 @@
+<?php
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
+
+//
+// This file has only the very basic configuration needed to function and do setup.
+// It is intentionally kept as short and simple as possible.
+// Board management and all other settings are accessible from the management area.
+//
+
+//
+// === General Settings ===
+//
+
+// If on a new install or no users are found, Nelliel will use 'defaultadmin' and 'defaultadmin_pass' to create an admin account.
+// Once created the default admin can be used for the rest of setup, managing staff, etc.
+// Once the default admin account is created, set both of these back to ''.
+$base_config['defaultadmin'] = '';
+$base_config['defaultadmin_pass'] = '';
+
+// Salt used for secure tripcodes
+// Change this setting ONCE when you do initial setup. Changing it again will alter the secure tripcode output.
+$base_config['tripcode_salt'] = 'sodiumz';
+
+// Salt used for other hashing
+// A different salt from the one for secure tripcodes. May have various uses
+$base_config['general_salt'] = 'moarsodiumz';
+
+// Each time the script is run, this goes through the setup sequence and checks that everything is in place.
+// Once initial setup and testing is finished this isn't really necessary and can be set to false.
+$base_config['run_setup_check'] = true;
+
+// Default file and directory permissions.
+// In most cases you don't need to touch these.
+// If they are changed, format must be in the proper octal format.
+$base_config['directory_perm'] = '0775';
+$base_config['file_perm'] = '0664';
+
+
+// Enable/disable internal caching.
+// When enabled Nelliel will use its internal caching system. This speeds things up considerably.
+// The only time this should need to be disabled is for testing or troubleshooting.
+$base_config['use_internal_cache'] = true;
+
+
+//
+// === Database Access Settings ===
+//
+
+// Database type
+// Currently supported types: MYSQL, SQLITE, POSTGRES
+$db_config['sqltype'] = 'MYSQL';
+
+//
+// Configuration for MySQL
+//
+
+// Name of database
+$db_config['mysql_db'] = '';
+
+// MySQL Server address
+$db_config['mysql_host'] = 'localhost';
+
+// MySQL server port. Default is 3306
+$db_config['mysql_port'] = '3306';
+
+// Name of database user
+$db_config['mysql_user'] = '';
+
+// Password of database user
+$db_config['mysql_pass'] = '';
+
+// The character encoding to use.
+$db_config['mysql_encoding'] = 'utf8';
+
+
+//
+// Configuration for SQLite
+//
+
+// WARNING: The database path must be a location outside of web-accessible directories!
+// Otherwise someone could just download the whole thing.
+// If this is not possible on your host, do not use SQLite for your database!
+
+// Filename of SQLite database
+$db_config['sqlite_db_name'] = 'nelliel.sqlite';
+
+// Path where the database is to be located
+$db_config['sqlite_db_path'] = '';
+
+// The character encoding to use. Should be fine as-is
+$db_config['sqlite_encoding'] = 'UTF-8';
+
+//
+// Configuration for PostgreSQL
+//
+
+// Name of database
+$db_config['postgres_db'] = '';
+
+// PostgreSQL Server address
+$db_config['postgres_host'] = 'localhost';
+
+// PostgreSQL server port. Default is 5432
+$db_config['postgres_port'] = '5432';
+
+// Name of database user
+$db_config['postgres_user'] = '';
+
+// Password of database user
+$db_config['postgres_password'] = '';
+
+// Which schema to use. Default is 'public'
+$db_config['postgres_schema'] = 'public';
+
+// Path where the database is to be located
+$db_config['postgres_encoding'] = 'UTF8';
+
+// The character encoding to use.
+// You must make sure this matches or is compatible with what the database uses!
+$db_config['postgres_encoding'] = 'UTF-8';
+
+
+//
+// == Crypt Settings ===
+//
+
+// The hash settings for staff logins and other higher security things
+// Bcrypt - PHP default is 10; 04 is the minimum; 31 is maximum
+// SHA2 - PHP default is 5000; minimum is 1000; maximum is 999999999
+$crypt_config['password_bcrypt_cost'] = 12;
+$crypt_config['password_sha2_cost'] = 200000;

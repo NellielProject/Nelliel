@@ -1,14 +1,9 @@
-    <div class="pass-valid">
-        <span data-i18n="neltext">MANAGE_MODE</span>
-    </div>
-    <div class="del-list">
-        <span data-i18n="neltext">MANAGE_STAFF</span>
-    </div>
-    <form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
+    <form id="user-edit-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
         <table>
             <tr>
                 <td>
-                    <input type="hidden" name="mode" value="admin->staff->user->update">
+                    <input type="hidden" name="action" value="update">
+                    <input id="board_id_field" type="hidden" name="board_id" value="">
                 </td>
             </tr>
             <tr>
@@ -42,16 +37,24 @@
                 </td>
             </tr>
             <tr>
-                <td>
-                    <label for="rselect" data-i18n="neltext">MANAGE_STAFF_ROLE_ID</label>
-                </td>
-                <td>
-                    <input id="role-id-field" type="text" name="role_id" id="rselect" size="50" value="">
-                </td>
+            	<td>
+            		<span>Boards</span>
+            	</td>
+            	<td>
+            		<span>User role</span>
+            	</td>
             </tr>
-            <tr>
+            <tr id="board-roles">
                 <td>
-                    <input type="submit" value="FORM_STAFF_USER_UPDATE" data-i18n="neltext" data-i18n-attributes="value">
+                    <label id="role-board-id-label-" for="role-board-id-"></label>
+                </td>
+                <td>
+                    <input type="text" name="user_board_role" id="role-board-id-" size="30" value="">
+                </td>
+            <tr>
+            <tr id="user-edit-submit">
+                <td>
+                    <input id="update-user-submit" type="submit" value="FORM_STAFF_USER_UPDATE" data-i18n="neltext" data-i18n-attributes="value">
                 </td>
             </tr>
         </table>

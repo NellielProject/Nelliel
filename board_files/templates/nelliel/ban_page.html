@@ -1,38 +1,38 @@
 	<div>
 		<div>
-			You have been banned from <span id="banned-board" class="ban-bold"></span>.<br>
-			This ban was given on <span id="banned-time" class="ban-bold"></span>
+			You have been banned from <span data-parse-id="banned-board" class="ban-bold"></span>.<br>
+			This ban was given on <span data-parse-id="banned-time" class="ban-bold"></span>
 		</div>
 		<table>
 			<tr>
 				<td>Reason for your ban: </td>
-				<td id="banned-reason" class="ban-bold"></td>
+				<td data-parse-id="banned-reason" class="ban-bold"></td>
 			</tr>
 			<tr>
 				<td>Ban will expire: </td>
-				<td id="banned-length" class="ban-bold"></td>
+				<td data-parse-id="banned-length" class="ban-bold"></td>
 			</tr>
 			<tr>
 				<td>The banned IP or hostname is: </td>
-				<td id="banned-ip" class="ban-bold"></td>
+				<td data-parse-id="banned-ip" class="ban-bold"></td>
 			</tr>
 		</table>
 	</div>
 	<form id="appeal-form" accept-charset="utf-8" name="postingform" action="" method="post" enctype="multipart/form-data">
 		<div>
 			<p data-i18n="neltext">ABOUT_APPEALS</p>
-			<input type="hidden" name="mode" value="general->bans->appeal">
+			<input type="hidden" name="action" value="add-appeal">
 			<input type="hidden" name="ban_ip" value="">
 			<input type="hidden" name="ban_board" value="">
 			<textarea name="ban_appeal" id="bawww" cols="30" rows="6"></textarea>
 			<input type="submit" value="BAWWWWW">
 		</div>
 	</form>
-	<p id="appeal-pending" data-i18n="neltext">BAN_RESPONSE_PENDING</p>
+	<p data-parse-id="appeal-pending" data-i18n="neltext">BAN_RESPONSE_PENDING</p>
 	<div id="appeal-response-div">
 		<p>
-			<span id="appeal-what-done" data-i18n="neltext"></span><br>
-			<span id="appeal-response-label" data-i18n="neltext">BAN_APPEAL_RESPONSE</span>
+			<span data-parse-id="appeal-what-done" data-i18n="neltext"></span><br>
+			<span data-parse-id="appeal-response-label" data-i18n="neltext">BAN_APPEAL_RESPONSE</span>
 		</p>
 		<p id="appeal-response-text"></p>
 	</div>

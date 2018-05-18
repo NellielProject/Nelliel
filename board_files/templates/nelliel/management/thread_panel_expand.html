@@ -1,11 +1,6 @@
-	<div class="pass-valid">
-		<span data-i18n="neltext">MANAGE_MODE</span>
-	</div>
-	<div class="del-list">
-		<span data-i18n="neltext">MANAGE_THREADS</span>
-	</div>
-	<form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="mode" value="admin->thread->update">
+	<form id="thread-list-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="action" value="update">
+		<input id="board_id_field" type="hidden" name="board_id" value="">
 		<table id="post-list" class="post-lists">
 			<tr class="manage-header">
 				<th data-i18n="neltext">MANAGE_POST_NUMBER</th>

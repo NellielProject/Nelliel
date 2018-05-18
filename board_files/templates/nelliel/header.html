@@ -8,7 +8,7 @@
 	<link data-id="style-board" rel="alternate stylesheet" type="text/css" href="" title="Nigra">
 	<link data-id="style-board" rel="alternate stylesheet" type="text/css" href="" title="Futaba">
 	<link data-id="style-board" rel="alternate stylesheet" type="text/css" href="" title="Burichan">
-	<script id="js-main-file" src="board_files/js/nel.js"></script>
+	<script id="js-main-file" src="web/js/nel.js"></script>
 	<script id="js-onload"></script>
 	<script id="js-style-set"></script>
 	<!--[if lt IE 9]>
@@ -17,6 +17,7 @@
 	<title></title>
 </head>
 <body>
+	<div id="board-navigation" class="board-navigation"></div>
 	<div class="text-center"></div>
 	<div id="top-styles-div">
 		<span class="top_styles" id='top-styles-span'>
@@ -38,3 +39,12 @@
 		<h1 id="top-logo-text">LOGO</h1>
 	</div>
 	<hr>
+	<div id="manage-header" class="manage-header">
+		<span id="manage-header-text" data-i18n="neltext">MANAGE_MODE</span>
+	</div>
+	<div id="manage-board-header" class="manage-board-header">
+		<span id="manage-board-header-data"></span>
+	</div>
+	<div id="manage-sub-header" class="manage-sub-header">
+		<span id="manage-sub-header-text" data-i18n="neltext"></span>
+	</div>

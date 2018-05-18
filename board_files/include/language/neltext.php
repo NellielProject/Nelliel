@@ -16,24 +16,24 @@ function nel_neltext_variable($name, $value = null)
     return $variables[$name];
 }
 
-function nel_stext($text)
+function nel_stext($text, $language = 'en-us')
 {
-    return nel_get_language(BOARD_LANGUAGE, 'singular', $text);
+    return nel_get_language($language, 'singular', $text);
 }
 
-function nel_ptext($text, $num)
+function nel_ptext($text, $num, $language = 'en-us')
 {
     if ($num <= 1)
     {
-        return nel_get_language(BOARD_LANGUAGE, 'singular', $text);
+        return nel_get_language($language, 'singular', $text);
     }
     else if ($num > 1)
     {
-        return nel_get_language(BOARD_LANGUAGE, 'plural', $text);
+        return nel_get_language($language, 'plural', $text);
     }
 }
 
-function nel_process_neltext_attribute($node)
+function nel_process_neltext_attribute($language, $node)
 {
     $attribute_list = explode(',', $node->getAttribute('data-i18n-attributes'));
     $new_text = '';
@@ -48,12 +48,12 @@ function nel_process_neltext_attribute($node)
         if($has_plural === 1)
         {
             $variable = nel_neltext_variable($matches[1]);
-            $new_text = nel_ptext($matches[2], $variable);
+            $new_text = nel_ptext($matches[2], $variable, $language);
             $new_text = preg_replace('#%count%#u', $variable, $new_text);
         }
         else
         {
-            $new_text = nel_stext($attribute_value);
+            $new_text = nel_stext($attribute_value, $language);
         }
 
         $attribute_node = $node->ownerDocument->createAttribute($attribute_name);
@@ -62,7 +62,7 @@ function nel_process_neltext_attribute($node)
     }
 }
 
-function nel_process_neltext_content($node)
+function nel_process_neltext_content($language, $node)
 {
     $new_text = '';
     $xpath = new DOMXPath($node->ownerDocument);
@@ -72,13 +72,13 @@ function nel_process_neltext_content($node)
     {
         $variable_name = $plural_element->getAttribute('data-plural');
         $variable = nel_neltext_variable($variable_name);
-        $new_text = nel_ptext($plural_element->getContent(), $variable);
+        $new_text = nel_ptext($plural_element->getContent(), $variable, $language);
         $new_text = preg_replace('#%count%#u', $variable, $new_text);
     }
     else
     {
         $text = $node->getContent();
-        $new_text = nel_stext($text);
+        $new_text = nel_stext($text, $language);
     }
 
     $node->setContent($new_text, 'replace');

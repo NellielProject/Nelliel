@@ -4,54 +4,63 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'output-filter.php';
-require_once INCLUDE_PATH . 'output/main-generation.php';
-require_once INCLUDE_PATH . 'output/thread-generation.php';
+require_once INCLUDE_PATH . 'output/posting_form.php';
+require_once INCLUDE_PATH . 'output/header.php';
+require_once INCLUDE_PATH . 'output/post.php';
+require_once INCLUDE_PATH . 'output/footer.php';
+require_once INCLUDE_PATH . 'output/main_generation.php';
+require_once INCLUDE_PATH . 'output/thread_generation.php';
 
-function nel_regen_threads($dataforce, $write, $ids)
+function nel_regen_threads($board_id, $write, $ids)
 {
     $threads = count($ids);
     $i = 0;
 
     while ($i < $threads)
     {
-        nel_thread_generator($dataforce, $write, $ids[$i]);
+        nel_thread_generator($board_id, $write, $ids[$i]);
         ++ $i;
     }
 }
 
-function nel_regen_cache($dataforce)
+function nel_regen_cache($board_id = '')
 {
-    nel_cache_filetype_settings();
-    nel_cache_board_settings();
-    nel_cache_board_settings_new();
+    if ($board_id === '')
+    {
+        nel_site_settings(null, true);
+    }
+    else
+    {
+        nel_board_settings($board_id, null, true);
+        nel_filetype_settings($board_id, null, true);
+    }
 }
 
-function nel_regen_index($dataforce)
+function nel_regen_index($board_id)
 {
-    $archive = nel_archive();
+    $archive = new \Nelliel\ArchiveAndPrune($board_id);
     $archive->updateAllArchiveStatus();
 
-    if(nel_board_settings('old_threads') === 'ARCHIVE')
+    if (nel_board_settings($board_id, 'old_threads') === 'ARCHIVE')
     {
         $archive->moveThreadsToArchive();
         $archive->moveThreadsFromArchive();
     }
-    else if(nel_board_settings('old_threads') === 'PRUNE')
+    else if (nel_board_settings($board_id, 'old_threads') === 'PRUNE')
     {
         $archive->pruneThreads();
     }
 
-    $dataforce['response_id'] = 0;
-    nel_main_thread_generator($dataforce, true);
+    nel_main_thread_generator($board_id, 0, true);
 }
 
-function nel_regen_all_pages($dataforce)
+function nel_regen_all_pages($board_id)
 {
     $dbh = nel_database();
-    $result =  $dbh->query('SELECT "thread_id" FROM "' . THREAD_TABLE . '" WHERE "archive_status" = 0');
+    $result = $dbh->query('SELECT "thread_id" FROM "' . nel_board_references($board_id, 'thread_table') .
+         '" WHERE "archive_status" = 0');
     $ids = $result->fetchAll(PDO::FETCH_COLUMN);
-    nel_regen_threads($dataforce, true, $ids);
-    nel_regen_index($dataforce);
+    nel_regen_threads($board_id, true, $ids);
+    nel_regen_index($board_id);
 }
 

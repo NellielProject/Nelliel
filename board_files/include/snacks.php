@@ -9,16 +9,16 @@ require_once INCLUDE_PATH . 'output/ban_page.php';
 //
 // Auto-ban on Spambot detection
 //
-function nel_ban_spambots($dataforce)
+function nel_ban_spambots()
 {
-    $ban_hammer = nel_ban_hammer();
+    $ban_hammer = new \Nelliel\BanHammer();
 
-    if (BS_USE_SPAMBOT_TRAP && (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')]) || !!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')])))
+    if (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')]) || !empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')]))
     {
-        $ban_info['type'] = 'SPAMBOT';
-        $ban_info['ip_address'] = $_SERVER['REMOTE_ADDR'];
-        $ban_info['reason'] = 'Ur a spambot. Nobody wants any. GTFO!';
-        $ban_info['length'] = 86400 * 9001;
+        $ban_input['type'] = 'SPAMBOT';
+        $ban_input['ip_address_start'] = $_SERVER['REMOTE_ADDR'];
+        $ban_input['reason'] = 'Ur a spambot. Nobody wants any. GTFO!';
+        $ban_input['length'] = 86400 * 9001;
         $ban_hammer->addBan($ban_input);
     }
 }
@@ -35,7 +35,8 @@ function nel_banned_hash($hash, $file)
     {
         if ($hash === $cancer[$i])
         {
-            nel_derp(150, nel_stext('ERROR_150'), array('bad-filename' => $file['filename'] . $file['ext'], 'files' => array($file)));
+            nel_derp(150, nel_stext('ERROR_150'), null, array('bad-filename' => $file['filename'] . $file['ext'],
+                'files' => array($file)));
         }
     }
 }
@@ -52,7 +53,7 @@ function nel_banned_name($name)
     {
         if ($cancer[$i] === $name)
         {
-            nel_derp(151, nel_stext('ERROR_151'), array('cancer' => $cancer[$i]));
+            nel_derp(151, nel_stext('ERROR_151'), null, array('cancer' => $cancer[$i]));
         }
     }
 }
@@ -73,39 +74,57 @@ function nel_banned_text($text, $file)
 
             if ($test !== FALSE)
             {
-                nel_derp(152, nel_stext('ERROR_152'), array('cancer' => $cancer[$i]));
+                nel_derp(152, nel_stext('ERROR_152'), $board_id, array('cancer' => $cancer[$i]));
             }
         }
     }
 }
 
+function nel_ban_appeal($board_id)
+{
+    if ($_POST['ban_ip'] != $user_ip_address)
+    {
+        nel_derp(160, nel_stext('ERROR_160'), $board_id);
+    }
+
+    $ip_address = $_POST['ban_ip'];
+    $bawww = $_POST['ban_appeal'];
+
+    if (SQLTYPE === 'MYSQL')
+    {
+        nel_utf8_4byte_to_entities($bawww);
+    }
+
+    $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE .
+         '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ip_address_starts" = ?');
+    $dbh->executePrepared($prepared, array($bawww, @inet_pton($ip_address)));
+
+    nel_apply_ban($board_id);
+}
+
 //
 // Apply b&hammer
 //
-function nel_apply_ban($dataforce)
+function nel_apply_ban($board_id)
 {
     $dbh = nel_database();
-    $ban_hammer = nel_ban_hammer();
+    $ban_hammer = new \Nelliel\BanHammer();
     $user_ip_address = $_SERVER["REMOTE_ADDR"];
-
-    if (isset($dataforce['mode_segments'][2]) && $dataforce['mode_segments'][2] === 'appeal')
-    {
-        if($_POST['ban_ip'] != $user_ip_address)
-        {
-            nel_derp(160, nel_stext('ERROR_160'));
-        }
-
-        $ip_address = $_POST['ban_ip'];
-        $bawww = $_POST['ban_appeal'];
-        $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ip_address" = ?');
-        $dbh->executePrepared($prepared, array($bawww, $ip_address));
-    }
-
     $ban_info = $ban_hammer->getBanByIp($user_ip_address);
+    $module = (isset($_GET['module'])) ? $_GET['module'] : null;
+    $action = (isset($_POST['action'])) ? $_POST['action'] : null;
 
-    if(empty($ban_info))
+    if (empty($ban_info))
     {
         return;
+    }
+
+    if($module === 'ban-page')
+    {
+        if($action === 'add-appeal')
+        {
+            nel_ban_appeal($board_id);
+        }
     }
 
     $length = $ban_info['length'] + $ban_info['start_time'];
@@ -116,6 +135,6 @@ function nel_apply_ban($dataforce)
         return;
     }
 
-    nel_render_ban_page($dataforce, $ban_info);
-    nel_clean_exit($dataforce, true);
+    nel_render_ban_page($board_id, $ban_info);
+    nel_clean_exit();
 }

@@ -3,11 +3,11 @@
 		</div>
 	<div>
 		<div class="posting-form">
-			<form id="posting-form" accept-charset="utf-8" name="postingform" action="imgboard.php" method="post" enctype="multipart/form-data">
+			<form id="posting-form" accept-charset="utf-8" name="postingform" action="" method="post" enctype="multipart/form-data">
 				<div>
-					<input type="hidden" name="mode" value="general->post->new">
+					<input type="hidden" name="action" value="new-post">
 					<input type="hidden" name="new_post[post_info][response_to]" value="">
-					<input type="hidden" name="mode2" value="modmode">
+					<input id="board_id_field_post_form" type="hidden" name="board_id" value="">
 				</div>
 				<table class="input-table" id="posting-form-table">
 					<tr>
@@ -55,9 +55,10 @@
 							<label for="up-file-1"><span data-i18n="neltext">FORM_LABEL_FILE #</span><span id="file-num-1">1</span></label>
 						</td>
 						<td class="posting-form-input">
-							<input type="file" name="up_file_1" id="up-file-1" data-command="reveal-file-input">&nbsp;
+							<input type="file" name="up_file_1" id="up-file-1" data-command="reveal-file-input">
+							<br>
 							<input type="button" value="Add Source" id="add-sauce-1" data-command="add-file-meta">&nbsp;
-							<input type="button" value="Add License" id="add-lol_drama-1" data-command="add-file-meta">
+							<input type="button" value="Add License" id="add-lol_drama-1" data-command="add-file-meta">&nbsp;
 							<input type="button" value="Add Alt Description" id="add-alt_text-1" data-command="add-file-meta">
 						</td>
 					</tr>

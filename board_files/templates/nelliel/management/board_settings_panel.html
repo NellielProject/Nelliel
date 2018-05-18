@@ -1,0 +1,820 @@
+	<form id="board-settings-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
+		<table>
+			<tr>
+				<td>
+					<input type="hidden" name="action" value="update">
+					<input id="board_id_field" type="hidden" name="board_id" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<br><b>Basic settings</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="board_name" data-i18n="neltext">MANAGE_SET_BOARD_NAME</label>
+				</td>
+				<td>
+					<input type="text" name="board_name" id="board_name" size="50" value="{$render->get('board_name')}">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="show_title" value="0">
+					<input type="checkbox" name="show_title" id="show_title" value="1">
+					<label for="show_title" data-i18n="neltext">MANAGE_SET_SHOW_NAME</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="board_favicon" data-i18n="neltext">MANAGE_SET_FAVICON</label>
+				</td>
+				<td>
+					<input type="text" name="board_favicon" id="board_favicon" size="30" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="show_favicon" value="0">
+					<input type="checkbox" name="show_favicon" id="show_favicon" value="1">
+					<label for="show_favicon" data-i18n="neltext">MANAGE_SET_SHOW_FAVICON</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="board_logo" data-i18n="neltext">MANAGE_SET_LOGO</label>
+				</td>
+				<td>
+					<input type="text" name="board_logo" id="board_logo" size="30" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="show_logo" value="0">
+					<input type="checkbox" name="show_logo" id="show_logo" value="1">
+					<label for="show_logo" data-i18n="neltext">MANAGE_SET_SHOW_LOGO</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="board_language" data-i18n="neltext">MANAGE_SET_BOARD_LANGUAGE</label>
+				</td>
+				<td>
+					<input type="text" name="board_language" id="board_language" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					Date Format:
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="radio" name="date_format" id="date_iso" value="ISO"> <label for="date_iso" data-i18n="neltext">MANAGE_SET_ISO_DATE</label><br>
+					<input type="radio" name="date_format" id="date_com" value="COM"> <label for="date_com" data-i18n="neltext">MANAGE_SET_COMMON_DATE</label><br>
+					<input type="radio" name="date_format" id="date_us" value="US"> <label for="date_us" data-i18n="neltext">MANAGE_SET_US_DATE</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="date_separator" data-i18n="neltext">MANAGE_SET_DATE_SEPARATOR</label>
+				</td>
+				<td>
+					<input type="text" name="date_separator" id="date_separator" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="thread_delay" data-i18n="neltext">MANAGE_SET_THREAD_DELAY</label>
+				</td>
+				<td>
+					<input type="text" name="thread_delay" id="thread_delay" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="reply_delay" data-i18n="neltext">MANAGE_SET_POST_DELAY</label>
+				</td>
+				<td>
+					<input type="text" name="reply_delay" id="reply_delay" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="abbreviate_thread" data-i18n="neltext">MANAGE_SET_ABBREVIATE_THREAD</label>
+				</td>
+				<td>
+					<input type="text" name="abbreviate_thread" id="abbreviate_thread" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="threads_per_page" data-i18n="neltext">MANAGE_SET_TPP</label>
+				</td>
+				<td>
+					<input type="text" name="threads_per_page" id="threads_per_page" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="page_limit" data-i18n="neltext">MANAGE_SET_MAXPAGE</label>
+				</td>
+				<td>
+					<input type="text" name="page_limit" id="page_limit" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="page_buffer" data-i18n="neltext">MANAGE_SET_BUFFER</label>
+				</td>
+				<td>
+					<input type="text" name="page_buffer" id="page_buffer" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span data-i18n="neltext" data-i18n="neltext">MANAGE_SET_HANDLE_OLD</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="radio" name="old_threads" id="old_threads_a" value="ARCHIVE"> 
+					<label for="old_threads_a" data-i18n="neltext">MANAGE_SET_OLD_A</label><br>
+					<input type="radio" name="old_threads" id="old_threads_p" value="PRUNE"> 
+					<label for="old_threads_p" data-i18n="neltext">MANAGE_SET_OLD_P</label><br>
+					<input type="radio" name="old_threads" id="old_threads_n" value="NOTHING"> 
+					<label for="old_threads_n" data-i18n="neltext">MANAGE_SET_OLD_N</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_posts" data-i18n="neltext">MANAGE_SET_MAXPPT</label>
+				</td>
+				<td>
+					<input type="text" name="max_posts" id="max_posts" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_bumps" data-i18n="neltext">MANAGE_SET_MAXBUMP</label>
+				</td>
+				<td>
+					<input type="text" name="max_bumps" id="max_bumps" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="force_anonymous" value="0">
+					<input type="checkbox" name="force_anonymous" id="force_anonymous" value="1">
+					<label for="force_anonymous" data-i18n="neltext">MANAGE_SET_FORCEANON</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="allow_tripkeys" value="0">
+					<input type="checkbox" name="allow_tripkeys" id="allow_tripkeys" value="1">
+					<label for="allow_tripkeys" data-i18n="neltext">MANAGE_SET_TRIP</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="tripkey_marker" data-i18n="neltext">MANAGE_SET_TRIPMARK</label>
+				</td>
+				<td>
+					<input type="text" name="tripkey_marker" id="tripkey_marker" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="use_fgsfds" value="0">
+					<input type="checkbox" name="use_fgsfds" id="use_fgsfds" value="1">
+					<label for="use_fgsfds" data-i18n="neltext">MANAGE_SET_FGSFDS</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="fgsfds_name" data-i18n="neltext">MANAGE_SET_FGSFDS_NAME</label>
+				</td>
+				<td>
+					<input type="text" name="fgsfds_name" id="fgsfds_name" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="require_image_start" value="0">
+					<input type="checkbox" name="require_image_start" id="require_image_start" value="1">
+					<label for="require_image_start" data-i18n="neltext">MANAGE_SET_IMGREQ_T</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="require_image_always" value="0">
+					<input type="checkbox" name="require_image_always" id="require_image_always" value="1">
+					<label for="require_image_always" data-i18n="neltext">MANAGE_SET_IMGREQ_P</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="use_spambot_trap" value="0">
+					<input type="checkbox" name="use_spambot_trap" id="use_spambot_trap" value="1">
+					<label for="use_spambot_trap" data-i18n="neltext">MANAGE_SET_USE_SPAMBOT_TRAP</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<hr>
+				</td>	
+			</tr>
+			<tr>
+				<td>
+					<label for="indent_marker" data-i18n="neltext">MANAGE_SET_INDENT_MARKER</label>
+				</td>
+				<td>
+					<input type="text" name="indent_marker" id="indent_marker" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_name_length" data-i18n="neltext">MANAGE_SET_MAX_NLENGTH</label>
+				</td>
+				<td>
+					<input type="text" name="max_name_length" id="max_name_length" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_email_length" data-i18n="neltext">MANAGE_SET_MAX_ELENGTH</label>
+				</td>
+				<td>
+					<input type="text" name="max_email_length" id="max_email_length" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_subject_length" data-i18n="neltext">MANAGE_SET_MAX_SLENGTH</label>
+				</td>
+				<td>
+					<input type="text" name="max_subject_length" id="max_subject_length" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_comment_length" data-i18n="neltext">MANAGE_SET_MAX_CLENGTH</label>
+				</td>
+				<td>
+					<input type="text" name="max_comment_length" id="max_comment_length" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_comment_lines" data-i18n="neltext">MANAGE_SET_MAX_CLINE</label>
+				</td>
+				<td>
+					<input type="text" name="max_comment_lines" id="max_comment_lines" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="display_comment_lines" data-i18n="neltext">MANAGE_SET_DISPLAY_CLINE</label>
+				</td>
+				<td>
+					<input type="text" name="display_comment_lines" id="display_comment_lines" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_source_length" data-i18n="neltext">MANAGE_SET_MAX_SRCLENGTH</label>
+				</td>
+				<td>
+					<input type="text" name="max_source_length" id="max_source_length" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_license_length" data-i18n="neltext">MANAGE_SET_MAX_LLENGTH</label>
+				</td>
+				<td>
+					<input type="text" name="max_license_length" id="max_license_length" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_filesize" data-i18n="neltext">MANAGE_SET_MAXFS</label>
+				</td>
+				<td>
+					<input type="text" name="max_filesize" id="max_filesize" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="allow_multifile" value="0">
+					<input type="checkbox" name="allow_multifile" id="allow_multifile" value="1">
+					<label for="allow_multifile" data-i18n="neltext">MANAGE_SET_ALLOW_MULTIFILE</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="allow_op_multifile" value="0">
+					<input type="checkbox" name="allow_op_multifile" id="allow_op_multifile" value="1">
+					<label for="allow_op_multifile" data-i18n="neltext">MANAGE_SET_ALLOW_OP_MULTIFILE</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_post_files" data-i18n="neltext">MANAGE_SET_MAXPF</label>
+				</td>
+				<td>
+					<input type="text" name="max_post_files" id="max_post_files" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_files_row" data-i18n="neltext">MANAGE_SET_MAXFR</label>
+				</td>
+				<td>
+					<input type="text" name="max_files_row" id="max_files_row" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="use_thumb" value="0">
+					<input type="checkbox" name="use_thumb" id="use_thumb" value="1">
+					<label for="use_thumb" data-i18n="neltext">MANAGE_SET_USE_THUMB</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="use_magick" value="0">
+					<input type="checkbox" name="use_magick" id="use_magick" value="1">
+					<label for="use_magick" data-i18n="neltext">MANAGE_SET_USE_MAGICK</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="use_file_icon" value="0">
+					<input type="checkbox" name="use_file_icon" id="use_file_icon" value="1">
+					<label for="use_file_icon" data-i18n="neltext">MANAGE_SET_USE_FILE_ICON</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="use_new_imgdel" value="0">
+					<input type="checkbox" name="use_new_imgdel" id="use_new_imgdel" value="1" >
+					<label for="use_new_imgdel" data-i18n="neltext">MANAGE_SET_NEW_IMGDEL</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="use_png_thumb" value="0">
+					<input type="checkbox" name="use_png_thumb" id="use_png_thumb" value="1">
+					<label for="use_png_thumb" data-i18n="neltext">MANAGE_SET_USE_PNG_THUMB</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="animated_gif_preview" value="0">
+					<input type="checkbox" name="animated_gif_preview" id="animated_gif_preview" value="1">
+					<label for="animated_gif_preview" data-i18n="neltext">MANAGE_SET_ANIMATED_GIF_PRE</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="jpeg_quality" data-i18n="neltext">MANAGE_SET_JPG_QUALITY</label>
+				</td>
+				<td>
+					<input type="text" name="jpeg_quality" id="jpeg_quality" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="file_sha256" value="0">
+					<input type="checkbox" name="file_sha256" id="file_sha256" value="1">
+					<label for="file_sha256" data-i18n="neltext">MANAGE_SET_FILE_SHA256</label>
+				</td>
+			</tr>
+			<tr>
+				<td data-i18n="neltext">MANAGE_SET_IMGMAX</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_width" data-i18n="neltext">MANAGE_SET_IMGMAX_W</label>
+				</td>
+				<td>
+					<input type="text" name="max_width" id="max_width" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_height" data-i18n="neltext">MANAGE_SET_IMGMAX_H</label>
+				</td>
+				<td>
+					<input type="text" name="max_height" id="max_height" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_multi_width" data-i18n="neltext">MANAGE_SET_IMGMAX_MW</label>
+				</td>
+				<td>
+					<input type="text" name="max_multi_width" id="max_multi_width" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="max_multi_height" data-i18n="neltext">MANAGE_SET_IMGMAX_MH</label>
+				</td>
+				<td>
+					<input type="text" name="max_multi_height" id="max_multi_height" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<hr>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<br><b data-i18n="neltext">MANAGE_SET_GFORMAT</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="graphics" value="0">
+					<input type="checkbox" name="graphics" id="graphics" value="1"> 
+					<label id="l_graphics" for="graphics" data-i18n="neltext">MANAGE_SET_ALW_GF</label>
+				</td>
+			<tr>
+				<td>
+					<input type="hidden" name="jpeg" value="0">
+					<input type="checkbox" name="jpeg" id="jpeg" value="1"> 
+					<label id="l_jpeg" for="jpeg"></label>
+				</td>
+				<td>
+					<input type="hidden" name="gif" value="0">
+					<input type="checkbox" name="gif" id="gif" value="1"> 
+					<label id="l_gif" for="gif"></label>
+				</td>
+				<td>
+					<input type="hidden" name="png" value="0">
+					<input type="checkbox" name="png" id="png" value="1"> 
+					<label id="l_png" for="png"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="jpeg2000" value="0">
+					<input type="checkbox" name="jpeg2000" id="jpeg2000" value="1"> 
+					<label id="l_jpeg2000" for="jpeg2000"></label>
+				</td>
+				<td>
+					<input type="hidden" name="tiff" value="0">
+					<input type="checkbox" name="tiff" id="tiff" value="1"> 
+					<label id="l_tiff" for="tiff"></label>
+				</td>
+				<td>
+					<input type="hidden" name="bmp" value="0">
+					<input type="checkbox" name="bmp" id="bmp" value="1"> 
+					<label id="l_bmp" for="bmp"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="icon" value="0">
+					<input type="checkbox" name="icon" id="icon" value="1"> 
+					<label id="l_icon" for="icon"></label>
+				</td>
+				<td>
+					<input type="hidden" name="photoshop" value="0">
+					<input type="checkbox" name="photoshop" id="photoshop" value="1"> 
+					<label id="l_photoshop" for="photoshop"></label>
+				</td>
+				<td>
+					<input type="hidden" name="tga" value="0">
+					<input type="checkbox" name="tga" id="tga" value="1"> 
+					<label id="l_tga" for="tga"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="art" value="0">
+					<input type="checkbox" name="art" id="art" value="1"> 
+					<label id="l_art" for="art"></label>
+				</td>
+				<td>
+					<input type="hidden" name="cel" value="0">
+					<input type="checkbox" name="cel" id="cel" value="1"> 
+					<label id="l_cel" for="cel"></label>
+				</td>
+				<td>
+					<input type="hidden" name="kcf" value="0">
+					<input type="checkbox" name="kcf" id="kcf" value="1"> 
+					<label id="l_kcf" for="kcf"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="pict" value="0">
+					<input type="checkbox" name="pict" id="pict" value="1"> 
+					<label id="l_pict" for="pict"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<br><b data-i18n="neltext">MANAGE_SET_AFORMAT</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="audio" value="0">
+					<input type="checkbox" name="audio" id="audio" value="1"> 
+					<label id="l_audio" for="audio" data-i18n="neltext">MANAGE_SET_ALW_AF</label>
+				</td>
+			<tr>
+				<td>
+					<input type="hidden" name="wave" value="0">
+					<input type="checkbox" name="wave" id="wave" value="1"> 
+					<label id="l_wave" for="wave"></label>
+				</td>
+				<td>
+					<input type="hidden" name="aiff" value="0">
+					<input type="checkbox" name="aiff" id="aiff" value="1"> 
+					<label id="l_aiff" for="aiff"></label>
+				</td>
+				<td>
+					<input type="hidden" name="mp3" value="0">
+					<input type="checkbox" name="mp3" id="mp3" value="1"> 
+					<label id="l_mp3" for="mp3"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="m4a" value="0">
+					<input type="checkbox" name="m4a" id="m4a" value="1"> 
+					<label id="l_m4a" for="m4a"></label>
+				</td>
+				<td>
+					<input type="hidden" name="flac" value="0">
+					<input type="checkbox" name="flac" id="flac" value="1"> 
+					<label id="l_flac" for="flac"></label>
+				</td>
+				<td>
+					<input type="hidden" name="aac" value="0">
+					<input type="checkbox" name="aac" id="aac" value="1"> 
+					<label id="l_aac" for="aac"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="ogg-audio" value="0">
+					<input type="checkbox" name="ogg-audio" id="ogg-audio" value="1"> 
+					<label id="l_ogg-audio" for="ogg-audio"></label>
+				</td>
+				<td>
+					<input type="hidden" name="au" value="0">
+					<input type="checkbox" name="au" id="au" value="1"> 
+					<label id="l_au" for="au"></label>
+				</td>
+				<td>
+					<input type="hidden" name="ac3" value="0">
+					<input type="checkbox" name="ac3" id="ac3" value="1"> 
+					<label id="l_ac3" for="ac3"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="wma" value="0">
+					<input type="checkbox" name="wma" id="wma" value="1"> 
+					<label id="l_wma" for="wma"></label>
+				</td>
+				<td>
+					<input type="hidden" name="midi" value="0">
+					<input type="checkbox" name="midi" id="midi" value="1">  
+					<label id="l_midi" for="midi"></label>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<br><b data-i18n="neltext">MANAGE_SET_VFORMAT</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="video" value="0">
+					<input type="checkbox" name="video" id="video" value="1"> 
+					<label id="l_video" for="video" data-i18n="neltext">MANAGE_SET_ALW_VF</label>
+				</td>
+			<tr>
+				<td>
+					<input type="hidden" name="mpeg" value="0">
+					<input type="checkbox" name="mpeg" id="mpeg" value="1"> 
+					<label id="l_mpeg" for="mpeg"></label>
+				</td>
+				<td>
+					<input type="hidden" name="quicktime" value="0">
+					<input type="checkbox" name="quicktime" id="quicktime" value="1"> 
+					<label id="l_quicktime" for="quicktime"></label>
+				</td>
+				<td>
+					<input type="hidden" name="avi" value="0">
+					<input type="checkbox" name="avi" id="avi" value="1"> 
+					<label id="l_avi" for="avi"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="wmv" value="0">
+					<input type="checkbox" name="wmv" id="wmv" value="1"> 
+					<label id="l_wmv" for="wmv"></label>
+				</td>
+				<td>
+					<input type="hidden" name="mpeg4" value="0">
+					<input type="checkbox" name="mpeg4" id="mpeg4" value="1"> 
+					<label id="l_mpeg4" for="mpeg4"></label>
+				</td>
+				<td>
+					<input type="hidden" name="matroska" value="0">
+					<input type="checkbox" name="matroska" id="matroska" value="1"> 
+					<label id="l_matroska" for="matroska"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="flash-video" value="0">
+					<input type="checkbox" name="flash-video" id="flash-video" value="1"> 
+					<label id="l_flash-video" for="flash-video"></label>
+				</td>
+				<td>
+					<input type="hidden" name="webm" value="0">
+					<input type="checkbox" name="webm" id="webm" value="1"> 
+					<label id="l_webm" for="webm"></label>
+				</td>
+				<td>
+					<input type="hidden" name="3gp" value="0">
+					<input type="checkbox" name="3gp" id="3gp" value="1"> 
+					<label id="l_3gp" for="3gp"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="ogg-video" value="0">
+					<input type="checkbox" name="ogg-video" id="ogg-video" value="1"> 
+					<label id="l_ogg-video" for="ogg-video"></label>
+				</td>
+				<td>
+					<input type="hidden" name="m4v" value="0">
+					<input type="checkbox" name="m4v" id="m4v" value="1"> 
+					<label id="l_m4v" for="m4v"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<br><b data-i18n="neltext">MANAGE_SET_DFORMAT</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="document" value="0">
+					<input type="checkbox" name="document" id="document" value="1"> 
+					<label id="l_document" for="document" data-i18n="neltext">MANAGE_SET_ALW_DF</label>
+				</td>
+			<tr>
+				<td>
+					<input type="hidden" name="rich-text" value="0">
+					<input type="checkbox" name="rich-text" id="rich-text" value="1"> 
+					<label id="l_rich-text" for="rich-text"></label>
+				</td>
+				<td>
+					<input type="hidden" name="pdf" value="0">
+					<input type="checkbox" name="pdf" id="pdf" value="1"> 
+					<label id="l_pdf" for="pdf"></label>
+				</td>
+				<td>
+					<input type="hidden" name="plaintext" value="0">
+					<input type="checkbox" name="plaintext" id="plaintext" value="1"> 
+					<label id="l_plaintext" for="plaintext"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="msword" value="0">
+					<input type="checkbox" name="msword" id="msword" value="1"> 
+					<label id="l_msword" for="msword"></label>
+				</td>
+				<td>
+					<input type="hidden" name="powerpoint" value="0">
+					<input type="checkbox" name="powerpoint" id="powerpoint" value="1"> 
+					<label id="l_powerpoint" for="powerpoint"></label>
+				</td>
+				<td>
+					<input type="hidden" name="msexcel" value="0">
+					<input type="checkbox" name="msexcel" id="msexcel" value="1"> 
+					<label id="l_msexcel" for="msexcel"></label>
+				</td>
+			<tr>
+				<td>
+					<br><b data-i18n="neltext">MANAGE_SET_RFORMAT</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="archive" value="0">
+					<input type="checkbox" name="archive" id="archive" value="1"> 
+					<label id="l_archive" for="archive" data-i18n="neltext">MANAGE_SET_ALW_RF</label>
+				</td>
+			<tr>
+				<td>
+					<input type="hidden" name="gzip" value="0">
+					<input type="checkbox" name="gzip" id="gzip" value="1"> 
+					<label id="l_gzip" for="gzip"></label>
+				</td>
+				<td>
+					<input type="hidden" name="bzip2" value="0">
+					<input type="checkbox" name="bzip2" id="bzip2" value="1"> 
+					<label id="l_bzip2" for="bzip2"></label>
+				</td>
+				<td>
+					<input type="hidden" name="lzh" value="0">
+					<input type="checkbox" name="lzh" id="lzh" value="1"> 
+					<label id="l_lzh" for="lzh"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="zip" value="0">
+					<input type="checkbox" name="zip" id="zip" value="1"> 
+					<label id="l_zip" for="zip"></label>
+				</td>
+				<td>
+					<input type="hidden" name="rar" value="0">
+					<input type="checkbox" name="rar" id="rar" value="1"> 
+					<label id="l_rar" for="rar"></label>
+				</td>
+				<td>
+					<input type="hidden" name="stuffit" value="0">
+					<input type="checkbox" name="stuffit" id="stuffit" value="1"> 
+					<label id="l_stuffit" for="stuffit"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="binhex" value="0">
+					<input type="checkbox" name="binhex" id="binhex" value="1"> 
+					<label id="l_binhex" for="binhex"></label>
+				</td>
+				<td>
+					<input type="hidden" name="tar" value="0">
+					<input type="checkbox" name="tar" id="tar" value="1"> 
+					<label id="l_tar" for="tar"></label>
+				</td>
+				<td>
+					<input type="hidden" name="7z" value="0">
+					<input type="checkbox" name="7z" id="7z" value="1"> 
+					<label id="l_7z" for="7z"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="iso" value="0">
+					<input type="checkbox" name="iso" id="iso" value="1"> 
+					<label id="l_iso" for="iso"></label>
+				</td>
+				<td>
+					<input type="hidden" name="dmg" value="0">
+					<input type="checkbox" name="dmg" id="dmg" value="1"> 
+					<label id="l_dmg" for="dmg"></label>
+				</td>
+			</tr>
+						<tr>
+				<td>
+					<br><b data-i18n="neltext">MANAGE_SET_OFORMAT</b>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="other" value="0">
+					<input type="checkbox" name="other" id="other" value="1"> 
+					<label id="l_other" for="other" data-i18n="neltext">MANAGE_SET_ALW_OF</label>
+				</td>
+			<tr>
+				<td>
+					<input type="hidden" name="flash-shockwave" value="0">
+					<input type="checkbox" name="flash-shockwave" id="flash-shockwave" value="1"> 
+					<label id="l_flash-shockwave" for="flash-shockwave"></label>
+				</td>
+			<tr>
+				<td>
+					<input type="hidden" name="blorb" value="0">
+					<input type="checkbox" name="blorb" id="blorb" value="1"> 
+					<label id="l_blorb" for="blorb"></label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="submit" value="MANAGE_FORM_UPDSET" data-i18n="neltext" data-i18n-attributes="value">
+				</td>
+			</tr>
+		</table>
+	</form>

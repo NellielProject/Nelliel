@@ -1,51 +1,42 @@
-    <div class="pass-valid">
-    	<span data-i18n="neltext">MANAGE_MODE</span>
-    </div>
-    <div class="del-list">
-        <span data-i18n="neltext">MANAGE_STAFF</span>
-    </div>
-    <form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
-        <table>
-            <tr>
-                <td>
-                    <input type="hidden" name="mode" value="admin->staff->user->edit">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="bname" data-i18n="neltext">MANAGE_STAFF_USER_ID</label>
-                </td>
-                <td>
-                    <input type="text" name="user_id" id="bname" size="50" value="">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" value="FORM_STAFF_USER_EDIT" data-i18n="neltext" data-i18n-attributes="value">
-                </td>
-            </tr>
-        </table>
-    </form>
-    <hr>
-    <form accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
-        <table>
-            <tr>
-                <td>
-                    <input type="hidden" name="mode" value="admin->staff->role->edit">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="bname" data-i18n="neltext">MANAGE_STAFF_ROLE_ID</label>
-                </td>
-                <td>
-                    <input type="text" name="role_id" id="bname" size="50" value="">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit" value="FORM_STAFF_ROLE_EDIT" data-i18n="neltext" data-i18n-attributes="value">
-                </td>
-            </tr>
-        </table>
-    </form>
+	<form id="edit-user-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="action" value="edit">
+		<table id="user-table">
+			<tr data-parse-id="user-row">
+			    <td><input data-parse-id="user-select" type="radio" name="user_id" value=""></td>
+				<td data-parse-id="user-name"></td>
+				<td data-parse-id="user-title"></td>
+			</tr>
+			<tr data-parse-id="submit-row">
+				<td>
+					<input type="submit" value="FORM_STAFF_USER_EDIT" data-i18n="neltext" data-i18n-attributes="value">
+				</td>
+			</tr>
+		</table>
+	</form>
+	<form id="new-user-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="action" value="new">
+		<input type="hidden" name="user_id" value="">
+		<input type="submit" value="FORM_STAFF_USER_NEW" data-i18n="neltext" data-i18n-attributes="value">
+	</form>
+	<hr>
+	<form id="edit-role-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="action" value="edit">
+		<table id="role-table">
+			<tr data-parse-id="role-row">
+			    <td><input data-parse-id="role-select" type="radio" name="role_id" value=""></td>
+				<td data-parse-id="role-name"></td>
+				<td data-parse-id="role-title"></td>
+			</tr>
+			<tr data-parse-id="submit-row">
+				<td>
+					<input type="submit" value="FORM_STAFF_ROLE_EDIT" data-i18n="neltext" data-i18n-attributes="value">
+				</td>
+			</tr>
+		</table>
+	</form>
+	<form id="new-role-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
+		<input type="hidden" name="action" value="new">
+		<input type="hidden" name="role_id" value="">
+		<input type="submit" value="FORM_STAFF_ROLE_NEW" data-i18n="neltext" data-i18n-attributes="value">
+	</form>
+	<hr>

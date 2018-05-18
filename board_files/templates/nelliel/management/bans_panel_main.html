@@ -1,9 +1,3 @@
-	<div class="pass-valid">
-		<span data-i18n="neltext">MANAGE_MODE</span>
-	</div>
-	<div class="del-list">
-		<span data-i18n="neltext">MANAGE_BANS</span>
-	</div>
 	<table id="ban-info-table" class="post-lists">
 		<tr class="manage-header">
 			<th data-i18n="neltext">MANAGE_BAN_ID</th>
@@ -29,18 +23,19 @@
 			<td></td>
 			<td></td>
 			<td>
-				<form id="form-mod-ban-" accept-charset="utf-8" action="imgboard.php" method="post">
+				<form id="form-mod-ban-" accept-charset="utf-8" action="" method="post">
 					<div>
-						<input type="hidden" name="mode" value="admin->ban->modify">
-						<input type="hidden" name="ban_id" value="">
+						<input type="hidden" name="action" value="modify">
+						<input type="hidden" name="board_id" value="">
+						<input id="board_id_field" type="hidden" name="ban_id" value="">
 						<input type="submit" value="FORM_MOD_BAN" data-i18n="neltext" data-i18n-attributes="value">
 					</div>
 				</form>
 			</td>
 			<td>
-				<form id="form-remove-ban-" accept-charset="utf-8" action="imgboard.php" method="post">
+				<form id="form-remove-ban-" accept-charset="utf-8" action="" method="post">
 					<div>
-						<input type="hidden" name="mode" value="admin->ban->remove">
+						<input type="hidden" name="action" value="remove">
 						<input type="hidden" name="ban_id" value="">
 						<input type="submit" value="FORM_REMOVE_BAN" data-i18n="neltext" data-i18n-attributes="value">
 					</div>
@@ -52,9 +47,9 @@
 	<table>
 		<tr>
 			<td>
-				<form id="form-add-ban" accept-charset="utf-8" action="imgboard.php" method="post">
+				<form id="form-add-ban" accept-charset="utf-8" action="" method="post">
 					<div>
-						<input type="hidden" name="mode" value="admin->ban->new">
+						<input type="hidden" name="action" value="new">
 						<input type="submit" value="FORM_ADD_BAN" data-i18n="neltext" data-i18n-attributes="value">
 					</div>
 				</form>

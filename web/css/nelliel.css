@@ -1,0 +1,440 @@
+/* General formatting */
+body {
+	background: #77FFBB;
+    color: #000000;
+    font-size: 1.0em;
+    font-family: serif;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.outer-div {
+    width: 100%;
+    height: 100%;
+    padding: 4px;
+}
+
+img {
+	
+}
+
+hr {
+	color: #006688;
+}
+
+a {
+    color: #4400FF;
+}
+
+a:visited {
+    color: #4400FF;
+}
+
+a:hover {
+    color: #0000AA;
+}
+
+a.post-link:active {
+    text-decoration: none;
+}
+
+a.post-link:link {
+    text-decoration: none;
+}
+
+a.post-link:visited {
+    text-decoration: none;
+}
+
+/* Header */
+.top-styles {
+    text-align: left;
+    float: left;
+}
+
+.logo {
+    color: #6600CC;
+    text-align: center;
+    font-weight: bold;
+    width: 100%;
+    clear: both;
+}
+
+.logo-alt-text {
+    font-size: 2.0em;
+}
+
+.board-navigation {
+	text-align: center;
+}
+
+.board-navigation-link {
+
+}
+
+/* Footer */
+.footer {
+    clear: both;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+.bottom-styles {
+    float: left;
+    text-align: left;
+    padding-top: 16px;
+}
+
+.footer-form {
+    float: right;
+    text-align: left;
+}
+
+/* Management */
+.admin-bar {
+    text-align: right;
+    float: right;
+}
+
+.manage-header {
+    background: #33AAFF;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px;
+    width: 100%;
+}
+
+.manage-board-header {
+    background: #33AAFF;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px;
+    width: 100%;
+}
+
+.manage-sub-header {
+    background: #55CCFF;
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    padding: 3px;
+    width: 100%;
+}
+
+.post-lists {
+    background: #FFFFFF;
+    width: 100%;
+    padding: 0px;
+}
+
+.row1 {
+    background: #99CCFF;
+    font-family: sans-serif;
+}
+
+.row2 {
+    background: #BBEEFF;
+    font-family: sans-serif;
+}
+
+/* Posting form formatting */
+.posting-form {
+    
+}
+
+.input-table {
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+.posting-form-row {
+    text-align: left;
+}
+
+.posting-form-label {
+    background: #44BBFF;
+    font-weight: bold;
+    padding: 3px;
+}
+
+.posting-form-input {
+    padding: 3px;
+}
+
+.rules {
+    font-size: 0.8em;
+    font-family: sans-serif;
+}
+
+/* Files */
+.post-files-container {
+
+}
+
+.file-delete-box {
+
+}
+
+.multi-file-delete-box {
+
+}
+
+.op-fileinfo {
+    float: left;
+    text-align: left;
+    text-decoration: none;
+	white-space: nowrap;
+    padding: 2px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 3px;
+    font-size: 0.95em;
+}
+
+.op-multiple-fileinfo {
+    float: left;
+    text-align: left;
+    text-decoration: none;
+	white-space: nowrap;
+    padding: 2px;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 3px;
+    font-size: 0.95em;
+}
+
+.reply-fileinfo {
+    float: left;
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 2px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin: 3px;
+    font-size: 0.95em;
+}
+
+.reply-multiple-fileinfo {
+    float: left;
+    text-align: left;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 2px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin: 3px;
+    font-size: 0.95em;
+}
+
+.file-meta {
+
+}
+
+.source {
+    padding-left: 2px;
+}
+
+.license {
+    padding-left: 2px;
+}
+
+.md5 {
+    padding-left: 2px;
+}
+
+.sha1 {
+    padding-left: 2px;
+}
+
+/* General post formatting */
+.none {
+    display: none;
+}
+
+.mod-comment {
+    color: #FF0000;
+    font-size: 1.05em;
+    font-weight: bold;
+}
+
+.old-post {
+	color: #DD1100;
+    font-size: 1.05em;
+    font-weight: bold;
+}
+
+.omitted-posts {
+    color: #5500CC;
+    font-size: 1.05em;
+    font-weight: bold;
+}
+
+.post-quote {
+    color: #339900;
+}
+
+.link-quote {
+    
+}
+
+.post-link {
+    
+}
+
+/* OP post formatting */
+.op-post {
+	color: #000000;
+    min-width: 15em;
+    height: 100%;
+    padding-bottom: 6px;
+    padding-left: 20px;
+}
+
+.op-post.post-highlight {
+	background: #AABBFF;
+}
+
+.op-poster-name {
+	color: #7711BB;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.op-subject {
+	color: #0044AA;
+    font-size: 1.05em;
+    font-weight: bold;
+}
+
+.op-post-text {
+    padding-left: 1.10em;
+    max-width: 70em;
+}
+
+.op-post-preview {
+    padding: 3px;
+    border: 0;
+}
+
+.op-post-multiple-preview {
+    padding: 3px;
+    border: 0;
+}
+
+.op-post-contents-multifile {
+	clear: both;
+}
+
+/* Reply post formatting */
+.reply-post {
+    background: #88EEFF;
+    color: #000000;
+    border: 1px solid #77DDFF;
+    padding: 5px;
+    min-width: 15em;
+    height: 100%;
+    margin: 5px;
+    display: inline-block;
+}
+
+.reply-post.post-highlight {
+	background: #AABBFF;
+}
+
+.reply-poster-name {
+	color: #7711BB;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.reply-subject {
+	color: #0044AA;
+    font-size: 1.05em;
+    font-weight: bold;
+}
+
+.reply-post-text {
+    padding-left: 1.10em;
+    max-width: 70em;
+}
+
+.reply-post-preview {
+    padding: 3px;
+    border: 0;
+}
+
+.reply-post-multiple-preview {
+    padding: 3px;
+    border: 0;
+}
+
+.reply-post-contents {
+	word-wrap: break-word;
+}
+
+.reply-post-contents-multifile {
+	clear: both;
+}
+
+.indents {
+    padding: 1px;
+    float: left;
+}
+
+/* Other */
+.ban-bold {
+    font-weight: bold;
+}
+
+.clear {
+    clear: both;
+}
+
+.clear-left {
+    clear: left;
+}
+
+.clear-right {
+    clear: right;
+}
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.nelliel-license-div {
+    font-size: 1.0em;
+    text-align: left;
+    margin: auto;
+    max-width: 60em;
+}
+
+.hidden {
+	display: none;
+}
+
+.post-corral {
+	
+}
+
+.post-quote-popup {
+	height: auto;
+	position: absolute;
+	display: block;
+}
+
+.reply-post.popup-mod {
+    border: 1px solid #88EEFF;
+}
