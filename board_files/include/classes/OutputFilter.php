@@ -11,7 +11,6 @@ if (!defined('NELLIEL_VERSION'))
 
 class OutputFilter
 {
-
     function __construct()
     {
     }
@@ -41,7 +40,7 @@ class OutputFilter
     {
         if (ctype_space($string))
         {
-            return '';
+            $string = '';
         }
     }
 
