@@ -458,3 +458,19 @@ function nel_create_filetype_table($table_name)
 
     nel_setup_stuff_done($result);
 }
+
+function nel_create_file_filter_table($table_name)
+{
+    $auto_inc = nel_autoincrement_column('INTEGER');
+    $options = nel_table_options();
+    $schema = '
+    CREATE TABLE ' . $table_name . ' (
+        entry                   ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+        hash_type               VARCHAR(255) NOT NULL,
+        file_hash               VARCHAR(255) NOT NULL UNIQUE,
+        file_notes              VARCHAR(255) DEFAULT NULL
+    ) ' . $options . ';';
+
+    $result = nel_create_table_query($schema, $table_name);
+    nel_setup_stuff_done($result);
+}

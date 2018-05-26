@@ -348,3 +348,27 @@ function nel_get_filetype_data($extension = null)
         return $filetypes[$extension];
     }
 }
+
+function nel_get_file_filters($cache_regen = false)
+{
+    static $file_filters;
+
+    if (!isset($file_filters))
+    {
+        $file_filters = array();
+        $loaded = false;
+
+        if (!$loaded)
+        {
+            $dbh = nel_database();
+            $filters = $dbh->executeFetchAll('SELECT "hash_type", "file_hash" FROM "nelliel_file_filters"', PDO::FETCH_ASSOC);
+
+            foreach ($filters as $filter)
+            {
+                $file_filters[$filter['hash_type']][] = $filter['file_hash'];
+            }
+        }
+    }
+
+    return $file_filters;
+}
