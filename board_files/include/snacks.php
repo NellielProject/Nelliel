@@ -30,7 +30,7 @@ function nel_file_hash_is_banned($file_hash, $hash_type)
 {
     $banned_hashes = nel_get_file_filters();
 
-    if (is_null($banned_hashes[$hash_type]))
+    if (!isset($banned_hashes[$hash_type]))
     {
         return false;
     }
