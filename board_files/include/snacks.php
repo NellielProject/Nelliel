@@ -26,19 +26,17 @@ function nel_ban_spambots()
 //
 // Banned hashes
 //
-function nel_banned_hash($hash, $file)
+function nel_file_hash_is_banned($file_hash, $hash_type)
 {
-    $cancer = array('', '');
-    $total_cancer = count($cancer);
+    $banned_hashes = nel_get_file_filters();
+    $hash_found = in_array($file_hash, $banned_hashes[$hash_type]);
 
-    for ($i = 0; $i < $total_cancer; ++ $i)
+    if (is_null($hash_found))
     {
-        if ($hash === $cancer[$i])
-        {
-            nel_derp(150, nel_stext('ERROR_150'), null, array('bad-filename' => $file['filename'] . $file['ext'],
-                'files' => array($file)));
-        }
+        return false;
     }
+
+    return $hash_found;
 }
 
 //
@@ -119,9 +117,9 @@ function nel_apply_ban($board_id)
         return;
     }
 
-    if($module === 'ban-page')
+    if ($module === 'ban-page')
     {
-        if($action === 'add-appeal')
+        if ($action === 'add-appeal')
         {
             nel_ban_appeal($board_id);
         }

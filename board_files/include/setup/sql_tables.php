@@ -467,7 +467,7 @@ function nel_create_file_filter_table($table_name)
     CREATE TABLE ' . $table_name . ' (
         entry                   ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         hash_type               VARCHAR(255) NOT NULL,
-        file_hash               VARCHAR(255) NOT NULL UNIQUE,
+        file_hash               ' . nel_sql_alternatives('VARBINARY', '64') . ' NOT NULL,
         file_notes              VARCHAR(255) DEFAULT NULL
     ) ' . $options . ';';
 
