@@ -347,6 +347,10 @@ $lang_singular = array(
     'MANAGE_SET_RFORMAT' => 'Archive files',  // Enable archive
     'MANAGE_SET_ALW_RF' => 'Allow archive files',  // Allow archive files
 
+    'MANAGE_FILE_FILTERS' => 'File filters',
+    'MANAGE_FILE_FILTER_HASHTYPE' => 'Hash type (md5, sha1, sha256, sha512)',
+    'MANAGE_FILE_FILTER_HASHES' => 'File hashes',
+
 
     'FILES_GRAPHICS' => 'Supported graphic types: ',  // Prints graphics filetypes supported
     'FILES_AUDIO' => 'Supported audio types: ',  // Prints audio filetypes supported
