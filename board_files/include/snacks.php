@@ -29,14 +29,13 @@ function nel_ban_spambots()
 function nel_file_hash_is_banned($file_hash, $hash_type)
 {
     $banned_hashes = nel_get_file_filters();
-    $hash_found = in_array($file_hash, $banned_hashes[$hash_type]);
 
-    if (is_null($hash_found))
+    if (is_null($banned_hashes[$hash_type]))
     {
         return false;
     }
 
-    return $hash_found;
+    return in_array($file_hash, $banned_hashes[$hash_type]);
 }
 
 //
