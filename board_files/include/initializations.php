@@ -29,6 +29,7 @@ define('FILE_FILTER_TABLE', 'nelliel_file_filters'); // Site-wide file filters
 $base_config['defaultadmin'] = '';
 $base_config['defaultadmin_pass'] = '';
 $base_config['tripcode_salt'] = 'sodiumz';
+$base_config['general_salt'] = 'moarsodiumz';
 $base_config['run_setup_check'] = true;
 $base_config['directory_perm'] = '0775';
 $base_config['file_perm'] = '0664';
