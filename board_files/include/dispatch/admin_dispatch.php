@@ -55,15 +55,8 @@ function nel_admin_dispatch()
                 break;
 
             case 'file-filter':
-                require_once INCLUDE_PATH . 'output/management/file_filter_panel.php';
-
-                if ($action === 'add')
-                {
-                    require_once INCLUDE_PATH . 'admin/file_filters.php';
-                    nel_manage_file_filters($action);
-                }
-
-                nel_render_file_filter_panel();
+                require_once INCLUDE_PATH . 'admin/file_filters.php';
+                nel_manage_file_filters($action);
 
             default:
                 nel_login();

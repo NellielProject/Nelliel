@@ -48,6 +48,8 @@ $lang_singular = array(
     'FORM_MOD_BAN' => 'Modify ban',  // Modify ban
     'FORM_REMOVE_BAN' => 'Remove ban',  // Remove ban
     'FORM_ADD_BAN' => 'Add new ban',  // Add ban
+    'FORM_ADD_FILE_FILTER' => 'Add filter',
+    'FORM_REMOVE_FILE_FILTER' => 'Remove filter',
     'FORM_LABEL_NAME' => 'Name',  // Name field
     'FORM_LABEL_EMAIL' => 'E-mail',  // E-mail field
     'FORM_LABEL_SUBJECT' => 'Subject',  // Subject field
@@ -350,7 +352,12 @@ $lang_singular = array(
     'MANAGE_FILE_FILTERS' => 'File filters',
     'MANAGE_FILE_FILTER_HASHTYPE' => 'Hash type (md5, sha1, sha256, sha512)',
     'MANAGE_FILE_FILTER_HASHES' => 'File hashes',
-
+    'MANAGE_FILE_FILTER_ID' => 'Filter ID',
+    'MANAGE_FILE_FILTER_HTYPE' => 'Hash type',
+    'MANAGE_FILE_FILTER_HASH' => 'File hash',
+    'MANAGE_FILE_FILTER_NOTES' => 'File notes',
+    'MANAGE_FILE_FILTER_MODIFY' => 'Modify',
+    'MANAGE_FILE_FILTER_REMOVE' => 'Remove',
 
     'FILES_GRAPHICS' => 'Supported graphic types: ',  // Prints graphics filetypes supported
     'FILES_AUDIO' => 'Supported audio types: ',  // Prints audio filetypes supported

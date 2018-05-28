@@ -4,7 +4,7 @@
 				<input type="hidden" name="action" value="add">
 			</div>
 			<div>
-				<input type="text" name="hash_type" size="12">&nbsp;&nbsp;
+				<input type="text" name="hash_type" size="24">&nbsp;&nbsp;
 				<span data-i18n="neltext">MANAGE_FILE_FILTER_HASHTYPE</span>
 			</div>
 			<div>
@@ -12,7 +12,38 @@
 				<span data-i18n="neltext">MANAGE_FILE_FILTER_HASHES</span>
 			</div>
 			<div>
-				<input type="submit" value="FORM_SUBMIT" data-i18n="neltext" data-i18n-attributes="value">
+				<input type="text" name="file_notes" size="24">&nbsp;&nbsp;
+				<span data-i18n="neltext">MANAGE_FILE_FILTER_NOTES</span>
+			</div>
+			<div>
+				<input type="submit" value="FORM_ADD_FILE_FILTER" data-i18n="neltext" data-i18n-attributes="value">
 			</div>
 		</form>
+	</div>
+	<hr>
+	<div>
+		<table id="file-filter-table" class="post-lists">
+			<tr class="manage-header">
+				<th data-i18n="neltext">MANAGE_FILE_FILTER_ID</th>
+				<th data-i18n="neltext">MANAGE_FILE_FILTER_HTYPE</th>
+				<th data-i18n="neltext">MANAGE_FILE_FILTER_HASH</th>
+				<th data-i18n="neltext">MANAGE_FILE_FILTER_NOTES</th>
+				<th data-i18n="neltext">MANAGE_FILE_FILTER_REMOVE</th>
+			</tr>
+			<tr id="file-filter-row" class="row1">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td>
+					<form id="form-remove-filter-" accept-charset="utf-8" action="" method="post">
+						<div>
+							<input type="hidden" name="action" value="remove">
+							<input type="hidden" name="filter_id" value="">
+							<input type="submit" value="FORM_REMOVE_FILE_FILTER" data-i18n="neltext" data-i18n-attributes="value">
+						</div>
+					</form>
+				</td>
+			</tr>
+		</table>
 	</div>
