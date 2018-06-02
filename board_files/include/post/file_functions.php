@@ -196,41 +196,30 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
         $files[$i]['pre_y'] = null;
         $files[$i]['preview_name'] = null;
 
-        if ($files[$i]['format'] === 'swf' || ($files[$i]['type'] === 'graphics' && !$board_settings['use_magick']))
+        if ($files[$i]['format'] === 'swf' || ($files[$i]['type'] === 'graphics'))
         {
             $dim = getimagesize($files[$i]['dest']);
             $files[$i]['im_x'] = $dim[0];
             $files[$i]['im_y'] = $dim[1];
-            $ratio = min(($board_settings['max_height'] / $files[$i]['im_y']), ($board_settings['max_width'] / $files[$i]['im_x']));
-
-            if($ratio < 1)
-            {
-                $files[$i]['pre_x'] = intval($ratio * $files[$i]['im_x']);
-                $files[$i]['pre_y'] = intval($ratio * $files[$i]['im_y']);
-            }
-            else
-            {
-                $files[$i]['pre_x'] = $files[$i]['im_x'];
-                $files[$i]['pre_y'] = $files[$i]['im_y'];
-            }
+            $ratio = min(($board_settings['max_height'] / $files[$i]['im_y']), ($board_settings['max_width'] /
+                 $files[$i]['im_x']));
+            $files[$i]['pre_x'] = ($ratio < 1) ? intval($ratio * $files[$i]['im_x']) : $files[$i]['im_x'];
+            $files[$i]['pre_y'] = ($ratio < 1) ? intval($ratio * $files[$i]['im_y']) : $files[$i]['im_y'];
         }
 
         if ($board_settings['use_thumb'] && $files[$i]['type'] === 'graphics')
         {
-            if ($board_settings['use_magick'])
+            $magick_available = nel_is_magick_available();
+
+            if ($board_settings['use_magick'] && $magick_available !== false)
             {
-                if (extension_loaded('imagick'))
+                if ($magick_available === 'imagick')
                 {
                     nel_create_imagick_preview($files[$i], $thumbpath, $board_id);
                 }
-                else if (function_exists('exec'))
+                else if ($magick_available === 'imagemagick')
                 {
-                    exec("convert -version 2>/dev/null", $out, $rescode);
-
-                    if ($rescode === 0)
-                    {
-                        nel_create_imagemagick_preview($files[$i], $thumbpath, $board_id);
-                    }
+                    nel_create_imagemagick_preview($files[$i], $thumbpath, $board_id);
                 }
             }
             else
@@ -238,12 +227,7 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
                 $files[$i]['thumbnail'] = nel_create_gd_preview($files[$i]);
                 $files[$i]['preview_name'] = $files[$i]['filename'] . '-preview.jpg';
 
-                if ($files[$i]['thumbnail'] === false)
-                {
-                    $files[$i]['pre_x'] = null;
-                    $files[$i]['pre_y'] = null;
-                }
-                else
+                if ($files[$i]['thumbnail'] !== false)
                 {
                     if ($board_settings['use_png_thumb'])
                     {
@@ -272,6 +256,26 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
     }
 
     return $files;
+}
+
+function nel_is_magick_available()
+{
+    if (extension_loaded('imagick'))
+    {
+        return 'imagick';
+    }
+
+    if (function_exists('exec'))
+    {
+        exec("convert -version 2>/dev/null", $out, $rescode);
+
+        if ($rescode === 0)
+        {
+            return 'imagemagick';
+        }
+    }
+
+    return false;
 }
 
 function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
@@ -378,7 +382,11 @@ function nel_create_gd_preview($file)
     }
 
     $preview = imagecreatetruecolor($file['pre_x'], $file['pre_y']);
-    imagecopyresampled($preview, $image, 0, 0, 0, 0, $file['pre_x'], $file['pre_y'], $file['im_x'], $file['im_y']);
+
+    if ($preview !== false)
+    {
+        imagecopyresampled($preview, $image, 0, 0, 0, 0, $file['pre_x'], $file['pre_y'], $file['im_x'], $file['im_y']);
+    }
 
     return $preview;
 }
