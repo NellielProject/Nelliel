@@ -300,7 +300,7 @@ function nel_insert_board_config_defaults($config_table)
                         ('board_setting', 'nelliel', 'general', 'str', 'date_separator', '/'),
                         ('board_setting', 'nelliel', 'general', 'str', 'fgsfds_name', 'FGSFDS'),
                         ('board_setting', 'nelliel', 'general', 'str', 'indent_marker', '>>'),
-                        ('board_setting', 'nelliel', 'general', 'bool', 'file_sha256', '0'),
+                        ('board_setting', 'nelliel', 'general', 'bool', 'file_sha256', '1'),
                         ('filetype_enable', 'nelliel', 'graphics', 'bool', 'graphics', '1'),
                         ('filetype_enable', 'nelliel', 'graphics', 'bool', 'jpeg', '1'),
                         ('filetype_enable', 'nelliel', 'graphics', 'bool', 'gif', '1'),
