@@ -18,9 +18,12 @@ function nel_thread_updates($board_id)
         switch ($sub[0])
         {
             case 'deletefile':
-                $thread_handler->verifyDeletePerms($sub[2]);
-                $thread_handler->removePostFilesFromDatabase($sub[2], $sub[3]);
-                $thread_handler->removePostFilesFromDisk($sub[2]);
+                if($thread_handler->verifyDeletePerms($sub[2]))
+                {
+                    $thread_handler->removePostFilesFromDatabase($sub[2], $sub[3]);
+                    $thread_handler->removePostFilesFromDisk($sub[2]);
+                }
+
                 break;
 
             case 'deletethread':
@@ -29,8 +32,11 @@ function nel_thread_updates($board_id)
                 break;
 
             case 'deletepost':
-                $thread_handler->verifyDeletePerms($sub[2]);
-                $thread_handler->removePost($sub[2]);
+                if($thread_handler->verifyDeletePerms($sub[2]))
+                {
+                    $thread_handler->removePost($sub[2]);
+                }
+
                 break;
 
             case 'threadsticky':

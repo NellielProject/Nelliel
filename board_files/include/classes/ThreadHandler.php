@@ -344,6 +344,11 @@ class ThreadHandler
              '" WHERE "post_number" = ? LIMIT 1');
         $post_data = $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_ASSOC, true);
 
+        if($post_data === false)
+        {
+            return false;
+        }
+
         $flag = false;
 
         if (nel_sessions()->sessionIsActive())
@@ -364,5 +369,7 @@ class ThreadHandler
         {
             nel_derp(31, nel_stext('ERROR_31'));
         }
+
+        return true;
     }
 }
