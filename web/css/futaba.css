@@ -222,20 +222,19 @@ a.post-link:visited {
 
 }
 
-.source {
+.file-source {
     padding-left: 2px;
+    display: block;
 }
 
-.license {
+.file-license {
     padding-left: 2px;
+    display: block;
 }
 
-.md5 {
+.file-hash {
     padding-left: 2px;
-}
-
-.sha1 {
-    padding-left: 2px;
+    display: block;
 }
 
 /* General post formatting */

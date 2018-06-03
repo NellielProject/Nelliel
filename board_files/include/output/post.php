@@ -299,8 +299,44 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
             $temp_file_node_array['file-source']->setContent('Source: ' . $file['source']);
             $temp_file_node_array['file-license']->setContent('License: ' . $file['license']);
-            $temp_file_node_array['file-md5']->setContent('MD5: ' . bin2hex($file['md5']));
-            $temp_file_node_array['file-sha1']->setContent('SHA1: ' . bin2hex($file['sha1']));
+
+            // TODO: Find a way to streamline this
+            if (!empty($file['md5']))
+            {
+                $temp_file_node_array['file-md5']->setContent('MD5: ' . bin2hex($file['md5']));
+            }
+            else
+            {
+                $temp_file_node_array['file-md5']->removeSelf();
+            }
+
+            if (!empty($file['sha1']))
+            {
+                $temp_file_node_array['file-sha256']->setContent('SHA1: ' . bin2hex($file['sha1']));
+            }
+            else
+            {
+                $temp_file_node_array['file-sha256']->removeSelf();
+            }
+
+            if (!empty($file['sha256']))
+            {
+                $temp_file_node_array['file-sha256']->setContent('SHA256: ' . bin2hex($file['sha256']));
+            }
+            else
+            {
+                $temp_file_node_array['file-sha256']->removeSelf();
+            }
+
+            if (!empty($file['sha512']))
+            {
+                $temp_file_node_array['file-sha512']->setContent('SHA512: ' . bin2hex($file['sha512']));
+            }
+            else
+            {
+                $temp_file_node_array['file-sha512']->removeSelf();
+            }
+
             $location_element = $temp_file_dom->getElementById('file-location-');
 
             if ($board_settings['use_thumb'])
@@ -313,7 +349,8 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                 if (!empty($file['preview_name']))
                 {
                     $file['has_preview'] = true;
-                    $file['preview_location'] = $references['thumb_dir'] . $thread_id . '/' . rawurlencode($file['preview_name']);
+                    $file['preview_location'] = $references['thumb_dir'] . $thread_id . '/' .
+                         rawurlencode($file['preview_name']);
 
                     if ($filecount > 1)
                     {
@@ -328,11 +365,11 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                     }
                 }
                 else if ($board_settings['use_file_icon'] && file_exists(WEB_PATH . 'imagez/nelliel/filetype/' .
-                utf8_strtolower($file['type']) . '/' . utf8_strtolower($file['format']) . '.png'))
+                     utf8_strtolower($file['type']) . '/' . utf8_strtolower($file['format']) . '.png'))
                 {
                     $file['has_preview'] = true;
-                    $file['preview_location'] = '../' . IMAGES_DIR . 'nelliel/filetype/' .
-                    utf8_strtolower($file['type']) . '/' . utf8_strtolower($file['format']) . '.png';
+                    $file['preview_location'] = '../' . IMAGES_DIR . 'nelliel/filetype/' . utf8_strtolower($file['type']) .
+                         '/' . utf8_strtolower($file['format']) . '.png';
                     $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
                     $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
                 }
@@ -373,9 +410,10 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
     $post_contents_element = $new_post_dom->getElementById('post-contents');
     $post_contents_node_array = $new_post_dom->getAssociativeNodeArray('data-parse-id', $post_contents_element);
-    if($multiple_files)
+    if ($multiple_files)
     {
-        $post_contents_node_array['post-contents']->extSetAttribute('class', $post_type_class . 'post-contents-multifile');
+        $post_contents_node_array['post-contents']->extSetAttribute('class', $post_type_class .
+             'post-contents-multifile');
     }
     else
     {

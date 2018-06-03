@@ -234,24 +234,19 @@ a.post-link:visited {
     font-size: 0.95em;
 }
 
-.file-meta {
-
+.file-source {
+    padding-left: 2px;
+    display: block;
 }
 
-.source {
+.file-license {
     padding-left: 2px;
+    display: block;
 }
 
-.license {
+.file-hash {
     padding-left: 2px;
-}
-
-.md5 {
-    padding-left: 2px;
-}
-
-.sha1 {
-    padding-left: 2px;
+    display: block;
 }
 
 /* General post formatting */
