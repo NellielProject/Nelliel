@@ -59,6 +59,8 @@ function processPostClicks(event) {
         } else if (command === "inline-expand" || command === "inline-reduce") {
             inlineExpandReduce(event.target, command);
             event.preventDefault();
+        } else if (command === "hide-post" || command === "show-post" ) {
+            hideShowPost(event.target, command);
         }
 
         if (event.target.hasAttribute("href") && event.target.getAttribute("href").match(/^#$/) !== null) {
@@ -125,6 +127,27 @@ function getCookie(key) {
     }
 
     return null;
+}
+
+function hideShowPost(element, command) {
+    var post_id = element.getAttribute("data-id");
+    var post_files = document.getElementById("post-files-container-" + post_id);
+    var post_contents = document.getElementById("post-contents-" + post_id);
+    var inner = element.innerHTML;
+    
+    if (command == "hide-post") {
+        post_files.className += " hidden";
+        post_contents.className += " hidden";
+        element.setAttribute("data-command", "show-post");
+        element.innerHTML = element.getAttribute("data-alt-text");
+        element.setAttribute("data-alt-visual", inner);
+    } else if (command == "show-post") {
+        post_files.className = post_files.className.replace(/\hidden\b/g, "");
+        post_contents.className = post_contents.className.replace(/\hidden\b/g, "");
+        element.setAttribute("data-command", "hide-post");
+        element.innerHTML = element.getAttribute("data-alt-text");
+        element.setAttribute("data-alt-visual", inner);
+    }
 }
 
 function addBoundingClientRectProperties(bounding_rect) {

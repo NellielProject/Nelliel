@@ -74,6 +74,9 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $post_container = $new_post_dom->getElementById('post-container-');
     $post_container->changeId('post-container-' . $post_id);
 
+    $post_header_node_array['hide-post']->extSetAttribute('data-id', $post_id);
+    $post_header_node_array['hide-post']->extSetAttribute('data-alt-visual', 'Show Post');
+
     $indents_element = $new_post_dom->getElementById('indents');
 
     if ($response)
@@ -408,19 +411,20 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
         $post_files_container->removeSelf();
     }
 
-    $post_contents_element = $new_post_dom->getElementById('post-contents');
+    $post_contents_element = $new_post_dom->getElementById('post-contents-');
+    $post_contents_element->changeId('post-contents-' . $post_id);
     $post_contents_node_array = $new_post_dom->getAssociativeNodeArray('data-parse-id', $post_contents_element);
+
     if ($multiple_files)
     {
-        $post_contents_node_array['post-contents']->extSetAttribute('class', $post_type_class .
+        $post_contents_element->extSetAttribute('class', $post_type_class .
              'post-contents-multifile');
     }
     else
     {
-        $post_contents_node_array['post-contents']->extSetAttribute('class', $post_type_class . 'post-contents');
+        $post_contents_element->extSetAttribute('class', $post_type_class . 'post-contents');
     }
 
-    $post_contents_node_array['post-contents']->removeAttribute('id');
     $post_contents_node_array['post-text']->extSetAttribute('class', $post_type_class . 'post-text');
     $post_contents_node_array['mod-comment']->setContent($post_data['mod_comment']);
     $post_contents_node_array['post-comment']->changeId('post-comment-' . $post_id);
