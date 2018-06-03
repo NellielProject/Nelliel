@@ -252,6 +252,10 @@ a.post-link:visited {
     display: block;
 }
 
+.preview-link {
+	display: block;
+}
+
 /* General post formatting */
 .none {
     display: none;
