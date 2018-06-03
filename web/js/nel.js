@@ -136,14 +136,26 @@ function hideShowPost(element, command) {
     var inner = element.innerHTML;
     
     if (command == "hide-post") {
-        post_files.className += " hidden";
-        post_contents.className += " hidden";
+        if (post_files !== null) {
+            post_files.className += " hidden";
+        }
+        
+        if (post_contents !== null) {
+            post_contents.className += " hidden";
+        }
+
         element.setAttribute("data-command", "show-post");
         element.innerHTML = element.getAttribute("data-alt-visual");
         element.setAttribute("data-alt-visual", inner);
     } else if (command == "show-post") {
-        post_files.className = post_files.className.replace(/\hidden\b/g, "");
-        post_contents.className = post_contents.className.replace(/\hidden\b/g, "");
+        if (post_files !== null) {
+            post_files.className = post_files.className.replace(/\hidden\b/g, "");
+        }
+        
+        if (post_contents !== null) {
+            post_contents.className = post_contents.className.replace(/\hidden\b/g, "");
+        }
+
         element.setAttribute("data-command", "hide-post");
         element.innerHTML = element.getAttribute("data-alt-visual");
         element.setAttribute("data-alt-visual", inner);
