@@ -328,6 +328,7 @@ $lang_singular = array(
     'MANAGE_SET_INDENT_MARKER' => 'Set the indent marker next to replies',  // Indent marker
     'MANAGE_SET_ANIMATED_GIF_PRE' => 'Create animated GIF preview',  // Animated GIF previews
     'MANAGE_SET_FILE_SHA256' => 'Generate a SHA256 hash for uploaded files',  // SHA256 file hash
+    'MANAGE_SET_FILE_SHA512' => 'Generate a SHA512 hash for uploaded files',  // SHA512 file hash
     'MANAGE_SET_POST_PASS_ALGO' => 'Hash algorithm for post passwords',  // Post password algorithm
     'MANAGE_SET_SECURE_TRIP_ALGO' => 'Hash algorithm for secure tripcodes',  // Secure tripcode algorithm
     'MANAGE_SET_USE_PASS_DEFAULT' => 'Use PHP\'s default algorithm for user and site passwords',  // PHP default pass algorithm

@@ -92,7 +92,7 @@ function nel_db_insert_new_files($board_id, $parent_id, $new_post_info, $files)
 
         $columns = array('parent_thread', 'post_ref', 'file_order', 'type', 'format', 'mime', 'filename', 'extension',
             'image_width', 'image_height', 'preview_name', 'preview_width', 'preview_height', 'filesize', 'md5', 'sha1',
-            'sha256', 'source', 'license', 'alt_text');
+            'sha256', 'sha512', 'source', 'license', 'alt_text');
         $values = $dbh->generateParameterIds($columns);
         $query = $dbh->buildBasicInsertQuery($references['file_table'], $columns, $values);
         $prepared = $dbh->prepare($query);
@@ -113,6 +113,7 @@ function nel_db_insert_new_files($board_id, $parent_id, $new_post_info, $files)
         $prepared->bindValue(':md5', $file['md5'], PDO::PARAM_LOB);
         $prepared->bindValue(':sha1', $file['sha1'], PDO::PARAM_LOB);
         $prepared->bindValue(':sha256', $file['sha256'], PDO::PARAM_LOB);
+        $prepared->bindValue(':sha512', $file['sha512'], PDO::PARAM_LOB);
         $prepared->bindValue(':source', $file['source'], PDO::PARAM_STR);
         $prepared->bindValue(':license', $file['license'], PDO::PARAM_STR);
         $prepared->bindValue(':alt_text', $file['alt_text'], PDO::PARAM_STR);

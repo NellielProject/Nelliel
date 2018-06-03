@@ -201,6 +201,7 @@ function nel_create_files_table($table_name, $posts_table)
         md5                     ' . nel_sql_alternatives('VARBINARY', '16') . ' NOT NULL,
         sha1                    ' . nel_sql_alternatives('VARBINARY', '20') . ' NOT NULL,
         sha256                  ' . nel_sql_alternatives('VARBINARY', '32') . ' NOT NULL,
+        sha512                  ' . nel_sql_alternatives('VARBINARY', '64') . ' NOT NULL,
         source                  VARCHAR(255) DEFAULT NULL,
         license                 VARCHAR(255) DEFAULT NULL,
         alt_text                VARCHAR(255) DEFAULT NULL,
@@ -467,7 +468,7 @@ function nel_create_file_filter_table($table_name)
     CREATE TABLE ' . $table_name . ' (
         entry                   ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         hash_type               VARCHAR(255) NOT NULL,
-        file_hash               ' . nel_sql_alternatives('VARBINARY', '64') . ' NOT NULL,
+        file_hash               ' . nel_sql_alternatives('VARBINARY', '128') . ' NOT NULL,
         file_notes              VARCHAR(255) DEFAULT NULL
     ) ' . $options . ';';
 

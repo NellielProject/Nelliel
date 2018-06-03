@@ -109,7 +109,7 @@ function nel_check_for_existing_file($board_id, $file, $files)
         $is_banned = nel_file_hash_is_banned($file['sha1'], 'sha1');
     }
 
-    $file['sha256'] = '';
+    $file['sha256'] = null;
 
     if (!$is_banned && $board_settings['file_sha256'])
     {
@@ -117,25 +117,25 @@ function nel_check_for_existing_file($board_id, $file, $files)
         $is_banned = nel_file_hash_is_banned($file['sha256'], 'sha256');
     }
 
+    $file['sha512'] = null;
+
+    if (!$is_banned && $board_settings['file_sha512'])
+    {
+        $file['sha512'] = hash_file('sha512', $file['dest'], true);
+        $is_banned = nel_file_hash_is_banned($file['sha512'], 'sha512');
+    }
+
     if ($is_banned)
     {
         nel_derp(150, nel_stext('ERROR_150'), $board_id, $error_data);
     }
 
-    if ($board_settings['file_sha256'])
-    {
-        $query = 'SELECT 1 FROM "' . $references['file_table'] . '" WHERE "sha256" = ? OR "sha1" = ? LIMIT 1';
-        $prepared = $dbh->prepare($query);
-        $prepared->bindValue(1, $file['sha256'], PDO::PARAM_LOB);
-        $prepared->bindValue(2, $file['sha1'], PDO::PARAM_LOB);
-    }
-    else
-    {
-        $query = 'SELECT 1 FROM "' . $references['file_table'] . '" WHERE "sha1" = ? LIMIT 1';
-        $prepared = $dbh->prepare($query);
-        $prepared->bindValue(1, $file['sha1'], PDO::PARAM_LOB);
-    }
-
+    $query = 'SELECT 1 FROM "' . $references['file_table'] . '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ? LIMIT 1';
+    $prepared = $dbh->prepare($query);
+    $prepared->bindValue(1, $file['md5'], PDO::PARAM_LOB);
+    $prepared->bindValue(2, $file['sha1'], PDO::PARAM_LOB);
+    $prepared->bindValue(3, $file['sha256'], PDO::PARAM_LOB);
+    $prepared->bindValue(4, $file['sha512'], PDO::PARAM_LOB);
     $result = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
 
     if ($result)
