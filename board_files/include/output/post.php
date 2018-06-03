@@ -315,11 +315,11 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
             if (!empty($file['sha1']))
             {
-                $temp_file_node_array['file-sha256']->setContent('SHA1: ' . bin2hex($file['sha1']));
+                $temp_file_node_array['file-sha1']->setContent('SHA1: ' . bin2hex($file['sha1']));
             }
             else
             {
-                $temp_file_node_array['file-sha256']->removeSelf();
+                $temp_file_node_array['file-sha1']->removeSelf();
             }
 
             if (!empty($file['sha256']))
