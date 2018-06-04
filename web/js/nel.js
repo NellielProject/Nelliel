@@ -61,6 +61,8 @@ function processPostClicks(event) {
             event.preventDefault();
         } else if (command === "hide-post" || command === "show-post" ) {
             hideShowPost(event.target, command);
+        } else if (command === "hide-thread" || command === "show-thread" ) {
+            hideShowThread(event.target, command);
         }
 
         if (event.target.hasAttribute("href") && event.target.getAttribute("href").match(/^#$/) !== null) {
@@ -129,10 +131,32 @@ function getCookie(key) {
     return null;
 }
 
+function hideShowThread(element, command) {
+    var id = element.getAttribute("data-id");
+    var thread_container = document.getElementById("thread-expand-" + id.split('_')[0]);
+    
+    if (command == "hide-thread") {
+        if (thread_container !== null) {
+            thread_container.className += " hidden";
+        }
+
+        hideShowPost(element, "hide-post")
+        element.setAttribute("data-command", "show-thread");
+    } else if (command == "show-thread") {
+        if (thread_container !== null) {
+            thread_container.className = thread_container.className.replace(/\hidden\b/g, "");
+        }
+        
+        hideShowPost(element, "show-post")
+        element.setAttribute("data-command", "hide-thread");
+    }
+}
+
 function hideShowPost(element, command) {
-    var post_id = element.getAttribute("data-id");
-    var post_files = document.getElementById("post-files-container-" + post_id);
-    var post_contents = document.getElementById("post-contents-" + post_id);
+    var id = element.getAttribute("data-id");
+    var post_files = document.getElementById("post-files-container-" + id);
+    var post_contents = document.getElementById("post-contents-" + id);
+    var thread_container = document.getElementById("thread-expand-" + id);
     var inner = element.innerHTML;
     
     if (command == "hide-post") {
@@ -160,6 +184,7 @@ function hideShowPost(element, command) {
         element.innerHTML = element.getAttribute("data-alt-visual");
         element.setAttribute("data-alt-visual", inner);
     }
+
 }
 
 function addBoundingClientRectProperties(bounding_rect) {

@@ -73,10 +73,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $new_post_element->changeId('post-id-' . $post_id);
     $post_container = $new_post_dom->getElementById('post-container-');
     $post_container->changeId('post-container-' . $post_id);
-
-    $post_header_node_array['hide-post']->extSetAttribute('data-id', $post_id);
-    $post_header_node_array['hide-post']->extSetAttribute('data-alt-visual', 'Show Post');
-
+    $post_header_node_array['hide-post-thread']->extSetAttribute('data-id', $post_id);
     $indents_element = $new_post_dom->getElementById('indents');
 
     if ($response)
@@ -86,12 +83,27 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
         $post_container->extSetAttribute('class', 'reply-post');
         $indents_element->setContent(nel_board_settings($board_id, 'indent_marker'));
         $indents_element->removeAttribute('id');
+        $post_header_node_array['hide-post-thread']->setContent('Hide Post');
+        $post_header_node_array['hide-post-thread']->extSetAttribute('data-command', 'hide-post');
+        $post_header_node_array['hide-post-thread']->extSetAttribute('data-alt-visual', 'Show Post');
     }
     else
     {
         $post_type = 'op';
         $post_type_class = 'op-';
         $indents_element->removeSelf();
+
+        if($gen_params['index_rendering'])
+        {
+            $post_header_node_array['hide-post-thread']->setContent('Hide Thread');
+        }
+        else
+        {
+            $post_header_node_array['hide-post-thread']->setContent('Hide Post');
+        }
+
+        $post_header_node_array['hide-post-thread']->extSetAttribute('data-command', 'hide-thread');
+        $post_header_node_array['hide-post-thread']->extSetAttribute('data-alt-visual', 'Show Thread');
     }
 
     $new_post_dom->getElementById('p-number')->changeId('p' . $post_id);
