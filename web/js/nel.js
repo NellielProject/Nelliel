@@ -1,3 +1,8 @@
+var nelliel = {};
+nelliel.setup = {};
+nelliel.core = {};
+
+
 function dataBin() {
     ;
 }
@@ -6,18 +11,18 @@ function doImportantStuff(board_id) {
     dataBin.board_id = board_id;
     dataBin.hidden_threads_id = "hidden_threads_" + board_id;
     dataBin.hidden_posts_id = "hidden_posts_" + board_id;
-    localStorageInitCheck();
+    nelliel.setup.localStorageInitCheck();
     dataBin.hidden_threads = retrieveFromLocalStorage(dataBin.hidden_threads_id, true);
     dataBin.hidden_posts = retrieveFromLocalStorage(dataBin.hidden_posts_id, true);
-    setupListeners();
-    hashHandler();
+    nelliel.setup.setupListeners();
+    nelliel.hashHandler();
     
     if(board_id !== "") {
         fillForms(board_id);
     }
 }
 
-function localStorageInitCheck() {
+nelliel.setup.localStorageInitCheck = function () {
     if(!localStorage[dataBin.hidden_threads_id]) {
         localStorage[dataBin.hidden_threads_id] = '{}';
     }
@@ -27,29 +32,29 @@ function localStorageInitCheck() {
     }
 }
 
-function setupListeners() {
+nelliel.setup.setupListeners = function () {
     var post_elements = document.getElementsByClassName('thread-corral');
 
     for (var i = 0; i < post_elements.length; i++) {
-        addListenerIfElementExists(post_elements[i], "click", processPostClicks);
-        addListenerIfElementExists(post_elements[i], "mouseover", processMouseOver);
-        addListenerIfElementExists(post_elements[i], "mouseout", processMouseOut);
+        nelliel.setup.addListenerIfElementExists(post_elements[i], "click", nelliel.core.processPostClicks);
+        nelliel.setup.addListenerIfElementExists(post_elements[i], "mouseover", nelliel.core.processMouseOver);
+        nelliel.setup.addListenerIfElementExists(post_elements[i], "mouseout", nelliel.core.processMouseOut);
     }
 
-    addListenerIfElementExists(document.getElementById("top-styles-div"), "click", processPostClicks);
-    addListenerIfElementExists(document.getElementById("bottom-styles-div"), "click", processPostClicks);
-    addListenerIfElementExists(document.getElementById("posting-form"), "click", processPostClicks);
-    addListenerIfElementExists(document.getElementById("posting-form"), "change", processChanges);
-    window.addEventListener("hashchange", hashHandler);
+    nelliel.setup.addListenerIfElementExists(document.getElementById("top-styles-div"), "click", nelliel.core.processPostClicks);
+    nelliel.setup.addListenerIfElementExists(document.getElementById("bottom-styles-div"), "click", nelliel.core.processPostClicks);
+    nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "click", nelliel.core.processPostClicks);
+    nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "change", nelliel.core.processChanges);
+    window.addEventListener("hashchange", nelliel.hashHandler);
 }
 
-function addListenerIfElementExists(element, event, event_handler) {
+nelliel.setup.addListenerIfElementExists = function (element, event, event_handler) {
     if (element !== null) {
         element.addEventListener(event, event_handler);
     }
 }
 
-function processPostClicks(event) {
+nelliel.core.processPostClicks = function (event) {
     if (event.target.hasAttribute("data-command")) {
         if (event.target.hasAttribute("data-id")) {
             var id_set = event.target.getAttribute("data-id").split("_");
@@ -86,7 +91,7 @@ function processPostClicks(event) {
     }
 }
 
-function processMouseOver(event) {
+nelliel.core.processMouseOver = function (event) {
     if (event.target.hasAttribute("data-command")) {
         var command = event.target.getAttribute("data-command");
 
@@ -96,7 +101,7 @@ function processMouseOver(event) {
     }
 }
 
-function processMouseOut(event) {
+nelliel.core.processMouseOut = function (event) {
     if (event.target.hasAttribute("data-command")) {
         var command = event.target.getAttribute("data-command");
 
@@ -106,7 +111,7 @@ function processMouseOut(event) {
     }
 }
 
-function processChanges(event) {
+nelliel.core.processChanges = function (event) {
     if (event.target.hasAttribute("data-command")) {
         var command = event.target.getAttribute("data-command");
 
@@ -303,7 +308,7 @@ function showNextFileInput(element) {
     next_file.className = next_file.className.replace(/\bhidden\b/g, "");
 }
 
-function hashHandler() {
+nelliel.hashHandler = function () {
     if (location.hash.match(/#p[0-9_]+/)) {
         highlightPost(location.hash.replace("#p", ""));
     }
