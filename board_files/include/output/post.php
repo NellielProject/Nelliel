@@ -75,6 +75,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $post_container->changeId('post-container-' . $post_id);
     $post_header_node_array['hide-post-thread']->extSetAttribute('data-id', $post_id);
     $indents_element = $new_post_dom->getElementById('indents');
+    $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
 
     if ($response)
     {
@@ -279,8 +280,9 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
             $temp_file_node_array['delete-file']->extSetAttribute('name', 'file_' . $file_id);
             $temp_file_node_array['delete-file']->extSetAttribute('value', 'deletefile_' . $file_id);
 
-            $file['file_location'] = $references['src_dir'] . $thread_id . '/' . rawurlencode($file['filename']) . "." .
+            $file['file_location'] = 'http://' . $base_domain . '/' . $board_id . '/' . $references['src_dir'] . $thread_id . '/' . rawurlencode($file['filename']) . "." .
                  $file['extension'];
+            var_dump($file['file_location']);
             $file['display_filename'] = $file['filename'];
 
             if (strlen($file['filename']) > 32)
@@ -364,7 +366,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                 if (!empty($file['preview_name']))
                 {
                     $file['has_preview'] = true;
-                    $file['preview_location'] = $references['thumb_dir'] . $thread_id . '/' .
+                    $file['preview_location'] = 'http://' . $base_domain . '/' . $board_id . '/' . $references['thumb_dir'] . $thread_id . '/' .
                          rawurlencode($file['preview_name']);
 
                     if ($filecount > 1)
@@ -484,24 +486,6 @@ function nel_render_post_adjust_relative($node, $gen_data)
     if (!is_null($sticky_element))
     {
         $sticky_element->modifyAttribute('src', '../../', 'before');
-    }
-
-    if ($gen_data['post']['has_file'] == 1)
-    {
-        foreach ($gen_data['files'] as $file)
-        {
-            $file_id = $post_id . '_' . $file['file_order'];
-            $new_post_dom->getElementById('file-link-' . $file_id)->modifyAttribute('href', '../../', 'before');
-            $new_post_dom->getElementById('file-location-' . $file_id)->modifyAttribute('href', '../../', 'before');
-
-            $preview_element = $new_post_dom->getElementById('file-preview-' . $file_id);
-            $preview_element->modifyAttribute('data-other-loc', '../../', 'before');
-
-            if (!is_null($preview_element))
-            {
-                $preview_element->modifyAttribute('src', '../../', 'before');
-            }
-        }
     }
 
     return $new_post_dom->getElementById('post-id-' . $post_id);
