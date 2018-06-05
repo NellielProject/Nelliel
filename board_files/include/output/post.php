@@ -306,8 +306,8 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
             $temp_file_node_array['filesize-display']->setContent($filesize_display);
             $temp_file_node_array['show-file-meta']->extSetAttribute('data-id', $file_id);
             $temp_file_node_array['show-file-meta']->changeId('show-file-meta-' . $file_id);
-            $temp_file_node_array['hide-file-meta']->extSetAttribute('data-id', $file_id);
-            $temp_file_node_array['hide-file-meta']->changeId('hide-file-meta-' . $file_id);
+            //$temp_file_node_array['hide-file-meta']->extSetAttribute('data-id', $file_id);
+           // $temp_file_node_array['hide-file-meta']->changeId('hide-file-meta-' . $file_id);
             $temp_file_node_array['file-meta']->changeId('file-meta-' . $file_id);
 
             $output_filter->cleanAndEncode($file['source']);

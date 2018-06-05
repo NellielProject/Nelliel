@@ -85,22 +85,19 @@ function hideShowPost(element, command) {
 }
 
 function showHideFileMeta(element, command) {
+    var full_id = element.getAttribute("data-id");
+    var inner = element.innerHTML;
+    var meta_element = document.getElementById("file-meta-" + full_id);
+    element.innerHTML = element.getAttribute("data-alt-visual");
+    element.setAttribute("data-alt-visual", inner);
+    toggleHidden(meta_element);
+
     if (command === "show-file-meta") {
-        var full_id = element.id.replace("show-file-meta-", "");
-        var meta_element = document.getElementById("file-meta-" + full_id);
-        var hide_meta_element = document.getElementById("hide-file-meta-" + full_id);
-        element.parentNode.className += " hidden";
-        hide_meta_element.parentNode.className = hide_meta_element.parentNode.className.replace(/\bhidden\b/g, "");
-        meta_element.className = meta_element.className.replace(/\bhidden\b/g, "");
+        element.setAttribute("data-command", "hide-file-meta");
     }
 
     if (command === "hide-file-meta") {
-        var full_id = element.id.replace("hide-file-meta-", "");
-        var meta_element = document.getElementById("file-meta-" + full_id);
-        var show_meta_element = document.getElementById("show-file-meta-" + full_id);
-        element.parentNode.className += " hidden";
-        show_meta_element.parentNode.className = show_meta_element.parentNode.className.replace(/\bhidden\b/g, "");
-        meta_element.className += " hidden";
+        element.setAttribute("data-command", "show-file-meta");
     }
 }
 
@@ -232,6 +229,14 @@ function hideLinkedPost(element, event) {
 
 function linkPost(num) {
     document.postingform.wordswordswords.value = document.postingform.wordswordswords.value + '>>' + num + '\n';
+}
+
+function toggleHidden(element) {
+    if(element.className.search("hidden") === -1) {
+        element.className += " hidden";
+    } else {
+        element.className = element.className.replace(/\bhidden\b/g, "");
+    }
 }
 
 function addBoundingClientRectProperties(bounding_rect) {
