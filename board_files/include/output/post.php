@@ -282,7 +282,6 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
             $file['file_location'] = 'http://' . $base_domain . '/' . $board_id . '/' . $references['src_dir'] . $thread_id . '/' . rawurlencode($file['filename']) . "." .
                  $file['extension'];
-            var_dump($file['file_location']);
             $file['display_filename'] = $file['filename'];
 
             if (strlen($file['filename']) > 32)

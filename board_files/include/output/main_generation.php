@@ -40,7 +40,7 @@ function nel_main_thread_generator($board_id, $response_to, $write)
         $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
         nel_render_board_header($board_id, $render, $dotdot, $treeline);
         nel_render_posting_form($board_id, $render, $response_to, $dotdot);
-        nel_render_board_footer($board_id, $render, true);
+        nel_render_board_footer($board_id, $render, $dotdot, true);
 
         if ($write)
         {
@@ -215,7 +215,7 @@ function nel_main_thread_generator($board_id, $response_to, $write)
         nel_render_index_navigation($board_id, $dom, $render, $pages);
         nel_render_thread_form_bottom($board_id, $dom);
         $render->appendHTMLFromDOM($dom);
-        nel_render_board_footer($board_id, $render, true);
+        nel_render_board_footer($board_id, $render, $dotdot, true);
 
         if (!$write)
         {
