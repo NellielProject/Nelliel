@@ -4,11 +4,26 @@ function dataBin() {
 
 function doImportantStuff(board_id) {
     dataBin.board_id = board_id;
+    dataBin.hidden_threads_id = "hidden_threads_" + board_id;
+    dataBin.hidden_posts_id = "hidden_posts_" + board_id;
+    localStorageInitCheck();
+    dataBin.hidden_threads = retrieveFromLocalStorage(dataBin.hidden_threads_id, true);
+    dataBin.hidden_posts = retrieveFromLocalStorage(dataBin.hidden_posts_id, true);
     setupListeners();
     hashHandler();
     
     if(board_id !== "") {
         fillForms(board_id);
+    }
+}
+
+function localStorageInitCheck() {
+    if(!localStorage[dataBin.hidden_threads_id]) {
+        localStorage[dataBin.hidden_threads_id] = '{}';
+    }
+    
+    if(!localStorage[dataBin.hidden_posts_id]) {
+        localStorage[dataBin.hidden_posts_id] = '{}';
     }
 }
 
@@ -133,21 +148,47 @@ function getCookie(key) {
 
 function hideShowThread(element, command) {
     var id = element.getAttribute("data-id");
-    var thread_container = document.getElementById("thread-expand-" + id.split('_')[0]);
+    var thread_id = id.split('_')[0];
+    var post_files = document.getElementById("post-files-container-" + id);
+    var post_contents = document.getElementById("post-contents-" + id);
+    var thread_container = document.getElementById("thread-expand-" + thread_id);
+    var inner = element.innerHTML;
     
     if (command == "hide-thread") {
         if (thread_container !== null) {
             thread_container.className += " hidden";
         }
+        
+        if (post_files !== null) {
+            post_files.className += " hidden";
+        }
+        
+        if (post_contents !== null) {
+            post_contents.className += " hidden";
+        }
 
-        hideShowPost(element, "hide-post")
+        dataBin.hidden_threads[thread_id] = Date.now();
+        storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
+        element.innerHTML = element.getAttribute("data-alt-visual");
+        element.setAttribute("data-alt-visual", inner);
         element.setAttribute("data-command", "show-thread");
     } else if (command == "show-thread") {
         if (thread_container !== null) {
             thread_container.className = thread_container.className.replace(/\hidden\b/g, "");
         }
         
-        hideShowPost(element, "show-post")
+        if (post_files !== null) {
+            post_files.className = post_files.className.replace(/\hidden\b/g, "");
+        }
+        
+        if (post_contents !== null) {
+            post_contents.className = post_contents.className.replace(/\hidden\b/g, "");
+        }
+        
+        delete dataBin.hidden_threads[thread_id];
+        storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
+        element.innerHTML = element.getAttribute("data-alt-visual");
+        element.setAttribute("data-alt-visual", inner);
         element.setAttribute("data-command", "hide-thread");
     }
 }
@@ -168,6 +209,8 @@ function hideShowPost(element, command) {
             post_contents.className += " hidden";
         }
 
+        dataBin.hidden_posts[id] = Date.now();
+        storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
         element.setAttribute("data-command", "show-post");
         element.innerHTML = element.getAttribute("data-alt-visual");
         element.setAttribute("data-alt-visual", inner);
@@ -180,6 +223,8 @@ function hideShowPost(element, command) {
             post_contents.className = post_contents.className.replace(/\hidden\b/g, "");
         }
 
+        delete dataBin.hidden_posts[id];
+        storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
         element.setAttribute("data-command", "hide-post");
         element.innerHTML = element.getAttribute("data-alt-visual");
         element.setAttribute("data-alt-visual", inner);

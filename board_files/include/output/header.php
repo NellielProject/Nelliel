@@ -14,6 +14,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $dotdot = (!is_null($dotdot)) ? $dotdot : '';
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
+    $dom->getElementById('js-storage-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . $board_id .
          '\');};');
