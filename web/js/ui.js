@@ -4,7 +4,6 @@ function hideShowThread(element, command) {
     var post_files = document.getElementById("post-files-container-" + id);
     var post_contents = document.getElementById("post-contents-" + id);
     var thread_container = document.getElementById("thread-expand-" + thread_id);
-    var inner = element.innerHTML;
     
     if (command == "hide-thread") {
         if (thread_container !== null) {
@@ -21,8 +20,7 @@ function hideShowThread(element, command) {
 
         dataBin.hidden_threads[thread_id] = Date.now();
         nelliel.core.storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
-        element.innerHTML = element.getAttribute("data-alt-visual");
-        element.setAttribute("data-alt-visual", inner);
+        swapContentAttribute(element, "data-alt-visual");
         element.setAttribute("data-command", "show-thread");
     } else if (command == "show-thread") {
         if (thread_container !== null) {
@@ -39,8 +37,7 @@ function hideShowThread(element, command) {
         
         delete dataBin.hidden_threads[thread_id];
         nelliel.core.storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
-        element.innerHTML = element.getAttribute("data-alt-visual");
-        element.setAttribute("data-alt-visual", inner);
+        swapContentAttribute(element, "data-alt-visual");
         element.setAttribute("data-command", "hide-thread");
     }
 }
@@ -50,7 +47,6 @@ function hideShowPost(element, command) {
     var post_files = document.getElementById("post-files-container-" + id);
     var post_contents = document.getElementById("post-contents-" + id);
     var thread_container = document.getElementById("thread-expand-" + id);
-    var inner = element.innerHTML;
     
     if (command == "hide-post") {
         if (post_files !== null) {
@@ -64,8 +60,7 @@ function hideShowPost(element, command) {
         dataBin.hidden_posts[id] = Date.now();
         nelliel.core.storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
         element.setAttribute("data-command", "show-post");
-        element.innerHTML = element.getAttribute("data-alt-visual");
-        element.setAttribute("data-alt-visual", inner);
+        swapContentAttribute(element, "data-alt-visual");
     } else if (command == "show-post") {
         if (post_files !== null) {
             post_files.className = post_files.className.replace(/\hidden\b/g, "");
@@ -78,18 +73,15 @@ function hideShowPost(element, command) {
         delete dataBin.hidden_posts[id];
         nelliel.core.storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
         element.setAttribute("data-command", "hide-post");
-        element.innerHTML = element.getAttribute("data-alt-visual");
-        element.setAttribute("data-alt-visual", inner);
+        swapContentAttribute(element, "data-alt-visual");
     }
 
 }
 
 function showHideFileMeta(element, command) {
     var full_id = element.getAttribute("data-id");
-    var inner = element.innerHTML;
     var meta_element = document.getElementById("file-meta-" + full_id);
-    element.innerHTML = element.getAttribute("data-alt-visual");
-    element.setAttribute("data-alt-visual", inner);
+    swapContentAttribute(element, "data-alt-visual");
     toggleHidden(meta_element);
 
     if (command === "show-file-meta") {
@@ -103,7 +95,6 @@ function showHideFileMeta(element, command) {
 
 function expandCollapseThread(thread_id, command, element) {
     var target_element = document.getElementById("thread-expand-" + thread_id);
-    var inner = element.innerHTML;
 
     if (!target_element) {
         return;
@@ -114,8 +105,7 @@ function expandCollapseThread(thread_id, command, element) {
     request.open('GET', url);
     request.onload = function() {
         if (request.status === 200) {
-            element.innerHTML = element.getAttribute("data-alt-visual");
-            element.setAttribute("data-alt-visual", inner);
+            swapContentAttribute(element, "data-alt-visual");
             
             if (command === "expand-thread") {
                 target_element.innerHTML = request.responseText;
@@ -238,6 +228,12 @@ function toggleHidden(element) {
     } else {
         element.className = element.className.replace(/\bhidden\b/g, "");
     }
+}
+
+function swapContentAttribute(element, attribute_name) {
+    var inner = element.innerHTML;
+    element.innerHTML = element.getAttribute(attribute_name);
+    element.setAttribute(attribute_name, inner);
 }
 
 function addBoundingClientRectProperties(bounding_rect) {
