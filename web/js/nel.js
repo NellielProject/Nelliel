@@ -74,9 +74,9 @@ nelliel.core.processPostClicks = function(event) {
 
         var command = event.target.getAttribute("data-command");
         if (command === "expand-thread") {
-            expandCollapseThread(thread_id, "expand");
+            expandCollapseThread(thread_id, command, event.target);
         } else if (command === "collapse-thread") {
-            expandCollapseThread(thread_id, "collapse");
+            expandCollapseThread(thread_id, command, event.target);
         } else if (command === "change-style") {
             changeBoardStyle(dataBin.board_id, event.target.getAttribute("data-id"));
         } else if (command === "link-post") {

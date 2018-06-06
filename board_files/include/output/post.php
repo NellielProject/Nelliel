@@ -212,17 +212,11 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     }
 
     $thread_link_html = $references['page_dir'] . $thread_id . '/' . $thread_id;
-    $expand_link_element = $new_post_dom->getElementById('expandLink');
-    $expand_link_element->extSetAttribute('data-id', $post_id);
-    $expand_link_element->changeId('expandLink' . $thread_id);
-    $collapse_link_element = $new_post_dom->getElementById('collapseLink');
-    $collapse_link_element->extSetAttribute('data-id', $post_id);
-    $collapse_link_element->changeId('collapseLink' . $thread_id);
+    $post_header_node_array['expand-thread']->extSetAttribute('data-id', $thread_id);
 
     if (!$gen_params['index_rendering'] || $response || !$gen_params['abbreviate'])
     {
-        $expand_link_element->parentNode->removeSelf();
-        $collapse_link_element->parentNode->removeSelf();
+        $post_header_node_array['expand-thread']->parentNode->removeSelf();
     }
 
     $mod_tools_1 = $new_post_dom->getElementById('mod-tools-1');
@@ -306,8 +300,6 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
             $temp_file_node_array['filesize-display']->setContent($filesize_display);
             $temp_file_node_array['show-file-meta']->extSetAttribute('data-id', $file_id);
             $temp_file_node_array['show-file-meta']->changeId('show-file-meta-' . $file_id);
-            //$temp_file_node_array['hide-file-meta']->extSetAttribute('data-id', $file_id);
-           // $temp_file_node_array['hide-file-meta']->changeId('hide-file-meta-' . $file_id);
             $temp_file_node_array['file-meta']->changeId('file-meta-' . $file_id);
 
             $output_filter->cleanAndEncode($file['source']);

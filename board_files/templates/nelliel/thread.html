@@ -19,8 +19,8 @@
 							<span>[<a data-parse-id="post-link-post" href="#" data-i18n="neltext" data-command="link-post" data-id="">LINK_POST_NUM_REF</a>]</span>
 							<img data-parse-id="sticky-icon" id="sticky-icon-" src="" width="22" height="22" alt="THREAD_STICKY" data-i18n="neltext" data-i18n-attributes="alt">
 							<span>[<a  data-parse-id="reply-to-link" href="" data-i18n="neltext">LINK_REPLY</a>]</span>
-							<span>[<a href="#" id="expandLink" data-i18n="neltext" data-command="expand-thread" data-id="">THREAD_EXPAND</a>]</span>
-							<span class="hidden">[<a href="#" id="collapseLink" data-i18n="neltext" data-command="collapse-thread" data-id="">THREAD_COLLAPSE</a>]</span>
+							<span>[<a href="#" data-parse-id="expand-thread" data-i18n="neltext" data-command="expand-thread" data-id="" data-alt-visual="THREAD_COLLAPSE" 
+								data-i18n-attributes="data-alt-visual">THREAD_EXPAND</a>]</span>
 							<div id="mod-tools-1">IP: <b id="ip-address-display">ip address</b><input id="set-ban-details" type="button" onclick="" value="Set Ban Details"></div>
 						</div>
 						<div id="post-files-container-" class="op-files-container">
@@ -30,14 +30,15 @@
 								<a href="" id="file-link-" target="_blank"></a>
 								</div>
 								<div data-parse-id="filesize-display"></div>
-								<span>[<a data-parse-id="show-file-meta" href="#" data-i18n="neltext" data-command="show-file-meta" data-id="" data-alt-visual="THREAD_LESS_DATA" data-i18n-attributes="data-alt-visual">THREAD_MOAR_DATA</a>]</span>
+								<span>[<a data-parse-id="show-file-meta" href="#" data-i18n="neltext" data-command="show-file-meta" data-id="" data-alt-visual="THREAD_LESS_DATA" 
+									data-i18n-attributes="data-alt-visual">THREAD_MOAR_DATA</a>]</span>
 								<div data-parse-id="file-meta" class="hidden">
-									<span class="file-source" data-parse-id="file-source">Source: </span>
-									<span class="file-license" data-parse-id="file-license">License: </span>
-									<span class="file-hash" data-parse-id="file-md5">MD5: </span>
-									<span class="file-hash" data-parse-id="file-sha1">SHA1: </span>
-									<span class="file-hash" data-parse-id="file-sha256">SHA256: </span>
-									<span class="file-hash" data-parse-id="file-sha512">SHA512: </span>
+									<span data-parse-id="file-source" class="file-source" >Source: </span>
+									<span data-parse-id="file-license" class="file-license">License: </span>
+									<span data-parse-id="file-md5" class="file-hash">MD5: </span>
+									<span data-parse-id="file-sha1" class="file-hash">SHA1: </span>
+									<span data-parse-id="file-sha256" class="file-hash">SHA256: </span>
+									<span data-parse-id="file-sha512" class="file-hash">SHA512: </span>
 								</div>
 								<a href="" id="file-location-" target="_blank" class="preview-link">
 								<img id="file-preview-" src="" width="" height="" alt="" class="" data-command="inline-expand" data-other-dims="" data-other-loc="">

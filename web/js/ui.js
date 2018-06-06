@@ -101,28 +101,29 @@ function showHideFileMeta(element, command) {
     }
 }
 
-function expandCollapseThread(thread_id, command) {
+function expandCollapseThread(thread_id, command, element) {
     var target_element = document.getElementById("thread-expand-" + thread_id);
-    var expand_element = document.getElementById("expandLink" + thread_id);
-    var collapse_element = document.getElementById("collapseLink" + thread_id);
+    var inner = element.innerHTML;
 
     if (!target_element) {
         return;
     }
 
-    var url = "threads/" + thread_id + "/" + thread_id + "-" + command + ".html";
+    var url = "threads/" + thread_id + "/" + thread_id + "-" + command.split('-')[0] + ".html";
     var request = new XMLHttpRequest();
     request.open('GET', url);
     request.onload = function() {
         if (request.status === 200) {
-            if (command === "expand") {
+            element.innerHTML = element.getAttribute("data-alt-visual");
+            element.setAttribute("data-alt-visual", inner);
+            
+            if (command === "expand-thread") {
                 target_element.innerHTML = request.responseText;
-                expand_element.parentNode.className += " hidden";
-                collapse_element.parentNode.className = collapse_element.className.replace(/\bhidden\b/g, "");
-            } else if (command === "collapse") {
+                element.setAttribute("data-command", "collapse-thread");
+            } else if (command === "collapse-thread") {
                 target_element.innerHTML = request.responseText;
-                collapse_element.parentNode.className += " hidden";
-                expand_element.parentNode.className = expand_element.className.replace(/\bhidden\b/g, "");
+                element.setAttribute("data-command", "expand-thread");
+
             }
         }
     };
