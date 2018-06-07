@@ -137,7 +137,7 @@ function nel_thread_generator($board_id, $write, $response_to)
     $render->appendHTMLFromDOM($dom);
     $render->appendHTMLFromDOM($collapse_dom, 'collapse');
     $render->appendHTMLFromDOM($expand_dom, 'expand');
-    nel_render_board_footer($board_id, $render, null, true);
+    nel_render_board_footer($board_id, $render, $dotdot, true);
 
     if ($write)
     {

@@ -130,7 +130,7 @@ nelliel.ui.showLinkedPost = function(element, event) {
     popup_div.id = "post-quote-popup-" + post_id;
     popup_div.setAttribute("class", "post-quote-popup");
     var element_rect = element.getBoundingClientRect();
-    addBoundingClientRectProperties(element_rect);
+    nelliel.ui.addBoundingClientRectProperties(element_rect);
 
     if (document.getElementById("post-container-" + post_id) !== null) {
         var quoted_post = document.getElementById("post-container-" + post_id).cloneNode(true);
