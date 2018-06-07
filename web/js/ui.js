@@ -1,4 +1,4 @@
-function hideShowThread(element, command) {
+nelliel.ui.hideShowThread = function(element, command) {
     var id = element.getAttribute("data-id");
     var thread_id = id.split('_')[0];
     var post_files = document.getElementById("post-files-container-" + id);
@@ -28,7 +28,7 @@ function hideShowThread(element, command) {
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
 }
 
-function hideShowPost(element, command) {
+nelliel.ui.hideShowPost = function(element, command) {
     var id = element.getAttribute("data-id");
     var post_files = document.getElementById("post-files-container-" + id);
     var post_contents = document.getElementById("post-contents-" + id);
@@ -52,7 +52,7 @@ function hideShowPost(element, command) {
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
 }
 
-function showHideFileMeta(element, command) {
+nelliel.ui.showHideFileMeta = function(element, command) {
     var full_id = element.getAttribute("data-id");
     var meta_element = document.getElementById("file-meta-" + full_id);
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
@@ -60,7 +60,7 @@ function showHideFileMeta(element, command) {
     nelliel.ui.switchDataCommand(element, "show-file-meta", "hide-file-meta");
 }
 
-function expandCollapseThread(thread_id, command, element) {
+nelliel.ui.expandCollapseThread = function(thread_id, command, element) {
     var target_element = document.getElementById("thread-expand-" + thread_id);
 
     if (!target_element) {
@@ -81,7 +81,7 @@ function expandCollapseThread(thread_id, command, element) {
     request.send();
 }
 
-function highlightPost(post_id) {
+nelliel.ui.highlightPost = function(post_id) {
     var post_elements = document.getElementsByClassName("post-corral");
     var id_sub = post_id.split("_");
     var id_op = id_sub[0] == id_sub[1] ? true : false;
@@ -98,7 +98,7 @@ function highlightPost(post_id) {
     }
 }
 
-function inlineExpandReduce(element, command) {
+nelliel.ui.inlineExpandReduce = function(element, command) {
     if (element.hasAttribute("data-other-dims")) {
         var new_location = element.getAttribute("data-other-loc");
         var old_location = element.getAttribute("src");
@@ -139,7 +139,7 @@ nelliel.ui.showLinkedPost = function(element, event) {
         popup_div.appendChild(quoted_post);
         element.parentNode.insertBefore(popup_div, element);
         var popup_rect = quoted_post.getBoundingClientRect();
-        addBoundingClientRectProperties(popup_rect);
+        nelliel.ui.addBoundingClientRectProperties(popup_rect);
         popup_div.style.left = (element_rect.right + offsetX + 10) + 'px';
         popup_div.style.top = ((element_rect.y + offsetY) - (popup_rect.height / 2)) + 'px';
     } else {
@@ -154,7 +154,7 @@ nelliel.ui.showLinkedPost = function(element, event) {
                 popup_div.appendChild(quoted_post);
                 element.parentNode.insertBefore(popup_div, element);
                 var popup_rect = quoted_post.getBoundingClientRect();
-                addBoundingClientRectProperties(popup_rect);
+                nelliel.ui.addBoundingClientRectProperties(popup_rect);
                 popup_div.style.left = (element_rect.right + offsetX + 5) + 'px';
                 popup_div.style.top = ((element_rect.y + offsetY) - (popup_rect.height / 2)) + 'px';
             }
@@ -202,7 +202,7 @@ nelliel.ui.switchDataCommand = function(element, option_one, option_two) {
     }
 }
 
-function addBoundingClientRectProperties(bounding_rect) {
+nelliel.ui.addBoundingClientRectProperties = function(bounding_rect) {
     bounding_rect.width = bounding_rect.width || bounding_rect.right - bounding_rect.left;
     bounding_rect.height = bounding_rect.height || bounding_rect.bottom - bounding_rect.top;
     bounding_rect.x = bounding_rect.x || bounding_rect.left + (bounding_rect.width / 2);

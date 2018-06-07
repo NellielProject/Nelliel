@@ -1,6 +1,7 @@
 var nelliel = {};
 nelliel.setup = {};
 nelliel.core = {};
+nelliel.events = {};
 nelliel.posting_form = {};
 nelliel.ui = {};
 
@@ -38,15 +39,15 @@ nelliel.setup.setupListeners = function() {
     var post_elements = document.getElementsByClassName('thread-corral');
 
     for (var i = 0; i < post_elements.length; i++) {
-        nelliel.setup.addListenerIfElementExists(post_elements[i], "click", nelliel.core.processPostClicks);
-        nelliel.setup.addListenerIfElementExists(post_elements[i], "mouseover", nelliel.core.processMouseOver);
-        nelliel.setup.addListenerIfElementExists(post_elements[i], "mouseout", nelliel.core.processMouseOut);
+        nelliel.setup.addListenerIfElementExists(post_elements[i], "click", nelliel.events.processPostClicks);
+        nelliel.setup.addListenerIfElementExists(post_elements[i], "mouseover", nelliel.events.processMouseOver);
+        nelliel.setup.addListenerIfElementExists(post_elements[i], "mouseout", nelliel.events.processMouseOut);
     }
 
-    nelliel.setup.addListenerIfElementExists(document.getElementById("top-styles-div"), "click", nelliel.core.processPostClicks);
-    nelliel.setup.addListenerIfElementExists(document.getElementById("bottom-styles-div"), "click", nelliel.core.processPostClicks);
-    nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "click", nelliel.core.processPostClicks);
-    nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "change", nelliel.core.processChanges);
+    nelliel.setup.addListenerIfElementExists(document.getElementById("top-styles-div"), "click", nelliel.events.processPostClicks);
+    nelliel.setup.addListenerIfElementExists(document.getElementById("bottom-styles-div"), "click", nelliel.events.processPostClicks);
+    nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "click", nelliel.events.processPostClicks);
+    nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "change", nelliel.events.processChanges);
     window.addEventListener("hashchange", nelliel.hashHandler);
 }
 
@@ -64,7 +65,7 @@ nelliel.setup.fillForms = function(board) {
     document.getElementById("not-anonymous").value = N;
 }
 
-nelliel.core.processPostClicks = function(event) {
+nelliel.events.processPostClicks = function(event) {
     if (event.target.hasAttribute("data-command")) {
         if (event.target.hasAttribute("data-id")) {
             var id_set = event.target.getAttribute("data-id").split("_");
@@ -74,23 +75,24 @@ nelliel.core.processPostClicks = function(event) {
         }
 
         var command = event.target.getAttribute("data-command");
+
         if (command === "expand-thread" || command === "collapse-thread") {
-            expandCollapseThread(thread_id, command, event.target);
+            nelliel.ui.expandCollapseThread(thread_id, command, event.target);
         } else if (command === "change-style") {
             changeBoardStyle(dataBin.board_id, event.target.getAttribute("data-id"));
         } else if (command === "link-post") {
             nelliel.ui.linkPost(post_id);
         } else if (command === "show-file-meta" || command === "hide-file-meta") {
-            showHideFileMeta(event.target, command);
+            nelliel.ui.showHideFileMeta(event.target, command);
         } else if (command === "add-file-meta") {
             addNewFileMeta(event.target, command);
         } else if (command === "inline-expand" || command === "inline-reduce") {
-            inlineExpandReduce(event.target, command);
+            nelliel.ui.inlineExpandReduce(event.target, command);
             event.preventDefault();
         } else if (command === "hide-post" || command === "show-post" ) {
-            hideShowPost(event.target, command);
+            nelliel.ui.hideShowPost(event.target, command);
         } else if (command === "hide-thread" || command === "show-thread" ) {
-            hideShowThread(event.target, command);
+            nelliel.ui.hideShowThread(event.target, command);
         }
 
         if (event.target.hasAttribute("href") && event.target.getAttribute("href").match(/^#$/) !== null) {
@@ -99,7 +101,7 @@ nelliel.core.processPostClicks = function(event) {
     }
 }
 
-nelliel.core.processMouseOver = function(event) {
+nelliel.events.processMouseOver = function(event) {
     if (event.target.hasAttribute("data-command")) {
         var command = event.target.getAttribute("data-command");
 
@@ -109,7 +111,7 @@ nelliel.core.processMouseOver = function(event) {
     }
 }
 
-nelliel.core.processMouseOut = function(event) {
+nelliel.events.processMouseOut = function(event) {
     if (event.target.hasAttribute("data-command")) {
         var command = event.target.getAttribute("data-command");
 
@@ -119,7 +121,7 @@ nelliel.core.processMouseOut = function(event) {
     }
 }
 
-nelliel.core.processChanges = function(event) {
+nelliel.events.processChanges = function(event) {
     if (event.target.hasAttribute("data-command")) {
         var command = event.target.getAttribute("data-command");
 
