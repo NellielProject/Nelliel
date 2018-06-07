@@ -2,6 +2,7 @@ var nelliel = {};
 nelliel.setup = {};
 nelliel.core = {};
 nelliel.posting_form = {};
+nelliel.ui = {};
 
 
 function dataBin() {
@@ -73,14 +74,12 @@ nelliel.core.processPostClicks = function(event) {
         }
 
         var command = event.target.getAttribute("data-command");
-        if (command === "expand-thread") {
-            expandCollapseThread(thread_id, command, event.target);
-        } else if (command === "collapse-thread") {
+        if (command === "expand-thread" || command === "collapse-thread") {
             expandCollapseThread(thread_id, command, event.target);
         } else if (command === "change-style") {
             changeBoardStyle(dataBin.board_id, event.target.getAttribute("data-id"));
         } else if (command === "link-post") {
-            linkPost(post_id);
+            nelliel.ui.linkPost(post_id);
         } else if (command === "show-file-meta" || command === "hide-file-meta") {
             showHideFileMeta(event.target, command);
         } else if (command === "add-file-meta") {
@@ -105,7 +104,7 @@ nelliel.core.processMouseOver = function(event) {
         var command = event.target.getAttribute("data-command");
 
         if (command === "show-linked-post") {
-            showLinkedPost(event.target, event);
+            nelliel.ui.showLinkedPost(event.target, event);
         }
     }
 }
@@ -115,7 +114,7 @@ nelliel.core.processMouseOut = function(event) {
         var command = event.target.getAttribute("data-command");
 
         if (command === "show-linked-post") {
-            hideLinkedPost(event.target, event);
+            nelliel.ui.hideLinkedPost(event.target, event);
         }
     }
 }

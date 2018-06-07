@@ -5,92 +5,59 @@ function hideShowThread(element, command) {
     var post_contents = document.getElementById("post-contents-" + id);
     var thread_container = document.getElementById("thread-expand-" + thread_id);
     
-    if (command == "hide-thread") {
-        if (thread_container !== null) {
-            thread_container.className += " hidden";
-        }
-        
-        if (post_files !== null) {
-            post_files.className += " hidden";
-        }
-        
-        if (post_contents !== null) {
-            post_contents.className += " hidden";
-        }
-
+    if (command === "hide-thread") {
         dataBin.hidden_threads[thread_id] = Date.now();
-        nelliel.core.storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
-        swapContentAttribute(element, "data-alt-visual");
-        element.setAttribute("data-command", "show-thread");
-    } else if (command == "show-thread") {
-        if (thread_container !== null) {
-            thread_container.className = thread_container.className.replace(/\hidden\b/g, "");
-        }
-        
-        if (post_files !== null) {
-            post_files.className = post_files.className.replace(/\hidden\b/g, "");
-        }
-        
-        if (post_contents !== null) {
-            post_contents.className = post_contents.className.replace(/\hidden\b/g, "");
-        }
-        
+    } else if (command === "show-thread") {    
         delete dataBin.hidden_threads[thread_id];
-        nelliel.core.storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
-        swapContentAttribute(element, "data-alt-visual");
-        element.setAttribute("data-command", "hide-thread");
     }
+
+    if (thread_container !== null) {
+        nelliel.ui.toggleHidden(thread_container);
+    }
+    
+    if (post_files !== null) {
+        nelliel.ui.toggleHidden(post_files);
+    }
+    
+    if (post_contents !== null) {
+        nelliel.ui.toggleHidden(post_contents);
+    }
+
+    nelliel.core.storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
+    nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
+    nelliel.ui.swapContentAttribute(element, "data-alt-visual");
 }
 
 function hideShowPost(element, command) {
     var id = element.getAttribute("data-id");
     var post_files = document.getElementById("post-files-container-" + id);
     var post_contents = document.getElementById("post-contents-" + id);
-    var thread_container = document.getElementById("thread-expand-" + id);
     
     if (command == "hide-post") {
-        if (post_files !== null) {
-            post_files.className += " hidden";
-        }
-        
-        if (post_contents !== null) {
-            post_contents.className += " hidden";
-        }
-
         dataBin.hidden_posts[id] = Date.now();
-        nelliel.core.storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
-        element.setAttribute("data-command", "show-post");
-        swapContentAttribute(element, "data-alt-visual");
     } else if (command == "show-post") {
-        if (post_files !== null) {
-            post_files.className = post_files.className.replace(/\hidden\b/g, "");
-        }
-        
-        if (post_contents !== null) {
-            post_contents.className = post_contents.className.replace(/\hidden\b/g, "");
-        }
-
         delete dataBin.hidden_posts[id];
-        nelliel.core.storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
-        element.setAttribute("data-command", "hide-post");
-        swapContentAttribute(element, "data-alt-visual");
     }
-
+    
+    if (post_files !== null) {
+        nelliel.ui.toggleHidden(post_files);
+    }
+    
+    if (post_contents !== null) {
+        nelliel.ui.toggleHidden(post_contents);
+    }
+    
+    nelliel.core.storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
+    nelliel.ui.switchDataCommand(element, "hide-post", "show-post");
+    nelliel.ui.swapContentAttribute(element, "data-alt-visual");
 }
 
 function showHideFileMeta(element, command) {
     var full_id = element.getAttribute("data-id");
     var meta_element = document.getElementById("file-meta-" + full_id);
-    swapContentAttribute(element, "data-alt-visual");
-    toggleHidden(meta_element);
-
-    if (command === "show-file-meta") {
-        element.setAttribute("data-command", "hide-file-meta");
-    }
-
-    if (command === "hide-file-meta") {
-        element.setAttribute("data-command", "show-file-meta");
-    }
+    nelliel.ui.swapContentAttribute(element, "data-alt-visual");
+    nelliel.ui.toggleHidden(meta_element);
+    nelliel.ui.switchDataCommand(element, "show-file-meta", "hide-file-meta");
 }
 
 function expandCollapseThread(thread_id, command, element) {
@@ -105,16 +72,9 @@ function expandCollapseThread(thread_id, command, element) {
     request.open('GET', url);
     request.onload = function() {
         if (request.status === 200) {
-            swapContentAttribute(element, "data-alt-visual");
-            
-            if (command === "expand-thread") {
-                target_element.innerHTML = request.responseText;
-                element.setAttribute("data-command", "collapse-thread");
-            } else if (command === "collapse-thread") {
-                target_element.innerHTML = request.responseText;
-                element.setAttribute("data-command", "expand-thread");
-
-            }
+            nelliel.ui.swapContentAttribute(element, "data-alt-visual");
+            nelliel.ui.switchDataCommand(element, "expand-thread", "collapse-thread");
+            target_element.innerHTML = request.responseText;
         }
     };
 
@@ -152,16 +112,11 @@ function inlineExpandReduce(element, command) {
         element.setAttribute("data-other-dims", 'w' + old_width + 'h' + old_height);
         element.setAttribute("src", new_location);
         element.setAttribute("data-other-loc", old_location);
-
-        if (command == "inline-expand") {
-            element.setAttribute("data-command", "inline-reduce");
-        } else if (command == "inline-reduce") {
-            element.setAttribute("data-command", "inline-expand");
-        }
+        nelliel.ui.switchDataCommand(element, "inline-reduce", "inline-expand");
     }
 }
 
-function showLinkedPost(element, event) {
+nelliel.ui.showLinkedPost = function(element, event) {
     var href = element.getAttribute("href");
     var post_id = href.match(/#p([0-9_]+)/)[1];
 
@@ -208,7 +163,7 @@ function showLinkedPost(element, event) {
     }
 }
 
-function hideLinkedPost(element, event) {
+nelliel.ui.hideLinkedPost = function(element, event) {
     var href = element.getAttribute("href");
     var post_id = href.match(/#p([0-9_]+)/)[1];
     var target_popup = document.getElementById("post-quote-popup-" + post_id);
@@ -218,11 +173,11 @@ function hideLinkedPost(element, event) {
     }
 }
 
-function linkPost(num) {
-    document.postingform.wordswordswords.value = document.postingform.wordswordswords.value + '>>' + num + '\n';
+nelliel.ui.linkPost = function(post_number) {
+    document.postingform.wordswordswords.value = document.postingform.wordswordswords.value + '>>' + post_number + '\n';
 }
 
-function toggleHidden(element) {
+nelliel.ui.toggleHidden = function(element) {
     if(element.className.search("hidden") === -1) {
         element.className += " hidden";
     } else {
@@ -230,10 +185,21 @@ function toggleHidden(element) {
     }
 }
 
-function swapContentAttribute(element, attribute_name) {
+nelliel.ui.swapContentAttribute = function(element, attribute_name) {
     var inner = element.innerHTML;
     element.innerHTML = element.getAttribute(attribute_name);
     element.setAttribute(attribute_name, inner);
+}
+
+nelliel.ui.switchDataCommand = function(element, option_one, option_two) {
+    var data_command = element.getAttribute("data-command");
+
+    if (data_command.indexOf(option_one) > -1 ) {
+        element.setAttribute("data-command", option_two);
+    }
+    else if (data_command.indexOf(option_two) > -1 ) {
+        element.setAttribute("data-command", option_one);
+    }
 }
 
 function addBoundingClientRectProperties(bounding_rect) {
