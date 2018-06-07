@@ -22,6 +22,7 @@ nelliel.setup.doImportantStuff = function(board_id) {
     
     if(board_id !== "") {
         nelliel.setup.fillForms(board_id);
+        nelliel.ui.applyHidePostThread();
     }
 }
 

@@ -6,9 +6,9 @@ nelliel.ui.hideShowThread = function(element, command) {
     var thread_container = document.getElementById("thread-expand-" + thread_id);
     
     if (command === "hide-thread") {
-        dataBin.hidden_threads[thread_id] = Date.now();
+        dataBin.hidden_threads[id] = Date.now();
     } else if (command === "show-thread") {    
-        delete dataBin.hidden_threads[thread_id];
+        delete dataBin.hidden_threads[id];
     }
 
     if (thread_container !== null) {
@@ -50,6 +50,48 @@ nelliel.ui.hideShowPost = function(element, command) {
     nelliel.core.storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
     nelliel.ui.switchDataCommand(element, "hide-post", "show-post");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
+}
+
+nelliel.ui.applyHidePostThread = function() {
+    for (var id in dataBin.hidden_threads) {
+        var thread_id = id.split('_')[0];
+        var post_files = document.getElementById("post-files-container-" + id);
+        var post_contents = document.getElementById("post-contents-" + id);
+        var thread_container = document.getElementById("thread-expand-" + thread_id);
+        var element = document.getElementById("hide-post-thread-" + id);
+        
+        if (thread_container !== null) {
+            nelliel.ui.toggleHidden(thread_container);
+        }
+        
+        if (post_files !== null) {
+            nelliel.ui.toggleHidden(post_files);
+        }
+        
+        if (post_contents !== null) {
+            nelliel.ui.toggleHidden(post_contents);
+        }
+        
+        nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
+        nelliel.ui.swapContentAttribute(element, "data-alt-visual");
+    }
+    
+    for (var id in dataBin.hidden_posts) {
+        var post_files = document.getElementById("post-files-container-" + id);
+        var post_contents = document.getElementById("post-contents-" + id);
+        var element = document.getElementById("hide-post-thread-" + id);
+
+        if (post_files !== null) {
+            nelliel.ui.toggleHidden(post_files);
+        }
+        
+        if (post_contents !== null) {
+            nelliel.ui.toggleHidden(post_contents);
+        }
+        
+        nelliel.ui.switchDataCommand(element, "hide-post", "show-post");
+        nelliel.ui.swapContentAttribute(element, "data-alt-visual");
+    }
 }
 
 nelliel.ui.showHideFileMeta = function(element, command) {
