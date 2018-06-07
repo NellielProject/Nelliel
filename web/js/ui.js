@@ -117,6 +117,7 @@ nelliel.ui.expandCollapseThread = function(thread_id, command, element) {
             nelliel.ui.swapContentAttribute(element, "data-alt-visual");
             nelliel.ui.switchDataCommand(element, "expand-thread", "collapse-thread");
             target_element.innerHTML = request.responseText;
+            nelliel.ui.applyHidePostThread();
         }
     };
 
