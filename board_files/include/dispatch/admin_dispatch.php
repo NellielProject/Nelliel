@@ -90,7 +90,7 @@ function nel_admin_dispatch()
 
                 if ($action === 'cache-all')
                 {
-                    nel_regen_cache($board_id);
+                    nel_regen_board_cache($board_id);
                 }
 
                 nel_render_main_board_panel($board_id);

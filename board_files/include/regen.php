@@ -23,17 +23,15 @@ function nel_regen_threads($board_id, $write, $ids)
     }
 }
 
-function nel_regen_cache($board_id = '')
+function nel_regen_board_cache($board_id)
 {
-    if ($board_id === '')
-    {
-        nel_site_settings(null, true);
-    }
-    else
-    {
-        nel_board_settings($board_id, null, true);
-        nel_filetype_settings($board_id, null, true);
-    }
+    nel_board_settings($board_id, null, true);
+    nel_filetype_settings($board_id, null, true);
+}
+
+function nel_regen_site_cache()
+{
+    nel_site_settings(null, true);
 }
 
 function nel_regen_index($board_id)
