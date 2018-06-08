@@ -87,3 +87,23 @@ function nel_numeric_html_entities_to_utf8(&$input)
         return utf8_chr(intval(substr($matches[0], 2, -1)));
     }, $input);
 }
+
+function nel_cast_to_datatype($datatype, $value)
+{
+    if ($datatype === 'bool' || $datatype === 'boolean')
+    {
+        return (bool) $value;
+    }
+    else if ($datatype === 'int' || $datatype === 'integer')
+    {
+        return intval($value);
+    }
+    else if ($datatype === 'str' || $datatype === 'string')
+    {
+        return print_r($value, true);
+    }
+    else
+    {
+        return $value;
+    }
+}

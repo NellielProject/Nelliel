@@ -54,19 +54,8 @@ function nel_site_settings($setting = null, $cache_regen = false)
 
             foreach ($config_list as $config)
             {
-                if ($config['data_type'] === 'bool')
-                {
-                    $config['setting'] = (bool) $config['setting'];
-                }
-                else if ($config['data_type'] === 'int')
-                {
-                    $config['setting'] = intval($config['setting']);
-                }
-                else if ($config['data_type'] === 'str')
-                {
-                    $config['setting'] = print_r($config['setting'], true);
-                }
-
+                $config['setting'] = nel_cast_to_datatype($config['data_type'], $config['setting']);
+                var_dump($config['setting']);
                 $site_settings[$config['config_name']] = $config['setting'];
             }
 
@@ -74,7 +63,7 @@ function nel_site_settings($setting = null, $cache_regen = false)
             {
                 $cacheHandler = new \Nelliel\CacheHandler();
                 $header = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}';
-                $cacheHandler->writeCacheFile(CACHE_PATH . $board_id . '/', 'site_settings.php', '$site_settings = ' .
+                $cacheHandler->writeCacheFile(CACHE_PATH, 'site_settings.php', '$site_settings = ' .
                      var_export($site_settings, true) . ';', $header);
             }
         }
@@ -129,19 +118,7 @@ function nel_board_settings($board_id, $setting = null, $cache_regen = false)
 
             foreach ($config_list as $config)
             {
-                if ($config['data_type'] === 'bool')
-                {
-                    $config['setting'] = (bool) $config['setting'];
-                }
-                else if ($config['data_type'] === 'int')
-                {
-                    $config['setting'] = intval($config['setting']);
-                }
-                else if ($config['data_type'] === 'str')
-                {
-                    $config['setting'] = print_r($config['setting'], true);
-                }
-
+                $config['setting'] = nel_cast_to_datatype($config['data_type'], $config['setting']);
                 $board_settings[$config['config_name']] = $config['setting'];
             }
 
