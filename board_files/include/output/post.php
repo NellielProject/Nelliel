@@ -79,34 +79,17 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $indents_element = $new_post_dom->getElementById('indents');
     $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
 
-    if ($response)
+    if($gen_params['index_rendering'] && !$response)
     {
-        $post_type = 'reply';
-        $post_type_class = 'reply-';
-        $post_container->extSetAttribute('class', 'reply-post');
-        $indents_element->setContent(nel_board_settings($board_id, 'indent_marker'));
-        $indents_element->removeAttribute('id');
-        $hide_post_thread->setContent('Hide Post');
-        $hide_post_thread->extSetAttribute('data-command', 'hide-post');
-        $hide_post_thread->extSetAttribute('data-alt-visual', 'Show Post');
+        $hide_post_thread->setContent('Hide Thread');
+        $hide_post_thread->extSetAttribute('data-alt-visual', 'Show Thread');
+        $hide_post_thread->extSetAttribute('data-command', 'hide-thread');
     }
     else
     {
-        $post_type = 'op';
-        $post_type_class = 'op-';
-        $indents_element->removeSelf();
-
-        if($gen_params['index_rendering'])
-        {
-            $hide_post_thread->setContent('Hide Thread');
-        }
-        else
-        {
-            $hide_post_thread->setContent('Hide Post');
-        }
-
-        $hide_post_thread->extSetAttribute('data-command', 'hide-thread');
-        $hide_post_thread->extSetAttribute('data-alt-visual', 'Show Thread');
+        $hide_post_thread->setContent('Hide Post');
+        $hide_post_thread->extSetAttribute('data-alt-visual', 'Show Post');
+        $hide_post_thread->extSetAttribute('data-command', 'hide-post');
     }
 
     $new_post_dom->getElementById('p-number')->changeId('p' . $post_id);
@@ -114,6 +97,11 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
     if ($response)
     {
+        $post_type = 'reply';
+        $post_type_class = 'reply-';
+        $post_container->extSetAttribute('class', 'reply-post');
+        $indents_element->setContent(nel_board_settings($board_id, 'indent_marker'));
+        $indents_element->removeAttribute('id');
         $post_checkbox = $new_post_dom->getElementById('post_post-id');
         $post_checkbox->changeId('post_' . $post_id);
         $post_checkbox->extSetAttribute('name', 'post_' . $rev_post_id);
@@ -122,6 +110,9 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     }
     else
     {
+        $post_type = 'op';
+        $post_type_class = 'op-';
+        $indents_element->removeSelf();
         $thread_checkbox = $new_post_dom->getElementById('thread_thread-id');
         $thread_checkbox->changeId('thread_' . $thread_id);
         $thread_checkbox->extSetAttribute('name', 'thread_' . $thread_id);
