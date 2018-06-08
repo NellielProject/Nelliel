@@ -79,7 +79,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $indents_element = $new_post_dom->getElementById('indents');
     $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
 
-    if($gen_params['index_rendering'] && !$response)
+    if ($gen_params['index_rendering'] && !$response)
     {
         $hide_post_thread->setContent('Hide Thread');
         $hide_post_thread->extSetAttribute('data-alt-visual', 'Show Thread');
@@ -267,8 +267,8 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
             $temp_file_node_array['delete-file']->extSetAttribute('name', 'file_' . $file_id);
             $temp_file_node_array['delete-file']->extSetAttribute('value', 'deletefile_' . $file_id);
 
-            $file['file_location'] = 'http://' . $base_domain . '/' . $board_id . '/' . $references['src_dir'] . $thread_id . '/' . rawurlencode($file['filename']) . "." .
-                 $file['extension'];
+            $file['file_location'] = 'http://' . $base_domain . '/' . $board_id . '/' . $references['src_dir'] .
+                 $thread_id . '/' . rawurlencode($file['filename']) . "." . $file['extension'];
             $file['display_filename'] = $file['filename'];
 
             if (strlen($file['filename']) > 32)
@@ -339,54 +339,68 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
             }
 
             $location_element = $temp_file_dom->getElementById('file-location-');
+            $video_preview = $temp_file_dom->getElementById('video-preview-');
 
             if ($board_settings['use_thumb'])
             {
-                $location_element->extSetAttribute('href', $file['file_location'], 'none');
-                $location_element->changeId('file-location-' . $file_id);
-                $preview_element = $temp_file_dom->getElementById('file-preview-');
-                $preview_element->changeId('file-preview-' . $file_id);
-
-                if (!empty($file['preview_name']))
+                if ($file['format'] == 'webm' || $file['format'] == 'mpeg4')
                 {
-                    $file['has_preview'] = true;
-                    $file['preview_location'] = 'http://' . $base_domain . '/' . $board_id . '/' . $references['thumb_dir'] . $thread_id . '/' .
-                         rawurlencode($file['preview_name']);
-
-                    if ($filecount > 1)
-                    {
-                        if ($file['preview_width'] > $board_settings['max_multi_width'] ||
-                             $file['preview_height'] > $board_settings['max_multi_height'])
-                        {
-                            $ratio = min(($board_settings['max_multi_height'] / $file['preview_height']), ($board_settings['max_multi_width'] /
-                             $file['preview_width']));
-                            $file['preview_width'] = intval($ratio * $file['preview_width']);
-                            $file['preview_height'] = intval($ratio * $file['preview_height']);
-                        }
-                    }
-                }
-                else if ($board_settings['use_file_icon'] && file_exists(WEB_PATH . 'imagez/nelliel/filetype/' .
-                     utf8_strtolower($file['type']) . '/' . utf8_strtolower($file['format']) . '.png'))
-                {
-                    $file['has_preview'] = true;
-                    $file['preview_location'] = '../' . IMAGES_DIR . 'nelliel/filetype/' . utf8_strtolower($file['type']) .
-                         '/' . utf8_strtolower($file['format']) . '.png';
-                    $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
-                    $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
+                    $video_preview->changeId('video-preview-' . $file_id);
+                    $video_preview->extSetAttribute('width', $board_settings['max_width']);
+                    $video_preview_source = $video_preview->getElementsByTagName('source')->item(0);
+                    $video_preview_source->extSetAttribute('src', $file['file_location']);
+                    $video_preview_source->extSetAttribute('type', $file['mime']);
+                    $location_element->removeSelf();
                 }
                 else
                 {
-                    $file['has_preview'] = false;
-                }
+                    $location_element->extSetAttribute('href', $file['file_location'], 'none');
+                    $location_element->changeId('file-location-' . $file_id);
+                    $preview_element = $temp_file_dom->getElementById('file-preview-');
+                    $preview_element->changeId('file-preview-' . $file_id);
 
-                $preview_element->extSetAttribute('src', $file['preview_location'], 'none');
-                $preview_element->extSetAttribute('width', $file['preview_width']);
-                $preview_element->extSetAttribute('height', $file['preview_height']);
-                $preview_element->extSetAttribute('alt', $file['alt_text']);
-                $preview_element->extSetAttribute('class', $post_type_class . $multiple_class . 'post-preview');
-                $preview_element->extSetAttribute('data-other-dims', 'w' . $file['image_width'] . 'h' .
-                     $file['image_height']);
-                $preview_element->extSetAttribute('data-other-loc', $file['file_location'], 'none');
+                    if (!empty($file['preview_name']))
+                    {
+                        $file['has_preview'] = true;
+                        $file['preview_location'] = 'http://' . $base_domain . '/' . $board_id . '/' .
+                             $references['thumb_dir'] . $thread_id . '/' . rawurlencode($file['preview_name']);
+
+                        if ($filecount > 1)
+                        {
+                            if ($file['preview_width'] > $board_settings['max_multi_width'] ||
+                                 $file['preview_height'] > $board_settings['max_multi_height'])
+                            {
+                                $ratio = min(($board_settings['max_multi_height'] / $file['preview_height']), ($board_settings['max_multi_width'] /
+                                 $file['preview_width']));
+                                $file['preview_width'] = intval($ratio * $file['preview_width']);
+                                $file['preview_height'] = intval($ratio * $file['preview_height']);
+                            }
+                        }
+                    }
+                    else if ($board_settings['use_file_icon'] && file_exists(WEB_PATH . 'imagez/nelliel/filetype/' .
+                         utf8_strtolower($file['type']) . '/' . utf8_strtolower($file['format']) . '.png'))
+                    {
+                        $file['has_preview'] = true;
+                        $file['preview_location'] = '../' . IMAGES_DIR . 'nelliel/filetype/' .
+                             utf8_strtolower($file['type']) . '/' . utf8_strtolower($file['format']) . '.png';
+                        $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
+                        $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
+                    }
+                    else
+                    {
+                        $file['has_preview'] = false;
+                    }
+
+                    $preview_element->extSetAttribute('src', $file['preview_location'], 'none');
+                    $preview_element->extSetAttribute('width', $file['preview_width']);
+                    $preview_element->extSetAttribute('height', $file['preview_height']);
+                    $preview_element->extSetAttribute('alt', $file['alt_text']);
+                    $preview_element->extSetAttribute('class', $post_type_class . $multiple_class . 'post-preview');
+                    $preview_element->extSetAttribute('data-other-dims', 'w' . $file['image_width'] . 'h' .
+                         $file['image_height']);
+                    $preview_element->extSetAttribute('data-other-loc', $file['file_location'], 'none');
+                    $video_preview->removeSelf();
+                }
             }
             else
             {
@@ -415,8 +429,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
     if ($multiple_files)
     {
-        $post_contents_element->extSetAttribute('class', $post_type_class .
-             'post-contents-multifile');
+        $post_contents_element->extSetAttribute('class', $post_type_class . 'post-contents-multifile');
     }
     else
     {

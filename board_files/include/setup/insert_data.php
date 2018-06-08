@@ -413,7 +413,7 @@ function nel_insert_filetypes()
     ('mov', 'mov', 'video', 'quicktime', 'video/quicktime', '^.{4}(?:cmov|free|ftypqt|mdat|moov|pnot|skip|wide)', 'Quicktime Movie'),
     ('avi', 'avi', 'video', 'avi', 'video/x-msvideo', '^RIFF.{4}AVI\\\\x20LIST', 'AVI'),
     ('wmv', 'wmv', 'video', 'wmv', 'video/x-ms-wmv', '^\\\\x30\\\\x26\\\\xB2\\\\x75\\\\x8E\\\\x66\\\\xCF\\\\x11\\\\xA6\\\\xD9\\\\x00\\\\xAA\\\\x00\\\\x62\\\\xCE\\\\x6C', 'Windows Media Video'),
-    ('mp4', 'mp4', 'video', 'mpeg4', 'video/mp4', '^.{4}(?:ftypiso2|ftypisom)', 'MPEG-4 Media'),
+    ('mp4', 'mp4', 'video', 'mpeg4', 'video/mp4', '^.{4}ftyp(?:iso2|isom|mp41|mp42)', 'MPEG-4 Media'),
     ('m4v', 'm4v', 'video', 'm4v', 'video/x-m4v', '^.{4}ftypmp(?:41|42|71)', 'MPEG-4 Video'),
     ('mkv', 'mkv', 'video', 'matroska', 'video/x-matroska', '^\\\\x1A\\\\x45\\\\xDF\\\\xA3', 'Matroska Media'),
     ('flv', 'flv', 'video', 'flash-video', 'video/x-flv', '^FLV\\\\x01', 'Flash Video'),
