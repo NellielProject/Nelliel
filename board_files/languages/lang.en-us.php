@@ -371,10 +371,6 @@ $lang_singular = array(
     'POSTING_RULES2_1' => 'Images greater than ',  // Rules line 2 first half
     'POSTING_RULES2_2' => ' pixels will be thumbnailed.',  // Rules line 2 second half
 
-
-    'DELETE_FILES_ONLY' => 'Delete File Only',  // Prints text next to checkbox for file deletion (right)
-
-
     'BAN_APPEAL_RESPONSE' => 'This is the response to your appeal: ',  // Response to appealed ban
     'BAN_NO_RESPONSE' => 'No response has been given.',  // No response yet
     'BAN_RESPONSE_PENDING' => 'You have already appealed this ban but the appeal has not been reviewed yet.',  // Appeal already filed
