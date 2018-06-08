@@ -55,7 +55,6 @@ function nel_site_settings($setting = null, $cache_regen = false)
             foreach ($config_list as $config)
             {
                 $config['setting'] = nel_cast_to_datatype($config['data_type'], $config['setting']);
-                var_dump($config['setting']);
                 $site_settings[$config['config_name']] = $config['setting'];
             }
 
