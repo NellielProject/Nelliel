@@ -148,5 +148,7 @@ class TemplateCore
     {
         $template_contents = preg_replace('#<\/source>#', '', $template_contents);
         $template_contents = preg_replace('#<\/embed>#', '', $template_contents);
+
+        return $template_contents;
     }
 }
