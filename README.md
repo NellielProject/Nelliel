@@ -7,15 +7,15 @@ Nelliel was originally a modified version of Futallaby made to host Nigrachan. T
 **Nelliel should be considered early beta software. It is still buggy, incomplete and will probably have further breaking changes. You're free to try it out but don't use it for anything important yet.**
 
 ## Minimum Requirements ##
-Nelliel's minimum requirements are kept to the lowest reasonable level for current functionality while also remaining forward compatible. These are only the bare minimum requirements for Nelliel to function. **It is strongly recommended to use the latest software versions available.**
+These are only the bare minimum requirements for Nelliel to function. **It is strongly recommended to use the latest software versions available.**
 
 Required:
-- PHP 5.3.3+
-- GD 2.0.34+
-- PDO with MySQL, SQLite or PostgreSQL
-- MySQL 5.1.73+ or SQLite 3.6.20+ or PostgreSQL 8.4.20+
-- iconv 2.12+
-- libxml 2.6.0+
+- PHP 5.4.16+
+- PDO with MySQL, SQLite or PostgreSQL support
+- MySQL 5.5.52+, MariaDB 5.5.52+, SQLite 3.6.20+ or PostgreSQL 9.2.18+
+- iconv
+- libxml 2.6+
+- PHP GD
 - PHP DOM
 
 In most cases these requirements will be fulfilled by a standard PHP install and everything will run out of the box. In the case a component is not present it will usually be available in the default system repos and can be easily installed.
