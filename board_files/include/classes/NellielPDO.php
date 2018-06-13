@@ -16,11 +16,6 @@ class NellielPDO extends PDO
     public function __construct($dsn, $username = null, $password = null, $options = array())
     {
         parent::__construct($dsn, $username, $password, $options);
-
-        if (ini_get('date.timezone') === '')
-        {
-            date_default_timezone_set('UTC');
-        }
     }
 
     public function databaseExists($database)

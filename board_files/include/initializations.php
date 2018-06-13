@@ -4,6 +4,11 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+if (ini_get('date.timezone') === '')
+{
+    date_default_timezone_set('UTC');
+}
+
 define('INPUT_BOARD_ID', isset($_POST['board_id']) ? $_POST['board_id'] : ''); // Default board id setting
 define('WEB_FILES', 'web/'); // Directory for CSS, Javascript and other web-related support files
 define('IMAGES_DIR', WEB_FILES . 'imagez/'); // Images used by Nelliel go here
