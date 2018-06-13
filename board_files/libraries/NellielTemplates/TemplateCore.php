@@ -76,6 +76,7 @@ class TemplateCore
         if(!is_null($template))
         {
             $output = $this->fixOutputHTML($template, $output);
+            $output = $this->html5Fixes($template, $output);
         }
 
         return $output;
@@ -140,8 +141,12 @@ class TemplateCore
             $template_contents = preg_replace('#<\/body>#', '', $template_contents);
         }
 
-        $template_contents = preg_replace('#<\/source>#', '', $template_contents);
-
         return $template_contents;
+    }
+
+    private function html5Fixes($template, $template_contents)
+    {
+        $template_contents = preg_replace('#<\/source>#', '', $template_contents);
+        $template_contents = preg_replace('#<\/embed>#', '', $template_contents);
     }
 }
