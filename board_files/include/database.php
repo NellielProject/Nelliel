@@ -79,12 +79,6 @@ function nel_default_database_connection()
             $dsn = 'mysql:host=' . MYSQL_HOST . ';port=' . MYSQL_PORT . ';dbname=' . MYSQL_DB . ';charset=' .
                  MYSQL_ENCODING . ';';
             $connection = nel_new_database_connection($dsn, MYSQL_USER, MYSQL_PASS, $options);
-
-            if (version_compare(PHP_VERSION, '5.3.6', '<'))
-            {
-                $connection->exec("SET names '" . MYSQL_ENCODING . "';");
-            }
-
             $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
             $connection->exec("SET SESSION sql_mode='ANSI';");
             break;

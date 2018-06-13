@@ -73,7 +73,7 @@ $db_config['mysql_user'] = '';
 $db_config['mysql_pass'] = '';
 
 // The character encoding to use.
-$db_config['mysql_encoding'] = 'utf8';
+$db_config['mysql_encoding'] = 'utf8mb4';
 
 
 //

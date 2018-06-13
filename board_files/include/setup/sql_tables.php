@@ -84,7 +84,7 @@ function nel_table_options()
 
     if (SQLTYPE === 'MYSQL')
     {
-        $options = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci';
+        $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
         $options .= ' ENGINE = InnoDB';
     }
 
@@ -282,7 +282,7 @@ function nel_create_user_table($table_name)
     $schema = '
     CREATE TABLE ' . $table_name . ' (
         entry                   ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        user_id                 VARCHAR(255) NOT NULL UNIQUE,
+        user_id                 VARCHAR(255) NOT NULL,
         user_title              VARCHAR(255) DEFAULT NULL,
         user_password           VARCHAR(255) DEFAULT NULL,
         user_tripcode           VARCHAR(255) DEFAULT NULL,
@@ -425,7 +425,7 @@ function nel_create_board_data_table($table_name)
     $schema = '
     CREATE TABLE ' . $table_name . ' (
         entry                   ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        board_id                VARCHAR(255) NOT NULL UNIQUE,
+        board_id                VARCHAR(255) NOT NULL,
         board_directory         VARCHAR(255) NOT NULL,
         db_prefix               VARCHAR(255) NOT NULL
     ) ' . $options . ';';
@@ -441,7 +441,7 @@ function nel_create_filetype_table($table_name)
     $schema = '
     CREATE TABLE ' . $table_name . ' (
         entry                   ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
-        extension               VARCHAR(255) NOT NULL UNIQUE,
+        extension               VARCHAR(255) NOT NULL,
         parent_extension        VARCHAR(255) NOT NULL,
         type                    VARCHAR(255) DEFAULT NULL,
         format                  VARCHAR(255) DEFAULT NULL,
