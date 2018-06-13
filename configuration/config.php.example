@@ -24,10 +24,6 @@ $base_config['defaultadmin_pass'] = '';
 // Change this setting ONCE when you do initial setup. Changing it again will alter the secure tripcode output.
 $base_config['tripcode_salt'] = 'sodiumz';
 
-// Salt used for other hashing
-// A different salt from the one for secure tripcodes. May have various uses
-$base_config['general_salt'] = 'moarsodiumz';
-
 // Each time the script is run, this goes through the setup sequence and checks that everything is in place.
 // Once initial setup and testing is finished this isn't really necessary and can be set to false.
 $base_config['run_setup_check'] = true;
