@@ -86,12 +86,6 @@ function nel_ban_appeal($board_id)
 
     $ip_address = $_POST['ban_ip'];
     $bawww = $_POST['ban_appeal'];
-
-    if (SQLTYPE === 'MYSQL')
-    {
-        nel_utf8_4byte_to_entities($bawww);
-    }
-
     $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE .
          '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ip_address_starts" = ?');
     $dbh->executePrepared($prepared, array($bawww, @inet_pton($ip_address)));

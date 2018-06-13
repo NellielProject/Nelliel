@@ -4,15 +4,6 @@ function nel_db_insert_initial_post($board_id, $time, $post_data)
 {
     $dbh = nel_database();
     $references = nel_board_references($board_id);
-
-    if (SQLTYPE === 'MYSQL')
-    {
-        nel_utf8_4byte_to_entities($post_data['name']);
-        nel_utf8_4byte_to_entities($post_data['email']);
-        nel_utf8_4byte_to_entities($post_data['subject']);
-        nel_utf8_4byte_to_entities($post_data['comment']);
-    }
-
     $columns = array('poster_name', 'post_password', 'tripcode', 'secure_tripcode', 'email', 'subject', 'comment',
         'ip_address', 'has_file', 'file_count', 'post_time', 'op', 'sage', 'mod_post');
     $values = $dbh->generateParameterIds($columns);
@@ -78,18 +69,6 @@ function nel_db_insert_new_files($board_id, $parent_id, $new_post_info, $files)
 
     foreach ($files as $file)
     {
-        if (SQLTYPE === 'MYSQL')
-        {
-            nel_utf8_4byte_to_entities($file['type']);
-            nel_utf8_4byte_to_entities($file['mime']);
-            nel_utf8_4byte_to_entities($file['filename']);
-            nel_utf8_4byte_to_entities($file['extension']);
-            nel_utf8_4byte_to_entities($file['preview_name']);
-            nel_utf8_4byte_to_entities($file['source']);
-            nel_utf8_4byte_to_entities($file['license']);
-            nel_utf8_4byte_to_entities($file['alt_text']);
-        }
-
         $columns = array('parent_thread', 'post_ref', 'file_order', 'type', 'format', 'mime', 'filename', 'extension',
             'image_width', 'image_height', 'preview_name', 'preview_width', 'preview_height', 'filesize', 'md5', 'sha1',
             'sha256', 'sha512', 'source', 'license', 'alt_text');
