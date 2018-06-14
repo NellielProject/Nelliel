@@ -88,7 +88,7 @@ function nel_numeric_html_entities_to_utf8(&$input)
     }, $input);
 }
 
-function nel_cast_to_datatype($datatype, $value)
+function nel_cast_to_datatype($value, $datatype)
 {
     if ($datatype === 'bool' || $datatype === 'boolean')
     {

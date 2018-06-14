@@ -54,7 +54,7 @@ function nel_site_settings($setting = null, $cache_regen = false)
 
             foreach ($config_list as $config)
             {
-                $config['setting'] = nel_cast_to_datatype($config['data_type'], $config['setting']);
+                $config['setting'] = nel_cast_to_datatype($config['setting'], $config['data_type']);
                 $site_settings[$config['config_name']] = $config['setting'];
             }
 
@@ -117,7 +117,7 @@ function nel_board_settings($board_id, $setting = null, $cache_regen = false)
 
             foreach ($config_list as $config)
             {
-                $config['setting'] = nel_cast_to_datatype($config['data_type'], $config['setting']);
+                $config['setting'] = nel_cast_to_datatype($config['setting'], $config['data_type']);
                 $board_settings[$config['config_name']] = $config['setting'];
             }
 
