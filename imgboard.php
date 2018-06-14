@@ -28,12 +28,22 @@ nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
 require_once INCLUDE_PATH . 'setup/setup.php';
 
-if(RUN_SETUP_CHECK)
+if (RUN_SETUP_CHECK)
 {
     setup_check(INPUT_BOARD_ID);
 }
 
 require_once INCLUDE_PATH . 'accessors.php';
+require_once INCLUDE_PATH . 'regen.php';
+
+if (nel_setup_stuff_done())
+{
+    if (USE_INTERNAL_CACHE)
+    {
+        nel_regen_site_cache();
+    }
+}
+
 require_once INCLUDE_PATH . 'plugins.php';
 $plugin_files = glob(PLUGINS_PATH . '*.nel.php');
 $plugins = new nel_plugin_handler();

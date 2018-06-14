@@ -4,8 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'regen.php';
-
 function nel_central_dispatch()
 {
     $authorize = nel_authorize();

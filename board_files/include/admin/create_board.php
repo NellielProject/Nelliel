@@ -14,5 +14,11 @@ function nel_create_new_board()
     $dbh->executePrepared($prepared, array($board_id, $board_directory, $db_prefix));
     nel_create_board_tables($board_id);
     nel_create_board_directories($board_id);
+
+    if(USE_INTERNAL_CACHE)
+    {
+        nel_regen_board_cache($board_id);
+    }
+
     return $board_id;
 }

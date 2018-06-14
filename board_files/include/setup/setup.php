@@ -25,31 +25,18 @@ function setup_check($board_id) // TODO Do this better
     {
         return;
     }
-
-    //nel_create_board_tables($board_id);
-    //nel_create_board_directories($board_id);
-    nel_setup_stuff_done('check_done_nochange');
-
-    if (STUFF_DONE === true)
-    {
-        // This should go to a log or something.
-        //echo '<br><br>Process completed. If there are no errors listed above then you did it right. Please wait a few seconds and you will be taken to the front page.';
-    }
 }
 
-function nel_setup_stuff_done($status)
+function nel_setup_stuff_done($status = null)
 {
-    if (!defined('STUFF_DONE'))
+    $stuff_done = false;
+
+    if(!is_null($status) && $status !== false)
     {
-        if ($status === 'check_done_nochange')
-        {
-            define('STUFF_DONE', false);
-        }
-        else if (!$status !== false)
-        {
-            define('STUFF_DONE', true);
-        }
+        $stuff_done = true;
     }
+
+    return $stuff_done;
 }
 
 function nel_create_core_directories()
