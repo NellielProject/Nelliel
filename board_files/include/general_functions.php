@@ -34,9 +34,7 @@ function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_del
 
 function get_millisecond_time()
 {
-    $time = explode(' ', microtime());
-    $time[0] = str_pad(round($time[0] * 1000), 3, '0', STR_PAD_LEFT);
-    return $time[1] . $time[0];
+    return round(microtime(true), 3) * 1000;
 }
 
 //
