@@ -1,18 +1,18 @@
 <?php
 /**
  * A Compatibility library with PHP 5.5's simplified password hashing API.
-*
-* @author Anthony Ferrara <ircmaxell@php.net>
-* @license http://www.opensource.org/licenses/mit-license.html MIT License
-* @copyright 2012 The Authors
-*/
+ *
+ * @author Anthony Ferrara <ircmaxell@php.net>
+ * @license http://www.opensource.org/licenses/mit-license.html MIT License
+ * @copyright 2012 The Authors
+ */
 
 namespace {
 
     if (!defined('PASSWORD_BCRYPT')) {
         /**
          * PHPUnit Process isolation caches constants, but not function declarations.
-         * So we need to check if the constants are defined separately from
+         * So we need to check if the constants are defined separately from 
          * the functions to enable supporting process isolation in userland
          * code.
          */
@@ -53,7 +53,7 @@ namespace {
                 case PASSWORD_BCRYPT:
                     $cost = PASSWORD_BCRYPT_DEFAULT_COST;
                     if (isset($options['cost'])) {
-                        $cost = (int) $options['cost'];
+                        $cost = $options['cost'];
                         if ($cost < 4 || $cost > 31) {
                             trigger_error(sprintf("password_hash(): Invalid bcrypt cost parameter specified: %d", $cost), E_USER_WARNING);
                             return null;
@@ -71,7 +71,7 @@ namespace {
                     trigger_error(sprintf("password_hash(): Unknown password hashing algorithm: %s", $algo), E_USER_WARNING);
                     return null;
             }
-            $salt_req_encoding = false;
+            $salt_requires_encoding = false;
             if (isset($options['salt'])) {
                 switch (gettype($options['salt'])) {
                     case 'NULL':
@@ -96,7 +96,7 @@ namespace {
                     trigger_error(sprintf("password_hash(): Provided salt is too short: %d expecting %d", PasswordCompat\binary\_strlen($salt), $required_salt_len), E_USER_WARNING);
                     return null;
                 } elseif (0 == preg_match('#^[a-zA-Z0-9./]+$#D', $salt)) {
-                    $salt_req_encoding = true;
+                    $salt_requires_encoding = true;
                 }
             } else {
                 $buffer = '';
@@ -108,30 +108,27 @@ namespace {
                     }
                 }
                 if (!$buffer_valid && function_exists('openssl_random_pseudo_bytes')) {
-                    $strong = false;
-                    $buffer = openssl_random_pseudo_bytes($raw_salt_len, $strong);
-                    if ($buffer && $strong) {
+                    $buffer = openssl_random_pseudo_bytes($raw_salt_len);
+                    if ($buffer) {
                         $buffer_valid = true;
                     }
                 }
                 if (!$buffer_valid && @is_readable('/dev/urandom')) {
-                    $file = fopen('/dev/urandom', 'r');
-                    $read = 0;
-                    $local_buffer = '';
+                    $f = fopen('/dev/urandom', 'r');
+                    $read = PasswordCompat\binary\_strlen($buffer);
                     while ($read < $raw_salt_len) {
-                        $local_buffer .= fread($file, $raw_salt_len - $read);
-                        $read = PasswordCompat\binary\_strlen($local_buffer);
+                        $buffer .= fread($f, $raw_salt_len - $read);
+                        $read = PasswordCompat\binary\_strlen($buffer);
                     }
-                    fclose($file);
+                    fclose($f);
                     if ($read >= $raw_salt_len) {
                         $buffer_valid = true;
                     }
-                    $buffer = str_pad($buffer, $raw_salt_len, "\0") ^ str_pad($local_buffer, $raw_salt_len, "\0");
                 }
                 if (!$buffer_valid || PasswordCompat\binary\_strlen($buffer) < $raw_salt_len) {
-                    $buffer_length = PasswordCompat\binary\_strlen($buffer);
+                    $bl = PasswordCompat\binary\_strlen($buffer);
                     for ($i = 0; $i < $raw_salt_len; $i++) {
-                        if ($i < $buffer_length) {
+                        if ($i < $bl) {
                             $buffer[$i] = $buffer[$i] ^ chr(mt_rand(0, 255));
                         } else {
                             $buffer .= chr(mt_rand(0, 255));
@@ -139,14 +136,14 @@ namespace {
                     }
                 }
                 $salt = $buffer;
-                $salt_req_encoding = true;
+                $salt_requires_encoding = true;
             }
-            if ($salt_req_encoding) {
+            if ($salt_requires_encoding) {
                 // encode string with the Base64 variant used by crypt
                 $base64_digits =
-                'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+                    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
                 $bcrypt64_digits =
-                './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                    './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
                 $base64_string = base64_encode($salt);
                 $salt = strtr(rtrim($base64_string, '='), $base64_digits, $bcrypt64_digits);
@@ -182,9 +179,9 @@ namespace {
          */
         function password_get_info($hash) {
             $return = array(
-            'algo' => 0,
-            'algoName' => 'unknown',
-            'options' => array(),
+                'algo' => 0,
+                'algoName' => 'unknown',
+                'options' => array(),
             );
             if (PasswordCompat\binary\_substr($hash, 0, 4) == '$2y$' && PasswordCompat\binary\_strlen($hash) == 60) {
                 $return['algo'] = PASSWORD_BCRYPT;
@@ -208,13 +205,13 @@ namespace {
          */
         function password_needs_rehash($hash, $algo, array $options = array()) {
             $info = password_get_info($hash);
-            if ($info['algo'] !== (int) $algo) {
+            if ($info['algo'] != $algo) {
                 return true;
             }
             switch ($algo) {
                 case PASSWORD_BCRYPT:
-                    $cost = isset($options['cost']) ? (int) $options['cost'] : PASSWORD_BCRYPT_DEFAULT_COST;
-                    if ($cost !== $info['options']['cost']) {
+                    $cost = isset($options['cost']) ? $options['cost'] : PASSWORD_BCRYPT_DEFAULT_COST;
+                    if ($cost != $info['options']['cost']) {
                         return true;
                     }
                     break;

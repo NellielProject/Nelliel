@@ -11,9 +11,7 @@ function nel_insert_site_config_defaults()
                 VALUES  ('core_setting', 'nelliel', 'general', 'str', 'home_page', '../'),
                         ('core_setting', 'nelliel', 'crypt', 'str', 'post_password_algorithm', 'sha256'),
                         ('core_setting', 'nelliel', 'crypt', 'str', 'secure_tripcode_algorithm', 'sha256'),
-                        ('core_setting', 'nelliel', 'crypt', 'bool', 'use_password_default_algorithm', '1'),
                         ('core_setting', 'nelliel', 'crypt', 'bool', 'do_password_rehash', '0'),
-                        ('core_setting', 'nelliel', 'crypt', 'bool', 'do_sha2_fallback', '1'),
                         ('schema_version', 'nelliel', 'database', 'str', 'original_bans_schema', '001'),
                         ('schema_version', 'nelliel', 'database', 'str', 'current_bans_schema', '001'),
                         ('schema_version', 'nelliel', 'database', 'str', 'original_user_schema', '001'),
@@ -199,8 +197,6 @@ function nel_insert_default_admin()
     {
         return false;
     }
-
-    nel_verify_hash_algorithm();
 
     $dbh = nel_database();
     $result = $dbh->query('SELECT 1 FROM "' . USER_TABLE . '" WHERE "user_id" = \'' . DEFAULTADMIN . '\'');

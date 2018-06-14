@@ -113,7 +113,7 @@ $lang_singular = array(
     'ERROR_152' => 'Cancer detected in post: ',  // Error 152: Banned text
     'ERROR_160' => 'Your ip address does not match the one listed in the ban.',  // Error 160: IP mismatch
     'ERROR_200' => 'No valid action specified.',  // Error 200: Wut u try do?
-    'ERROR_201' => 'No acceptable hashing algorithm has been found. We can\'t function like this.',  // Error 201: No decent hash algorithm to work with
+    'ERROR_201' => 'No acceptable password hashing algorithm has been found. We can\'t function like this.',  // Error 201: No decent hash algorithm to work with
     'ERROR_300' => 'You have failed to login. Please wait a few seconds before trying again.',  // Error 300: Not authorized
     'ERROR_301' => 'JFC! Slow down on the failure!',  // Error 301: Too many login attempts
     'ERROR_302' => 'This account has had too many failed login attempts and has been temporarily locked for 10 minutes.',  // Error 302: Lockout 5 min
@@ -331,9 +331,7 @@ $lang_singular = array(
     'MANAGE_SET_FILE_SHA512' => 'Generate a SHA512 hash for uploaded files',  // SHA512 file hash
     'MANAGE_SET_POST_PASS_ALGO' => 'Hash algorithm for post passwords',  // Post password algorithm
     'MANAGE_SET_SECURE_TRIP_ALGO' => 'Hash algorithm for secure tripcodes',  // Secure tripcode algorithm
-    'MANAGE_SET_USE_PASS_DEFAULT' => 'Use PHP\'s default algorithm for user and site passwords',  // PHP default pass algorithm
     'MANAGE_SET_DO_PASS_REHASH' => 'Do password rehash as needed. Usually used when changing algorithms or cost',  // Password rehash
-    'MANAGE_SET_DO_SHA2_FALLBACK' => 'In case bcrypt or other default is not available, fallback to SHA2 for password',  // Password fallback SHA2
     'MANAGE_FORM_UPDSET' => 'Update board settings',  // Update settings
 
 

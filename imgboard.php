@@ -16,12 +16,16 @@ require_once INCLUDE_PATH . 'autoload.php';
 require_once LIBRARY_PATH . 'phpDOMExtend/autoload.php';
 require_once LIBRARY_PATH . 'NellielTemplates/autoload.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
+require_once LIBRARY_PATH . 'password_compat/lib/password.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'general_functions.php';
 require_once INCLUDE_PATH . 'language/language.php';
 require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'crypt.php';
+
+nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
+
 require_once INCLUDE_PATH . 'setup/setup.php';
 
 if(RUN_SETUP_CHECK)
@@ -29,7 +33,6 @@ if(RUN_SETUP_CHECK)
     setup_check(INPUT_BOARD_ID);
 }
 
-nel_verify_hash_algorithm();
 require_once INCLUDE_PATH . 'accessors.php';
 require_once INCLUDE_PATH . 'plugins.php';
 $plugin_files = glob(PLUGINS_PATH . '*.nel.php');

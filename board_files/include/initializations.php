@@ -38,8 +38,11 @@ $base_config['run_setup_check'] = true;
 $base_config['directory_perm'] = '0775';
 $base_config['file_perm'] = '0664';
 $base_config['use_internal_cache'] = true;
+$crypt_config['password_algorithm'] = 'BCRYPT';
 $crypt_config['password_bcrypt_cost'] = 12;
-$crypt_config['password_sha2_cost'] = 200000;
+$crypt_config['argon2_memory_cost'] = 1024;
+$crypt_config['argon2_time_cost'] = 2;
+$crypt_config['argon2_threads'] = 2;
 
 require_once CONFIG_PATH . 'config.php';
 
@@ -67,5 +70,8 @@ define('POSTGRES_USER', $db_config['postgres_user']);
 define('POSTGRES_PASS', $db_config['postgres_password']);
 define('POSTGRES_SCHEMA', $db_config['postgres_schema']);
 define('POSTGRES_ENCODING', $db_config['postgres_encoding']);
-define('PASSWORD_BCRYPT_COST', $crypt_config['password_bcrypt_cost']);
-define('PASSWORD_SHA2_COST', $crypt_config['password_sha2_cost']);
+define('NEL_PASSWORD_PREFERRED_ALGORITHM', $crypt_config['password_algorithm']);
+define('NEL_PASSWORD_BCRYPT_COST', $crypt_config['password_bcrypt_cost']);
+define('NEL_PASSWORD_ARGON2_MEMORY_COST', $crypt_config['password_argon2_memory_cost']);
+define('NEL_PASSWORD_ARGON2_TIME_COST', $crypt_config['password_argon2_time_cost']);
+define('NEL_PASSWORD_ARGON2_THREADS', $crypt_config['password_argon2_threads']);

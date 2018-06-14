@@ -124,7 +124,24 @@ $db_config['postgres_encoding'] = 'UTF-8';
 //
 
 // The hash settings for staff logins and other higher security things
-// Bcrypt - PHP default is 10; 04 is the minimum; 31 is maximum
-// SHA2 - PHP default is 5000; minimum is 1000; maximum is 999999999
+
+// Which algorithm to use. Current valid options: BCRYPT, ARGON2I
+// If a selected algorithm is not available, Nelliel will use the PASSWORD_DEFAULT
+$crypt_config['password_algorithm'] = 'BCRYPT';
+
+// Bcrypt
+
+// PHP default cost is 10; Nelliel default is 12; 04 is the minimum; 31 is maximum
 $crypt_config['password_bcrypt_cost'] = 12;
-$crypt_config['password_sha2_cost'] = 200000;
+
+// Argon2I
+// Only available in PHP 7.2+
+
+// PHP default memory cost is 1024; Nelliel default is 1024
+$crypt_config['password_argon2_memory_cost'] = 1024;
+
+// PHP default time cost is 2; Nelliel default is 2
+$crypt_config['password_argon2_time_cost'] = 2;
+
+// PHP default threads is 2; Nelliel default is 2
+$crypt_config['password_argon2_threads'] = 2;
