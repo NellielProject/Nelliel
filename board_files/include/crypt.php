@@ -78,11 +78,7 @@ function nel_password_verify($password, $hash)
 
 function nel_password_needs_rehash($hash, $algorithm, $options = array())
 {
-    $dbh = nel_database();
-    $do_rehash = $dbh->executeFetch('SELECT "setting" FROM "' . SITE_CONFIG_TABLE .
-         '" WHERE "config_name" = \'do_password_rehash\'', PDO::FETCH_COLUMN);
-
-    if (!$do_rehash)
+    if (!nel_site_settings('do_password_rehash'))
     {
         return false;
     }
@@ -102,17 +98,15 @@ function nel_salted_hash_info($hash)
     $info = array();
     $pieces = explode('$', $hash);
 
-    if (in_array($pieces[0], $available))
+    $info['algoName'] = 'unknown';
+    $info['salt'] = '';
+    $info['hash'] = '';
+
+    if (in_array($pieces[1], $available))
     {
-        $info['algoName'] = $pieces[0];
-        $info['salt'] = $pieces[1];
-        $info['hash'] = $pieces[2];
-    }
-    else
-    {
-        $info['algoName'] = 'unknown';
-        $info['salt'] = '';
-        $info['hash'] = '';
+        $info['algoName'] = $pieces[1];
+        $info['salt'] = $pieces[2];
+        $info['hash'] = $pieces[3];
     }
 
     return $info;
@@ -127,7 +121,7 @@ function nel_generate_salted_hash($algorithm, $string, $salt = null)
 
     $full_string = $salt . $string;
     $hash = hash($algorithm, $full_string, false);
-    return $algorithm . '$' . $salt . '$' . $hash;
+    return '$' . $algorithm . '$' . $salt . '$' . $hash;
 }
 
 function nel_verify_salted_hash($string, $hash)
