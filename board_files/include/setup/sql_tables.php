@@ -333,7 +333,7 @@ function nel_create_user_role_table($table_name)
         entry                   ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
         user_id                 VARCHAR(255) NOT NULL,
         role_id                 VARCHAR(255) NOT NULL,
-        board                   VARCHAR(255) NOT NULL,
+        board                   VARCHAR(255) DEFAULT NULL,
         all_boards              SMALLINT NOT NULL DEFAULT 0
     ) ' . $options . ';';
 
