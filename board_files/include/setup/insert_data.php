@@ -203,10 +203,10 @@ function nel_insert_default_admin()
         return false;
     }
 
-    $result = $dbh->query('INSERT INTO "' . USER_TABLE . '" (user_id, user_password, active, failed_logins, last_failed_login)
-    VALUES (\'' .
-         DEFAULTADMIN . '\', \'' . nel_password_hash(DEFAULTADMIN_PASS, NEL_PASSWORD_ALGORITHM) . '\', 1, 1, 0)');
-
+    $insert_query = "INSERT INTO " . USER_TABLE .
+         " (user_id, user_password, active, failed_logins, last_failed_login) VALUES (?, ?, ?, ?, ?)";
+    $prepared = $dbh->prepare($insert_query);
+    $dbh->executePrepared($prepared, [DEFAULTADMIN, nel_password_hash(DEFAULTADMIN_PASS, NEL_PASSWORD_ALGORITHM), 1, 1, 0]);
     nel_setup_stuff_done($result);
 }
 
@@ -225,9 +225,9 @@ function nel_insert_default_admin_role()
         return false;
     }
 
-    $result = $dbh->query("INSERT INTO \"" . USER_ROLE_TABLE . "\" (user_id, role_id, all_boards) VALUES ('" .
-         DEFAULTADMIN . "', 'SUPER_ADMIN', 1");
-
+    $insert_query = "INSERT INTO " . USER_ROLE_TABLE . " (user_id, role_id, all_boards) VALUES (?, ?, ?)";
+    $prepared = $dbh->prepare($insert_query);
+    $dbh->executePrepared($prepared, [DEFAULTADMIN, 'SUPER_ADMIN', '1']);
     nel_setup_stuff_done($result);
 }
 
