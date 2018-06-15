@@ -104,7 +104,6 @@ function nel_create_table_query($schema, $table_name)
 
     if (!$result)
     {
-        print_r($dbh->errorInfo());
         $dbh->tableFail($table_name);
     }
 

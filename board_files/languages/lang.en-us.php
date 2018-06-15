@@ -114,6 +114,7 @@ $lang_singular = array(
     'ERROR_160' => 'Your ip address does not match the one listed in the ban.',  // Error 160: IP mismatch
     'ERROR_200' => 'No valid action specified.',  // Error 200: Wut u try do?
     'ERROR_201' => 'No acceptable password hashing algorithm has been found. We can\'t function like this.',  // Error 201: No decent hash algorithm to work with
+    'ERROR_202' => 'InnoDB engine is required for MySQL support. However the engine has been disabled for some stupid reason.',  // Error 202: No InnoDB available
     'ERROR_300' => 'You have failed to login. Please wait a few seconds before trying again.',  // Error 300: Not authorized
     'ERROR_301' => 'JFC! Slow down on the failure!',  // Error 301: Too many login attempts
     'ERROR_302' => 'This account has had too many failed login attempts and has been temporarily locked for 10 minutes.',  // Error 302: Lockout 5 min
