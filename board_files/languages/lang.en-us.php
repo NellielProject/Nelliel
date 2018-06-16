@@ -333,6 +333,8 @@ $lang_singular = array(
     'MANAGE_SET_POST_PASS_ALGO' => 'Hash algorithm for post passwords',  // Post password algorithm
     'MANAGE_SET_SECURE_TRIP_ALGO' => 'Hash algorithm for secure tripcodes',  // Secure tripcode algorithm
     'MANAGE_SET_DO_PASS_REHASH' => 'Do password rehash as needed. Usually used when changing algorithms or cost',  // Password rehash
+    'MANAGE_SET_ONLY_THREAD_DUPLICATES' => 'Only check for duplicates in current thread when replying',
+    'MANAGE_SET_ONLY_OP_DUPLICATES' => 'Only check for duplicates in other op posts when creating new thread',
     'MANAGE_FORM_UPDSET' => 'Update board settings',  // Update settings
 
 

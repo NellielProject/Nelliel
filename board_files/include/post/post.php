@@ -34,7 +34,7 @@ function nel_process_new_post($board_id)
     $post_data['sage'] = (is_null(nel_fgsfds('sage'))) ? 0 : nel_fgsfds('sage');
 
     // Start collecting file info
-    $files = nel_process_file_info($board_id);
+    $files = nel_process_file_info($board_id, $post_data['response_to']);
     $spoon = false;
     $files_count = 0;
 

@@ -1,6 +1,6 @@
 <?php
 
-function nel_process_file_info($board_id)
+function nel_process_file_info($board_id, $response_to)
 {
     $references = nel_board_references($board_id);
     $board_settings = nel_board_settings($board_id);
@@ -30,7 +30,7 @@ function nel_process_file_info($board_id)
         $new_file['fullname'] = substr($info['basename'], 1);
         $new_file['dest'] = $file['tmp_name'];
         $new_file['filesize'] = $file['size'];
-        $new_file = nel_check_for_existing_file($board_id, $new_file, $files);
+        $new_file = nel_check_for_existing_file($board_id, $new_file, $files, $response_to);
         $new_file = nel_get_filetype($board_id, $new_file, $files);
         $new_file['dest'] = $references['src_path'] . $file['name'] . '.tmp';
         move_uploaded_file($file['tmp_name'], $new_file['dest']);
@@ -93,7 +93,7 @@ function nel_check_upload_errors($board_id, $file, $files)
     }
 }
 
-function nel_check_for_existing_file($board_id, $file, $files)
+function nel_check_for_existing_file($board_id, $file, $files, $response_to)
 {
     $dbh = nel_database();
     $references = nel_board_references($board_id);
@@ -130,13 +130,40 @@ function nel_check_for_existing_file($board_id, $file, $files)
         nel_derp(150, nel_stext('ERROR_150'), $board_id, $error_data);
     }
 
-    $query = 'SELECT 1 FROM "' . $references['file_table'] .
-         '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ? LIMIT 1';
-    $prepared = $dbh->prepare($query);
-    $prepared->bindValue(1, $file['md5'], PDO::PARAM_LOB);
-    $prepared->bindValue(2, $file['sha1'], PDO::PARAM_LOB);
-    $prepared->bindValue(3, $file['sha256'], PDO::PARAM_LOB);
-    $prepared->bindValue(4, $file['sha512'], PDO::PARAM_LOB);
+    if ($response_to === 0 && $board_settings['only_op_duplicates'])
+    {
+        $query = 'SELECT 1 FROM "' . $references['file_table'] .
+             '" WHERE ("parent_thread" = ? AND "post_ref" = ?) AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
+        $prepared = $dbh->prepare($query);
+        $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
+        $prepared->bindValue(2, $response_to, PDO::PARAM_INT);
+        $prepared->bindValue(3, $file['md5'], PDO::PARAM_LOB);
+        $prepared->bindValue(4, $file['sha1'], PDO::PARAM_LOB);
+        $prepared->bindValue(5, $file['sha256'], PDO::PARAM_LOB);
+        $prepared->bindValue(6, $file['sha512'], PDO::PARAM_LOB);
+    }
+    else if ($response_to > 0 && $board_settings['only_thread_duplicates'])
+    {
+        $query = 'SELECT 1 FROM "' . $references['file_table'] .
+             '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
+        $prepared = $dbh->prepare($query);
+        $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
+        $prepared->bindValue(2, $file['md5'], PDO::PARAM_LOB);
+        $prepared->bindValue(3, $file['sha1'], PDO::PARAM_LOB);
+        $prepared->bindValue(4, $file['sha256'], PDO::PARAM_LOB);
+        $prepared->bindValue(5, $file['sha512'], PDO::PARAM_LOB);
+    }
+    else
+    {
+        $query = 'SELECT 1 FROM "' . $references['file_table'] .
+             '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ? LIMIT 1';
+        $prepared = $dbh->prepare($query);
+        $prepared->bindValue(1, $file['md5'], PDO::PARAM_LOB);
+        $prepared->bindValue(2, $file['sha1'], PDO::PARAM_LOB);
+        $prepared->bindValue(3, $file['sha256'], PDO::PARAM_LOB);
+        $prepared->bindValue(4, $file['sha512'], PDO::PARAM_LOB);
+    }
+
     $result = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
 
     if ($result)
