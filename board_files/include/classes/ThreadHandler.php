@@ -160,7 +160,7 @@ class ThreadHandler
                  '" SET "parent_thread" = ? WHERE "post_ref" = ?');
             $this->dbh->executePrepared($prepared, array($post_id, $post_id));
 
-            $prepared = $this->dbh->prepare('SELECT "filename", "extension", "preview_name" FROM "' .
+            $prepared = $this->dbh->prepare('SELECT "filename", "extension", "preview_name", "preview_extension" FROM "' .
                  $this->references['file_table'] . '" WHERE "post_ref" = ?');
             $file_data = $this->dbh->executePreparedFetchAll($prepared, array($post_id), PDO::FETCH_ASSOC);
             $file_count = count($file_data);
@@ -168,8 +168,8 @@ class ThreadHandler
 
             while ($line < $file_count)
             {
-                $filename = $file_data[$line]['filename'] . $file_data[$line]['extension'];
-                $preview = $file_data[$line]['preview_name'];
+                $filename = $file_data[$line]['filename'] . '.' . $file_data[$line]['extension'];
+                $preview = $file_data[$line]['preview_name'] . '.' . $file_data[$line]['preview_extension'];
                 $this->file_handler->moveFile($this->file_handler->pathFileJoin($src_path, $filename), $this->file_handler->pathFileJoin($src_dest, $filename));
                 $this->file_handler->moveFile($this->file_handler->pathFileJoin($thumb_path, $preview), $this->file_handler->pathFileJoin($thumb_dest, $preview));
                 ++ $line;
@@ -238,13 +238,13 @@ class ThreadHandler
 
         if (is_null($file_order))
         {
-            $prepared = $this->dbh->prepare('SELECT "filename", "extension", "preview_name" FROM "' .
+            $prepared = $this->dbh->prepare('SELECT "filename", "extension", "preview_name", "preview_extension" FROM "' .
                  $this->references['file_table'] . '" WHERE "post_ref" = ?');
             $file_data = $this->dbh->executePreparedFetchAll($prepared, array($post_id), PDO::FETCH_ASSOC);
         }
         else
         {
-            $prepared = $this->dbh->prepare('SELECT "filename", "extension", "preview_name" FROM "' .
+            $prepared = $this->dbh->prepare('SELECT "filename", "extension", "preview_name", "preview_extension" FROM "' .
                  $this->references['file_table'] . '" WHERE "post_ref" = ? AND "file_order" = ?');
             $file_data = $this->dbh->executePreparedFetchAll($prepared, array($post_id, $file_order), PDO::FETCH_ASSOC);
         }
@@ -254,8 +254,9 @@ class ThreadHandler
             foreach ($file_data as $file)
             {
                 $filename = $file['filename'] . '.' . $file['extension'];
+                $preview = $file['preview_name'] . '.' . $file['preview_extension'];
                 $this->file_handler->eraserGun($this->file_handler->pathJoin($this->references['src_path'], $thread_id), $filename);
-                $this->file_handler->eraserGun($this->file_handler->pathJoin($this->references['thumb_path'], $thread_id), $file['preview_name']);
+                $this->file_handler->eraserGun($this->file_handler->pathJoin($this->references['thumb_path'], $thread_id), $preview);
             }
         }
     }
@@ -264,18 +265,13 @@ class ThreadHandler
     {
         $this->verifyDeletePerms($thread_id);
         $this->removeThreadFromDatabase($thread_id);
-        //$this->removeThreadFilesFromDatabase($thread_id);
         $this->removeThreadDirectories($thread_id);
     }
 
     public function removeThreadFromDatabase($thread_id)
     {
-        /*$prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['post_table'] .
-         '" WHERE "parent_thread" = ?');
-         $this->dbh->executePrepared($prepared, array($thread_id));*/
         $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['thread_table'] . '" WHERE "thread_id" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
-        //$this->removeThreadFilesFromDatabase($thread_id);
     }
 
     public function removeThreadFilesFromDatabase($thread_id)
@@ -344,7 +340,7 @@ class ThreadHandler
              '" WHERE "post_number" = ? LIMIT 1');
         $post_data = $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_ASSOC, true);
 
-        if($post_data === false)
+        if ($post_data === false)
         {
             return false;
         }

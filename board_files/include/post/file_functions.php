@@ -130,7 +130,8 @@ function nel_check_for_existing_file($board_id, $file, $files)
         nel_derp(150, nel_stext('ERROR_150'), $board_id, $error_data);
     }
 
-    $query = 'SELECT 1 FROM "' . $references['file_table'] . '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ? LIMIT 1';
+    $query = 'SELECT 1 FROM "' . $references['file_table'] .
+         '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ? LIMIT 1';
     $prepared = $dbh->prepare($query);
     $prepared->bindValue(1, $file['md5'], PDO::PARAM_LOB);
     $prepared->bindValue(2, $file['sha1'], PDO::PARAM_LOB);
@@ -195,6 +196,7 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
         $files[$i]['pre_x'] = null;
         $files[$i]['pre_y'] = null;
         $files[$i]['preview_name'] = null;
+        $files[$i]['preview_extension'] = null;
 
         if ($files[$i]['format'] === 'swf' || ($files[$i]['type'] === 'graphics'))
         {
@@ -225,17 +227,21 @@ function nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath)
             else
             {
                 $files[$i]['thumbnail'] = nel_create_gd_preview($files[$i]);
-                $files[$i]['preview_name'] = $files[$i]['filename'] . '-preview.jpg';
+                $files[$i]['preview_name'] = $files[$i]['filename'] . '-preview';
 
                 if ($files[$i]['thumbnail'] !== false)
                 {
                     if ($board_settings['use_png_thumb'])
                     {
-                        imagepng($files[$i]['thumbnail'], $thumbpath . $files[$i]['preview_name'], -1);
+                        $files[$i]['preview_extension'] = 'png';
+                        imagepng($files[$i]['thumbnail'], $thumbpath . $files[$i]['preview_name'] . '.' .
+                             $files[$i]['preview_extension'], -1);
                     }
                     else
                     {
-                        imagejpeg($files[$i]['thumbnail'], $thumbpath . $files[$i]['preview_name'], $board_settings['jpeg_quality']);
+                        $files[$i]['preview_extension'] = 'jpg';
+                        imagejpeg($files[$i]['thumbnail'], $thumbpath . $files[$i]['preview_name'] . '.' .
+                             $files[$i]['preview_extension'], $board_settings['jpeg_quality']);
                     }
                 }
             }
@@ -287,7 +293,8 @@ function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
 
     if ($file['format'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
     {
-        $file['preview_name'] = $file['filename'] . '-preview.gif';
+        $file['preview_name'] = $file['filename'] . '-preview';
+        $file['preview_extension'] = 'gif';
 
         if ($file['im_x'] <= $board_settings['max_width'] && $file['im_y'] <= $board_settings['max_height'])
         {
@@ -300,7 +307,7 @@ function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
                 $frame->scaleImage($file['pre_x'], $file['pre_y'], true);
             }
 
-            $image->writeImages($thumbpath . $file['preview_name'], true);
+            $image->writeImages($thumbpath . $file['preview_name'] . '.' . $file['preview_extension'], true);
         }
     }
     else
@@ -310,17 +317,19 @@ function nel_create_imagick_preview(&$file, $thumbpath, $board_id)
 
         if ($board_settings['use_png_thumb'])
         {
-            $file['preview_name'] = $file['filename'] . '-preview.png';
+            $file['preview_name'] = $file['filename'] . '-preview';
+            $file['preview_extension'] = 'png';
             $image->setImageFormat('png');
         }
         else
         {
-            $file['preview_name'] = $file['filename'] . '-preview.jpg';
+            $file['preview_name'] = $file['filename'] . '-preview';
+            $file['preview_extension'] = 'jpg';
             $image->setImageFormat('jpeg');
             $image->setImageCompressionQuality($board_settings['jpeg_quality']);
         }
 
-        $image->writeImage($thumbpath . $file['preview_name']);
+        $image->writeImage($thumbpath . $file['preview_name'] . '.' . $file['preview_extension']);
     }
 }
 
@@ -330,10 +339,11 @@ function nel_create_imagemagick_preview(&$file, $thumbpath, $board_id)
 
     if ($file['format'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
     {
-        $file['preview_name'] = $file['filename'] . '-preview.gif';
+        $file['preview_name'] = $file['filename'] . '-preview';
+        $file['preview_extension'] = 'gif';
         $cmd_resize = 'convert ' . escapeshellarg($file['dest']) . ' -coalesce -thumbnail ' .
              $board_settings['max_width'] . 'x' . $board_settings['max_height'] .
-             escapeshellarg($thumbpath . $file['preview_name']);
+             escapeshellarg($thumbpath . $file['preview_name'] . '.' . $file['preview_extension']);
         exec($cmd_resize);
         chmod($thumbpath . $file['preview_name'], octdec(FILE_PERM));
     }
@@ -341,17 +351,19 @@ function nel_create_imagemagick_preview(&$file, $thumbpath, $board_id)
     {
         if ($board_settings['use_png_thumb'])
         {
-            $file['preview_name'] = $file['filename'] . '-preview.png';
+            $file['preview_name'] = $file['filename'] . '-preview';
+            $file['preview_extension'] = 'png';
             $cmd_resize = 'convert ' . escapeshellarg($file['dest']) . ' -resize ' . $board_settings['max_width'] . 'x' .
                  $board_settings['max_height'] . '\> -quality 00 -sharpen 0x0.5 ' .
-                 escapeshellarg($thumbpath . $file['preview_name']);
+                 escapeshellarg($thumbpath . $file['preview_name'] . '.' . $file['preview_extension']);
         }
         else
         {
-            $file['preview_name'] = $file['filename'] . '-preview.jpg';
+            $file['preview_name'] = $file['filename'] . '-preview';
+            $file['preview_extension'] = 'jpg';
             $cmd_resize = 'convert ' . escapeshellarg($file['dest']) . ' -resize ' . $board_settings['max_width'] . 'x' .
                  $board_settings['max_height'] . '\> -quality ' . $board_settings['jpeg_quality'] . ' -sharpen 0x0.5 ' .
-                 escapeshellarg($thumbpath . $file['preview_name']);
+                 escapeshellarg($thumbpath . $file['preview_name'] . '.' . $file['preview_extension']);
         }
 
         exec($cmd_resize);

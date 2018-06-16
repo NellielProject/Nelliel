@@ -249,9 +249,6 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
         foreach ($gen_data['files'] as $file)
         {
-            nel_numeric_html_entities_to_utf8($file['filename']);
-            nel_numeric_html_entities_to_utf8($file['extension']);
-            nel_numeric_html_entities_to_utf8($file['preview_name']);
             $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['file_order'];
             $temp_file_dom = $new_post_dom->copyNodeIntoDocument($new_post_dom->getElementById('fileinfo-'), true);
             $temp_file_node = $temp_file_dom->getElementById('fileinfo-');
@@ -262,7 +259,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
             $temp_file_node_array['delete-file']->extSetAttribute('value', 'deletefile_' . $file_id);
 
             $file['file_location'] = 'http://' . $base_domain . '/' . $board_id . '/' . $references['src_dir'] .
-                 $thread_id . '/' . rawurlencode($file['filename']) . "." . $file['extension'];
+                 $thread_id . '/' . rawurlencode($file['filename']) . '.' . $file['extension'];
             $file['display_filename'] = $file['filename'];
 
             if (strlen($file['filename']) > 32)
@@ -357,7 +354,8 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                     {
                         $file['has_preview'] = true;
                         $file['preview_location'] = 'http://' . $base_domain . '/' . $board_id . '/' .
-                             $references['thumb_dir'] . $thread_id . '/' . rawurlencode($file['preview_name']);
+                             $references['thumb_dir'] . $thread_id . '/' .
+                             rawurlencode($file['preview_name'] . '.' . $file['preview_extension']);
 
                         if ($filecount > 1)
                         {
@@ -441,8 +439,6 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     }
     else
     {
-        nel_numeric_html_entities_to_utf8($post_data['comment']);
-
         foreach ($output_filter->newlinesToArray($post_data['comment']) as $line)
         {
             $append_target = $post_contents_node_array['post-comment'];

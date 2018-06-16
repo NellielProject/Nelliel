@@ -194,6 +194,7 @@ function nel_create_files_table($table_name, $posts_table)
         image_width             INTEGER DEFAULT NULL,
         image_height            INTEGER DEFAULT NULL,
         preview_name            VARCHAR(255) DEFAULT NULL,
+        preview_extension       VARCHAR(255) DEFAULT NULL,
         preview_width           SMALLINT DEFAULT NULL,
         preview_height          SMALLINT DEFAULT NULL,
         filesize                INTEGER NOT NULL DEFAULT 0,

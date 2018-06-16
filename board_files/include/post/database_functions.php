@@ -70,8 +70,8 @@ function nel_db_insert_new_files($board_id, $parent_id, $new_post_info, $files)
     foreach ($files as $file)
     {
         $columns = array('parent_thread', 'post_ref', 'file_order', 'type', 'format', 'mime', 'filename', 'extension',
-            'image_width', 'image_height', 'preview_name', 'preview_width', 'preview_height', 'filesize', 'md5', 'sha1',
-            'sha256', 'sha512', 'source', 'license', 'alt_text');
+            'image_width', 'image_height', 'preview_name', 'preview_extension', 'preview_width', 'preview_height',
+            'filesize', 'md5', 'sha1', 'sha256', 'sha512', 'source', 'license', 'alt_text');
         $values = $dbh->generateParameterIds($columns);
         $query = $dbh->buildBasicInsertQuery($references['file_table'], $columns, $values);
         $prepared = $dbh->prepare($query);
@@ -86,6 +86,7 @@ function nel_db_insert_new_files($board_id, $parent_id, $new_post_info, $files)
         $prepared->bindValue(':image_width', $file['im_x'], PDO::PARAM_INT);
         $prepared->bindValue(':image_height', $file['im_y'], PDO::PARAM_INT);
         $prepared->bindValue(':preview_name', $file['preview_name'], PDO::PARAM_STR);
+        $prepared->bindValue(':preview_extension', $file['preview_extension'], PDO::PARAM_STR);
         $prepared->bindValue(':preview_width', $file['pre_x'], PDO::PARAM_INT);
         $prepared->bindValue(':preview_height', $file['pre_y'], PDO::PARAM_INT);
         $prepared->bindValue(':filesize', $file['filesize'], PDO::PARAM_INT);

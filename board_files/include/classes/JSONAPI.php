@@ -83,6 +83,7 @@ class JSONAPI
         $this->addIfNotEmpty($data_output, 'image_width', $post_data['image_width'], 'integer');
         $this->addIfNotEmpty($data_output, 'image_height', $post_data['image_height'], 'integer');
         $this->addIfNotEmpty($data_output, 'preview_name', $post_data['preview_name'], 'string');
+        $this->addIfNotEmpty($data_output, 'preview_extension', $post_data['preview_extension'], 'string');
         $this->addIfNotEmpty($data_output, 'preview_width', $post_data['preview_width'], 'integer');
         $this->addIfNotEmpty($data_output, 'preview_height', $post_data['preview_height'], 'integer');
         $data_output['filesize'] = nel_cast_to_datatype($post_data['filesize'], 'integer');
