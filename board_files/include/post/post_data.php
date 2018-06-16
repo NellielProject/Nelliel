@@ -20,8 +20,12 @@ function nel_collect_post_data($board_id)
         $post_data = nel_get_tripcodes($board_id, $post_data, $name_pieces);
         $post_data = nel_get_staff_post($post_data, $name_pieces);
     }
+    else
+    {
+        $post_data['name'] = nel_stext('THREAD_NONAME');
+    }
 
-    if ($board_settings['force_anonymous'] || $post_data['name'] === '')
+    if ($board_settings['force_anonymous'])
     {
         $post_data['name'] = nel_stext('THREAD_NONAME');
         $post_data['email'] = '';
