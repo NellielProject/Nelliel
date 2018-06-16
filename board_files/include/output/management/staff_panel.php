@@ -70,6 +70,7 @@ function nel_render_staff_panel_user_edit($user_id)
     {
         $user = $authorize->get_user($user_id);
         $dom->getElementById('user-id-field')->extSetAttribute('value', $user['user_id']);
+        $dom->getElementById('user-secure-tripcode-field')->extSetAttribute('value', $user['user_secure_tripcode']);
         $dom->getElementById('user-title-field')->extSetAttribute('value', $user['user_title']);
     }
 

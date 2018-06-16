@@ -232,6 +232,7 @@ $lang_singular = array(
     'MANAGE_STAFF_USER_ADD' => 'Can add new users',  // Add users
     'MANAGE_STAFF_USER_MODIFY' => 'Can modify existing users',  // Modify users
     'MANAGE_STAFF_USER_DELETE' => 'Can delete users',  // Delete users
+    'MANAGE_STAFF_USER_SECURE_TRIPCODE' => 'User\'s secure tripcode for posting as staff',
     'MANAGE_STAFF_USER_CHANGE_PASS' => 'User can change their password',  // User change password
     'MANAGE_STAFF_ROLE_ACCESS' => 'Access roles panel',  // Access roles
     'MANAGE_STAFF_ROLE_ADD' => 'Can add new roles',  // Add roles

@@ -285,7 +285,7 @@ function nel_create_user_table($table_name)
         user_id                 VARCHAR(255) NOT NULL,
         user_title              VARCHAR(255) DEFAULT NULL,
         user_password           VARCHAR(255) DEFAULT NULL,
-        user_tripcode           VARCHAR(255) DEFAULT NULL,
+        user_secure_tripcode    VARCHAR(255) DEFAULT NULL,
         active                  SMALLINT NOT NULL DEFAULT 0,
         failed_logins           SMALLINT NOT NULL DEFAULT 0,
         last_failed_login       BIGINT NOT NULL DEFAULT 0
