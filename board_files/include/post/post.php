@@ -141,10 +141,10 @@ function nel_process_new_post($board_id)
 
     nel_fgsfds('noko_topic', $thread_info['id']);
     $srcpath = $references['src_path'] . $thread_info['id'] . '/';
-    $thumbpath = $references['thumb_path'] . $thread_info['id'] . '/';
+    $preview_path = $references['thumb_path'] . $thread_info['id'] . '/';
 
     // Make thumbnails and do final file processing
-    $files = nel_generate_thumbnails($board_id, $files, $srcpath, $thumbpath);
+    $files = nel_generate_previews($board_id, $files, $srcpath, $preview_path);
     clearstatcache();
 
     // Add file data if applicable
