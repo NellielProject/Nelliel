@@ -75,7 +75,7 @@ function nel_get_staff_post($post_data, $name_pieces)
 
     $role = $authorize->get_user_info($user, 'role_id');
 
-    if ($name_pieces[3] !== $authorize->get_user_info($user, 'user_tripcode') ||
+    if ($name_pieces[3] !== $authorize->get_user_info($user, 'user_secure_tripcode') ||
          !$authorize->get_role_info($role, 'perm_post_default_name'))
     {
         return $post_data;
