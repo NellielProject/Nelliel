@@ -1,0 +1,557 @@
+Older kinda messy changelog from earlier development periods. Nothing really useful outside of curiosity.
+
+01/20/2016
+v0.9.3:
+
+Over 9000 changes
+
+11/02/2015
+v0.9.1:
+
+Move archive functions to own file
+More cleanup and some code rearrangement
+Various other things
+
+11/02/2015
+v0.9.1:
+
+Move archive functions to own file
+More cleanup and some code rearrangement
+Various other things
+
+09/24/2015
+v0.9b-r37:
+
+Fix error handler
+Cleanup of error messages
+Fix bug in post
+
+09/20/2015
+v0.9b-r36:
+
+Fix post quote and redirect
+
+09/19/2015
+v0.9b-r35:
+
+General cleanup
+Tweaks to anti-spambot code
+
+09/18/2015
+v0.9b-r34:
+
+Officially licensed with BSD 3-clause
+
+11/12/2014
+v0.9b-r33:
+
+Cleaned up a number of comments and code bits
+Got generic filetype icons for most files
+
+03/07/2014
+v0.9b-r32:
+
+Added blorb/gblorb filetype and package filetype category
+If no filetypes of a category are enabled or the category is disabled, the posting form list will not show the category
+
+03/02/2014
+v0.9b-r31:
+
+Fixed some of the error handling to be a bit more informative
+
+02/28/2014
+v0.9b-r30:
+
+Extensive testing and debug
+Can now choose how many posts in a thread before it's abbreviated on the main page
+Minor code clean up
+Small layout and CSS changes
+
+08/08/2013
+v0.9b-r29:
+
+SQLite should now be fully supported
+Database schema cleanup
+Some code clean up
+Additional debugging
+
+04/22/2013
+v0.9b-r28:
+
+Lots of tweaking
+Lots of debugging
+Made FGSFDS field optional
+Option to force an update of the internal caches
+
+11/28/2012
+v0.9b-r27:
+
+Updated archive system for the multiple file changes
+Tweaked database structure
+Fixed rendering issue with the page navigator
+
+11/15/2012
+v0.9b-r26:
+
+Added proper filetype checking
+Now many supported filetypes
+
+v0.9b-r25:
+
+Reorganized the board settings panel
+Fixed error when a template has not changed but its cache file is missing
+Various minor debugging
+
+11/14/2012
+v0.9b-r24:
+
+Fixed ban handling
+Fixed thread panel
+Got staff maintenance working
+
+10/27/2012
+v0.9b-r23:
+
+Improved and simplified authentication and session handling
+
+6/30/2012
+v0.9b-r22:
+
+Greatly simplified calling the page regeneration routines and made the process more efficent
+Cleared out some older, now redundant code
+
+6/12/2012
+v0.9b-r21:
+
+Fixed a few bugs in query syntax
+Changes in settings panel now correctly updates the board pages
+
+5/20/2012
+v0.9b-r20:
+
+Some minor code cleanup
+Begun refinements to database calls
+
+1/3/2012
+v0.9b-r19:
+
+Redid deletion and sticky function
+Debugged javascript, cookies and templates
+Removed 'file only' checkbox at bottom; each file/image has it's own checkbox now
+
+12/31/2011
+v0.9b-r18:
+
+Fully configurable multiple files per post. Just like that. :D
+
+12/30/2011
+v0.9b-r17:
+
+FGSFDS field working again; noko and sage available
+Took care of some variable errors
+Basic word filter and name/file blacklisting working again
+Can choose compression level for JPEG thumbnails
+
+12/29/2011
+v0.9b-r16:
+
+Added several more options to settings panel
+Can use PNG (instead of JPEG) for thumbnails if desired
+Enabled substitute thumbnails for non-image files
+
+12/28/2011
+v0.9b-r15:
+
+Fixed most of the remaining E_NOTICE errors
+Tweaked template parsing. Template system is finished now
+Got capcodes and staff posting worked out
+
+12/26/2011
+v0.9b-r14:
+
+Lots of debugging
+Improved security
+Cleaned up a couple subroutines
+Can now set thumbnails to be done with GD or ImageMagick( when available)
+Improved template syntax
+
+12/14/2011
+v0.9b-r13:
+
+Managed to cache templates back into string concatenation functions (about 2x faster than eval() )
+Fixed post link cache
+
+12/12/2011
+v0.9b-r12:
+
+Fixed a whole lot of minor bugs and errors
+Added source and license options when posting files
+Cleaned up CSS
+Cleaned up HTML
+Language files almost done
+
+12/11/2011
+v0.9b-r11:
+
+Worked out staff permissions
+Added panel to add/edit/remove staff
+
+12/10/2011
+v0.9b-r10:
+
+Reworking language stuff
+Cleared out a number of now-unused variables and code blocks
+Cleaned up some HTML
+
+12/10/2011
+v0.9b-r9:
+
+Cleaned up a few bits
+
+12/9/2011
+v0.9b-r8:
+
+Fixed up database schema
+Moar bugs gone
+Template conversion done. Still needs tweaking and cleanup though.
+Archive system working again
+
+12/8/2011
+v0.9b-r7:
+
+Nailed a couple more bugs
+Converted all admin pages to templates
+PDO conversion finished!
+
+12/7/2011
+v0.9b-r6:
+
+Fixed a pile of minor bugs
+Update all pages now works correctly
+Cleaned up page generation looping
+Fixed ban controls
+Removed more commented-out code
+Majority of PDO conversion finished
+Debugged templates
+Cleaned up main function handler
+
+6/10/2011
+v0.9b-r5:
+
+Removed a lot of commented out code
+Improved templates
+Fixed a whole pile of variable issues
+New rendering routines functional. Still needs refinement.
+
+3/12/2011
+v0.9b-r4:
+
+Began converting hardcoded HTML to basic template files
+Cleaned up more of the rendering subroutines
+Fixed a few CSS and HTML errors
+Removed a bunch of older commented-out code
+Got flood detection working again
+Fixed an issue in the input sanitization
+
+2/24/2011
+v0.9b-r3:
+
+Fixed several errors
+Fixed flood and duplicate file detection
+Cleaned up admin board handling
+
+2/10/2011
+v0.9b-r2:
+
+Further PDO conversion
+Cleaned up some HTML
+Took care of several undefined variables
+Fixed a few bugs in the admin controls
+Changed the handler for the board settings panel; much neater and easier to expand upon now
+
+1/17/2011
+v0.9b-r1:
+
+Gutted the core page rendering engine from Futallaby and rewrote it
+Began conversion to use PDO
+Cleaned up some code bits and bugs
+
+8/20/2010
+v0.8.9b:
+
+Gutted mod mode, began writing better alternative
+
+7/16/2010
+v0.8.8b:
+
+Fixed several bugs
+Cleaned out a few lines of code
+
+05/25/2010
+v0.8.7b:
+
+Cleaned up a bunch of CSS styling and moved it to the external file
+Bug fixed that only applied the last b& when doing more than one at a time
+A few bits of code simplified
+
+05/09/2010
+v0.8.6b:
+
+Spambot b&s are not listed in the normal panel. Extra panel just for thoses still needs to be added.
+Non-image files now have an icon that will be listed in place of the usual preview. Improves aesthetics a bit, etc.
+
+03/04/2010
+v0.8.5.2b:
+
+Fixed post info so that threads won't stay bumped if you delete the last post(s).
+
+02/27/2010
+v0.8.5.1b:
+
+Added a stupidly forgotten function to check if a ban has actually expired (hurrrrr)
+
+v0.8.5b:
+
+Added a setting to config file
+Changed javascript routines so that style change will work with KHTML/WebKit-based browsers like Safari
+Changed form html a bit to deal with Firefox 3's password manager. It assumes any field immediately before a password field in the form code is a username field. This can cause obvious problems if multiple password fields with different functions are used on one site or when the password field is a standalone thing, as with imageboards. This shit is actually an intentional feature with no plans for change. Further info: Firefox 3's Password Manager
+
+02/25/2010
+v0.8.4b:
+
+Removed tables from the post content layout
+Added several css formatting options for better appearance.
+
+v0.8.3b:
+
+Redid thumbnail code. Shorter and simpler now.
+Fixed odd problems with generating animated thumbnails for GIFs
+Fixed a missing variable
+
+v0.8.2b:
+
+Fixed a bug that caused divide by zero for small images
+Disabled browser caching of the HTML to fix a couple issues
+Fixed cookies
+
+01/23/2010
+v0.8.1b:
+
+Added thread locking
+Fixed bug that broke mod mode if there are no threads
+Removed a couple unused variables
+Added short menu at the top with links to other boards
+
+01/09/2010
+v0.8b:
+
+Fixed cache code
+Moved first run database functions out of database include
+Fixed several minor errors
+Changed a few default settings
+
+12/17/2009
+v0.7.9b:
+
+Fixed various bugs
+Eliminated some globals and the last register global
+Some minor restructuring of functions
+
+12/16/2009
+v0.7.8b:
+
+Secure tipcodes
+Added setting to admin panel that was missing.
+
+v0.7.7b:
+
+Replaced all old mod/admin password variables with the new auth variables
+Added username field to mod mode
+Added method to make mod/admin posts outside of mod mode
+
+12/15/2009
+v0.7.6b:
+
+Added prune function
+Added options to either archive, prune or do nothing with old threads
+
+v0.7.5b:
+
+Fixed a couple bugs
+Implemented automatic archiving function to keep the main database from growing hueg like xbox without having to delete the old content
+Simplified some conditional statements
+Updated and debugged the first run routines
+
+12/12/2009
+v0.7.4b:
+
+Added username
+Manage link requires login before displaying options
+
+12/07/2009
+v0.7.3b:
+
+Added post links to cache system (avoids a potential fuckton of database accesses)
+Fixed some non-obvious bugs in the deletion system
+Patched a couple minor security holes
+
+12/06/2009
+v0.7.2b:
+
+Fixed some variable names
+Implemented a cache for internal use
+Adjusted database parameters
+A number of minor tweaks
+
+12/04/2009
+v0.7.1b:
+
+Various tweaks
+Dropped microtime column from database as it's not used now
+Cleaned up some code bits
+
+12/02/2009
+v0.7b:
+
+Eliminated the remaining register globals and similar variables
+Removed a number of code chunks not needed any more
+Fixed most of the bugs in mod mode
+Added anti-spambot traps to the posting form
+Added the HTML tag to most output. This helps for accessibility but also you can now click on the word(s) next to most form elements to select them now.
+Fixed some database-related bugs
+File sizes all display correctly
+Image and flash dimensions work again
+Eliminated the old proxy code. New code may be added eventually.
+Moved the Submit button to the bottom of the form. Srsly, wtf was it doing up there anyway and why does virtually every imageboard never change that? Also, button to clear the form if you need to start over
+Cleaned up the config file and updated comments
+Did a lot of minor code cleaning and tweaking
+
+11/22/2009
+v0.6.3b:
+
+Fixed a few things related to UTF-8
+Name is properly set in cookie again and autofills
+Eliminated most of the register globals still lurking
+Removed mod post form. Just use mod or admin password when posting and it will automatically register it as being posted by a mod/admin
+Deleted several chunks of code no longer needed
+
+11/21/2009
+v0.6.2b:
+
+Fixed an error involving file uploads and creating the subdirectories which somehow evaded being triggered for 2 weeks. o.O
+Edited some database settings
+Added filetype settings for video files
+Everything set to use UTF-8. May be glitches if I missed something
+
+11/20/2009
+v0.6.1b:
+
+Post quotes (>>) now become links to that post
+Time/date format for posts is now more readable
+Added admin setting to choose which of the 3 major date formats to use with the board (default is Asian/ISO-8601)
+Dropped the no longer useful 'now' column from the database
+Removed the quite pointless 'no file' checkbox in the posting form
+
+11/9/2009
+v0.6b:
+
+Fixed a number of errors and bugs
+Fixed an oddity that was not bumping threads when they get replies
+Eliminated several SQL calls
+Removed several code sections leftover from futallaby that actually weren't being used any more
+Added options for requiring a file when starting a new thread/post
+Added an option to view only the first 100 posts in a thread (when it gets that long)
+Set up basic system to allow wordfilters, auto-bans, and banned names or md5 file hashes
+
+11/6/2009
+v0.5b:
+
+Can now switch between styles
+Added Nelliel style. Set as default.
+Posts now display IP address of poster when in "mod mode"
+Cleaned up appearance and interface
+Finished converting relevant config.php options to database storage
+Fixed error messages
+Significant upgrade to the ban page
+Fixed some bugs and inconsistencies in overall ban system
+Admin now has control to remove/modify bans
+Ban appeals system now functional
+Many code rearrangements and some reductions
+HTML Rendering engine is a bit faster now
+Added an extra field titled FGSFDS for special commands. Currently only does noko. Moar to come
+
+10/28/2009
+v0.4.3a:
+
+Post numbers now link to the post/thread, similar to 4chan
+Basic quote function in place (does not make it a link yet)
+Ban function rounded out some
+Rudimentary appeal and ban modification system added. Needs moar work
+
+10/15/2009
+v0.4.2a:
+
+Post numbers now are links to the post/thread, similar to 4chan.
+When on a thread reply page the link will quote the post number (the >> thing).
+
+10/7/2009
+v0.4.1a:
+
+Post ban message works now (the big red text)
+Fixed a few things that were messing with the ability to make new posts
+
+10/6/2009
+v0.4a:
+
+Various tweaks to the code
+Moderator Mode added
+
+9/29/2009
+v0.3a:
+
+Re-sorted functions into appropriate files
+Reduced and cleaned up a bunch of code and html generation. HTML source is now formatted to actually be readable.
+Fixed mod/admin post function
+Put 'expand thread' button only where it's actually needed
+Various minor stuff
+
+9/28/2009
+v0.2.1a:
+
+Added an option to expand long threads without having to visit the reply page
+Cleaned up moar code.
+Fixed some of the mod/admin code
+
+9/24/2009
+v0.2a:
+
+Converted to prepared/parameterized MySQL statements, making successful SQL Injection near-impossible.
+Set up controls for which file types are allowed. Can be customized for each board and the current allowed types are listed on each page.
+Cleaned up various small things in the HTML output.
+Reduced and cleaned up numerous bits of code.
+Forced anonymous mode added
+Moved a few settings from config file to admin panel
+
+9/17/2009
+v0.1.2a:
+
+Minor code tweaks
+Changed page generation timer (the thing all the way at the bottom). Now only times page generation like Kusaba, not the entire script lol
+
+9/17/2009
+v0.1.1a:
+
+Added extra if and else statements to make sure it doesn't execute any more routines than it absolutely has to to get a task done.
+Discovered an ass-slow gethostbyaddr call for the original b& system (which seems to consist only of hardcoding IPs into an array by hand...o.O) and deleted it. All it does is get the hostname for the IP address...which doesn't really tell you anything new and useful in this case. This one line was adding from .05 to .2 seconds to execution time, depending on DNS speed, etc. Wtf.
+Gave the database proper field types instead of everything just being texttexttexttext. A small speed boost thar
+
+9/15/2009
+v0.1a:
+
+Deletion system redone
+Mod controls and relevant internal routines redone
+Now generates static html for thread responses as well as the main page
+Cleaned up the HTML code
+Separated uploaded files and thumbnails into sub-directories based on the thread they belong to
+Image replies
+
