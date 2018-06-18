@@ -15,6 +15,7 @@ function nel_collect_post_data($board_id)
 
     if ($post_data['name'] !== '')
     {
+        $post_data['name'] = preg_replace("/#+$/", "", $post_data['name']);
         preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post_data['name'], $name_pieces);
         $post_data['name'] = $name_pieces[1];
         $post_data = nel_get_tripcodes($board_id, $post_data, $name_pieces);
@@ -104,23 +105,19 @@ function nel_get_tripcodes($board_id, $post_data, $name_pieces)
 
     if ($name_pieces[2] !== '' && $board_settings['allow_tripkeys'])
     {
-        $raw_trip = nel_tripcode_charset_convert($name_pieces[2], 'UTF-8', 'SHIFT_JIS');
-        $cap = strtr($raw_trip, '&amp;', '&');
-        $cap = strtr($cap, '&#44;', ',');
-        $salt = substr($cap . 'H.', 1, 2);
-        $salt = preg_replace('#[^\.-z]#', '.#', $salt);
+        $trip = nel_tripcode_charset_convert($name_pieces[2], 'SHIFT_JIS', 'UTF-8');
+        $salt = substr($trip . 'H.', 1, 2);
+        $salt = preg_replace('#[^\.-z]#', '.', $salt);
         $salt = strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
-        $final_trip = substr(crypt($cap, $salt), -10);
-        $post_data['tripcode'] = nel_tripcode_charset_convert($final_trip, 'SHIFT_JIS', 'UTF-8');
+        $post_data['tripcode'] = substr(crypt($trip, $salt), -10);
     }
 
     if ($name_pieces[3] !== '' && $board_settings['allow_tripkeys'])
     {
-        $raw_trip = $name_pieces[3];
-        $trip = hash(nel_site_settings('secure_tripcode_algorithm'), $raw_trip . TRIPCODE_SALT);
+        $trip = $name_pieces[3];
+        $trip = hash(nel_site_settings('secure_tripcode_algorithm'), $trip . TRIPCODE_SALT);
         $trip = base64_encode(pack("H*", $trip));
-        $final_trip = substr($trip, -12, -2);
-        $post_data['secure_tripcode'] = $final_trip;
+        $post_data['secure_tripcode'] = substr($trip, 2, 10);
     }
 
     $post_data = $plugins->plugin_hook('in-after-tripcode-processing', TRUE, array($post_data, $name_pieces));
