@@ -116,11 +116,11 @@ function nel_get_tripcodes($board_id, $post_data, $name_pieces)
 
     if ($name_pieces[3] !== '' && $board_settings['allow_tripkeys'])
     {
-        $raw_trip = $raw_trip = nel_tripcode_charset_convert($name_pieces[3], 'UTF-8', 'SHIFT_JIS');
+        $raw_trip = $name_pieces[3];
         $trip = hash(nel_site_settings('secure_tripcode_algorithm'), $raw_trip . TRIPCODE_SALT);
         $trip = base64_encode(pack("H*", $trip));
-        $final_trip = substr($trip, -12);
-        $post_data['secure_tripcode'] = nel_tripcode_charset_convert($final_trip, 'SHIFT_JIS', 'UTF-8');
+        $final_trip = substr($trip, -12, -2);
+        $post_data['secure_tripcode'] = $final_trip;
     }
 
     $post_data = $plugins->plugin_hook('in-after-tripcode-processing', TRUE, array($post_data, $name_pieces));
