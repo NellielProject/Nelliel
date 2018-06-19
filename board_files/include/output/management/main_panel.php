@@ -44,6 +44,9 @@ function nel_render_main_panel()
     $file_filters = $dom->getElementById('module-file-filter');
     $file_filters_elements = $file_filters->getAssociativeNodeArray('data-parse-id', $file_filters);
     $file_filters_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=file-filter');
+    $default_board_settings = $dom->getElementById('module-default-board-settings');
+    $default_board_settings_elements = $default_board_settings->getAssociativeNodeArray('data-parse-id', $default_board_settings);
+    $default_board_settings_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=default-board-settings');
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);

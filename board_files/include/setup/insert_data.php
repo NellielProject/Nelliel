@@ -236,6 +236,14 @@ function nel_insert_default_admin_role()
     nel_setup_stuff_done($result);
 }
 
+function nel_copy_board_defaults($config_table)
+{
+    $dbh = nel_database();
+    $insert_query = 'INSERT INTO "' . $config_table . '" SELECT * FROM "' . DEFAULT_BOARD_CONFIG_TABLE . '"';
+    $prepared = $dbh->prepare($insert_query);
+    $dbh->executePrepared($prepared);
+}
+
 function nel_insert_board_config_defaults($config_table)
 {
     $dbh = nel_database();

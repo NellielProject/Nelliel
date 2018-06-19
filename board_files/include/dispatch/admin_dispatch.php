@@ -58,6 +58,11 @@ function nel_admin_dispatch()
                 require_once INCLUDE_PATH . 'admin/file_filters.php';
                 nel_manage_file_filters($action);
 
+            case 'default-board-settings':
+                require_once INCLUDE_PATH . 'admin/board_settings_panel.php';
+                nel_board_settings_control($board_id, $action, true);
+                break;
+
             default:
                 nel_login();
                 break;

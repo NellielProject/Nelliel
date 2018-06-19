@@ -4,22 +4,36 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_board_settings_panel($board_id)
+function nel_render_board_settings_panel($board_id, $defaults)
 {
     $dbh = nel_database();
     $filetypes = nel_get_filetype_data();
-    $references = nel_board_references($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, $board_id, array('header' => 'MANAGE_BOARD',
-        'sub_header' => 'MANAGE_SETTINGS'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/board_settings_panel.html');
-    $dom->getElementById('board-settings-form')->extSetAttribute('action', PHP_SELF .
-         '?manage=board&module=board-settings&board_id=' . $board_id);
+
+    if($defaults === true)
+    {
+        $references = nel_board_references($board_id);
+        nel_render_general_header($render, null, null, array('header' => 'MANAGE_BOARD',
+        'sub_header' => 'MANAGE_SETTINGS'));
+        $result = $dbh->query('SELECT * FROM "' . DEFAULT_BOARD_CONFIG_TABLE . '"');
+        $dom->getElementById('board-settings-form')->extSetAttribute('action', PHP_SELF .
+        '?manage=general&module=default-board-settings');
+    }
+    else
+    {
+        $references = nel_board_references($board_id);
+        nel_render_general_header($render, null, $board_id, array('header' => 'MANAGE_BOARD',
+        'sub_header' => 'MANAGE_SETTINGS'));
+        $result = $dbh->query('SELECT * FROM "' . $references['config_table'] . '"');
+        $dom->getElementById('board-settings-form')->extSetAttribute('action', PHP_SELF .
+        '?manage=board&module=board-settings&board_id=' . $board_id);
+    }
+
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
-    $result = $dbh->query('SELECT * FROM "' . $references['config_table'] . '"');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
 

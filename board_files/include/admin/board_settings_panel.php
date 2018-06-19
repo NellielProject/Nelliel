@@ -6,14 +6,15 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/board_settings_panel.php';
 
-function nel_board_settings_control($board_id, $action)
+function nel_board_settings_control($board_id, $action, $defaults = false)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
     $references = nel_board_references($board_id);
+    $config_table = ($defaults) ? DEFAULT_BOARD_CONFIG_TABLE : $references['config_table'];
     $update = FALSE;
 
-    if ($action = 'update')
+    if ($action === 'update')
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_modify', $board_id))
         {
@@ -29,14 +30,17 @@ function nel_board_settings_control($board_id, $action)
                     $item[0] = 100;
                 }
 
-                $prepared = $dbh->prepare('UPDATE "' . $references['config_table'] . '" SET "setting" = ? WHERE "config_name" = ?');
+                $prepared = $dbh->prepare('UPDATE "' . $config_table . '" SET "setting" = ? WHERE "config_name" = ?');
                 $dbh->executePrepared($prepared, array($item[1], $item[0]), true);
             }
         }
 
-        nel_regen_board_cache($board_id);
-        nel_regen_all_pages($board_id);
+        if(!$defaults)
+        {
+            nel_regen_board_cache($board_id);
+            nel_regen_all_pages($board_id);
+        }
     }
 
-    nel_render_board_settings_panel($board_id);
+    nel_render_board_settings_panel($board_id, $defaults);
 }

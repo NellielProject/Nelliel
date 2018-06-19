@@ -225,7 +225,7 @@ function nel_create_files_table($table_name, $posts_table)
     nel_setup_stuff_done($result);
 }
 
-function nel_create_board_config_table($table_name)
+function nel_create_board_config_table($table_name, $copy_defaults)
 {
     $auto_inc = nel_autoincrement_column('INTEGER');
     $options = nel_table_options();
@@ -244,7 +244,14 @@ function nel_create_board_config_table($table_name)
 
     if ($result !== false)
     {
-        nel_insert_board_config_defaults($table_name);
+        if($copy_defaults)
+        {
+            nel_copy_board_defaults($table_name);
+        }
+        else
+        {
+            nel_insert_board_config_defaults($table_name);
+        }
     }
 
     nel_setup_stuff_done($result);

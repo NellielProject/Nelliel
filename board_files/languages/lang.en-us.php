@@ -337,7 +337,7 @@ $lang_singular = array(
     'MANAGE_SET_ONLY_THREAD_DUPLICATES' => 'Only check for duplicates in current thread when replying',
     'MANAGE_SET_ONLY_OP_DUPLICATES' => 'Only check for duplicates in other op posts when creating new thread',
     'MANAGE_FORM_UPDSET' => 'Update board settings',  // Update settings
-
+    'MANAGE_DEFAULT_BOARD_SETTINGS' => 'New board defaults',
 
     'MANAGE_SET_GFORMAT' => 'Graphics files',  // Enable graphics
     'MANAGE_SET_ALW_GF' => 'Allow graphics files',  // Allow audio files

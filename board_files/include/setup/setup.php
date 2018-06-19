@@ -58,6 +58,7 @@ function nel_create_core_tables()
     nel_create_board_data_table(BOARD_DATA_TABLE);
     nel_create_filetype_table(FILETYPE_TABLE);
     nel_create_file_filter_table(FILE_FILTER_TABLE);
+    nel_create_board_config_table(DEFAULT_BOARD_CONFIG_TABLE, false);
 }
 
 function nel_create_board_directories($board_id)
@@ -82,7 +83,7 @@ function nel_create_board_tables($board_id)
     nel_create_posts_table($references['archive_post_table'], $references['archive_thread_table']);
     nel_create_files_table($references['file_table'], $references['post_table']);
     nel_create_files_table($references['archive_file_table'], $references['archive_post_table']);
-    nel_create_board_config_table($references['config_table']);
+    nel_create_board_config_table($references['config_table'], true);
 }
 
 function nel_check_for_innodb()
