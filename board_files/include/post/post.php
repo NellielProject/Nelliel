@@ -4,7 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'post/file_functions.php';
 require_once INCLUDE_PATH . 'post/post_data.php';
 
 function nel_process_new_post($board_id)
@@ -138,8 +137,8 @@ function nel_process_new_post($board_id)
     $preview_path = $references['thumb_path'] . $thread_info['id'] . '/' . $new_post_info['post_number'] . '/';
 
     // Make thumbnails and do final file processing
-    $files = nel_generate_previews($board_id, $files, $src_path, $preview_path);
-
+    $gen_previews = new \Nelliel\GeneratePreviews($board_id);
+    $files = $gen_previews->generate($files, $preview_path);
     clearstatcache();
 
     // Add file data and move uploads to final location if applicable

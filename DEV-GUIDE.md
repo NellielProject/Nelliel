@@ -30,8 +30,6 @@ Query requirements:
  - All identifiers should be treated as being case sensitive.
  - Non-parameterized string literals must be placed inside single quotes `' '`.
  - Keywords should be ALL CAPS.
-
-Fetched results from a query should be checked with loose comparison ( == ) unless the result has been explicitly cast to a type.
  
 ## Targets and Version Support
 Any stable core functions and features contributed to Nelliel must be fully functional with the minimum versions listed below in addition to all later versions of the software. These minimum requirements will change over time due to certain circumstances including:

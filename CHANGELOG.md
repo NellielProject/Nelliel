@@ -1,4 +1,17 @@
 # Nelliel Changelog
+## v0.9.6.6 (2018/06/19)
+### Changed
+ - Preview generation moved to its own class
+ - Set PDO to stringify fetches for now so we can use strict checking again
+ - Handle the remaining likely case of filename collisions
+
+### Removed
+ - file_functions.php
+
+### Fixed
+ - No longer generate empty posts when a thread's post count is wrong
+ - Add alt text field is now available for all files in the posting form
+   
 ## v0.9.6.5 (2018/06/19)
 ### Breaking
  - Each post now gets a directory for files within the thread directory. This should avoid most filename collisions.
