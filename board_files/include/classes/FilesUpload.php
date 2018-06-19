@@ -24,8 +24,7 @@ class FilesUpload
 
     public function processFiles($response_to)
     {
-        $references = nel_board_references($this->board_id);
-        $board_settings = nel_board_settings($this->board_id);
+        $board_settings = $this->board_settings;
         $file_handler = new \Nelliel\FileHandler();
         $file_count = 1;
         $filenames = array();
@@ -74,7 +73,7 @@ class FilesUpload
             array_push($filenames, $new_file['fullname']);
             array_push($this->processed_files, $new_file);
 
-            if ($file_count == $this->board_settings['max_post_files'])
+            if ($file_count == $board_settings['max_post_files'])
             {
                 break;
             }
@@ -97,8 +96,9 @@ class FilesUpload
     public function checkForErrors($file)
     {
         $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files);
+        $board_settings = $this->board_settings;
 
-        if ($file['size'] > $this->board_settings['max_filesize'] * 1024)
+        if ($file['size'] > $board_settings['max_filesize'] * 1024)
         {
             nel_derp(100, nel_stext('ERROR_100'), $this->board_id, $error_data);
         }
@@ -138,6 +138,7 @@ class FilesUpload
     {
         $dbh = nel_database();
         $references = nel_board_references($this->board_id);
+        $board_settings = $this->board_settings;
         $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files);
         $is_banned = false;
         $hashes = array();
@@ -152,7 +153,7 @@ class FilesUpload
 
         $file['sha256'] = null;
 
-        if (!$is_banned && $this->board_settings['file_sha256'])
+        if (!$is_banned && $board_settings['file_sha256'])
         {
             $hashes['sha256'] = hash_file('sha256', $file['location'], true);
             $is_banned = nel_file_hash_is_banned($hashes['sha256'], 'sha256');
@@ -160,7 +161,7 @@ class FilesUpload
 
         $file['sha512'] = null;
 
-        if (!$is_banned && $this->board_settings['file_sha512'])
+        if (!$is_banned && $board_settings['file_sha512'])
         {
             $hashes['sha512'] = hash_file('sha512', $file['location'], true);
             $is_banned = nel_file_hash_is_banned($hashes['sha512'], 'sha512');
@@ -171,7 +172,7 @@ class FilesUpload
             nel_derp(150, nel_stext('ERROR_150'), $this->board_id, $error_data);
         }
 
-        if ($response_to === 0 && $this->board_settings['only_op_duplicates'])
+        if ($response_to === 0 && $board_settings['only_op_duplicates'])
         {
             $query = 'SELECT 1 FROM "' . $references['file_table'] .
                 '" WHERE ("parent_thread" = ? AND "post_ref" = ?) AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
@@ -183,7 +184,7 @@ class FilesUpload
             $prepared->bindValue(5, $hashes['sha256'], PDO::PARAM_LOB);
             $prepared->bindValue(6, $hashes['sha512'], PDO::PARAM_LOB);
         }
-        else if ($response_to > 0 && $this->board_settings['only_thread_duplicates'])
+        else if ($response_to > 0 && $board_settings['only_thread_duplicates'])
         {
             $query = 'SELECT 1 FROM "' . $references['file_table'] .
                 '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
