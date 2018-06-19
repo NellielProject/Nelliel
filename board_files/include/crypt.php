@@ -112,11 +112,11 @@ function nel_salted_hash_info($hash)
     return $info;
 }
 
-function nel_generate_salted_hash($algorithm, $string, $salt = null)
+function nel_generate_salted_hash($algorithm, $string, $salt = null, $salt_length = 16)
 {
     if (is_null($salt))
     {
-        $salt = nel_gen_salt(16);
+        $salt = nel_gen_salt($salt_length);
     }
 
     $full_string = $salt . $string;
