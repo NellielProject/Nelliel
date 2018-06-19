@@ -1,4 +1,13 @@
 # Nelliel Changelog
+## v0.9.6.7 (2018/06/19)
+### Added
+ - Configurable defaults for new boards
+
+### Changed
+ - Improve file and post deletion functions
+ - Updated database schema markers
+ - nel_generate_salted_hash can now take an optional parameter for salt length
+   
 ## v0.9.6.6 (2018/06/19)
 ### Changed
  - Preview generation moved to its own class
