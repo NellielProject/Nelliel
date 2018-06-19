@@ -15,20 +15,25 @@ function nel_insert_site_config_defaults()
     $dbh->executePrepared($prepared, ['core_setting', 'nelliel', 'crypt', 'bool', 'do_password_rehash', '0']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_bans_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_bans_schema', '001']);
-    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_user_schema', '001']);
-    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_user_schema', '001']);
-    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_roles_schema', '001']);
-    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_roles_schema', '001']);
-    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_user_role_schema', '001']);
-    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_user_role_schema', '001']);
-    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_permissions_schema', '001']);
-    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_permissions_schema', '001']);
-    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_logins_schema', '001']);
-    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_logins_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_board_data_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_board_data_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_filetypes_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_filetypes_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_file_filters_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_file_filters_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_login_attempts_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_login_attempts_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_permissions_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_permissions_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_roles_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_roles_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_site_config_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_site_config_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_users_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_users_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_user_role_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_user_role_schema', '001']);
+
     nel_setup_stuff_done(true);
 }
 
@@ -237,12 +242,14 @@ function nel_insert_board_config_defaults($config_table)
     $insert_query = "INSERT INTO " . $config_table .
          " (config_type, config_owner, config_category, data_type, config_name, setting) VALUES (?, ?, ?, ?, ?, ?)";
     $prepared = $dbh->prepare($insert_query);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_config_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_config_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_files_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_files_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_posts_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_posts_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_threads_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_threads_schema', '001']);
-    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_files_schema', '001']);
-    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_files_schema', '001']);
     $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'allow_tripkeys', '1']);
     $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'force_anonymous', '0']);
     $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'show_title', '1']);
