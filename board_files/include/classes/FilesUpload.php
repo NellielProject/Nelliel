@@ -3,7 +3,6 @@
 namespace Nelliel;
 
 use PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -29,6 +28,8 @@ class FilesUpload
         $board_settings = nel_board_settings($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
         $file_count = 1;
+        $filenames = array();
+        $file_duplicate = 1;
 
         foreach ($this->uploaded_files as $entry => $file)
         {
@@ -54,6 +55,23 @@ class FilesUpload
             $new_file['source'] = nel_check_post_entry($form_info['sauce'], 'string');
             $new_file['license'] = nel_check_post_entry($form_info['lol_drama'], 'string');
             $new_file['alt_text'] = nel_check_post_entry($form_info['alt_text'], 'string');
+
+            foreach ($filenames as $filename)
+            {
+                if (strcasecmp($filename, $new_file['fullname']) === 0)
+                {
+                    if (strlen($new_file['fullname'] >= 255))
+                    {
+                        $new_file['filename'] = substr($new_file['filename'], 0, -5);
+                    }
+
+                    $new_file['filename'] = $new_file['filename'] . '_' . $file_duplicate;
+                    $new_file['fullname'] = $new_file['filename'] . '.' . $new_file['extension'];
+                    ++ $file_duplicate;
+                }
+            }
+
+            array_push($filenames, $new_file['fullname']);
             array_push($this->processed_files, $new_file);
 
             if ($file_count == $this->board_settings['max_post_files'])
@@ -70,9 +88,9 @@ class FilesUpload
     public function getPathInfo($file)
     {
         $path_info = pathinfo('_' . $file['name']); // Underscore is added as a workaround for pathinfo not handling Unicode properly
-        $path_info ['filename'] = substr($path_info['filename'], 1);
-        $path_info ['fullname'] = substr($path_info['basename'], 1);
-        $path_info ['extension'] = $path_info['extension'];
+        $path_info['filename'] = substr($path_info['filename'], 1);
+        $path_info['fullname'] = substr($path_info['basename'], 1);
+        $path_info['extension'] = $path_info['extension'];
         return $path_info;
     }
 
