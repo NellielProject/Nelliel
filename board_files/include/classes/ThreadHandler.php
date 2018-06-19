@@ -177,10 +177,16 @@ class ThreadHandler
         }
     }
 
+    public function removeFile($post_id, $file_order)
+    {
+        $this->verifyDeletePerms($post_id);
+        $this->removePostFilesFromDisk($post_id, $file_order);
+        $this->removePostFilesFromDatabase($post_id, $file_order);
+    }
+
     public function removePost($post_id)
     {
-        $post_data = $this->getPostData($post_id);
-        $post_files = $this->getPostFiles($post_id);
+        $this->verifyDeletePerms($post_id);
         $this->removePostFilesFromDisk($post_id);
         $this->removePostFromDatabase($post_id);
     }

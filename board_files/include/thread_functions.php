@@ -18,12 +18,7 @@ function nel_thread_updates($board_id)
         switch ($sub[0])
         {
             case 'deletefile':
-                if($thread_handler->verifyDeletePerms($sub[2]))
-                {
-                    $thread_handler->removePostFilesFromDisk($sub[2], $sub[3]);
-                    $thread_handler->removePostFilesFromDatabase($sub[2], $sub[3]);
-                }
-
+                $thread_handler->removeFile($sub[2], $sub[3]);
                 break;
 
             case 'deletethread':
@@ -32,11 +27,7 @@ function nel_thread_updates($board_id)
                 break;
 
             case 'deletepost':
-                if($thread_handler->verifyDeletePerms($sub[2]))
-                {
-                    $thread_handler->removePost($sub[2]);
-                }
-
+                $thread_handler->removePost($sub[2]);
                 break;
 
             case 'threadsticky':
@@ -56,16 +47,16 @@ function nel_thread_updates($board_id)
         }
     }
 
-    if($update_archive)
+    if ($update_archive)
     {
         $archive->updateAllArchiveStatus();
 
-        if(nel_board_settings($board_id, 'old_threads') === 'ARCHIVE')
+        if (nel_board_settings($board_id, 'old_threads') === 'ARCHIVE')
         {
             $archive->moveThreadsToArchive();
             $archive->moveThreadsFromArchive();
         }
-        else if(nel_board_settings($board_id, 'old_threads') === 'PRUNE')
+        else if (nel_board_settings($board_id, 'old_threads') === 'PRUNE')
         {
             $archive->pruneThreads();
         }
