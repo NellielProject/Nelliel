@@ -11,11 +11,14 @@ function nel_derp($error_id, $error_message, $board_id = null, $error_data = arr
     $diagnostic['error-message'] = $error_message;
     $diagnostic['bad-filename'] = (isset($error_data['bad-filename'])) ? $error_data['bad-filename'] : null;
 
-    if (isset($error_data['files']) && !empty($error_data['files']))
+    if (isset($error_data['remove_files']) && $error_data['remove_files'] === true)
     {
-        foreach ($files as $file)
+        if (isset($error_data['files']))
         {
-            unlink($file['dest']);
+            foreach ($error_data['files'] as $file)
+            {
+                unlink($file['location']);
+            }
         }
     }
 

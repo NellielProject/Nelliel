@@ -14,6 +14,8 @@ function nel_process_new_post($board_id)
     $references = nel_board_references($board_id);
     $archive = new \Nelliel\ArchiveAndPrune($board_id);
     $thread_handler = new \Nelliel\ThreadHandler($board_id);
+    $file_handler = new \Nelliel\FileHandler();
+    $file_upload = new \Nelliel\FilesUpload($board_id, $_FILES);
     $post_data = nel_collect_post_data($board_id);
     $new_thread_dir = '';
 
@@ -34,19 +36,13 @@ function nel_process_new_post($board_id)
     $post_data['sage'] = (is_null(nel_fgsfds('sage'))) ? 0 : nel_fgsfds('sage');
 
     // Start collecting file info
-    $files = nel_process_file_info($board_id, $post_data['response_to']);
-    $spoon = false;
-    $files_count = 0;
+    $files = $file_upload->processFiles($post_data['response_to']);
+    //$files = nel_process_file_info($board_id, $post_data['response_to']);
+    $spoon = !empty($files);
+    $post_data['file_count'] = count($files);
 
-    if (!empty($files))
+    if(!$spoon)
     {
-        $files_count = count($files);
-        $spoon = true;
-    }
-    else
-    {
-        $files = array();
-
         if (!$post_data['comment'])
         {
             nel_derp(10, nel_stext('ERROR_10'), $board_id);
@@ -100,9 +96,7 @@ function nel_process_new_post($board_id)
         $post_data['op'] = 0;
     }
 
-    $files_count = count($files);
-    $post_data['file_count'] = $files_count;
-    $post_data['has_file'] = ($files_count > 0) ? 1 : 0;
+    $post_data['has_file'] = ($post_data['file_count'] > 0) ? 1 : 0;
     nel_db_insert_initial_post($board_id, $time, $post_data);
     $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "post_time" = ? LIMIT 1');
     $new_post_info = $dbh->executePreparedFetch($prepared, array($time), PDO::FETCH_ASSOC, true);
@@ -114,8 +108,8 @@ function nel_process_new_post($board_id)
         $thread_info['post_count'] = 1;
         $thread_info['last_bump_time'] = $time;
         $thread_info['id'] = $new_post_info['post_number'];
-        $thread_info['total_files'] = $files_count;
-        nel_db_insert_new_thread($board_id, $thread_info, $files_count);
+        $thread_info['total_files'] = $post_data['file_count'];
+        nel_db_insert_new_thread($board_id, $thread_info);
         $thread_handler->createThreadDirectories($thread_info['id']);
     }
     else
@@ -126,7 +120,7 @@ function nel_process_new_post($board_id)
         $thread_info['last_update'] = $current_thread['last_update'];
         $thread_info['post_count'] = $current_thread['post_count'] + 1;
         $thread_info['last_bump_time'] = $time;
-        $thread_info['total_files'] = $current_thread['total_files'] + count($files);
+        $thread_info['total_files'] = $current_thread['total_files'] + $post_data['file_count'];
 
         if ($current_thread['post_count'] > nel_board_settings($board_id, 'max_bumps') || nel_fgsfds('sage'))
         {
@@ -140,16 +134,23 @@ function nel_process_new_post($board_id)
     $dbh->executePrepared($prepared, array($thread_info['id'], $new_post_info['post_number']), true);
 
     nel_fgsfds('noko_topic', $thread_info['id']);
-    $srcpath = $references['src_path'] . $thread_info['id'] . '/';
-    $preview_path = $references['thumb_path'] . $thread_info['id'] . '/';
+    $src_path = $references['src_path'] . $thread_info['id'] . '/' . $new_post_info['post_number'] . '/';
+    $preview_path = $references['thumb_path'] . $thread_info['id'] . '/' . $new_post_info['post_number'] . '/';
 
     // Make thumbnails and do final file processing
-    $files = nel_generate_previews($board_id, $files, $srcpath, $preview_path);
+    $files = nel_generate_previews($board_id, $files, $src_path, $preview_path);
+
     clearstatcache();
 
-    // Add file data if applicable
+    // Add file data and move uploads to final location if applicable
     if ($spoon)
     {
+        foreach($files as $file)
+        {
+            $file_handler->moveFile($file['location'], $src_path . $file['fullname'], true, DIRECTORY_PERM);
+            chmod($src_path . $file['fullname'], octdec(FILE_PERM));
+        }
+
         nel_db_insert_new_files($board_id, $thread_info['id'], $new_post_info, $files);
     }
 

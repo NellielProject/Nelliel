@@ -20,8 +20,8 @@ function nel_thread_updates($board_id)
             case 'deletefile':
                 if($thread_handler->verifyDeletePerms($sub[2]))
                 {
+                    $thread_handler->removePostFilesFromDisk($sub[2], $sub[3]);
                     $thread_handler->removePostFilesFromDatabase($sub[2], $sub[3]);
-                    $thread_handler->removePostFilesFromDisk($sub[2]);
                 }
 
                 break;

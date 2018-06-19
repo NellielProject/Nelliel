@@ -49,9 +49,14 @@ class FileHandler
         return @mkdir($directory, octdec($dir_chmod), $recursive);
     }
 
-    public function moveFile($file, $destination)
+    public function moveFile($file, $destination, $create_directories = false, $dir_chmod = DIRECTORY_PERM)
     {
         clearstatcache();
+
+        if ($create_directories)
+        {
+            $this->createDirectory(dirname($destination), $dir_chmod, true);
+        }
 
         if (file_exists($file))
         {

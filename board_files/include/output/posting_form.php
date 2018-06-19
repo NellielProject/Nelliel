@@ -95,21 +95,21 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
             $for_label_sauce = $temp_source_block->doXPathQuery(".//label[@for='sauce-1']")->item(0);
             $for_label_sauce->extSetAttribute('for', 'sauce-' . $i);
             $source_element = $temp_source_block->getElementById('sauce-1');
-            $source_element->extSetAttribute('name', 'new_post[file_info][file_' . $i . '][sauce]');
+            $source_element->extSetAttribute('name', 'new_post[file_info][up_file_' . $i . '][sauce]');
             $source_element->extSetAttribute('maxlength', $board_settings['max_source_length']);
             $source_element->changeId('sauce-' . $i);
 
             $for_label_license = $temp_license_block->doXPathQuery(".//label[@for='lol_drama-1']")->item(0);
             $for_label_license->extSetAttribute('for', 'lol_drama-' . $i);
             $license_element = $temp_license_block->getElementById('lol_drama-1');
-            $license_element->extSetAttribute('name', 'new_post[file_info][file_' . $i . '][lol_drama]');
+            $license_element->extSetAttribute('name', 'new_post[file_info][up_file_' . $i . '][lol_drama]');
             $license_element->extSetAttribute('maxlength', $board_settings['max_license_length']);
             $license_element->changeId('lol_drama-' . $i);
 
             $for_label_alt_text = $temp_alt_text_block->doXPathQuery(".//label[@for='alt_text-1']")->item(0);
             $for_label_alt_text->extSetAttribute('for', 'alt_text-' . $i);
             $alt_text_element = $temp_alt_text_block->getElementById('alt_text-1');
-            $alt_text_element->extSetAttribute('name', 'new_post[file_info][file_' . $i . '][alt_text]');
+            $alt_text_element->extSetAttribute('name', 'new_post[file_info][up_file_' . $i . '][alt_text]');
             $alt_text_element->extSetAttribute('maxlength', '255');
             $alt_text_element->changeId('alt_text-' . $i);
         }

@@ -1,217 +1,12 @@
 <?php
-
-function nel_process_file_info($board_id, $response_to)
+if (!defined('NELLIEL_VERSION'))
 {
-    $references = nel_board_references($board_id);
-    $board_settings = nel_board_settings($board_id);
-    $file_handler = new \Nelliel\FileHandler();
-    $files = array();
-    $file_count = 1;
-
-    foreach ($_FILES as $entry => $file)
-    {
-        $new_file = array();
-
-        if (empty($file['name']))
-        {
-            ++ $file_count;
-            continue;
-        }
-
-        nel_check_upload_errors($board_id, $file, $files);
-        $file['name'] = $file_handler->filterFilename($file['name']);
-        preg_match('#[0-9]+$#', $entry, $matches);
-        $file_order = $matches[0];
-        $post_file_info = $_POST['new_post']['file_info']['file_' . $file_order . ''];
-        $file['name'] = '_' . $file['name']; // Workaround for pahtinfo not handling Unicode properly
-        $info = pathinfo($file['name']);
-        $new_file['ext'] = $info['extension'];
-        $new_file['filename'] = substr($info['filename'], 1);
-        $new_file['fullname'] = substr($info['basename'], 1);
-        $new_file['dest'] = $file['tmp_name'];
-        $new_file['filesize'] = $file['size'];
-        $new_file = nel_check_for_existing_file($board_id, $new_file, $files, $response_to);
-        $new_file = nel_get_filetype($board_id, $new_file, $files);
-        $new_file['dest'] = $references['src_path'] . $file['name'] . '.tmp';
-        move_uploaded_file($file['tmp_name'], $new_file['dest']);
-        chmod($new_file['dest'], octdec(FILE_PERM));
-
-        $new_file['source'] = nel_check_post_entry($post_file_info['sauce'], 'string');
-        $new_file['license'] = nel_check_post_entry($post_file_info['lol_drama'], 'string');
-        $new_file['alt_text'] = nel_check_post_entry($post_file_info['alt_text'], 'string');
-        array_push($files, $new_file);
-
-        if ($file_count == $board_settings['max_post_files'])
-        {
-            break;
-        }
-
-        ++ $file_count;
-    }
-
-    return $files;
-}
-
-function nel_check_upload_errors($board_id, $file, $files)
-{
-    $board_settings = nel_board_settings($board_id);
-    $error_data = array('bad-filename' => $file['name'], 'files' => $files);
-
-    if ($file['size'] > $board_settings['max_filesize'] * 1024)
-    {
-        nel_derp(100, nel_stext('ERROR_100'), $board_id, $error_data);
-    }
-
-    if ($file['error'] === UPLOAD_ERR_INI_SIZE)
-    {
-        nel_derp(101, nel_stext('ERROR_101'), $board_id, $error_data);
-    }
-
-    if ($file['error'] === UPLOAD_ERR_FORM_SIZE)
-    {
-        nel_derp(102, nel_stext('ERROR_102'), $board_id, $error_data);
-    }
-
-    if ($file['error'] === UPLOAD_ERR_PARTIAL)
-    {
-        nel_derp(103, nel_stext('ERROR_103'), $board_id, $error_data);
-    }
-
-    if ($file['error'] === UPLOAD_ERR_NO_FILE)
-    {
-        nel_derp(104, nel_stext('ERROR_104'), $board_id, $error_data);
-    }
-
-    if ($file['error'] === UPLOAD_ERR_NO_TMP_DIR || $file['error'] === UPLOAD_ERR_CANT_WRITE)
-    {
-        nel_derp(105, nel_stext('ERROR_105'), $board_id, $error_data);
-    }
-
-    if ($file['error'] !== UPLOAD_ERR_OK)
-    {
-        nel_derp(106, nel_stext('ERROR_106'), $board_id, $error_data);
-    }
-}
-
-function nel_check_for_existing_file($board_id, $file, $files, $response_to)
-{
-    $dbh = nel_database();
-    $references = nel_board_references($board_id);
-    $board_settings = nel_board_settings($board_id);
-    $error_data = array('bad-filename' => $file['filename'], 'files' => $files);
-    $is_banned = false;
-    $file['md5'] = hash_file('md5', $file['dest'], true);
-    $is_banned = nel_file_hash_is_banned($file['md5'], 'md5');
-
-    if (!$is_banned)
-    {
-        $file['sha1'] = hash_file('sha1', $file['dest'], true);
-        $is_banned = nel_file_hash_is_banned($file['sha1'], 'sha1');
-    }
-
-    $file['sha256'] = null;
-
-    if (!$is_banned && $board_settings['file_sha256'])
-    {
-        $file['sha256'] = hash_file('sha256', $file['dest'], true);
-        $is_banned = nel_file_hash_is_banned($file['sha256'], 'sha256');
-    }
-
-    $file['sha512'] = null;
-
-    if (!$is_banned && $board_settings['file_sha512'])
-    {
-        $file['sha512'] = hash_file('sha512', $file['dest'], true);
-        $is_banned = nel_file_hash_is_banned($file['sha512'], 'sha512');
-    }
-
-    if ($is_banned)
-    {
-        nel_derp(150, nel_stext('ERROR_150'), $board_id, $error_data);
-    }
-
-    if ($response_to === 0 && $board_settings['only_op_duplicates'])
-    {
-        $query = 'SELECT 1 FROM "' . $references['file_table'] .
-             '" WHERE ("parent_thread" = ? AND "post_ref" = ?) AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
-        $prepared = $dbh->prepare($query);
-        $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
-        $prepared->bindValue(2, $response_to, PDO::PARAM_INT);
-        $prepared->bindValue(3, $file['md5'], PDO::PARAM_LOB);
-        $prepared->bindValue(4, $file['sha1'], PDO::PARAM_LOB);
-        $prepared->bindValue(5, $file['sha256'], PDO::PARAM_LOB);
-        $prepared->bindValue(6, $file['sha512'], PDO::PARAM_LOB);
-    }
-    else if ($response_to > 0 && $board_settings['only_thread_duplicates'])
-    {
-        $query = 'SELECT 1 FROM "' . $references['file_table'] .
-             '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
-        $prepared = $dbh->prepare($query);
-        $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
-        $prepared->bindValue(2, $file['md5'], PDO::PARAM_LOB);
-        $prepared->bindValue(3, $file['sha1'], PDO::PARAM_LOB);
-        $prepared->bindValue(4, $file['sha256'], PDO::PARAM_LOB);
-        $prepared->bindValue(5, $file['sha512'], PDO::PARAM_LOB);
-    }
-    else
-    {
-        $query = 'SELECT 1 FROM "' . $references['file_table'] .
-             '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ? LIMIT 1';
-        $prepared = $dbh->prepare($query);
-        $prepared->bindValue(1, $file['md5'], PDO::PARAM_LOB);
-        $prepared->bindValue(2, $file['sha1'], PDO::PARAM_LOB);
-        $prepared->bindValue(3, $file['sha256'], PDO::PARAM_LOB);
-        $prepared->bindValue(4, $file['sha512'], PDO::PARAM_LOB);
-    }
-
-    $result = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
-
-    if ($result)
-    {
-        nel_derp(110, nel_stext('ERROR_110'), $board_id, $error_data);
-    }
-
-    return $file;
-}
-
-function nel_get_filetype($board_id, $file, $files)
-{
-    $filetypes = nel_get_filetype_data();
-    $filetype_settings = nel_filetype_settings($board_id);
-    $error_data = array('bad-filename' => $file['filename'], 'files' => $files);
-    $test_ext = utf8_strtolower($file['ext']);
-    $file_length = filesize($file['dest']);
-    $end_offset = ($file_length < 65535) ? $file_length : $file_length - 65535;
-    $file_test_begin = file_get_contents($file['dest'], NULL, NULL, 0, 65535);
-    $file_test_end = file_get_contents($file['dest'], NULL, NULL, $end_offset);
-
-    if (!array_key_exists($test_ext, $filetypes))
-    {
-        nel_derp(107, nel_stext('ERROR_107'), $board_id, $error_data);
-    }
-
-    if (!$filetype_settings[$filetypes[$test_ext]['type']][$filetypes[$test_ext]['format']])
-    {
-        nel_derp(108, nel_stext('ERROR_108'), $board_id, $error_data);
-    }
-
-    if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test_begin) ||
-         preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test_end))
-    {
-        $file['type'] = $filetypes[$test_ext]['type'];
-        $file['format'] = $filetypes[$test_ext]['format'];
-        $file['mime'] = $filetypes[$test_ext]['mime'];
-    }
-    else
-    {
-        nel_derp(109, nel_stext('ERROR_109'), $board_id, $error_data);
-    }
-
-    return $file;
+    die("NOPE.AVI");
 }
 
 function nel_generate_previews($board_id, $files, $srcpath, $preview_path)
 {
+    $file_handler = new \Nelliel\FileHandler();
     $i = 0;
     $files_count = count($files);
     $board_settings = nel_board_settings($board_id);
@@ -227,7 +22,7 @@ function nel_generate_previews($board_id, $files, $srcpath, $preview_path)
 
         if ($files[$i]['format'] === 'swf' || ($files[$i]['type'] === 'graphics'))
         {
-            $dim = getimagesize($files[$i]['dest']);
+            $dim = getimagesize($files[$i]['location']);
             $files[$i]['im_x'] = $dim[0];
             $files[$i]['im_y'] = $dim[1];
             $ratio = min(($board_settings['max_height'] / $files[$i]['im_y']), ($board_settings['max_width'] /
@@ -238,6 +33,7 @@ function nel_generate_previews($board_id, $files, $srcpath, $preview_path)
 
         if ($board_settings['use_thumb'] && $files[$i]['type'] === 'graphics')
         {
+            $file_handler->createDirectory($preview_path, DIRECTORY_PERM, true);
             $magick_available = nel_is_magick_available();
 
             $files[$i]['preview_name'] = $files[$i]['filename'] . '-preview';
@@ -269,16 +65,6 @@ function nel_generate_previews($board_id, $files, $srcpath, $preview_path)
         }
 
         clearstatcache();
-
-        if (!file_exists($srcpath . $files[$i]['filename'] . $files[$i]['ext']))
-        {
-            rename($files[$i]['dest'], $srcpath . $files[$i]['filename'] . '.' . $files[$i]['ext']);
-        }
-        else
-        {
-            $files[$i]['filename'] = 'copy' . utf8_substr($time, -4) . '--' . $files[$i]['filename'];
-            rename($files[$i]['dest'], $srcpath . $files[$i]['filename'] . '.' . $files[$i]['ext']);
-        }
         ++ $i;
     }
 
@@ -307,7 +93,7 @@ function nel_is_magick_available()
 
 function nel_create_imagick_preview(&$file, $preview_path, $board_id)
 {
-    $image = new Imagick($file['dest']);
+    $image = new Imagick($file['location']);
     $iterations = $image->getImageIterations();
     $image = $image->coalesceimages();
     $board_settings = nel_board_settings($board_id);
@@ -318,7 +104,7 @@ function nel_create_imagick_preview(&$file, $preview_path, $board_id)
 
         if ($file['im_x'] <= $board_settings['max_width'] && $file['im_y'] <= $board_settings['max_height'])
         {
-            copy($file['dest'], $preview_path . $file['preview_name'] . '.' . $file['preview_extension']);
+            copy($file['location'], $preview_path . $file['preview_name'] . '.' . $file['preview_extension']);
         }
         else
         {
@@ -356,7 +142,7 @@ function nel_create_imagemagick_preview(&$file, $preview_path, $board_id)
     if ($file['format'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
     {
         $file['preview_extension'] = 'gif';
-        $cmd_resize = 'convert ' . escapeshellarg($file['dest']) . ' -coalesce -thumbnail ' .
+        $cmd_resize = 'convert ' . escapeshellarg($file['location']) . ' -coalesce -thumbnail ' .
              $board_settings['max_width'] . 'x' . $board_settings['max_height'] .
              escapeshellarg($preview_path . $file['preview_name'] . '.' . $file['preview_extension']);
         exec($cmd_resize);
@@ -366,13 +152,13 @@ function nel_create_imagemagick_preview(&$file, $preview_path, $board_id)
     {
         if ($board_settings['use_png_thumb'])
         {
-            $cmd_resize = 'convert ' . escapeshellarg($file['dest']) . ' -resize ' . $board_settings['max_width'] . 'x' .
+            $cmd_resize = 'convert ' . escapeshellarg($file['location']) . ' -resize ' . $board_settings['max_width'] . 'x' .
                  $board_settings['max_height'] . '\> -quality 00 -sharpen 0x0.5 ' .
                  escapeshellarg($preview_path . $file['preview_name'] . '.' . $file['preview_extension']);
         }
         else
         {
-            $cmd_resize = 'convert ' . escapeshellarg($file['dest']) . ' -resize ' . $board_settings['max_width'] . 'x' .
+            $cmd_resize = 'convert ' . escapeshellarg($file['location']) . ' -resize ' . $board_settings['max_width'] . 'x' .
                  $board_settings['max_height'] . '\> -quality ' . $board_settings['jpeg_quality'] . ' -sharpen 0x0.5 ' .
                  escapeshellarg($preview_path . $file['preview_name'] . '.' . $file['preview_extension']);
         }
@@ -390,15 +176,15 @@ function nel_create_gd_preview($file, $preview_path, $board_id)
 
     if ($file['format'] === 'jpeg' && $gd_test["JPEG Support"])
     {
-        $image = imagecreatefromjpeg($file['dest']);
+        $image = imagecreatefromjpeg($file['location']);
     }
     else if ($file['format'] === 'gif' && $gd_test["GIF Read Support"])
     {
-        $image = imagecreatefromgif($file['dest']);
+        $image = imagecreatefromgif($file['location']);
     }
     else if ($file['format'] === 'png' && $gd_test["PNG Support"])
     {
-        $image = imagecreatefrompng($file['dest']);
+        $image = imagecreatefrompng($file['location']);
     }
     else
     {

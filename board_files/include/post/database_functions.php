@@ -26,7 +26,7 @@ function nel_db_insert_initial_post($board_id, $time, $post_data)
     $dbh->executePrepared($prepared);
 }
 
-function nel_db_insert_new_thread($board_id, $thread_info, $files_count)
+function nel_db_insert_new_thread($board_id, $thread_info)
 {
     $dbh = nel_database();
     $references = nel_board_references($board_id);
@@ -82,7 +82,7 @@ function nel_db_insert_new_files($board_id, $parent_id, $new_post_info, $files)
         $prepared->bindValue(':format', $file['format'], PDO::PARAM_STR);
         $prepared->bindValue(':mime', $file['mime'], PDO::PARAM_STR);
         $prepared->bindValue(':filename', $file['filename'], PDO::PARAM_STR);
-        $prepared->bindValue(':extension', $file['ext'], PDO::PARAM_STR);
+        $prepared->bindValue(':extension', $file['extension'], PDO::PARAM_STR);
         $prepared->bindValue(':image_width', $file['im_x'], PDO::PARAM_INT);
         $prepared->bindValue(':image_height', $file['im_y'], PDO::PARAM_INT);
         $prepared->bindValue(':preview_name', $file['preview_name'], PDO::PARAM_STR);
