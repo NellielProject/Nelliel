@@ -76,6 +76,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
             $posting_form_table->insertBefore($temp_file_block, $insert_before_point);
             $posting_form_table->insertBefore($temp_source_block, $insert_before_point);
             $posting_form_table->insertBefore($temp_license_block, $insert_before_point);
+            $posting_form_table->insertBefore($temp_alt_text_block, $insert_before_point);
 
             $for_label_file = $temp_file_block->doXPathQuery(".//label[@for='up-file-1']")->item(0);
             $for_label_file->extSetAttribute('for', 'up-file-' . $i);
