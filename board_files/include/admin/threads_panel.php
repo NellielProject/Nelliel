@@ -9,6 +9,8 @@ require_once INCLUDE_PATH . 'output/management/thread_panel.php';
 function nel_thread_panel($board_id, $action)
 {
     $authorize = nel_authorize();
+    $thread_handler = new \Nelliel\ThreadHandler($board_id);
+
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_access', $board_id))
     {
         nel_derp(350, nel_stext('ERROR_350'));
@@ -21,7 +23,7 @@ function nel_thread_panel($board_id, $action)
             nel_derp(351, nel_stext('ERROR_351'));
         }
 
-        $updates = nel_thread_updates($board_id);
+        $updates = $thread_handler->threadUpdates();
         nel_regen_threads($board_id, true, $updates);
         nel_regen_index($board_id);
     }

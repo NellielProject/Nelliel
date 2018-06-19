@@ -14,21 +14,82 @@ class ThreadHandler
     private $dbh;
     private $file_handler;
     private $board_id;
-    private $references;
 
     function __construct($board_id)
     {
         $this->dbh = nel_database();
         $this->file_handler = new \Nelliel\FileHandler();
         $this->board_id = $board_id;
-        $this->references = nel_board_references($board_id);
+    }
+
+    public function threadUpdates()
+    {
+        $board_settings = nel_board_settings($this->board_id);
+        $returned_list = array();
+        $update_archive = false;
+
+        foreach ($_POST as $input)
+        {
+            $sub = explode('_', $input, 4);
+
+            switch ($sub[0])
+            {
+                case 'deletefile':
+                    $this->removeFile($sub[2], $sub[3]);
+                    break;
+
+                case 'deletethread':
+                    $this->removeThread($sub[1]);
+                    $update_archive = true;
+                    break;
+
+                case 'deletepost':
+                    $this->removePost($sub[2]);
+                    break;
+
+                case 'threadsticky':
+                    $this->stickyThread($sub[1]);
+                    $update_archive = true;
+                    break;
+
+                case 'threadunsticky':
+                    $this->unStickyThread($sub[1]);
+                    $update_archive = true;
+                    break;
+            }
+
+            if (isset($sub[1]) && !in_array($sub[1], $returned_list))
+            {
+                array_push($returned_list, $sub[1]);
+            }
+        }
+
+        if ($update_archive)
+        {
+            $archive = new \Nelliel\ArchiveAndPrune($this->board_id);
+            $archive->updateAllArchiveStatus();
+
+            if ($board_settings['old_threads'] === 'ARCHIVE')
+            {
+                $archive->moveThreadsToArchive();
+                $archive->moveThreadsFromArchive();
+            }
+            else if ($board_settings['old_threads'] === 'PRUNE')
+            {
+                $archive->pruneThreads();
+            }
+        }
+
+        return $returned_list;
     }
 
     public function stickyThread($thread_id, $post_id = null)
     {
+        $board_references = nel_board_references($this->board_id);
+
         if (!is_null($post_id))
         {
-            $prepared = $this->dbh->prepare('SELECT "parent_thread" FROM "' . $this->references['thread_table'] .
+            $prepared = $this->dbh->prepare('SELECT "parent_thread" FROM "' . $board_references['thread_table'] .
                 '" WHERE "post_number" = ? LIMIT 1');
             $post_data = $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_ASSOC, true);
 
@@ -39,7 +100,7 @@ class ThreadHandler
             }
         }
 
-        $prepared = $this->dbh->prepare('UPDATE "' . $this->references['thread_table'] .
+        $prepared = $this->dbh->prepare('UPDATE "' . $board_references['thread_table'] .
             '" SET "sticky" = 1 WHERE "thread_id" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
         return;
@@ -47,7 +108,8 @@ class ThreadHandler
 
     public function unStickyThread($thread_id)
     {
-        $prepared = $this->dbh->prepare('UPDATE "' . $this->references['thread_table'] .
+        $board_references = nel_board_references($this->board_id);
+        $prepared = $this->dbh->prepare('UPDATE "' . $board_references['thread_table'] .
             '" SET "sticky" = 0 WHERE "thread_id" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
         return;
@@ -55,48 +117,55 @@ class ThreadHandler
 
     public function getPostData($post_id)
     {
-        $prepared = $this->dbh->prepare('SELECT * FROM "' . $this->references['post_table'] .
+        $board_references = nel_board_references($this->board_id);
+        $prepared = $this->dbh->prepare('SELECT * FROM "' . $board_references['post_table'] .
             '" WHERE "post_number" = ? LIMIT 1');
         return $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_ASSOC, true);
     }
 
     public function getPostFiles($post_id)
     {
-        $prepared = $this->dbh->prepare('SELECT * FROM "' . $this->references['file_table'] . '" WHERE "post_ref" = ?');
+        $board_references = nel_board_references($this->board_id);
+        $prepared = $this->dbh->prepare('SELECT * FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ?');
         return $this->dbh->executePreparedFetchAll($prepared, array($post_id), PDO::FETCH_ASSOC);
     }
 
     public function getPostParentThreadId($post_id)
     {
-        $prepared = $this->dbh->prepare('SELECT "parent_thread" FROM "' . $this->references['post_table'] .
+        $board_references = nel_board_references($this->board_id);
+        $prepared = $this->dbh->prepare('SELECT "parent_thread" FROM "' . $board_references['post_table'] .
             '" WHERE "post_number" = ? LIMIT 1');
         return $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_COLUMN, true);
     }
 
     public function getThreadData($thread_id)
     {
-        $prepared = $this->dbh->prepare('SELECT * FROM "' . $this->references['thread_table'] .
+        $board_references = nel_board_references($this->board_id);
+        $prepared = $this->dbh->prepare('SELECT * FROM "' . $board_references['thread_table'] .
             '" WHERE "thread_id" = ? LIMIT 1');
         return $this->dbh->executePreparedFetch($prepared, array($thread_id), PDO::FETCH_ASSOC, true);
     }
 
     public function getAllThreadPosts($thread_id)
     {
-        $prepared = $this->dbh->prepare('SELECT * FROM "' . $this->references['post_table'] .
+        $board_references = nel_board_references($this->board_id);
+        $prepared = $this->dbh->prepare('SELECT * FROM "' . $board_references['post_table'] .
             '" WHERE "parent_thread" = ? ORDER BY "post_number"');
         return $this->dbh->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
     }
 
     public function getNextToLastPostInThread($thread_id, $no_sage = false)
     {
+        $board_references = nel_board_references($this->board_id);
+
         if ($no_sage)
         {
-            $prepared = $this->dbh->prepare('SELECT *  FROM "' . $this->references['post_table'] .
+            $prepared = $this->dbh->prepare('SELECT *  FROM "' . $board_references['post_table'] .
                 '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 2');
         }
         else
         {
-            $prepared = $this->dbh->prepare('SELECT *  FROM "' . $this->references['post_table'] .
+            $prepared = $this->dbh->prepare('SELECT *  FROM "' . $board_references['post_table'] .
                 '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 2');
         }
 
@@ -112,14 +181,16 @@ class ThreadHandler
 
     public function getLastPostInThread($thread_id, $no_sage = false)
     {
+        $board_references = nel_board_references($this->board_id);
+
         if ($no_sage)
         {
-            $prepared = $this->dbh->prepare('SELECT *  FROM "' . $this->references['post_table'] .
+            $prepared = $this->dbh->prepare('SELECT *  FROM "' . $board_references['post_table'] .
                 '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1');
         }
         else
         {
-            $prepared = $this->dbh->prepare('SELECT *  FROM "' . $this->references['post_table'] .
+            $prepared = $this->dbh->prepare('SELECT *  FROM "' . $board_references['post_table'] .
                 '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1');
         }
 
@@ -128,12 +199,13 @@ class ThreadHandler
 
     public function convertPostToThread($post_id)
     {
+        $board_references = nel_board_references($this->board_id);
         nel_create_thread_directories($post_id);
         $post_data = $this->getPostData($post_id);
         $columns = array('thread_id', 'first_post', 'last_post', 'last_bump_time', 'total_files', 'last_update',
             'post_count', 'sticky');
         $values = $this->dbh->generateParameterIds($columns);
-        $query = $this->dbh->buildBasicInsertQuery($this->references['thread_table'], $columns, $values);
+        $query = $this->dbh->buildBasicInsertQuery($board_references['thread_table'], $columns, $values);
         $prepared = $this->dbh->prepare($query);
         $prepared->bindValue(':thread_id', $post_id, PDO::PARAM_INT);
         $prepared->bindValue(':first_post', $post_id, PDO::PARAM_INT);
@@ -145,23 +217,23 @@ class ThreadHandler
         $prepared->bindValue(':sticky', 1, PDO::PARAM_INT);
         $this->dbh->executePrepared($prepared);
 
-        $prepared = $dbh->prepare('UPDATE "' . $this->references['post_table'] .
+        $prepared = $dbh->prepare('UPDATE "' . $board_references['post_table'] .
             '" SET "parent_thread" = ?, "op" = 1 WHERE "post_number" = ?');
         $dbh->executePrepared($prepared, array($post_id, $post_id));
 
         if ($post_data['has_file'])
         {
-            $src_path = $this->file_handler->pathFileJoin($this->references['src_path'], $post_data['parent_thread']);
-            $thumb_path = $this->file_handler->pathFileJoin($this->references['thumb_path'], $post_data['parent_thread']);
-            $src_dest = $this->file_handler->pathFileJoin($this->references['src_path'], $post_id);
-            $thumb_dest = $this->file_handler->pathFileJoin($this->references['thumb_path'], $post_id);
+            $src_path = $this->file_handler->pathFileJoin($board_references['src_path'], $post_data['parent_thread']);
+            $thumb_path = $this->file_handler->pathFileJoin($board_references['thumb_path'], $post_data['parent_thread']);
+            $src_dest = $this->file_handler->pathFileJoin($board_references['src_path'], $post_id);
+            $thumb_dest = $this->file_handler->pathFileJoin($board_references['thumb_path'], $post_id);
 
-            $prepared = $this->dbh->prepare('UPDATE "' . $this->references['file_table'] .
+            $prepared = $this->dbh->prepare('UPDATE "' . $board_references['file_table'] .
                 '" SET "parent_thread" = ? WHERE "post_ref" = ?');
             $this->dbh->executePrepared($prepared, array($post_id, $post_id));
 
             $prepared = $this->dbh->prepare('SELECT "filename", "extension", "preview_name", "preview_extension" FROM "' .
-                $this->references['file_table'] . '" WHERE "post_ref" = ?');
+                $board_references['file_table'] . '" WHERE "post_ref" = ?');
             $file_data = $this->dbh->executePreparedFetchAll($prepared, array($post_id), PDO::FETCH_ASSOC);
             $file_count = count($file_data);
             $line = 0;
@@ -193,8 +265,9 @@ class ThreadHandler
 
     public function removePostFromDatabase($post_id)
     {
+        $board_references = nel_board_references($this->board_id);
         $post_data = $this->getPostData($post_id);
-        $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['post_table'] . '" WHERE "post_number" = ?');
+        $prepared = $this->dbh->prepare('DELETE FROM "' . $board_references['post_table'] . '" WHERE "post_number" = ?');
         $this->dbh->executePrepared($prepared, array($post_id));
         $thread_id = $post_data['parent_thread'];
         $thread_data = $this->getThreadData($thread_id);
@@ -209,7 +282,7 @@ class ThreadHandler
             $last_bump = $last_nosage['post_time'];
         }
 
-        $prepared = $this->dbh->prepare('UPDATE "' . $this->references['thread_table'] .
+        $prepared = $this->dbh->prepare('UPDATE "' . $board_references['thread_table'] .
             '" SET "post_count" = ?, "last_post" = ?, "last_update" = ?, "last_bump_time" = ?, "total_files" = ? WHERE "thread_id" = ?');
         $prepared->bindValue(1, $new_count, PDO::PARAM_INT);
         $prepared->bindValue(2, $new_last['post_number'], PDO::PARAM_INT);
@@ -222,14 +295,15 @@ class ThreadHandler
 
     public function removePostFilesFromDatabase($post_ref, $order = null, $quantity = 1)
     {
+        $board_references = nel_board_references($this->board_id);
         if (is_null($order))
         {
-            $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['file_table'] . '" WHERE "post_ref" = ?');
+            $prepared = $this->dbh->prepare('DELETE FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ?');
             $this->dbh->executePrepared($prepared, array($post_ref));
         }
         else
         {
-            $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['file_table'] .
+            $prepared = $this->dbh->prepare('DELETE FROM "' . $board_references['file_table'] .
                 '" WHERE "post_ref" = ? AND "file_order" = ?');
             $this->dbh->executePrepared($prepared, array($post_ref, $order));
         }
@@ -239,18 +313,19 @@ class ThreadHandler
 
     public function removePostFilesFromDisk($post_id, $file_order = null)
     {
+        $board_references = nel_board_references($this->board_id);
         $thread_id = $this->getPostParentThreadId($post_id);
 
         if (is_null($file_order))
         {
             $prepared = $this->dbh->prepare('SELECT "filename", "extension", "preview_name", "preview_extension" FROM "' .
-                $this->references['file_table'] . '" WHERE "post_ref" = ?');
+                $board_references['file_table'] . '" WHERE "post_ref" = ?');
             $file_data = $this->dbh->executePreparedFetchAll($prepared, array($post_id), PDO::FETCH_ASSOC);
         }
         else
         {
             $prepared = $this->dbh->prepare('SELECT "filename", "extension", "preview_name", "preview_extension" FROM "' .
-                $this->references['file_table'] . '" WHERE "post_ref" = ? AND "file_order" = ?');
+                $board_references['file_table'] . '" WHERE "post_ref" = ? AND "file_order" = ?');
             $file_data = $this->dbh->executePreparedFetchAll($prepared, array($post_id, $file_order), PDO::FETCH_ASSOC);
         }
 
@@ -260,19 +335,19 @@ class ThreadHandler
             {
                 if (is_null($file_order))
                 {
-                    $this->file_handler->eraserGun($this->file_handler->pathJoin($this->references['src_path'], $thread_id .
-                    '/' . $post_id), null, true);
-                    $this->file_handler->eraserGun($this->file_handler->pathJoin($this->references['thumb_path'], $thread_id .
-                    '/' . $post_id), null, true);
+                    $this->file_handler->eraserGun($this->file_handler->pathJoin($board_references['src_path'], $thread_id .
+                        '/' . $post_id), null, true);
+                    $this->file_handler->eraserGun($this->file_handler->pathJoin($board_references['thumb_path'], $thread_id .
+                        '/' . $post_id), null, true);
                 }
                 else
                 {
                     $filename = $file['filename'] . '.' . $file['extension'];
                     $preview = $file['preview_name'] . '.' . $file['preview_extension'];
-                    $this->file_handler->eraserGun($this->file_handler->pathJoin($this->references['src_path'], $thread_id .
-                    '/' . $post_id), $filename);
-                    $this->file_handler->eraserGun($this->file_handler->pathJoin($this->references['thumb_path'], $thread_id .
-                    '/' . $post_id), $preview);
+                    $this->file_handler->eraserGun($this->file_handler->pathJoin($board_references['src_path'], $thread_id .
+                        '/' . $post_id), $filename);
+                    $this->file_handler->eraserGun($this->file_handler->pathJoin($board_references['thumb_path'], $thread_id .
+                        '/' . $post_id), $preview);
                 }
             }
         }
@@ -287,21 +362,24 @@ class ThreadHandler
 
     public function removeThreadFromDatabase($thread_id)
     {
-        $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['thread_table'] . '" WHERE "thread_id" = ?');
+        $board_references = nel_board_references($this->board_id);
+        $prepared = $this->dbh->prepare('DELETE FROM "' . $board_references['thread_table'] . '" WHERE "thread_id" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
     }
 
     public function removeThreadFilesFromDatabase($thread_id)
     {
-        $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['file_table'] .
+        $board_references = nel_board_references($this->board_id);
+        $prepared = $this->dbh->prepare('DELETE FROM "' . $board_references['file_table'] .
             '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
     }
 
     public function subtractFromFileCount($post_id, $quantity)
     {
+        $board_references = nel_board_references($this->board_id);
         $prepared = $this->dbh->prepare('SELECT "parent_thread", "file_count", "has_file" FROM "' .
-            $this->references['post_table'] . '" WHERE "post_number" = ? LIMIT 1');
+            $board_references['post_table'] . '" WHERE "post_number" = ? LIMIT 1');
         $post_files = $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_ASSOC, true);
         $post_files['file_count'] -= $quantity;
         $thread_id = $post_files['parent_thread'];
@@ -312,7 +390,7 @@ class ThreadHandler
             $post_files['has_file'] = 0;
         }
 
-        $prepared = $this->dbh->prepare('SELECT "total_files" FROM "' . $this->references['thread_table'] .
+        $prepared = $this->dbh->prepare('SELECT "total_files" FROM "' . $board_references['thread_table'] .
             '" WHERE "thread_id" = ? LIMIT 1');
         $total_files = $this->dbh->executePreparedFetch($prepared, array($thread_id), PDO::FETCH_COLUMN, true);
         $total_files -= $quantity;
@@ -322,38 +400,41 @@ class ThreadHandler
             $total_files = 0;
         }
 
-        $prepared = $this->dbh->prepare('UPDATE "' . $this->references['post_table'] .
+        $prepared = $this->dbh->prepare('UPDATE "' . $board_references['post_table'] .
             '" SET "has_file" = ?, "file_count" = ? WHERE "post_number" = ?');
         $this->dbh->executePrepared($prepared, array($post_files['has_file'], $post_files['file_count'], $post_id));
-        $prepared = $this->dbh->prepare('UPDATE "' . $this->references['thread_table'] .
+        $prepared = $this->dbh->prepare('UPDATE "' . $board_references['thread_table'] .
             '" SET "total_files" = ? WHERE "thread_id" = ?');
         $this->dbh->executePrepared($prepared, array($total_files, $thread_id));
     }
 
     function createThreadDirectories($thread_id)
     {
-        $this->file_handler->createDirectory($this->references['src_path'] . $thread_id, DIRECTORY_PERM);
-        $this->file_handler->createDirectory($this->references['thumb_path'] . $thread_id, DIRECTORY_PERM);
-        $this->file_handler->createDirectory($this->references['page_path'] . $thread_id, DIRECTORY_PERM);
+        $board_references = nel_board_references($this->board_id);
+        $this->file_handler->createDirectory($board_references['src_path'] . $thread_id, DIRECTORY_PERM);
+        $this->file_handler->createDirectory($board_references['thumb_path'] . $thread_id, DIRECTORY_PERM);
+        $this->file_handler->createDirectory($board_references['page_path'] . $thread_id, DIRECTORY_PERM);
     }
 
     function removeThreadDirectories($thread_id)
     {
-        $this->file_handler->eraserGun($this->file_handler->pathJoin($this->references['src_path'], $thread_id), null, true);
-        $this->file_handler->eraserGun($this->file_handler->pathJoin($this->references['thumb_path'], $thread_id), null, true);
-        $this->file_handler->eraserGun($this->file_handler->pathJoin($this->references['page_path'], $thread_id), null, true);
+        $board_references = nel_board_references($this->board_id);
+        $this->file_handler->eraserGun($this->file_handler->pathJoin($board_references['src_path'], $thread_id), null, true);
+        $this->file_handler->eraserGun($this->file_handler->pathJoin($board_references['thumb_path'], $thread_id), null, true);
+        $this->file_handler->eraserGun($this->file_handler->pathJoin($board_references['page_path'], $thread_id), null, true);
     }
 
     public function verifyDeletePerms($post_id)
     {
         $authorize = nel_authorize();
+        $board_references = nel_board_references($this->board_id);
 
         if (!is_numeric($post_id))
         {
             nel_derp(30, nel_stext('ERROR_30'));
         }
 
-        $prepared = $this->dbh->prepare('SELECT "post_password", "mod_post" FROM "' . $this->references['post_table'] .
+        $prepared = $this->dbh->prepare('SELECT "post_password", "mod_post" FROM "' . $board_references['post_table'] .
             '" WHERE "post_number" = ? LIMIT 1');
         $post_data = $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_ASSOC, true);
 

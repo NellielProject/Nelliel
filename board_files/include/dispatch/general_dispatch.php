@@ -39,7 +39,8 @@ function nel_general_dispatch()
         case 'threads':
             if ($action === 'update')
             {
-                $updates = nel_thread_updates($board_id);
+                $thread_handler = new \Nelliel\ThreadHandler($board_id);
+                $updates = $thread_handler->threadUpdates();
                 nel_regen_threads($board_id, true, $updates);
                 nel_regen_index($board_id);
                 nel_clean_exit(true, $board_id);
