@@ -1,5 +1,5 @@
 # Nelliel Changelog
-## v0.9.6.5 (2018/06/17)
+## v0.9.6.5 (2018/06/19)
 ### Breaking
  - Each post now gets a directory for files within the thread directory. This should avoid most filename collisions.
 
