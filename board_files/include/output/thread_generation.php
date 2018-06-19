@@ -50,6 +50,11 @@ function nel_thread_generator($board_id, $write, $response_to)
 
     while ($gen_data['post_counter'] < $gen_data['thread']['post_count'])
     {
+        if(!isset($treeline[$gen_data['post_counter']]))
+        {
+            ++ $gen_data['post_counter'];
+            continue;
+        }
 
         $gen_data['post'] = $treeline[$gen_data['post_counter']];
 
