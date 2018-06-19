@@ -11,7 +11,7 @@ function nel_board_settings_control($board_id, $action, $defaults = false)
     $dbh = nel_database();
     $authorize = nel_authorize();
     $references = nel_board_references($board_id);
-    $config_table = ($defaults) ? DEFAULT_BOARD_CONFIG_TABLE : $references['config_table'];
+    $config_table = ($defaults) ? BOARD_DEFAULTS_TABLE : $references['config_table'];
     $update = FALSE;
 
     if ($action === 'update')

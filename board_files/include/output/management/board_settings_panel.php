@@ -19,7 +19,7 @@ function nel_render_board_settings_panel($board_id, $defaults)
         $references = nel_board_references($board_id);
         nel_render_general_header($render, null, null, array('header' => 'MANAGE_BOARD',
         'sub_header' => 'MANAGE_SETTINGS'));
-        $result = $dbh->query('SELECT * FROM "' . DEFAULT_BOARD_CONFIG_TABLE . '"');
+        $result = $dbh->query('SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"');
         $dom->getElementById('board-settings-form')->extSetAttribute('action', PHP_SELF .
         '?manage=general&module=default-board-settings');
     }

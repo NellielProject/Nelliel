@@ -17,6 +17,8 @@ function nel_insert_site_config_defaults()
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_bans_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_board_data_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_board_data_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_board_defaults_schema', '001']);
+    $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_board_defaults_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_filetypes_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_filetypes_schema', '001']);
     $dbh->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_file_filters_schema', '001']);
@@ -239,7 +241,7 @@ function nel_insert_default_admin_role()
 function nel_copy_board_defaults($config_table)
 {
     $dbh = nel_database();
-    $insert_query = 'INSERT INTO "' . $config_table . '" SELECT * FROM "' . DEFAULT_BOARD_CONFIG_TABLE . '"';
+    $insert_query = 'INSERT INTO "' . $config_table . '" SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"';
     $prepared = $dbh->prepare($insert_query);
     $dbh->executePrepared($prepared);
 }
