@@ -107,7 +107,7 @@ class FileHandler
         return $path . $separator . $filename;
     }
 
-    function filterFilename($filename)
+    public function filterFilename($filename)
     {
         $filtered = preg_replace('#[[:cntrl:]]#u', '', $filename); // Filter out the ASCII control characters
         $filtered = preg_replace('#[^\PC\s\p{Cn}]#u', '', $filename); // Filter out invisible Unicode characters
