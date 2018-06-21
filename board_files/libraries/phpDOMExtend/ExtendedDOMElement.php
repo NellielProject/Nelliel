@@ -27,8 +27,8 @@ class ExtendedDOMElement extends \DOMElement
      * Execute an XPath query on the current document and return the result.
      *
      * @param string $expression The XPath query
-     * @param DOMNode[optional] $context_node Optional context node to limit the query scope
-     * @return DOMNodeList Returns result of the query as a DOMNodeList object
+     * @param \DOMNode [optional] $context_node Optional context node to limit the query scope
+     * @return \DOMNodeList Returns result of the query as a DOMNodeList object
      */
     public function doXPathQuery($expression, $context_node = null)
     {
@@ -48,7 +48,7 @@ class ExtendedDOMElement extends \DOMElement
      * @param string $name Attribute name
      * @param string $value Attribute value
      * @param string $escape_type Type of escaping to use
-     * @return DOMAttr The old node if replaced, otherwise null
+     * @return \DOMAttr The old node if replaced, otherwise null
      */
     public function extSetAttribute($name, $value, $escape_type = 'attribute')
     {
@@ -64,7 +64,7 @@ class ExtendedDOMElement extends \DOMElement
      * @param string $qualifiedName The qualified name of the element
      * @param string $value Attribute value
      * @param string $escape_type Type of escaping to use
-     * @return DOMAttr The old node if replaced, otherwise null
+     * @return \DOMAttr The old node if replaced, otherwise null
      */
     public function extSetAttributeNS($namespaceURI, $qualifiedName, $value, $escape_type = 'attribute')
     {
@@ -201,7 +201,7 @@ class ExtendedDOMElement extends \DOMElement
      * by attribute values.
      *
      * @param string $name Name of attribute to search for
-     * @param DOMNode[optional] $context_node Optional context node to search within
+     * @param \DOMNode [optional] $context_node Optional context node to search within
      * @return array Associative array of nodes
      */
     public function getAssociativeNodeArray($name, $context_node = null)
@@ -221,7 +221,7 @@ class ExtendedDOMElement extends \DOMElement
      * Get child element matching the given ID.
      *
      * @param string $id The ID to search for
-     * @return DOMElement The first matching element
+     * @return \DOMElement The first matching element
      */
     public function getElementById($id)
     {
@@ -232,7 +232,7 @@ class ExtendedDOMElement extends \DOMElement
      * Get child elements which contain the given attribute name.
      *
      * @param string $name Name of the attribute
-     * @return DOMNodeList A DOMNodeList of matching elements
+     * @return \DOMNodeList A DOMNodeList of matching elements
      */
     public function getElementsByAttributeName($name)
     {
@@ -244,7 +244,7 @@ class ExtendedDOMElement extends \DOMElement
      *
      * @param string $name Name of the attribute
      * @param string $value Attribute value to match
-     * @return DOMNodeList A DOMNodeList of matching elements
+     * @return \DOMNodeList A DOMNodeList of matching elements
      */
     public function getElementsByAttributeValue($name, $value)
     {
@@ -255,7 +255,7 @@ class ExtendedDOMElement extends \DOMElement
      * Get child elements which contain the given class name.
      *
      * @param string $name Name of the class
-     * @return DOMNodeList A DOMNodeList of matching elements
+     * @return \DOMNodeList A DOMNodeList of matching elements
      */
     public function getElementsByClassName($name)
     {
@@ -266,7 +266,7 @@ class ExtendedDOMElement extends \DOMElement
      * Get the innder nodes of this element.
      *
      * @param boolean $as_list True to return nodes as a list or false to return a DOMDocument containing the nodes.
-     * @return DOMNodeList|ExtendedDOMDocument
+     * @return \DOMNodeList|ExtendedDOMDocument
      */
     public function getInnerNode($as_list = false)
     {
