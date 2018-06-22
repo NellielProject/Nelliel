@@ -56,11 +56,13 @@ class LanguageExtractor
         $headers .= '"Project-Id-Version: Nelliel ' . NELLIEL_VERSION . '\n"' . "\n";
         $headers .= '"Report-Msgid-Bugs-To: \n"' . "\n";
         $headers .= '"POT-Creation-Date: ' . date("Y-m-d H:i:s T O") . '\n"' . "\n";
-        $headers .= '"Language: en_US\n"' . "\n";
+        $headers .= '"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"' . "\n";
+        $headers .= '"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"' . "\n";
+        $headers .= '"Language-Team: LANGUAGE <LL@li.org>\n"' . "\n";
+        $headers .= '"Language: \n"' . "\n";
         $headers .= '"MIME-Version: 1.0\n"' . "\n";
         $headers .= '"Content-Type: text/plain; charset=UTF-8\n"' . "\n";
         $headers .= '"Content-Transfer-Encoding: 8bit\n"' . "\n";
-        $headers .= '"Plural-Forms: nplurals=2; plural=n == 1 ? 0 : 1"' . "\n";
 
         return $headers;
     }
