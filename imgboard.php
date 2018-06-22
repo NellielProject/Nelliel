@@ -1,5 +1,7 @@
 <?php
 define('NELLIEL_VERSION', 'v0.9.6.7'); // Version
+define('NELLIEL_COPYRIGHT', '2010-2018 Nelliel Project'); // Copyright line
+define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('BASE_PATH', realpath('./') . '/'); // Base path for script
 define('FILES_PATH', BASE_PATH . 'board_files/'); // Base board files path
 define('INCLUDE_PATH', FILES_PATH . 'include/'); // Base include files path
