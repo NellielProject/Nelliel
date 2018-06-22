@@ -19,17 +19,30 @@ class LanguageExtractor
         $strings = $this->parseHTMLFiles($strings);
         $strings = $this->parseSiteFiles($strings);
 
-        foreach ($strings as $string)
+        foreach ($strings as $context)
         {
-            $output_string .= "\n";
-            $output_string .= 'msgid "' . $string['msgid'] . '"' . "\n";
-
-            if (isset($string['msgid_plural']))
+            foreach ($context as $msgid => $data)
             {
-                $output_string .= 'msgid_plural "' . $string['msgid_plural'] . '"' . "\n";
-            }
+                $output_string .= "\n";
 
-            $output_string .= 'msgstr ""' . "\n";
+                foreach($data['comments'] as $comment => $type)
+                {
+                    $output_string .= $type . ' ' . $comment . "\n";
+                }
+
+                $output_string .= 'msgid "' . $msgid . '"' . "\n";
+
+                if (isset($data['msgid_plural']))
+                {
+                   $output_string .= 'msgid_plural "' . $data['msgid_plural'] . '"' . "\n";
+                   $output_string .= 'msgstr[0] ""' . "\n";
+                   $output_string .= 'msgstr[1] ""' . "\n";
+                }
+                else
+                {
+                    $output_string .= 'msgstr ""' . "\n";
+                }
+            }
         }
 
         return $output_string;
@@ -100,16 +113,8 @@ class LanguageExtractor
 
             foreach($matches as $set)
             {
-                if(empty($set))
-                {
-                    continue;
-                }
-
-                if (!in_array($set[1], $strings))
-                {
-                    $block = ['msgid' => $set[1]];
-                    array_push($strings, $block);
-                }
+                $context = 'default';
+                $strings[$context][$set[1]]['comments'][str_replace(BASE_PATH, '', $file)] = '#:';
             }
 
             $contents = file_get_contents($file);
@@ -118,16 +123,9 @@ class LanguageExtractor
 
             foreach($matches as $set)
             {
-                if(empty($set))
-                {
-                    continue;
-                }
-
-                if (!in_array($set[1], $strings))
-                {
-                    $block = ['msgid' => $set[1], 'msgid_plural' => $set[2]];
-                    array_push($strings, $block);
-                }
+                $context = 'default';
+                $strings[$context][$set[1]]['msgid_plural'] = $set[2];
+                $strings[$context][$set[1]]['comments'][str_replace(BASE_PATH, '', $file)] = '#:';
             }
         }
 
@@ -154,15 +152,12 @@ class LanguageExtractor
 
                     foreach ($attribute_list as $attribute_name)
                     {
-                        $message = trim($node->getAttribute(trim($attribute_name)));
+                        $msgid = trim($node->getAttribute(trim($attribute_name)));
 
-                        if ($message !== '')
+                        if ($msgid !== '')
                         {
-                            if (!in_array($message, $strings))
-                            {
-                                $block = ['msgid' => $message];
-                                array_push($strings, $block);
-                            }
+                            $context = 'default';
+                            $strings[$context][$msgid]['comments'][str_replace(BASE_PATH, '', $file)] = '#:';
                         }
                     }
                 }
@@ -172,15 +167,12 @@ class LanguageExtractor
             {
                 if ($node->getAttribute('data-i18n') === 'neltext')
                 {
-                    $message = $node->getContent();
+                    $msgid = $node->getContent();
 
-                    if ($message !== '')
+                    if ($msgid !== '')
                     {
-                        if (!in_array($message, $strings))
-                        {
-                            $block = ['msgid' => $message];
-                            array_push($strings, $block);
-                        }
+                        $context = 'default';
+                        $strings[$context][$msgid]['comments'][str_replace(BASE_PATH, '', $file)] = '#:';
                     }
                 }
             }
