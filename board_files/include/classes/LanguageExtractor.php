@@ -22,7 +22,13 @@ class LanguageExtractor
         foreach ($strings as $string)
         {
             $output_string .= "\n";
-            $output_string .= 'msgid "' . $string . '"' . "\n";
+            $output_string .= 'msgid "' . $string['msgid'] . '"' . "\n";
+
+            if (isset($string['msgid_plural']))
+            {
+                $output_string .= 'msgid_plural "' . $string['msgid_plural'] . '"' . "\n";
+            }
+
             $output_string .= 'msgstr ""' . "\n";
         }
 
@@ -74,7 +80,7 @@ class LanguageExtractor
         return $file_list;
     }
 
-    private function addIfNotDuplicate(&$strings, $message)
+    private function addIfNotDuplicate(&$strings, $message, $plural)
     {
         if (!in_array($message, $strings))
         {
@@ -89,12 +95,39 @@ class LanguageExtractor
         foreach ($php_files as $file)
         {
             $contents = file_get_contents($file);
-            preg_match('#nel_stext\(["\'](.*?)["\']\)#u', $contents, $matches);
+            preg_match_all('#nel_stext\(["\'](.*?)["\']\)#u', $contents, $matches, PREG_SET_ORDER);
             $count = count($matches);
 
-            for ($i = 1; $i < $count; ++ $i)
+            foreach($matches as $set)
             {
-                $this->addIfNotDuplicate($strings, $matches[$i]);
+                if(empty($set))
+                {
+                    continue;
+                }
+
+                if (!in_array($set[1], $strings))
+                {
+                    $block = ['msgid' => $set[1]];
+                    array_push($strings, $block);
+                }
+            }
+
+            $contents = file_get_contents($file);
+            preg_match_all('#nel_ptext\(["\'](.*?)["\'][\s]*?,[\s]*?["\'](.*?)["\'].*?\)#u', $contents, $matches, PREG_SET_ORDER);
+            $count = count($matches);
+
+            foreach($matches as $set)
+            {
+                if(empty($set))
+                {
+                    continue;
+                }
+
+                if (!in_array($set[1], $strings))
+                {
+                    $block = ['msgid' => $set[1], 'msgid_plural' => $set[2]];
+                    array_push($strings, $block);
+                }
             }
         }
 
@@ -122,7 +155,15 @@ class LanguageExtractor
                     foreach ($attribute_list as $attribute_name)
                     {
                         $message = trim($node->getAttribute(trim($attribute_name)));
-                        $this->addIfNotDuplicate($strings, $message);
+
+                        if ($message !== '')
+                        {
+                            if (!in_array($message, $strings))
+                            {
+                                $block = ['msgid' => $message];
+                                array_push($strings, $block);
+                            }
+                        }
                     }
                 }
             }
@@ -135,7 +176,11 @@ class LanguageExtractor
 
                     if ($message !== '')
                     {
-                        $this->addIfNotDuplicate($strings, $message);
+                        if (!in_array($message, $strings))
+                        {
+                            $block = ['msgid' => $message];
+                            array_push($strings, $block);
+                        }
                     }
                 }
             }
