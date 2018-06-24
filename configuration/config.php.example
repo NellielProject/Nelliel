@@ -40,6 +40,14 @@ $base_config['file_perm'] = '0664';
 // The only time this should need to be disabled is for testing or troubleshooting.
 $base_config['use_internal_cache'] = true;
 
+// The locale to use.
+// Should follow the standard format using ISO-639 and ISO-3166 codes.
+// e.g. 'en_US' for 'English (United Sates)', 'en_GB' for 'English (United Kingdom)'
+// If a language file is available that matches the locale, Nelliel will use it.
+// If no translations are found matching the code, it will default to 'en_US'
+// The available locales and their translations can be found in the directory 'boardfiles/language/locale'
+$base_config['locale'] = 'en_US'
+
 
 //
 // === Database Access Settings ===
