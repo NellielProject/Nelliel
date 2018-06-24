@@ -10,7 +10,7 @@ function nel_render_site_settings_panel()
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null, array('header' => 'MANAGE_GENERAL', 'sub_header' => 'MANAGE_SETTINGS'));
+    nel_render_general_header($render, null, null, array('header' => 'General Management', 'sub_header' => 'Board Settings'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/site_settings_panel.html');
     $dom->getElementById('site-settings-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=site-settings');

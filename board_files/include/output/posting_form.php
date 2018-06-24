@@ -130,7 +130,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
 
     if ($response_to)
     {
-        $dom->getElementById('which-post-mode')->setContent('TEXT_REPLYMODE');
+        $dom->getElementById('which-post-mode')->setContent('Posting mode: Reply');
     }
 
     $rules = $dom->importNode(nel_render_rules_list($board_id), true);

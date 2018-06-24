@@ -7,8 +7,7 @@ function nel_render_main_panel()
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null, array('header' => 'MANAGE_GENERAL',
-        'sub_header' => 'MANAGE_OPTIONS'));
+    nel_render_general_header($render, null, null, array('header' => 'General Management', 'sub_header' => 'Options'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/main_panel.html');
     $board_entry = $dom->getElementById('board-entry');
@@ -24,7 +23,7 @@ function nel_render_main_panel()
             $entry->removeAttribute('id');
             $entry_elements = $entry->getAssociativeNodeArray('data-parse-id', $entry);
             $entry_elements['board-link']->extSetAttribute('href', PHP_SELF .
-                 '?manage=board&module=main-panel&board_id=' . $board['board_id']);
+                '?manage=board&module=main-panel&board_id=' . $board['board_id']);
             $entry_elements['board-link']->extSetAttribute('title', $board['board_id']);
             $entry_elements['board-link']->setContent('/' . $board['board_id'] . '/');
         }
@@ -46,7 +45,9 @@ function nel_render_main_panel()
     $file_filters_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=file-filter');
     $default_board_settings = $dom->getElementById('module-default-board-settings');
     $default_board_settings_elements = $default_board_settings->getAssociativeNodeArray('data-parse-id', $default_board_settings);
-    $default_board_settings_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=default-board-settings');
+    $default_board_settings_elements['module-link']->extSetAttribute('href', PHP_SELF .
+        '?manage=general&module=default-board-settings');
+    $dom->getElementById('extract-gettext-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=language');
 
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
@@ -61,14 +62,13 @@ function nel_render_main_board_panel($board_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, $board_id, array('header' => 'MANAGE_BOARD',
-        'sub_header' => 'MANAGE_OPTIONS'));
+    nel_render_general_header($render, null, $board_id, array('header' => 'Board Management', 'sub_header' => 'Options'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/main_board_panel.html');
     $dom->getElementById('cache-regen-form')->extSetAttribute('action', PHP_SELF .
-         '?manage=board&module=regen&board_id=' . $board_id);
+        '?manage=board&module=regen&board_id=' . $board_id);
     $dom->getElementById('page-regen-form')->extSetAttribute('action', PHP_SELF . '?manage=board&module=regen&board_id=' .
-         $board_id);
+        $board_id);
     $manage_options = $dom->getElementById('manage-options');
     $settings = $dom->getElementById('module-board-settings');
 
@@ -76,7 +76,7 @@ function nel_render_main_board_panel($board_id)
     {
         $settings_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $settings);
         $settings_elements['board-settings-link']->extSetAttribute('href', PHP_SELF .
-             '?manage=board&module=board-settings&board_id=' . $board_id);
+            '?manage=board&module=board-settings&board_id=' . $board_id);
     }
     else
     {
@@ -89,7 +89,7 @@ function nel_render_main_board_panel($board_id)
     {
         $bans_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $bans);
         $bans_elements['bans-link']->extSetAttribute('href', PHP_SELF . '?manage=board&module=bans&board_id=' .
-             $board_id);
+            $board_id);
     }
     else
     {
@@ -102,7 +102,7 @@ function nel_render_main_board_panel($board_id)
     {
         $threads_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $threads);
         $threads_elements['threads-link']->extSetAttribute('href', PHP_SELF . '?manage=board&module=threads&board_id=' .
-             $board_id);
+            $board_id);
     }
     else
     {

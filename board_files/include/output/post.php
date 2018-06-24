@@ -171,7 +171,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     if (!$response && $gen_data['thread']['sticky'])
     {
         $post_header_node_array['sticky-icon']->extSetAttribute('src', IMAGES_DIR . '/nelliel/' .
-            nel_stext('THREAD_STICKY_ICON'), 'url');
+            _gettext('sticky.png'), 'url');
         $post_header_node_array['sticky-icon']->changeId('sticky-icon-' . $post_id);
     }
     else
@@ -206,29 +206,9 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
         $post_header_node_array['expand-thread']->parentNode->removeSelf();
     }
 
+    // TODO: New inline ban options
     $mod_tools_1 = $new_post_dom->getElementById('mod-tools-1');
-
-    if (!nel_sessions()->sessionIsIgnored('render'))
-    {
-        /*$new_post_dom->getElementById('ip-address-display')->setContent(@inet_ntop($post_data['ip_address']));
-         $set_ban_details = $new_post_dom->getElementById('set-ban-details');
-
-         if (nel_get_authorization()->get_user_perm($_SESSION['username'], 'perm_ban_add', $references['board_directory']) &&
-         !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
-         {
-         $ban_details = 'addBanDetails(\'ban' . $post_data['post_number'] . '\', \'' . $post_data['post_number'] .
-         '\', \'' . $post_data['poster_name'] . '\', \'' . @inet_ntop($post_data['ip_address']) . '\')';
-         $set_ban_details->extSetAttribute('onclick', $ban_details, 'none')
-         }
-         else
-         {
-         $set_ban_details->removeSelf();
-         }*/
-    }
-    else
-    {
-        $mod_tools_1->removeSelf();
-    }
+    $mod_tools_1->removeSelf();
 
     $multiple_files = false;
     $post_files_container = $new_post_dom->getElementById('post-files-container-');
@@ -436,7 +416,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
     if ($post_data['comment'] === '')
     {
-        $post_contents_node_array['post-comment']->setContent(nel_stext('THREAD_NOTEXT'));
+        $post_contents_node_array['post-comment']->setContent(_gettext('(no comment)'));
     }
     else
     {
@@ -489,7 +469,7 @@ function nel_render_thread_form_bottom($board_id, $dom)
     if (nel_sessions()->sessionIsIgnored('render'))
     {
         $dom->getElementById('admin-input-set1')->removeSelf();
-        $dom->getElementById('bottom-submit-button')->setContent('FORM_SUBMIT');
+        $dom->getElementById('bottom-submit-button')->setContent('Submit');
     }
     else
     {

@@ -5,18 +5,18 @@
 			</div>
 			<div>
 				<input type="text" name="hash_type" size="24">&nbsp;&nbsp;
-				<span data-i18n="neltext">MANAGE_FILE_FILTER_HASHTYPE</span>
+				<span data-i18n="gettext">Hash type (md5, sha1, sha256, sha512)</span>
 			</div>
 			<div>
 				<textarea name="file_hashes" cols="40" rows="3"></textarea>&nbsp;&nbsp;
-				<span data-i18n="neltext">MANAGE_FILE_FILTER_HASHES</span>
+				<span data-i18n="gettext">File hashes</span>
 			</div>
 			<div>
 				<input type="text" name="file_notes" size="24">&nbsp;&nbsp;
-				<span data-i18n="neltext">MANAGE_FILE_FILTER_NOTES</span>
+				<span data-i18n="gettext">File notes</span>
 			</div>
 			<div>
-				<input type="submit" value="FORM_ADD_FILE_FILTER" data-i18n="neltext" data-i18n-attributes="value">
+				<input type="submit" value="Add filter" data-i18n="gettext" data-i18n-attributes="value">
 			</div>
 		</form>
 	</div>
@@ -24,11 +24,11 @@
 	<div>
 		<table id="file-filter-table" class="post-lists">
 			<tr class="manage-header">
-				<th data-i18n="neltext">MANAGE_FILE_FILTER_ID</th>
-				<th data-i18n="neltext">MANAGE_FILE_FILTER_HTYPE</th>
-				<th data-i18n="neltext">MANAGE_FILE_FILTER_HASH</th>
-				<th data-i18n="neltext">MANAGE_FILE_FILTER_NOTES</th>
-				<th data-i18n="neltext">MANAGE_FILE_FILTER_REMOVE</th>
+				<th data-i18n="gettext">Filter ID</th>
+				<th data-i18n="gettext">Hash type</th>
+				<th data-i18n="gettext">File hash</th>
+				<th data-i18n="gettext">File notes</th>
+				<th data-i18n="gettext">Remove</th>
 			</tr>
 			<tr id="file-filter-row" class="row1">
 				<td></td>
@@ -40,7 +40,7 @@
 						<div>
 							<input type="hidden" name="action" value="remove">
 							<input type="hidden" name="filter_id" value="">
-							<input type="submit" value="FORM_REMOVE_FILE_FILTER" data-i18n="neltext" data-i18n-attributes="value">
+							<input type="submit" value="Remove filter" data-i18n="gettext" data-i18n-attributes="value">
 						</div>
 					</form>
 				</td>

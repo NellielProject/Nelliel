@@ -10,7 +10,7 @@ function nel_render_staff_panel_main()
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null, array('header' => 'MANAGE_GENERAL', 'sub_header' => 'MANAGE_STAFF'));
+    nel_render_general_header($render, null, null, array('header' => 'General Management', 'sub_header' => 'Staff'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_main.html');
     $user_table = $dom->getElementById('user-table');
@@ -61,7 +61,7 @@ function nel_render_staff_panel_user_edit($user_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null, array('header' => 'MANAGE_GENERAL', 'sub_header' => 'MANAGE_STAFF'));
+    nel_render_general_header($render, null, null, array('header' => 'General Management', 'sub_header' => 'Staff'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_user_edit.html');
     $dom->getElementById('user-edit-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=user');
@@ -127,7 +127,7 @@ function nel_render_staff_panel_role_edit($role_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null, array('header' => 'MANAGE_GENERAL', 'sub_header' => 'MANAGE_STAFF'));
+    nel_render_general_header($render, null, null, array('header' => 'General Management', 'sub_header' => 'Staff'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_role_edit.html');
     $dom->getElementById('role-edit-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=role');

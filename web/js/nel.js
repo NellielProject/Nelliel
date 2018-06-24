@@ -196,24 +196,6 @@ function addNewFileMeta(element, command) {
     element.className += " hidden";
 }
 
-
-function addBanDetails(id, num, name, host) {
-    var element = document.getElementById(id);
-    if (!element) {
-        return;
-    }
-
-    element.innerHTML = '<table>' + '<tr><td>B& from posting: <input type="checkbox" name="postban' + num + '" value='
-            + num + '></td><td class="text-center">Days: <input type="text" name="timedays' + num
-            + '" size="4" maxlength="4" value="3">' + ' &nbsp;&nbsp;&nbsp; Hours: <input type="text" name="timehours'
-            + num + '" size="4" maxlength="4" value="0"></td></tr>'
-            + '<tr><td>B& post message (optional): </td><td><input type="text" name="banmessage' + num
-            + '" size="32" maxlength="32" value=""></td></tr>'
-            + '<tr><td>B& reason (optional): </td><td><textarea name="banreason' + num
-            + '" cols="32" rows="3"></textarea>' + '<input type="hidden" name="banname' + num + '" value="' + name
-            + '"><input type="hidden" name="banhost' + num + '" value="' + host + '"></td></tr>' + '</table>';
-}
-
 function setStyle(style) {
     if(style == null) {
         return;

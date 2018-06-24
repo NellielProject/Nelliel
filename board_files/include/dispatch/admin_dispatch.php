@@ -5,7 +5,6 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 require_once INCLUDE_PATH . 'admin/login.php';
-require_once INCLUDE_PATH . 'thread_functions.php';
 
 function nel_admin_dispatch()
 {
@@ -63,6 +62,15 @@ function nel_admin_dispatch()
                 nel_board_settings_control($board_id, $action, true);
                 break;
 
+            case 'language':
+                if ($action === 'extract-gettext')
+                {
+                    nel_extract_language(LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
+                }
+
+                nel_render_main_panel();
+                break;
+
             default:
                 nel_login();
                 break;
@@ -108,6 +116,6 @@ function nel_admin_dispatch()
     }
     else
     {
-        nel_derp(400, nel_stext('ERROR_400'));
+        nel_derp(400, _gettext('No valid management action specified.'));
     }
 }

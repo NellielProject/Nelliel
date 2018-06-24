@@ -13,7 +13,7 @@ function nel_ban_spambots()
 {
     $ban_hammer = new \Nelliel\BanHammer();
 
-    if (!empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD1')]) || !empty($_POST[nel_stext('TEXT_SPAMBOT_FIELD2')]))
+    if (!empty($_POST[_gettext('TEXT_SPAMBOT_FIELD1')]) || !empty($_POST[_gettext('TEXT_SPAMBOT_FIELD2')]))
     {
         $ban_input['type'] = 'SPAMBOT';
         $ban_input['ip_address_start'] = $_SERVER['REMOTE_ADDR'];
@@ -50,7 +50,7 @@ function nel_banned_name($name)
     {
         if ($cancer[$i] === $name)
         {
-            nel_derp(151, nel_stext('ERROR_151'), null, array('cancer' => $cancer[$i]));
+            nel_derp(151, _gettext('That name is banned.'), null, array('cancer' => $cancer[$i]));
         }
     }
 }
@@ -71,7 +71,7 @@ function nel_banned_text($text, $file)
 
             if ($test !== FALSE)
             {
-                nel_derp(152, nel_stext('ERROR_152'), $board_id, array('cancer' => $cancer[$i]));
+                nel_derp(152, _gettext('Cancer detected in post: '), $board_id, array('cancer' => $cancer[$i]));
             }
         }
     }
@@ -81,7 +81,7 @@ function nel_ban_appeal($board_id)
 {
     if ($_POST['ban_ip'] != $user_ip_address)
     {
-        nel_derp(160, nel_stext('ERROR_160'), $board_id);
+        nel_derp(160, _gettext('Your ip address does not match the one listed in the ban.'), $board_id);
     }
 
     $ip_address = $_POST['ban_ip'];

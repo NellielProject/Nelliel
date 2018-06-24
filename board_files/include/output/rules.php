@@ -41,13 +41,13 @@ function nel_render_rules_list($board_id)
 
     $post_limits = $rules_list_element->cloneNode();
     $size_limit = $rules_item_element->cloneNode(true);
-    $size_limit->firstChild->setContent('POSTING_RULES1_1');
+    $size_limit->firstChild->setContent('Maximum file size allowed is ');
     $size_limit->firstChild->nextSibling->setContent($board_settings['max_filesize'] . 'KB'); // TODO: Settable units
     $post_limits->appendChild($size_limit);
     $thumbnail_limit = $rules_item_element->cloneNode(true);
-    $thumbnail_limit->firstChild->setContent('POSTING_RULES2_1');
+    $thumbnail_limit->firstChild->setContent('Images greater than ');
     $thumbnail_limit->firstChild->nextSibling->setContent($board_settings['max_width'] . ' x ' .
-         $board_settings['max_height'] . nel_stext('POSTING_RULES2_2'));
+         $board_settings['max_height'] . _gettext(' pixels will be thumbnailed.'));
     $post_limits->appendChild($thumbnail_limit);
 
     $rules_div->appendChild($filetype_rules);

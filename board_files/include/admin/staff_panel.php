@@ -17,7 +17,7 @@ function nel_staff_panel($section, $action)
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access') &&
          !$authorize->get_user_perm($_SESSION['username'], 'perm_role_access'))
     {
-        nel_derp(340, nel_stext('ERROR_340'));
+        nel_derp(340, _gettext('You are not allowed to access the staff panel.'));
     }
 
     if (is_null($section) || $section === 'main')
@@ -28,14 +28,14 @@ function nel_staff_panel($section, $action)
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access'))
         {
-            nel_derp(340, nel_stext('ERROR_340'));
+            nel_derp(340, _gettext('You are not allowed to access the staff panel.'));
         }
 
         if ($action === 'new')
         {
             if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_add'))
             {
-                nel_derp(341, nel_stext('ERROR_341'));
+                nel_derp(341, _gettext('You are not allowed to modify staff.'));
             }
 
             nel_render_staff_panel_user_edit(null);
@@ -46,14 +46,14 @@ function nel_staff_panel($section, $action)
 
         if (!$authorize->user_exists($user_id))
         {
-            nel_derp(440, nel_stext('ERROR_440'));
+            nel_derp(440, _gettext('The specified user does not exist.'));
         }
 
         if ($action === 'edit')
         {
             if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_modify'))
             {
-                nel_derp(341, nel_stext('ERROR_341'));
+                nel_derp(341, _gettext('You are not allowed to modify staff.'));
             }
 
             nel_render_staff_panel_user_edit($user_id);
@@ -62,7 +62,7 @@ function nel_staff_panel($section, $action)
         {
             if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_modify'))
             {
-                nel_derp(341, nel_stext('ERROR_341'));
+                nel_derp(341, _gettext('You are not allowed to modify staff.'));
             }
 
             if (isset($_POST['change_pass']) && isset($_POST['user_password']))
@@ -112,14 +112,14 @@ function nel_staff_panel($section, $action)
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_access'))
         {
-            nel_derp(342, nel_stext('ERROR_342'));
+            nel_derp(342, _gettext('You are not allowed to modify roles.'));
         }
 
         if ($action === 'new')
         {
             if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_add'))
             {
-                nel_derp(341, nel_stext('ERROR_341'));
+                nel_derp(341, _gettext('You are not allowed to modify staff.'));
             }
 
             nel_render_staff_panel_role_edit(null);
@@ -130,14 +130,14 @@ function nel_staff_panel($section, $action)
 
         if (!$authorize->role_exists($role_id))
         {
-            nel_derp(441, nel_stext('ERROR_441'));
+            nel_derp(441, _gettext('The specified role does not exist.'));
         }
 
         if ($action === 'edit')
         {
             if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_modify'))
             {
-                nel_derp(342, nel_stext('ERROR_342'));
+                nel_derp(342, _gettext('You are not allowed to modify roles.'));
             }
 
             nel_render_staff_panel_role_edit($role_id);
@@ -146,7 +146,7 @@ function nel_staff_panel($section, $action)
         {
             if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_modify'))
             {
-                nel_derp(342, nel_stext('ERROR_342'));
+                nel_derp(342, _gettext('You are not allowed to modify roles.'));
             }
 
             foreach ($_POST as $key => $value)
@@ -170,6 +170,6 @@ function nel_staff_panel($section, $action)
     }
     else
     {
-        nel_derp(442, nel_stext('ERROR_442'));
+        nel_derp(442, _gettext('No valid action given for user or role panels.'));
     }
 }

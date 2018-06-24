@@ -431,7 +431,7 @@ class ThreadHandler
 
         if (!is_numeric($post_id))
         {
-            nel_derp(30, nel_stext('ERROR_30'));
+            nel_derp(30, _gettext('Id of thread or post was non-numeric. How did you even do that?'));
         }
 
         $prepared = $this->dbh->prepare('SELECT "post_password", "mod_post" FROM "' . $board_references['post_table'] .
@@ -461,7 +461,7 @@ class ThreadHandler
 
         if (!$flag)
         {
-            nel_derp(31, nel_stext('ERROR_31'));
+            nel_derp(31, _gettext('Password is wrong or you are not allowed to delete that.'));
         }
 
         return true;

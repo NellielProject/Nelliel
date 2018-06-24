@@ -15,7 +15,7 @@ function setup_check($board_id) // TODO Do this better
 {
     if (SQLTYPE === 'MYSQL' && !nel_check_for_innodb())
     {
-        nel_derp(202, nel_stext('ERROR_202'));
+        nel_derp(202, _gettext('InnoDB engine is required for MySQL support. However the engine has been disabled for some stupid reason.'));
     }
 
     nel_create_core_tables();

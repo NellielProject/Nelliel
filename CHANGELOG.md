@@ -1,4 +1,19 @@
 # Nelliel Changelog
+## v0.9.6.9 (2018/06/24)
+### Added
+ - Option to extract gettext strings to a .pot file
+
+### Removed
+ - Old lang.en-us.php file
+
+## v0.9.6.8 (2018/06/24)
+### Added
+ - SmallPHPGettext library
+
+### Changed
+ - Converted language handling to gettext
+
+# Nelliel Changelog
 ## v0.9.6.7 (2018/06/19)
 ### Added
  - Configurable defaults for new boards

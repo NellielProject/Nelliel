@@ -107,7 +107,7 @@ class FileHandler
         return $path . $separator . $filename;
     }
 
-    function filterFilename($filename)
+    public function filterFilename($filename)
     {
         $filtered = preg_replace('#[[:cntrl:]]#u', '', $filename); // Filter out the ASCII control characters
         $filtered = preg_replace('#[^\PC\s\p{Cn}]#u', '', $filename); // Filter out invisible Unicode characters
@@ -133,7 +133,7 @@ class FileHandler
 
         if ($filtered === '')
         {
-            nel_derp(111, nel_stext('ERROR_111'));
+            nel_derp(111, _gettext('Filename was empty or was purged by filter.'));
         }
 
         return $filtered;
