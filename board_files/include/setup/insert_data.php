@@ -443,7 +443,7 @@ function nel_insert_filetypes()
     $dbh->executePrepared($prepared, ['tbz', 'bz2', null, null, null, null, null]);
     $dbh->executePrepared($prepared, ['tar', 'tar', 'archive', 'tar', 'application/x-tar', '^.{257}ustar', 'TAR']);
     $dbh->executePrepared($prepared, ['7z', '7z', 'archive', '7z', 'application/x-7z-compressed', '^\x37\x7A\xBC\xAF\x27\x1C', '7z']);
-    $dbh->executePrepared($prepared, ['hqx', 'hqx', 'archive', 'binhex', 'application/binhex', '^(This file must be converted with BinHex)', 'Binhex']);
+    $dbh->executePrepared($prepared, ['hqx', 'hqx', 'archive', 'binhex', 'application/binhex', '^\(This file must be converted with BinHex', 'Binhex']);
     $dbh->executePrepared($prepared, ['lzh', 'lzh', 'archive', 'lzh', 'application/x-lzh-compressed', '^.{2}\x2D\x6C\x68', 'LZH']);
     $dbh->executePrepared($prepared, ['lha', 'lzh', null, null, null, null, null]);
     $dbh->executePrepared($prepared, ['zip', 'zip', 'archive', 'zip', 'application/zip', '^PK\x03\x04', 'Zip']);
