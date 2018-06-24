@@ -20,7 +20,7 @@ class ParsePo
         {
             $line = trim($line);
 
-            if (preg_match('#"([^:]*):#ui', $line) === 1)
+            if (preg_match('#^"([^:]*):#ui', $line) === 1)
             {
                 $domain_array = $this->parseHeaders($line, $domain_array);
             }
@@ -55,8 +55,13 @@ class ParsePo
                         }
 
                         $split_line = preg_split('#\s+#', $tline, 2);
-                        $split_line[1] = trim($split_line[1], '"');
 
+                        if(!isset($split_line[1]))
+                        {
+                            continue;
+                        }
+
+                        $split_line[1] = trim($split_line[1], '"');
                         $translation = $this->parseMessage($split_line, $translation);
                         $translation = $this->parseComment($split_line, $translation);
                     }
@@ -140,7 +145,7 @@ class ParsePo
     private function parseHeaders($line, $domain_array)
     {
         $line = $this->combineMultiline($line);
-        preg_match('#"([^:]*):[\s]*(.*)$#ui', $line, $matches);
+        preg_match('#^"([^:]*):[\s]*(.*)$#ui', $line, $matches);
         $header_name = trim($matches[1]);
         $header = trim($matches[2]);
         $domain_array['headers'][$header_name] = $header;
