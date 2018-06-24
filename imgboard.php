@@ -9,7 +9,8 @@ define('CONFIG_PATH', BASE_PATH . 'configuration/'); // Base cache path
 define('LIBRARY_PATH', FILES_PATH . 'libraries/'); // Libraries path
 define('PLUGINS_PATH', FILES_PATH . 'plugins/'); // Base plugins path
 define('TEMPLATE_PATH', FILES_PATH . 'templates/nelliel/'); // Base template path
-define('LANGUAGE_PATH', FILES_PATH . 'languages/'); // Language files path
+define('LANGUAGE_PATH', FILES_PATH . 'languages/'); // Language path
+define('LOCALE_PATH', LANGUAGE_PATH . 'locale/'); // Locale files path
 define('CACHE_PATH', FILES_PATH . 'cache/'); // Base cache path
 define('WEB_PATH', BASE_PATH . 'web/'); // Base cache path
 define('SQLITE_DB_DEFAULT_PATH', FILES_PATH); // Base SQLite DB location
@@ -24,6 +25,9 @@ require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'general_functions.php';
 require_once INCLUDE_PATH . 'language/language.php';
+
+nel_load_language_library(LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po');
+
 require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'crypt.php';
 

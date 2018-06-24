@@ -137,7 +137,7 @@ class LanguageExtractor
         foreach ($php_files as $file)
         {
             $contents = file_get_contents($file);
-            preg_match_all('#nel_stext\(["\'](.*?)["\']\)#u', $contents, $matches, PREG_SET_ORDER);
+            preg_match_all('#_gettext\(["\'](.*?)["\']\)#u', $contents, $matches, PREG_SET_ORDER);
             $count = count($matches);
 
             foreach ($matches as $set)
@@ -148,7 +148,7 @@ class LanguageExtractor
             }
 
             $contents = file_get_contents($file);
-            preg_match_all('#nel_ptext\(["\'](.*?)["\'][\s]*?,[\s]*?["\'](.*?)["\'].*?\)#u', $contents, $matches, PREG_SET_ORDER);
+            preg_match_all('#_ngettext\(["\'](.*?)["\'][\s]*?,[\s]*?["\'](.*?)["\'].*?\)#u', $contents, $matches, PREG_SET_ORDER);
             $count = count($matches);
 
             foreach ($matches as $set)

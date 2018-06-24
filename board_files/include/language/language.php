@@ -9,6 +9,32 @@ require_once INCLUDE_PATH . 'language/neltext.php';
 //
 // Handles language functions
 //
+
+function nel_load_language_library($file = null)
+{
+    if(empty($file))
+    {
+        $file = LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po';
+    }
+
+    $lang_lib = new \SmallPHPGettext\SmallPHPGettext();
+    $lang_lib->addDomainFromFile($file);
+    $lang_lib->registerFunctions();
+    nel_get_language_instance($lang_lib);
+}
+
+function nel_get_language_instance($instance = null)
+{
+    static $language_instance;
+
+    if (!empty($sessions))
+    {
+        $language_instance = $instance;
+    }
+
+    return $language_instance;
+}
+
 function nel_get_language($language, $form, $text)
 {
     static $lang_arrays;
