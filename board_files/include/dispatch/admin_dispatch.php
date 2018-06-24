@@ -107,6 +107,6 @@ function nel_admin_dispatch()
     }
     else
     {
-        nel_derp(400, nel_stext('No valid management action specified.'));
+        nel_derp(400, _gettext('No valid management action specified.'));
     }
 }

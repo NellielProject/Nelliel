@@ -35,7 +35,7 @@ function nel_render_thread_panel_main($board_id)
         unset($result);
 
         $expand_thread_button = $temp_thread_row->getElementById('expand-thread-button-');
-        $expand_thread_button->extSetAttribute('value', nel_stext('Expand') . ' ' . $thread['thread_id']);
+        $expand_thread_button->extSetAttribute('value', _gettext('Expand') . ' ' . $thread['thread_id']);
         $expand_thread_button->changeId('expand-thread-button-' . $thread['thread_id']);
         $thread_post_number = $temp_thread_row->getElementById('thread-post-number-');
         $thread_post_number->setContent($thread['thread_id']);

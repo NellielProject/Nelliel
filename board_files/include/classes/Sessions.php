@@ -28,7 +28,7 @@ class Sessions
         else
         {
             $this->terminateSession();
-            nel_derp(310, nel_stext('The session id provided is invalid.'));
+            nel_derp(310, _gettext('The session id provided is invalid.'));
         }
 
         $this->setSessionCookie();
@@ -51,7 +51,7 @@ class Sessions
         else if (!empty($_SESSION) && $this->sessionIsOld())
         {
             $this->terminateSession();
-            nel_derp(311, nel_stext('This session has expired. Please login again.'));
+            nel_derp(311, _gettext('This session has expired. Please login again.'));
         }
         else
         {
@@ -68,7 +68,7 @@ class Sessions
                 else
                 {
                     $this->terminateSession();
-                    nel_derp(311, nel_stext('Login has not been validated or was not correctly flagged. Cannot start session.'));
+                    nel_derp(311, _gettext('Login has not been validated or was not correctly flagged. Cannot start session.'));
                 }
 
                 $this->setSessionCookie();

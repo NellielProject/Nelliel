@@ -15,7 +15,7 @@ class SmallPHPGettext
     {
         $this->categories[$this->default_category] = array();
         $this->categories[$this->default_category][$this->default_domain] = array();
-        $this->version = '1.0.1';
+        $this->version = '1.0.2';
     }
 
     public function registerFunctions()
@@ -115,6 +115,7 @@ class SmallPHPGettext
 
     private function singularMessage($msgid, $context, $domain, $category)
     {
+        $message = '';
         $context = (!empty($context)) ? $context : $this->default_context;
         $domain = (!empty($domain)) ? $domain : $this->default_domain;
         $category = (!empty($category)) ? $category : $this->default_category;
@@ -125,15 +126,16 @@ class SmallPHPGettext
 
             if (isset($category[$domain]['contexts'][$context][$msgid]['msgstr']))
             {
-                return $category[$domain]['contexts'][$context][$msgid]['msgstr'];
+                $message = $category[$domain]['contexts'][$context][$msgid]['msgstr'];
             }
         }
 
-        return $msgid;
+        return (!empty($message)) ? $message : $msgid;
     }
 
     private function pluralMessage($msgid1, $msgid2, $n, $context, $domain, $category)
     {
+        $message = '';
         $context = (!empty($context)) ? $context : $this->default_context;
         $domain = (!empty($domain)) ? $domain : $this->default_domain;
         $category = (!empty($category)) ? $category : $this->default_category;
@@ -150,11 +152,13 @@ class SmallPHPGettext
 
                 if ($plural === 0)
                 {
-                    return (isset($translation['plurals'][$plural])) ? $translation['plurals'][$plural] : $msgid1;
+                    $message = (isset($translation['plurals'][$plural])) ? $translation['plurals'][$plural] : $msgid1;
+                    return (!empty($message)) ? $message : $msgid1;
                 }
                 else
                 {
-                    return (isset($translation['plurals'][$plural])) ? $translation['plurals'][$plural] : $msgid2;
+                    $message = (isset($translation['plurals'][$plural])) ? $translation['plurals'][$plural] : $msgid2;
+                    return (!empty($message)) ? $message : $msgid2;
                 }
             }
         }

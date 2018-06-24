@@ -177,7 +177,7 @@ class LanguageExtractor
 
             foreach ($attribute_node_list as $node)
             {
-                if ($node->getAttribute('data-i18n') === 'neltext')
+                if ($node->getAttribute('data-i18n') === 'gettext')
                 {
                     $attribute_list = explode(',', $node->getAttribute('data-i18n-attributes'));
 
@@ -196,7 +196,7 @@ class LanguageExtractor
 
             foreach ($content_node_list as $node)
             {
-                if ($node->getAttribute('data-i18n') === 'neltext')
+                if ($node->getAttribute('data-i18n') === 'gettext')
                 {
                     $msgid = $node->getContent();
 

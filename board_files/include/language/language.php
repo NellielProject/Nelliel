@@ -4,8 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'language/neltext.php';
-
 //
 // Handles language functions
 //
@@ -66,9 +64,9 @@ function nel_process_i18n($dom, $language = 'en-us')
 
     foreach ($attribute_node_list as $node)
     {
-        if ($node->getAttribute('data-i18n') === 'neltext')
+        if ($node->getAttribute('data-i18n') === 'gettext')
         {
-            nel_process_neltext_attribute($language, $node);
+            nel_process_gettext_attribute($node);
         }
 
         $node->removeAttribute('data-i18n-attributes');
@@ -76,11 +74,35 @@ function nel_process_i18n($dom, $language = 'en-us')
 
     foreach ($content_node_list as $node)
     {
-        if ($node->getAttribute('data-i18n') === 'neltext')
+        if ($node->getAttribute('data-i18n') === 'gettext')
         {
-            nel_process_neltext_content($language, $node);
+            nel_process_gettext_content($node);
         }
 
         $node->removeAttribute('data-i18n');
     }
+}
+
+function nel_process_gettext_attribute($node)
+{
+    $attribute_list = explode(',', $node->getAttribute('data-i18n-attributes'));
+    $new_text = '';
+
+    foreach ($attribute_list as $attribute_name)
+    {
+        $attribute_name = trim($attribute_name);
+        $attribute_value = $node->getAttribute($attribute_name);
+        $new_text = _gettext($attribute_value);
+        $attribute_node = $node->ownerDocument->createAttribute($attribute_name);
+        $attribute_node->value = $new_text;
+        $node->setAttributeNode($attribute_node);
+    }
+}
+
+function nel_process_gettext_content($node)
+{
+    $new_text = '';
+    $text = $node->getContent();
+    $new_text = _gettext($text);
+    $node->setContent($new_text, 'replace');
 }

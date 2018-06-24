@@ -171,7 +171,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     if (!$response && $gen_data['thread']['sticky'])
     {
         $post_header_node_array['sticky-icon']->extSetAttribute('src', IMAGES_DIR . '/nelliel/' .
-            nel_stext('sticky.png'), 'url');
+            _gettext('sticky.png'), 'url');
         $post_header_node_array['sticky-icon']->changeId('sticky-icon-' . $post_id);
     }
     else
@@ -416,7 +416,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
     if ($post_data['comment'] === '')
     {
-        $post_contents_node_array['post-comment']->setContent(nel_stext('(no comment)'));
+        $post_contents_node_array['post-comment']->setContent(_gettext('(no comment)'));
     }
     else
     {

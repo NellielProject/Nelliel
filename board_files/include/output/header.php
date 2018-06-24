@@ -158,7 +158,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
 
         if ($board_id !== '')
         {
-            $board_data = nel_stext('Current Board:') . ' ' . $board_id;
+            $board_data = _gettext('Current Board:') . ' ' . $board_id;
             $dom->getElementById('manage-board-header-data')->setContent($board_data);
         }
 

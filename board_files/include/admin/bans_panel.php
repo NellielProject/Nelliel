@@ -19,7 +19,7 @@ function nel_ban_control($board_id, $action)
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify', $board_id))
         {
-            nel_derp(322, nel_stext('You are not allowed to modify bans.'));
+            nel_derp(322, _gettext('You are not allowed to modify bans.'));
         }
 
         nel_render_ban_panel_modify($board_id);
@@ -28,7 +28,7 @@ function nel_ban_control($board_id, $action)
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_add', $board_id))
         {
-            nel_derp(321, nel_stext('You are not allowed to add new bans.'));
+            nel_derp(321, _gettext('You are not allowed to add new bans.'));
         }
 
         nel_render_ban_panel_add($board_id);
@@ -37,7 +37,7 @@ function nel_ban_control($board_id, $action)
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_add', $board_id))
         {
-            nel_derp(321, nel_stext('You are not allowed to add new bans.'));
+            nel_derp(321, _gettext('You are not allowed to add new bans.'));
         }
 
         $ban_input = $ban_hammer->postToArray();
@@ -48,7 +48,7 @@ function nel_ban_control($board_id, $action)
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_delete', $board_id))
         {
-            nel_derp(323, nel_stext('You are not allowed to delete bans.'));
+            nel_derp(323, _gettext('You are not allowed to delete bans.'));
         }
 
         $ban_input = $ban_hammer->postToArray();
@@ -59,7 +59,7 @@ function nel_ban_control($board_id, $action)
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify', $board_id))
         {
-            nel_derp(322, nel_stext('You are not allowed to modify bans.'));
+            nel_derp(322, _gettext('You are not allowed to modify bans.'));
         }
 
         $ban_input = $ban_hammer->postToArray();
@@ -70,7 +70,7 @@ function nel_ban_control($board_id, $action)
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_access', $board_id))
         {
-            nel_derp(320, nel_stext('You are not allowed to access the bans panel.'));
+            nel_derp(320, _gettext('You are not allowed to access the bans panel.'));
         }
 
         nel_render_main_ban_panel($board_id);

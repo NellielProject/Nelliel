@@ -18,7 +18,7 @@ function nel_board_settings_control($board_id, $action, $defaults = false)
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_modify', $board_id))
         {
-            nel_derp(331, nel_stext('You are not allowed to modify the board settings.'));
+            nel_derp(331, _gettext('You are not allowed to modify the board settings.'));
         }
 
         while ($item = each($_POST))
