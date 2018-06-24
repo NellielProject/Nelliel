@@ -170,8 +170,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
     if (!$response && $gen_data['thread']['sticky'])
     {
-        $post_header_node_array['sticky-icon']->extSetAttribute('src', IMAGES_DIR . '/nelliel/' .
-            _gettext('sticky.png'), 'url');
+        $post_header_node_array['sticky-icon']->extSetAttribute('src', IMAGES_DIR . '/nelliel/' . _gettext('sticky.png'), 'url');
         $post_header_node_array['sticky-icon']->changeId('sticky-icon-' . $post_id);
     }
     else
@@ -326,6 +325,8 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                 }
                 else
                 {
+                    $file['has_preview'] = false;
+                    $video_preview->removeSelf();
                     $location_element->extSetAttribute('href', $file['file_location'], 'none');
                     $location_element->changeId('file-location-' . $file_id);
                     $preview_element = $temp_file_dom->getElementById('file-preview-');
@@ -350,29 +351,44 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                             }
                         }
                     }
-                    else if ($board_settings['use_file_icon'] && file_exists(WEB_PATH . 'imagez/nelliel/filetype/' .
-                        utf8_strtolower($file['type']) . '/' . utf8_strtolower($file['format']) . '.png'))
+                    else if ($board_settings['use_file_icon'])
                     {
-                        $file['has_preview'] = true;
-                        $file['preview_location'] = '../' . IMAGES_DIR . 'nelliel/filetype/' .
-                            utf8_strtolower($file['type']) . '/' . utf8_strtolower($file['format']) . '.png';
-                        $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
-                        $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
+                        $format_icon = utf8_strtolower($file['format']) . '.png';
+                        $type_icon = utf8_strtolower($file['type']) . '.png';
+
+                        if (file_exists(WEB_PATH . 'imagez/nelliel/filetype/' . utf8_strtolower($file['type']) . '/' .
+                            $format_icon))
+                        {
+                            $file['has_preview'] = true;
+                            $file['preview_location'] = '../' . IMAGES_DIR . 'nelliel/filetype/' .
+                                utf8_strtolower($file['format']) . '/' . $format_icon;
+                            $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
+                            $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
+                        }
+                        else if (file_exists(WEB_PATH . 'imagez/nelliel/filetype/generic/' . $type_icon))
+                        {
+                            $file['has_preview'] = true;
+                            $file['preview_location'] = '../' . IMAGES_DIR . 'nelliel/filetype/generic/' . $type_icon;
+                            $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
+                            $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
+                        }
+                    }
+
+                    if ($file['has_preview'])
+                    {
+                        $preview_element->extSetAttribute('src', $file['preview_location'], 'none');
+                        $preview_element->extSetAttribute('width', $file['preview_width']);
+                        $preview_element->extSetAttribute('height', $file['preview_height']);
+                        $preview_element->extSetAttribute('alt', $file['alt_text']);
+                        $preview_element->extSetAttribute('class', $post_type_class . $multiple_class . 'post-preview');
+                        $preview_element->extSetAttribute('data-other-dims', 'w' . $file['image_width'] . 'h' .
+                            $file['image_height']);
+                        $preview_element->extSetAttribute('data-other-loc', $file['file_location'], 'none');
                     }
                     else
                     {
-                        $file['has_preview'] = false;
+                        $location_element->removeSelf();
                     }
-
-                    $preview_element->extSetAttribute('src', $file['preview_location'], 'none');
-                    $preview_element->extSetAttribute('width', $file['preview_width']);
-                    $preview_element->extSetAttribute('height', $file['preview_height']);
-                    $preview_element->extSetAttribute('alt', $file['alt_text']);
-                    $preview_element->extSetAttribute('class', $post_type_class . $multiple_class . 'post-preview');
-                    $preview_element->extSetAttribute('data-other-dims', 'w' . $file['image_width'] . 'h' .
-                        $file['image_height']);
-                    $preview_element->extSetAttribute('data-other-loc', $file['file_location'], 'none');
-                    $video_preview->removeSelf();
                 }
             }
             else
