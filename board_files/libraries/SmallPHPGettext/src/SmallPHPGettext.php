@@ -15,12 +15,13 @@ class SmallPHPGettext
     {
         $this->categories[$this->default_category] = array();
         $this->categories[$this->default_category][$this->default_domain] = array();
-        $this->version = '1.0';
+        $this->version = '1.0.1';
     }
 
     public function registerFunctions()
     {
         include_once __DIR__ . '/gettext_functions.php';
+        access_small_php_gettext($this);
     }
 
     public function gettext($msgid)
