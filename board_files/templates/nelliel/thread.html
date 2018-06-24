@@ -16,11 +16,11 @@
 							</span>
 							<span data-parse-id="post-time-"></span>&nbsp;<span>No. </span>
 							<a data-parse-id="post-num-link-" href="" class="post-link"></a>
-							<span>[<a data-parse-id="post-link-post" href="#" data-i18n="neltext" data-command="link-post" data-id="">LINK_POST_NUM_REF</a>]</span>
-							<img data-parse-id="sticky-icon" id="sticky-icon-" src="" width="22" height="22" alt="THREAD_STICKY" data-i18n="neltext" data-i18n-attributes="alt">
-							<span>[<a  data-parse-id="reply-to-link" href="" data-i18n="neltext">LINK_REPLY</a>]</span>
-							<span>[<a href="#" data-parse-id="expand-thread" data-i18n="neltext" data-command="expand-thread" data-id="" data-alt-visual="THREAD_COLLAPSE" 
-								data-i18n-attributes="data-alt-visual">THREAD_EXPAND</a>]</span>
+							<span>[<a data-parse-id="post-link-post" href="#" data-i18n="neltext" data-command="link-post" data-id="">Link</a>]</span>
+							<img data-parse-id="sticky-icon" id="sticky-icon-" src="" width="22" height="22" alt="Sticky" data-i18n="neltext" data-i18n-attributes="alt">
+							<span>[<a  data-parse-id="reply-to-link" href="" data-i18n="neltext">Reply</a>]</span>
+							<span>[<a href="#" data-parse-id="expand-thread" data-i18n="neltext" data-command="expand-thread" data-id="" data-alt-visual="Collapse thread" 
+								data-i18n-attributes="data-alt-visual">Expand thread</a>]</span>
 							<div id="mod-tools-1">IP: <b id="ip-address-display">ip address</b><input id="set-ban-details" type="button" onclick="" value="Set Ban Details"></div>
 						</div>
 						<div id="post-files-container-" class="op-files-container">
@@ -30,8 +30,8 @@
 								<a href="" id="file-link-" target="_blank"></a>
 								</div>
 								<div data-parse-id="filesize-display"></div>
-								<div>[<a data-parse-id="show-file-meta" href="#" data-i18n="neltext" data-command="show-file-meta" data-id="" data-alt-visual="THREAD_LESS_DATA" 
-									data-i18n-attributes="data-alt-visual">THREAD_MOAR_DATA</a>]</div>
+								<div>[<a data-parse-id="show-file-meta" href="#" data-i18n="neltext" data-command="show-file-meta" data-id="" data-alt-visual="Less file info" 
+									data-i18n-attributes="data-alt-visual">More file info</a>]</div>
 								<div data-parse-id="file-meta" class="hidden">
 									<span data-parse-id="file-source" class="file-source" >Source: </span>
 									<span data-parse-id="file-license" class="file-license">License: </span>
@@ -58,7 +58,7 @@
 					</div>
 				</div>
 				<div id="thread-expand-">
-					<span class="omitted-posts"><span></span><span data-i18n="neltext">TEXT_OMITTED_POSTS</span><br></span>
+					<span class="omitted-posts"><span></span><span data-i18n="neltext"> posts omitted. Click Reply or Expand Post to view.</span><br></span>
 				</div>
 			</div>
 			<table id="footer-form" class="footer-form">
@@ -67,13 +67,13 @@
 						<input type="hidden" name="action" value="update">
 						<input id="board_id_field_footer" type="hidden" name="board_id" value="">
 						<span id="admin-input-set1">
-						<input type="checkbox" name="delpost" id="dpost"><label for="dpost" data-i18n="neltext">FORM_DELETE_POSTS</label><br>
-						<input type="checkbox" name="banpost" id="bpost"><label for="bpost" data-i18n="neltext">FORM_BAN_POSTS</label><br>
+						<input type="checkbox" name="delpost" id="dpost"><label for="dpost" data-i18n="neltext">Delete selected content</label><br>
+						<input type="checkbox" name="banpost" id="bpost"><label for="bpost" data-i18n="neltext">Ban selected posts</label><br>
 						<input type="hidden" name="mode" value="admin->modmode">
 						</span>
-						<input id="bottom-submit-button" type="submit" value="FORM_DELETE" data-i18n="neltext" data-i18n-attributes="value">
+						<input id="bottom-submit-button" type="submit" value="Delete" data-i18n="neltext" data-i18n-attributes="value">
 						<span id="bottom-pass-input">
-						<input type="password" name="update_sekrit" id="update-sekrit" size="12" maxlength="16" value=""><label for="update-sekrit" data-i18n="neltext">FORM_LABEL_PASS</label>
+						<input type="password" name="update_sekrit" id="update-sekrit" size="12" maxlength="16" value=""><label for="update-sekrit" data-i18n="neltext">Password</label>
 						</span>
 					</td>
 				</tr>

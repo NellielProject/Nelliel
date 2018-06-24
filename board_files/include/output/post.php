@@ -171,7 +171,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     if (!$response && $gen_data['thread']['sticky'])
     {
         $post_header_node_array['sticky-icon']->extSetAttribute('src', IMAGES_DIR . '/nelliel/' .
-            nel_stext('THREAD_STICKY_ICON'), 'url');
+            nel_stext('sticky.png'), 'url');
         $post_header_node_array['sticky-icon']->changeId('sticky-icon-' . $post_id);
     }
     else
@@ -416,7 +416,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
     if ($post_data['comment'] === '')
     {
-        $post_contents_node_array['post-comment']->setContent(nel_stext('THREAD_NOTEXT'));
+        $post_contents_node_array['post-comment']->setContent(nel_stext('(no comment)'));
     }
     else
     {
@@ -469,7 +469,7 @@ function nel_render_thread_form_bottom($board_id, $dom)
     if (nel_sessions()->sessionIsIgnored('render'))
     {
         $dom->getElementById('admin-input-set1')->removeSelf();
-        $dom->getElementById('bottom-submit-button')->setContent('FORM_SUBMIT');
+        $dom->getElementById('bottom-submit-button')->setContent('Submit');
     }
     else
     {

@@ -50,7 +50,7 @@ function nel_banned_name($name)
     {
         if ($cancer[$i] === $name)
         {
-            nel_derp(151, nel_stext('ERROR_151'), null, array('cancer' => $cancer[$i]));
+            nel_derp(151, nel_stext('That name is banned.'), null, array('cancer' => $cancer[$i]));
         }
     }
 }
@@ -71,7 +71,7 @@ function nel_banned_text($text, $file)
 
             if ($test !== FALSE)
             {
-                nel_derp(152, nel_stext('ERROR_152'), $board_id, array('cancer' => $cancer[$i]));
+                nel_derp(152, nel_stext('Cancer detected in post: '), $board_id, array('cancer' => $cancer[$i]));
             }
         }
     }
@@ -81,7 +81,7 @@ function nel_ban_appeal($board_id)
 {
     if ($_POST['ban_ip'] != $user_ip_address)
     {
-        nel_derp(160, nel_stext('ERROR_160'), $board_id);
+        nel_derp(160, nel_stext('Your ip address does not match the one listed in the ban.'), $board_id);
     }
 
     $ip_address = $_POST['ban_ip'];

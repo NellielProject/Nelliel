@@ -13,14 +13,14 @@ function nel_thread_panel($board_id, $action)
 
     if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_access', $board_id))
     {
-        nel_derp(350, nel_stext('ERROR_350'));
+        nel_derp(350, nel_stext('You are not allowed to access the threads panel.'));
     }
 
     if ($action = 'update')
     {
         if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_modify', $board_id))
         {
-            nel_derp(351, nel_stext('ERROR_351'));
+            nel_derp(351, nel_stext('You are not allowed to modify threads or posts.'));
         }
 
         $updates = $thread_handler->threadUpdates();

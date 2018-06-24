@@ -47,12 +47,12 @@ function nel_render_ban_page($board_id, $ban_info)
     {
         if ($ban_info['appeal_status'] == 2)
         {
-            $ban_page_node_array['appeal-what-done']->setContent(nel_stext('APPEAL_REVIEWED'));
+            $ban_page_node_array['appeal-what-done']->setContent(nel_stext('You appeal has been reviewed. You cannot appeal again.'));
         }
 
         if ($ban_info['appeal_status'] == 3)
         {
-            $ban_page_node_array['appeal-what-done']->setContent(nel_stext('BAN_ALTERED'));
+            $ban_page_node_array['appeal-what-done']->setContent(nel_stext('Your appeal has been reviewed and the ban has been altered.'));
         }
 
         if ($ban_info['appeal_response'] != '')
@@ -61,7 +61,7 @@ function nel_render_ban_page($board_id, $ban_info)
         }
         else
         {
-            $ban_page_node_array['appeal-response-text']->setContent(nel_stext('BAN_NO_RESPONSE'));
+            $ban_page_node_array['appeal-response-text']->setContent(nel_stext('No response has been given.'));
         }
     }
 

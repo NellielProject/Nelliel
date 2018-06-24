@@ -48,7 +48,7 @@ function nel_set_password_algorithm($choice)
     }
     else
     {
-        nel_derp(201, nel_stext('ERROR_201'));
+        nel_derp(201, nel_stext('No acceptable password hashing algorithm has been found. We can\'t function like this.'));
     }
 }
 

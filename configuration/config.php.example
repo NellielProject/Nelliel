@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // This file has only the very basic configuration needed to function and do setup.
 // It is intentionally kept as short and simple as possible.
-// Board management and all other settings are accessible from the management area.
+// Board Management and all other settings are accessible from the management area.
 //
 
 //

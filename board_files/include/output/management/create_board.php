@@ -9,7 +9,7 @@ function nel_render_create_board_panel()
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null, array('header' => 'MANAGE_GENERAL', 'sub_header' => 'MANAGE_CREATE_BOARD'));
+    nel_render_general_header($render, null, null, array('header' => 'General Management', 'sub_header' => 'MANAGE_CREATE_BOARD'));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/create_board.html');
     $dom->getElementById('create-board-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=create-board');

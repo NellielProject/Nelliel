@@ -23,12 +23,12 @@ function nel_collect_post_data($board_id)
     }
     else
     {
-        $post_data['name'] = nel_stext('THREAD_NONAME');
+        $post_data['name'] = nel_stext('Anonymous');
     }
 
     if ($board_settings['force_anonymous'])
     {
-        $post_data['name'] = nel_stext('THREAD_NONAME');
+        $post_data['name'] = nel_stext('Anonymous');
         $post_data['email'] = '';
     }
 

@@ -19,6 +19,7 @@ require_once LIBRARY_PATH . 'phpDOMExtend/autoload.php';
 require_once LIBRARY_PATH . 'NellielTemplates/autoload.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
 require_once LIBRARY_PATH . 'password_compat/lib/password.php';
+require_once LIBRARY_PATH . 'SmallPHPGettext/autoload.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'general_functions.php';
