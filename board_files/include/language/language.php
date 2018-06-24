@@ -33,6 +33,13 @@ function nel_get_language_instance($instance = null)
     return $language_instance;
 }
 
+function nel_extract_language($file)
+{
+    $extractor = new \Nelliel\LanguageExtractor();
+    $file_handler = new \Nelliel\FileHandler();
+    $file_handler->writeFile($file, $extractor->assemblePoString());
+}
+
 function nel_get_language($language, $form, $text)
 {
     static $lang_arrays;

@@ -62,6 +62,15 @@ function nel_admin_dispatch()
                 nel_board_settings_control($board_id, $action, true);
                 break;
 
+            case 'language':
+                if ($action === 'extract-gettext')
+                {
+                    nel_extract_language(LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
+                }
+
+                nel_render_main_panel();
+                break;
+
             default:
                 nel_login();
                 break;
