@@ -26,17 +26,15 @@ function nel_process_new_post($board_id)
     $post_count = nel_is_post_ok($board_id, $post_data, $time);
 
     // Process FGSFDS
-    if (!is_null($post_data['fgsfds']))
+    if (!empty($post_data['fgsfds']))
     {
-        nel_fgsfds('noko', nel_is_in_string($post_data['fgsfds'], 'noko'));
-        nel_fgsfds('sage', nel_is_in_string($post_data['fgsfds'], 'sage'));
+        $fgsfds_commands = preg_split('#[\s,]#u', $post_data['fgsfds']);
+        nel_fgsfds('noko', in_array('noko', $fgsfds_commands));
+        nel_fgsfds('sage', in_array('sage', $fgsfds_commands));
     }
 
     $post_data['sage'] = (is_null(nel_fgsfds('sage'))) ? 0 : nel_fgsfds('sage');
-
-    // Start collecting file info
     $files = $file_upload->processFiles($post_data['response_to']);
-    //$files = nel_process_file_info($board_id, $post_data['response_to']);
     $spoon = !empty($files);
     $post_data['file_count'] = count($files);
 
@@ -75,26 +73,15 @@ function nel_process_new_post($board_id)
     }
 
     nel_banned_text($post_data['comment'], $files);
-    $cookie_name = $post_data['name'];
 
     // Cookies OM NOM NOM NOM
     setrawcookie('pwd-' . $board_id, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
-    setrawcookie('name-' . $board_id, $cookie_name, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
+    setrawcookie('name-' . $board_id, $post_data['name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
     $post_data = $plugins->plugin_hook('after-post-info-processing', TRUE, array($post_data));
-    $i = 0;
 
     // Go ahead and put post into database
     require_once INCLUDE_PATH . 'post/database_functions.php';
-
-    if ($post_data['parent_thread'] === 0)
-    {
-        $post_data['op'] = 1;
-    }
-    else
-    {
-        $post_data['op'] = 0;
-    }
-
+    $post_data['op'] = ($post_data['parent_thread'] === 0) ? 1 : 0;
     $post_data['has_file'] = ($post_data['file_count'] > 0) ? 1 : 0;
     nel_db_insert_initial_post($board_id, $time, $post_data);
     $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "post_time" = ? LIMIT 1');
@@ -131,7 +118,6 @@ function nel_process_new_post($board_id)
 
     $prepared = $dbh->prepare('UPDATE "' . $references['post_table']. '" SET parent_thread = ? WHERE post_number = ?');
     $dbh->executePrepared($prepared, array($thread_info['id'], $new_post_info['post_number']), true);
-
     nel_fgsfds('noko_topic', $thread_info['id']);
     $src_path = $references['src_path'] . $thread_info['id'] . '/' . $new_post_info['post_number'] . '/';
     $preview_path = $references['thumb_path'] . $thread_info['id'] . '/' . $new_post_info['post_number'] . '/';
