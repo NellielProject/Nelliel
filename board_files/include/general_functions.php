@@ -4,11 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_is_in_string($string, $substring)
-{
-    return utf8_strripos($string, $substring) !== false;
-}
-
 function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_delay = 2)
 {
     $authorize = nel_authorize();
@@ -49,23 +44,6 @@ function true_empty($var)
     }
 
     return !isset($var) || is_null($var) || (is_string($var) && $var === '') || (is_array($var) && $var === array());
-}
-
-function nel_utf8_4byte_to_entities(&$input)
-{
-    $regex = '#(.)#Su';
-
-    $input = preg_replace_callback($regex, function ($matches)
-    {
-        if(strlen($matches[0]) > 3)
-        {
-            return '&#' . utf8_ord($matches[0]) . ';';
-        }
-        else
-        {
-            return $matches[0];
-        }
-    }, $input);
 }
 
 function nel_utf8_to_numeric_html_entities(&$input, $non_ascii_only = true)
