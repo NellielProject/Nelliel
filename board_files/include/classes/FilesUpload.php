@@ -232,7 +232,8 @@ class FilesUpload
             nel_derp(107, _gettext('Unrecognized file type.'), $this->board_id, $error_data);
         }
 
-        if (!$filetype_settings[$filetypes[$test_ext]['type']][$filetypes[$test_ext]['format']])
+        if (!$filetype_settings[$filetypes[$test_ext]['type']][$filetypes[$test_ext]['type']] ||
+            !$filetype_settings[$filetypes[$test_ext]['type']][$filetypes[$test_ext]['format']])
         {
             nel_derp(108, _gettext('Filetype is not allowed.'), $this->board_id, $error_data);
         }
