@@ -68,7 +68,7 @@ class Sessions
                 else
                 {
                     $this->terminateSession();
-                    nel_derp(311, _gettext('Login has not been validated or was not correctly flagged. Cannot start session.'));
+                    nel_derp(311, _gettext('Login has not been validated or was incorrectly flagged. Cannot start session.'));
                 }
 
                 $this->setSessionCookie();
@@ -86,7 +86,7 @@ class Sessions
     {
         session_unset();
         session_destroy();
-        setrawcookie("PHPSESSID", "", time() - 3600, "/");
+        setrawcookie("PHPSESSID", "", time() - 7200, "/");
     }
 
     private function setSessionCookie()
@@ -96,7 +96,7 @@ class Sessions
 
     private function sessionIsOld()
     {
-        return !isset($_SESSION['login_time']) || (time() - $_SESSION['last_activity']) > 1800;
+        return !isset($_SESSION['login_time']) || (time() - $_SESSION['last_activity']) > 3600;
     }
 
     public function sessionIsActive()
