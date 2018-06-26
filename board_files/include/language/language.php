@@ -7,16 +7,43 @@ if (!defined('NELLIEL_VERSION'))
 //
 // Handles language functions
 //
-
 function nel_load_language_library($file = null)
 {
-    if(empty($file))
+    if (empty($file))
     {
         $file = LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po';
     }
 
+    $language_array = array();
+    $loaded = false;
+    $file_id =
+    $hash = md5_file($file);
+    $cache_handler = new \Nelliel\CacheHandler();
+
+    if ($cache_handler->checkHash($file, $hash) && USE_INTERNAL_CACHE)
+    {
+        if (file_exists(CACHE_PATH . 'language/' . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel_po.php'))
+        {
+            include CACHE_PATH . 'language/' . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel_po.php';
+            $loaded = true;
+        }
+    }
+
+    if (!$loaded)
+    {
+        $po_parser = new \SmallPHPGettext\ParsePo();
+        $language_array = $po_parser->parseFile($file);
+
+        if (USE_INTERNAL_CACHE)
+        {
+            $cache_handler->updateHash($file, $hash);
+            $cache_handler->writeCacheFile(CACHE_PATH . 'language/' . DEFAULT_LOCALE . '/LC_MESSAGES/', 'nelliel_po.php', '$language_array = ' .
+            var_export($language_array, true) . ';');
+        }
+    }
+
     $lang_lib = new \SmallPHPGettext\SmallPHPGettext();
-    $lang_lib->addDomainFromFile($file);
+    $lang_lib->addDomainFromArray($language_array);
     $lang_lib->registerFunctions();
     nel_get_language_instance($lang_lib);
 }
@@ -42,7 +69,7 @@ function nel_extract_language($file)
 
 function nel_process_i18n($dom, $language = 'en-us')
 {
-    if(empty($language))
+    if (empty($language))
     {
         $language = 'en-us';
     }
