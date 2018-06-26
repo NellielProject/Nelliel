@@ -78,7 +78,6 @@ function nel_process_new_post($board_id)
     // Cookies OM NOM NOM NOM
     setrawcookie('pwd-' . $board_id, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
     setrawcookie('name-' . $board_id, $post_data['name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
-    $post_data = $plugins->plugin_hook('after-post-info-processing', TRUE, array($post_data));
 
     // Go ahead and put post into database
     require_once INCLUDE_PATH . 'post/database_functions.php';

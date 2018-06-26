@@ -101,7 +101,6 @@ function nel_get_tripcodes($board_id, $post_data, $name_pieces)
     $authorize = nel_authorize();
     $post_data['tripcode'] = '';
     $post_data['secure_tripcode'] = '';
-    $post_data = $plugins->plugin_hook('in-before-tripcode-processing', TRUE, array($post_data, $name_pieces));
 
     if ($name_pieces[2] !== '' && $board_settings['allow_tripkeys'])
     {
@@ -120,7 +119,6 @@ function nel_get_tripcodes($board_id, $post_data, $name_pieces)
         $post_data['secure_tripcode'] = substr($trip, 2, 10);
     }
 
-    $post_data = $plugins->plugin_hook('in-after-tripcode-processing', TRUE, array($post_data, $name_pieces));
     return $post_data;
 }
 
