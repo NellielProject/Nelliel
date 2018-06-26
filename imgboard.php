@@ -51,19 +51,11 @@ if (nel_setup_stuff_done())
     }
 }
 
-require_once INCLUDE_PATH . 'plugins.php';
-$plugin_files = glob(PLUGINS_PATH . '*.nel.php');
-$plugins = new nel_plugin_handler();
-
-foreach ($plugin_files as $file)
-{
-    require_once $file;
-}
-
-$plugins->activate();
+require_once INCLUDE_PATH . 'PluginAPI.php';
+nel_plugins()->initializePlugins();
 
 // A demo point. Does nothing, really
-$example_result = $plugins->plugin_hook('plugin-example', TRUE, array(5));
+nel_plugins()->processPluginHook('plugin-example', array(5));
 
 require_once INCLUDE_PATH . 'snacks.php';
 

@@ -28,6 +28,18 @@ function nel_sessions()
     return $sessions;
 }
 
+function nel_plugins()
+{
+    static $api;
+
+    if (!isset($api))
+    {
+        $api = new PluginAPI();
+    }
+
+    return $api;
+}
+
 function nel_site_settings($setting = null, $cache_regen = false)
 {
     static $settings;
