@@ -84,10 +84,10 @@ class FilesUpload
 
     public function getPathInfo($file)
     {
-        $path_info = pathinfo('_' . $file['name']); // Underscore is added as a workaround for pathinfo not handling Unicode properly
-        $path_info['filename'] = substr($path_info['filename'], 1);
-        $path_info['fullname'] = substr($path_info['basename'], 1);
-        $path_info['extension'] = $path_info['extension'];
+        $file_info = new \SplFileInfo($file);
+        $path_info['filename'] = $file_info->getFilename();
+        $path_info['fullname'] = $file_info->getBasename();
+        $path_info['extension'] = $file_info->getExtension();
         return $path_info;
     }
 
