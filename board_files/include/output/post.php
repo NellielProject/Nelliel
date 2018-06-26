@@ -81,14 +81,14 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
     if ($gen_params['index_rendering'] && !$response)
     {
-        $hide_post_thread->setContent('Hide Thread');
-        $hide_post_thread->extSetAttribute('data-alt-visual', 'Show Thread');
+        $hide_post_thread->setContent(_gettext('Hide Thread'));
+        $hide_post_thread->extSetAttribute('data-alt-visual', _gettext('Show Thread'));
         $hide_post_thread->extSetAttribute('data-command', 'hide-thread');
     }
     else
     {
-        $hide_post_thread->setContent('Hide Post');
-        $hide_post_thread->extSetAttribute('data-alt-visual', 'Show Post');
+        $hide_post_thread->setContent(_gettext('Hide Post'));
+        $hide_post_thread->extSetAttribute('data-alt-visual', _gettext('Show Post'));
         $hide_post_thread->extSetAttribute('data-command', 'hide-post');
     }
 
@@ -170,7 +170,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
     if (!$response && $gen_data['thread']['sticky'])
     {
-        $post_header_node_array['sticky-icon']->extSetAttribute('src', IMAGES_DIR . '/nelliel/' . _gettext('sticky.png'), 'url');
+        $post_header_node_array['sticky-icon']->extSetAttribute('src', IMAGES_DIR . '/nelliel/' . 'sticky.png', 'url');
         $post_header_node_array['sticky-icon']->changeId('sticky-icon-' . $post_id);
     }
     else

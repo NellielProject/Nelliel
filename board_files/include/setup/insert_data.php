@@ -70,7 +70,6 @@ function nel_insert_permissions_defaults()
     $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_ban_access', 1]);
     $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_ban_add', 1]);
     $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_ban_modify', 1]);
-    $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_ban_delete', 1]);
     $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_post_access', 1]);
     $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_post_modify', 1]);
     $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_post_delete', 1]);
@@ -88,8 +87,6 @@ function nel_insert_permissions_defaults()
     $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_caches', 1]);
     $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_index', 1]);
     $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_threads', 1]);
-    $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_modmode_access', 1]);
-    $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_modmode_view_ips', 1]);
     $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_config_access', 1]);
     $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_config_modify', 1]);
     $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_user_access', 1]);
@@ -104,7 +101,6 @@ function nel_insert_permissions_defaults()
     $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_ban_access', 1]);
     $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_ban_add', 1]);
     $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_ban_modify', 1]);
-    $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_ban_delete', 1]);
     $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_post_access', 1]);
     $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_post_modify', 1]);
     $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_post_delete', 1]);
@@ -122,8 +118,6 @@ function nel_insert_permissions_defaults()
     $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_caches', 1]);
     $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_index', 1]);
     $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_threads', 1]);
-    $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_modmode_access', 1]);
-    $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_modmode_view_ips', 1]);
     $dbh->executePrepared($prepared, ['MOD', 'perm_config_access', 0]);
     $dbh->executePrepared($prepared, ['MOD', 'perm_config_change', 0]);
     $dbh->executePrepared($prepared, ['MOD', 'perm_user_access', 0]);
@@ -138,7 +132,6 @@ function nel_insert_permissions_defaults()
     $dbh->executePrepared($prepared, ['MOD', 'perm_ban_access', 1]);
     $dbh->executePrepared($prepared, ['MOD', 'perm_ban_add', 1]);
     $dbh->executePrepared($prepared, ['MOD', 'perm_ban_modify', 1]);
-    $dbh->executePrepared($prepared, ['MOD', 'perm_ban_delete', 1]);
     $dbh->executePrepared($prepared, ['MOD', 'perm_post_access', 1]);
     $dbh->executePrepared($prepared, ['MOD', 'perm_post_modify', 0]);
     $dbh->executePrepared($prepared, ['MOD', 'perm_post_delete', 1]);
@@ -156,8 +149,6 @@ function nel_insert_permissions_defaults()
     $dbh->executePrepared($prepared, ['MOD', 'perm_regen_caches', 0]);
     $dbh->executePrepared($prepared, ['MOD', 'perm_regen_index', 0]);
     $dbh->executePrepared($prepared, ['MOD', 'perm_regen_threads', 0]);
-    $dbh->executePrepared($prepared, ['MOD', 'perm_modmode_access', 1]);
-    $dbh->executePrepared($prepared, ['MOD', 'perm_modmode_view_ips', 1]);
     $dbh->executePrepared($prepared, ['JANITOR', 'perm_config_access', 0]);
     $dbh->executePrepared($prepared, ['JANITOR', 'perm_config_change', 0]);
     $dbh->executePrepared($prepared, ['JANITOR', 'perm_user_access', 0]);
@@ -172,7 +163,6 @@ function nel_insert_permissions_defaults()
     $dbh->executePrepared($prepared, ['JANITOR', 'perm_ban_access', 0]);
     $dbh->executePrepared($prepared, ['JANITOR', 'perm_ban_add', 0]);
     $dbh->executePrepared($prepared, ['JANITOR', 'perm_ban_modify', 0]);
-    $dbh->executePrepared($prepared, ['JANITOR', 'perm_ban_delete', 0]);
     $dbh->executePrepared($prepared, ['JANITOR', 'perm_post_access', 1]);
     $dbh->executePrepared($prepared, ['JANITOR', 'perm_post_modify', 0]);
     $dbh->executePrepared($prepared, ['JANITOR', 'perm_post_delete', 1]);
@@ -190,8 +180,6 @@ function nel_insert_permissions_defaults()
     $dbh->executePrepared($prepared, ['JANITOR', 'perm_regen_caches', 0]);
     $dbh->executePrepared($prepared, ['JANITOR', 'perm_regen_index', 0]);
     $dbh->executePrepared($prepared, ['JANITOR', 'perm_regen_threads', 0]);
-    $dbh->executePrepared($prepared, ['JANITOR', 'perm_modmode_access', 1]);
-    $dbh->executePrepared($prepared, ['JANITOR', 'perm_modmode_view_ips', 0]);
     nel_setup_stuff_done(true);
 }
 

@@ -109,26 +109,6 @@ function nel_render_main_board_panel($board_id)
         $bans->removeSelf();
     }
 
-    /*if ($authorize->get_user_perm($_SESSION['username'], 'perm_config_access', $board_id))
-     {
-     $dom->removeChild($dom->getElementById('select-settings-panel'));
-     }
-
-     if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban_access', $board_id))
-     {
-     $dom->removeChild($dom->getElementById('select-ban-panel'));
-     }
-
-     if ($authorize->get_user_perm($_SESSION['username'], 'perm_post_access', $board_id))
-     {
-     $dom->removeChild($dom->getElementById('select-thread-panel'));
-     }
-
-     if ($authorize->get_user_perm($_SESSION['username'], 'perm_modmode_access', $board_id))
-     {
-     $dom->removeChild($dom->getElementById('select-mod-mode'));
-     }*/
-
     if ($authorize->get_user_perm($_SESSION['username'], 'perm_regen_index', $board_id))
     {
         $dom->removeChild($dom->getElementById('page-regen-form'));

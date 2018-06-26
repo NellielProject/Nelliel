@@ -72,10 +72,9 @@ function nel_site_settings($setting = null, $cache_regen = false)
 
             if (USE_INTERNAL_CACHE || $cache_regen)
             {
-                $cacheHandler = new \Nelliel\CacheHandler();
-                $header = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}';
+                $cacheHandler = new \Nelliel\CacheHandler(true);
                 $cacheHandler->writeCacheFile(CACHE_PATH, 'site_settings.php', '$site_settings = ' .
-                     var_export($site_settings, true) . ';', $header);
+                     var_export($site_settings, true) . ';');
             }
         }
 
@@ -135,10 +134,9 @@ function nel_board_settings($board_id, $setting = null, $cache_regen = false)
 
             if (USE_INTERNAL_CACHE || $cache_regen)
             {
-                $cacheHandler = new \Nelliel\CacheHandler();
-                $header = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}';
+                $cacheHandler = new \Nelliel\CacheHandler(true);
                 $cacheHandler->writeCacheFile(CACHE_PATH . $board_id . '/', 'board_settings.php', '$board_settings = ' .
-                     var_export($board_settings, true) . ';', $header);
+                     var_export($board_settings, true) . ';');
             }
         }
 
@@ -198,10 +196,9 @@ function nel_filetype_settings($board_id, $setting = null, $cache_regen = false)
 
             if (USE_INTERNAL_CACHE || $cache_regen)
             {
-                $cacheHandler = new \Nelliel\CacheHandler();
-                $header = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}';
+                $cacheHandler = new \Nelliel\CacheHandler(true);
                 $cacheHandler->writeCacheFile(CACHE_PATH . $board_id . '/', 'filetype_settings.php', '$filetype_settings = ' .
-                     var_export($filetype_settings, true) . ';', $header);
+                     var_export($filetype_settings, true) . ';');
             }
         }
 
