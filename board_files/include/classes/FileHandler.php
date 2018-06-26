@@ -138,4 +138,32 @@ class FileHandler
 
         return $filtered;
     }
+
+    public function recursiveFileList($path, $include_directories = false, $valid_extensions = array())
+    {
+        $file_list = array();
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
+
+        foreach ($iterator as $file)
+        {
+            $path_info = pathinfo('_' . $file->getPathname()); // Underscore is added as a workaround for pathinfo not handling Unicode properly
+
+            if ($file->isDir() && !$include_directories)
+            {
+                continue;
+            }
+
+            if (isset($path_info['extension']) && !empty($valid_extensions))
+            {
+                if (!in_array($path_info['extension'], $valid_extensions))
+                {
+                    continue;
+                }
+            }
+
+            $file_list[] = $file->getPathname();
+        }
+
+        return $file_list;
+    }
 }

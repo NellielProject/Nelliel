@@ -94,34 +94,6 @@ class LanguageExtractor
         return $headers;
     }
 
-    public function recursiveFileList($path, $include_directories = false, $valid_extensions = array())
-    {
-        $file_list = array();
-        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
-
-        foreach ($iterator as $file)
-        {
-            $path_info = pathinfo('_' . $file->getPathname()); // Underscore is added as a workaround for pathinfo not handling Unicode properly
-
-            if (!$include_directories && $file->isDir())
-            {
-                continue;
-            }
-
-            if (isset($path_info['extension']) && !empty($valid_extensions))
-            {
-                if (!in_array($path_info['extension'], $valid_extensions))
-                {
-                    continue;
-                }
-            }
-
-            $file_list[] = $file->getPathname();
-        }
-
-        return $file_list;
-    }
-
     private function addIfNotDuplicate(&$strings, $message, $plural)
     {
         if (!in_array($message, $strings))
@@ -132,7 +104,8 @@ class LanguageExtractor
 
     private function parseSiteFiles($strings = array())
     {
-        $php_files = $this->recursiveFileList(BASE_PATH, false, ['php']);
+        $file_handler = new \Nelliel\FileHandler();
+        $php_files = $file_handler->recursiveFileList(BASE_PATH,  false, ['php']);
 
         foreach ($php_files as $file)
         {
@@ -165,7 +138,8 @@ class LanguageExtractor
 
     private function parseHTMLFiles($strings = array())
     {
-        $html_files = $this->recursiveFileList(TEMPLATE_PATH, false, ['html']);
+        $file_handler = new \Nelliel\FileHandler();
+        $html_files = $file_handler->recursiveFileList(BASE_PATH,  false, ['html']);
         $render = new \NellielTemplates\RenderCore();
 
         foreach ($html_files as $file)
