@@ -116,7 +116,7 @@ class FileHandler
         $filtered = preg_replace('#[<>:"\/\\|?*]#u', '', $filtered); // Reserved characters for Windows
         $filtered = preg_replace('#(com[1-9]|lpt[1-9]|con|prn|aux|nul)\.?[a-zA-Z0-9]*#ui', '', $filtered); // Reserved names for Windows
 
-        $filtered = preg_replace('#^[ -.]|\'#', '', $filtered); // Other potentially troublesome characters
+        $filtered = preg_replace('#^[ -.]|\'#', '_', $filtered); // Other potentially troublesome characters
         $cleared = false;
 
         while (!$cleared)
@@ -146,22 +146,20 @@ class FileHandler
 
         foreach ($iterator as $file)
         {
-            $path_info = pathinfo('_' . $file->getPathname()); // Underscore is added as a workaround for pathinfo not handling Unicode properly
-
             if ($file->isDir() && !$include_directories)
             {
                 continue;
             }
 
-            if (isset($path_info['extension']) && !empty($valid_extensions))
+            if (!empty($valid_extensions))
             {
-                if (!in_array($path_info['extension'], $valid_extensions))
+                if (!in_array($file->getExtension(), $valid_extensions))
                 {
                     continue;
                 }
             }
 
-            $file_list[] = $file->getPathname();
+            $file_list[] = $file->getRealPath();
         }
 
         return $file_list;
