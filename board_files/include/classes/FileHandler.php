@@ -139,7 +139,7 @@ class FileHandler
         return $filtered;
     }
 
-    public function recursiveFileList($path, $include_directories = false, $valid_extensions = array())
+    public function recursiveFileList($path, $include_directories = false, $extensions = array(), $file_object = false)
     {
         $file_list = array();
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
@@ -151,15 +151,22 @@ class FileHandler
                 continue;
             }
 
-            if (!empty($valid_extensions))
+            if (!empty($extensions))
             {
-                if (!in_array($file->getExtension(), $valid_extensions))
+                if (!in_array($file->getExtension(), $extensions))
                 {
                     continue;
                 }
             }
 
-            $file_list[] = $file->getRealPath();
+            if ($file_object)
+            {
+                $file_list[] = $file;
+            }
+            else
+            {
+                $file_list[] = $file->getRealPath();
+            }
         }
 
         return $file_list;
