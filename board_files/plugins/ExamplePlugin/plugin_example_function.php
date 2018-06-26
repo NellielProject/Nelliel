@@ -12,6 +12,5 @@ function plugin_example_function()
 function plugin_example_function_dostuff($input)
 {
     $output = $input + 3;
-    var_dump($output);
     return $output;
 }

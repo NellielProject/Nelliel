@@ -360,7 +360,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                             $format_icon))
                         {
                             $file['has_preview'] = true;
-                            $file['preview_location'] = '../' . IMAGES_DIR . 'nelliel/filetype/' .
+                            $file['preview_location'] = 'http://' . $base_domain . '/web/imagez/nelliel/filetype/' .
                                 utf8_strtolower($file['format']) . '/' . $format_icon;
                             $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
                             $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
@@ -368,7 +368,8 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                         else if (file_exists(WEB_PATH . 'imagez/nelliel/filetype/generic/' . $type_icon))
                         {
                             $file['has_preview'] = true;
-                            $file['preview_location'] = '../' . IMAGES_DIR . 'nelliel/filetype/generic/' . $type_icon;
+                            $file['preview_location'] = 'http://' . $base_domain . '/web/imagez/nelliel/filetype/generic/' .
+                                $type_icon;
                             $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
                             $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
                         }

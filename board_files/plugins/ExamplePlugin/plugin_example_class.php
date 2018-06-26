@@ -15,7 +15,6 @@ class plugin_example_class
     public function plugin_example($input)
     {
         $output = $input + 5;
-        var_dump($output);
         return $output;
     }
 }
