@@ -22,23 +22,28 @@ class ParametersAndData
     {
     }
 
+    private function loadArrayFromCache($filename, $array_variable)
+    {
+        if (USE_INTERNAL_CACHE)
+        {
+            if (file_exists(CACHE_PATH . $filename))
+            {
+                include CACHE_PATH . $filename;
+                $array = $$array_variable;
+                return $array;
+            }
+        }
+
+        return false;
+    }
+
     public function siteSettings($setting = null, $cache_regen = false)
     {
         if (empty($this->site_settings) || $cache_regen)
         {
-            $site_settings = array();
-            $loaded = false;
+            $settings = $this->loadArrayFromCache('site_settings.php', 'site_settings');
 
-            if (USE_INTERNAL_CACHE && !$cache_regen)
-            {
-                if (file_exists(CACHE_PATH . 'site_settings.php'))
-                {
-                    include CACHE_PATH . 'site_settings.php';
-                    $loaded = true;
-                }
-            }
-
-            if (!$loaded)
+            if ($settings === false || $cache_regen)
             {
                 $dbh = nel_database();
                 $config_list = $dbh->executeFetchAll('SELECT * FROM "nelliel_site_config"', PDO::FETCH_ASSOC);
@@ -46,18 +51,18 @@ class ParametersAndData
                 foreach ($config_list as $config)
                 {
                     $config['setting'] = nel_cast_to_datatype($config['setting'], $config['data_type']);
-                    $site_settings[$config['config_name']] = $config['setting'];
+                    $settings[$config['config_name']] = $config['setting'];
                 }
 
                 if (USE_INTERNAL_CACHE || $cache_regen)
                 {
                     $cacheHandler = new \Nelliel\CacheHandler(true);
                     $cacheHandler->writeCacheFile(CACHE_PATH, 'site_settings.php',
-                            '$site_settings = ' . var_export($site_settings, true) . ';');
+                            '$site_settings = ' . var_export($settings, true) . ';');
                 }
             }
 
-            $this->site_settings = $site_settings;
+            $this->site_settings = $settings;
         }
 
         if (is_null($setting))
@@ -77,19 +82,9 @@ class ParametersAndData
 
         if (empty($this->board_settings[$board_id]) || $cache_regen)
         {
-            $board_settings = array();
-            $loaded = false;
+            $settings = $this->loadArrayFromCache($board_id . '/board_settings.php', 'board_settings');
 
-            if (USE_INTERNAL_CACHE && !$cache_regen)
-            {
-                if (file_exists(CACHE_PATH . $board_id . '/board_settings.php'))
-                {
-                    include CACHE_PATH . $board_id . '/board_settings.php';
-                    $loaded = true;
-                }
-            }
-
-            if (!$loaded)
+            if ($settings === false || $cache_regen)
             {
                 $dbh = nel_database();
                 $prepared = $dbh->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
@@ -101,18 +96,18 @@ class ParametersAndData
                 foreach ($config_list as $config)
                 {
                     $config['setting'] = nel_cast_to_datatype($config['setting'], $config['data_type']);
-                    $board_settings[$config['config_name']] = $config['setting'];
+                    $settings[$config['config_name']] = $config['setting'];
                 }
 
                 if (USE_INTERNAL_CACHE || $cache_regen)
                 {
                     $cacheHandler = new \Nelliel\CacheHandler(true);
                     $cacheHandler->writeCacheFile(CACHE_PATH . $board_id . '/', 'board_settings.php',
-                            '$board_settings = ' . var_export($board_settings, true) . ';');
+                            '$board_settings = ' . var_export($settings, true) . ';');
                 }
             }
 
-            $this->board_settings[$board_id] = $board_settings;
+            $this->board_settings[$board_id] = $settings;
         }
 
         if (is_null($setting))
@@ -132,19 +127,9 @@ class ParametersAndData
 
         if (empty($this->filetype_settings[$board_id]) || $cache_regen)
         {
-            $filetype_settings = array();
-            $loaded = false;
+            $settings = $this->loadArrayFromCache($board_id . '/filetype_settings.php', 'filetype_settings');
 
-            if (USE_INTERNAL_CACHE && !$cache_regen)
-            {
-                if (file_exists(CACHE_PATH . $board_id . '/filetype_settings.php'))
-                {
-                    include CACHE_PATH . $board_id . '/filetype_settings.php';
-                    $loaded = true;
-                }
-            }
-
-            if (!$loaded)
+            if ($settings === false || $cache_regen)
             {
                 $dbh = nel_database();
                 $prepared = $dbh->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
@@ -153,22 +138,22 @@ class ParametersAndData
                 $config_list = $dbh->executeFetchAll(
                         'SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'filetype_enable\'',
                         PDO::FETCH_ASSOC);
-                $filetype_settings = array();
+                $settings = array();
 
                 foreach ($config_list as $config)
                 {
-                    $filetype_settings[$config['config_category']][utf8_strtolower($config['config_name'])] = (bool) $config['setting'];
+                    $settings[$config['config_category']][utf8_strtolower($config['config_name'])] = (bool) $config['setting'];
                 }
 
                 if (USE_INTERNAL_CACHE || $cache_regen)
                 {
                     $cacheHandler = new \Nelliel\CacheHandler(true);
                     $cacheHandler->writeCacheFile(CACHE_PATH . $board_id . '/', 'filetype_settings.php',
-                            '$filetype_settings = ' . var_export($filetype_settings, true) . ';');
+                            '$filetype_settings = ' . var_export($settings, true) . ';');
                 }
             }
 
-            $this->filetype_settings[$board_id] = $filetype_settings;
+            $this->filetype_settings[$board_id] = $settings;
         }
 
         if (is_null($setting))
@@ -257,6 +242,8 @@ class ParametersAndData
                     $filetypes[$sub_extension['extension']]['extension'] = $sub_extension['extension'];
                 }
             }
+
+            $this->filetype_data = $filetypes;
         }
 
         if (is_null($extension))
@@ -276,7 +263,8 @@ class ParametersAndData
             if (!$loaded)
             {
                 $dbh = nel_database();
-                $filters = $dbh->executeFetchAll('SELECT "hash_type", "file_hash" FROM "nelliel_file_filters"', PDO::FETCH_ASSOC);
+                $filters = $dbh->executeFetchAll('SELECT "hash_type", "file_hash" FROM "nelliel_file_filters"',
+                        PDO::FETCH_ASSOC);
 
                 foreach ($filters as $filter)
                 {
