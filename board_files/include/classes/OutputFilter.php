@@ -2,7 +2,7 @@
 
 namespace Nelliel;
 
-use \PDO;
+use PDO;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -11,6 +11,7 @@ if (!defined('NELLIEL_VERSION'))
 
 class OutputFilter
 {
+
     function __construct()
     {
     }
@@ -72,8 +73,9 @@ class OutputFilter
         {
             if (preg_match('#^>>([0-9]+)$#', $segment, $matches) === 1)
             {
-                $prepared = $dbh->prepare('SELECT "parent_thread" FROM "' .
-                     nel_board_references($board_id, 'post_table') . '" WHERE "post_number" = ? LIMIT 1');
+                $prepared = $dbh->prepare(
+                        'SELECT "parent_thread" FROM "' . nel_parameters()->boardReferences($board_id, 'post_table') .
+                        '" WHERE "post_number" = ? LIMIT 1');
                 $parent_thread = $dbh->executePreparedFetch($prepared, array($matches[1]), PDO::FETCH_COLUMN);
 
                 if ($parent_thread === false || empty($parent_thread))
@@ -83,8 +85,8 @@ class OutputFilter
                 else
                 {
                     $p_anchor = '#p' . $parent_thread . '_' . $matches[1];
-                    $url = nel_board_references($board_id, 'page_dir') . $parent_thread . '/' . $parent_thread . '.html' .
-                         $p_anchor;
+                    $url = nel_parameters()->boardReferences($board_id, 'page_dir') . $parent_thread . '/' .
+                            $parent_thread . '.html' . $p_anchor;
                     $segment_node = $target_element->ownerDocument->createElement('a', $matches[0]);
                     $segment_node->extSetAttribute('class', 'link-quote');
                     $segment_node->extSetAttribute('data-command', 'show-linked-post');

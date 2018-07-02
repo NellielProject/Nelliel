@@ -7,8 +7,8 @@ if (!defined('NELLIEL_VERSION'))
 function nel_thread_generator($board_id, $write, $response_to)
 {
     $dbh = nel_database();
-    $references = nel_board_references($board_id);
-    $board_settings = nel_board_settings($board_id);
+    $references = nel_parameters()->boardReferences($board_id);
+    $board_settings = nel_parameters()->boardSettings($board_id);
     $file_handler = new \Nelliel\FileHandler();
 
     if ($write)
@@ -21,7 +21,7 @@ function nel_thread_generator($board_id, $write, $response_to)
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'thread.html');
-    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
+    nel_process_i18n($dom, nel_parameters()->boardSettings($board_id, 'board_language'));
     $expand_dom = $render->newDOMDocument();
     $collapse_dom = $render->newDOMDocument();
     $render->startRenderTimer();

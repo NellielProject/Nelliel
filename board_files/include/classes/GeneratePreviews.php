@@ -22,7 +22,7 @@ class GeneratePreviews
         $file_handler = new \Nelliel\FileHandler();
         $i = 0;
         $files_count = count($files);
-        $board_settings = nel_board_settings($this->board_id);
+        $board_settings = nel_parameters()->boardSettings($this->board_id);
 
         while ($i < $files_count)
         {
@@ -109,7 +109,7 @@ class GeneratePreviews
         $image = new \Imagick($file['location']);
         $iterations = $image->getImageIterations();
         $image = $image->coalesceimages();
-        $board_settings = nel_board_settings($this->board_id);
+        $board_settings = nel_parameters()->boardSettings($this->board_id);
 
         if ($file['format'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
         {
@@ -150,7 +150,7 @@ class GeneratePreviews
 
     public function imagemagickPreview($file, $preview_path)
     {
-        $board_settings = nel_board_settings($this->board_id);
+        $board_settings = nel_parameters()->boardSettings($this->board_id);
 
         if ($file['format'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
         {
@@ -183,7 +183,7 @@ class GeneratePreviews
 
     public function gdPreview($file, $preview_path)
     {
-        $board_settings = nel_board_settings($this->board_id);
+        $board_settings = nel_parameters()->boardSettings($this->board_id);
         $gd_test = gd_info(); // This shouldn't be needed. If your host actually doesn't have these, it sucks. Get a new one, srsly.
 
         if ($file['format'] === 'jpeg' && $gd_test["JPEG Support"])

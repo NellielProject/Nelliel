@@ -23,14 +23,14 @@ class ArchiveAndPrune
     {
         $this->dbh = nel_database();
         $this->thread_handler = new \Nelliel\ThreadHandler($board_id);
-        $this->start_buffer = nel_board_settings($board_id, 'threads_per_page') *
-             nel_board_settings($board_id, 'page_limit');
-        $this->end_buffer = nel_board_settings($board_id, 'threads_per_page') *
-             nel_board_settings($board_id, 'page_buffer');
+        $this->start_buffer = nel_parameters()->boardSettings($board_id, 'threads_per_page') *
+        nel_parameters()->boardSettings($board_id, 'page_limit');
+        $this->end_buffer = nel_parameters()->boardSettings($board_id, 'threads_per_page') *
+        nel_parameters()->boardSettings($board_id, 'page_buffer');
              $this->file_handler = new \Nelliel\FileHandler();
         $this->board_id = $board_id;
-        $this->references = nel_board_references($board_id);
-        $this->board_settings = nel_board_settings($board_id);
+        $this->references = nel_parameters()->boardReferences($board_id);
+        $this->board_settings = nel_parameters()->boardSettings($board_id);
 
         if ($this->end_buffer == 0)
         {

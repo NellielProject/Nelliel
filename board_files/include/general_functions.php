@@ -15,12 +15,12 @@ function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_del
     {
         if (is_null($redirect_board))
         {
-            echo '<meta http-equiv="refresh" content="' . $redirect_delay . ';URL=' . nel_site_settings('home_page') . '">';
+            echo '<meta http-equiv="refresh" content="' . $redirect_delay . ';URL=' . nel_parameters()->siteSettings('home_page') . '">';
         }
         else
         {
             echo '<meta http-equiv="refresh" content="' . $redirect_delay . ';URL=' .
-                 nel_board_references($redirect_board, 'board_directory') . '/' . PHP_SELF2 . PHP_EXT . '">';
+                 nel_parameters()->boardReferences($redirect_board, 'board_directory') . '/' . PHP_SELF2 . PHP_EXT . '">';
         }
     }
 

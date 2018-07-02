@@ -64,7 +64,7 @@ function nel_create_core_tables()
 function nel_create_board_directories($board_id)
 {
     $file_handler = new \Nelliel\FileHandler();
-    $references = nel_board_references($board_id);
+    $references = nel_parameters()->boardReferences($board_id);
     $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM, true);
     $file_handler->createDirectory($references['thumb_path'], DIRECTORY_PERM, true);
     $file_handler->createDirectory($references['page_path'], DIRECTORY_PERM, true);
@@ -76,7 +76,7 @@ function nel_create_board_directories($board_id)
 
 function nel_create_board_tables($board_id)
 {
-    $references = nel_board_references($board_id);
+    $references = nel_parameters()->boardReferences($board_id);
     nel_create_threads_table($references['thread_table']);
     nel_create_threads_table($references['archive_thread_table']);
     nel_create_posts_table($references['post_table'], $references['thread_table']);

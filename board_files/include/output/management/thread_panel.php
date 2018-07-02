@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_thread_panel_main($board_id)
 {
     $dbh = nel_database();
-    $references = nel_board_references($board_id);
+    $references = nel_parameters()->boardReferences($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -115,7 +115,7 @@ function nel_render_thread_panel_main($board_id)
 function nel_render_thread_panel_expand($board_id, $thread_id)
 {
     $dbh = nel_database();
-    $references = nel_board_references($board_id);
+    $references = nel_parameters()->boardReferences($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);

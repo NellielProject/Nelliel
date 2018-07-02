@@ -65,7 +65,7 @@ function nel_render_ban_page($board_id, $ban_info)
         }
     }
 
-    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
+    nel_process_i18n($dom, nel_parameters()->boardSettings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
     nel_render_board_footer($board_id, $render, null, true);
     echo $render->outputRenderSet();

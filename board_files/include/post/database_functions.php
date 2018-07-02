@@ -3,7 +3,7 @@
 function nel_db_insert_initial_post($board_id, $time, $post_data)
 {
     $dbh = nel_database();
-    $references = nel_board_references($board_id);
+    $references = nel_parameters()->boardReferences($board_id);
     $columns = array('poster_name', 'post_password', 'tripcode', 'secure_tripcode', 'email', 'subject', 'comment',
         'ip_address', 'has_file', 'file_count', 'post_time', 'op', 'sage', 'mod_post');
     $values = $dbh->generateParameterIds($columns);
@@ -29,7 +29,7 @@ function nel_db_insert_initial_post($board_id, $time, $post_data)
 function nel_db_insert_new_thread($board_id, $thread_info)
 {
     $dbh = nel_database();
-    $references = nel_board_references($board_id);
+    $references = nel_parameters()->boardReferences($board_id);
     $columns = array('thread_id', 'first_post', 'last_post', 'last_bump_time', 'total_files', 'last_update',
         'post_count');
     $values = $dbh->generateParameterIds($columns);
@@ -48,7 +48,7 @@ function nel_db_insert_new_thread($board_id, $thread_info)
 function nel_db_update_thread($board_id, $new_post_info, $thread_info)
 {
     $dbh = nel_database();
-    $references = nel_board_references($board_id);
+    $references = nel_parameters()->boardReferences($board_id);
     $query = 'UPDATE "' . $references['thread_table'] .
          '" SET "last_post" = ?, "last_bump_time" = ?, "last_update" = ?, "post_count" = ?, "total_files" = ? WHERE "thread_id" = ?';
     $prepared = $dbh->prepare($query);
@@ -64,7 +64,7 @@ function nel_db_update_thread($board_id, $new_post_info, $thread_info)
 function nel_db_insert_new_files($board_id, $parent_id, $new_post_info, $files)
 {
     $dbh = nel_database();
-    $references = nel_board_references($board_id);
+    $references = nel_parameters()->boardReferences($board_id);
     $i = 1;
 
     foreach ($files as $file)

@@ -22,7 +22,7 @@ class FilesUpload
 
     public function processFiles($response_to)
     {
-        $board_settings = nel_board_settings($this->board_id);
+        $board_settings = nel_parameters()->boardSettings($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
         $file_count = 1;
         $filenames = array();
@@ -44,7 +44,7 @@ class FilesUpload
             $new_file = $new_file + $file_hashes;
             $type_data = $this->checkFiletype($file);
             $new_file = $new_file + $type_data;
-            $path_info = $this->getPathInfo($file);
+            $path_info = $this->getPathInfo($file['name']);
             $new_file = $new_file + $path_info;
             $new_file['name'] = $file_handler->filterFilename($file['name']);
             $form_info = $_POST['new_post']['file_info'][$entry];
@@ -94,7 +94,7 @@ class FilesUpload
     public function checkForErrors($file)
     {
         $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files, 'board_id' => $this->board_id);
-        $board_settings = nel_board_settings($this->board_id);
+        $board_settings = nel_parameters()->boardSettings($this->board_id);
 
         if ($file['size'] > $board_settings['max_filesize'] * 1024)
         {
@@ -135,8 +135,8 @@ class FilesUpload
     public function doesFileExist($file, $response_to)
     {
         $dbh = nel_database();
-        $references = nel_board_references($this->board_id);
-        $board_settings = nel_board_settings($this->board_id);
+        $references = nel_parameters()->boardReferences($this->board_id);
+        $board_settings = nel_parameters()->boardSettings($this->board_id);
         $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files, 'board_id' => $this->board_id);
         $is_banned = false;
         $hashes = array();
@@ -217,9 +217,9 @@ class FilesUpload
     public function checkFiletype($file)
     {
         $filetypes = nel_get_filetype_data();
-        $filetype_settings = nel_filetype_settings($this->board_id);
+        $filetype_settings = nel_parameters()->filetypeSettings($this->board_id);
         $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files, 'board_id' => $this->board_id);
-        $path_info = $this->getPathInfo($file);
+        $path_info = $this->getPathInfo($file['name']);
         $test_ext = utf8_strtolower($path_info['extension']);
         $file_length = filesize($file['location']);
         $end_offset = ($file_length < 65535) ? $file_length : $file_length - 65535;

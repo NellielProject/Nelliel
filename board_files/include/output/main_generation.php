@@ -10,8 +10,8 @@ if (!defined('NELLIEL_VERSION'))
 function nel_main_thread_generator($board_id, $response_to, $write)
 {
     $dbh = nel_database();
-    $references = nel_board_references($board_id);
-    $board_settings = nel_board_settings($board_id);
+    $references = nel_parameters()->boardReferences($board_id);
+    $board_settings = nel_parameters()->boardSettings($board_id);
     $file_handler = new \Nelliel\FileHandler();
     $thread_table = $gen_data = array();
     $dotdot = '../';
@@ -66,7 +66,7 @@ function nel_main_thread_generator($board_id, $response_to, $write)
         $dom = $render->newDOMDocument();
         $render->loadTemplateFromFile($dom, 'thread.html');
         $render->startRenderTimer();
-        nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
+        nel_process_i18n($dom, nel_parameters()->boardSettings($board_id, 'board_language'));
         $dom->getElementById('form-post-index')->extSetAttribute('action', $dotdot . PHP_SELF .
              '?module=threads&board_id=' . $board_id);
         nel_render_board_header($board_id, $render, $dotdot, $treeline);

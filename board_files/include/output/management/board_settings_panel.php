@@ -16,7 +16,7 @@ function nel_render_board_settings_panel($board_id, $defaults)
 
     if($defaults === true)
     {
-        $references = nel_board_references($board_id);
+        $references = nel_parameters()->boardReferences($board_id);
         nel_render_general_header($render, null, null, array('header' => 'Board Management',
         'sub_header' => 'Board Settings'));
         $result = $dbh->query('SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"');
@@ -25,7 +25,7 @@ function nel_render_board_settings_panel($board_id, $defaults)
     }
     else
     {
-        $references = nel_board_references($board_id);
+        $references = nel_parameters()->boardReferences($board_id);
         nel_render_general_header($render, null, $board_id, array('header' => 'Board Management',
         'sub_header' => 'Board Settings'));
         $result = $dbh->query('SELECT * FROM "' . $references['config_table'] . '"');
@@ -113,7 +113,7 @@ function nel_render_board_settings_panel($board_id, $defaults)
         }
     }
 
-    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
+    nel_process_i18n($dom, nel_parameters()->boardSettings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

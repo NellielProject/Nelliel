@@ -3,6 +3,7 @@
 namespace Nelliel;
 
 use PDO;
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -57,7 +58,7 @@ class BanHammer
     private function combineTimeToSeconds($time)
     {
         return ($time['years'] * 31536000) + ($time['months'] * 2592000) + ($time['days'] * 86400) +
-            ($time['hours'] * 3600) + ($time['minutes'] * 60) + $time['seconds'];
+                ($time['hours'] * 3600) + ($time['minutes'] * 60) + $time['seconds'];
     }
 
     public function getBanById($ban_id, $convert_length = false)
@@ -99,12 +100,13 @@ class BanHammer
     public function addBan($ban_input)
     {
         if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_add', INPUT_BOARD_ID) &&
-            !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
+                !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
         {
             nel_derp(321, _gettext('You are not allowed to add new bans.'));
         }
 
-        $prepared = $this->dbh->prepare('INSERT INTO "' . BAN_TABLE . '" ("board_id", "all_boards", "type", "ip_address_start", "reason", "length", "start_time")
+        $prepared = $this->dbh->prepare(
+                'INSERT INTO "' . BAN_TABLE . '" ("board_id", "all_boards", "type", "ip_address_start", "reason", "length", "start_time")
 								VALUES (:board_id, :all_boards, :type, :ip_address_start, :reason, :length, :start_time)');
         $prepared->bindParam(':board_id', $ban_input['board'], PDO::PARAM_STR);
         $prepared->bindParam(':all_boards', $ban_input['all_boards'], PDO::PARAM_INT);
@@ -128,13 +130,14 @@ class BanHammer
     public function modifyBan($ban_input)
     {
         if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify', INPUT_BOARD_ID) &&
-            !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
+                !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
         {
             nel_derp(322, _gettext('You are not allowed to modify bans.'));
         }
 
-        $prepared = $this->dbh->prepare('UPDATE "' . BAN_TABLE .
-            '" SET "board_id" = :board_id, "all_boards" = :all_boards, "type" = :type, "ip_address_start" = :ip_address_start, "reason" = :reason, "length" = :length, "start_time" = :start_time, "appeal" = :appeal, "appeal_response" = :appeal_response, "appeal_status" = :appeal_status WHERE "ban_id" = :ban_id');
+        $prepared = $this->dbh->prepare(
+                'UPDATE "' . BAN_TABLE .
+                '" SET "board_id" = :board_id, "all_boards" = :all_boards, "type" = :type, "ip_address_start" = :ip_address_start, "reason" = :reason, "length" = :length, "start_time" = :start_time, "appeal" = :appeal, "appeal_response" = :appeal_response, "appeal_status" = :appeal_status WHERE "ban_id" = :ban_id');
         $prepared->bindParam(':ban_id', $ban_input['ban_id'], PDO::PARAM_INT);
         $prepared->bindParam(':board_id', $ban_input['board'], PDO::PARAM_STR);
         $prepared->bindParam(':all_boards', $ban_input['all_boards'], PDO::PARAM_INT);
@@ -154,7 +157,7 @@ class BanHammer
         if (!$snacks)
         {
             if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify', INPUT_BOARD_ID) &&
-                !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify') && !$snacks)
+                    !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify') && !$snacks)
             {
                 nel_derp(323, _gettext('You are not allowed to remove bans.'));
             }

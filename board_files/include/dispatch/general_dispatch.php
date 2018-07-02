@@ -23,13 +23,15 @@ function nel_general_dispatch()
                 if (nel_fgsfds('noko'))
                 {
                     echo '<meta http-equiv="refresh" content="1;URL=' .
-                        nel_board_references($board_id, 'board_directory') . '/' . nel_board_references($board_id, 'page_dir') .
-                        nel_fgsfds('noko_topic') . '/' . nel_fgsfds('noko_topic') . '.html">';
+                            nel_parameters()->boardReferences($board_id, 'board_directory') . '/' .
+                            nel_parameters()->boardReferences($board_id, 'page_dir') . nel_fgsfds('noko_topic') . '/' .
+                            nel_fgsfds('noko_topic') . '.html">';
                 }
                 else
                 {
                     echo '<meta http-equiv="refresh" content="1;URL=' .
-                        nel_board_references($board_id, 'board_directory') . '/' . PHP_SELF2 . PHP_EXT . '">';
+                            nel_parameters()->boardReferences($board_id, 'board_directory') . '/' . PHP_SELF2 . PHP_EXT .
+                            '">';
                 }
             }
 

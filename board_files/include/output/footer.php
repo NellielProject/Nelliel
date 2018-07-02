@@ -17,7 +17,7 @@ function nel_render_board_footer($board_id, $render, $dotdot = null, $styles = t
 
     $dom->getElementById('nelliel-version')->setContent(NELLIEL_VERSION);
     $dom->getElementById('js-ui')->modifyAttribute('src', $dotdot, 'before');
-    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
+    nel_process_i18n($dom, nel_parameters()->boardSettings($board_id, 'board_language'));
     $dom->getElementById('timer-result')->setContent(round($render->endRenderTimer(), 4));
     $render->appendHTMLFromDOM($dom);
 }

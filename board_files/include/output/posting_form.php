@@ -3,8 +3,8 @@ require_once INCLUDE_PATH . 'output/rules.php';
 
 function nel_render_posting_form($board_id, $render, $response_to, $dotdot = null)
 {
-    $references = nel_board_references($board_id);
-    $board_settings = nel_board_settings($board_id);
+    $references = nel_parameters()->boardReferences($board_id);
+    $board_settings = nel_parameters()->boardSettings($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'posting_form.html');
     $dotdot = (!is_null($dotdot)) ? $dotdot : '';
@@ -142,6 +142,6 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
         $dom->removeChild($dom->getElementById('form-trap2'));
     }
 
-    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
+    nel_process_i18n($dom, nel_parameters()->boardSettings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
 }

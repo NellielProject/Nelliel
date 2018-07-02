@@ -25,13 +25,13 @@ function nel_regen_threads($board_id, $write, $ids)
 
 function nel_regen_board_cache($board_id)
 {
-    nel_board_settings($board_id, null, true);
-    nel_filetype_settings($board_id, null, true);
+    nel_parameters()->boardSettings($board_id, null, true);
+    nel_parameters()->filetypeSettings($board_id, null, true);
 }
 
 function nel_regen_site_cache()
 {
-    nel_site_settings(null, true);
+    nel_parameters()->siteSettings(null, true);
 }
 
 function nel_regen_index($board_id)
@@ -39,12 +39,12 @@ function nel_regen_index($board_id)
     $archive = new \Nelliel\ArchiveAndPrune($board_id);
     $archive->updateAllArchiveStatus();
 
-    if (nel_board_settings($board_id, 'old_threads') === 'ARCHIVE')
+    if (nel_parameters()->boardSettings($board_id, 'old_threads') === 'ARCHIVE')
     {
         $archive->moveThreadsToArchive();
         $archive->moveThreadsFromArchive();
     }
-    else if (nel_board_settings($board_id, 'old_threads') === 'PRUNE')
+    else if (nel_parameters()->boardSettings($board_id, 'old_threads') === 'PRUNE')
     {
         $archive->pruneThreads();
     }
@@ -55,7 +55,7 @@ function nel_regen_index($board_id)
 function nel_regen_all_pages($board_id)
 {
     $dbh = nel_database();
-    $result = $dbh->query('SELECT "thread_id" FROM "' . nel_board_references($board_id, 'thread_table') .
+    $result = $dbh->query('SELECT "thread_id" FROM "' . nel_parameters()->boardReferences($board_id, 'thread_table') .
          '" WHERE "archive_status" = 0');
     $ids = $result->fetchAll(PDO::FETCH_COLUMN);
     nel_regen_threads($board_id, true, $ids);

@@ -14,7 +14,7 @@ function nel_render_derp($diagnostic)
     $render->loadTemplateFromFile($dom, 'derp.html');
     $dom->getElementById('error-message')->setContent($diagnostic['error-message']);
     $dom->getElementById('error-data')->setContent(''); // TODO: This actually have something{PHP_SELF2}{PHP_EXT}
-    $return_link = $dom->getElementById('return-link')->extSetAttribute('href', nel_board_references(INPUT_BOARD_ID, 'board_directory') .
+    $return_link = $dom->getElementById('return-link')->extSetAttribute('href', nel_parameters()->boardReferences(INPUT_BOARD_ID, 'board_directory') .
          '/' . PHP_SELF2 . PHP_EXT);
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);
@@ -32,7 +32,7 @@ function nel_render_board_derp($board_id, $diagnostic)
     $render->loadTemplateFromFile($dom, 'derp.html');
     $dom->getElementById('error-message')->setContent($diagnostic['error-message']);
     $dom->getElementById('error-data')->setContent(''); // TODO: This actually have something{PHP_SELF2}{PHP_EXT}
-    $return_link = $dom->getElementById('return-link')->extSetAttribute('href', nel_board_references(INPUT_BOARD_ID, 'board_directory') .
+    $return_link = $dom->getElementById('return-link')->extSetAttribute('href', nel_parameters()->boardReferences(INPUT_BOARD_ID, 'board_directory') .
     '/' . PHP_SELF2 . PHP_EXT);
     nel_process_i18n($dom);
     $render->appendHTMLFromDOM($dom);

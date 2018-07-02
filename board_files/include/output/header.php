@@ -7,8 +7,8 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_board_header($board_id, $render, $dotdot = null, $treeline = null)
 {
     $dbh = nel_database();
-    $board_settings = nel_board_settings($board_id);
-    $references = nel_board_references($board_id);
+    $board_settings = nel_parameters()->boardSettings($board_id);
+    $references = nel_parameters()->boardReferences($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
     $dotdot = (!is_null($dotdot)) ? $dotdot : '';
@@ -54,7 +54,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
         $board_link = $dom->createElement('a');
         $board_link->extSetAttribute('class', 'board-navigation-link');
         $board_link->extSetAttribute('href', $dotdot . $board['board_directory']);
-        $board_link->extSetAttribute('title', nel_board_settings($board['board_id'], 'board_name'));
+        $board_link->extSetAttribute('title', nel_parameters()->boardSettings($board['board_id'], 'board_name'));
         $board_link->setContent($board['board_directory']);
         $board_navigation->appendChild($board_link);
 
@@ -91,7 +91,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
 
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
-    $a_elements->item(1)->extSetAttribute('href', nel_site_settings('home_page'));
+    $a_elements->item(1)->extSetAttribute('href', nel_parameters()->siteSettings('home_page'));
     $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
@@ -107,7 +107,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');
     }
 
-    nel_process_i18n($dom, nel_board_settings($board_id, 'board_language'));
+    nel_process_i18n($dom, nel_parameters()->boardSettings($board_id, 'board_language'));
 
     $render->appendHTMLFromDOM($dom);
 }
@@ -138,7 +138,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $dom->getElementById('logo')->removeSelf();
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
-    $a_elements->item(1)->extSetAttribute('href', nel_site_settings('home_page'));
+    $a_elements->item(1)->extSetAttribute('href', nel_parameters()->siteSettings('home_page'));
     $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
