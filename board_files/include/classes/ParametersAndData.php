@@ -9,12 +9,14 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-class Parameters
+class ParametersAndData
 {
     private $site_settings = array();
     private $board_settings = array();
     private $filetype_settings = array();
     private $board_references = array();
+    private $filetype_data = array();
+    private $file_filters = array();
 
     function __construct($no_hash_load = false)
     {
@@ -223,5 +225,66 @@ class Parameters
         }
 
         return $this->references[$board_id][$reference];
+    }
+
+    public function filetypeData($extension = null)
+    {
+        if (empty($this->filetype_data))
+        {
+            $filetypes = array();
+
+            $dbh = nel_database();
+            $db_results = $dbh->executeFetchAll('SELECT * FROM "nelliel_filetypes"', PDO::FETCH_ASSOC);
+            $sub_extensions = array();
+
+            foreach ($db_results as $result)
+            {
+                if ($result['extension'] == $result['parent_extension'])
+                {
+                    $filetypes[$result['extension']] = $result;
+                }
+                else
+                {
+                    $sub_extensions[] = $result;
+                }
+            }
+
+            foreach ($sub_extensions as $sub_extension)
+            {
+                if (array_key_exists($sub_extension['parent_extension'], $filetypes))
+                {
+                    $filetypes[$sub_extension['extension']] = $filetypes[$sub_extension['parent_extension']];
+                    $filetypes[$sub_extension['extension']]['extension'] = $sub_extension['extension'];
+                }
+            }
+        }
+
+        if (is_null($extension))
+        {
+            return $this->filetype_data;
+        }
+
+        return $this->filetype_data[$extension];
+    }
+
+    public function fileFilters()
+    {
+        if (empty($this->file_filters))
+        {
+            $loaded = false;
+
+            if (!$loaded)
+            {
+                $dbh = nel_database();
+                $filters = $dbh->executeFetchAll('SELECT "hash_type", "file_hash" FROM "nelliel_file_filters"', PDO::FETCH_ASSOC);
+
+                foreach ($filters as $filter)
+                {
+                    $this->file_filters[$filter['hash_type']][] = $filter['file_hash'];
+                }
+            }
+        }
+
+        return $this->file_filters;
     }
 }

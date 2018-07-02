@@ -22,7 +22,7 @@ class FilesUpload
 
     public function processFiles($response_to)
     {
-        $board_settings = nel_parameters()->boardSettings($this->board_id);
+        $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
         $file_count = 1;
         $filenames = array();
@@ -94,7 +94,7 @@ class FilesUpload
     public function checkForErrors($file)
     {
         $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files, 'board_id' => $this->board_id);
-        $board_settings = nel_parameters()->boardSettings($this->board_id);
+        $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
 
         if ($file['size'] > $board_settings['max_filesize'] * 1024)
         {
@@ -135,8 +135,8 @@ class FilesUpload
     public function doesFileExist($file, $response_to)
     {
         $dbh = nel_database();
-        $references = nel_parameters()->boardReferences($this->board_id);
-        $board_settings = nel_parameters()->boardSettings($this->board_id);
+        $references = nel_parameters_and_data()->boardReferences($this->board_id);
+        $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files, 'board_id' => $this->board_id);
         $is_banned = false;
         $hashes = array();
@@ -216,8 +216,8 @@ class FilesUpload
 
     public function checkFiletype($file)
     {
-        $filetypes = nel_get_filetype_data();
-        $filetype_settings = nel_parameters()->filetypeSettings($this->board_id);
+        $filetypes = nel_parameters_and_data()->filetypeData();
+        $filetype_settings = nel_parameters_and_data()->filetypeSettings($this->board_id);
         $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files, 'board_id' => $this->board_id);
         $path_info = $this->getPathInfo($file['name']);
         $test_ext = utf8_strtolower($path_info['extension']);

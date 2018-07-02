@@ -28,7 +28,7 @@ function nel_ban_spambots()
 //
 function nel_file_hash_is_banned($file_hash, $hash_type)
 {
-    $banned_hashes = nel_get_file_filters();
+    $banned_hashes = nel_parameters_and_data()->fileFilters();
 
     if (!isset($banned_hashes[$hash_type]))
     {

@@ -2,7 +2,7 @@
 
 function nel_collect_post_data($board_id)
 {
-    $board_settings = nel_parameters()->boardSettings($board_id);
+    $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $post_data = array();
     $post_data['parent_thread'] = nel_check_post_entry($_POST['new_post']['post_info']['response_to'], "int");
     $post_data['name'] = nel_check_post_entry($_POST['new_post']['post_info']['not_anonymous'], "string");
@@ -96,8 +96,8 @@ function nel_get_tripcodes($board_id, $post_data, $name_pieces)
 {
     global $plugins;
 
-    $references = nel_parameters()->boardReferences($board_id);
-    $board_settings = nel_parameters()->boardSettings($board_id);
+    $references = nel_parameters_and_data()->boardReferences($board_id);
+    $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $authorize = nel_authorize();
     $post_data['tripcode'] = '';
     $post_data['secure_tripcode'] = '';
@@ -114,7 +114,7 @@ function nel_get_tripcodes($board_id, $post_data, $name_pieces)
     if ($name_pieces[3] !== '' && $board_settings['allow_tripkeys'])
     {
         $trip = $name_pieces[3];
-        $trip = hash(nel_parameters()->siteSettings('secure_tripcode_algorithm'), $trip . TRIPCODE_SALT);
+        $trip = hash(nel_parameters_and_data()->siteSettings('secure_tripcode_algorithm'), $trip . TRIPCODE_SALT);
         $trip = base64_encode(pack("H*", $trip));
         $post_data['secure_tripcode'] = substr($trip, 2, 10);
     }

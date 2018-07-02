@@ -50,7 +50,7 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
     }
 
     $page_nav_td->removeSelf();
-    nel_process_i18n($dom_nav, nel_parameters()->boardSettings($board_id, 'board_language'));
+    nel_process_i18n($dom_nav, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
     $imported = $dom->importNode($index_bottom_nav_element, true);
     $dom->getElementById('outer-div')->appendChild($imported);
 }
@@ -58,8 +58,8 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
 function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 {
     $authorize = nel_authorize();
-    $references = nel_parameters()->boardReferences($board_id);
-    $board_settings = nel_parameters()->boardSettings($board_id);
+    $references = nel_parameters_and_data()->boardReferences($board_id);
+    $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $output_filter = new \Nelliel\OutputFilter();
     $start = microtime(true);
     $post_data = $gen_data['post'];
@@ -100,7 +100,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
         $post_type = 'reply';
         $post_type_class = 'reply-';
         $post_container->extSetAttribute('class', 'reply-post');
-        $indents_element->setContent(nel_parameters()->boardSettings($board_id, 'indent_marker'));
+        $indents_element->setContent(nel_parameters_and_data()->boardSettings($board_id, 'indent_marker'));
         $indents_element->removeAttribute('id');
         $post_checkbox = $new_post_dom->getElementById('post_post-id');
         $post_checkbox->changeId('post_' . $post_id);
@@ -478,7 +478,7 @@ function nel_render_post_adjust_relative($node, $gen_data)
 
 function nel_render_thread_form_bottom($board_id, $dom)
 {
-    $board_settings = nel_parameters()->boardSettings($board_id);
+    $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $footer_form_element = $dom->getElementById('footer-form');
     $form_td_list = $footer_form_element->doXPathQuery(".//input");
     $dom->getElementById('board_id_field_footer')->extSetAttribute('value', $board_id);

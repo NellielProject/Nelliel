@@ -10,7 +10,7 @@ function nel_board_settings_control($board_id, $action, $defaults = false)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
-    $references = nel_parameters()->boardReferences($board_id);
+    $references = nel_parameters_and_data()->boardReferences($board_id);
     $config_table = ($defaults) ? BOARD_DEFAULTS_TABLE : $references['config_table'];
     $update = FALSE;
 

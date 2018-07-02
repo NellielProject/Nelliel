@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_rules_list($board_id)
 {
-    $board_settings = nel_parameters()->boardSettings($board_id);
+    $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $dom = $render->newDOMDocument();
@@ -16,7 +16,7 @@ function nel_render_rules_list($board_id)
     $rules_item_element = $dom->getElementsByClassName('rules-item')->item(0);
     $filetype_rules = $rules_list_element->cloneNode();
 
-    foreach (nel_parameters()->filetypeSettings($board_id) as $key => $value)
+    foreach (nel_parameters_and_data()->filetypeSettings($board_id) as $key => $value)
     {
         $current_list_item = $rules_item_element->cloneNode(true);
         $list_set = '';

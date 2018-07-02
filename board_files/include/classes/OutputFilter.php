@@ -74,7 +74,7 @@ class OutputFilter
             if (preg_match('#^>>([0-9]+)$#', $segment, $matches) === 1)
             {
                 $prepared = $dbh->prepare(
-                        'SELECT "parent_thread" FROM "' . nel_parameters()->boardReferences($board_id, 'post_table') .
+                        'SELECT "parent_thread" FROM "' . nel_parameters_and_data()->boardReferences($board_id, 'post_table') .
                         '" WHERE "post_number" = ? LIMIT 1');
                 $parent_thread = $dbh->executePreparedFetch($prepared, array($matches[1]), PDO::FETCH_COLUMN);
 
@@ -85,7 +85,7 @@ class OutputFilter
                 else
                 {
                     $p_anchor = '#p' . $parent_thread . '_' . $matches[1];
-                    $url = nel_parameters()->boardReferences($board_id, 'page_dir') . $parent_thread . '/' .
+                    $url = nel_parameters_and_data()->boardReferences($board_id, 'page_dir') . $parent_thread . '/' .
                             $parent_thread . '.html' . $p_anchor;
                     $segment_node = $target_element->ownerDocument->createElement('a', $matches[0]);
                     $segment_node->extSetAttribute('class', 'link-quote');
