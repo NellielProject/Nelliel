@@ -14,27 +14,33 @@ class FileHandler
     {
     }
 
-    public function writeFile($file, $output, $chmod = FILE_PERM, $create_directories = false, $dir_chmod = DIRECTORY_PERM)
+    public function writeFile($file, $output, $chmod = FILE_PERM, $create_directories = false, $dir_chmod = DIRECTORY_PERM, $temp_move = true)
     {
+        $file_final = $file;
+
         if ($create_directories)
         {
             $this->createDirectory(dirname($file), $dir_chmod, true);
         }
 
-        $fp = fopen($file, "w");
-
-        if (!$fp)
+        if ($temp_move)
         {
-            echo 'Failed to open file for writing. Check permissions.';
-            return false;
+            $file = uniqid();
         }
 
-        set_file_buffer($fp, 0);
-        rewind($fp);
-        fputs($fp, $output);
-        fclose($fp);
-        chmod($file, octdec($chmod));
-        return true;
+        $result = file_put_contents($file, $output, LOCK_EX);
+
+        if ($result !== false)
+        {
+            if ($temp_move)
+            {
+                $this->moveFile($file, $file_final);
+            }
+
+            chmod($file_final, octdec($chmod));
+        }
+
+        return $result;
     }
 
     public function createDirectory($directory, $dir_chmod = DIRECTORY_PERM, $recursive = false)
@@ -60,8 +66,10 @@ class FileHandler
 
         if (file_exists($file))
         {
-            rename($file, $destination);
+            return rename($file, $destination);
         }
+
+        return false;
     }
 
     public function eraserGun($path, $filename = null, $is_directory = false)
