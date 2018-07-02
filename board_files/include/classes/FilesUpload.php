@@ -85,9 +85,9 @@ class FilesUpload
     public function getPathInfo($file)
     {
         $file_info = new \SplFileInfo($file);
-        $path_info['filename'] = $file_info->getFilename();
-        $path_info['fullname'] = $file_info->getBasename();
         $path_info['extension'] = $file_info->getExtension();
+        $path_info['filename'] = $file_info->getBasename('.' . $path_info['extension']);
+        $path_info['fullname'] = $file_info->getFilename();
         return $path_info;
     }
 

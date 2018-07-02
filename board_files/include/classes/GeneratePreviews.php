@@ -48,7 +48,6 @@ class GeneratePreviews
             {
                 $file_handler->createDirectory($preview_path, DIRECTORY_PERM, true);
                 $magick_available = $this->magickAvailable();
-
                 $files[$i]['preview_name'] = $files[$i]['filename'] . '-preview';
 
                 if ($board_settings['use_png_thumb'])
