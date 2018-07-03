@@ -103,28 +103,69 @@ class PluginAPI
         return $success;
     }
 
-    public function processPluginHook($hook_name, $data)
+    public function eventHook($hook_name, $data)
     {
         if (!$this->isValidHook($hook_name))
         {
-            return; // TODO return input if needed
+            return;
         }
 
         $hook = $this->hooks[$hook_name];
 
         foreach ($hook as $registration)
         {
-            $is_method = (isset($registration['method_name'])) ? true : false;
+            $is_method = isset($registration['method_name']);
 
             if ($is_method && $this->isValidMethod($registration['class'], $registration['method_name']))
             {
-                call_user_func_array(array($registration['class'], $registration['method_name']), $data);
+                call_user_func_array(array($registration['class'], $registration['method_name']), [0 => $data]);
             }
             else
             {
-                call_user_func_array($registration['function_name'], $data);
+                call_user_func_array($registration['function_name'], [0 => $data]);
             }
         }
+    }
+
+    public function filterHook($hook_name, $data, $args)
+    {
+        if (!$this->isValidHook($hook_name))
+        {
+            return;
+        }
+
+        if(!is_array($args))
+        {
+           $args = [0 => $args];
+        }
+
+        $arguments_array = $args;
+        array_unshift($arguments_array, $data);
+        $hook = $this->hooks[$hook_name];
+        $modified = $data;
+
+        foreach ($hook as $registration)
+        {
+            $is_method = isset($registration['method_name']);
+
+            if ($is_method && $this->isValidMethod($registration['class'], $registration['method_name']))
+            {
+                $return = call_user_func_array([$registration['class'], $registration['method_name']], $arguments_array);
+            }
+            else
+            {
+                $return = call_user_func_array($registration['function_name'], $arguments_array);
+            }
+
+            if(!is_null($return))
+            {
+                $modified = $return;
+            }
+
+            $arguments_array[0] = $modified;
+        }
+
+        return $modified;
     }
 
     private function getPluginIniFiles()
@@ -178,7 +219,7 @@ class PluginAPI
     {
         if ($a['priority'] == $b['priority'])
         {
-            return $a['index'] - $b['index'];
+            return $a['priority'] - $b['priority'];
         }
 
         return ($a['priority'] < $b['priority']) ? -1 : 1;

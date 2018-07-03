@@ -1,5 +1,5 @@
 <?php
-define('NELLIEL_VERSION', 'v0.9.6.10'); // Version
+define('NELLIEL_VERSION', 'v0.9.6.11'); // Version
 define('NELLIEL_COPYRIGHT', '2010-2018 Nelliel Project'); // Copyright line
 define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('BASE_PATH', realpath('./') . '/'); // Base path for script
@@ -54,8 +54,9 @@ if (nel_setup_stuff_done())
 require_once INCLUDE_PATH . 'PluginAPI.php';
 nel_plugins()->initializePlugins();
 
-// A demo point. Does nothing, really
-nel_plugins()->processPluginHook('plugin-example', array(5));
+// A demo point. Does nothing.
+nel_plugins()->eventHook('plugin-example', 5);
+$out = nel_plugins()->filterHook('plugin-example', 5, array());
 
 require_once INCLUDE_PATH . 'snacks.php';
 
