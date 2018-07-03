@@ -1,4 +1,11 @@
 # Nelliel Changelog
+## v0.9.6.11 (2018/07/03)
+### Added
+ - Filter hooks
+
+### Changed
+ - Updated example plugin
+
 ## v0.9.6.10 (2018/07/02)
 ### Breaking
  - Overhaul of plugin system (WIP)
