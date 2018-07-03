@@ -1,4 +1,22 @@
 # Nelliel Changelog
+## v0.9.6.10 (2018/07/02)
+### Breaking
+ - Overhaul of plugin system (WIP)
+
+### Added
+ - Recursive file list function
+ - Add caching for language files
+
+### Changed
+ - Path info uses SPL functions now
+ - Default time limit on sessions increased
+ - Improve error handler
+ - writeFile now has better atomic function
+ - Many tweaks and cleanup
+
+### Removed
+ - plugins.php, old plugin hooks
+
 ## v0.9.6.9 (2018/06/24)
 ### Added
  - Option to extract gettext strings to a .pot file

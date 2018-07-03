@@ -8,7 +8,7 @@ function nel_render_board_footer($board_id, $render, $dotdot = null, $styles = t
 {
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'footer.html');
-    $dotdot = (!is_null($dotdot)) ? $dotdot : '';
+    $dotdot = (!empty($dotdot)) ? $dotdot : '';
 
     if(!$extra_links)
     {
@@ -26,7 +26,7 @@ function nel_render_general_footer($render, $dotdot = null, $styles = false, $ex
 {
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'footer.html');
-    $dotdot = (!is_null($dotdot)) ? $dotdot : '';
+    $dotdot = (!empty($dotdot)) ? $dotdot : '';
 
     if(!$styles)
     {

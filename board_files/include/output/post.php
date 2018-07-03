@@ -123,8 +123,8 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $post_header_node_array['subject']->modifyAttribute('class', $post_type, 'before');
     $post_header_node_array['subject']->setContent($post_data['subject']);
     $post_header_node_array['poster-name']->modifyAttribute('class', $post_type, 'before');
-    $tripcode = (!is_null($post_data['tripcode'])) ? $board_settings['tripkey_marker'] . $post_data['tripcode'] : '';
-    $secure_tripcode = (!is_null($post_data['secure_tripcode'])) ? $board_settings['tripkey_marker'] .
+    $tripcode = (!empty($post_data['tripcode'])) ? $board_settings['tripkey_marker'] . $post_data['tripcode'] : '';
+    $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $board_settings['tripkey_marker'] .
         $board_settings['tripkey_marker'] . $post_data['secure_tripcode'] : '';
     $capcode_text = ($post_data['mod_post']) ? $authorize->get_role_info($post_data['mod_post'], 'capcode_text') : '';
     $trip_line = $tripcode . $secure_tripcode . '&nbsp;&nbsp;' . $capcode_text;
@@ -252,7 +252,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
             $file_text_link->extSetAttribute('href', $file['file_location'], 'none');
             $file_text_link->setContent($file['display_filename'] . '.' . $file['extension']);
 
-            $file['img_dim'] = (!is_null($file['image_width']) && !is_null($file['image_height'])) ? true : false;
+            $file['img_dim'] = !empty($file['image_width']) && !empty($file['image_height']);
             $file['filesize'] = round(((int) $file['filesize'] / 1024), 2);
             $filesize_display = ' ( ' . $file['filesize'] . ' KB)';
 

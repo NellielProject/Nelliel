@@ -7,7 +7,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'posting_form.html');
-    $dotdot = (!is_null($dotdot)) ? $dotdot : '';
+    $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $post_form_return_link = $dom->getElementById('post-form-return-link');
 
     if (!nel_sessions()->sessionIsIgnored('render'))

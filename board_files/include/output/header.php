@@ -11,7 +11,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
-    $dotdot = (!is_null($dotdot)) ? $dotdot : '';
+    $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
@@ -30,7 +30,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $title_element = $head_element->getElementsByTagName('title')->item(0);
     $title_content = $board_settings['board_name'];
 
-    if (!is_null($treeline))
+    if (!empty($treeline))
     {
         if ($treeline[0]['subject'] === '')
         {
@@ -117,7 +117,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
     $head_element = $dom->getElementsByTagName('head')->item(0);
-    $dotdot = (!is_null($dotdot)) ? $dotdot : '';
+    $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $board_id = (!is_null($board_id)) ? $board_id : '';
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');

@@ -21,7 +21,7 @@ function setup_check($board_id) // TODO Do this better
     nel_create_core_tables();
     nel_create_core_directories();
 
-    if (true_empty($board_id))
+    if ($board_id === '')
     {
         return;
     }
@@ -29,13 +29,8 @@ function setup_check($board_id) // TODO Do this better
 
 function nel_setup_stuff_done($status = null)
 {
-    $stuff_done = false;
-
-    if(!is_null($status) && $status !== false)
-    {
-        $stuff_done = true;
-    }
-
+    static $stuff_done = false;
+    $stuff_done = (is_bool($status)) ? $status : $stuff_done;
     return $stuff_done;
 }
 

@@ -374,7 +374,7 @@ class Authorization
         {
             $level = $this->get_role_info($value['role_id'], 'role_level');
 
-            if (!is_null($board_id) && $board_id !== $key && $key !== '')
+            if ($key !== '' && $board_id !== $key)
             {
                 $level = 0;
             }

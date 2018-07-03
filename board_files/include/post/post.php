@@ -34,7 +34,7 @@ function nel_process_new_post($board_id)
         nel_fgsfds('sage', in_array('sage', $fgsfds_commands));
     }
 
-    $post_data['sage'] = (is_null(nel_fgsfds('sage'))) ? 0 : nel_fgsfds('sage');
+    $post_data['sage'] = (empty(nel_fgsfds('sage'))) ? 0 : nel_fgsfds('sage');
     $files = $file_upload->processFiles($post_data['response_to']);
     $spoon = !empty($files);
     $post_data['file_count'] = count($files);
