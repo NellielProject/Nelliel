@@ -6,26 +6,22 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'admin/login.php';
 
-function nel_admin_dispatch()
+function nel_admin_dispatch($inputs)
 {
-    $manage = (isset($_GET['manage'])) ? $_GET['manage'] : null;
-    $module = (isset($_GET['module'])) ? $_GET['module'] : null;
-    $section = (isset($_GET['section'])) ? $_GET['section'] : null;
-    $board_id = (isset($_GET['board_id'])) ? $_GET['board_id'] : null;
-    $action = (isset($_POST['action'])) ? $_POST['action'] : null;
-    nel_verify_login_or_session($manage, $action);
+    $inputs = nel_plugins()->processHook('inb4-admin-dispatch', array(), $inputs);
+    nel_verify_login_or_session($inputs['manage'], $inputs['action']);
 
-    if ($manage === 'login')
+    if ($inputs['manage'] === 'login')
     {
         nel_login();
     }
-    else if ($manage === 'logout')
+    else if ($inputs['manage'] === 'logout')
     {
-        nel_sessions()->initializeSession($manage, $action);
+        nel_sessions()->initializeSession($inputs['manage'], $inputs['action']);
     }
-    else if ($manage === 'general')
+    else if ($inputs['manage'] === 'general')
     {
-        switch ($module)
+        switch ($inputs['module'])
         {
             case 'main-panel':
                 nel_render_main_panel();
@@ -33,18 +29,18 @@ function nel_admin_dispatch()
 
             case 'staff':
                 require_once INCLUDE_PATH . 'admin/staff_panel.php';
-                nel_staff_panel($section, $action);
+                nel_staff_panel($inputs['section'], $inputs['action']);
                 break;
 
             case 'site-settings':
                 require_once INCLUDE_PATH . 'admin/site_settings_panel.php';
-                nel_site_settings_control($action);
+                nel_site_settings_control($inputs['action']);
                 break;
 
             case 'create-board':
                 require_once INCLUDE_PATH . 'output/management/create_board.php';
 
-                if ($action === 'create')
+                if ($inputs['action'] === 'create')
                 {
                     require_once INCLUDE_PATH . 'admin/create_board.php';
                     nel_create_new_board();
@@ -55,15 +51,15 @@ function nel_admin_dispatch()
 
             case 'file-filter':
                 require_once INCLUDE_PATH . 'admin/file_filters.php';
-                nel_manage_file_filters($action);
+                nel_manage_file_filters($inputs['action']);
 
             case 'default-board-settings':
                 require_once INCLUDE_PATH . 'admin/board_settings_panel.php';
-                nel_board_settings_control($board_id, $action, true);
+                nel_board_settings_control($inputs['board_id'], $inputs['action'], true);
                 break;
 
             case 'language':
-                if ($action === 'extract-gettext')
+                if ($inputs['action'] === 'extract-gettext')
                 {
                     nel_extract_language(LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
                 }
@@ -76,41 +72,41 @@ function nel_admin_dispatch()
                 break;
         }
     }
-    else if ($manage === 'board')
+    else if ($inputs['manage'] === 'board')
     {
-        switch ($module)
+        switch ($inputs['module'])
         {
             case 'board-settings':
                 require_once INCLUDE_PATH . 'admin/board_settings_panel.php';
-                nel_board_settings_control($board_id, $action);
+                nel_board_settings_control($inputs['board_id'], $inputs['action']);
                 break;
 
             case 'bans':
                 require_once INCLUDE_PATH . 'admin/bans_panel.php';
-                nel_ban_control($board_id, $action);
+                nel_ban_control($inputs['board_id'], $inputs['action']);
                 break;
 
             case 'threads':
                 require_once INCLUDE_PATH . 'admin/threads_panel.php';
-                nel_thread_panel($board_id, $action);
+                nel_thread_panel($inputs['board_id'], $inputs['action']);
                 break;
 
             case 'regen':
-                if ($action === 'pages-all')
+                if ($inputs['action'] === 'pages-all')
                 {
-                    nel_regen_all_pages($board_id);
+                    nel_regen_all_pages($inputs['board_id']);
                 }
 
-                if ($action === 'cache-all')
+                if ($inputs['action'] === 'cache-all')
                 {
-                    nel_regen_board_cache($board_id);
+                    nel_regen_board_cache($inputs['board_id']);
                 }
 
-                nel_render_main_board_panel($board_id);
+                nel_render_main_board_panel($inputs['board_id']);
                 break;
 
             case 'main-panel':
-                nel_render_main_board_panel($board_id);
+                nel_render_main_board_panel($inputs['board_id']);
                 break;
         }
     }
