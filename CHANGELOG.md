@@ -1,4 +1,15 @@
 # Nelliel Changelog
+## v0.9.6.12 (2018/07/03)
+### Added
+ - Config setting to disable plugins
+
+### Changed
+ - Finish primary work on plugin API
+ - Moved language handling to Language class
+
+### Removed
+ - language/language.php
+
 ## v0.9.6.11 (2018/07/03)
 ### Added
  - Filter hooks
