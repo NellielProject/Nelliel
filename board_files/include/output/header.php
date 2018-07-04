@@ -15,8 +15,8 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
-    $dom->getElementById('js-onload')->setContent('window.onload = function () {nelliel.setup.doImportantStuff(\'' . $board_id .
-         '\');};');
+    $dom->getElementById('js-onload')->setContent('window.onload = function () {nelliel.setup.doImportantStuff(\'' .
+        $board_id . '\');};');
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $board_id . '"));');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
@@ -30,20 +30,16 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $title_element = $head_element->getElementsByTagName('title')->item(0);
     $title_content = $board_settings['board_name'];
 
-    if (!empty($treeline))
+    if (isset($treeline[0]['subject']) && $treeline[0]['subject'] === '')
     {
-        if ($treeline[0]['subject'] === '')
-        {
-            $title_content = $board_settings['board_name'] . ' > Thread #' . $treeline[0]['post_number'];
-        }
-        else
-        {
-            $title_content = $board_settings['board_name'] . ' > ' . $treeline[0]['subject'];
-        }
+        $title_content = $board_settings['board_name'] . ' > Thread #' . $treeline[0]['post_number'];
+    }
+    else
+    {
+        $title_content = $board_settings['board_name'] . ' > ' . $treeline[0]['subject'];
     }
 
     $title_element->setContent($title_content);
-
     $board_navigation = $dom->getElementById("board-navigation");
     $board_navigation->appendChild($dom->createTextNode('[ '));
     $board_data = $dbh->executeFetchAll('SELECT * FROM "nelliel_board_data"', PDO::FETCH_ASSOC);
@@ -122,7 +118,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent('window.onload = function () {doImportantStuff(\'' . $board_id .
-         '\');};');
+        '\');};');
     $dom->getElementById('js-style-set')->setContent('setStyle(getCookie("base-style"));');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;

@@ -49,10 +49,8 @@ function nel_render_rules_list($board_id)
     $thumbnail_limit->firstChild->nextSibling->setContent($board_settings['max_width'] . ' x ' .
          $board_settings['max_height'] . _gettext(' pixels will be thumbnailed.'));
     $post_limits->appendChild($thumbnail_limit);
-
     $rules_div->appendChild($filetype_rules);
     $rules_div->appendChild($post_limits);
-
     $rules_list_element->removeSelf();
     return $rules_div;
 }
