@@ -142,6 +142,6 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
         $dom->removeChild($dom->getElementById('form-trap2'));
     }
 
-    nel_process_i18n($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    nel_language()->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
 }

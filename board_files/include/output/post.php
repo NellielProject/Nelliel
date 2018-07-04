@@ -50,7 +50,7 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
     }
 
     $page_nav_td->removeSelf();
-    nel_process_i18n($dom_nav, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    nel_language()->i18nDom($dom_nav, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
     $imported = $dom->importNode($index_bottom_nav_element, true);
     $dom->getElementById('outer-div')->appendChild($imported);
 }

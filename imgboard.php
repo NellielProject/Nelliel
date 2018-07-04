@@ -1,5 +1,5 @@
 <?php
-define('NELLIEL_VERSION', 'v0.9.6.11'); // Version
+define('NELLIEL_VERSION', 'v0.9.6.12'); // Version
 define('NELLIEL_COPYRIGHT', '2010-2018 Nelliel Project'); // Copyright line
 define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('BASE_PATH', realpath('./') . '/'); // Base path for script
@@ -22,12 +22,12 @@ require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
 require_once LIBRARY_PATH . 'password_compat/lib/password.php';
 require_once LIBRARY_PATH . 'SmallPHPGettext/autoload.php';
 require_once INCLUDE_PATH . 'initializations.php';
+require_once INCLUDE_PATH . 'accessors.php';
+
+nel_language()->loadLanguage(LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po');
+
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'general_functions.php';
-require_once INCLUDE_PATH . 'language/language.php';
-
-nel_load_language_library(LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po');
-
 require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'crypt.php';
 
@@ -40,7 +40,7 @@ if (RUN_SETUP_CHECK)
     setup_check(INPUT_BOARD_ID);
 }
 
-require_once INCLUDE_PATH . 'accessors.php';
+
 require_once INCLUDE_PATH . 'regen.php';
 
 if (nel_setup_stuff_done())

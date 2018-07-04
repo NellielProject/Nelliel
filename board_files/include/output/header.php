@@ -103,7 +103,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');
     }
 
-    nel_process_i18n($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    nel_language()->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
 
     $render->appendHTMLFromDOM($dom);
 }
@@ -166,7 +166,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');
     }
 
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
 
     $render->appendHTMLFromDOM($dom);
 }

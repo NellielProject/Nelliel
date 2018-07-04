@@ -40,7 +40,7 @@ function nel_render_site_settings_panel()
         }
     }
 
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

@@ -17,7 +17,7 @@ function nel_render_board_footer($board_id, $render, $dotdot = null, $styles = t
 
     $dom->getElementById('nelliel-version')->setContent(NELLIEL_VERSION);
     $dom->getElementById('js-ui')->modifyAttribute('src', $dotdot, 'before');
-    nel_process_i18n($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    nel_language()->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
     $dom->getElementById('timer-result')->setContent(round($render->endRenderTimer(), 4));
     $render->appendHTMLFromDOM($dom);
 }
@@ -40,7 +40,7 @@ function nel_render_general_footer($render, $dotdot = null, $styles = false, $ex
 
     $dom->getElementById('nelliel-version')->setContent(NELLIEL_VERSION);
     $dom->getElementById('js-ui')->modifyAttribute('src', $dotdot, 'before');
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $dom->getElementById('timer-result')->setContent(round($render->endRenderTimer(), 4));
     $render->appendHTMLFromDOM($dom);
 }

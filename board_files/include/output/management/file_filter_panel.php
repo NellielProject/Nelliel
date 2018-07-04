@@ -52,7 +52,7 @@ function nel_render_file_filter_panel()
 
     unset($result);
     $file_filter_row->removeSelf();
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

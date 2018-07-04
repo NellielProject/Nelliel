@@ -61,7 +61,7 @@ function nel_admin_dispatch($inputs)
             case 'language':
                 if ($inputs['action'] === 'extract-gettext')
                 {
-                    nel_extract_language(LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
+                    nel_language()->extractLanguageStrings(LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
                 }
 
                 nel_render_main_panel();

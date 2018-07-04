@@ -13,7 +13,7 @@ function nel_render_login_page()
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/login.html');
     $dom->getElementById('login-form')->extSetAttribute('action', PHP_SELF . '?manage=login');
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

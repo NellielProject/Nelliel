@@ -47,7 +47,7 @@ function nel_render_staff_panel_main()
 
     $role_node_array['role-row']->removeSelf();
 
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -113,7 +113,7 @@ function nel_render_staff_panel_user_edit($user_id)
     $board_roles->parentNode->appendChild($update_submit);
 
     //$board_roles->removeSelf();
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -149,7 +149,7 @@ function nel_render_staff_panel_role_edit($role_id)
         }
     }
 
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

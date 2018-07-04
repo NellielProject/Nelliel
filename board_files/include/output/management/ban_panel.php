@@ -64,7 +64,7 @@ function nel_render_main_ban_panel($board_id)
     $form_add_ban = $dom->getElementById('form-add-ban');
     $form_add_ban->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&board_id=' . $board_id);
 
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -82,7 +82,7 @@ function nel_render_ban_panel_add($board_id)
     $dom->getElementById('add-ban-form')->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&board_id=' .
          $board_id);
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -147,7 +147,7 @@ function nel_render_ban_panel_modify($board_id)
         $dom->getElementById('ban-appealed-field')->extSetAttribute('checked', 'checked');
     }
 
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

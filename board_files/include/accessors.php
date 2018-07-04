@@ -52,6 +52,18 @@ function nel_parameters_and_data()
     return $parameters;
 }
 
+function nel_language()
+{
+    static $language;
+
+    if (!isset($language))
+    {
+        $language = new \Nelliel\Language();
+    }
+
+    return $language;
+}
+
 function nel_fgsfds($entry, $new_value = null)
 {
     static $fgsfds;

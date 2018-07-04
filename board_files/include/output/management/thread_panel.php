@@ -105,7 +105,7 @@ function nel_render_thread_panel_main($board_id)
 
     $thread_row->removeSelf();
 
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -178,7 +178,7 @@ function nel_render_thread_panel_expand($board_id, $thread_id)
 
     $post_row->removeSelf();
 
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

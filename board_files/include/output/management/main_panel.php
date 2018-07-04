@@ -49,7 +49,7 @@ function nel_render_main_panel()
         '?manage=general&module=default-board-settings');
     $dom->getElementById('extract-gettext-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=language');
 
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -119,7 +119,7 @@ function nel_render_main_board_panel($board_id)
         $dom->removeChild($dom->getElementById('cache-regen-form'));
     }
 
-    nel_process_i18n($dom);
+    nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

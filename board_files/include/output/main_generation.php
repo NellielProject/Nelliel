@@ -66,7 +66,7 @@ function nel_main_thread_generator($board_id, $response_to, $write)
         $dom = $render->newDOMDocument();
         $render->loadTemplateFromFile($dom, 'thread.html');
         $render->startRenderTimer();
-        nel_process_i18n($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+        nel_language()->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
         $dom->getElementById('form-post-index')->extSetAttribute('action', $dotdot . PHP_SELF .
              '?module=threads&board_id=' . $board_id);
         nel_render_board_header($board_id, $render, $dotdot, $treeline);

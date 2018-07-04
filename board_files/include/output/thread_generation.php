@@ -21,7 +21,7 @@ function nel_thread_generator($board_id, $write, $response_to)
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'thread.html');
-    nel_process_i18n($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    nel_language()->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
     $expand_dom = $render->newDOMDocument();
     $collapse_dom = $render->newDOMDocument();
     $render->startRenderTimer();

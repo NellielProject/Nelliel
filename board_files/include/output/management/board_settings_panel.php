@@ -113,7 +113,7 @@ function nel_render_board_settings_panel($board_id, $defaults)
         }
     }
 
-    nel_process_i18n($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    nel_language()->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
