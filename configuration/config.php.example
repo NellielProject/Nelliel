@@ -45,8 +45,11 @@ $base_config['use_internal_cache'] = true;
 // e.g. 'en_US' for 'English (United Sates)', 'en_GB' for 'English (United Kingdom)'
 // If a language file is available that matches the locale, Nelliel will use it.
 // If no translations are found matching the code, it will default to 'en_US'
-// The available locales and their translations can be found in the directory 'boardfiles/language/locale'
+// The available locales and their translations can be found in the directory 'board_files/language/locale'
 $base_config['default_locale'] = 'en_US';
+
+// Enable or disable plugins
+$base_config['enable_plugins'] = true;
 
 
 //

@@ -11,6 +11,11 @@ class PluginAPI
 
     public function registerPlugin($plugin_info)
     {
+        if(!ENABLE_PLUGINS)
+        {
+            return false;
+        }
+
         $plugin_id = $this->generateID($plugin_info);
 
         if (!in_array($plugin_id, $this->plugins))
@@ -25,7 +30,7 @@ class PluginAPI
     // Register hook functions here
     public function addHookFunction($hook_name, $function_name, $plugin_id, $priority = 10)
     {
-        if (!$this->isValidPlugin($plugin_id) || !$this->isValidFunction($function_name))
+        if (!ENABLE_PLUGINS || !$this->isValidPlugin($plugin_id) || !$this->isValidFunction($function_name))
         {
             return false;
         }
@@ -39,7 +44,7 @@ class PluginAPI
     // Register hook methods here
     public function addHookMethod($hook_name, $class, $method_name, $plugin_id, $priority = 10)
     {
-        if (!$this->isValidPlugin($plugin_id) || !$this->isValidMethod($class, $method_name))
+        if (!ENABLE_PLUGINS || !$this->isValidPlugin($plugin_id) || !$this->isValidMethod($class, $method_name))
         {
             return false;
         }
@@ -52,7 +57,7 @@ class PluginAPI
 
     public function removeHookFunction($hook_name, $function_name, $plugin_id)
     {
-        if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id) ||
+        if (!ENABLE_PLUGINS || !$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id) ||
             !$this->isValidFunction($function_name))
         {
             return false;
@@ -74,7 +79,7 @@ class PluginAPI
 
     public function removeHookMethod($hook_name, $class, $method_name, $plugin_id)
     {
-        if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id) ||
+        if (!ENABLE_PLUGINS || !$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id) ||
             !$this->isValidMethod($class, $method_name))
         {
             return false;
@@ -96,9 +101,9 @@ class PluginAPI
 
     public function processHook($hook_name, $args, $returnable = null)
     {
-        if (!$this->isValidHook($hook_name))
+        if (!ENABLE_PLUGINS || !$this->isValidHook($hook_name))
         {
-            return;
+            return $returnable;
         }
 
         if (!is_array($args))
@@ -148,6 +153,11 @@ class PluginAPI
 
     public function initializePlugins()
     {
+        if(!ENABLE_PLUGINS)
+        {
+            return;
+        }
+
         $ini_files = $this->getPluginIniFiles();
 
         foreach ($ini_files as $ini_file)
