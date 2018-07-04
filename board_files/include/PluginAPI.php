@@ -23,7 +23,7 @@ class PluginAPI
     }
 
     // Register hook functions here
-    public function registerFunctionForHook($hook_name, $function_name, $plugin_id, $priority = 10)
+    public function addHookFunction($hook_name, $function_name, $plugin_id, $priority = 10)
     {
         if (!$this->isValidPlugin($plugin_id) || !$this->isValidFunction($function_name))
         {
@@ -37,7 +37,7 @@ class PluginAPI
     }
 
     // Register hook methods here
-    public function registerMethodForHook($hook_name, $class, $method_name, $plugin_id, $priority = 10)
+    public function addHookMethod($hook_name, $class, $method_name, $plugin_id, $priority = 10)
     {
         if (!$this->isValidPlugin($plugin_id) || !$this->isValidMethod($class, $method_name))
         {
@@ -50,7 +50,7 @@ class PluginAPI
         return true;
     }
 
-    public function unregisterFunctionForHook($hook_name, $function_name, $plugin_id)
+    public function removeHookFunction($hook_name, $function_name, $plugin_id)
     {
         if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id) ||
             !$this->isValidFunction($function_name))
@@ -58,25 +58,21 @@ class PluginAPI
             return false;
         }
 
-        $success = false;
-
         foreach ($this->hooks[$hook_name] as $key => $value)
         {
-            $valid_registration = $this->verifyRegistrationArray($key, false);
-
-            if ($valid_registration && $key['plugin_id'] === $plugin_id && $key['function_name'] === $function_name)
+            if ($this->verifyRegistrationArray($key, false) && $key['plugin_id'] === $plugin_id &&
+                $key['function_name'] === $function_name)
             {
                 unset($this->hooks[$hook_name][$key]);
-                $success = true;
-                break;
+                $this->sort_hooks($hook_name);
+                return true;
             }
         }
 
-        $this->sort_hooks($hook_name);
-        return $success;
+        return false;
     }
 
-    public function unregisterMethodForHook($hook_name, $class, $method_name, $plugin_id)
+    public function removeHookMethod($hook_name, $class, $method_name, $plugin_id)
     {
         if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id) ||
             !$this->isValidMethod($class, $method_name))
@@ -84,85 +80,60 @@ class PluginAPI
             return false;
         }
 
-        $success = false;
-
         foreach ($this->hooks[$hook_name] as $key => $value)
         {
-            $valid_registration = $this->verifyRegistrationArray($key, true);
-
-            if ($valid_registration && $key['plugin_id'] === $plugin_id && $key['class'] === $class &&
-                $key['method_name'] === $method_name)
+            if ($this->verifyRegistrationArray($key, true) && $key['plugin_id'] === $plugin_id &&
+                $key['class'] === $class && $key['method_name'] === $method_name)
             {
                 unset($this->hooks[$hook_name][$key]);
-                $success = true;
-                break;
+                $this->sort_hooks($hook_name);
+                return true;
             }
         }
 
-        $this->sort_hooks($hook_name);
-        return $success;
+        return false;
     }
 
-    public function eventHook($hook_name, $data)
+    public function processHook($hook_name, $args, $returnable = null)
     {
         if (!$this->isValidHook($hook_name))
         {
             return;
         }
 
-        $hook = $this->hooks[$hook_name];
-
-        foreach ($hook as $registration)
+        if (!is_array($args))
         {
-            $is_method = isset($registration['method_name']);
-
-            if ($is_method && $this->isValidMethod($registration['class'], $registration['method_name']))
-            {
-                call_user_func_array(array($registration['class'], $registration['method_name']), [0 => $data]);
-            }
-            else
-            {
-                call_user_func_array($registration['function_name'], [0 => $data]);
-            }
-        }
-    }
-
-    public function filterHook($hook_name, $data, $args)
-    {
-        if (!$this->isValidHook($hook_name))
-        {
-            return;
-        }
-
-        if(!is_array($args))
-        {
-           $args = [0 => $args];
+            $args = [0 => $args];
         }
 
         $arguments_array = $args;
-        array_unshift($arguments_array, $data);
-        $hook = $this->hooks[$hook_name];
-        $modified = $data;
+        $needs_return = !is_null($returnable);
+        $return_type = gettype($returnable);
 
-        foreach ($hook as $registration)
+        if ($needs_return)
         {
-            $is_method = isset($registration['method_name']);
+            array_unshift($arguments_array, $returnable);
+        }
 
-            if ($is_method && $this->isValidMethod($registration['class'], $registration['method_name']))
+        $hook = $this->hooks[$hook_name];
+        $modified = $returnable;
+
+        foreach ($hook as $entry)
+        {
+            if (isset($entry['method_name']) && $this->isValidMethod($entry['class'], $entry['method_name']))
             {
-                $return = call_user_func_array([$registration['class'], $registration['method_name']], $arguments_array);
+                $return = call_user_func_array([$entry['class'], $entry['method_name']], $arguments_array);
             }
-            else
+            else if ($this->isValidFunction($entry['function_name']))
             {
-                $return = call_user_func_array($registration['function_name'], $arguments_array);
+                $return = call_user_func_array($entry['function_name'], $arguments_array);
             }
 
-            if(!is_null($return))
+            if ($needs_return && gettype($return) === $return_type)
             {
                 $modified = $return;
+                $arguments_array[0] = $modified;
             }
-
-            $arguments_array[0] = $modified;
         }
 
         return $modified;

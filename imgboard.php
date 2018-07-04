@@ -55,8 +55,8 @@ require_once INCLUDE_PATH . 'PluginAPI.php';
 nel_plugins()->initializePlugins();
 
 // A demo point. Does nothing.
-nel_plugins()->eventHook('plugin-example', 5);
-$out = nel_plugins()->filterHook('plugin-example', 5, array());
+nel_plugins()->processHook('plugin-example', array(5));
+$out = nel_plugins()->processHook('plugin-example-return', array('string'), 5);
 
 require_once INCLUDE_PATH . 'snacks.php';
 
