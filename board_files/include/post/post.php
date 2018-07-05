@@ -118,7 +118,7 @@ function nel_process_new_post($board_id)
     $preview_path = $references['thumb_path'] . $thread_info['id'] . '/' . $new_post_info['post_number'] . '/';
 
     // Make thumbnails and do final file processing
-    $gen_previews = new \Nelliel\GeneratePreviews($board_id);
+    $gen_previews = new \Nelliel\post\GeneratePreviews($board_id);
     $files = $gen_previews->generate($files, $preview_path);
     clearstatcache();
 
