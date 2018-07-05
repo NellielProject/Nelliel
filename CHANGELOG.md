@@ -1,4 +1,20 @@
 # Nelliel Changelog
+## v0.9.6.13 (2018/07/05)
+### Added
+ - post/Postdata.php and post/PostDatabaseFunctions.php
+
+### Changed
+ - Fix up rules output
+ - Make use of footer HTML element
+ - Some rearrangement of files and namespaces
+ - Move more post functions to classes
+ - Other code cleanup
+
+### Removed
+ - post/database_functions.php
+ - post/post_data.php
+
+
 ## v0.9.6.12 (2018/07/03)
 ### Added
  - Config setting to disable plugins

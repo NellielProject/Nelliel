@@ -75,7 +75,6 @@ function nel_process_new_post($board_id)
     setrawcookie('name-' . $board_id, $post_data['name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
 
     // Go ahead and put post into database
-    require_once INCLUDE_PATH . 'post/database_functions.php';
     $post_data['op'] = ($post_data['parent_thread'] === 0) ? 1 : 0;
     $post_data['has_file'] = ($post_data['file_count'] > 0) ? 1 : 0;
     $database_functions->insertInitialPost($time, $post_data);
