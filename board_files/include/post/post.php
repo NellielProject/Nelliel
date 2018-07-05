@@ -6,8 +6,8 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_process_new_post($board_id)
 {
-    global $plugins;
     $dbh = nel_database();
+    $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $error_data = array('board_id' => $board_id);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $archive = new \Nelliel\ArchiveAndPrune($board_id);
@@ -16,14 +16,10 @@ function nel_process_new_post($board_id)
     $file_upload = new \Nelliel\FilesUpload($board_id, $_FILES);
     $data_handler = new \Nelliel\PostData($board_id);
     $post_data = $data_handler->collectData();
-    $new_thread_dir = '';
-
-    // Get time
     $time = get_millisecond_time();
-    $reply_delay = $time - (nel_parameters_and_data()->boardSettings($board_id, 'reply_delay')* 1000);
 
     // Check if post is ok
-    $post_count = nel_is_post_ok($board_id, $post_data, $time);
+    nel_is_post_ok($board_id, $post_data, $time);
 
     // Process FGSFDS
     if (!empty($post_data['fgsfds']))
@@ -45,19 +41,18 @@ function nel_process_new_post($board_id)
             nel_derp(10, _gettext('Post contains no content or file. Dumbass.'), $error_data);
         }
 
-        if (nel_parameters_and_data()->boardSettings($board_id, 'require_image_always'))
+        if ($board_settings['require_image_always'])
         {
             nel_derp(11, _gettext('Image or file required when making a new post.'), $error_data);
         }
 
-        if (nel_parameters_and_data()->boardSettings($board_id, 'require_image_start') && $post_data['response_to'] === 0)
+        if ($board_settings['require_image_start'] && $post_data['response_to'] === 0)
         {
             nel_derp(12, _gettext('Image or file required to make new thread.'), $error_data);
         }
     }
 
-    // Cancer-fighting tools and lulz
-    if (utf8_strlen($post_data['comment']) > nel_parameters_and_data()->boardSettings($board_id, 'max_comment_length'))
+    if (utf8_strlen($post_data['comment']) > $board_settings['max_comment_length'])
     {
         nel_derp(13, _gettext('Post is too long. Try looking up the word concise.'), $error_data);
     }
@@ -107,7 +102,7 @@ function nel_process_new_post($board_id)
         $thread_info['last_bump_time'] = $time;
         $thread_info['total_files'] = $current_thread['total_files'] + $post_data['file_count'];
 
-        if ($current_thread['post_count'] > nel_parameters_and_data()->boardSettings($board_id, 'max_bumps') || nel_fgsfds('sage'))
+        if ($current_thread['post_count'] > $board_settings['max_bumps'] || nel_fgsfds('sage'))
         {
             $thread_info['last_bump_time'] = $current_thread['last_bump_time'];
         }
@@ -138,14 +133,13 @@ function nel_process_new_post($board_id)
         nel_db_insert_new_files($board_id, $thread_info['id'], $new_post_info, $files);
     }
 
-    // Run the archiving routine if this is a new thread or deleted/expired thread
     $archive->updateAllArchiveStatus();
 
-    if(nel_parameters_and_data()->boardSettings($board_id, 'old_threads') === 'ARCHIVE')
+    if($board_settings['old_threads'] === 'ARCHIVE')
     {
         $archive->moveThreadsToArchive();
     }
-    else if(nel_parameters_and_data()->boardSettings($board_id, 'old_threads') === 'PRUNE')
+    else if($board_settings['old_threads'] === 'PRUNE')
     {
         $archive->pruneThreads();
     }
@@ -159,15 +153,16 @@ function nel_process_new_post($board_id)
 function nel_is_post_ok($board_id, $post_data, $time)
 {
     $dbh = nel_database();
+    $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $error_data = array('board_id' => $board_id);
 
     // Check for flood
     // If post is a reply, also check if the thread still exists
 
-    if ($post_data['parent_thread'] == 0) // TODO: Update this, doesn't look right
+    if ($post_data['parent_thread'] === 0) // TODO: Update this, doesn't look right
     {
-        $thread_delay = $time - (nel_parameters_and_data()->boardSettings($board_id, 'thread_delay') * 1000);
+        $thread_delay = $time - ($board_settings['thread_delay'] * 1000);
         $prepared = $dbh->prepare('SELECT COUNT(*) FROM "' . $references['post_table']. '" WHERE "post_time" > ? AND "ip_address" = ?');
         $prepared->bindValue(1, $thread_delay, PDO::PARAM_STR);
         $prepared->bindValue(2, @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_LOB);
@@ -175,11 +170,11 @@ function nel_is_post_ok($board_id, $post_data, $time)
     }
     else
     {
-        $thread_delay = $time - (nel_parameters_and_data()->boardSettings($board_id, 'reply_delay') * 1000);
+        $reply_delay = $time - ($board_settings['reply_delay'] * 1000);
         $prepared = $dbh->prepare('SELECT COUNT(*) FROM "' . $references['post_table'].
              '" WHERE "parent_thread" = ? AND "post_time" > ? AND "ip_address" = ?');
         $prepared->bindValue(1, $post_data['parent_thread'], PDO::PARAM_INT);
-        $prepared->bindValue(2, $thread_delay, PDO::PARAM_STR);
+        $prepared->bindValue(2, $reply_delay, PDO::PARAM_STR);
         $prepared->bindValue(3, @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_LOB);
         $renzoku = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
     }
@@ -189,42 +184,36 @@ function nel_is_post_ok($board_id, $post_data, $time)
         nel_derp(1, _gettext('Flood detected! You\'re posting too fast, slow the fuck down.'), $error_data);
     }
 
-    $post_count = 1;
-
     if ($post_data['parent_thread'] != 0)
     {
-        $prepared = $dbh->prepare('SELECT * FROM "' . $references['thread_table']. '" WHERE "thread_id" = ? LIMIT 1');
-        $op_post = $dbh->executePreparedFetch($prepared, array($post_data['parent_thread']), PDO::FETCH_ASSOC, true);
+        $prepared = $dbh->prepare('SELECT "post_count", "archive_status", "locked" FROM "' . $references['thread_table']. '" WHERE "thread_id" = ? LIMIT 1');
+        $thread_info = $dbh->executePreparedFetch($prepared, array($post_data['parent_thread']), PDO::FETCH_ASSOC, true);
 
-        if (!empty($op_post))
+        if (!empty($thread_info))
         {
-            if ($op_post['locked'] == 1)
+            if ($thread_info['locked'] == 1)
             {
                 nel_derp(2, _gettext('This thread is locked.'), $error_data);
             }
 
-            if ($op_post['archive_status'] != 0)
+            if ($thread_info['archive_status'] != 0)
             {
                 nel_derp(3, _gettext('The thread you have tried posting in is currently inaccessible or archived.'), $error_data);
             }
-
-            $post_count = $op_post['post_count'];
         }
         else
         {
             nel_derp(4, _gettext('The thread you have tried posting in could not be found.'), $error_data);
         }
 
-        if ($post_count >= nel_parameters_and_data()->boardSettings($board_id, 'max_posts'))
+        if ($thread_info['post_count'] >= $board_settings['max_posts'])
         {
             nel_derp(5, _gettext('The thread has reached maximum posts.'), $error_data);
         }
 
-        if ($op_post['archive_status'] != 0)
+        if ($thread_info['archive_status'] != 0)
         {
             nel_derp(6, _gettext('The thread is archived or buffered and cannot be posted to.'), $error_data);
         }
     }
-
-    return $post_count;
 }
