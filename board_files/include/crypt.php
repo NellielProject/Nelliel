@@ -5,7 +5,6 @@
 //
 if (!function_exists('hash_equals'))
 {
-
     function hash_equals($known_string, $user_string)
     {
         if (strlen($known_string) != strlen($user_string))
@@ -114,13 +113,8 @@ function nel_salted_hash_info($hash)
 
 function nel_generate_salted_hash($algorithm, $string, $salt = null, $salt_length = 16)
 {
-    if (is_null($salt))
-    {
-        $salt = nel_gen_salt($salt_length);
-    }
-
-    $full_string = $salt . $string;
-    $hash = hash($algorithm, $full_string, false);
+    $salt = (!is_null($salt)) ? $salt : nel_gen_salt($salt_length);
+    $hash = hash($algorithm, $salt . $string, false);
     return '$' . $algorithm . '$' . $salt . '$' . $hash;
 }
 
@@ -137,38 +131,16 @@ function nel_verify_salted_hash($string, $hash)
     return hash_equals($hash, $new_hash);
 }
 
-function nel_gen_salt($length)
+function nel_gen_salt($length, $bcrypt_base64 = false)
 {
-    $salt = '';
-    $good = false;
-
-    if (function_exists('mcrypt_create_iv'))
-    {
-        $salt = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
-        $good = ($salt !== false) ? true : false;
-    }
-
-    if ($good === false && function_exists('openssl_random_pseudo_bytes'))
-    {
-        $strong = false;
-        $salt = openssl_random_pseudo_bytes($length, $strong);
-        $good = ($salt !== false && $strong) ? true : false;
-    }
-
-    if ($good === false)
-    {
-        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\][{}\'";:?.>,<!@#$%^&*()-_=+|';
-
-        for ($i = 0; $i < $length; $i ++)
-        {
-            $salt .= $charset[mt_rand(0, strlen($charset) - 1)];
-        }
-
-        $good = ($salt !== '') ? true : false;
-    }
-
+    $salt = random_bytes($length);
     $base_64 = base64_encode($salt);
     $salt = rtrim($base_64, '=');
-    $salt = strtr($salt, '+', '.');
+
+    if($bcrypt_base64)
+    {
+        $salt = strtr($salt, '+', '.');
+    }
+
     return $salt;
 }

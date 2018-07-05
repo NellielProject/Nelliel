@@ -21,6 +21,7 @@ require_once LIBRARY_PATH . 'NellielTemplates/autoload.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
 require_once LIBRARY_PATH . 'password_compat/lib/password.php';
 require_once LIBRARY_PATH . 'SmallPHPGettext/autoload.php';
+require_once LIBRARY_PATH . 'random_compat/lib/random.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'accessors.php';
 
@@ -40,7 +41,6 @@ if (RUN_SETUP_CHECK)
     setup_check(INPUT_BOARD_ID);
 }
 
-
 require_once INCLUDE_PATH . 'regen.php';
 
 if (nel_setup_stuff_done())
@@ -51,7 +51,6 @@ if (nel_setup_stuff_done())
     }
 }
 
-require_once INCLUDE_PATH . 'PluginAPI.php';
 nel_plugins()->initializePlugins();
 
 // A demo point. Does nothing.
