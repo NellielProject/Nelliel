@@ -43,3 +43,7 @@ spl_autoload_register(function ($class)
         require $file;
     }
 });
+
+require_once LIBRARY_PATH . 'phpDOMExtend/autoload.php';
+require_once LIBRARY_PATH . 'NellielTemplates/autoload.php';
+require_once LIBRARY_PATH . 'SmallPHPGettext/autoload.php';
