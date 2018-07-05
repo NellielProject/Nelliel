@@ -4,8 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'post/post_data.php';
-
 function nel_process_new_post($board_id)
 {
     global $plugins;
@@ -16,7 +14,8 @@ function nel_process_new_post($board_id)
     $thread_handler = new \Nelliel\ThreadHandler($board_id);
     $file_handler = new \Nelliel\FileHandler();
     $file_upload = new \Nelliel\FilesUpload($board_id, $_FILES);
-    $post_data = nel_collect_post_data($board_id);
+    $data_handler = new \Nelliel\PostData($board_id);
+    $post_data = $data_handler->collectData();
     $new_thread_dir = '';
 
     // Get time
