@@ -107,8 +107,6 @@ function nel_login()
     }
     else
     {
-        nel_insert_default_admin(); // Let's make sure there's some kind of admin in the system
-        nel_insert_default_admin_role(); // And then be sure admin is assigned the role
         nel_render_login_page();
     }
 

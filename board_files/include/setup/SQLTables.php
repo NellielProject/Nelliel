@@ -205,12 +205,7 @@ class SQLTables
         ) ' . $options . ';';
 
         $result = $this->createTableQuery($schema, $table_name);
-
-        if ($result !== false)
-        {
-            $this->insert_data->defaultAdmin();
-        }
-
+        $this->insert_data->defaultAdmin();
         nel_setup_stuff_done($result);
     }
 
@@ -251,12 +246,7 @@ class SQLTables
         ) ' . $options . ';';
 
         $result = $this->createTableQuery($schema, $table_name);
-
-        if ($result !== false)
-        {
-            $this->insert_data->defaultAdminRole();
-        }
-
+        $this->insert_data->defaultAdminRole();
         nel_setup_stuff_done($result);
     }
 
