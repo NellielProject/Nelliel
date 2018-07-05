@@ -15,6 +15,7 @@ function nel_process_new_post($board_id)
     $file_handler = new \Nelliel\FileHandler();
     $file_upload = new \Nelliel\post\FilesUpload($board_id, $_FILES);
     $data_handler = new \Nelliel\post\PostData($board_id);
+    $database_functions = new \Nelliel\post\PostDatabaseFunctions($board_id);
     $post_data = $data_handler->collectData();
     $time = get_millisecond_time();
 
@@ -77,7 +78,7 @@ function nel_process_new_post($board_id)
     require_once INCLUDE_PATH . 'post/database_functions.php';
     $post_data['op'] = ($post_data['parent_thread'] === 0) ? 1 : 0;
     $post_data['has_file'] = ($post_data['file_count'] > 0) ? 1 : 0;
-    nel_db_insert_initial_post($board_id, $time, $post_data);
+    $database_functions->insertInitialPost($time, $post_data);
     $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "post_time" = ? LIMIT 1');
     $new_post_info = $dbh->executePreparedFetch($prepared, array($time), PDO::FETCH_ASSOC, true);
     $thread_info = array();
@@ -89,7 +90,7 @@ function nel_process_new_post($board_id)
         $thread_info['last_bump_time'] = $time;
         $thread_info['id'] = $new_post_info['post_number'];
         $thread_info['total_files'] = $post_data['file_count'];
-        nel_db_insert_new_thread($board_id, $thread_info);
+        $database_functions->insertNewThread($thread_info);
         $thread_handler->createThreadDirectories($thread_info['id']);
     }
     else
@@ -107,7 +108,7 @@ function nel_process_new_post($board_id)
             $thread_info['last_bump_time'] = $current_thread['last_bump_time'];
         }
 
-        nel_db_update_thread($board_id, $new_post_info, $thread_info);
+        $database_functions->updateThread($new_post_info, $thread_info);
     }
 
     $prepared = $dbh->prepare('UPDATE "' . $references['post_table']. '" SET parent_thread = ? WHERE post_number = ?');
@@ -130,7 +131,7 @@ function nel_process_new_post($board_id)
             chmod($src_path . $file['fullname'], octdec(FILE_PERM));
         }
 
-        nel_db_insert_new_files($board_id, $thread_info['id'], $new_post_info, $files);
+        $database_functions->insertNewFiles($thread_info['id'], $new_post_info, $files);
     }
 
     $archive->updateAllArchiveStatus();

@@ -3,6 +3,7 @@
 namespace Nelliel\post;
 
 use PDO;
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -14,7 +15,7 @@ class FilesUpload
     private $uploaded_files = array();
     private $processed_files = array();
 
-    function __construct($board_id = '', $files = array())
+    function __construct($board_id, $files = array())
     {
         $this->board_id = $board_id;
         $this->uploaded_files = $files;
@@ -93,7 +94,8 @@ class FilesUpload
 
     public function checkForErrors($file)
     {
-        $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files, 'board_id' => $this->board_id);
+        $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files,
+            'board_id' => $this->board_id);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
 
         if ($file['size'] > $board_settings['max_filesize'] * 1024)
@@ -137,7 +139,8 @@ class FilesUpload
         $dbh = nel_database();
         $references = nel_parameters_and_data()->boardReferences($this->board_id);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
-        $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files, 'board_id' => $this->board_id);
+        $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files,
+            'board_id' => $this->board_id);
         $is_banned = false;
         $hashes = array();
         $hashes['md5'] = hash_file('md5', $file['location'], true);
@@ -173,7 +176,7 @@ class FilesUpload
         if ($response_to === 0 && $board_settings['only_op_duplicates'])
         {
             $query = 'SELECT 1 FROM "' . $references['file_table'] .
-                '" WHERE ("parent_thread" = ? AND "post_ref" = ?) AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
+                    '" WHERE ("parent_thread" = ? AND "post_ref" = ?) AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
             $prepared = $dbh->prepare($query);
             $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
             $prepared->bindValue(2, $response_to, PDO::PARAM_INT);
@@ -185,7 +188,7 @@ class FilesUpload
         else if ($response_to > 0 && $board_settings['only_thread_duplicates'])
         {
             $query = 'SELECT 1 FROM "' . $references['file_table'] .
-                '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
+                    '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
             $prepared = $dbh->prepare($query);
             $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
             $prepared->bindValue(2, $hashes['md5'], PDO::PARAM_LOB);
@@ -196,7 +199,7 @@ class FilesUpload
         else
         {
             $query = 'SELECT 1 FROM "' . $references['file_table'] .
-                '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ? LIMIT 1';
+                    '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ? LIMIT 1';
             $prepared = $dbh->prepare($query);
             $prepared->bindValue(1, $hashes['md5'], PDO::PARAM_LOB);
             $prepared->bindValue(2, $hashes['sha1'], PDO::PARAM_LOB);
@@ -218,7 +221,8 @@ class FilesUpload
     {
         $filetypes = nel_parameters_and_data()->filetypeData();
         $filetype_settings = nel_parameters_and_data()->filetypeSettings($this->board_id);
-        $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files, 'board_id' => $this->board_id);
+        $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files,
+            'board_id' => $this->board_id);
         $path_info = $this->getPathInfo($file['name']);
         $test_ext = utf8_strtolower($path_info['extension']);
         $file_length = filesize($file['location']);
@@ -233,13 +237,13 @@ class FilesUpload
         }
 
         if (!$filetype_settings[$filetypes[$test_ext]['type']][$filetypes[$test_ext]['type']] ||
-            !$filetype_settings[$filetypes[$test_ext]['type']][$filetypes[$test_ext]['format']])
+                !$filetype_settings[$filetypes[$test_ext]['type']][$filetypes[$test_ext]['format']])
         {
             nel_derp(108, _gettext('Filetype is not allowed.'), $error_data);
         }
 
         if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test_begin) ||
-            preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test_end))
+                preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test_end))
         {
             $type_data['type'] = $filetypes[$test_ext]['type'];
             $type_data['format'] = $filetypes[$test_ext]['format'];
@@ -247,7 +251,8 @@ class FilesUpload
         }
         else
         {
-            nel_derp(109, _gettext('Incorrect file type detected (does not match extension). Possible Hax.'), $error_data);
+            nel_derp(109, _gettext('Incorrect file type detected (does not match extension). Possible Hax.'),
+                    $error_data);
         }
 
         return $type_data;

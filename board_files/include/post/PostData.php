@@ -11,7 +11,7 @@ class PostData
 {
     private $board_id;
 
-    function __construct($board_id = '')
+    function __construct($board_id)
     {
         $this->board_id = $board_id;
     }
