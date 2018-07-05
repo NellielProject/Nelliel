@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel;
+namespace Nelliel\post;
 
 use PDO;
 if (!defined('NELLIEL_VERSION'))

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel;
+namespace Nelliel\language;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -61,7 +61,7 @@ class Language
 
     public function extractLanguageStrings($file)
     {
-        $extractor = new \Nelliel\LanguageExtractor();
+        $extractor = new \Nelliel\language\LanguageExtractor();
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->writeFile($file, $extractor->assemblePoString());
     }

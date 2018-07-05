@@ -58,7 +58,7 @@ function nel_language()
 
     if (!isset($language))
     {
-        $language = new \Nelliel\Language();
+        $language = new \Nelliel\language\Language();
     }
 
     return $language;

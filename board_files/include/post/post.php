@@ -13,8 +13,8 @@ function nel_process_new_post($board_id)
     $archive = new \Nelliel\ArchiveAndPrune($board_id);
     $thread_handler = new \Nelliel\ThreadHandler($board_id);
     $file_handler = new \Nelliel\FileHandler();
-    $file_upload = new \Nelliel\FilesUpload($board_id, $_FILES);
-    $data_handler = new \Nelliel\PostData($board_id);
+    $file_upload = new \Nelliel\post\FilesUpload($board_id, $_FILES);
+    $data_handler = new \Nelliel\post\PostData($board_id);
     $post_data = $data_handler->collectData();
     $time = get_millisecond_time();
 
