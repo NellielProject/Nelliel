@@ -1,4 +1,9 @@
 # Nelliel Changelog
+## v0.9.6.15 (2018/07/05)
+### Changed
+ - Move setup files into classes
+ - have setup check handle board as well if ID is set
+
 ## v0.9.6.14 (2018/07/05)
 ### Added
  - random_compat library
@@ -6,7 +11,7 @@
 ### Changed
  - nel_gen_salt now uses random_bytes
  - added PluginAPI.php to Nelliel namespace
-   
+
 ## v0.9.6.13 (2018/07/05)
 ### Added
  - post/Postdata.php and post/PostDatabaseFunctions.php

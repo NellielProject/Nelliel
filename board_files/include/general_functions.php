@@ -69,3 +69,10 @@ function nel_cast_to_datatype($value, $datatype)
         return $value;
     }
 }
+
+function nel_setup_stuff_done($status = null)
+{
+    static $stuff_done = false;
+    $stuff_done = (is_bool($status)) ? $status : $stuff_done;
+    return $stuff_done;
+}
