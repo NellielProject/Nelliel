@@ -145,8 +145,9 @@ function nel_process_new_post($board_id)
     }
 
     // Generate response page if it doesn't exist, otherwise update
-    nel_regen_threads($board_id, true, array($thread_info['id']));
-    nel_regen_index($board_id);
+    $regen = new \Nelliel\Regen();
+    $regen->threads($board_id, true, array($thread_info['id']));
+    $regen->index($board_id);
     return $thread_info['id'];
 }
 

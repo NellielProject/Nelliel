@@ -4,6 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'output/posting_form.php';
+require_once INCLUDE_PATH . 'output/post.php';
+
 function nel_thread_generator($board_id, $write, $response_to)
 {
     $dbh = nel_database();
@@ -25,12 +28,12 @@ function nel_thread_generator($board_id, $write, $response_to)
     $expand_dom = $render->newDOMDocument();
     $collapse_dom = $render->newDOMDocument();
     $render->startRenderTimer();
-    $dom->getElementById('form-post-index')->extSetAttribute('action', $dotdot. PHP_SELF . '?module=threads&board_id=' .
-         $board_id);
+    $dom->getElementById('form-post-index')->extSetAttribute('action',
+            $dotdot . PHP_SELF . '?module=threads&board_id=' . $board_id);
     $prepared = $dbh->prepare('SELECT * FROM "' . $references['thread_table'] . '" WHERE "thread_id" = ? LIMIT 1');
     $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($response_to), PDO::FETCH_ASSOC);
-    $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] .
-         '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+    $prepared = $dbh->prepare(
+            'SELECT * FROM "' . $references['post_table'] . '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
     $treeline = $dbh->executePreparedFetchAll($prepared, array($response_to), PDO::FETCH_ASSOC);
 
     if (empty($treeline))
@@ -50,7 +53,7 @@ function nel_thread_generator($board_id, $write, $response_to)
 
     while ($gen_data['post_counter'] < $gen_data['thread']['post_count'])
     {
-        if(!isset($treeline[$gen_data['post_counter']]))
+        if (!isset($treeline[$gen_data['post_counter']]))
         {
             ++ $gen_data['post_counter'];
             continue;
@@ -71,9 +74,10 @@ function nel_thread_generator($board_id, $write, $response_to)
 
         if ($gen_data['post']['has_file'] == 1)
         {
-            $prepared = $dbh->prepare('SELECT * FROM "' . $references['file_table'] .
-                 '" WHERE "post_ref" = ? ORDER BY "file_order" ASC');
-            $gen_data['files'] = $dbh->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']), PDO::FETCH_ASSOC);
+            $prepared = $dbh->prepare(
+                    'SELECT * FROM "' . $references['file_table'] . '" WHERE "post_ref" = ? ORDER BY "file_order" ASC');
+            $gen_data['files'] = $dbh->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']),
+                    PDO::FETCH_ASSOC);
         }
 
         if ($gen_data['post_counter'] === 99)
@@ -82,7 +86,8 @@ function nel_thread_generator($board_id, $write, $response_to)
             nel_render_insert_hr($dom);
             $hr_added = true;
             nel_render_board_footer($board_id, $render_temp, $dotdot, true);
-            $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '-0-100.html', $render_temp->outputRenderSet(), FILE_PERM, true);
+            $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '-0-100.html',
+                    $render_temp->outputRenderSet(), FILE_PERM, true);
             unset($render_temp);
         }
 
@@ -116,7 +121,8 @@ function nel_thread_generator($board_id, $write, $response_to)
                 if ($gen_data['post_counter'] > $gen_data['thread']['post_count'] - $board_settings['abbreviate_thread'])
                 {
                     $import_node = $collapse_dom->importNode($base_new_post_node, true);
-                    $collapse_dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id'])->appendChild($import_node);
+                    $collapse_dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id'])->appendChild(
+                            $import_node);
                 }
             }
 
@@ -146,26 +152,29 @@ function nel_thread_generator($board_id, $write, $response_to)
 
     if ($write)
     {
-        $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '.html', $render->outputRenderSet(), FILE_PERM, true);
-        $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '-expand.html', $render->outputRenderSet('expand'), FILE_PERM, true);
-        $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '-collapse.html', $render->outputRenderSet('collapse'), FILE_PERM, true);
+        $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '.html',
+                $render->outputRenderSet(), FILE_PERM, true);
+        $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '-expand.html',
+                $render->outputRenderSet('expand'), FILE_PERM, true);
+        $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '-collapse.html',
+                $render->outputRenderSet('collapse'), FILE_PERM, true);
     }
     else
     {
         /*if ($dataforce['expand'])
-        {
-            echo $render->outputRenderSet('expand');
-        }
-        else if ($dataforce['collapse'])
-        {
-            echo $render->outputRenderSet('collapse');
-        }
-        else
-        {
-            echo $render->outputRenderSet();
-        }
+         {
+         echo $render->outputRenderSet('expand');
+         }
+         else if ($dataforce['collapse'])
+         {
+         echo $render->outputRenderSet('collapse');
+         }
+         else
+         {
+         echo $render->outputRenderSet();
+         }
 
-        nel_clean_exit();*/
+         nel_clean_exit();*/
         // TODO: Modmode stuff
     }
 

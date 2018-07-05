@@ -254,7 +254,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
             $file['img_dim'] = !empty($file['image_width']) && !empty($file['image_height']);
             $file['filesize'] = round(((int) $file['filesize'] / 1024), 2);
-            $filesize_display = ' ( ' . $file['filesize'] . ' KB)';
+            $filesize_display = ' (' . $file['filesize'] . ' KB)';
 
             if ($file['img_dim'])
             {

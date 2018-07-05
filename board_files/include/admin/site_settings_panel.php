@@ -22,7 +22,8 @@ function nel_site_settings_control($action)
             }
         }
 
-        nel_regen_site_cache();
+        $regen = new \Nelliel\Regen();
+        $regen->siteCache();
     }
 
     nel_render_site_settings_panel();

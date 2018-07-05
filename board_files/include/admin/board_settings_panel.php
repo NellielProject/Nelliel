@@ -37,8 +37,9 @@ function nel_board_settings_control($board_id, $action, $defaults = false)
 
         if(!$defaults)
         {
-            nel_regen_board_cache($board_id);
-            nel_regen_all_pages($board_id);
+            $regen = new \Nelliel\Regen();
+            $regen->boardCache($board_id);
+            $regen->allPages($board_id);
         }
     }
 

@@ -24,8 +24,9 @@ function nel_thread_panel($board_id, $action)
         }
 
         $updates = $thread_handler->threadUpdates();
-        nel_regen_threads($board_id, true, $updates);
-        nel_regen_index($board_id);
+        $regen = new \Nelliel\Regen();
+        $regen->threads($board_id, true, $updates);
+        $regen->index($board_id);
     }
 
     if (isset($_POST['expand_thread']))

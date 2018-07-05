@@ -41,13 +41,15 @@ if (RUN_SETUP_CHECK)
     $setup->checkAll($board_id);
 }
 
-require_once INCLUDE_PATH . 'regen.php';
+require_once INCLUDE_PATH . 'output/header.php';
+require_once INCLUDE_PATH . 'output/footer.php';
 
 if (nel_setup_stuff_done())
 {
     if (USE_INTERNAL_CACHE)
     {
-        nel_regen_site_cache();
+        $regen = new \Nelliel\Regen();
+        $regen->siteCache();
     }
 }
 

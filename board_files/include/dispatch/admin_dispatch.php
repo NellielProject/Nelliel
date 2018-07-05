@@ -92,14 +92,16 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'regen':
+                $regen = new \Nelliel\Regen();
+
                 if ($inputs['action'] === 'pages-all')
                 {
-                    nel_regen_all_pages($inputs['board_id']);
+                    $regen->allPages($inputs['board_id']);
                 }
 
                 if ($inputs['action'] === 'cache-all')
                 {
-                    nel_regen_board_cache($inputs['board_id']);
+                    $regen->boardCache($inputs['board_id']);
                 }
 
                 nel_render_main_board_panel($inputs['board_id']);

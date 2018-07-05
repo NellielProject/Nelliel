@@ -39,8 +39,9 @@ function nel_general_dispatch($inputs)
             {
                 $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
                 $updates = $thread_handler->threadUpdates();
-                nel_regen_threads($inputs['board_id'], true, $updates);
-                nel_regen_index($inputs['board_id']);
+                $regen = new \Nelliel\Regen();
+                $regen->threads($inputs['board_id'], true, $updates);
+                $regen->index($inputs['board_id']);
                 nel_clean_exit(true, $inputs['board_id']);
             }
 

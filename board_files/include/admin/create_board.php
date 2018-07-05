@@ -17,7 +17,8 @@ function nel_create_new_board()
 
     if(USE_INTERNAL_CACHE)
     {
-        nel_regen_board_cache($board_id);
+        $regen = new \Nelliel\Regen();
+        $regen->boardCache($board_id);
     }
 
     return $board_id;
