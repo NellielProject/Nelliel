@@ -14,17 +14,20 @@ class FilesUpload
     private $board_id;
     private $uploaded_files = array();
     private $processed_files = array();
+    private $data_handler;
 
     function __construct($board_id, $files = array())
     {
         $this->board_id = $board_id;
         $this->uploaded_files = $files;
+        $this->data_handler = new \Nelliel\post\PostData($board_id);
     }
 
     public function processFiles($response_to)
     {
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
+        $post_data =
         $file_count = 1;
         $filenames = array();
         $file_duplicate = 1;
@@ -50,9 +53,9 @@ class FilesUpload
             $new_file['name'] = $file_handler->filterFilename($file['name']);
             $form_info = $_POST['new_post']['file_info'][$entry];
             $new_file['filesize'] = $file['size'];
-            $new_file['source'] = nel_check_post_entry($form_info['sauce'], 'string');
-            $new_file['license'] = nel_check_post_entry($form_info['lol_drama'], 'string');
-            $new_file['alt_text'] = nel_check_post_entry($form_info['alt_text'], 'string');
+            $new_file['source'] = $this->data_handler->checkEntry($form_info['sauce'], 'string');
+            $new_file['license'] = $this->data_handler->checkEntry($form_info['lol_drama'], 'string');
+            $new_file['alt_text'] = $this->data_handler->checkEntry($form_info['alt_text'], 'string');
 
             foreach ($filenames as $filename)
             {
