@@ -1,4 +1,7 @@
 <?php
+
+namespace Nelliel;
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -11,7 +14,7 @@ class PluginAPI
 
     public function registerPlugin($plugin_info)
     {
-        if(!ENABLE_PLUGINS)
+        if (!ENABLE_PLUGINS)
         {
             return false;
         }
@@ -58,7 +61,7 @@ class PluginAPI
     public function removeHookFunction($hook_name, $function_name, $plugin_id)
     {
         if (!ENABLE_PLUGINS || !$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id) ||
-            !$this->isValidFunction($function_name))
+                !$this->isValidFunction($function_name))
         {
             return false;
         }
@@ -66,7 +69,7 @@ class PluginAPI
         foreach ($this->hooks[$hook_name] as $key => $value)
         {
             if ($this->verifyRegistrationArray($key, false) && $key['plugin_id'] === $plugin_id &&
-                $key['function_name'] === $function_name)
+                    $key['function_name'] === $function_name)
             {
                 unset($this->hooks[$hook_name][$key]);
                 $this->sort_hooks($hook_name);
@@ -80,7 +83,7 @@ class PluginAPI
     public function removeHookMethod($hook_name, $class, $method_name, $plugin_id)
     {
         if (!ENABLE_PLUGINS || !$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id) ||
-            !$this->isValidMethod($class, $method_name))
+                !$this->isValidMethod($class, $method_name))
         {
             return false;
         }
@@ -88,7 +91,7 @@ class PluginAPI
         foreach ($this->hooks[$hook_name] as $key => $value)
         {
             if ($this->verifyRegistrationArray($key, true) && $key['plugin_id'] === $plugin_id &&
-                $key['class'] === $class && $key['method_name'] === $method_name)
+                    $key['class'] === $class && $key['method_name'] === $method_name)
             {
                 unset($this->hooks[$hook_name][$key]);
                 $this->sort_hooks($hook_name);
@@ -153,7 +156,7 @@ class PluginAPI
 
     public function initializePlugins()
     {
-        if(!ENABLE_PLUGINS)
+        if (!ENABLE_PLUGINS)
         {
             return;
         }

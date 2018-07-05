@@ -34,7 +34,7 @@ function nel_plugins()
 
     if (!isset($api))
     {
-        $api = new PluginAPI();
+        $api = new \Nelliel\PluginAPI();
     }
 
     return $api;
