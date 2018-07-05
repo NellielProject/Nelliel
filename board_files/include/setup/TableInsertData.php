@@ -281,8 +281,8 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'board_favicon', '']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'board_logo', '']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'board_language', 'en-us']);
-        $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'thread_delay', '60']);
-        $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'reply_delay', '15']);
+        $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'thread_delay', '120']);
+        $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'reply_delay', '60']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'abbreviate_thread', '5']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_post_files', '3']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_files_row', '3']);
@@ -291,7 +291,7 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'jpeg_quality', '85']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_width', '256']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_height', '256']);
-        $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_filesize', '1024']);
+        $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_filesize', '4096']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_name_length', '100']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_email_length', '100']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_subject_length', '100']);
@@ -304,7 +304,7 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'page_limit', '10']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'page_buffer', '0']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_posts', '1000']);
-        $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_bumps', '750']);
+        $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_bumps', '1000']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'tripkey_marker', '!']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'date_format', 'ISO']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'old_threads', 'ARCHIVE']);
@@ -344,10 +344,10 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'quicktime', '0']);
         $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'avi', '0']);
         $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'wmv', '0']);
-        $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'mpeg4', '0']);
+        $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'mpeg4', '1']);
         $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'matroska', '0']);
         $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'flash-video', '0']);
-        $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'webm', '0']);
+        $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'webm', '1']);
         $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', '3gp', '0']);
         $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'ogg-video', '0']);
         $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'm4v', '0']);
