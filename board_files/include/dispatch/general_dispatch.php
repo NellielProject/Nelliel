@@ -13,9 +13,9 @@ function nel_general_dispatch($inputs)
         case 'post':
             require_once INCLUDE_PATH . 'post/post.php';
 
-            if ($inputs['action'] === 'new-post')
+            if ($inputs['action'] === 'new-post' || $inputs['action'] === 'new-staff-post')
             {
-                nel_process_new_post($inputs['board_id']);
+                nel_process_new_post($inputs);
 
                 if (nel_fgsfds('noko'))
                 {

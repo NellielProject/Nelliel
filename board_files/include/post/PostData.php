@@ -10,10 +10,12 @@ if (!defined('NELLIEL_VERSION'))
 class PostData
 {
     private $board_id;
+    private $staff_post;
 
-    function __construct($board_id)
+    function __construct($board_id, $staff_post = false)
     {
         $this->board_id = $board_id;
+        $this->staff_post = $staff_post;
     }
 
     public function collectData()
@@ -28,6 +30,7 @@ class PostData
         $post_data['fgsfds'] = $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], "string");
         $post_data['password'] = $this->checkEntry($_POST['new_post']['post_info']['sekrit'], "string");
         $post_data['response_to'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], "int");
+        $post_data['mod_post'] = null;
 
         if ($post_data['name'] !== '')
         {
@@ -35,7 +38,7 @@ class PostData
             preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post_data['name'], $name_pieces);
             $post_data['name'] = $name_pieces[1];
             $post_data = $this->tripcodes($post_data, $name_pieces);
-            //$post_data = $this->staffPost($post_data, $name_pieces);
+            $post_data = $this->staffPost($post_data, $name_pieces);
         }
         else
         {
@@ -76,35 +79,16 @@ class PostData
     public function staffPost($post_data, $name_pieces)
     {
         $authorize = nel_authorize();
-        $post_data['modpost'] = null;
 
-        if ($name_pieces[3] === '')
+        if(empty($_SESSION))
         {
             return $post_data;
         }
 
-        $user = $authorize->get_tripcode_user($name_pieces[3]);
-
-        if ($user === FALSE)
-        {
-            return $post_data;
-        }
-
-        $role = $authorize->get_user_info($user, 'role_id');
-
-        if ($name_pieces[3] !== $authorize->get_user_info($user, 'user_secure_tripcode') ||
-        !$authorize->get_role_info($role, 'perm_post_default_name'))
-        {
-            return $post_data;
-        }
-
-        $post_data['modpost'] = $role;
-
-        if (!$authorize->get_role_info($role, 'perm_post_custom_name'))
-        {
-            $post_data['name'] = $authorize->get_user_info($user, 'user_title');
-        }
-
+        $user = $authorize->get_user($_SESSION['username']);
+        $user_role = $authorize->get_user_role($_SESSION['username'], $this->board_id);
+        $post_data['name'] = $user['user_title'];
+        $post_data['mod_post'] = $user_role['role_id'];
         return $post_data;
     }
 

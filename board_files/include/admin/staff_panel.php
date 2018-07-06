@@ -67,7 +67,7 @@ function nel_staff_panel($section, $action)
 
             if (isset($_POST['user_password']) && !empty($_POST['user_password']))
             {
-                $authorize->update_user_info($user_id, 'user_password', nel_password_hash($_POST['user_password'], NELLIEL_PASS_ALGORITHM));
+                $authorize->update_user_info($user_id, 'user_password', nel_password_hash($_POST['user_password'], NEL_PASSWORD_ALGORITHM));
             }
 
             foreach ($_POST as $key => $value)

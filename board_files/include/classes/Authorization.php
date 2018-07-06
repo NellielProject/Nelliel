@@ -2,7 +2,7 @@
 
 namespace Nelliel;
 
-use \PDO;
+use PDO;
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -223,6 +223,24 @@ class Authorization
         return false;
     }
 
+    public function get_user_role($user, $board_id = '')
+    {
+        if ($this->user_exists($user))
+        {
+            if (isset($this->user_roles[$user]['']))
+            {
+                return $this->user_roles[$user][''];
+            }
+
+            if (isset($this->user_roles[$user][$board_id]))
+            {
+                return $this->user_roles[$user][$board_id];
+            }
+        }
+
+        return false;
+    }
+
     public function get_role($role)
     {
         if ($this->role_exists($role))
@@ -270,13 +288,13 @@ class Authorization
         if ($this->user_exists($user_id))
         {
             if (isset($this->user_roles[$user_id][$board]) &&
-                 $this->get_role_perm($this->user_roles[$user_id][$board]['role_id'], $perm))
+                $this->get_role_perm($this->user_roles[$user_id][$board]['role_id'], $perm))
             {
                 return true;
             }
 
             if (isset($this->user_roles[$user_id]['']) &&
-                 $this->get_role_perm($this->user_roles[$user_id]['']['role_id'], $perm))
+                $this->get_role_perm($this->user_roles[$user_id]['']['role_id'], $perm))
             {
                 return true;
             }
@@ -437,10 +455,10 @@ class Authorization
     {
         $user_role_data = $this->user_roles[$user_id];
 
-        foreach ($user_role_data as $set)
+        foreach ($user_role_data as $board => $set)
         {
             $prepared = $this->dbh->prepare('SELECT "entry" FROM "' . USER_ROLE_TABLE .
-                 '" WHERE "user_id" = ? AND "board" = ? LIMIT 1');
+                '" WHERE "user_id" = ? AND "board" = ? LIMIT 1');
             $entry = $this->dbh->executePreparedFetch($prepared, array($user_id, $set['board']), PDO::FETCH_COLUMN, true);
 
             if ($entry !== false)
@@ -449,11 +467,12 @@ class Authorization
                 {
                     $prepared = $this->dbh->prepare('DELETE FROM "' . USER_ROLE_TABLE . '" WHERE "entry" = ?');
                     $this->dbh->executePrepared($prepared, array($entry));
+                    unset($this->user_roles[$user_id][$board]);
                 }
                 else
                 {
                     $prepared = $this->dbh->prepare('UPDATE "' . USER_ROLE_TABLE .
-                         '" SET "role_id" = ?, "board" = ?, "all_boards" = ? WHERE "entry" = ?');
+                        '" SET "role_id" = ?, "board" = ?, "all_boards" = ? WHERE "entry" = ?');
                     $this->dbh->executePrepared($prepared, array($set['role_id'], $set['board'], $set['all_boards'],
                         $entry));
                 }
@@ -461,7 +480,7 @@ class Authorization
             else
             {
                 $prepared = $this->dbh->prepare('INSERT INTO "' . USER_ROLE_TABLE .
-                     '" ("user_id", "role_id", "board", "all_boards") VALUES (?, ?, ?, ?)');
+                    '" ("user_id", "role_id", "board", "all_boards") VALUES (?, ?, ?, ?)');
                 $this->dbh->executePrepared($prepared, array($user_id, $set['role_id'], $set['board'],
                     $set['all_boards']));
             }
@@ -538,7 +557,7 @@ class Authorization
         foreach ($perms_data as $key => $value)
         {
             $query = 'UPDATE "' . PERMISSIONS_TABLE . '" SET "perm_setting" = :setting WHERE "perm_id" = \'' . $key .
-                 '\' AND "role_id" = :role';
+                '\' AND "role_id" = :role';
             $prepared = $this->dbh->prepare($query);
             $prepared->bindValue(':setting', $value, PDO::PARAM_INT);
             $prepared->bindValue(':role', $role, PDO::PARAM_INT);

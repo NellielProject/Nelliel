@@ -33,6 +33,13 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
 
     $new_post_element = $posting_form->doXPathQuery(".//input[@name='new_post[post_info][response_to]']", $posting_form)->item(0);
     $new_post_element->extSetAttribute('value', $response_to);
+
+    if(!nel_sessions()->sessionIsIgnored())
+    {
+        $post_action = $posting_form->doXPathQuery(".//input[@name='action']", $posting_form)->item(0);
+        $post_action->extSetAttribute('value', 'new-staff-post');
+    }
+
     $dom->getElementById('not-anonymous')->extSetAttribute('maxlength', $board_settings['max_name_length']);
     $dom->getElementById('spam-target')->extSetAttribute('maxlength', $board_settings['max_email_length']);
     $dom->getElementById('verb')->extSetAttribute('maxlength', $board_settings['max_subject_length']);
