@@ -77,7 +77,7 @@ function nel_render_staff_panel_user_edit($user_id)
 
     if (!is_null($user_id))
     {
-        $user = $authorize->get_user($user_id);
+        $user = $authorize->getUser($user_id);
         $dom->getElementById('user-id-field')->extSetAttribute('value', $user['user_id']);
         $dom->getElementById('user-title-field')->extSetAttribute('value', $user['user_title']);
     }
@@ -131,7 +131,7 @@ function nel_render_staff_panel_user_edit($user_id)
 function nel_render_staff_panel_role_edit($role_id)
 {
     $authorize = nel_authorize();
-    $role = $authorize->get_role($role_id);
+    $role = $authorize->getRole($role_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);

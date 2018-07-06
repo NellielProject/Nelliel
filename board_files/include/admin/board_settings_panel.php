@@ -16,7 +16,7 @@ function nel_board_settings_control($board_id, $action, $defaults = false)
 
     if ($action === 'update')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_modify', $board_id))
+        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_config_modify', $board_id))
         {
             nel_derp(331, _gettext('You are not allowed to modify the board settings.'));
         }

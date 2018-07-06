@@ -17,7 +17,7 @@ function nel_ban_control($board_id, $action)
 
     if ($action === 'modify')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify', $board_id))
+        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', $board_id))
         {
             nel_derp(322, _gettext('You are not allowed to modify bans.'));
         }
@@ -26,7 +26,7 @@ function nel_ban_control($board_id, $action)
     }
     else if ($action === 'new')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_add', $board_id))
+        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_add', $board_id))
         {
             nel_derp(321, _gettext('You are not allowed to add new bans.'));
         }
@@ -35,7 +35,7 @@ function nel_ban_control($board_id, $action)
     }
     else if ($action === 'add')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_add', $board_id))
+        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_add', $board_id))
         {
             nel_derp(321, _gettext('You are not allowed to add new bans.'));
         }
@@ -46,7 +46,7 @@ function nel_ban_control($board_id, $action)
     }
     else if ($action === 'remove')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_delete', $board_id))
+        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_delete', $board_id))
         {
             nel_derp(323, _gettext('You are not allowed to delete bans.'));
         }
@@ -57,7 +57,7 @@ function nel_ban_control($board_id, $action)
     }
     else if ($action === 'update')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify', $board_id))
+        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', $board_id))
         {
             nel_derp(322, _gettext('You are not allowed to modify bans.'));
         }
@@ -68,7 +68,7 @@ function nel_ban_control($board_id, $action)
     }
     else
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_ban_access', $board_id))
+        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_access', $board_id))
         {
             nel_derp(320, _gettext('You are not allowed to access the bans panel.'));
         }

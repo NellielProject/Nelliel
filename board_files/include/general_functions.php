@@ -7,8 +7,8 @@ if (!defined('NELLIEL_VERSION'))
 function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_delay = 2)
 {
     $authorize = nel_authorize();
-    $authorize->save_users();
-    $authorize->save_roles();
+    $authorize->saveUsers();
+    $authorize->saveRoles();
     $authorize->save_user_roles();
 
     if ($redirect)

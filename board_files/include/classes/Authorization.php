@@ -70,32 +70,6 @@ class Authorization
         return array_key_exists($role, $this->roles);
     }
 
-    private function load_all_users($retain)
-    {
-        $user_list = $this->get_user_list();
-
-        foreach ($user_list as $user_id)
-        {
-            if (!$this->user_loaded($user) || !$retain)
-            {
-                $this->set_up_user($user_id);
-            }
-        }
-    }
-
-    private function load_all_roles($retain)
-    {
-        $role_list = $this->get_role_list();
-
-        foreach ($role_list as $role_id)
-        {
-            if (!$this->role_loaded($role_id) || !$retain)
-            {
-                $this->set_up_role($role_id);
-            }
-        }
-    }
-
     private function get_user_list()
     {
         $result = $this->dbh->query('SELECT "user_id" FROM "' . USER_TABLE . '"');
@@ -142,26 +116,26 @@ class Authorization
 
     public function set_up_user($user_id)
     {
-        $user_data = $this->load_user($user_id);
+        $user_info = $this->load_user($user_id);
 
-        if ($user_data === false)
+        if ($user_info === false)
         {
             return false;
         }
 
-        foreach ($user_data as $key => $value)
+        $this->users[$user_id] = $user_info;
+        $user_roles = $this->load_user_roles($user_id);
+
+        if ($user_roles === false)
         {
-            $this->users[$user_id][$key] = $value;
+            return false;
         }
 
-        $user_roles = $this->load_user_roles($user_id);
+        $this->user_roles[$user_id] = $user_roles;
 
         foreach ($user_roles as $role)
         {
-            foreach ($role as $key => $value)
-            {
-                $this->user_roles[$user_id][$role['board']][$key] = $value;
-            }
+            $this->set_up_role($role['role_id']);
         }
 
         return true;
@@ -203,119 +177,27 @@ class Authorization
         return true;
     }
 
-    public function get_user($user)
-    {
-        if ($this->user_exists($user))
-        {
-            return $this->users[$user];
-        }
-
-        return false;
-    }
-
-    public function get_user_info($user, $info)
-    {
-        if ($this->user_exists($user))
-        {
-            return $this->users[$user][$info];
-        }
-
-        return false;
-    }
-
-    public function get_user_role($user, $board_id = '')
-    {
-        if ($this->user_exists($user))
-        {
-            if (isset($this->user_roles[$user]['']))
-            {
-                return $this->user_roles[$user][''];
-            }
-
-            if (isset($this->user_roles[$user][$board_id]))
-            {
-                return $this->user_roles[$user][$board_id];
-            }
-        }
-
-        return false;
-    }
-
-    public function get_role($role)
-    {
-        if ($this->role_exists($role))
-        {
-            return $this->roles[$role];
-        }
-
-        return false;
-    }
-
-    public function get_role_info($role, $info)
-    {
-        if ($this->role_exists($role))
-        {
-            return $this->roles[$role][$info];
-        }
-
-        return false;
-    }
-
-    public function get_role_all_perms($role_id)
-    {
-        $perms = array();
-
-        if ($this->role_exists($role_id))
-        {
-            $perms = $this->roles[$role_id]['permissions'];
-        }
-
-        return $perms;
-    }
-
-    public function get_role_perm($role_id, $perm)
-    {
-        if ($this->role_exists($role_id))
-        {
-            return isset($this->roles[$role_id]['permissions'][$perm]) && $this->roles[$role_id]['permissions'][$perm];
-        }
-
-        return false;
-    }
-
-    public function get_user_perm($user_id, $perm, $board = '')
+    public function getUser($user_id)
     {
         if ($this->user_exists($user_id))
         {
-            if (isset($this->user_roles[$user_id][$board]) &&
-                $this->get_role_perm($this->user_roles[$user_id][$board]['role_id'], $perm))
-            {
-                return true;
-            }
-
-            if (isset($this->user_roles[$user_id]['']) &&
-                $this->get_role_perm($this->user_roles[$user_id]['']['role_id'], $perm))
-            {
-                return true;
-            }
+            return $this->users[$user_id];
         }
 
         return false;
     }
 
-    public function update_user($user, $update)
+    public function getUserInfo($user_id, $info)
     {
-        if ($this->user_exists($user))
+        if ($this->user_exists($user_id))
         {
-            $this->users[$user] = $update;
-            $this->users_modified[$user] = true;
-            return true;
+            return $this->users[$user_id][$info];
         }
 
         return false;
     }
 
-    public function update_user_info($user_id, $info, $update)
+    public function updateUserInfo($user_id, $info, $update)
     {
         if ($this->user_exists($user_id))
         {
@@ -327,35 +209,114 @@ class Authorization
         return false;
     }
 
-    public function update_role($role_id, $update)
+    public function getUserPerm($user_id, $perm, $board = null)
     {
-        if ($this->role_exists($role_id))
+        if (!$this->user_exists($user_id))
         {
-            $this->roles[$role_id] = $update;
-            $this->roles_modified[$role_id] = true;
-            return true;
+            return false;
+        }
+
+        foreach ($this->user_roles[$user_id] as $role)
+        {
+            if (is_null($board) && $this->getRolePerm($role['role_id'], $perm))
+            {
+                return true;
+            }
+            else if ($role['role_id']['board'] === $board && $this->getRolePerm($role['role_id'], $perm))
+            {
+                return true;
+            }
         }
 
         return false;
     }
 
-    public function update_user_role($user_id, $update, $board_id, $remove = false)
+    public function getRole($role_id)
     {
-        if ($this->user_exists($user_id))
+        if (!$this->role_exists($role_id))
         {
-            $updated = false;
+            return false;
+        }
 
-            if ($update['all_boards'] == 1)
+        return $this->roles[$role_id];
+    }
+
+    public function getRoleInfo($role_id, $info)
+    {
+        if (!$this->role_exists($role_id))
+        {
+            return false;
+        }
+
+        return $this->roles[$role_id][$info];
+    }
+
+    public function updateRoleInfo($role_id, $info, $update)
+    {
+        if (!$this->role_exists($role_id))
+        {
+            return false;
+        }
+
+        $this->roles[$role_id][$info] = $update;
+        $this->roles_modified[$role_id] = true;
+        return true;
+    }
+
+    public function getRolePerm($role_id, $perm)
+    {
+        if (!$this->role_exists($role_id))
+        {
+            return false;
+        }
+
+        return $this->roles[$role_id]['permissions'][$perm];
+    }
+
+    public function updateRolePerm($role_id, $perm, $update)
+    {
+        if (!$this->role_exists($role_id))
+        {
+            return false;
+        }
+
+        $this->roles[$role_id]['permissions'][$perm] = $update;
+        $this->roles_modified[$role_id] = true;
+        return true;
+    }
+
+    public function updateUserRole($user_id, $role_id, $board_id, $remove = false)
+    {
+        if (!$this->user_exists($user_id))
+        {
+            return false;
+        }
+
+        foreach ($this->user_roles[$user_id] as $key => $user_role)
+        {
+            if ($user_role['board'] === $board_id)
             {
-                $update['board'] = '';
-            }
+                if ($remove)
+                {
+                    $this->user_roles[$user_id][$key]['remove'] = true;
+                }
+                else
+                {
+                    $this->user_roles[$user_id][$key]['board'] = $board_id;
+                    $this->user_roles[$user_id][$key]['role_id'] = $role_id;
+                }
 
-            foreach ($update as $key => $value)
-            {
-                $this->user_roles[$user_id][$board_id][$key] = $value;
+                $this->user_roles_modified[$user_id] = true;
+                return true;
             }
+        }
 
-            $this->user_roles[$user_id][$board_id]['remove'] = $remove;
+        if (!$remove)
+        {
+            $this->user_roles[$user_id][$key]['user_id'] = $user_id;
+            $this->user_roles[$user_id][$key]['role_id'] = $role_id;
+            $this->user_roles[$user_id][$key]['board'] = $board_id;
+            $this->user_roles[$user_id][$key]['all_boards'] = ($board_id === '') ? 1 : 0;
             $this->user_roles_modified[$user_id] = true;
             return true;
         }
@@ -363,7 +324,7 @@ class Authorization
         return false;
     }
 
-    public function update_perm($role_id, $perm, $update)
+    public function updatePerm($role_id, $perm, $update)
     {
         if ($this->role_exists($role_id))
         {
@@ -382,7 +343,7 @@ class Authorization
 
         foreach ($this->user_roles[$user_id] as $key => $value)
         {
-            $level = $this->get_role_info($value['role_id'], 'role_level');
+            $level = $this->getRoleInfo($value['role_id'], 'role_level');
 
             if ($key !== '' && $board_id !== $key)
             {
@@ -391,7 +352,7 @@ class Authorization
 
             if ($level > $role_level)
             {
-                $role_level = $this->get_role_info($value['role_id'], 'role_level');
+                $role_level = $this->getRoleInfo($value['role_id'], 'role_level');
                 $role = $value['role_id'];
             }
         }
@@ -411,8 +372,8 @@ class Authorization
             return true;
         }
 
-        $level1 = $this->get_role_info($role1, 'role_level');
-        $level2 = $this->get_role_info($role2, 'role_level');
+        $level1 = $this->getRoleInfo($role1, 'role_level');
+        $level2 = $this->getRoleInfo($role2, 'role_level');
 
         if ($false_if_equal)
         {
@@ -424,7 +385,7 @@ class Authorization
         }
     }
 
-    public function save_roles()
+    public function saveRoles()
     {
         foreach ($this->roles_modified as $key => $value)
         {
@@ -433,7 +394,7 @@ class Authorization
         }
     }
 
-    public function save_users()
+    public function saveUsers()
     {
         foreach ($this->users_modified as $key => $value)
         {
@@ -446,12 +407,12 @@ class Authorization
     {
         foreach ($this->user_roles_modified as $key => $value)
         {
-            $this->save_user_role($key);
+            $this->saveUserRole($key);
             $this->user_roles_modified[$key] = false;
         }
     }
 
-    private function save_user_role($user_id)
+    private function saveUserRole($user_id)
     {
         $user_role_data = $this->user_roles[$user_id];
 
@@ -472,17 +433,15 @@ class Authorization
                 else
                 {
                     $prepared = $this->dbh->prepare('UPDATE "' . USER_ROLE_TABLE .
-                        '" SET "role_id" = ?, "board" = ?, "all_boards" = ? WHERE "entry" = ?');
-                    $this->dbh->executePrepared($prepared, array($set['role_id'], $set['board'], $set['all_boards'],
-                        $entry));
+                        '" SET "role_id" = ?, "board" = ? WHERE "entry" = ?');
+                    $this->dbh->executePrepared($prepared, array($set['role_id'], $set['board'], $entry));
                 }
             }
             else
             {
                 $prepared = $this->dbh->prepare('INSERT INTO "' . USER_ROLE_TABLE .
-                    '" ("user_id", "role_id", "board", "all_boards") VALUES (?, ?, ?, ?)');
-                $this->dbh->executePrepared($prepared, array($user_id, $set['role_id'], $set['board'],
-                    $set['all_boards']));
+                    '" ("user_id", "role_id", "board") VALUES (?, ?, ?, ?)');
+                $this->dbh->executePrepared($prepared, array($user_id, $set['role_id'], $set['board']));
             }
         }
     }

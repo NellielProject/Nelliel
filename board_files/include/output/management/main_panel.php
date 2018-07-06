@@ -75,7 +75,7 @@ function nel_render_main_board_panel($board_id)
     $manage_options = $dom->getElementById('manage-options');
     $settings = $dom->getElementById('module-board-settings');
 
-    if ($authorize->get_user_perm($_SESSION['username'], 'perm_config_access', $board_id))
+    if ($authorize->getUserPerm($_SESSION['username'], 'perm_config_access', $board_id))
     {
         $settings_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $settings);
         $settings_elements['board-settings-link']->extSetAttribute('href',
@@ -88,7 +88,7 @@ function nel_render_main_board_panel($board_id)
 
     $bans = $dom->getElementById('module-bans');
 
-    if ($authorize->get_user_perm($_SESSION['username'], 'perm_ban_access', $board_id))
+    if ($authorize->getUserPerm($_SESSION['username'], 'perm_ban_access', $board_id))
     {
         $bans_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $bans);
         $bans_elements['bans-link']->extSetAttribute('href',
@@ -101,7 +101,7 @@ function nel_render_main_board_panel($board_id)
 
     $threads = $dom->getElementById('module-threads');
 
-    if ($authorize->get_user_perm($_SESSION['username'], 'perm_post_access', $board_id))
+    if ($authorize->getUserPerm($_SESSION['username'], 'perm_post_access', $board_id))
     {
         $threads_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $threads);
         $threads_elements['threads-link']->extSetAttribute('href',
@@ -125,12 +125,12 @@ function nel_render_main_board_panel($board_id)
         $bans->removeSelf();
     }
 
-    if ($authorize->get_user_perm($_SESSION['username'], 'perm_regen_index', $board_id))
+    if ($authorize->getUserPerm($_SESSION['username'], 'perm_regen_index', $board_id))
     {
         $dom->removeChild($dom->getElementById('page-regen-form'));
     }
 
-    if ($authorize->get_user_perm($_SESSION['username'], 'perm_regen_caches', $board_id))
+    if ($authorize->getUserPerm($_SESSION['username'], 'perm_regen_caches', $board_id))
     {
         $dom->removeChild($dom->getElementById('cache-regen-form'));
     }

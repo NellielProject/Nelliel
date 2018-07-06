@@ -17,8 +17,8 @@ function nel_verify_login_or_session($manage, $action)
     {
         if ($_POST['username'] !== '' && $authorize->user_exists($_POST['username']))
         {
-            $user_login_fails = $authorize->get_user_info($_POST['username'], 'failed_logins');
-            $last_user_attempt = $authorize->get_user_info($_POST['username'], 'last_failed_login');
+            $user_login_fails = $authorize->getUserInfo($_POST['username'], 'failed_logins');
+            $last_user_attempt = $authorize->getUserInfo($_POST['username'], 'last_failed_login');
 
             if ($user_login_fails > 10 && time() - $last_user_attempt < 300)
             {
@@ -30,7 +30,7 @@ function nel_verify_login_or_session($manage, $action)
                 nel_derp(303, _gettext('This account has had too many failed login attempts and has been temporarily locked for 30 minutes.'));
             }
 
-            if (nel_password_verify($_POST['super_sekrit'], $authorize->get_user_info($_POST['username'], 'user_password')))
+            if (nel_password_verify($_POST['super_sekrit'], $authorize->getUserInfo($_POST['username'], 'user_password')))
             {
                 $login_valid = true;
                 $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
