@@ -11,14 +11,16 @@ function nel_render_thread_panel_main($board_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, $board_id, array('header' => 'Board Management', 'sub_header' => 'Threads'));
+    nel_render_general_header($render, null, $board_id,
+            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Threads')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel.html');
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
-    $dom->getElementById('thread-list-form')->extSetAttribute('action', PHP_SELF .
-         '?manage=board&module=threads&board_id=' . $board_id);
-    $thread_data = $dbh->executeFetchAll('SELECT * FROM "' . $references['thread_table'] .
-         '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC', PDO::FETCH_ASSOC);
+    $dom->getElementById('thread-list-form')->extSetAttribute('action',
+            PHP_SELF . '?manage=board&module=threads&board_id=' . $board_id);
+    $thread_data = $dbh->executeFetchAll(
+            'SELECT * FROM "' . $references['thread_table'] .
+            '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC', PDO::FETCH_ASSOC);
     $thread_list_table = $dom->getElementById('thread-list');
     $thread_row = $dom->getElementById('thread-row-');
     $i = 0;
@@ -72,8 +74,8 @@ function nel_render_thread_panel_main($board_id)
 
         $thread_subject_link = $temp_thread_row->getElementById('thread-subject-link-');
         $thread_subject_link->setContent($op_post['subject']);
-        $thread_subject_link->extSetAttribute('href', $references['page_dir'] . $thread['thread_id'] . '/' .
-             $thread['thread_id'] . '.html', 'none');
+        $thread_subject_link->extSetAttribute('href',
+                $references['page_dir'] . $thread['thread_id'] . '/' . $thread['thread_id'] . '.html', 'none');
         $thread_subject_link->changeId('thread-subject-link-' . $thread['thread_id']);
 
         $thread_op_name = $temp_thread_row->getElementById('thread-op-name-');
@@ -119,11 +121,12 @@ function nel_render_thread_panel_expand($board_id, $thread_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, $board_id, array('header' => 'Board Management', 'sub_header' => 'Threads'));
+    nel_render_general_header($render, null, $board_id,
+            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Threads')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
-    $dom->getElementById('thread-list-form')->extSetAttribute('action', PHP_SELF .
-         '?manage=board&module=threads&board_id=' . $board_id);
+    $dom->getElementById('thread-list-form')->extSetAttribute('action',
+            PHP_SELF . '?manage=board&module=threads&board_id=' . $board_id);
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
     $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "parent_thread" = ?');
     $post_data = $dbh->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
@@ -151,8 +154,8 @@ function nel_render_thread_panel_expand($board_id, $thread_id)
         $post_last_update->changeId('post-time-' . $post['post_number']); /////
         $post_subject_link = $temp_post_row->getElementById('post-subject-link-');
         $post_subject_link->setContent($post['subject']);
-        $post_subject_link->extSetAttribute('href', $references['page_dir'] . $post['parent_thread'] . '/' .
-             $post['post_number'] . '.html', 'none');
+        $post_subject_link->extSetAttribute('href',
+                $references['page_dir'] . $post['parent_thread'] . '/' . $post['post_number'] . '.html', 'none');
         $post_subject_link->changeId('post-subject-link-' . $post['post_number']);
 
         $post_name = $temp_post_row->getElementById('post-name-');

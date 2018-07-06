@@ -10,20 +10,26 @@ function nel_render_staff_panel_main()
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null, array('header' => 'General Management', 'sub_header' => 'Staff'));
+    nel_render_general_header($render, null, null,
+            array('header' => _gettext('General Management'), 'sub_header' => _gettext('Staff')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_main.html');
     $user_table = $dom->getElementById('user-table');
     $user_node_array = $dom->getAssociativeNodeArray('data-parse-id', $user_table);
     $users = $dbh->executeFetchAll('SELECT "user_id", "user_title" FROM "' . USER_TABLE . '"', PDO::FETCH_ASSOC);
-    $dom->getElementById('edit-user-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=user');
-    $dom->getElementById('new-user-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=user');
-    $dom->getElementById('edit-role-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=role');
-    $dom->getElementById('new-role-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=role');
+    $dom->getElementById('edit-user-form')->extSetAttribute('action',
+            PHP_SELF . '?manage=general&module=staff&section=user');
+    $dom->getElementById('new-user-form')->extSetAttribute('action',
+            PHP_SELF . '?manage=general&module=staff&section=user');
+    $dom->getElementById('edit-role-form')->extSetAttribute('action',
+            PHP_SELF . '?manage=general&module=staff&section=role');
+    $dom->getElementById('new-role-form')->extSetAttribute('action',
+            PHP_SELF . '?manage=general&module=staff&section=role');
 
     foreach ($users as $user)
     {
-        $user_row = $user_table->insertBefore($user_node_array['user-row']->cloneNode(true), $user_node_array['submit-row']);
+        $user_row = $user_table->insertBefore($user_node_array['user-row']->cloneNode(true),
+                $user_node_array['submit-row']);
         $row_node_array = $user_row->getAssociativeNodeArray('data-parse-id');
         $row_node_array['user-select']->extSetAttribute('value', $user['user_id']);
         $row_node_array['user-name']->setContent($user['user_id']);
@@ -38,7 +44,8 @@ function nel_render_staff_panel_main()
 
     foreach ($roles as $role)
     {
-        $role_row = $role_table->insertBefore($role_node_array['role-row']->cloneNode(true), $role_node_array['submit-row']);
+        $role_row = $role_table->insertBefore($role_node_array['role-row']->cloneNode(true),
+                $role_node_array['submit-row']);
         $row_node_array = $role_row->getAssociativeNodeArray('data-parse-id');
         $row_node_array['role-select']->extSetAttribute('value', $role['role_id']);
         $row_node_array['role-name']->setContent($role['role_id']);
@@ -61,10 +68,12 @@ function nel_render_staff_panel_user_edit($user_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null, array('header' => 'General Management', 'sub_header' => 'Staff'));
+    nel_render_general_header($render, null, null,
+            array('header' => _gettext('General Management'), 'sub_header' => _gettext('Staff: Edit User')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_user_edit.html');
-    $dom->getElementById('user-edit-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=user');
+    $dom->getElementById('user-edit-form')->extSetAttribute('action',
+            PHP_SELF . '?manage=general&module=staff&section=user');
 
     if (!is_null($user_id))
     {
@@ -126,10 +135,12 @@ function nel_render_staff_panel_role_edit($role_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null, array('header' => 'General Management', 'sub_header' => 'Staff'));
+    nel_render_general_header($render, null, null,
+            array('header' => _gettext('General Management'), 'sub_header' => _gettext('Staff: Edit Role')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_role_edit.html');
-    $dom->getElementById('role-edit-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=staff&section=role');
+    $dom->getElementById('role-edit-form')->extSetAttribute('action',
+            PHP_SELF . '?manage=general&module=staff&section=role');
 
     if (!is_null($role_id))
     {

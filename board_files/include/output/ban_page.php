@@ -14,20 +14,23 @@ function nel_render_ban_page($board_id, $ban_info)
     nel_render_board_header($board_id, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'ban_page.html');
-    $banned_board = ($ban_info['all_boards'] > 0) ? 'All Boards' : $ban_info['board'];
+    $banned_board = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board'];
     $ban_page_node_array = $dom->getAssociativeNodeArray('data-parse-id');
     $ban_page_node_array['banned-board']->setContent($banned_board);
     $ban_page_node_array['banned-time']->setContent(date("D F jS Y  H:i", $ban_info['start_time']));
     $ban_page_node_array['banned-reason']->setContent($ban_info['reason']);
-    $ban_page_node_array['banned-length']->setContent(date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']));
+    $ban_page_node_array['banned-length']->setContent(
+            date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']));
     $ban_page_node_array['banned-ip']->setContent(@inet_ntop($ban_info['ip_address_start']));
     $appeal_form_element = $dom->getElementById('appeal-form');
 
     if ($ban_info['appeal_status'] == 0)
     {
         $appeal_form_element->extSetAttribute('action', PHP_SELF . '?module=ban-page');
-        $appeal_form_element->doXPathQuery(".//input[@name='ban_ip']")->item(0)->extSetAttribute('value', @inet_ntop($ban_info['ip_address_start']));
-        $appeal_form_element->doXPathQuery(".//input[@name='ban_board']")->item(0)->extSetAttribute('value', $banned_board);
+        $appeal_form_element->doXPathQuery(".//input[@name='ban_ip']")->item(0)->extSetAttribute('value',
+                @inet_ntop($ban_info['ip_address_start']));
+        $appeal_form_element->doXPathQuery(".//input[@name='ban_board']")->item(0)->extSetAttribute('value',
+                $banned_board);
     }
     else
     {
@@ -47,12 +50,14 @@ function nel_render_ban_page($board_id, $ban_info)
     {
         if ($ban_info['appeal_status'] == 2)
         {
-            $ban_page_node_array['appeal-what-done']->setContent(_gettext('You appeal has been reviewed. You cannot appeal again.'));
+            $ban_page_node_array['appeal-what-done']->setContent(
+                    _gettext('You appeal has been reviewed. You cannot appeal again.'));
         }
 
         if ($ban_info['appeal_status'] == 3)
         {
-            $ban_page_node_array['appeal-what-done']->setContent(_gettext('Your appeal has been reviewed and the ban has been altered.'));
+            $ban_page_node_array['appeal-what-done']->setContent(
+                    _gettext('Your appeal has been reviewed and the ban has been altered.'));
         }
 
         if ($ban_info['appeal_response'] != '')

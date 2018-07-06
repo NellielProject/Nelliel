@@ -10,12 +10,12 @@ function nel_render_file_filter_panel()
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null, array('header' => 'Board Management',
-        'sub_header' => 'Bans'));
+    nel_render_general_header($render, null, null,
+            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('File Filters')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/file_filter_panel.html');
-    $dom->getElementById('add-file-filter-form')->extSetAttribute('action', PHP_SELF .
-         '?manage=general&module=file-filter');
+    $dom->getElementById('add-file-filter-form')->extSetAttribute('action',
+            PHP_SELF . '?manage=general&module=file-filter');
 
     $result = $dbh->query('SELECT * FROM "' . FILE_FILTER_TABLE . '" ORDER BY "entry" DESC');
     $file_filter_table = $dom->getElementById('file-filter-table');
@@ -44,7 +44,8 @@ function nel_render_file_filter_panel()
         $form_remove_filter = $temp_filter_info_row->getElementById('form-remove-filter-');
         $form_remove_filter->extSetAttribute('action', PHP_SELF . '?manage=general&module=file-filter');
         $form_remove_filter->changeId('form-remove-filter-' . $filter_info['entry']);
-        $form_remove_filter->doXPathQuery(".//input[@name='filter_id']")->item(0)->extSetAttribute('value', $filter_info['entry']);
+        $form_remove_filter->doXPathQuery(".//input[@name='filter_id']")->item(0)->extSetAttribute('value',
+                $filter_info['entry']);
 
         $file_filter_table->appendChild($temp_filter_info_row);
         $i ++;

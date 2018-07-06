@@ -58,7 +58,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     {
         for ($i = 2, $j = 3; $i <= $board_settings['max_post_files']; ++ $i, ++ $j)
         {
-            if(!$response_to && !$board_settings['allow_op_multifile'])
+            if (!$response_to && !$board_settings['allow_op_multifile'])
             {
                 break;
             }

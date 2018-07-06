@@ -10,7 +10,8 @@ function nel_render_main_ban_panel($board_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, $board_id, array('header' => 'Board Management', 'sub_header' => 'Bans'));
+    nel_render_general_header($render, null, $board_id,
+            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_main.html');
 
@@ -36,7 +37,8 @@ function nel_render_main_ban_panel($board_id)
         $ban_info_td_list = $temp_ban_info_row->doXPathQuery(".//td");
         $ban_info_td_list->item(0)->setContent($ban_info['ban_id']);
         $ban_info_td_list->item(1)->setContent($ban_info['type']);
-        $ban_info_td_list->item(2)->setContent($ban_info['ip_address_start'] ? @inet_ntop($ban_info['ip_address_start']) : 'Unknown');
+        $ban_info_td_list->item(2)->setContent(
+                $ban_info['ip_address_start'] ? @inet_ntop($ban_info['ip_address_start']) : 'Unknown');
         $ban_info_td_list->item(3)->setContent($ban_info['board_id']);
         $ban_info_td_list->item(4)->setContent($ban_info['reason']);
         $ban_info_td_list->item(5)->setContent(date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']));
@@ -52,7 +54,8 @@ function nel_render_main_ban_panel($board_id)
         $form_remove_ban = $temp_ban_info_row->getElementById('form-remove-ban-');
         $form_remove_ban->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&board_id=' . $board_id);
         $form_remove_ban->changeId('form-remove-ban-' . $ban_info['ban_id']);
-        $form_remove_ban->doXPathQuery(".//input[@name='ban_id']")->item(0)->extSetAttribute('value', $ban_info['ban_id']);
+        $form_remove_ban->doXPathQuery(".//input[@name='ban_id']")->item(0)->extSetAttribute('value',
+                $ban_info['ban_id']);
 
         $ban_info_table->appendChild($temp_ban_info_row);
         $i ++;
@@ -76,11 +79,12 @@ function nel_render_ban_panel_add($board_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, $board_id, array('header' => 'Board Management', 'sub_header' => 'Bans'));
+    nel_render_general_header($render, null, $board_id,
+            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
-    $dom->getElementById('add-ban-form')->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&board_id=' .
-         $board_id);
+    $dom->getElementById('add-ban-form')->extSetAttribute('action',
+            PHP_SELF . '?manage=board&module=bans&board_id=' . $board_id);
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
     nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
@@ -96,18 +100,19 @@ function nel_render_ban_panel_modify($board_id)
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, $board_id, array('header' => 'Board Management', 'sub_header' => 'Bans'));
+    nel_render_general_header($render, null, $board_id,
+            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_modify_ban.html');
 
-    $dom->getElementById('modify-ban-form')->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&board_id=' .
-         $board_id);
+    $dom->getElementById('modify-ban-form')->extSetAttribute('action',
+            PHP_SELF . '?manage=board&module=bans&board_id=' . $board_id);
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
     $ban_info = $ban_hammer->getBanById($_POST['ban_id'], true);
     $dom->getElementById('ban-ip-field')->extSetAttribute('value', @inet_ntop($ban_info['ip_address_start']));
     $dom->getElementById('ban-time-display')->setContent(date("D F jS Y  H:i:s", $ban_info['start_time']));
-    $dom->getElementById('ban-expiration-display')->setContent(date("D F jS Y  H:i:s", $ban_info['length'] +
-         $ban_info['start_time']));
+    $dom->getElementById('ban-expiration-display')->setContent(
+            date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']));
     $dom->getElementById('ban-time-years')->extSetAttribute('value', $ban_info['years']);
     $dom->getElementById('ban-time-months')->extSetAttribute('value', $ban_info['months']);
     $dom->getElementById('ban-time-days')->extSetAttribute('value', $ban_info['days']);

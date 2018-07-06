@@ -125,7 +125,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $post_header_node_array['poster-name']->modifyAttribute('class', $post_type, 'before');
     $tripcode = (!empty($post_data['tripcode'])) ? $board_settings['tripkey_marker'] . $post_data['tripcode'] : '';
     $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $board_settings['tripkey_marker'] .
-        $board_settings['tripkey_marker'] . $post_data['secure_tripcode'] : '';
+            $board_settings['tripkey_marker'] . $post_data['secure_tripcode'] : '';
     $capcode_text = ($post_data['mod_post']) ? $authorize->get_role_info($post_data['mod_post'], 'capcode_text') : '';
     $trip_line = $tripcode . $secure_tripcode . '&nbsp;&nbsp;' . $capcode_text;
 
@@ -147,24 +147,25 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     {
         case 'ISO':
             $post_time = date("Y", $curr_time) . $board_settings['date_separator'] . date("m", $curr_time) .
-                $board_settings['date_separator'] . date("d (D) H:i:s", $curr_time);
+                    $board_settings['date_separator'] . date("d (D) H:i:s", $curr_time);
             break;
 
         case 'US':
             $post_time = date("m", $curr_time) . $board_settings['date_separator'] . date("d", $curr_time) .
-                $board_settings['date_separator'] . date("Y (D) H:i:s", $curr_time);
+                    $board_settings['date_separator'] . date("Y (D) H:i:s", $curr_time);
             break;
 
         case 'COM':
             $post_time = date("d", $curr_time) . $board_settings['date_separator'] . date("m", $curr_time) .
-                $board_settings['date_separator'] . date("Y (D) H:i:s", $curr_time);
+                    $board_settings['date_separator'] . date("Y (D) H:i:s", $curr_time);
             break;
     }
 
     $post_header_node_array['post-time-']->setContent($post_time);
     $post_header_node_array['post-num-link-']->setContent($post_data['post_number']);
-    $post_header_node_array['post-num-link-']->extSetAttribute('href', $references['page_dir'] .
-        $post_data['parent_thread'] . '/' . $post_data['parent_thread'] . '.html#p' . $post_id, 'none');
+    $post_header_node_array['post-num-link-']->extSetAttribute('href',
+            $references['page_dir'] . $post_data['parent_thread'] . '/' . $post_data['parent_thread'] . '.html#p' .
+            $post_id, 'none');
     $post_header_node_array['post-num-link-']->changeId('post-num-link-' . $post_id);
     $post_header_node_array['post-link-post']->extSetAttribute('data-id', $post_id);
 
@@ -182,13 +183,13 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     {
         if (!nel_sessions()->sessionIsIgnored('render'))
         {
-            $post_header_node_array['reply-to-link']->extSetAttribute('href', PHP_SELF . '?mode=display&post=' .
-                $post_data['post_number']);
+            $post_header_node_array['reply-to-link']->extSetAttribute('href',
+                    PHP_SELF . '?mode=display&post=' . $post_data['post_number']);
         }
         else
         {
-            $post_header_node_array['reply-to-link']->extSetAttribute('href', $references['page_dir'] .
-                $post_data['parent_thread'] . '/' . $post_data['post_number'] . '.html');
+            $post_header_node_array['reply-to-link']->extSetAttribute('href',
+                    $references['page_dir'] . $post_data['parent_thread'] . '/' . $post_data['post_number'] . '.html');
         }
     }
 
@@ -238,8 +239,8 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
             $temp_file_node_array['delete-file']->extSetAttribute('value', 'deletefile_' . $file_id);
 
             $file['file_location'] = 'http://' . $base_domain . '/' . $board_id . '/' . $references['src_dir'] .
-                $thread_id . '/' . $post_data['post_number'] . '/' . rawurlencode($file['filename']) . '.' .
-                $file['extension'];
+                    $thread_id . '/' . $post_data['post_number'] . '/' . rawurlencode($file['filename']) . '.' .
+                    $file['extension'];
             $file['display_filename'] = $file['filename'];
 
             if (strlen($file['filename']) > 32)
@@ -336,16 +337,16 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                     {
                         $file['has_preview'] = true;
                         $file['preview_location'] = 'http://' . $base_domain . '/' . $board_id . '/' .
-                            $references['thumb_dir'] . $thread_id . '/' . $post_data['post_number'] . '/' .
-                            rawurlencode($file['preview_name'] . '.' . $file['preview_extension']);
+                                $references['thumb_dir'] . $thread_id . '/' . $post_data['post_number'] . '/' .
+                                rawurlencode($file['preview_name'] . '.' . $file['preview_extension']);
 
                         if ($filecount > 1)
                         {
                             if ($file['preview_width'] > $board_settings['max_multi_width'] ||
-                                $file['preview_height'] > $board_settings['max_multi_height'])
+                                    $file['preview_height'] > $board_settings['max_multi_height'])
                             {
-                                $ratio = min(($board_settings['max_multi_height'] / $file['preview_height']), ($board_settings['max_multi_width'] /
-                                    $file['preview_width']));
+                                $ratio = min(($board_settings['max_multi_height'] / $file['preview_height']),
+                                        ($board_settings['max_multi_width'] / $file['preview_width']));
                                 $file['preview_width'] = intval($ratio * $file['preview_width']);
                                 $file['preview_height'] = intval($ratio * $file['preview_height']);
                             }
@@ -356,20 +357,21 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                         $format_icon = utf8_strtolower($file['format']) . '.png';
                         $type_icon = utf8_strtolower($file['type']) . '.png';
 
-                        if (file_exists(WEB_PATH . 'imagez/nelliel/filetype/' . utf8_strtolower($file['type']) . '/' .
-                            $format_icon))
+                        if (file_exists(
+                                WEB_PATH . 'imagez/nelliel/filetype/' . utf8_strtolower($file['type']) . '/' .
+                                $format_icon))
                         {
                             $file['has_preview'] = true;
                             $file['preview_location'] = 'http://' . $base_domain . '/web/imagez/nelliel/filetype/' .
-                                utf8_strtolower($file['format']) . '/' . $format_icon;
+                                    utf8_strtolower($file['format']) . '/' . $format_icon;
                             $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
                             $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
                         }
                         else if (file_exists(WEB_PATH . 'imagez/nelliel/filetype/generic/' . $type_icon))
                         {
                             $file['has_preview'] = true;
-                            $file['preview_location'] = 'http://' . $base_domain . '/web/imagez/nelliel/filetype/generic/' .
-                                $type_icon;
+                            $file['preview_location'] = 'http://' . $base_domain .
+                                    '/web/imagez/nelliel/filetype/generic/' . $type_icon;
                             $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
                             $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
                         }
@@ -382,8 +384,8 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                         $preview_element->extSetAttribute('height', $file['preview_height']);
                         $preview_element->extSetAttribute('alt', $file['alt_text']);
                         $preview_element->extSetAttribute('class', $post_type_class . $multiple_class . 'post-preview');
-                        $preview_element->extSetAttribute('data-other-dims', 'w' . $file['image_width'] . 'h' .
-                            $file['image_height']);
+                        $preview_element->extSetAttribute('data-other-dims',
+                                'w' . $file['image_width'] . 'h' . $file['image_height']);
                         $preview_element->extSetAttribute('data-other-loc', $file['file_location'], 'none');
                     }
                     else

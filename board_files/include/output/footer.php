@@ -10,7 +10,7 @@ function nel_render_board_footer($board_id, $render, $dotdot = null, $styles = t
     $render->loadTemplateFromFile($dom, 'footer.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
 
-    if(!$extra_links)
+    if (!$extra_links)
     {
         $dom->getElementById('bottom-extra-links')->removeSelf();
     }
@@ -28,12 +28,12 @@ function nel_render_general_footer($render, $dotdot = null, $styles = false, $ex
     $render->loadTemplateFromFile($dom, 'footer.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
 
-    if(!$styles)
+    if (!$styles)
     {
         $dom->getElementById('bottom-styles-span')->removeSelf();
     }
 
-    if(!$extra_links)
+    if (!$extra_links)
     {
         $dom->getElementById('bottom-extra-links')->removeSelf();
     }

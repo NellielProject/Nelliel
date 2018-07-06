@@ -14,23 +14,23 @@ function nel_render_board_settings_panel($board_id, $defaults)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/board_settings_panel.html');
 
-    if($defaults === true)
+    if ($defaults === true)
     {
         $references = nel_parameters_and_data()->boardReferences($board_id);
-        nel_render_general_header($render, null, null, array('header' => 'Board Management',
-        'sub_header' => 'Board Settings'));
+        nel_render_general_header($render, null, null,
+                array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Default Board Settings')));
         $result = $dbh->query('SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"');
-        $dom->getElementById('board-settings-form')->extSetAttribute('action', PHP_SELF .
-        '?manage=general&module=default-board-settings');
+        $dom->getElementById('board-settings-form')->extSetAttribute('action',
+                PHP_SELF . '?manage=general&module=default-board-settings');
     }
     else
     {
         $references = nel_parameters_and_data()->boardReferences($board_id);
-        nel_render_general_header($render, null, $board_id, array('header' => 'Board Management',
-        'sub_header' => 'Board Settings'));
+        nel_render_general_header($render, null, $board_id,
+                array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')));
         $result = $dbh->query('SELECT * FROM "' . $references['config_table'] . '"');
-        $dom->getElementById('board-settings-form')->extSetAttribute('action', PHP_SELF .
-        '?manage=board&module=board-settings&board_id=' . $board_id);
+        $dom->getElementById('board-settings-form')->extSetAttribute('action',
+                PHP_SELF . '?manage=board&module=board-settings&board_id=' . $board_id);
     }
 
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
@@ -43,7 +43,7 @@ function nel_render_board_settings_panel($board_id, $defaults)
         {
             $config_element = $dom->getElementById($config_line['config_name']);
 
-            if(is_null($config_element))
+            if (is_null($config_element))
             {
                 continue;
             }
@@ -52,18 +52,20 @@ function nel_render_board_settings_panel($board_id, $defaults)
             {
                 foreach ($filetypes as $filetype)
                 {
-                    if($filetype['format'] != $config_line['config_name'])
+                    if ($filetype['format'] != $config_line['config_name'])
                     {
                         continue;
                     }
 
-                    if($filetype['extension'] == $filetype['parent_extension'])
+                    if ($filetype['extension'] == $filetype['parent_extension'])
                     {
-                        $dom->getElementById('l_' . $filetype['format'])->setContent($filetype['label'] . ' - .' . $filetype['extension'], 'before');
+                        $dom->getElementById('l_' . $filetype['format'])->setContent(
+                                $filetype['label'] . ' - .' . $filetype['extension'], 'before');
                     }
                     else
                     {
-                        $dom->getElementById('l_' . $filetype['format'])->setContent(', .' . $filetype['extension'], 'after');
+                        $dom->getElementById('l_' . $filetype['format'])->setContent(', .' . $filetype['extension'],
+                                'after');
                     }
                 }
             }

@@ -33,7 +33,8 @@ function nel_render_rules_list($board_id)
 
         if ($list_set !== '')
         {
-            $current_list_item->setContent(sprintf(_gettext('Supported %s file types: '), $key) . substr($list_set, 0, -2));
+            $current_list_item->setContent(
+                    sprintf(_gettext('Supported %s file types: '), $key) . substr($list_set, 0, -2));
             $filetype_rules->appendChild($current_list_item);
         }
     }
@@ -43,7 +44,9 @@ function nel_render_rules_list($board_id)
     $size_limit->setContent(sprintf(_gettext('Maximum file size allowed is %dKB'), $board_settings['max_filesize']));
     $post_limits->appendChild($size_limit);
     $thumbnail_limit = $rules_item_element->cloneNode(true);
-    $thumbnail_limit->setContent(sprintf(_gettext('Images greater than %d x %d pixels will be thumbnailed.'), $board_settings['max_width'], $board_settings['max_height']));
+    $thumbnail_limit->setContent(
+            sprintf(_gettext('Images greater than %d x %d pixels will be thumbnailed.'), $board_settings['max_width'],
+                    $board_settings['max_height']));
     $post_limits->appendChild($thumbnail_limit);
     $rules_div->appendChild($filetype_rules);
     $rules_div->appendChild($post_limits);
