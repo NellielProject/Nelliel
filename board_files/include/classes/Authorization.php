@@ -285,14 +285,6 @@ class Authorization
         return false;
     }
 
-    public function get_tripcode_user($tripcode)
-    {
-        $query = 'SELECT "user_id" FROM "' . USER_TABLE . '" WHERE "user_secure_tripcode" = ?';
-        $prepared = $this->dbh->prepare($query);
-        $prepared->bindValue(1, $tripcode, PDO::PARAM_STR);
-        return $this->dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
-    }
-
     public function update_user($user, $update)
     {
         if ($this->user_exists($user))

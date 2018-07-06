@@ -65,7 +65,7 @@ function nel_staff_panel($section, $action)
                 nel_derp(341, _gettext('You are not allowed to modify staff.'));
             }
 
-            if (isset($_POST['change_pass']) && isset($_POST['user_password']))
+            if (isset($_POST['user_password']) && !empty($_POST['user_password']))
             {
                 $authorize->update_user_info($user_id, 'user_password', nel_password_hash($_POST['user_password'], NELLIEL_PASS_ALGORITHM));
             }
@@ -95,7 +95,7 @@ function nel_staff_panel($section, $action)
                     continue;
                 }
 
-                if ($key === 'action' || $key === 'user_password' || $key === 'change_pass' || $key === 'board_id')
+                if ($key === 'action' || $key === 'user_password' || $key === 'board_id')
                 {
                     continue;
                 }

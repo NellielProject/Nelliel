@@ -35,7 +35,7 @@ class PostData
             preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post_data['name'], $name_pieces);
             $post_data['name'] = $name_pieces[1];
             $post_data = $this->tripcodes($post_data, $name_pieces);
-            $post_data = $this->staffPost($post_data, $name_pieces);
+            //$post_data = $this->staffPost($post_data, $name_pieces);
         }
         else
         {

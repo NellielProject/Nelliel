@@ -280,7 +280,7 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'board_name', 'Nelliel-powered image board']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'board_favicon', '']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'board_logo', '']);
-        $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'board_language', 'en-us']);
+        $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'board_language', 'en-US']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'thread_delay', '120']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'reply_delay', '60']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'abbreviate_thread', '5']);
