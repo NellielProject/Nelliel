@@ -9,24 +9,22 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     $render->loadTemplateFromFile($dom, 'posting_form.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $post_form_return_link = $dom->getElementById('post-form-return-link');
-
-    if (!nel_sessions()->sessionIsIgnored('render'))
-    {
-        $page_ref1 = PHP_SELF . '?mode=display&page=0';
-        $page_ref2 = PHP_SELF . '?page=';
-    }
-    else
-    {
-        $page_ref1 = $references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT;
-    }
-
     $posting_form = $dom->getElementById('posting-form');
     $posting_form->extSetAttribute('action', $dotdot . PHP_SELF . '?module=post&board_id=' . $board_id);
     $dom->getElementById('board_id_field_post_form')->extSetAttribute('value', $board_id);
 
     if ($response_to)
     {
-        $post_form_return_link->doXPathQuery(".//a")->item(0)->extSetAttribute('href', $dotdot . $page_ref1);
+        if (!nel_sessions()->sessionIsIgnored('render'))
+        {
+            $return_url = PHP_SELF . '?manage=modmode&module=index&board_id=' . $board_id;
+        }
+        else
+        {
+            $return_url = $references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT;
+        }
+
+        $post_form_return_link->doXPathQuery(".//a")->item(0)->extSetAttribute('href', $dotdot . $return_url);
     }
     else
     {

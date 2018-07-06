@@ -115,8 +115,18 @@ function nel_admin_dispatch($inputs)
     }
     else if ($inputs['manage'] === 'modmode')
     {
-        require_once INCLUDE_PATH . 'output/main_generation.php';
-        nel_main_thread_generator($inputs['board_id'], 0, false);
+        switch ($inputs['module'])
+        {
+            case 'index':
+                require_once INCLUDE_PATH . 'output/main_generation.php';
+                nel_main_thread_generator($inputs['board_id'], 0, false);
+                break;
+
+            case 'thread':
+                require_once INCLUDE_PATH . 'output/thread_generation.php';
+                nel_thread_generator($inputs['board_id'], false, $inputs['section']);
+                break;
+        }
     }
     else
     {

@@ -19,7 +19,7 @@ function nel_thread_generator($board_id, $write, $response_to)
         nel_sessions()->sessionIsIgnored('render', true);
     }
 
-    $dotdot = '../../../';
+    $dotdot = ($write) ? '../../../' : '';
     $render = new NellielTemplates\RenderCore();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $dom = $render->newDOMDocument();
@@ -161,21 +161,8 @@ function nel_thread_generator($board_id, $write, $response_to)
     }
     else
     {
-        /*if ($dataforce['expand'])
-         {
-         echo $render->outputRenderSet('expand');
-         }
-         else if ($dataforce['collapse'])
-         {
-         echo $render->outputRenderSet('collapse');
-         }
-         else
-         {
-         echo $render->outputRenderSet();
-         }
-
-         nel_clean_exit();*/
-        // TODO: Modmode stuff
+        echo $render->outputRenderSet();
+        nel_clean_exit();
     }
 
     if ($write)

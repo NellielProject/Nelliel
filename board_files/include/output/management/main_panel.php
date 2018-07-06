@@ -118,7 +118,7 @@ function nel_render_main_board_panel($board_id)
     {
         $modmode_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $modmode);
         $modmode_elements['modmode-link']->extSetAttribute('href',
-                PHP_SELF . '?manage=modmode&board_id=' . $board_id);
+                PHP_SELF . '?manage=modmode&module=index&board_id=' . $board_id);
     }
     else
     {

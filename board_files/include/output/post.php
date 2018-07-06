@@ -184,7 +184,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
         if (!nel_sessions()->sessionIsIgnored('render'))
         {
             $post_header_node_array['reply-to-link']->extSetAttribute('href',
-                    PHP_SELF . '?mode=display&post=' . $post_data['post_number']);
+                    PHP_SELF . '?manage=modmode&module=thread&section=' . $post_data['post_number'] . '&board_id=' . $board_id);
         }
         else
         {

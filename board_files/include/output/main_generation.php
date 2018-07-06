@@ -224,8 +224,8 @@ function nel_main_thread_generator($board_id, $response_to, $write)
 
         if (!$write)
         {
-             echo $render->outputRenderSet();
-             nel_clean_exit();
+            echo $render->outputRenderSet();
+            nel_clean_exit();
         }
         else
         {
