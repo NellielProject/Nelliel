@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 require_once INCLUDE_PATH . 'output/posting_form.php';
 require_once INCLUDE_PATH . 'output/post.php';
 
-function nel_main_thread_generator($board_id, $response_to, $write)
+function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
 {
     $dbh = nel_database();
     $references = nel_parameters_and_data()->boardReferences($board_id);
@@ -57,8 +57,7 @@ function nel_main_thread_generator($board_id, $response_to, $write)
         return;
     }
 
-    $thread_counter = 0;
-    $page = 1;
+    $thread_counter = $page * $board_settings['threads_per_page'];
     $gen_data['post_counter'] = -1;
 
     while ($thread_counter < $counttree)
@@ -168,37 +167,43 @@ function nel_main_thread_generator($board_id, $response_to, $write)
         $dom->getElementById('post-id-')->removeSelf();
         $dom->getElementById('thread-')->removeSelf();
         $gen_params['posts_ending'] = true;
-
-        // if not in res display mode
-        $prev = $page - 1;
-        $next = $page + 1;
         $page_count = (int) ceil($counttree / $board_settings['threads_per_page']);
         $pages = array();
 
-        if ($page === 1)
+        if ($page === 0)
         {
-            $pages['prev'] = '';
+            $prev = '';
         }
-        else if ($page === 2)
+        else if ($page === 1)
         {
-            $pages['prev'] = PHP_SELF2 . PHP_EXT;
+            $prev = ($write) ? PHP_SELF2 . PHP_EXT : 'imgboard.php?manage=modmode&module=index&section=0&board_id=' . $board_id;
         }
         else
         {
-            $pages['prev'] = PHP_SELF2 . ($page - 2) . PHP_EXT;
+            $prev = ($write) ? PHP_SELF2 . ($page - 1) . PHP_EXT : 'imgboard.php?manage=modmode&module=index&section=' . ($page - 1) . '&board_id=' . $board_id;
         }
 
+        if ($page === ($page_count - 1) || $board_settings['page_limit'] === 1)
+        {
+            $next = '';
+        }
+        else
+        {
+            $next = ($write) ? PHP_SELF2 . ($page + 1) . PHP_EXT : 'imgboard.php?manage=modmode&module=index&section=' . ($page + 1) . '&board_id=' . $board_id;
+        }
+
+        $pages['prev'] = $prev;
         $i = 0;
 
         while ($i < $page_count)
         {
-            if ($i === 0)
+            if($i === 0)
             {
-                $pages[$i] = (($page > 1) ? PHP_SELF2 . PHP_EXT : '');
+                $pages[$i] = $prev;
             }
-            else if ($i === ($page - 1) || $board_settings['page_limit'] === 1)
+            else if($i === ($page_count - 1))
             {
-                $pages[$i] = '';
+                $pages[$i] = $next;
             }
             else
             {
@@ -208,14 +213,7 @@ function nel_main_thread_generator($board_id, $response_to, $write)
             ++ $i;
         }
 
-        if ($page === $page_count || $board_settings['page_limit'] === 1)
-        {
-            $pages['next'] = '';
-        }
-        else
-        {
-            $pages['next'] = PHP_SELF2 . ($page) . PHP_EXT;
-        }
+        $pages['next'] = $next;
 
         nel_render_index_navigation($board_id, $dom, $render, $pages);
         nel_render_thread_form_bottom($board_id, $dom);
@@ -229,8 +227,8 @@ function nel_main_thread_generator($board_id, $response_to, $write)
         }
         else
         {
-            $logfilename = ($page === 1) ? $references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT : $references['board_directory'] .
-                    '/' . PHP_SELF2 . ($page - 1) . PHP_EXT;
+            $logfilename = ($page === 0) ? $references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT : $references['board_directory'] .
+                    '/' . PHP_SELF2 . $page . PHP_EXT;
             $file_handler->writeFile($logfilename, $render->outputRenderSet(), FILE_PERM, true);
         }
 

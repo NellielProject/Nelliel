@@ -38,7 +38,7 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
 
         if ($value !== '')
         {
-            $page_link->extSetAttribute('href', $value, 'none');
+            $page_link->extSetAttribute('href', $value, 'attribute');
             $page_link->setContent($content);
         }
         else

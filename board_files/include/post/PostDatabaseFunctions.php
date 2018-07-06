@@ -41,7 +41,7 @@ class PostDatabaseFunctions
         $prepared->bindValue(':post_time', $time, PDO::PARAM_INT);
         $prepared->bindValue(':op', $post_data['op'], PDO::PARAM_INT);
         $prepared->bindValue(':sage', $post_data['sage'], PDO::PARAM_INT);
-        $prepared->bindValue(':mod_post', $post_data['modpost'], PDO::PARAM_STR);
+        $prepared->bindValue(':mod_post', '', PDO::PARAM_STR);
         $dbh->executePrepared($prepared);
     }
 
