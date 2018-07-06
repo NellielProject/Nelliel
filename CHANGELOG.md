@@ -1,4 +1,16 @@
 # Nelliel Changelog
+## v0.9.6.16 (2018/07/05)
+### Added
+ - Regen.php
+
+### Changed
+ - Default admin check moved to setup
+ - Collect autoloads together
+ - Some cleanup of templates, language strings
+
+### Removed
+ - regen.php
+
 ## v0.9.6.15 (2018/07/05)
 ### Changed
  - Move setup files into classes
