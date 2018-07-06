@@ -61,7 +61,8 @@ function nel_admin_dispatch($inputs)
             case 'language':
                 if ($inputs['action'] === 'extract-gettext')
                 {
-                    nel_language()->extractLanguageStrings(LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
+                    nel_language()->extractLanguageStrings(
+                            LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
                 }
 
                 nel_render_main_panel();
@@ -111,6 +112,11 @@ function nel_admin_dispatch($inputs)
                 nel_render_main_board_panel($inputs['board_id']);
                 break;
         }
+    }
+    else if ($inputs['manage'] === 'modmode')
+    {
+        require_once INCLUDE_PATH . 'output/main_generation.php';
+        nel_main_thread_generator($inputs['board_id'], 0, false);
     }
     else
     {

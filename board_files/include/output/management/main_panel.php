@@ -112,6 +112,19 @@ function nel_render_main_board_panel($board_id)
         $bans->removeSelf();
     }
 
+    $modmode = $dom->getElementById('module-modmode');
+
+    if (true)
+    {
+        $modmode_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $modmode);
+        $modmode_elements['modmode-link']->extSetAttribute('href',
+                PHP_SELF . '?manage=modmode&board_id=' . $board_id);
+    }
+    else
+    {
+        $bans->removeSelf();
+    }
+
     if ($authorize->get_user_perm($_SESSION['username'], 'perm_regen_index', $board_id))
     {
         $dom->removeChild($dom->getElementById('page-regen-form'));

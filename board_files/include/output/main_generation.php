@@ -14,7 +14,7 @@ function nel_main_thread_generator($board_id, $response_to, $write)
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $file_handler = new \Nelliel\FileHandler();
     $thread_table = $gen_data = array();
-    $dotdot = '../';
+    $dotdot = ($write) ? '../' : '';
     $gen_params = array();
 
     if ($write)
@@ -224,14 +224,8 @@ function nel_main_thread_generator($board_id, $response_to, $write)
 
         if (!$write)
         {
-            // TODO: Modmode stuff
-            /*if ($page >= $dataforce['current_page'])
-             {
-             $page = $counttree;
-             }
-
              echo $render->outputRenderSet();
-             nel_clean_exit();*/
+             nel_clean_exit();
         }
         else
         {
