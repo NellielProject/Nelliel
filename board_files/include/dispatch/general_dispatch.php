@@ -13,7 +13,7 @@ function nel_general_dispatch($inputs)
         case 'post':
             require_once INCLUDE_PATH . 'post/post.php';
 
-            if ($inputs['action'] === 'new-post' || $inputs['action'] === 'new-staff-post')
+            if ($inputs['action'] === 'new-post')
             {
                 nel_process_new_post($inputs);
 

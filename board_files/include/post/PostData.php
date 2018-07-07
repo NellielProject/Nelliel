@@ -22,14 +22,15 @@ class PostData
     {
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $post_data = array();
-        $post_data['parent_thread'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], "int");
-        $post_data['name'] = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], "string");
-        $post_data['email'] = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], "string");
-        $post_data['subject'] = $this->checkEntry($_POST['new_post']['post_info']['verb'], "string");
-        $post_data['comment'] = $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], "string");
-        $post_data['fgsfds'] = $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], "string");
-        $post_data['password'] = $this->checkEntry($_POST['new_post']['post_info']['sekrit'], "string");
-        $post_data['response_to'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], "int");
+        $post_data['parent_thread'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer');
+        $post_data['name'] = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
+        $post_data['email'] = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string');
+        $post_data['subject'] = $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string');
+        $post_data['comment'] = $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], 'string');
+        $post_data['fgsfds'] = $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], 'string');
+        $post_data['password'] = $this->checkEntry($_POST['new_post']['post_info']['sekrit'], 'string');
+        $post_data['response_to'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer');
+        $post_data['post_as_staff'] = $this->checkEntry($_POST['post_as_staff'], 'boolean');
         $post_data['mod_post'] = null;
 
         if ($post_data['name'] !== '')
@@ -77,8 +78,9 @@ class PostData
     public function staffPost($post_data)
     {
         $authorize = nel_authorize();
+        nel_sessions()->initializeSession('modmode', 'new-post');
 
-        if(empty($_SESSION))
+        if(empty($_SESSION) || $post_data['post_as_staff'] === false)
         {
             return $post_data;
         }

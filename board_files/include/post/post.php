@@ -8,7 +8,6 @@ function nel_process_new_post($inputs)
 {
     $dbh = nel_database();
     $board_id = $inputs['board_id'];
-    $staff_post = $inputs['action'] === 'new-staff-post';
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $error_data = array('board_id' => $board_id);
     $references = nel_parameters_and_data()->boardReferences($board_id);
@@ -16,14 +15,8 @@ function nel_process_new_post($inputs)
     $thread_handler = new \Nelliel\ThreadHandler($board_id);
     $file_handler = new \Nelliel\FileHandler();
     $file_upload = new \Nelliel\post\FilesUpload($board_id, $_FILES);
-    $data_handler = new \Nelliel\post\PostData($board_id, $staff_post);
+    $data_handler = new \Nelliel\post\PostData($board_id);
     $database_functions = new \Nelliel\post\PostDatabaseFunctions($board_id);
-
-    if($staff_post)
-    {
-        nel_sessions()->initializeSession($inputs['manage'], $inputs['action']);
-    }
-
     $post_data = $data_handler->collectData();
     $time = get_millisecond_time();
 
