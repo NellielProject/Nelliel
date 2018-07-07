@@ -100,6 +100,9 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     }
     else
     {
+        $dom->getElementById('manage-header-text')->setContent(_gettext('Mod Mode'));
+        $dom->getElementById('manage-board-header')->removeSelf();
+        $dom->getElementById('manage-sub-header')->removeSelf();
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');
     }
 
