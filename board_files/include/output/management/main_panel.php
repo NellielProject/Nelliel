@@ -125,14 +125,14 @@ function nel_render_main_board_panel($board_id)
         $bans->removeSelf();
     }
 
-    if ($authorize->getUserPerm($_SESSION['username'], 'perm_regen_index', $board_id))
+    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_regen_index', $board_id))
     {
-        $dom->removeChild($dom->getElementById('page-regen-form'));
+        $dom->getElementById('page-regen-form')->removeSelf();
     }
 
-    if ($authorize->getUserPerm($_SESSION['username'], 'perm_regen_caches', $board_id))
+    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_regen_caches', $board_id))
     {
-        $dom->removeChild($dom->getElementById('cache-regen-form'));
+        $dom->getElementById('cache-regen-form')->removeSelf();
     }
 
     nel_language()->i18nDom($dom);

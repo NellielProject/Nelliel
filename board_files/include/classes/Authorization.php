@@ -192,7 +192,7 @@ class Authorization
         return true;
     }
 
-    public function getUserPerm($user_id, $perm, $board = null)
+    public function getUserPerm($user_id, $perm, $board_id = null)
     {
         if (!$this->userExists($user_id))
         {
@@ -201,13 +201,16 @@ class Authorization
 
         foreach ($this->user_roles[$user_id] as $role)
         {
-            if (is_null($board) && $this->getRolePerm($role['role_id'], $perm))
+            if(!is_null($board_id) && $role['board'] !== $board_id && $role['board'] !== '')
             {
-                return true;
+                continue;
             }
-            else if ($role['role_id']['board'] === $board && $this->getRolePerm($role['role_id'], $perm))
+
+            $perm_setting = $this->getRolePerm($role['role_id'], $perm);
+
+            if ($perm_setting !== false)
             {
-                return true;
+                return $perm_setting;
             }
         }
 
