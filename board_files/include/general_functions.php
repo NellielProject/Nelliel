@@ -9,7 +9,7 @@ function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_del
     $authorize = nel_authorize();
     $authorize->saveUsers();
     $authorize->saveRoles();
-    $authorize->save_user_roles();
+    $authorize->saveUserRoles();
 
     if ($redirect)
     {

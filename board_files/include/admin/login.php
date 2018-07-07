@@ -15,7 +15,7 @@ function nel_verify_login_or_session($manage, $action)
 
     if ($manage === 'login' && !is_null($action))
     {
-        if ($_POST['username'] !== '' && $authorize->user_exists($_POST['username']))
+        if ($_POST['username'] !== '' && $authorize->userExists($_POST['username']))
         {
             $user_login_fails = $authorize->getUserInfo($_POST['username'], 'failed_logins');
             $last_user_attempt = $authorize->getUserInfo($_POST['username'], 'last_failed_login');

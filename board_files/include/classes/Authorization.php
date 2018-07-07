@@ -3,38 +3,33 @@
 namespace Nelliel;
 
 use PDO;
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
 
-//
-// Handle all the authorization functions
-//
 class Authorization
 {
     private $dbh;
     private $users = array();
     private $roles = array();
     private $user_roles = array();
-    private $users_modified = array();
-    private $roles_modified = array();
-    private $user_roles_modified = array();
 
     function __construct()
     {
         $this->dbh = nel_database();
     }
 
-    public function user_exists($user)
+    public function userExists($user)
     {
-        if ($this->user_loaded($user))
+        if ($this->userLoaded($user))
         {
             return true;
         }
         else
         {
-            if ($this->set_up_user($user) !== false)
+            if ($this->setupUser($user) !== false)
             {
                 return true;
             }
@@ -43,15 +38,15 @@ class Authorization
         return false;
     }
 
-    public function role_exists($role)
+    public function roleExists($role)
     {
-        if ($this->role_loaded($role))
+        if ($this->roleLoaded($role))
         {
             return true;
         }
         else
         {
-            if ($this->set_up_role($role) !== false)
+            if ($this->setupRole($role) !== false)
             {
                 return true;
             }
@@ -60,29 +55,17 @@ class Authorization
         return false;
     }
 
-    private function user_loaded($user)
+    private function userLoaded($user)
     {
         return array_key_exists($user, $this->users);
     }
 
-    private function role_loaded($role)
+    private function roleLoaded($role)
     {
         return array_key_exists($role, $this->roles);
     }
 
-    private function get_user_list()
-    {
-        $result = $this->dbh->query('SELECT "user_id" FROM "' . USER_TABLE . '"');
-        return $result->fetch(FETCH_COLUMN);
-    }
-
-    private function get_role_list()
-    {
-        $result = $this->dbh->query('SELECT "role_id" FROM "' . ROLES_TABLE . '"');
-        return $result->fetchAll(FETCH_COLUMN);
-    }
-
-    private function load_user($user_id)
+    private function loadUser($user_id)
     {
         $query = 'SELECT * FROM "' . USER_TABLE . '" WHERE "user_id" = ? LIMIT 1';
         $prepared = $this->dbh->prepare($query);
@@ -90,7 +73,7 @@ class Authorization
         return $this->dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
     }
 
-    private function load_user_roles($user_id)
+    private function loadUserRoles($user_id)
     {
         $query = 'SELECT * FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ?';
         $prepared = $this->dbh->prepare($query);
@@ -98,7 +81,7 @@ class Authorization
         return $this->dbh->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
     }
 
-    private function load_role($role_id)
+    private function loadRole($role_id)
     {
         $query = 'SELECT * FROM "' . ROLES_TABLE . '" WHERE "role_id" = ? LIMIT 1';
         $prepared = $this->dbh->prepare($query);
@@ -106,7 +89,7 @@ class Authorization
         return $this->dbh->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC, true);
     }
 
-    private function load_role_permissons($role_id)
+    private function loadRolePermissons($role_id)
     {
         $query = 'SELECT "perm_id", "perm_setting" FROM "' . 'nelliel_permissions' . '" WHERE "role_id" = ?';
         $prepared = $this->dbh->prepare($query);
@@ -114,9 +97,9 @@ class Authorization
         return $this->dbh->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
     }
 
-    public function set_up_user($user_id)
+    public function setupUser($user_id)
     {
-        $user_info = $this->load_user($user_id);
+        $user_info = $this->loadUser($user_id);
 
         if ($user_info === false)
         {
@@ -124,7 +107,7 @@ class Authorization
         }
 
         $this->users[$user_id] = $user_info;
-        $user_roles = $this->load_user_roles($user_id);
+        $user_roles = $this->loadUserRoles($user_id);
 
         if ($user_roles === false)
         {
@@ -135,15 +118,15 @@ class Authorization
 
         foreach ($user_roles as $role)
         {
-            $this->set_up_role($role['role_id']);
+            $this->setupRole($role['role_id']);
         }
 
         return true;
     }
 
-    public function set_up_role($role)
+    public function setupRole($role)
     {
-        $role_data = $this->load_role($role);
+        $role_data = $this->loadRole($role);
 
         if ($role_data === false)
         {
@@ -155,14 +138,14 @@ class Authorization
             $this->roles[$role][$key] = $value;
         }
 
-        $this->set_up_role_permissions($role);
+        $this->setupRolePermissions($role);
 
         return true;
     }
 
-    public function set_up_role_permissions($role_id)
+    public function setupRolePermissions($role_id)
     {
-        $perms = $this->load_role_permissons($role_id);
+        $perms = $this->loadRolePermissons($role_id);
 
         if ($perms === false)
         {
@@ -179,39 +162,39 @@ class Authorization
 
     public function getUser($user_id)
     {
-        if ($this->user_exists($user_id))
+        if (!$this->userExists($user_id))
         {
-            return $this->users[$user_id];
+            return false;
         }
 
-        return false;
+        return $this->users[$user_id];
     }
 
     public function getUserInfo($user_id, $info)
     {
-        if ($this->user_exists($user_id))
+        if (!$this->userExists($user_id))
         {
-            return $this->users[$user_id][$info];
+            return false;
         }
 
-        return false;
+        return $this->users[$user_id][$info];
     }
 
     public function updateUserInfo($user_id, $info, $update)
     {
-        if ($this->user_exists($user_id))
+        if (!$this->userExists($user_id))
         {
-            $this->users[$user_id][$info] = $update;
-            $this->users_modified[$user_id] = true;
-            return true;
+            return false;
         }
 
-        return false;
+        $this->users[$user_id][$info] = $update;
+        $this->users[$user_id]['modified'] = true;
+        return true;
     }
 
     public function getUserPerm($user_id, $perm, $board = null)
     {
-        if (!$this->user_exists($user_id))
+        if (!$this->userExists($user_id))
         {
             return false;
         }
@@ -233,7 +216,7 @@ class Authorization
 
     public function getRole($role_id)
     {
-        if (!$this->role_exists($role_id))
+        if (!$this->roleExists($role_id))
         {
             return false;
         }
@@ -243,7 +226,7 @@ class Authorization
 
     public function getRoleInfo($role_id, $info)
     {
-        if (!$this->role_exists($role_id))
+        if (!$this->roleExists($role_id))
         {
             return false;
         }
@@ -253,19 +236,19 @@ class Authorization
 
     public function updateRoleInfo($role_id, $info, $update)
     {
-        if (!$this->role_exists($role_id))
+        if (!$this->roleExists($role_id))
         {
             return false;
         }
 
         $this->roles[$role_id][$info] = $update;
-        $this->roles_modified[$role_id] = true;
+        $this->roles[$role_id]['modified'] = true;
         return true;
     }
 
     public function getRolePerm($role_id, $perm)
     {
-        if (!$this->role_exists($role_id))
+        if (!$this->roleExists($role_id))
         {
             return false;
         }
@@ -275,19 +258,19 @@ class Authorization
 
     public function updateRolePerm($role_id, $perm, $update)
     {
-        if (!$this->role_exists($role_id))
+        if (!$this->roleExists($role_id))
         {
             return false;
         }
 
         $this->roles[$role_id]['permissions'][$perm] = $update;
-        $this->roles_modified[$role_id] = true;
+        $this->roles[$role_id]['modified'] = true;
         return true;
     }
 
     public function updateUserRole($user_id, $role_id, $board_id, $remove = false)
     {
-        if (!$this->user_exists($user_id))
+        if (!$this->userExists($user_id))
         {
             return false;
         }
@@ -306,7 +289,7 @@ class Authorization
                     $this->user_roles[$user_id][$key]['role_id'] = $role_id;
                 }
 
-                $this->user_roles_modified[$user_id] = true;
+                $this->user_roles[$user_id][$key]['modified'] = true;
                 return true;
             }
         }
@@ -317,7 +300,7 @@ class Authorization
             $this->user_roles[$user_id][$key]['role_id'] = $role_id;
             $this->user_roles[$user_id][$key]['board'] = $board_id;
             $this->user_roles[$user_id][$key]['all_boards'] = ($board_id === '') ? 1 : 0;
-            $this->user_roles_modified[$user_id] = true;
+            $this->user_roles[$user_id][$key]['modified'] = true;
             return true;
         }
 
@@ -326,7 +309,7 @@ class Authorization
 
     public function updatePerm($role_id, $perm, $update)
     {
-        if ($this->role_exists($role_id))
+        if ($this->roleExists($role_id))
         {
             $this->roles[$role_id]['permissions'][$perm] = $update;
             $this->roles_modified[$role_id] = true;
@@ -336,7 +319,7 @@ class Authorization
         return false;
     }
 
-    public function user_highest_level_role($user_id, $board_id = null) // TODO: User exists checks here
+    public function userHighestLevelRole($user_id, $board_id = null) // TODO: User exists checks here
     {
         $role_level = 0;
         $role = '';
@@ -360,14 +343,14 @@ class Authorization
         return $role;
     }
 
-    public function role_level_check($role1, $role2, $false_if_equal = false)
+    public function roleLevelCheck($role1, $role2, $false_if_equal = false)
     {
-        if (!$this->role_exists($role1))
+        if (!$this->roleExists($role1))
         {
             return false;
         }
 
-        if (!$this->role_exists($role2))
+        if (!$this->roleExists($role2))
         {
             return true;
         }
@@ -385,138 +368,139 @@ class Authorization
         }
     }
 
-    public function saveRoles()
-    {
-        foreach ($this->roles_modified as $key => $value)
-        {
-            $this->save_role($key);
-            $this->roles_modified[$key] = false;
-        }
-    }
-
     public function saveUsers()
     {
-        foreach ($this->users_modified as $key => $value)
+        foreach ($this->users as $user_id => $user_data)
         {
-            $this->save_user($key);
-            $this->users_modified[$key] = false;
-        }
-    }
-
-    public function save_user_roles()
-    {
-        foreach ($this->user_roles_modified as $key => $value)
-        {
-            $this->saveUserRole($key);
-            $this->user_roles_modified[$key] = false;
-        }
-    }
-
-    private function saveUserRole($user_id)
-    {
-        $user_role_data = $this->user_roles[$user_id];
-
-        foreach ($user_role_data as $board => $set)
-        {
-            $prepared = $this->dbh->prepare('SELECT "entry" FROM "' . USER_ROLE_TABLE .
-                '" WHERE "user_id" = ? AND "board" = ? LIMIT 1');
-            $entry = $this->dbh->executePreparedFetch($prepared, array($user_id, $set['board']), PDO::FETCH_COLUMN, true);
-
-            if ($entry !== false)
+            if (!isset($user_data['modified']) || $user_data['modified'] !== true)
             {
-                if (isset($set['remove']) && $set['remove'] === true)
+                continue;
+            }
+
+            $update_user = '';
+
+            foreach ($user_data as $key => $value)
+            {
+                if ($key === 'modified')
                 {
-                    $prepared = $this->dbh->prepare('DELETE FROM "' . USER_ROLE_TABLE . '" WHERE "entry" = ?');
-                    $this->dbh->executePrepared($prepared, array($entry));
-                    unset($this->user_roles[$user_id][$board]);
+                    continue;
+                }
+
+                $update_user .= '"' . $key . '" = :' . $key . ', ';
+            }
+
+            $update_user = substr($update_user, 0, -2);
+            $query = 'UPDATE "' . USER_TABLE . '" SET ' . $update_user . ' WHERE "user_id" = :user';
+            $prepared = $this->dbh->prepare($query);
+            $prepared->bindValue(':user', $user_id, PDO::PARAM_STR);
+
+            foreach ($user_data as $key => $value)
+            {
+                if ($key === 'modified')
+                {
+                    continue;
+                }
+
+                $prepared->bindValue(':' . $key, $value);
+            }
+
+            $this->dbh->executePrepared($prepared, null, true);
+            $this->users[$user_id]['modified'] = false;
+        }
+    }
+
+    public function saveRoles()
+    {
+        foreach ($this->roles as $role => $role_data)
+        {
+            if (!isset($role_data['modified']) || $role_data['modified'] !== true)
+            {
+                continue;
+            }
+
+            $update_role = '';
+
+            foreach ($role_data as $key => $value)
+            {
+                $this->savePermissions($role);
+
+                if ($key === 'permissions' || $key === 'modified')
+                {
+                    continue;
+                }
+
+                $update_role .= '"' . $key . '" = :' . $key . ', ';
+            }
+
+            $update_role = substr($update_role, 0, -2);
+            $query = 'UPDATE "' . ROLES_TABLE . '" SET ' . $update_role . ' WHERE "role_id" = :role';
+            $prepared = $this->dbh->prepare($query);
+            $prepared->bindValue(':role', $role, PDO::PARAM_STR);
+
+            foreach ($role_data as $key => $value)
+            {
+                if ($key === 'permissions' || $key === 'modified')
+                {
+                    continue;
+                }
+
+                $prepared->bindValue(':' . $key, $value);
+            }
+
+            $this->dbh->executePrepared($prepared, null, true);
+            $this->roles[$role]['modified'] = false;
+        }
+    }
+
+    public function saveUserRoles()
+    {
+        foreach ($this->user_roles as $user_id => $user_roles)
+        {
+            foreach ($user_roles as $user_role)
+            {
+                if (!isset($user_role['modified']) || $user_role['modified'] !== true)
+                {
+                    continue;
+                }
+
+                $prepared = $this->dbh->prepare(
+                        'SELECT "entry" FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ? AND "board" = ? LIMIT 1');
+                $entry = $this->dbh->executePreparedFetch($prepared, array($user_id, $user_role['board']),
+                        PDO::FETCH_COLUMN, true);
+
+                if ($entry !== false)
+                {
+                    if (isset($user_role['remove']) && $user_role['remove'] === true)
+                    {
+                        $prepared = $this->dbh->prepare('DELETE FROM "' . USER_ROLE_TABLE . '" WHERE "entry" = ?');
+                        $this->dbh->executePrepared($prepared, array($entry));
+                        unset($this->user_roles[$user_id][$board]);
+                    }
+                    else
+                    {
+                        $prepared = $this->dbh->prepare(
+                                'UPDATE "' . USER_ROLE_TABLE . '" SET "role_id" = ?, "board" = ? WHERE "entry" = ?');
+                        $this->dbh->executePrepared($prepared, array($user_role['role_id'], $user_role['board'], $entry));
+                    }
                 }
                 else
                 {
-                    $prepared = $this->dbh->prepare('UPDATE "' . USER_ROLE_TABLE .
-                        '" SET "role_id" = ?, "board" = ? WHERE "entry" = ?');
-                    $this->dbh->executePrepared($prepared, array($set['role_id'], $set['board'], $entry));
+                    $prepared = $this->dbh->prepare(
+                            'INSERT INTO "' . USER_ROLE_TABLE . '" ("user_id", "role_id", "board") VALUES (?, ?, ?, ?)');
+                    $this->dbh->executePrepared($prepared, array($user_id, $user_role['role_id'], $user_role['board']));
                 }
             }
-            else
-            {
-                $prepared = $this->dbh->prepare('INSERT INTO "' . USER_ROLE_TABLE .
-                    '" ("user_id", "role_id", "board") VALUES (?, ?, ?, ?)');
-                $this->dbh->executePrepared($prepared, array($user_id, $set['role_id'], $set['board']));
-            }
         }
     }
 
-    private function save_user($user)
-    {
-        $user_data = $this->users[$user];
-        $update_user = '';
-
-        foreach ($user_data as $key => $value)
-        {
-            if ($key === 'permissions')
-            {
-                $this->save_permissions($role);
-                continue;
-            }
-
-            $update_user .= '"' . $key . '" = :' . $key . ', ';
-        }
-
-        $update_user = substr($update_user, 0, -2);
-        $query = 'UPDATE "' . USER_TABLE . '" SET ' . $update_user . ' WHERE "user_id" = :user';
-        $prepared = $this->dbh->prepare($query);
-        $prepared->bindValue(':user', $user, PDO::PARAM_STR);
-
-        foreach ($user_data as $key => $value)
-        {
-            $prepared->bindValue(':' . $key, $value);
-        }
-
-        $this->dbh->executePrepared($prepared, null, true);
-    }
-
-    private function save_role($role)
-    {
-        $role_data = $this->roles[$role];
-        $update_role = '';
-
-        foreach ($role_data as $key => $value)
-        {
-            if ($key === 'permissions')
-            {
-                $this->save_permissions($role);
-                continue;
-            }
-
-            $update_role .= '"' . $key . '" = :' . $key . ', ';
-        }
-
-        $update_role = substr($update_role, 0, -2);
-        $query = 'UPDATE "' . ROLES_TABLE . '" SET ' . $update_role . ' WHERE "role_id" = :role';
-        $prepared = $this->dbh->prepare($query);
-        $prepared->bindValue(':role', $role, PDO::PARAM_STR);
-
-        foreach ($role_data as $key => $value)
-        {
-            if ($key === 'permissions')
-            {
-                continue;
-            }
-
-            $prepared->bindValue(':' . $key, $value);
-        }
-
-        $this->dbh->executePrepared($prepared, null, true);
-    }
-
-    private function save_permissions($role)
+    public function savePermissions($role)
     {
         $perms_data = $this->roles[$role]['permissions'];
 
         foreach ($perms_data as $key => $value)
         {
             $query = 'UPDATE "' . PERMISSIONS_TABLE . '" SET "perm_setting" = :setting WHERE "perm_id" = \'' . $key .
-                '\' AND "role_id" = :role';
+                    '\' AND "role_id" = :role';
             $prepared = $this->dbh->prepare($query);
             $prepared->bindValue(':setting', $value, PDO::PARAM_INT);
             $prepared->bindValue(':role', $role, PDO::PARAM_INT);

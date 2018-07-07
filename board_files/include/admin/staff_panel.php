@@ -44,7 +44,7 @@ function nel_staff_panel($section, $action)
 
         $user_id = (isset($_POST['user_id'])) ? $_POST['user_id'] : null;
 
-        if (!$authorize->user_exists($user_id))
+        if (!$authorize->userExists($user_id))
         {
             nel_derp(440, _gettext('The specified user does not exist.'));
         }
@@ -89,7 +89,7 @@ function nel_staff_panel($section, $action)
             }
 
             $authorize->saveUsers();
-            $authorize->save_user_roles();
+            $authorize->saveUserRoles();
             nel_render_staff_panel_user_edit($user_id);
         }
     }
@@ -113,7 +113,7 @@ function nel_staff_panel($section, $action)
 
         $role_id = (isset($_POST['role_id'])) ? $_POST['role_id'] : null;
 
-        if (!$authorize->role_exists($role_id))
+        if (!$authorize->roleExists($role_id))
         {
             nel_derp(441, _gettext('The specified role does not exist.'));
         }
