@@ -96,7 +96,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     }
     else
     {
-        $post_header_node_array['post-ip-address']->removeSelf();
+        $post_header_node_array['post-ip-address']->parentNode->removeSelf();
     }
 
     $new_post_dom->getElementById('p-number')->changeId('p' . $post_id);
@@ -212,10 +212,6 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     {
         $post_header_node_array['expand-thread']->parentNode->removeSelf();
     }
-
-    // TODO: New inline ban options
-    $mod_tools_1 = $new_post_dom->getElementById('mod-tools-1');
-    $mod_tools_1->removeSelf();
 
     $multiple_files = false;
     $post_files_container = $new_post_dom->getElementById('post-files-container-');

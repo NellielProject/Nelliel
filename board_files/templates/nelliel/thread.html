@@ -8,9 +8,11 @@
 						<div id="post-header" class="post-header">
 							<div>
 								<span>[<a href="#" data-parse-id="hide-post-thread" data-command="" data-id="" data-alt-visual=""></a>]</span>
-								<span>[<a href="#" data-parse-id="expand-thread" data-i18n="gettext" data-command="expand-thread" data-id="" data-alt-visual="Collapse thread" 
-								data-i18n-attributes="data-alt-visual">Expand thread</a>]</span>
-								<span data-i18n="gettext">IP:</span>&nbsp;<span data-parse-id="post-ip-address"></span>
+								<span>[<a href="#" data-parse-id="expand-thread" data-i18n="gettext" data-command="expand-thread" data-id="" data-alt-visual="Collapse Thread" 
+								data-i18n-attributes="data-alt-visual">Expand Thread</a>]</span>
+								<span>[<a  data-parse-id="reply-to-link" href="" data-i18n="gettext">Reply</a>]</span>
+								<span>[<a data-parse-id="post-link-post" href="#" data-i18n="gettext" data-command="link-post" data-id="">Link</a>]</span>
+								<span>[<span data-parse-id="post-ip-address"></span>]</span>
 							</div>
 							<input id="thread_thread-id" type="checkbox" name="thread_thread-id" value="deletethread_thread-id" title="Delete entire thread">
 							<input id="post_post-id" type="checkbox" name="post_post-id" value="deletepost_post-id" title="Delete entire post">
@@ -21,10 +23,7 @@
 							</span>
 							<span data-parse-id="post-time-"></span>&nbsp;<span>No. </span>
 							<a data-parse-id="post-num-link-" href="" class="post-link"></a>
-							<span>[<a data-parse-id="post-link-post" href="#" data-i18n="gettext" data-command="link-post" data-id="">Link</a>]</span>
 							<img data-parse-id="sticky-icon" id="sticky-icon-" src="" width="22" height="22" alt="Sticky" data-i18n="gettext" data-i18n-attributes="alt">
-							<span>[<a  data-parse-id="reply-to-link" href="" data-i18n="gettext">Reply</a>]</span>
-							<div id="mod-tools-1">IP: <b id="ip-address-display">ip address</b><input id="set-ban-details" type="button" onclick="" value="Set Ban Details"></div>
 						</div>
 						<div id="post-files-container-" class="op-files-container">
 							<div id="fileinfo-" class="">
@@ -36,12 +35,12 @@
 								<div>[<a data-parse-id="show-file-meta" href="#" data-i18n="gettext" data-command="show-file-meta" data-id="" data-alt-visual="Less file info" 
 									data-i18n-attributes="data-alt-visual">More file info</a>]</div>
 								<div data-parse-id="file-meta" class="hidden">
-									<span data-parse-id="file-source" class="file-source" >Source: </span>
-									<span data-parse-id="file-license" class="file-license">License: </span>
-									<span data-parse-id="file-md5" class="file-hash">MD5: </span>
-									<span data-parse-id="file-sha1" class="file-hash">SHA1: </span>
-									<span data-parse-id="file-sha256" class="file-hash">SHA256: </span>
-									<span data-parse-id="file-sha512" class="file-hash">SHA512: </span>
+									<span data-parse-id="file-source" class="file-source" data-i18n="gettext">Source:</span>&nbsp;
+									<span data-parse-id="file-license" class="file-license" data-i18n="gettext">License:</span>&nbsp;
+									<span data-parse-id="file-md5" class="file-hash" data-i18n="gettext">MD5:</span>&nbsp;
+									<span data-parse-id="file-sha1" class="file-hash" data-i18n="gettext">SHA1:</span>&nbsp;
+									<span data-parse-id="file-sha256" class="file-hash" data-i18n="gettext">SHA256:</span>&nbsp;
+									<span data-parse-id="file-sha512" class="file-hash" data-i18n="gettext">SHA512:</span>&nbsp;
 								</div>
 								<video id="video-preview-" preload="metadata" width="" controls>
 									<source src="" type="">
