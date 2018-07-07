@@ -1,4 +1,14 @@
 # Nelliel Changelog
+## v0.9.6.17 (2018/07/06)
+### Added
+ - Mod Mode is in again
+ - Can make posts as a staff member
+
+### Changed
+ - Updated perms
+ - Overhaul of Authorization class
+ - Debugging
+
 ## v0.9.6.16 (2018/07/05)
 ### Added
  - Regen.php

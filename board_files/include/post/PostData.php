@@ -34,11 +34,9 @@ class PostData
 
         if ($post_data['name'] !== '')
         {
-            $post_data['name'] = preg_replace("/#+$/", "", $post_data['name']);
-            preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post_data['name'], $name_pieces);
-            $post_data['name'] = $name_pieces[1];
-            $post_data = $this->tripcodes($post_data, $name_pieces);
-            $post_data = $this->staffPost($post_data, $name_pieces);
+            $post_data = $this->staffPost($post_data);
+            $post_data = $this->tripcodes($post_data);
+
         }
         else
         {
@@ -76,7 +74,7 @@ class PostData
         return $post_item;
     }
 
-    public function staffPost($post_data, $name_pieces)
+    public function staffPost($post_data)
     {
         $authorize = nel_authorize();
 
@@ -86,23 +84,45 @@ class PostData
         }
 
         $user = $authorize->getUser($_SESSION['username']);
-        $role_id = $authorize->getUserBoardRole($user['user_id'], $this->board_id, true);
 
-        if($role_id === false)
+        if($authorize->getUserPerm($user['user_id'], 'perm_post_modmode') === false)
         {
             return $post_data;
         }
 
-        $post_data['name'] = $user['user_title'];
+        $role_id = $authorize->getUserBoardRole($user['user_id'], $this->board_id);
+
+        if($role_id === false || $authorize->getRolePerm($role_id, 'perm_post_modmode') === false)
+        {
+            $role_id = $authorize->getUserBoardRole($user['user_id'], '');
+
+            if($role_id === false || $authorize->getRolePerm($role_id, 'perm_post_modmode') === false)
+            {
+                return $post_data; // TODO: Do error instead
+            }
+        }
+
+        if($authorize->getRolePerm($role_id, 'perm_post_override_anon') === false)
+        {
+            $post_data['name'] = _gettext('Anonymous');
+        }
+        else
+        {
+            $post_data['name'] = $user['display_name'];
+        }
+
         $post_data['mod_post'] = $role_id;
         return $post_data;
     }
 
-    public function tripcodes($post_data, $name_pieces)
+    public function tripcodes($post_data)
     {
         $references = nel_parameters_and_data()->boardReferences($this->board_id);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $authorize = nel_authorize();
+        $post_data['name'] = preg_replace("/#+$/", "", $post_data['name']);
+        preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post_data['name'], $name_pieces);
+        $post_data['name'] = $name_pieces[1];
         $post_data['tripcode'] = '';
         $post_data['secure_tripcode'] = '';
 

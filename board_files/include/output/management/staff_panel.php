@@ -16,7 +16,7 @@ function nel_render_staff_panel_main()
     $render->loadTemplateFromFile($dom, 'management/staff_panel_main.html');
     $user_table = $dom->getElementById('user-table');
     $user_node_array = $dom->getAssociativeNodeArray('data-parse-id', $user_table);
-    $users = $dbh->executeFetchAll('SELECT "user_id", "user_title" FROM "' . USER_TABLE . '"', PDO::FETCH_ASSOC);
+    $users = $dbh->executeFetchAll('SELECT "user_id", "display_name" FROM "' . USER_TABLE . '"', PDO::FETCH_ASSOC);
     $dom->getElementById('edit-user-form')->extSetAttribute('action',
             PHP_SELF . '?manage=general&module=staff&section=user');
     $dom->getElementById('new-user-form')->extSetAttribute('action',
@@ -33,7 +33,7 @@ function nel_render_staff_panel_main()
         $row_node_array = $user_row->getAssociativeNodeArray('data-parse-id');
         $row_node_array['user-select']->extSetAttribute('value', $user['user_id']);
         $row_node_array['user-name']->setContent($user['user_id']);
-        $row_node_array['user-title']->setContent($user['user_title']);
+        $row_node_array['user-title']->setContent($user['display_name']);
     }
 
     $user_node_array['user-row']->removeSelf();
@@ -79,7 +79,7 @@ function nel_render_staff_panel_user_edit($user_id)
     {
         $user = $authorize->getUser($user_id);
         $dom->getElementById('user-id-field')->extSetAttribute('value', $user['user_id']);
-        $dom->getElementById('user-title-field')->extSetAttribute('value', $user['user_title']);
+        $dom->getElementById('display_name')->extSetAttribute('value', $user['display_name']);
     }
 
     $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
@@ -154,7 +154,12 @@ function nel_render_staff_panel_role_edit($role_id)
         {
             if ($value === true)
             {
-                $dom->getElementById($key)->extSetAttribute('checked', $value);
+                $element = $dom->getElementById($key);
+
+                if(!is_null($element))
+                {
+                    $element->extSetAttribute('checked', $value);
+                }
             }
         }
     }

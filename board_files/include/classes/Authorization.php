@@ -192,14 +192,12 @@ class Authorization
         return true;
     }
 
-    public function getUserBoardRole($user_id, $board_id, $return_allboard = false)
+    public function getUserBoardRole($user_id, $board_id)
     {
         if (!$this->userExists($user_id))
         {
             return false;
         }
-
-        $allboard = null;
 
         foreach ($this->user_roles[$user_id] as $role)
         {
@@ -207,16 +205,6 @@ class Authorization
             {
                 return $role['role_id'];
             }
-
-            if ($role['board'] === '')
-            {
-                $allboard = $role['role_id'];
-            }
-        }
-
-        if ($return_allboard && !is_null($allboard))
-        {
-            return $allboard;
         }
 
         return false;
@@ -266,6 +254,7 @@ class Authorization
 
         return $this->roles[$role_id][$info];
     }
+
 
     public function updateRoleInfo($role_id, $info, $update)
     {

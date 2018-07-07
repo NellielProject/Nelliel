@@ -196,7 +196,7 @@ class SQLTables
         CREATE TABLE ' . $table_name . ' (
             entry                   ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
             user_id                 VARCHAR(255) NOT NULL,
-            user_title              VARCHAR(255) DEFAULT NULL,
+            display_name            VARCHAR(255) DEFAULT NULL,
             user_password           VARCHAR(255) DEFAULT NULL,
             active                  SMALLINT NOT NULL DEFAULT 0,
             failed_logins           SMALLINT NOT NULL DEFAULT 0,
@@ -256,7 +256,6 @@ class SQLTables
         CREATE TABLE ' . $table_name . ' (
             entry                   ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
             role_id                 VARCHAR(255) DEFAULT NULL,
-            perm_type               VARCHAR(255) NOT NULL,
             perm_id                 VARCHAR(255) NOT NULL,
             perm_setting            SMALLINT NOT NULL DEFAULT 0
         ) ' . $options . ';';
