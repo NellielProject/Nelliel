@@ -86,9 +86,15 @@ class PostData
         }
 
         $user = $authorize->getUser($_SESSION['username']);
-        $user_role = $authorize->user_highest_level_roles($_SESSION['username'], $this->board_id);
+        $role_id = $authorize->getUserBoardRole($user['user_id'], $this->board_id, true);
+
+        if($role_id === false)
+        {
+            return $post_data;
+        }
+
         $post_data['name'] = $user['user_title'];
-        $post_data['mod_post'] = $user_role['role_id'];
+        $post_data['mod_post'] = $role_id;
         return $post_data;
     }
 

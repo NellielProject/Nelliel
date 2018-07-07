@@ -192,6 +192,36 @@ class Authorization
         return true;
     }
 
+    public function getUserBoardRole($user_id, $board_id, $return_allboard = false)
+    {
+        if (!$this->userExists($user_id))
+        {
+            return false;
+        }
+
+        $allboard = null;
+
+        foreach ($this->user_roles[$user_id] as $role)
+        {
+            if ($role['board'] === $board_id)
+            {
+                return $role['role_id'];
+            }
+
+            if ($role['board'] === '')
+            {
+                $allboard = $role['role_id'];
+            }
+        }
+
+        if ($return_allboard && !is_null($allboard))
+        {
+            return $allboard;
+        }
+
+        return false;
+    }
+
     public function getUserPerm($user_id, $perm, $board_id = null)
     {
         if (!$this->userExists($user_id))
@@ -201,7 +231,7 @@ class Authorization
 
         foreach ($this->user_roles[$user_id] as $role)
         {
-            if(!is_null($board_id) && $role['board'] !== $board_id && $role['board'] !== '')
+            if (!is_null($board_id) && $role['board'] !== $board_id && $role['board'] !== '')
             {
                 continue;
             }
