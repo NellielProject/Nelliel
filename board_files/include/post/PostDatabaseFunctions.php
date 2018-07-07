@@ -35,7 +35,7 @@ class PostDatabaseFunctions
         $prepared->bindValue(':email', $post_data['email'], PDO::PARAM_STR);
         $prepared->bindValue(':subject', $post_data['subject'], PDO::PARAM_STR);
         $prepared->bindValue(':comment', $post_data['comment'], PDO::PARAM_STR);
-        $prepared->bindValue(':ip_address', @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_LOB);
+        $prepared->bindValue(':ip_address', @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
         $prepared->bindValue(':has_file', $post_data['has_file'], PDO::PARAM_INT);
         $prepared->bindValue(':file_count', $post_data['file_count'], PDO::PARAM_INT);
         $prepared->bindValue(':post_time', $time, PDO::PARAM_INT);

@@ -30,7 +30,7 @@ class PostData
         $post_data['fgsfds'] = $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], 'string');
         $post_data['password'] = $this->checkEntry($_POST['new_post']['post_info']['sekrit'], 'string');
         $post_data['response_to'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer');
-        $post_data['post_as_staff'] = $this->checkEntry($_POST['post_as_staff'], 'boolean');
+        $post_data['post_as_staff'] = (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false;
         $post_data['mod_post'] = null;
 
         if ($post_data['name'] !== '')

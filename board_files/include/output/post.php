@@ -73,23 +73,30 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $new_post_element->changeId('post-id-' . $post_id);
     $post_container = $new_post_dom->getElementById('post-container-');
     $post_container->changeId('post-container-' . $post_id);
-    $hide_post_thread = $new_post_dom->getElementById('hide-post-thread-');
-    $hide_post_thread->extSetAttribute('data-id', $post_id);
-    $hide_post_thread->changeId('hide-post-thread-' . $post_id);
     $indents_element = $new_post_dom->getElementById('indents');
     $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
+    $post_header_node_array['hide-post-thread']->extSetAttribute('data-id', $post_id);
 
     if ($gen_params['index_rendering'] && !$response)
     {
-        $hide_post_thread->setContent(_gettext('Hide Thread'));
-        $hide_post_thread->extSetAttribute('data-alt-visual', _gettext('Show Thread'));
-        $hide_post_thread->extSetAttribute('data-command', 'hide-thread');
+        $post_header_node_array['hide-post-thread']->setContent(_gettext('Hide Thread'));
+        $post_header_node_array['hide-post-thread']->extSetAttribute('data-alt-visual', _gettext('Show Thread'));
+        $post_header_node_array['hide-post-thread']->extSetAttribute('data-command', 'hide-thread');
     }
     else
     {
-        $hide_post_thread->setContent(_gettext('Hide Post'));
-        $hide_post_thread->extSetAttribute('data-alt-visual', _gettext('Show Post'));
-        $hide_post_thread->extSetAttribute('data-command', 'hide-post');
+        $post_header_node_array['hide-post-thread']->setContent(_gettext('Hide Post'));
+        $post_header_node_array['hide-post-thread']->extSetAttribute('data-alt-visual', _gettext('Show Post'));
+        $post_header_node_array['hide-post-thread']->extSetAttribute('data-command', 'hide-post');
+    }
+
+    if (!nel_sessions()->sessionIsIgnored('render'))
+    {
+        $post_header_node_array['post-ip-address']->setContent(@inet_ntop($post_data['ip_address']));
+    }
+    else
+    {
+        $post_header_node_array['post-ip-address']->removeSelf();
     }
 
     $new_post_dom->getElementById('p-number')->changeId('p' . $post_id);
