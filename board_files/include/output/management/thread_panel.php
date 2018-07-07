@@ -75,7 +75,7 @@ function nel_render_thread_panel_main($board_id)
         $thread_subject_link = $temp_thread_row->getElementById('thread-subject-link-');
         $thread_subject_link->setContent($op_post['subject']);
         $thread_subject_link->extSetAttribute('href',
-                $references['page_dir'] . $thread['thread_id'] . '/' . $thread['thread_id'] . '.html', 'none');
+                $references['page_dir'] . '/' . $thread['thread_id'] . '/' . $thread['thread_id'] . '.html', 'none');
         $thread_subject_link->changeId('thread-subject-link-' . $thread['thread_id']);
 
         $thread_op_name = $temp_thread_row->getElementById('thread-op-name-');
@@ -155,7 +155,7 @@ function nel_render_thread_panel_expand($board_id, $thread_id)
         $post_subject_link = $temp_post_row->getElementById('post-subject-link-');
         $post_subject_link->setContent($post['subject']);
         $post_subject_link->extSetAttribute('href',
-                $references['page_dir'] . $post['parent_thread'] . '/' . $post['post_number'] . '.html', 'none');
+                $references['page_dir'] . '/' . $post['parent_thread'] . '/' . $post['post_number'] . '.html', 'none');
         $post_subject_link->changeId('post-subject-link-' . $post['post_number']);
 
         $post_name = $temp_post_row->getElementById('post-name-');

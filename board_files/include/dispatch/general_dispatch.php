@@ -21,7 +21,7 @@ function nel_general_dispatch($inputs)
                 {
                     echo '<meta http-equiv="refresh" content="1;URL=' .
                         nel_parameters_and_data()->boardReferences($inputs['board_id'], 'board_directory') . '/' .
-                        nel_parameters_and_data()->boardReferences($inputs['board_id'], 'page_dir') .
+                        nel_parameters_and_data()->boardReferences($inputs['board_id'], 'page_dir') . '/' .
                         nel_fgsfds('noko_topic') . '/' . nel_fgsfds('noko_topic') . '.html">';
                 }
                 else

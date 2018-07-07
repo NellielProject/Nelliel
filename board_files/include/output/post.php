@@ -28,12 +28,12 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
 
         if ($key === 'prev')
         {
-            $content = 'Previous';
+            $content = _gettext('Previous');
         }
 
         if ($key === 'next')
         {
-            $content = 'Next';
+            $content = _gettext('Next');
         }
 
         if ($value !== '')
@@ -169,48 +169,49 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     }
 
     $post_header_node_array['post-time-']->setContent($post_time);
-    $post_header_node_array['post-num-link-']->setContent($post_data['post_number']);
-    $post_header_node_array['post-num-link-']->extSetAttribute('href',
-            $references['page_dir'] . $post_data['parent_thread'] . '/' . $post_data['parent_thread'] . '.html#p' .
-            $post_id, 'none');
-    $post_header_node_array['post-num-link-']->changeId('post-num-link-' . $post_id);
+    $post_header_node_array['post-num-link']->setContent($post_data['post_number']);
+    $post_header_node_array['post-num-link']->extSetAttribute('href',
+            '//' . $base_domain . '/' . $references['board_directory'] . '/' . $references['page_dir'] . '/' .
+            $post_data['parent_thread'] . '/' . $post_data['parent_thread'] . '.html#p' . $post_id, 'none');
     $post_header_node_array['post-link-post']->extSetAttribute('data-id', $post_id);
-
-    if (!$response && $gen_data['thread']['sticky'])
-    {
-        $post_header_node_array['sticky-icon']->extSetAttribute('src', IMAGES_DIR . '/nelliel/' . 'sticky.png', 'url');
-        $post_header_node_array['sticky-icon']->changeId('sticky-icon-' . $post_id);
-    }
-    else
-    {
-        $post_header_node_array['sticky-icon']->removeSelf();
-    }
-
-    if (!$response)
-    {
-        if (!nel_sessions()->sessionIsIgnored('render'))
-        {
-            $post_header_node_array['reply-to-link']->extSetAttribute('href',
-                    PHP_SELF . '?manage=modmode&module=thread&section=' . $post_data['post_number'] . '&board_id=' . $board_id);
-        }
-        else
-        {
-            $post_header_node_array['reply-to-link']->extSetAttribute('href',
-                    $references['page_dir'] . $post_data['parent_thread'] . '/' . $post_data['post_number'] . '.html');
-        }
-    }
 
     if (!$gen_params['index_rendering'] || $response)
     {
         $post_header_node_array['reply-to-link']->parentNode->removeSelf();
     }
-
-    $thread_link_html = $references['page_dir'] . $thread_id . '/' . $thread_id;
-    $post_header_node_array['expand-thread']->extSetAttribute('data-id', $thread_id);
+    else
+    {
+        if (!nel_sessions()->sessionIsIgnored('render'))
+        {
+            $post_header_node_array['reply-to-link']->extSetAttribute('href',
+                    PHP_SELF . '?manage=modmode&module=thread&section=' . $post_data['post_number'] . '&board_id=' .
+                    $board_id);
+        }
+        else
+        {
+            $post_header_node_array['reply-to-link']->extSetAttribute('href',
+                    $references['page_dir'] . '/' . $post_data['parent_thread'] . '/' . $post_data['post_number'] .
+                    '.html');
+        }
+    }
 
     if (!$gen_params['index_rendering'] || $response || !$gen_params['abbreviate'])
     {
         $post_header_node_array['expand-thread']->parentNode->removeSelf();
+    }
+    else
+    {
+        $post_header_node_array['expand-thread']->extSetAttribute('data-id', $thread_id);
+    }
+
+    if (!$response && $gen_data['thread']['sticky'])
+    {
+        $post_header_node_array['sticky-icon']->extSetAttribute('src',
+                '//' . $base_domain . '/' . IMAGES_DIR . '/nelliel/' . 'sticky.png', 'none');
+    }
+    else
+    {
+        $post_header_node_array['sticky-icon']->removeSelf();
     }
 
     $multiple_files = false;
@@ -241,7 +242,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
             $temp_file_node_array['delete-file']->extSetAttribute('name', 'file_' . $file_id);
             $temp_file_node_array['delete-file']->extSetAttribute('value', 'deletefile_' . $file_id);
 
-            $file['file_location'] = 'http://' . $base_domain . '/' . $board_id . '/' . $references['src_dir'] .
+            $file['file_location'] = '//' . $base_domain . '/' . $board_id . '/' . $references['src_dir'] . '/' .
                     $thread_id . '/' . $post_data['post_number'] . '/' . rawurlencode($file['filename']) . '.' .
                     $file['extension'];
             $file['display_filename'] = $file['filename'];
@@ -339,8 +340,8 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                     if (!empty($file['preview_name']))
                     {
                         $file['has_preview'] = true;
-                        $file['preview_location'] = 'http://' . $base_domain . '/' . $board_id . '/' .
-                                $references['thumb_dir'] . $thread_id . '/' . $post_data['post_number'] . '/' .
+                        $file['preview_location'] = '//' . $base_domain . '/' . $board_id . '/' .
+                                $references['thumb_dir'] . '/' . $thread_id . '/' . $post_data['post_number'] . '/' .
                                 rawurlencode($file['preview_name'] . '.' . $file['preview_extension']);
 
                         if ($filecount > 1)
@@ -365,7 +366,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                                 $format_icon))
                         {
                             $file['has_preview'] = true;
-                            $file['preview_location'] = 'http://' . $base_domain . '/web/imagez/nelliel/filetype/' .
+                            $file['preview_location'] = '//' . $base_domain . '/web/imagez/nelliel/filetype/' .
                                     utf8_strtolower($file['format']) . '/' . $format_icon;
                             $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
                             $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
@@ -373,8 +374,8 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
                         else if (file_exists(WEB_PATH . 'imagez/nelliel/filetype/generic/' . $type_icon))
                         {
                             $file['has_preview'] = true;
-                            $file['preview_location'] = 'http://' . $base_domain .
-                                    '/web/imagez/nelliel/filetype/generic/' . $type_icon;
+                            $file['preview_location'] = '//' . $base_domain . '/web/imagez/nelliel/filetype/generic/' .
+                                    $type_icon;
                             $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
                             $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
                         }
@@ -459,26 +460,6 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
 
     $new_post_dom->getElementById('ban-')->changeId('ban' . $post_data['post_number']);
     return $new_post_element;
-}
-
-function nel_render_post_adjust_relative($node, $gen_data)
-{
-    $post_id = $gen_data['post']['parent_thread'] . '_' . $gen_data['post']['post_number'];
-    $new_post_dom = $node->ownerDocument->copyNodeIntoDocument($node, true);
-    $new_post_dom->getElementById('post-num-link-' . $post_id)->modifyAttribute('href', '../../', 'before');
-    $sticky_element = $new_post_dom->getElementById('sticky-icon-');
-
-    foreach ($new_post_dom->getElementById('post-comment-' . $post_id)->getElementsByClassName('link-quote') as $comment_element)
-    {
-        $comment_element->modifyAttribute('href', '../../', 'before');
-    }
-
-    if (!is_null($sticky_element))
-    {
-        $sticky_element->modifyAttribute('src', '../../', 'before');
-    }
-
-    return $new_post_dom->getElementById('post-id-' . $post_id);
 }
 
 function nel_render_thread_form_bottom($board_id, $dom)

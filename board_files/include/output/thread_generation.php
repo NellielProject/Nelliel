@@ -93,7 +93,7 @@ function nel_thread_generator($board_id, $write, $response_to)
 
         if ($gen_data['post']['op'] == 1)
         {
-            $base_new_post_node = nel_render_post($board_id, $gen_params, false, $gen_data, $dom);
+            $new_post_node = nel_render_post($board_id, $gen_params, false, $gen_data, $dom);
             $expand_div = $dom->getElementById('thread-expand-');
             $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
             $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
@@ -114,24 +114,23 @@ function nel_thread_generator($board_id, $write, $response_to)
         }
         else
         {
-            $base_new_post_node = nel_render_post($board_id, $gen_params, true, $gen_data, $dom);
+            $new_post_node = nel_render_post($board_id, $gen_params, true, $gen_data, $dom);
 
             if ($gen_data['thread']['post_count'] > $board_settings['abbreviate_thread'])
             {
                 if ($gen_data['post_counter'] > $gen_data['thread']['post_count'] - $board_settings['abbreviate_thread'])
                 {
-                    $import_node = $collapse_dom->importNode($base_new_post_node, true);
+                    $import_node = $collapse_dom->importNode($new_post_node, true);
                     $collapse_dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id'])->appendChild(
                             $import_node);
                 }
             }
 
-            $import_node = $expand_dom->importNode($base_new_post_node, true);
+            $import_node = $expand_dom->importNode($new_post_node, true);
             $expand_dom->appendChild($import_node);
         }
 
-        $new_post_element = nel_render_post_adjust_relative($base_new_post_node, $gen_data);
-        $imported = $dom->importNode($new_post_element, true);
+        $imported = $dom->importNode($new_post_node, true);
         $dom->getElementById('thread-')->appendChild($imported);
         ++ $gen_data['post_counter'];
     }

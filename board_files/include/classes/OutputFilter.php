@@ -67,14 +67,16 @@ class OutputFilter
     public function postQuoteLink($board_id, $target_element, $text_input)
     {
         $dbh = nel_database();
+        $board_references = nel_parameters_and_data()->boardReferences($board_id);
         $text_segments = preg_split('#(>>[0-9]+)#', $text_input, null, PREG_SPLIT_DELIM_CAPTURE);
+        $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
 
         foreach ($text_segments as $segment)
         {
             if (preg_match('#^>>([0-9]+)$#', $segment, $matches) === 1)
             {
                 $prepared = $dbh->prepare(
-                        'SELECT "parent_thread" FROM "' . nel_parameters_and_data()->boardReferences($board_id, 'post_table') .
+                        'SELECT "parent_thread" FROM "' . $board_references['post_table'] .
                         '" WHERE "post_number" = ? LIMIT 1');
                 $parent_thread = $dbh->executePreparedFetch($prepared, array($matches[1]), PDO::FETCH_COLUMN);
 
@@ -85,8 +87,8 @@ class OutputFilter
                 else
                 {
                     $p_anchor = '#p' . $parent_thread . '_' . $matches[1];
-                    $url = nel_parameters_and_data()->boardReferences($board_id, 'page_dir') . $parent_thread . '/' .
-                            $parent_thread . '.html' . $p_anchor;
+                    $url = '//' . $base_domain . '/' . $board_references['board_directory'] . '/' . $board_references['page_dir'] . '/' .
+                            $parent_thread . '/' . $parent_thread . '.html' . $p_anchor;
                     $segment_node = $target_element->ownerDocument->createElement('a', $matches[0]);
                     $segment_node->extSetAttribute('class', 'link-quote');
                     $segment_node->extSetAttribute('data-command', 'show-linked-post');
