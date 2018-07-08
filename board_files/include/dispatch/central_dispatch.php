@@ -4,6 +4,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'admin/login.php'; // TODO: Make login a class
+
 function nel_central_dispatch()
 {
     nel_plugins()->processHook('inb4-central-dispatch', array());

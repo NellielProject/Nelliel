@@ -4,8 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'admin/login.php';
-
 function nel_admin_dispatch($inputs)
 {
     $inputs = nel_plugins()->processHook('inb4-admin-dispatch', array(), $inputs);

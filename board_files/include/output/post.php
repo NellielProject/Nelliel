@@ -55,12 +55,13 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
     $dom->getElementById('outer-div')->appendChild($imported);
 }
 
-function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
+function nel_render_post($board_id, $gen_data, $dom)
 {
     $authorize = nel_authorize();
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $output_filter = new \Nelliel\OutputFilter();
+    $response = $gen_data['post']['op'] != 1;
     $post_data = $gen_data['post'];
     $thread_id = $post_data['parent_thread'];
     $post_id = $thread_id . '_' . $post_data['post_number'];
@@ -79,7 +80,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
     $header_nodes['hide-post-thread']->extSetAttribute('data-id', $post_id);
 
-    if ($gen_params['index_rendering'] && !$response)
+    if ($gen_data['index_rendering'] && !$response)
     {
         $header_nodes['hide-post-thread']->setContent(_gettext('Hide Thread'));
         $header_nodes['hide-post-thread']->extSetAttribute('data-alt-visual', _gettext('Show Thread'));
@@ -189,7 +190,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
     $header_nodes['post-num-link']->extSetAttribute('href', $thread_page_web_path . '#p' . $post_id, 'none');
     $header_nodes['post-link-post']->extSetAttribute('data-id', $post_id);
 
-    if (!$gen_params['index_rendering'] || $response)
+    if (!$gen_data['index_rendering'] || $response)
     {
         $header_nodes['reply-to-link']->parentNode->removeSelf();
     }
@@ -206,7 +207,7 @@ function nel_render_post($board_id, $gen_params, $response, $gen_data, $dom)
         }
     }
 
-    if (!$gen_params['index_rendering'] || $response || !$gen_params['abbreviate'])
+    if (!$gen_data['index_rendering'] || $response || !$gen_data['abbreviate'])
     {
         $header_nodes['expand-thread']->parentNode->removeSelf();
     }

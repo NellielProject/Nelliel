@@ -42,45 +42,44 @@ function nel_thread_generator($board_id, $write, $response_to)
         return;
     }
 
-    $gen_data['post_counter'] = 0;
-    $gen_data['expand_post'] = FALSE;
-    $gen_data['first100'] = FALSE;
-    $gen_params = array();
-    $gen_params['posts_ending'] = false;
-    $gen_params['index_rendering'] = false;
-    $gen_params['abbreviate'] = false;
+    $post_counter = 0;
+    $gen_data['posts_ending'] = false;
+    $gen_data['index_rendering'] = false;
+    $gen_data['abbreviate'] = false;
     $hr_added = false;
+    $total_posts = $gen_data['thread']['post_count'];
+    $abbreviate = $total_posts > $board_settings['abbreviate_thread'];
 
-    while ($gen_data['post_counter'] < $gen_data['thread']['post_count'])
+    while ($post_counter < $total_posts)
     {
-        if (!isset($treeline[$gen_data['post_counter']]))
+        if (!isset($treeline[$post_counter]))
         {
-            ++ $gen_data['post_counter'];
+            ++ $post_counter;
             continue;
         }
 
-        $gen_data['post'] = $treeline[$gen_data['post_counter']];
+        $gen_data['post'] = $treeline[$post_counter];
 
-        if ($gen_data['post_counter'] === 0)
+        if ($post_counter === 0)
         {
             nel_render_board_header($board_id, $render, $dotdot, $treeline);
             nel_render_posting_form($board_id, $render, $response_to, $dotdot);
         }
 
-        if ($gen_data['post_counter'] == $gen_data['thread']['post_count'] - 1)
+        if ($post_counter == $total_posts - 1)
         {
-            $gen_params['posts_ending'] = true;
+            $gen_data['posts_ending'] = true;
         }
 
         if ($gen_data['post']['has_file'] == 1)
         {
-            $prepared = $dbh->prepare(
-                    'SELECT * FROM "' . $references['file_table'] . '" WHERE "post_ref" = ? ORDER BY "file_order" ASC');
+            $query = 'SELECT * FROM "' . $references['file_table'] . '" WHERE "post_ref" = ? ORDER BY "file_order" ASC';
+            $prepared = $dbh->prepare($query);
             $gen_data['files'] = $dbh->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']),
                     PDO::FETCH_ASSOC);
         }
 
-        if ($gen_data['post_counter'] === 99)
+        if ($post_counter === 99)
         {
             $render_temp = clone $render;
             nel_render_insert_hr($dom);
@@ -93,15 +92,14 @@ function nel_thread_generator($board_id, $write, $response_to)
 
         if ($gen_data['post']['op'] == 1)
         {
-            $new_post_node = nel_render_post($board_id, $gen_params, false, $gen_data, $dom);
+            $new_post_node = nel_render_post($board_id, $gen_data, $dom);
             $expand_div = $dom->getElementById('thread-expand-');
             $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
             $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
 
-            if ($gen_data['thread']['post_count'] > $board_settings['abbreviate_thread'])
+            if ($abbreviate)
             {
-                $omitted_count = $gen_data['thread']['post_count'] - $board_settings['abbreviate_thread'];
-                $omitted_element->firstChild->setContent($omitted_count);
+                $omitted_element->firstChild->setContent($total_posts - $board_settings['abbreviate_thread']);
             }
             else
             {
@@ -114,16 +112,13 @@ function nel_thread_generator($board_id, $write, $response_to)
         }
         else
         {
-            $new_post_node = nel_render_post($board_id, $gen_params, true, $gen_data, $dom);
+            $new_post_node = nel_render_post($board_id, $gen_data, $dom);
 
-            if ($gen_data['thread']['post_count'] > $board_settings['abbreviate_thread'])
+            if ($abbreviate && $post_counter > $total_posts - $board_settings['abbreviate_thread'])
             {
-                if ($gen_data['post_counter'] > $gen_data['thread']['post_count'] - $board_settings['abbreviate_thread'])
-                {
-                    $import_node = $collapse_dom->importNode($new_post_node, true);
-                    $collapse_dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id'])->appendChild(
-                            $import_node);
-                }
+                $import_node = $collapse_dom->importNode($new_post_node, true);
+                $collapse_dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id'])->appendChild(
+                        $import_node);
             }
 
             $import_node = $expand_dom->importNode($new_post_node, true);
@@ -132,7 +127,7 @@ function nel_thread_generator($board_id, $write, $response_to)
 
         $imported = $dom->importNode($new_post_node, true);
         $dom->getElementById('thread-')->appendChild($imported);
-        ++ $gen_data['post_counter'];
+        ++ $post_counter;
     }
 
     $dom->getElementById('post-id-')->removeSelf();

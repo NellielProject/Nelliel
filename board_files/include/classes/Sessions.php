@@ -74,6 +74,10 @@ class Sessions
                 $this->setSessionCookie();
                 nel_login();
             }
+            else if($manage === 'modmode')
+            {
+                ;
+            }
             else
             {
                 $this->terminateSession();
