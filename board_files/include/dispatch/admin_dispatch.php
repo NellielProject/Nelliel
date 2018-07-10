@@ -82,7 +82,7 @@ function nel_admin_dispatch($inputs)
 
             case 'bans':
                 require_once INCLUDE_PATH . 'admin/bans_panel.php';
-                nel_ban_control($inputs['board_id'], $inputs['action']);
+                nel_ban_control($inputs);
                 break;
 
             case 'threads':
@@ -123,6 +123,11 @@ function nel_admin_dispatch($inputs)
             case 'thread':
                 require_once INCLUDE_PATH . 'output/thread_generation.php';
                 nel_thread_generator($inputs['board_id'], false, intval($inputs['section']));
+                break;
+
+            case 'bans':
+                require_once INCLUDE_PATH . 'admin/bans_panel.php';
+                nel_ban_control($inputs);
                 break;
         }
     }

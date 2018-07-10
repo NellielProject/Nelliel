@@ -80,6 +80,14 @@ function nel_render_post($board_id, $gen_data, $dom)
     $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
     $header_nodes['hide-post-thread']->extSetAttribute('data-id', $post_id);
 
+    $board_web_path = '//' . $base_domain . '/' . rawurlencode($references['board_directory']) . '/';
+    $pages_web_path = $board_web_path . rawurlencode($references['page_dir']) . '/';
+    $thread_page_web_path = $pages_web_path . $thread_id . '/' . $thread_id . '.html';
+    $src_web_path = $board_web_path . rawurlencode($references['src_dir']) . '/';
+    $thread_src_web_path = $src_web_path . $thread_id . '/';
+    $preview_web_path = $board_web_path . rawurlencode($references['thumb_dir']) . '/';
+    $thread_preview_web_path = $preview_web_path . $thread_id . '/';
+
     if ($gen_data['index_rendering'] && !$response)
     {
         $header_nodes['hide-post-thread']->setContent(_gettext('Hide Thread'));
@@ -95,10 +103,13 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     if (!nel_sessions()->sessionIsIgnored('render'))
     {
+        $ip = @inet_ntop($post_data['ip_address']);
         $header_nodes['post-ip-address']->setContent(@inet_ntop($post_data['ip_address']));
+        $header_nodes['ban-ip-link']->extSetAttribute('href', '?manage=modmode&module=bans&board_id=test&action=new&ban_ip=' . $ip);
     }
     else
     {
+        $header_nodes['ban-ip-link']->parentNode->removeSelf();
         $header_nodes['post-ip-address']->parentNode->removeSelf();
     }
 
@@ -176,14 +187,6 @@ function nel_render_post($board_id, $gen_data, $dom)
                     $board_settings['date_separator'] . date("Y (D) H:i:s", $curr_time);
             break;
     }
-
-    $board_web_path = '//' . $base_domain . '/' . rawurlencode($references['board_directory']) . '/';
-    $pages_web_path = $board_web_path . rawurlencode($references['page_dir']) . '/';
-    $thread_page_web_path = $pages_web_path . $thread_id . '/' . $thread_id . '.html';
-    $src_web_path = $board_web_path . rawurlencode($references['src_dir']) . '/';
-    $thread_src_web_path = $src_web_path . $thread_id . '/';
-    $preview_web_path = $board_web_path . rawurlencode($references['thumb_dir']) . '/';
-    $thread_preview_web_path = $preview_web_path . $thread_id . '/';
 
     $header_nodes['post-time-']->setContent($post_time);
     $header_nodes['post-num-link']->setContent($post_data['post_number']);

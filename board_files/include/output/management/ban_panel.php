@@ -74,7 +74,7 @@ function nel_render_main_ban_panel($board_id)
     nel_clean_exit();
 }
 
-function nel_render_ban_panel_add($board_id)
+function nel_render_ban_panel_add($board_id, $ip = '')
 {
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -83,9 +83,12 @@ function nel_render_ban_panel_add($board_id)
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
-    $dom->getElementById('add-ban-form')->extSetAttribute('action',
+    $add_ban_form = $dom->getElementById('add-ban-form');
+    $add_ban_form->extSetAttribute('action',
             PHP_SELF . '?manage=board&module=bans&board_id=' . $board_id);
     $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
+    $ban_nodes = $dom->getAssociativeNodeArray('data-parse-id', $add_ban_form);
+    $ban_nodes['ban-ip']->extSetAttribute('value', $ip);
     nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);

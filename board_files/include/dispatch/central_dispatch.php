@@ -34,6 +34,7 @@ function nel_central_dispatch()
     $inputs['section'] = (isset($_GET['section'])) ? $_GET['section'] : null;
     $inputs['board_id'] = (isset($_GET['board_id'])) ? $_GET['board_id'] : null;
     $inputs['action'] = (isset($_POST['action'])) ? $_POST['action'] : null;
+    $inputs['action2'] = (isset($_GET['action'])) ? $_GET['action'] : null;
 
     if (isset($_GET['manage']))
     {
