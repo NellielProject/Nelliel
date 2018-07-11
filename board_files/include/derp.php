@@ -27,14 +27,6 @@ function nel_derp($error_id, $error_message, $error_data = array())
         }
     }
 
-    if (is_null($board_id))
-    {
-        nel_render_derp($diagnostic);
-    }
-    else
-    {
-        nel_render_board_derp($board_id, $diagnostic);
-    }
-
+    nel_render_derp($diagnostic, $board_id);
     nel_clean_exit();
 }
