@@ -2,7 +2,13 @@
 
 namespace phpDOMExtend;
 
-class ExtendedDOMElement extends \DOMElement
+use DOMElement;
+use DOMNode;
+use DOMNodeList;
+use DOMAttr;
+use DOMXPath;
+
+class ExtendedDOMElement extends DOMElement
 {
     private $escaper_instance;
 
@@ -27,12 +33,12 @@ class ExtendedDOMElement extends \DOMElement
      * Execute an XPath query on the current document and return the result.
      *
      * @param string $expression The XPath query
-     * @param \DOMNode [optional] $context_node Optional context node to limit the query scope
-     * @return \DOMNodeList Returns result of the query as a DOMNodeList object
+     * @param DOMNode [optional] $context_node Optional context node to limit the query scope
+     * @return DOMNodeList Returns result of the query as a DOMNodeList object
      */
     public function doXPathQuery($expression, $context_node = null)
     {
-        $xpath = new \DOMXPath($this->ownerDocument);
+        $xpath = new DOMXPath($this->ownerDocument);
 
         if(is_null($context_node))
         {
@@ -48,7 +54,7 @@ class ExtendedDOMElement extends \DOMElement
      * @param string $name Attribute name
      * @param string $value Attribute value
      * @param string $escape_type Type of escaping to use
-     * @return \DOMAttr The old node if replaced, otherwise null
+     * @return DOMAttr The old node if replaced, otherwise null
      */
     public function extSetAttribute($name, $value, $escape_type = 'attribute')
     {
@@ -64,7 +70,7 @@ class ExtendedDOMElement extends \DOMElement
      * @param string $qualifiedName The qualified name of the element
      * @param string $value Attribute value
      * @param string $escape_type Type of escaping to use
-     * @return \DOMAttr The old node if replaced, otherwise null
+     * @return DOMAttr The old node if replaced, otherwise null
      */
     public function extSetAttributeNS($namespaceURI, $qualifiedName, $value, $escape_type = 'attribute')
     {
@@ -201,7 +207,7 @@ class ExtendedDOMElement extends \DOMElement
      * by attribute values.
      *
      * @param string $name Name of attribute to search for
-     * @param \DOMNode [optional] $context_node Optional context node to search within
+     * @param DOMNode [optional] $context_node Optional context node to search within
      * @return array Associative array of nodes
      */
     public function getAssociativeNodeArray($name, $context_node = null)
@@ -221,7 +227,7 @@ class ExtendedDOMElement extends \DOMElement
      * Get child element matching the given ID.
      *
      * @param string $id The ID to search for
-     * @return \DOMElement The first matching element
+     * @return DOMElement The first matching element
      */
     public function getElementById($id)
     {
@@ -232,7 +238,7 @@ class ExtendedDOMElement extends \DOMElement
      * Get child elements which contain the given attribute name.
      *
      * @param string $name Name of the attribute
-     * @return \DOMNodeList A DOMNodeList of matching elements
+     * @return DOMNodeList A DOMNodeList of matching elements
      */
     public function getElementsByAttributeName($name)
     {
@@ -244,7 +250,7 @@ class ExtendedDOMElement extends \DOMElement
      *
      * @param string $name Name of the attribute
      * @param string $value Attribute value to match
-     * @return \DOMNodeList A DOMNodeList of matching elements
+     * @return DOMNodeList A DOMNodeList of matching elements
      */
     public function getElementsByAttributeValue($name, $value)
     {
@@ -255,7 +261,7 @@ class ExtendedDOMElement extends \DOMElement
      * Get child elements which contain the given class name.
      *
      * @param string $name Name of the class
-     * @return \DOMNodeList A DOMNodeList of matching elements
+     * @return DOMNodeList A DOMNodeList of matching elements
      */
     public function getElementsByClassName($name)
     {
@@ -266,7 +272,7 @@ class ExtendedDOMElement extends \DOMElement
      * Get the innder nodes of this element.
      *
      * @param boolean $as_list True to return nodes as a list or false to return a DOMDocument containing the nodes.
-     * @return \DOMNodeList|ExtendedDOMDocument
+     * @return DOMNodeList|ExtendedDOMDocument
      */
     public function getInnerNode($as_list = false)
     {
@@ -302,5 +308,63 @@ class ExtendedDOMElement extends \DOMElement
         {
             $this->ownerDocument->removeChild($this);
         }
+    }
+
+    /**
+     * Adds a new child after a reference node
+     *
+     * @param DOMNode $newnode The new node.
+     * @param DOMNode $refnode The reference node. If not supplied, newnode is appended to the children.
+     * @return DOMNode The inserted node.
+     */
+
+    public function insertAfter($newnode, $refnode = null)
+    {
+        if(is_null($refnode))
+        {
+            return $this->appendChild($newnode);
+        }
+
+        $parent = $refnode->parentNode;
+        $next = $refnode->nextSibling;
+
+        if(!is_null($next))
+        {
+            return $parent->insertBefore($newnode, $next);
+        }
+        else
+        {
+            return $parent->appendChild($newnode);
+        }
+
+        return $newnode;
+    }
+
+    /**
+     * Copies a node and inserts it relative to a target node
+     *
+     * @param DOMNode $node The node to be copied.
+     * @param DOMNode $target_node The target node to insert the new copy.
+     * @param string $insert Where to insert the copied node relative to the target.
+     * @return DOMNode The copied node.
+     */
+    public function copyNode($node, $target_node, $insert)
+    {
+        $parent = $target_node->parentNode;
+
+        if ($insert === 'before')
+        {
+            return $parent->insertBefore($node->cloneNode(true), $target_node);
+        }
+        else if($insert === 'after')
+        {
+            return $this->insertAfter($node->cloneNode(true), $target_node);
+        }
+        else if($insert === 'append')
+        {
+            return $target_node->appendChild($node->cloneNode(true));
+        }
+
+        return $node;
     }
 }

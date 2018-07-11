@@ -15,15 +15,14 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
 {
     $dom_nav = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom_nav, 'index_navigation.html');
-    $index_bottom_nav_element = $dom_nav->getElementById('index-bottom-nav');
-    $inner_td_elements = $index_bottom_nav_element->doXPathQuery(".//td");
-    $page_nav_td = $inner_td_elements->item(0);
+    $bottom_nav = $dom_nav->getElementById('index-bottom-nav');
+    $bottom_nav = $dom->getElementById('outer-div')->appendChild($dom->importNode($bottom_nav, true));
+    $nav_nodes = $dom->getAssociativeNodeArray('data-parse-id', $bottom_nav);
 
     foreach ($pages as $key => $value)
     {
-        $temp_page_nav_td = $page_nav_td->cloneNode(true);
-        $page_link = $temp_page_nav_td->doXPathQuery(".//a")->item(0);
-
+        $temp_page_nav = $dom->copyNode($nav_nodes['nav-link-container'], $bottom_nav, 'append');
+        $page_link = $temp_page_nav->doXPathQuery(".//a")->item(0);
         $content = $key;
 
         if ($key === 'prev')
@@ -43,16 +42,12 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
         }
         else
         {
-            $temp_page_nav_td->replaceChild($dom_nav->createTextNode($content), $page_link);
+            $temp_page_nav->replaceChild($dom->createTextNode($content), $page_link);
         }
-
-        $page_nav_td->parentNode->insertBefore($temp_page_nav_td, $inner_td_elements->item(2));
     }
 
-    $page_nav_td->removeSelf();
-    nel_language()->i18nDom($dom_nav, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
-    $imported = $dom->importNode($index_bottom_nav_element, true);
-    $dom->getElementById('outer-div')->appendChild($imported);
+    $nav_nodes['nav-link-container']->removeSelf();
+    nel_language()->i18nDom($bottom_nav, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
 }
 
 function nel_render_post($board_id, $gen_data, $dom)
