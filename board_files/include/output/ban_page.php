@@ -14,7 +14,7 @@ function nel_render_ban_page($board_id, $ban_info)
     nel_render_board_header($board_id, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'ban_page.html');
-    $banned_board = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board'];
+    $banned_board = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board_id'];
     $ban_page_node_array = $dom->getAssociativeNodeArray('data-parse-id');
     $ban_page_node_array['banned-board']->setContent($banned_board);
     $ban_page_node_array['banned-time']->setContent(date("D F jS Y  H:i", $ban_info['start_time']));

@@ -77,20 +77,25 @@ function nel_banned_text($text, $file)
     }
 }
 
-function nel_ban_appeal($board_id)
+function nel_ban_appeal($board_id, $ban_info)
 {
-    if ($_POST['ban_ip'] != $user_ip_address)
+    $dbh = nel_database();
+
+    if ($_POST['ban_ip'] != @inet_ntop($ban_info['ip_address_start']))
     {
         nel_derp(160, _gettext('Your ip address does not match the one listed in the ban.'));
     }
 
-    $ip_address = $_POST['ban_ip'];
+    if ($ban_info['appeal_status'] > 0)
+    {
+        nel_derp(161, _gettext('You have already appealed your ban.'));
+    }
+
     $bawww = $_POST['ban_appeal'];
     $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE .
-         '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ip_address_starts" = ?');
-    $dbh->executePrepared($prepared, array($bawww, @inet_pton($ip_address)));
-
-    nel_apply_ban($board_id);
+         '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ban_id" = ?');
+    $dbh->executePrepared($prepared, array($bawww, $ban_info['ban_id']));
+    return;
 }
 
 //
@@ -114,7 +119,8 @@ function nel_apply_ban($board_id)
     {
         if ($action === 'add-appeal')
         {
-            nel_ban_appeal($board_id);
+            nel_ban_appeal($board_id, $ban_info);
+            $ban_info = $ban_hammer->getBanById($ban_info['ban_id']);
         }
     }
 
