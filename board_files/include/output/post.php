@@ -252,14 +252,14 @@ function nel_render_post($board_id, $gen_data, $dom)
         $header_nodes['expand-thread']->extSetAttribute('data-id', $thread_id);
     }
 
-    if (!$response && $gen_data['thread']['sticky'])
-    {
-        $header_nodes['sticky-icon']->extSetAttribute('src',
-                '//' . $base_domain . '/' . IMAGES_DIR . '/nelliel/' . 'sticky.png', 'none');
-    }
-    else
+    if ($response || !$thread_data['sticky'])
     {
         $header_nodes['sticky-icon']->removeSelf();
+    }
+
+    if ($response || !$thread_data['locked'])
+    {
+        $header_nodes['locked-icon']->removeSelf();
     }
 
     $multiple_files = false;
