@@ -15,7 +15,7 @@ function nel_ban_control($inputs)
     $authorize = nel_authorize();
     $ban_hammer = new \Nelliel\BanHammer();
 
-    if ($inputs['action'] === 'modify')
+    if ($inputs['action'] === 'modify' || $inputs['action2'] === 'modify')
     {
         if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', $inputs['board_id']))
         {
@@ -33,7 +33,7 @@ function nel_ban_control($inputs)
 
         nel_render_ban_panel_add($inputs['board_id'], $_GET['ban_ip']);
     }
-    else if ($inputs['action'] === 'add')
+    else if ($inputs['action'] === 'add' || $inputs['action2'] === 'add')
     {
         if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_add', $inputs['board_id']))
         {
@@ -44,7 +44,7 @@ function nel_ban_control($inputs)
         $ban_hammer->addBan($ban_input);
         nel_render_main_ban_panel($inputs['board_id']);
     }
-    else if ($inputs['action'] === 'remove')
+    else if ($inputs['action'] === 'remove' || $inputs['action2'] === 'remove')
     {
         if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_delete', $inputs['board_id']))
         {
@@ -55,7 +55,7 @@ function nel_ban_control($inputs)
         $ban_hammer->removeBan($ban_input['ban_id']);
         nel_render_main_ban_panel($inputs['board_id']);
     }
-    else if ($inputs['action'] === 'update')
+    else if ($inputs['action'] === 'update' || $inputs['action2'] === 'update')
     {
         if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', $inputs['board_id']))
         {
