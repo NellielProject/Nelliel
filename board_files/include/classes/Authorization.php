@@ -341,24 +341,30 @@ class Authorization
         return false;
     }
 
-    public function userHighestLevelRole($user_id, $board_id = null) // TODO: User exists checks here
+    public function userHighestLevelRole($user_id, $board_id = '')
     {
-        $role_level = 0;
         $role = '';
 
-        foreach ($this->user_roles[$user_id] as $key => $value)
+        if (!$this->userExists($user_id))
         {
-            $level = $this->getRoleInfo($value['role_id'], 'role_level');
+            return $role;
+        }
 
-            if ($key !== '' && $board_id !== $key)
+        $role_level = 0;
+
+        foreach ($this->user_roles[$user_id] as $role)
+        {
+            $level = $this->getRoleInfo($role['role_id'], 'role_level');
+
+            if ($board_id !== '' && $board_id !== $role['board'])
             {
                 $level = 0;
             }
 
             if ($level > $role_level)
             {
-                $role_level = $this->getRoleInfo($value['role_id'], 'role_level');
-                $role = $value['role_id'];
+                $role_level = $this->getRoleInfo($role['role_id'], 'role_level');
+                $role = $role['role_id'];
             }
         }
 
