@@ -131,6 +131,22 @@ function nel_admin_dispatch($inputs)
                 {
                     $updates = $thread_handler->removeThread($_GET['thread-id']);
                 }
+                else if ($inputs['action2'] === 'sticky')
+                {
+                    $updates = $thread_handler->stickyThread($_GET['thread-id']);
+                }
+                else if ($inputs['action2'] === 'unsticky')
+                {
+                    $updates = $thread_handler->unstickyThread($_GET['thread-id']);
+                }
+                else if ($inputs['action2'] === 'lock')
+                {
+                    $updates = $thread_handler->lockThread($_GET['thread-id']);
+                }
+                else if ($inputs['action2'] === 'unlock')
+                {
+                    $updates = $thread_handler->unlockThread($_GET['thread-id']);
+                }
 
                 $regen = new \Nelliel\Regen();
                 $regen->threads($inputs['board_id'], true, $updates);
