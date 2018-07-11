@@ -142,6 +142,28 @@ function nel_admin_dispatch($inputs)
                 require_once INCLUDE_PATH . 'admin/bans_panel.php';
                 nel_ban_control($inputs);
                 break;
+
+            case 'multi':
+                if($inputs['action2'] === 'ban-delete')
+                {
+                    $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
+
+                    if(isset($_GET['post-id']))
+                    {
+                        $updates = $thread_handler->removePost($_GET['post-id']);
+                    }
+                    else if(isset($_GET['thread-id']))
+                    {
+                        $updates = $thread_handler->removeThread($_GET['thread-id']);
+                    }
+
+                    $regen = new \Nelliel\Regen();
+                    $regen->threads($inputs['board_id'], true, $updates);
+                    $regen->index($inputs['board_id']);
+                    require_once INCLUDE_PATH . 'admin/bans_panel.php';
+                    $inputs['action2'] = 'new';
+                    nel_ban_control($inputs);
+                }
         }
     }
     else
