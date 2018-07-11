@@ -123,11 +123,11 @@ function nel_admin_dispatch($inputs)
             case 'threads':
                 $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
 
-                if($inputs['action2'] === 'delete-post')
+                if ($inputs['action2'] === 'delete-post')
                 {
                     $updates = $thread_handler->removePost($_GET['post-id']);
                 }
-                else if($inputs['action2'] === 'delete-thread')
+                else if ($inputs['action2'] === 'delete-thread')
                 {
                     $updates = $thread_handler->removeThread($_GET['thread-id']);
                 }
@@ -144,15 +144,16 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'multi':
-                if($inputs['action2'] === 'ban-delete')
+                var_dump($inputs['action2']);
+                if ($inputs['action2'] === 'ban.delete-post' || $inputs['action2'] === 'ban.delete-thread')
                 {
                     $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
 
-                    if(isset($_GET['post-id']))
+                    if ($inputs['action2'] === 'ban.delete-post')
                     {
                         $updates = $thread_handler->removePost($_GET['post-id']);
                     }
-                    else if(isset($_GET['thread-id']))
+                    else if ($inputs['action2'] === 'ban.delete-thread')
                     {
                         $updates = $thread_handler->removeThread($_GET['thread-id']);
                     }
@@ -164,6 +165,8 @@ function nel_admin_dispatch($inputs)
                     $inputs['action2'] = 'new';
                     nel_ban_control($inputs);
                 }
+
+                break;
         }
     }
     else

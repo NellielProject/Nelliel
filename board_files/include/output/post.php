@@ -110,12 +110,12 @@ function nel_render_post($board_id, $gen_data, $dom)
         if($response)
         {
             $header_nodes['modmode-delete-link']->extSetAttribute('href', '?manage=modmode&module=threads&board_id=test&action=delete-post&post-id=' . $post_data['post_number']);
-            $header_nodes['modmode-ban-delete-link']->extSetAttribute('href', '?manage=modmode&module=multi&board_id=test&action=ban-delete&post-id=' . $post_data['post_number'] . '&ban_ip=' . rawurlencode($ip));
+            $header_nodes['modmode-ban-delete-link']->extSetAttribute('href', '?manage=modmode&module=multi&board_id=test&action=ban.delete-post&post-id=' . $post_data['post_number'] . '&ban_ip=' . rawurlencode($ip));
         }
         else
         {
             $header_nodes['modmode-delete-link']->extSetAttribute('href', '?manage=modmode&module=threads&board_id=test&action=delete-thread&thread-id=' . $post_data['parent_thread']);
-            $header_nodes['modmode-ban-delete-link']->extSetAttribute('href', '?manage=modmode&module=multi&board_id=test&action=ban-delete&thread-id=' . $post_data['parent_thread'] . '&ban_ip=' . rawurlencode($ip));
+            $header_nodes['modmode-ban-delete-link']->extSetAttribute('href', '?manage=modmode&module=multi&board_id=test&action=ban.delete-thread&thread-id=' . $post_data['parent_thread'] . '&ban_ip=' . rawurlencode($ip));
         }
     }
     else
