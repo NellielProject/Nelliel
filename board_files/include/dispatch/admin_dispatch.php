@@ -120,9 +120,22 @@ function nel_admin_dispatch($inputs)
                 nel_main_thread_generator($inputs['board_id'], 0, false, intval($inputs['section']));
                 break;
 
-            case 'thread':
-                require_once INCLUDE_PATH . 'output/thread_generation.php';
-                nel_thread_generator($inputs['board_id'], false, intval($inputs['section']));
+            case 'threads':
+                $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
+
+                if($inputs['action2'] === 'delete-post')
+                {
+                    $updates = $thread_handler->removePost($_GET['post-id']);
+                }
+                else if($inputs['action2'] === 'delete-thread')
+                {
+                    $updates = $thread_handler->removeThread($_GET['thread-id']);
+                }
+
+                $regen = new \Nelliel\Regen();
+                $regen->threads($inputs['board_id'], true, $updates);
+                $regen->index($inputs['board_id']);
+                nel_clean_exit(true, $inputs['board_id']);
                 break;
 
             case 'bans':

@@ -106,11 +106,21 @@ function nel_render_post($board_id, $gen_data, $dom)
         $ip = @inet_ntop($post_data['ip_address']);
         $header_nodes['post-ip-address']->setContent(@inet_ntop($post_data['ip_address']));
         $header_nodes['ban-ip-link']->extSetAttribute('href', '?manage=modmode&module=bans&board_id=test&action=new&ban_ip=' . $ip);
+
+        if($response)
+        {
+            $header_nodes['delete-post-link']->extSetAttribute('href', '?manage=modmode&module=threads&board_id=test&action=delete-post&post-id=' . $post_data['post_number']);
+            $header_nodes['delete-thread-link']->parentNode->removeSelf();
+        }
+        else
+        {
+            $header_nodes['delete-thread-link']->extSetAttribute('href', '?manage=modmode&module=threads&board_id=test&action=delete-thread&thread-id=' . $post_data['parent_thread']);
+            $header_nodes['delete-post-link']->parentNode->removeSelf();
+        }
     }
     else
     {
-        $header_nodes['ban-ip-link']->parentNode->removeSelf();
-        $header_nodes['post-ip-address']->parentNode->removeSelf();
+        $header_nodes['modmode-options']->removeSelf();
     }
 
     $new_post_dom->getElementById('p-number')->changeId('p' . $post_id);
