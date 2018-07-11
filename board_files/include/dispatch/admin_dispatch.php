@@ -144,7 +144,6 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'multi':
-                var_dump($inputs['action2']);
                 if ($inputs['action2'] === 'ban.delete-post' || $inputs['action2'] === 'ban.delete-thread')
                 {
                     $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
