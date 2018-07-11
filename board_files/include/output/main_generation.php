@@ -174,7 +174,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
             $next = ($write) ? PHP_SELF2 . ($page + 1) . PHP_EXT : $modmode_base . ($page + 1) . '&board_id=' . $board_id;
         }
 
-        $pages['prev'] = $prev;
+        $pages[_gettext('Previous')] = $prev;
         $i = 0;
 
         while ($i < $page_count)
@@ -195,7 +195,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
             ++ $i;
         }
 
-        $pages['next'] = $next;
+        $pages[_gettext('Next')] = $next;
 
         nel_render_index_navigation($board_id, $dom, $render, $pages);
         nel_render_thread_form_bottom($board_id, $dom);

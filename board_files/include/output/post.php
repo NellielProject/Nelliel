@@ -25,16 +25,6 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
         $page_link = $temp_page_nav->doXPathQuery(".//a")->item(0);
         $content = $key;
 
-        if ($key === 'prev')
-        {
-            $content = _gettext('Previous');
-        }
-
-        if ($key === 'next')
-        {
-            $content = _gettext('Next');
-        }
-
         if ($value !== '')
         {
             $page_link->extSetAttribute('href', $value, 'attribute');
@@ -101,38 +91,50 @@ function nel_render_post($board_id, $gen_data, $dom)
     {
         $ip = @inet_ntop($post_data['ip_address']);
         $header_nodes['modmode-ip-address']->setContent(@inet_ntop($post_data['ip_address']));
-        $header_nodes['modmode-ban-link']->extSetAttribute('href', '?manage=modmode&module=bans&board_id=test&action=new&ban_ip=' . rawurlencode($ip));
+        $header_nodes['modmode-ban-link']->extSetAttribute('href',
+                '?manage=modmode&module=bans&board_id=test&action=new&ban_ip=' . rawurlencode($ip));
 
-        if($response)
+        if ($response)
         {
-            $header_nodes['modmode-delete-link']->extSetAttribute('href', '?manage=modmode&module=threads&board_id=test&action=delete-post&post-id=' . $post_data['post_number']);
-            $header_nodes['modmode-ban-delete-link']->extSetAttribute('href', '?manage=modmode&module=multi&board_id=test&action=ban.delete-post&post-id=' . $post_data['post_number'] . '&ban_ip=' . rawurlencode($ip));
+            $header_nodes['modmode-delete-link']->extSetAttribute('href',
+                    '?manage=modmode&module=threads&board_id=test&action=delete-post&post-id=' .
+                    $post_data['post_number']);
+            $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
+                    '?manage=modmode&module=multi&board_id=test&action=ban.delete-post&post-id=' .
+                    $post_data['post_number'] . '&ban_ip=' . rawurlencode($ip));
             $header_nodes['modmode-lock-thread-link']->parentNode->removeSelf();
             $header_nodes['modmode-sticky-thread-link']->parentNode->removeSelf();
         }
         else
         {
-            $header_nodes['modmode-delete-link']->extSetAttribute('href', '?manage=modmode&module=threads&board_id=test&action=delete-thread&thread-id=' . $post_data['parent_thread']);
-            $header_nodes['modmode-ban-delete-link']->extSetAttribute('href', '?manage=modmode&module=multi&board_id=test&action=ban.delete-thread&thread-id=' . $post_data['parent_thread'] . '&ban_ip=' . rawurlencode($ip));
+            $header_nodes['modmode-delete-link']->extSetAttribute('href',
+                    '?manage=modmode&module=threads&board_id=test&action=delete-thread&thread-id=' . $thread_id);
+            $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
+                    '?manage=modmode&module=multi&board_id=test&action=ban.delete-thread&thread-id=' . $thread_id .
+                    '&ban_ip=' . rawurlencode($ip));
 
-            if($thread_data['locked'] == 1)
+            if ($thread_data['locked'] == 1)
             {
-                $header_nodes['modmode-lock-thread-link']->extSetAttribute('href', '?manage=modmode&module=threads&board_id=test&action=unlock&thread-id=' . $post_data['parent_thread']);
+                $header_nodes['modmode-lock-thread-link']->extSetAttribute('href',
+                        '?manage=modmode&module=threads&board_id=test&action=unlock&thread-id=' . $thread_id);
                 $header_nodes['modmode-lock-thread-link']->setContent(_gettext('Unlock Thread'));
             }
             else
             {
-                $header_nodes['modmode-lock-thread-link']->extSetAttribute('href', '?manage=modmode&module=threads&board_id=test&action=lock&thread-id=' . $post_data['parent_thread']);
+                $header_nodes['modmode-lock-thread-link']->extSetAttribute('href',
+                        '?manage=modmode&module=threads&board_id=test&action=lock&thread-id=' . $thread_id);
             }
 
-            if($thread_data['sticky'] == 1)
+            if ($thread_data['sticky'] == 1)
             {
-                $header_nodes['modmode-sticky-thread-link']->extSetAttribute('href', '?manage=modmode&module=threads&board_id=test&action=unsticky&thread-id=' . $post_data['parent_thread']);
+                $header_nodes['modmode-sticky-thread-link']->extSetAttribute('href',
+                        '?manage=modmode&module=threads&board_id=test&action=unsticky&thread-id=' . $thread_id);
                 $header_nodes['modmode-sticky-thread-link']->setContent(_gettext('Unsticky Thread'));
             }
             else
             {
-                $header_nodes['modmode-sticky-thread-link']->extSetAttribute('href', '?manage=modmode&module=threads&board_id=test&action=sticky&thread-id=' . $post_data['parent_thread']);
+                $header_nodes['modmode-sticky-thread-link']->extSetAttribute('href',
+                        '?manage=modmode&module=threads&board_id=test&action=sticky&thread-id=' . $thread_id);
             }
         }
     }
