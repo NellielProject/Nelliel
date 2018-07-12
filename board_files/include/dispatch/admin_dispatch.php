@@ -115,9 +115,14 @@ function nel_admin_dispatch($inputs)
     {
         switch ($inputs['module'])
         {
-            case 'index':
+            case 'view-index':
                 require_once INCLUDE_PATH . 'output/main_generation.php';
                 nel_main_thread_generator($inputs['board_id'], 0, false, intval($inputs['section']));
+                break;
+
+            case 'view-thread':
+                require_once INCLUDE_PATH . 'output/thread_generation.php';
+                nel_thread_generator($inputs['board_id'], false, intval($inputs['section']));
                 break;
 
             case 'threads':

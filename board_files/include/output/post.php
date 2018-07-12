@@ -232,7 +232,7 @@ function nel_render_post($board_id, $gen_data, $dom)
         if (!nel_sessions()->sessionIsIgnored('render'))
         {
             $header_nodes['reply-to-link']->extSetAttribute('href',
-                    PHP_SELF . '?manage=modmode&module=thread&section=' . $thread_id . '&board_id=' . $board_id);
+                    PHP_SELF . '?manage=modmode&module=view-thread&section=' . $thread_id . '&board_id=' . $board_id);
         }
         else
         {

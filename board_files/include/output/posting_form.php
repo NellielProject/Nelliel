@@ -17,7 +17,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     {
         if (!nel_sessions()->sessionIsIgnored('render'))
         {
-            $return_url = PHP_SELF . '?manage=modmode&module=index&section=0&board_id=' . $board_id;
+            $return_url = PHP_SELF . '?manage=modmode&module=view-index&section=0&board_id=' . $board_id;
         }
         else
         {
