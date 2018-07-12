@@ -287,6 +287,18 @@ function nel_render_post($board_id, $gen_data, $dom)
             $temp_file_node->extSetAttribute('class', $post_type_class . $multiple_class . 'fileinfo');
 
             $file_nodes = $temp_file_dom->getAssociativeNodeArray('data-parse-id', $temp_file_node);
+
+            if (!nel_sessions()->sessionIsIgnored('render'))
+            {
+                    $file_nodes['modmode-delete-link']->extSetAttribute('href',
+                            '?manage=modmode&module=threads&board_id=test&action=delete-file&post-id=' .
+                            $post_data['post_number'] . '&file-order=' . $file['file_order']);
+            }
+            else
+            {
+                $file_nodes['modmode-options']->removeSelf();
+            }
+
             $file_nodes['delete-file']->extSetAttribute('name', 'file_' . $file_id);
             $file_nodes['delete-file']->extSetAttribute('value', 'deletefile_' . $file_id);
 

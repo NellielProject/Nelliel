@@ -152,6 +152,14 @@ function nel_admin_dispatch($inputs)
                 {
                     $updates = $thread_handler->unlockThread($_GET['thread-id']);
                 }
+                else if ($inputs['action2'] === 'delete-file')
+                {
+                    $updates = $thread_handler->removeFile($_GET['post-id'], $_GET['file-order']);
+                }
+                else if ($inputs['action2'] === 'ban-file')
+                {
+                    ;
+                }
 
                 $regen = new \Nelliel\Regen();
                 $regen->threads($inputs['board_id'], true, $updates);
@@ -160,8 +168,8 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'bans':
-                require_once INCLUDE_PATH . 'admin/bans_panel.php';
-                nel_ban_control($inputs);
+                require_once INCLUDE_PATH . 'admin/file-filters.php';
+                nel_manage_file_filters($inputs);
                 break;
 
             case 'multi':

@@ -282,6 +282,7 @@ class ThreadHandler
         $this->verifyDeletePerms($post_id);
         $this->removePostFilesFromDisk($post_id, $file_order);
         $this->removePostFilesFromDatabase($post_id, $file_order);
+        return $post_id;
     }
 
     public function removePost($post_id)
@@ -289,6 +290,7 @@ class ThreadHandler
         $this->verifyDeletePerms($post_id);
         $this->removePostFilesFromDisk($post_id);
         $this->removePostFromDatabase($post_id);
+        return $post_id;
     }
 
     public function removePostFromDatabase($post_id)
@@ -394,6 +396,7 @@ class ThreadHandler
         $this->verifyDeletePerms($thread_id);
         $this->removeThreadFromDatabase($thread_id);
         $this->removeThreadDirectories($thread_id);
+        return $thread_id;
     }
 
     public function removeThreadFromDatabase($thread_id)
