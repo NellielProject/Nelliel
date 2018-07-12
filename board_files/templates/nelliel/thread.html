@@ -12,16 +12,16 @@
 								data-i18n-attributes="data-alt-visual">Expand Thread</a>]</span>
 								<span>[<a  data-parse-id="reply-to-link" href="" data-i18n="gettext">Reply</a>]</span>
 								<span>[<a data-parse-id="post-link-post" href="#" data-i18n="gettext" data-command="link-post" data-id="">Link</a>]</span>
-								<span data-parse-id="modmode-options">
+								<span data-parse-id="sticky-icon" title="Sticky" data-i18n-attributes="title">&#128204;</span>
+								<span data-parse-id="locked-icon" title="Locked" data-i18n-attributes="title">&#128274;</span>
+							</div>
+							<div data-parse-id="modmode-options">
 								<span>[<span data-parse-id="modmode-ip-address"></span>]</span>
 								<span>[<a  data-parse-id="modmode-ban-link" href="" data-i18n="gettext">Ban</a>]</span>
 								<span>[<a  data-parse-id="modmode-delete-link" href="" data-i18n="gettext">Delete</a>]</span>
 								<span>[<a  data-parse-id="modmode-ban-delete-link" href="" data-i18n="gettext">Ban and Delete</a>]</span>
 								<span>[<a  data-parse-id="modmode-lock-thread-link" href="" data-i18n="gettext">Lock Thread</a>]</span>
 								<span>[<a  data-parse-id="modmode-sticky-thread-link" href="" data-i18n="gettext">Sticky Thread</a>]</span>
-								</span>
-								<span data-parse-id="sticky-icon" title="Sticky" data-i18n-attributes="title">&#128204;</span>
-								<span data-parse-id="locked-icon" title="Locked" data-i18n-attributes="title">&#128274;</span>
 							</div>
 							<input id="thread_thread-id" type="checkbox" name="thread_thread-id" value="deletethread_thread-id" title="Delete entire thread">
 							<input id="post_post-id" type="checkbox" name="post_post-id" value="deletepost_post-id" title="Delete entire post">
@@ -42,13 +42,13 @@
 								<div data-parse-id="filesize-display"></div>
 								<div>[<a data-parse-id="show-file-meta" href="#" data-i18n="gettext" data-command="show-file-meta" data-id="" data-alt-visual="Less file info" 
 									data-i18n-attributes="data-alt-visual">More file info</a>]</div>
-								<div data-parse-id="file-meta" class="hidden">
-									<span data-parse-id="file-source" class="file-source" data-i18n="gettext">Source:</span>&nbsp;
-									<span data-parse-id="file-license" class="file-license" data-i18n="gettext">License:</span>&nbsp;
-									<span data-parse-id="file-md5" class="file-hash" data-i18n="gettext">MD5:</span>&nbsp;
-									<span data-parse-id="file-sha1" class="file-hash" data-i18n="gettext">SHA1:</span>&nbsp;
-									<span data-parse-id="file-sha256" class="file-hash" data-i18n="gettext">SHA256:</span>&nbsp;
-									<span data-parse-id="file-sha512" class="file-hash" data-i18n="gettext">SHA512:</span>&nbsp;
+								<div data-parse-id="file-meta" class="file-meta hidden">
+									<div data-parse-id="file-source" class="file-source" data-i18n="gettext">Source:</div>
+									<div data-parse-id="file-license" class="file-license" data-i18n="gettext">License:</div>
+									<div data-parse-id="file-md5" class="file-hash">MD5:</div>
+									<div data-parse-id="file-sha1" class="file-hash">SHA1:</div>
+									<div data-parse-id="file-sha256" class="file-hash">SHA256:</div>
+									<div data-parse-id="file-sha512" class="file-hash">SHA512:</div>
 								</div>
 								<video id="video-preview-" preload="metadata" width="" controls>
 									<source src="" type="">

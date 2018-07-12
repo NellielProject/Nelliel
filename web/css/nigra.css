@@ -233,19 +233,21 @@ a.post-link:visited {
     font-size: 0.95em;
 }
 
+.file-meta {
+	white-space:normal;
+	word-wrap: break-word;
+}
+
 .file-source {
     padding-left: 2px;
-    display: block;
 }
 
 .file-license {
     padding-left: 2px;
-    display: block;
 }
 
 .file-hash {
     padding-left: 2px;
-    display: block;
 }
 
 .preview-link {
