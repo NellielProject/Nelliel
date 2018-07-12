@@ -1,4 +1,20 @@
 # Nelliel Changelog
+## v0.9.6.18 (2018/07/11)
+### Added
+ - Links for ban, delete, sticky and lock posts and files
+ - Checkbox to toggle posting as staff or normal when in modmode
+
+### Changed
+ - Update phpDOMExtend library
+ - Small improvement on filename filter
+ - Convert more forms to links in management panels
+ - Code and HTML cleanup
+ - Fix numerous bugs
+ - Update CSS
+
+### Removed
+ - Now-redundant output functions for footer and derp
+
 ## v0.9.6.17 (2018/07/06)
 ### Added
  - Mod Mode is in again
