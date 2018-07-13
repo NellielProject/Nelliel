@@ -27,7 +27,7 @@ function nel_admin_dispatch($inputs)
 
             case 'staff':
                 require_once INCLUDE_PATH . 'admin/staff_panel.php';
-                nel_staff_panel($inputs['section'], $inputs['action']);
+                nel_staff_panel($inputs);
                 break;
 
             case 'site-settings':

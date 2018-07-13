@@ -14,45 +14,34 @@ function nel_render_staff_panel_main()
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Staff')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_main.html');
-    $user_table = $dom->getElementById('user-table');
-    $user_node_array = $dom->getAssociativeNodeArray('data-parse-id', $user_table);
+
+    $user_list = $dom->getElementById('user-list');
+    $user_list_nodes = $user_list->getAssociativeNodeArray('data-parse-id');
     $users = $dbh->executeFetchAll('SELECT "user_id", "display_name" FROM "' . USER_TABLE . '"', PDO::FETCH_ASSOC);
-    $dom->getElementById('edit-user-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=general&module=staff&section=user');
-    $dom->getElementById('new-user-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=general&module=staff&section=user');
-    $dom->getElementById('edit-role-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=general&module=staff&section=role');
-    $dom->getElementById('new-role-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=general&module=staff&section=role');
 
     foreach ($users as $user)
     {
-        $user_row = $user_table->insertBefore($user_node_array['user-row']->cloneNode(true),
-                $user_node_array['submit-row']);
-        $row_node_array = $user_row->getAssociativeNodeArray('data-parse-id');
-        $row_node_array['user-select']->extSetAttribute('value', $user['user_id']);
-        $row_node_array['user-name']->setContent($user['user_id']);
-        $row_node_array['user-title']->setContent($user['display_name']);
+        $user_node = $dom->copyNode($user_list_nodes['edit-user-link'], $user_list, 'append');
+        $user_node->setContent($user['user_id'] . ' - ' . $user['display_name']);
+        $user_node->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff&section=user&action=edit&user-id=' . $user['user_id']);
     }
 
-    $user_node_array['user-row']->removeSelf();
+    $user_list_nodes['edit-user-link']->removeSelf();
+    $dom->getElementById('new-user-link')->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff&section=user&action=new');
 
-    $role_table = $dom->getElementById('role-table');
-    $role_node_array = $dom->getAssociativeNodeArray('data-parse-id', $role_table);
+    $role_list = $dom->getElementById('role-list');
+    $role_list_nodes = $role_list->getAssociativeNodeArray('data-parse-id');
     $roles = $dbh->executeFetchAll('SELECT "role_id", "role_title" FROM "' . ROLES_TABLE . '"', PDO::FETCH_ASSOC);
 
     foreach ($roles as $role)
     {
-        $role_row = $role_table->insertBefore($role_node_array['role-row']->cloneNode(true),
-                $role_node_array['submit-row']);
-        $row_node_array = $role_row->getAssociativeNodeArray('data-parse-id');
-        $row_node_array['role-select']->extSetAttribute('value', $role['role_id']);
-        $row_node_array['role-name']->setContent($role['role_id']);
-        $row_node_array['role-title']->setContent($role['role_title']);
+        $role_node = $dom->copyNode($role_list_nodes['edit-role-link'], $role_list, 'append');
+        $role_node->setContent($role['role_id'] . ' - ' . $role['role_title']);
+        $role_node->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff&section=role&action=edit&role-id=' . $role['role_id']);
     }
 
-    $role_node_array['role-row']->removeSelf();
+    $role_list_nodes['edit-role-link']->removeSelf();
+    $dom->getElementById('new-role-link')->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff&section=role&action=new');
 
     nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);

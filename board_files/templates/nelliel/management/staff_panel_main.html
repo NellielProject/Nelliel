@@ -1,42 +1,16 @@
-	<form id="edit-user-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="action" value="edit">
-		<table id="user-table">
-			<tr data-parse-id="user-row">
-			    <td><input data-parse-id="user-select" type="radio" name="user_id" value=""></td>
-				<td data-parse-id="user-name"></td>
-				<td data-parse-id="user-title"></td>
-			</tr>
-			<tr data-parse-id="submit-row">
-				<td>
-					<input type="submit" value="Edit user" data-i18n="gettext" data-i18n-attributes="value">
-				</td>
-			</tr>
-		</table>
-	</form>
-	<form id="new-user-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="action" value="new">
-		<input type="hidden" name="user_id" value="">
-		<input type="submit" value="Add new user" data-i18n="gettext" data-i18n-attributes="value">
-	</form>
+	<div id="user-list">
+		<a data-parse-id="edit-user-link" href="" class="display-block"></a>
+	</div>
+	<br>
+	<div id="new-user">
+		<a id="new-user-link" href="" data-i18n="gettext">Add New User</a>
+	</div>
 	<hr>
-	<form id="edit-role-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="action" value="edit">
-		<table id="role-table">
-			<tr data-parse-id="role-row">
-			    <td><input data-parse-id="role-select" type="radio" name="role_id" value=""></td>
-				<td data-parse-id="role-name"></td>
-				<td data-parse-id="role-title"></td>
-			</tr>
-			<tr data-parse-id="submit-row">
-				<td>
-					<input type="submit" value="Edit role" data-i18n="gettext" data-i18n-attributes="value">
-				</td>
-			</tr>
-		</table>
-	</form>
-	<form id="new-role-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="action" value="new">
-		<input type="hidden" name="role_id" value="">
-		<input type="submit" value="Add new role" data-i18n="gettext" data-i18n-attributes="value">
-	</form>
+	<div id="role-list">
+		<a data-parse-id="edit-role-link" href="" class="display-block"></a>
+	</div>
+	<br>
+	<div id="new-role">
+		<a id="new-role-link" href="" data-i18n="gettext">Add New Role</a>
+	</div>
 	<hr>
