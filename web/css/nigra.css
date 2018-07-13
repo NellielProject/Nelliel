@@ -430,6 +430,10 @@ a.post-link:visited {
 	display: none;
 }
 
+.display-block {
+	display: block;
+}
+
 .post-corral {
 	
 }
