@@ -26,11 +26,14 @@ function nel_render_ban_page($board_id, $ban_info)
 
     if ($ban_info['appeal_status'] == 0)
     {
-        $appeal_form_element->extSetAttribute('action', PHP_SELF . '?module=ban-page');
-        $appeal_form_element->doXPathQuery(".//input[@name='ban_ip']")->item(0)->extSetAttribute('value',
-                @inet_ntop($ban_info['ip_address_start']));
-        $appeal_form_element->doXPathQuery(".//input[@name='ban_board']")->item(0)->extSetAttribute('value',
-                $banned_board);
+       // $dom->getElementById('ban-ip')->extSetAttribute('value', @inet_ntop($ban_info['ip_address_start']));
+        //$dom->getElementById('ban-board')->extSetAttribute('value', $banned_board);
+        $appeal_form_element->extSetAttribute('action', PHP_SELF . '?module=ban-page&action=add-appeal');
+
+        if(!empty($ban_info['board_id']))
+        {
+            $appeal_form_element->modifyAttribute('action', '&board-id=' . $ban_info['board_id'], 'after');
+        }
     }
     else
     {

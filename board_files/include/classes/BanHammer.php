@@ -79,19 +79,14 @@ class BanHammer
         return $ban_info;
     }
 
-    public function getBanByIp($ban_ip, $convert_length = false)
+    public function getBansByIp($ban_ip)
     {
-        $prepared = $this->dbh->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ip_address_start" = ? LIMIT 1');
-        $ban_info = $this->dbh->executePreparedFetch($prepared, array(@inet_pton($ban_ip)), PDO::FETCH_ASSOC);
+        $prepared = $this->dbh->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ip_address_start" = ? AND "ip_address_end" IS NULL');
+        $ban_info = $this->dbh->executePreparedFetchAll($prepared, array(@inet_pton($ban_ip)), PDO::FETCH_ASSOC);
 
         if ($ban_info === false)
         {
             return null;
-        }
-
-        if ($convert_length)
-        {
-            $ban_info = array_merge($ban_info, $this->splitSecondsToTime($ban_info['length']));
         }
 
         return $ban_info;
