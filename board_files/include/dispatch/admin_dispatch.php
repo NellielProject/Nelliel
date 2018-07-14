@@ -15,7 +15,8 @@ function nel_admin_dispatch($inputs)
     }
     else if ($inputs['manage'] === 'logout')
     {
-        nel_sessions()->initializeSession($inputs['manage'], $inputs['action']);
+        nel_sessions()->terminateSession();
+        nel_clean_exit(true);
     }
     else if ($inputs['manage'] === 'general')
     {

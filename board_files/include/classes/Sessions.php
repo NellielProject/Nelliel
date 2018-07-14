@@ -42,11 +42,6 @@ class Sessions
         {
             $_SESSION['last_activity'] = time();
             $_SESSION['ignores'] = array('default' => false);
-
-            if ($manage === 'logout')
-            {
-                $this->terminateSession();
-            }
         }
         else if (!empty($_SESSION) && $this->sessionIsOld())
         {
