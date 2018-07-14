@@ -1,52 +1,30 @@
 	<form id="user-edit-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
-		<table>
-			<tr>
-				<td>
-					<label for="bname"data-i18n="gettext">User ID</label>
-				</td>
-				<td>
-					<input id="user-id-field" type="text" name="user_id" id="bname" size="30" value="">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="bpass"data-i18n="gettext">New password (leave blank to keep current password)</label>
-				</td>
-				<td>
-					<input type="text" name="user_password" id="bpass" size="30">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="display_name" data-i18n="gettext">User display name</label>
-				</td>
-				<td>
-					<input id="display_name" type="text" name="display_name" size="30" value="">
-				</td>
-			</tr>
-		</table>
+		<div class="config-table">
+			<div class="config-row">
+				<label for="bname" class="config-cell" data-i18n="gettext">User ID</label>
+				<input id="user-id-field" class="config-cell" type="text" name="user_id" id="bname" size="30" value="">
+			</div>
+			<div class="config-row">
+				<label for="bpass" class="config-cell" data-i18n="gettext">New password (leave blank to keep current password)</label>
+				<input class="config-cell" type="text" name="user_password" id="bpass" size="30">
+			</div>
+			<div class="config-row">
+				<label for="display_name" class="config-cell" data-i18n="gettext">User display name</label>
+				<input id="display_name" class="config-cell" type="text" name="display_name" size="30" value="">
+			</div>
+		</div>
 		<hr>
-		<table>
-			<tr>
-				<td>
-					<span>Board</span>
-				</td>
-				<td>
-					<span>User role</span>
-				</td>
-			</tr>
-			<tr id="board-roles">
-				<td>
-					<label id="role-board-id-label-" for="role-board-id-"></label>
-				</td>
-				<td>
-					<input type="text" name="user_board_role" id="role-board-id-" size="30" value="">
-				</td>
-			<tr>
-			<tr id="user-edit-submit">
-				<td>
-					<input id="update-user-submit" type="submit" value="Update user" data-i18n="gettext" data-i18n-attributes="value">
-				</td>
-			</tr>
-		</table>
+		<div class="config-table">
+			<div class="config-row">
+				<span>Board</span>
+				<span>User role</span>
+			</div>
+			<div class="config-row" id="board-roles">
+				<label id="role-board-id-label-" class="config-cell" for="role-board-id-"></label>
+				<input class="config-cell" type="text" name="user_board_role" id="role-board-id-" size="30" value="">
+			</div>
+			<div class="config-row" id="user-edit-submit">
+				<input id="update-user-submit" type="submit" value="Update user" data-i18n="gettext" data-i18n-attributes="value">
+			</div>
+		</div>
 	</form>
