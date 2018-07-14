@@ -1,50 +1,30 @@
 	<form id="site-settings-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
-		<table>
-			<tr>
-				<td>
-					<br><b>Basic settings</b>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="home_page" data-i18n="gettext">Site home page. Can be absolute or relative URL.</label>
-				</td>
-				<td>
-					<input type="text" name="home_page" id="home_page" size="50" value="">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<br><b>Hashing and Passwords</b>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="post_password_algorithm" data-i18n="gettext">Hash algorithm for post passwords</label>
-				</td>
-				<td>
-					<input type="text" name="post_password_algorithm" id="post_password_algorithm" size="20" value="">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="secure_tripcode_algorithm" data-i18n="gettext">Hash algorithm for secure tripcodes</label>
-				</td>
-				<td>
-					<input type="text" name="secure_tripcode_algorithm" id="secure_tripcode_algorithm" size="20" value="">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="hidden" name="do_password_rehash" value="0">
-					<input type="checkbox" name="do_password_rehash" id="do_password_rehash" value="1">
-					<label for="do_password_rehash" data-i18n="gettext">Check if staff passwords need rehashing</label>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="submit" value="Update board settings" data-i18n="gettext" data-i18n-attributes="value">
-				</td>
-			</tr>
-		</table>
+	<div class="config-table">
+		<div class="config-row">
+			<b>Basic settings</b>
+		</div>
+		<div class="config-row">
+			<label class="config-cell" for="home_page" data-i18n="gettext">Site home page. Can be absolute or relative URL</label>
+			<input class="config-cell" type="text" name="home_page" id="home_page" size="50" value="">
+		</div>
+		<div class="config-row">
+			<b>Hashing and Passwords</b>
+		</div>
+		<div class="config-row">
+			<label class="config-cell" for="post_password_algorithm" data-i18n="gettext">Hash algorithm for post passwords</label>
+			<input class="config-cell" type="text" name="post_password_algorithm" id="post_password_algorithm" size="20" value="">
+		</div>
+		<div class="config-row">
+			<label class="config-cell" for="secure_tripcode_algorithm" data-i18n="gettext">Hash algorithm for secure tripcodes</label>
+			<input class="config-cell" type="text" name="secure_tripcode_algorithm" id="secure_tripcode_algorithm" size="20" value="">
+		</div>
+		<div class="config-row">
+			<input type="hidden" name="do_password_rehash" value="0">
+			<input type="checkbox" name="do_password_rehash" id="do_password_rehash" value="1">
+			<label for="do_password_rehash" data-i18n="gettext">Check if staff passwords need rehashing</label>
+		</div>
+		<div class="config-row">
+			<input type="submit" value="Update board settings" data-i18n="gettext" data-i18n-attributes="value">
+		</div>
+	</div>
 	</form>
