@@ -62,7 +62,7 @@ function nel_render_staff_panel_user_edit($user_id)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_user_edit.html');
     $dom->getElementById('user-edit-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=general&module=staff&section=user');
+            PHP_SELF . '?manage=general&module=staff&section=user&action=update');
 
     if (!is_null($user_id))
     {
@@ -71,7 +71,6 @@ function nel_render_staff_panel_user_edit($user_id)
         $dom->getElementById('display_name')->extSetAttribute('value', $user['display_name']);
     }
 
-    $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
     $board_roles = $dom->getElementById('board-roles');
     $update_submit = $dom->getElementById('user-edit-submit');
     $boards = $dbh->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
@@ -129,11 +128,10 @@ function nel_render_staff_panel_role_edit($role_id)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/staff_panel_role_edit.html');
     $dom->getElementById('role-edit-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=general&module=staff&section=role');
+            PHP_SELF . '?manage=general&module=staff&section=role&action=update');
 
     if (!is_null($role_id))
     {
-        $dom->getElementById('board_id_field')->extSetAttribute('value', INPUT_BOARD_ID);
         $dom->getElementById('role_id')->extSetAttribute('value', $role['role_id']);
         $dom->getElementById('role_level')->extSetAttribute('value', $role['role_level']);
         $dom->getElementById('role_title')->extSetAttribute('value', $role['role_title']);

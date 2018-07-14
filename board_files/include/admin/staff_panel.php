@@ -31,7 +31,7 @@ function nel_staff_panel($inputs)
             nel_derp(340, _gettext('You are not allowed to access the staff panel.'));
         }
 
-        if ($inputs['action'] === 'new' || $inputs['action2'] === 'new')
+        if ($inputs['action'] === 'new')
         {
             if (!$authorize->getUserPerm($_SESSION['username'], 'perm_user_add'))
             {
@@ -42,15 +42,19 @@ function nel_staff_panel($inputs)
             return;
         }
 
-        $user_id = (isset($_GET['user-id'])) ? $_GET['user-id'] : null;
 
-        if (!$authorize->userExists($user_id))
-        {
-            nel_derp(440, _gettext('The specified user does not exist.'));
-        }
 
-        if ($inputs['action'] === 'edit' || $inputs['action2'] === 'edit')
+
+
+        if ($inputs['action'] === 'edit')
         {
+            $user_id = (isset($_GET['user-id'])) ? $_GET['user-id'] : null;
+
+            if (!$authorize->userExists($user_id))
+            {
+                nel_derp(440, _gettext('The specified user does not exist.'));
+            }
+
             if (!$authorize->getUserPerm($_SESSION['username'], 'perm_user_modify'))
             {
                 nel_derp(341, _gettext('You are not allowed to modify staff.'));
@@ -60,6 +64,13 @@ function nel_staff_panel($inputs)
         }
         else if ($inputs['action'] === 'update')
         {
+            $user_id = (isset($_POST['user_id'])) ? $_POST['user_id'] : null;
+
+            if (!$authorize->userExists($user_id))
+            {
+                nel_derp(440, _gettext('The specified user does not exist.'));
+            }
+
             if (!$authorize->getUserPerm($_SESSION['username'], 'perm_user_modify'))
             {
                 nel_derp(341, _gettext('You are not allowed to modify staff.'));
@@ -80,7 +91,7 @@ function nel_staff_panel($inputs)
                     continue;
                 }
 
-                if ($key === 'action' || $key === 'user_password' || $key === 'board_id')
+                if ($key === 'user_password')
                 {
                     continue;
                 }
@@ -100,7 +111,7 @@ function nel_staff_panel($inputs)
             nel_derp(342, _gettext('You are not allowed to modify roles.'));
         }
 
-        if ($inputs['action'] === 'new' || $inputs['action2'] === 'new')
+        if ($inputs['action'] === 'new')
         {
             if (!$authorize->getUserPerm($_SESSION['username'], 'perm_role_add'))
             {
@@ -111,15 +122,15 @@ function nel_staff_panel($inputs)
             return;
         }
 
-        $role_id = (isset($_GET['role-id'])) ? $_GET['role-id'] : null;
-
-        if (!$authorize->roleExists($role_id))
+        if ($inputs['action'] === 'edit')
         {
-            nel_derp(441, _gettext('The specified role does not exist.'));
-        }
+            $role_id = (isset($_GET['role-id'])) ? $_GET['role-id'] : null;
 
-        if ($inputs['action'] === 'edit' || $inputs['action2'] === 'edit')
-        {
+            if (!$authorize->roleExists($role_id))
+            {
+                nel_derp(441, _gettext('The specified role does not exist.'));
+            }
+
             if (!$authorize->getUserPerm($_SESSION['username'], 'perm_role_modify'))
             {
                 nel_derp(342, _gettext('You are not allowed to modify roles.'));
@@ -129,6 +140,13 @@ function nel_staff_panel($inputs)
         }
         else if ($inputs['action'] === 'update')
         {
+            $role_id = (isset($_POST['role_id'])) ? $_POST['role_id'] : null;
+
+            if (!$authorize->roleExists($role_id))
+            {
+                nel_derp(441, _gettext('The specified role does not exist.'));
+            }
+
             if (!$authorize->getUserPerm($_SESSION['username'], 'perm_role_modify'))
             {
                 nel_derp(342, _gettext('You are not allowed to modify roles.'));
@@ -136,11 +154,6 @@ function nel_staff_panel($inputs)
 
             foreach ($_POST as $key => $value)
             {
-                if ($key === 'action' || $key === 'board_id')
-                {
-                    continue;
-                }
-
                 if (substr($key, 0, 5) === 'perm_')
                 {
                     $value = ($value == 1) ? true : false;

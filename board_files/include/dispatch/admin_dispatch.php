@@ -32,7 +32,7 @@ function nel_admin_dispatch($inputs)
 
             case 'site-settings':
                 require_once INCLUDE_PATH . 'admin/site_settings_panel.php';
-                nel_site_settings_control($inputs['action']);
+                nel_site_settings_control($inputs);
                 break;
 
             case 'create-board':
@@ -49,11 +49,11 @@ function nel_admin_dispatch($inputs)
 
             case 'file-filter':
                 require_once INCLUDE_PATH . 'admin/file_filters.php';
-                nel_manage_file_filters($inputs['action']);
+                nel_manage_file_filters($inputs);
 
             case 'default-board-settings':
                 require_once INCLUDE_PATH . 'admin/board_settings_panel.php';
-                nel_board_settings_control($inputs['board_id'], $inputs['action'], true);
+                nel_board_settings_control($inputs, true);
                 break;
 
             case 'language':
@@ -77,7 +77,7 @@ function nel_admin_dispatch($inputs)
         {
             case 'board-settings':
                 require_once INCLUDE_PATH . 'admin/board_settings_panel.php';
-                nel_board_settings_control($inputs['board_id'], $inputs['action']);
+                nel_board_settings_control($inputs);
                 break;
 
             case 'bans':
@@ -87,18 +87,18 @@ function nel_admin_dispatch($inputs)
 
             case 'threads':
                 require_once INCLUDE_PATH . 'admin/threads_panel.php';
-                nel_thread_panel($inputs['board_id'], $inputs['action']);
+                nel_thread_panel($inputs);
                 break;
 
             case 'regen':
                 $regen = new \Nelliel\Regen();
 
-                if ($inputs['action'] === 'pages-all')
+                if ($inputs['action'] === 'all-pages')
                 {
                     $regen->allPages($inputs['board_id']);
                 }
 
-                if ($inputs['action'] === 'cache-all')
+                if ($inputs['action'] === 'all-caches')
                 {
                     $regen->boardCache($inputs['board_id']);
                 }
@@ -128,35 +128,35 @@ function nel_admin_dispatch($inputs)
             case 'threads':
                 $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
 
-                if ($inputs['action2'] === 'delete-post')
+                if ($inputs['action'] === 'delete-post')
                 {
                     $updates = $thread_handler->removePost($_GET['post-id']);
                 }
-                else if ($inputs['action2'] === 'delete-thread')
+                else if ($inputs['action'] === 'delete-thread')
                 {
                     $updates = $thread_handler->removeThread($_GET['thread-id']);
                 }
-                else if ($inputs['action2'] === 'sticky')
+                else if ($inputs['action'] === 'sticky')
                 {
                     $updates = $thread_handler->stickyThread($_GET['thread-id']);
                 }
-                else if ($inputs['action2'] === 'unsticky')
+                else if ($inputs['action'] === 'unsticky')
                 {
                     $updates = $thread_handler->unstickyThread($_GET['thread-id']);
                 }
-                else if ($inputs['action2'] === 'lock')
+                else if ($inputs['action'] === 'lock')
                 {
                     $updates = $thread_handler->lockThread($_GET['thread-id']);
                 }
-                else if ($inputs['action2'] === 'unlock')
+                else if ($inputs['action'] === 'unlock')
                 {
                     $updates = $thread_handler->unlockThread($_GET['thread-id']);
                 }
-                else if ($inputs['action2'] === 'delete-file')
+                else if ($inputs['action'] === 'delete-file')
                 {
                     $updates = $thread_handler->removeFile($_GET['post-id'], $_GET['file-order']);
                 }
-                else if ($inputs['action2'] === 'ban-file')
+                else if ($inputs['action'] === 'ban-file')
                 {
                     ;
                 }
@@ -173,15 +173,15 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'multi':
-                if ($inputs['action2'] === 'ban.delete-post' || $inputs['action2'] === 'ban.delete-thread')
+                if ($inputs['action'] === 'ban.delete-post' || $inputs['action'] === 'ban.delete-thread')
                 {
                     $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
 
-                    if ($inputs['action2'] === 'ban.delete-post')
+                    if ($inputs['action'] === 'ban.delete-post')
                     {
                         $updates = $thread_handler->removePost($_GET['post-id']);
                     }
-                    else if ($inputs['action2'] === 'ban.delete-thread')
+                    else if ($inputs['action'] === 'ban.delete-thread')
                     {
                         $updates = $thread_handler->removeThread($_GET['thread-id']);
                     }
@@ -190,7 +190,7 @@ function nel_admin_dispatch($inputs)
                     $regen->threads($inputs['board_id'], true, $updates);
                     $regen->index($inputs['board_id']);
                     require_once INCLUDE_PATH . 'admin/bans_panel.php';
-                    $inputs['action2'] = 'new';
+                    $inputs['action'] = 'new';
                     nel_ban_control($inputs);
                 }
 

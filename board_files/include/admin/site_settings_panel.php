@@ -6,20 +6,17 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/site_settings_panel.php';
 
-function nel_site_settings_control($action)
+function nel_site_settings_control($inputs)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
 
-    if ($action === 'update') // TODO: Set up perm for this
+    if ($inputs['action'] === 'update') // TODO: Set up perm for this
     {
         while ($item = each($_POST))
         {
-            if ($item[0] !== 'action')
-            {
-                $prepared = $dbh->prepare('UPDATE "nelliel_site_config" SET "setting" = ? WHERE "config_name" = ?');
-                $dbh->executePrepared($prepared, array($item[1], $item[0]), true);
-            }
+            $prepared = $dbh->prepare('UPDATE "nelliel_site_config" SET "setting" = ? WHERE "config_name" = ?');
+            $dbh->executePrepared($prepared, array($item[1], $item[0]), true);
         }
 
         $regen = new \Nelliel\Regen();

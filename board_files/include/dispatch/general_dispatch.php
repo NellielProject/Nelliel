@@ -10,11 +10,10 @@ function nel_general_dispatch($inputs)
 
     switch ($inputs['module'])
     {
-        case 'post':
-            require_once INCLUDE_PATH . 'post/post.php';
-
+        case 'threads':
             if ($inputs['action'] === 'new-post')
             {
+                require_once INCLUDE_PATH . 'post/post.php';
                 nel_process_new_post($inputs);
                 $board_references = nel_parameters_and_data()->boardReferences($inputs['board_id']);
 
@@ -23,8 +22,8 @@ function nel_general_dispatch($inputs)
                     if (nel_sessions()->sessionIsActive())
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                                '?manage=modmode&module=view-thread&section=' . nel_fgsfds('noko_topic') . '&board_id=' .
-                                $inputs['board_id'] . '">';
+                        '?manage=modmode&module=view-thread&section=' . nel_fgsfds('noko_topic') . '&board_id=' .
+                        $inputs['board_id'] . '">';
                     }
                     else
                     {
@@ -38,7 +37,7 @@ function nel_general_dispatch($inputs)
                     if (nel_sessions()->sessionIsActive())
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                                '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
+                        '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
                     }
                     else
                     {
@@ -47,19 +46,6 @@ function nel_general_dispatch($inputs)
                                 PHP_SELF2 . PHP_EXT . '">';
                     }
                 }
-            }
-
-            break;
-
-        case 'threads':
-            if ($inputs['action'] === 'update')
-            {
-                $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
-                $updates = $thread_handler->threadUpdates();
-                $regen = new \Nelliel\Regen();
-                $regen->threads($inputs['board_id'], true, $updates);
-                $regen->index($inputs['board_id']);
-                nel_clean_exit(true, $inputs['board_id']);
             }
 
             break;

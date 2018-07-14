@@ -33,8 +33,9 @@ function nel_central_dispatch()
     $inputs['module'] = (isset($_GET['module'])) ? $_GET['module'] : null;
     $inputs['section'] = (isset($_GET['section'])) ? $_GET['section'] : null;
     $inputs['board_id'] = (isset($_GET['board_id'])) ? $_GET['board_id'] : null;
-    $inputs['action'] = (isset($_POST['action'])) ? $_POST['action'] : null;
-    $inputs['action2'] = (isset($_GET['action'])) ? $_GET['action'] : null;
+    $inputs['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
+
+    nel_apply_ban($inputs);
 
     if (isset($_GET['manage']))
     {

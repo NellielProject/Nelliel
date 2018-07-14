@@ -61,7 +61,6 @@ require_once INCLUDE_PATH . 'snacks.php';
 // IT'S GO TIME!
 ignore_user_abort(true);
 nel_ban_spambots();
-nel_apply_ban(INPUT_BOARD_ID);
 
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 

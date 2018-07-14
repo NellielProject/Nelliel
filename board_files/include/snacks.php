@@ -87,7 +87,7 @@ function nel_ban_appeal($board_id, $ban_info)
         return;
     }
 
-    if ($_SERVER["REMOTE_ADDR"] != @inet_ntop($ban_info['ip_address_start']))
+    if ($_SERVER['REMOTE_ADDR'] != @inet_ntop($ban_info['ip_address_start']))
     {
         nel_derp(160, _gettext('Your ip address does not match the one listed in the ban.'));
     }
@@ -109,7 +109,7 @@ function nel_ban_appeal($board_id, $ban_info)
 function nel_apply_ban($inputs)
 {
     $ban_hammer = new \Nelliel\BanHammer();
-    $bans = $ban_hammer->getBansByIp($_SERVER["REMOTE_ADDR"]);
+    $bans = $ban_hammer->getBansByIp($_SERVER['REMOTE_ADDR']);
     $ban_info = null;
 
     if (empty($bans))
@@ -156,7 +156,7 @@ function nel_apply_ban($inputs)
 
     if ($inputs['module'] === 'ban-page')
     {
-        if ($inputs['action2'] === 'add-appeal')
+        if ($inputs['action'] === 'add-appeal')
         {
             nel_ban_appeal($inputs['board_id'], $ban_info);
             $ban_info = $ban_hammer->getBanById($ban_info['ban_id']);

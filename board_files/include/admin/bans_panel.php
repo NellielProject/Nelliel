@@ -15,7 +15,7 @@ function nel_ban_control($inputs)
     $authorize = nel_authorize();
     $ban_hammer = new \Nelliel\BanHammer();
 
-    if ($inputs['action'] === 'modify' || $inputs['action2'] === 'modify')
+    if ($inputs['action'] === 'modify')
     {
         if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', $inputs['board_id']))
         {
@@ -24,16 +24,17 @@ function nel_ban_control($inputs)
 
         nel_render_ban_panel_modify($inputs['board_id']);
     }
-    else if ($inputs['action'] === 'new' || $inputs['action2'] === 'new')
+    else if ($inputs['action'] === 'new')
     {
         if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_add', $inputs['board_id']))
         {
             nel_derp(321, _gettext('You are not allowed to add new bans.'));
         }
 
-        nel_render_ban_panel_add($inputs['board_id'], $_GET['ban_ip']);
+        $ip = (isset($_GET['ban_ip'])) ? $_GET['ban_ip'] : '';
+        nel_render_ban_panel_add($inputs['board_id'], $ip);
     }
-    else if ($inputs['action'] === 'add' || $inputs['action2'] === 'add')
+    else if ($inputs['action'] === 'add')
     {
         if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_add', $inputs['board_id']))
         {
@@ -44,7 +45,7 @@ function nel_ban_control($inputs)
         $ban_hammer->addBan($ban_input);
         nel_render_main_ban_panel($inputs['board_id']);
     }
-    else if ($inputs['action'] === 'remove' || $inputs['action2'] === 'remove')
+    else if ($inputs['action'] === 'remove')
     {
         if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_delete', $inputs['board_id']))
         {
@@ -55,7 +56,7 @@ function nel_ban_control($inputs)
         $ban_hammer->removeBan($ban_input['ban_id']);
         nel_render_main_ban_panel($inputs['board_id']);
     }
-    else if ($inputs['action'] === 'update' || $inputs['action2'] === 'update')
+    else if ($inputs['action'] === 'update')
     {
         if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', $inputs['board_id']))
         {

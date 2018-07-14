@@ -10,7 +10,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $post_form_return_link = $dom->getElementById('post-form-return-link');
     $posting_form = $dom->getElementById('posting-form');
-    $posting_form->extSetAttribute('action', $dotdot . PHP_SELF . '?module=post&board_id=' . $board_id);
+    $posting_form->extSetAttribute('action', $dotdot . PHP_SELF . '?module=threads&action=new-post&board_id=' . $board_id);
     $dom->getElementById('board_id_field_post_form')->extSetAttribute('value', $board_id);
 
     if ($response_to)

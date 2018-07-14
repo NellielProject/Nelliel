@@ -49,7 +49,8 @@ function nel_render_main_panel()
             $default_board_settings);
     $default_board_settings_elements['module-link']->extSetAttribute('href',
             PHP_SELF . '?manage=general&module=default-board-settings');
-    $dom->getElementById('extract-gettext-form')->extSetAttribute('action', PHP_SELF . '?manage=general&module=language');
+    $dom->getElementById('extract-gettext-form')->extSetAttribute('action',
+            PHP_SELF . '?manage=general&module=language&action=extract-gettext');
 
     nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
@@ -68,10 +69,6 @@ function nel_render_main_board_panel($board_id)
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Options')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/main_board_panel.html');
-    $dom->getElementById('cache-regen-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=board&module=regen&board_id=' . $board_id);
-    $dom->getElementById('page-regen-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=board&module=regen&board_id=' . $board_id);
     $manage_options = $dom->getElementById('manage-options');
     $settings = $dom->getElementById('module-board-settings');
 
@@ -129,10 +126,20 @@ function nel_render_main_board_panel($board_id)
     {
         $dom->getElementById('page-regen-form')->removeSelf();
     }
+    else
+    {
+        $dom->getElementById('regen-all-pages')->extSetAttribute('href',
+                PHP_SELF . '?manage=board&module=regen&action=all-pages&board_id=' . $board_id);
+    }
 
     if (!$authorize->getUserPerm($_SESSION['username'], 'perm_regen_caches', $board_id))
     {
         $dom->getElementById('cache-regen-form')->removeSelf();
+    }
+    else
+    {
+        $dom->getElementById('regen-all-caches')->extSetAttribute('href',
+                PHP_SELF . '?manage=board&module=regen&action=all-caches&board_id=' . $board_id);
     }
 
     nel_language()->i18nDom($dom);
