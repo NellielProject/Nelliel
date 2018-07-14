@@ -69,8 +69,6 @@ function nel_process_new_post($inputs)
         $cpass = utf8_substr(rand(), 0, 8);
     }
 
-    nel_banned_text($post_data['comment'], $files);
-
     // Cookies OM NOM NOM NOM
     setrawcookie('pwd-' . $board_id, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
     setrawcookie('name-' . $board_id, $post_data['name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration

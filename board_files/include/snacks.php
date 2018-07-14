@@ -38,45 +38,6 @@ function nel_file_hash_is_banned($file_hash, $hash_type)
     return in_array($file_hash, $banned_hashes[$hash_type]);
 }
 
-//
-// Banned poster names
-//
-function nel_banned_name($name)
-{
-    $cancer = array('', '');
-    $total_cancer = count($cancer);
-
-    for ($i = 0; $i < $total_cancer; ++ $i)
-    {
-        if ($cancer[$i] === $name)
-        {
-            nel_derp(151, _gettext('That name is banned.'), array('cancer' => $cancer[$i]));
-        }
-    }
-}
-
-//
-// Banned text in comments
-//
-function nel_banned_text($text, $file)
-{
-    $cancer = array('samefag', '');
-    $total_cancer = count($cancer);
-
-    for ($i = 0; $i < $total_cancer; ++ $i)
-    {
-        if ($cancer[$i] !== '')
-        {
-            $test = utf8_strpos($text, $cancer[$i]);
-
-            if ($test !== FALSE)
-            {
-                nel_derp(152, _gettext('Cancer detected in post: '), array('cancer' => $cancer[$i]));
-            }
-        }
-    }
-}
-
 function nel_ban_appeal($board_id, $ban_info)
 {
     $dbh = nel_database();
