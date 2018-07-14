@@ -1,4 +1,13 @@
 # Nelliel Changelog
+## v0.9.6.19 (2018/07/13)
+### Added
+ - display-block class in CSS files
+ - Checkbox to toggle posting as staff or normal when in modmode
+
+### Changed
+ - Dispatch converted to GET parameters
+ - Ban page and ban application fixed up considerably
+
 ## v0.9.6.18 (2018/07/11)
 ### Added
  - Links for ban, delete, sticky and lock posts and files
