@@ -126,10 +126,9 @@ a.post-link:visited {
     width: 100%;
 }
 
-.post-lists {
-    background: #202020;
+.data-table {
+    background: #FFFFFF;
     width: 100%;
-    padding: 0px;
 }
 
 .row1 {
@@ -432,6 +431,20 @@ a.post-link:visited {
 
 .display-block {
 	display: block;
+}
+
+.config-table {
+	display: table;
+}
+
+.config-row {
+	display: table-row;
+	line-height: 1.6;
+}
+
+.config-cell {
+	display: table-cell;
+	padding-right: 1em;
 }
 
 .post-corral {

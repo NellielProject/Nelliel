@@ -1,49 +1,38 @@
-	<div>
-		<form id="add-file-filter-form" accept-charset="utf-8" action="" method="post">
-			<div>
-				<input type="hidden" name="action" value="add">
+	<form id="add-file-filter-form" accept-charset="utf-8" action="" method="post">
+		<div class="config-table">
+			<div class="config-row">
+				<label for="hash-type" class="config-cell" data-i18n="gettext">Hash type (md5, sha1, sha256, sha512)</label>
+				<input id="hash-type" class="config-cell" type="text" name="hash_type" size="30">
 			</div>
-			<div>
-				<input type="text" name="hash_type" size="24">&nbsp;&nbsp;
-				<span data-i18n="gettext">Hash type (md5, sha1, sha256, sha512)</span>
+			<div class="config-row">
+				<label for="file-hashes" class="config-cell" data-i18n="gettext">File hashes</label>
+				<textarea id="file-hashes" class="config-cell" name="file_hashes" cols="64" rows="3"></textarea>
 			</div>
-			<div>
-				<textarea name="file_hashes" cols="40" rows="3"></textarea>&nbsp;&nbsp;
-				<span data-i18n="gettext">File hashes</span>
+			<div class="config-row">
+				<label for="file-notes" class="config-cell" data-i18n="gettext">File notes</label>
+				<input id="file-notes" class="config-cell" type="text" name="file_notes" size="30">
 			</div>
-			<div>
-				<input type="text" name="file_notes" size="24">&nbsp;&nbsp;
-				<span data-i18n="gettext">File notes</span>
+			<div class="config-row">
+				<input type="submit" value="Add Filter" data-i18n="gettext" data-i18n-attributes="value">
 			</div>
-			<div>
-				<input type="submit" value="Add filter" data-i18n="gettext" data-i18n-attributes="value">
-			</div>
-		</form>
-	</div>
+		</div>
+	</form>
 	<hr>
-	<div>
-		<table id="file-filter-table" class="post-lists">
-			<tr class="manage-header">
-				<th data-i18n="gettext">Filter ID</th>
-				<th data-i18n="gettext">Hash type</th>
-				<th data-i18n="gettext">File hash</th>
-				<th data-i18n="gettext">File notes</th>
-				<th data-i18n="gettext">Remove</th>
-			</tr>
-			<tr id="file-filter-row" class="row1">
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td>
-					<form id="form-remove-filter-" accept-charset="utf-8" action="" method="post">
-						<div>
-							<input type="hidden" name="action" value="remove">
-							<input type="hidden" name="filter_id" value="">
-							<input type="submit" value="Remove filter" data-i18n="gettext" data-i18n-attributes="value">
-						</div>
-					</form>
-				</td>
-			</tr>
-		</table>
-	</div>
+	<table id="filter-list" class="data-table">
+		<tr class="manage-header">
+			<th data-i18n="gettext">Filter ID</th>
+			<th data-i18n="gettext">Hash type</th>
+			<th data-i18n="gettext">File hash</th>
+			<th data-i18n="gettext">File notes</th>
+			<th data-i18n="gettext">Remove</th>
+		</tr>
+		<tr data-parse-id="file-filter-row" class="row1">
+			<td data-parse-id="filter-id"></td>
+			<td data-parse-id="hash-type"></td>
+			<td data-parse-id="file-hash"></td>
+			<td data-parse-id="file-notes"></td>
+			<td>
+				<a class="config-cell" data-parse-id="filter-remove-link" href="" data-i18n="gettext">Remove Filter</a>
+			</td>
+		</tr>
+	</table>
