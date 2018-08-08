@@ -64,7 +64,7 @@ class TableInsertData
     public function permissionsDefaults()
     {
         $dbh = nel_database();
-        $insert_query = 'INSERT INTO "' . PERMISSIONS_TABLE . '" ("role_id", "perm_type", "perm_id", "perm_setting") VALUES (?, ?, ?, ?)';
+        $insert_query = 'INSERT INTO "' . PERMISSIONS_TABLE . '" ("role_id", "perm_id", "perm_setting") VALUES (?, ?, ?)';
         $prepared = $dbh->prepare($insert_query);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_manage_site_config', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_manage_board_defaults', 1]);
@@ -93,6 +93,7 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_caches', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_index', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_threads', 1]);
+        $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_create_board', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_site_config', 0]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_board_defaults', 0]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_board_config', 1]);
@@ -120,6 +121,7 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_caches', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_index', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_threads', 1]);
+        $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_create_board', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_manage_site_config', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_manage_board_defaults', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_manage_board_config', 0]);
@@ -147,6 +149,7 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['MOD', 'perm_regen_caches', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_regen_index', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_regen_threads', 0]);
+        $dbh->executePrepared($prepared, ['MOD', 'perm_create_board', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_manage_site_config', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_manage_board_defaults', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_manage_board_config', 0]);
@@ -174,6 +177,7 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_regen_caches', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_regen_index', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_regen_threads', 0]);
+        $dbh->executePrepared($prepared, ['JANITOR', 'perm_create_board', 0]);
         nel_setup_stuff_done(true);
     }
 

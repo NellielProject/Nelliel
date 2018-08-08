@@ -6,6 +6,8 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_create_board_panel()
 {
+    $authorize = nel_authorize();
+
     if (!$authorize->getUserPerm($_SESSION['username'], 'perm_create_board'))
     {
         nel_derp(370, _gettext('You are not allowed to create new boards.'));

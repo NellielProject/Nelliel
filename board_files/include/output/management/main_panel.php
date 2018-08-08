@@ -34,24 +34,49 @@ function nel_render_main_panel()
     $manage_options = $dom->getElementById('manage-options');
     $manage_options_nodes = $manage_options->getAssociativeNodeArray('data-parse-id');
 
-    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_create_board'))
+    if ($authorize->getUserPerm($_SESSION['username'], 'perm_create_board'))
     {
-        $manage_options_nodes['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=create-board');
-    }
-
-    $manage_options_nodes['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff');
-
-    if ($authorize->getUserPerm($_SESSION['username'], 'perm_manage_site_config'))
-    {
-        $manage_options_nodes['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=site-settings');
+        $manage_options_nodes['module-link-create-board']->extSetAttribute('href',
+                PHP_SELF . '?manage=general&module=create-board');
     }
     else
     {
-        $manage_options_nodes['module-link']->removeSelf();
+        $manage_options_nodes['module-link-create-board']->removeSelf();
     }
-    $manage_options_nodes['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=file-filter');
-    $manage_options_nodes['module-link']->extSetAttribute('href',
-            PHP_SELF . '?manage=general&module=default-board-settings');
+
+    if ($authorize->getUserPerm($_SESSION['username'], 'perm_user_access') ||
+            $authorize->getUserPerm($_SESSION['username'], 'perm_role_access'))
+    {
+        $manage_options_nodes['module-link-staff']->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff');
+    }
+    else
+    {
+        $manage_options_nodes['module-link-staff']->removeSelf();
+    }
+
+    if ($authorize->getUserPerm($_SESSION['username'], 'perm_manage_site_config'))
+    {
+        $manage_options_nodes['module-link-site-settings']->extSetAttribute('href',
+                PHP_SELF . '?manage=general&module=site-settings');
+    }
+    else
+    {
+        $manage_options_nodes['module-link-site-settings']->removeSelf();
+    }
+
+    $manage_options_nodes['module-link-file-filters']->extSetAttribute('href',
+            PHP_SELF . '?manage=general&module=file-filter');
+
+    if ($authorize->getUserPerm($_SESSION['username'], 'perm_manage_board_defaults'))
+    {
+        $manage_options_nodes['module-link-board-defaults']->extSetAttribute('href',
+                PHP_SELF . '?manage=general&module=default-board-settings');
+    }
+    else
+    {
+        $manage_options_nodes['module-link-board-settings']->removeSelf();
+    }
+
     $dom->getElementById('extract-gettext-form')->extSetAttribute('action',
             PHP_SELF . '?manage=general&module=language&action=extract-gettext');
 
