@@ -17,14 +17,19 @@
 				<input class="config-cell" type="text" name="capcode_text" id="capcode_text" size="30" value="">
 			</div>
 			<div class="config-row">
-				<input type="hidden" name="perm_config_access" value="0">
-				<input type="checkbox" name="perm_config_access" id="perm_config_access" value="1">
-				<label for="perm_config_access" data-i18n="gettext">Can access board config panel</label>
+				<input type="hidden" name="perm_manage_site_config" value="0">
+				<input type="checkbox" name="perm_manage_site_config" id="perm_manage_site_config" value="1">
+				<label for="perm_manage_site_config" data-i18n="gettext">Can access and modify site settings</label>
 			</div>
 			<div class="config-row">
-				<input type="hidden" name="perm_config_modify" value="0">
-				<input type="checkbox" name="perm_config_modify" id="perm_config_modify" value="1">
-				<label for="perm_config_modify" data-i18n="gettext">Can change the board settings</label>
+				<input type="hidden" name="perm_manage_board_defaults" value="0">
+				<input type="checkbox" name="perm_manage_board_defaults" id="perm_manage_board_defaults" value="1">
+				<label for="perm_manage_board_defaults" data-i18n="gettext">Can access and modify the default board settings</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_manage_board_config" value="0">
+				<input type="checkbox" name="perm_manage_board_config" id="perm_manage_board_config" value="1">
+				<label for="perm_manage_board_config" data-i18n="gettext">Can access and modify board settings</label>
 			</div>
 			<div class="config-row">
 				<input type="hidden" name="perm_user_access" value="0">
@@ -45,11 +50,6 @@
 				<input type="hidden" name="perm_user_delete" value="0">
 				<input type="checkbox" name="perm_user_delete" id="perm_user_delete" value="1">
 				<label for="perm_user_delete" data-i18n="gettext">Can delete users</label>
-			</div>
-			<div class="config-row">
-				<input type="hidden" name="perm_user_change_pass" value="0">
-				<input type="checkbox" name="perm_user_change_pass" id="perm_user_change_pass" value="1">
-				<label for="perm_user_change_pass" data-i18n="gettext">User can change their password</label>
 			</div>
 			<div class="config-row">
 				<input type="hidden" name="perm_role_access" value="0">
@@ -112,29 +112,14 @@
 				<label for="perm_post_modmode" data-i18n="gettext">Can make posts as staff</label>
 			</div>
 			<div class="config-row">
-				<input type="hidden" name="perm_post_override_anon" value="0">
-				<input type="checkbox" name="perm_post_override_anon" id="perm_post_override_anon" value="1">
-				<label for="perm_post_override_anon" data-i18n="gettext">Can override forced anonymous when posting as staff</label>
-			</div>
-			<div class="config-row">
 				<input type="hidden" name="perm_post_sticky" value="0">
 				<input type="checkbox" name="perm_post_sticky" id="perm_post_sticky" value="1">
-				<label for="perm_post_sticky" data-i18n="gettext">Can create sticky</label>
-			</div>
-			<div class="config-row">
-				<input type="hidden" name="perm_post_unsticky" value="0">
-				<input type="checkbox" name="perm_post_unsticky" id="perm_post_unsticky" value="1">
-				<label for="perm_post_unsticky" data-i18n="gettext">Can unsticky a post</label>
+				<label for="perm_post_sticky" data-i18n="gettext">Can sticky and unsticky posts</label>
 			</div>
 			<div class="config-row">
 				<input type="hidden" name="perm_post_lock" value="0">
 				<input type="checkbox" name="perm_post_lock" id="perm_post_lock" value="1">
-				<label for="perm_post_lock" data-i18n="gettext">Can lock a thread</label>
-			</div>
-			<div class="config-row">
-				<input type="hidden" name="perm_post_unlock" value="0">
-				<input type="checkbox" name="perm_post_unlock" id="perm_post_unlock" value="1">
-				<label for="perm_post_unlock" data-i18n="gettext">Can unlock a thread</label>
+				<label for="perm_post_lock" data-i18n="gettext">Can lock and unlock threads</label>
 			</div>
 			<div class="config-row">
 				<input type="hidden" name="perm_post_in_locked" value="0">

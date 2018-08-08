@@ -6,6 +6,11 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_create_new_board()
 {
+    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_create_board'))
+    {
+        nel_derp(370, _gettext('You are not allowed to create new boards.'));
+    }
+
     $dbh = nel_database();
     $board_id = $_POST['new_board_id'];
     $board_directory = $_POST['board_directory'];

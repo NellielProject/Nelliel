@@ -11,15 +11,21 @@ function nel_board_settings_control($inputs, $defaults = false)
     $dbh = nel_database();
     $authorize = nel_authorize();
     $board_id = $inputs['board_id'];
-    $references = nel_parameters_and_data()->boardReferences($board_id);
-    $config_table = ($defaults) ? BOARD_DEFAULTS_TABLE : $references['config_table'];
+
+    if ($defaults && !$authorize->getUserPerm($_SESSION['username'], 'perm_manage_board_defaults'))
+    {
+        nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
+    }
+
+    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_manage_board_config', $board_id))
+    {
+        nel_derp(330, _gettext('You are not allowed to modify the board settings.'));
+    }
 
     if ($inputs['action'] === 'update')
     {
-        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_config_modify', $board_id))
-        {
-            nel_derp(331, _gettext('You are not allowed to modify the board settings.'));
-        }
+        $references = nel_parameters_and_data()->boardReferences($board_id);
+        $config_table = ($defaults) ? BOARD_DEFAULTS_TABLE : $references['config_table'];
 
         while ($item = each($_POST))
         {

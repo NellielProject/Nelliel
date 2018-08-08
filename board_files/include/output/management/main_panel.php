@@ -32,22 +32,25 @@ function nel_render_main_panel()
 
     $board_entry->removeSelf();
     $manage_options = $dom->getElementById('manage-options');
-    $create_board = $dom->getElementById('module-create-board');
-    $create_board_elements = $create_board->getAssociativeNodeArray('data-parse-id', $create_board);
-    $create_board_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=create-board');
-    $staff = $dom->getElementById('module-staff');
-    $staff_elements = $staff->getAssociativeNodeArray('data-parse-id', $staff);
-    $staff_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff');
-    $site_settings = $dom->getElementById('module-site-settings');
-    $site_settings_elements = $site_settings->getAssociativeNodeArray('data-parse-id', $site_settings);
-    $site_settings_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=site-settings');
-    $file_filters = $dom->getElementById('module-file-filter');
-    $file_filters_elements = $file_filters->getAssociativeNodeArray('data-parse-id', $file_filters);
-    $file_filters_elements['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=file-filter');
-    $default_board_settings = $dom->getElementById('module-default-board-settings');
-    $default_board_settings_elements = $default_board_settings->getAssociativeNodeArray('data-parse-id',
-            $default_board_settings);
-    $default_board_settings_elements['module-link']->extSetAttribute('href',
+    $manage_options_nodes = $manage_options->getAssociativeNodeArray('data-parse-id');
+
+    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_create_board'))
+    {
+        $manage_options_nodes['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=create-board');
+    }
+
+    $manage_options_nodes['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff');
+
+    if ($authorize->getUserPerm($_SESSION['username'], 'perm_manage_site_config'))
+    {
+        $manage_options_nodes['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=site-settings');
+    }
+    else
+    {
+        $manage_options_nodes['module-link']->removeSelf();
+    }
+    $manage_options_nodes['module-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=file-filter');
+    $manage_options_nodes['module-link']->extSetAttribute('href',
             PHP_SELF . '?manage=general&module=default-board-settings');
     $dom->getElementById('extract-gettext-form')->extSetAttribute('action',
             PHP_SELF . '?manage=general&module=language&action=extract-gettext');
@@ -72,7 +75,7 @@ function nel_render_main_board_panel($board_id)
     $manage_options = $dom->getElementById('manage-options');
     $settings = $dom->getElementById('module-board-settings');
 
-    if ($authorize->getUserPerm($_SESSION['username'], 'perm_config_access', $board_id))
+    if ($authorize->getUserPerm($_SESSION['username'], 'perm_manage_board_config', $board_id))
     {
         $settings_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $settings);
         $settings_elements['board-settings-link']->extSetAttribute('href',

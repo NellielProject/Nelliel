@@ -6,6 +6,11 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_create_board_panel()
 {
+    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_create_board'))
+    {
+        nel_derp(370, _gettext('You are not allowed to create new boards.'));
+    }
+
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);

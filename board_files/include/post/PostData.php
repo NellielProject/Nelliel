@@ -104,15 +104,7 @@ class PostData
             }
         }
 
-        if($authorize->getRolePerm($role_id, 'perm_post_override_anon') === false)
-        {
-            $post_data['name'] = _gettext('Anonymous');
-        }
-        else
-        {
-            $post_data['name'] = $user['display_name'];
-        }
-
+        $post_data['name'] = $user['display_name'];
         $post_data['mod_post'] = $role_id;
         return $post_data;
     }

@@ -42,10 +42,6 @@ function nel_staff_panel($inputs)
             return;
         }
 
-
-
-
-
         if ($inputs['action'] === 'edit')
         {
             $user_id = (isset($_GET['user-id'])) ? $_GET['user-id'] : null;

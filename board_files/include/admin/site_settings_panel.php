@@ -11,7 +11,12 @@ function nel_site_settings_control($inputs)
     $dbh = nel_database();
     $authorize = nel_authorize();
 
-    if ($inputs['action'] === 'update') // TODO: Set up perm for this
+    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_manage_site_config'))
+    {
+        nel_derp(360, _gettext('You are not allowed to access the site settings.'));
+    }
+
+    if ($inputs['action'] === 'update')
     {
         while ($item = each($_POST))
         {
