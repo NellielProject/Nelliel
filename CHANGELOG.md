@@ -1,4 +1,15 @@
 # Nelliel Changelog
+## v0.9.7 (2018/08/09)
+### Added
+ - Moderator Mode restored and updated
+
+### Changed
+ - Fixed login page
+ - Convert panel markup
+ - Fix javascript initializing
+ - Clean up perms
+ - Various other cleanup and fixes
+
 ## v0.9.6.19 (2018/07/13)
 ### Added
  - display-block class in CSS files
