@@ -6,14 +6,20 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_create_new_board()
 {
+    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_create_board'))
+    {
+        nel_derp(370, _gettext('You are not allowed to create new boards.'));
+    }
+
     $dbh = nel_database();
     $board_id = $_POST['new_board_id'];
     $board_directory = $_POST['board_directory'];
     $db_prefix = $board_id;
     $prepared = $dbh->prepare('INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "board_directory", "db_prefix") VALUES (?, ?, ?)');
     $dbh->executePrepared($prepared, array($board_id, $board_directory, $db_prefix));
-    nel_create_board_tables($board_id);
-    nel_create_board_directories($board_id);
+    $setup = new \Nelliel\setup\Setup();
+    $setup->createBoardTables($board_id);
+    $setup->createBoardDirectories($board_id);
 
     if(USE_INTERNAL_CACHE)
     {

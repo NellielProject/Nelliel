@@ -18,13 +18,13 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $dom->getElementById('js-onload')->setContent(
             'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $board_id . '\');};');
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $board_id . '"));');
-    $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
+    $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . '/' . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
     foreach ($link_elements as $element)
     {
         $content = $element->getAttribute('title');
-        $element->extSetAttribute('href', $dotdot . CSS_DIR . strtolower($content) . '.css');
+        $element->extSetAttribute('href', $dotdot . CSS_DIR . '/' . strtolower($content) . '.css');
     }
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
@@ -100,6 +100,9 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     }
     else
     {
+        $dom->getElementById('manage-header-text')->setContent(_gettext('Mod Mode'));
+        $dom->getElementById('manage-board-header')->removeSelf();
+        $dom->getElementById('manage-sub-header')->removeSelf();
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');
     }
 
@@ -118,15 +121,15 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent(
-            'window.onload = function () {doImportantStuff(\'' . $board_id . '\');};');
-    $dom->getElementById('js-style-set')->setContent('setStyle(getCookie("base-style"));');
-    $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . 'html5shiv-printshiv.js"></script><![endif]';
+            'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $board_id . '\');};');
+    $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $board_id . '"));');
+    $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . '/' . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
     foreach ($link_elements as $element)
     {
         $content = $element->getAttribute('title');
-        $element->extSetAttribute('href', $dotdot . CSS_DIR . strtolower($content) . '.css');
+        $element->extSetAttribute('href', $dotdot . CSS_DIR . '/' . strtolower($content) . '.css');
     }
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);

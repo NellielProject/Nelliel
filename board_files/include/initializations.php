@@ -11,9 +11,9 @@ if (ini_get('date.timezone') === '')
 
 define('INPUT_BOARD_ID', isset($_POST['board_id']) ? $_POST['board_id'] : ''); // Default board id setting
 define('WEB_FILES', 'web/'); // Directory for CSS, Javascript and other web-related support files
-define('IMAGES_DIR', WEB_FILES . 'imagez/'); // Images used by Nelliel go here
-define('CSS_DIR', WEB_FILES . 'css/'); // CSS files here
-define('JS_DIR', WEB_FILES . 'js/'); // Javascript files here
+define('IMAGES_DIR', WEB_FILES . 'imagez'); // Images used by Nelliel go here
+define('CSS_DIR', WEB_FILES . 'css'); // CSS files here
+define('JS_DIR', WEB_FILES . 'js'); // Javascript files here
 
 define('PHP_SELF', 'imgboard.php'); // Name of main script file
 define('PHP_SELF2', 'index'); // Name of board index

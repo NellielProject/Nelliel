@@ -15,44 +15,29 @@ function nel_render_file_filter_panel()
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/file_filter_panel.html');
     $dom->getElementById('add-file-filter-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=general&module=file-filter');
+            PHP_SELF . '?manage=general&module=file-filter&action=add');
 
-    $result = $dbh->query('SELECT * FROM "' . FILE_FILTER_TABLE . '" ORDER BY "entry" DESC');
-    $file_filter_table = $dom->getElementById('file-filter-table');
-    $file_filter_row = $dom->getElementById('file-filter-row');
+    $filters = $dbh->executeFetchAll('SELECT * FROM "' . FILE_FILTER_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
+    $filter_list = $dom->getElementById('filter-list');
+    $filter_list_nodes = $filter_list->getAssociativeNodeArray('data-parse-id');
     $i = 0;
+    $bgclass = 'row1';
 
-    while ($result && $filter_info = $result->fetch(PDO::FETCH_ASSOC))
+    foreach ($filters as $filter)
     {
-        if ($i & 1)
-        {
-            $bgclass = 'row1';
-        }
-        else
-        {
-            $bgclass = 'row2';
-        }
-
-        $temp_filter_info_row = $file_filter_row->cloneNode(true);
-        $temp_filter_info_row->extSetAttribute('class', $bgclass);
-        $file_filter_td_list = $temp_filter_info_row->doXPathQuery(".//td");
-        $file_filter_td_list->item(0)->setContent($filter_info['entry']);
-        $file_filter_td_list->item(1)->setContent($filter_info['hash_type']);
-        $file_filter_td_list->item(2)->setContent(bin2hex($filter_info['file_hash']));
-        $file_filter_td_list->item(3)->setContent($filter_info['file_notes']);
-
-        $form_remove_filter = $temp_filter_info_row->getElementById('form-remove-filter-');
-        $form_remove_filter->extSetAttribute('action', PHP_SELF . '?manage=general&module=file-filter');
-        $form_remove_filter->changeId('form-remove-filter-' . $filter_info['entry']);
-        $form_remove_filter->doXPathQuery(".//input[@name='filter_id']")->item(0)->extSetAttribute('value',
-                $filter_info['entry']);
-
-        $file_filter_table->appendChild($temp_filter_info_row);
+        $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
+        $filter_row = $dom->copyNode($filter_list_nodes['file-filter-row'], $filter_list, 'append');
+        $filter_row->modifyAttribute('class', ' ' . $bgclass, 'after');
+        $filter_row_nodes = $filter_row->getAssociativeNodeArray('data-parse-id');
+        $filter_row_nodes['filter-id']->setContent($filter['entry']);
+        $filter_row_nodes['hash-type']->setContent($filter['hash_type']);
+        $filter_row_nodes['file-hash']->setContent(bin2hex($filter['file_hash']));
+        $filter_row_nodes['file-notes']->setContent($filter['file_notes']);
+        $filter_row_nodes['filter-remove-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=file-filter&action=remove&filter-id=' . $filter['entry']);
         $i ++;
     }
 
-    unset($result);
-    $file_filter_row->removeSelf();
+    $filter_list_nodes['file-filter-row']->removeSelf();
     nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);

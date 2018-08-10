@@ -6,19 +6,20 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/thread_panel.php';
 
-function nel_thread_panel($board_id, $action)
+function nel_thread_panel($inputs)
 {
     $authorize = nel_authorize();
+    $board_id = $inputs['board_id'];
     $thread_handler = new \Nelliel\ThreadHandler($board_id);
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_access', $board_id))
+    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_post_access', $board_id))
     {
         nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
     }
 
-    if ($action = 'update')
+    if ($inputs['action'] === 'update')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_post_modify', $board_id))
+        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_post_modify', $board_id))
         {
             nel_derp(351, _gettext('You are not allowed to modify threads or posts.'));
         }

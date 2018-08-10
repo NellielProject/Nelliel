@@ -10,32 +10,34 @@ if (!defined('NELLIEL_VERSION'))
 class PostData
 {
     private $board_id;
+    private $staff_post;
 
-    function __construct($board_id)
+    function __construct($board_id, $staff_post = false)
     {
         $this->board_id = $board_id;
+        $this->staff_post = $staff_post;
     }
 
     public function collectData()
     {
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $post_data = array();
-        $post_data['parent_thread'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], "int");
-        $post_data['name'] = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], "string");
-        $post_data['email'] = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], "string");
-        $post_data['subject'] = $this->checkEntry($_POST['new_post']['post_info']['verb'], "string");
-        $post_data['comment'] = $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], "string");
-        $post_data['fgsfds'] = $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], "string");
-        $post_data['password'] = $this->checkEntry($_POST['new_post']['post_info']['sekrit'], "string");
-        $post_data['response_to'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], "int");
+        $post_data['parent_thread'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer');
+        $post_data['name'] = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
+        $post_data['email'] = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string');
+        $post_data['subject'] = $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string');
+        $post_data['comment'] = $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], 'string');
+        $post_data['fgsfds'] = $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], 'string');
+        $post_data['password'] = $this->checkEntry($_POST['new_post']['post_info']['sekrit'], 'string');
+        $post_data['response_to'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer');
+        $post_data['post_as_staff'] = (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false;
+        $post_data['mod_post'] = null;
 
         if ($post_data['name'] !== '')
         {
-            $post_data['name'] = preg_replace("/#+$/", "", $post_data['name']);
-            preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post_data['name'], $name_pieces);
-            $post_data['name'] = $name_pieces[1];
-            $post_data = $this->tripcodes($post_data, $name_pieces);
-            //$post_data = $this->staffPost($post_data, $name_pieces);
+            $post_data = $this->staffPost($post_data);
+            $post_data = $this->tripcodes($post_data);
+
         }
         else
         {
@@ -73,46 +75,48 @@ class PostData
         return $post_item;
     }
 
-    public function staffPost($post_data, $name_pieces)
+    public function staffPost($post_data)
     {
         $authorize = nel_authorize();
-        $post_data['modpost'] = null;
+        nel_sessions()->initializeSession('modmode', 'new-post');
 
-        if ($name_pieces[3] === '')
+        if(empty($_SESSION) || $post_data['post_as_staff'] === false)
         {
             return $post_data;
         }
 
-        $user = $authorize->get_tripcode_user($name_pieces[3]);
+        $user = $authorize->getUser($_SESSION['username']);
 
-        if ($user === FALSE)
+        if($authorize->getUserPerm($user['user_id'], 'perm_post_modmode') === false)
         {
             return $post_data;
         }
 
-        $role = $authorize->get_user_info($user, 'role_id');
+        $role_id = $authorize->getUserBoardRole($user['user_id'], $this->board_id);
 
-        if ($name_pieces[3] !== $authorize->get_user_info($user, 'user_secure_tripcode') ||
-        !$authorize->get_role_info($role, 'perm_post_default_name'))
+        if($role_id === false || $authorize->getRolePerm($role_id, 'perm_post_modmode') === false)
         {
-            return $post_data;
+            $role_id = $authorize->getUserBoardRole($user['user_id'], '');
+
+            if($role_id === false || $authorize->getRolePerm($role_id, 'perm_post_modmode') === false)
+            {
+                return $post_data; // TODO: Do error instead
+            }
         }
 
-        $post_data['modpost'] = $role;
-
-        if (!$authorize->get_role_info($role, 'perm_post_custom_name'))
-        {
-            $post_data['name'] = $authorize->get_user_info($user, 'user_title');
-        }
-
+        $post_data['name'] = $user['display_name'];
+        $post_data['mod_post'] = $role_id;
         return $post_data;
     }
 
-    public function tripcodes($post_data, $name_pieces)
+    public function tripcodes($post_data)
     {
         $references = nel_parameters_and_data()->boardReferences($this->board_id);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $authorize = nel_authorize();
+        $post_data['name'] = preg_replace("/#+$/", "", $post_data['name']);
+        preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post_data['name'], $name_pieces);
+        $post_data['name'] = $name_pieces[1];
         $post_data['tripcode'] = '';
         $post_data['secure_tripcode'] = '';
 

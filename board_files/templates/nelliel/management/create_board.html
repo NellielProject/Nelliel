@@ -1,28 +1,15 @@
 	<form id="create-board-form" action="" method="post" enctype="multipart/form-data">
-		<table>
-			<tr>
-				<td>
-					<label for="board-id" data-i18n="gettext">Board ID</label>
-				</td>
-				<td>
-					<input id="board-id" type="text" name="new_board_id" size="30" value="">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<label for="board-directory" data-i18n="gettext">Board directory</label>
-				</td>
-				<td>
-					<input id="board-directory" type="text" name="board_directory" size="30" value="">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="hidden" name="action" value="create">
-				</td>
-				<td>
-					<input type="submit" value="Submit" data-i18n-attributes="value" data-i18n="gettext">
-				</td>
-			</tr>
-		</table>
+		<div class="config-table">
+			<div class="config-row">
+				<label for="board-id" class="config-cell" data-i18n="gettext">Board ID</label>
+				<input id="board-id" class="config-cell" type="text" name="new_board_id" size="30" value="">
+			</div>
+			<div class="config-row">
+				<label for="board-directory" class="config-cell" data-i18n="gettext">Board directory</label>
+				<input id="board-directory" class="config-cell" type="text" name="board_directory" size="30" value="">
+			</div>
+			<div class="config-row">
+				<input type="submit" value="Create Board" data-i18n-attributes="value" data-i18n="gettext">
+			</div>
+		</div>
 	</form>

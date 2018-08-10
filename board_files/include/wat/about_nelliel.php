@@ -15,7 +15,7 @@ function nel_about_nelliel_screen()
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'about_nelliel.html');
     $dom->getElementById('version')->setContent('Version: ' . NELLIEL_VERSION);
-    $dom->getElementById('disclaimer-image')->extSetAttribute('src', IMAGES_DIR . 'wat/luna_canterlot_disclaimer.png');
+    $dom->getElementById('disclaimer-image')->extSetAttribute('src', IMAGES_DIR . '/wat/luna_canterlot_disclaimer.png');
     $render->appendHTMLFromDOM($dom);
     echo $render->outputRenderSet();
     nel_clean_exit();

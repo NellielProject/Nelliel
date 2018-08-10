@@ -180,20 +180,21 @@ class ParametersAndData
             $board_path = BASE_PATH . $board_data['board_directory'] . '/';
             $new_reference['board_directory'] = $board_data['board_directory'];
             $new_reference['db_prefix'] = $board_data['db_prefix'];
-            $new_reference['src_dir'] = 'src/';
-            $new_reference['thumb_dir'] = 'thumb/';
-            $new_reference['page_dir'] = 'threads/';
-            $new_reference['archive_dir'] = 'archive/';
+            $new_reference['src_dir'] = 'src';
+            $new_reference['thumb_dir'] = 'thumb';
+            $new_reference['page_dir'] = 'threads';
+            $new_reference['archive_dir'] = 'archive';
             $new_reference['board_path'] = $board_path;
-            $new_reference['src_path'] = $board_path . $new_reference['src_dir'];
-            $new_reference['thumb_path'] = $board_path . $new_reference['thumb_dir'];
-            $new_reference['page_path'] = $board_path . $new_reference['page_dir'];
-            $new_reference['archive_path'] = $board_path . $new_reference['archive_dir'];
-            $new_reference['archive_src_path'] = $board_path . $new_reference['archive_dir'] . $new_reference['src_dir'];
-            $new_reference['archive_thumb_path'] = $board_path . $new_reference['archive_dir'] .
-                    $new_reference['thumb_dir'];
-            $new_reference['archive_page_path'] = $board_path . $new_reference['archive_dir'] .
-                    $new_reference['page_dir'];
+            $new_reference['src_path'] = $board_path . $new_reference['src_dir'] . '/';
+            $new_reference['thumb_path'] = $board_path . $new_reference['thumb_dir'] . '/';
+            $new_reference['page_path'] = $board_path . $new_reference['page_dir'] . '/';
+            $new_reference['archive_path'] = $board_path . $new_reference['archive_dir'] . '/';
+            $new_reference['archive_src_path'] = $board_path . $new_reference['archive_dir'] . '/' .
+                    $new_reference['src_dir'] . '/';
+            $new_reference['archive_thumb_path'] = $board_path . $new_reference['archive_dir'] . '/' .
+                    $new_reference['thumb_dir'] . '/';
+            $new_reference['archive_page_path'] = $board_path . $new_reference['archive_dir'] . '/' .
+                    $new_reference['page_dir'] . '/';
             $new_reference['post_table'] = $new_reference['db_prefix'] . '_posts';
             $new_reference['thread_table'] = $new_reference['db_prefix'] . '_threads';
             $new_reference['file_table'] = $new_reference['db_prefix'] . '_files';

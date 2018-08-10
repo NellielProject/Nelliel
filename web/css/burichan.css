@@ -126,10 +126,9 @@ a.post-link:visited {
     width: 100%;
 }
 
-.post-lists {
+.data-table {
     background: #FFFFFF;
     width: 100%;
-    padding: 0px;
 }
 
 .row1 {
@@ -150,7 +149,6 @@ a.post-link:visited {
 .input-table {
     margin-right: auto;
     margin-left: auto;
-    text-align: center;
 }
 
 .posting-form-row {
@@ -234,22 +232,20 @@ a.post-link:visited {
 }
 
 .file-meta {
-
+	white-space:normal;
+	word-wrap: break-word;
 }
 
 .file-source {
     padding-left: 2px;
-    display: block;
 }
 
 .file-license {
     padding-left: 2px;
-    display: block;
 }
 
 .file-hash {
     padding-left: 2px;
-    display: block;
 }
 
 .preview-link {
@@ -430,6 +426,24 @@ a.post-link:visited {
 
 .hidden {
 	display: none;
+}
+
+.display-block {
+	display: block;
+}
+
+.config-table {
+	display: table;
+}
+
+.config-row {
+	display: table-row;
+	line-height: 1.6;
+}
+
+.config-cell {
+	display: table-cell;
+	padding-right: 1em;
 }
 
 .post-corral {

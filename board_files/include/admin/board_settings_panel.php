@@ -6,36 +6,39 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/board_settings_panel.php';
 
-function nel_board_settings_control($board_id, $action, $defaults = false)
+function nel_board_settings_control($inputs, $defaults = false)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
-    $references = nel_parameters_and_data()->boardReferences($board_id);
-    $config_table = ($defaults) ? BOARD_DEFAULTS_TABLE : $references['config_table'];
-    $update = FALSE;
+    $board_id = $inputs['board_id'];
 
-    if ($action === 'update')
+    if ($defaults && !$authorize->getUserPerm($_SESSION['username'], 'perm_manage_board_defaults'))
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_config_modify', $board_id))
-        {
-            nel_derp(331, _gettext('You are not allowed to modify the board settings.'));
-        }
+        nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
+    }
+
+    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_manage_board_config', $board_id))
+    {
+        nel_derp(330, _gettext('You are not allowed to modify the board settings.'));
+    }
+
+    if ($inputs['action'] === 'update')
+    {
+        $references = nel_parameters_and_data()->boardReferences($board_id);
+        $config_table = ($defaults) ? BOARD_DEFAULTS_TABLE : $references['config_table'];
 
         while ($item = each($_POST))
         {
-            if ($item[0] !== 'action' && $item[0] !== 'board_id')
+            if ($item[0] === 'jpeg_quality' && $item[1] > 100)
             {
-                if ($item[0] === 'jpeg_quality' && $item[1] > 100)
-                {
-                    $item[0] = 100;
-                }
-
-                $prepared = $dbh->prepare('UPDATE "' . $config_table . '" SET "setting" = ? WHERE "config_name" = ?');
-                $dbh->executePrepared($prepared, array($item[1], $item[0]), true);
+                $item[0] = 100;
             }
+
+            $prepared = $dbh->prepare('UPDATE "' . $config_table . '" SET "setting" = ? WHERE "config_name" = ?');
+            $dbh->executePrepared($prepared, array($item[1], $item[0]), true);
         }
 
-        if(!$defaults)
+        if (!$defaults)
         {
             $regen = new \Nelliel\Regen();
             $regen->boardCache($board_id);

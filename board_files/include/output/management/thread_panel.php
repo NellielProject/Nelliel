@@ -15,9 +15,8 @@ function nel_render_thread_panel_main($board_id)
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Threads')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel.html');
-    $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
     $dom->getElementById('thread-list-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=board&module=threads&board_id=' . $board_id);
+            PHP_SELF . '?manage=board&module=threads&action=update&board_id=' . $board_id);
     $thread_data = $dbh->executeFetchAll(
             'SELECT * FROM "' . $references['thread_table'] .
             '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC', PDO::FETCH_ASSOC);
@@ -75,7 +74,7 @@ function nel_render_thread_panel_main($board_id)
         $thread_subject_link = $temp_thread_row->getElementById('thread-subject-link-');
         $thread_subject_link->setContent($op_post['subject']);
         $thread_subject_link->extSetAttribute('href',
-                $references['page_dir'] . $thread['thread_id'] . '/' . $thread['thread_id'] . '.html', 'none');
+                $references['page_dir'] . '/' . $thread['thread_id'] . '/' . $thread['thread_id'] . '.html', 'none');
         $thread_subject_link->changeId('thread-subject-link-' . $thread['thread_id']);
 
         $thread_op_name = $temp_thread_row->getElementById('thread-op-name-');
@@ -126,8 +125,7 @@ function nel_render_thread_panel_expand($board_id, $thread_id)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
     $dom->getElementById('thread-list-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=board&module=threads&board_id=' . $board_id);
-    $dom->getElementById('board_id_field')->extSetAttribute('value', $board_id);
+            PHP_SELF . '?manage=board&module=threads&action=update&board_id=' . $board_id);
     $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "parent_thread" = ?');
     $post_data = $dbh->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
     $post_list_table = $dom->getElementById('post-list');
@@ -155,7 +153,7 @@ function nel_render_thread_panel_expand($board_id, $thread_id)
         $post_subject_link = $temp_post_row->getElementById('post-subject-link-');
         $post_subject_link->setContent($post['subject']);
         $post_subject_link->extSetAttribute('href',
-                $references['page_dir'] . $post['parent_thread'] . '/' . $post['post_number'] . '.html', 'none');
+                $references['page_dir'] . '/' . $post['parent_thread'] . '/' . $post['post_number'] . '.html', 'none');
         $post_subject_link->changeId('post-subject-link-' . $post['post_number']);
 
         $post_name = $temp_post_row->getElementById('post-name-');

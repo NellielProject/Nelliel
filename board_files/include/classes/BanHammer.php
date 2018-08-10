@@ -79,19 +79,14 @@ class BanHammer
         return $ban_info;
     }
 
-    public function getBanByIp($ban_ip, $convert_length = false)
+    public function getBansByIp($ban_ip)
     {
-        $prepared = $this->dbh->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ip_address_start" = ? LIMIT 1');
-        $ban_info = $this->dbh->executePreparedFetch($prepared, array(@inet_pton($ban_ip)), PDO::FETCH_ASSOC);
+        $prepared = $this->dbh->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ip_address_start" = ? AND "ip_address_end" IS NULL');
+        $ban_info = $this->dbh->executePreparedFetchAll($prepared, array(@inet_pton($ban_ip)), PDO::FETCH_ASSOC);
 
         if ($ban_info === false)
         {
             return null;
-        }
-
-        if ($convert_length)
-        {
-            $ban_info = array_merge($ban_info, $this->splitSecondsToTime($ban_info['length']));
         }
 
         return $ban_info;
@@ -99,8 +94,8 @@ class BanHammer
 
     public function addBan($ban_input)
     {
-        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_add', INPUT_BOARD_ID) &&
-                !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
+        if (!$this->authorize->getUserPerm($_SESSION['username'], 'perm_ban_add', INPUT_BOARD_ID) &&
+                !$authorize->getUserPerm($_SESSION['username'], 'perm_all_ban_modify'))
         {
             nel_derp(321, _gettext('You are not allowed to add new bans.'));
         }
@@ -129,8 +124,8 @@ class BanHammer
 
     public function modifyBan($ban_input)
     {
-        if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify', INPUT_BOARD_ID) &&
-                !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify'))
+        if (!$this->authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', INPUT_BOARD_ID) &&
+                !$authorize->getUserPerm($_SESSION['username'], 'perm_all_ban_modify'))
         {
             nel_derp(322, _gettext('You are not allowed to modify bans.'));
         }
@@ -156,8 +151,8 @@ class BanHammer
     {
         if (!$snacks)
         {
-            if (!$this->authorize->get_user_perm($_SESSION['username'], 'perm_ban_modify', INPUT_BOARD_ID) &&
-                    !$authorize->get_user_perm($_SESSION['username'], 'perm_all_ban_modify') && !$snacks)
+            if (!$this->authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', INPUT_BOARD_ID) &&
+                    !$authorize->getUserPerm($_SESSION['username'], 'perm_all_ban_modify') && !$snacks)
             {
                 nel_derp(323, _gettext('You are not allowed to remove bans.'));
             }

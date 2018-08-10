@@ -9,31 +9,31 @@ require_once INCLUDE_PATH . 'output/management/staff_panel.php';
 //
 // Staff control panel
 //
-function nel_staff_panel($section, $action)
+function nel_staff_panel($inputs)
 {
     $authorize = nel_authorize();
     $temp_auth = array();
 
-    if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access') &&
-         !$authorize->get_user_perm($_SESSION['username'], 'perm_role_access'))
+    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_user_access') &&
+         !$authorize->getUserPerm($_SESSION['username'], 'perm_role_access'))
     {
         nel_derp(340, _gettext('You are not allowed to access the staff panel.'));
     }
 
-    if (is_null($section) || $section === 'main')
+    if (is_null($inputs['section']) || $inputs['section'] === 'main')
     {
         nel_render_staff_panel_main();
     }
-    else if ($section === 'user')
+    else if ($inputs['section'] === 'user')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_access'))
+        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_user_access'))
         {
             nel_derp(340, _gettext('You are not allowed to access the staff panel.'));
         }
 
-        if ($action === 'new')
+        if ($inputs['action'] === 'new')
         {
-            if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_add'))
+            if (!$authorize->getUserPerm($_SESSION['username'], 'perm_user_add'))
             {
                 nel_derp(341, _gettext('You are not allowed to modify staff.'));
             }
@@ -42,32 +42,39 @@ function nel_staff_panel($section, $action)
             return;
         }
 
-        $user_id = (isset($_POST['user_id'])) ? $_POST['user_id'] : null;
-
-        if (!$authorize->user_exists($user_id))
+        if ($inputs['action'] === 'edit')
         {
-            nel_derp(440, _gettext('The specified user does not exist.'));
-        }
+            $user_id = (isset($_GET['user-id'])) ? $_GET['user-id'] : null;
 
-        if ($action === 'edit')
-        {
-            if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_modify'))
+            if (!$authorize->userExists($user_id))
+            {
+                nel_derp(440, _gettext('The specified user does not exist.'));
+            }
+
+            if (!$authorize->getUserPerm($_SESSION['username'], 'perm_user_modify'))
             {
                 nel_derp(341, _gettext('You are not allowed to modify staff.'));
             }
 
             nel_render_staff_panel_user_edit($user_id);
         }
-        else if ($action === 'update')
+        else if ($inputs['action'] === 'update')
         {
-            if (!$authorize->get_user_perm($_SESSION['username'], 'perm_user_modify'))
+            $user_id = (isset($_POST['user_id'])) ? $_POST['user_id'] : null;
+
+            if (!$authorize->userExists($user_id))
+            {
+                nel_derp(440, _gettext('The specified user does not exist.'));
+            }
+
+            if (!$authorize->getUserPerm($_SESSION['username'], 'perm_user_modify'))
             {
                 nel_derp(341, _gettext('You are not allowed to modify staff.'));
             }
 
             if (isset($_POST['user_password']) && !empty($_POST['user_password']))
             {
-                $authorize->update_user_info($user_id, 'user_password', nel_password_hash($_POST['user_password'], NELLIEL_PASS_ALGORITHM));
+                $authorize->updateUserInfo($user_id, 'user_password', nel_password_hash($_POST['user_password'], NEL_PASSWORD_ALGORITHM));
             }
 
             foreach ($_POST as $key => $value)
@@ -75,49 +82,34 @@ function nel_staff_panel($section, $action)
                 if (strpos($key, 'user_board_role') !== false)
                 {
                     $board = substr($key, 16);
-                    $remove = false;
-
-                    if ($value === '')
-                    {
-                        $remove = true;
-                    }
-
-                    $all_boards = 0;
-
-                    if ($board == '')
-                    {
-                        $all_boards = 1;
-                    }
-
-                    $update = array('user_id' => $user_id, 'role_id' => $value, 'board' => $board,
-                        'all_boards' => $all_boards);
-                    $authorize->update_user_role($user_id, $update, $board, $remove);
+                    $remove = ($value === '') ? true : false;
+                    $authorize->updateUserRole($user_id, $value, $board, $remove);
                     continue;
                 }
 
-                if ($key === 'action' || $key === 'user_password' || $key === 'board_id')
+                if ($key === 'user_password')
                 {
                     continue;
                 }
 
-                $authorize->update_user_info($user_id, $key, $value);
+                $authorize->updateUserInfo($user_id, $key, $value);
             }
 
-            $authorize->save_users();
-            $authorize->save_user_roles();
+            $authorize->saveUsers();
+            $authorize->saveUserRoles();
             nel_render_staff_panel_user_edit($user_id);
         }
     }
-    else if ($section === 'role')
+    else if ($inputs['section'] === 'role')
     {
-        if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_access'))
+        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_role_access'))
         {
             nel_derp(342, _gettext('You are not allowed to modify roles.'));
         }
 
-        if ($action === 'new')
+        if ($inputs['action'] === 'new')
         {
-            if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_add'))
+            if (!$authorize->getUserPerm($_SESSION['username'], 'perm_role_add'))
             {
                 nel_derp(341, _gettext('You are not allowed to modify staff.'));
             }
@@ -126,45 +118,49 @@ function nel_staff_panel($section, $action)
             return;
         }
 
-        $role_id = (isset($_POST['role_id'])) ? $_POST['role_id'] : null;
-
-        if (!$authorize->role_exists($role_id))
+        if ($inputs['action'] === 'edit')
         {
-            nel_derp(441, _gettext('The specified role does not exist.'));
-        }
+            $role_id = (isset($_GET['role-id'])) ? $_GET['role-id'] : null;
 
-        if ($action === 'edit')
-        {
-            if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_modify'))
+            if (!$authorize->roleExists($role_id))
+            {
+                nel_derp(441, _gettext('The specified role does not exist.'));
+            }
+
+            if (!$authorize->getUserPerm($_SESSION['username'], 'perm_role_modify'))
             {
                 nel_derp(342, _gettext('You are not allowed to modify roles.'));
             }
 
             nel_render_staff_panel_role_edit($role_id);
         }
-        else if ($action === 'update')
+        else if ($inputs['action'] === 'update')
         {
-            if (!$authorize->get_user_perm($_SESSION['username'], 'perm_role_modify'))
+            $role_id = (isset($_POST['role_id'])) ? $_POST['role_id'] : null;
+
+            if (!$authorize->roleExists($role_id))
+            {
+                nel_derp(441, _gettext('The specified role does not exist.'));
+            }
+
+            if (!$authorize->getUserPerm($_SESSION['username'], 'perm_role_modify'))
             {
                 nel_derp(342, _gettext('You are not allowed to modify roles.'));
             }
 
             foreach ($_POST as $key => $value)
             {
-                if ($key === 'action')
-                {
-                    continue;
-                }
-
                 if (substr($key, 0, 5) === 'perm_')
                 {
                     $value = ($value == 1) ? true : false;
+                    $authorize->updatePerm($role_id, $key, $value);
+                    continue;
                 }
 
-                $authorize->update_perm($role_id, $key, $value);
+                $authorize->updateRoleInfo($role_id, $key, $value);
             }
 
-            $authorize->save_roles();
+            $authorize->saveRoles();
             nel_render_staff_panel_role_edit($role_id);
         }
     }

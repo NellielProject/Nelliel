@@ -1,5 +1,5 @@
 <?php
-define('NELLIEL_VERSION', 'v0.9.6.16'); // Version
+define('NELLIEL_VERSION', 'v0.9.6.19'); // Version
 define('NELLIEL_COPYRIGHT', '2010-2018 Nelliel Project'); // Copyright line
 define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('BASE_PATH', realpath('./') . '/'); // Base path for script
@@ -61,7 +61,6 @@ require_once INCLUDE_PATH . 'snacks.php';
 // IT'S GO TIME!
 ignore_user_abort(true);
 nel_ban_spambots();
-nel_apply_ban(INPUT_BOARD_ID);
 
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 

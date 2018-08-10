@@ -2,19 +2,14 @@
 		<div id="module-board-settings"><a data-parse-id="board-settings-link" href="" title="" data-i18n="gettext">Board Settings</a></div>
 		<div id="module-bans"><a data-parse-id="bans-link" href="" title="" data-i18n="gettext">Ban Controls</a></div>
 		<div id="module-threads"><a data-parse-id="threads-link" href="" title="" data-i18n="gettext">Thread Management</a></div>
+		<div id="module-modmode"><a data-parse-id="modmode-link" href="" title="" data-i18n="gettext">Moderator Mode</a></div>
 	</div>
 	<hr>
-	<form id="page-regen-form" action="" method="post" enctype="multipart/form-data">
-		<div>
-			<input type="hidden" name="action" value="pages-all">
-			<input type="submit" value="Update all pages" data-i18n-attributes="value" data-i18n="gettext"><br>
-			<span data-i18n="gettext">Forces an update of all pages. May cause heavy server load.</span><br><br>
-		</div>
-	</form>
-	<form id="cache-regen-form" action="" method="post" enctype="multipart/form-data">
-		<div>
-			<input type="hidden" name="action" value="cache-all">
-			<input type="submit" value="Regenerate all caches" data-i18n-attributes="value" data-i18n="gettext"><br>
-			<span data-i18n="gettext">Regenerates all the internal caches.</span><br><br>
-		</div>
-	</form>
+	<div>
+		<a id="regen-all-pages" href="" data-i18n="gettext">Regenerate Board Pages</a>
+		<span data-i18n="gettext">Regenerates all posts and threads for the board. May cause heavy server load.</span>
+	</div>
+	<div>
+		<a id="regen-all-caches" href="" data-i18n="gettext">Regenerate Board Caches</a>
+		<span data-i18n="gettext">Regenerates all internal cache files for the board.</span>
+	</div>

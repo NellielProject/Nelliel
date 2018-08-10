@@ -4,9 +4,10 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_process_new_post($board_id)
+function nel_process_new_post($inputs)
 {
     $dbh = nel_database();
+    $board_id = $inputs['board_id'];
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $error_data = array('board_id' => $board_id);
     $references = nel_parameters_and_data()->boardReferences($board_id);
@@ -67,8 +68,6 @@ function nel_process_new_post($board_id)
     {
         $cpass = utf8_substr(rand(), 0, 8);
     }
-
-    nel_banned_text($post_data['comment'], $files);
 
     // Cookies OM NOM NOM NOM
     setrawcookie('pwd-' . $board_id, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
@@ -166,7 +165,7 @@ function nel_is_post_ok($board_id, $post_data, $time)
         $thread_delay = $time - ($board_settings['thread_delay'] * 1000);
         $prepared = $dbh->prepare('SELECT COUNT(*) FROM "' . $references['post_table']. '" WHERE "post_time" > ? AND "ip_address" = ?');
         $prepared->bindValue(1, $thread_delay, PDO::PARAM_STR);
-        $prepared->bindValue(2, @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_LOB);
+        $prepared->bindValue(2, @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
         $renzoku = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
     }
     else
@@ -176,7 +175,7 @@ function nel_is_post_ok($board_id, $post_data, $time)
              '" WHERE "parent_thread" = ? AND "post_time" > ? AND "ip_address" = ?');
         $prepared->bindValue(1, $post_data['parent_thread'], PDO::PARAM_INT);
         $prepared->bindValue(2, $reply_delay, PDO::PARAM_STR);
-        $prepared->bindValue(3, @inet_pton($_SERVER["REMOTE_ADDR"]), PDO::PARAM_LOB);
+        $prepared->bindValue(3, @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
         $renzoku = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
     }
 

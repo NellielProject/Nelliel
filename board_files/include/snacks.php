@@ -38,94 +38,92 @@ function nel_file_hash_is_banned($file_hash, $hash_type)
     return in_array($file_hash, $banned_hashes[$hash_type]);
 }
 
-//
-// Banned poster names
-//
-function nel_banned_name($name)
+function nel_ban_appeal($board_id, $ban_info)
 {
-    $cancer = array('', '');
-    $total_cancer = count($cancer);
+    $dbh = nel_database();
+    $bawww = $_POST['ban_appeal'];
 
-    for ($i = 0; $i < $total_cancer; ++ $i)
+    if(empty($bawww))
     {
-        if ($cancer[$i] === $name)
-        {
-            nel_derp(151, _gettext('That name is banned.'), array('cancer' => $cancer[$i]));
-        }
+        return;
     }
-}
 
-//
-// Banned text in comments
-//
-function nel_banned_text($text, $file)
-{
-    $cancer = array('samefag', '');
-    $total_cancer = count($cancer);
-
-    for ($i = 0; $i < $total_cancer; ++ $i)
-    {
-        if ($cancer[$i] !== '')
-        {
-            $test = utf8_strpos($text, $cancer[$i]);
-
-            if ($test !== FALSE)
-            {
-                nel_derp(152, _gettext('Cancer detected in post: '), array('cancer' => $cancer[$i]));
-            }
-        }
-    }
-}
-
-function nel_ban_appeal($board_id)
-{
-    if ($_POST['ban_ip'] != $user_ip_address)
+    if ($_SERVER['REMOTE_ADDR'] != @inet_ntop($ban_info['ip_address_start']))
     {
         nel_derp(160, _gettext('Your ip address does not match the one listed in the ban.'));
     }
 
-    $ip_address = $_POST['ban_ip'];
-    $bawww = $_POST['ban_appeal'];
-    $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE .
-         '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ip_address_starts" = ?');
-    $dbh->executePrepared($prepared, array($bawww, @inet_pton($ip_address)));
+    if ($ban_info['appeal_status'] > 0)
+    {
+        nel_derp(161, _gettext('You have already appealed your ban.'));
+    }
 
-    nel_apply_ban($board_id);
+
+    $prepared = $dbh->prepare('UPDATE "' . BAN_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ban_id" = ?');
+    $dbh->executePrepared($prepared, array($bawww, $ban_info['ban_id']));
+    return;
 }
 
 //
 // Apply b&hammer
 //
-function nel_apply_ban($board_id)
+function nel_apply_ban($inputs)
 {
-    $dbh = nel_database();
     $ban_hammer = new \Nelliel\BanHammer();
-    $user_ip_address = $_SERVER["REMOTE_ADDR"];
-    $ban_info = $ban_hammer->getBanByIp($user_ip_address);
-    $module = (isset($_GET['module'])) ? $_GET['module'] : null;
-    $action = (isset($_POST['action'])) ? $_POST['action'] : null;
+    $bans = $ban_hammer->getBansByIp($_SERVER['REMOTE_ADDR']);
+    $ban_info = null;
 
-    if (empty($ban_info))
+    if (empty($bans))
     {
         return;
     }
 
-    if ($module === 'ban-page')
+    foreach ($bans as $ban)
     {
-        if ($action === 'add-appeal')
+        $length = $ban['length'] + $ban['start_time'];
+
+        if (time() >= $length)
         {
-            nel_ban_appeal($board_id);
+            $ban_hammer->removeBan($ban['ban_id'], true);
+            continue;
+        }
+
+        if($ban['all_boards'] != 0)
+        {
+            if(is_null($ban_info))
+            {
+                $ban_info = $ban;
+            }
+
+            continue;
+        }
+
+        if(empty($inputs['board_id']))
+        {
+            break;
+        }
+
+        if ($inputs['board_id'] === $ban['board_id'])
+        {
+            $ban_info = $ban;
+            continue;
         }
     }
 
-    $length = $ban_info['length'] + $ban_info['start_time'];
-
-    if (time() >= $length)
+    if (is_null($ban_info))
     {
-        $ban_hammer->removeBan($ban_info['ban_id'], true);
         return;
     }
 
-    nel_render_ban_page($board_id, $ban_info);
+    if ($inputs['module'] === 'ban-page')
+    {
+        if ($inputs['action'] === 'add-appeal')
+        {
+            nel_ban_appeal($inputs['board_id'], $ban_info);
+            $ban_info = $ban_hammer->getBanById($ban_info['ban_id']);
+        }
+    }
+
+    nel_render_ban_page($inputs['board_id'], $ban_info);
     nel_clean_exit();
 }
