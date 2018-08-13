@@ -27,6 +27,7 @@ class BanHammer
         $ban_input['board'] = (isset($_POST['ban_board'])) ? $_POST['ban_board'] : null;
         $ban_input['all_boards'] = ($_POST['ban_all_boards'] > 0) ? 1 : 0;
         $ban_input['type'] = (isset($_POST['ban_type'])) ? $_POST['ban_type'] : null;
+        $ban_input['creator'] = (isset($_SESSION['username'])) ? $_SESSION['username'] : null;
         $ban_input['ip_address_start'] = (isset($_POST['ban_ip'])) ? $_POST['ban_ip'] : null;
         $ban_input['years'] = (isset($_POST['ban_time_years'])) ? $_POST['ban_time_years'] : 0;
         $ban_input['months'] = (isset($_POST['ban_time_months'])) ? $_POST['ban_time_months'] : 0;
@@ -101,11 +102,12 @@ class BanHammer
         }
 
         $prepared = $this->dbh->prepare(
-                'INSERT INTO "' . BAN_TABLE . '" ("board_id", "all_boards", "type", "ip_address_start", "reason", "length", "start_time")
-								VALUES (:board_id, :all_boards, :type, :ip_address_start, :reason, :length, :start_time)');
+                'INSERT INTO "' . BAN_TABLE . '" ("board_id", "all_boards", "type", "creator", "ip_address_start", "reason", "length", "start_time")
+								VALUES (:board_id, :all_boards, :type, :creator, :ip_address_start, :reason, :length, :start_time)');
         $prepared->bindParam(':board_id', $ban_input['board'], PDO::PARAM_STR);
         $prepared->bindParam(':all_boards', $ban_input['all_boards'], PDO::PARAM_INT);
         $prepared->bindParam(':type', $ban_input['type'], PDO::PARAM_STR);
+        $prepared->bindParam(':creator', $ban_input['creator'], PDO::PARAM_STR);
         $prepared->bindParam(':ip_address_start', @inet_pton($ban_input['ip_address_start']), PDO::PARAM_LOB);
         $prepared->bindParam(':reason', $ban_input['reason'], PDO::PARAM_STR);
         $prepared->bindParam(':length', $ban_input['length'], PDO::PARAM_INT);
