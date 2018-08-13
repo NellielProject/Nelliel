@@ -92,7 +92,7 @@ function nel_render_post($board_id, $gen_data, $dom)
         $ip = @inet_ntop($post_data['ip_address']);
         $header_nodes['modmode-ip-address']->setContent(@inet_ntop($post_data['ip_address']));
         $header_nodes['modmode-ban-link']->extSetAttribute('href',
-                '?manage=modmode&module=bans&board_id=test&action=new&ban_ip=' . rawurlencode($ip));
+                '?manage=modmode&module=bans&board_id=test&action=new&ban_type=POST&ban_ip=' . rawurlencode($ip));
 
         if ($response)
         {
@@ -101,7 +101,7 @@ function nel_render_post($board_id, $gen_data, $dom)
                     $post_data['post_number']);
             $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
                     '?manage=modmode&module=multi&board_id=test&action=ban.delete-post&post-id=' .
-                    $post_data['post_number'] . '&ban_ip=' . rawurlencode($ip));
+                    $post_data['post_number'] . '&ban_type=POST&ban_ip=' . rawurlencode($ip));
             $header_nodes['modmode-lock-thread-link']->parentNode->removeSelf();
             $header_nodes['modmode-sticky-thread-link']->parentNode->removeSelf();
         }
@@ -111,7 +111,7 @@ function nel_render_post($board_id, $gen_data, $dom)
                     '?manage=modmode&module=threads&board_id=test&action=delete-thread&thread-id=' . $thread_id);
             $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
                     '?manage=modmode&module=multi&board_id=test&action=ban.delete-thread&thread-id=' . $thread_id .
-                    '&ban_ip=' . rawurlencode($ip));
+                    '&ban_type=POST&ban_ip=' . rawurlencode($ip));
 
             if ($thread_data['locked'] == 1)
             {

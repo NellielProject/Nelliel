@@ -56,7 +56,7 @@ function nel_render_main_ban_panel($board_id)
     nel_clean_exit();
 }
 
-function nel_render_ban_panel_add($board_id, $ip = '')
+function nel_render_ban_panel_add($board_id, $ip = '', $type = 'GENERAL')
 {
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -69,6 +69,7 @@ function nel_render_ban_panel_add($board_id, $ip = '')
     $add_ban_form->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&action=add&board_id=' . $board_id);
     $ban_nodes = $dom->getAssociativeNodeArray('data-parse-id', $add_ban_form);
     $ban_nodes['ban-ip']->extSetAttribute('value', $ip);
+    $dom->getElementById('ban-type')->extSetAttribute('value', $type);
     nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
@@ -93,6 +94,7 @@ function nel_render_ban_panel_modify($board_id)
     $ban_id = $_GET['ban_id'];
     $ban_info = $ban_hammer->getBanById($ban_id, true);
     $dom->getElementById('ban-ip-field')->extSetAttribute('value', @inet_ntop($ban_info['ip_address_start']));
+    $dom->getElementById('ban-type-display')->setContent($ban_info['type']);
     $dom->getElementById('ban-time-display')->setContent(date("D F jS Y  H:i:s", $ban_info['start_time']));
     $dom->getElementById('ban-expiration-display')->setContent(
             date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']));

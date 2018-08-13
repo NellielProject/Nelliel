@@ -32,7 +32,8 @@ function nel_ban_control($inputs)
         }
 
         $ip = (isset($_GET['ban_ip'])) ? $_GET['ban_ip'] : '';
-        nel_render_ban_panel_add($inputs['board_id'], $ip);
+        $type = (isset($_GET['ban_type'])) ? $_GET['ban_type'] : 'GENERAL';
+        nel_render_ban_panel_add($inputs['board_id'], $ip, $type);
     }
     else if ($inputs['action'] === 'add')
     {

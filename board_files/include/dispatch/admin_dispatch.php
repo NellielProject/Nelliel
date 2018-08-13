@@ -169,11 +169,13 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'bans':
-                require_once INCLUDE_PATH . 'admin/file-filters.php';
-                nel_manage_file_filters($inputs);
+                require_once INCLUDE_PATH . 'admin/bans_panel.php';
+                nel_ban_control($inputs);
                 break;
 
             case 'multi':
+                require_once INCLUDE_PATH . 'admin/bans_panel.php';
+
                 if ($inputs['action'] === 'ban.delete-post' || $inputs['action'] === 'ban.delete-thread')
                 {
                     $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
