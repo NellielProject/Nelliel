@@ -25,7 +25,7 @@ class BanHammer
         $ban_input = array();
         $ban_input['ban_id'] = (isset($_POST['ban_id'])) ? $_POST['ban_id'] : null;
         $ban_input['board'] = (isset($_POST['ban_board'])) ? $_POST['ban_board'] : null;
-        $ban_input['all_boards'] = ($_POST['ban_all_boards'] > 0) ? 1 : 0;
+        $ban_input['all_boards'] = (isset($_POST['ban_all_boards']) && $_POST['ban_all_boards'] > 0) ? 1 : 0;
         $ban_input['type'] = (isset($_POST['ban_type'])) ? $_POST['ban_type'] : null;
         $ban_input['creator'] = (isset($_SESSION['username'])) ? $_SESSION['username'] : null;
         $ban_input['ip_address_start'] = (isset($_POST['ban_ip'])) ? $_POST['ban_ip'] : null;
@@ -82,7 +82,8 @@ class BanHammer
 
     public function getBansByIp($ban_ip)
     {
-        $prepared = $this->dbh->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ip_address_start" = ? AND "ip_address_end" IS NULL');
+        $prepared = $this->dbh->prepare(
+                'SELECT * FROM "' . BAN_TABLE . '" WHERE "ip_address_start" = ? AND "ip_address_end" IS NULL');
         $ban_info = $this->dbh->executePreparedFetchAll($prepared, array(@inet_pton($ban_ip)), PDO::FETCH_ASSOC);
 
         if ($ban_info === false)

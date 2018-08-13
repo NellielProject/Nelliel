@@ -48,13 +48,13 @@ function nel_ban_control($inputs)
     }
     else if ($inputs['action'] === 'remove')
     {
-        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_delete', $inputs['board_id']))
+        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', $inputs['board_id']))
         {
             nel_derp(323, _gettext('You are not allowed to delete bans.'));
         }
 
         $ban_input = $ban_hammer->postToArray();
-        $ban_hammer->removeBan($ban_input['ban_id']);
+        $ban_hammer->removeBan($_GET['ban_id']);
         nel_render_main_ban_panel($inputs['board_id']);
     }
     else if ($inputs['action'] === 'update')
