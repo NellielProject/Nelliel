@@ -118,6 +118,7 @@ function nel_render_ban_panel_modify($board_id)
     $dom->getElementById('ban-id-field')->extSetAttribute('value', $ban_info['ban_id']);
     $dom->getElementById('ban-start-field')->extSetAttribute('value', $ban_info['start_time']);
     $dom->getElementById('ban-reason-field')->setContent($ban_info['reason']);
+    $dom->getElementById('ban-name-display')->setContent($ban_info['creator']);
 
     if ($ban_info['appeal'] === '')
     {
