@@ -65,6 +65,12 @@ function nel_render_ban_panel_add($board_id, $ip = '', $type = 'GENERAL')
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
+
+    if (!empty($board_id))
+    {
+        $add_ban_form = $dom->getElementById('ban-board-field')->extSetAttribute('value', $board_id);
+    }
+
     $add_ban_form = $dom->getElementById('add-ban-form');
     $add_ban_form->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&action=add&board_id=' . $board_id);
     $ban_nodes = $dom->getAssociativeNodeArray('data-parse-id', $add_ban_form);
@@ -94,6 +100,7 @@ function nel_render_ban_panel_modify($board_id)
     $ban_id = $_GET['ban_id'];
     $ban_info = $ban_hammer->getBanById($ban_id, true);
     $dom->getElementById('ban-ip-field')->extSetAttribute('value', @inet_ntop($ban_info['ip_address_start']));
+    $dom->getElementById('ban-board-field')->setContent($ban_info['board_id']);
     $dom->getElementById('ban-type-display')->setContent($ban_info['type']);
     $dom->getElementById('ban-time-display')->setContent(date("D F jS Y  H:i:s", $ban_info['start_time']));
     $dom->getElementById('ban-expiration-display')->setContent(
