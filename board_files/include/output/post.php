@@ -92,7 +92,7 @@ function nel_render_post($board_id, $gen_data, $dom)
         $ip = @inet_ntop($post_data['ip_address']);
         $header_nodes['modmode-ip-address']->setContent(@inet_ntop($post_data['ip_address']));
         $header_nodes['modmode-ban-link']->extSetAttribute('href',
-                '?manage=modmode&module=bans&board_id=test&action=new&ban_type=POST&ban_ip=' . rawurlencode($ip));
+                '?manage=modmode&module=bans&board_id=test&action=new&ban_type=POST&post-id=' . $post_data['post_number'] . '&ban_ip=' . rawurlencode($ip));
 
         if ($response)
         {
@@ -108,9 +108,9 @@ function nel_render_post($board_id, $gen_data, $dom)
         else
         {
             $header_nodes['modmode-delete-link']->extSetAttribute('href',
-                    '?manage=modmode&module=threads&board_id=test&action=delete-thread&thread-id=' . $thread_id);
+                    '?manage=modmode&module=threads&board_id=test&action=delete-thread&post-id=' . $post_data['post_number'] . '&thread-id=' . $thread_id);
             $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
-                    '?manage=modmode&module=multi&board_id=test&action=ban.delete-thread&thread-id=' . $thread_id .
+                    '?manage=modmode&module=multi&board_id=test&action=ban.delete-thread&post-id=' . $post_data['post_number'] . '&thread-id=' . $thread_id .
                     '&ban_type=POST&ban_ip=' . rawurlencode($ip));
 
             if ($thread_data['locked'] == 1)
@@ -490,9 +490,17 @@ function nel_render_post($board_id, $gen_data, $dom)
     }
 
     $contents_nodes['post-text']->extSetAttribute('class', $post_type_class . 'post-text');
-    $contents_nodes['mod-comment']->setContent($post_data['mod_comment']);
-    $contents_nodes['post-comment']->changeId('post-comment-' . $post_id);
 
+    if(!empty($post_data['mod_comment']))
+    {
+        $contents_nodes['mod-comment']->setContent('(' . $post_data['mod_comment'] . ')');
+    }
+    else
+    {
+        $contents_nodes['mod-comment']->removeSelf();
+    }
+
+    $contents_nodes['post-comment']->changeId('post-comment-' . $post_id);
     $output_filter->clearWhitespace($post_data['comment']);
 
     if ($post_data['comment'] === '')

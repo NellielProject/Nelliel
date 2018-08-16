@@ -71,8 +71,19 @@ function nel_render_ban_panel_add($board_id, $ip = '', $type = 'GENERAL')
         $add_ban_form = $dom->getElementById('ban-board-field')->extSetAttribute('value', $board_id);
     }
 
+    if ($type === 'POST' && isset($_GET['post-id']))
+    {
+        $post_param = '&post-id=' . $_GET['post-id'];
+    }
+    else
+    {
+        $post_param = '';
+        $dom->getElementById('ban-mod-comment')->removeSelf();
+    }
+
     $add_ban_form = $dom->getElementById('add-ban-form');
-    $add_ban_form->extSetAttribute('action', PHP_SELF . '?manage=board&module=bans&action=add&board_id=' . $board_id);
+    $add_ban_form->extSetAttribute('action',
+            PHP_SELF . '?manage=board&module=bans&action=add&board_id=' . $board_id . $post_param);
     $ban_nodes = $dom->getAssociativeNodeArray('data-parse-id', $add_ban_form);
     $ban_nodes['ban-ip']->extSetAttribute('value', $ip);
     $dom->getElementById('ban-type')->extSetAttribute('value', $type);

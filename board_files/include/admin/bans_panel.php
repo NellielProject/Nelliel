@@ -44,6 +44,22 @@ function nel_ban_control($inputs)
 
         $ban_input = $ban_hammer->postToArray();
         $ban_hammer->addBan($ban_input);
+
+        if (isset($_GET['post-id']))
+        {
+            if (isset($_POST['mod_post_comment']) && !empty($_POST['mod_post_comment']))
+            {
+                $post_table = nel_parameters_and_data()->boardReferences($inputs['board_id'], 'post_table');
+                $prepared = $dbh->prepare(
+                        'UPDATE "' . $post_table . '" SET "mod_comment" = ? WHERE "post_number" = ?');
+
+                $dbh->executePrepared($prepared, array($_POST['mod_post_comment'], $_GET['post-id']));
+                $regen = new \Nelliel\Regen();
+                $regen->threads($inputs['board_id'], true, array($_GET['post-id']));
+                $regen->index($inputs['board_id']);
+            }
+        }
+
         nel_render_main_ban_panel($inputs['board_id']);
     }
     else if ($inputs['action'] === 'remove')
