@@ -377,6 +377,23 @@ class SQLTables
         nel_setup_stuff_done($result);
     }
 
+    public function createReportsTable($table_name)
+    {
+        $auto_inc = $this->autoincrementColumn('INTEGER');
+        $options = $this->tableOptions();
+        $schema = '
+        CREATE TABLE ' . $table_name . ' (
+            report_id               ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
+            board_id                VARCHAR(255) NULL,
+            item_id                 VARCHAR(255) NOT NULL,
+            reason                  VARCHAR(255) DEFAULT NULL,
+            reporter_ip             ' . $this->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL
+        ) ' . $options . ';';
+
+        $result = $this->createTableQuery($schema, $table_name);
+        nel_setup_stuff_done($result);
+    }
+
     private function autoincrementColumn($int_column)
     {
         $auto = '';

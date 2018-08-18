@@ -30,6 +30,7 @@ define('SITE_CONFIG_TABLE', 'nelliel_site_config'); // Site-wide config settings
 define('FILETYPE_TABLE', 'nelliel_filetypes'); // Site-wide filetypes
 define('FILE_FILTER_TABLE', 'nelliel_file_filters'); // Site-wide file filters
 define('BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults'); // Default config for new boards
+define('REPORTS_TABLE', 'nelliel_reports'); // Content reports
 
 // Set default values here in case the config is missing something
 $base_config['defaultadmin'] = '';

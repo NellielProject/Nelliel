@@ -49,6 +49,7 @@ class Setup
         $sql_tables->createFiletypeTable(FILETYPE_TABLE);
         $sql_tables->createFileFilterTable(FILE_FILTER_TABLE);
         $sql_tables->createBoardConfigTable(BOARD_DEFAULTS_TABLE, false);
+        $sql_tables->createReportsTable(REPORTS_TABLE);
     }
 
     public function createCoreDirectories()
