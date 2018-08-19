@@ -49,6 +49,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     $response = $gen_data['post']['op'] != 1;
     $post_data = $gen_data['post'];
     $thread_data = $gen_data['thread'];
+    $base_content_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_0';
     $thread_id = $post_data['parent_thread'];
     $post_id = $thread_id . '_' . $post_data['post_number'];
     $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-'), true);
@@ -92,49 +93,49 @@ function nel_render_post($board_id, $gen_data, $dom)
         $ip = @inet_ntop($post_data['ip_address']);
         $header_nodes['modmode-ip-address']->setContent(@inet_ntop($post_data['ip_address']));
         $header_nodes['modmode-ban-link']->extSetAttribute('href',
-                '?manage=modmode&module=bans&board_id=test&action=new&ban_type=POST&post-id=' . $post_data['post_number'] . '&ban_ip=' . rawurlencode($ip));
+                '?manage=modmode&module=bans&board_id=test&action=new&ban_type=POST&content-id=' . $base_content_id .
+                '&ban_ip=' . rawurlencode($ip));
 
         if ($response)
         {
             $header_nodes['modmode-delete-link']->extSetAttribute('href',
-                    '?manage=modmode&module=threads&board_id=test&action=delete-post&post-id=' .
-                    $post_data['post_number']);
+                    '?manage=modmode&module=threads&board_id=test&action=delete-post&content-id=' . $base_content_id);
             $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
-                    '?manage=modmode&module=multi&board_id=test&action=ban.delete-post&post-id=' .
-                    $post_data['post_number'] . '&ban_type=POST&ban_ip=' . rawurlencode($ip));
+                    '?manage=modmode&module=multi&board_id=test&action=ban.delete-post&content-id=' . $base_content_id .
+                    '&ban_type=POST&ban_ip=' . rawurlencode($ip));
             $header_nodes['modmode-lock-thread-link']->parentNode->removeSelf();
             $header_nodes['modmode-sticky-thread-link']->parentNode->removeSelf();
         }
         else
         {
             $header_nodes['modmode-delete-link']->extSetAttribute('href',
-                    '?manage=modmode&module=threads&board_id=test&action=delete-thread&post-id=' . $post_data['post_number'] . '&thread-id=' . $thread_id);
+                    '?manage=modmode&module=threads&board_id=test&action=delete-thread&content-id=' . $base_content_id);
             $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
-                    '?manage=modmode&module=multi&board_id=test&action=ban.delete-thread&post-id=' . $post_data['post_number'] . '&thread-id=' . $thread_id .
+                    '?manage=modmode&module=multi&board_id=test&action=ban.delete-thread&content-id=' . $base_content_id .
                     '&ban_type=POST&ban_ip=' . rawurlencode($ip));
 
             if ($thread_data['locked'] == 1)
             {
                 $header_nodes['modmode-lock-thread-link']->extSetAttribute('href',
-                        '?manage=modmode&module=threads&board_id=test&action=unlock&thread-id=' . $thread_id);
+                        '?manage=modmode&module=threads&board_id=test&action=unlock' . '&content-id=' . $base_content_id);
                 $header_nodes['modmode-lock-thread-link']->setContent(_gettext('Unlock Thread'));
             }
             else
             {
                 $header_nodes['modmode-lock-thread-link']->extSetAttribute('href',
-                        '?manage=modmode&module=threads&board_id=test&action=lock&thread-id=' . $thread_id);
+                        '?manage=modmode&module=threads&board_id=test&action=lock&content-id=' . $base_content_id);
             }
 
             if ($thread_data['sticky'] == 1)
             {
                 $header_nodes['modmode-sticky-thread-link']->extSetAttribute('href',
-                        '?manage=modmode&module=threads&board_id=test&action=unsticky&thread-id=' . $thread_id);
+                        '?manage=modmode&module=threads&board_id=test&action=unsticky&content-id=' . $base_content_id);
                 $header_nodes['modmode-sticky-thread-link']->setContent(_gettext('Unsticky Thread'));
             }
             else
             {
                 $header_nodes['modmode-sticky-thread-link']->extSetAttribute('href',
-                        '?manage=modmode&module=threads&board_id=test&action=sticky&thread-id=' . $thread_id);
+                        '?manage=modmode&module=threads&board_id=test&action=sticky&content-id=' . $base_content_id);
             }
         }
     }
@@ -232,7 +233,8 @@ function nel_render_post($board_id, $gen_data, $dom)
         if (!nel_sessions()->sessionIsIgnored('render'))
         {
             $header_nodes['reply-to-link']->extSetAttribute('href',
-                    PHP_SELF . '?manage=modmode&module=view-thread&section=' . $thread_id . '&board_id=' . $board_id);
+                    PHP_SELF . '?manage=modmode&module=view-thread&content-id=' . $base_content_id . '&section=' .
+                    $thread_id . '&board_id=' . $board_id);
         }
         else
         {
@@ -290,9 +292,9 @@ function nel_render_post($board_id, $gen_data, $dom)
 
             if (!nel_sessions()->sessionIsIgnored('render'))
             {
-                    $file_nodes['modmode-delete-link']->extSetAttribute('href',
-                            '?manage=modmode&module=threads&board_id=test&action=delete-file&post-id=' .
-                            $post_data['post_number'] . '&file-order=' . $file['file_order']);
+                $file_nodes['modmode-delete-link']->extSetAttribute('href',
+                        '?manage=modmode&module=threads&board_id=test&action=delete-file&post-id=' .
+                        $post_data['post_number'] . '&file-order=' . $file['file_order']);
             }
             else
             {
@@ -491,7 +493,7 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     $contents_nodes['post-text']->extSetAttribute('class', $post_type_class . 'post-text');
 
-    if(!empty($post_data['mod_comment']))
+    if (!empty($post_data['mod_comment']))
     {
         $contents_nodes['mod-comment']->setContent('(' . $post_data['mod_comment'] . ')');
     }

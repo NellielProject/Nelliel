@@ -34,6 +34,7 @@ function nel_central_dispatch()
     $inputs['section'] = (isset($_GET['section'])) ? $_GET['section'] : null;
     $inputs['board_id'] = (isset($_GET['board_id'])) ? $_GET['board_id'] : null;
     $inputs['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
+    $inputs['content_id'] = (isset($_GET['content-id'])) ? $_GET['content-id'] : null;
 
     nel_apply_ban($inputs);
 
