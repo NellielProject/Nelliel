@@ -84,10 +84,23 @@
 						<input type="checkbox" name="banpost" id="bpost"><label for="bpost" data-i18n="gettext">Ban selected posts</label><br>
 						<input type="hidden" name="mode" value="admin->modmode">
 						</span>
-						<input id="bottom-submit-button" type="submit" value="Delete" data-i18n="gettext" data-i18n-attributes="value">
-						<span id="bottom-pass-input">
-						<input type="password" name="update_sekrit" id="update-sekrit" size="12" maxlength="16" value=""><label for="update-sekrit" data-i18n="gettext">Password</label>
-						</span>
+						<div id="bottom-pass-input">
+							<label for="update-sekrit" data-i18n="gettext">Password:</label>&nbsp;<input type="password" name="update_sekrit" id="update-sekrit" size="12" value="">
+						</div>
+						<div>
+							<input id="bottom-submit-button" type="submit" name="form_submit_delete" value="Delete" data-i18n="gettext" data-i18n-attributes="value">
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div id="bottom-pass-input">
+							<label for="report-reason-bottom" data-i18n="gettext">Report Reason:</label>&nbsp;<input type="text" name="report_reason" id="report-reason-bottom" size="30" value="">
+						</div>
+						<div>
+							<input id="report-button-bottom" type="submit" name="form_submit_report" value="Report" data-i18n="gettext" data-i18n-attributes="value">
+						</div>				
+
 					</td>
 				</tr>
 			</table>

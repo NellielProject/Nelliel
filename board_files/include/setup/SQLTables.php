@@ -385,7 +385,7 @@ class SQLTables
         CREATE TABLE ' . $table_name . ' (
             report_id               ' . $auto_inc[0] . ' PRIMARY KEY ' . $auto_inc[1] . ' NOT NULL,
             board_id                VARCHAR(255) NULL,
-            item_id                 VARCHAR(255) NOT NULL,
+            content_id                 VARCHAR(255) NOT NULL,
             reason                  VARCHAR(255) DEFAULT NULL,
             reporter_ip             ' . $this->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL
         ) ' . $options . ';';

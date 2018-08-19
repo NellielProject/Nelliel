@@ -22,8 +22,8 @@ function nel_general_dispatch($inputs)
                     if (nel_sessions()->sessionIsActive())
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                        '?manage=modmode&module=view-thread&section=' . nel_fgsfds('noko_topic') . '&board_id=' .
-                        $inputs['board_id'] . '">';
+                                '?manage=modmode&module=view-thread&section=' . nel_fgsfds('noko_topic') . '&board_id=' .
+                                $inputs['board_id'] . '">';
                     }
                     else
                     {
@@ -37,7 +37,7 @@ function nel_general_dispatch($inputs)
                     if (nel_sessions()->sessionIsActive())
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                        '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
+                                '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
                     }
                     else
                     {
@@ -45,6 +45,23 @@ function nel_general_dispatch($inputs)
                                 nel_parameters_and_data()->boardReferences($inputs['board_id'], 'board_directory') . '/' .
                                 PHP_SELF2 . PHP_EXT . '">';
                     }
+                }
+            }
+            else
+            {
+                $reports = new \Nelliel\Reports();
+                $reports->collectReportedContent();
+
+                if (nel_sessions()->sessionIsActive())
+                {
+                    echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
+                    '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
+                }
+                else
+                {
+                    echo '<meta http-equiv="refresh" content="1;URL=' .
+                            nel_parameters_and_data()->boardReferences($inputs['board_id'], 'board_directory') . '/' .
+                            PHP_SELF2 . PHP_EXT . '">';
                 }
             }
 
