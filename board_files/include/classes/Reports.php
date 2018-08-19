@@ -40,6 +40,6 @@ class Reports
     {
         $query = 'INSERT INTO "' . REPORTS_TABLE . '" ("board_id", "content_id", "reason", "reporter_ip") VALUES (?, ?, ?, ?)';
         $prepared = $this->dbh->prepare($query);
-        $this->dbh->executePrepared($prepared, array($report_data['board_id'], $report_data['content_id'], $report_data['reason'], $report_data['reporter_ip']));
+        $this->dbh->executePrepared($prepared, array($report_data['board_id'], $report_data['content_id'], $report_data['reason'], @inet_pton($report_data['reporter_ip'])));
     }
 }
