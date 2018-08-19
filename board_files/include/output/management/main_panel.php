@@ -77,6 +77,17 @@ function nel_render_main_panel()
         $manage_options_nodes['module-link-board-settings']->removeSelf();
     }
 
+    // TODO: Add perm for this
+    if (true)
+    {
+        $manage_options_nodes['module-link-reports']->extSetAttribute('href',
+                PHP_SELF . '?manage=general&module=reports');
+    }
+    else
+    {
+        $manage_options_nodes['module-link-reports']->removeSelf();
+    }
+
     $dom->getElementById('extract-gettext-form')->extSetAttribute('action',
             PHP_SELF . '?manage=general&module=language&action=extract-gettext');
 

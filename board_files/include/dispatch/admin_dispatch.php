@@ -67,6 +67,11 @@ function nel_admin_dispatch($inputs)
                 nel_render_main_panel();
                 break;
 
+            case 'reports':
+                require_once INCLUDE_PATH . 'output/management/reports_panel.php';
+                nel_render_reports_panel();
+                break;
+
             default:
                 nel_login();
                 break;
