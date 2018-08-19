@@ -1,4 +1,11 @@
 # Nelliel Changelog
+## v0.9.7.1 (2018/08/19)
+### Added
+ - Add very basic reports system
+
+### Changed
+ - Improve ban functions
+
 ## v0.9.7 (2018/08/09)
 ### Added
  - Moderator Mode restored and updated
