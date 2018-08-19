@@ -28,39 +28,48 @@ class ThreadHandler
         $returned_list = array();
         $update_archive = false;
 
-        foreach ($_POST as $input)
+        foreach ($_POST as $name => $value)
         {
-            $sub = explode('_', $input, 4);
+            if(\Nelliel\ContentID::isContentID($name))
+            {
+                $id_array = \Nelliel\ContentID::parseIDString($name);
+            }
+            else
+            {
+                continue;
+            }
 
-            switch ($sub[0])
+            var_dump($id_array);
+            var_dump($value);
+            switch ($value)
             {
                 case 'deletefile':
-                    $this->removeFile($sub[2], $sub[3]);
+                    $this->removeFile($id_array['post'], $id_array['order']);
                     break;
 
                 case 'deletethread':
-                    $this->removeThread($sub[1]);
+                    $this->removeThread($id_array['thread']);
                     $update_archive = true;
                     break;
 
                 case 'deletepost':
-                    $this->removePost($sub[2]);
+                    $this->removePost($id_array['post']);
                     break;
 
                 case 'threadsticky':
-                    $this->stickyThread($sub[1]);
+                    $this->stickyThread($id_array['thread']);
                     $update_archive = true;
                     break;
 
                 case 'threadunsticky':
-                    $this->untickyThread($sub[1]);
+                    $this->untickyThread($id_array['thread']);
                     $update_archive = true;
                     break;
             }
 
-            if (isset($sub[1]) && !in_array($sub[1], $returned_list))
+            if (!in_array($id_array['thread'], $returned_list))
             {
-                array_push($returned_list, $sub[1]);
+                array_push($returned_list, $id_array['thread']);
             }
         }
 

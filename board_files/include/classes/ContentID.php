@@ -14,7 +14,7 @@ class ContentID
     private $id_string;
     private $thread_id;
     private $post_id;
-    private $file_order;
+    private $order_id;
     private $is_thread;
     private $is_post;
     private $is_file;
@@ -25,19 +25,24 @@ class ContentID
         $id_array = self::parseIDString($id_string);
         $this->thread_id = $id_array['thread'];
         $this->post_id = $id_array['post'];
-        $this->file_order = $id_array['order'];
+        $this->order_id = $id_array['order'];
         $this->is_file = $id_array['order'] > 0;
         $this->is_post = !$this->is_file && $id_array['post'] > 0;
         $this->is_thread = !$this->is_file && !$this->is_post && $id_array['thread'] > 0;
+    }
+
+    public static function isContentID($string)
+    {
+        return preg_match('/nci_[0-9]+_[0-9]+_[0-9]+/', $string) === 1;
     }
 
     public static function parseIDString($id_string)
     {
         $id_split = explode('_', $id_string);
         $id_array = array();
-        $id_array['thread'] = (isset($id_split[0]) && is_numeric($id_split[0])) ? intval($id_split[0]) : 0;
-        $id_array['post'] = (isset($id_split[1]) && is_numeric($id_split[1])) ? intval($id_split[1]) : 0;
-        $id_array['order'] = (isset($id_split[2]) && is_numeric($id_split[2])) ? intval($id_split[2]) : 0;
+        $id_array['thread'] = (isset($id_split[1]) && is_numeric($id_split[1])) ? intval($id_split[1]) : 0;
+        $id_array['post'] = (isset($id_split[2]) && is_numeric($id_split[2])) ? intval($id_split[2]) : 0;
+        $id_array['order'] = (isset($id_split[3]) && is_numeric($id_split[3])) ? intval($id_split[3]) : 0;
         return $id_array;
     }
 
@@ -56,9 +61,9 @@ class ContentID
         return $this->post_id;
     }
 
-    public function getFileOrder()
+    public function getOrder()
     {
-        return $this->file_order;
+        return $this->order_id;
     }
 
     public function isThread()

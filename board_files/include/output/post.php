@@ -49,7 +49,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     $response = $gen_data['post']['op'] != 1;
     $post_data = $gen_data['post'];
     $thread_data = $gen_data['thread'];
-    $base_content_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_0';
+    $base_content_id = 'nci_' . $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_0';
     $thread_id = $post_data['parent_thread'];
     $post_id = $thread_id . '_' . $post_data['post_number'];
     $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-'), true);
@@ -158,8 +158,8 @@ function nel_render_post($board_id, $gen_data, $dom)
 
         $post_checkbox = $new_post_dom->getElementById('post_post-id');
         $post_checkbox->changeId('post_' . $post_id);
-        $post_checkbox->extSetAttribute('name', 'post_' . $rev_post_id);
-        $post_checkbox->extSetAttribute('value', 'deletepost_' . $post_id);
+        $post_checkbox->extSetAttribute('name', $base_content_id);
+        $post_checkbox->extSetAttribute('value', 'deletepost');
 
         $new_post_dom->getElementById('thread_thread-id')->removeSelf();
     }
@@ -171,8 +171,8 @@ function nel_render_post($board_id, $gen_data, $dom)
 
         $thread_checkbox = $new_post_dom->getElementById('thread_thread-id');
         $thread_checkbox->changeId('thread_' . $thread_id);
-        $thread_checkbox->extSetAttribute('name', 'thread_' . $thread_id);
-        $thread_checkbox->extSetAttribute('value', 'deletethread_' . $thread_id);
+        $thread_checkbox->extSetAttribute('name', $base_content_id);
+        $thread_checkbox->extSetAttribute('value', 'deletethread');
 
         $new_post_dom->getElementById('post_post-id')->removeSelf();
     }
@@ -280,6 +280,7 @@ function nel_render_post($board_id, $gen_data, $dom)
 
         foreach ($gen_data['files'] as $file)
         {
+            $file_content_id = 'nci_' . $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['file_order'];
             $full_filename = $file['filename'] . '.' . $file['extension'];
             $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['file_order'];
             $temp_file_dom = $new_post_dom->copyNodeIntoDocument($new_post_dom->getElementById('fileinfo-'), true);
@@ -301,8 +302,8 @@ function nel_render_post($board_id, $gen_data, $dom)
                 $file_nodes['modmode-options']->removeSelf();
             }
 
-            $file_nodes['delete-file']->extSetAttribute('name', 'file_' . $file_id);
-            $file_nodes['delete-file']->extSetAttribute('value', 'deletefile_' . $file_id);
+            $file_nodes['delete-file']->extSetAttribute('name', $file_content_id);
+            $file_nodes['delete-file']->extSetAttribute('value', 'deletefile');
 
             $file['file_location'] = $thread_src_web_path . $post_data['post_number'] . '/' .
                     rawurlencode($full_filename);
