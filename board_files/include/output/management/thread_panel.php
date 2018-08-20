@@ -47,26 +47,33 @@ function nel_render_thread_panel_main($board_id)
         $delete_thread->extSetAttribute('name', $base_content_id);
         $delete_thread->changeId('delete-thread-' . $thread['thread_id']);
 
+        $sticky_thread_link = $temp_thread_row->getElementById('sticky-thread-link-');
+
         if ($thread['sticky'] == 1)
         {
-            $unsticky_thread = $temp_thread_row->getElementById('unsticky-thread-');
-            $unsticky_thread->modifyAttribute('name', $thread['thread_id'], 'after');
-            $unsticky_thread->modifyAttribute('value', $thread['thread_id'], 'after');
-            $unsticky_thread->changeId('unsticky-thread-' . $thread['thread_id']);
-            $temp_thread_row->getElementById('sticky-thread-')->removeSelf();
+            $sticky_thread_link->extSetAttribute('href',
+                    '?manage=modmode&module=threads&board_id=test&action=unsticky&content-id=' . $base_content_id);
+            $sticky_thread_link->setContent(_gettext('Unsticky Thread'));
         }
         else
         {
-            $sticky_thread = $temp_thread_row->getElementById('sticky-thread-');
-            $sticky_thread->modifyAttribute('name', $thread['thread_id'], 'after');
-            $sticky_thread->modifyAttribute('value', $thread['thread_id'], 'after');
-            $sticky_thread->changeId('sticky-thread-' . $thread['thread_id']);
-            $temp_thread_row->getElementById('unsticky-thread-')->removeSelf();
+            $sticky_thread_link->extSetAttribute('href',
+                    '?manage=modmode&module=threads&board_id=test&action=sticky&content-id=' . $base_content_id);
         }
 
-        $thread_locked = $temp_thread_row->getElementById('thread-locked-');
-        $thread_locked->setContent($thread['locked'] == 1 ? 'Locked' : 'Unlocked');
-        $thread_locked->changeId('thread-locked-' . $thread['thread_id']);
+        $lock_thread_link = $temp_thread_row->getElementById('lock-thread-link-');
+
+        if ($thread['locked'] == 1)
+        {
+            $lock_thread_link->extSetAttribute('href',
+                    '?manage=modmode&module=threads&board_id=test&action=unlock&content-id=' . $base_content_id);
+            $lock_thread_link->setContent(_gettext('Unlock Thread'));
+        }
+        else
+        {
+            $lock_thread_link->extSetAttribute('href',
+                    '?manage=modmode&module=threads&board_id=test&action=lock&content-id=' . $base_content_id);
+        }
 
         $thread_last_update = $temp_thread_row->getElementById('thread-last-update-');
         $thread_last_update->setContent(date("D F jS Y  H:i:s", $thread['last_update'] / 1000));
