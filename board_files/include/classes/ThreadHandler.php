@@ -22,7 +22,7 @@ class ThreadHandler
         $this->board_id = $board_id;
     }
 
-    public function threadUpdates()
+    public function threadUpdates($wut_do = 'delete')
     {
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $returned_list = array();
@@ -41,19 +41,22 @@ class ThreadHandler
 
             switch ($value)
             {
-                case 'delete':
-                    if ($content_id->isThread())
+                case 'action':
+                    if ($wut_do === 'delete')
                     {
-                        $this->removeThread($content_id->getThreadID());
-                        $update_archive = true;
-                    }
-                    else if ($content_id->isPost())
-                    {
-                        $this->removePost($content_id->getPostID());
-                    }
-                    else if ($content_id->isFile())
-                    {
-                        $this->removeFile($content_id->getPostID(), $content_id->getOrder());
+                        if ($content_id->isThread())
+                        {
+                            $this->removeThread($content_id->getThreadID());
+                            $update_archive = true;
+                        }
+                        else if ($content_id->isPost())
+                        {
+                            $this->removePost($content_id->getPostID());
+                        }
+                        else if ($content_id->isFile())
+                        {
+                            $this->removeFile($content_id->getPostID(), $content_id->getOrder());
+                        }
                     }
 
                     break;

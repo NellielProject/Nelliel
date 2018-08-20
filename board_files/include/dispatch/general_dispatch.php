@@ -70,7 +70,7 @@ function nel_general_dispatch($inputs)
                 if (isset($_POST['form_submit_delete']))
                 {
                     $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
-                    $updates = $thread_handler->threadUpdates();
+                    $updates = $thread_handler->threadUpdates('delete');
 
                     if (nel_sessions()->sessionIsActive())
                     {

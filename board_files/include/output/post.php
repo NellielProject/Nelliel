@@ -159,7 +159,6 @@ function nel_render_post($board_id, $gen_data, $dom)
         $post_checkbox = $new_post_dom->getElementById('post_post-id');
         $post_checkbox->changeId('post_' . $post_id);
         $post_checkbox->extSetAttribute('name', $base_content_id);
-        $post_checkbox->extSetAttribute('value', 'delete');
 
         $new_post_dom->getElementById('thread_thread-id')->removeSelf();
     }
@@ -172,7 +171,6 @@ function nel_render_post($board_id, $gen_data, $dom)
         $thread_checkbox = $new_post_dom->getElementById('thread_thread-id');
         $thread_checkbox->changeId('thread_' . $thread_id);
         $thread_checkbox->extSetAttribute('name', $base_content_id);
-        $thread_checkbox->extSetAttribute('value', 'delete');
 
         $new_post_dom->getElementById('post_post-id')->removeSelf();
     }
@@ -303,7 +301,6 @@ function nel_render_post($board_id, $gen_data, $dom)
             }
 
             $file_nodes['delete-file']->extSetAttribute('name', $file_content_id);
-            $file_nodes['delete-file']->extSetAttribute('value', 'delete');
 
             $file['file_location'] = $thread_src_web_path . $post_data['post_number'] . '/' .
                     rawurlencode($full_filename);

@@ -35,7 +35,7 @@ class Reports
                 continue;
             }
 
-            if($value == 'delete')
+            if($value == 'action')
             {
                 $report_data['content_id'] = $content_id->getIDString();
                 $this->addReport($report_data);
