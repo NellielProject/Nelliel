@@ -61,16 +61,6 @@ class ThreadHandler
                     }
 
                     break;
-
-                case 'threadsticky':
-                    $this->stickyThread($content_id->getThreadID());
-                    $update_archive = true;
-                    break;
-
-                case 'threadunsticky':
-                    $this->unStickyThread($content_id->getThreadID());
-                    $update_archive = true;
-                    break;
             }
 
             if (!in_array($content_id->getThreadID(), $returned_list))
