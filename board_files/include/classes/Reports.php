@@ -24,13 +24,20 @@ class Reports
         $report_data['reason'] = (isset($_POST['report_reason'])) ? $_POST['report_reason'] : null;
         $report_data['reporter_ip'] = $_SERVER['REMOTE_ADDR'];
 
-        foreach ($_POST as $input)
+        foreach ($_POST as $name => $value)
         {
-            $sub = explode('_', $input, 2);
-
-            if($sub[0] == 'deletefile' || $sub[0] == 'deletethread' || $sub[0] == 'deletepost' )
+            if (\Nelliel\ContentID::isContentID($name))
             {
-                $report_data['content_id'] = $sub[1];
+                $content_id = new \Nelliel\ContentID($name);
+            }
+            else
+            {
+                continue;
+            }
+
+            if($value == 'delete')
+            {
+                $report_data['content_id'] = $content_id->getIDString();
                 $this->addReport($report_data);
             }
         }
