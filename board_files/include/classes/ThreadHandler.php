@@ -41,8 +41,9 @@ class ThreadHandler
 
             switch ($value)
             {
+                case 'delete':
                 case 'action':
-                    if ($wut_do === 'delete')
+                    if ($wut_do === 'delete' || $value === 'delete')
                     {
                         if ($content_id->isThread())
                         {

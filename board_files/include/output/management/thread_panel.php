@@ -35,6 +35,8 @@ function nel_render_thread_panel_main($board_id)
         $op_post = $prepared->fetch(PDO::FETCH_ASSOC);
         unset($result);
 
+        $base_content_id = 'nci_' . $thread['thread_id'] . '_' . $thread['first_post'] . '_0';
+
         $expand_thread_button = $temp_thread_row->getElementById('expand-thread-button-');
         $expand_thread_button->extSetAttribute('value', _gettext('Expand') . ' ' . $thread['thread_id']);
         $expand_thread_button->changeId('expand-thread-button-' . $thread['thread_id']);
@@ -42,8 +44,7 @@ function nel_render_thread_panel_main($board_id)
         $thread_post_number->setContent($thread['thread_id']);
         $thread_post_number->changeId('thread-post-number-' . $thread['thread_id']);
         $delete_thread = $temp_thread_row->getElementById('delete-thread-');
-        $delete_thread->modifyAttribute('name', $thread['thread_id'], 'after');
-        $delete_thread->modifyAttribute('value', $thread['thread_id'], 'after');
+        $delete_thread->extSetAttribute('name', $base_content_id);
         $delete_thread->changeId('delete-thread-' . $thread['thread_id']);
 
         if ($thread['sticky'] == 1)
@@ -137,12 +138,13 @@ function nel_render_thread_panel_expand($board_id, $thread_id)
         $temp_post_row = $post_row->cloneNode(true);
         $temp_post_row->changeId('post-row-' . $post['post_number']);
 
+        $base_content_id = 'nci_' . $post['parent_thread'] . '_' . $post['post_number'] . '_0';
+
         $post_post_number = $temp_post_row->getElementById('post-post-number-');
         $post_post_number->setContent($post['post_number']);
         $post_post_number->changeId('post-post-number-' . $post['post_number']);
         $delete_post = $temp_post_row->getElementById('delete-post-');
-        $delete_post->modifyAttribute('name', $post['post_number'], 'after');
-        $delete_post->modifyAttribute('value', $post['parent_thread'] . '_' . $post['post_number'], 'after');
+        $delete_post->extSetAttribute('name', $base_content_id);
         $delete_post->changeId('delete-post-' . $post['post_number']);
         $post_parent_thread = $temp_post_row->getElementById('post-thread-');
         $post_parent_thread->setContent($post['parent_thread']);
