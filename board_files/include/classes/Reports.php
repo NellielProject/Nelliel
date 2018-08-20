@@ -2,7 +2,8 @@
 
 namespace Nelliel;
 
-use \PDO;
+use PDO;
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -17,7 +18,7 @@ class Reports
         $this->dbh = nel_database();
     }
 
-    public function collectReportedContent()
+    public function processContentReports()
     {
         $report_data = array();
         $report_data['board_id'] = (isset($_GET['board_id'])) ? $_GET['board_id'] : null;
@@ -35,7 +36,7 @@ class Reports
                 continue;
             }
 
-            if($value == 'action')
+            if ($value == 'action')
             {
                 $report_data['content_id'] = $content_id->getIDString();
                 $this->addReport($report_data);
@@ -45,8 +46,11 @@ class Reports
 
     public function addReport($report_data)
     {
-        $query = 'INSERT INTO "' . REPORTS_TABLE . '" ("board_id", "content_id", "reason", "reporter_ip") VALUES (?, ?, ?, ?)';
+        $query = 'INSERT INTO "' . REPORTS_TABLE .
+                '" ("board_id", "content_id", "reason", "reporter_ip") VALUES (?, ?, ?, ?)';
         $prepared = $this->dbh->prepare($query);
-        $this->dbh->executePrepared($prepared, array($report_data['board_id'], $report_data['content_id'], $report_data['reason'], @inet_pton($report_data['reporter_ip'])));
+        $this->dbh->executePrepared($prepared,
+                array($report_data['board_id'], $report_data['content_id'], $report_data['reason'],
+                    @inet_pton($report_data['reporter_ip'])));
     }
 }

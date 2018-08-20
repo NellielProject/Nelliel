@@ -52,7 +52,7 @@ function nel_general_dispatch($inputs)
                 if (isset($_POST['form_submit_report']))
                 {
                     $reports = new \Nelliel\Reports();
-                    $reports->collectReportedContent();
+                    $reports->processContentReports();
 
                     if (nel_sessions()->sessionIsActive())
                     {
@@ -70,7 +70,7 @@ function nel_general_dispatch($inputs)
                 if (isset($_POST['form_submit_delete']))
                 {
                     $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
-                    $updates = $thread_handler->threadUpdates('delete');
+                    $updates = $thread_handler->processContentDeletes();
 
                     if (nel_sessions()->sessionIsActive())
                     {

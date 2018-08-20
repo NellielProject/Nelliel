@@ -22,7 +22,7 @@ class ThreadHandler
         $this->board_id = $board_id;
     }
 
-    public function threadUpdates($wut_do = 'delete')
+    public function processContentDeletes()
     {
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $returned_list = array();
@@ -39,28 +39,21 @@ class ThreadHandler
                 continue;
             }
 
-            switch ($value)
+            if ($value === 'action')
             {
-                case 'delete':
-                case 'action':
-                    if ($wut_do === 'delete' || $value === 'delete')
-                    {
-                        if ($content_id->isThread())
-                        {
-                            $this->removeThread($content_id->getThreadID());
-                            $update_archive = true;
-                        }
-                        else if ($content_id->isPost())
-                        {
-                            $this->removePost($content_id->getPostID());
-                        }
-                        else if ($content_id->isFile())
-                        {
-                            $this->removeFile($content_id->getPostID(), $content_id->getOrder());
-                        }
-                    }
-
-                    break;
+                if ($content_id->isThread())
+                {
+                    $this->removeThread($content_id->getThreadID());
+                    $update_archive = true;
+                }
+                else if ($content_id->isPost())
+                {
+                    $this->removePost($content_id->getPostID());
+                }
+                else if ($content_id->isFile())
+                {
+                    $this->removeFile($content_id->getPostID(), $content_id->getOrder());
+                }
             }
 
             if (!in_array($content_id->getThreadID(), $returned_list))
