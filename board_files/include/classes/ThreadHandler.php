@@ -30,46 +30,48 @@ class ThreadHandler
 
         foreach ($_POST as $name => $value)
         {
-            if(\Nelliel\ContentID::isContentID($name))
+            if (\Nelliel\ContentID::isContentID($name))
             {
-                $id_array = \Nelliel\ContentID::parseIDString($name);
+                $content_id = new \Nelliel\ContentID($name);
             }
             else
             {
                 continue;
             }
 
-            var_dump($id_array);
-            var_dump($value);
             switch ($value)
             {
-                case 'deletefile':
-                    $this->removeFile($id_array['post'], $id_array['order']);
-                    break;
+                case 'delete':
+                    if ($content_id->isThread())
+                    {
+                        $this->removeThread($content_id->getThreadID());
+                        $update_archive = true;
+                    }
+                    else if ($content_id->isPost())
+                    {
+                        $this->removePost($content_id->getPostID());
+                    }
+                    else if ($content_id->isFile())
+                    {
+                        $this->removeFile($content_id->getPostID(), $content_id->getOrder());
+                    }
 
-                case 'deletethread':
-                    $this->removeThread($id_array['thread']);
-                    $update_archive = true;
-                    break;
-
-                case 'deletepost':
-                    $this->removePost($id_array['post']);
                     break;
 
                 case 'threadsticky':
-                    $this->stickyThread($id_array['thread']);
+                    $this->stickyThread($content_id->getThreadID());
                     $update_archive = true;
                     break;
 
                 case 'threadunsticky':
-                    $this->untickyThread($id_array['thread']);
+                    $this->unStickyThread($content_id->getThreadID());
                     $update_archive = true;
                     break;
             }
 
-            if (!in_array($id_array['thread'], $returned_list))
+            if (!in_array($content_id->getThreadID(), $returned_list))
             {
-                array_push($returned_list, $id_array['thread']);
+                array_push($returned_list, $content_id->getThreadID());
             }
         }
 
