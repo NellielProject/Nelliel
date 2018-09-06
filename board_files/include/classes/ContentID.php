@@ -51,18 +51,33 @@ class ContentID
         return $this->id_string;
     }
 
-    public function getThreadID()
+    public function threadID($new_value = null)
     {
+        if(!is_null(new_value))
+        {
+            $this->thread_id = $new_value;
+        }
+
         return $this->thread_id;
     }
 
-    public function getPostID()
+    public function postID($new_value = null)
     {
+        if(!is_null(new_value))
+        {
+            $this->post_id = $new_value;
+        }
+
         return $this->post_id;
     }
 
-    public function getOrder()
+    public function orderID($new_value = null)
     {
+        if(!is_null(new_value))
+        {
+            $this->order_id = $new_value;
+        }
+
         return $this->order_id;
     }
 

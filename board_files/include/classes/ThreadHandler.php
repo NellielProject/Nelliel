@@ -43,22 +43,22 @@ class ThreadHandler
             {
                 if ($content_id->isThread())
                 {
-                    $this->removeThread($content_id->getThreadID());
+                    $this->removeThread($content_id->threadID());
                     $update_archive = true;
                 }
                 else if ($content_id->isPost())
                 {
-                    $this->removePost($content_id->getPostID());
+                    $this->removePost($content_id->postID());
                 }
                 else if ($content_id->isFile())
                 {
-                    $this->removeFile($content_id->getPostID(), $content_id->getOrder());
+                    $this->removeFile($content_id->postID(), $content_id->orderID());
                 }
             }
 
-            if (!in_array($content_id->getThreadID(), $returned_list))
+            if (!in_array($content_id->threadID(), $returned_list))
             {
-                array_push($returned_list, $content_id->getThreadID());
+                array_push($returned_list, $content_id->threadID());
             }
         }
 
