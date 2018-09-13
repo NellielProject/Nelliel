@@ -36,6 +36,11 @@ class ContentID
         return preg_match('/nci_[0-9]+_[0-9]+_[0-9]+/', $string) === 1;
     }
 
+    public static function createIDString($thread_id = 0, $post_id = 0, $order_id = 0)
+    {
+        return 'nci_' . $thread_id . '_' . $post_id . '_' . $order_id;
+    }
+
     public static function parseIDString($id_string)
     {
         $id_split = explode('_', $id_string);
@@ -53,7 +58,7 @@ class ContentID
 
     public function threadID($new_value = null)
     {
-        if(!is_null(new_value))
+        if (!is_null(new_value))
         {
             $this->thread_id = $new_value;
         }
@@ -63,7 +68,7 @@ class ContentID
 
     public function postID($new_value = null)
     {
-        if(!is_null(new_value))
+        if (!is_null(new_value))
         {
             $this->post_id = $new_value;
         }
@@ -73,7 +78,7 @@ class ContentID
 
     public function orderID($new_value = null)
     {
-        if(!is_null(new_value))
+        if (!is_null(new_value))
         {
             $this->order_id = $new_value;
         }
