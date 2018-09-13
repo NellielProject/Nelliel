@@ -24,7 +24,7 @@ function nel_thread_panel($inputs)
             nel_derp(351, _gettext('You are not allowed to modify threads or posts.'));
         }
 
-        $updates = $thread_handler->threadUpdates();
+        $updates = $thread_handler->processContentDeletes();
         $regen = new \Nelliel\Regen();
         $regen->threads($board_id, true, $updates);
         $regen->index($board_id);

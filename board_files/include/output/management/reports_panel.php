@@ -30,7 +30,6 @@ function nel_render_reports_panel()
         $report_nodes['board-id']->setContent($report_info['board_id']);
         $report_nodes['content-id']->setContent($report_info['content_id']);
         $report_nodes['report-reason']->setContent($report_info['reason']);
-        var_dump(@inet_ntop($report_info['reporter_ip']));
         $report_nodes['reporter-ip']->setContent(@inet_ntop($report_info['reporter_ip']));
         $report_nodes['link-report-dismiss']->extSetAttribute('href',
                 PHP_SELF . '?manage=general&module=reports&action=dismiss&report_id=' . $report_info['report_id']);

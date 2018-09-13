@@ -49,19 +49,46 @@ function nel_general_dispatch($inputs)
             }
             else
             {
-                $reports = new \Nelliel\Reports();
-                $reports->collectReportedContent();
+                if (isset($_POST['form_submit_report']))
+                {
+                    $reports = new \Nelliel\Reports();
+                    $reports->processContentReports();
 
-                if (nel_sessions()->sessionIsActive())
-                {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                    '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
+                    if (nel_sessions()->sessionIsActive())
+                    {
+                        echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
+                                '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
+                    }
+                    else
+                    {
+                        echo '<meta http-equiv="refresh" content="1;URL=' .
+                                nel_parameters_and_data()->boardReferences($inputs['board_id'], 'board_directory') . '/' .
+                                PHP_SELF2 . PHP_EXT . '">';
+                    }
                 }
-                else
+
+                if (isset($_POST['form_submit_delete']))
                 {
-                    echo '<meta http-equiv="refresh" content="1;URL=' .
-                            nel_parameters_and_data()->boardReferences($inputs['board_id'], 'board_directory') . '/' .
-                            PHP_SELF2 . PHP_EXT . '">';
+                    $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
+                    $updates = $thread_handler->processContentDeletes();
+
+                    if (nel_sessions()->sessionIsActive())
+                    {
+                        echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
+                        '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
+                    }
+                    else
+                    {
+                        echo '<meta http-equiv="refresh" content="1;URL=' .
+                                nel_parameters_and_data()->boardReferences($inputs['board_id'], 'board_directory') . '/' .
+                                PHP_SELF2 . PHP_EXT . '">';
+                    }
+
+                    $regen = new \Nelliel\Regen();
+                    $regen->threads($inputs['board_id'], true, $updates);
+                    $regen->index($inputs['board_id']);
+                    nel_clean_exit(true, $inputs['board_id']);
+                    break;
                 }
             }
 

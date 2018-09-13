@@ -119,6 +119,8 @@ function nel_admin_dispatch($inputs)
     }
     else if ($inputs['manage'] === 'modmode')
     {
+        $content_id = new \Nelliel\ContentID($inputs['content_id']);
+
         switch ($inputs['module'])
         {
             case 'view-index':
@@ -136,35 +138,35 @@ function nel_admin_dispatch($inputs)
 
                 if ($inputs['action'] === 'delete-post')
                 {
-                    $updates = $thread_handler->removePost($_GET['post-id']);
+                    $updates = $thread_handler->removePost($content_id->postID());
                 }
                 else if ($inputs['action'] === 'delete-thread')
                 {
-                    $updates = $thread_handler->removeThread($_GET['thread-id']);
+                    $updates = $thread_handler->removeThread($content_id->threadID());
                 }
                 else if ($inputs['action'] === 'sticky')
                 {
-                    $updates = $thread_handler->stickyThread($_GET['thread-id']);
+                    $updates = $thread_handler->stickyThread($content_id->threadID());
                 }
                 else if ($inputs['action'] === 'unsticky')
                 {
-                    $updates = $thread_handler->unstickyThread($_GET['thread-id']);
+                    $updates = $thread_handler->unstickyThread($content_id->threadID());
                 }
                 else if ($inputs['action'] === 'lock')
                 {
-                    $updates = $thread_handler->lockThread($_GET['thread-id']);
+                    $updates = $thread_handler->lockThread($content_id->threadID());
                 }
                 else if ($inputs['action'] === 'unlock')
                 {
-                    $updates = $thread_handler->unlockThread($_GET['thread-id']);
+                    $updates = $thread_handler->unlockThread($content_id->threadID());
                 }
                 else if ($inputs['action'] === 'delete-file')
                 {
-                    $updates = $thread_handler->removeFile($_GET['post-id'], $_GET['file-order']);
+                    $updates = $thread_handler->removeFile($content_id->postID(), $content_id->getFileOrder());
                 }
                 else if ($inputs['action'] === 'ban-file')
                 {
-                    ;
+                    ; // TODO: Add file hash
                 }
 
                 $regen = new \Nelliel\Regen();
@@ -187,11 +189,11 @@ function nel_admin_dispatch($inputs)
 
                     if ($inputs['action'] === 'ban.delete-post')
                     {
-                        $updates = $thread_handler->removePost($_GET['post-id']);
+                        $updates = $thread_handler->removePost($content_id->postID());
                     }
                     else if ($inputs['action'] === 'ban.delete-thread')
                     {
-                        $updates = $thread_handler->removeThread($_GET['thread-id']);
+                        $updates = $thread_handler->removeThread($content_id->threadID());
                     }
 
                     $regen = new \Nelliel\Regen();

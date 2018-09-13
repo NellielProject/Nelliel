@@ -22,45 +22,43 @@ class ThreadHandler
         $this->board_id = $board_id;
     }
 
-    public function threadUpdates()
+    public function processContentDeletes()
     {
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $returned_list = array();
         $update_archive = false;
 
-        foreach ($_POST as $input)
+        foreach ($_POST as $name => $value)
         {
-            $sub = explode('_', $input, 4);
-
-            switch ($sub[0])
+            if (\Nelliel\ContentID::isContentID($name))
             {
-                case 'deletefile':
-                    $this->removeFile($sub[2], $sub[3]);
-                    break;
-
-                case 'deletethread':
-                    $this->removeThread($sub[1]);
-                    $update_archive = true;
-                    break;
-
-                case 'deletepost':
-                    $this->removePost($sub[2]);
-                    break;
-
-                case 'threadsticky':
-                    $this->stickyThread($sub[1]);
-                    $update_archive = true;
-                    break;
-
-                case 'threadunsticky':
-                    $this->untickyThread($sub[1]);
-                    $update_archive = true;
-                    break;
+                $content_id = new \Nelliel\ContentID($name);
+            }
+            else
+            {
+                continue;
             }
 
-            if (isset($sub[1]) && !in_array($sub[1], $returned_list))
+            if ($value === 'action')
             {
-                array_push($returned_list, $sub[1]);
+                if ($content_id->isThread())
+                {
+                    $this->removeThread($content_id->threadID());
+                    $update_archive = true;
+                }
+                else if ($content_id->isPost())
+                {
+                    $this->removePost($content_id->postID());
+                }
+                else if ($content_id->isFile())
+                {
+                    $this->removeFile($content_id->postID(), $content_id->orderID());
+                }
+            }
+
+            if (!in_array($content_id->threadID(), $returned_list))
+            {
+                array_push($returned_list, $content_id->threadID());
             }
         }
 
