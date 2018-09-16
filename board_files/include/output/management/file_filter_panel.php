@@ -19,7 +19,7 @@ function nel_render_file_filter_panel()
 
     $filters = $dbh->executeFetchAll('SELECT * FROM "' . FILE_FILTER_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
     $filter_list = $dom->getElementById('filter-list');
-    $filter_list_nodes = $filter_list->getAssociativeNodeArray('data-parse-id');
+    $filter_list_nodes = $filter_list->getElementsByAttributeName('data-parse-id', true);
     $i = 0;
     $bgclass = 'row1';
 
@@ -28,7 +28,7 @@ function nel_render_file_filter_panel()
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $filter_row = $dom->copyNode($filter_list_nodes['file-filter-row'], $filter_list, 'append');
         $filter_row->modifyAttribute('class', ' ' . $bgclass, 'after');
-        $filter_row_nodes = $filter_row->getAssociativeNodeArray('data-parse-id');
+        $filter_row_nodes = $filter_row->getElementsByAttributeName('data-parse-id', true);
         $filter_row_nodes['filter-id']->setContent($filter['entry']);
         $filter_row_nodes['hash-type']->setContent($filter['hash_type']);
         $filter_row_nodes['file-hash']->setContent(bin2hex($filter['file_hash']));
@@ -37,7 +37,7 @@ function nel_render_file_filter_panel()
         $i ++;
     }
 
-    $filter_list_nodes['file-filter-row']->removeSelf();
+    $filter_list_nodes['file-filter-row']->remove();
     nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);

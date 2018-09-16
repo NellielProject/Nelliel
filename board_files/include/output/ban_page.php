@@ -15,7 +15,7 @@ function nel_render_ban_page($board_id, $ban_info)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'ban_page.html');
     $banned_board = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board_id'];
-    $ban_page_node_array = $dom->getAssociativeNodeArray('data-parse-id');
+    $ban_page_node_array = $dom->getElementsByAttributeName('data-parse-id', true);
     $ban_page_node_array['banned-board']->setContent($banned_board);
     $ban_page_node_array['banned-time']->setContent(date("F jS, Y H:i e", $ban_info['start_time']));
     $ban_expire = $ban_info['length'] + $ban_info['start_time'];
@@ -53,17 +53,17 @@ function nel_render_ban_page($board_id, $ban_info)
     }
     else
     {
-        $appeal_form_element->removeSelf();
+        $appeal_form_element->remove();
     }
 
     if ($ban_info['appeal_status'] != 1)
     {
-        $ban_page_node_array['appeal-pending']->removeSelf();
+        $ban_page_node_array['appeal-pending']->remove();
     }
 
     if ($ban_info['appeal_status'] != 2 && $ban_info['appeal_status'] != 3)
     {
-        $dom->getElementById('appeal-response-div')->removeSelf();
+        $dom->getElementById('appeal-response-div')->remove();
     }
     else
     {

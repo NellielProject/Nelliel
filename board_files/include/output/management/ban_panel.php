@@ -25,7 +25,7 @@ function nel_render_main_ban_panel($board_id)
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $temp_ban_info_row = $ban_info_row->cloneNode(true);
         $temp_ban_info_row->extSetAttribute('class', $bgclass);
-        $ban_nodes = $dom->getAssociativeNodeArray('data-parse-id', $temp_ban_info_row);
+        $ban_nodes = $temp_ban_info_row->getElementsByAttributeName('data-parse-id', true);
         $ban_nodes['ban-id']->setContent($ban_info['ban_id']);
         $ban_nodes['ban-type']->setContent($ban_info['type']);
         $ban_nodes['ip-address-start']->setContent(
@@ -45,7 +45,7 @@ function nel_render_main_ban_panel($board_id)
         $ban_info_table->appendChild($temp_ban_info_row);
     }
 
-    $ban_info_row->removeSelf();
+    $ban_info_row->remove();
 
     $form_add_ban = $dom->getElementById('link-new-ban');
     $form_add_ban->extSetAttribute('href', PHP_SELF . '?manage=board&module=bans&action=new&board_id=' . $board_id);
@@ -78,13 +78,13 @@ function nel_render_ban_panel_add($board_id, $ip = '', $type = 'GENERAL')
     else
     {
         $post_param = '';
-        $dom->getElementById('ban-mod-comment')->removeSelf();
+        $dom->getElementById('ban-mod-comment')->remove();
     }
 
     $add_ban_form = $dom->getElementById('add-ban-form');
     $add_ban_form->extSetAttribute('action',
             PHP_SELF . '?manage=board&module=bans&action=add&board_id=' . $board_id . $post_param);
-    $ban_nodes = $dom->getAssociativeNodeArray('data-parse-id', $add_ban_form);
+    $ban_nodes = $add_ban_form->getElementsByAttributeName('data-parse-id', true);
     $ban_nodes['ban-ip']->extSetAttribute('value', $ip);
     $dom->getElementById('ban-type')->extSetAttribute('value', $type);
     nel_language()->i18nDom($dom);
@@ -133,7 +133,7 @@ function nel_render_ban_panel_modify($board_id)
 
     if ($ban_info['appeal'] === '')
     {
-        $dom->getElementById('ban-appeal-display-row')->removeSelf();
+        $dom->getElementById('ban-appeal-display-row')->remove();
     }
     else
     {
@@ -142,7 +142,7 @@ function nel_render_ban_panel_modify($board_id)
 
     if ($ban_info['appeal_response'] === '')
     {
-        $dom->getElementById('ban-appeal-response-row')->removeSelf();
+        $dom->getElementById('ban-appeal-response-row')->remove();
     }
     else
     {

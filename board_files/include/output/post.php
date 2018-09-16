@@ -17,7 +17,7 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
     $render->loadTemplateFromFile($dom_nav, 'index_navigation.html');
     $bottom_nav = $dom_nav->getElementById('index-bottom-nav');
     $bottom_nav = $dom->getElementById('outer-div')->appendChild($dom->importNode($bottom_nav, true));
-    $nav_nodes = $dom->getAssociativeNodeArray('data-parse-id', $bottom_nav);
+    $nav_nodes = $bottom_nav->getElementsByAttributeName('data-parse-id', true);
 
     foreach ($pages as $key => $value)
     {
@@ -36,7 +36,7 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
         }
     }
 
-    $nav_nodes['nav-link-container']->removeSelf();
+    $nav_nodes['nav-link-container']->remove();
     nel_language()->i18nDom($bottom_nav, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
 }
 
@@ -55,7 +55,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-'), true);
     $post_header_node = $new_post_dom->getElementById('post-header');
     $post_header_node->removeAttribute('id');
-    $header_nodes = $new_post_dom->getAssociativeNodeArray('data-parse-id', $post_header_node);
+    $header_nodes = $post_header_node->getElementsByAttributeName('data-parse-id', true);
 
     $new_post_element = $new_post_dom->getElementById('post-id-');
     $new_post_element->changeId('post-id-' . $post_id);
@@ -103,8 +103,8 @@ function nel_render_post($board_id, $gen_data, $dom)
             $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
                     '?manage=modmode&module=multi&board_id=test&action=ban.delete-post&content-id=' . $base_content_id .
                     '&ban_type=POST&ban_ip=' . rawurlencode($ip));
-            $header_nodes['modmode-lock-thread-link']->parentNode->removeSelf();
-            $header_nodes['modmode-sticky-thread-link']->parentNode->removeSelf();
+            $header_nodes['modmode-lock-thread-link']->parentNode->remove();
+            $header_nodes['modmode-sticky-thread-link']->parentNode->remove();
         }
         else
         {
@@ -141,7 +141,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     }
     else
     {
-        $header_nodes['modmode-options']->removeSelf();
+        $header_nodes['modmode-options']->remove();
     }
 
     $new_post_dom->getElementById('p-number')->changeId('p' . $post_id);
@@ -160,19 +160,19 @@ function nel_render_post($board_id, $gen_data, $dom)
         $post_checkbox->changeId('post_' . $post_id);
         $post_checkbox->extSetAttribute('name', $base_content_id);
 
-        $new_post_dom->getElementById('thread_thread-id')->removeSelf();
+        $new_post_dom->getElementById('thread_thread-id')->remove();
     }
     else
     {
         $post_type = 'op';
         $post_type_class = 'op-';
-        $indents_element->removeSelf();
+        $indents_element->remove();
 
         $thread_checkbox = $new_post_dom->getElementById('thread_thread-id');
         $thread_checkbox->changeId('thread_' . $thread_id);
         $thread_checkbox->extSetAttribute('name', $base_content_id);
 
-        $new_post_dom->getElementById('post_post-id')->removeSelf();
+        $new_post_dom->getElementById('post_post-id')->remove();
     }
 
     $header_nodes['subject']->modifyAttribute('class', $post_type, 'before');
@@ -193,7 +193,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     }
     else
     {
-        $header_nodes['poster-mailto']->removeSelf();
+        $header_nodes['poster-mailto']->remove();
         $header_nodes['trip-line-']->setContent($post_data['poster_name'] . $trip_line);
     }
 
@@ -224,7 +224,7 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     if (!$gen_data['index_rendering'] || $response)
     {
-        $header_nodes['reply-to-link']->parentNode->removeSelf();
+        $header_nodes['reply-to-link']->parentNode->remove();
     }
     else
     {
@@ -242,7 +242,7 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     if (!$gen_data['index_rendering'] || $response || !$gen_data['abbreviate'])
     {
-        $header_nodes['expand-thread']->parentNode->removeSelf();
+        $header_nodes['expand-thread']->parentNode->remove();
     }
     else
     {
@@ -251,12 +251,12 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     if ($response || !$thread_data['sticky'])
     {
-        $header_nodes['sticky-icon']->removeSelf();
+        $header_nodes['sticky-icon']->remove();
     }
 
     if ($response || !$thread_data['locked'])
     {
-        $header_nodes['locked-icon']->removeSelf();
+        $header_nodes['locked-icon']->remove();
     }
 
     $multiple_files = false;
@@ -287,7 +287,7 @@ function nel_render_post($board_id, $gen_data, $dom)
             $temp_file_node->changeId('fileinfo-' . $file_id);
             $temp_file_node->extSetAttribute('class', $post_type_class . $multiple_class . 'fileinfo');
 
-            $file_nodes = $temp_file_dom->getAssociativeNodeArray('data-parse-id', $temp_file_node);
+            $file_nodes = $temp_file_node->getElementsByAttributeName('data-parse-id', true);
 
             if (!nel_sessions()->sessionIsIgnored('render'))
             {
@@ -297,7 +297,7 @@ function nel_render_post($board_id, $gen_data, $dom)
             }
             else
             {
-                $file_nodes['modmode-options']->removeSelf();
+                $file_nodes['modmode-options']->remove();
             }
 
             $file_nodes['delete-file']->extSetAttribute('name', $file_content_id);
@@ -343,7 +343,7 @@ function nel_render_post($board_id, $gen_data, $dom)
             }
             else
             {
-                $file_nodes['file-md5']->removeSelf();
+                $file_nodes['file-md5']->remove();
             }
 
             if (!empty($file['sha1']))
@@ -352,7 +352,7 @@ function nel_render_post($board_id, $gen_data, $dom)
             }
             else
             {
-                $file_nodes['file-sha1']->removeSelf();
+                $file_nodes['file-sha1']->remove();
             }
 
             if (!empty($file['sha256']))
@@ -361,7 +361,7 @@ function nel_render_post($board_id, $gen_data, $dom)
             }
             else
             {
-                $file_nodes['file-sha256']->removeSelf();
+                $file_nodes['file-sha256']->remove();
             }
 
             if (!empty($file['sha512']))
@@ -370,7 +370,7 @@ function nel_render_post($board_id, $gen_data, $dom)
             }
             else
             {
-                $file_nodes['file-sha512']->removeSelf();
+                $file_nodes['file-sha512']->remove();
             }
 
             $location_element = $temp_file_dom->getElementById('file-location-');
@@ -386,13 +386,13 @@ function nel_render_post($board_id, $gen_data, $dom)
                     $video_preview_source->extSetAttribute('src', $file['file_location']);
                     $video_preview_source->extSetAttribute('type', $file['mime']);
 
-                    $location_element->removeSelf();
+                    $location_element->remove();
                 }
                 else
                 {
                     $full_preview_name = $file['preview_name'] . '.' . $file['preview_extension'];
                     $file['has_preview'] = false;
-                    $video_preview->removeSelf();
+                    $video_preview->remove();
 
                     $location_element->extSetAttribute('href', $file['file_location'], 'none');
                     $location_element->changeId('file-location-' . $file_id);
@@ -455,30 +455,30 @@ function nel_render_post($board_id, $gen_data, $dom)
                     }
                     else
                     {
-                        $location_element->removeSelf();
+                        $location_element->remove();
                     }
                 }
             }
             else
             {
-                $location_element->removeSelf();
+                $location_element->remove();
             }
 
             $imported = $new_post_dom->importNode($temp_file_node, true);
             $post_files_container->appendChild($imported);
         }
 
-        $new_post_dom->getElementById('fileinfo-')->removeSelf();
+        $new_post_dom->getElementById('fileinfo-')->remove();
     }
     else
     {
-        $post_files_container->removeSelf();
+        $post_files_container->remove();
     }
 
     $post_contents_element = $new_post_dom->getElementById('post-contents-');
     $post_contents_element->changeId('post-contents-' . $post_id);
 
-    $contents_nodes = $new_post_dom->getAssociativeNodeArray('data-parse-id', $post_contents_element);
+    $contents_nodes = $post_contents_element->getElementsByAttributeName('data-parse-id', true);
 
     if ($multiple_files)
     {
@@ -497,7 +497,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     }
     else
     {
-        $contents_nodes['mod-comment']->removeSelf();
+        $contents_nodes['mod-comment']->remove();
     }
 
     $contents_nodes['post-comment']->changeId('post-comment-' . $post_id);
@@ -537,17 +537,17 @@ function nel_render_thread_form_bottom($board_id, $dom)
 
     if (nel_sessions()->sessionIsIgnored('render'))
     {
-        $dom->getElementById('admin-input-set1')->removeSelf();
+        $dom->getElementById('admin-input-set1')->remove();
         $dom->getElementById('bottom-submit-button')->setContent('Submit');
     }
     else
     {
-        $dom->getElementById('bottom-pass-input')->removeSelf();
+        $dom->getElementById('bottom-pass-input')->remove();
     }
 
     if (!$board_settings['use_new_imgdel'])
     {
-        $form_td_list->item(4)->removeSelf();
+        $form_td_list->item(4)->remove();
     }
 
     $dom->getElementById('outer-div')->appendChild($footer_form_element);

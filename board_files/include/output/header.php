@@ -94,15 +94,15 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     if (nel_sessions()->sessionIsIgnored('render'))
     {
         $top_admin_span->removeChild($a_elements->item(0)->parentNode);
-        $dom->getElementById('manage-header')->removeSelf();
-        $dom->getElementById('manage-board-header')->removeSelf();
-        $dom->getElementById('manage-sub-header')->removeSelf();
+        $dom->getElementById('manage-header')->remove();
+        $dom->getElementById('manage-board-header')->remove();
+        $dom->getElementById('manage-sub-header')->remove();
     }
     else
     {
         $dom->getElementById('manage-header-text')->setContent(_gettext('Mod Mode'));
-        $dom->getElementById('manage-board-header')->removeSelf();
-        $dom->getElementById('manage-sub-header')->removeSelf();
+        $dom->getElementById('manage-board-header')->remove();
+        $dom->getElementById('manage-sub-header')->remove();
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');
     }
 
@@ -134,7 +134,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
     $title_element->setContent('Nelliel Imageboard');
-    $dom->getElementById('logo')->removeSelf();
+    $dom->getElementById('logo')->remove();
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', nel_parameters_and_data()->siteSettings('home_page'));
@@ -144,9 +144,9 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     if (nel_sessions()->sessionIsIgnored('render'))
     {
         $top_admin_span->removeChild($a_elements->item(0)->parentNode);
-        $dom->getElementById('manage-header')->removeSelf();
-        $dom->getElementById('manage-board-header')->removeSelf();
-        $dom->getElementById('manage-sub-header')->removeSelf();
+        $dom->getElementById('manage-header')->remove();
+        $dom->getElementById('manage-board-header')->remove();
+        $dom->getElementById('manage-sub-header')->remove();
     }
     else
     {

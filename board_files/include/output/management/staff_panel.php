@@ -16,7 +16,7 @@ function nel_render_staff_panel_main()
     $render->loadTemplateFromFile($dom, 'management/staff_panel_main.html');
 
     $user_list = $dom->getElementById('user-list');
-    $user_list_nodes = $user_list->getAssociativeNodeArray('data-parse-id');
+    $user_list_nodes = $user_list->getElementsByAttributeName('data-parse-id', true);
     $users = $dbh->executeFetchAll('SELECT "user_id", "display_name" FROM "' . USER_TABLE . '"', PDO::FETCH_ASSOC);
 
     foreach ($users as $user)
@@ -26,11 +26,11 @@ function nel_render_staff_panel_main()
         $user_node->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff&section=user&action=edit&user-id=' . $user['user_id']);
     }
 
-    $user_list_nodes['edit-user-link']->removeSelf();
+    $user_list_nodes['edit-user-link']->remove();
     $dom->getElementById('new-user-link')->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff&section=user&action=new');
 
     $role_list = $dom->getElementById('role-list');
-    $role_list_nodes = $role_list->getAssociativeNodeArray('data-parse-id');
+    $role_list_nodes = $role_list->getElementsByAttributeName('data-parse-id', true);
     $roles = $dbh->executeFetchAll('SELECT "role_id", "role_title" FROM "' . ROLES_TABLE . '"', PDO::FETCH_ASSOC);
 
     foreach ($roles as $role)
@@ -40,7 +40,7 @@ function nel_render_staff_panel_main()
         $role_node->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff&section=role&action=edit&role-id=' . $role['role_id']);
     }
 
-    $role_list_nodes['edit-role-link']->removeSelf();
+    $role_list_nodes['edit-role-link']->remove();
     $dom->getElementById('new-role-link')->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff&section=role&action=new');
 
     nel_language()->i18nDom($dom);
@@ -108,7 +108,7 @@ function nel_render_staff_panel_user_edit($user_id)
     $role_board_id_label->setContent('All Boards');
     $board_roles->parentNode->appendChild($update_submit);
 
-    //$board_roles->removeSelf();
+    //$board_roles->remove();
     nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);

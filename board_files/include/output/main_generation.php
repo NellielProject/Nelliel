@@ -128,7 +128,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
                 }
                 else
                 {
-                    $omitted_element->removeSelf();
+                    $omitted_element->remove();
                 }
             }
 
@@ -145,8 +145,8 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
             }
         }
 
-        $dom->getElementById('post-id-')->removeSelf();
-        $dom->getElementById('thread-')->removeSelf();
+        $dom->getElementById('post-id-')->remove();
+        $dom->getElementById('thread-')->remove();
         $gen_data['posts_ending'] = true;
         $page_count = (int) ceil($counttree / $board_settings['threads_per_page']);
         $pages = array();

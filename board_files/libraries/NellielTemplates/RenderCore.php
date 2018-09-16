@@ -23,7 +23,7 @@ class RenderCore
 
     public function newDOMDocument()
     {
-        $dom = new \phpDOMExtend\ExtendedDOMDocument(true);
+        $dom = new \phpDOMExtend\ExtendedDOMDocument();
         $this->dom_documents[spl_object_hash($dom)]['template'] = null;
         $dom->formatOutput = true;
         $dom->strictErrorChecking = false;

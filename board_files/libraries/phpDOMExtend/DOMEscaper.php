@@ -9,7 +9,13 @@ class DOMEscaper
         ;
     }
 
-    public function doEscaping(&$content, $escape_type = 'html')
+    /**
+     * Use the defined escaper to escape the passed content before output.
+     *
+     * @param string $content The content to escape
+     * @param string $escape_type Type of escaping to use
+     */
+    public static function doEscaping(&$content, $escape_type = 'html')
     {
         switch ($escape_type)
         {

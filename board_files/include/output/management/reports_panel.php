@@ -25,7 +25,7 @@ function nel_render_reports_panel()
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $temp_report_info_row = $report_info_row->cloneNode(true);
         $temp_report_info_row->extSetAttribute('class', $bgclass);
-        $report_nodes = $dom->getAssociativeNodeArray('data-parse-id', $temp_report_info_row);
+        $report_nodes = $temp_report_info_row->getElementsByAttributeName('data-parse-id', true);
         $report_nodes['report-id']->setContent($report_info['report_id']);
         $report_nodes['board-id']->setContent($report_info['board_id']);
         $report_nodes['content-id']->setContent($report_info['content_id']);
@@ -42,7 +42,7 @@ function nel_render_reports_panel()
         $report_info_table->appendChild($temp_report_info_row);
     }
 
-    $report_info_row->removeSelf();
+    $report_info_row->remove();
 
     nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);

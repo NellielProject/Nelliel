@@ -22,7 +22,7 @@ function nel_render_main_panel()
             $entry = $board_entry->cloneNode(true);
             $board_entry->parentNode->insertBefore($entry, $insert_before);
             $entry->removeAttribute('id');
-            $entry_elements = $entry->getAssociativeNodeArray('data-parse-id', $entry);
+            $entry_elements = $entry->getElementsByAttributeName('data-parse-id', true);
             $entry_elements['board-link']->extSetAttribute('href',
                     PHP_SELF . '?manage=board&module=main-panel&board_id=' . $board['board_id']);
             $entry_elements['board-link']->extSetAttribute('title', $board['board_id']);
@@ -30,9 +30,9 @@ function nel_render_main_panel()
         }
     }
 
-    $board_entry->removeSelf();
+    $board_entry->remove();
     $manage_options = $dom->getElementById('manage-options');
-    $manage_options_nodes = $manage_options->getAssociativeNodeArray('data-parse-id');
+    $manage_options_nodes = $manage_options->getElementsByAttributeName('data-parse-id', true);
 
     if ($authorize->getUserPerm($_SESSION['username'], 'perm_create_board'))
     {
@@ -41,7 +41,7 @@ function nel_render_main_panel()
     }
     else
     {
-        $manage_options_nodes['module-link-create-board']->removeSelf();
+        $manage_options_nodes['module-link-create-board']->remove();
     }
 
     if ($authorize->getUserPerm($_SESSION['username'], 'perm_user_access') ||
@@ -51,7 +51,7 @@ function nel_render_main_panel()
     }
     else
     {
-        $manage_options_nodes['module-link-staff']->removeSelf();
+        $manage_options_nodes['module-link-staff']->remove();
     }
 
     if ($authorize->getUserPerm($_SESSION['username'], 'perm_manage_site_config'))
@@ -61,7 +61,7 @@ function nel_render_main_panel()
     }
     else
     {
-        $manage_options_nodes['module-link-site-settings']->removeSelf();
+        $manage_options_nodes['module-link-site-settings']->remove();
     }
 
     $manage_options_nodes['module-link-file-filters']->extSetAttribute('href',
@@ -74,7 +74,7 @@ function nel_render_main_panel()
     }
     else
     {
-        $manage_options_nodes['module-link-board-settings']->removeSelf();
+        $manage_options_nodes['module-link-board-settings']->remove();
     }
 
     // TODO: Add perm for this
@@ -85,7 +85,7 @@ function nel_render_main_panel()
     }
     else
     {
-        $manage_options_nodes['module-link-reports']->removeSelf();
+        $manage_options_nodes['module-link-reports']->remove();
     }
 
     $dom->getElementById('extract-gettext-form')->extSetAttribute('action',
@@ -113,57 +113,57 @@ function nel_render_main_board_panel($board_id)
 
     if ($authorize->getUserPerm($_SESSION['username'], 'perm_manage_board_config', $board_id))
     {
-        $settings_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $settings);
+        $settings_elements = $settings->getElementsByAttributeName('data-parse-id', true);
         $settings_elements['board-settings-link']->extSetAttribute('href',
                 PHP_SELF . '?manage=board&module=board-settings&board_id=' . $board_id);
     }
     else
     {
-        $settings->removeSelf();
+        $settings->remove();
     }
 
     $bans = $dom->getElementById('module-bans');
 
     if ($authorize->getUserPerm($_SESSION['username'], 'perm_ban_access', $board_id))
     {
-        $bans_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $bans);
+        $bans_elements = $bans->getElementsByAttributeName('data-parse-id', true);
         $bans_elements['bans-link']->extSetAttribute('href',
                 PHP_SELF . '?manage=board&module=bans&board_id=' . $board_id);
     }
     else
     {
-        $bans->removeSelf();
+        $bans->remove();
     }
 
     $threads = $dom->getElementById('module-threads');
 
     if ($authorize->getUserPerm($_SESSION['username'], 'perm_post_access', $board_id))
     {
-        $threads_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $threads);
+        $threads_elements = $threads->getElementsByAttributeName('data-parse-id', true);
         $threads_elements['threads-link']->extSetAttribute('href',
                 PHP_SELF . '?manage=board&module=threads&board_id=' . $board_id);
     }
     else
     {
-        $bans->removeSelf();
+        $bans->remove();
     }
 
     $modmode = $dom->getElementById('module-modmode');
 
     if (true)
     {
-        $modmode_elements = $manage_options->getAssociativeNodeArray('data-parse-id', $modmode);
+        $modmode_elements = $modmode->getElementsByAttributeName('data-parse-id', true);
         $modmode_elements['modmode-link']->extSetAttribute('href',
                 PHP_SELF . '?manage=modmode&module=view-index&section=0&board_id=' . $board_id);
     }
     else
     {
-        $bans->removeSelf();
+        $bans->remove();
     }
 
     if (!$authorize->getUserPerm($_SESSION['username'], 'perm_regen_index', $board_id))
     {
-        $dom->getElementById('page-regen-form')->removeSelf();
+        $dom->getElementById('page-regen-form')->remove();
     }
     else
     {
@@ -173,7 +173,7 @@ function nel_render_main_board_panel($board_id)
 
     if (!$authorize->getUserPerm($_SESSION['username'], 'perm_regen_caches', $board_id))
     {
-        $dom->getElementById('cache-regen-form')->removeSelf();
+        $dom->getElementById('cache-regen-form')->remove();
     }
     else
     {

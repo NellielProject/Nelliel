@@ -114,6 +114,6 @@ class Language
         $new_text = '';
         $text = $node->getContent();
         $new_text = _gettext($text);
-        $node->setContent($new_text, 'replace');
+        $node->setContent($new_text);
     }
 }

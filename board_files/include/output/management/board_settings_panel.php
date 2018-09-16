@@ -58,13 +58,12 @@ function nel_render_board_settings_panel($board_id, $defaults)
 
                     if ($filetype['extension'] == $filetype['parent_extension'])
                     {
-                        $dom->getElementById('l_' . $filetype['format'])->setContent(
+                        $dom->getElementById('l_' . $filetype['format'])->addContent(
                                 $filetype['label'] . ' - .' . $filetype['extension'], 'before');
                     }
                     else
                     {
-                        $dom->getElementById('l_' . $filetype['format'])->setContent(', .' . $filetype['extension'],
-                                'after');
+                        $dom->getElementById('l_' . $filetype['format'])->addContent(', .' . $filetype['extension']);
                     }
                 }
             }

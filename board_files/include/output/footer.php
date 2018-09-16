@@ -13,12 +13,12 @@ function nel_render_general_footer($render, $board_id = null, $dotdot = null, $s
 
     if (!$styles)
     {
-        $dom->getElementById('bottom-styles-span')->removeSelf();
+        $dom->getElementById('bottom-styles-span')->remove();
     }
 
     if (!$extra_links)
     {
-        $dom->getElementById('bottom-extra-links')->removeSelf();
+        $dom->getElementById('bottom-extra-links')->remove();
     }
 
     $dom->getElementById('nelliel-version')->setContent(NELLIEL_VERSION);

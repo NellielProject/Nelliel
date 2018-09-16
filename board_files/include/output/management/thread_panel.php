@@ -112,7 +112,7 @@ function nel_render_thread_panel_main($board_id)
         $i ++;
     }
 
-    $thread_row->removeSelf();
+    $thread_row->remove();
 
     nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
@@ -186,7 +186,7 @@ function nel_render_thread_panel_expand($board_id, $thread_id)
         $i ++;
     }
 
-    $post_row->removeSelf();
+    $post_row->remove();
 
     nel_language()->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);

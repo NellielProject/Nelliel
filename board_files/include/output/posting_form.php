@@ -28,7 +28,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     }
     else
     {
-        $post_form_return_link->removeSelf();
+        $post_form_return_link->remove();
     }
 
     $new_post_element = $posting_form->doXPathQuery(".//input[@name='new_post[post_info][response_to]']", $posting_form)->item(0);
@@ -36,7 +36,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
 
     if(nel_sessions()->sessionIsIgnored('render'))
     {
-        $dom->getElementById('posting-form-staff')->removeSelf();
+        $dom->getElementById('posting-form-staff')->remove();
     }
 
     $dom->getElementById('not-anonymous')->extSetAttribute('maxlength', $board_settings['max_name_length']);

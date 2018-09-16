@@ -103,12 +103,12 @@ function nel_thread_generator($board_id, $write, $response_to)
             }
             else
             {
-                $omitted_element->removeSelf();
+                $omitted_element->remove();
             }
 
             $import_node = $collapse_dom->importNode($expand_div->cloneNode(true), true);
             $collapse_dom->appendChild($import_node);
-            $expand_div->removeSelf();
+            $expand_div->remove();
         }
         else
         {
@@ -130,7 +130,7 @@ function nel_thread_generator($board_id, $write, $response_to)
         ++ $post_counter;
     }
 
-    $dom->getElementById('post-id-')->removeSelf();
+    $dom->getElementById('post-id-')->remove();
     $dom->getElementById('thread-')->changeId('thread-' . $response_to);
 
     if (!$hr_added)

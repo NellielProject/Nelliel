@@ -38,10 +38,10 @@ function nel_render_rules_list($board_id)
         }
     }
 
-    $filetype_rules->getElementsByClassName('rules-item')->item(0)->removeSelf();
-    $rules_list_element->removeSelf();
+    $filetype_rules->getElementsByClassName('rules-item')->item(0)->remove();
+    $rules_list_element->remove();
     $post_limits = $dom->copyNode($rules_list_element, $rules_div, 'append');
-    $post_limits->getElementsByClassName('rules-item')->item(0)->removeSelf();
+    $post_limits->getElementsByClassName('rules-item')->item(0)->remove();
     $size_limit = $dom->copyNode($rules_item_element, $post_limits, 'append');
     $size_limit->setContent(sprintf(_gettext('Maximum file size allowed is %dKB'), $board_settings['max_filesize']));
     $thumbnail_limit = $dom->copyNode($rules_item_element, $post_limits, 'append');

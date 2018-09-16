@@ -7,47 +7,18 @@ use DOMElement;
 use DOMNode;
 use DOMNodeList;
 use DOMAttr;
-use DOMXPath;
 use DOMText;
 
 class ExtendedDOMDocument extends DOMDocument
 {
-    private $escaper_instance;
-
-    function __construct($register = false)
+    function __construct()
     {
         parent::__construct();
-
-        $this->escaper_instance = new DOMEscaper();
-
-        if ($register)
-        {
-            $this->registerNodeClasses();
-        }
+        $this->registerNodeClass('DOMElement', 'phpDOMExtend\ExtendedDOMElement');
     }
 
     /**
-     * This method will register ExtendedDOMDocument and/or ExtendedDOMElement as the classes for the DOM extension to
-     * use.
-     *
-     * @param boolean $dom_document Register ExtendedDOMDocument
-     * @param boolean $dom_element Register ExtendedDOMElement
-     */
-    public function registerNodeClasses($dom_document = true, $dom_element = true)
-    {
-        if ($dom_document)
-        {
-            $this->registerNodeClass('DOMDocument', 'phpDOMExtend\ExtendedDOMDocument');
-        }
-
-        if ($dom_element)
-        {
-            $this->registerNodeClass('DOMElement', 'phpDOMExtend\ExtendedDOMElement');
-        }
-    }
-
-    /**
-     * Execute an XPath query on the current document and return the result.
+     * Execute an XPath query on this document and return the result.
      *
      * @param string $expression The XPath query
      * @param DOMNode [optional] $context_node Optional context node to limit the query scope
@@ -55,19 +26,7 @@ class ExtendedDOMDocument extends DOMDocument
      */
     public function doXPathQuery($expression, $context_node = null)
     {
-        $xpath = new DOMXPath($this);
-        return $xpath->query($expression, $context_node);
-    }
-
-    /**
-     * Use the defined escaper to escape the passed content before output.
-     *
-     * @param string $content The content to escape
-     * @param string $escape_type Type of escaping to use
-     */
-    public function doEscaping(&$content, $escape_type)
-    {
-        $this->escaper_instance->doEscaping($content, $escape_type);
+        return DOMHelperFunctions::doXPathQuery($this, $expression, $context_node);
     }
 
     /**
@@ -79,7 +38,7 @@ class ExtendedDOMDocument extends DOMDocument
      */
     public function extCreateTextNode($content, $escape_type = 'html')
     {
-        $this->doEscaping($content, $escape_type);
+        DOMEscaper::doEscaping($content, $escape_type);
         return parent::createTextNode($content);
     }
 
@@ -95,7 +54,7 @@ class ExtendedDOMDocument extends DOMDocument
     {
         if (!is_null($value))
         {
-            $this->doEscaping($value, $escape_type);
+            DOMEscaper::doEscaping($value, $escape_type);
         }
 
         return parent::createElement($name, $value);
@@ -114,7 +73,7 @@ class ExtendedDOMDocument extends DOMDocument
     {
         if (!is_null($value))
         {
-            $this->doEscaping($value, $escape_type);
+            DOMEscaper::doEscaping($value, $escape_type);
         }
 
         return parent::createElementNS($namespaceURI, $qualifiedName, $value);
@@ -130,7 +89,7 @@ class ExtendedDOMDocument extends DOMDocument
      */
     public function createFullAttribute($name, $value, $escape_type = 'attribute')
     {
-        $this->doEscaping($value, $escape_type);
+        DOMEscaper::doEscaping($value, $escape_type);
         $attribute = $this->createAttribute($name);
         $attribute->value = $value;
         return $attribute;
@@ -147,7 +106,7 @@ class ExtendedDOMDocument extends DOMDocument
      */
     public function createFullAttributeNS($namespaceURI, $qualifiedName, $value, $escape_type = 'attribute')
     {
-        $this->doEscaping($value, $escape_type);
+        DOMEscaper::doEscaping($value, $escape_type);
         $attribute = $this->createAttributeNS($namespaceURI, $qualifiedName);
         $attribute->value = $value;
         return $attribute;
@@ -160,9 +119,16 @@ class ExtendedDOMDocument extends DOMDocument
      * @param DOMNode [optional] $context_node Optional context node to search within
      * @return DOMNodeList A DOMNodeList of matching elements
      */
-    public function getElementsByAttributeName($name, $context_node = null)
+    public function getElementsByAttributeName($name, $as_array = false)
     {
-        return $this->doXPathQuery('.//*[@' . $name . ']', $context_node);
+        $query_result = DOMHelperFunctions::doXPathQuery($this, './/*[@' . $name . ']');
+
+        if($as_array)
+        {
+            return DOMHelperFunctions::attributeListToArray($query_result, $name);
+        }
+
+        return $query_result;
     }
 
     /**
@@ -173,9 +139,9 @@ class ExtendedDOMDocument extends DOMDocument
      * @param DOMNode [optional] $context_node Optional context node to search within
      * @return DOMNodeList A DOMNodeList of matching elements
      */
-    public function getElementsByAttributeValue($name, $value, $context_node = null)
+    public function getElementsByAttributeValue($name, $value)
     {
-        return $this->doXPathQuery('.//*[@' . $name . '=\'' . $value . '\']', $context_node);
+        return DOMHelperFunctions::doXPathQuery($this, './/*[@' . $name . '=\'' . $value . '\']');
     }
 
     /**
@@ -185,9 +151,9 @@ class ExtendedDOMDocument extends DOMDocument
      * @param DOMNode [optional] $context_node Optional context node to search within
      * @return DOMNodeList A DOMNodeList of matching elements
      */
-    public function getElementsByClassName($name, $context_node = null)
+    public function getElementsByClassName($name)
     {
-        return $this->getElementsByAttributeValue('class', $name, $context_node);
+        return DOMHelperFunctions::doXPathQuery($this, './/*[@class=\'' . $name . '\']');
     }
 
     /**
@@ -195,46 +161,25 @@ class ExtendedDOMDocument extends DOMDocument
      *
      * @param DOMNode $node
      */
-    public function removeElementKeepChildren($node)
+    public function removeParentNode($node)
     {
-        $children = $element->getInnerNode(true);
-        $parent = $element->parentNode;
+        $children = $node->getInnerNode(true);
+        $parent = $node->parentNode;
 
         foreach ($children as $child_node)
         {
-            $parent->insertBefore($child_node->cloneNode(true), $element);
+            $parent->insertBefore($child_node->cloneNode(true), $node);
         }
 
-        $element->removeSelf();
-    }
-
-    /**
-     * Searches for nodes containing the given attribute and returns the nodes as a PHP associative array indexed
-     * by attribute values.
-     *
-     * @param string $name Name of attribute to search for.
-     * @param DOMNode [optional] $context_node Optional context node to search within.
-     * @return array Associative array of nodes.
-     */
-    public function getAssociativeNodeArray($name, $context_node = null)
-    {
-        $array = array();
-        $node_list = $this->doXPathQuery(".//*[@" . $name . "]", $context_node);
-
-        foreach ($node_list as $node)
-        {
-            $array[$node->getAttribute($name)] = $node;
-        }
-
-        return $array;
+        $node->removeSelf();
     }
 
     /**
      * Adds a new child after a reference node
      *
-     * @param DOMNode $newnode The new node.
-     * @param DOMNode $refnode The reference node. If not supplied, newnode is appended to the children.
-     * @return DOMNode The inserted node.
+     * @param DOMNode $newnode The new node
+     * @param DOMNode $refnode The reference node. If not supplied, newnode is appended to the children
+     * @return DOMNode The inserted node
      */
 
     public function insertAfter($newnode, $refnode = null)
@@ -253,7 +198,7 @@ class ExtendedDOMDocument extends DOMDocument
         }
         else
         {
-           return $parent->appendChild($newnode);
+            return $parent->appendChild($newnode);
         }
 
         return $newnode;
@@ -262,10 +207,10 @@ class ExtendedDOMDocument extends DOMDocument
     /**
      * Copies a node and inserts it relative to a target node
      *
-     * @param DOMNode $node The node to be copied.
-     * @param DOMNode $target_node The target node to insert the new copy.
-     * @param string $insert Where to insert the copied node relative to the target.
-     * @return DOMNode The copied node.
+     * @param DOMNode $node The node to be copied
+     * @param DOMNode $target_node The target node to insert the new copy
+     * @param string $insert Where to insert the copied node relative to the target
+     * @return DOMNode The copied node
      */
     public function copyNode($node, $target_node, $insert)
     {
@@ -277,7 +222,7 @@ class ExtendedDOMDocument extends DOMDocument
         }
         else if($insert === 'after')
         {
-            return $this->insertAfter($node->cloneNode(true), $target_node);
+            return self::insertAfter($node->cloneNode(true), $target_node);
         }
         else if($insert === 'append')
         {
