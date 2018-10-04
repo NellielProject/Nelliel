@@ -11,13 +11,13 @@ if (!defined('NELLIEL_VERSION'))
 
 class ContentID
 {
-    private $id_string;
-    private $thread_id;
-    private $post_id;
-    private $order_id;
-    private $is_thread;
-    private $is_post;
-    private $is_file;
+    public $thread_id;
+    public $post_id;
+    public $order_id;
+    protected $id_string;
+    protected $is_thread;
+    protected $is_post;
+    protected $is_file;
 
     function __construct($id_string)
     {
@@ -54,36 +54,6 @@ class ContentID
     public function getIDString()
     {
         return $this->id_string;
-    }
-
-    public function threadID($new_value = null)
-    {
-        if (!is_null(new_value))
-        {
-            $this->thread_id = $new_value;
-        }
-
-        return $this->thread_id;
-    }
-
-    public function postID($new_value = null)
-    {
-        if (!is_null(new_value))
-        {
-            $this->post_id = $new_value;
-        }
-
-        return $this->post_id;
-    }
-
-    public function orderID($new_value = null)
-    {
-        if (!is_null(new_value))
-        {
-            $this->order_id = $new_value;
-        }
-
-        return $this->order_id;
     }
 
     public function isThread()
