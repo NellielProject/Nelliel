@@ -89,12 +89,14 @@ function nel_render_post($board_id, $gen_data, $dom)
         $header_nodes['hide-post-thread']->setContent(_gettext('Hide Thread'));
         $header_nodes['hide-post-thread']->extSetAttribute('data-alt-visual', _gettext('Show Thread'));
         $header_nodes['hide-post-thread']->extSetAttribute('data-command', 'hide-thread');
+        $header_nodes['hide-post-thread']->changeID('hide-post-thread-' . $post_id);
     }
     else
     {
         $header_nodes['hide-post-thread']->setContent(_gettext('Hide Post'));
         $header_nodes['hide-post-thread']->extSetAttribute('data-alt-visual', _gettext('Show Post'));
         $header_nodes['hide-post-thread']->extSetAttribute('data-command', 'hide-post');
+        $header_nodes['hide-post-thread']->changeID('hide-post-thread-' . $post_id);
     }
 
     if (!nel_sessions()->sessionIsIgnored('render'))
