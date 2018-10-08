@@ -78,10 +78,15 @@ class FileHandler
 
         if ($is_directory && file_exists($path))
         {
-            $files = glob($this->pathFileJoin($path, '*.*'));
+            $files = glob($this->pathFileJoin($path, '*'));
 
             foreach ($files as $file)
             {
+                if (is_dir($file))
+                {
+                    $this->eraserGun($file, null, true);
+                }
+
                 unlink($file);
             }
 
