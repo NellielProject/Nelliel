@@ -19,4 +19,8 @@ abstract class ContentBase
     public abstract function writeToDatabase($database = null);
 
     public abstract function removeFromDatabase($database = null);
+
+    public abstract function createDirectories();
+
+    public abstract function removeDirectories();
 }

@@ -85,8 +85,7 @@ class ContentThread extends ContentBase
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . $board_references['thread_table'] .
-                    '" ("thread_id", "first_post", "last_post", "last_bump_time", "total_files", "last_update",
+                    'INSERT INTO "' . $board_references['thread_table'] . '" ("thread_id", "first_post", "last_post", "last_bump_time", "total_files", "last_update",
                     "post_count", "thread_sage", "sticky", "archive_status", "locked") VALUES
                     (:thread_id, :first_post, :last_post, :last_bump_time, :total_files, :last_update, :post_count,
                     :thread_sage, :sticky, :archive_status, :locked)');
@@ -105,5 +104,26 @@ class ContentThread extends ContentBase
         $prepared->bindValue(':locked', $this->validThreadData('locked', 0), PDO::PARAM_INT);
         $database->executePrepared($prepared);
         return true;
+    }
+
+    public function createDirectories()
+    {
+        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
+        $file_handler = new \Nelliel\FileHandler();
+        $file_handler->createDirectory($board_references['src_path'] . $this->content_id->thread_id, DIRECTORY_PERM);
+        $file_handler->createDirectory($board_references['thumb_path'] . $this->content_id->thread_id, DIRECTORY_PERM);
+        $file_handler->createDirectory($board_references['page_path'] . $this->content_id->thread_id, DIRECTORY_PERM);
+    }
+
+    public function removeDirectories()
+    {
+        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
+        $file_handler = new \Nelliel\FileHandler();
+        $file_handler->eraserGun($file_handler->pathJoin($board_references['src_path'], $this->content_id->thread_id),
+                null, true);
+        $file_handler->eraserGun($file_handler->pathJoin($board_references['thumb_path'], $this->content_id->thread_id),
+                null, true);
+        $file_handler->eraserGun($file_handler->pathJoin($board_references['page_path'], $this->content_id->thread_id),
+                null, true);
     }
 }

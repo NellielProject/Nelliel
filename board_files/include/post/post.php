@@ -91,7 +91,8 @@ function nel_process_new_post($inputs)
         $thread->thread_data['last_update'] = $time;
         $thread->thread_data['post_count'] = 1;
         $thread->writeToDatabase();
-        $thread_handler->createThreadDirectories($thread->content_id->thread_id);
+        $thread->createDirectories();
+        //$thread_handler->createThreadDirectories($thread->content_id->thread_id);
     }
     else
     {

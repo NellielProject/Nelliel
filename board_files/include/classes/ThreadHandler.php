@@ -44,8 +44,9 @@ class ThreadHandler
                 if ($content_id->isThread())
                 {
                     $thread = new \Nelliel\ContentThread($this->dbh, $content_id, $this->board_id);
-                    $thread->removeFromDatabase();
                     $this->removeThread($content_id->thread_id);
+                    $thread->removeFromDatabase();
+                    $thread->removeDirectories();
                     $update_archive = true;
                 }
                 else if ($content_id->isPost())
@@ -395,11 +396,11 @@ class ThreadHandler
     {
         $this->verifyDeletePerms($thread_id);
         //$this->removeThreadFromDatabase($thread_id);
-        $this->removeThreadDirectories($thread_id);
+        //$this->removeThreadDirectories($thread_id);
         return $thread_id;
     }
 
-    public function removeThreadFromDatabase($thread_id)
+    /*public function removeThreadFromDatabase($thread_id)
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $this->dbh->prepare('DELETE FROM "' . $board_references['thread_table'] . '" WHERE "thread_id" = ?');
@@ -412,7 +413,7 @@ class ThreadHandler
         $prepared = $this->dbh->prepare(
                 'DELETE FROM "' . $board_references['file_table'] . '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
-    }
+    }*/
 
     public function subtractFromFileCount($post_id, $quantity)
     {
@@ -449,7 +450,7 @@ class ThreadHandler
         $this->dbh->executePrepared($prepared, array($total_files, $thread_id));
     }
 
-    function createThreadDirectories($thread_id)
+    /*function createThreadDirectories($thread_id)
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $this->file_handler->createDirectory($board_references['src_path'] . $thread_id, DIRECTORY_PERM);
@@ -466,7 +467,7 @@ class ThreadHandler
                 true);
         $this->file_handler->eraserGun($this->file_handler->pathJoin($board_references['page_path'], $thread_id), null,
                 true);
-    }
+    }*/
 
     public function verifyDeletePerms($post_id)
     {
