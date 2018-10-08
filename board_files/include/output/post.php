@@ -49,7 +49,16 @@ function nel_render_post($board_id, $gen_data, $dom)
     $response = $gen_data['post']['op'] != 1;
     $post_data = $gen_data['post'];
     $thread_data = $gen_data['thread'];
-    $base_content_id = \Nelliel\ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']);
+
+    if($response)
+    {
+        $base_content_id = \Nelliel\ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']);
+    }
+    else
+    {
+        $base_content_id = \Nelliel\ContentID::createIDString($post_data['parent_thread']);
+    }
+
     $thread_id = $post_data['parent_thread'];
     $post_id = $thread_id . '_' . $post_data['post_number'];
     $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-'), true);

@@ -43,6 +43,8 @@ class ThreadHandler
             {
                 if ($content_id->isThread())
                 {
+                    $thread = new \Nelliel\ContentThread($this->dbh, $content_id, $this->board_id);
+                    $thread->removeFromDatabase();
                     $this->removeThread($content_id->thread_id);
                     $update_archive = true;
                 }
@@ -392,7 +394,7 @@ class ThreadHandler
     public function removeThread($thread_id)
     {
         $this->verifyDeletePerms($thread_id);
-        $this->removeThreadFromDatabase($thread_id);
+        //$this->removeThreadFromDatabase($thread_id);
         $this->removeThreadDirectories($thread_id);
         return $thread_id;
     }
