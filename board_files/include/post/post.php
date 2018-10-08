@@ -74,46 +74,46 @@ function nel_process_new_post($inputs)
     setrawcookie('name-' . $board_id, $post_data['name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
 
     // Go ahead and put post into database
-    $post_data['op'] = ($post_data['parent_thread'] === 0) ? 1 : 0;
+    $post_data['op'] = ($post_data['parent_thread'] == 0) ? 1 : 0;
     $post_data['has_file'] = ($post_data['file_count'] > 0) ? 1 : 0;
     $database_functions->insertInitialPost($time, $post_data);
     $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "post_time" = ? LIMIT 1');
     $new_post_info = $dbh->executePreparedFetch($prepared, array($time), PDO::FETCH_ASSOC, true);
-    $thread_info = array();
+    $thread = new \Nelliel\ContentThread($dbh, new \Nelliel\ContentID('nci_0_0_0'), $board_id);
 
-    if ($post_data['parent_thread'] === 0)
+    if ($post_data['parent_thread'] == 0)
     {
-        $thread_info['last_update'] = $time;
-        $thread_info['post_count'] = 1;
-        $thread_info['last_bump_time'] = $time;
-        $thread_info['id'] = $new_post_info['post_number'];
-        $thread_info['total_files'] = $post_data['file_count'];
-        $database_functions->insertNewThread($thread_info);
-        $thread_handler->createThreadDirectories($thread_info['id']);
+        $thread->content_id->thread_id = $new_post_info['post_number'];
+        $thread->thread_data['first_post'] = $new_post_info['post_number'];
+        $thread->thread_data['last_post'] = $new_post_info['post_number'];
+        $thread->thread_data['last_bump_time'] = $time;
+        $thread->thread_data['total_files'] = $post_data['file_count'];
+        $thread->thread_data['last_update'] = $time;
+        $thread->thread_data['post_count'] = 1;
+        $thread->writeToDatabase();
+        $thread_handler->createThreadDirectories($thread->content_id->thread_id);
     }
     else
     {
-        $thread_info['id'] = $post_data['parent_thread'];
-        $prepared = $dbh->prepare('SELECT * FROM "' . $references['thread_table']. '" WHERE "thread_id" = ? LIMIT 1');
-        $current_thread = $dbh->executePreparedFetch($prepared, array($thread_info['id']), PDO::FETCH_ASSOC, true);
-        $thread_info['last_update'] = $current_thread['last_update'];
-        $thread_info['post_count'] = $current_thread['post_count'] + 1;
-        $thread_info['last_bump_time'] = $time;
-        $thread_info['total_files'] = $current_thread['total_files'] + $post_data['file_count'];
+        $thread->content_id->thread_id = $post_data['parent_thread'];
+        $thread->loadFromDatabase();
+        $thread->thread_data['total_files'] = $thread->thread_data['total_files'] + $post_data['file_count'];
+        $thread->thread_data['last_update'] = $time;
+        $thread->thread_data['post_count'] = $thread->thread_data['post_count'] + 1;
 
-        if ($current_thread['post_count'] > $board_settings['max_bumps'] || nel_fgsfds('sage'))
+        if ($thread->thread_data['post_count'] <= $board_settings['max_bumps'] && !nel_fgsfds('sage'))
         {
-            $thread_info['last_bump_time'] = $current_thread['last_bump_time'];
+            $thread->thread_data['last_bump_time'] = $time;
         }
 
-        $database_functions->updateThread($new_post_info, $thread_info);
+        $thread->writeToDatabase();
     }
 
     $prepared = $dbh->prepare('UPDATE "' . $references['post_table']. '" SET parent_thread = ? WHERE post_number = ?');
-    $dbh->executePrepared($prepared, array($thread_info['id'], $new_post_info['post_number']), true);
-    nel_fgsfds('noko_topic', $thread_info['id']);
-    $src_path = $references['src_path'] . $thread_info['id'] . '/' . $new_post_info['post_number'] . '/';
-    $preview_path = $references['thumb_path'] . $thread_info['id'] . '/' . $new_post_info['post_number'] . '/';
+    $dbh->executePrepared($prepared, array($thread->content_id->thread_id, $new_post_info['post_number']), true);
+    nel_fgsfds('noko_topic', $thread->content_id->thread_id);
+    $src_path = $references['src_path'] . $thread->content_id->thread_id . '/' . $new_post_info['post_number'] . '/';
+    $preview_path = $references['thumb_path'] . $thread->content_id->thread_id . '/' . $new_post_info['post_number'] . '/';
 
     // Make thumbnails and do final file processing
     $gen_previews = new \Nelliel\post\GeneratePreviews($board_id);
@@ -129,7 +129,7 @@ function nel_process_new_post($inputs)
             chmod($src_path . $file['fullname'], octdec(FILE_PERM));
         }
 
-        $database_functions->insertNewFiles($thread_info['id'], $new_post_info, $files);
+        $database_functions->insertNewFiles($thread->content_id->thread_id, $new_post_info, $files);
     }
 
     $archive->updateAllArchiveStatus();
@@ -145,9 +145,9 @@ function nel_process_new_post($inputs)
 
     // Generate response page if it doesn't exist, otherwise update
     $regen = new \Nelliel\Regen();
-    $regen->threads($board_id, true, array($thread_info['id']));
+    $regen->threads($board_id, true, array($thread->content_id->thread_id));
     $regen->index($board_id);
-    return $thread_info['id'];
+    return $thread->content_id->thread_id;
 }
 
 function nel_is_post_ok($board_id, $post_data, $time)
