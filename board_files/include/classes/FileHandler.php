@@ -86,8 +86,10 @@ class FileHandler
                 {
                     $this->eraserGun($file, null, true);
                 }
-
-                unlink($file);
+                else
+                {
+                    unlink($file);
+                }
             }
 
             @rmdir($path);
