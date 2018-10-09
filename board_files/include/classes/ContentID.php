@@ -11,9 +11,9 @@ if (!defined('NELLIEL_VERSION'))
 
 class ContentID
 {
-    public $thread_id;
-    public $post_id;
-    public $order_id;
+    public $thread_id = 0;
+    public $post_id = 0;
+    public $order_id = 1;
     protected $id_string;
     protected $is_thread;
     protected $is_post;

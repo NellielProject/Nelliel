@@ -118,13 +118,18 @@ class ContentPost extends ContentBase
     public function reserveDatabaseRow($post_time, $temp_database = null)
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
+
+        $parent_thread =
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('INSERT INTO "' . $board_references['post_table'] . '" ("post_time") VALUES (?)');
         $database->executePrepared($prepared, [$post_time]);
         $prepared = $database->prepare(
                 'SELECT "post_number" FROM "' . $board_references['post_table'] . '" WHERE "post_time" = ? LIMIT 1');
         $result = $database->executePreparedFetch($prepared, [$post_time], PDO::FETCH_COLUMN, true);
+        $this->content_id->thread_id = ($this->content_id->thread_id == 0) ? $result : $this->content_id->thread_id;
+        $this->post_data['parent_thread'] = ($this->post_data['parent_thread'] == 0) ? $result : $this->post_data['parent_thread'];
         $this->content_id->post_id = $result;
+
     }
 
     public function createDirectories()
