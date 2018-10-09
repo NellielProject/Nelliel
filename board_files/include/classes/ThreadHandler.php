@@ -43,24 +43,16 @@ class ThreadHandler
             {
                 if ($content_id->isThread())
                 {
-                    $thread = new \Nelliel\ContentThread($this->dbh, $content_id, $this->board_id);
-                    $this->removeThread($content_id->thread_id);
-                    $thread->removeFromDatabase();
-                    $thread->removeDirectories();
+                    $this->removeThread($content_id);
                     $update_archive = true;
                 }
                 else if ($content_id->isPost())
                 {
-                    $post = new \Nelliel\ContentPost($this->dbh, $content_id, $this->board_id);
-                    $this->removePost($content_id->post_id);
-                    $post->removeFromDatabase();
-                    $post->removeDirectories();
+                    $this->removePost($content_id);
                 }
                 else if ($content_id->isFile())
                 {
-                    $file = new \Nelliel\ContentFile($this->dbh, $content_id, $this->board_id);
-                    $this->removeFile($content_id->post_id, $content_id->order_id);
-                    $file->removeFromDatabase();
+                    $this->removeFile($content_id);
                 }
             }
 
@@ -283,52 +275,21 @@ class ThreadHandler
         }
     }
 
-    public function removeFile($post_id, $file_order)
+    public function removeFile($content_id)
     {
-        $this->verifyDeletePerms($post_id);
-        $this->removePostFilesFromDisk($post_id, $file_order);
-        //$this->removePostFilesFromDatabase($post_id, $file_order);
-        return $post_id;
+        $file = new \Nelliel\ContentFile($this->dbh, $content_id, $this->board_id);
+        $this->verifyDeletePerms($content_id->post_id);
+        $this->removePostFilesFromDisk($content_id->post_id, $content_id->order_id);
+        $file->removeFromDatabase();
     }
 
-    public function removePost($post_id)
+    public function removePost($content_id)
     {
-        $this->verifyDeletePerms($post_id);
-        //$this->removePostFilesFromDisk($post_id);
-        //$this->removePostFromDatabase($post_id);
-        return $post_id;
+        $post = new \Nelliel\ContentPost($this->dbh, $content_id, $this->board_id);
+        $this->verifyDeletePerms($content_id->post_id);
+        $post->removeFromDatabase();
+        $post->removeDirectories();
     }
-
-    /*public function removePostFromDatabase($post_id)
-    {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-        $post_data = $this->getPostData($post_id);
-        $prepared = $this->dbh->prepare('DELETE FROM "' . $board_references['post_table'] . '" WHERE "post_number" = ?');
-        $this->dbh->executePrepared($prepared, array($post_id));
-        $thread_id = $post_data['parent_thread'];
-        $thread_data = $this->getThreadData($thread_id);
-        $new_count = $thread_data['post_count'] - 1;
-        $new_last = $this->getLastPostInThread($thread_id);
-        $last_bump = $new_last['post_time'];
-        $total_files = $thread_data['total_files'] - $post_data['file_count'];
-
-        if ($new_last['sage'] != 0)
-        {
-            $last_nosage = $this->getLastPostInThread($thread_id, true);
-            $last_bump = $last_nosage['post_time'];
-        }
-
-        $prepared = $this->dbh->prepare(
-                'UPDATE "' . $board_references['thread_table'] .
-                '" SET "post_count" = ?, "last_post" = ?, "last_update" = ?, "last_bump_time" = ?, "total_files" = ? WHERE "thread_id" = ?');
-        $prepared->bindValue(1, $new_count, PDO::PARAM_INT);
-        $prepared->bindValue(2, $new_last['post_number'], PDO::PARAM_INT);
-        $prepared->bindValue(3, $new_last['post_time'], PDO::PARAM_INT);
-        $prepared->bindValue(4, $last_bump, PDO::PARAM_INT);
-        $prepared->bindValue(5, $total_files, PDO::PARAM_INT);
-        $prepared->bindValue(6, $post_data['parent_thread'], PDO::PARAM_INT);
-        $this->dbh->executePrepared($prepared, null, true);
-    }*/
 
     public function removePostFilesFromDatabase($post_ref, $order = null, $quantity = 1)
     {
@@ -397,28 +358,13 @@ class ThreadHandler
         }
     }
 
-    public function removeThread($thread_id)
+    public function removeThread($content_id)
     {
-        $this->verifyDeletePerms($thread_id);
-        //$this->removeThreadFromDatabase($thread_id);
-        //$this->removeThreadDirectories($thread_id);
-        return $thread_id;
+        $thread = new \Nelliel\ContentThread($this->dbh, $content_id, $this->board_id);
+        $this->verifyDeletePerms($content_id->thread_id);
+        $thread->removeFromDatabase();
+        $thread->removeDirectories();
     }
-
-    /*public function removeThreadFromDatabase($thread_id)
-    {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-        $prepared = $this->dbh->prepare('DELETE FROM "' . $board_references['thread_table'] . '" WHERE "thread_id" = ?');
-        $this->dbh->executePrepared($prepared, array($thread_id));
-    }
-
-    public function removeThreadFilesFromDatabase($thread_id)
-    {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-        $prepared = $this->dbh->prepare(
-                'DELETE FROM "' . $board_references['file_table'] . '" WHERE "parent_thread" = ?');
-        $this->dbh->executePrepared($prepared, array($thread_id));
-    }*/
 
     public function subtractFromFileCount($post_id, $quantity)
     {
@@ -454,25 +400,6 @@ class ThreadHandler
                 'UPDATE "' . $board_references['thread_table'] . '" SET "total_files" = ? WHERE "thread_id" = ?');
         $this->dbh->executePrepared($prepared, array($total_files, $thread_id));
     }
-
-    /*function createThreadDirectories($thread_id)
-    {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-        $this->file_handler->createDirectory($board_references['src_path'] . $thread_id, DIRECTORY_PERM);
-        $this->file_handler->createDirectory($board_references['thumb_path'] . $thread_id, DIRECTORY_PERM);
-        $this->file_handler->createDirectory($board_references['page_path'] . $thread_id, DIRECTORY_PERM);
-    }
-
-    function removeThreadDirectories($thread_id)
-    {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-        $this->file_handler->eraserGun($this->file_handler->pathJoin($board_references['src_path'], $thread_id), null,
-                true);
-        $this->file_handler->eraserGun($this->file_handler->pathJoin($board_references['thumb_path'], $thread_id), null,
-                true);
-        $this->file_handler->eraserGun($this->file_handler->pathJoin($board_references['page_path'], $thread_id), null,
-                true);
-    }*/
 
     public function verifyDeletePerms($post_id)
     {

@@ -135,14 +135,15 @@ function nel_admin_dispatch($inputs)
 
             case 'threads':
                 $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
+                $updates = $content_id->thread_id;
 
                 if ($inputs['action'] === 'delete-post')
                 {
-                    $updates = $thread_handler->removePost($content_id->post_id);
+                    $thread_handler->removePost($content_id);
                 }
                 else if ($inputs['action'] === 'delete-thread')
                 {
-                    $updates = $thread_handler->removeThread($content_id->thread_id);
+                    $thread_handler->removeThread($content_id);
                 }
                 else if ($inputs['action'] === 'sticky')
                 {
@@ -162,7 +163,7 @@ function nel_admin_dispatch($inputs)
                 }
                 else if ($inputs['action'] === 'delete-file')
                 {
-                    $updates = $thread_handler->removeFile($content_id->post_id, $content_id->getFileOrder());
+                    $thread_handler->removeFile($content_id);
                 }
                 else if ($inputs['action'] === 'ban-file')
                 {
@@ -170,7 +171,7 @@ function nel_admin_dispatch($inputs)
                 }
 
                 $regen = new \Nelliel\Regen();
-                $regen->threads($inputs['board_id'], true, $updates);
+                $regen->threads($inputs['board_id'], true, $content_id->thread_id);
                 $regen->index($inputs['board_id']);
                 nel_clean_exit(true, $inputs['board_id']);
                 break;
@@ -182,6 +183,7 @@ function nel_admin_dispatch($inputs)
 
             case 'multi':
                 require_once INCLUDE_PATH . 'admin/bans_panel.php';
+                $updates = $content_id->thread_id;
 
                 if ($inputs['action'] === 'ban.delete-post' || $inputs['action'] === 'ban.delete-thread')
                 {
@@ -189,11 +191,11 @@ function nel_admin_dispatch($inputs)
 
                     if ($inputs['action'] === 'ban.delete-post')
                     {
-                        $updates = $thread_handler->removePost($content_id->post_id);
+                        $thread_handler->removePost($content_id);
                     }
                     else if ($inputs['action'] === 'ban.delete-thread')
                     {
-                        $updates = $thread_handler->removeThread($content_id->thread_id);
+                        $thread_handler->removeThread($content_id);
                     }
 
                     $regen = new \Nelliel\Regen();

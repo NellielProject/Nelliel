@@ -16,10 +16,8 @@ function nel_process_new_post($inputs)
     $file_handler = new \Nelliel\FileHandler();
     $file_upload = new \Nelliel\post\FilesUpload($board_id, $_FILES);
     $data_handler = new \Nelliel\post\PostData($board_id);
-    $database_functions = new \Nelliel\post\PostDatabaseFunctions($board_id);
     $post = new \Nelliel\ContentPost($dbh, new \Nelliel\ContentID('nci_0_0_0'), $board_id);
     $data_handler->processPostData($post);
-    //$post_data = $data_handler->collectData();
     $time = get_millisecond_time();
     $post->post_data['post_time'] = $time;
 
@@ -34,11 +32,9 @@ function nel_process_new_post($inputs)
         nel_fgsfds('sage', in_array('sage', $fgsfds_commands));
     }
 
-    //$post_data['sage'] = (empty(nel_fgsfds('sage'))) ? 0 : nel_fgsfds('sage');
     $post->post_data['sage'] = (empty(nel_fgsfds('sage'))) ? 0 : nel_fgsfds('sage');
     $files = $file_upload->processFiles($post->post_data['response_to']);
     $spoon = !empty($files);
-    //$post_data['file_count'] = count($files);
     $post->post_data['file_count'] = count($files);
 
     if (!$spoon)
@@ -67,11 +63,8 @@ function nel_process_new_post($inputs)
     if (isset($post->post_data['password']))
     {
         $cpass = $post->post_data['password'];
-        //$cpass = $post_data['password'];
         $post->post_data['password'] = nel_generate_salted_hash(
                 nel_parameters_and_data()->siteSettings('post_password_algorithm'), $post->post_data['password']);
-        //$post_data['password'] = nel_generate_salted_hash(
-        //        nel_parameters_and_data()->siteSettings('post_password_algorithm'), $post_data['password']);
     }
     else
     {
@@ -81,19 +74,11 @@ function nel_process_new_post($inputs)
     // Cookies OM NOM NOM NOM
     setrawcookie('pwd-' . $board_id, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
     setrawcookie('name-' . $board_id, $post->post_data['name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
-    //setrawcookie('name-' . $board_id, $post_data['name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
 
     // Go ahead and put post into database
     $post->post_data['op'] = ($post->post_data['parent_thread'] == 0) ? 1 : 0;
     $post->post_data['has_file'] = ($post->post_data['file_count'] > 0) ? 1 : 0;
-    //$post_data['op'] = ($post_data['parent_thread'] == 0) ? 1 : 0;
-    //$post_data['has_file'] = ($post_data['file_count'] > 0) ? 1 : 0;
     $post->reserveDatabaseRow($time);
-
-    //$database_functions->insertInitialPost($time, $post_data);
-    //$prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "post_time" = ? LIMIT 1');
-    //$new_post_info = $dbh->executePreparedFetch($prepared, array($time), PDO::FETCH_ASSOC, true);
-    //$post->content_id->post_id = $new_post_info['post_number'];
     $thread = new \Nelliel\ContentThread($dbh, new \Nelliel\ContentID('nci_0_0_0'), $board_id);
 
     if ($post->post_data['response_to'] == 0)
@@ -107,7 +92,6 @@ function nel_process_new_post($inputs)
         $thread->thread_data['post_count'] = 1;
         $thread->writeToDatabase();
         $thread->createDirectories();
-        //$thread_handler->createThreadDirectories($thread->content_id->thread_id);
     }
     else
     {
@@ -153,16 +137,12 @@ function nel_process_new_post($inputs)
             $file->file_data['post_ref'] = $post->content_id->post_id;
             $file->content_id->order_id = $order;
             $file->file_data['file_order'] = $order;
-            //$file_handler->moveFile($file['location'], $src_path . $file['fullname'], true, DIRECTORY_PERM);
-            //chmod($src_path . $file['fullname'], octdec(FILE_PERM));
             $file_handler->moveFile($file->file_data['location'], $src_path . $file->file_data['fullname'], true,
                     DIRECTORY_PERM);
             chmod($src_path . $file->file_data['fullname'], octdec(FILE_PERM));
             $file->writeToDatabase();
             ++ $order;
         }
-
-        //$database_functions->insertNewFiles($thread->content_id->thread_id, $new_post_info, $files);
     }
 
     $archive->updateAllArchiveStatus();
