@@ -18,6 +18,46 @@ class PostData
         $this->staff_post = $staff_post;
     }
 
+    public function processPostData($post)
+    {
+        $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
+        $post->post_data['parent_thread'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer');
+
+        if($post->post_data['parent_thread'] != 0)
+        {
+            $post->content_id->thread_id = $post->post_data['parent_thread'];
+        }
+
+        $post->post_data['name'] = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
+        $post->post_data['email'] = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string');
+        $post->post_data['subject'] = $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string');
+        $post->post_data['comment'] = $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], 'string');
+        $post->post_data['fgsfds'] = $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], 'string');
+        $post->post_data['password'] = $this->checkEntry($_POST['new_post']['post_info']['sekrit'], 'string');
+        $post->post_data['response_to'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer');
+        $post->post_data['post_as_staff'] = (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false;
+        $post->post_data['mod_post'] = null;
+
+        //TODO: Update this for ContentPost once we switch over
+        if ($post->post_data['name'] !== '')
+        {
+            // = $this->staffPost($post_data);
+            //$post_data = $this->tripcodes($post_data);
+
+        }
+        else
+        {
+            $post->post_data['name'] = _gettext('Anonymous');
+        }
+
+        if ($board_settings['force_anonymous'])
+        {
+            $post->post_data['name'] = _gettext('Anonymous');
+            $post->post_data['email'] = '';
+        }
+
+    }
+
     public function collectData()
     {
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);

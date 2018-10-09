@@ -51,7 +51,10 @@ class ThreadHandler
                 }
                 else if ($content_id->isPost())
                 {
+                    $post = new \Nelliel\ContentPost($this->dbh, $content_id, $this->board_id);
                     $this->removePost($content_id->post_id);
+                    $post->removeFromDatabase();
+                    $post->removeDirectories();
                 }
                 else if ($content_id->isFile())
                 {
@@ -289,12 +292,12 @@ class ThreadHandler
     public function removePost($post_id)
     {
         $this->verifyDeletePerms($post_id);
-        $this->removePostFilesFromDisk($post_id);
-        $this->removePostFromDatabase($post_id);
+        //$this->removePostFilesFromDisk($post_id);
+        //$this->removePostFromDatabase($post_id);
         return $post_id;
     }
 
-    public function removePostFromDatabase($post_id)
+    /*public function removePostFromDatabase($post_id)
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $post_data = $this->getPostData($post_id);
@@ -323,7 +326,7 @@ class ThreadHandler
         $prepared->bindValue(5, $total_files, PDO::PARAM_INT);
         $prepared->bindValue(6, $post_data['parent_thread'], PDO::PARAM_INT);
         $this->dbh->executePrepared($prepared, null, true);
-    }
+    }*/
 
     public function removePostFilesFromDatabase($post_ref, $order = null, $quantity = 1)
     {

@@ -11,6 +11,7 @@ if (!defined('NELLIEL_VERSION'))
 
 class ContentThread extends ContentBase
 {
+    public $thread_data = array();
 
     function __construct($database, $content_id, $board_id)
     {
