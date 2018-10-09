@@ -41,7 +41,7 @@ function nel_process_new_post($inputs)
     $post_data['file_count'] = count($files);
     $post->post_data['file_count'] = count($files);
 
-    if(!$spoon)
+    if (!$spoon)
     {
         if (!$post_data['comment'] || !$post->post_data['comment'])
         {
@@ -53,13 +53,15 @@ function nel_process_new_post($inputs)
             nel_derp(11, _gettext('Image or file required when making a new post.'), $error_data);
         }
 
-        if ($board_settings['require_image_start'] && ($post_data['response_to'] === 0 || $post->post_data['response_to'] == 0))
+        if ($board_settings['require_image_start'] &&
+                ($post_data['response_to'] === 0 || $post->post_data['response_to'] == 0))
         {
             nel_derp(12, _gettext('Image or file required to make new thread.'), $error_data);
         }
     }
 
-    if (utf8_strlen($post_data['comment']) > $board_settings['max_comment_length'] || utf8_strlen($post->post_data['comment']) > $board_settings['max_comment_length'])
+    if (utf8_strlen($post_data['comment']) > $board_settings['max_comment_length'] ||
+            utf8_strlen($post->post_data['comment']) > $board_settings['max_comment_length'])
     {
         nel_derp(13, _gettext('Post is too long. Try looking up the word concise.'), $error_data);
     }
@@ -68,8 +70,10 @@ function nel_process_new_post($inputs)
     {
         $cpass = $post->post_data['password'];
         $cpass = $post_data['password'];
-        $post->post_data['password'] = nel_generate_salted_hash(nel_parameters_and_data()->siteSettings('post_password_algorithm'), $post->post_data['password']);
-        $post_data['password'] = nel_generate_salted_hash(nel_parameters_and_data()->siteSettings('post_password_algorithm'), $post_data['password']);
+        $post->post_data['password'] = nel_generate_salted_hash(
+                nel_parameters_and_data()->siteSettings('post_password_algorithm'), $post->post_data['password']);
+        $post_data['password'] = nel_generate_salted_hash(
+                nel_parameters_and_data()->siteSettings('post_password_algorithm'), $post_data['password']);
     }
     else
     {
@@ -128,11 +132,12 @@ function nel_process_new_post($inputs)
 
     $post->createDirectories();
 
-    $prepared = $dbh->prepare('UPDATE "' . $references['post_table']. '" SET parent_thread = ? WHERE post_number = ?');
+    $prepared = $dbh->prepare('UPDATE "' . $references['post_table'] . '" SET parent_thread = ? WHERE post_number = ?');
     $dbh->executePrepared($prepared, array($thread->content_id->thread_id, $new_post_info['post_number']), true);
     nel_fgsfds('noko_topic', $thread->content_id->thread_id);
     $src_path = $references['src_path'] . $thread->content_id->thread_id . '/' . $new_post_info['post_number'] . '/';
-    $preview_path = $references['thumb_path'] . $thread->content_id->thread_id . '/' . $new_post_info['post_number'] . '/';
+    $preview_path = $references['thumb_path'] . $thread->content_id->thread_id . '/' . $new_post_info['post_number'] .
+            '/';
 
     // Make thumbnails and do final file processing
     $gen_previews = new \Nelliel\post\GeneratePreviews($board_id);
@@ -142,22 +147,35 @@ function nel_process_new_post($inputs)
     // Add file data and move uploads to final location if applicable
     if ($spoon)
     {
-        foreach($files as $file)
+        $order = 1;
+
+        foreach ($files as $file)
         {
-            $file_handler->moveFile($file['location'], $src_path . $file['fullname'], true, DIRECTORY_PERM);
-            chmod($src_path . $file['fullname'], octdec(FILE_PERM));
+            $file->content_id->thread_id = $thread->content_id->thread_id;
+            $file->file_data['parent_thread'] = $thread->content_id->thread_id;
+            $file->content_id->post_id = $post->content_id->post_id;
+            $file->file_data['post_ref'] = $post->content_id->post_id;
+            $file->content_id->order_id = $order;
+            $file->file_data['file_order'] = $order;
+            //$file_handler->moveFile($file['location'], $src_path . $file['fullname'], true, DIRECTORY_PERM);
+            //chmod($src_path . $file['fullname'], octdec(FILE_PERM));
+            $file_handler->moveFile($file->file_data['location'], $src_path . $file->file_data['fullname'], true,
+                    DIRECTORY_PERM);
+            chmod($src_path . $file->file_data['fullname'], octdec(FILE_PERM));
+            $file->writeToDatabase();
+            ++ $order;
         }
 
-        $database_functions->insertNewFiles($thread->content_id->thread_id, $new_post_info, $files);
+        //$database_functions->insertNewFiles($thread->content_id->thread_id, $new_post_info, $files);
     }
 
     $archive->updateAllArchiveStatus();
 
-    if($board_settings['old_threads'] === 'ARCHIVE')
+    if ($board_settings['old_threads'] === 'ARCHIVE')
     {
         $archive->moveThreadsToArchive();
     }
-    else if($board_settings['old_threads'] === 'PRUNE')
+    else if ($board_settings['old_threads'] === 'PRUNE')
     {
         $archive->pruneThreads();
     }
@@ -182,7 +200,8 @@ function nel_is_post_ok($board_id, $post_data, $time)
     if ($post_data['parent_thread'] === 0) // TODO: Update this, doesn't look right
     {
         $thread_delay = $time - ($board_settings['thread_delay'] * 1000);
-        $prepared = $dbh->prepare('SELECT COUNT(*) FROM "' . $references['post_table']. '" WHERE "post_time" > ? AND "ip_address" = ?');
+        $prepared = $dbh->prepare(
+                'SELECT COUNT(*) FROM "' . $references['post_table'] . '" WHERE "post_time" > ? AND "ip_address" = ?');
         $prepared->bindValue(1, $thread_delay, PDO::PARAM_STR);
         $prepared->bindValue(2, @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
         $renzoku = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
@@ -190,8 +209,9 @@ function nel_is_post_ok($board_id, $post_data, $time)
     else
     {
         $reply_delay = $time - ($board_settings['reply_delay'] * 1000);
-        $prepared = $dbh->prepare('SELECT COUNT(*) FROM "' . $references['post_table'].
-             '" WHERE "parent_thread" = ? AND "post_time" > ? AND "ip_address" = ?');
+        $prepared = $dbh->prepare(
+                'SELECT COUNT(*) FROM "' . $references['post_table'] .
+                '" WHERE "parent_thread" = ? AND "post_time" > ? AND "ip_address" = ?');
         $prepared->bindValue(1, $post_data['parent_thread'], PDO::PARAM_INT);
         $prepared->bindValue(2, $reply_delay, PDO::PARAM_STR);
         $prepared->bindValue(3, @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
@@ -205,7 +225,9 @@ function nel_is_post_ok($board_id, $post_data, $time)
 
     if ($post_data['parent_thread'] != 0)
     {
-        $prepared = $dbh->prepare('SELECT "post_count", "archive_status", "locked" FROM "' . $references['thread_table']. '" WHERE "thread_id" = ? LIMIT 1');
+        $prepared = $dbh->prepare(
+                'SELECT "post_count", "archive_status", "locked" FROM "' . $references['thread_table'] .
+                '" WHERE "thread_id" = ? LIMIT 1');
         $thread_info = $dbh->executePreparedFetch($prepared, array($post_data['parent_thread']), PDO::FETCH_ASSOC, true);
 
         if (!empty($thread_info))
@@ -217,7 +239,8 @@ function nel_is_post_ok($board_id, $post_data, $time)
 
             if ($thread_info['archive_status'] != 0)
             {
-                nel_derp(3, _gettext('The thread you have tried posting in is currently inaccessible or archived.'), $error_data);
+                nel_derp(3, _gettext('The thread you have tried posting in is currently inaccessible or archived.'),
+                        $error_data);
             }
         }
         else

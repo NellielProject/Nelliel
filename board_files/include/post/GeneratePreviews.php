@@ -26,37 +26,37 @@ class GeneratePreviews
 
         while ($i < $files_count)
         {
-            $files[$i]['im_x'] = null;
-            $files[$i]['im_y'] = null;
-            $files[$i]['pre_x'] = null;
-            $files[$i]['pre_y'] = null;
-            $files[$i]['preview_name'] = null;
-            $files[$i]['preview_extension'] = null;
+            $files[$i]->file_data['im_x'] = null;
+            $files[$i]->file_data['im_y'] = null;
+            $files[$i]->file_data['pre_x'] = null;
+            $files[$i]->file_data['pre_y'] = null;
+            $files[$i]->file_data['preview_name'] = null;
+            $files[$i]->file_data['preview_extension'] = null;
 
-            if ($files[$i]['format'] === 'swf' || ($files[$i]['type'] === 'graphics'))
+            if ($files[$i]->file_data['format'] === 'swf' || ($files[$i]->file_data['type'] === 'graphics'))
             {
-                $dim = getimagesize($files[$i]['location']);
-                $files[$i]['im_x'] = $dim[0];
-                $files[$i]['im_y'] = $dim[1];
-                $ratio = min(($board_settings['max_height'] / $files[$i]['im_y']), ($board_settings['max_width'] /
-                $files[$i]['im_x']));
-                $files[$i]['pre_x'] = ($ratio < 1) ? intval($ratio * $files[$i]['im_x']) : $files[$i]['im_x'];
-                $files[$i]['pre_y'] = ($ratio < 1) ? intval($ratio * $files[$i]['im_y']) : $files[$i]['im_y'];
+                $dim = getimagesize($files[$i]->file_data['location']);
+                $files[$i]->file_data['im_x'] = $dim[0];
+                $files[$i]->file_data['im_y'] = $dim[1];
+                $ratio = min(($board_settings['max_height'] / $files[$i]->file_data['im_y']), ($board_settings['max_width'] /
+                        $files[$i]->file_data['im_x']));
+                $files[$i]->file_data['pre_x'] = ($ratio < 1) ? intval($ratio * $files[$i]->file_data['im_x']) : $files[$i]->file_data['im_x'];
+                $files[$i]->file_data['pre_y'] = ($ratio < 1) ? intval($ratio * $files[$i]->file_data['im_y']) : $files[$i]->file_data['im_y'];
             }
 
-            if ($board_settings['use_thumb'] && $files[$i]['type'] === 'graphics')
+            if ($board_settings['use_thumb'] && $files[$i]->file_data['type'] === 'graphics')
             {
                 $file_handler->createDirectory($preview_path, DIRECTORY_PERM, true);
                 $magick_available = $this->magickAvailable();
-                $files[$i]['preview_name'] = $files[$i]['filename'] . '-preview';
+                $files[$i]->file_data['preview_name'] = $files[$i]->file_data['filename'] . '-preview';
 
                 if ($board_settings['use_png_thumb'])
                 {
-                    $files[$i]['preview_extension'] = 'png';
+                    $files[$i]->file_data['preview_extension'] = 'png';
                 }
                 else
                 {
-                    $files[$i]['preview_extension'] = 'jpg';
+                    $files[$i]->file_data['preview_extension'] = 'jpg';
                 }
 
                 if ($board_settings['use_magick'] && $magick_available !== false)
@@ -105,32 +105,32 @@ class GeneratePreviews
 
     public function imagickPreview($file, $preview_path)
     {
-        $image = new \Imagick($file['location']);
+        $image = new \Imagick($file->file_data['location']);
         $iterations = $image->getImageIterations();
         $image = $image->coalesceimages();
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
 
-        if ($file['format'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
+        if ($file->file_data['format'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
         {
-            $file['preview_extension'] = 'gif';
+            $file->file_data['preview_extension'] = 'gif';
 
-            if ($file['im_x'] <= $board_settings['max_width'] && $file['im_y'] <= $board_settings['max_height'])
+            if ($file->file_data['im_x'] <= $board_settings['max_width'] && $file->file_data['im_y'] <= $board_settings['max_height'])
             {
-                copy($file['location'], $preview_path . $file['preview_name'] . '.' . $file['preview_extension']);
+                copy($file->file_data['location'], $preview_path . $file->file_data['preview_name'] . '.' . $file->file_data['preview_extension']);
             }
             else
             {
                 foreach ($image as $frame)
                 {
-                    $frame->scaleImage($file['pre_x'], $file['pre_y'], true);
+                    $frame->scaleImage($file->file_data['pre_x'], $file->file_data['pre_y'], true);
                 }
 
-                $image->writeImages($preview_path . $file['preview_name'] . '.' . $file['preview_extension'], true);
+                $image->writeImages($preview_path . $file->file_data['preview_name'] . '.' . $file->file_data['preview_extension'], true);
             }
         }
         else
         {
-            $image->thumbnailImage($file['pre_x'], $file['pre_y'], true);
+            $image->thumbnailImage($file->file_data['pre_x'], $file->file_data['pre_y'], true);
             $image->sharpenImage(0, 0.5);
 
             if ($board_settings['use_png_thumb'])
@@ -143,7 +143,7 @@ class GeneratePreviews
                 $image->setImageCompressionQuality($board_settings['jpeg_quality']);
             }
 
-            $image->writeImage($preview_path . $file['preview_name'] . '.' . $file['preview_extension']);
+            $image->writeImage($preview_path . $file->file_data['preview_name'] . '.' . $file->file_data['preview_extension']);
         }
     }
 
@@ -151,32 +151,32 @@ class GeneratePreviews
     {
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
 
-        if ($file['format'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
+        if ($file->file_data['format'] === 'gif' && $iterations > 0 && $board_settings['animated_gif_preview'])
         {
-            $file['preview_extension'] = 'gif';
-            $cmd_resize = 'convert ' . escapeshellarg($file['location']) . ' -coalesce -thumbnail ' .
+            $file->file_data['preview_extension'] = 'gif';
+            $cmd_resize = 'convert ' . escapeshellarg($file->file_data['location']) . ' -coalesce -thumbnail ' .
             $board_settings['max_width'] . 'x' . $board_settings['max_height'] .
-            escapeshellarg($preview_path . $file['preview_name'] . '.' . $file['preview_extension']);
+            escapeshellarg($preview_path . $file->file_data['preview_name'] . '.' . $file->file_data['preview_extension']);
             exec($cmd_resize);
-            chmod($preview_path . $file['preview_name'] . '.' . $file['preview_extension'], octdec(FILE_PERM));
+            chmod($preview_path . $file->file_data['preview_name'] . '.' . $file->file_data['preview_extension'], octdec(FILE_PERM));
         }
         else
         {
             if ($board_settings['use_png_thumb'])
             {
-                $cmd_resize = 'convert ' . escapeshellarg($file['location']) . ' -resize ' . $board_settings['max_width'] . 'x' .
+                $cmd_resize = 'convert ' . escapeshellarg($file->file_data['location']) . ' -resize ' . $board_settings['max_width'] . 'x' .
                 $board_settings['max_height'] . '\> -quality 00 -sharpen 0x0.5 ' .
-                escapeshellarg($preview_path . $file['preview_name'] . '.' . $file['preview_extension']);
+                escapeshellarg($preview_path . $file->file_data['preview_name'] . '.' . $file->file_data['preview_extension']);
             }
             else
             {
-                $cmd_resize = 'convert ' . escapeshellarg($file['location']) . ' -resize ' . $board_settings['max_width'] . 'x' .
+                $cmd_resize = 'convert ' . escapeshellarg($file->file_data['location']) . ' -resize ' . $board_settings['max_width'] . 'x' .
                 $board_settings['max_height'] . '\> -quality ' . $board_settings['jpeg_quality'] . ' -sharpen 0x0.5 ' .
-                escapeshellarg($preview_path . $file['preview_name'] . '.' . $file['preview_extension']);
+                escapeshellarg($preview_path . $file->file_data['preview_name'] . '.' . $file->file_data['preview_extension']);
             }
 
             exec($cmd_resize);
-            chmod($preview_path . $file['preview_name'] . '.' . $file['preview_extension'], octdec(FILE_PERM));
+            chmod($preview_path . $file->file_data['preview_name'] . '.' . $file->file_data['preview_extension'], octdec(FILE_PERM));
         }
     }
 
@@ -185,36 +185,36 @@ class GeneratePreviews
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $gd_test = gd_info(); // This shouldn't be needed. If your host actually doesn't have these, it sucks. Get a new one, srsly.
 
-        if ($file['format'] === 'jpeg' && $gd_test["JPEG Support"])
+        if ($file->file_data['format'] === 'jpeg' && $gd_test["JPEG Support"])
         {
-            $image = imagecreatefromjpeg($file['location']);
+            $image = imagecreatefromjpeg($file->file_data['location']);
         }
-        else if ($file['format'] === 'gif' && $gd_test["GIF Read Support"])
+        else if ($file->file_data['format'] === 'gif' && $gd_test["GIF Read Support"])
         {
-            $image = imagecreatefromgif($file['location']);
+            $image = imagecreatefromgif($file->file_data['location']);
         }
-        else if ($file['format'] === 'png' && $gd_test["PNG Support"])
+        else if ($file->file_data['format'] === 'png' && $gd_test["PNG Support"])
         {
-            $image = imagecreatefrompng($file['location']);
+            $image = imagecreatefrompng($file->file_data['location']);
         }
         else
         {
             return false;
         }
 
-        $preview = imagecreatetruecolor($file['pre_x'], $file['pre_y']);
+        $preview = imagecreatetruecolor($file->file_data['pre_x'], $file->file_data['pre_y']);
 
         if ($preview !== false)
         {
-            imagecopyresampled($preview, $image, 0, 0, 0, 0, $file['pre_x'], $file['pre_y'], $file['im_x'], $file['im_y']);
+            imagecopyresampled($preview, $image, 0, 0, 0, 0, $file->file_data['pre_x'], $file->file_data['pre_y'], $file->file_data['im_x'], $file->file_data['im_y']);
 
             if ($board_settings['use_png_thumb'])
             {
-                imagepng($preview, $preview_path . $file['preview_name'] . '.' . $file['preview_extension'], -1);
+                imagepng($preview, $preview_path . $file->file_data['preview_name'] . '.' . $file->file_data['preview_extension'], -1);
             }
             else
             {
-                imagejpeg($preview, $preview_path . $file['preview_name'] . '.' . $file['preview_extension'], $board_settings['jpeg_quality']);
+                imagejpeg($preview, $preview_path . $file->file_data['preview_name'] . '.' . $file->file_data['preview_extension'], $board_settings['jpeg_quality']);
             }
         }
     }

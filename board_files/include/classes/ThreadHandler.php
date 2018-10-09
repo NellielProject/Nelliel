@@ -58,7 +58,9 @@ class ThreadHandler
                 }
                 else if ($content_id->isFile())
                 {
+                    $file = new \Nelliel\ContentFile($this->dbh, $content_id, $this->board_id);
                     $this->removeFile($content_id->post_id, $content_id->order_id);
+                    $file->removeFromDatabase();
                 }
             }
 
@@ -285,7 +287,7 @@ class ThreadHandler
     {
         $this->verifyDeletePerms($post_id);
         $this->removePostFilesFromDisk($post_id, $file_order);
-        $this->removePostFilesFromDatabase($post_id, $file_order);
+        //$this->removePostFilesFromDatabase($post_id, $file_order);
         return $post_id;
     }
 
