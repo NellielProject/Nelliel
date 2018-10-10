@@ -72,12 +72,39 @@ class FileHandler
         return false;
     }
 
+    public function moveDirectory($directory, $destination, $create_directories = false, $dir_chmod = DIRECTORY_PERM)
+    {
+        clearstatcache();
+
+        if (!file_exists($directory) || !is_dir($directory))
+        {
+            return false;
+        }
+
+        rename($directory, $destination);
+
+        $files = glob($this->pathFileJoin($directory, '*'));
+
+        foreach ($files as $file)
+        {
+            if (is_dir($file))
+            {
+                $this->moveDirectory($file, null, true);
+            }
+            else
+            {
+                rename($this->pathFileJoin($directory, $file), $this->pathFileJoin($destination, $file));
+            }
+        }
+    }
+
     public function eraserGun($path, $filename = null, $is_directory = false)
     {
         clearstatcache();
 
         if ($is_directory && file_exists($path))
         {
+
             $files = glob($this->pathFileJoin($path, '*'));
 
             foreach ($files as $file)
