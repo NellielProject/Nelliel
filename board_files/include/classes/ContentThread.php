@@ -125,26 +125,33 @@ class ContentThread extends ContentBase
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $this->database->prepare(
                 'SELECT COUNT("post_number") FROM "' . $board_references['post_table'] . '" WHERE "parent_thread" = ?');
-        $post_count = $this->database->executePreparedFetch($prepared, array($this->content_id->thread_id),
-                PDO::FETCH_COLUMN, true);
+        $post_count = $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id],
+                PDO::FETCH_COLUMN);
 
         $prepared = $this->database->prepare(
                 'UPDATE "' . $board_references['thread_table'] . '" SET "post_count" = ? WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, array($post_count, $this->content_id->thread_id));
+        $this->database->executePrepared($prepared, [$post_count, $this->content_id->thread_id]);
 
         $prepared = $this->database->prepare(
                 'SELECT COUNT("entry") FROM "' . $board_references['file_table'] . '" WHERE "parent_thread" = ?');
-        $file_count = $this->database->executePreparedFetch($prepared, array($this->content_id->thread_id),
-                PDO::FETCH_COLUMN, true);
+        $file_count = $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id],
+                PDO::FETCH_COLUMN);
 
         $prepared = $this->database->prepare(
                 'UPDATE "' . $board_references['thread_table'] . '" SET "total_files" = ? WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, array($file_count, $this->content_id->thread_id));
+        $this->database->executePrepared($prepared, [$file_count, $this->content_id->thread_id]);
+
+        $first_post = $this->firstPost();
+        $last_post = $this->lastPost();
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $board_references['thread_table'] .
+                '" SET "first_post" = ?, "last_post = ? WHERE "thread_id" = ?');
+        $this->database->executePrepared($prepared, [$first_post, $last_post, $this->content_id->thread_id]);
     }
 
     public function sticky()
     {
-        if(!$this->dataIsLoaded(true))
+        if (!$this->dataIsLoaded(true))
         {
             return false;
         }
@@ -156,7 +163,7 @@ class ContentThread extends ContentBase
 
     public function lock()
     {
-        if(!$this->dataIsLoaded(true))
+        if (!$this->dataIsLoaded(true))
         {
             return false;
         }
@@ -164,5 +171,34 @@ class ContentThread extends ContentBase
         $this->content_data['locked'] = ($this->content_data['locked'] == 1) ? 0 : 1;
         $this->writeToDatabase();
         return true;
+    }
+
+    public function lastPost($no_sage = false)
+    {
+        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
+
+        if ($no_sage)
+        {
+            $prepared = $this->database->prepare(
+                    'SELECT "post_number" FROM "' . $board_references['post_table'] .
+                    '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1');
+        }
+        else
+        {
+            $prepared = $this->database->prepare(
+                    'SELECT "post_number" FROM "' . $board_references['post_table'] .
+                    '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1');
+        }
+
+        return $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id], PDO::FETCH_COLUMN);
+    }
+
+    public function firstPost()
+    {
+        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
+        $prepared = $this->database->prepare(
+                'SELECT "post_number" FROM "' . $board_references['post_table'] .
+                '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC LIMIT 1');
+        return $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id], PDO::FETCH_COLUMN);
     }
 }

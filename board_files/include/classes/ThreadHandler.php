@@ -121,7 +121,7 @@ class ThreadHandler
         return $this->dbh->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
     }*/
 
-    public function getNextToLastPostInThread($thread_id, $no_sage = false)
+    /*public function getNextToLastPostInThread($thread_id, $no_sage = false)
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
 
@@ -166,7 +166,7 @@ class ThreadHandler
         }
 
         return $this->dbh->executePreparedFetch($prepared, array($thread_id), PDO::FETCH_ASSOC, true);
-    }
+    }*/
 
     public function convertPostToThread($post_id)
     {
