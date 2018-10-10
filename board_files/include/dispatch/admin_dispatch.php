@@ -146,8 +146,21 @@ function nel_admin_dispatch($inputs)
                 }
                 else if ($inputs['action'] === 'sticky' || $inputs['action'] === 'unsticky')
                 {
-                    $thread = new \Nelliel\ContentThread(nel_database(), $content_id, $inputs['board_id']);
-                    $thread->sticky();
+                    if($content_id->isPost())
+                    {
+                        $post = new \Nelliel\ContentPost(nel_database(), $content_id, $inputs['board_id']);
+                        $post->convertToThread();
+                        $new_content_id = new \Nelliel\ContentID();
+                        $new_content_id->thread_id = $content_id->post_id;
+                        $new_content_id->post_id = $content_id->post_id;
+                        $new_thread = new \Nelliel\ContentThread(nel_database(), $new_content_id, $inputs['board_id']);
+                        $new_thread->sticky();
+                    }
+                    else
+                    {
+                        $thread = new \Nelliel\ContentThread(nel_database(), $content_id, $inputs['board_id']);
+                        $thread->sticky();
+                    }
                 }
                 else if ($inputs['action'] === 'lock' || $inputs['action'] === 'unlock')
                 {

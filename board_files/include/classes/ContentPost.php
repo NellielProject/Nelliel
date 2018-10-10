@@ -70,7 +70,8 @@ class ContentPost extends ContentBase
                     :op, :sage, :mod_post, :mod_comment)');
         }
 
-        $prepared->bindValue(':parent_thread', $this->contentDataOrDefault('parent_thread', null), PDO::PARAM_INT);
+        $prepared->bindValue(':parent_thread',
+                $this->contentDataOrDefault('parent_thread', $this->content_id->thread_id), PDO::PARAM_INT);
         $prepared->bindValue(':poster_name', $this->contentDataOrDefault('poster_name', null), PDO::PARAM_STR);
         $prepared->bindValue(':post_password', $this->contentDataOrDefault('password', null), PDO::PARAM_STR);
         $prepared->bindValue(':tripcode', $this->contentDataOrDefault('tripcode', null), PDO::PARAM_STR);
@@ -143,10 +144,8 @@ class ContentPost extends ContentBase
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->eraserGun($board_references['src_path'],
-                $this->content_id->thread_id . '/' . $this->content_id->post_id, true);
-        $file_handler->eraserGun($board_references['thumb_path'],
-                $this->content_id->thread_id . '/' . $this->content_id->post_id, true);
+        $file_handler->eraserGun($board_references['src_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id, null, true);
+        $file_handler->eraserGun($board_references['thumb_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id, null, true);
     }
 
     public function updateCounts()
@@ -160,5 +159,51 @@ class ContentPost extends ContentBase
         $prepared = $this->database->prepare(
                 'UPDATE "' . $board_references['post_table'] . '" SET "file_count" = ? WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, array($file_count, $this->content_id->post_id));
+    }
+
+    public function convertToThread()
+    {
+        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
+        $time = get_millisecond_time();
+        $new_content_id = new \Nelliel\ContentID();
+        $new_content_id->thread_id = $this->content_id->post_id;
+        $new_content_id->post_id = $this->content_id->post_id;
+        $new_thread = new \Nelliel\ContentThread($this->database, $new_content_id, $this->board_id);
+        $new_thread->content_data['thread_id'] = $this->content_id->post_id;
+        $new_thread->content_data['first_post'] = $this->content_id->post_id;
+        $new_thread->content_data['last_post'] = $this->content_id->post_id;
+        $new_thread->content_data['last_bump_time'] = $time;
+        $new_thread->content_data['last_update'] = $time;
+        $new_thread->writeToDatabase();
+        $new_thread->loadFromDatabase();
+        $file_handler = new \Nelliel\FileHandler();
+        $new_thread->createDirectories();
+        $file_handler->moveDirectory(
+                $board_references['src_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                $board_references['src_path'] . '/' . $new_thread->content_id->thread_id . '/' .
+                $this->content_id->post_id, true);
+        $file_handler->moveDirectory(
+                $board_references['thumb_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                $board_references['thumb_path'] . '/' . $new_thread->content_id->thread_id . '/' .
+                $this->content_id->post_id, true);
+
+        $prepared = $this->database->prepare(
+                'SELECT entry FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ?');
+        $files = $this->database->executePreparedFetchAll($prepared, array($this->content_id->post_id), PDO::FETCH_ASSOC);
+
+        foreach ($files as $file)
+        {
+            $prepared = $this->database->prepare(
+                    'UPDATE "' . $board_references['file_table'] . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
+            $this->database->executePrepared($prepared, [$new_thread->content_id->thread_id,
+                $this->content_id->post_id]);
+        }
+
+        $this->loadFromDatabase();
+        $this->content_id->thread_id = $new_thread->content_id->thread_id;
+        $this->content_data['parent_thread'] = $new_thread->content_id->thread_id;
+        $this->content_data['op'] = 1;
+        $this->writeToDatabase();
+        $new_thread->updateCounts();
     }
 }

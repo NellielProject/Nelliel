@@ -115,9 +115,9 @@ class ContentThread extends ContentBase
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->eraserGun($board_references['src_path'], $this->content_id->thread_id, true);
-        $file_handler->eraserGun($board_references['thumb_path'], $this->content_id->thread_id, true);
-        $file_handler->eraserGun($board_references['page_path'], $this->content_id->thread_id, true);
+        $file_handler->eraserGun($board_references['src_path'] . $this->content_id->thread_id, null, true);
+        $file_handler->eraserGun($board_references['thumb_path'] . $this->content_id->thread_id, null, true);
+        $file_handler->eraserGun($board_references['page_path'] . $this->content_id->thread_id, null, true);
     }
 
     public function updateCounts()
@@ -145,7 +145,7 @@ class ContentThread extends ContentBase
         $last_post = $this->lastPost();
         $prepared = $this->database->prepare(
                 'UPDATE "' . $board_references['thread_table'] .
-                '" SET "first_post" = ?, "last_post = ? WHERE "thread_id" = ?');
+                '" SET "first_post" = ?, "last_post" = ? WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$first_post, $last_post, $this->content_id->thread_id]);
     }
 

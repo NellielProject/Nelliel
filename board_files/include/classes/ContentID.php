@@ -17,7 +17,7 @@ class ContentID
     protected $is_post = false;
     protected $is_file = false;
 
-    function __construct($id_string)
+    function __construct($id_string = 'nci_0_0_0')
     {
         $this->id_string = $id_string;
         $id_array = self::parseIDString($id_string);
