@@ -28,5 +28,11 @@ abstract class ContentBase
 
     public abstract function writeToDatabase($database = null);
 
+    public abstract function remove();
+
     public abstract function removeFromDatabase($database = null);
+
+    public abstract function removeFromDisk();
+
+    public abstract function updateCounts();
 }

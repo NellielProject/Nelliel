@@ -279,35 +279,14 @@ class ThreadHandler
     {
         $file = new \Nelliel\ContentFile($this->dbh, $content_id, $this->board_id);
         $this->verifyDeletePerms($content_id->post_id);
-        $this->removePostFilesFromDisk($content_id->post_id, $content_id->order_id);
-        $file->removeFromDatabase();
+        $file->remove();
     }
 
     public function removePost($content_id)
     {
         $post = new \Nelliel\ContentPost($this->dbh, $content_id, $this->board_id);
         $this->verifyDeletePerms($content_id->post_id);
-        $post->removeFromDatabase();
-        $post->removeDirectories();
-    }
-
-    public function removePostFilesFromDatabase($post_ref, $order = null, $quantity = 1)
-    {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-        if (is_null($order))
-        {
-            $prepared = $this->dbh->prepare(
-                    'DELETE FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ?');
-            $this->dbh->executePrepared($prepared, array($post_ref));
-        }
-        else
-        {
-            $prepared = $this->dbh->prepare(
-                    'DELETE FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ? AND "file_order" = ?');
-            $this->dbh->executePrepared($prepared, array($post_ref, $order));
-        }
-
-        $this->subtractFromFileCount($post_ref, $quantity);
+        $post->remove();
     }
 
     public function removePostFilesFromDisk($post_id, $file_order = null)
@@ -362,8 +341,7 @@ class ThreadHandler
     {
         $thread = new \Nelliel\ContentThread($this->dbh, $content_id, $this->board_id);
         $this->verifyDeletePerms($content_id->thread_id);
-        $thread->removeFromDatabase();
-        $thread->removeDirectories();
+        $thread->remove();
     }
 
     public function subtractFromFileCount($post_id, $quantity)

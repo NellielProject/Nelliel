@@ -11,6 +11,7 @@ if (!defined('NELLIEL_VERSION'))
 
 class ContentPost extends ContentBase
 {
+
     function __construct($database, $content_id, $board_id)
     {
         $this->database = $database;
@@ -32,20 +33,6 @@ class ContentPost extends ContentBase
         }
 
         $this->content_data = $result;
-        return true;
-    }
-
-    public function removeFromDatabase($temp_database = null)
-    {
-        if (empty($this->content_id->post_id))
-        {
-            return false;
-        }
-
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-        $prepared = $database->prepare('DELETE FROM "' . $board_references['post_table'] . '" WHERE "post_number" = ?');
-        $database->executePrepared($prepared, [$this->content_id->post_id]);
         return true;
     }
 
@@ -107,8 +94,7 @@ class ContentPost extends ContentBase
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
 
-        $parent_thread =
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
+        $parent_thread = $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('INSERT INTO "' . $board_references['post_table'] . '" ("post_time") VALUES (?)');
         $database->executePrepared($prepared, [$post_time]);
         $prepared = $database->prepare(
@@ -117,26 +103,62 @@ class ContentPost extends ContentBase
         $this->content_id->thread_id = ($this->content_id->thread_id == 0) ? $result : $this->content_id->thread_id;
         $this->content_data['parent_thread'] = ($this->content_data['parent_thread'] == 0) ? $result : $this->content_data['parent_thread'];
         $this->content_id->post_id = $result;
-
     }
 
     public function createDirectories()
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->createDirectory($board_references['src_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
-        $file_handler->createDirectory($board_references['thumb_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
+        $file_handler->createDirectory(
+                $board_references['src_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                DIRECTORY_PERM);
+        $file_handler->createDirectory(
+                $board_references['thumb_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                DIRECTORY_PERM);
     }
 
-    public function removeDirectories()
+    public function remove()
+    {
+        $this->removeFromDatabase();
+        $this->removeFromDisk();
+        $thread = new \Nelliel\ContentThread($this->database, $this->content_id, $this->board_id);
+        $thread->updateCounts();
+    }
+
+    public function removeFromDatabase($temp_database = null)
+    {
+        if (empty($this->content_id->post_id))
+        {
+            return false;
+        }
+
+        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
+        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
+        $prepared = $database->prepare('DELETE FROM "' . $board_references['post_table'] . '" WHERE "post_number" = ?');
+        $database->executePrepared($prepared, [$this->content_id->post_id]);
+        return true;
+    }
+
+    public function removeFromDisk()
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->eraserGun(
-                $file_handler->pathJoin($board_references['src_path'],
-                        $this->content_id->thread_id . '/' . $this->content_id->post_id), null, true);
-        $file_handler->eraserGun(
-                $file_handler->pathJoin($board_references['thumb_path'],
-                        $this->content_id->thread_id . '/' . $this->content_id->post_id), null, true);
+        $file_handler->eraserGun($board_references['src_path'],
+                $this->content_id->thread_id . '/' . $this->content_id->post_id, true);
+        $file_handler->eraserGun($board_references['thumb_path'],
+                $this->content_id->thread_id . '/' . $this->content_id->post_id, true);
+    }
+
+    public function updateCounts()
+    {
+        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
+        $prepared = $this->database->prepare(
+                'SELECT COUNT("entry") FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ?');
+        $file_count = $this->database->executePreparedFetch($prepared, array($this->content_id->post_id),
+                PDO::FETCH_COLUMN, true);
+
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $board_references['post_table'] . '" SET "file_count" = ? WHERE "post_number" = ?');
+        $this->database->executePrepared($prepared, array($file_count, $this->content_id->post_id));
     }
 }

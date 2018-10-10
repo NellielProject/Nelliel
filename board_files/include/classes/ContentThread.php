@@ -11,6 +11,7 @@ if (!defined('NELLIEL_VERSION'))
 
 class ContentThread extends ContentBase
 {
+
     function __construct($database, $content_id, $board_id)
     {
         $this->database = $database;
@@ -32,20 +33,6 @@ class ContentThread extends ContentBase
         }
 
         $this->content_data = $result;
-        return true;
-    }
-
-    public function removeFromDatabase($temp_database = null)
-    {
-        if (empty($this->content_id->thread_id))
-        {
-            return false;
-        }
-
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-        $prepared = $database->prepare('DELETE FROM "' . $board_references['thread_table'] . '" WHERE "thread_id" = ?');
-        $database->executePrepared($prepared, [$this->content_id->thread_id]);
         return true;
     }
 
@@ -104,15 +91,54 @@ class ContentThread extends ContentBase
         $file_handler->createDirectory($board_references['page_path'] . $this->content_id->thread_id, DIRECTORY_PERM);
     }
 
-    public function removeDirectories()
+    public function remove()
+    {
+        $this->removeFromDatabase();
+        $this->removeFromDisk();
+    }
+
+    public function removeFromDatabase($temp_database = null)
+    {
+        if (empty($this->content_id->thread_id))
+        {
+            return false;
+        }
+
+        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
+        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
+        $prepared = $database->prepare('DELETE FROM "' . $board_references['thread_table'] . '" WHERE "thread_id" = ?');
+        $database->executePrepared($prepared, [$this->content_id->thread_id]);
+        return true;
+    }
+
+    public function removeFromDisk()
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->eraserGun($file_handler->pathJoin($board_references['src_path'], $this->content_id->thread_id),
-                null, true);
-        $file_handler->eraserGun($file_handler->pathJoin($board_references['thumb_path'], $this->content_id->thread_id),
-                null, true);
-        $file_handler->eraserGun($file_handler->pathJoin($board_references['page_path'], $this->content_id->thread_id),
-                null, true);
+        $file_handler->eraserGun($board_references['src_path'], $this->content_id->thread_id, true);
+        $file_handler->eraserGun($board_references['thumb_path'], $this->content_id->thread_id, true);
+        $file_handler->eraserGun($board_references['page_path'], $this->content_id->thread_id, true);
+    }
+
+    public function updateCounts()
+    {
+        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
+        $prepared = $this->database->prepare(
+                'SELECT COUNT("post_number") FROM "' . $board_references['post_table'] . '" WHERE "parent_thread" = ?');
+        $post_count = $this->database->executePreparedFetch($prepared, array($this->content_id->thread_id),
+                PDO::FETCH_COLUMN, true);
+
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $board_references['thread_table'] . '" SET "post_count" = ? WHERE "thread_id" = ?');
+        $this->database->executePrepared($prepared, array($post_count, $this->content_id->thread_id));
+
+        $prepared = $this->database->prepare(
+                'SELECT COUNT("entry") FROM "' . $board_references['file_table'] . '" WHERE "parent_thread" = ?');
+        $file_count = $this->database->executePreparedFetch($prepared, array($this->content_id->thread_id),
+                PDO::FETCH_COLUMN, true);
+
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $board_references['thread_table'] . '" SET "total_files" = ? WHERE "thread_id" = ?');
+        $this->database->executePrepared($prepared, array($file_count, $this->content_id->thread_id));
     }
 }

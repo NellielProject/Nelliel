@@ -11,6 +11,7 @@ if (!defined('NELLIEL_VERSION'))
 
 class ContentFile extends ContentBase
 {
+
     function __construct($database, $content_id, $board_id)
     {
         $this->database = $database;
@@ -24,7 +25,8 @@ class ContentFile extends ContentBase
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $database->prepare(
                 'SELECT * FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ? AND "file_order" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id, $this->content_id->order_id], PDO::FETCH_ASSOC);
+        $result = $database->executePreparedFetch($prepared,
+                [$this->content_id->post_id, $this->content_id->order_id], PDO::FETCH_ASSOC);
 
         if (empty($result))
         {
@@ -32,20 +34,6 @@ class ContentFile extends ContentBase
         }
 
         $this->content_data = $result;
-        return true;
-    }
-
-    public function removeFromDatabase($temp_database = null)
-    {
-        if (empty($this->content_id->order_id))
-        {
-            return false;
-        }
-
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-        $prepared = $database->prepare('DELETE FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ? AND "file_order" = ?');
-        $database->executePrepared($prepared, [$this->content_id->post_id, $this->content_id->order_id]);
         return true;
     }
 
@@ -60,7 +48,8 @@ class ContentFile extends ContentBase
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $database->prepare(
                 'SELECT "entry" FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ? AND "file_order" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id, $this->content_id->order_id], PDO::FETCH_COLUMN);
+        $result = $database->executePreparedFetch($prepared,
+                [$this->content_id->post_id, $this->content_id->order_id], PDO::FETCH_COLUMN);
 
         if ($result)
         {
@@ -99,7 +88,8 @@ class ContentFile extends ContentBase
         $prepared->bindValue(':image_width', $this->contentDataOrDefault('image_width', null), PDO::PARAM_INT);
         $prepared->bindValue(':image_height', $this->contentDataOrDefault('image_height', null), PDO::PARAM_INT);
         $prepared->bindValue(':preview_name', $this->contentDataOrDefault('preview_name', null), PDO::PARAM_STR);
-        $prepared->bindValue(':preview_extension', $this->contentDataOrDefault('preview_extension', null), PDO::PARAM_STR);
+        $prepared->bindValue(':preview_extension', $this->contentDataOrDefault('preview_extension', null),
+                PDO::PARAM_STR);
         $prepared->bindValue(':preview_width', $this->contentDataOrDefault('preview_width', null), PDO::PARAM_INT);
         $prepared->bindValue(':preview_height', $this->contentDataOrDefault('preview_height', null), PDO::PARAM_INT);
         $prepared->bindValue(':filesize', $this->contentDataOrDefault('filesize', null), PDO::PARAM_INT);
@@ -119,19 +109,58 @@ class ContentFile extends ContentBase
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->createDirectory($board_references['src_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
-        $file_handler->createDirectory($board_references['thumb_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
+        $file_handler->createDirectory(
+                $board_references['src_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                DIRECTORY_PERM);
+        $file_handler->createDirectory(
+                $board_references['thumb_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                DIRECTORY_PERM);
     }
 
-    public function removeDirectories()
+    public function remove()
+    {
+        $this->removeFromDisk();
+        $this->removeFromDatabase();
+        $post = new \Nelliel\ContentPost($this->database, $this->content_id, $this->board_id);
+        $post->updateCounts();
+        $thread = new \Nelliel\ContentThread($this->database, $this->content_id, $this->board_id);
+        $thread->updateCounts();
+    }
+
+    public function removeFromDatabase($temp_database = null)
+    {
+        if (empty($this->content_id->order_id))
+        {
+            return false;
+        }
+
+        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
+        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
+        $prepared = $database->prepare(
+                'DELETE FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ? AND "file_order" = ?');
+        $database->executePrepared($prepared, [$this->content_id->post_id, $this->content_id->order_id]);
+        return true;
+    }
+
+    public function removeFromDisk()
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
+
+        if (empty($this->content_data))
+        {
+            $this->loadFromDatabase();
+        }
+
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->eraserGun(
-                $file_handler->pathJoin($board_references['src_path'],
-                        $this->content_id->thread_id . '/' . $this->content_id->post_id), null, true);
-        $file_handler->eraserGun(
-                $file_handler->pathJoin($board_references['thumb_path'],
-                        $this->content_id->thread_id . '/' . $this->content_id->post_id), null, true);
+        $file_handler->eraserGun($board_references['src_path'],
+                $this->content_id->thread_id . '/' . $this->content_id->post_id . '/' . $this->content_data['filename'] .
+                '.' . $this->content_data['extension']);
+        $file_handler->eraserGun($board_references['thumb_path'],
+                $this->content_id->thread_id . '/' . $this->content_id->post_id . '/' .
+                $this->content_data['preview_name'] . '.' . $this->content_data['preview_extension']);
+    }
+
+    public function updateCounts()
+    {
     }
 }
