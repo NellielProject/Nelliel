@@ -52,4 +52,6 @@ abstract class ContentBase
     public abstract function removeFromDisk();
 
     public abstract function updateCounts();
+
+    public abstract function verifyModifyPerms();
 }

@@ -60,11 +60,11 @@ function nel_process_new_post($inputs)
         nel_derp(13, _gettext('Post is too long. Try looking up the word concise.'), $error_data);
     }
 
-    if (isset($post->content_data['password']))
+    if (isset($post->content_data['post_password']))
     {
-        $cpass = $post->content_data['password'];
-        $post->content_data['password'] = nel_generate_salted_hash(
-                nel_parameters_and_data()->siteSettings('post_password_algorithm'), $post->content_data['password']);
+        $cpass = $post->content_data['post_password'];
+        $post->content_data['post_password'] = nel_generate_salted_hash(
+                nel_parameters_and_data()->siteSettings('post_password_algorithm'), $post->content_data['post_password']);
     }
     else
     {

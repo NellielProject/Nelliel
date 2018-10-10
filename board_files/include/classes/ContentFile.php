@@ -119,6 +119,11 @@ class ContentFile extends ContentBase
 
     public function remove()
     {
+        if (!$this->verifyModifyPerms())
+        {
+            return false;
+        }
+
         $this->removeFromDisk();
         $this->removeFromDatabase();
         $post = new \Nelliel\ContentPost($this->database, $this->content_id, $this->board_id);
@@ -162,5 +167,11 @@ class ContentFile extends ContentBase
 
     public function updateCounts()
     {
+    }
+
+    public function verifyModifyPerms()
+    {
+        $post = new \Nelliel\ContentPost($this->database, $content_id, $this->board_id);
+        return $post->verifyModifyPerms();
     }
 }

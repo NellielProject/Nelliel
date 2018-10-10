@@ -43,16 +43,19 @@ class ThreadHandler
             {
                 if ($content_id->isThread())
                 {
-                    $this->removeThread($content_id);
+                    $thread = new \Nelliel\ContentThread($this->dbh, $content_id, $this->board_id);
+                    $thread->remove();
                     $update_archive = true;
                 }
                 else if ($content_id->isPost())
                 {
-                    $this->removePost($content_id);
+                    $post = new \Nelliel\ContentPost($this->dbh, $content_id, $this->board_id);
+                    $post->remove();
                 }
                 else if ($content_id->isFile())
                 {
-                    $this->removeFile($content_id);
+                    $file = new \Nelliel\ContentFile($this->dbh, $content_id, $this->board_id);
+                    $file->remove();
                 }
             }
 
@@ -81,13 +84,13 @@ class ThreadHandler
         return $returned_list;
     }
 
-    public function getPostData($post_id)
+    /*public function getPostData($post_id)
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $this->dbh->prepare(
                 'SELECT * FROM "' . $board_references['post_table'] . '" WHERE "post_number" = ? LIMIT 1');
         return $this->dbh->executePreparedFetch($prepared, array($post_id), PDO::FETCH_ASSOC, true);
-    }
+    }*/
 
     /*public function getPostFiles($post_id)
     {
@@ -168,7 +171,7 @@ class ThreadHandler
         return $this->dbh->executePreparedFetch($prepared, array($thread_id), PDO::FETCH_ASSOC, true);
     }*/
 
-    public function convertPostToThread($post_id)
+    /*public function convertPostToThread($post_id)
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         nel_create_thread_directories($post_id);
@@ -222,9 +225,9 @@ class ThreadHandler
                 ++ $line;
             }
         }
-    }
+    }*/
 
-    public function removeFile($content_id)
+    /*public function removeFile($content_id)
     {
         $file = new \Nelliel\ContentFile($this->dbh, $content_id, $this->board_id);
         $this->verifyDeletePerms($content_id->post_id);
@@ -244,9 +247,9 @@ class ThreadHandler
         $thread = new \Nelliel\ContentThread($this->dbh, $content_id, $this->board_id);
         $this->verifyDeletePerms($content_id->thread_id);
         $thread->remove();
-    }
+    }*/
 
-    public function verifyDeletePerms($post_id)
+    /*public function verifyDeletePerms($post_id)
     {
         $authorize = nel_authorize();
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
@@ -289,5 +292,5 @@ class ThreadHandler
         }
 
         return true;
-    }
+    }*/
 }

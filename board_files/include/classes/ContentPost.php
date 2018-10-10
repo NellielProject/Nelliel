@@ -73,7 +73,7 @@ class ContentPost extends ContentBase
         $prepared->bindValue(':parent_thread',
                 $this->contentDataOrDefault('parent_thread', $this->content_id->thread_id), PDO::PARAM_INT);
         $prepared->bindValue(':poster_name', $this->contentDataOrDefault('poster_name', null), PDO::PARAM_STR);
-        $prepared->bindValue(':post_password', $this->contentDataOrDefault('password', null), PDO::PARAM_STR);
+        $prepared->bindValue(':post_password', $this->contentDataOrDefault('post_password', null), PDO::PARAM_STR);
         $prepared->bindValue(':tripcode', $this->contentDataOrDefault('tripcode', null), PDO::PARAM_STR);
         $prepared->bindValue(':secure_tripcode', $this->contentDataOrDefault('secure_tripcode', null), PDO::PARAM_STR);
         $prepared->bindValue(':email', $this->contentDataOrDefault('email', null), PDO::PARAM_STR);
@@ -94,7 +94,6 @@ class ContentPost extends ContentBase
     public function reserveDatabaseRow($post_time, $temp_database = null)
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-
         $parent_thread = $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('INSERT INTO "' . $board_references['post_table'] . '" ("post_time") VALUES (?)');
         $database->executePrepared($prepared, [$post_time]);
@@ -120,10 +119,16 @@ class ContentPost extends ContentBase
 
     public function remove()
     {
+        if (!$this->verifyModifyPerms())
+        {
+            return false;
+        }
+
         $this->removeFromDatabase();
         $this->removeFromDisk();
         $thread = new \Nelliel\ContentThread($this->database, $this->content_id, $this->board_id);
         $thread->updateCounts();
+        return true;
     }
 
     public function removeFromDatabase($temp_database = null)
@@ -144,8 +149,12 @@ class ContentPost extends ContentBase
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->eraserGun($board_references['src_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id, null, true);
-        $file_handler->eraserGun($board_references['thumb_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id, null, true);
+        $file_handler->eraserGun(
+                $board_references['src_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id, null,
+                true);
+        $file_handler->eraserGun(
+                $board_references['thumb_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id, null,
+                true);
     }
 
     public function updateCounts()
@@ -159,6 +168,33 @@ class ContentPost extends ContentBase
         $prepared = $this->database->prepare(
                 'UPDATE "' . $board_references['post_table'] . '" SET "file_count" = ? WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, array($file_count, $this->content_id->post_id));
+    }
+
+    public function verifyModifyPerms()
+    {
+        if (empty($this->content_data))
+        {
+            $this->loadFromDatabase();
+        }
+
+        $authorize = nel_authorize();
+        $flag = false;
+
+        if (!empty($this->content_data['mod_post']) && nel_sessions()->sessionIsActive())
+        {
+            $flag = $authorize->roleLevelCheck($authorize->userHighestLevelRole($_SESSION['username'], $this->board_id),
+                    $authorize->userHighestLevelRole($this->content_data['mod_post'], $this->board_id));
+        }
+
+        if (!$flag)
+        {
+            if (!nel_verify_salted_hash($_POST['update_sekrit'], $this->content_data['post_password']))
+            {
+                nel_derp(31, _gettext('Password is wrong or you are not allowed to delete that.'));
+            }
+        }
+
+        return true;
     }
 
     public function convertToThread()

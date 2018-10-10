@@ -93,6 +93,11 @@ class ContentThread extends ContentBase
 
     public function remove()
     {
+        if (!$this->verifyModifyPerms())
+        {
+            return false;
+        }
+
         $this->removeFromDatabase();
         $this->removeFromDisk();
     }
@@ -147,6 +152,12 @@ class ContentThread extends ContentBase
                 'UPDATE "' . $board_references['thread_table'] .
                 '" SET "first_post" = ?, "last_post" = ? WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$first_post, $last_post, $this->content_id->thread_id]);
+    }
+
+    public function verifyModifyPerms()
+    {
+        $post = new \Nelliel\ContentPost($this->database, $content_id, $this->board_id);
+        return $post->verifyModifyPerms();
     }
 
     public function sticky()

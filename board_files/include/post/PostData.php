@@ -33,7 +33,7 @@ class PostData
         $post->content_data['subject'] = $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string');
         $post->content_data['comment'] = $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], 'string');
         $post->content_data['fgsfds'] = $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], 'string');
-        $post->content_data['password'] = $this->checkEntry($_POST['new_post']['post_info']['sekrit'], 'string');
+        $post->content_data['post_password'] = $this->checkEntry($_POST['new_post']['post_info']['sekrit'], 'string');
         $post->content_data['response_to'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer');
         $post->content_data['post_as_staff'] = (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false;
         $post->content_data['mod_post'] = null;
