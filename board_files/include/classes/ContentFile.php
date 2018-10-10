@@ -171,7 +171,7 @@ class ContentFile extends ContentBase
 
     public function verifyModifyPerms()
     {
-        $post = new \Nelliel\ContentPost($this->database, $content_id, $this->board_id);
+        $post = new \Nelliel\ContentPost($this->database, $this->content_id, $this->board_id);
         return $post->verifyModifyPerms();
     }
 }
