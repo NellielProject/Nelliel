@@ -24,6 +24,23 @@ abstract class ContentBase
         return $default;
     }
 
+    public function dataIsLoaded($load = false)
+    {
+        if(empty($this->content_data))
+        {
+            if($load)
+            {
+                return $this->loadFromDatabase();
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public abstract function loadFromDatabase($database = null);
 
     public abstract function writeToDatabase($database = null);

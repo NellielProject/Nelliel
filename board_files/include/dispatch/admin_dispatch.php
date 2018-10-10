@@ -134,36 +134,30 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'threads':
-                $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
-                $updates = $content_id->thread_id;
-
                 if ($inputs['action'] === 'delete-post')
                 {
-                    $thread_handler->removePost($content_id);
+                    $post = new \Nelliel\ContentPost(nel_database(), $content_id, $inputs['board_id']);
+                    $post->remove();
                 }
                 else if ($inputs['action'] === 'delete-thread')
                 {
-                    $thread_handler->removeThread($content_id);
+                    $thread = new \Nelliel\ContentThread(nel_database(), $content_id, $inputs['board_id']);
+                    $thread->remove();
                 }
-                else if ($inputs['action'] === 'sticky')
+                else if ($inputs['action'] === 'sticky' || $inputs['action'] === 'unsticky')
                 {
-                    $updates = $thread_handler->stickyThread($content_id->thread_id);
+                    $thread = new \Nelliel\ContentThread(nel_database(), $content_id, $inputs['board_id']);
+                    $thread->sticky();
                 }
-                else if ($inputs['action'] === 'unsticky')
+                else if ($inputs['action'] === 'lock' || $inputs['action'] === 'unlock')
                 {
-                    $updates = $thread_handler->unstickyThread($content_id->thread_id);
-                }
-                else if ($inputs['action'] === 'lock')
-                {
-                    $updates = $thread_handler->lockThread($content_id->thread_id);
-                }
-                else if ($inputs['action'] === 'unlock')
-                {
-                    $updates = $thread_handler->unlockThread($content_id->thread_id);
+                    $thread = new \Nelliel\ContentThread(nel_database(), $content_id, $inputs['board_id']);
+                    $thread->lock();
                 }
                 else if ($inputs['action'] === 'delete-file')
                 {
-                    $thread_handler->removeFile($content_id);
+                    $file = new \Nelliel\ContentFile(nel_database(), $content_id, $inputs['board_id']);
+                    $file->remove();
                 }
                 else if ($inputs['action'] === 'ban-file')
                 {
@@ -183,23 +177,22 @@ function nel_admin_dispatch($inputs)
 
             case 'multi':
                 require_once INCLUDE_PATH . 'admin/bans_panel.php';
-                $updates = $content_id->thread_id;
 
                 if ($inputs['action'] === 'ban.delete-post' || $inputs['action'] === 'ban.delete-thread')
                 {
-                    $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
-
                     if ($inputs['action'] === 'ban.delete-post')
                     {
-                        $thread_handler->removePost($content_id);
+                        $post = new \Nelliel\ContentPost(nel_database(), $content_id, $inputs['board_id']);
+                        $post->remove();
                     }
                     else if ($inputs['action'] === 'ban.delete-thread')
                     {
-                        $thread_handler->removeThread($content_id);
+                        $thread = new \Nelliel\ContentThread(nel_database(), $content_id, $inputs['board_id']);
+                        $thread->remove();
                     }
 
                     $regen = new \Nelliel\Regen();
-                    $regen->threads($inputs['board_id'], true, $updates);
+                    $regen->threads($inputs['board_id'], true, $content_id->thread_id);
                     $regen->index($inputs['board_id']);
                     require_once INCLUDE_PATH . 'admin/bans_panel.php';
                     $inputs['action'] = 'new';

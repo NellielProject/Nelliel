@@ -141,4 +141,28 @@ class ContentThread extends ContentBase
                 'UPDATE "' . $board_references['thread_table'] . '" SET "total_files" = ? WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, array($file_count, $this->content_id->thread_id));
     }
+
+    public function sticky()
+    {
+        if(!$this->dataIsLoaded(true))
+        {
+            return false;
+        }
+
+        $this->content_data['sticky'] = ($this->content_data['sticky'] == 1) ? 0 : 1;
+        $this->writeToDatabase();
+        return true;
+    }
+
+    public function lock()
+    {
+        if(!$this->dataIsLoaded(true))
+        {
+            return false;
+        }
+
+        $this->content_data['locked'] = ($this->content_data['locked'] == 1) ? 0 : 1;
+        $this->writeToDatabase();
+        return true;
+    }
 }
