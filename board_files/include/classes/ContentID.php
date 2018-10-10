@@ -2,8 +2,6 @@
 
 namespace Nelliel;
 
-use PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -13,11 +11,11 @@ class ContentID
 {
     public $thread_id = 0;
     public $post_id = 0;
-    public $order_id = 1;
-    protected $id_string;
-    protected $is_thread;
-    protected $is_post;
-    protected $is_file;
+    public $order_id = 0;
+    protected $id_string = 'nci_0_0_0';
+    protected $is_thread = false;
+    protected $is_post = false;
+    protected $is_file = false;
 
     function __construct($id_string)
     {
