@@ -19,27 +19,27 @@ function nel_process_new_post($inputs)
     $post = new \Nelliel\ContentPost($dbh, new \Nelliel\ContentID('nci_0_0_0'), $board_id);
     $data_handler->processPostData($post);
     $time = get_millisecond_time();
-    $post->post_data['post_time'] = $time;
+    $post->content_data['post_time'] = $time;
 
     // Check if post is ok
-    nel_is_post_ok($board_id, $post->post_data, $time);
+    nel_is_post_ok($board_id, $post->content_data, $time);
 
     // Process FGSFDS
-    if (!empty($post->post_data['fgsfds']))
+    if (!empty($post->content_data['fgsfds']))
     {
-        $fgsfds_commands = preg_split('#[\s,]#u', $post->post_data['fgsfds']);
+        $fgsfds_commands = preg_split('#[\s,]#u', $post->content_data['fgsfds']);
         nel_fgsfds('noko', in_array('noko', $fgsfds_commands));
         nel_fgsfds('sage', in_array('sage', $fgsfds_commands));
     }
 
-    $post->post_data['sage'] = (empty(nel_fgsfds('sage'))) ? 0 : nel_fgsfds('sage');
-    $files = $file_upload->processFiles($post->post_data['response_to']);
+    $post->content_data['sage'] = (empty(nel_fgsfds('sage'))) ? 0 : nel_fgsfds('sage');
+    $files = $file_upload->processFiles($post->content_data['response_to']);
     $spoon = !empty($files);
-    $post->post_data['file_count'] = count($files);
+    $post->content_data['file_count'] = count($files);
 
     if (!$spoon)
     {
-        if (!$post->post_data['comment'])
+        if (!$post->content_data['comment'])
         {
             nel_derp(10, _gettext('Post contains no content or file. Dumbass.'), $error_data);
         }
@@ -49,22 +49,22 @@ function nel_process_new_post($inputs)
             nel_derp(11, _gettext('Image or file required when making a new post.'), $error_data);
         }
 
-        if ($board_settings['require_image_start'] && $post->post_data['response_to'] == 0)
+        if ($board_settings['require_image_start'] && $post->content_data['response_to'] == 0)
         {
             nel_derp(12, _gettext('Image or file required to make new thread.'), $error_data);
         }
     }
 
-    if (utf8_strlen($post->post_data['comment']) > $board_settings['max_comment_length'])
+    if (utf8_strlen($post->content_data['comment']) > $board_settings['max_comment_length'])
     {
         nel_derp(13, _gettext('Post is too long. Try looking up the word concise.'), $error_data);
     }
 
-    if (isset($post->post_data['password']))
+    if (isset($post->content_data['password']))
     {
-        $cpass = $post->post_data['password'];
-        $post->post_data['password'] = nel_generate_salted_hash(
-                nel_parameters_and_data()->siteSettings('post_password_algorithm'), $post->post_data['password']);
+        $cpass = $post->content_data['password'];
+        $post->content_data['password'] = nel_generate_salted_hash(
+                nel_parameters_and_data()->siteSettings('post_password_algorithm'), $post->content_data['password']);
     }
     else
     {
@@ -73,37 +73,37 @@ function nel_process_new_post($inputs)
 
     // Cookies OM NOM NOM NOM
     setrawcookie('pwd-' . $board_id, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
-    setrawcookie('name-' . $board_id, $post->post_data['name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
+    setrawcookie('name-' . $board_id, $post->content_data['name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
 
     // Go ahead and put post into database
-    $post->post_data['op'] = ($post->post_data['parent_thread'] == 0) ? 1 : 0;
-    $post->post_data['has_file'] = ($post->post_data['file_count'] > 0) ? 1 : 0;
+    $post->content_data['op'] = ($post->content_data['parent_thread'] == 0) ? 1 : 0;
+    $post->content_data['has_file'] = ($post->content_data['file_count'] > 0) ? 1 : 0;
     $post->reserveDatabaseRow($time);
     $thread = new \Nelliel\ContentThread($dbh, new \Nelliel\ContentID('nci_0_0_0'), $board_id);
 
-    if ($post->post_data['response_to'] == 0)
+    if ($post->content_data['response_to'] == 0)
     {
         $thread->content_id->thread_id = $post->content_id->post_id;
-        $thread->thread_data['first_post'] = $post->content_id->post_id;
-        $thread->thread_data['last_post'] = $post->content_id->post_id;
-        $thread->thread_data['last_bump_time'] = $time;
-        $thread->thread_data['total_files'] = $post->post_data['file_count'];
-        $thread->thread_data['last_update'] = $time;
-        $thread->thread_data['post_count'] = 1;
+        $thread->content_data['first_post'] = $post->content_id->post_id;
+        $thread->content_data['last_post'] = $post->content_id->post_id;
+        $thread->content_data['last_bump_time'] = $time;
+        $thread->content_data['total_files'] = $post->content_data['file_count'];
+        $thread->content_data['last_update'] = $time;
+        $thread->content_data['post_count'] = 1;
         $thread->writeToDatabase();
         $thread->createDirectories();
     }
     else
     {
-        $thread->content_id->thread_id = $post->post_data['parent_thread'];
+        $thread->content_id->thread_id = $post->content_data['parent_thread'];
         $thread->loadFromDatabase();
-        $thread->thread_data['total_files'] = $thread->thread_data['total_files'] + $post->post_data['file_count'];
-        $thread->thread_data['last_update'] = $time;
-        $thread->thread_data['post_count'] = $thread->thread_data['post_count'] + 1;
+        $thread->content_data['total_files'] = $thread->content_data['total_files'] + $post->content_data['file_count'];
+        $thread->content_data['last_update'] = $time;
+        $thread->content_data['post_count'] = $thread->content_data['post_count'] + 1;
 
-        if ($thread->thread_data['post_count'] <= $board_settings['max_bumps'] && !nel_fgsfds('sage'))
+        if ($thread->content_data['post_count'] <= $board_settings['max_bumps'] && !nel_fgsfds('sage'))
         {
-            $thread->thread_data['last_bump_time'] = $time;
+            $thread->content_data['last_bump_time'] = $time;
         }
 
         $thread->writeToDatabase();
@@ -132,14 +132,14 @@ function nel_process_new_post($inputs)
         foreach ($files as $file)
         {
             $file->content_id->thread_id = $thread->content_id->thread_id;
-            $file->file_data['parent_thread'] = $thread->content_id->thread_id;
+            $file->content_data['parent_thread'] = $thread->content_id->thread_id;
             $file->content_id->post_id = $post->content_id->post_id;
-            $file->file_data['post_ref'] = $post->content_id->post_id;
+            $file->content_data['post_ref'] = $post->content_id->post_id;
             $file->content_id->order_id = $order;
-            $file->file_data['file_order'] = $order;
-            $file_handler->moveFile($file->file_data['location'], $src_path . $file->file_data['fullname'], true,
+            $file->content_data['file_order'] = $order;
+            $file_handler->moveFile($file->content_data['location'], $src_path . $file->content_data['fullname'], true,
                     DIRECTORY_PERM);
-            chmod($src_path . $file->file_data['fullname'], octdec(FILE_PERM));
+            chmod($src_path . $file->content_data['fullname'], octdec(FILE_PERM));
             $file->writeToDatabase();
             ++ $order;
         }

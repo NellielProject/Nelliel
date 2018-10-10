@@ -11,23 +11,11 @@ if (!defined('NELLIEL_VERSION'))
 
 class ContentFile extends ContentBase
 {
-    public $file_data = array();
-
     function __construct($database, $content_id, $board_id)
     {
         $this->database = $database;
         $this->content_id = $content_id;
         $this->board_id = $board_id;
-    }
-
-    private function validFileData($data_name, $default)
-    {
-        if (isset($this->file_data[$data_name]))
-        {
-            return $this->file_data[$data_name];
-        }
-
-        return $default;
     }
 
     public function loadFromDatabase($temp_database = null)
@@ -43,7 +31,7 @@ class ContentFile extends ContentBase
             return false;
         }
 
-        $this->file_data = $result;
+        $this->content_data = $result;
         return true;
     }
 
@@ -63,7 +51,7 @@ class ContentFile extends ContentBase
 
     public function writeToDatabase($temp_database = null)
     {
-        if (empty($this->file_data) || empty($this->content_id->order_id))
+        if (empty($this->content_data) || empty($this->content_id->order_id))
         {
             return false;
         }
@@ -99,30 +87,30 @@ class ContentFile extends ContentBase
                     :source, :license, :alt_text, :exif)');
         }
 
-        $prepared->bindValue(':parent_thread', $this->validFileData('parent_thread', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':post_ref', $this->validFileData('post_ref', null), PDO::PARAM_INT);
-        $prepared->bindValue(':file_order', $this->validFileData('file_order', 1), PDO::PARAM_INT);
-        $prepared->bindValue(':type', $this->validFileData('type', null), PDO::PARAM_STR);
-        $prepared->bindValue(':format', $this->validFileData('format', null), PDO::PARAM_STR);
-        $prepared->bindValue(':mime', $this->validFileData('mime', null), PDO::PARAM_STR);
-        $prepared->bindValue(':url', $this->validFileData('url', null), PDO::PARAM_STR);
-        $prepared->bindValue(':filename', $this->validFileData('filename', null), PDO::PARAM_STR);
-        $prepared->bindValue(':extension', $this->validFileData('extension', null), PDO::PARAM_STR);
-        $prepared->bindValue(':image_width', $this->validFileData('image_width', null), PDO::PARAM_INT);
-        $prepared->bindValue(':image_height', $this->validFileData('image_height', null), PDO::PARAM_INT);
-        $prepared->bindValue(':preview_name', $this->validFileData('preview_name', null), PDO::PARAM_STR);
-        $prepared->bindValue(':preview_extension', $this->validFileData('preview_extension', null), PDO::PARAM_STR);
-        $prepared->bindValue(':preview_width', $this->validFileData('preview_width', null), PDO::PARAM_INT);
-        $prepared->bindValue(':preview_height', $this->validFileData('preview_height', null), PDO::PARAM_INT);
-        $prepared->bindValue(':filesize', $this->validFileData('filesize', null), PDO::PARAM_INT);
-        $prepared->bindValue(':md5', $this->validFileData('md5', null), PDO::PARAM_LOB);
-        $prepared->bindValue(':sha1', $this->validFileData('sha1', null), PDO::PARAM_LOB);
-        $prepared->bindValue(':sha256', $this->validFileData('sha256', null), PDO::PARAM_LOB);
-        $prepared->bindValue(':sha512', $this->validFileData('sha512', null), PDO::PARAM_LOB);
-        $prepared->bindValue(':source', $this->validFileData('source', null), PDO::PARAM_STR);
-        $prepared->bindValue(':license', $this->validFileData('license', null), PDO::PARAM_STR);
-        $prepared->bindValue(':alt_text', $this->validFileData('alt_text', null), PDO::PARAM_STR);
-        $prepared->bindValue(':exif', $this->validFileData('exif', null), PDO::PARAM_STR);
+        $prepared->bindValue(':parent_thread', $this->contentDataOrDefault('parent_thread', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':post_ref', $this->contentDataOrDefault('post_ref', null), PDO::PARAM_INT);
+        $prepared->bindValue(':file_order', $this->contentDataOrDefault('file_order', 1), PDO::PARAM_INT);
+        $prepared->bindValue(':type', $this->contentDataOrDefault('type', null), PDO::PARAM_STR);
+        $prepared->bindValue(':format', $this->contentDataOrDefault('format', null), PDO::PARAM_STR);
+        $prepared->bindValue(':mime', $this->contentDataOrDefault('mime', null), PDO::PARAM_STR);
+        $prepared->bindValue(':url', $this->contentDataOrDefault('url', null), PDO::PARAM_STR);
+        $prepared->bindValue(':filename', $this->contentDataOrDefault('filename', null), PDO::PARAM_STR);
+        $prepared->bindValue(':extension', $this->contentDataOrDefault('extension', null), PDO::PARAM_STR);
+        $prepared->bindValue(':image_width', $this->contentDataOrDefault('image_width', null), PDO::PARAM_INT);
+        $prepared->bindValue(':image_height', $this->contentDataOrDefault('image_height', null), PDO::PARAM_INT);
+        $prepared->bindValue(':preview_name', $this->contentDataOrDefault('preview_name', null), PDO::PARAM_STR);
+        $prepared->bindValue(':preview_extension', $this->contentDataOrDefault('preview_extension', null), PDO::PARAM_STR);
+        $prepared->bindValue(':preview_width', $this->contentDataOrDefault('preview_width', null), PDO::PARAM_INT);
+        $prepared->bindValue(':preview_height', $this->contentDataOrDefault('preview_height', null), PDO::PARAM_INT);
+        $prepared->bindValue(':filesize', $this->contentDataOrDefault('filesize', null), PDO::PARAM_INT);
+        $prepared->bindValue(':md5', $this->contentDataOrDefault('md5', null), PDO::PARAM_LOB);
+        $prepared->bindValue(':sha1', $this->contentDataOrDefault('sha1', null), PDO::PARAM_LOB);
+        $prepared->bindValue(':sha256', $this->contentDataOrDefault('sha256', null), PDO::PARAM_LOB);
+        $prepared->bindValue(':sha512', $this->contentDataOrDefault('sha512', null), PDO::PARAM_LOB);
+        $prepared->bindValue(':source', $this->contentDataOrDefault('source', null), PDO::PARAM_STR);
+        $prepared->bindValue(':license', $this->contentDataOrDefault('license', null), PDO::PARAM_STR);
+        $prepared->bindValue(':alt_text', $this->contentDataOrDefault('alt_text', null), PDO::PARAM_STR);
+        $prepared->bindValue(':exif', $this->contentDataOrDefault('exif', null), PDO::PARAM_STR);
         $database->executePrepared($prepared);
         return true;
     }

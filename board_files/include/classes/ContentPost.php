@@ -11,23 +11,11 @@ if (!defined('NELLIEL_VERSION'))
 
 class ContentPost extends ContentBase
 {
-    public $post_data = array();
-
     function __construct($database, $content_id, $board_id)
     {
         $this->database = $database;
         $this->content_id = $content_id;
         $this->board_id = $board_id;
-    }
-
-    private function validPostData($data_name, $default)
-    {
-        if (isset($this->post_data[$data_name]))
-        {
-            return $this->post_data[$data_name];
-        }
-
-        return $default;
     }
 
     public function loadFromDatabase($temp_database = null)
@@ -43,7 +31,7 @@ class ContentPost extends ContentBase
             return false;
         }
 
-        $this->post_data = $result;
+        $this->content_data = $result;
         return true;
     }
 
@@ -63,7 +51,7 @@ class ContentPost extends ContentBase
 
     public function writeToDatabase($temp_database = null)
     {
-        if (empty($this->post_data) || empty($this->content_id->post_id))
+        if (empty($this->content_data) || empty($this->content_id->post_id))
         {
             return false;
         }
@@ -95,22 +83,22 @@ class ContentPost extends ContentBase
                     :op, :sage, :mod_post, :mod_comment)');
         }
 
-        $prepared->bindValue(':parent_thread', $this->validPostData('parent_thread', null), PDO::PARAM_INT);
-        $prepared->bindValue(':poster_name', $this->validPostData('poster_name', null), PDO::PARAM_STR);
-        $prepared->bindValue(':post_password', $this->validPostData('password', null), PDO::PARAM_STR);
-        $prepared->bindValue(':tripcode', $this->validPostData('tripcode', null), PDO::PARAM_STR);
-        $prepared->bindValue(':secure_tripcode', $this->validPostData('secure_tripcode', null), PDO::PARAM_STR);
-        $prepared->bindValue(':email', $this->validPostData('email', null), PDO::PARAM_STR);
-        $prepared->bindValue(':subject', $this->validPostData('subject', null), PDO::PARAM_STR);
-        $prepared->bindValue(':comment', $this->validPostData('comment', null), PDO::PARAM_STR);
-        $prepared->bindValue(':ip_address', $this->validPostData('ip_address', null), PDO::PARAM_LOB);
-        $prepared->bindValue(':post_time', $this->validPostData('post_time', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':has_file', $this->validPostData('has_file', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':file_count', $this->validPostData('file_count', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':op', $this->validPostData('op', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':sage', $this->validPostData('sage', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':mod_post', $this->validPostData('mod_post', null), PDO::PARAM_STR);
-        $prepared->bindValue(':mod_comment', $this->validPostData('mod_comment', null), PDO::PARAM_STR);
+        $prepared->bindValue(':parent_thread', $this->contentDataOrDefault('parent_thread', null), PDO::PARAM_INT);
+        $prepared->bindValue(':poster_name', $this->contentDataOrDefault('poster_name', null), PDO::PARAM_STR);
+        $prepared->bindValue(':post_password', $this->contentDataOrDefault('password', null), PDO::PARAM_STR);
+        $prepared->bindValue(':tripcode', $this->contentDataOrDefault('tripcode', null), PDO::PARAM_STR);
+        $prepared->bindValue(':secure_tripcode', $this->contentDataOrDefault('secure_tripcode', null), PDO::PARAM_STR);
+        $prepared->bindValue(':email', $this->contentDataOrDefault('email', null), PDO::PARAM_STR);
+        $prepared->bindValue(':subject', $this->contentDataOrDefault('subject', null), PDO::PARAM_STR);
+        $prepared->bindValue(':comment', $this->contentDataOrDefault('comment', null), PDO::PARAM_STR);
+        $prepared->bindValue(':ip_address', $this->contentDataOrDefault('ip_address', null), PDO::PARAM_LOB);
+        $prepared->bindValue(':post_time', $this->contentDataOrDefault('post_time', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':has_file', $this->contentDataOrDefault('has_file', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':file_count', $this->contentDataOrDefault('file_count', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':op', $this->contentDataOrDefault('op', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':sage', $this->contentDataOrDefault('sage', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':mod_post', $this->contentDataOrDefault('mod_post', null), PDO::PARAM_STR);
+        $prepared->bindValue(':mod_comment', $this->contentDataOrDefault('mod_comment', null), PDO::PARAM_STR);
         $database->executePrepared($prepared);
         return true;
     }
@@ -127,7 +115,7 @@ class ContentPost extends ContentBase
                 'SELECT "post_number" FROM "' . $board_references['post_table'] . '" WHERE "post_time" = ? LIMIT 1');
         $result = $database->executePreparedFetch($prepared, [$post_time], PDO::FETCH_COLUMN, true);
         $this->content_id->thread_id = ($this->content_id->thread_id == 0) ? $result : $this->content_id->thread_id;
-        $this->post_data['parent_thread'] = ($this->post_data['parent_thread'] == 0) ? $result : $this->post_data['parent_thread'];
+        $this->content_data['parent_thread'] = ($this->content_data['parent_thread'] == 0) ? $result : $this->content_data['parent_thread'];
         $this->content_id->post_id = $result;
 
     }

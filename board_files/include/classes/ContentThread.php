@@ -11,23 +11,11 @@ if (!defined('NELLIEL_VERSION'))
 
 class ContentThread extends ContentBase
 {
-    public $thread_data = array();
-
     function __construct($database, $content_id, $board_id)
     {
         $this->database = $database;
         $this->content_id = $content_id;
         $this->board_id = $board_id;
-    }
-
-    private function validThreadData($data_name, $default)
-    {
-        if (isset($this->thread_data[$data_name]))
-        {
-            return $this->thread_data[$data_name];
-        }
-
-        return $default;
     }
 
     public function loadFromDatabase($temp_database = null)
@@ -43,7 +31,7 @@ class ContentThread extends ContentBase
             return false;
         }
 
-        $this->thread_data = $result;
+        $this->content_data = $result;
         return true;
     }
 
@@ -63,7 +51,7 @@ class ContentThread extends ContentBase
 
     public function writeToDatabase($temp_database = null)
     {
-        if (empty($this->thread_data) || empty($this->content_id->thread_id))
+        if (empty($this->content_data) || empty($this->content_id->thread_id))
         {
             return false;
         }
@@ -93,16 +81,16 @@ class ContentThread extends ContentBase
         }
 
         $prepared->bindValue(':thread_id', $this->content_id->thread_id, PDO::PARAM_INT);
-        $prepared->bindValue(':first_post', $this->validThreadData('first_post', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':last_post', $this->validThreadData('last_post', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':last_bump_time', $this->validThreadData('last_bump_time', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':total_files', $this->validThreadData('total_files', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':last_update', $this->validThreadData('last_update', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':post_count', $this->validThreadData('post_count', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':thread_sage', $this->validThreadData('thread_sage', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':sticky', $this->validThreadData('sticky', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':archive_status', $this->validThreadData('archive_status', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':locked', $this->validThreadData('locked', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':first_post', $this->contentDataOrDefault('first_post', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':last_post', $this->contentDataOrDefault('last_post', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':last_bump_time', $this->contentDataOrDefault('last_bump_time', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':total_files', $this->contentDataOrDefault('total_files', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':last_update', $this->contentDataOrDefault('last_update', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':post_count', $this->contentDataOrDefault('post_count', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':thread_sage', $this->contentDataOrDefault('thread_sage', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':sticky', $this->contentDataOrDefault('sticky', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':archive_status', $this->contentDataOrDefault('archive_status', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':locked', $this->contentDataOrDefault('locked', 0), PDO::PARAM_INT);
         $database->executePrepared($prepared);
         return true;
     }
