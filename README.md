@@ -8,7 +8,7 @@ A relatively lightweight, expandable and highly configurable imageboard written 
 These are only the bare minimum requirements for Nelliel to function. **It is strongly recommended to use the latest software versions available.**
 
 Required:
-- PHP 5.4.16+
+- PHP 5.6.25+
 - PDO with MySQL, SQLite or PostgreSQL support
 - MySQL 5.5.52+, MariaDB 5.5.52+, SQLite 3.6.20+ or PostgreSQL 9.2.18+
 - iconv
