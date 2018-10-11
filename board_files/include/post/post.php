@@ -111,9 +111,6 @@ function nel_process_new_post($inputs)
 
     $post->writeToDatabase();
     $post->createDirectories();
-
-    $prepared = $dbh->prepare('UPDATE "' . $references['post_table'] . '" SET parent_thread = ? WHERE post_number = ?');
-    $dbh->executePrepared($prepared, array($thread->content_id->thread_id, $post->content_id->post_id), true);
     nel_fgsfds('noko_topic', $thread->content_id->thread_id);
     $src_path = $references['src_path'] . $thread->content_id->thread_id . '/' . $post->content_id->post_id . '/';
     $preview_path = $references['thumb_path'] . $thread->content_id->thread_id . '/' . $post->content_id->post_id .
