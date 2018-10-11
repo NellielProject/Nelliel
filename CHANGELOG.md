@@ -1,4 +1,24 @@
 # Nelliel Changelog
+## v0.9.8 (2018/10/10)
+### Breaking
+ - Bump minimum requirements to PHP 5.6.25
+
+### Added
+ - Mostly finished implementing a standard ContentID
+ - ContentThread, ContentPost and ContentFile objects for handling most functions of threads, posts and files respectively
+ - Add moveDirectory to FileHandler
+
+### Changed
+ - Update thread control panel
+ - Update libraries
+ - Fix show/hide thread js
+ - Moved most of the thread and post functions inside their respective objects
+ - Refine some of the FileHandler functions
+ - Lots of cleanup and debugging
+
+### Removed
+ - second_last_post which was no longer used
+
 ## v0.9.7.1 (2018/08/19)
 ### Added
  - Add very basic reports system

@@ -38,7 +38,7 @@ Any stable core functions and features contributed to Nelliel must be fully func
  - Forward compatibility becomes impractical or is no longer possible.
 
 ### PHP Support
-At present Nelliel has a target version of **PHP 5.4.16**.
+At present Nelliel has a target version of **PHP 5.6.25**.
 
 ### Database Support
 Currently supported RDBMS:
