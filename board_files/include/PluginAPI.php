@@ -12,28 +12,28 @@ class PluginAPI
     private static $api_revision = 1;
     private static $hooks = array();
     private static $plugins = array();
+    private static $parsed_ini_files = array();
 
     public static function apiRevision()
     {
         return self::$api_revision;
     }
 
-    public static function registerPlugin($plugin_directory)
+    public static function registerPlugin($plugin_directory, $initializer_file)
     {
         if (!ENABLE_PLUGINS)
         {
             return false;
         }
 
-        $plugin_id = self::generateID();
-
-        if (isset(self::$plugins[$plugin_id]))
+        if(array_key_exists($initializer_file, self::$parsed_ini_files))
         {
-            return false;
+            $plugin_id = self::generateID();
+            self::$plugins[$plugin_id] = new \Nelliel\Plugin($plugin_id, $plugin_directory, self::$parsed_ini_files[$initializer_file]);
+            return $plugin_id;
         }
 
-        self::$plugins[$plugin_id] = new \Nelliel\Plugin($plugin_id, $plugin_directory);
-        return $plugin_id;
+        return false;
     }
 
     private static function verifyOrCreateHook($hook_name, $new = true)
@@ -126,9 +126,11 @@ class PluginAPI
         {
             if($file->getFilename() === 'nelliel-plugin.ini')
             {
-                $parsed_ini = parse_ini_file($file->getPathname());
+                $parsed_ini = parse_ini_file($file->getPathname(), true);
                 $plugin_base_path = $file->getPathInfo()->getRealPath();
-                include_once $plugin_base_path . '/' . $parsed_ini['initializer'];
+                $initializer_file = $plugin_base_path . '/' . $parsed_ini['initializer'];
+                self::$parsed_ini_files[$initializer_file]['ini'] = $parsed_ini;
+                include_once $initializer_file;
             }
         }
     }

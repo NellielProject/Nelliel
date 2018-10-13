@@ -14,10 +14,10 @@ class Plugin
     private $directory;
     private $initializer;
 
-    function __construct($id, $directory)
+    function __construct($id, $directory, $ini)
     {
         $this->id = $id;
-        $this->directory = $directory;
-        $this->ini = parse_ini_file($directory . '/nelliel-plugin.ini');
+        $this->directory = new \SplFileInfo($directory);
+        $this->ini = $ini;
     }
 }

@@ -9,7 +9,7 @@ namespace ExamplePlugin;
 include_once 'plugin_example_class.php';
 include_once 'plugin_example_function.php';
 
-$plugin_id = \Nelliel\PluginAPI::registerPlugin(__DIR__);
+$plugin_id = \Nelliel\PluginAPI::registerPlugin(__DIR__, __FILE__);
 new \ExamplePlugin\plugin_example_class($plugin_id);
 \ExamplePlugin\plugin_example_function($plugin_id);
 
