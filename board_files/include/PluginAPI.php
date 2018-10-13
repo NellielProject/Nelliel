@@ -124,8 +124,12 @@ class PluginAPI
 
         foreach ($plugin_files as $file)
         {
-            if($file->getFilename() === 'nelliel-plugin.php')
-            include_once $file->getPathname();
+            if($file->getFilename() === 'nelliel-plugin.ini')
+            {
+                $parsed_ini = parse_ini_file($file->getPathname());
+                $plugin_base_path = $file->getPathInfo()->getRealPath();
+                include_once $plugin_base_path . '/' . $parsed_ini['initializer'];
+            }
         }
     }
 
