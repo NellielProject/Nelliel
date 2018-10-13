@@ -6,11 +6,11 @@ class plugin_example_class
 {
     private $plugin_id;
 
-    public function __construct()
+    public function __construct($plugin_id)
     {
-        $this->plugin_id = nel_plugins()->registerPlugin(['name' => 'name']);
-        nel_plugins()->addHookMethod('plugin-example', $this, 'example_method', $this->plugin_id, 5);
-        nel_plugins()->addHookMethod('plugin-example-return', $this, 'example_method_returnable', $this->plugin_id, 10);
+        $this->plugin_id = $plugin_id;
+        \Nelliel\PluginAPI::registerMethod('plugin-example', $this, 'example_method', $this->plugin_id, 5);
+        \Nelliel\PluginAPI::registerMethod('plugin-example-return', $this, 'example_method_returnable', $this->plugin_id, 10);
     }
 
     public function example_method($arg)
