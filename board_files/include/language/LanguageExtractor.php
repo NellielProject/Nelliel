@@ -105,10 +105,16 @@ class LanguageExtractor
     private function parseSiteFiles($strings = array())
     {
         $file_handler = new \Nelliel\FileHandler();
-        $php_files = $file_handler->recursiveFileList(BASE_PATH,  false, ['php']);
+        $php_files = $file_handler->recursiveFileList(BASE_PATH, 0);
+        $php_files = array_merge($php_files, $file_handler->recursiveFileList(INCLUDE_PATH));
 
         foreach ($php_files as $file)
         {
+            if($file->getExtension() !== 'php')
+            {
+                continue;
+            }
+
             $contents = file_get_contents($file);
             preg_match_all('#_gettext\(["\'](.*?)["\']\)#u', $contents, $matches, PREG_SET_ORDER);
             $count = count($matches);
@@ -139,13 +145,18 @@ class LanguageExtractor
     private function parseHTMLFiles($strings = array())
     {
         $file_handler = new \Nelliel\FileHandler();
-        $html_files = $file_handler->recursiveFileList(BASE_PATH,  false, ['html']);
+        $html_files = $file_handler->recursiveFileList(TEMPLATE_PATH);
         $render = new \NellielTemplates\RenderCore();
 
         foreach ($html_files as $file)
         {
+            if($file->getExtension() !== 'html')
+            {
+                continue;
+            }
+
             $dom = $render->newDOMDocument();
-            $render->loadTemplateFromFile($dom, $file);
+            $render->loadTemplateFromFile($dom, $file->getPathname());
             $content_node_list = $dom->getElementsByAttributeName('data-i18n');
             $attribute_node_list = $dom->getElementsByAttributeName('data-i18n-attributes');
 
