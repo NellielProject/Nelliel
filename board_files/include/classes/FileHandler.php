@@ -179,24 +179,17 @@ class FileHandler
         return $filtered;
     }
 
-    public function recursiveFileList($path, $include_directories = false, $extensions = array(), $file_object = false)
+    public function recursiveFileList($path, $recursion_depth = -1, $include_directories = false, $file_object = true)
     {
         $file_list = array();
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
+        $iterator->setMaxDepth($recursion_depth);
 
         foreach ($iterator as $file)
         {
             if ($file->isDir() && !$include_directories)
             {
                 continue;
-            }
-
-            if (!empty($extensions))
-            {
-                if (!in_array($file->getExtension(), $extensions))
-                {
-                    continue;
-                }
             }
 
             if ($file_object)
