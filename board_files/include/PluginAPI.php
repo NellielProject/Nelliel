@@ -14,12 +14,12 @@ class PluginAPI
     private static $plugins = array();
     private static $parsed_ini_files = array();
 
-    public static function apiRevision()
+    public function apiRevision()
     {
         return self::$api_revision;
     }
 
-    public static function registerPlugin($plugin_directory, $initializer_file)
+    public function registerPlugin($plugin_directory, $initializer_file)
     {
         if (!ENABLE_PLUGINS)
         {
@@ -28,7 +28,7 @@ class PluginAPI
 
         if(array_key_exists($initializer_file, self::$parsed_ini_files))
         {
-            $plugin_id = self::generateID();
+            $plugin_id = $this->generateID();
             self::$plugins[$plugin_id] = new \Nelliel\Plugin($plugin_id, $plugin_directory, self::$parsed_ini_files[$initializer_file]);
             return $plugin_id;
         }
@@ -36,9 +36,9 @@ class PluginAPI
         return false;
     }
 
-    private static function verifyOrCreateHook($hook_name, $new = true)
+    private function verifyOrCreateHook($hook_name, $new = true)
     {
-        if (!self::isValidHook($hook_name))
+        if (!$this->isValidHook($hook_name))
         {
             if ($new)
             {
@@ -54,56 +54,56 @@ class PluginAPI
     }
 
     // Register hook functions here
-    public static function registerFunction($hook_name, $function_name, $plugin_id, $priority = 10)
+    public function addFunction($hook_name, $function_name, $plugin_id, $priority = 10)
     {
-        if (!self::isValidPlugin($plugin_id))
+        if (!$this->isValidPlugin($plugin_id))
         {
             return false;
         }
 
-        self::verifyOrCreateHook($hook_name);
-        self::$hooks[$hook_name]->registerFunction($function_name, $plugin_id, $priority);
+        $this->verifyOrCreateHook($hook_name);
+        self::$hooks[$hook_name]->addFunction($function_name, $plugin_id, $priority);
         return true;
     }
 
     // Register hook methods here
-    public static function registerMethod($hook_name, $class, $method_name, $plugin_id, $priority = 10)
+    public function addMethod($hook_name, $class, $method_name, $plugin_id, $priority = 10)
     {
-        if (!self::isValidPlugin($plugin_id))
+        if (!$this->isValidPlugin($plugin_id))
         {
             return false;
         }
 
-        self::verifyOrCreateHook($hook_name);
-        self::$hooks[$hook_name]->registerMethod($class, $method_name, $plugin_id, $priority);
+        $this->verifyOrCreateHook($hook_name);
+        self::$hooks[$hook_name]->addMethod($class, $method_name, $plugin_id, $priority);
         return true;
     }
 
-    public static function unregisterFunction($hook_name, $function_name, $plugin_id)
+    public function removeFunction($hook_name, $function_name, $plugin_id)
     {
-        if (!self::isValidHook($hook_name) || !self::isValidPlugin($plugin_id))
+        if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id))
         {
             return false;
         }
 
-        self::$hooks[$hook_name]->unregisterFunction($function_name, $plugin_id);
+        self::$hooks[$hook_name]->removeFunction($function_name, $plugin_id);
         return true;
     }
 
-    public static function unregisterMethod($hook_name, $class, $method_name, $plugin_id)
+    public function removeMethod($hook_name, $class, $method_name, $plugin_id)
     {
-        if (!self::isValidHook($hook_name) || !self::isValidPlugin($plugin_id))
+        if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id))
         {
             return false;
         }
 
-        self::$hooks[$hook_name]->unregisterFunction($class, $method_name, $plugin_id);
+        self::$hooks[$hook_name]->removeFunction($class, $method_name, $plugin_id);
         return true;
     }
 
-    public static function processHook($hook_name, $args, $returnable = null)
+    public function processHook($hook_name, $args, $returnable = null)
     {
-        if (!ENABLE_PLUGINS || !self::isValidHook($hook_name))
+        if (!ENABLE_PLUGINS || !$this->isValidHook($hook_name))
         {
             return $returnable;
         }
@@ -112,7 +112,7 @@ class PluginAPI
         return $returnable;
     }
 
-    public static function loadPlugins()
+    public function loadPlugins()
     {
         if (!ENABLE_PLUGINS)
         {
@@ -135,17 +135,17 @@ class PluginAPI
         }
     }
 
-    private static function generateID()
+    private function generateID()
     {
         return substr(md5(random_bytes(16)), -8);
     }
 
-    private static function isValidHook($hook_name)
+    private function isValidHook($hook_name)
     {
         return isset(self::$hooks[$hook_name]) && self::$hooks[$hook_name] instanceof PluginHook;
     }
 
-    private static function isValidPlugin($plugin_id)
+    private function isValidPlugin($plugin_id)
     {
         return isset(self::$plugins[$plugin_id]);
     }

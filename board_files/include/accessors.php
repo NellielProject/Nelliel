@@ -28,6 +28,18 @@ function nel_sessions()
     return $sessions;
 }
 
+function nel_plugins()
+{
+    static $plugins;
+
+    if (!isset($plugins))
+    {
+        $plugins = new \Nelliel\PluginAPI();
+    }
+
+    return $plugins;
+}
+
 function nel_parameters_and_data()
 {
     static $parameters;

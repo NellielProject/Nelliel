@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_general_dispatch($inputs)
 {
-    $inputs = \Nelliel\PluginAPI::processHook('inb4-general-dispatch', array(), $inputs);
+    $inputs = nel_plugins()->processHook('inb4-general-dispatch', array(), $inputs);
 
     switch ($inputs['module'])
     {

@@ -50,11 +50,11 @@ if (nel_setup_stuff_done())
     }
 }
 
-\Nelliel\PluginAPI::loadPlugins();
+nel_plugins()->loadPlugins();
 
 // A demo point. Does nothing.
-\Nelliel\PluginAPI::processHook('plugin-example', array(5));
-$out = \Nelliel\PluginAPI::processHook('plugin-example-return', array('string'), 5);
+nel_plugins()->processHook('plugin-example', array(5));
+$out = nel_plugins()->processHook('plugin-example-return', array('string'), 5);
 
 require_once INCLUDE_PATH . 'snacks.php';
 
