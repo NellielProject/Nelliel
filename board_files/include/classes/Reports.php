@@ -11,11 +11,11 @@ if (!defined('NELLIEL_VERSION'))
 
 class Reports
 {
-    private $dbh;
+    private $database;
 
-    function __construct()
+    function __construct($database)
     {
-        $this->dbh = nel_database();
+        $this->database = $database;
     }
 
     public function processContentReports()
@@ -48,8 +48,8 @@ class Reports
     {
         $query = 'INSERT INTO "' . REPORTS_TABLE .
                 '" ("board_id", "content_id", "reason", "reporter_ip") VALUES (?, ?, ?, ?)';
-        $prepared = $this->dbh->prepare($query);
-        $this->dbh->executePrepared($prepared,
+        $prepared = $this->database->prepare($query);
+        $this->database->executePrepared($prepared,
                 array($report_data['board_id'], $report_data['content_id'], $report_data['reason'],
                     @inet_pton($report_data['reporter_ip'])));
     }

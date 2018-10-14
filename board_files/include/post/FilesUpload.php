@@ -14,17 +14,16 @@ class FilesUpload
     private $board_id;
     private $uploaded_files = array();
     private $processed_files = array();
-    private $data_handler;
 
     function __construct($board_id, $files = array())
     {
         $this->board_id = $board_id;
         $this->uploaded_files = $files;
-        $this->data_handler = new \Nelliel\post\PostData($board_id);
     }
 
     public function processFiles($response_to)
     {
+        $data_handler = new \Nelliel\post\PostData($this->board_id);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
         $post_data =
@@ -39,7 +38,7 @@ class FilesUpload
                 continue;
             }
 
-            $file = new \Nelliel\ContentFile(nel_database(), new \Nelliel\ContentID('nci_0_0_0'), $this->board_id);
+            $file = new \Nelliel\ContentFile(nel_database(), new \Nelliel\ContentID(), $this->board_id);
             $new_file = array();
             $this->uploaded_files[$entry]['location'] = $file_data['tmp_name'];
             $file->content_data['location'] = $file_data['tmp_name'];
@@ -52,9 +51,9 @@ class FilesUpload
             $file->content_data['name'] = $file_handler->filterFilename($file_data['name']);
             $form_info = $_POST['new_post']['file_info'][$entry];
             $file->content_data['filesize'] = $file_data['size'];
-            $file->content_data['source'] = $this->data_handler->checkEntry($form_info['sauce'], 'string');
-            $file->content_data['license'] = $this->data_handler->checkEntry($form_info['lol_drama'], 'string');
-            $file->content_data['alt_text'] = $this->data_handler->checkEntry($form_info['alt_text'], 'string');
+            $file->content_data['source'] = $data_handler->checkEntry($form_info['sauce'], 'string');
+            $file->content_data['license'] = $data_handler->checkEntry($form_info['lol_drama'], 'string');
+            $file->content_data['alt_text'] = $data_handler->checkEntry($form_info['alt_text'], 'string');
 
             foreach ($filenames as $filename)
             {

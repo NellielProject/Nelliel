@@ -9,6 +9,9 @@ if (!defined('NELLIEL_VERSION'))
 
 class LanguageExtractor
 {
+    function __construct()
+    {
+    }
 
     public function assemblePoString()
     {

@@ -52,7 +52,7 @@ function nel_general_dispatch($inputs)
             {
                 if (isset($_POST['form_submit_report']))
                 {
-                    $reports = new \Nelliel\Reports();
+                    $reports = new \Nelliel\Reports(nel_database());
                     $reports->processContentReports();
 
                     if ($sessions->sessionIsActive())

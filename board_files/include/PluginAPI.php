@@ -14,6 +14,10 @@ class PluginAPI
     private static $plugins = array();
     private static $parsed_ini_files = array();
 
+    function __construct()
+    {
+    }
+
     public function apiRevision()
     {
         return self::$api_revision;

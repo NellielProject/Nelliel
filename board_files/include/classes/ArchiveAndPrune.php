@@ -2,7 +2,8 @@
 
 namespace Nelliel;
 
-use \PDO;
+use PDO;
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -11,7 +12,6 @@ if (!defined('NELLIEL_VERSION'))
 class ArchiveAndPrune
 {
     private $dbh;
-    private $thread_handler;
     private $file_handler;
     private $start_buffer;
     private $end_buffer;
@@ -22,12 +22,11 @@ class ArchiveAndPrune
     function __construct($board_id)
     {
         $this->dbh = nel_database();
-        $this->thread_handler = new \Nelliel\ThreadHandler($board_id);
         $this->start_buffer = nel_parameters_and_data()->boardSettings($board_id, 'threads_per_page') *
-        nel_parameters_and_data()->boardSettings($board_id, 'page_limit');
+                nel_parameters_and_data()->boardSettings($board_id, 'page_limit');
         $this->end_buffer = nel_parameters_and_data()->boardSettings($board_id, 'threads_per_page') *
-        nel_parameters_and_data()->boardSettings($board_id, 'page_buffer');
-             $this->file_handler = new \Nelliel\FileHandler();
+                nel_parameters_and_data()->boardSettings($board_id, 'page_buffer');
+        $this->file_handler = new \Nelliel\FileHandler();
         $this->board_id = $board_id;
         $this->references = nel_parameters_and_data()->boardReferences($board_id);
         $this->board_settings = nel_parameters_and_data()->boardSettings($board_id);
@@ -47,15 +46,15 @@ class ArchiveAndPrune
     public function getFullThreadList()
     {
         $query = 'SELECT "thread_id", "archive_status" FROM "' . $this->references['thread_table'] .
-             '" ORDER BY "sticky" DESC, "last_bump_time" DESC';
+                '" ORDER BY "sticky" DESC, "last_bump_time" DESC';
         $thread_list = $this->dbh->executeFetchAll($query, PDO::FETCH_ASSOC);
         return $thread_list;
     }
 
     public function getThreadListForStatus($status)
     {
-        $prepared = $this->dbh->prepare('SELECT "thread_id" FROM "' . $this->references['thread_table'] .
-             '" WHERE "archive_status" = ?');
+        $prepared = $this->dbh->prepare(
+                'SELECT "thread_id" FROM "' . $this->references['thread_table'] . '" WHERE "archive_status" = ?');
         $thread_list = $this->dbh->executePreparedFetchAll($prepared, array($status), PDO::FETCH_COLUMN);
         return $thread_list;
     }
@@ -63,7 +62,7 @@ class ArchiveAndPrune
     public function getFullArchiveThreadList()
     {
         $query = 'SELECT "thread_id", "archive_status" FROM "' . $this->references['archive_thread_table'] .
-             '" ORDER BY "sticky" DESC, "last_bump_time" DESC';
+                '" ORDER BY "sticky" DESC, "last_bump_time" DESC';
         $thread_list = $this->dbh->executeFetchAll($query, PDO::FETCH_ASSOC);
         return $thread_list;
     }
@@ -117,21 +116,24 @@ class ArchiveAndPrune
     public function moveToArchive($thread_id)
     {
         // Threads must be moved first, then posts, then files otherwise the db foreign keys will bitch
-        $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['archive_thread_table'] .
-             '" SELECT * FROM "' . $this->references['thread_table'] . '" WHERE "thread_id" = ?');
+        $prepared = $this->dbh->prepare(
+                'INSERT INTO "' . $this->references['archive_thread_table'] . '" SELECT * FROM "' .
+                $this->references['thread_table'] . '" WHERE "thread_id" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
-        $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['archive_post_table'] . '" SELECT * FROM "' .
-             $this->references['post_table'] . '" WHERE "parent_thread" = ?');
+        $prepared = $this->dbh->prepare(
+                'INSERT INTO "' . $this->references['archive_post_table'] . '" SELECT * FROM "' .
+                $this->references['post_table'] . '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
-        $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['archive_file_table'] . '" SELECT * FROM "' .
-             $this->references['file_table'] . '" WHERE "parent_thread" = ?');
+        $prepared = $this->dbh->prepare(
+                'INSERT INTO "' . $this->references['archive_file_table'] . '" SELECT * FROM "' .
+                $this->references['file_table'] . '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
-        $this->file_handler->moveFile($this->references['src_path'] . $thread_id, $this->references['archive_src_path'] .
-             $thread_id);
-        $this->file_handler->moveFile($this->references['thumb_path'] . $thread_id, $this->references['archive_thumb_path'] .
-             $thread_id);
-        $this->file_handler->moveFile($references['page_path'] . $thread_id, $this->references['archive_page_path'] .
-             $thread_id);
+        $this->file_handler->moveFile($this->references['src_path'] . $thread_id,
+                $this->references['archive_src_path'] . $thread_id);
+        $this->file_handler->moveFile($this->references['thumb_path'] . $thread_id,
+                $this->references['archive_thumb_path'] . $thread_id);
+        $this->file_handler->moveFile($references['page_path'] . $thread_id,
+                $this->references['archive_page_path'] . $thread_id);
         $this->dbh->executePrepared($prepared, array($thread_id));
         $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['thread_table'] . '" WHERE "thread_id"= ?');
     }
@@ -139,24 +141,27 @@ class ArchiveAndPrune
     public function moveFromArchive($thread_id)
     {
         // Threads must be moved first, then posts, then files otherwise the db foreign keys will bitch
-        $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['thread_table'] . '" SELECT * FROM "' .
-             $this->references['archive_thread_table'] . '" WHERE "thread_id" = ?');
+        $prepared = $this->dbh->prepare(
+                'INSERT INTO "' . $this->references['thread_table'] . '" SELECT * FROM "' .
+                $this->references['archive_thread_table'] . '" WHERE "thread_id" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
-        $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['post_table'] . '" SELECT * FROM "' .
-        $this->references['archive_post_table'] . '" WHERE "parent_thread" = ?');
+        $prepared = $this->dbh->prepare(
+                'INSERT INTO "' . $this->references['post_table'] . '" SELECT * FROM "' .
+                $this->references['archive_post_table'] . '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
-        $prepared = $this->dbh->prepare('INSERT INTO "' . $this->references['file_table'] . '" SELECT * FROM "' .
-             $this->references['archive_file_table'] . '" WHERE "parent_thread" = ?');
+        $prepared = $this->dbh->prepare(
+                'INSERT INTO "' . $this->references['file_table'] . '" SELECT * FROM "' .
+                $this->references['archive_file_table'] . '" WHERE "parent_thread" = ?');
         $this->dbh->executePrepared($prepared, array($thread_id));
-        $this->file_handler->moveFile($this->references['archive_src_path'] . $thread_id, $this->references['src_path'] .
-             $thread_id);
-        $this->file_handler->moveFile($this->references['archive_thumb_path'] . $thread_id, $this->references['thumb_path'] .
-             $thread_id);
-        $this->file_handler->moveFile($this->references['archive_page_path'] . $thread_id, $this->references['page_path'] .
-             $thread_id);
+        $this->file_handler->moveFile($this->references['archive_src_path'] . $thread_id,
+                $this->references['src_path'] . $thread_id);
+        $this->file_handler->moveFile($this->references['archive_thumb_path'] . $thread_id,
+                $this->references['thumb_path'] . $thread_id);
+        $this->file_handler->moveFile($this->references['archive_page_path'] . $thread_id,
+                $this->references['page_path'] . $thread_id);
         $this->dbh->executePrepared($prepared, array($thread_id));
-        $prepared = $this->dbh->prepare('DELETE FROM "' . $this->references['archive_thread_table'] .
-             '" WHERE "thread_id"= ?');
+        $prepared = $this->dbh->prepare(
+                'DELETE FROM "' . $this->references['archive_thread_table'] . '" WHERE "thread_id"= ?');
     }
 
     public function moveThreadsToArchive($move_list = array())
@@ -178,7 +183,7 @@ class ArchiveAndPrune
         if (empty($move_list))
         {
             $query = 'SELECT "thread_id" FROM "' . $this->references['archive_thread_table'] .
-                 '" WHERE "archive_status" < 2';
+                    '" WHERE "archive_status" < 2';
             $move_list = $this->dbh->executeFetchAll($query, PDO::FETCH_COLUMN);
         }
 
@@ -192,7 +197,8 @@ class ArchiveAndPrune
     {
         foreach ($this->getThreadListForStatus(2) as $thread_id)
         {
-            $thread = new \Nelliel\ContentThread($this->dbh, new \Nelliel\ContentID('nci_' . $thread_id . '_0_0'), $this->board_id);
+            $thread = new \Nelliel\ContentThread($this->dbh, new \Nelliel\ContentID('nci_' . $thread_id . '_0_0'),
+                    $this->board_id);
             $thread->remove();
         }
     }
