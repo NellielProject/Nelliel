@@ -53,7 +53,6 @@ class PostData
             $post->content_data['poster_name'] = _gettext('Anonymous');
             $post->content_data['email'] = '';
         }
-
     }
 
     public function checkEntry($post_item, $type)

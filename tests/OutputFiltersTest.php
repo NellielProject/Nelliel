@@ -1,12 +1,23 @@
 <?php
 require_once 'nelliel_version.php';
-require_once '../board_files/include/classes/OutputFilter.php';
+require_once __DIR__ . '/../board_files/include/classes/OutputFilter.php';
 
-class TestOutputFilters extends PHPUnit_Framework_TestCase
+class OutputFiltersTest extends PHPUnit_Framework_TestCase
 {
 
     function __construct()
     {
+    }
+
+    public function testCleanAndEncode()
+    {
+        $filter = new \Nelliel\OutputFilter();
+        $whitespace_string = " \n\r\t   ";
+        $untrimmed_string = "  string ";
+        $filter->cleanAndEncode($whitespace_string);
+        $this->assertTrue($whitespace_string === '');
+        $filter->cleanAndEncode($untrimmed_string);
+        $this->assertTrue($untrimmed_string === 'string');
     }
 
     public function testClearWhitespace()
