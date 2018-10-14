@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_admin_dispatch($inputs)
 {
-    $inputs = nel_plugins()->processHook('inb4-admin-dispatch', array(), $inputs);
+    $inputs = nel_plugins()->processHook('nel-inb4-admin-dispatch', array(), $inputs);
     nel_verify_login_or_session($inputs['manage'], $inputs['action']);
 
     if ($inputs['manage'] === 'login')

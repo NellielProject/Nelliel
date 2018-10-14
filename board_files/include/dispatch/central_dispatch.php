@@ -8,7 +8,7 @@ require_once INCLUDE_PATH . 'admin/login.php'; // TODO: Make login a class
 
 function nel_central_dispatch()
 {
-    nel_plugins()->processHook('inb4-central-dispatch', array());
+    nel_plugins()->processHook('nel-inb4-central-dispatch', array());
     $authorize = nel_authorize();
 
     if (empty($_GET) && empty($_POST))
