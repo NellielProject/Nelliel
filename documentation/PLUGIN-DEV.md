@@ -15,7 +15,7 @@ On start, Nelliel will scan the plugins directory for `nelliel-plugin.ini` files
 4. Assuming successful registration of the plugin, the initializer may then complete whatever other functions it needs.
 
 ## Hooks
-The core of Nelliel's plugin API is hooks. These can be set at almost any given part of Nelliel's code or in the code of plugins. When the code execution reaches the hook, it will check for any functions or methods registered to it and execute those before continuing.
+The core of Nelliel's plugin API is hooks. These may be set at almost any part of Nelliel's code or in the code of plugins. When the code execution reaches a hook, it will check for any functions or methods registered to it and execute those before continuing.
 
 In order to avoid naming collisions, hooks set by Nelliel will be prepended by `nel-`. Hooks set by plugins must be prepended by a unique identifier such as the plugin name.
 
@@ -25,29 +25,29 @@ Both Nelliel and plugins can define hooks. This is done by using `processHook`. 
 2. `$args` - [Required] An array of variables or parameters to be passed on to any registered functions or methods.
 3. `$returnable` - [Optional] An optional variable that should be returned. If not passed, will have the value null.
   
-If `$returnable` is given, all plugin methods and functions registered to the hook should return the variable as-is or modified. If it is not returned or the type has been changed, the previous value will be passed on instead.
+If `$returnable` is given, all plugin methods and functions registered to the hook should return the variable as-is or with a modified value. If it is not returned or the type has been changed, the previous value will be passed on instead.
 
 ## Function Registration
-To add a function to a hook, call `addHookFunction`. Four parameters can be passed:
+To add a function to a hook, call `addFunction`. Four parameters can be passed:
 1. `$hook_name` - [Required] A string matching the name of a hook.
 2. `$function_name` - [Required] The name of the function being registered. This must include the namespace path.
 3. `$plugin_id` - [Required] The ID of the plugin.
-4. `$priority` - [Optional] Sets the priority of execution. If not given, defaults to 10.
+4. `$priority` - [Optional] Sets the priority of execution. Defaults to 10.
 
-To remove a function from a hook, call `removeHookFunction`. Three parameters can be passed:
+To remove a function from a hook, call `removeFunction`. Three parameters can be passed:
 1. `$hook_name` - [Required] A string matching the name of a hook.
 2. `$function_name` - [Required] The name of the function being registered. This must include the namespace path.
 3. `$plugin_id` - [Required] The ID of the plugin.
 
 ## Class Method Registration
-To add a class method to a hook, call `addHookMethod`. Five parameters can be passed during registration:
+To add a class method to a hook, call `addMethod`. Five parameters can be passed during registration:
 1. `$hook_name` - [Required] A string matching the name of a hook.
 2. `$class` - [Required] An instance of the class containing the method.
 3. `$method_name` - [Required] The name of the method.
 4. `$plugin_id` - [Required] The ID of the plugin.
-5. `$priority` - [Optional] An optional parameter setting the priority of execution. If not given, defaults to 10.
+5. `$priority` - [Optional] An optional parameter setting the priority of execution. Defaults to 10.
 
-To remove a class method from a hook, call `removeHookMethod`. Four parameters can be passed:
+To remove a class method from a hook, call `removeMethod`. Four parameters can be passed:
 1. `$hook_name` - [Required] A string matching the name of a hook.
 2. `$class` - [Required] An instance of the class containing the method.
 3. `$method_name` - [Required] The name of the method.
