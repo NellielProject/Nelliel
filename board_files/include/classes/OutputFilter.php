@@ -28,11 +28,6 @@ class OutputFilter
             return;
         }
 
-        if (get_magic_quotes_gpc())
-        {
-            $string = stripslashes($string);
-        }
-
         $string = trim($string);
         $string = htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
     }
