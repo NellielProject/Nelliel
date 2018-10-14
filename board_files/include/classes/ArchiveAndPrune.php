@@ -19,9 +19,9 @@ class ArchiveAndPrune
     private $references;
     private $board_settings;
 
-    function __construct($board_id)
+    function __construct($database, $board_id)
     {
-        $this->dbh = nel_database();
+        $this->dbh = $database;
         $this->start_buffer = nel_parameters_and_data()->boardSettings($board_id, 'threads_per_page') *
                 nel_parameters_and_data()->boardSettings($board_id, 'page_limit');
         $this->end_buffer = nel_parameters_and_data()->boardSettings($board_id, 'threads_per_page') *

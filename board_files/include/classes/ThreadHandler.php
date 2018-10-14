@@ -12,9 +12,9 @@ class ThreadHandler
     private $dbh;
     private $board_id;
 
-    function __construct($board_id)
+    function __construct($database, $board_id)
     {
-        $this->dbh = nel_database();
+        $this->dbh = $database;
         $this->board_id = $board_id;
     }
 
@@ -63,7 +63,7 @@ class ThreadHandler
 
         if ($update_archive)
         {
-            $archive = new \Nelliel\ArchiveAndPrune($this->board_id);
+            $archive = new \Nelliel\ArchiveAndPrune($this->dbh, $this->board_id);
             $archive->updateAllArchiveStatus();
 
             if ($board_settings['old_threads'] === 'ARCHIVE')

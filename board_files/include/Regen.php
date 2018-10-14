@@ -43,7 +43,7 @@ class Regen
     public function index($board_id)
     {
         require_once INCLUDE_PATH . 'output/main_generation.php';
-        $archive = new \Nelliel\ArchiveAndPrune($board_id);
+        $archive = new \Nelliel\ArchiveAndPrune(nel_database(), $board_id);
         $archive->updateAllArchiveStatus();
 
         if (nel_parameters_and_data()->boardSettings($board_id, 'old_threads') === 'ARCHIVE')
