@@ -73,7 +73,7 @@ function nel_process_new_post($inputs)
 
     // Cookies OM NOM NOM NOM
     setrawcookie('pwd-' . $board_id, $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
-    setrawcookie('name-' . $board_id, $post->content_data['name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
+    setrawcookie('name-' . $board_id, $post->content_data['poster_name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
 
     // Go ahead and put post into database
     $post->content_data['op'] = ($post->content_data['parent_thread'] == 0) ? 1 : 0;
