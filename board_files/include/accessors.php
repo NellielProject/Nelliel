@@ -22,7 +22,7 @@ function nel_plugins()
 
     if (!isset($plugins))
     {
-        $plugins = new \Nelliel\PluginAPI();
+        $plugins = new \Nelliel\API\PluginAPI();
     }
 
     return $plugins;

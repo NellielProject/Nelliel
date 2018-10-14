@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel;
+namespace Nelliel\API;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -33,7 +33,7 @@ class PluginAPI
         if(array_key_exists($initializer_file, self::$parsed_ini_files))
         {
             $plugin_id = $this->generateID();
-            self::$plugins[$plugin_id] = new \Nelliel\Plugin($plugin_id, $plugin_directory, self::$parsed_ini_files[$initializer_file]);
+            self::$plugins[$plugin_id] = new \Nelliel\API\Plugin($plugin_id, $plugin_directory, self::$parsed_ini_files[$initializer_file]);
             return $plugin_id;
         }
 
@@ -46,7 +46,7 @@ class PluginAPI
         {
             if ($new)
             {
-                self::$hooks[$hook_name] = new PluginHook($hook_name);
+                self::$hooks[$hook_name] = new \Nelliel\API\PluginHook($hook_name);
             }
             else
             {
