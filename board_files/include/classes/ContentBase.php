@@ -41,13 +41,13 @@ abstract class ContentBase
         return true;
     }
 
-    public abstract function loadFromDatabase($database = null);
+    public abstract function loadFromDatabase($temp_database = null);
 
-    public abstract function writeToDatabase($database = null);
+    public abstract function writeToDatabase($temp_database = null);
 
     public abstract function remove();
 
-    public abstract function removeFromDatabase($database = null);
+    public abstract function removeFromDatabase($temp_database = null);
 
     public abstract function removeFromDisk();
 
