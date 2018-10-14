@@ -14,10 +14,10 @@ class BanHammer
     private $dbh;
     private $authorize;
 
-    public function __construct()
+    public function __construct($database, $authorize)
     {
-        $this->dbh = nel_database();
-        $this->authorize = nel_authorize();
+        $this->dbh = $database;
+        $this->authorize = $authorize;
     }
 
     public function postToArray()

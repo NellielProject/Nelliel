@@ -39,7 +39,6 @@ class CacheHandler
     public function updateHash($id, $hash)
     {
         $this->hashes[$id] = $hash;
-        $file_handler = new \Nelliel\FileHandler();
         $this->writeCacheFile(CACHE_PATH, 'hashes.php', '$hashes = ' . var_export($this->hashes, true) . ';');
     }
 

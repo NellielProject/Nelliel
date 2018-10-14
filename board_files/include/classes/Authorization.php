@@ -16,9 +16,9 @@ class Authorization
     private $roles = array();
     private $user_roles = array();
 
-    function __construct()
+    function __construct($database)
     {
-        $this->dbh = nel_database();
+        $this->dbh = $database;
     }
 
     public function userExists($user)

@@ -96,7 +96,7 @@ function nel_render_ban_panel_add($board_id, $ip = '', $type = 'GENERAL')
 
 function nel_render_ban_panel_modify($board_id)
 {
-    $ban_hammer = new \Nelliel\BanHammer();
+    $ban_hammer = new \Nelliel\BanHammer(nel_database(), nel_authorize());
     $dbh = nel_database();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();

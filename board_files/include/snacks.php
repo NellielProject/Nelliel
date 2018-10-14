@@ -11,7 +11,7 @@ require_once INCLUDE_PATH . 'output/ban_page.php';
 //
 function nel_ban_spambots()
 {
-    $ban_hammer = new \Nelliel\BanHammer();
+    $ban_hammer = new \Nelliel\BanHammer(nel_database(), nel_authorize());
 
     if (!empty($_POST[_gettext('TEXT_SPAMBOT_FIELD1')]) || !empty($_POST[_gettext('TEXT_SPAMBOT_FIELD2')]))
     {
@@ -69,7 +69,7 @@ function nel_ban_appeal($board_id, $ban_info)
 //
 function nel_apply_ban($inputs)
 {
-    $ban_hammer = new \Nelliel\BanHammer();
+    $ban_hammer = new \Nelliel\BanHammer(nel_database(), nel_authorize());
     $bans = $ban_hammer->getBansByIp($_SERVER['REMOTE_ADDR']);
     $ban_info = null;
 
