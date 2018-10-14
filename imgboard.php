@@ -17,7 +17,6 @@ define('SQLITE_DB_DEFAULT_PATH', FILES_PATH); // Base SQLite DB location
 
 require_once INCLUDE_PATH . 'autoload.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
-require_once LIBRARY_PATH . 'password_compat/lib/password.php';
 require_once LIBRARY_PATH . 'random_compat/lib/random.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'accessors.php';
