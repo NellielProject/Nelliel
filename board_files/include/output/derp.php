@@ -6,6 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_derp($diagnostic, $board_id = null)
 {
+    $language = new \Nelliel\language\Language();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -22,7 +23,7 @@ function nel_render_derp($diagnostic, $board_id = null)
     }
 
     $do_styles = (is_null($board_id)) ? false : true;
-    nel_language()->i18nDom($dom);
+    $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render, $board_id, null, $do_styles);
     echo $render->outputRenderSet();

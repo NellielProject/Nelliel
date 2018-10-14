@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_site_settings_panel()
 {
     $dbh = nel_database();
+    $language = new \Nelliel\language\Language();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -42,7 +43,7 @@ function nel_render_site_settings_panel()
         }
     }
 
-    nel_language()->i18nDom($dom);
+    $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

@@ -10,13 +10,15 @@ require_once INCLUDE_PATH . 'output/post.php';
 function nel_thread_generator($board_id, $write, $response_to)
 {
     $dbh = nel_database();
+    $language = new \Nelliel\language\Language();
+    $sessions = new \Nelliel\Sessions();
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $file_handler = new \Nelliel\FileHandler();
 
     if ($write)
     {
-        nel_sessions()->sessionIsIgnored('render', true);
+        $sessions->sessionIsIgnored('render', true);
     }
 
     $dotdot = ($write) ? '../../../' : '';
@@ -24,7 +26,7 @@ function nel_thread_generator($board_id, $write, $response_to)
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'thread.html');
-    nel_language()->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    $language->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
     $expand_dom = $render->newDOMDocument();
     $collapse_dom = $render->newDOMDocument();
     $render->startRenderTimer();
@@ -38,7 +40,7 @@ function nel_thread_generator($board_id, $write, $response_to)
 
     if (empty($treeline))
     {
-        nel_sessions()->sessionIsIgnored('render', false);
+        $sessions->sessionIsIgnored('render', false);
         return;
     }
 
@@ -161,6 +163,6 @@ function nel_thread_generator($board_id, $write, $response_to)
 
     if ($write)
     {
-        nel_sessions()->sessionIsIgnored('render', false);
+        $sessions->sessionIsIgnored('render', false);
     }
 }

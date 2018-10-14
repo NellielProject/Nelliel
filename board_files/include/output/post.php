@@ -13,6 +13,7 @@ function nel_render_insert_hr($dom)
 
 function nel_render_index_navigation($board_id, $dom, $render, $pages)
 {
+    $language = new \Nelliel\language\Language();
     $dom_nav = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom_nav, 'index_navigation.html');
     $bottom_nav = $dom_nav->getElementById('index-bottom-nav');
@@ -37,11 +38,12 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
     }
 
     $nav_nodes['nav-link-container']->remove();
-    nel_language()->i18nDom($bottom_nav, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    $language->i18nDom($bottom_nav, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
 }
 
 function nel_render_post($board_id, $gen_data, $dom)
 {
+    $sessions = new \Nelliel\Sessions();
     $authorize = nel_authorize();
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
@@ -99,7 +101,7 @@ function nel_render_post($board_id, $gen_data, $dom)
         $header_nodes['hide-post-thread']->changeID('hide-post-thread-' . $post_id);
     }
 
-    if (!nel_sessions()->sessionIsIgnored('render'))
+    if (!$sessions->sessionIsIgnored('render'))
     {
         $ip = @inet_ntop($post_data['ip_address']);
         $header_nodes['modmode-ip-address']->setContent(@inet_ntop($post_data['ip_address']));
@@ -239,7 +241,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     }
     else
     {
-        if (!nel_sessions()->sessionIsIgnored('render'))
+        if (!$sessions->sessionIsIgnored('render'))
         {
             $header_nodes['reply-to-link']->extSetAttribute('href',
                     PHP_SELF . '?manage=modmode&module=view-thread&content-id=' . $base_content_id . '&section=' .
@@ -300,7 +302,7 @@ function nel_render_post($board_id, $gen_data, $dom)
 
             $file_nodes = $temp_file_node->getElementsByAttributeName('data-parse-id', true);
 
-            if (!nel_sessions()->sessionIsIgnored('render'))
+            if (!$sessions->sessionIsIgnored('render'))
             {
                 $file_nodes['modmode-delete-link']->extSetAttribute('href',
                         '?manage=modmode&module=threads&board_id=test&action=delete-file&post-id=' .
@@ -541,12 +543,13 @@ function nel_render_post($board_id, $gen_data, $dom)
 
 function nel_render_thread_form_bottom($board_id, $dom)
 {
+    $sessions = new \Nelliel\Sessions();
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $footer_form_element = $dom->getElementById('footer-form');
     $form_td_list = $footer_form_element->doXPathQuery(".//input");
     $dom->getElementById('board_id_field_footer')->extSetAttribute('value', $board_id);
 
-    if (nel_sessions()->sessionIsIgnored('render'))
+    if ($sessions->sessionIsIgnored('render'))
     {
         $dom->getElementById('admin-input-set1')->remove();
         $dom->getElementById('bottom-submit-button')->setContent('Submit');

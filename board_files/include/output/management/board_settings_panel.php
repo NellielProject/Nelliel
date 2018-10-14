@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_board_settings_panel($board_id, $defaults)
 {
     $dbh = nel_database();
+    $language = new \Nelliel\language\Language();
     $filetypes = nel_parameters_and_data()->filetypeData();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -113,7 +114,7 @@ function nel_render_board_settings_panel($board_id, $defaults)
         }
     }
 
-    nel_language()->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    $language->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

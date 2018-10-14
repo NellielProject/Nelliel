@@ -172,6 +172,8 @@ class ContentPost extends ContentBase
 
     public function verifyModifyPerms()
     {
+        $sessions = new \Nelliel\Sessions();
+
         if (empty($this->content_data))
         {
             $this->loadFromDatabase();
@@ -180,7 +182,7 @@ class ContentPost extends ContentBase
         $authorize = nel_authorize();
         $flag = false;
 
-        if (!empty($this->content_data['mod_post']) && nel_sessions()->sessionIsActive())
+        if (!empty($this->content_data['mod_post']) && $sessions->sessionIsActive())
         {
             $flag = $authorize->roleLevelCheck($authorize->userHighestLevelRole($_SESSION['username'], $this->board_id),
                     $authorize->userHighestLevelRole($this->content_data['mod_post'], $this->board_id));

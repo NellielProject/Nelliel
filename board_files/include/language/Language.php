@@ -9,20 +9,14 @@ if (!defined('NELLIEL_VERSION'))
 
 class Language
 {
-    private $gettext;
-
-    public function __construct()
+    function __construct()
     {
-        $this->gettext = new \SmallPHPGettext\SmallPHPGettext();
-    }
-
-    public function gettextInstance()
-    {
-        return $this->gettext;
     }
 
     public function loadLanguage($file = null)
     {
+        $gettext = new \SmallPHPGettext\SmallPHPGettext();
+
         if (empty($file))
         {
             $file = LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po';
@@ -55,8 +49,8 @@ class Language
             }
         }
 
-        $this->gettext->addDomainFromArray($language_array);
-        $this->gettext->registerFunctions();
+        $gettext->addDomainFromArray($language_array);
+        $gettext->registerFunctions();
     }
 
     public function extractLanguageStrings($file)

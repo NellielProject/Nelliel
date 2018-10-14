@@ -12,6 +12,7 @@ function nel_verify_login_or_session($manage, $action)
     $authorize = nel_authorize();
     $dbh = nel_database();
     $login_valid = false;
+    $sessions = new \Nelliel\Sessions();
 
     if ($manage === 'login' && !is_null($action))
     {
@@ -89,12 +90,14 @@ function nel_verify_login_or_session($manage, $action)
         }
     }
 
-    nel_sessions()->initializeSession($manage, $action, $login_valid);
+    $sessions->initializeSession($manage, $action, $login_valid);
 }
 
 function nel_login()
 {
-    if (!nel_sessions()->sessionIsIgnored())
+    $sessions = new \Nelliel\Sessions();
+
+    if (!$sessions->sessionIsIgnored())
     {
         if(INPUT_BOARD_ID === '')
         {

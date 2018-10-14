@@ -6,6 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_admin_dispatch($inputs)
 {
+    $sessions = new \Nelliel\Sessions();
     $inputs = nel_plugins()->processHook('nel-inb4-admin-dispatch', array(), $inputs);
     nel_verify_login_or_session($inputs['manage'], $inputs['action']);
 
@@ -15,7 +16,7 @@ function nel_admin_dispatch($inputs)
     }
     else if ($inputs['manage'] === 'logout')
     {
-        nel_sessions()->terminateSession();
+        $sessions->terminateSession();
         nel_clean_exit(true);
     }
     else if ($inputs['manage'] === 'general')
@@ -60,7 +61,8 @@ function nel_admin_dispatch($inputs)
             case 'language':
                 if ($inputs['action'] === 'extract-gettext')
                 {
-                    nel_language()->extractLanguageStrings(
+                    $language = new \Nelliel\language\Language();
+                    $language->extractLanguageStrings(
                             LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
                 }
 

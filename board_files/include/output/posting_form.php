@@ -3,6 +3,8 @@ require_once INCLUDE_PATH . 'output/rules.php';
 
 function nel_render_posting_form($board_id, $render, $response_to, $dotdot = null)
 {
+    $language = new \Nelliel\language\Language();
+    $sessions = new \Nelliel\Sessions();
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $dom = $render->newDOMDocument();
@@ -15,7 +17,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
 
     if ($response_to)
     {
-        if (!nel_sessions()->sessionIsIgnored('render'))
+        if (!$sessions->sessionIsIgnored('render'))
         {
             $return_url = PHP_SELF . '?manage=modmode&module=view-index&section=0&board_id=' . $board_id;
         }
@@ -34,7 +36,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     $new_post_element = $posting_form->doXPathQuery(".//input[@name='new_post[post_info][response_to]']", $posting_form)->item(0);
     $new_post_element->extSetAttribute('value', $response_to);
 
-    if(nel_sessions()->sessionIsIgnored('render'))
+    if($sessions->sessionIsIgnored('render'))
     {
         $dom->getElementById('posting-form-staff')->remove();
     }
@@ -146,6 +148,6 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
         $dom->removeChild($dom->getElementById('form-trap2'));
     }
 
-    nel_language()->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    $language->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
 }

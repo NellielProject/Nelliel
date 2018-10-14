@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_staff_panel_main()
 {
     $dbh = nel_database();
+    $language = new \Nelliel\language\Language();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -43,7 +44,7 @@ function nel_render_staff_panel_main()
     $role_list_nodes['edit-role-link']->remove();
     $dom->getElementById('new-role-link')->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff&section=role&action=new');
 
-    nel_language()->i18nDom($dom);
+    $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -53,6 +54,7 @@ function nel_render_staff_panel_main()
 function nel_render_staff_panel_user_edit($user_id)
 {
     $dbh = nel_database();
+    $language = new \Nelliel\language\Language();
     $authorize = nel_authorize();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -109,7 +111,7 @@ function nel_render_staff_panel_user_edit($user_id)
     $board_roles->parentNode->appendChild($update_submit);
 
     //$board_roles->remove();
-    nel_language()->i18nDom($dom);
+    $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -118,6 +120,7 @@ function nel_render_staff_panel_user_edit($user_id)
 
 function nel_render_staff_panel_role_edit($role_id)
 {
+    $language = new \Nelliel\language\Language();
     $authorize = nel_authorize();
     $role = $authorize->getRole($role_id);
     $render = new NellielTemplates\RenderCore();
@@ -151,7 +154,7 @@ function nel_render_staff_panel_role_edit($role_id)
         }
     }
 
-    nel_language()->i18nDom($dom);
+    $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

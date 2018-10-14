@@ -82,8 +82,9 @@ class PostData
 
     public function staffPost($post_data)
     {
+        $sessions = new \Nelliel\Sessions();
         $authorize = nel_authorize();
-        nel_sessions()->initializeSession('modmode', 'new-post');
+        $sessions->initializeSession('modmode', 'new-post');
 
         if(empty($_SESSION) || $post_data['post_as_staff'] === false)
         {

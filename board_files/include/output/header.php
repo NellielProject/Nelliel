@@ -7,6 +7,8 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_board_header($board_id, $render, $dotdot = null, $treeline = null)
 {
     $dbh = nel_database();
+    $language = new \Nelliel\language\Language();
+    $sessions = new \Nelliel\Sessions();
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $dom = $render->newDOMDocument();
@@ -91,7 +93,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
-    if (nel_sessions()->sessionIsIgnored('render'))
+    if ($sessions->sessionIsIgnored('render'))
     {
         $top_admin_span->removeChild($a_elements->item(0)->parentNode);
         $dom->getElementById('manage-header')->remove();
@@ -106,13 +108,15 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');
     }
 
-    nel_language()->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    $language->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
 
     $render->appendHTMLFromDOM($dom);
 }
 
 function nel_render_general_header($render, $dotdot = null, $board_id = null, $extra_data = array())
 {
+    $language = new \Nelliel\language\Language();
+    $sessions = new \Nelliel\Sessions();
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
     $head_element = $dom->getElementsByTagName('head')->item(0);
@@ -141,7 +145,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
-    if (nel_sessions()->sessionIsIgnored('render'))
+    if ($sessions->sessionIsIgnored('render'))
     {
         $top_admin_span->removeChild($a_elements->item(0)->parentNode);
         $dom->getElementById('manage-header')->remove();
@@ -169,7 +173,6 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');
     }
 
-    nel_language()->i18nDom($dom);
-
+    $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
 }

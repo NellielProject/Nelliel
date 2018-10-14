@@ -6,6 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_create_board_panel()
 {
+    $language = new \Nelliel\language\Language();
     $authorize = nel_authorize();
 
     if (!$authorize->getUserPerm($_SESSION['username'], 'perm_create_board'))
@@ -22,7 +23,7 @@ function nel_render_create_board_panel()
     $render->loadTemplateFromFile($dom, 'management/create_board.html');
     $dom->getElementById('create-board-form')->extSetAttribute('action',
             PHP_SELF . '?manage=general&module=create-board&action=create');
-    nel_language()->i18nDom($dom);
+    $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

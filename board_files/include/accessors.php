@@ -16,18 +16,6 @@ function nel_authorize()
     return $authorize;
 }
 
-function nel_sessions()
-{
-    static $sessions;
-
-    if (!isset($sessions))
-    {
-        $sessions = new \Nelliel\Sessions();
-    }
-
-    return $sessions;
-}
-
 function nel_plugins()
 {
     static $plugins;
@@ -50,18 +38,6 @@ function nel_parameters_and_data()
     }
 
     return $parameters;
-}
-
-function nel_language()
-{
-    static $language;
-
-    if (!isset($language))
-    {
-        $language = new \Nelliel\language\Language();
-    }
-
-    return $language;
 }
 
 function nel_fgsfds($entry, $new_value = null)

@@ -3,6 +3,7 @@
 function nel_render_main_panel()
 {
     $dbh = nel_database();
+    $language = new \Nelliel\language\Language();
     $authorize = nel_authorize();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -91,7 +92,7 @@ function nel_render_main_panel()
     $dom->getElementById('extract-gettext-form')->extSetAttribute('action',
             PHP_SELF . '?manage=general&module=language&action=extract-gettext');
 
-    nel_language()->i18nDom($dom);
+    $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -100,6 +101,7 @@ function nel_render_main_panel()
 
 function nel_render_main_board_panel($board_id)
 {
+    $language = new \Nelliel\language\Language();
     $authorize = nel_authorize();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -181,7 +183,7 @@ function nel_render_main_board_panel($board_id)
                 PHP_SELF . '?manage=board&module=regen&action=all-caches&board_id=' . $board_id);
     }
 
-    nel_language()->i18nDom($dom);
+    $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_main_ban_panel($board_id)
 {
     $dbh = nel_database();
+    $language = new \Nelliel\language\Language();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -49,7 +50,7 @@ function nel_render_main_ban_panel($board_id)
 
     $form_add_ban = $dom->getElementById('link-new-ban');
     $form_add_ban->extSetAttribute('href', PHP_SELF . '?manage=board&module=bans&action=new&board_id=' . $board_id);
-    nel_language()->i18nDom($dom);
+    $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -58,6 +59,7 @@ function nel_render_main_ban_panel($board_id)
 
 function nel_render_ban_panel_add($board_id, $ip = '', $type = 'GENERAL')
 {
+    $language = new \Nelliel\language\Language();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -87,7 +89,7 @@ function nel_render_ban_panel_add($board_id, $ip = '', $type = 'GENERAL')
     $ban_nodes = $add_ban_form->getElementsByAttributeName('data-parse-id', true);
     $ban_nodes['ban-ip']->extSetAttribute('value', $ip);
     $dom->getElementById('ban-type')->extSetAttribute('value', $type);
-    nel_language()->i18nDom($dom);
+    $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -96,6 +98,7 @@ function nel_render_ban_panel_add($board_id, $ip = '', $type = 'GENERAL')
 
 function nel_render_ban_panel_modify($board_id)
 {
+    $language = new \Nelliel\language\Language();
     $ban_hammer = new \Nelliel\BanHammer(nel_database(), nel_authorize());
     $dbh = nel_database();
     $render = new NellielTemplates\RenderCore();
@@ -154,7 +157,7 @@ function nel_render_ban_panel_modify($board_id)
         $dom->getElementById('ban-appealed-field')->extSetAttribute('checked', 'checked');
     }
 
-    nel_language()->i18nDom($dom);
+    $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

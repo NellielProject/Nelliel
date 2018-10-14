@@ -6,6 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_general_dispatch($inputs)
 {
+    $sessions = new \Nelliel\Sessions();
     $inputs = nel_plugins()->processHook('nel-inb4-general-dispatch', array(), $inputs);
 
     switch ($inputs['module'])
@@ -19,7 +20,7 @@ function nel_general_dispatch($inputs)
 
                 if (nel_fgsfds('noko'))
                 {
-                    if (nel_sessions()->sessionIsActive())
+                    if ($sessions->sessionIsActive())
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
                                 '?manage=modmode&module=view-thread&section=' . nel_fgsfds('noko_topic') . '&board_id=' .
@@ -34,7 +35,7 @@ function nel_general_dispatch($inputs)
                 }
                 else
                 {
-                    if (nel_sessions()->sessionIsActive())
+                    if ($sessions->sessionIsActive())
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
                                 '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
@@ -54,7 +55,7 @@ function nel_general_dispatch($inputs)
                     $reports = new \Nelliel\Reports();
                     $reports->processContentReports();
 
-                    if (nel_sessions()->sessionIsActive())
+                    if ($sessions->sessionIsActive())
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
                                 '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
@@ -72,7 +73,7 @@ function nel_general_dispatch($inputs)
                     $thread_handler = new \Nelliel\ThreadHandler($inputs['board_id']);
                     $updates = $thread_handler->processContentDeletes();
 
-                    if (nel_sessions()->sessionIsActive())
+                    if ($sessions->sessionIsActive())
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
                         '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';

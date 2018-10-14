@@ -10,6 +10,8 @@ require_once INCLUDE_PATH . 'output/post.php';
 function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
 {
     $dbh = nel_database();
+    $language = new \Nelliel\language\Language();
+    $sessions = new \Nelliel\Sessions();
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $file_handler = new \Nelliel\FileHandler();
@@ -18,7 +20,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
 
     if ($write)
     {
-        nel_sessions()->sessionIsIgnored('render', true);
+        $sessions->sessionIsIgnored('render', true);
     }
 
     $result = $dbh->query(
@@ -46,7 +48,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
         {
             $file_handler->writeFile($references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT,
                     $render->outputRenderSet(), FILE_PERM);
-            nel_sessions()->sessionIsIgnored('render', false);
+            $sessions->sessionIsIgnored('render', false);
         }
         else
         {
@@ -66,7 +68,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
         $dom = $render->newDOMDocument();
         $render->loadTemplateFromFile($dom, 'thread.html');
         $render->startRenderTimer();
-        nel_language()->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+        $language->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
         $dom->getElementById('form-post-index')->extSetAttribute('action',
                 $dotdot . PHP_SELF . '?module=threads&board_id=' . $board_id);
         nel_render_board_header($board_id, $render, $dotdot, $treeline);
@@ -220,6 +222,6 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
 
     if ($write)
     {
-        nel_sessions()->sessionIsIgnored('render', false);
+        $sessions->sessionIsIgnored('render', false);
     }
 }
