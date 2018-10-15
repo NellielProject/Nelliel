@@ -69,8 +69,8 @@ function nel_render_staff_panel_user_edit($user_id)
     if (!is_null($user_id))
     {
         $user = $authorize->getUser($user_id);
-        $dom->getElementById('user-id-field')->extSetAttribute('value', $user['user_id']);
-        $dom->getElementById('display_name')->extSetAttribute('value', $user['display_name']);
+        $dom->getElementById('user-id-field')->extSetAttribute('value', $user->auth_data['user_id']);
+        $dom->getElementById('display_name')->extSetAttribute('value', $user->auth_data['display_name']);
     }
 
     $board_roles = $dom->getElementById('board-roles');
@@ -135,12 +135,12 @@ function nel_render_staff_panel_role_edit($role_id)
 
     if (!is_null($role_id))
     {
-        $dom->getElementById('role_id')->extSetAttribute('value', $role['role_id']);
-        $dom->getElementById('role_level')->extSetAttribute('value', $role['role_level']);
-        $dom->getElementById('role_title')->extSetAttribute('value', $role['role_title']);
-        $dom->getElementById('capcode_text')->extSetAttribute('value', $role['capcode_text']);
+        $dom->getElementById('role_id')->extSetAttribute('value', $role->auth_data['role_id']);
+        $dom->getElementById('role_level')->extSetAttribute('value', $role->auth_data['role_level']);
+        $dom->getElementById('role_title')->extSetAttribute('value', $role->auth_data['role_title']);
+        $dom->getElementById('capcode_text')->extSetAttribute('value', $role->auth_data['capcode_text']);
 
-        foreach ($role['permissions'] as $key => $value)
+        foreach ($role->permissions->auth_data as $key => $value)
         {
             if ($value === true)
             {

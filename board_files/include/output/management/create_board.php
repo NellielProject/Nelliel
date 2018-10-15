@@ -8,8 +8,9 @@ function nel_render_create_board_panel()
 {
     $language = new \Nelliel\language\Language();
     $authorize = nel_authorize();
+    $user = $authorize->getUser($_SESSION['username']);
 
-    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_create_board'))
+    if (!$user->boardPerm('', 'perm_create_board'))
     {
         nel_derp(370, _gettext('You are not allowed to create new boards.'));
     }

@@ -13,9 +13,9 @@ function nel_staff_panel($inputs)
 {
     $authorize = nel_authorize();
     $temp_auth = array();
+    $user = $authorize->getUser($_SESSION['username']);
 
-    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_user_access') &&
-         !$authorize->getUserPerm($_SESSION['username'], 'perm_role_access'))
+    if (!$user->boardPerm('', 'perm_user_access') && !$user->boardPerm('', 'perm_role_access'))
     {
         nel_derp(340, _gettext('You are not allowed to access the staff panel.'));
     }
@@ -26,14 +26,14 @@ function nel_staff_panel($inputs)
     }
     else if ($inputs['section'] === 'user')
     {
-        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_user_access'))
+        if (!$user->boardPerm('', 'perm_user_access'))
         {
             nel_derp(340, _gettext('You are not allowed to access the staff panel.'));
         }
 
         if ($inputs['action'] === 'new')
         {
-            if (!$authorize->getUserPerm($_SESSION['username'], 'perm_user_add'))
+            if (!$user->boardPerm('', 'perm_user_add'))
             {
                 nel_derp(341, _gettext('You are not allowed to modify staff.'));
             }
@@ -51,7 +51,7 @@ function nel_staff_panel($inputs)
                 nel_derp(440, _gettext('The specified user does not exist.'));
             }
 
-            if (!$authorize->getUserPerm($_SESSION['username'], 'perm_user_modify'))
+            if (!$user->boardPerm('', 'perm_user_modify'))
             {
                 nel_derp(341, _gettext('You are not allowed to modify staff.'));
             }
@@ -67,14 +67,16 @@ function nel_staff_panel($inputs)
                 nel_derp(440, _gettext('The specified user does not exist.'));
             }
 
-            if (!$authorize->getUserPerm($_SESSION['username'], 'perm_user_modify'))
+            $user = $authorize->getUser($user_id);
+
+            if (!$user->boardPerm('', 'perm_user_modify'))
             {
                 nel_derp(341, _gettext('You are not allowed to modify staff.'));
             }
 
             if (isset($_POST['user_password']) && !empty($_POST['user_password']))
             {
-                $authorize->updateUserInfo($user_id, 'user_password', nel_password_hash($_POST['user_password'], NEL_PASSWORD_ALGORITHM));
+                $user->auth_data['user_password'] = nel_password_hash($_POST['user_password'], NEL_PASSWORD_ALGORITHM);
             }
 
             foreach ($_POST as $key => $value)
@@ -82,8 +84,27 @@ function nel_staff_panel($inputs)
                 if (strpos($key, 'user_board_role') !== false)
                 {
                     $board = substr($key, 16);
-                    $remove = ($value === '') ? true : false;
-                    $authorize->updateUserRole($user_id, $value, $board, $remove);
+
+                    if($board === false)
+                    {
+                        $board = '';
+                    }
+
+                    if(!$user->boardRole($board))
+                    {
+                        $user->addUserRole($board, $value);
+                        continue;
+                    }
+
+                    if ($value === '')
+                    {
+                        $user->removeUserRole($board, $value);
+                    }
+                    else
+                    {
+                        $user->updateUserRole($board, $value);
+                    }
+
                     continue;
                 }
 
@@ -92,26 +113,25 @@ function nel_staff_panel($inputs)
                     continue;
                 }
 
-                $authorize->updateUserInfo($user_id, $key, $value);
+                $user->auth_data[$key] = $value;
             }
 
             $authorize->saveUsers();
-            $authorize->saveUserRoles();
             nel_render_staff_panel_user_edit($user_id);
         }
     }
     else if ($inputs['section'] === 'role')
     {
-        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_role_access'))
+        if (!$user->boardPerm('', 'perm_role_access'))
         {
             nel_derp(342, _gettext('You are not allowed to modify roles.'));
         }
 
         if ($inputs['action'] === 'new')
         {
-            if (!$authorize->getUserPerm($_SESSION['username'], 'perm_role_add'))
+            if (!$user->boardPerm('', 'perm_role_add'))
             {
-                nel_derp(341, _gettext('You are not allowed to modify staff.'));
+                nel_derp(341, _gettext('You are not allowed to add roles.'));
             }
 
             nel_render_staff_panel_role_edit(null);
@@ -127,7 +147,7 @@ function nel_staff_panel($inputs)
                 nel_derp(441, _gettext('The specified role does not exist.'));
             }
 
-            if (!$authorize->getUserPerm($_SESSION['username'], 'perm_role_modify'))
+            if (!$user->boardPerm('', 'perm_role_modify'))
             {
                 nel_derp(342, _gettext('You are not allowed to modify roles.'));
             }
@@ -143,7 +163,9 @@ function nel_staff_panel($inputs)
                 nel_derp(441, _gettext('The specified role does not exist.'));
             }
 
-            if (!$authorize->getUserPerm($_SESSION['username'], 'perm_role_modify'))
+            $role = $authorize->getRole($role_id);
+
+            if (!$user->boardPerm('', 'perm_role_modify'))
             {
                 nel_derp(342, _gettext('You are not allowed to modify roles.'));
             }
@@ -153,11 +175,11 @@ function nel_staff_panel($inputs)
                 if (substr($key, 0, 5) === 'perm_')
                 {
                     $value = ($value == 1) ? true : false;
-                    $authorize->updatePerm($role_id, $key, $value);
+                    $role->permissions->auth_data[$key] = $value;
                     continue;
                 }
 
-                $authorize->updateRoleInfo($role_id, $key, $value);
+                $role->auth_data[$key] = $value;
             }
 
             $authorize->saveRoles();

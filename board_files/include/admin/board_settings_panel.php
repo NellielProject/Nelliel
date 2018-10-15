@@ -10,14 +10,15 @@ function nel_board_settings_control($inputs, $defaults = false)
 {
     $dbh = nel_database();
     $authorize = nel_authorize();
-    $board_id = $inputs['board_id'];
+    $board_id = '';
+    $user = $authorize->getUser($_SESSION['username']);
 
-    if ($defaults && !$authorize->getUserPerm($_SESSION['username'], 'perm_manage_board_defaults'))
+    if ($defaults && !$user->boardPerm($board_id, 'perm_manage_board_defaults'))
     {
         nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
     }
 
-    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_manage_board_config', $board_id))
+    if (!$user->boardPerm($board_id, 'perm_manage_board_config'))
     {
         nel_derp(330, _gettext('You are not allowed to modify the board settings.'));
     }

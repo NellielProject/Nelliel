@@ -14,10 +14,11 @@ function nel_ban_control($inputs)
     $dbh = nel_database();
     $authorize = nel_authorize();
     $ban_hammer = new \Nelliel\BanHammer(nel_database(), nel_authorize());
+    $user = $authorize->getUser($_SESSION['username']);
 
     if ($inputs['action'] === 'modify')
     {
-        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', $inputs['board_id']))
+        if (!$user->boardPerm($inputs['board_id'], 'perm_ban_modify'))
         {
             nel_derp(322, _gettext('You are not allowed to modify bans.'));
         }
@@ -26,7 +27,7 @@ function nel_ban_control($inputs)
     }
     else if ($inputs['action'] === 'new')
     {
-        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_add', $inputs['board_id']))
+        if (!$user->boardPerm($inputs['board_id'], 'perm_ban_add'))
         {
             nel_derp(321, _gettext('You are not allowed to add new bans.'));
         }
@@ -37,7 +38,7 @@ function nel_ban_control($inputs)
     }
     else if ($inputs['action'] === 'add')
     {
-        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_add', $inputs['board_id']))
+        if (!$user->boardPerm($inputs['board_id'], 'perm_ban_add'))
         {
             nel_derp(321, _gettext('You are not allowed to add new bans.'));
         }
@@ -64,18 +65,18 @@ function nel_ban_control($inputs)
     }
     else if ($inputs['action'] === 'remove')
     {
-        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', $inputs['board_id']))
+        if (!$user->boardPerm($inputs['board_id'], 'perm_ban_modify'))
         {
             nel_derp(323, _gettext('You are not allowed to delete bans.'));
         }
 
         $ban_input = $ban_hammer->postToArray();
-        $ban_hammer->removeBan($_GET['ban_id']);
+        $ban_hammer->removeBan($inputs['board_id'], $_GET['ban_id']);
         nel_render_main_ban_panel($inputs['board_id']);
     }
     else if ($inputs['action'] === 'update')
     {
-        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', $inputs['board_id']))
+        if (!$user->boardPerm($inputs['board_id'], 'perm_ban_modify'))
         {
             nel_derp(322, _gettext('You are not allowed to modify bans.'));
         }
@@ -86,7 +87,7 @@ function nel_ban_control($inputs)
     }
     else
     {
-        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_ban_access', $inputs['board_id']))
+        if (!$user->boardPerm($inputs['board_id'], 'perm_ban_access'))
         {
             nel_derp(320, _gettext('You are not allowed to access the bans panel.'));
         }

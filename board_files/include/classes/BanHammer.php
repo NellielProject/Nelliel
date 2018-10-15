@@ -96,8 +96,9 @@ class BanHammer
 
     public function addBan($ban_input)
     {
-        if (!$this->authorize->getUserPerm($_SESSION['username'], 'perm_ban_add', INPUT_BOARD_ID) &&
-                !$authorize->getUserPerm($_SESSION['username'], 'perm_all_ban_modify'))
+        $user = $this->authorize->getUser($_SESSION['username']);
+
+        if (!$user->boardPerm($board_id, 'perm_ban_add') && !$user->boardPerm('', 'perm_ban_add'))
         {
             nel_derp(321, _gettext('You are not allowed to add new bans.'));
         }
@@ -127,8 +128,9 @@ class BanHammer
 
     public function modifyBan($ban_input)
     {
-        if (!$this->authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', INPUT_BOARD_ID) &&
-                !$authorize->getUserPerm($_SESSION['username'], 'perm_all_ban_modify'))
+        $user = $this->authorize->getUser($_SESSION['username']);
+
+        if (!$user->boardPerm($board_id, 'perm_ban_modify') && !$user->boardPerm('', 'perm_ban_modify'))
         {
             nel_derp(322, _gettext('You are not allowed to modify bans.'));
         }
@@ -150,12 +152,13 @@ class BanHammer
         $this->dbh->executePrepared($prepared);
     }
 
-    public function removeBan($ban_id, $snacks = false)
+    public function removeBan($board_id, $ban_id, $snacks = false)
     {
+        $user = $this->authorize->getUser($_SESSION['username']);
+
         if (!$snacks)
         {
-            if (!$this->authorize->getUserPerm($_SESSION['username'], 'perm_ban_modify', INPUT_BOARD_ID) &&
-                    !$authorize->getUserPerm($_SESSION['username'], 'perm_all_ban_modify') && !$snacks)
+            if (!$user->boardPerm($board_id, 'perm_ban_modify') && !$user->boardPerm('', 'perm_ban_modify') && !$snacks)
             {
                 nel_derp(323, _gettext('You are not allowed to remove bans.'));
             }

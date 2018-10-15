@@ -195,7 +195,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     $tripcode = (!empty($post_data['tripcode'])) ? $board_settings['tripkey_marker'] . $post_data['tripcode'] : '';
     $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $board_settings['tripkey_marker'] .
             $board_settings['tripkey_marker'] . $post_data['secure_tripcode'] : '';
-    $capcode_text = ($post_data['mod_post']) ? $authorize->getRoleInfo($post_data['mod_post'], 'capcode_text') : '';
+            $capcode_text = ($post_data['mod_post']) ? $authorize->getRole[$post_data['mod_post']]->auth_data['capcode_text'] : '';
     $trip_line = $tripcode . $secure_tripcode . '&nbsp;&nbsp;' . $capcode_text;
 
     if ($post_data['email'])

@@ -89,19 +89,16 @@ class PostData
         }
 
         $user = $authorize->getUser($_SESSION['username']);
+        $role = $user->getBoardRole($this->board_id);
 
-        if($authorize->getUserPerm($user['user_id'], 'perm_post_modmode') === false)
+        if($user->boardPerm($board_id, 'perm_post_modmode') === false)
         {
             return;
         }
 
-        $role_id = $authorize->getUserBoardRole($user['user_id'], $this->board_id);
-
-        if($role_id === false || $authorize->getRolePerm($role_id, 'perm_post_modmode') === false)
+        if($role === false || $role->checkPermission('perm_post_modmode') === false)
         {
-            $role_id = $authorize->getUserBoardRole($user['user_id'], '');
-
-            if($role_id === false || $authorize->getRolePerm($role_id, 'perm_post_modmode') === false)
+            if($user->boardPerm('', 'perm_post_modmode') === false)
             {
                 return; // TODO: Do error instead
             }

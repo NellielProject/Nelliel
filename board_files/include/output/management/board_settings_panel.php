@@ -17,7 +17,6 @@ function nel_render_board_settings_panel($board_id, $defaults)
 
     if ($defaults === true)
     {
-        $references = nel_parameters_and_data()->boardReferences($board_id);
         nel_render_general_header($render, null, null,
                 array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Default Board Settings')));
         $result = $dbh->query('SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"');

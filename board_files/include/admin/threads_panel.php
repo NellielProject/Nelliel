@@ -11,15 +11,16 @@ function nel_thread_panel($inputs)
     $authorize = nel_authorize();
     $board_id = $inputs['board_id'];
     $thread_handler = new \Nelliel\ThreadHandler(nel_database(), $board_id);
+    $user = $authorize->getUser($_SESSION['username']);
 
-    if (!$authorize->getUserPerm($_SESSION['username'], 'perm_post_access', $board_id))
+    if (!$user->boardPerm($board_id, 'perm_post_access'))
     {
         nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
     }
 
     if ($inputs['action'] === 'update')
     {
-        if (!$authorize->getUserPerm($_SESSION['username'], 'perm_post_modify', $board_id))
+        if (!$user->boardPerm($board_id, 'perm_post_modify'))
         {
             nel_derp(351, _gettext('You are not allowed to modify threads or posts.'));
         }
