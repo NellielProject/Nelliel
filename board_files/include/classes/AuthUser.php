@@ -47,11 +47,8 @@ class AuthUser extends AuthBase
                 continue;
             }
 
-            $user_role = new \Nelliel\AuthUserRole($database, $row['user_id'], $row['role_id'], $row['board']);
-            $user_role->loadFromDatabase();
-            $role = new \Nelliel\AuthRole($database, $row['role_id']);
-            $role->loadFromDatabase();
-            $this->user_roles[] = $user_role;
+            $role = $this->setupAuthRole($row['role_id']);
+            $this->user_roles[] = ['role_id' => $row['role_id'], 'board' => $row['board'], 'role' => $role];
         }
 
         return true;
@@ -92,8 +89,31 @@ class AuthUser extends AuthBase
 
         foreach ($this->user_roles as $user_role)
         {
-            $user_role->writeToDatabase();
+            $prepared = $database->prepare(
+                    'SELECT "entry" FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ? AND "board" = ?');
+            $result = $database->executePreparedFetch($prepared,
+                    [$this->auth_id, $user_role['board']], PDO::FETCH_COLUMN);
+
+            if ($result)
+            {
+                $prepared = $database->prepare(
+                        'UPDATE "' . USER_ROLE_TABLE .
+                        '" SET "user_id" = :user_id, "role_id" = :role_id, "board" = :board WHERE "entry" = :entry');
+                $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
+            }
+            else
+            {
+                $prepared = $database->prepare(
+                        'INSERT INTO "' . USER_ROLE_TABLE . '" ("user_id", "role_id", "board") VALUES
+                    (:user_id, :role_id, :board)');
+            }
+
+            $prepared->bindValue(':user_id', $this->auth_id, PDO::PARAM_STR);
+            $prepared->bindValue(':role_id', $user_role['role_id'], PDO::PARAM_STR);
+            $prepared->bindValue(':board', $user_role['board'], PDO::PARAM_STR);
+            $database->executePrepared($prepared);
         }
+
         return true;
     }
 
@@ -101,72 +121,56 @@ class AuthUser extends AuthBase
     {
         foreach ($this->user_roles as $user_role)
         {
-            if ($user_role->auth_data['board'] === $board_id)
+            if ($user_role['board'] === $board_id)
             {
                 if ($return_id)
                 {
-                    return $user_role->auth_id;
+                    return $user_role['role_id'];
                 }
                 else
                 {
-                    return $user_role->role;
+                    return $user_role['role'];
                 }
-
             }
         }
 
         return false;
     }
 
-    public function userRole($board_id)
-    {
-        foreach ($this->user_roles as $user_role)
-        {
-            if ($user_role->auth_data['board'] === $board_id)
-            {
-                return $user_role;
-            }
-        }
-
-        return false;
-    }
-
-    public function updateUserRole($board_id, $role_id)
-    {
-        foreach ($this->user_roles as $user_role)
-        {
-            if ($user_role->auth_data['board'] === $board_id)
-            {
-                $user_role->updateRole($role_id);
-                return;
-            }
-        }
-    }
-
-    public function removeUserRole($board_id, $role_id)
+    public function changeOrAddBoardRole($board_id, $role_id)
     {
         foreach ($this->user_roles as $index => $user_role)
         {
-            if ($user_role->auth_data['board'] === $board_id)
+            if ($user_role['board'] === $board_id)
             {
-                $user_role->removeFromDatabase();
+                $this->user_roles[$index]['role_id'] = $role_id;
+                $this->user_roles[$index]['role'] = $this->setupAuthRole($role_id);
+                return;
+            }
+        }
+
+        $this->user_roles[] = ['role_id' => $role_id, 'board' => $board_id, 'role' => $this->setupAuthRole(
+                $role_id)];
+        $prepared = $this->database->prepare(
+                'INSERT INTO "' . USER_ROLE_TABLE . '" ("user_id", "role_id", "board") VALUES
+                    (?, ?, ?)');
+        $this->database->executePrepared($prepared, [$this->auth_id, $role_id, $board_id]);
+    }
+
+    public function removeBoardRole($board_id, $role_id)
+    {
+        foreach ($this->user_roles as $index => $user_role)
+        {
+            if ($user_role['board'] === $board_id)
+            {
+                $prepared = $this->database->prepare(
+                        'DELETE FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ? AND "board" = ?');
+                $this->database->executePrepared($prepared, [$this->auth_id, $board_id]);
                 unset($this->user_roles[$index]);
             }
         }
 
         return false;
-    }
-
-    public function addUserRole($board_id, $role_id)
-    {
-        $user_role = new \Nelliel\AuthUserRole($this->database, $this->auth_id, $role_id);
-        $user_role->auth_data['role_id'] = $role_id;
-        $user_role->auth_data['board'] = $board_id;
-        $user_role->auth_data['user_id'] = $this->auth_id;
-        $user_role->writeToDatabase();
-        $role = new \Nelliel\AuthRole($this->database, $role_id);
-        $role->loadFromDatabase();
-        $this->user_roles[] = $user_role;
     }
 
     public function boardPerm($board_id, $perm)
@@ -179,6 +183,13 @@ class AuthUser extends AuthBase
         }
 
         return $role->checkPermission($perm);
+    }
+
+    private function setupAuthRole($role_id)
+    {
+        $role = new \Nelliel\AuthRole($this->database, $role_id);
+        $role->loadFromDatabase();
+        return $role;
     }
 }
 

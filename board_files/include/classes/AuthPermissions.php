@@ -37,7 +37,7 @@ class AuthPermissions extends AuthBase
         return true;
     }
 
-    public function writeToDatabase($database = null)
+    public function writeToDatabase($temp_database = null)
     {
         if (empty($this->auth_data))
         {
@@ -48,7 +48,7 @@ class AuthPermissions extends AuthBase
 
         foreach ($this->auth_data as $perm => $setting)
         {
-            $prepared = $database->prepare('SELECT "entry" FROM "' . USER_TABLE . '" WHERE "perm_id" = ? LIMIT 1');
+            $prepared = $database->prepare('SELECT "entry" FROM "' . PERMISSIONS_TABLE . '" WHERE "perm_id" = ? LIMIT 1');
             $result = $database->executePreparedFetch($prepared, [$perm], PDO::FETCH_COLUMN);
 
             if ($result)
@@ -61,13 +61,13 @@ class AuthPermissions extends AuthBase
             else
             {
                 $prepared = $database->prepare(
-                        'INSERT INTO "' . PERMISSIONS_TABLE . '" ("role_id", "perm_id", perm_setting") VALUES
+                        'INSERT INTO "' . PERMISSIONS_TABLE . '" ("role_id", "perm_id", "perm_setting") VALUES
                     (:role_id, :perm_id, :perm_setting)');
             }
 
             $prepared->bindValue(':role_id', $this->authDataOrDefault('role_id', $this->auth_id), PDO::PARAM_STR);
-            $prepared->bindValue(':perm_id', $this - authDataOrDefault($perm, null), PDO::PARAM_STR);
-            $prepared->bindValue(':perm_setting', $this->authDataOrDefault('perm_setting', 0), PDO::PARAM_INT);
+            $prepared->bindValue(':perm_id', $perm, PDO::PARAM_STR);
+            $prepared->bindValue(':perm_setting', intval($setting), PDO::PARAM_INT);
             $database->executePrepared($prepared);
         }
         return true;

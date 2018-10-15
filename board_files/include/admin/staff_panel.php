@@ -92,17 +92,17 @@ function nel_staff_panel($inputs)
 
                     if(!$user->boardRole($board))
                     {
-                        $user->addUserRole($board, $value);
+                        $user->changeOrAddBoardRole($board, $value);
                         continue;
                     }
 
                     if ($value === '')
                     {
-                        $user->removeUserRole($board, $value);
+                        $user->removeBoardRole($board, $value);
                     }
                     else
                     {
-                        $user->updateUserRole($board, $value);
+                        $user->ChangeOrAddBoardRole($board, $value);
                     }
 
                     continue;

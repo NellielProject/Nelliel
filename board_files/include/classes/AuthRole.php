@@ -66,6 +66,7 @@ class AuthRole extends AuthBase
         $prepared->bindValue(':role_title', $this->authDataOrDefault('role_title', null), PDO::PARAM_STR);
         $prepared->bindValue(':capcode_text', $this->authDataOrDefault('capcode_text', null), PDO::PARAM_STR);
         $database->executePrepared($prepared);
+        $this->permissions->writeToDatabase();
         return true;
     }
 
