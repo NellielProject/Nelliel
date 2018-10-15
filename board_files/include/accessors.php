@@ -10,7 +10,7 @@ function nel_authorize()
 
     if (!isset($authorize))
     {
-        $authorize = new \Nelliel\Authorization(nel_database());
+        $authorize = new \Nelliel\Auth\Authorization(nel_database());
     }
 
     return $authorize;

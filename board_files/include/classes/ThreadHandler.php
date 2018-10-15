@@ -39,18 +39,18 @@ class ThreadHandler
             {
                 if ($content_id->isThread())
                 {
-                    $thread = new ContentThread($this->dbh, $content_id, $this->board_id);
+                    $thread = new \Nelliel\Content\ContentThread($this->dbh, $content_id, $this->board_id);
                     $thread->remove();
                     $update_archive = true;
                 }
                 else if ($content_id->isPost())
                 {
-                    $post = new ContentPost($this->dbh, $content_id, $this->board_id);
+                    $post = new \Nelliel\Content\ContentPost($this->dbh, $content_id, $this->board_id);
                     $post->remove();
                 }
                 else if ($content_id->isFile())
                 {
-                    $file = new ContentFile($this->dbh, $content_id, $this->board_id);
+                    $file = new \Nelliel\Content\ContentFile($this->dbh, $content_id, $this->board_id);
                     $file->remove();
                 }
             }

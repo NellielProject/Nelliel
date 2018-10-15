@@ -16,7 +16,7 @@ function nel_process_new_post($inputs)
     $file_handler = new \Nelliel\FileHandler();
     $file_upload = new \Nelliel\post\FilesUpload($board_id, $_FILES);
     $data_handler = new \Nelliel\post\PostData($board_id);
-    $post = new \Nelliel\ContentPost($dbh, new \Nelliel\ContentID(), $board_id);
+    $post = new \Nelliel\Content\ContentPost($dbh, new \Nelliel\ContentID(), $board_id);
     $data_handler->processPostData($post);
     $time = get_millisecond_time();
     $post->content_data['post_time'] = $time;
@@ -79,7 +79,7 @@ function nel_process_new_post($inputs)
     $post->content_data['op'] = ($post->content_data['parent_thread'] == 0) ? 1 : 0;
     $post->content_data['has_file'] = ($post->content_data['file_count'] > 0) ? 1 : 0;
     $post->reserveDatabaseRow($time);
-    $thread = new \Nelliel\ContentThread($dbh, new \Nelliel\ContentID(), $board_id);
+    $thread = new \Nelliel\Content\ContentThread($dbh, new \Nelliel\ContentID(), $board_id);
 
     if ($post->content_data['response_to'] == 0)
     {
