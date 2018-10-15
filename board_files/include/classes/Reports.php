@@ -27,9 +27,9 @@ class Reports
 
         foreach ($_POST as $name => $value)
         {
-            if (\Nelliel\ContentID::isContentID($name))
+            if (ContentID::isContentID($name))
             {
-                $content_id = new \Nelliel\ContentID($name);
+                $content_id = new ContentID($name);
             }
             else
             {

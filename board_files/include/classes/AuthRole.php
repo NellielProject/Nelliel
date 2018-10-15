@@ -31,7 +31,7 @@ class AuthRole extends AuthBase
         }
 
         $this->auth_data = $result;
-        $this->permissions = new \Nelliel\AuthPermissions($database, $this->auth_id);
+        $this->permissions = new AuthPermissions($database, $this->auth_id);
         $this->permissions->loadFromDatabase();
         return true;
     }

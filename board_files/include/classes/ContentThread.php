@@ -156,7 +156,7 @@ class ContentThread extends ContentBase
 
     public function verifyModifyPerms()
     {
-        $post = new \Nelliel\ContentPost($this->database, $this->content_id, $this->board_id);
+        $post = new ContentPost($this->database, $this->content_id, $this->board_id);
         $post->content_id->post_id = $this->firstPost();
         return $post->verifyModifyPerms();
     }

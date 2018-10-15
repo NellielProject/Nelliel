@@ -126,7 +126,7 @@ class ContentPost extends ContentBase
 
         $this->removeFromDatabase();
         $this->removeFromDisk();
-        $thread = new \Nelliel\ContentThread($this->database, $this->content_id, $this->board_id);
+        $thread = new ContentThread($this->database, $this->content_id, $this->board_id);
         $thread->updateCounts();
         return true;
     }
@@ -207,7 +207,7 @@ class ContentPost extends ContentBase
         $new_content_id = new \Nelliel\ContentID();
         $new_content_id->thread_id = $this->content_id->post_id;
         $new_content_id->post_id = $this->content_id->post_id;
-        $new_thread = new \Nelliel\ContentThread($this->database, $new_content_id, $this->board_id);
+        $new_thread = new ContentThread($this->database, $new_content_id, $this->board_id);
         $new_thread->content_data['thread_id'] = $this->content_id->post_id;
         $new_thread->content_data['first_post'] = $this->content_id->post_id;
         $new_thread->content_data['last_post'] = $this->content_id->post_id;

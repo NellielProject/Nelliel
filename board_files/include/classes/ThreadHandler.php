@@ -26,9 +26,9 @@ class ThreadHandler
 
         foreach ($_POST as $name => $value)
         {
-            if (\Nelliel\ContentID::isContentID($name))
+            if (ContentID::isContentID($name))
             {
-                $content_id = new \Nelliel\ContentID($name);
+                $content_id = new ContentID($name);
             }
             else
             {
@@ -39,18 +39,18 @@ class ThreadHandler
             {
                 if ($content_id->isThread())
                 {
-                    $thread = new \Nelliel\ContentThread($this->dbh, $content_id, $this->board_id);
+                    $thread = new ContentThread($this->dbh, $content_id, $this->board_id);
                     $thread->remove();
                     $update_archive = true;
                 }
                 else if ($content_id->isPost())
                 {
-                    $post = new \Nelliel\ContentPost($this->dbh, $content_id, $this->board_id);
+                    $post = new ContentPost($this->dbh, $content_id, $this->board_id);
                     $post->remove();
                 }
                 else if ($content_id->isFile())
                 {
-                    $file = new \Nelliel\ContentFile($this->dbh, $content_id, $this->board_id);
+                    $file = new ContentFile($this->dbh, $content_id, $this->board_id);
                     $file->remove();
                 }
             }
@@ -63,7 +63,7 @@ class ThreadHandler
 
         if ($update_archive)
         {
-            $archive = new \Nelliel\ArchiveAndPrune($this->dbh, $this->board_id);
+            $archive = new ArchiveAndPrune($this->dbh, $this->board_id);
             $archive->updateAllArchiveStatus();
 
             if ($board_settings['old_threads'] === 'ARCHIVE')

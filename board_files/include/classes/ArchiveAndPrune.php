@@ -26,7 +26,7 @@ class ArchiveAndPrune
                 nel_parameters_and_data()->boardSettings($board_id, 'page_limit');
         $this->end_buffer = nel_parameters_and_data()->boardSettings($board_id, 'threads_per_page') *
                 nel_parameters_and_data()->boardSettings($board_id, 'page_buffer');
-        $this->file_handler = new \Nelliel\FileHandler();
+        $this->file_handler = new FileHandler();
         $this->board_id = $board_id;
         $this->references = nel_parameters_and_data()->boardReferences($board_id);
         $this->board_settings = nel_parameters_and_data()->boardSettings($board_id);
@@ -197,7 +197,7 @@ class ArchiveAndPrune
     {
         foreach ($this->getThreadListForStatus(2) as $thread_id)
         {
-            $thread = new \Nelliel\ContentThread($this->dbh, new \Nelliel\ContentID('nci_' . $thread_id . '_0_0'),
+            $thread = new ContentThread($this->dbh, new ContentID('nci_' . $thread_id . '_0_0'),
                     $this->board_id);
             $thread->remove();
         }

@@ -45,7 +45,7 @@ class CacheHandler
     public function writeCacheFile($path, $filename, $content, $header = '', $footer = '', $file_perm = FILE_PERM)
     {
         $header = (!empty($header)) ? $headeer : $this->default_header;
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new FileHandler();
         $file_handler->writeFile($path . $filename, $header . $content . $footer, $file_perm, true);
     }
 }

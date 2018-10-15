@@ -56,7 +56,7 @@ class ParametersAndData
 
                 if (USE_INTERNAL_CACHE || $cache_regen)
                 {
-                    $cacheHandler = new \Nelliel\CacheHandler(true);
+                    $cacheHandler = new CacheHandler(true);
                     $cacheHandler->writeCacheFile(CACHE_PATH, 'site_settings.php',
                             '$site_settings = ' . var_export($settings, true) . ';');
                 }
@@ -101,7 +101,7 @@ class ParametersAndData
 
                 if (USE_INTERNAL_CACHE || $cache_regen)
                 {
-                    $cacheHandler = new \Nelliel\CacheHandler(true);
+                    $cacheHandler = new CacheHandler(true);
                     $cacheHandler->writeCacheFile(CACHE_PATH . $board_id . '/', 'board_settings.php',
                             '$board_settings = ' . var_export($settings, true) . ';');
                 }
@@ -147,7 +147,7 @@ class ParametersAndData
 
                 if (USE_INTERNAL_CACHE || $cache_regen)
                 {
-                    $cacheHandler = new \Nelliel\CacheHandler(true);
+                    $cacheHandler = new CacheHandler(true);
                     $cacheHandler->writeCacheFile(CACHE_PATH . $board_id . '/', 'filetype_settings.php',
                             '$filetype_settings = ' . var_export($settings, true) . ';');
                 }

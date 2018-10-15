@@ -126,9 +126,9 @@ class ContentFile extends ContentBase
 
         $this->removeFromDisk();
         $this->removeFromDatabase();
-        $post = new \Nelliel\ContentPost($this->database, $this->content_id, $this->board_id);
+        $post = new ContentPost($this->database, $this->content_id, $this->board_id);
         $post->updateCounts();
-        $thread = new \Nelliel\ContentThread($this->database, $this->content_id, $this->board_id);
+        $thread = new ContentThread($this->database, $this->content_id, $this->board_id);
         $thread->updateCounts();
     }
 
@@ -171,7 +171,7 @@ class ContentFile extends ContentBase
 
     public function verifyModifyPerms()
     {
-        $post = new \Nelliel\ContentPost($this->database, $this->content_id, $this->board_id);
+        $post = new ContentPost($this->database, $this->content_id, $this->board_id);
         return $post->verifyModifyPerms();
     }
 }

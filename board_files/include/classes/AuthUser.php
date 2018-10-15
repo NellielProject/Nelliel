@@ -187,7 +187,7 @@ class AuthUser extends AuthBase
 
     private function setupAuthRole($role_id)
     {
-        $role = new \Nelliel\AuthRole($this->database, $role_id);
+        $role = new AuthRole($this->database, $role_id);
         $role->loadFromDatabase();
         return $role;
     }

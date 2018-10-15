@@ -25,7 +25,7 @@ class Authorization
             return $this->users[$user_id];
         }
 
-        $this->users[$user_id] = new \Nelliel\AuthUser($this->database, $user_id);
+        $this->users[$user_id] = new AuthUser($this->database, $user_id);
 
         if ($this->users[$user_id]->loadFromDatabase())
         {
@@ -52,7 +52,7 @@ class Authorization
             return $this->roles[$role_id];
         }
 
-        $this->roles[$role_id] = new \Nelliel\AuthRole($this->database, $role_id);
+        $this->roles[$role_id] = new AuthRole($this->database, $role_id);
 
         if ($this->roles[$role_id]->loadFromDatabase())
         {
