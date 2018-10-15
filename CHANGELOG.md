@@ -1,4 +1,15 @@
 # Nelliel Changelog
+## v0.9.9 (2018/10/10)
+### Added
+ - Basic plugin API documentation
+
+### Changed
+ - Overhaul of plugin system
+ - Documentation update
+ - Cleaned up some singletons and random bits of code
+ - Overhaul of authorization system
+ - Debugging
+
 ## v0.9.8 (2018/10/10)
 ### Breaking
  - Bump minimum requirements to PHP 5.6.25
