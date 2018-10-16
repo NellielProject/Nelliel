@@ -1,4 +1,11 @@
 # Nelliel Changelog
+## v0.9.9.1 (2018/10/10)
+### Changed
+ - Update FGSFDS handling
+ - Clean up some code and namespacing
+ - Rename more dbh to database
+ - Most classes now use dependency injection
+ 
 ## v0.9.9 (2018/10/10)
 ### Added
  - Basic plugin API documentation
