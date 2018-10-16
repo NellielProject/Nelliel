@@ -16,7 +16,6 @@ class GeneratePreviews
         $this->board_id = $board_id;
     }
 
-
     public function generate($files, $preview_path)
     {
         $file_handler = new \Nelliel\FileHandler();
@@ -26,22 +25,24 @@ class GeneratePreviews
 
         while ($i < $files_count)
         {
-            $files[$i]->content_data['im_x'] = null;
-            $files[$i]->content_data['im_y'] = null;
-            $files[$i]->content_data['pre_x'] = null;
-            $files[$i]->content_data['pre_y'] = null;
+            $files[$i]->content_data['image_width'] = null;
+            $files[$i]->content_data['image_height'] = null;
+            $files[$i]->content_data['preview_width'] = null;
+            $files[$i]->content_data['preview_height'] = null;
             $files[$i]->content_data['preview_name'] = null;
             $files[$i]->content_data['preview_extension'] = null;
 
             if ($files[$i]->content_data['format'] === 'swf' || ($files[$i]->content_data['type'] === 'graphics'))
             {
                 $dim = getimagesize($files[$i]->content_data['location']);
-                $files[$i]->content_data['im_x'] = $dim[0];
-                $files[$i]->content_data['im_y'] = $dim[1];
-                $ratio = min(($board_settings['max_height'] / $files[$i]->content_data['im_y']), ($board_settings['max_width'] /
-                        $files[$i]->content_data['im_x']));
-                $files[$i]->content_data['pre_x'] = ($ratio < 1) ? intval($ratio * $files[$i]->content_data['im_x']) : $files[$i]->content_data['im_x'];
-                $files[$i]->content_data['pre_y'] = ($ratio < 1) ? intval($ratio * $files[$i]->content_data['im_y']) : $files[$i]->content_data['im_y'];
+                $files[$i]->content_data['image_width'] = $dim[0];
+                $files[$i]->content_data['image_height'] = $dim[1];
+                $ratio = min(($board_settings['max_height'] / $files[$i]->content_data['image_height']),
+                        ($board_settings['max_width'] / $files[$i]->content_data['image_width']));
+                $files[$i]->content_data['preview_width'] = ($ratio < 1) ? intval(
+                        $ratio * $files[$i]->content_data['image_width']) : $files[$i]->content_data['image_width'];
+                $files[$i]->content_data['preview_height'] = ($ratio < 1) ? intval(
+                        $ratio * $files[$i]->content_data['image_height']) : $files[$i]->content_data['image_height'];
             }
 
             if ($board_settings['use_thumb'] && $files[$i]->content_data['type'] === 'graphics')
@@ -114,23 +115,28 @@ class GeneratePreviews
         {
             $file->content_data['preview_extension'] = 'gif';
 
-            if ($file->content_data['im_x'] <= $board_settings['max_width'] && $file->content_data['im_y'] <= $board_settings['max_height'])
+            if ($file->content_data['image_width'] <= $board_settings['max_width'] &&
+                    $file->content_data['image_height'] <= $board_settings['max_height'])
             {
-                copy($file->content_data['location'], $preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension']);
+                copy($file->content_data['location'],
+                        $preview_path . $file->content_data['preview_name'] . '.' .
+                        $file->content_data['preview_extension']);
             }
             else
             {
                 foreach ($image as $frame)
                 {
-                    $frame->scaleImage($file->content_data['pre_x'], $file->content_data['pre_y'], true);
+                    $frame->scaleImage($file->content_data['preview_width'], $file->content_data['preview_height'], true);
                 }
 
-                $image->writeImages($preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension'], true);
+                $image->writeImages(
+                        $preview_path . $file->content_data['preview_name'] . '.' .
+                        $file->content_data['preview_extension'], true);
             }
         }
         else
         {
-            $image->thumbnailImage($file->content_data['pre_x'], $file->content_data['pre_y'], true);
+            $image->thumbnailImage($file->content_data['preview_width'], $file->content_data['preview_height'], true);
             $image->sharpenImage(0, 0.5);
 
             if ($board_settings['use_png_thumb'])
@@ -143,7 +149,8 @@ class GeneratePreviews
                 $image->setImageCompressionQuality($board_settings['jpeg_quality']);
             }
 
-            $image->writeImage($preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension']);
+            $image->writeImage(
+                    $preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension']);
         }
     }
 
@@ -155,28 +162,38 @@ class GeneratePreviews
         {
             $file->content_data['preview_extension'] = 'gif';
             $cmd_resize = 'convert ' . escapeshellarg($file->content_data['location']) . ' -coalesce -thumbnail ' .
-            $board_settings['max_width'] . 'x' . $board_settings['max_height'] .
-            escapeshellarg($preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension']);
+                    $board_settings['max_width'] . 'x' . $board_settings['max_height'] .
+                    escapeshellarg(
+                            $preview_path . $file->content_data['preview_name'] . '.' .
+                            $file->content_data['preview_extension']);
             exec($cmd_resize);
-            chmod($preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension'], octdec(FILE_PERM));
+            chmod($preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension'],
+                    octdec(FILE_PERM));
         }
         else
         {
             if ($board_settings['use_png_thumb'])
             {
-                $cmd_resize = 'convert ' . escapeshellarg($file->content_data['location']) . ' -resize ' . $board_settings['max_width'] . 'x' .
-                $board_settings['max_height'] . '\> -quality 00 -sharpen 0x0.5 ' .
-                escapeshellarg($preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension']);
+                $cmd_resize = 'convert ' . escapeshellarg($file->content_data['location']) . ' -resize ' .
+                        $board_settings['max_width'] . 'x' . $board_settings['max_height'] .
+                        '\> -quality 00 -sharpen 0x0.5 ' .
+                        escapeshellarg(
+                                $preview_path . $file->content_data['preview_name'] . '.' .
+                                $file->content_data['preview_extension']);
             }
             else
             {
-                $cmd_resize = 'convert ' . escapeshellarg($file->content_data['location']) . ' -resize ' . $board_settings['max_width'] . 'x' .
-                $board_settings['max_height'] . '\> -quality ' . $board_settings['jpeg_quality'] . ' -sharpen 0x0.5 ' .
-                escapeshellarg($preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension']);
+                $cmd_resize = 'convert ' . escapeshellarg($file->content_data['location']) . ' -resize ' .
+                        $board_settings['max_width'] . 'x' . $board_settings['max_height'] . '\> -quality ' .
+                        $board_settings['jpeg_quality'] . ' -sharpen 0x0.5 ' .
+                        escapeshellarg(
+                                $preview_path . $file->content_data['preview_name'] . '.' .
+                                $file->content_data['preview_extension']);
             }
 
             exec($cmd_resize);
-            chmod($preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension'], octdec(FILE_PERM));
+            chmod($preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension'],
+                    octdec(FILE_PERM));
         }
     }
 
@@ -202,19 +219,24 @@ class GeneratePreviews
             return false;
         }
 
-        $preview = imagecreatetruecolor($file->content_data['pre_x'], $file->content_data['pre_y']);
+        $preview = imagecreatetruecolor($file->content_data['preview_width'], $file->content_data['preview_height']);
 
         if ($preview !== false)
         {
-            imagecopyresampled($preview, $image, 0, 0, 0, 0, $file->content_data['pre_x'], $file->content_data['pre_y'], $file->content_data['im_x'], $file->content_data['im_y']);
+            imagecopyresampled($preview, $image, 0, 0, 0, 0, $file->content_data['preview_width'],
+                    $file->content_data['preview_height'], $file->content_data['image_width'], $file->content_data['image_height']);
 
             if ($board_settings['use_png_thumb'])
             {
-                imagepng($preview, $preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension'], -1);
+                imagepng($preview,
+                        $preview_path . $file->content_data['preview_name'] . '.' .
+                        $file->content_data['preview_extension'], -1);
             }
             else
             {
-                imagejpeg($preview, $preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension'], $board_settings['jpeg_quality']);
+                imagejpeg($preview,
+                        $preview_path . $file->content_data['preview_name'] . '.' .
+                        $file->content_data['preview_extension'], $board_settings['jpeg_quality']);
             }
         }
     }
