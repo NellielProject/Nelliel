@@ -52,10 +52,11 @@ function nel_admin_dispatch($inputs)
             case 'file-filter':
                 $file_filters_panel = new \Nelliel\PanelFileFilters(nel_database(), nel_authorize());
                 $file_filters_panel->actionDispatch($inputs);
+                break;
 
             case 'default-board-settings':
-                require_once INCLUDE_PATH . 'admin/board_settings_panel.php';
-                nel_board_settings_control($inputs, true);
+                $board_settings_panel = new \Nelliel\PanelBoardSettings(nel_database(), nel_authorize());
+                $board_settings_panel->actionDispatch($inputs);
                 break;
 
             case 'language':
@@ -84,8 +85,8 @@ function nel_admin_dispatch($inputs)
         switch ($inputs['module'])
         {
             case 'board-settings':
-                require_once INCLUDE_PATH . 'admin/board_settings_panel.php';
-                nel_board_settings_control($inputs);
+                $board_settings_panel = new \Nelliel\PanelBoardSettings(nel_database(), nel_authorize(), $inputs['board_id']);
+                $board_settings_panel->actionDispatch($inputs);
                 break;
 
             case 'bans':
