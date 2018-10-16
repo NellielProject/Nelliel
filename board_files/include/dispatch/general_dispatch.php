@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_general_dispatch($inputs)
 {
     $sessions = new \Nelliel\Sessions();
+    $fgsfds = new \Nelliel\FGSFDS();
     $inputs = nel_plugins()->processHook('nel-inb4-general-dispatch', array(), $inputs);
 
     switch ($inputs['module'])
@@ -18,19 +19,19 @@ function nel_general_dispatch($inputs)
                 nel_process_new_post($inputs);
                 $board_references = nel_parameters_and_data()->boardReferences($inputs['board_id']);
 
-                if (nel_fgsfds('noko'))
+                if ($fgsfds->getCommand('noko') !== false)
                 {
                     if ($sessions->sessionIsActive())
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                                '?manage=modmode&module=view-thread&section=' . nel_fgsfds('noko_topic') . '&board_id=' .
+                                '?manage=modmode&module=view-thread&section=' . $fgsfds->getCommandData('noko', 'topic') . '&board_id=' .
                                 $inputs['board_id'] . '">';
                     }
                     else
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . $board_references['board_directory'] . '/' .
-                                $board_references['page_dir'] . '/' . nel_fgsfds('noko_topic') . '/' .
-                                nel_fgsfds('noko_topic') . '.html">';
+                                $board_references['page_dir'] . '/' . $fgsfds->getCommandData('noko', 'topic') . '/' .
+                                $fgsfds->getCommandData('noko', 'topic') . '.html">';
                     }
                 }
                 else

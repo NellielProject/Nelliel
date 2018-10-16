@@ -39,25 +39,3 @@ function nel_parameters_and_data()
 
     return $parameters;
 }
-
-function nel_fgsfds($entry, $new_value = null)
-{
-    static $fgsfds;
-
-    if (!isset($fgsfds))
-    {
-        $fgsfds = array();
-    }
-
-    if (!is_null($new_value))
-    {
-        $fgsfds[$entry] = $new_value;
-    }
-
-    if (isset($fgsfds[$entry]))
-    {
-        return $fgsfds[$entry];
-    }
-
-    return null;
-}

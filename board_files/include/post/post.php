@@ -27,12 +27,15 @@ function nel_process_new_post($inputs)
     // Process FGSFDS
     if (!empty($post->content_data['fgsfds']))
     {
-        $fgsfds_commands = preg_split('#[\s,]#u', $post->content_data['fgsfds']);
-        nel_fgsfds('noko', in_array('noko', $fgsfds_commands));
-        nel_fgsfds('sage', in_array('sage', $fgsfds_commands));
+        $fgsfds = new \Nelliel\FGSFDS($post->content_data['fgsfds']);
+
+        if($fgsfds->getCommand('sage') !== false)
+        {
+            $fgsfds->modifyCommandData('sage', 'value', true);
+        }
     }
 
-    $post->content_data['sage'] = (empty(nel_fgsfds('sage'))) ? 0 : nel_fgsfds('sage');
+    $post->content_data['sage'] = $fgsfds->getCommandData('sage', 'value');
     $files = $file_upload->processFiles($post->content_data['response_to']);
     $spoon = !empty($files);
     $post->content_data['file_count'] = count($files);
@@ -101,7 +104,7 @@ function nel_process_new_post($inputs)
         $thread->content_data['last_update'] = $time;
         $thread->content_data['post_count'] = $thread->content_data['post_count'] + 1;
 
-        if ($thread->content_data['post_count'] <= $board_settings['max_bumps'] && !nel_fgsfds('sage'))
+        if ($thread->content_data['post_count'] <= $board_settings['max_bumps'] && !$fgsfds->getCommandData('sage', 'value'))
         {
             $thread->content_data['last_bump_time'] = $time;
         }
@@ -111,7 +114,7 @@ function nel_process_new_post($inputs)
 
     $post->writeToDatabase();
     $post->createDirectories();
-    nel_fgsfds('noko_topic', $thread->content_id->thread_id);
+    $fgsfds->modifyCommandData('noko', 'topic', $thread->content_id->thread_id);
     $src_path = $references['src_path'] . $thread->content_id->thread_id . '/' . $post->content_id->post_id . '/';
     $preview_path = $references['thumb_path'] . $thread->content_id->thread_id . '/' . $post->content_id->post_id .
             '/';
