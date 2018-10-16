@@ -2,8 +2,6 @@
 
 namespace Nelliel\Auth;
 
-use PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");

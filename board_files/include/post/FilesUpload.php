@@ -137,18 +137,19 @@ class FilesUpload
     public function doesFileExist($response_to, $file)
     {
         $dbh = nel_database();
+        $snacks = new \Nelliel\Snacks($dbh, new \Nelliel\BanHammer($dbh, nel_authorize()));
         $references = nel_parameters_and_data()->boardReferences($this->board_id);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $error_data = array('delete_files' => true, 'bad-filename' => $file->content_data['name'], 'files' => $this->uploaded_files,
             'board_id' => $this->board_id);
         $is_banned = false;
         $file->content_data['md5'] = hash_file('md5', $file->content_data['location'], true);
-        $is_banned = nel_file_hash_is_banned($file->content_data['md5'], 'md5');
+        $is_banned = $snacks->fileHashIsBanned($file->content_data['md5'], 'md5');
 
         if (!$is_banned)
         {
             $file->content_data['sha1'] = hash_file('sha1', $file->content_data['location'], true);
-            $is_banned = nel_file_hash_is_banned($file->content_data['sha1'], 'sha1');
+            $is_banned = $snacks->fileHashIsBanned($file->content_data['sha1'], 'sha1');
         }
 
         $file->content_data['sha256'] = null;
@@ -156,7 +157,7 @@ class FilesUpload
         if (!$is_banned && $board_settings['file_sha256'])
         {
             $file->content_data['sha256'] = hash_file('sha256', $file->content_data['location'], true);
-            $is_banned = nel_file_hash_is_banned($file->content_data['sha256'], 'sha256');
+            $is_banned = $snacks->fileHashIsBanned($file->content_data['sha256'], 'sha256');
         }
 
         $file->content_data['sha512'] = null;
@@ -164,7 +165,7 @@ class FilesUpload
         if (!$is_banned && $board_settings['file_sha512'])
         {
             $file->content_data['sha512'] = hash_file('sha512', $file->content_data['location'], true);
-            $is_banned = nel_file_hash_is_banned($file->content_data['sha512'], 'sha512');
+            $is_banned = $snacks->fileHashIsBanned($file->content_data['sha512'], 'sha512');
         }
 
         if ($is_banned)

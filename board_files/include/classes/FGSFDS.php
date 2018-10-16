@@ -2,6 +2,11 @@
 
 namespace Nelliel;
 
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
+
 class FGSFDS
 {
     private static $raw_fgsfds = '';

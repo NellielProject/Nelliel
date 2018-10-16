@@ -36,7 +36,8 @@ function nel_central_dispatch()
     $inputs['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
     $inputs['content_id'] = (isset($_GET['content-id'])) ? $_GET['content-id'] : null;
 
-    nel_apply_ban($inputs);
+    $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database(), $authorize));
+    $snacks->applyBan($inputs);
 
     if (isset($_GET['manage']))
     {

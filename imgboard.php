@@ -56,11 +56,10 @@ nel_plugins()->loadPlugins();
 nel_plugins()->processHook('nel-plugin-example', array(5));
 $out = nel_plugins()->processHook('nel-plugin-example-return', array('string'), 5);
 
-require_once INCLUDE_PATH . 'snacks.php';
-
 // IT'S GO TIME!
 ignore_user_abort(true);
-nel_ban_spambots();
+$snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database(), nel_authorize()));
+$snacks->banSpambots();
 
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 
