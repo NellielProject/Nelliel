@@ -38,15 +38,8 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'create-board':
-                require_once INCLUDE_PATH . 'output/management/create_board.php';
-
-                if ($inputs['action'] === 'create')
-                {
-                    require_once INCLUDE_PATH . 'admin/create_board.php';
-                    nel_create_new_board();
-                }
-
-                nel_render_create_board_panel();
+                $create_board_panel = new \Nelliel\PanelCreateBoard(nel_database(), nel_authorize());
+                $create_board_panel->actionDispatch($inputs);
                 break;
 
             case 'file-filter':
