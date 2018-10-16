@@ -11,6 +11,8 @@ if (!defined('NELLIEL_VERSION'))
 
 class ParametersAndData
 {
+    private $database;
+    private $cache_handler;
     private $site_settings = array();
     private $board_settings = array();
     private $filetype_settings = array();
@@ -18,8 +20,10 @@ class ParametersAndData
     private $filetype_data = array();
     private $file_filters = array();
 
-    function __construct($no_hash_load = false)
+    function __construct($database, $cache_handler)
     {
+        $this->database = $database;
+        $this->cache_handler = $cache_handler;
     }
 
     private function loadArrayFromCache($filename, $array_variable)
@@ -45,8 +49,7 @@ class ParametersAndData
 
             if ($settings === false || $cache_regen)
             {
-                $dbh = nel_database();
-                $config_list = $dbh->executeFetchAll('SELECT * FROM "nelliel_site_config"', PDO::FETCH_ASSOC);
+                $config_list = $this->database->executeFetchAll('SELECT * FROM "nelliel_site_config"', PDO::FETCH_ASSOC);
 
                 foreach ($config_list as $config)
                 {
@@ -56,8 +59,7 @@ class ParametersAndData
 
                 if (USE_INTERNAL_CACHE || $cache_regen)
                 {
-                    $cacheHandler = new CacheHandler(true);
-                    $cacheHandler->writeCacheFile(CACHE_PATH, 'site_settings.php',
+                    $this->cache_handler->writeCacheFile(CACHE_PATH, 'site_settings.php',
                             '$site_settings = ' . var_export($settings, true) . ';');
                 }
             }
@@ -86,11 +88,10 @@ class ParametersAndData
 
             if ($settings === false || $cache_regen)
             {
-                $dbh = nel_database();
-                $prepared = $dbh->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
-                $db_prefix = $dbh->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
+                $prepared = $this->database->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
+                $db_prefix = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
                 $config_table = $db_prefix . '_config';
-                $config_list = $dbh->executeFetchAll(
+                $config_list = $this->database->executeFetchAll(
                         'SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
 
                 foreach ($config_list as $config)
@@ -101,8 +102,7 @@ class ParametersAndData
 
                 if (USE_INTERNAL_CACHE || $cache_regen)
                 {
-                    $cacheHandler = new CacheHandler(true);
-                    $cacheHandler->writeCacheFile(CACHE_PATH . $board_id . '/', 'board_settings.php',
+                    $this->cache_handler->writeCacheFile(CACHE_PATH . $board_id . '/', 'board_settings.php',
                             '$board_settings = ' . var_export($settings, true) . ';');
                 }
             }
@@ -131,11 +131,10 @@ class ParametersAndData
 
             if ($settings === false || $cache_regen)
             {
-                $dbh = nel_database();
-                $prepared = $dbh->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
-                $db_prefix = $dbh->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
+                $prepared = $this->database->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
+                $db_prefix = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
                 $config_table = $db_prefix . '_config';
-                $config_list = $dbh->executeFetchAll(
+                $config_list = $this->database->executeFetchAll(
                         'SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'filetype_enable\'',
                         PDO::FETCH_ASSOC);
                 $settings = array();
@@ -147,8 +146,7 @@ class ParametersAndData
 
                 if (USE_INTERNAL_CACHE || $cache_regen)
                 {
-                    $cacheHandler = new CacheHandler(true);
-                    $cacheHandler->writeCacheFile(CACHE_PATH . $board_id . '/', 'filetype_settings.php',
+                    $this->cache_handler->writeCacheFile(CACHE_PATH . $board_id . '/', 'filetype_settings.php',
                             '$filetype_settings = ' . var_export($settings, true) . ';');
                 }
             }
@@ -173,9 +171,8 @@ class ParametersAndData
 
         if (empty($this->board_references[$board_id]))
         {
-            $dbh = nel_database();
-            $prepared = $dbh->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
-            $board_data = $dbh->executePreparedFetch($prepared, array($board_id), PDO::FETCH_ASSOC);
+            $prepared = $this->database->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
+            $board_data = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_ASSOC);
             $new_reference = array();
             $board_path = BASE_PATH . $board_data['board_directory'] . '/';
             $new_reference['board_directory'] = $board_data['board_directory'];
@@ -218,9 +215,7 @@ class ParametersAndData
         if (empty($this->filetype_data))
         {
             $filetypes = array();
-
-            $dbh = nel_database();
-            $db_results = $dbh->executeFetchAll('SELECT * FROM "nelliel_filetypes"', PDO::FETCH_ASSOC);
+            $db_results = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes"', PDO::FETCH_ASSOC);
             $sub_extensions = array();
 
             foreach ($db_results as $result)
@@ -263,8 +258,7 @@ class ParametersAndData
 
             if (!$loaded)
             {
-                $dbh = nel_database();
-                $filters = $dbh->executeFetchAll('SELECT "hash_type", "file_hash" FROM "nelliel_file_filters"',
+                $filters = $this->database->executeFetchAll('SELECT "hash_type", "file_hash" FROM "nelliel_file_filters"',
                         PDO::FETCH_ASSOC);
 
                 foreach ($filters as $filter)

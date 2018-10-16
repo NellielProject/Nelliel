@@ -11,12 +11,12 @@ if (!defined('NELLIEL_VERSION'))
 
 class BanHammer
 {
-    private $dbh;
+    private $database;
     private $authorize;
 
     public function __construct($database, $authorize)
     {
-        $this->dbh = $database;
+        $this->database = $database;
         $this->authorize = $authorize;
     }
 
@@ -64,8 +64,8 @@ class BanHammer
 
     public function getBanById($ban_id, $convert_length = false)
     {
-        $prepared = $this->dbh->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ban_id" = ? LIMIT 1');
-        $ban_info = $this->dbh->executePreparedFetch($prepared, array($ban_id), PDO::FETCH_ASSOC);
+        $prepared = $this->database->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ban_id" = ? LIMIT 1');
+        $ban_info = $this->database->executePreparedFetch($prepared, array($ban_id), PDO::FETCH_ASSOC);
 
         if ($ban_info === false)
         {
@@ -82,9 +82,9 @@ class BanHammer
 
     public function getBansByIp($ban_ip)
     {
-        $prepared = $this->dbh->prepare(
+        $prepared = $this->database->prepare(
                 'SELECT * FROM "' . BAN_TABLE . '" WHERE "ip_address_start" = ? AND "ip_address_end" IS NULL');
-        $ban_info = $this->dbh->executePreparedFetchAll($prepared, array(@inet_pton($ban_ip)), PDO::FETCH_ASSOC);
+        $ban_info = $this->database->executePreparedFetchAll($prepared, array(@inet_pton($ban_ip)), PDO::FETCH_ASSOC);
 
         if ($ban_info === false)
         {
@@ -103,7 +103,7 @@ class BanHammer
             nel_derp(321, _gettext('You are not allowed to add new bans.'));
         }
 
-        $prepared = $this->dbh->prepare(
+        $prepared = $this->database->prepare(
                 'INSERT INTO "' . BAN_TABLE . '" ("board_id", "all_boards", "type", "creator", "ip_address_start", "reason", "length", "start_time")
 								VALUES (:board_id, :all_boards, :type, :creator, :ip_address_start, :reason, :length, :start_time)');
         $prepared->bindParam(':board_id', $ban_input['board'], PDO::PARAM_STR);
@@ -123,7 +123,7 @@ class BanHammer
             $prepared->bindValue(':start_time', time(), PDO::PARAM_INT);
         }
 
-        $this->dbh->executePrepared($prepared);
+        $this->database->executePrepared($prepared);
     }
 
     public function modifyBan($ban_input)
@@ -135,7 +135,7 @@ class BanHammer
             nel_derp(322, _gettext('You are not allowed to modify bans.'));
         }
 
-        $prepared = $this->dbh->prepare(
+        $prepared = $this->database->prepare(
                 'UPDATE "' . BAN_TABLE .
                 '" SET "board_id" = :board_id, "all_boards" = :all_boards, "type" = :type, "ip_address_start" = :ip_address_start, "reason" = :reason, "length" = :length, "start_time" = :start_time, "appeal" = :appeal, "appeal_response" = :appeal_response, "appeal_status" = :appeal_status WHERE "ban_id" = :ban_id');
         $prepared->bindParam(':ban_id', $ban_input['ban_id'], PDO::PARAM_INT);
@@ -149,7 +149,7 @@ class BanHammer
         $prepared->bindValue(':appeal', $ban_input['appeal'], PDO::PARAM_STR);
         $prepared->bindValue(':appeal_response', $ban_input['appeal_response'], PDO::PARAM_STR);
         $prepared->bindValue(':appeal_status', $ban_input['appeal_status'], PDO::PARAM_INT);
-        $this->dbh->executePrepared($prepared);
+        $this->database->executePrepared($prepared);
     }
 
     public function removeBan($board_id, $ban_id, $snacks = false)
@@ -164,8 +164,8 @@ class BanHammer
             }
         }
 
-        $prepared = $this->dbh->prepare('DELETE FROM "' . BAN_TABLE . '" WHERE "ban_id" = ?');
-        $this->dbh->executePrepared($prepared, array($ban_id));
+        $prepared = $this->database->prepare('DELETE FROM "' . BAN_TABLE . '" WHERE "ban_id" = ?');
+        $this->database->executePrepared($prepared, array($ban_id));
     }
 }
 

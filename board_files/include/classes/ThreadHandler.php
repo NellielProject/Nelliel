@@ -9,12 +9,12 @@ if (!defined('NELLIEL_VERSION'))
 
 class ThreadHandler
 {
-    private $dbh;
+    private $database;
     private $board_id;
 
     function __construct($database, $board_id)
     {
-        $this->dbh = $database;
+        $this->database = $database;
         $this->board_id = $board_id;
     }
 
@@ -39,18 +39,18 @@ class ThreadHandler
             {
                 if ($content_id->isThread())
                 {
-                    $thread = new \Nelliel\Content\ContentThread($this->dbh, $content_id, $this->board_id);
+                    $thread = new \Nelliel\Content\ContentThread($this->database, $content_id, $this->board_id);
                     $thread->remove();
                     $update_archive = true;
                 }
                 else if ($content_id->isPost())
                 {
-                    $post = new \Nelliel\Content\ContentPost($this->dbh, $content_id, $this->board_id);
+                    $post = new \Nelliel\Content\ContentPost($this->database, $content_id, $this->board_id);
                     $post->remove();
                 }
                 else if ($content_id->isFile())
                 {
-                    $file = new \Nelliel\Content\ContentFile($this->dbh, $content_id, $this->board_id);
+                    $file = new \Nelliel\Content\ContentFile($this->database, $content_id, $this->board_id);
                     $file->remove();
                 }
             }
@@ -63,7 +63,7 @@ class ThreadHandler
 
         if ($update_archive)
         {
-            $archive = new ArchiveAndPrune($this->dbh, $this->board_id);
+            $archive = new ArchiveAndPrune($this->database, $this->board_id, new FileHandler());
             $archive->updateAllArchiveStatus();
 
             if ($board_settings['old_threads'] === 'ARCHIVE')

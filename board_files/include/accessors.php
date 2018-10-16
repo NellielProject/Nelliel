@@ -34,7 +34,7 @@ function nel_parameters_and_data()
 
     if (!isset($parameters))
     {
-        $parameters = new \Nelliel\ParametersAndData();
+        $parameters = new \Nelliel\ParametersAndData(nel_database(), new \Nelliel\CacheHandler(true));
     }
 
     return $parameters;
