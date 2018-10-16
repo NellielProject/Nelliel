@@ -50,8 +50,8 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'file-filter':
-                require_once INCLUDE_PATH . 'admin/file_filters.php';
-                nel_manage_file_filters($inputs);
+                $file_filters_panel = new \Nelliel\PanelFileFilters(nel_database(), nel_authorize());
+                $file_filters_panel->actionDispatch($inputs);
 
             case 'default-board-settings':
                 require_once INCLUDE_PATH . 'admin/board_settings_panel.php';
