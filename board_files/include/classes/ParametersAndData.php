@@ -13,12 +13,12 @@ class ParametersAndData
 {
     private $database;
     private $cache_handler;
-    private $site_settings = array();
-    private $board_settings = array();
-    private $filetype_settings = array();
-    private $board_references = array();
-    private $filetype_data = array();
-    private $file_filters = array();
+    private static $site_settings = array();
+    private static $board_settings = array();
+    private static $filetype_settings = array();
+    private static $board_references = array();
+    private static $filetype_data = array();
+    private static $file_filters = array();
 
     function __construct($database, $cache_handler)
     {
@@ -43,7 +43,7 @@ class ParametersAndData
 
     public function siteSettings($setting = null, $cache_regen = false)
     {
-        if (empty($this->site_settings) || $cache_regen)
+        if (empty(self::$site_settings) || $cache_regen)
         {
             $settings = $this->loadArrayFromCache('site_settings.php', 'site_settings');
 
@@ -64,15 +64,15 @@ class ParametersAndData
                 }
             }
 
-            $this->site_settings = $settings;
+            self::$site_settings = $settings;
         }
 
         if (is_null($setting))
         {
-            return $this->site_settings;
+            return self::$site_settings;
         }
 
-        return $this->site_settings[$setting];
+        return self::$site_settings[$setting];
     }
 
     public function boardSettings($board_id, $setting = null, $cache_regen = false)
@@ -82,7 +82,7 @@ class ParametersAndData
             return;
         }
 
-        if (empty($this->board_settings[$board_id]) || $cache_regen)
+        if (empty(self::$board_settings[$board_id]) || $cache_regen)
         {
             $settings = $this->loadArrayFromCache($board_id . '/board_settings.php', 'board_settings');
 
@@ -107,15 +107,15 @@ class ParametersAndData
                 }
             }
 
-            $this->board_settings[$board_id] = $settings;
+            self::$board_settings[$board_id] = $settings;
         }
 
         if (is_null($setting))
         {
-            return $this->board_settings[$board_id];
+            return self::$board_settings[$board_id];
         }
 
-        return $this->board_settings[$board_id][$setting];
+        return self::$board_settings[$board_id][$setting];
     }
 
     public function filetypeSettings($board_id, $setting = null, $cache_regen = false)
@@ -125,7 +125,7 @@ class ParametersAndData
             return;
         }
 
-        if (empty($this->filetype_settings[$board_id]) || $cache_regen)
+        if (empty(self::$filetype_settings[$board_id]) || $cache_regen)
         {
             $settings = $this->loadArrayFromCache($board_id . '/filetype_settings.php', 'filetype_settings');
 
@@ -151,15 +151,15 @@ class ParametersAndData
                 }
             }
 
-            $this->filetype_settings[$board_id] = $settings;
+            self::$filetype_settings[$board_id] = $settings;
         }
 
         if (is_null($setting))
         {
-            return $this->filetype_settings[$board_id];
+            return self::$filetype_settings[$board_id];
         }
 
-        return $this->filetype_settings[$board_id][$setting];
+        return self::$filetype_settings[$board_id][$setting];
     }
 
     public function boardReferences($board_id, $reference = null)
@@ -169,7 +169,7 @@ class ParametersAndData
             return;
         }
 
-        if (empty($this->board_references[$board_id]))
+        if (empty(self::$board_references[$board_id]))
         {
             $prepared = $this->database->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
             $board_data = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_ASSOC);
@@ -199,20 +199,20 @@ class ParametersAndData
             $new_reference['archive_thread_table'] = $new_reference['db_prefix'] . '_archive_threads';
             $new_reference['archive_file_table'] = $new_reference['db_prefix'] . '_archive_files';
             $new_reference['config_table'] = $new_reference['db_prefix'] . '_config';
-            $this->references[$board_id] = $new_reference;
+            self::$board_references[$board_id] = $new_reference;
         }
 
         if (is_null($reference))
         {
-            return $this->references[$board_id];
+            return self::$board_references[$board_id];
         }
 
-        return $this->references[$board_id][$reference];
+        return self::$board_references[$board_id][$reference];
     }
 
     public function filetypeData($extension = null)
     {
-        if (empty($this->filetype_data))
+        if (empty(self::$filetype_data))
         {
             $filetypes = array();
             $db_results = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes"', PDO::FETCH_ASSOC);
@@ -239,20 +239,20 @@ class ParametersAndData
                 }
             }
 
-            $this->filetype_data = $filetypes;
+            self::$filetype_data = $filetypes;
         }
 
         if (is_null($extension))
         {
-            return $this->filetype_data;
+            return self::$filetype_data;
         }
 
-        return $this->filetype_data[$extension];
+        return self::$filetype_data[$extension];
     }
 
     public function fileFilters()
     {
-        if (empty($this->file_filters))
+        if (empty(self::$file_filters))
         {
             $loaded = false;
 
@@ -263,11 +263,11 @@ class ParametersAndData
 
                 foreach ($filters as $filter)
                 {
-                    $this->file_filters[$filter['hash_type']][] = $filter['file_hash'];
+                    self::$file_filters[$filter['hash_type']][] = $filter['file_hash'];
                 }
             }
         }
 
-        return $this->file_filters;
+        return self::$file_filters;
     }
 }
