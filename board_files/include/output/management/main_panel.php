@@ -115,7 +115,7 @@ function nel_render_main_board_panel($board_id)
     $settings = $dom->getElementById('module-board-settings');
     $user = $authorize->getUser($_SESSION['username']);
 
-    if ($user->boardPerm($board_id, 'perm_manage_board_config'))
+    if ($user->boardPerm($board_id, 'perm_manage_board_config') || $user->boardPerm('', 'perm_manage_board_config'))
     {
         $settings_elements = $settings->getElementsByAttributeName('data-parse-id', true);
         $settings_elements['board-settings-link']->extSetAttribute('href',
@@ -128,7 +128,7 @@ function nel_render_main_board_panel($board_id)
 
     $bans = $dom->getElementById('module-bans');
 
-    if ($user->boardPerm($board_id, 'perm_ban_access'))
+    if ($user->boardPerm($board_id, 'perm_ban_access') || $user->boardPerm('', 'perm_ban_access'))
     {
         $bans_elements = $bans->getElementsByAttributeName('data-parse-id', true);
         $bans_elements['bans-link']->extSetAttribute('href',
@@ -141,7 +141,7 @@ function nel_render_main_board_panel($board_id)
 
     $threads = $dom->getElementById('module-threads');
 
-    if ($user->boardPerm($board_id, 'perm_post_access'))
+    if ($user->boardPerm($board_id, 'perm_post_access') || $user->boardPerm('', 'perm_post_access'))
     {
         $threads_elements = $threads->getElementsByAttributeName('data-parse-id', true);
         $threads_elements['threads-link']->extSetAttribute('href',
@@ -165,9 +165,9 @@ function nel_render_main_board_panel($board_id)
         $bans->remove();
     }
 
-    if (!$user->boardPerm($board_id, 'perm_regen_index'))
+    if (!$user->boardPerm($board_id, 'perm_regen_index') && !$user->boardPerm('', 'perm_regen_index'))
     {
-        $dom->getElementById('page-regen-form')->remove();
+        $dom->getElementById('regen-all-pages')->remove();
     }
     else
     {
@@ -175,9 +175,9 @@ function nel_render_main_board_panel($board_id)
                 PHP_SELF . '?manage=board&module=regen&action=all-pages&board_id=' . $board_id);
     }
 
-    if (!$user->boardPerm($board_id, 'perm_regen_caches'))
+    if (!$user->boardPerm($board_id, 'perm_regen_caches') && !$user->boardPerm('', 'perm_regen_caches'))
     {
-        $dom->getElementById('cache-regen-form')->remove();
+        $dom->getElementById('regen-all-caches')->remove();
     }
     else
     {
