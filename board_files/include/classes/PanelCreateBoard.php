@@ -66,7 +66,6 @@ class PanelCreateBoard extends PanelBase
 
     public function update()
     {
-
     }
 
     public function remove()

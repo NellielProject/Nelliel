@@ -33,8 +33,8 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'site-settings':
-                require_once INCLUDE_PATH . 'admin/site_settings_panel.php';
-                nel_site_settings_control($inputs);
+                $site_settings_panel = new \Nelliel\PanelSiteSettings(nel_database(), nel_authorize());
+                $site_settings_panel->actionDispatch($inputs);
                 break;
 
             case 'create-board':
