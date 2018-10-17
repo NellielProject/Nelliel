@@ -88,8 +88,8 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'threads':
-                require_once INCLUDE_PATH . 'admin/threads_panel.php';
-                nel_thread_panel($inputs);
+                $board_settings_panel = new \Nelliel\PanelThreads(nel_database(), nel_authorize(), $inputs['board_id']);
+                $board_settings_panel->actionDispatch($inputs);
                 break;
 
             case 'regen':
