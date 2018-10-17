@@ -48,8 +48,8 @@ class AuthPermissions extends AuthBase
 
         foreach ($this->auth_data as $perm => $setting)
         {
-            $prepared = $database->prepare('SELECT "entry" FROM "' . PERMISSIONS_TABLE . '" WHERE "perm_id" = ? LIMIT 1');
-            $result = $database->executePreparedFetch($prepared, [$perm], PDO::FETCH_COLUMN);
+            $prepared = $database->prepare('SELECT "entry" FROM "' . PERMISSIONS_TABLE . '" WHERE "role_id" = ? AND "perm_id" = ? LIMIT 1');
+            $result = $database->executePreparedFetch($prepared, [$this->auth_id, $perm], PDO::FETCH_COLUMN);
 
             if ($result)
             {
