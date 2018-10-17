@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel;
+namespace Nelliel\Panels;
 
 if (!defined('NELLIEL_VERSION'))
 {
