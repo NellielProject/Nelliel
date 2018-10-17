@@ -96,13 +96,6 @@ class BanHammer
 
     public function addBan($ban_input)
     {
-        $user = $this->authorize->getUser($_SESSION['username']);
-
-        if (!$user->boardPerm($board_id, 'perm_ban_add') && !$user->boardPerm('', 'perm_ban_add'))
-        {
-            nel_derp(321, _gettext('You are not allowed to add new bans.'));
-        }
-
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . BAN_TABLE . '" ("board_id", "all_boards", "type", "creator", "ip_address_start", "reason", "length", "start_time")
 								VALUES (:board_id, :all_boards, :type, :creator, :ip_address_start, :reason, :length, :start_time)');
@@ -128,13 +121,6 @@ class BanHammer
 
     public function modifyBan($ban_input)
     {
-        $user = $this->authorize->getUser($_SESSION['username']);
-
-        if (!$user->boardPerm($board_id, 'perm_ban_modify') && !$user->boardPerm('', 'perm_ban_modify'))
-        {
-            nel_derp(322, _gettext('You are not allowed to modify bans.'));
-        }
-
         $prepared = $this->database->prepare(
                 'UPDATE "' . BAN_TABLE .
                 '" SET "board_id" = :board_id, "all_boards" = :all_boards, "type" = :type, "ip_address_start" = :ip_address_start, "reason" = :reason, "length" = :length, "start_time" = :start_time, "appeal" = :appeal, "appeal_response" = :appeal_response, "appeal_status" = :appeal_status WHERE "ban_id" = :ban_id');

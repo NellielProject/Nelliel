@@ -83,8 +83,8 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'bans':
-                require_once INCLUDE_PATH . 'admin/bans_panel.php';
-                nel_ban_control($inputs);
+                $board_settings_panel = new \Nelliel\PanelBans(nel_database(), nel_authorize(), $inputs['board_id']);
+                $board_settings_panel->actionDispatch($inputs);
                 break;
 
             case 'threads':
