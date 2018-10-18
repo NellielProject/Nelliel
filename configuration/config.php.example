@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 // This file has only the very basic configuration needed to function and do setup.
 // It is intentionally kept as short and simple as possible.
-// Board Management and all other settings are accessible from the management area.
+// Board management and all other settings are accessible from the management panels.
 //
 
 //
@@ -24,32 +24,11 @@ $base_config['defaultadmin_pass'] = '';
 // Change this setting ONCE when you do initial setup. Changing it again will alter the secure tripcode output.
 $base_config['tripcode_salt'] = 'sodiumz';
 
-// Each time the script is run, this goes through the setup sequence and checks that everything is in place.
-// Once initial setup and testing is finished this isn't really necessary and can be set to false.
-$base_config['run_setup_check'] = true;
-
-// Default file and directory permissions.
-// In most cases you don't need to touch these.
-// If they are changed, format must be in the proper octal format.
-$base_config['directory_perm'] = '0775';
-$base_config['file_perm'] = '0664';
-
-
-// Enable/disable internal caching.
-// When enabled Nelliel will use its internal caching system. This speeds things up considerably.
-// The only time this should need to be disabled is for testing or troubleshooting.
-$base_config['use_internal_cache'] = true;
-
-// The locale to use.
-// Should follow the standard format using ISO-639 and ISO-3166 codes.
+// The locale to use. Should follow the standard format using ISO-639 and ISO-3166 codes.
 // e.g. 'en_US' for 'English (United Sates)', 'en_GB' for 'English (United Kingdom)'
-// If a language file is available that matches the locale, Nelliel will use it.
-// If no translations are found matching the code, it will default to 'en_US'
+// If a language file is available that matches the locale, Nelliel will use it. Otherwise it will default to 'en_US'
 // The available locales and their translations can be found in the directory 'board_files/language/locale'
 $base_config['default_locale'] = 'en_US';
-
-// Enable or disable plugins
-$base_config['enable_plugins'] = true;
 
 
 //
@@ -129,9 +108,31 @@ $db_config['postgres_encoding'] = 'UTF8';
 // You must make sure this matches or is compatible with what the database uses!
 $db_config['postgres_encoding'] = 'UTF-8';
 
+//
+// === Technical Settings ===
+//
+
+// In most cases you won't need to mess with this stuff.
+
+// Each time the script is run, this goes through the setup sequence and checks that everything is in place.
+// Once initial setup and testing is finished this isn't really necessary and can be set to false.
+$base_config['run_setup_check'] = true;
+
+// Default file and directory permissions. Format must be in the proper octal format.
+$base_config['directory_perm'] = '0775';
+$base_config['file_perm'] = '0664';
+
+// Enable/disable internal caching.
+// When enabled Nelliel will use its internal caching system. This speeds things up considerably.
+// The only time this should need to be disabled is for testing or troubleshooting.
+$base_config['use_internal_cache'] = true;
+
+// Enable or disable plugins
+$base_config['enable_plugins'] = true;
+
 
 //
-// == Crypt Settings ===
+// === Crypt Settings ===
 //
 
 // The hash settings for staff logins and other higher security things
