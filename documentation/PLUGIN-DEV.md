@@ -2,7 +2,7 @@
 
 Documentation on the basic functioning and usage of the plugin API.
 
-**This is currently an incomplete and changing standard. Don't use it just yet.**
+**This is currently an incomplete and changing standard with minimal hooks implemented.**
 
 ## API Access
  API methods can be accessed from an instance of `\Nelliel\PluginAPI` or from the function `nel_plugins()`.

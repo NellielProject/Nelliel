@@ -10,7 +10,7 @@ These are only the bare minimum requirements for Nelliel to function. **It is st
 Required:
 - PHP 5.6.25+
 - PDO with MySQL, MariaDB, PostgreSQL or SQLite support
-- MySQL 5.5.52+, MariaDB 5.5.52+, SQLite 3.6.20+ or PostgreSQL 9.2.18+
+- MySQL 5.5.52+, MariaDB 5.5.52+, PostgreSQL 9.2.18+ or SQLite 3.6.20+
 - iconv
 - libxml 2.6+
 - PHP GD
@@ -28,7 +28,7 @@ These are optional things that Nelliel or one of its libraries can utilize for e
 See [INSTALL.md](INSTALL.md) for instructions.
 
 ## Plugin API
-Nelliel currently has a very basic API for making plugins in the works. This will eventually allow extension of the software without having to worry about mods that can be easily broken during updates or having to mess with core code. **Do not use the plugin system yet! It is still undocumented and changing!**
+Nelliel currently has a basic API for making plugins in the works. This will eventually allow extension of the software without having to worry about mods that can be easily broken during updates or having to mess with core code. Details about using the API available in [PLUGIN-DEV](documentation/PLUGIN-DEV.md).
 
 ## License
-Nelliel is released under the [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause). This can be viewed in LICENSE.txt or the imageboard's About Nelliel page.
+Nelliel is released under the [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause). This can be viewed in [LICENSE.txt](LICENSE.txt) or the imageboard's About Nelliel page.

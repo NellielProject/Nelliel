@@ -44,8 +44,8 @@ At present Nelliel has a target version of **PHP 5.6.25**.
 Currently supported RDBMS:
  - MySQL 5.5.52+
  - MariaDB 5.5.52+
- - SQLite 3.6.20+
  - PostgreSQL 9.2.18+
+ - SQLite 3.6.20+
 
 ### Browser Support
 These are the minimum browser versions Nelliel should be compatible with:
