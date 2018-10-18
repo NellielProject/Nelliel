@@ -1,5 +1,5 @@
 <?php
-define('NELLIEL_VERSION', 'v0.9.9.3'); // Version
+define('NELLIEL_VERSION', 'v0.9.9.4'); // Version
 define('NELLIEL_COPYRIGHT', '2010-2018 Nelliel Project'); // Copyright line
 define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('BASE_PATH', realpath('./') . '/'); // Base path for script
@@ -28,6 +28,8 @@ require_once INCLUDE_PATH . 'output/footer.php';
 require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'general_functions.php';
+require_once INCLUDE_PATH . 'crypt.php';
+nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
 if (RUN_SETUP_CHECK)
 {
@@ -35,9 +37,6 @@ if (RUN_SETUP_CHECK)
     $board_id = (isset($_GET['board_id'])) ? $_GET['board_id'] : '';
     $setup->checkAll($board_id);
 }
-
-require_once INCLUDE_PATH . 'crypt.php';
-nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
 if (nel_setup_stuff_done())
 {

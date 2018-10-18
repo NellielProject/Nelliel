@@ -1,4 +1,12 @@
 # Nelliel Changelog
+## v0.9.9.4 (2018/10/10)
+### Changed
+ - Fix the broken setup routines
+ - Add checks for main directory and board_files being writable
+ - Assorted debugging
+ - Improve installation directions
+ - Update SmallPHPText library
+ 
 ## v0.9.9.3 (2018/10/10)
 ### Changed
  - Converted all the control panels to a more standard Panel class

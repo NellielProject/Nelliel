@@ -7,7 +7,13 @@ class ParsePo
 
     public function parseFile($file, $return_object = true)
     {
-        $string = file_get_contents($file);
+        $string = '';
+
+        if(file_exists($file))
+        {
+            $string = file_get_contents($file);
+        }
+
         return $this->parseString($string, $return_object = true);
     }
 
@@ -35,16 +41,9 @@ class ParsePo
                 {
                     $tline = $this->combineMultiline($translation_lines[$i]);
 
-                    if ($line === 'msgid ""' || $line === 'msgstr ""')
+                    if ($tline === '' || $tline === 'msgid ""' || $tline === 'msgstr ""')
                     {
                         continue;
-                    }
-
-                    if ($tline === '')
-                    {
-                        $domain_array['contexts'][$context][$translation['msgid']] = $translation;
-                        $translation = array();
-                        $context = 'default';
                     }
                     else
                     {

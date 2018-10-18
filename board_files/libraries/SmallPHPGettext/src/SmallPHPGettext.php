@@ -15,7 +15,7 @@ class SmallPHPGettext
     {
         $this->categories[$this->default_category] = array();
         $this->categories[$this->default_category][$this->default_domain] = array();
-        $this->version = '1.0.2';
+        $this->version = '1.0.3';
     }
 
     public function registerFunctions()

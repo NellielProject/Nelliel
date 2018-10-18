@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Nelliel v0.9.6.7\n"
+"Project-Id-Version: Nelliel v0.9.9.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-06-24 15:42:18 UTC +0000\n"
+"POT-Creation-Date: 2018-10-18 18:59:24 UTC +0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: board_files/templates/nelliel/ban_page.html
-msgid "If you wish, you may appeal this ban. Enter your reason(s) why you should get unbanned in the box below. A staff member will (probably) review it."
+msgid "If you wish, you may appeal this ban. Enter your reason why you should get unbanned in the box below. A staff member will (probably) review it."
 msgstr ""
 
 #: board_files/templates/nelliel/ban_page.html
@@ -54,18 +54,22 @@ msgstr ""
 msgid "About Nelliel"
 msgstr ""
 
-#: board_files/templates/nelliel/header.html
-msgid "MANAGE_MODE"
+#: board_files/templates/nelliel/management/bans_panel_add_ban.html
+msgid "Set Ban"
 msgstr ""
 
 #: board_files/templates/nelliel/management/bans_panel_add_ban.html
-#: board_files/templates/nelliel/management/bans_panel_modify_ban.html
-msgid "Update"
-msgstr ""
-
-#: board_files/templates/nelliel/management/bans_panel_add_ban.html
-#: board_files/templates/nelliel/management/bans_panel_modify_ban.html
 msgid "IP to ban:"
+msgstr ""
+
+#: board_files/templates/nelliel/management/bans_panel_add_ban.html
+#: board_files/templates/nelliel/management/bans_panel_modify_ban.html
+msgid "Apply ban to this board:"
+msgstr ""
+
+#: board_files/templates/nelliel/management/bans_panel_add_ban.html
+#: board_files/templates/nelliel/management/bans_panel_modify_ban.html
+msgid "Ban from all boards. This overrides any specific boards."
 msgstr ""
 
 #: board_files/templates/nelliel/management/bans_panel_add_ban.html
@@ -76,11 +80,6 @@ msgstr ""
 #: board_files/templates/nelliel/management/bans_panel_add_ban.html
 #: board_files/templates/nelliel/management/bans_panel_modify_ban.html
 msgid "Years:"
-msgstr ""
-
-#: board_files/templates/nelliel/management/bans_panel_add_ban.html
-#: board_files/templates/nelliel/management/bans_panel_modify_ban.html
-msgid "Months:"
 msgstr ""
 
 #: board_files/templates/nelliel/management/bans_panel_add_ban.html
@@ -100,29 +99,11 @@ msgstr ""
 
 #: board_files/templates/nelliel/management/bans_panel_add_ban.html
 #: board_files/templates/nelliel/management/bans_panel_modify_ban.html
-msgid "Seconds:"
-msgstr ""
-
-#: board_files/templates/nelliel/management/bans_panel_add_ban.html
-#: board_files/templates/nelliel/management/bans_panel_modify_ban.html
-msgid "Ban from all boards."
-msgstr ""
-
-#: board_files/templates/nelliel/management/bans_panel_add_ban.html
-#: board_files/templates/nelliel/management/bans_panel_modify_ban.html
 msgid "Ban reason (optional):"
 msgstr ""
 
-#: board_files/templates/nelliel/management/bans_panel_main.html
-msgid "Modify ban"
-msgstr ""
-
-#: board_files/templates/nelliel/management/bans_panel_main.html
-msgid "Remove ban"
-msgstr ""
-
-#: board_files/templates/nelliel/management/bans_panel_main.html
-msgid "Add new ban"
+#: board_files/templates/nelliel/management/bans_panel_add_ban.html
+msgid "Attach comment to post (optional):"
 msgstr ""
 
 #: board_files/templates/nelliel/management/bans_panel_main.html
@@ -143,6 +124,7 @@ msgid "Board"
 msgstr ""
 
 #: board_files/templates/nelliel/management/bans_panel_main.html
+#: board_files/templates/nelliel/management/reports_panel.html
 msgid "Reason"
 msgstr ""
 
@@ -173,8 +155,24 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
+#: board_files/templates/nelliel/management/bans_panel_main.html
+msgid "Modify Ban"
+msgstr ""
+
+#: board_files/templates/nelliel/management/bans_panel_main.html
+msgid "Remove Ban"
+msgstr ""
+
+#: board_files/templates/nelliel/management/bans_panel_main.html
+msgid "Add New Ban"
+msgstr ""
+
 #: board_files/templates/nelliel/management/bans_panel_modify_ban.html
-msgid "Ban generated on:"
+msgid "Update"
+msgstr ""
+
+#: board_files/templates/nelliel/management/bans_panel_modify_ban.html
+msgid "Ban set on:"
 msgstr ""
 
 #: board_files/templates/nelliel/management/bans_panel_modify_ban.html
@@ -182,7 +180,15 @@ msgid "Ban expires on:"
 msgstr ""
 
 #: board_files/templates/nelliel/management/bans_panel_modify_ban.html
-msgid "MANAGE_BANMOD_NAME"
+msgid "Ban type:"
+msgstr ""
+
+#: board_files/templates/nelliel/management/bans_panel_modify_ban.html
+msgid "Banned IP:"
+msgstr ""
+
+#: board_files/templates/nelliel/management/bans_panel_modify_ban.html
+msgid "Ban was set by:"
 msgstr ""
 
 #: board_files/templates/nelliel/management/bans_panel_modify_ban.html
@@ -199,7 +205,7 @@ msgid "Board Name"
 msgstr ""
 
 #: board_files/templates/nelliel/management/board_settings_panel.html
-msgid "SHow board name at top"
+msgid "Show board name at top"
 msgstr ""
 
 #: board_files/templates/nelliel/management/board_settings_panel.html
@@ -487,12 +493,11 @@ msgid "Allow other files"
 msgstr ""
 
 #: board_files/templates/nelliel/management/create_board.html
-#: board_files/templates/nelliel/management/login.html
-#: board_files/templates/nelliel/posting_form.html
-msgid "Submit"
+msgid "Create Board"
 msgstr ""
 
 #: board_files/templates/nelliel/management/create_board.html
+#: board_files/templates/nelliel/management/reports_panel.html
 msgid "Board ID"
 msgstr ""
 
@@ -501,11 +506,7 @@ msgid "Board directory"
 msgstr ""
 
 #: board_files/templates/nelliel/management/file_filter_panel.html
-msgid "Add filter"
-msgstr ""
-
-#: board_files/templates/nelliel/management/file_filter_panel.html
-msgid "Remove filter"
+msgid "Add Filter"
 msgstr ""
 
 #: board_files/templates/nelliel/management/file_filter_panel.html
@@ -532,15 +533,26 @@ msgstr ""
 msgid "File hash"
 msgstr ""
 
-#: board_files/templates/nelliel/management/main_board_panel.html
-msgid "Update all pages"
+#: board_files/templates/nelliel/management/file_filter_panel.html
+msgid "Remove Filter"
+msgstr ""
+
+#: board_files/templates/nelliel/management/login.html
+#: board_files/templates/nelliel/posting_form.html
+msgid "Submit"
+msgstr ""
+
+#: board_files/templates/nelliel/management/login.html
+msgid "Username: "
+msgstr ""
+
+#: board_files/templates/nelliel/management/login.html
+msgid "Password: "
 msgstr ""
 
 #: board_files/templates/nelliel/management/main_board_panel.html
-msgid "Regenerate all caches"
-msgstr ""
-
-#: board_files/templates/nelliel/management/main_board_panel.html
+#: board_files/include/output/management/board_settings_panel.php
+#, php-format
 msgid "Board Settings"
 msgstr ""
 
@@ -553,11 +565,27 @@ msgid "Thread Management"
 msgstr ""
 
 #: board_files/templates/nelliel/management/main_board_panel.html
-msgid "Forces an update of all pages. May cause heavy server load."
+msgid "Moderator Mode"
 msgstr ""
 
 #: board_files/templates/nelliel/management/main_board_panel.html
-msgid "Regenerates all the internal caches."
+msgid "Regenerate Board Pages"
+msgstr ""
+
+#: board_files/templates/nelliel/management/main_board_panel.html
+msgid "Regenerates all posts and threads for the board. May cause heavy server load."
+msgstr ""
+
+#: board_files/templates/nelliel/management/main_board_panel.html
+msgid "Regenerate Board Caches"
+msgstr ""
+
+#: board_files/templates/nelliel/management/main_board_panel.html
+msgid "Regenerates all internal cache files for the board."
+msgstr ""
+
+#: board_files/templates/nelliel/management/main_panel.html
+msgid "Extract gettext strings"
 msgstr ""
 
 #: board_files/templates/nelliel/management/main_panel.html
@@ -569,6 +597,8 @@ msgid "Staff Controls"
 msgstr ""
 
 #: board_files/templates/nelliel/management/main_panel.html
+#: board_files/include/output/management/site_settings_panel.php
+#, php-format
 msgid "Site Settings"
 msgstr ""
 
@@ -580,8 +610,50 @@ msgstr ""
 msgid "New board defaults"
 msgstr ""
 
+#: board_files/templates/nelliel/management/main_panel.html
+#: board_files/include/output/management/reports_panel.php
+#, php-format
+msgid "Reports"
+msgstr ""
+
+#: board_files/templates/nelliel/management/main_panel.html
+msgid "Extracts all gettext strings from code and templates. Output file can be found in board_files/languages/extracted/"
+msgstr ""
+
+#: board_files/templates/nelliel/management/reports_panel.html
+msgid "Report ID"
+msgstr ""
+
+#: board_files/templates/nelliel/management/reports_panel.html
+msgid "Content ID"
+msgstr ""
+
+#: board_files/templates/nelliel/management/reports_panel.html
+msgid "Reporter IP"
+msgstr ""
+
+#: board_files/templates/nelliel/management/reports_panel.html
+msgid "Dismiss Report"
+msgstr ""
+
+#: board_files/templates/nelliel/management/reports_panel.html
+#: board_files/templates/nelliel/thread.html
+msgid "Ban"
+msgstr ""
+
+#: board_files/templates/nelliel/management/reports_panel.html
+#: board_files/templates/nelliel/management/thread_panel.html
+#: board_files/templates/nelliel/thread.html
+msgid "Delete"
+msgstr ""
+
+#: board_files/templates/nelliel/management/reports_panel.html
+#: board_files/templates/nelliel/thread.html
+msgid "Ban and Delete"
+msgstr ""
+
 #: board_files/templates/nelliel/management/site_settings_panel.html
-msgid "Site home page. Can be absolute or relative URL."
+msgid "Site home page. Can be absolute or relative URL"
 msgstr ""
 
 #: board_files/templates/nelliel/management/site_settings_panel.html
@@ -593,23 +665,15 @@ msgid "Hash algorithm for secure tripcodes"
 msgstr ""
 
 #: board_files/templates/nelliel/management/site_settings_panel.html
-msgid "Do staff passwords need rehashing. Usually used when changing algorithms or cost"
+msgid "Check if staff passwords need rehashing"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_main.html
-msgid "Edit user"
+msgid "Add New User"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_main.html
-msgid "Add new user"
-msgstr ""
-
-#: board_files/templates/nelliel/management/staff_panel_main.html
-msgid "Edit role"
-msgstr ""
-
-#: board_files/templates/nelliel/management/staff_panel_main.html
-msgid "Add new role"
+msgid "Add New Role"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
@@ -633,11 +697,15 @@ msgid "Capcode Text"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can access board config panel"
+msgid "Can access and modify site settings"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can change the board settings"
+msgid "Can access and modify the default board settings"
+msgstr ""
+
+#: board_files/templates/nelliel/management/staff_panel_role_edit.html
+msgid "Can access and modify board settings"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
@@ -657,10 +725,6 @@ msgid "Can delete users"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "User can change their password"
-msgstr ""
-
-#: board_files/templates/nelliel/management/staff_panel_role_edit.html
 msgid "Access roles panel"
 msgstr ""
 
@@ -677,63 +741,43 @@ msgid "Can delete roles"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can access bans panel."
+msgid "Can access bans panel"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can add new bans."
+msgid "Can add new bans"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can modify exsiting bans."
+msgid "Can modify exsiting bans"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can delete bans."
+msgid "Can access posts panel"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can access posts panel."
+msgid "Can modify existing posts"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can modify existing posts."
+msgid "Can delete posts"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can delete posts."
+msgid "Can delete files from a post"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can delete files from a post."
+msgid "Can make posts as staff"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can post as staff with their assigned name."
+msgid "Can sticky and unsticky posts"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can post as staff with any name"
-msgstr ""
-
-#: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can override forced anonymous when posting as staff"
-msgstr ""
-
-#: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can create sticky"
-msgstr ""
-
-#: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can unsticky a post"
-msgstr ""
-
-#: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can lock a thread"
-msgstr ""
-
-#: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can unlock a thread"
+msgid "Can lock and unlock threads"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
@@ -761,11 +805,7 @@ msgid "Can rebuild threads"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can access Mod Mode"
-msgstr ""
-
-#: board_files/templates/nelliel/management/staff_panel_role_edit.html
-msgid "Can view IP addresses of posts"
+msgid "Can create new boards"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_user_edit.html
@@ -777,49 +817,27 @@ msgid "User ID"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_user_edit.html
-msgid "User\'s secure tripcode for posting as staff"
-msgstr ""
-
-#: board_files/templates/nelliel/management/staff_panel_user_edit.html
 msgid "New password (leave blank to keep current password)"
 msgstr ""
 
 #: board_files/templates/nelliel/management/staff_panel_user_edit.html
-msgid "Check this to change current password to the one entered above"
-msgstr ""
-
-#: board_files/templates/nelliel/management/staff_panel_user_edit.html
-msgid "User Title"
+msgid "User display name"
 msgstr ""
 
 #: board_files/templates/nelliel/management/thread_panel.html
+#: board_files/include/output/management/thread_panel.php
+#, php-format
 msgid "Threads"
 msgstr ""
 
 #: board_files/templates/nelliel/management/thread_panel.html
+#: board_files/include/output/management/thread_panel.php
+#, php-format
 msgid "Expand"
 msgstr ""
 
 #: board_files/templates/nelliel/management/thread_panel.html
 msgid "Post no."
-msgstr ""
-
-#: board_files/templates/nelliel/management/thread_panel.html
-#: board_files/templates/nelliel/thread.html
-msgid "Delete"
-msgstr ""
-
-#: board_files/templates/nelliel/management/thread_panel.html
-#: board_files/templates/nelliel/thread.html
-msgid "Sticky"
-msgstr ""
-
-#: board_files/templates/nelliel/management/thread_panel.html
-msgid "Unsticky"
-msgstr ""
-
-#: board_files/templates/nelliel/management/thread_panel.html
-msgid "Locked"
 msgstr ""
 
 #: board_files/templates/nelliel/management/thread_panel.html
@@ -844,6 +862,20 @@ msgstr ""
 
 #: board_files/templates/nelliel/management/thread_panel.html
 msgid "Total Files"
+msgstr ""
+
+#: board_files/templates/nelliel/management/thread_panel.html
+msgid "Actions"
+msgstr ""
+
+#: board_files/templates/nelliel/management/thread_panel.html
+#: board_files/templates/nelliel/thread.html
+msgid "Sticky Thread"
+msgstr ""
+
+#: board_files/templates/nelliel/management/thread_panel.html
+#: board_files/templates/nelliel/thread.html
+msgid "Lock Thread"
 msgstr ""
 
 #: board_files/templates/nelliel/management/thread_panel_expand.html
@@ -900,12 +932,15 @@ msgid "Alt text"
 msgstr ""
 
 #: board_files/templates/nelliel/posting_form.html
-#: board_files/templates/nelliel/thread.html
 msgid "Password"
 msgstr ""
 
 #: board_files/templates/nelliel/posting_form.html
 msgid "(Password used for file deletion)"
+msgstr ""
+
+#: board_files/templates/nelliel/posting_form.html
+msgid "Post as staff"
 msgstr ""
 
 #: board_files/templates/nelliel/posting_form.html
@@ -917,7 +952,7 @@ msgid "Never put anything in this field!"
 msgstr ""
 
 #: board_files/templates/nelliel/thread.html
-msgid "Collapse thread"
+msgid "Collapse Thread"
 msgstr ""
 
 #: board_files/templates/nelliel/thread.html
@@ -925,7 +960,11 @@ msgid "Less file info"
 msgstr ""
 
 #: board_files/templates/nelliel/thread.html
-msgid "Link"
+msgid "Report"
+msgstr ""
+
+#: board_files/templates/nelliel/thread.html
+msgid "Expand Thread"
 msgstr ""
 
 #: board_files/templates/nelliel/thread.html
@@ -933,7 +972,7 @@ msgid "Reply"
 msgstr ""
 
 #: board_files/templates/nelliel/thread.html
-msgid "Expand thread"
+msgid "Link"
 msgstr ""
 
 #: board_files/templates/nelliel/thread.html
@@ -941,7 +980,15 @@ msgid "More file info"
 msgstr ""
 
 #: board_files/templates/nelliel/thread.html
-msgid " posts omitted. Click Reply or Expand Post to view."
+msgid "Source:"
+msgstr ""
+
+#: board_files/templates/nelliel/thread.html
+msgid "License:"
+msgstr ""
+
+#: board_files/templates/nelliel/thread.html
+msgid " posts omitted. Click Reply or Expand Thread to view."
 msgstr ""
 
 #: board_files/templates/nelliel/thread.html
@@ -950,4 +997,462 @@ msgstr ""
 
 #: board_files/templates/nelliel/thread.html
 msgid "Ban selected posts"
+msgstr ""
+
+#: board_files/templates/nelliel/thread.html
+msgid "Password:"
+msgstr ""
+
+#: board_files/templates/nelliel/thread.html
+msgid "Report Reason:"
+msgstr ""
+
+#: board_files/include/classes/BanHammer.php
+#, php-format
+msgid "You are not allowed to remove bans."
+msgstr ""
+
+#: board_files/include/classes/FileHandler.php
+#, php-format
+msgid "Filename was empty or was purged by filter."
+msgstr ""
+
+#: board_files/include/classes/Sessions.php
+#, php-format
+msgid "The session id provided is invalid."
+msgstr ""
+
+#: board_files/include/classes/Sessions.php
+#, php-format
+msgid "This session has expired. Please login again."
+msgstr ""
+
+#: board_files/include/classes/Sessions.php
+#, php-format
+msgid "Login has not been validated or was incorrectly flagged. Cannot start session."
+msgstr ""
+
+#: board_files/include/classes/Snacks.php
+#: board_files/include/snacks.php
+#, php-format
+msgid "TEXT_SPAMBOT_FIELD1"
+msgstr ""
+
+#: board_files/include/classes/Snacks.php
+#: board_files/include/snacks.php
+#, php-format
+msgid "TEXT_SPAMBOT_FIELD2"
+msgstr ""
+
+#: board_files/include/classes/Snacks.php
+#: board_files/include/snacks.php
+#, php-format
+msgid "Your ip address does not match the one listed in the ban."
+msgstr ""
+
+#: board_files/include/classes/Snacks.php
+#: board_files/include/snacks.php
+#, php-format
+msgid "You have already appealed your ban."
+msgstr ""
+
+#: board_files/include/Content/ContentPost.php
+#, php-format
+msgid "Password is wrong or you are not allowed to delete that."
+msgstr ""
+
+#: board_files/include/crypt.php
+#, php-format
+msgid "No acceptable password hashing algorithm has been found. We can\'t function like this."
+msgstr ""
+
+#: board_files/include/dispatch/admin_dispatch.php
+#, php-format
+msgid "No valid management action specified."
+msgstr ""
+
+#: board_files/include/login.php
+#, php-format
+msgid "This account has had too many failed login attempts and has been temporarily locked for 10 minutes."
+msgstr ""
+
+#: board_files/include/login.php
+#, php-format
+msgid "This account has had too many failed login attempts and has been temporarily locked for 30 minutes."
+msgstr ""
+
+#: board_files/include/login.php
+#, php-format
+msgid "You have failed to login. Please wait a few seconds before trying again."
+msgstr ""
+
+#: board_files/include/login.php
+#, php-format
+msgid "JFC! Slow down on the failure!"
+msgstr ""
+
+#: board_files/include/output/ban_page.php
+#, php-format
+msgid "All Boards"
+msgstr ""
+
+#: board_files/include/output/ban_page.php
+#, php-format
+msgid "You appeal has been reviewed and denied. You cannot appeal again."
+msgstr ""
+
+#: board_files/include/output/ban_page.php
+#, php-format
+msgid "Your appeal has been reviewed and the ban has been altered."
+msgstr ""
+
+#: board_files/include/output/ban_page.php
+#, php-format
+msgid "No response has been given."
+msgstr ""
+
+#: board_files/include/output/header.php
+#, php-format
+msgid "Mod Mode"
+msgstr ""
+
+#: board_files/include/output/header.php
+#, php-format
+msgid "Current Board:"
+msgstr ""
+
+#: board_files/include/output/main_generation.php
+#, php-format
+msgid "Previous"
+msgstr ""
+
+#: board_files/include/output/main_generation.php
+#, php-format
+msgid "Next"
+msgstr ""
+
+#: board_files/include/output/management/ban_panel.php
+#: board_files/include/output/management/board_settings_panel.php
+#: board_files/include/output/management/file_filter_panel.php
+#: board_files/include/output/management/main_panel.php
+#: board_files/include/output/management/reports_panel.php
+#: board_files/include/output/management/thread_panel.php
+#, php-format
+msgid "Board Management"
+msgstr ""
+
+#: board_files/include/output/management/ban_panel.php
+#, php-format
+msgid "Bans"
+msgstr ""
+
+#: board_files/include/output/management/board_settings_panel.php
+#, php-format
+msgid "Default Board Settings"
+msgstr ""
+
+#: board_files/include/output/management/create_board.php
+#: board_files/include/Panels/PanelCreateBoard.php
+#, php-format
+msgid "You are not allowed to create new boards."
+msgstr ""
+
+#: board_files/include/output/management/create_board.php
+#: board_files/include/output/management/main_panel.php
+#: board_files/include/output/management/site_settings_panel.php
+#: board_files/include/output/management/staff_panel.php
+#, php-format
+msgid "General Management"
+msgstr ""
+
+#: board_files/include/output/management/create_board.php
+#, php-format
+msgid "Create new board"
+msgstr ""
+
+#: board_files/include/output/management/file_filter_panel.php
+#, php-format
+msgid "File Filters"
+msgstr ""
+
+#: board_files/include/output/management/login_page.php
+#, php-format
+msgid "Management Login"
+msgstr ""
+
+#: board_files/include/output/management/main_panel.php
+#, php-format
+msgid "Options"
+msgstr ""
+
+#: board_files/include/output/management/staff_panel.php
+#, php-format
+msgid "Staff"
+msgstr ""
+
+#: board_files/include/output/management/staff_panel.php
+#, php-format
+msgid "Staff: Edit User"
+msgstr ""
+
+#: board_files/include/output/management/staff_panel.php
+#, php-format
+msgid "Staff: Edit Role"
+msgstr ""
+
+#: board_files/include/output/management/thread_panel.php
+#: board_files/include/output/post.php
+#, php-format
+msgid "Unsticky Thread"
+msgstr ""
+
+#: board_files/include/output/management/thread_panel.php
+#: board_files/include/output/post.php
+#, php-format
+msgid "Unlock Thread"
+msgstr ""
+
+#: board_files/include/output/post.php
+#, php-format
+msgid "Hide Thread"
+msgstr ""
+
+#: board_files/include/output/post.php
+#, php-format
+msgid "Show Thread"
+msgstr ""
+
+#: board_files/include/output/post.php
+#, php-format
+msgid "Hide Post"
+msgstr ""
+
+#: board_files/include/output/post.php
+#, php-format
+msgid "Show Post"
+msgstr ""
+
+#: board_files/include/output/post.php
+#, php-format
+msgid "(no comment)"
+msgstr ""
+
+#: board_files/include/output/rules.php
+#, php-format
+msgid "Supported %s file types: "
+msgstr ""
+
+#: board_files/include/output/rules.php
+#, php-format
+msgid "Maximum file size allowed is %dKB"
+msgstr ""
+
+#: board_files/include/output/rules.php
+#, php-format
+msgid "Images greater than %d x %d pixels will be thumbnailed."
+msgstr ""
+
+#: board_files/include/Panels/PanelBans.php
+#, php-format
+msgid "You are not allowed to modify bans."
+msgstr ""
+
+#: board_files/include/Panels/PanelBans.php
+#, php-format
+msgid "You are not allowed to add new bans."
+msgstr ""
+
+#: board_files/include/Panels/PanelBans.php
+#, php-format
+msgid "You are not allowed to delete bans."
+msgstr ""
+
+#: board_files/include/Panels/PanelBans.php
+#, php-format
+msgid "You are not allowed to access the bans panel."
+msgstr ""
+
+#: board_files/include/Panels/PanelBoardSettings.php
+#, php-format
+msgid "You are not allowed to modify the default board settings."
+msgstr ""
+
+#: board_files/include/Panels/PanelBoardSettings.php
+#, php-format
+msgid "You are not allowed to modify the board settings."
+msgstr ""
+
+#: board_files/include/Panels/PanelSiteSettings.php
+#, php-format
+msgid "You are not allowed to access the site settings."
+msgstr ""
+
+#: board_files/include/Panels/PanelStaff.php
+#, php-format
+msgid "You are not allowed to access the staff panel."
+msgstr ""
+
+#: board_files/include/Panels/PanelStaff.php
+#, php-format
+msgid "You are not allowed to modify staff."
+msgstr ""
+
+#: board_files/include/Panels/PanelStaff.php
+#, php-format
+msgid "The specified user does not exist."
+msgstr ""
+
+#: board_files/include/Panels/PanelStaff.php
+#, php-format
+msgid "You are not allowed to modify roles."
+msgstr ""
+
+#: board_files/include/Panels/PanelStaff.php
+#, php-format
+msgid "You are not allowed to add roles."
+msgstr ""
+
+#: board_files/include/Panels/PanelStaff.php
+#, php-format
+msgid "The specified role does not exist."
+msgstr ""
+
+#: board_files/include/Panels/PanelStaff.php
+#, php-format
+msgid "No valid action given for user or role panels."
+msgstr ""
+
+#: board_files/include/Panels/PanelThreads.php
+#, php-format
+msgid "You are not allowed to access the threads panel."
+msgstr ""
+
+#: board_files/include/Panels/PanelThreads.php
+#, php-format
+msgid "You are not allowed to modify threads or posts."
+msgstr ""
+
+#: board_files/include/post/FilesUpload.php
+#, php-format
+msgid "Spoon is too big."
+msgstr ""
+
+#: board_files/include/post/FilesUpload.php
+#, php-format
+msgid "File is bigger than the server allows."
+msgstr ""
+
+#: board_files/include/post/FilesUpload.php
+#, php-format
+msgid "File is bigger than submission form allows."
+msgstr ""
+
+#: board_files/include/post/FilesUpload.php
+#, php-format
+msgid "Only part of the file was uploaded."
+msgstr ""
+
+#: board_files/include/post/FilesUpload.php
+#, php-format
+msgid "File size is 0 or Candlejack stole your uplo"
+msgstr ""
+
+#: board_files/include/post/FilesUpload.php
+#, php-format
+msgid "Cannot save uploaded files to server for some reason."
+msgstr ""
+
+#: board_files/include/post/FilesUpload.php
+#, php-format
+msgid "The uploaded file just ain\'t right. That\'s all I know."
+msgstr ""
+
+#: board_files/include/post/FilesUpload.php
+#, php-format
+msgid "That file is banned."
+msgstr ""
+
+#: board_files/include/post/FilesUpload.php
+#, php-format
+msgid "Duplicate file detected."
+msgstr ""
+
+#: board_files/include/post/FilesUpload.php
+#, php-format
+msgid "Unrecognized file type."
+msgstr ""
+
+#: board_files/include/post/FilesUpload.php
+#, php-format
+msgid "Filetype is not allowed."
+msgstr ""
+
+#: board_files/include/post/FilesUpload.php
+#, php-format
+msgid "Incorrect file type detected (does not match extension). Possible Hax."
+msgstr ""
+
+#: board_files/include/post/post.php
+#, php-format
+msgid "Post contains no content or file. Dumbass."
+msgstr ""
+
+#: board_files/include/post/post.php
+#, php-format
+msgid "Image or file required when making a new post."
+msgstr ""
+
+#: board_files/include/post/post.php
+#, php-format
+msgid "Image or file required to make new thread."
+msgstr ""
+
+#: board_files/include/post/post.php
+#, php-format
+msgid "Post is too long. Try looking up the word concise."
+msgstr ""
+
+#: board_files/include/post/post.php
+#, php-format
+msgid "Flood detected! You\'re posting too fast, slow the fuck down."
+msgstr ""
+
+#: board_files/include/post/post.php
+#, php-format
+msgid "This thread is locked."
+msgstr ""
+
+#: board_files/include/post/post.php
+#, php-format
+msgid "The thread you have tried posting in is currently inaccessible or archived."
+msgstr ""
+
+#: board_files/include/post/post.php
+#, php-format
+msgid "The thread you have tried posting in could not be found."
+msgstr ""
+
+#: board_files/include/post/post.php
+#, php-format
+msgid "The thread has reached maximum posts."
+msgstr ""
+
+#: board_files/include/post/post.php
+#, php-format
+msgid "The thread is archived or buffered and cannot be posted to."
+msgstr ""
+
+#: board_files/include/post/PostData.php
+#, php-format
+msgid "Anonymous"
+msgstr ""
+
+#: board_files/include/setup/Setup.php
+#, php-format
+msgid "Board files directory is missing or not writable. Admin should check this out."
+msgstr ""
+
+#: board_files/include/setup/Setup.php
+#, php-format
+msgid "Nelliel main directory is not writable. Admin should check this out."
 msgstr ""
