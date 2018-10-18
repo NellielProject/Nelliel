@@ -97,10 +97,10 @@ function nel_default_database_connection()
             $connection->exec('PRAGMA encoding = "' . SQLITE_ENCODING . '";');
             break;
 
-        case 'POSTGRES':
-            $dsn = 'pgsql:host=' . POSTGRES_HOST . ';port=' . POSTGRES_PORT . ';dbname=' . POSTGRES_DB . ';';
-            $connection = nel_new_database_connection($dsn, POSTGRES_USER, POSTGRES_PASS, $options);
-            $connection->exec("SET search_path TO " . POSTGRES_SCHEMA . "; SET names '" . POSTGRES_ENCODING . "';");
+        case 'POSTGRESQL':
+            $dsn = 'pgsql:host=' . POSTGRESQL_HOST . ';port=' . POSTGRESQL_PORT . ';dbname=' . POSTGRESQL_DB . ';';
+            $connection = nel_new_database_connection($dsn, POSTGRESQL_USER, POSTGRESQL_PASS, $options);
+            $connection->exec("SET search_path TO " . POSTGRESQL_SCHEMA . "; SET names '" . POSTGRESQL_ENCODING . "';");
             break;
 
         default:

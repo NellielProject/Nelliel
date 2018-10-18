@@ -401,7 +401,7 @@ class SQLTables
         {
             $auto = 'AUTO_INCREMENT';
         }
-        else if (SQLTYPE === 'POSTGRES')
+        else if (SQLTYPE === 'POSTGRESQL')
         {
             if ($int_column === 'SMALLINT')
             {
@@ -439,7 +439,7 @@ class SQLTables
                 return 'VARBINARY(' . $length . ')';
             }
         }
-        else if (SQLTYPE === 'POSTGRES')
+        else if (SQLTYPE === 'POSTGRESQL')
         {
             if ($datatype === "BINARY")
             {

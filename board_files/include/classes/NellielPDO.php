@@ -33,7 +33,7 @@ class NellielPDO extends PDO
                 $result = $this->query(
                         "SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $database . "'");
                 break;
-            case 'POSTGRES':
+            case 'POSTGRESQL':
                 $result = $this->query(
                         "SELECT nspname FROM pg_catalog.pg_namespace WHERE nspname = '" . $database . "';");
                 break;
@@ -57,9 +57,9 @@ class NellielPDO extends PDO
             case 'SQLITE':
                 $result = $this->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $table . "'");
                 break;
-            case 'POSTGRES':
+            case 'POSTGRESQL':
                 $result = $this->query(
-                        "SELECT table_name FROM information_schema.tables WHERE table_schema = '" . POSTGRES_SCHEMA .
+                        "SELECT table_name FROM information_schema.tables WHERE table_schema = '" . POSTGRESQL_SCHEMA .
                         "' AND table_name = '" . $table . "';");
                 break;
             default:

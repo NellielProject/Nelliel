@@ -8,7 +8,7 @@ Basic installation guide. Should be enough to get things up and running.
 	- `defaultadmin` and `defaultadmin_pass` need to be set to a value. This will be used to create a basic administrative user.
 	- Choose a salt for `tripcode_salt`. This will only be used for secure tripcodes (it is what makes them secure) and should be random characters.
 	- Change `default_locale` if you want a language other than American English. If Nelliel can't find the appropriate language file it will default back to english.
-	- Set `sqltype` to whichever type of database you are using. The current options are MYSQL, SQLITE and POSTGRES.
+	- Set `sqltype` to whichever type of database you are using. The current options are MYSQL, SQLITE and POSTGRESQL.
 	- There is a config section for each type of SQL database. You only need to configure the section for the one you are using; the others can be left alone.
 5. Go to `imgboard.php` in a browser and give it a moment to run the install routines. If anything goes wrong it should give an error message.
 6. If installation is successful you should be redirected to the default home page. From there you can log in to create boards and further configure the script. You can also go to `imgboard.php?manage=login` to access the login page.

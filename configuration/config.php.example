@@ -36,7 +36,7 @@ $base_config['default_locale'] = 'en_US';
 //
 
 // Database type
-// Currently supported types: MYSQL, SQLITE, POSTGRES
+// Currently supported types: MYSQL, SQLITE, POSTGRESQL
 $db_config['sqltype'] = 'MYSQL';
 
 //
@@ -84,29 +84,29 @@ $db_config['sqlite_encoding'] = 'UTF-8';
 //
 
 // Name of database
-$db_config['postgres_db'] = '';
+$db_config['postgresql_db'] = '';
 
 // PostgreSQL Server address
-$db_config['postgres_host'] = 'localhost';
+$db_config['postgresql_host'] = 'localhost';
 
 // PostgreSQL server port. Default is 5432
-$db_config['postgres_port'] = '5432';
+$db_config['postgresql_port'] = '5432';
 
 // Name of database user
-$db_config['postgres_user'] = '';
+$db_config['postgresql_user'] = '';
 
 // Password of database user
-$db_config['postgres_password'] = '';
+$db_config['postgresql_password'] = '';
 
 // Which schema to use. Default is 'public'
-$db_config['postgres_schema'] = 'public';
+$db_config['postgresql_schema'] = 'public';
 
 // Path where the database is to be located
-$db_config['postgres_encoding'] = 'UTF8';
+$db_config['postgresql_encoding'] = 'UTF8';
 
 // The character encoding to use.
 // You must make sure this matches or is compatible with what the database uses!
-$db_config['postgres_encoding'] = 'UTF-8';
+$db_config['postgresql_encoding'] = 'UTF-8';
 
 //
 // === Technical Settings ===
