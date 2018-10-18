@@ -29,27 +29,27 @@ class PanelBans extends PanelBase
 
         if ($inputs['action'] === 'modify')
         {
-            if (!$user->boardPerm($inputs['board_id'], 'perm_ban_modify'))
+            if (!$user->boardPerm($this->board_id, 'perm_ban_modify'))
             {
                 nel_derp(322, _gettext('You are not allowed to modify bans.'));
             }
 
-            nel_render_ban_panel_modify($inputs['board_id']);
+            nel_render_ban_panel_modify($this->board_id);
         }
         else if ($inputs['action'] === 'new')
         {
-            if (!$user->boardPerm($inputs['board_id'], 'perm_ban_add'))
+            if (!$user->boardPerm($this->board_id, 'perm_ban_add'))
             {
                 nel_derp(321, _gettext('You are not allowed to add new bans.'));
             }
 
             $ip = (isset($_GET['ban_ip'])) ? $_GET['ban_ip'] : '';
             $type = (isset($_GET['ban_type'])) ? $_GET['ban_type'] : 'GENERAL';
-            nel_render_ban_panel_add($inputs['board_id'], $ip, $type);
+            nel_render_ban_panel_add($this->board_id, $ip, $type);
         }
         else if ($inputs['action'] === 'add')
         {
-            if (!$user->boardPerm($inputs['board_id'], 'perm_ban_add'))
+            if (!$user->boardPerm($this->board_id, 'perm_ban_add'))
             {
                 nel_derp(321, _gettext('You are not allowed to add new bans.'));
             }
@@ -102,14 +102,14 @@ class PanelBans extends PanelBase
         {
             if (isset($_POST['mod_post_comment']) && !empty($_POST['mod_post_comment']))
             {
-                $post_table = nel_parameters_and_data()->boardReferences($inputs['board_id'], 'post_table');
+                $post_table = nel_parameters_and_data()->boardReferences($this->board_id, 'post_table');
                 $prepared = $this->database->prepare(
                         'UPDATE "' . $post_table . '" SET "mod_comment" = ? WHERE "post_number" = ?');
 
                 $this->database->executePrepared($prepared, array($_POST['mod_post_comment'], $_GET['post-id']));
                 $regen = new \Nelliel\Regen();
-                $regen->threads($inputs['board_id'], true, array($_GET['post-id']));
-                $regen->index($inputs['board_id']);
+                $regen->threads($this->board_id, true, array($_GET['post-id']));
+                $regen->index($this->board_id);
             }
         }
     }
@@ -127,7 +127,7 @@ class PanelBans extends PanelBase
     public function remove()
     {
         $ban_input = $this->ban_hammer->postToArray();
-        $this->ban_hammer->removeBan($inputs['board_id'], $_GET['ban_id']);
+        $this->ban_hammer->removeBan($this->board_id, $_GET['ban_id']);
     }
 
 
