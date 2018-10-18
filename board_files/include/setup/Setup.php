@@ -29,7 +29,7 @@ class Setup
 
         if (!is_writable(FILES_PATH))
         {
-            nel_derp(204, _gettext('Board files directory is missing or not writable. Admin should check permissions.'));
+            nel_derp(204, _gettext('Board files directory is missing or not writable. Admin should check this out.'));
         }
 
         $this->createCoreDirectories();
@@ -83,7 +83,7 @@ class Setup
 
         if (!is_writable(BASE_PATH))
         {
-            nel_derp(205, _gettext('Nelliel main directory is not writable. Admin should check permissions.'));
+            nel_derp(205, _gettext('Nelliel main directory is not writable. Admin should check this out.'));
         }
 
         $references = nel_parameters_and_data()->boardReferences($board_id);

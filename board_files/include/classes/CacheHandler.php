@@ -44,6 +44,11 @@ class CacheHandler
 
     public function writeCacheFile($path, $filename, $content, $header = '', $footer = '', $file_perm = FILE_PERM)
     {
+        if (!is_writable(CACHE_PATH))
+        {
+            return; // TODO: Work out so this can be a proper error
+        }
+
         $header = (!empty($header)) ? $headeer : $this->default_header;
         $file_handler = new FileHandler();
         $file_handler->writeFile($path . $filename, $header . $content . $footer, $file_perm, true);
