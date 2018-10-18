@@ -218,9 +218,9 @@ class TableInsertData
             return false;
         }
 
-        $insert_query = "INSERT INTO " . USER_ROLE_TABLE . " (user_id, role_id, all_boards) VALUES (?, ?, ?)";
+        $insert_query = "INSERT INTO " . USER_ROLE_TABLE . " (user_id, role_id, board) VALUES (?, ?, ?)";
         $prepared = $dbh->prepare($insert_query);
-        $dbh->executePrepared($prepared, [DEFAULTADMIN, 'SUPER_ADMIN', '1']);
+        $dbh->executePrepared($prepared, [DEFAULTADMIN, 'SUPER_ADMIN', '']);
         nel_setup_stuff_done($result);
     }
 
