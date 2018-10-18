@@ -29,13 +29,17 @@ class NellielPDO extends PDO
                 $result = $this->query(
                         "SELECT schema_name FROM information_schema.schemata WHERE schema_name = '" . $database . "';");
                 break;
-            case 'SQLITE':
+            case 'MARIADB':
                 $result = $this->query(
-                        "SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $database . "'");
+                        "SELECT schema_name FROM information_schema.schemata WHERE schema_name = '" . $database . "';");
                 break;
             case 'POSTGRESQL':
                 $result = $this->query(
                         "SELECT nspname FROM pg_catalog.pg_namespace WHERE nspname = '" . $database . "';");
+                break;
+            case 'SQLITE':
+                $result = $this->query(
+                "SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $database . "'");
                 break;
             default:
                 return false;
@@ -54,13 +58,18 @@ class NellielPDO extends PDO
                         "SELECT table_name FROM information_schema.tables WHERE table_schema = '" . MYSQL_DB .
                         "' AND table_name = '" . $table . "';");
                 break;
-            case 'SQLITE':
-                $result = $this->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $table . "'");
+            case 'MARIADB':
+                $result = $this->query(
+                        "SELECT table_name FROM information_schema.tables WHERE table_schema = '" . MARIADB_DB .
+                        "' AND table_name = '" . $table . "';");
                 break;
             case 'POSTGRESQL':
                 $result = $this->query(
                         "SELECT table_name FROM information_schema.tables WHERE table_schema = '" . POSTGRESQL_SCHEMA .
                         "' AND table_name = '" . $table . "';");
+                break;
+            case 'SQLITE':
+                $result = $this->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $table . "'");
                 break;
             default:
                 return false;
@@ -73,8 +82,10 @@ class NellielPDO extends PDO
     public function tableFail($table)
     {
         nel_derp(203,
-                sprintf(_gettext(
-                        'Creation of %s failed! Check database settings and config.php then retry installation.'), $table));
+                sprintf(
+                        _gettext(
+                                'Creation of %s failed! Check database settings and config.php then retry installation.'),
+                        $table));
     }
 
     public function executeFetch($query, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)

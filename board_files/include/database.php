@@ -77,9 +77,22 @@ function nel_default_database_connection()
     {
         case 'MYSQL':
             $dsn = 'mysql:host=' . MYSQL_HOST . ';port=' . MYSQL_PORT . ';dbname=' . MYSQL_DB . ';charset=' .
-                 MYSQL_ENCODING . ';';
+                    MYSQL_ENCODING . ';';
             $connection = nel_new_database_connection($dsn, MYSQL_USER, MYSQL_PASS, $options);
             $connection->exec("SET SESSION sql_mode='ANSI';");
+            break;
+
+        case 'MARIADB':
+            $dsn = 'mysql:host=' . MARIADB_HOST . ';port=' . MARIADB_PORT . ';dbname=' . MARIADB_DB . ';charset=' .
+                    MARIADB_ENCODING . ';';
+            $connection = nel_new_database_connection($dsn, MARIADB_USER, MARIADB_PASS, $options);
+            $connection->exec("SET SESSION sql_mode='ANSI';");
+            break;
+
+        case 'POSTGRESQL':
+            $dsn = 'pgsql:host=' . POSTGRESQL_HOST . ';port=' . POSTGRESQL_PORT . ';dbname=' . POSTGRESQL_DB . ';';
+            $connection = nel_new_database_connection($dsn, POSTGRESQL_USER, POSTGRESQL_PASS, $options);
+            $connection->exec("SET search_path TO " . POSTGRESQL_SCHEMA . "; SET names '" . POSTGRESQL_ENCODING . "';");
             break;
 
         case 'SQLITE':
@@ -95,12 +108,6 @@ function nel_default_database_connection()
             $dsn = 'sqlite:' . $path . SQLITE_DB_NAME;
             $connection = nel_new_database_connection($dsn);
             $connection->exec('PRAGMA encoding = "' . SQLITE_ENCODING . '";');
-            break;
-
-        case 'POSTGRESQL':
-            $dsn = 'pgsql:host=' . POSTGRESQL_HOST . ';port=' . POSTGRESQL_PORT . ';dbname=' . POSTGRESQL_DB . ';';
-            $connection = nel_new_database_connection($dsn, POSTGRESQL_USER, POSTGRESQL_PASS, $options);
-            $connection->exec("SET search_path TO " . POSTGRESQL_SCHEMA . "; SET names '" . POSTGRESQL_ENCODING . "';");
             break;
 
         default:

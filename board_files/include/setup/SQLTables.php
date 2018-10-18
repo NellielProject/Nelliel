@@ -401,6 +401,10 @@ class SQLTables
         {
             $auto = 'AUTO_INCREMENT';
         }
+        else if (SQLTYPE === 'MARIADB')
+        {
+            $auto = 'AUTO_INCREMENT';
+        }
         else if (SQLTYPE === 'POSTGRESQL')
         {
             if ($int_column === 'SMALLINT')
@@ -429,6 +433,17 @@ class SQLTables
     private function sqlAlternatives($datatype, $length)
     {
         if (SQLTYPE === 'MYSQL')
+        {
+            if ($datatype === "BINARY")
+            {
+                return 'BINARY(' . $length . ')';
+            }
+            else if ($datatype === "VARBINARY")
+            {
+                return 'VARBINARY(' . $length . ')';
+            }
+        }
+        else if (SQLTYPE === 'MARIADB')
         {
             if ($datatype === "BINARY")
             {
@@ -468,6 +483,11 @@ class SQLTables
         $options = '';
 
         if (SQLTYPE === 'MYSQL')
+        {
+            $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
+            $options .= ' ENGINE = InnoDB';
+        }
+        else if (SQLTYPE === 'MARIADB')
         {
             $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
             $options .= ' ENGINE = InnoDB';

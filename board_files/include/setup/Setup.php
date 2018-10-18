@@ -18,11 +18,11 @@ class Setup
 
     public function checkAll($board_id)
     {
-        if (SQLTYPE === 'MYSQL' && !$this->checkForInnoDB())
+        if ((SQLTYPE === 'MYSQL' || SQLTYPE === 'MARIADB') && !$this->checkForInnoDB())
         {
             nel_derp(202,
                     _gettext(
-                            'InnoDB engine is required for MySQL support. However the engine has been disabled for some reason.'));
+                            'InnoDB engine is required for MySQL or MariaDB support. However the engine is not available for some reason.'));
         }
 
         $this->createCoreTables();

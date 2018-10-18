@@ -9,7 +9,7 @@ These are only the bare minimum requirements for Nelliel to function. **It is st
 
 Required:
 - PHP 5.6.25+
-- PDO with MySQL, SQLite or PostgreSQL support
+- PDO with MySQL, MariaDB, PostgreSQL or SQLite support
 - MySQL 5.5.52+, MariaDB 5.5.52+, SQLite 3.6.20+ or PostgreSQL 9.2.18+
 - iconv
 - libxml 2.6+
