@@ -25,13 +25,7 @@ These are optional things that Nelliel or one of its libraries can utilize for e
 - mbstring
 
 ## Installation
-Just a basic guide, subject to likely changes and improvements.
-
-1. If using MySQL, MariaDB or PostgreSQL you need a database and a user that has CREATE, ALTER and DROP permissions for that database. If not sure how to set this up, check with your host. For SQLite you just need the path to where you wish the database file to be stored (this must not be a web-accessible location!).
-2. Copy files to the directory Nelliel will be run from. Be sure PHP is able to read and write to this directory and any files in the Nelliel install.
-3. Go to the `configuration` directory and rename `config.php.example` to `config.php` then edit the settings as needed.
-4. Access `imgboard.php` in a browser and give it a moment to run the install routines.
-5. If errors are displayed, address those and try again. If installation is successful you should be redirected to the default home page. From there you can log in to create boards and further configure the script.
+See [INSTALL.md](INSTALL.md) for instructions.
 
 ## Plugin API
 Nelliel currently has a very basic API for making plugins in the works. This will eventually allow extension of the software without having to worry about mods that can be easily broken during updates or having to mess with core code. **Do not use the plugin system yet! It is still undocumented and changing!**
