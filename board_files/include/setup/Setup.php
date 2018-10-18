@@ -26,6 +26,12 @@ class Setup
         }
 
         $this->createCoreTables();
+
+        if (!is_writable(FILES_PATH))
+        {
+            nel_derp(204, _gettext('Board files directory is missing or not writable. Admin should check permissions.'));
+        }
+
         $this->createCoreDirectories();
 
         if ($board_id !== '')
@@ -74,6 +80,12 @@ class Setup
     public function createBoardDirectories($board_id)
     {
         $file_handler = new \Nelliel\FileHandler();
+
+        if (!is_writable(BASE_PATH))
+        {
+            nel_derp(205, _gettext('Nelliel main directory is not writable. Admin should check permissions.'));
+        }
+
         $references = nel_parameters_and_data()->boardReferences($board_id);
         $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM, true);
         $file_handler->createDirectory($references['thumb_path'], DIRECTORY_PERM, true);
