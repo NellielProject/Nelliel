@@ -26,6 +26,8 @@ $language->loadLanguage(LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po'
 
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'general_functions.php';
+require_once INCLUDE_PATH . 'output/header.php';
+require_once INCLUDE_PATH . 'output/footer.php';
 require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'crypt.php';
 
@@ -37,9 +39,6 @@ if (RUN_SETUP_CHECK)
     $board_id = (isset($_GET['board_id'])) ? $_GET['board_id'] : '';
     $setup->checkAll($board_id);
 }
-
-require_once INCLUDE_PATH . 'output/header.php';
-require_once INCLUDE_PATH . 'output/footer.php';
 
 if (nel_setup_stuff_done())
 {
