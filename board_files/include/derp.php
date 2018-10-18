@@ -4,6 +4,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+require_once INCLUDE_PATH . 'output/header.php';
+require_once INCLUDE_PATH . 'output/footer.php';
 require_once INCLUDE_PATH . 'output/derp.php';
 
 function nel_derp($error_id, $error_message, $error_data = array())
