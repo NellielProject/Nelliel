@@ -81,7 +81,6 @@ class JSONAPI
         $data_output['type'] = nel_cast_to_datatype($thread_data['type'], 'string');
         $data_output['format'] = nel_cast_to_datatype($thread_data['format'], 'string');
         $data_output['mime'] = nel_cast_to_datatype($thread_data['mime'], 'string');
-        $this->addIfNotEmpty($data_output, 'url', $post_data['url'], 'string');
         $data_output['filename'] = nel_cast_to_datatype($post_data['filename'], 'string');
         $data_output['extension'] = nel_cast_to_datatype($post_data['extension'], 'string');
         $this->addIfNotEmpty($data_output, 'image_width', $post_data['image_width'], 'integer');

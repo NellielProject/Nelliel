@@ -57,7 +57,7 @@ class ContentFile extends ContentBase
                     'UPDATE "' . $board_references['file_table'] . '" SET "parent_thread" = :parent_thread,
                     "post_ref" = :post_ref, "file_order" = :file_order,
                     "type" = :type, "format" = :format, "mime" = :mime,
-                    "url" = :url, "filename" = :filename, "extension" = :extension,
+                    "filename" = :filename, "extension" = :extension,
                     "image_width" = :image_width, "image_height" = :image_height, "preview_name" = :preview_name,
                     "preview_extension" = :preview_extension, "preview_width" = :preview_width, "preview_height" = :preview_height,
                     "filesize" = :filesize, "md5" = :md5, "sha1" = :sha1, "sha256" = :sha256, "sha512" = :sha512,
@@ -69,9 +69,9 @@ class ContentFile extends ContentBase
         {
             $prepared = $database->prepare(
                     'INSERT INTO "' . $board_references['file_table'] . '" ("parent_thread", "post_ref", "file_order", "type", "format", "mime",
-                    "url", "filename", "extension", "image_width", "image_height", "preview_name", "preview_extension", "preview_width", "preview_height",
+                    "filename", "extension", "image_width", "image_height", "preview_name", "preview_extension", "preview_width", "preview_height",
                     "filesize", "md5", "sha1", "sha256", "sha512", "source", "license", "alt_text", "exif") VALUES
-                    (:parent_thread, :post_ref, :file_order, :type, :format, :mime, :url, :filename, :extension, :image_width, :image_height,
+                    (:parent_thread, :post_ref, :file_order, :type, :format, :mime, :filename, :extension, :image_width, :image_height,
                     :preview_name, :preview_extension, :preview_width, :preview_height, :filesize, :md5, :sha1, :sha256, :sha512,
                     :source, :license, :alt_text, :exif)');
         }
@@ -82,7 +82,6 @@ class ContentFile extends ContentBase
         $prepared->bindValue(':type', $this->contentDataOrDefault('type', null), PDO::PARAM_STR);
         $prepared->bindValue(':format', $this->contentDataOrDefault('format', null), PDO::PARAM_STR);
         $prepared->bindValue(':mime', $this->contentDataOrDefault('mime', null), PDO::PARAM_STR);
-        $prepared->bindValue(':url', $this->contentDataOrDefault('url', null), PDO::PARAM_STR);
         $prepared->bindValue(':filename', $this->contentDataOrDefault('filename', null), PDO::PARAM_STR);
         $prepared->bindValue(':extension', $this->contentDataOrDefault('extension', null), PDO::PARAM_STR);
         $prepared->bindValue(':image_width', $this->contentDataOrDefault('image_width', null), PDO::PARAM_INT);

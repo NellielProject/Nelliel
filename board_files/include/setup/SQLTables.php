@@ -93,7 +93,6 @@ class SQLTables
             type                    VARCHAR(255) DEFAULT NULL,
             format                  VARCHAR(255) DEFAULT NULL,
             mime                    VARCHAR(255) DEFAULT NULL,
-            url                     VARCHAR(2048) DEFAULT NULL,
             filename                VARCHAR(255) NOT NULL,
             extension               VARCHAR(255) NOT NULL,
             image_width             INTEGER DEFAULT NULL,
