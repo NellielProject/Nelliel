@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_staff_panel_main()
 {
     $dbh = nel_database();
-    $language = new \Nelliel\language\Language();
+    $language = new \Nelliel\language\Language(nel_authorize());
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -54,7 +54,7 @@ function nel_render_staff_panel_main()
 function nel_render_staff_panel_user_edit($user_id)
 {
     $dbh = nel_database();
-    $language = new \Nelliel\language\Language();
+    $language = new \Nelliel\language\Language(nel_authorize());
     $authorize = nel_authorize();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -120,7 +120,7 @@ function nel_render_staff_panel_user_edit($user_id)
 
 function nel_render_staff_panel_role_edit($role_id)
 {
-    $language = new \Nelliel\language\Language();
+    $language = new \Nelliel\language\Language(nel_authorize());
     $authorize = nel_authorize();
     $role = $authorize->getRole($role_id);
     $render = new NellielTemplates\RenderCore();

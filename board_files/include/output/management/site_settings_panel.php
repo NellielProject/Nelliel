@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_site_settings_panel()
 {
     $dbh = nel_database();
-    $language = new \Nelliel\language\Language();
+    $language = new \Nelliel\language\Language(nel_authorize());
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);

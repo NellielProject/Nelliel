@@ -3,7 +3,7 @@
 function nel_render_main_panel()
 {
     $dbh = nel_database();
-    $language = new \Nelliel\language\Language();
+    $language = new \Nelliel\language\Language(nel_authorize());
     $authorize = nel_authorize();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -79,8 +79,7 @@ function nel_render_main_panel()
         $manage_options_nodes['module-link-board-defaults']->remove();
     }
 
-    // TODO: Add perm for this
-    if (true)
+    if ($user->boardPerm('', 'perm_reports_access'))
     {
         $manage_options_nodes['module-link-reports']->extSetAttribute('href',
                 PHP_SELF . '?manage=general&module=reports');
@@ -90,8 +89,16 @@ function nel_render_main_panel()
         $manage_options_nodes['module-link-reports']->remove();
     }
 
-    $dom->getElementById('extract-gettext-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=general&module=language&action=extract-gettext');
+    if ($user->boardPerm('', 'perm_extract_gettext'))
+    {
+        $dom->getElementById('extract-gettext-form')->extSetAttribute('action',
+                PHP_SELF . '?manage=general&module=language&action=extract-gettext');
+    }
+    else
+    {
+        $dom->getElementById('extract-gettext-form')->remove();
+    }
+
 
     $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
@@ -102,7 +109,7 @@ function nel_render_main_panel()
 
 function nel_render_main_board_panel($board_id)
 {
-    $language = new \Nelliel\language\Language();
+    $language = new \Nelliel\language\Language(nel_authorize());
     $authorize = nel_authorize();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();

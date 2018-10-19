@@ -21,7 +21,7 @@ require_once LIBRARY_PATH . 'random_compat/lib/random.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'accessors.php';
 
-$language = new \Nelliel\language\Language();
+$language = new \Nelliel\language\Language(nel_authorize());
 $language->loadLanguage(LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po');
 require_once INCLUDE_PATH . 'output/header.php';
 require_once INCLUDE_PATH . 'output/footer.php';

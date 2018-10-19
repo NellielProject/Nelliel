@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_derp($diagnostic, $board_id = null)
 {
-    $language = new \Nelliel\language\Language();
+    $language = new \Nelliel\language\Language(nel_authorize());
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);

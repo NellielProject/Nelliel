@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_create_board_panel()
 {
-    $language = new \Nelliel\language\Language();
+    $language = new \Nelliel\language\Language(nel_authorize());
     $authorize = nel_authorize();
     $user = $authorize->getUser($_SESSION['username']);
 

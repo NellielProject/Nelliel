@@ -90,10 +90,13 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_post_in_locked', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_post_comment', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_post_permsage', 1]);
+        $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_reports_access', 1]);
+        $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_reports_dismiss', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_caches', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_index', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_threads', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_create_board', 1]);
+        $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_extract_gettext', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_site_config', 0]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_board_defaults', 0]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_board_config', 1]);
@@ -118,10 +121,13 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_post_in_locked', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_post_comment', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_post_permsage', 1]);
+        $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_reports_access', 1]);
+        $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_reports_dismiss', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_caches', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_index', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_threads', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_create_board', 0]);
+        $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_extract_gettext', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_manage_site_config', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_manage_board_defaults', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_manage_board_config', 0]);
@@ -146,10 +152,13 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['MOD', 'perm_post_in_locked', 1]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_post_comment', 1]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_post_permsage', 1]);
+        $dbh->executePrepared($prepared, ['MOD', 'perm_reports_access', 1]);
+        $dbh->executePrepared($prepared, ['MOD', 'perm_reports_dismiss', 1]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_regen_caches', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_regen_index', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_regen_threads', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_create_board', 0]);
+        $dbh->executePrepared($prepared, ['MOD', 'perm_extract_gettext', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_manage_site_config', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_manage_board_defaults', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_manage_board_config', 0]);
@@ -174,10 +183,13 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_post_in_locked', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_post_comment', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_post_permsage', 0]);
+        $dbh->executePrepared($prepared, ['JANITOR', 'perm_reports_access', 1]);
+        $dbh->executePrepared($prepared, ['JANITOR', 'perm_reports_dismiss', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_regen_caches', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_regen_index', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_regen_threads', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_create_board', 0]);
+        $dbh->executePrepared($prepared, ['JANITOR', 'perm_extract_gettext', 0]);
         nel_setup_stuff_done(true);
     }
 

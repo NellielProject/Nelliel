@@ -9,8 +9,11 @@ if (!defined('NELLIEL_VERSION'))
 
 class Language
 {
-    function __construct()
+    private $authorize;
+
+    function __construct($authorize)
     {
+        $this->authorize = $authorize;
     }
 
     public function loadLanguage($file = null)
@@ -55,6 +58,13 @@ class Language
 
     public function extractLanguageStrings($file)
     {
+        $user = $this->authorize->getUser($_SESSION['username']);
+
+        if (!$user->boardPerm('', 'perm_extract_gettext'))
+        {
+            nel_derp(390, _gettext('You are not allowed to extract the gettext strings.'));
+        }
+
         $extractor = new \Nelliel\language\LanguageExtractor();
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->writeFile($file, $extractor->assemblePoString());

@@ -3,7 +3,7 @@ require_once INCLUDE_PATH . 'output/rules.php';
 
 function nel_render_posting_form($board_id, $render, $response_to, $dotdot = null)
 {
-    $language = new \Nelliel\language\Language();
+    $language = new \Nelliel\language\Language(nel_authorize());
     $sessions = new \Nelliel\Sessions();
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);

@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_thread_panel_main($board_id)
 {
     $dbh = nel_database();
-    $language = new \Nelliel\language\Language();
+    $language = new \Nelliel\language\Language(nel_authorize());
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -125,7 +125,7 @@ function nel_render_thread_panel_main($board_id)
 function nel_render_thread_panel_expand($board_id, $thread_id)
 {
     $dbh = nel_database();
-    $language = new \Nelliel\language\Language();
+    $language = new \Nelliel\language\Language(nel_authorize());
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();

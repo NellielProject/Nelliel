@@ -27,8 +27,20 @@ class PanelReports extends PanelBase
 
     public function actionDispatch($inputs)
     {
+        $user = $this->authorize->getUser($_SESSION['username']);
+
+        if (!$user->boardPerm('', 'perm_reports_access') && !$user->boardPerm('', 'perm_reports_access'))
+        {
+            nel_derp(380, _gettext('You are not allowed to access the reports panel.'));
+        }
+
         if($inputs['action'] === 'dismiss')
         {
+            if (!$user->boardPerm('', 'perm_reports_dismiss') && !$user->boardPerm('', 'perm_reports_dismiss'))
+            {
+                nel_derp(381, _gettext('You are not allowed to dismiss reports.'));
+            }
+
             $this->dismiss($_GET['report_id']);
             $this->renderPanel();
         }

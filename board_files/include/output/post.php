@@ -13,7 +13,7 @@ function nel_render_insert_hr($dom)
 
 function nel_render_index_navigation($board_id, $dom, $render, $pages)
 {
-    $language = new \Nelliel\language\Language();
+    $language = new \Nelliel\language\Language(nel_authorize());
     $dom_nav = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom_nav, 'index_navigation.html');
     $bottom_nav = $dom_nav->getElementById('index-bottom-nav');

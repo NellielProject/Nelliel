@@ -10,7 +10,7 @@ require_once INCLUDE_PATH . 'output/post.php';
 function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
 {
     $dbh = nel_database();
-    $language = new \Nelliel\language\Language();
+    $language = new \Nelliel\language\Language(nel_authorize());
     $sessions = new \Nelliel\Sessions();
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);

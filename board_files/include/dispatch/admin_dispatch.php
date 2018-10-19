@@ -55,7 +55,7 @@ function nel_admin_dispatch($inputs)
             case 'language':
                 if ($inputs['action'] === 'extract-gettext')
                 {
-                    $language = new \Nelliel\language\Language();
+                    $language = new \Nelliel\language\Language(nel_authorize());
                     $language->extractLanguageStrings(
                             LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
                 }

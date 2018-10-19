@@ -137,6 +137,16 @@
 				<label for="perm_post_permsage" data-i18n="gettext">Can permanently sage or unsage a thread</label>
 			</div>
 			<div class="config-row">
+				<input type="hidden" name="perm_reports_access" value="0">
+				<input type="checkbox" name="perm_reports_access" id="perm_reports_access" value="1">
+				<label for="perm_reports_access" data-i18n="gettext">Can access the reports panel</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_reports_dismiss" value="0">
+				<input type="checkbox" name="perm_reports_dismiss" id="perm_reports_dismiss" value="1">
+				<label for="pperm_reports_dismiss" data-i18n="gettext">Can dismiss reports</label>
+			</div>
+			<div class="config-row">
 				<input type="hidden" name="perm_regen_caches" value="0">
 				<input type="checkbox" name="perm_regen_caches" id="perm_regen_caches" value="1">
 				<label for="perm_regen_caches" data-i18n="gettext">Can rebuild caches</label>
@@ -155,6 +165,11 @@
 				<input type="hidden" name="perm_create_board" value="0">
 				<input type="checkbox" name="perm_create_board" id="perm_create_board" value="1">
 				<label for="perm_create_board" data-i18n="gettext">Can create new boards</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_extract_gettext" value="0">
+				<input type="checkbox" name="perm_extract_gettext" id="perm_extract_gettext" value="1">
+				<label for="perm_extract_gettext" data-i18n="gettext">Can extract gettext strings from code and templates</label>
 			</div>
 			<div class="config-row">
 				<input type="submit" value="Update role" data-i18n="gettext" data-i18n-attributes="value">
