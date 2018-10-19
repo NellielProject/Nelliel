@@ -25,15 +25,17 @@ function nel_process_new_post($inputs)
     nel_is_post_ok($board_id, $post->content_data, $time);
 
     // Process FGSFDS
+    $fgsfds = new \Nelliel\FGSFDS($post->content_data['fgsfds']);
+
     if (!empty($post->content_data['fgsfds']))
     {
-        $fgsfds = new \Nelliel\FGSFDS($post->content_data['fgsfds']);
-
         if($fgsfds->getCommand('sage') !== false)
         {
             $fgsfds->modifyCommandData('sage', 'value', true);
         }
     }
+    else
+
 
     $post->content_data['sage'] = $fgsfds->getCommandData('sage', 'value');
     $files = $file_upload->processFiles($post->content_data['response_to']);

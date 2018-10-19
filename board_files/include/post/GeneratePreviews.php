@@ -25,8 +25,8 @@ class GeneratePreviews
 
         while ($i < $files_count)
         {
-            $files[$i]->content_data['image_width'] = null;
-            $files[$i]->content_data['image_height'] = null;
+            $files[$i]->content_data['display_width'] = null;
+            $files[$i]->content_data['display_height'] = null;
             $files[$i]->content_data['preview_width'] = null;
             $files[$i]->content_data['preview_height'] = null;
             $files[$i]->content_data['preview_name'] = null;
@@ -35,14 +35,14 @@ class GeneratePreviews
             if ($files[$i]->content_data['format'] === 'swf' || ($files[$i]->content_data['type'] === 'graphics'))
             {
                 $dim = getimagesize($files[$i]->content_data['location']);
-                $files[$i]->content_data['image_width'] = $dim[0];
-                $files[$i]->content_data['image_height'] = $dim[1];
-                $ratio = min(($board_settings['max_height'] / $files[$i]->content_data['image_height']),
-                        ($board_settings['max_width'] / $files[$i]->content_data['image_width']));
+                $files[$i]->content_data['display_width'] = $dim[0];
+                $files[$i]->content_data['display_height'] = $dim[1];
+                $ratio = min(($board_settings['max_height'] / $files[$i]->content_data['display_height']),
+                        ($board_settings['max_width'] / $files[$i]->content_data['display_width']));
                 $files[$i]->content_data['preview_width'] = ($ratio < 1) ? intval(
-                        $ratio * $files[$i]->content_data['image_width']) : $files[$i]->content_data['image_width'];
+                        $ratio * $files[$i]->content_data['display_width']) : $files[$i]->content_data['display_width'];
                 $files[$i]->content_data['preview_height'] = ($ratio < 1) ? intval(
-                        $ratio * $files[$i]->content_data['image_height']) : $files[$i]->content_data['image_height'];
+                        $ratio * $files[$i]->content_data['display_height']) : $files[$i]->content_data['display_height'];
             }
 
             if ($board_settings['use_thumb'] && $files[$i]->content_data['type'] === 'graphics')
@@ -115,8 +115,8 @@ class GeneratePreviews
         {
             $file->content_data['preview_extension'] = 'gif';
 
-            if ($file->content_data['image_width'] <= $board_settings['max_width'] &&
-                    $file->content_data['image_height'] <= $board_settings['max_height'])
+            if ($file->content_data['display_width'] <= $board_settings['max_width'] &&
+                    $file->content_data['display_height'] <= $board_settings['max_height'])
             {
                 copy($file->content_data['location'],
                         $preview_path . $file->content_data['preview_name'] . '.' .
@@ -224,7 +224,7 @@ class GeneratePreviews
         if ($preview !== false)
         {
             imagecopyresampled($preview, $image, 0, 0, 0, 0, $file->content_data['preview_width'],
-                    $file->content_data['preview_height'], $file->content_data['image_width'], $file->content_data['image_height']);
+                    $file->content_data['preview_height'], $file->content_data['display_width'], $file->content_data['display_height']);
 
             if ($board_settings['use_png_thumb'])
             {

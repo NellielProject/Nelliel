@@ -58,7 +58,7 @@ class ContentFile extends ContentBase
                     "post_ref" = :post_ref, "file_order" = :file_order,
                     "type" = :type, "format" = :format, "mime" = :mime,
                     "filename" = :filename, "extension" = :extension,
-                    "image_width" = :image_width, "image_height" = :image_height, "preview_name" = :preview_name,
+                    "display_width" = :display_width, "display_height" = :display_height, "preview_name" = :preview_name,
                     "preview_extension" = :preview_extension, "preview_width" = :preview_width, "preview_height" = :preview_height,
                     "filesize" = :filesize, "md5" = :md5, "sha1" = :sha1, "sha256" = :sha256, "sha512" = :sha512,
                     "source" = :source, "license" = :license, "alt_text" = :alt_text, "exif" = :exif
@@ -69,9 +69,9 @@ class ContentFile extends ContentBase
         {
             $prepared = $database->prepare(
                     'INSERT INTO "' . $board_references['file_table'] . '" ("parent_thread", "post_ref", "file_order", "type", "format", "mime",
-                    "filename", "extension", "image_width", "image_height", "preview_name", "preview_extension", "preview_width", "preview_height",
+                    "filename", "extension", "display_width", "display_height", "preview_name", "preview_extension", "preview_width", "preview_height",
                     "filesize", "md5", "sha1", "sha256", "sha512", "source", "license", "alt_text", "exif") VALUES
-                    (:parent_thread, :post_ref, :file_order, :type, :format, :mime, :filename, :extension, :image_width, :image_height,
+                    (:parent_thread, :post_ref, :file_order, :type, :format, :mime, :filename, :extension, :display_width, :display_height,
                     :preview_name, :preview_extension, :preview_width, :preview_height, :filesize, :md5, :sha1, :sha256, :sha512,
                     :source, :license, :alt_text, :exif)');
         }
@@ -84,8 +84,8 @@ class ContentFile extends ContentBase
         $prepared->bindValue(':mime', $this->contentDataOrDefault('mime', null), PDO::PARAM_STR);
         $prepared->bindValue(':filename', $this->contentDataOrDefault('filename', null), PDO::PARAM_STR);
         $prepared->bindValue(':extension', $this->contentDataOrDefault('extension', null), PDO::PARAM_STR);
-        $prepared->bindValue(':image_width', $this->contentDataOrDefault('image_width', null), PDO::PARAM_INT);
-        $prepared->bindValue(':image_height', $this->contentDataOrDefault('image_height', null), PDO::PARAM_INT);
+        $prepared->bindValue(':display_width', $this->contentDataOrDefault('display_width', null), PDO::PARAM_INT);
+        $prepared->bindValue(':display_height', $this->contentDataOrDefault('display_height', null), PDO::PARAM_INT);
         $prepared->bindValue(':preview_name', $this->contentDataOrDefault('preview_name', null), PDO::PARAM_STR);
         $prepared->bindValue(':preview_extension', $this->contentDataOrDefault('preview_extension', null),
                 PDO::PARAM_STR);

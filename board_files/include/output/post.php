@@ -331,13 +331,13 @@ function nel_render_post($board_id, $gen_data, $dom)
             $file_text_link->extSetAttribute('href', $file['file_location'], 'none');
             $file_text_link->setContent($file['display_filename'] . '.' . $file['extension']);
 
-            $file['img_dim'] = !empty($file['image_width']) && !empty($file['image_height']);
+            $file['img_dim'] = !empty($file['display_width']) && !empty($file['display_height']);
             $file['filesize'] = round(((int) $file['filesize'] / 1024), 2);
             $filesize_display = ' (' . $file['filesize'] . ' KB)';
 
             if ($file['img_dim'])
             {
-                $filesize_display = $file['image_width'] . ' x ' . $file['image_height'] . $filesize_display;
+                $filesize_display = $file['display_width'] . ' x ' . $file['display_height'] . $filesize_display;
             }
 
             $file_nodes['filesize-display']->setContent($filesize_display);
@@ -465,7 +465,7 @@ function nel_render_post($board_id, $gen_data, $dom)
                         $preview_element->extSetAttribute('alt', $file['alt_text']);
                         $preview_element->extSetAttribute('class', $post_type_class . $multiple_class . 'post-preview');
                         $preview_element->extSetAttribute('data-other-dims',
-                                'w' . $file['image_width'] . 'h' . $file['image_height']);
+                                'w' . $file['display_width'] . 'h' . $file['display_height']);
                         $preview_element->extSetAttribute('data-other-loc', $file['file_location'], 'none');
                     }
                     else
