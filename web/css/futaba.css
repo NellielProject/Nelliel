@@ -168,6 +168,18 @@ a.post-link:visited {
 }
 
 /* Files */
+.post-files-container {
+
+}
+
+.file-select {
+
+}
+
+.multi-file-select {
+
+}
+
 .op-fileinfo {
     float: left;
     text-align: left;
@@ -316,11 +328,11 @@ a.post-link:visited {
 	clear: both;
 }
 
-.post-checkbox {
+.post-select {
 	margin-left: 15px;
 }
 
-.thread-checkbox {
+.thread-select {
 
 }
 

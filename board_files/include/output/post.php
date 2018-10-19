@@ -315,7 +315,7 @@ function nel_render_post($board_id, $gen_data, $dom)
                 $file_nodes['modmode-options']->remove();
             }
 
-            $file_nodes['delete-file']->extSetAttribute('name', $file_content_id);
+            $file_nodes['select-file']->extSetAttribute('name', $file_content_id);
 
             $file['file_location'] = $thread_src_web_path . $post_data['post_number'] . '/' .
                     rawurlencode($full_filename);

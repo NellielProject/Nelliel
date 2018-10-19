@@ -172,14 +172,14 @@ a.post-link:visited {
 
 /* Files */
 .post-files-container {
-	
+
 }
 
-.file-delete-box {
-	
+.file-select {
+
 }
 
-.multi-file-delete-box {
+.multi-file-select {
 
 }
 
@@ -332,11 +332,11 @@ a.post-link:visited {
 	clear: both;
 }
 
-.post-checkbox {
+.post-select {
 	margin-left: 15px;
 }
 
-.thread-checkbox {
+.thread-select {
 
 }
 
