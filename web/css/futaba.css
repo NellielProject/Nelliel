@@ -316,6 +316,14 @@ a.post-link:visited {
 	clear: both;
 }
 
+.post-checkbox {
+	margin-left: 15px;
+}
+
+.thread-checkbox {
+
+}
+
 /* Reply post formatting */
 .reply-post {
     background: #F0E0D6;
