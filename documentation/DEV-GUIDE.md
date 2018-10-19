@@ -17,19 +17,20 @@ In addition:
 ## Functions, Classes and Structure
  - Procedural is not evil. OOP is not the Holy Grail. Use what makes sense for a given situation.
  - Function names should be prefixed with `nel_`
- - Classes should be in the `Nelliel` namespace.
+ - Classes should be within the `Nelliel` namespace.
  - If a class instance or mutable variable needs to be accessible in a global scope it should be encapsulated inside a function.
  
 ## SQL and Queries
 All queries and schemas should comply with ANSI standards when possible. In cases where a data type is not fully cross-compatible or has a differing name (e.g. the BINARY equivalent in PostgreSQL is BYTEA), an equivalent may be used for the specific RDBMS schema; the functionality however must be indistinguishable.
 
 Query requirements:
- - Queries must go through PDO or NellielPDO.
+ - Queries must go through PDO or a PDO-derived class such as NellielPDO.
  - Queries must be parameterized unless the entire query is hardcoded.
  - Identifiers must be placed in double quotes `" "`, with the exception of table or column creation.
  - All identifiers should be treated as being case sensitive.
  - Non-parameterized string literals must be placed inside single quotes `' '`.
  - Keywords should be ALL CAPS.
+ - Database NULL is treated as unknown value.
  
 ## Targets and Version Support
 Any stable core functions and features contributed to Nelliel must be fully functional with the minimum versions listed below in addition to all later versions of the software. These minimum requirements will change over time due to certain circumstances including:
