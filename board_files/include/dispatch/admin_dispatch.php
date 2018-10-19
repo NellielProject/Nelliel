@@ -64,8 +64,8 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'reports':
-                require_once INCLUDE_PATH . 'output/management/reports_panel.php';
-                nel_render_reports_panel();
+                $reports_panel = new \Nelliel\Panels\PanelReports(nel_database(), nel_authorize(), $inputs['board_id']);
+                $reports_panel->actionDispatch($inputs);
                 break;
 
             default:

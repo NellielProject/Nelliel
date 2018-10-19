@@ -53,8 +53,8 @@ function nel_general_dispatch($inputs)
             {
                 if (isset($_POST['form_submit_report']))
                 {
-                    $reports = new \Nelliel\Reports(nel_database());
-                    $reports->processContentReports();
+                    $reports_panel = new \Nelliel\Panels\PanelReports(nel_database(), nel_authorize(), $inputs['board_id']);
+                    $reports_panel->actionDispatch($inputs);
 
                     if ($sessions->sessionIsActive())
                     {

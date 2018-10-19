@@ -65,13 +65,17 @@ function nel_render_reports_panel()
         $report_nodes['report-reason']->setContent($report_info['reason']);
         $report_nodes['reporter-ip']->setContent(@inet_ntop($report_info['reporter_ip']));
         $report_nodes['link-report-dismiss']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=reports&action=dismiss&report_id=' . $report_info['report_id']);
+                PHP_SELF . '?manage=general&module=reports&board_id=' . $report_info['board_id'] .
+                '&action=dismiss&report_id=' . $report_info['report_id']);
         $report_nodes['link-report-ban']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=reports&action=ban&report_id=' . $report_info['report_id']);
+                PHP_SELF . '?manage=general&module=reports&board_id=' . $report_info['board_id'] .
+                '&action=ban&report_id=' . $report_info['report_id']);
         $report_nodes['link-report-delete']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=reports&action=delete&report_id=' . $report_info['report_id']);
+                PHP_SELF . '?manage=general&module=reports&board_id=' . $report_info['board_id'] .
+                '&action=delete&report_id=' . $report_info['report_id']);
         $report_nodes['link-report-ban-delete']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=reports&action=ban-delete&report_id=' . $report_info['report_id']);
+                PHP_SELF . '?manage=general&module=reports&board_id=' . $report_info['board_id'] .
+                '&action=ban-delete&report_id=' . $report_info['report_id']);
         $report_info_table->appendChild($temp_report_info_row);
     }
 
