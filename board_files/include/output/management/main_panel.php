@@ -170,6 +170,19 @@ function nel_render_main_board_panel($board_id)
         $bans->remove();
     }
 
+    $reports = $dom->getElementById('module-reports');
+
+    if ($user->boardPerm($board_id, 'perm_reports_access'))
+    {
+        $reports_elements = $reports->getElementsByAttributeName('data-parse-id', true);
+        $reports_elements['reports-link']->extSetAttribute('href',
+                PHP_SELF . '?manage=board&module=reports&board_id=' . $board_id);
+    }
+    else
+    {
+        $reports->remove();
+    }
+
     if ($user->boardPerm($board_id, 'perm_regen_index'))
     {
         $dom->getElementById('regen-all-pages')->extSetAttribute('href',

@@ -4,8 +4,15 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_reports_panel()
+function nel_render_reports_panel($board_id = '')
 {
+    $user = nel_authorize()->getUser($_SESSION['username']);
+
+    if (!$user->boardPerm($board_id, 'perm_reports_access'))
+    {
+        nel_derp(380, _gettext('You are not allowed to access the reports panel.'));
+    }
+
     $dbh = nel_database();
     $language = new \Nelliel\language\Language(nel_authorize());
     $render = new NellielTemplates\RenderCore();
@@ -16,8 +23,18 @@ function nel_render_reports_panel()
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/reports_panel.html');
 
-    $report_list = $dbh->executeFetchAll('SELECT * FROM "' . REPORTS_TABLE . '" ORDER BY "report_id" DESC',
-            PDO::FETCH_ASSOC);
+    if ($board_id !== '')
+    {
+        $prepared = $dbh->prepare(
+                'SELECT * FROM "' . REPORTS_TABLE . '" WHERE "board_id" = ? ORDER BY "report_id" DESC');
+        $report_list = $dbh->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_ASSOC);
+    }
+    else
+    {
+        $report_list = $dbh->executeFetchAll('SELECT * FROM "' . REPORTS_TABLE . '" ORDER BY "report_id" DESC',
+                PDO::FETCH_ASSOC);
+    }
+
     $report_info_table = $dom->getElementById('report-info-table');
     $report_info_row = $dom->getElementById('report-info-row');
     $bgclass = 'row1';
@@ -37,12 +54,14 @@ function nel_render_reports_panel()
 
         if ($content_id->isThread())
         {
-            $content_link = $base_path . '&module=view-thread&content-id=' . $content_id->getIDString() . '&section=' . $content_id->thread_id . '&board_id=' . $report_info['board_id'];
+            $content_link = $base_path . '&module=view-thread&content-id=' . $content_id->getIDString() . '&section=' .
+                    $content_id->thread_id . '&board_id=' . $report_info['board_id'];
         }
         else if ($content_id->isPost())
         {
             $post_anchor = '#p' . $content_id->thread_id . '_' . $content_id->post_id;
-            $content_link = $base_path . '&module=view-thread&content-id=' . $content_id->getIDString() . '&section=' . $content_id->thread_id . '&board_id=' . $report_info['board_id'] . $post_anchor;
+            $content_link = $base_path . '&module=view-thread&content-id=' . $content_id->getIDString() . '&section=' .
+                    $content_id->thread_id . '&board_id=' . $report_info['board_id'] . $post_anchor;
         }
         else if ($content_id->isFile())
         {

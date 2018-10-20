@@ -47,12 +47,7 @@ class PanelReports extends PanelBase
 
     public function renderPanel($user)
     {
-        if (!$user->boardPerm($this->board_id, 'perm_reports_access'))
-        {
-            nel_derp(380, _gettext('You are not allowed to access the reports panel.'));
-        }
-
-        nel_render_reports_panel();
+        nel_render_reports_panel($this->board_id);
     }
 
     public function creator($user)

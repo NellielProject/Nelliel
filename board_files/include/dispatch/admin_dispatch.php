@@ -111,6 +111,11 @@ function nel_admin_dispatch($inputs)
             case 'main-panel':
                 nel_render_main_board_panel($inputs['board_id']);
                 break;
+
+            case 'reports':
+                $reports_panel = new \Nelliel\Panels\PanelReports(nel_database(), nel_authorize(), $inputs['board_id']);
+                $reports_panel->actionDispatch($inputs);
+                break;
         }
     }
     else if ($inputs['manage'] === 'modmode')
