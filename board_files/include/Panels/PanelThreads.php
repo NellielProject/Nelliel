@@ -24,29 +24,24 @@ class PanelThreads extends PanelBase
     {
         $user = $this->authorize->getUser($_SESSION['username']);
 
+        if($inputs['action'] === 'update')
+        {
+            $this->update($user);
+            $this->renderPanel($user);
+        }
+        else
+        {
+            $this->renderPanel($user);
+        }
+    }
+
+    public function renderPanel($user)
+    {
         if (!$user->boardPerm($this->board_id, 'perm_post_access'))
         {
             nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
         }
 
-        if($inputs['action'] === 'update')
-        {
-            if (!$user->boardPerm($this->board_id, 'perm_post_modify'))
-            {
-                nel_derp(351, _gettext('You are not allowed to modify threads or posts.'));
-            }
-
-            $this->update();
-            $this->renderPanel();
-        }
-        else
-        {
-            $this->renderPanel();
-        }
-    }
-
-    public function renderPanel()
-    {
         if (isset($_POST['expand_thread']))
         {
             $expand_data = explode(' ', $_POST['expand_thread']);
@@ -58,16 +53,25 @@ class PanelThreads extends PanelBase
         }
     }
 
-    public function add()
+    public function creator($user)
     {
     }
 
-    public function edit()
+    public function add($user)
     {
     }
 
-    public function update()
+    public function editor($user)
     {
+    }
+
+    public function update($user)
+    {
+        if (!$user->boardPerm($this->board_id, 'perm_post_modify'))
+        {
+            nel_derp(351, _gettext('You are not allowed to modify threads or posts.'));
+        }
+
         $thread_handler = new \Nelliel\ThreadHandler($this->database, $this->board_id);
         $updates = $thread_handler->processContentDeletes();
         $regen = new \Nelliel\Regen();
@@ -75,9 +79,7 @@ class PanelThreads extends PanelBase
         $regen->index($this->board_id);
     }
 
-    public function remove()
+    public function remove($user)
     {
     }
-
-
 }

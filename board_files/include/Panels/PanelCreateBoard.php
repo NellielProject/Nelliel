@@ -11,6 +11,7 @@ require_once INCLUDE_PATH . 'output/management/create_board.php';
 
 class PanelCreateBoard extends PanelBase
 {
+
     function __construct($database, $authorize)
     {
         $this->database = $database;
@@ -19,58 +20,61 @@ class PanelCreateBoard extends PanelBase
 
     public function actionDispatch($inputs)
     {
+        $user = $this->authorize->getUser($_SESSION['username']);
 
-        if($inputs['action'] === 'add')
+        if ($inputs['action'] === 'add')
         {
-            $this->add();
-            $this->renderPanel();
+            $this->add($user);
+            $this->renderPanel($user);
         }
         else
         {
-            $this->renderPanel();
+            $this->renderPanel($user);
         }
     }
 
-    public function renderPanel()
+    public function renderPanel($user)
     {
         nel_render_create_board_panel();
     }
 
-    public function add()
+    public function creator($user)
     {
-        $user = $this->authorize->getUser($_SESSION['username']);
+    }
 
+    public function add($user)
+    {
         if (!$user->boardPerm('', 'perm_create_board'))
         {
-            nel_derp(370, _gettext('You are not allowed to create new boards.'));
+            nel_derp(371, _gettext('You are not allowed to create new boards.'));
         }
+
         $board_id = $_POST['new_board_id'];
         $board_directory = $_POST['board_directory'];
         $db_prefix = $board_id;
-        $prepared = $this->database->prepare('INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "board_directory", "db_prefix") VALUES (?, ?, ?)');
+        $prepared = $this->database->prepare(
+                'INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "board_directory", "db_prefix") VALUES (?, ?, ?)');
         $this->database->executePrepared($prepared, array($board_id, $board_directory, $db_prefix));
         $setup = new \Nelliel\setup\Setup();
         $setup->createBoardTables($board_id);
         $setup->createBoardDirectories($board_id);
 
-        if(USE_INTERNAL_CACHE)
+        if (USE_INTERNAL_CACHE)
         {
             $regen = new \Nelliel\Regen();
             $regen->boardCache($board_id);
         }
     }
 
-    public function edit()
+    public function editor($user)
     {
     }
 
-    public function update()
+    public function update($user)
     {
     }
 
-    public function remove()
+    public function remove($user)
     {
     }
-
-
 }

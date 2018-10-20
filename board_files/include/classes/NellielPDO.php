@@ -81,7 +81,7 @@ class NellielPDO extends PDO
 
     public function tableFail($table)
     {
-        nel_derp(203,
+        nel_derp(103,
                 sprintf(
                         _gettext(
                                 'Creation of %s failed! Check database settings and config.php then retry installation.'),

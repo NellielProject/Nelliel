@@ -14,14 +14,16 @@ abstract class PanelBase
 
     public abstract function actionDispatch($inputs);
 
-    public abstract function renderPanel();
+    public abstract function renderPanel($user);
 
-    public abstract function add();
+    public abstract function creator($user);
 
-    public abstract function edit();
+    public abstract function add($user);
 
-    public abstract function update();
+    public abstract function editor($user);
 
-    public abstract function remove();
+    public abstract function update($user);
+
+    public abstract function remove($user);
 }
 

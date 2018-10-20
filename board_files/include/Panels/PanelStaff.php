@@ -30,7 +30,7 @@ class PanelStaff extends PanelBase
 
         if (is_null($inputs['section']) || $inputs['section'] === 'main')
         {
-            $this->renderPanel();
+            $this->renderPanel($user);
         }
         else if ($inputs['section'] === 'user')
         {
@@ -56,7 +56,7 @@ class PanelStaff extends PanelBase
 
                 if (!$this->authorize->userExists($user_id))
                 {
-                    nel_derp(220, _gettext('The specified user does not exist.'));
+                    nel_derp(230, _gettext('The specified user does not exist.'));
                 }
 
                 if (!$user->boardPerm('', 'perm_user_modify'))
@@ -72,7 +72,7 @@ class PanelStaff extends PanelBase
 
                 if (!$this->authorize->userExists($user_id))
                 {
-                    nel_derp(220, _gettext('The specified user does not exist.'));
+                    nel_derp(230, _gettext('The specified user does not exist.'));
                 }
 
                 $user = $this->authorize->getUser($user_id);
@@ -152,7 +152,7 @@ class PanelStaff extends PanelBase
 
                 if (!$this->authorize->roleExists($role_id))
                 {
-                    nel_derp(221, _gettext('The specified role does not exist.'));
+                    nel_derp(231, _gettext('The specified role does not exist.'));
                 }
 
                 if (!$user->boardPerm('', 'perm_role_modify'))
@@ -168,7 +168,7 @@ class PanelStaff extends PanelBase
 
                 if (!$this->authorize->roleExists($role_id))
                 {
-                    nel_derp(221, _gettext('The specified role does not exist.'));
+                    nel_derp(231, _gettext('The specified role does not exist.'));
                 }
 
                 $role = $this->authorize->getRole($role_id);
@@ -196,28 +196,32 @@ class PanelStaff extends PanelBase
         }
         else
         {
-            nel_derp(222, _gettext('No valid action given for user or role panels.'));
+            nel_derp(232, _gettext('No valid action given for user or role panels.'));
         }
     }
 
-    public function renderPanel()
+    public function renderPanel($user)
     {
         nel_render_staff_panel_main();
     }
 
-    public function add()
+    public function creator($user)
     {
     }
 
-    public function edit()
+    public function add($user)
     {
     }
 
-    public function update()
+    public function editor($user)
     {
     }
 
-    public function remove()
+    public function update($user)
+    {
+    }
+
+    public function remove($user)
     {
     }
 

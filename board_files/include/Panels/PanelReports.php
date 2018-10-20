@@ -29,38 +29,37 @@ class PanelReports extends PanelBase
     {
         $user = $this->authorize->getUser($_SESSION['username']);
 
+        if($inputs['action'] === 'dismiss')
+        {
+            $this->dismiss($_GET['report_id']);
+            $this->renderPanel($user);
+        }
+        else if(isset($_POST['form_submit_report']))
+        {
+            $this->add($user);
+            $this->renderPanel($user);
+        }
+        else
+        {
+            $this->renderPanel($user);
+        }
+    }
+
+    public function renderPanel($user)
+    {
         if (!$user->boardPerm('', 'perm_reports_access') && !$user->boardPerm('', 'perm_reports_access'))
         {
             nel_derp(380, _gettext('You are not allowed to access the reports panel.'));
         }
 
-        if($inputs['action'] === 'dismiss')
-        {
-            if (!$user->boardPerm('', 'perm_reports_dismiss') && !$user->boardPerm('', 'perm_reports_dismiss'))
-            {
-                nel_derp(381, _gettext('You are not allowed to dismiss reports.'));
-            }
-
-            $this->dismiss($_GET['report_id']);
-            $this->renderPanel();
-        }
-        else if(isset($_POST['form_submit_report']))
-        {
-            $this->add();
-            $this->renderPanel();
-        }
-        else
-        {
-            $this->renderPanel();
-        }
-    }
-
-    public function renderPanel()
-    {
         nel_render_reports_panel();
     }
 
-    public function add()
+    public function creator($user)
+    {
+    }
+
+    public function add($user)
     {
         $report_data = array();
         $report_data['board_id'] = (isset($_GET['board_id'])) ? $_GET['board_id'] : null;
@@ -92,20 +91,25 @@ class PanelReports extends PanelBase
         }
     }
 
-    public function edit()
+    public function editor($user)
     {
     }
 
-    public function update()
+    public function update($user)
     {
     }
 
-    public function remove()
+    public function remove($user)
     {
     }
 
     public function dismiss($report_id)
     {
+        if (!$user->boardPerm('', 'perm_reports_dismiss') && !$user->boardPerm('', 'perm_reports_dismiss'))
+        {
+            nel_derp(381, _gettext('You are not allowed to dismiss reports.'));
+        }
+
         $prepared = $this->database->prepare('DELETE FROM "' . REPORTS_TABLE . '" WHERE "report_id" = ?');
         $this->database->executePrepared($prepared, array($report_id));
     }

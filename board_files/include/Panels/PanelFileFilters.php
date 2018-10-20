@@ -19,27 +19,43 @@ class PanelFileFilters extends PanelBase
 
     public function actionDispatch($inputs)
     {
+        $user = $this->authorize->getUser($_SESSION['username']);
+
         if($inputs['action'] === 'add')
         {
-            $this->add();
+            $this->add($user);
         }
         else if($inputs['action'] == 'remove')
         {
-            $this->remove();
+            $this->remove($user);
         }
         else
         {
-            $this->renderPanel();
+            $this->renderPanel($user);
         }
     }
 
-    public function renderPanel()
+    public function renderPanel($user)
     {
+        if (!$user->boardPerm('', 'perm_file_filters_access'))
+        {
+            nel_derp(341, _gettext('You are not allowed to add file filters.'));
+        }
+
         nel_render_file_filter_panel();
     }
 
-    public function add()
+    public function creator($user)
     {
+    }
+
+    public function add($user)
+    {
+        if (!$user->boardPerm('', 'perm_file_filters_add'))
+        {
+            nel_derp(341, _gettext('You are not allowed to add file filters.'));
+        }
+
         $type = $_POST['hash_type'];
         $notes = $_POST['file_notes'];
         $output_filter = new \Nelliel\OutputFilter();
@@ -51,19 +67,24 @@ class PanelFileFilters extends PanelBase
             $this->database->executePrepared($prepared, array($type, pack("H*" , $hash), $notes));
         }
 
-        $this->renderPanel();
+        $this->renderPanel($user);
     }
 
-    public function edit()
+    public function editor($user)
     {
     }
 
-    public function update()
+    public function update($user)
     {
     }
 
-    public function remove()
+    public function remove($user)
     {
+        if (!$user->boardPerm('', 'perm_file_filters_delete'))
+        {
+            nel_derp(342, _gettext('You are not allowed to remove file filters.'));
+        }
+
         $filter_id = $_GET['filter-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . FILE_FILTER_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, array($filter_id));

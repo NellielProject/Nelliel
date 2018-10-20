@@ -19,7 +19,7 @@ class PanelBoardSettings extends PanelBase
         $this->database = $database;
         $this->authorize = $authorize;
 
-        if(is_null($board_id) || $board_id === '')
+        if (is_null($board_id) || $board_id === '')
         {
             $this->defaults = true;
         }
@@ -33,42 +33,56 @@ class PanelBoardSettings extends PanelBase
     {
         $user = $this->authorize->getUser($_SESSION['username']);
 
-        if ($this->defaults && !$user->boardPerm($this->board_id, 'perm_manage_board_defaults'))
+        if ($inputs['action'] === 'update')
         {
-            nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
+            $this->update($user);
+            $this->renderPanel($user);
         }
+        else
+        {
+            $this->renderPanel($user);
+        }
+    }
 
-        if (!$user->boardPerm($this->board_id, 'perm_manage_board_config'))
+    public function renderPanel($user)
+    {
+        if (!$user->boardPerm($this->board_id, 'perm_board_config_access'))
         {
             nel_derp(330, _gettext('You are not allowed to modify the board settings.'));
         }
 
-        if($inputs['action'] === 'update')
+        if ($this->defaults && !$user->boardPerm('', 'perm_board_defaults_access'))
         {
-            $this->update();
-            $this->renderPanel();
+            nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
         }
-        else
-        {
-            $this->renderPanel();
-        }
-    }
 
-    public function renderPanel()
-    {
         nel_render_board_settings_panel($this->board_id, $this->defaults);
     }
 
-    public function add()
+    public function creator($user)
     {
     }
 
-    public function edit()
+    public function add($user)
     {
     }
 
-    public function update()
+    public function editor($user)
     {
+    }
+
+    public function update($user)
+    {
+        if (!$user->boardPerm($this->board_id, 'perm_board_config_modify'))
+        {
+            nel_derp(330, _gettext('You are not allowed to modify the board settings.'));
+        }
+
+        if ($this->defaults && !$user->boardPerm('', 'perm_board_defaults_modify'))
+        {
+            nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
+        }
+
         $references = nel_parameters_and_data()->boardReferences($this->board_id);
         $config_table = ($this->defaults) ? BOARD_DEFAULTS_TABLE : $references['config_table'];
 
@@ -79,7 +93,8 @@ class PanelBoardSettings extends PanelBase
                 $item[0] = 100;
             }
 
-            $prepared = $this->database->prepare('UPDATE "' . $config_table . '" SET "setting" = ? WHERE "config_name" = ?');
+            $prepared = $this->database->prepare(
+                    'UPDATE "' . $config_table . '" SET "setting" = ? WHERE "config_name" = ?');
             $this->database->executePrepared($prepared, array($item[1], $item[0]), true);
         }
 
@@ -91,9 +106,7 @@ class PanelBoardSettings extends PanelBase
         }
     }
 
-    public function remove()
+    public function remove($user)
     {
     }
-
-
 }

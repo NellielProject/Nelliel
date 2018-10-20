@@ -21,37 +21,46 @@ class PanelSiteSettings extends PanelBase
     {
         $user = $this->authorize->getUser($_SESSION['username']);
 
-        if (!$user->boardPerm('', 'perm_manage_site_config'))
+        if($inputs['action'] === 'update')
+        {
+            $this->add($user);
+            $this->renderPanel($user);
+        }
+        else
+        {
+            $this->renderPanel($user);
+        }
+    }
+
+    public function renderPanel($user)
+    {
+        if (!$user->boardPerm('', 'perm_site_config_access'))
         {
             nel_derp(360, _gettext('You are not allowed to access the site settings.'));
         }
 
-        if($inputs['action'] === 'update')
-        {
-            $this->add();
-            $this->renderPanel();
-        }
-        else
-        {
-            $this->renderPanel();
-        }
-    }
-
-    public function renderPanel()
-    {
         nel_render_site_settings_panel();
     }
 
-    public function add()
+    public function creator($user)
     {
     }
 
-    public function edit()
+    public function add($user)
     {
     }
 
-    public function update()
+    public function editor($user)
     {
+    }
+
+    public function update($user)
+    {
+        if (!$user->boardPerm('', 'perm_site_config_modify'))
+        {
+            nel_derp(361, _gettext('You are not allowed to modify the site settings.'));
+        }
+
         while ($item = each($_POST))
         {
             $prepared = $this->database->prepare('UPDATE "nelliel_site_config" SET "setting" = ? WHERE "config_name" = ?');
@@ -62,7 +71,7 @@ class PanelSiteSettings extends PanelBase
         $regen->siteCache();
     }
 
-    public function remove()
+    public function remove($user)
     {
     }
 

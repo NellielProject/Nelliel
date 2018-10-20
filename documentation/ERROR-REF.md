@@ -26,23 +26,27 @@ Error 50: Password does not match post. (Content/ContentPost.php)
 
 Error 60: Filename purged by filter. (classes/FileHandler.php)
 
+Error 101: No acceptable password hashing. (crypt.php)
+Error 102: InnoDB engine unavailable. (setup/Setup.php)
+Error 103: Failed to create database table. (classes/NellielPDO.php)
+Error 104: board_files not writable. (setup/Setup.php)
+Error 105: Main directory not writable. (setup/Setup.php)
+
 Error 150: IP doesn't match ban. (classes/Snacks.php)
 Error 151: Already appealed. (classes/Snacks.php)
-
-Error 201: No acceptable password hashing. (crypt.php)
-Error 202: InnoDB engine unavailable. (setup/Setup.php)
-Error 203: Failed to create database table. (classes/NellielPDO.php)
-Error 204: board_files not writable. (setup/Setup.php)
-Error 205: Main directory not writable. (setup/Setup.php)
 
 Error 210: Login fail. (login.php)
 Error 211: Login attempts too fast. (login.php)
 Error 212: Too many failed login attempts (10 minutes). (login.php)
 Error 213: Too many failed login attempts (30 minutes). (login.php)
 
-Error 220: User does not exist. (Panels/PanelStaff.php)
-Error 221: Role does not exist. (Panels/PanelStaff.php)
-Error 222: No valid action. (Panels/PanelStaff.php)
+Error 220: Invalid session id. (classes/Sessions.php)
+Error 221: Expired session. (classes/Sessions.php)
+Error 222: Login not validated. (classes/Sessions.php)
+
+Error 230: User does not exist. (Panels/PanelStaff.php)
+Error 231: Role does not exist. (Panels/PanelStaff.php)
+Error 232: No valid action. (Panels/PanelStaff.php)
 
 Error 250: No valid action. (dispatch/admin_dispatch.php)
 
@@ -54,10 +58,6 @@ Error 310: perm_role_access (Panels/PanelStaff.php)
 Error 311: perm_role_add (Panels/PanelStaff.php)
 Error 312: perm_role_modify (Panels/PanelStaff.php)
 
-Error 220: Invalid session id. (classes/Sessions.php)
-Error 221: Expired session. (classes/Sessions.php)
-Error 222: Login not validated. (classes/Sessions.php)
-
 Error 320: perm_ban_access (Panels/PanelBans.php)
 Error 321: perm_ban_add (Panels/PanelBans.php)
 Error 322: perm_ban_modify (Panels/PanelBans.php)
@@ -66,10 +66,15 @@ Error 323: perm_ban_delete (Panels/PanelBans.php, classes/BanHammer.php)
 Error 330: perm_manage_board_config (Panels/PanelBoardSettings.php)
 Error 332: perm_manage_board_defaults (Panels/PanelBoardSettings.php)
 
+Error 340: perm_access_file_filters (Panels/PanelFileFilters.php)
+Error 341: perm_add_file_filters (Panels/PanelFileFilters.php)
+Error 343: perm_modify_file_filters (Panels/PanelFileFilters.php)
+
 Error 350: perm_post_access (Panels/PanelThreads.php)
 Error 351: perm_post_modify (Panels/PanelThreads.php)
 
-Error 360: perm_manage_site_config (Panels/PanelSiteSettings.php)
+Error 360: perm_site_config_access (Panels/PanelSiteSettings.php)
+Error 361: perm_site_config_modify (Panels/PanelSiteSettings.php)
 
 Error 370: perm_create_board (Panels/PanelCreateBoard.php)
 

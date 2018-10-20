@@ -17,19 +17,34 @@
 				<input class="config-cell" type="text" name="capcode_text" id="capcode_text" size="30" value="">
 			</div>
 			<div class="config-row">
-				<input type="hidden" name="perm_manage_site_config" value="0">
-				<input type="checkbox" name="perm_manage_site_config" id="perm_manage_site_config" value="1">
-				<label for="perm_manage_site_config" data-i18n="gettext">Can access and modify site settings</label>
+				<input type="hidden" name="perm_site_config_access" value="0">
+				<input type="checkbox" name="perm_site_config_access" id="perm_site_config_access" value="1">
+				<label for="perm_site_config_access" data-i18n="gettext">Can access site settings panel</label>
 			</div>
 			<div class="config-row">
-				<input type="hidden" name="perm_manage_board_defaults" value="0">
-				<input type="checkbox" name="perm_manage_board_defaults" id="perm_manage_board_defaults" value="1">
-				<label for="perm_manage_board_defaults" data-i18n="gettext">Can access and modify the default board settings</label>
+				<input type="hidden" name="perm_site_config_modify" value="0">
+				<input type="checkbox" name="perm_site_config_modify" id="perm_site_config_modify" value="1">
+				<label for="perm_site_config_modify" data-i18n="gettext">Can modify site settings</label>
 			</div>
 			<div class="config-row">
-				<input type="hidden" name="perm_manage_board_config" value="0">
-				<input type="checkbox" name="perm_manage_board_config" id="perm_manage_board_config" value="1">
-				<label for="perm_manage_board_config" data-i18n="gettext">Can access and modify board settings</label>
+				<input type="hidden" name="perm_board_defaults_access" value="0">
+				<input type="checkbox" name="perm_board_defaults_access" id="perm_board_defaults_access" value="1">
+				<label for="perm_board_defaults_access" data-i18n="gettext">Can access the default board setting panel</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_board_defaults_modify" value="0">
+				<input type="checkbox" name="perm_board_defaults_modify" id="perm_board_defaults_modify" value="1">
+				<label for="perm_board_defaults_modify" data-i18n="gettext">Can modify the default board settings</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_board_config_access" value="0">
+				<input type="checkbox" name="perm_board_config_access" id="perm_board_config_access" value="1">
+				<label for="perm_board_config_access" data-i18n="gettext">Can access the board settings panel</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_board_config_modify" value="0">
+				<input type="checkbox" name="perm_board_config_modify" id="perm_board_config_modify" value="1">
+				<label for="perm_board_config_modify" data-i18n="gettext">Can modify the board settings</label>
 			</div>
 			<div class="config-row">
 				<input type="hidden" name="perm_user_access" value="0">
@@ -175,6 +190,26 @@
 				<input type="hidden" name="perm_extract_gettext" value="0">
 				<input type="checkbox" name="perm_extract_gettext" id="perm_extract_gettext" value="1">
 				<label for="perm_extract_gettext" data-i18n="gettext">Can extract gettext strings from code and templates</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_file_filters_access" value="0">
+				<input type="checkbox" name="perm_file_filters_access" id="perm_file_filters_access" value="1">
+				<label for="perm_file_filters_access" data-i18n="gettext">Can access file filters panel</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_file_filters_add" value="0">
+				<input type="checkbox" name="perm_file_filters_add" id="perm_file_filters_add" value="1">
+				<label for="perm_file_filters_add" data-i18n="gettext">Can add file filters</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_file_filters_modify" value="0">
+				<input type="checkbox" name="perm_file_filters_modify" id="perm_file_filters_modify" value="1">
+				<label for="perm_file_filters_modify" data-i18n="gettext">Can modify file filters</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_file_filters_delete" value="0">
+				<input type="checkbox" name="perm_file_filters_delete" id="perm_file_filters_delete" value="1">
+				<label for="perm_file_filters_delete" data-i18n="gettext">Can delete file filters</label>
 			</div>
 			<div class="config-row">
 				<input type="submit" value="Update role" data-i18n="gettext" data-i18n-attributes="value">

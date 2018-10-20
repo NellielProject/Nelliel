@@ -29,72 +29,64 @@ class PanelBans extends PanelBase
 
         if ($inputs['action'] === 'modify')
         {
-            if (!$user->boardPerm($this->board_id, 'perm_ban_modify'))
-            {
-                nel_derp(322, _gettext('You are not allowed to modify bans.'));
-            }
-
-            nel_render_ban_panel_modify($this->board_id);
+            $this->editor($user);
         }
         else if ($inputs['action'] === 'new')
         {
-            if (!$user->boardPerm($this->board_id, 'perm_ban_add'))
-            {
-                nel_derp(321, _gettext('You are not allowed to add new bans.'));
-            }
-
-            $ip = (isset($_GET['ban_ip'])) ? $_GET['ban_ip'] : '';
-            $type = (isset($_GET['ban_type'])) ? $_GET['ban_type'] : 'GENERAL';
-            nel_render_ban_panel_add($this->board_id, $ip, $type);
+            $this->creator($user);
         }
         else if ($inputs['action'] === 'add')
         {
-            if (!$user->boardPerm($this->board_id, 'perm_ban_add'))
-            {
-                nel_derp(321, _gettext('You are not allowed to add new bans.'));
-            }
-
-            $this->add();
-            $this->renderPanel();
+            $this->add($user);
+            $this->renderPanel($user);
         }
         else if ($inputs['action'] === 'remove')
         {
-            if (!$user->boardPerm($this->board_id, 'perm_ban_delete'))
-            {
-                nel_derp(323, _gettext('You are not allowed to delete bans.'));
-            }
-
-            $this->remove();
-            $this->renderPanel();
+            $this->remove($user);
+            $this->renderPanel($user);
         }
         else if ($inputs['action'] === 'update')
         {
-            if (!$user->boardPerm($this->board_id, 'perm_ban_modify'))
-            {
-                nel_derp(322, _gettext('You are not allowed to modify bans.'));
-            }
-
-            $this->update();
-            $this->renderPanel();
+            $this->update($user);
+            $this->renderPanel($user);
         }
         else
         {
-            if (!$user->boardPerm($this->board_id, 'perm_ban_access'))
-            {
-                nel_derp(320, _gettext('You are not allowed to access the bans panel.'));
-            }
-
-            $this->renderPanel();
+            $this->renderPanel($user);
         }
     }
 
-    public function renderPanel()
+    public function renderPanel($user)
     {
+        $user = $this->authorize->getUser($_SESSION['username']);
+
+        if (!$user->boardPerm('', 'perm_ban_access'))
+        {
+            nel_derp(341, _gettext('You are not allowed to add file filters.'));
+        }
+
         nel_render_main_ban_panel($this->board_id);
     }
 
-    public function add()
+    public function creator($user)
     {
+        if (!$user->boardPerm($this->board_id, 'perm_ban_add'))
+        {
+            nel_derp(321, _gettext('You are not allowed to add new bans.'));
+        }
+
+        $ip = (isset($_GET['ban_ip'])) ? $_GET['ban_ip'] : '';
+        $type = (isset($_GET['ban_type'])) ? $_GET['ban_type'] : 'GENERAL';
+        nel_render_ban_panel_add($this->board_id, $ip, $type);
+    }
+
+    public function add($user)
+    {
+        if (!$user->boardPerm($this->board_id, 'perm_ban_add'))
+        {
+            nel_derp(321, _gettext('You are not allowed to add new bans.'));
+        }
+
         $ban_input = $this->ban_hammer->postToArray();
         $this->ban_hammer->addBan($ban_input);
 
@@ -114,18 +106,34 @@ class PanelBans extends PanelBase
         }
     }
 
-    public function edit()
+    public function editor($user)
     {
+        if (!$user->boardPerm($this->board_id, 'perm_ban_modify'))
+        {
+            nel_derp(322, _gettext('You are not allowed to modify bans.'));
+        }
+
+        nel_render_ban_panel_modify($this->board_id);
     }
 
-    public function update()
+    public function update($user)
     {
+        if (!$user->boardPerm($this->board_id, 'perm_ban_modify'))
+        {
+            nel_derp(322, _gettext('You are not allowed to modify bans.'));
+        }
+
         $ban_input = $this->ban_hammer->postToArray();
         $this->ban_hammer->modifyBan($ban_input);
     }
 
-    public function remove()
+    public function remove($user)
     {
+        if (!$user->boardPerm($this->board_id, 'perm_ban_delete'))
+        {
+            nel_derp(323, _gettext('You are not allowed to delete bans.'));
+        }
+
         $ban_input = $this->ban_hammer->postToArray();
         $this->ban_hammer->removeBan($this->board_id, $_GET['ban_id']);
     }

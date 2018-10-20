@@ -56,7 +56,7 @@ function nel_render_main_panel()
         $manage_options_nodes['module-link-staff']->remove();
     }
 
-    if ($user->boardPerm('', 'perm_manage_site_config'))
+    if ($user->boardPerm('', 'perm_site_config_access'))
     {
         $manage_options_nodes['module-link-site-settings']->extSetAttribute('href',
                 PHP_SELF . '?manage=general&module=site-settings');
@@ -69,7 +69,7 @@ function nel_render_main_panel()
     $manage_options_nodes['module-link-file-filters']->extSetAttribute('href',
             PHP_SELF . '?manage=general&module=file-filter');
 
-    if ($user->boardPerm('', 'perm_manage_board_defaults'))
+    if ($user->boardPerm('', 'perm_board_defaults_access'))
     {
         $manage_options_nodes['module-link-board-defaults']->extSetAttribute('href',
                 PHP_SELF . '?manage=general&module=default-board-settings');
@@ -122,7 +122,7 @@ function nel_render_main_board_panel($board_id)
     $settings = $dom->getElementById('module-board-settings');
     $user = $authorize->getUser($_SESSION['username']);
 
-    if ($user->boardPerm($board_id, 'perm_manage_board_config') || $user->boardPerm('', 'perm_manage_board_config'))
+    if ($user->boardPerm($board_id, 'perm_board_config_access') || $user->boardPerm('', 'perm_board_config_access'))
     {
         $settings_elements = $settings->getElementsByAttributeName('data-parse-id', true);
         $settings_elements['board-settings-link']->extSetAttribute('href',
