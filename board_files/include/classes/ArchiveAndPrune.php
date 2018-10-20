@@ -46,7 +46,7 @@ class ArchiveAndPrune
     public function getFullThreadList()
     {
         $query = 'SELECT "thread_id", "archive_status" FROM "' . $this->references['thread_table'] .
-                '" ORDER BY "sticky" DESC, "last_bump_time" DESC';
+                '" ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC';
         $thread_list = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
         return $thread_list;
     }
@@ -62,7 +62,7 @@ class ArchiveAndPrune
     public function getFullArchiveThreadList()
     {
         $query = 'SELECT "thread_id", "archive_status" FROM "' . $this->references['archive_thread_table'] .
-                '" ORDER BY "sticky" DESC, "last_bump_time" DESC';
+                '" ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC';
         $thread_list = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
         return $thread_list;
     }

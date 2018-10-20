@@ -39,7 +39,8 @@ class JSONAPI
         $data_output['first_post'] = nel_cast_to_datatype($thread_data['first_post'], 'integer');
         $data_output['last_post'] = nel_cast_to_datatype($thread_data['last_post'], 'integer');
         $data_output['total_files'] = nel_cast_to_datatype($thread_data['total_files'], 'integer');
-        $data_output['last_update'] = nel_cast_to_datatype(substr(strval($thread_data['last_update']), 0, -3), 'integer');
+        $data_output['last_update'] = nel_cast_to_datatype($thread_data['last_update'], 'integer');
+        $data_output['last_update_milli'] = nel_cast_to_datatype($thread_data['last_update_milli'], 'integer');
         $data_output['post_count'] = nel_cast_to_datatype($thread_data['post_count'], 'integer');
         $data_output['thread_sage'] = nel_cast_to_datatype($thread_data['thread_sage'], 'boolean');
         $data_output['sticky'] = nel_cast_to_datatype($thread_data['sticky'], 'boolean');
@@ -58,7 +59,8 @@ class JSONAPI
         $this->addIfNotEmpty($data_output, 'email', $post_data['email'], 'string');
         $this->addIfNotEmpty($data_output, 'subject', $post_data['subject'], 'string');
         $this->addIfNotEmpty($data_output, 'comment', $post_data['comment'], 'string');
-        $data_output['post_time'] = nel_cast_to_datatype(substr(strval($post_data['post_time']), 0, -3), 'integer');
+        $data_output['post_time'] = nel_cast_to_datatype($post_data['post_time'], 'integer');
+        $data_output['post_time_milli'] = nel_cast_to_datatype($post_data['post_time_milli'], 'integer');
         $data_output['has_file'] = nel_cast_to_datatype($post_data['has_file'], 'boolean');
 
         if($data_output['has_file'])

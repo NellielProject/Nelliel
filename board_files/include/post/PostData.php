@@ -89,9 +89,9 @@ class PostData
         }
 
         $user = $authorize->getUser($_SESSION['username']);
-        $role = $user->getBoardRole($this->board_id);
+        $role = $user->boardRole($this->board_id);
 
-        if($user->boardPerm($board_id, 'perm_post_modmode') === false)
+        if($user->boardPerm($this->board_id, 'perm_post_modmode') === false)
         {
             return;
         }
@@ -104,8 +104,8 @@ class PostData
             }
         }
 
-        $post->content_data['poster_name'] = $user['display_name'];
-        $post->content_data['mod_post'] = $role_id;
+        $post->content_data['poster_name'] = $user->auth_data['display_name'];
+        $post->content_data['mod_post'] = $role->auth_id;
     }
 
     public function tripcodes($post)

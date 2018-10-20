@@ -15,39 +15,56 @@ function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_del
     {
         if (is_null($redirect_board))
         {
-            echo '<meta http-equiv="refresh" content="' . $redirect_delay . ';URL=' . nel_parameters_and_data()->siteSettings('home_page') . '">';
+            echo '<meta http-equiv="refresh" content="' . $redirect_delay . ';URL=' .
+                    nel_parameters_and_data()->siteSettings('home_page') . '">';
         }
         else
         {
             echo '<meta http-equiv="refresh" content="' . $redirect_delay . ';URL=' .
-                 nel_parameters_and_data()->boardReferences($redirect_board, 'board_directory') . '/' . PHP_SELF2 . PHP_EXT . '">';
+                    nel_parameters_and_data()->boardReferences($redirect_board, 'board_directory') . '/' . PHP_SELF2 .
+                    PHP_EXT . '">';
         }
     }
 
     die();
 }
 
-function get_millisecond_time()
+function nel_get_microtime($convert_int = true)
 {
-    return round(microtime(true), 3) * 1000;
+    $time = microtime();
+    $return_time = ['time' => $time];
+    $split_time = explode(' ', $time);
+
+    if($convert_int)
+    {
+        $return_time = ['time' => intval($split_time[1]), 'milli' => intval(round($split_time[0], 3) * 1000), 'micro' => intval($split_time[0] * 1000000)];
+    }
+    else
+    {
+        $return_time = ['time' => (float) $split_time[1], 'milli' => round($split_time[0], 3), 'micro' => (float) $split_time[0] * 1000000];
+    }
+
+    return $return_time;
 }
 
 function nel_utf8_to_numeric_html_entities(&$input, $non_ascii_only = true)
 {
     $regex = ($non_ascii_only) ? '#([^[:ascii:]])#Su' : '#(.)#Su';
 
-    $input = preg_replace_callback($regex, function ($matches)
-    {
-        return '&#' . utf8_ord($matches[0]) . ';';
-    }, $input);
+    $input = preg_replace_callback($regex,
+            function ($matches)
+            {
+                return '&#' . utf8_ord($matches[0]) . ';';
+            }, $input);
 }
 
 function nel_numeric_html_entities_to_utf8(&$input)
 {
-    $input = preg_replace_callback('#&\#[0-9]+;#Su', function ($matches)
-    {
-        return utf8_chr(intval(substr($matches[0], 2, -1)));
-    }, $input);
+    $input = preg_replace_callback('#&\#[0-9]+;#Su',
+            function ($matches)
+            {
+                return utf8_chr(intval(substr($matches[0], 2, -1)));
+            }, $input);
 }
 
 function nel_cast_to_datatype($value, $datatype)

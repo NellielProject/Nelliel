@@ -53,26 +53,30 @@ class ContentThread extends ContentBase
         {
             $prepared = $database->prepare(
                     'UPDATE "' . $board_references['thread_table'] . '" SET "first_post" = :first_post,
-                    "last_post" = :last_post, "last_bump_time" = :last_bump_time,
-                    "total_files" = :total_files, "last_update" = :last_update, "post_count" = :post_count,
+                    "last_post" = :last_post, "last_bump_time" = :last_bump_time, "last_bump_time_milli" = :last_bump_time_milli,
+                    "total_files" = :total_files, "last_update" = :last_update, "last_update_milli" = :last_update_milli, "post_count" = :post_count,
                     "thread_sage" = :thread_sage, "sticky" = :sticky, "archive_status" = :archive_status,
                     "locked" = :locked WHERE "thread_id" = :thread_id');
         }
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . $board_references['thread_table'] . '" ("thread_id", "first_post", "last_post", "last_bump_time", "total_files", "last_update",
+                    'INSERT INTO "' . $board_references['thread_table'] . '" ("thread_id", "first_post", "last_post",
+                    "last_bump_time", "last_bump_time_milli, "total_files", "last_update", "last_update_milli",
                     "post_count", "thread_sage", "sticky", "archive_status", "locked") VALUES
-                    (:thread_id, :first_post, :last_post, :last_bump_time, :total_files, :last_update, :post_count,
-                    :thread_sage, :sticky, :archive_status, :locked)');
+                    (:thread_id, :first_post, :last_post, :last_bump_time, :last_bump_time_milli, :total_files,
+                    :last_update, :last_update_milli, :post_count, :thread_sage, :sticky, :archive_status, :locked)');
         }
 
         $prepared->bindValue(':thread_id', $this->content_id->thread_id, PDO::PARAM_INT);
         $prepared->bindValue(':first_post', $this->contentDataOrDefault('first_post', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_post', $this->contentDataOrDefault('last_post', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_bump_time', $this->contentDataOrDefault('last_bump_time', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':last_bump_time_milli', $this->contentDataOrDefault('last_bump_time_milli', 0),
+                PDO::PARAM_INT);
         $prepared->bindValue(':total_files', $this->contentDataOrDefault('total_files', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_update', $this->contentDataOrDefault('last_update', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':last_update_milli', $this->contentDataOrDefault('last_update_milli', 0), PDO::PARAM_INT);
         $prepared->bindValue(':post_count', $this->contentDataOrDefault('post_count', 0), PDO::PARAM_INT);
         $prepared->bindValue(':thread_sage', $this->contentDataOrDefault('thread_sage', 0), PDO::PARAM_INT);
         $prepared->bindValue(':sticky', $this->contentDataOrDefault('sticky', 0), PDO::PARAM_INT);

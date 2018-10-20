@@ -56,7 +56,7 @@ class ContentPost extends ContentBase
                     "poster_name" = :poster_name, "post_password" = :post_password,
                     "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "email" = :email,
                     "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address,
-                    "post_time" = :post_time, "has_file" = :has_file, "file_count" = :file_count,
+                    "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_file" = :has_file, "file_count" = :file_count,
                     "op" = :op, "sage" = :sage, "mod_post" = :mod_post, "mod_comment" = :mod_comment
                     WHERE "post_number" = :post_number');
             $prepared->bindValue(':post_number', $this->content_id->post_id, PDO::PARAM_INT);
@@ -65,8 +65,8 @@ class ContentPost extends ContentBase
         {
             $prepared = $database->prepare(
                     'INSERT INTO "' . $board_references['post_table'] . '" ("parent_thread", "poster_name", "post_password", "tripcode", "secure_tripcode", "email",
-                    "subject", "comment", "ip_address", "post_time", "has_file", "file_count", "op", "sage", "mod_post", "mod_comment") VALUES
-                    (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :email, :subject, :comment, :ip_address, :post_time, :has_file, :file_count,
+                    "subject", "comment", "ip_address", "post_time", "post_time_milli", "has_file", "file_count", "op", "sage", "mod_post", "mod_comment") VALUES
+                    (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :email, :subject, :comment, :ip_address, :post_time, :post_time_milli, :has_file, :file_count,
                     :op, :sage, :mod_post, :mod_comment)');
         }
 
@@ -81,6 +81,7 @@ class ContentPost extends ContentBase
         $prepared->bindValue(':comment', $this->contentDataOrDefault('comment', null), PDO::PARAM_STR);
         $prepared->bindValue(':ip_address', $this->contentDataOrDefault('ip_address', null), PDO::PARAM_LOB);
         $prepared->bindValue(':post_time', $this->contentDataOrDefault('post_time', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':post_time_milli', $this->contentDataOrDefault('post_time_milli', 0), PDO::PARAM_INT);
         $prepared->bindValue(':has_file', $this->contentDataOrDefault('has_file', 0), PDO::PARAM_INT);
         $prepared->bindValue(':file_count', $this->contentDataOrDefault('file_count', 0), PDO::PARAM_INT);
         $prepared->bindValue(':op', $this->contentDataOrDefault('op', 0), PDO::PARAM_INT);
@@ -91,15 +92,18 @@ class ContentPost extends ContentBase
         return true;
     }
 
-    public function reserveDatabaseRow($post_time, $temp_database = null)
+    public function reserveDatabaseRow($post_time, $post_time_milli, $temp_database = null)
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $parent_thread = $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('INSERT INTO "' . $board_references['post_table'] . '" ("post_time") VALUES (?)');
-        $database->executePrepared($prepared, [$post_time]);
         $prepared = $database->prepare(
-                'SELECT "post_number" FROM "' . $board_references['post_table'] . '" WHERE "post_time" = ? LIMIT 1');
-        $result = $database->executePreparedFetch($prepared, [$post_time], PDO::FETCH_COLUMN, true);
+                'INSERT INTO "' . $board_references['post_table'] . '" ("post_time", "post_time_milli") VALUES (?, ?)');
+        $database->executePrepared($prepared, [$post_time, $post_time_milli]);
+        $prepared = $database->prepare(
+                'SELECT "post_number" FROM "' . $board_references['post_table'] .
+                '" WHERE "post_time" = ? AND post_time_milli = ? LIMIT 1');
+        $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli],
+                PDO::FETCH_COLUMN, true);
         $this->content_id->thread_id = ($this->content_id->thread_id == 0) ? $result : $this->content_id->thread_id;
         $this->content_data['parent_thread'] = ($this->content_data['parent_thread'] == 0) ? $result : $this->content_data['parent_thread'];
         $this->content_id->post_id = $result;
@@ -186,7 +190,8 @@ class ContentPost extends ContentBase
         if (!empty($this->content_data['mod_post']) && $sessions->sessionIsActive())
         {
             $mod_post_user = $authorize->getUser($this->content_data['mod_post']);
-            $flag = $authorize->roleLevelCheck($user->boardRole($this->board_id), $mod_post_user->boardRole($this->board_id));
+            $flag = $authorize->roleLevelCheck($user->boardRole($this->board_id),
+                    $mod_post_user->boardRole($this->board_id));
         }
 
         if (!$flag)
@@ -203,7 +208,7 @@ class ContentPost extends ContentBase
     public function convertToThread()
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-        $time = get_millisecond_time();
+        $time = nel_get_microtime();
         $new_content_id = new \Nelliel\ContentID();
         $new_content_id->thread_id = $this->content_id->post_id;
         $new_content_id->post_id = $this->content_id->post_id;
@@ -211,8 +216,10 @@ class ContentPost extends ContentBase
         $new_thread->content_data['thread_id'] = $this->content_id->post_id;
         $new_thread->content_data['first_post'] = $this->content_id->post_id;
         $new_thread->content_data['last_post'] = $this->content_id->post_id;
-        $new_thread->content_data['last_bump_time'] = $time;
-        $new_thread->content_data['last_update'] = $time;
+        $new_thread->content_data['last_bump_time'] = $time['time'];
+        $new_thread->content_data['last_bump_time_milli'] = $time['milli'];
+        $new_thread->content_data['last_update'] = $time['time'];
+        $new_thread->content_data['last_update_milli'] = $time['milli'];
         $new_thread->writeToDatabase();
         $new_thread->loadFromDatabase();
         $file_handler = new \Nelliel\FileHandler();
@@ -234,8 +241,8 @@ class ContentPost extends ContentBase
         {
             $prepared = $this->database->prepare(
                     'UPDATE "' . $board_references['file_table'] . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
-            $this->database->executePrepared($prepared, [$new_thread->content_id->thread_id,
-                $this->content_id->post_id]);
+            $this->database->executePrepared($prepared,
+                    [$new_thread->content_id->thread_id, $this->content_id->post_id]);
         }
 
         $this->loadFromDatabase();

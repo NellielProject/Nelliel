@@ -25,7 +25,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
 
     $result = $dbh->query(
             'SELECT "thread_id" FROM "' . $references['thread_table'] .
-            '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC');
+            '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC');
     $front_page_list = $result->fetchAll(PDO::FETCH_COLUMN);
     unset($result);
 

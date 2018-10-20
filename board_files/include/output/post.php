@@ -197,7 +197,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     $tripcode = (!empty($post_data['tripcode'])) ? $board_settings['tripkey_marker'] . $post_data['tripcode'] : '';
     $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $board_settings['tripkey_marker'] .
             $board_settings['tripkey_marker'] . $post_data['secure_tripcode'] : '';
-            $capcode_text = ($post_data['mod_post']) ? $authorize->getRole[$post_data['mod_post']]->auth_data['capcode_text'] : '';
+            $capcode_text = ($post_data['mod_post']) ? $authorize->getRole($post_data['mod_post'])->auth_data['capcode_text'] : '';
     $trip_line = $tripcode . $secure_tripcode . '&nbsp;&nbsp;' . $capcode_text;
 
     if ($post_data['email'])
@@ -212,7 +212,7 @@ function nel_render_post($board_id, $gen_data, $dom)
         $header_nodes['trip-line-']->setContent($post_data['poster_name'] . $trip_line);
     }
 
-    $curr_time = floor($gen_data['post']['post_time'] / 1000);
+    $curr_time = $gen_data['post']['post_time'];
 
     switch ($board_settings['date_format'])
     {

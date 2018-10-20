@@ -18,11 +18,12 @@ function nel_process_new_post($inputs)
     $data_handler = new \Nelliel\post\PostData($board_id);
     $post = new \Nelliel\Content\ContentPost($dbh, new \Nelliel\ContentID(), $board_id);
     $data_handler->processPostData($post);
-    $time = get_millisecond_time();
-    $post->content_data['post_time'] = $time;
+    $time = nel_get_microtime();
+    $post->content_data['post_time'] = $time['time'];
+    $post->content_data['post_time_milli'] = $time['milli'];
 
     // Check if post is ok
-    nel_is_post_ok($board_id, $post->content_data, $time);
+    nel_is_post_ok($board_id, $post->content_data, $time['time']);
 
     // Process FGSFDS
     $fgsfds = new \Nelliel\FGSFDS($post->content_data['fgsfds']);
@@ -83,7 +84,7 @@ function nel_process_new_post($inputs)
     // Go ahead and put post into database
     $post->content_data['op'] = ($post->content_data['parent_thread'] == 0) ? 1 : 0;
     $post->content_data['has_file'] = ($post->content_data['file_count'] > 0) ? 1 : 0;
-    $post->reserveDatabaseRow($time);
+    $post->reserveDatabaseRow($time['time'], $time['milli']);
     $thread = new \Nelliel\Content\ContentThread($dbh, new \Nelliel\ContentID(), $board_id);
 
     if ($post->content_data['response_to'] == 0)
@@ -91,9 +92,11 @@ function nel_process_new_post($inputs)
         $thread->content_id->thread_id = $post->content_id->post_id;
         $thread->content_data['first_post'] = $post->content_id->post_id;
         $thread->content_data['last_post'] = $post->content_id->post_id;
-        $thread->content_data['last_bump_time'] = $time;
+        $thread->content_data['last_bump_time'] = $time['time'];
+        $thread->content_data['last_bump_time_milli'] = $time['milli'];
         $thread->content_data['total_files'] = $post->content_data['file_count'];
-        $thread->content_data['last_update'] = $time;
+        $thread->content_data['last_update'] = $time['time'];
+        $thread->content_data['last_update_milli'] = $time['milli'];
         $thread->content_data['post_count'] = 1;
         $thread->writeToDatabase();
         $thread->createDirectories();
@@ -103,12 +106,14 @@ function nel_process_new_post($inputs)
         $thread->content_id->thread_id = $post->content_data['parent_thread'];
         $thread->loadFromDatabase();
         $thread->content_data['total_files'] = $thread->content_data['total_files'] + $post->content_data['file_count'];
-        $thread->content_data['last_update'] = $time;
+        $thread->content_data['last_update'] = $time['time'];
+        $thread->content_data['last_update_milli'] = $time['milli'];
         $thread->content_data['post_count'] = $thread->content_data['post_count'] + 1;
 
         if ($thread->content_data['post_count'] <= $board_settings['max_bumps'] && !$fgsfds->getCommandData('sage', 'value'))
         {
-            $thread->content_data['last_bump_time'] = $time;
+            $thread->content_data['last_bump_time'] = $time['time'];
+            $thread->content_data['last_bump_time_milli'] = $time['milli'];
         }
 
         $thread->writeToDatabase();
@@ -177,7 +182,7 @@ function nel_is_post_ok($board_id, $post_data, $time)
 
     if ($post_data['parent_thread'] === 0) // TODO: Update this, doesn't look right
     {
-        $thread_delay = $time - ($board_settings['thread_delay'] * 1000);
+        $thread_delay = $time - $board_settings['thread_delay'];
         $prepared = $dbh->prepare(
                 'SELECT COUNT(*) FROM "' . $references['post_table'] . '" WHERE "post_time" > ? AND "ip_address" = ?');
         $prepared->bindValue(1, $thread_delay, PDO::PARAM_STR);
@@ -186,7 +191,7 @@ function nel_is_post_ok($board_id, $post_data, $time)
     }
     else
     {
-        $reply_delay = $time - ($board_settings['reply_delay'] * 1000);
+        $reply_delay = $time - $board_settings['reply_delay'];
         $prepared = $dbh->prepare(
                 'SELECT COUNT(*) FROM "' . $references['post_table'] .
                 '" WHERE "parent_thread" = ? AND "post_time" > ? AND "ip_address" = ?');
