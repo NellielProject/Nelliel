@@ -148,7 +148,7 @@ function nel_render_main_board_panel($board_id)
 
     $threads = $dom->getElementById('module-threads');
 
-    if ($user->boardPerm($board_id, 'perm_post_access') || $user->boardPerm('', 'perm_post_access'))
+    if ($user->boardPerm($board_id, 'perm_threads_access') || $user->boardPerm('', 'perm_threads_access'))
     {
         $threads_elements = $threads->getElementsByAttributeName('data-parse-id', true);
         $threads_elements['threads-link']->extSetAttribute('href',
@@ -161,7 +161,7 @@ function nel_render_main_board_panel($board_id)
 
     $modmode = $dom->getElementById('module-modmode');
 
-    if (true)
+    if ($user->boardPerm($board_id, 'perm_modmode_access') || $user->boardPerm('', 'perm_modmode_access'))
     {
         $modmode_elements = $modmode->getElementsByAttributeName('data-parse-id', true);
         $modmode_elements['modmode-link']->extSetAttribute('href',

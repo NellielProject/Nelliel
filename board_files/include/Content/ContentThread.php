@@ -167,6 +167,13 @@ class ContentThread extends ContentBase
 
     public function sticky()
     {
+        $user = $this->authorize->getUser($_SESSION['username']);
+
+        if (!$user->boardPerm($this->board_id, 'perm_post_sticky') && !$user->boardPerm('', 'perm_post_sticky'))
+        {
+            nel_derp(400, _gettext('You are not allowed to sticky or unsticky threads.'));
+        }
+
         if (!$this->dataIsLoaded(true))
         {
             return false;
@@ -179,6 +186,13 @@ class ContentThread extends ContentBase
 
     public function lock()
     {
+        $user = $this->authorize->getUser($_SESSION['username']);
+
+        if (!$user->boardPerm($this->board_id, 'perm_post_lock') && !$user->boardPerm('', 'perm_post_lock'))
+        {
+            nel_derp(401, _gettext('You are not allowed to lock or unlock threads.'));
+        }
+
         if (!$this->dataIsLoaded(true))
         {
             return false;

@@ -37,7 +37,7 @@ class PanelThreads extends PanelBase
 
     public function renderPanel($user)
     {
-        if (!$user->boardPerm($this->board_id, 'perm_post_access'))
+        if (!$user->boardPerm($this->board_id, 'perm_threads_access'))
         {
             nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
         }
@@ -67,7 +67,7 @@ class PanelThreads extends PanelBase
 
     public function update($user)
     {
-        if (!$user->boardPerm($this->board_id, 'perm_post_modify'))
+        if (!$user->boardPerm($this->board_id, 'perm_threads_modify'))
         {
             nel_derp(351, _gettext('You are not allowed to modify threads or posts.'));
         }

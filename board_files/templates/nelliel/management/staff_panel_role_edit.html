@@ -107,14 +107,19 @@
 				<label for="perm_ban_delete" data-i18n="gettext">Can delete bans</label>
 			</div>
 			<div class="config-row">
-				<input type="hidden" name="perm_post_access" value="0">
-				<input type="checkbox" name="perm_post_access" id="perm_post_access" value="1">
-				<label for="perm_post_access" data-i18n="gettext">Can access posts panel</label>
+				<input type="hidden" name="perm_modmode_access" value="0">
+				<input type="checkbox" name="perm_modmode_access" id="perm_modmode_access" value="1">
+				<label for="perm_modmode_access" data-i18n="gettext">Can access modmode</label>
 			</div>
 			<div class="config-row">
-				<input type="hidden" name="perm_post_modify" value="0">
-				<input type="checkbox" name="perm_post_modify" id="perm_post_modify" value="1">
-				<label for="perm_post_modify" data-i18n="gettext">Can modify existing posts</label>
+				<input type="hidden" name="perm_threads_access" value="0">
+				<input type="checkbox" name="perm_threads_access" id="perm_threads_access" value="1">
+				<label for="perm_threads_access" data-i18n="gettext">Can access the threads panel</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_threads_modify" value="0">
+				<input type="checkbox" name="perm_threads_modify" id="perm_threads_modify" value="1">
+				<label for="perm_threads_modify" data-i18n="gettext">Can modify existing posts</label>
 			</div>
 			<div class="config-row">
 				<input type="hidden" name="perm_post_delete" value="0">
@@ -122,14 +127,14 @@
 				<label for="perm_post_delete" data-i18n="gettext">Can delete posts</label>
 			</div>
 			<div class="config-row">
-				<input type="hidden" name="perm_post_file_delete" value="0">
-				<input type="checkbox" name="perm_post_file_delete" id="perm_post_file_delete" value="1">
-				<label for="perm_post_file_delete" data-i18n="gettext">Can delete files from a post</label>
+				<input type="hidden" name="perm_post_as_staff" value="0">
+				<input type="checkbox" name="perm_post_as_staff" id="perm_post_as_staff" value="1">
+				<label for="perm_post_as_staff" data-i18n="gettext">Can post as staff</label>
 			</div>
 			<div class="config-row">
-				<input type="hidden" name="perm_post_modmode" value="0">
-				<input type="checkbox" name="perm_post_modmode" id="perm_post_modmode" value="1">
-				<label for="perm_post_modmode" data-i18n="gettext">Can make posts as staff</label>
+				<input type="hidden" name="perm_post_in_locked" value="0">
+				<input type="checkbox" name="perm_post_in_locked" id="perm_post_in_locked" value="1">
+				<label for="perm_post_in_locked" data-i18n="gettext">Can post in a locked thread</label>
 			</div>
 			<div class="config-row">
 				<input type="hidden" name="perm_post_sticky" value="0">
@@ -142,14 +147,9 @@
 				<label for="perm_post_lock" data-i18n="gettext">Can lock and unlock threads</label>
 			</div>
 			<div class="config-row">
-				<input type="hidden" name="perm_post_in_locked" value="0">
-				<input type="checkbox" name="perm_post_in_locked" id="perm_post_in_locked" value="1">
-				<label for="perm_post_in_locked" data-i18n="gettext">Can post in a locked thread</label>
-			</div>
-			<div class="config-row">
-				<input type="hidden" name="perm_post_comment" value="0">
-				<input type="checkbox" name="perm_post_comment" id="perm_post_comment" value="1">
-				<label for="perm_post_comment" data-i18n="gettext">Can add commentary to an existing post</label>
+				<input type="hidden" name="perm_post_mod_comment" value="0">
+				<input type="checkbox" name="perm_post_mod_comment" id="perm_post_mod_comment" value="1">
+				<label for="perm_post_mod_comment" data-i18n="gettext">Can add commentary to an existing post</label>
 			</div>
 			<div class="config-row">
 				<input type="hidden" name="perm_post_permsage" value="0">

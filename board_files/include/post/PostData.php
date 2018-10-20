@@ -91,14 +91,14 @@ class PostData
         $user = $authorize->getUser($_SESSION['username']);
         $role = $user->boardRole($this->board_id);
 
-        if($user->boardPerm($this->board_id, 'perm_post_modmode') === false)
+        if($user->boardPerm($this->board_id, 'perm_post_as_staff') === false)
         {
             return;
         }
 
-        if($role === false || $role->checkPermission('perm_post_modmode') === false)
+        if($role === false || $role->checkPermission('perm_post_as_staff') === false)
         {
-            if($user->boardPerm('', 'perm_post_modmode') === false)
+            if($user->boardPerm('', 'perm_post_as_staff') === false)
             {
                 return; // TODO: Do error instead
             }

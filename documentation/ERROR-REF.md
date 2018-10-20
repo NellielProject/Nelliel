@@ -66,12 +66,12 @@ Error 323: perm_ban_delete (Panels/PanelBans.php, classes/BanHammer.php)
 Error 330: perm_manage_board_config (Panels/PanelBoardSettings.php)
 Error 332: perm_manage_board_defaults (Panels/PanelBoardSettings.php)
 
-Error 340: perm_access_file_filters (Panels/PanelFileFilters.php)
-Error 341: perm_add_file_filters (Panels/PanelFileFilters.php)
-Error 343: perm_modify_file_filters (Panels/PanelFileFilters.php)
+Error 340: perm_file_filters_access (Panels/PanelFileFilters.php)
+Error 341: perm_file_filters_add (Panels/PanelFileFilters.php)
+Error 342: perm_file_filters_delete (Panels/PanelFileFilters.php)
 
-Error 350: perm_post_access (Panels/PanelThreads.php)
-Error 351: perm_post_modify (Panels/PanelThreads.php)
+Error 350: perm_threads_access (Panels/PanelThreads.php)
+Error 351: perm_threads_modify (Panels/PanelThreads.php)
 
 Error 360: perm_site_config_access (Panels/PanelSiteSettings.php)
 Error 361: perm_site_config_modify (Panels/PanelSiteSettings.php)
@@ -82,4 +82,7 @@ Error 380: perm_reports_access (Panels/PanelReports.php)
 Error 381: perm_reports_dismiss (Panels/PanelBoardSettings.php)
 
 Error 390: perm_extract_gettext (language/Language.php)
+
+Error 400: perm_post_sticky (Content/ContentThread.php)
+Error 401: perm_post_lock (Content/ContentThread.php)
 
