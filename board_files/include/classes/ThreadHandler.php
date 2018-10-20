@@ -21,7 +21,7 @@ class ThreadHandler
     public function processContentDeletes()
     {
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
-        $returned_list = array();
+        $updates = array();
         $update_archive = false;
 
         foreach ($_POST as $name => $value)
@@ -55,9 +55,9 @@ class ThreadHandler
                 }
             }
 
-            if (!in_array($content_id->thread_id, $returned_list))
+            if (!in_array($content_id->thread_id, $updates))
             {
-                array_push($returned_list, $content_id->thread_id);
+                array_push($updates, $content_id->thread_id);
             }
         }
 
@@ -77,6 +77,8 @@ class ThreadHandler
             }
         }
 
-        return $returned_list;
+        $regen = new \Nelliel\Regen();
+        $regen->threads($this->board_id, true, $updates);
+        $regen->index($this->board_id);
     }
 }

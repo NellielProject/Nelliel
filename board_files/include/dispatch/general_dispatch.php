@@ -72,7 +72,7 @@ function nel_general_dispatch($inputs)
                 if (isset($_POST['form_submit_delete']))
                 {
                     $thread_handler = new \Nelliel\ThreadHandler(nel_database(), $inputs['board_id']);
-                    $updates = $thread_handler->processContentDeletes();
+                    $thread_handler->processContentDeletes();
 
                     if ($sessions->sessionIsActive())
                     {
@@ -86,9 +86,6 @@ function nel_general_dispatch($inputs)
                                 PHP_SELF2 . PHP_EXT . '">';
                     }
 
-                    $regen = new \Nelliel\Regen();
-                    $regen->threads($inputs['board_id'], true, $updates);
-                    $regen->index($inputs['board_id']);
                     nel_clean_exit(true, $inputs['board_id']);
                     break;
                 }

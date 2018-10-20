@@ -73,10 +73,7 @@ class PanelThreads extends PanelBase
         }
 
         $thread_handler = new \Nelliel\ThreadHandler($this->database, $this->board_id);
-        $updates = $thread_handler->processContentDeletes();
-        $regen = new \Nelliel\Regen();
-        $regen->threads($this->board_id, true, $updates);
-        $regen->index($this->board_id);
+        $thread_handler->processContentDeletes();
     }
 
     public function remove($user)
