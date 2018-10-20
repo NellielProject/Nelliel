@@ -55,12 +55,12 @@ class Snacks
 
         if ($_SERVER['REMOTE_ADDR'] != @inet_ntop($ban_info['ip_address_start']))
         {
-            nel_derp(160, _gettext('Your ip address does not match the one listed in the ban.'));
+            nel_derp(150, _gettext('Your ip address does not match the one listed in the ban.'));
         }
 
         if ($ban_info['appeal_status'] > 0)
         {
-            nel_derp(161, _gettext('You have already appealed your ban.'));
+            nel_derp(151, _gettext('You have already appealed your ban.'));
         }
 
 

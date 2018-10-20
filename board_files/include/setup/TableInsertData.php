@@ -80,6 +80,7 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_ban_access', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_ban_add', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_ban_modify', 1]);
+        $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_ban_delete', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_post_access', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_post_modify', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_post_delete', 1]);
@@ -111,6 +112,7 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_ban_access', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_ban_add', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_ban_modify', 1]);
+        $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_ban_delete', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_post_access', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_post_modify', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_post_delete', 1]);
@@ -142,6 +144,7 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['MOD', 'perm_ban_access', 1]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_ban_add', 1]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_ban_modify', 1]);
+        $dbh->executePrepared($prepared, ['MOD', 'perm_ban_delete', 1]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_post_access', 1]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_post_modify', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_post_delete', 1]);
@@ -173,6 +176,7 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_ban_access', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_ban_add', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_ban_modify', 0]);
+        $dbh->executePrepared($prepared, ['JANITOR', 'perm_ban_delete', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_post_access', 1]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_post_modify', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_post_delete', 1]);

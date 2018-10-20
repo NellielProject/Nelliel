@@ -62,7 +62,16 @@ Upon the initial 1.0 Release, Nelliel versioning will follow Major.Minor.Patch u
  - Patch: Bug fixes, code tweaks and feature refinements.
 
 When the version changes, the constant `NELLIEL_VERSION` in file `imgboard.php` must be updated. A git tag should be created upon Major or Minor changes, or when a release is created.
- 
+
+## Error Codes
+Nelliel returns a numeric error id along with an error message. This keeps the better user experience without making it difficult to track exactly where in the code things went wrong (especially when other translations are involved). These are the designated ranges:
+0: Unknown or nonspecific error. Very rare.
+1-99: Content-related errors (upload problems, duplicate files, etc.).
+100-199: General system and input errors.
+200-299: Management-related system and input errors.
+300-499: Permissions errors.
+
+
 ## Other
  - Only basic initialization, loading and dispatch should happen in `imgboard.php`.
  - Configurations should be stored in the database whenever possible.

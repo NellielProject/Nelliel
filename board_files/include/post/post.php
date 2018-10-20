@@ -46,23 +46,23 @@ function nel_process_new_post($inputs)
     {
         if (!$post->content_data['comment'])
         {
-            nel_derp(10, _gettext('Post contains no content or file. Dumbass.'), $error_data);
+            nel_derp(7, _gettext('Post contains no content or file. Dumbass.'), $error_data);
         }
 
         if ($board_settings['require_image_always'])
         {
-            nel_derp(11, _gettext('Image or file required when making a new post.'), $error_data);
+            nel_derp(8, _gettext('Image or file required when making a new post.'), $error_data);
         }
 
         if ($board_settings['require_image_start'] && $post->content_data['response_to'] == 0)
         {
-            nel_derp(12, _gettext('Image or file required to make new thread.'), $error_data);
+            nel_derp(9, _gettext('Image or file required to make new thread.'), $error_data);
         }
     }
 
     if (utf8_strlen($post->content_data['comment']) > $board_settings['max_comment_length'])
     {
-        nel_derp(13, _gettext('Post is too long. Try looking up the word concise.'), $error_data);
+        nel_derp(10, _gettext('Post is too long. Try looking up the word concise.'), $error_data);
     }
 
     if (isset($post->content_data['post_password']))

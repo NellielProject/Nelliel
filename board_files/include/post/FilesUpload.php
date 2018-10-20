@@ -100,37 +100,37 @@ class FilesUpload
 
         if ($file['size'] > $board_settings['max_filesize'] * 1024)
         {
-            nel_derp(100, _gettext('Spoon is too big.'), $error_data);
+            nel_derp(11, _gettext('Spoon is too big.'), $error_data);
         }
 
         if ($file['error'] === UPLOAD_ERR_INI_SIZE)
         {
-            nel_derp(101, _gettext('File is bigger than the server allows.'), $error_data);
+            nel_derp(12, _gettext('File is bigger than the server allows.'), $error_data);
         }
 
         if ($file['error'] === UPLOAD_ERR_FORM_SIZE)
         {
-            nel_derp(102, _gettext('File is bigger than submission form allows.'), $error_data);
+            nel_derp(13, _gettext('File is bigger than submission form allows.'), $error_data);
         }
 
         if ($file['error'] === UPLOAD_ERR_PARTIAL)
         {
-            nel_derp(103, _gettext('Only part of the file was uploaded.'), $error_data);
+            nel_derp(14, _gettext('Only part of the file was uploaded.'), $error_data);
         }
 
         if ($file['error'] === UPLOAD_ERR_NO_FILE)
         {
-            nel_derp(104, _gettext('File size is 0 or Candlejack stole your uplo'), $error_data);
+            nel_derp(15, _gettext('File size is 0 or Candlejack stole your uplo'), $error_data);
         }
 
         if ($file['error'] === UPLOAD_ERR_NO_TMP_DIR || $file['error'] === UPLOAD_ERR_CANT_WRITE)
         {
-            nel_derp(105, _gettext('Cannot save uploaded files to server for some reason.'), $error_data);
+            nel_derp(16, _gettext('Cannot save uploaded files to server for some reason.'), $error_data);
         }
 
         if ($file['error'] !== UPLOAD_ERR_OK)
         {
-            nel_derp(106, _gettext('The uploaded file just ain\'t right. That\'s all I know.'), $error_data);
+            nel_derp(17, _gettext('The uploaded file just ain\'t right. That\'s all I know.'), $error_data);
         }
     }
 
@@ -170,7 +170,7 @@ class FilesUpload
 
         if ($is_banned)
         {
-            nel_derp(150, _gettext('That file is banned.'), $error_data);
+            nel_derp(22, _gettext('That file is banned.'), $error_data);
         }
 
         if ($response_to === 0 && $board_settings['only_op_duplicates'])
@@ -209,7 +209,7 @@ class FilesUpload
 
         if ($result)
         {
-            nel_derp(110, _gettext('Duplicate file detected.'), $error_data);
+            nel_derp(21, _gettext('Duplicate file detected.'), $error_data);
         }
     }
 
@@ -228,13 +228,13 @@ class FilesUpload
 
         if (!array_key_exists($test_ext, $filetypes))
         {
-            nel_derp(107, _gettext('Unrecognized file type.'), $error_data);
+            nel_derp(18, _gettext('Unrecognized file type.'), $error_data);
         }
 
         if (!$filetype_settings[$filetypes[$test_ext]['type']][$filetypes[$test_ext]['type']] ||
                 !$filetype_settings[$filetypes[$test_ext]['type']][$filetypes[$test_ext]['format']])
         {
-            nel_derp(108, _gettext('Filetype is not allowed.'), $error_data);
+            nel_derp(19, _gettext('Filetype is not allowed.'), $error_data);
         }
 
         if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test_begin) ||
@@ -246,7 +246,7 @@ class FilesUpload
         }
         else
         {
-            nel_derp(109, _gettext('Incorrect file type detected (does not match extension). Possible Hax.'),
+            nel_derp(20, _gettext('Incorrect file type detected (does not match extension). Possible Hax.'),
                     $error_data);
         }
     }

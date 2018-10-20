@@ -173,7 +173,7 @@ class FileHandler
 
         if ($filtered === '')
         {
-            nel_derp(111, _gettext('Filename was empty or was purged by filter.'));
+            nel_derp(60, _gettext('Filename was empty or was purged by filter.'));
         }
 
         return $filtered;

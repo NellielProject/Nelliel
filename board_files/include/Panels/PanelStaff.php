@@ -25,7 +25,7 @@ class PanelStaff extends PanelBase
 
         if (!$user->boardPerm('', 'perm_user_access') && !$user->boardPerm('', 'perm_role_access'))
         {
-            nel_derp(340, _gettext('You are not allowed to access the staff panel.'));
+            nel_derp(300, _gettext('You are not allowed to access the staff panel.'));
         }
 
         if (is_null($inputs['section']) || $inputs['section'] === 'main')
@@ -36,14 +36,14 @@ class PanelStaff extends PanelBase
         {
             if (!$user->boardPerm('', 'perm_user_access'))
             {
-                nel_derp(340, _gettext('You are not allowed to access the staff panel.'));
+                nel_derp(300, _gettext('You are not allowed to access the users panel.'));
             }
 
             if ($inputs['action'] === 'new')
             {
                 if (!$user->boardPerm('', 'perm_user_add'))
                 {
-                    nel_derp(341, _gettext('You are not allowed to modify staff.'));
+                    nel_derp(301, _gettext('You are not allowed to modify users.'));
                 }
 
                 nel_render_staff_panel_user_edit(null);
@@ -56,12 +56,12 @@ class PanelStaff extends PanelBase
 
                 if (!$this->authorize->userExists($user_id))
                 {
-                    nel_derp(440, _gettext('The specified user does not exist.'));
+                    nel_derp(220, _gettext('The specified user does not exist.'));
                 }
 
                 if (!$user->boardPerm('', 'perm_user_modify'))
                 {
-                    nel_derp(341, _gettext('You are not allowed to modify staff.'));
+                    nel_derp(301, _gettext('You are not allowed to modify users.'));
                 }
 
                 nel_render_staff_panel_user_edit($user_id);
@@ -72,14 +72,14 @@ class PanelStaff extends PanelBase
 
                 if (!$this->authorize->userExists($user_id))
                 {
-                    nel_derp(440, _gettext('The specified user does not exist.'));
+                    nel_derp(220, _gettext('The specified user does not exist.'));
                 }
 
                 $user = $this->authorize->getUser($user_id);
 
                 if (!$user->boardPerm('', 'perm_user_modify'))
                 {
-                    nel_derp(341, _gettext('You are not allowed to modify staff.'));
+                    nel_derp(301, _gettext('You are not allowed to modify users.'));
                 }
 
                 if (isset($_POST['user_password']) && !empty($_POST['user_password']))
@@ -132,14 +132,14 @@ class PanelStaff extends PanelBase
         {
             if (!$user->boardPerm('', 'perm_role_access'))
             {
-                nel_derp(342, _gettext('You are not allowed to modify roles.'));
+                nel_derp(310, _gettext('You are not allowed to access the roles panel.'));
             }
 
             if ($inputs['action'] === 'new')
             {
                 if (!$user->boardPerm('', 'perm_role_add'))
                 {
-                    nel_derp(341, _gettext('You are not allowed to add roles.'));
+                    nel_derp(311, _gettext('You are not allowed to add roles.'));
                 }
 
                 nel_render_staff_panel_role_edit(null);
@@ -152,12 +152,12 @@ class PanelStaff extends PanelBase
 
                 if (!$this->authorize->roleExists($role_id))
                 {
-                    nel_derp(441, _gettext('The specified role does not exist.'));
+                    nel_derp(221, _gettext('The specified role does not exist.'));
                 }
 
                 if (!$user->boardPerm('', 'perm_role_modify'))
                 {
-                    nel_derp(342, _gettext('You are not allowed to modify roles.'));
+                    nel_derp(312, _gettext('You are not allowed to modify roles.'));
                 }
 
                 nel_render_staff_panel_role_edit($role_id);
@@ -168,14 +168,14 @@ class PanelStaff extends PanelBase
 
                 if (!$this->authorize->roleExists($role_id))
                 {
-                    nel_derp(441, _gettext('The specified role does not exist.'));
+                    nel_derp(221, _gettext('The specified role does not exist.'));
                 }
 
                 $role = $this->authorize->getRole($role_id);
 
                 if (!$user->boardPerm('', 'perm_role_modify'))
                 {
-                    nel_derp(342, _gettext('You are not allowed to modify roles.'));
+                    nel_derp(312, _gettext('You are not allowed to modify roles.'));
                 }
 
                 foreach ($_POST as $key => $value)
@@ -196,7 +196,7 @@ class PanelStaff extends PanelBase
         }
         else
         {
-            nel_derp(442, _gettext('No valid action given for user or role panels.'));
+            nel_derp(222, _gettext('No valid action given for user or role panels.'));
         }
     }
 

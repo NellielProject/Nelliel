@@ -59,7 +59,7 @@ class PanelBans extends PanelBase
         }
         else if ($inputs['action'] === 'remove')
         {
-            if (!$user->boardPerm($this->board_id, 'perm_ban_modify'))
+            if (!$user->boardPerm($this->board_id, 'perm_ban_delete'))
             {
                 nel_derp(323, _gettext('You are not allowed to delete bans.'));
             }

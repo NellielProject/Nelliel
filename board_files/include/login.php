@@ -24,12 +24,12 @@ function nel_verify_login_or_session($manage, $action)
 
             if ($user_login_fails > 10 && time() - $last_user_attempt < 300)
             {
-                nel_derp(302, _gettext('This account has had too many failed login attempts and has been temporarily locked for 10 minutes.'));
+                nel_derp(212, _gettext('This account has had too many failed login attempts and has been temporarily locked for 10 minutes.'));
             }
 
             if ($user_login_fails > 20 && time() - $last_user_attempt < 1800)
             {
-                nel_derp(303, _gettext('This account has had too many failed login attempts and has been temporarily locked for 30 minutes.'));
+                nel_derp(213, _gettext('This account has had too many failed login attempts and has been temporarily locked for 30 minutes.'));
             }
 
             if (nel_password_verify($_POST['super_sekrit'], $user->auth_data['user_password']))
@@ -52,7 +52,7 @@ function nel_verify_login_or_session($manage, $action)
 
             if (!$login_valid)
             {
-                nel_derp(300, _gettext('You have failed to login. Please wait a few seconds before trying again.'));
+                nel_derp(210, _gettext('You have failed to login. Please wait a few seconds before trying again.'));
             }
         }
         else
@@ -79,7 +79,7 @@ function nel_verify_login_or_session($manage, $action)
                 }
                 else
                 {
-                    nel_derp(301, _gettext('JFC! Slow down on the failure!'));
+                    nel_derp(211, _gettext('JFC! Slow down on the failure!'));
                 }
             }
             else

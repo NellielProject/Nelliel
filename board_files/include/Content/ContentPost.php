@@ -193,7 +193,7 @@ class ContentPost extends ContentBase
         {
             if (!nel_verify_salted_hash($_POST['update_sekrit'], $this->content_data['post_password']))
             {
-                nel_derp(31, _gettext('Password is wrong or you are not allowed to delete that.'));
+                nel_derp(50, _gettext('Password is wrong or you are not allowed to delete that.'));
             }
         }
 

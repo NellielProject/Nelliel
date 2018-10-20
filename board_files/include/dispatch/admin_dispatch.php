@@ -211,6 +211,6 @@ function nel_admin_dispatch($inputs)
     }
     else
     {
-        nel_derp(400, _gettext('No valid management action specified.'));
+        nel_derp(250, _gettext('No valid management action specified.'));
     }
 }
