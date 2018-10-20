@@ -371,7 +371,8 @@ class SQLTables
             entry                   " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             hash_type               VARCHAR(255) NOT NULL,
             file_hash               " . $this->sqlAlternatives('VARBINARY', '128') . " DEFAULT NULL,
-            file_notes              VARCHAR(255) NULL DEFAULT ''
+            file_notes              VARCHAR(255) NULL DEFAULT '',
+            board_id                VARCHAR(255) NULL DEFAULT ''
         ) " . $options . ";";
 
         $result = $this->createTableQuery($schema, $table_name);

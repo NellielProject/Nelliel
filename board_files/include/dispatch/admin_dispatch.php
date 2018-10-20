@@ -43,7 +43,7 @@ function nel_admin_dispatch($inputs)
                 break;
 
             case 'file-filter':
-                $file_filters_panel = new \Nelliel\Panels\PanelFileFilters(nel_database(), nel_authorize());
+                $file_filters_panel = new \Nelliel\Panels\PanelFileFilters(nel_database(), nel_authorize(), $inputs['board_id']);
                 $file_filters_panel->actionDispatch($inputs);
                 break;
 
@@ -115,6 +115,11 @@ function nel_admin_dispatch($inputs)
             case 'reports':
                 $reports_panel = new \Nelliel\Panels\PanelReports(nel_database(), nel_authorize(), $inputs['board_id']);
                 $reports_panel->actionDispatch($inputs);
+                break;
+
+            case 'file-filter':
+                $file_filters_panel = new \Nelliel\Panels\PanelFileFilters(nel_database(), nel_authorize(), $inputs['board_id']);
+                $file_filters_panel->actionDispatch($inputs);
                 break;
         }
     }

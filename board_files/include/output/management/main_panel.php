@@ -183,6 +183,19 @@ function nel_render_main_board_panel($board_id)
         $reports->remove();
     }
 
+    $file_filters = $dom->getElementById('module-file-filters');
+
+    if ($user->boardPerm($board_id, 'perm_file_filters_access'))
+    {
+        $file_filters_elements = $file_filters->getElementsByAttributeName('data-parse-id', true);
+        $file_filters_elements['file-filters-link']->extSetAttribute('href',
+                PHP_SELF . '?manage=board&module=file-filter&board_id=' . $board_id);
+    }
+    else
+    {
+        $file_filters->remove();
+    }
+
     if ($user->boardPerm($board_id, 'perm_regen_index'))
     {
         $dom->getElementById('regen-all-pages')->extSetAttribute('href',
