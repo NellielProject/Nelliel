@@ -32,19 +32,17 @@ function nel_render_reports_panel()
         $content_id = new \Nelliel\ContentID($report_info['content_id']);
         $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
         $board_web_path = '//' . $base_domain . '/' . rawurlencode($references['board_directory']) . '/';
+        $base_path = '//' . $base_domain . '/' . PHP_SELF . '?manage=modmode';
         $content_link = '';
 
         if ($content_id->isThread())
         {
-            $pages_web_path = $board_web_path . rawurlencode($references['page_dir']) . '/';
-            $content_link = $pages_web_path . $content_id->thread_id . '/' . $content_id->thread_id . '.html';
+            $content_link = $base_path . '&module=view-thread&content-id=' . $content_id->getIDString() . '&section=' . $content_id->thread_id . '&board_id=' . $report_info['board_id'];
         }
         else if ($content_id->isPost())
         {
-            $pages_web_path = $board_web_path . rawurlencode($references['page_dir']) . '/';
-            $thread_link = $pages_web_path . $content_id->thread_id . '/' . $content_id->thread_id . '.html';
             $post_anchor = '#p' . $content_id->thread_id . '_' . $content_id->post_id;
-            $content_link = $thread_link . $post_anchor;
+            $content_link = $base_path . '&module=view-thread&content-id=' . $content_id->getIDString() . '&section=' . $content_id->thread_id . '&board_id=' . $report_info['board_id'] . $post_anchor;
         }
         else if ($content_id->isFile())
         {
@@ -67,15 +65,6 @@ function nel_render_reports_panel()
         $report_nodes['link-report-dismiss']->extSetAttribute('href',
                 PHP_SELF . '?manage=general&module=reports&board_id=' . $report_info['board_id'] .
                 '&action=dismiss&report_id=' . $report_info['report_id']);
-        $report_nodes['link-report-ban']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=reports&board_id=' . $report_info['board_id'] .
-                '&action=ban&report_id=' . $report_info['report_id']);
-        $report_nodes['link-report-delete']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=reports&board_id=' . $report_info['board_id'] .
-                '&action=delete&report_id=' . $report_info['report_id']);
-        $report_nodes['link-report-ban-delete']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=reports&board_id=' . $report_info['board_id'] .
-                '&action=ban-delete&report_id=' . $report_info['report_id']);
         $report_info_table->appendChild($temp_report_info_row);
     }
 
