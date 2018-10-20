@@ -89,21 +89,13 @@ class PostData
         }
 
         $user = $authorize->getUser($_SESSION['username']);
-        $role = $user->boardRole($this->board_id);
 
-        if($user->boardPerm($this->board_id, 'perm_post_as_staff') === false)
+        if(!$user->boardPerm($this->board_id, 'perm_post_as_staff'))
         {
             return;
         }
 
-        if($role === false || $role->checkPermission('perm_post_as_staff') === false)
-        {
-            if($user->boardPerm('', 'perm_post_as_staff') === false)
-            {
-                return; // TODO: Do error instead
-            }
-        }
-
+        $role = $user->boardRole($this->board_id);
         $post->content_data['poster_name'] = $user->auth_data['display_name'];
         $post->content_data['mod_post'] = $role->auth_id;
     }

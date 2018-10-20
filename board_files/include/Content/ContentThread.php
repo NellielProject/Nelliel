@@ -169,7 +169,7 @@ class ContentThread extends ContentBase
     {
         $user = $this->authorize->getUser($_SESSION['username']);
 
-        if (!$user->boardPerm($this->board_id, 'perm_post_sticky') && !$user->boardPerm('', 'perm_post_sticky'))
+        if (!$user->boardPerm($this->board_id, 'perm_post_sticky'))
         {
             nel_derp(400, _gettext('You are not allowed to sticky or unsticky threads.'));
         }
@@ -188,7 +188,7 @@ class ContentThread extends ContentBase
     {
         $user = $this->authorize->getUser($_SESSION['username']);
 
-        if (!$user->boardPerm($this->board_id, 'perm_post_lock') && !$user->boardPerm('', 'perm_post_lock'))
+        if (!$user->boardPerm($this->board_id, 'perm_post_lock'))
         {
             nel_derp(401, _gettext('You are not allowed to lock or unlock threads.'));
         }

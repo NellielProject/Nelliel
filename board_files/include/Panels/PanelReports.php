@@ -47,7 +47,7 @@ class PanelReports extends PanelBase
 
     public function renderPanel($user)
     {
-        if (!$user->boardPerm('', 'perm_reports_access') && !$user->boardPerm('', 'perm_reports_access'))
+        if (!$user->boardPerm($this->board_id, 'perm_reports_access'))
         {
             nel_derp(380, _gettext('You are not allowed to access the reports panel.'));
         }
@@ -105,7 +105,7 @@ class PanelReports extends PanelBase
 
     public function dismiss($report_id)
     {
-        if (!$user->boardPerm('', 'perm_reports_dismiss') && !$user->boardPerm('', 'perm_reports_dismiss'))
+        if (!$user->boardPerm($this->board_id, 'perm_reports_dismiss'))
         {
             nel_derp(381, _gettext('You are not allowed to dismiss reports.'));
         }

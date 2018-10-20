@@ -91,8 +91,8 @@ class AuthUser extends AuthBase
         {
             $prepared = $database->prepare(
                     'SELECT "entry" FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ? AND "board" = ?');
-            $result = $database->executePreparedFetch($prepared,
-                    [$this->auth_id, $user_role['board']], PDO::FETCH_COLUMN);
+            $result = $database->executePreparedFetch($prepared, [$this->auth_id, $user_role['board']],
+                    PDO::FETCH_COLUMN);
 
             if ($result)
             {
@@ -149,8 +149,8 @@ class AuthUser extends AuthBase
             }
         }
 
-        $this->user_roles[] = ['role_id' => $role_id, 'board' => $board_id, 'role' => $this->setupAuthRole(
-                $role_id)];
+        $this->user_roles[] = ['role_id' => $role_id, 'board' => $board_id,
+            'role' => $this->setupAuthRole($role_id)];
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . USER_ROLE_TABLE . '" ("user_id", "role_id", "board") VALUES
                     (?, ?, ?)');
@@ -173,16 +173,29 @@ class AuthUser extends AuthBase
         return false;
     }
 
-    public function boardPerm($board_id, $perm)
+    public function boardPerm($board_id, $perm, $check_allboard = true)
     {
+        $role_perm = false;
+        $role2_perm = false;
+
         $role = $this->boardRole($board_id);
 
-        if (!$role)
+        if ($role)
         {
-            return false;
+            $role_perm = $role->checkPermission($perm);
         }
 
-        return $role->checkPermission($perm);
+        if ($check_allboard && $board_id !== '')
+        {
+            $role2 = $this->boardRole('');
+
+            if ($role2)
+            {
+                $role2_perm = $role2->checkPermission($perm);
+            }
+        }
+
+        return $role_perm || $role2_perm;
     }
 
     private function setupAuthRole($role_id)

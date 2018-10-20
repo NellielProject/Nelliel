@@ -46,8 +46,7 @@ function nel_render_main_panel()
         $manage_options_nodes['module-link-create-board']->remove();
     }
 
-    if ($user->boardPerm('', 'perm_user_access') ||
-            $user->boardPerm('', 'perm_role_access'))
+    if ($user->boardPerm('', 'perm_user_access') || $user->boardPerm('', 'perm_role_access'))
     {
         $manage_options_nodes['module-link-staff']->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff');
     }
@@ -99,7 +98,6 @@ function nel_render_main_panel()
         $dom->getElementById('extract-gettext-form')->remove();
     }
 
-
     $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
@@ -122,7 +120,7 @@ function nel_render_main_board_panel($board_id)
     $settings = $dom->getElementById('module-board-settings');
     $user = $authorize->getUser($_SESSION['username']);
 
-    if ($user->boardPerm($board_id, 'perm_board_config_access') || $user->boardPerm('', 'perm_board_config_access'))
+    if ($user->boardPerm($board_id, 'perm_board_config_access'))
     {
         $settings_elements = $settings->getElementsByAttributeName('data-parse-id', true);
         $settings_elements['board-settings-link']->extSetAttribute('href',
@@ -135,7 +133,7 @@ function nel_render_main_board_panel($board_id)
 
     $bans = $dom->getElementById('module-bans');
 
-    if ($user->boardPerm($board_id, 'perm_ban_access') || $user->boardPerm('', 'perm_ban_access'))
+    if ($user->boardPerm($board_id, 'perm_ban_access'))
     {
         $bans_elements = $bans->getElementsByAttributeName('data-parse-id', true);
         $bans_elements['bans-link']->extSetAttribute('href',
@@ -148,7 +146,7 @@ function nel_render_main_board_panel($board_id)
 
     $threads = $dom->getElementById('module-threads');
 
-    if ($user->boardPerm($board_id, 'perm_threads_access') || $user->boardPerm('', 'perm_threads_access'))
+    if ($user->boardPerm($board_id, 'perm_threads_access'))
     {
         $threads_elements = $threads->getElementsByAttributeName('data-parse-id', true);
         $threads_elements['threads-link']->extSetAttribute('href',
@@ -161,7 +159,7 @@ function nel_render_main_board_panel($board_id)
 
     $modmode = $dom->getElementById('module-modmode');
 
-    if ($user->boardPerm($board_id, 'perm_modmode_access') || $user->boardPerm('', 'perm_modmode_access'))
+    if ($user->boardPerm($board_id, 'perm_modmode_access'))
     {
         $modmode_elements = $modmode->getElementsByAttributeName('data-parse-id', true);
         $modmode_elements['modmode-link']->extSetAttribute('href',
@@ -172,24 +170,24 @@ function nel_render_main_board_panel($board_id)
         $bans->remove();
     }
 
-    if (!$user->boardPerm($board_id, 'perm_regen_index') && !$user->boardPerm('', 'perm_regen_index'))
-    {
-        $dom->getElementById('regen-all-pages')->remove();
-    }
-    else
+    if ($user->boardPerm($board_id, 'perm_regen_index'))
     {
         $dom->getElementById('regen-all-pages')->extSetAttribute('href',
                 PHP_SELF . '?manage=board&module=regen&action=all-pages&board_id=' . $board_id);
     }
-
-    if (!$user->boardPerm($board_id, 'perm_regen_caches') && !$user->boardPerm('', 'perm_regen_caches'))
-    {
-        $dom->getElementById('regen-all-caches')->remove();
-    }
     else
+    {
+        $dom->getElementById('regen-all-pages')->remove();
+    }
+
+    if (!$user->boardPerm($board_id, 'perm_regen_caches'))
     {
         $dom->getElementById('regen-all-caches')->extSetAttribute('href',
                 PHP_SELF . '?manage=board&module=regen&action=all-caches&board_id=' . $board_id);
+    }
+    else
+    {
+        $dom->getElementById('regen-all-caches')->remove();
     }
 
     $language->i18nDom($dom);
