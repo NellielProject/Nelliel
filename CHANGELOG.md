@@ -1,4 +1,19 @@
 # Nelliel Changelog
+## v0.9.9.5 (2018/10/10)
+## Added
+ - ERROR-REF.md to document error codes and location
+ - Add permissions to reports panel and output
+
+### Changed
+ - Update reports panel and report handling
+ - Make checkbox for selecting OP post separate from thread checkbox
+ - Update SQL tables
+ - Update `DEV-GUIDE.md`
+ - Clean up of error codes
+
+### Removed
+ - Dropped `url` field from posts database
+
 ## v0.9.9.4 (2018/10/10)
 ### Changed
  - Fix the broken setup routines
@@ -6,7 +21,7 @@
  - Assorted debugging
  - Improve installation directions
  - Update SmallPHPText library
- 
+
 ## v0.9.9.3 (2018/10/10)
 ### Changed
  - Converted all the control panels to a more standard Panel class
