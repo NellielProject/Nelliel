@@ -37,7 +37,6 @@ class PanelReports extends PanelBase
         else if(isset($_POST['form_submit_report']))
         {
             $this->add($user);
-            $this->renderPanel($user);
         }
         else
         {
