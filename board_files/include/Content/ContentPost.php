@@ -193,6 +193,16 @@ class ContentPost extends ContentBase
             $flag = $authorize->roleLevelCheck($user->boardRole($this->board_id),
                     $mod_post_user->boardRole($this->board_id));
         }
+        else
+        {
+            if($sessions->sessionIsActive())
+            {
+                if ($user->boardPerm($this->board_id, 'perm_post_delete'))
+                {
+                    $flag = true;
+                }
+            }
+        }
 
         if (!$flag)
         {
