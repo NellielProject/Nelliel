@@ -182,9 +182,24 @@
 				<label for="perm_regen_threads" data-i18n="gettext">Can rebuild threads</label>
 			</div>
 			<div class="config-row">
-				<input type="hidden" name="perm_create_board" value="0">
-				<input type="checkbox" name="perm_create_board" id="perm_create_board" value="1">
-				<label for="perm_create_board" data-i18n="gettext">Can create new boards</label>
+				<input type="hidden" name="perm_manage_boards_access" value="0">
+				<input type="checkbox" name="perm_manage_boards_access" id="perm_manage_boards_access" value="1">
+				<label for="perm_manage_boards_access" data-i18n="gettext">Can access board management panel</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_manage_boards_add" value="0">
+				<input type="checkbox" name="perm_manage_boards_add" id="perm_manage_boards_add" value="1">
+				<label for="perm_manage_boards_add" data-i18n="gettext">Can create new boards</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_manage_boards_modify" value="0">
+				<input type="checkbox" name="perm_manage_boards_modify" id="perm_manage_boards_modify" value="1">
+				<label for="perm_manage_boards_modify" data-i18n="gettext">Can modify boards</label>
+			</div>
+			<div class="config-row">
+				<input type="hidden" name="perm_manage_boards_delete" value="0">
+				<input type="checkbox" name="perm_manage_boards_delete" id="perm_manage_boards_delete" value="1">
+				<label for="perm_manage_boards_delete" data-i18n="gettext">Can remove boards</label>
 			</div>
 			<div class="config-row">
 				<input type="hidden" name="perm_extract_gettext" value="0">
