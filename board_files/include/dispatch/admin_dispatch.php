@@ -37,8 +37,8 @@ function nel_admin_dispatch($inputs)
                 $site_settings_panel->actionDispatch($inputs);
                 break;
 
-            case 'create-board':
-                $create_board_panel = new \Nelliel\Panels\PanelCreateBoard(nel_database(), nel_authorize());
+            case 'manage-boards':
+                $create_board_panel = new \Nelliel\Panels\PanelManageBoards(nel_database(), nel_authorize());
                 $create_board_panel->actionDispatch($inputs);
                 break;
 

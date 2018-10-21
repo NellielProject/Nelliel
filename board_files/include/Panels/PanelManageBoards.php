@@ -7,9 +7,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'output/management/create_board.php';
+require_once INCLUDE_PATH . 'output/management/manage_boards.php';
 
-class PanelCreateBoard extends PanelBase
+class PanelManageBoards extends PanelBase
 {
 
     function __construct($database, $authorize)
@@ -35,7 +35,7 @@ class PanelCreateBoard extends PanelBase
 
     public function renderPanel($user)
     {
-        nel_render_create_board_panel();
+        nel_render_manage_boards_panel($user);
     }
 
     public function creator($user)
@@ -44,7 +44,7 @@ class PanelCreateBoard extends PanelBase
 
     public function add($user)
     {
-        if (!$user->boardPerm('', 'perm_create_board'))
+        if (!$user->boardPerm('', 'perm_manage_boards_add'))
         {
             nel_derp(371, _gettext('You are not allowed to create new boards.'));
         }

@@ -98,7 +98,10 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_caches', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_index', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_threads', 1]);
-        $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_create_board', 1]);
+        $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_manage_boards_access', 1]);
+        $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_manage_boards_add', 1]);
+        $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_manage_boards_modify', 1]);
+        $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_manage_boards_delete', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_extract_gettext', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_file_filters_access', 1]);
         $dbh->executePrepared($prepared, ['SUPER_ADMIN', 'perm_file_filters_add', 1]);
@@ -136,7 +139,10 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_caches', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_index', 1]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_threads', 1]);
-        $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_create_board', 0]);
+        $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_boards_access', 0]);
+        $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_boards_add', 0]);
+        $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_boards_modify', 0]);
+        $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_boards_delete', 0]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_extract_gettext', 0]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_file_filters_access', 0]);
         $dbh->executePrepared($prepared, ['BOARD_ADMIN', 'perm_file_filters_add', 0]);
@@ -174,7 +180,10 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['MOD', 'perm_regen_caches', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_regen_index', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_regen_threads', 0]);
-        $dbh->executePrepared($prepared, ['MOD', 'perm_create_board', 0]);
+        $dbh->executePrepared($prepared, ['MOD', 'perm_manage_boards_access', 0]);
+        $dbh->executePrepared($prepared, ['MOD', 'perm_manage_boards_add', 0]);
+        $dbh->executePrepared($prepared, ['MOD', 'perm_manage_boards_modify', 0]);
+        $dbh->executePrepared($prepared, ['MOD', 'perm_manage_boards_delete', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_extract_gettext', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_file_filters_access', 0]);
         $dbh->executePrepared($prepared, ['MOD', 'perm_file_filters_add', 0]);
@@ -212,7 +221,10 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_regen_caches', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_regen_index', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_regen_threads', 0]);
-        $dbh->executePrepared($prepared, ['JANITOR', 'perm_create_board', 0]);
+        $dbh->executePrepared($prepared, ['JANITOR', 'perm_manage_boards_access', 0]);
+        $dbh->executePrepared($prepared, ['JANITOR', 'perm_manage_boards_add', 0]);
+        $dbh->executePrepared($prepared, ['JANITOR', 'perm_manage_boards_modify', 0]);
+        $dbh->executePrepared($prepared, ['JANITOR', 'perm_manage_boards_delete', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_extract_gettext', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_file_filters_access', 0]);
         $dbh->executePrepared($prepared, ['JANITOR', 'perm_file_filters_add', 0]);

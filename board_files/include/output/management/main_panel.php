@@ -36,14 +36,14 @@ function nel_render_main_panel()
     $manage_options = $dom->getElementById('manage-options');
     $manage_options_nodes = $manage_options->getElementsByAttributeName('data-parse-id', true);
 
-    if ($user->boardPerm('', 'perm_create_board'))
+    if ($user->boardPerm('', 'perm_manage_boards_access'))
     {
-        $manage_options_nodes['module-link-create-board']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=create-board');
+        $manage_options_nodes['module-link-manage-boards']->extSetAttribute('href',
+                PHP_SELF . '?manage=general&module=manage-boards');
     }
     else
     {
-        $manage_options_nodes['module-link-create-board']->remove();
+        $manage_options_nodes['module-link-manage-boards']->remove();
     }
 
     if ($user->boardPerm('', 'perm_user_access') || $user->boardPerm('', 'perm_role_access'))
