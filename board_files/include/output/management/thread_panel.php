@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_thread_panel_main($user, $board_id)
 {
-    if (!$user->boardPerm($this->board_id, 'perm_threads_access'))
+    if (!$user->boardPerm($board_id, 'perm_threads_access'))
     {
         nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
     }
