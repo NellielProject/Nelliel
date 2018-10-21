@@ -4,10 +4,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_reports_panel($board_id = '')
+function nel_render_reports_panel($user, $board_id = '')
 {
-    $user = nel_authorize()->getUser($_SESSION['username']);
-
     if (!$user->boardPerm($board_id, 'perm_reports_access'))
     {
         nel_derp(380, _gettext('You are not allowed to access the reports panel.'));

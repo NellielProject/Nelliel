@@ -58,14 +58,7 @@ class PanelBans extends PanelBase
 
     public function renderPanel($user)
     {
-        $user = $this->authorize->getUser($_SESSION['username']);
-
-        if (!$user->boardPerm('', 'perm_ban_access'))
-        {
-            nel_derp(341, _gettext('You are not allowed to add file filters.'));
-        }
-
-        nel_render_main_ban_panel($this->board_id);
+        nel_render_main_ban_panel($user, $this->board_id);
     }
 
     public function creator($user)

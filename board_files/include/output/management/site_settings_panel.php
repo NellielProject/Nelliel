@@ -4,8 +4,13 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_site_settings_panel()
+function nel_render_site_settings_panel($user)
 {
+    if (!$user->boardPerm('', 'perm_site_config_access'))
+    {
+        nel_derp(360, _gettext('You are not allowed to access the site settings.'));
+    }
+
     $dbh = nel_database();
     $language = new \Nelliel\language\Language(nel_authorize());
     $render = new NellielTemplates\RenderCore();

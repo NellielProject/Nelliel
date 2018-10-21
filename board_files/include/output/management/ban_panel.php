@@ -4,8 +4,13 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_main_ban_panel($board_id)
+function nel_render_main_ban_panel($user, $board_id)
 {
+    if (!$user->boardPerm('', 'perm_ban_access'))
+    {
+        nel_derp(341, _gettext('You are not allowed to access the bans panel.'));
+    }
+
     $dbh = nel_database();
     $language = new \Nelliel\language\Language(nel_authorize());
     $render = new NellielTemplates\RenderCore();

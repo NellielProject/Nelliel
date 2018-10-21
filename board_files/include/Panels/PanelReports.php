@@ -46,7 +46,7 @@ class PanelReports extends PanelBase
 
     public function renderPanel($user)
     {
-        nel_render_reports_panel($this->board_id);
+        nel_render_reports_panel($user, $this->board_id);
     }
 
     public function creator($user)

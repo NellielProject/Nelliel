@@ -37,19 +37,14 @@ class PanelThreads extends PanelBase
 
     public function renderPanel($user)
     {
-        if (!$user->boardPerm($this->board_id, 'perm_threads_access'))
-        {
-            nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
-        }
-
         if (isset($_POST['expand_thread']))
         {
             $expand_data = explode(' ', $_POST['expand_thread']);
-            nel_render_thread_panel_expand($this->board_id, $expand_data[1]);
+            nel_render_thread_panel_expand($user, $this->board_id, $expand_data[1]);
         }
         else
         {
-            nel_render_thread_panel_main($this->board_id);
+            nel_render_thread_panel_main($user, $this->board_id);
         }
     }
 

@@ -4,10 +4,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_file_filter_panel($board_id = '')
+function nel_render_file_filter_panel($user, $board_id = '')
 {
-    $user = nel_authorize()->getUser($_SESSION['username']);
-
     if (!$user->boardPerm($board_id, 'perm_file_filters_access'))
     {
         nel_derp(341, _gettext('You are not allowed to add file filters.'));

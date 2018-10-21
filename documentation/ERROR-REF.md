@@ -76,7 +76,8 @@ Error 351: perm_threads_modify (Panels/PanelThreads.php)
 Error 360: perm_site_config_access (Panels/PanelSiteSettings.php)
 Error 361: perm_site_config_modify (Panels/PanelSiteSettings.php)
 
-Error 370: perm_create_board (Panels/PanelCreateBoard.php)
+Error 370: perm_create_board_access (Panels/PanelCreateBoard.php)
+Error 370: perm_create_board_add (Panels/PanelCreateBoard.php)
 
 Error 380: perm_reports_access (Panels/PanelReports.php)
 Error 381: perm_reports_dismiss (Panels/PanelBoardSettings.php)

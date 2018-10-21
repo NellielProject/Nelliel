@@ -4,8 +4,13 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_thread_panel_main($board_id)
+function nel_render_thread_panel_main($user, $board_id)
 {
+    if (!$user->boardPerm($this->board_id, 'perm_threads_access'))
+    {
+        nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
+    }
+
     $dbh = nel_database();
     $language = new \Nelliel\language\Language(nel_authorize());
     $references = nel_parameters_and_data()->boardReferences($board_id);
@@ -122,8 +127,13 @@ function nel_render_thread_panel_main($board_id)
     nel_clean_exit();
 }
 
-function nel_render_thread_panel_expand($board_id, $thread_id)
+function nel_render_thread_panel_expand($user, $board_id, $thread_id)
 {
+    if (!$user->boardPerm($this->board_id, 'perm_threads_access'))
+    {
+        nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
+    }
+
     $dbh = nel_database();
     $language = new \Nelliel\language\Language(nel_authorize());
     $references = nel_parameters_and_data()->boardReferences($board_id);

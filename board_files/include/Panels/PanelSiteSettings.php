@@ -34,12 +34,7 @@ class PanelSiteSettings extends PanelBase
 
     public function renderPanel($user)
     {
-        if (!$user->boardPerm('', 'perm_site_config_access'))
-        {
-            nel_derp(360, _gettext('You are not allowed to access the site settings.'));
-        }
-
-        nel_render_site_settings_panel();
+        nel_render_site_settings_panel($user);
     }
 
     public function creator($user)
@@ -74,6 +69,4 @@ class PanelSiteSettings extends PanelBase
     public function remove($user)
     {
     }
-
-
 }

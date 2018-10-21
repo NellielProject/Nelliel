@@ -44,7 +44,7 @@ class PanelFileFilters extends PanelBase
 
     public function renderPanel($user)
     {
-        nel_render_file_filter_panel($this->board_id);
+        nel_render_file_filter_panel($user, $this->board_id);
     }
 
     public function creator($user)
