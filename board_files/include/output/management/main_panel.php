@@ -206,7 +206,7 @@ function nel_render_main_board_panel($board_id)
         $dom->getElementById('regen-all-pages')->remove();
     }
 
-    if (!$user->boardPerm($board_id, 'perm_regen_caches'))
+    if ($user->boardPerm($board_id, 'perm_regen_caches'))
     {
         $dom->getElementById('regen-all-caches')->extSetAttribute('href',
                 PHP_SELF . '?manage=board&module=regen&action=all-caches&board_id=' . $board_id);
