@@ -13,7 +13,8 @@ function nel_render_derp($diagnostic, $board_id = null)
     nel_render_general_header($render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'derp.html');
-    $dom->getElementById('error-message')->setContent($diagnostic['error-message']);
+    $dom->getElementById('error-id')->setContent($diagnostic['error_id']);
+    $dom->getElementById('error-message')->setContent($diagnostic['error_message']);
     $dom->getElementById('error-data')->setContent(''); // TODO: This actually have something
 
     if (!is_null($board_id))
