@@ -203,7 +203,7 @@ function nel_render_main_board_panel($board_id)
     }
     else
     {
-        $dom->getElementById('regen-all-pages')->remove();
+        $dom->getElementById('regen-all-pages')->parentNode->remove();
     }
 
     if ($user->boardPerm($board_id, 'perm_regen_caches'))
@@ -213,7 +213,7 @@ function nel_render_main_board_panel($board_id)
     }
     else
     {
-        $dom->getElementById('regen-all-caches')->remove();
+        $dom->getElementById('regen-all-caches')->parentNode->remove();
     }
 
     $language->i18nDom($dom);
