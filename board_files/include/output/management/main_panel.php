@@ -90,12 +90,12 @@ function nel_render_main_panel()
 
     if ($user->boardPerm('', 'perm_extract_gettext'))
     {
-        $dom->getElementById('extract-gettext-form')->extSetAttribute('action',
+        $manage_options_nodes['module-extract-gettext']->extSetAttribute('href',
                 PHP_SELF . '?manage=general&module=language&action=extract-gettext');
     }
     else
     {
-        $dom->getElementById('extract-gettext-form')->remove();
+        $manage_options_nodes['module-extract-gettext']->remove();
     }
 
     $language->i18nDom($dom);
