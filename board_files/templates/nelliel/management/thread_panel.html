@@ -1,12 +1,9 @@
-<span data-i18n="gettext">Threads</span>
 	</div>
-	<form id="thread-list-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
 		<table id="thread-list" class="data-table">
 			<tr class="manage-header">
 				<th id="expand-thread-th" data-i18n="gettext">Expand</th>
-				<th data-i18n="gettext">Post no.</th>
-				<th data-i18n="gettext">Delete</th>
-				<th data-i18n="gettext">Last updated</th>
+				<th data-i18n="gettext">First Post</th>
+				<th data-i18n="gettext">Last Updated</th>
 				<th data-i18n="gettext">Subject</th>
 				<th data-i18n="gettext">Name</th>
 				<th data-i18n="gettext">Host</th>
@@ -19,9 +16,6 @@
 					<input id="expand-thread-button-" type="submit" name="expand_thread" value="">
 				</td>
 				<td id="thread-post-number-"></td>
-				<td>
-					<input id="delete-thread-" type="checkbox" name="" value="action" title="Delete entire thread">
-				</td>
 				<td>
 					<span id="thread-last-update-"></span>
 				</td>
@@ -43,11 +37,7 @@
 				<td>
 					<span>[<a id="sticky-thread-link-" href="" data-i18n="gettext">Sticky Thread</a>]&nbsp;</span>
 					<span>[<a id="lock-thread-link-" href="" data-i18n="gettext">Lock Thread</a>]</span>
+					<span>[<a id="delete-thread-link-" href="" data-i18n="gettext">Lock Thread</a>]</span>
 				</td>
 			</tr>
 		</table>
-		<div>
-			<input type="submit" name="dostuff" value="Update">&nbsp;
-			<input type=reset value="Reset">
-		</div>
-	</form>

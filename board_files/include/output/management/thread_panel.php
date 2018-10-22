@@ -21,8 +21,6 @@ function nel_render_thread_panel_main($user, $board_id)
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Threads')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel.html');
-    $dom->getElementById('thread-list-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=board&module=threads&action=update&board_id=' . $board_id);
     $thread_data = $dbh->executeFetchAll(
             'SELECT * FROM "' . $references['thread_table'] .
             '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC', PDO::FETCH_ASSOC);
@@ -41,7 +39,7 @@ function nel_render_thread_panel_main($user, $board_id)
         $op_post = $prepared->fetch(PDO::FETCH_ASSOC);
         unset($result);
 
-        $base_content_id = 'nci_' . $thread['thread_id'] . '_' . $thread['first_post'] . '_0';
+        $base_content_id = 'nci_' . $thread['thread_id'] . '_0_0';
 
         $expand_thread_button = $temp_thread_row->getElementById('expand-thread-button-');
         $expand_thread_button->extSetAttribute('value', _gettext('Expand') . ' ' . $thread['thread_id']);
@@ -49,22 +47,21 @@ function nel_render_thread_panel_main($user, $board_id)
         $thread_post_number = $temp_thread_row->getElementById('thread-post-number-');
         $thread_post_number->setContent($thread['thread_id']);
         $thread_post_number->changeId('thread-post-number-' . $thread['thread_id']);
-        $delete_thread = $temp_thread_row->getElementById('delete-thread-');
-        $delete_thread->extSetAttribute('name', $base_content_id);
-        $delete_thread->changeId('delete-thread-' . $thread['thread_id']);
 
         $sticky_thread_link = $temp_thread_row->getElementById('sticky-thread-link-');
 
         if ($thread['sticky'] == 1)
         {
             $sticky_thread_link->extSetAttribute('href',
-                    '?manage=modmode&module=threads&board_id=test&action=unsticky&content-id=' . $base_content_id);
+                    '?manage=modmode&module=threads&board_id=' . $board_id . '&action=unsticky&content-id=' .
+                    $base_content_id);
             $sticky_thread_link->setContent(_gettext('Unsticky Thread'));
         }
         else
         {
             $sticky_thread_link->extSetAttribute('href',
-                    '?manage=modmode&module=threads&board_id=test&action=sticky&content-id=' . $base_content_id);
+                    '?manage=modmode&module=threads&board_id=' . $board_id . '&action=sticky&content-id=' .
+                    $base_content_id);
         }
 
         $lock_thread_link = $temp_thread_row->getElementById('lock-thread-link-');
@@ -72,14 +69,22 @@ function nel_render_thread_panel_main($user, $board_id)
         if ($thread['locked'] == 1)
         {
             $lock_thread_link->extSetAttribute('href',
-                    '?manage=modmode&module=threads&board_id=test&action=unlock&content-id=' . $base_content_id);
+                    '?manage=modmode&module=threads&board_id=' . $board_id . '&action=unlock&content-id=' .
+                    $base_content_id);
             $lock_thread_link->setContent(_gettext('Unlock Thread'));
         }
         else
         {
             $lock_thread_link->extSetAttribute('href',
-                    '?manage=modmode&module=threads&board_id=test&action=lock&content-id=' . $base_content_id);
+                    '?manage=modmode&module=threads&board_id=' . $board_id . '&action=lock&content-id=' .
+                    $base_content_id);
         }
+
+        $lock_thread_link = $temp_thread_row->getElementById('delete-thread-link-');
+        $lock_thread_link->extSetAttribute('href',
+                '?manage=modmode&module=threads&board_id=' . $board_id . '&action=delete-thread&content-id=' .
+                $base_content_id);
+        $lock_thread_link->setContent(_gettext('Delete Thread'));
 
         $thread_last_update = $temp_thread_row->getElementById('thread-last-update-');
         $thread_last_update->setContent(date("D F jS Y  H:i:s", $thread['last_update'] / 1000));
