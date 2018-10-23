@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel\Panels;
+namespace Nelliel\Admin;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/reports_panel.php';
 
-class PanelReports extends PanelBase
+class AdminReports extends AdminBase
 {
     private $board_id = '';
     private $defaults = false;

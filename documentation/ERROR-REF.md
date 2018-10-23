@@ -44,43 +44,43 @@ Error 220: Invalid session id. (classes/Sessions.php)
 Error 221: Expired session. (classes/Sessions.php)
 Error 222: Login not validated. (classes/Sessions.php)
 
-Error 230: User does not exist. (Panels/PanelStaff.php)
-Error 231: Role does not exist. (Panels/PanelStaff.php)
-Error 232: No valid action. (Panels/PanelStaff.php)
+Error 230: User does not exist. (Panels/AdminStaff.php)
+Error 231: Role does not exist. (Panels/AdminStaff.php)
+Error 232: No valid action. (Panels/AdminStaff.php)
 
 Error 250: No valid action. (dispatch/admin_dispatch.php)
 
-Error 300: perm_user_access (Panels/PanelStaff.php)
-Error 301: perm_user_add (Panels/PanelStaff.php)
-Error 302: perm_user_modify (Panels/PanelStaff.php)
+Error 300: perm_user_access (Panels/AdminStaff.php)
+Error 301: perm_user_add (Panels/AdminStaff.php)
+Error 302: perm_user_modify (Panels/AdminStaff.php)
 
-Error 310: perm_role_access (Panels/PanelStaff.php)
-Error 311: perm_role_add (Panels/PanelStaff.php)
-Error 312: perm_role_modify (Panels/PanelStaff.php)
+Error 310: perm_role_access (Panels/AdminStaff.php)
+Error 311: perm_role_add (Panels/AdminStaff.php)
+Error 312: perm_role_modify (Panels/AdminStaff.php)
 
-Error 320: perm_ban_access (Panels/PanelBans.php)
-Error 321: perm_ban_add (Panels/PanelBans.php)
-Error 322: perm_ban_modify (Panels/PanelBans.php)
-Error 323: perm_ban_delete (Panels/PanelBans.php, classes/BanHammer.php)
+Error 320: perm_ban_access (Panels/AdminBans.php)
+Error 321: perm_ban_add (Panels/AdminBans.php)
+Error 322: perm_ban_modify (Panels/AdminBans.php)
+Error 323: perm_ban_delete (Panels/AdminBans.php, classes/BanHammer.php)
 
-Error 330: perm_manage_board_config (Panels/PanelBoardSettings.php)
-Error 332: perm_manage_board_defaults (Panels/PanelBoardSettings.php)
+Error 330: perm_manage_board_config (Panels/AdminBoardSettings.php)
+Error 332: perm_manage_board_defaults (Panels/AdminBoardSettings.php)
 
-Error 340: perm_file_filters_access (Panels/PanelFileFilters.php)
-Error 341: perm_file_filters_add (Panels/PanelFileFilters.php)
-Error 342: perm_file_filters_delete (Panels/PanelFileFilters.php)
+Error 340: perm_file_filters_access (Panels/AdminFileFilters.php)
+Error 341: perm_file_filters_add (Panels/AdminFileFilters.php)
+Error 342: perm_file_filters_delete (Panels/AdminFileFilters.php)
 
 Error 350: perm_threads_access (Panels/PanelThreads.php)
 Error 351: perm_threads_modify (Panels/PanelThreads.php)
 
-Error 360: perm_site_config_access (Panels/PanelSiteSettings.php)
-Error 361: perm_site_config_modify (Panels/PanelSiteSettings.php)
+Error 360: perm_site_config_access (Panels/AdminSiteSettings.php)
+Error 361: perm_site_config_modify (Panels/AdminSiteSettings.php)
 
 Error 370: perm_create_board_access (Panels/PanelCreateBoard.php)
 Error 371: perm_create_board_add (Panels/PanelCreateBoard.php)
 
-Error 380: perm_reports_access (Panels/PanelReports.php)
-Error 381: perm_reports_dismiss (Panels/PanelBoardSettings.php)
+Error 380: perm_reports_access (Panels/AdminReports.php)
+Error 381: perm_reports_dismiss (Panels/AdminBoardSettings.php)
 
 Error 390: perm_extract_gettext (language/Language.php)
 

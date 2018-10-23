@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel\Panels;
+namespace Nelliel\Admin;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -10,7 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 require_once INCLUDE_PATH . 'output/management/staff_panel.php';
 
 // TODO: Split into user and role panels
-class PanelStaff extends PanelBase
+class AdminStaff extends AdminBase
 {
     function __construct($database, $authorize)
     {

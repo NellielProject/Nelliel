@@ -1,13 +1,13 @@
 <?php
 
-namespace Nelliel\Panels;
+namespace Nelliel\Admin;
 
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
 
-abstract class PanelBase
+abstract class AdminBase
 {
     protected $database;
     protected $authorize;

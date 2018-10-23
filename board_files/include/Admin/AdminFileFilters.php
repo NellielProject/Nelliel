@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel\Panels;
+namespace Nelliel\Admin;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/file_filter_panel.php';
 
-class PanelFileFilters extends PanelBase
+class AdminFileFilters extends AdminBase
 {
     private $board_id = '';
 

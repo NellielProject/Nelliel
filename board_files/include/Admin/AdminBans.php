@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel\Panels;
+namespace Nelliel\Admin;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/ban_panel.php';
 
-class PanelBans extends PanelBase
+class AdminBans extends AdminBase
 {
     private $board_id;
     private $ban_hammer;

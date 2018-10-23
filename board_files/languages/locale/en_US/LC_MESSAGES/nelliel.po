@@ -1252,72 +1252,72 @@ msgstr ""
 msgid "Images greater than %d x %d pixels will be thumbnailed."
 msgstr ""
 
-#: board_files/include/Panels/PanelBans.php
+#: board_files/include/Panels/AdminBans.php
 #, php-format
 msgid "You are not allowed to modify bans."
 msgstr ""
 
-#: board_files/include/Panels/PanelBans.php
+#: board_files/include/Panels/AdminBans.php
 #, php-format
 msgid "You are not allowed to add new bans."
 msgstr ""
 
-#: board_files/include/Panels/PanelBans.php
+#: board_files/include/Panels/AdminBans.php
 #, php-format
 msgid "You are not allowed to delete bans."
 msgstr ""
 
-#: board_files/include/Panels/PanelBans.php
+#: board_files/include/Panels/AdminBans.php
 #, php-format
 msgid "You are not allowed to access the bans panel."
 msgstr ""
 
-#: board_files/include/Panels/PanelBoardSettings.php
+#: board_files/include/Panels/AdminBoardSettings.php
 #, php-format
 msgid "You are not allowed to modify the default board settings."
 msgstr ""
 
-#: board_files/include/Panels/PanelBoardSettings.php
+#: board_files/include/Panels/AdminBoardSettings.php
 #, php-format
 msgid "You are not allowed to modify the board settings."
 msgstr ""
 
-#: board_files/include/Panels/PanelSiteSettings.php
+#: board_files/include/Panels/AdminSiteSettings.php
 #, php-format
 msgid "You are not allowed to access the site settings."
 msgstr ""
 
-#: board_files/include/Panels/PanelStaff.php
+#: board_files/include/Panels/AdminStaff.php
 #, php-format
 msgid "You are not allowed to access the staff panel."
 msgstr ""
 
-#: board_files/include/Panels/PanelStaff.php
+#: board_files/include/Panels/AdminStaff.php
 #, php-format
 msgid "You are not allowed to modify staff."
 msgstr ""
 
-#: board_files/include/Panels/PanelStaff.php
+#: board_files/include/Panels/AdminStaff.php
 #, php-format
 msgid "The specified user does not exist."
 msgstr ""
 
-#: board_files/include/Panels/PanelStaff.php
+#: board_files/include/Panels/AdminStaff.php
 #, php-format
 msgid "You are not allowed to modify roles."
 msgstr ""
 
-#: board_files/include/Panels/PanelStaff.php
+#: board_files/include/Panels/AdminStaff.php
 #, php-format
 msgid "You are not allowed to add roles."
 msgstr ""
 
-#: board_files/include/Panels/PanelStaff.php
+#: board_files/include/Panels/AdminStaff.php
 #, php-format
 msgid "The specified role does not exist."
 msgstr ""
 
-#: board_files/include/Panels/PanelStaff.php
+#: board_files/include/Panels/AdminStaff.php
 #, php-format
 msgid "No valid action given for user or role panels."
 msgstr ""

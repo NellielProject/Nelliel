@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel\Panels;
+namespace Nelliel\Admin;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/site_settings_panel.php';
 
-class PanelSiteSettings extends PanelBase
+class AdminSiteSettings extends AdminBase
 {
     function __construct($database, $authorize)
     {

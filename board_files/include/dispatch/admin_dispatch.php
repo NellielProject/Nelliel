@@ -34,28 +34,28 @@ function nel_admin_dispatch($inputs)
             break;
 
         case 'staff':
-            $staff_panel = new \Nelliel\Panels\PanelStaff(nel_database(), nel_authorize());
+            $staff_panel = new \Nelliel\Admin\AdminStaff(nel_database(), nel_authorize());
             $staff_panel->actionDispatch($inputs);
             break;
 
         case 'site-settings':
-            $site_settings_panel = new \Nelliel\Panels\PanelSiteSettings(nel_database(), nel_authorize());
+            $site_settings_panel = new \Nelliel\Admin\AdminSiteSettings(nel_database(), nel_authorize());
             $site_settings_panel->actionDispatch($inputs);
             break;
 
         case 'manage-boards':
-            $create_board_panel = new \Nelliel\Panels\PanelManageBoards(nel_database(), nel_authorize());
+            $create_board_panel = new \Nelliel\Admin\AdminManageBoards(nel_database(), nel_authorize());
             $create_board_panel->actionDispatch($inputs);
             break;
 
         case 'file-filter':
-            $file_filters_panel = new \Nelliel\Panels\PanelFileFilters(nel_database(), nel_authorize(),
+            $file_filters_panel = new \Nelliel\Admin\AdminFileFilters(nel_database(), nel_authorize(),
                     $inputs['board_id']);
             $file_filters_panel->actionDispatch($inputs);
             break;
 
         case 'default-board-settings':
-            $board_settings_panel = new \Nelliel\Panels\PanelBoardSettings(nel_database(), nel_authorize());
+            $board_settings_panel = new \Nelliel\Admin\AdminBoardSettings(nel_database(), nel_authorize());
             $board_settings_panel->actionDispatch($inputs);
             break;
 
@@ -70,18 +70,18 @@ function nel_admin_dispatch($inputs)
             break;
 
         case 'reports':
-            $reports_panel = new \Nelliel\Panels\PanelReports(nel_database(), nel_authorize(), $inputs['board_id']);
+            $reports_panel = new \Nelliel\Admin\AdminReports(nel_database(), nel_authorize(), $inputs['board_id']);
             $reports_panel->actionDispatch($inputs);
             break;
 
         case 'board-settings':
-            $board_settings_panel = new \Nelliel\Panels\PanelBoardSettings(nel_database(), nel_authorize(),
+            $board_settings_panel = new \Nelliel\Admin\AdminBoardSettings(nel_database(), nel_authorize(),
                     $inputs['board_id']);
             $board_settings_panel->actionDispatch($inputs);
             break;
 
         case 'bans':
-            $bans_panel = new \Nelliel\Panels\PanelBans(nel_database(), nel_authorize(), $inputs['board_id']);
+            $bans_panel = new \Nelliel\Admin\AdminBans(nel_database(), nel_authorize(), $inputs['board_id']);
             $bans_panel->actionDispatch($inputs);
             break;
 
@@ -128,7 +128,7 @@ function nel_admin_dispatch($inputs)
                 {
                     if (isset($_POST['form_submit_report']))
                     {
-                        $reports_panel = new \Nelliel\Panels\PanelReports(nel_database(), nel_authorize(),
+                        $reports_panel = new \Nelliel\Admin\AdminReports(nel_database(), nel_authorize(),
                                 $inputs['board_id']);
                         $reports_panel->actionDispatch($inputs);
 
@@ -169,11 +169,11 @@ function nel_admin_dispatch($inputs)
             else
             {
 
-                $threads_panel = new \Nelliel\Panels\PanelThreads(nel_database(), nel_authorize(), $inputs['board_id']);
+                $threads_panel = new \Nelliel\Admin\PanelThreads(nel_database(), nel_authorize(), $inputs['board_id']);
                 $threads_panel->actionDispatch($inputs);
             }
 
-            $threads_panel = new \Nelliel\Panels\PanelThreads(nel_database(), nel_authorize(), $inputs['board_id']);
+            $threads_panel = new \Nelliel\Admin\PanelThreads(nel_database(), nel_authorize(), $inputs['board_id']);
             $threads_panel->actionDispatch($inputs);
             break;
 
@@ -191,17 +191,6 @@ function nel_admin_dispatch($inputs)
             }
 
             nel_render_main_board_panel($inputs['board_id']);
-            break;
-
-        case 'reports':
-            $reports_panel = new \Nelliel\Panels\PanelReports(nel_database(), nel_authorize(), $inputs['board_id']);
-            $reports_panel->actionDispatch($inputs);
-            break;
-
-        case 'file-filter':
-            $file_filters_panel = new \Nelliel\Panels\PanelFileFilters(nel_database(), nel_authorize(),
-                    $inputs['board_id']);
-            $file_filters_panel->actionDispatch($inputs);
             break;
 
         case 'modmode':
@@ -273,7 +262,7 @@ function nel_admin_dispatch($inputs)
                     break;
 
                 case 'bans':
-                    $bans_panel = new \Nelliel\Panels\PanelBans(nel_database(), nel_authorize(), $inputs['board_id']);
+                    $bans_panel = new \Nelliel\Admin\AdminBans(nel_database(), nel_authorize(), $inputs['board_id']);
                     $bans_panel->actionDispatch($inputs);
                     break;
 
@@ -295,7 +284,7 @@ function nel_admin_dispatch($inputs)
                         $regen->threads($inputs['board_id'], true, $content_id->thread_id);
                         $regen->index($inputs['board_id']);
                         $inputs['action'] = 'new';
-                        $bans_panel = new \Nelliel\Panels\PanelBans(nel_database(), nel_authorize(), $inputs['board_id']);
+                        $bans_panel = new \Nelliel\Admin\AdminBans(nel_database(), nel_authorize(), $inputs['board_id']);
                         $bans_panel->actionDispatch($inputs);
                     }
 
