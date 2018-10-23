@@ -14,15 +14,7 @@ class URLConstructor
     {
     }
 
-    public function staticContent()
-    {
-    }
-
-    public function dynamicContent()
-    {
-    }
-
-    public function dynamicManagement($base_file, $parameters)
+    public function dynamic($base_file, $parameters)
     {
         $new_url = $base_file . '?';
 
