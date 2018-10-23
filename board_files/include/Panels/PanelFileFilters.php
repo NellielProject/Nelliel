@@ -91,7 +91,7 @@ class PanelFileFilters extends PanelBase
         $filter_id = $_GET['filter-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . FILE_FILTER_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, array($filter_id));
-        $this->renderPanel();
+        $this->renderPanel($user);
     }
 
 

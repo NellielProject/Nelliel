@@ -12,6 +12,7 @@ function nel_render_file_filter_panel($user, $board_id = '')
     }
 
     $dbh = nel_database();
+    $url_constructor = new \Nelliel\URLConstructor();
     $language = new \Nelliel\language\Language(nel_authorize());
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -32,8 +33,8 @@ function nel_render_file_filter_panel($user, $board_id = '')
         $filters = $dbh->executeFetchAll('SELECT * FROM "' . FILE_FILTER_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
     }
 
-    $dom->getElementById('add-file-filter-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=general&module=file-filter&action=add');
+    $form_action = $url_constructor->dynamic(PHP_SELF, ['manage' => 'general', 'module' => 'file-filter', 'action' => 'add']);
+    $dom->getElementById('add-file-filter-form')->extSetAttribute('action', $form_action);
 
     $filter_list = $dom->getElementById('filter-list');
     $filter_list_nodes = $filter_list->getElementsByAttributeName('data-parse-id', true);
@@ -51,7 +52,8 @@ function nel_render_file_filter_panel($user, $board_id = '')
         $filter_row_nodes['file-hash']->setContent(bin2hex($filter['file_hash']));
         $filter_row_nodes['file-notes']->setContent($filter['file_notes']);
         $filter_row_nodes['board-id']->setContent($filter['board_id']);
-        $filter_row_nodes['filter-remove-link']->extSetAttribute('href', PHP_SELF . '?manage=general&module=file-filter&action=remove&filter-id=' . $filter['entry']);
+        $remove_link = $url_constructor->dynamic(PHP_SELF, ['manage' => 'general', 'module' => 'file-filter', 'action' => 'remove', 'filter-id' => $filter['entry']]);
+        $filter_row_nodes['filter-remove-link']->extSetAttribute('href', $remove_link);
         $i ++;
     }
 

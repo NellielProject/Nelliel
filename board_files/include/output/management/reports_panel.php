@@ -12,6 +12,7 @@ function nel_render_reports_panel($user, $board_id = '')
     }
 
     $dbh = nel_database();
+    $url_constructor = new \Nelliel\URLConstructor();
     $language = new \Nelliel\language\Language(nel_authorize());
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -47,19 +48,21 @@ function nel_render_reports_panel($user, $board_id = '')
         $content_id = new \Nelliel\ContentID($report_info['content_id']);
         $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
         $board_web_path = '//' . $base_domain . '/' . rawurlencode($references['board_directory']) . '/';
-        $base_path = '//' . $base_domain . '/' . PHP_SELF . '?manage=modmode';
+        $base_path = '//' . $base_domain . '/' . PHP_SELF;
         $content_link = '';
 
         if ($content_id->isThread())
         {
-            $content_link = $base_path . '&module=view-thread&content-id=' . $content_id->getIDString() . '&section=' .
-                    $content_id->thread_id . '&board_id=' . $report_info['board_id'];
+            $content_link = $url_constructor->dynamic($base_path,
+                    ['manage' => 'modmode', 'module' => 'view-thread', 'section' => $content_id->thread_id,
+                        'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id']]);
         }
         else if ($content_id->isPost())
         {
-            $post_anchor = '#p' . $content_id->thread_id . '_' . $content_id->post_id;
-            $content_link = $base_path . '&module=view-thread&content-id=' . $content_id->getIDString() . '&section=' .
-                    $content_id->thread_id . '&board_id=' . $report_info['board_id'] . $post_anchor;
+            $content_link = $url_constructor->dynamic($base_path,
+                    ['manage' => 'modmode', 'module' => 'view-thread', 'section' => $content_id->thread_id,
+                    'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id']]);
+            $content_link .= '#p' . $content_id->thread_id . '_' . $content_id->post_id;
         }
         else if ($content_id->isFile())
         {
