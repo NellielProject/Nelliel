@@ -83,7 +83,7 @@ function nel_render_reports_panel($user, $board_id = '')
         $report_nodes['report-reason']->setContent($report_info['reason']);
         $report_nodes['reporter-ip']->setContent(@inet_ntop($report_info['reporter_ip']));
         $report_nodes['link-report-dismiss']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=reports&board_id=' . $report_info['board_id'] .
+                PHP_SELF . '?module=reports&board_id=' . $report_info['board_id'] .
                 '&action=dismiss&report_id=' . $report_info['report_id']);
         $report_info_table->appendChild($temp_report_info_row);
     }

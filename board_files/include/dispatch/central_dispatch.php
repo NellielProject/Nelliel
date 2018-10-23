@@ -38,8 +38,9 @@ function nel_central_dispatch()
 
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database(), $authorize));
     $snacks->applyBan($inputs);
-
-    if (isset($_GET['manage']))
+    require_once INCLUDE_PATH . 'dispatch/admin_dispatch.php';
+    nel_admin_dispatch($inputs);
+    /*if (isset($_GET['manage']))
     {
         require_once INCLUDE_PATH . 'dispatch/admin_dispatch.php';
         nel_admin_dispatch($inputs);
@@ -49,5 +50,5 @@ function nel_central_dispatch()
     {
         require_once INCLUDE_PATH . 'dispatch/general_dispatch.php';
         nel_general_dispatch($inputs);
-    }
+    }*/
 }

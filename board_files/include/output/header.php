@@ -90,7 +90,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', nel_parameters_and_data()->siteSettings('home_page'));
-    $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=login');
+    $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
     if ($sessions->sessionIsIgnored('render'))
@@ -105,7 +105,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
         $dom->getElementById('manage-header-text')->setContent(_gettext('Mod Mode'));
         $dom->getElementById('manage-board-header')->remove();
         $dom->getElementById('manage-sub-header')->remove();
-        $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');
+        $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=logout');
     }
 
     $language->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
@@ -142,7 +142,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', nel_parameters_and_data()->siteSettings('home_page'));
-    $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=login');
+    $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
     if ($sessions->sessionIsIgnored('render'))
@@ -170,7 +170,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
             $dom->getElementById('manage-sub-header-text')->setContent($extra_data['sub_header']);
         }
 
-        $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?manage=logout');
+        $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=logout');
     }
 
     $language->i18nDom($dom);

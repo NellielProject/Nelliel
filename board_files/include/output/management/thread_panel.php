@@ -53,14 +53,14 @@ function nel_render_thread_panel_main($user, $board_id)
         if ($thread['sticky'] == 1)
         {
             $sticky_thread_link->extSetAttribute('href',
-                    '?manage=modmode&module=threads&board_id=' . $board_id . '&action=unsticky&content-id=' .
+                    '?module=modmode&area=threads&board_id=' . $board_id . '&action=unsticky&content-id=' .
                     $base_content_id);
             $sticky_thread_link->setContent(_gettext('Unsticky Thread'));
         }
         else
         {
             $sticky_thread_link->extSetAttribute('href',
-                    '?manage=modmode&module=threads&board_id=' . $board_id . '&action=sticky&content-id=' .
+                    '?module=modmode&area=threads&board_id=' . $board_id . '&action=sticky&content-id=' .
                     $base_content_id);
         }
 
@@ -69,20 +69,20 @@ function nel_render_thread_panel_main($user, $board_id)
         if ($thread['locked'] == 1)
         {
             $lock_thread_link->extSetAttribute('href',
-                    '?manage=modmode&module=threads&board_id=' . $board_id . '&action=unlock&content-id=' .
+                    '?module=modmode&area=threads&board_id=' . $board_id . '&action=unlock&content-id=' .
                     $base_content_id);
             $lock_thread_link->setContent(_gettext('Unlock Thread'));
         }
         else
         {
             $lock_thread_link->extSetAttribute('href',
-                    '?manage=modmode&module=threads&board_id=' . $board_id . '&action=lock&content-id=' .
+                    '?module=modmode&area=threads&board_id=' . $board_id . '&action=lock&content-id=' .
                     $base_content_id);
         }
 
         $lock_thread_link = $temp_thread_row->getElementById('delete-thread-link-');
         $lock_thread_link->extSetAttribute('href',
-                '?manage=modmode&module=threads&board_id=' . $board_id . '&action=delete-thread&content-id=' .
+                '?module=modmode&area=threads&board_id=' . $board_id . '&action=delete-thread&content-id=' .
                 $base_content_id);
         $lock_thread_link->setContent(_gettext('Delete Thread'));
 
@@ -150,7 +150,7 @@ function nel_render_thread_panel_expand($user, $board_id, $thread_id)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
     $dom->getElementById('thread-list-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=board&module=threads&action=update&board_id=' . $board_id);
+            PHP_SELF . '?module=threads&action=update&board_id=' . $board_id);
     $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "parent_thread" = ?');
     $post_data = $dbh->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
     $post_list_table = $dom->getElementById('post-list');

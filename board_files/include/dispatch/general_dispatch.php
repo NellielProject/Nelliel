@@ -24,7 +24,7 @@ function nel_general_dispatch($inputs)
                     if ($sessions->sessionIsActive())
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                                '?manage=modmode&module=view-thread&section=' . $fgsfds->getCommandData('noko', 'topic') . '&board_id=' .
+                                '?module=modmode&area=view-thread&section=' . $fgsfds->getCommandData('noko', 'topic') . '&board_id=' .
                                 $inputs['board_id'] . '">';
                     }
                     else
@@ -39,7 +39,7 @@ function nel_general_dispatch($inputs)
                     if ($sessions->sessionIsActive())
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                                '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
+                                '?module=modmode&area=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
                     }
                     else
                     {
@@ -59,7 +59,7 @@ function nel_general_dispatch($inputs)
                     if ($sessions->sessionIsActive())
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                                '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
+                                '?module=modmode&area=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
                     }
                     else
                     {
@@ -77,7 +77,7 @@ function nel_general_dispatch($inputs)
                     if ($sessions->sessionIsActive())
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                        '?manage=modmode&module=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
+                        '?module=modmode&area=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
                     }
                     else
                     {

@@ -20,7 +20,7 @@ function nel_render_manage_boards_panel($user)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/manage_boards_panel_main.html');
     $dom->getElementById('create-board-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=general&module=manage-boards&action=add');
+            PHP_SELF . '?module=manage-boards&action=add');
     $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);

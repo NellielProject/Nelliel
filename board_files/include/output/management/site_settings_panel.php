@@ -21,7 +21,7 @@ function nel_render_site_settings_panel($user)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/site_settings_panel.html');
     $dom->getElementById('site-settings-form')->extSetAttribute('action',
-            PHP_SELF . '?manage=general&module=site-settings&action=update');
+            PHP_SELF . '?module=site-settings&action=update');
     $result = $dbh->query('SELECT * FROM "nelliel_site_config"');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);

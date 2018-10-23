@@ -26,7 +26,7 @@ function nel_render_main_panel()
             $entry->removeAttribute('id');
             $entry_elements = $entry->getElementsByAttributeName('data-parse-id', true);
             $entry_elements['board-link']->extSetAttribute('href',
-                    PHP_SELF . '?manage=board&module=main-panel&board_id=' . $board['board_id']);
+                    PHP_SELF . '?module=main-panel&board_id=' . $board['board_id']);
             $entry_elements['board-link']->extSetAttribute('title', $board['board_id']);
             $entry_elements['board-link']->setContent('/' . $board['board_id'] . '/');
         }
@@ -39,7 +39,7 @@ function nel_render_main_panel()
     if ($user->boardPerm('', 'perm_manage_boards_access'))
     {
         $manage_options_nodes['module-link-manage-boards']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=manage-boards');
+                PHP_SELF . '?module=manage-boards');
     }
     else
     {
@@ -48,7 +48,7 @@ function nel_render_main_panel()
 
     if ($user->boardPerm('', 'perm_user_access') || $user->boardPerm('', 'perm_role_access'))
     {
-        $manage_options_nodes['module-link-staff']->extSetAttribute('href', PHP_SELF . '?manage=general&module=staff');
+        $manage_options_nodes['module-link-staff']->extSetAttribute('href', PHP_SELF . '?module=staff');
     }
     else
     {
@@ -58,7 +58,7 @@ function nel_render_main_panel()
     if ($user->boardPerm('', 'perm_site_config_access'))
     {
         $manage_options_nodes['module-link-site-settings']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=site-settings');
+                PHP_SELF . '?module=site-settings');
     }
     else
     {
@@ -66,12 +66,12 @@ function nel_render_main_panel()
     }
 
     $manage_options_nodes['module-link-file-filters']->extSetAttribute('href',
-            PHP_SELF . '?manage=general&module=file-filter');
+            PHP_SELF . '?module=file-filter');
 
     if ($user->boardPerm('', 'perm_board_defaults_access'))
     {
         $manage_options_nodes['module-link-board-defaults']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=default-board-settings');
+                PHP_SELF . '?module=default-board-settings');
     }
     else
     {
@@ -81,7 +81,7 @@ function nel_render_main_panel()
     if ($user->boardPerm('', 'perm_reports_access'))
     {
         $manage_options_nodes['module-link-reports']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=reports');
+                PHP_SELF . '?module=reports');
     }
     else
     {
@@ -91,7 +91,7 @@ function nel_render_main_panel()
     if ($user->boardPerm('', 'perm_extract_gettext'))
     {
         $manage_options_nodes['module-extract-gettext']->extSetAttribute('href',
-                PHP_SELF . '?manage=general&module=language&action=extract-gettext');
+                PHP_SELF . '?module=language&action=extract-gettext');
     }
     else
     {
@@ -124,7 +124,7 @@ function nel_render_main_board_panel($board_id)
     {
         $settings_elements = $settings->getElementsByAttributeName('data-parse-id', true);
         $settings_elements['board-settings-link']->extSetAttribute('href',
-                PHP_SELF . '?manage=board&module=board-settings&board_id=' . $board_id);
+                PHP_SELF . '?module=board-settings&board_id=' . $board_id);
     }
     else
     {
@@ -137,7 +137,7 @@ function nel_render_main_board_panel($board_id)
     {
         $bans_elements = $bans->getElementsByAttributeName('data-parse-id', true);
         $bans_elements['bans-link']->extSetAttribute('href',
-                PHP_SELF . '?manage=board&module=bans&board_id=' . $board_id);
+                PHP_SELF . '?module=bans&board_id=' . $board_id);
     }
     else
     {
@@ -150,7 +150,7 @@ function nel_render_main_board_panel($board_id)
     {
         $threads_elements = $threads->getElementsByAttributeName('data-parse-id', true);
         $threads_elements['threads-link']->extSetAttribute('href',
-                PHP_SELF . '?manage=board&module=threads&board_id=' . $board_id);
+                PHP_SELF . '?module=threads&board_id=' . $board_id);
     }
     else
     {
@@ -163,7 +163,7 @@ function nel_render_main_board_panel($board_id)
     {
         $modmode_elements = $modmode->getElementsByAttributeName('data-parse-id', true);
         $modmode_elements['modmode-link']->extSetAttribute('href',
-                PHP_SELF . '?manage=modmode&module=view-index&section=0&board_id=' . $board_id);
+                PHP_SELF . '?module=modmode&area=view-index&section=0&board_id=' . $board_id);
     }
     else
     {
@@ -176,7 +176,7 @@ function nel_render_main_board_panel($board_id)
     {
         $reports_elements = $reports->getElementsByAttributeName('data-parse-id', true);
         $reports_elements['reports-link']->extSetAttribute('href',
-                PHP_SELF . '?manage=board&module=reports&board_id=' . $board_id);
+                PHP_SELF . '?module=reports&board_id=' . $board_id);
     }
     else
     {
@@ -189,7 +189,7 @@ function nel_render_main_board_panel($board_id)
     {
         $file_filters_elements = $file_filters->getElementsByAttributeName('data-parse-id', true);
         $file_filters_elements['file-filters-link']->extSetAttribute('href',
-                PHP_SELF . '?manage=board&module=file-filter&board_id=' . $board_id);
+                PHP_SELF . '?module=file-filter&board_id=' . $board_id);
     }
     else
     {
@@ -199,7 +199,7 @@ function nel_render_main_board_panel($board_id)
     if ($user->boardPerm($board_id, 'perm_regen_index'))
     {
         $dom->getElementById('regen-all-pages')->extSetAttribute('href',
-                PHP_SELF . '?manage=board&module=regen&action=all-pages&board_id=' . $board_id);
+                PHP_SELF . '?module=regen&action=all-pages&board_id=' . $board_id);
     }
     else
     {
@@ -209,7 +209,7 @@ function nel_render_main_board_panel($board_id)
     if ($user->boardPerm($board_id, 'perm_regen_caches'))
     {
         $dom->getElementById('regen-all-caches')->extSetAttribute('href',
-                PHP_SELF . '?manage=board&module=regen&action=all-caches&board_id=' . $board_id);
+                PHP_SELF . '?module=regen&action=all-caches&board_id=' . $board_id);
     }
     else
     {

@@ -70,7 +70,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
         $render->startRenderTimer();
         $language->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
         $dom->getElementById('form-post-index')->extSetAttribute('action',
-                $dotdot . PHP_SELF . '?module=threads&board_id=' . $board_id);
+                $dotdot . PHP_SELF . '?module=threads&area=general&board_id=' . $board_id);
         nel_render_board_header($board_id, $render, $dotdot, $treeline);
         nel_render_posting_form($board_id, $render, $response_to, $dotdot);
         $sub_page_thread_counter = 0;
@@ -152,7 +152,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
         $gen_data['posts_ending'] = true;
         $page_count = (int) ceil($counttree / $board_settings['threads_per_page']);
         $pages = array();
-        $modmode_base = 'imgboard.php?manage=modmode&module=view-index&section=';
+        $modmode_base = 'imgboard.php?module=modmode&area=view-index&section=';
 
         if ($page === 0)
         {
