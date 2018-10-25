@@ -62,7 +62,7 @@ class ContentThread extends ContentBase
         {
             $prepared = $database->prepare(
                     'INSERT INTO "' . $board_references['thread_table'] . '" ("thread_id", "first_post", "last_post",
-                    "last_bump_time", "last_bump_time_milli, "total_files", "last_update", "last_update_milli",
+                    "last_bump_time", "last_bump_time_milli", "total_files", "last_update", "last_update_milli",
                     "post_count", "thread_sage", "sticky", "archive_status", "locked") VALUES
                     (:thread_id, :first_post, :last_post, :last_bump_time, :last_bump_time_milli, :total_files,
                     :last_update, :last_update_milli, :post_count, :thread_sage, :sticky, :archive_status, :locked)');

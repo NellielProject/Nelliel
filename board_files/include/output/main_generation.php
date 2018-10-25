@@ -152,7 +152,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
         $gen_data['posts_ending'] = true;
         $page_count = (int) ceil($counttree / $board_settings['threads_per_page']);
         $pages = array();
-        $modmode_base = 'imgboard.php?module=modmode&area=view-index&section=';
+        $modmode_base = 'imgboard.php?module=render&area=view-index&section=';
 
         if ($page === 0)
         {

@@ -53,14 +53,14 @@ function nel_render_thread_panel_main($user, $board_id)
         if ($thread['sticky'] == 1)
         {
             $sticky_thread_link->extSetAttribute('href',
-                    '?module=modmode&area=threads&board_id=' . $board_id . '&action=unsticky&content-id=' .
+                    '?module=threads&board_id=' . $board_id . '&action=unsticky&content-id=' .
                     $base_content_id);
             $sticky_thread_link->setContent(_gettext('Unsticky Thread'));
         }
         else
         {
             $sticky_thread_link->extSetAttribute('href',
-                    '?module=modmode&area=threads&board_id=' . $board_id . '&action=sticky&content-id=' .
+                    '?module=threads&board_id=' . $board_id . '&action=sticky&content-id=' .
                     $base_content_id);
         }
 
@@ -69,20 +69,20 @@ function nel_render_thread_panel_main($user, $board_id)
         if ($thread['locked'] == 1)
         {
             $lock_thread_link->extSetAttribute('href',
-                    '?module=modmode&area=threads&board_id=' . $board_id . '&action=unlock&content-id=' .
+                    '?module=threads&board_id=' . $board_id . '&action=unlock&content-id=' .
                     $base_content_id);
             $lock_thread_link->setContent(_gettext('Unlock Thread'));
         }
         else
         {
             $lock_thread_link->extSetAttribute('href',
-                    '?module=modmode&area=threads&board_id=' . $board_id . '&action=lock&content-id=' .
+                    '?module=threads&board_id=' . $board_id . '&action=lock&content-id=' .
                     $base_content_id);
         }
 
         $lock_thread_link = $temp_thread_row->getElementById('delete-thread-link-');
         $lock_thread_link->extSetAttribute('href',
-                '?module=modmode&area=threads&board_id=' . $board_id . '&action=delete-thread&content-id=' .
+                '?module=threads&board_id=' . $board_id . '&action=delete-thread&content-id=' .
                 $base_content_id);
         $lock_thread_link->setContent(_gettext('Delete Thread'));
 

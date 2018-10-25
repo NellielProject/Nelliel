@@ -76,7 +76,7 @@ class Sessions
             else
             {
                 $this->terminateSession();
-                nel_login();
+                //nel_login();
             }
         }
     }
