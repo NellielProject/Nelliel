@@ -8,7 +8,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
 {
     $dbh = nel_database();
     $language = new \Nelliel\language\Language(nel_authorize());
-    $sessions = new \Nelliel\Sessions();
+    $sessions = new \Nelliel\Sessions(nel_authorize());
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $dom = $render->newDOMDocument();
@@ -93,19 +93,19 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
-    if ($sessions->sessionIsIgnored('render'))
-    {
-        $top_admin_span->removeChild($a_elements->item(0)->parentNode);
-        $dom->getElementById('manage-header')->remove();
-        $dom->getElementById('manage-board-header')->remove();
-        $dom->getElementById('manage-sub-header')->remove();
-    }
-    else
+    if ($sessions->inModmode($board_id))
     {
         $dom->getElementById('manage-header-text')->setContent(_gettext('Mod Mode'));
         $dom->getElementById('manage-board-header')->remove();
         $dom->getElementById('manage-sub-header')->remove();
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=logout');
+    }
+    else
+    {
+        $top_admin_span->removeChild($a_elements->item(0)->parentNode);
+        $dom->getElementById('manage-header')->remove();
+        $dom->getElementById('manage-board-header')->remove();
+        $dom->getElementById('manage-sub-header')->remove();
     }
 
     $language->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
@@ -116,7 +116,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
 function nel_render_general_header($render, $dotdot = null, $board_id = null, $extra_data = array())
 {
     $language = new \Nelliel\language\Language(nel_authorize());
-    $sessions = new \Nelliel\Sessions();
+    $sessions = new \Nelliel\Sessions(nel_authorize());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
     $head_element = $dom->getElementsByTagName('head')->item(0);
@@ -145,14 +145,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
-    if ($sessions->sessionIsIgnored('render'))
-    {
-        $top_admin_span->removeChild($a_elements->item(0)->parentNode);
-        $dom->getElementById('manage-header')->remove();
-        $dom->getElementById('manage-board-header')->remove();
-        $dom->getElementById('manage-sub-header')->remove();
-    }
-    else
+    if ($sessions->sessionIsActive() || $sessions->inModmode($board_id))
     {
         if (isset($extra_data['header']))
         {
@@ -171,6 +164,13 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
         }
 
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=logout');
+    }
+    else
+    {
+        $top_admin_span->removeChild($a_elements->item(0)->parentNode);
+        $dom->getElementById('manage-header')->remove();
+        $dom->getElementById('manage-board-header')->remove();
+        $dom->getElementById('manage-sub-header')->remove();
     }
 
     $language->i18nDom($dom);

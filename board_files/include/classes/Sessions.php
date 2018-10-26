@@ -9,9 +9,11 @@ if (!defined('NELLIEL_VERSION'))
 
 class Sessions
 {
+    private $authorize;
 
-    function __construct()
+    function __construct($authorize)
     {
+        $this->authorize = $authorize;
         ini_set('session.use_cookies', 1);
         ini_set('session.use_only_cookies', 1);
         ini_set('session.cookie_httponly', 1);
@@ -42,6 +44,7 @@ class Sessions
         {
             $_SESSION['last_activity'] = time();
             $_SESSION['ignores'] = array('default' => false);
+            $this->setModmode();
         }
         else if (!empty($_SESSION) && $this->sessionIsOld())
         {
@@ -59,6 +62,7 @@ class Sessions
                     $_SESSION['username'] = $_POST['username'];
                     $_SESSION['login_time'] = time();
                     $_SESSION['last_activity'] = time();
+                    $this->setModmode();
                 }
                 else
                 {
@@ -69,14 +73,10 @@ class Sessions
                 $this->setSessionCookie();
                 nel_login();
             }
-            else if($manage === 'modmode')
-            {
-                ;
-            }
             else
             {
                 $this->terminateSession();
-                //nel_login();
+                //nel_login()
             }
         }
     }
@@ -98,9 +98,21 @@ class Sessions
         return !isset($_SESSION['login_time']) || (time() - $_SESSION['last_activity']) > 3600;
     }
 
+    private function setModmode()
+    {
+        $_SESSION['modmode'] = (isset($_GET['modmode'])) ? (bool) $_GET['modmode'] : false;
+    }
+
     public function sessionIsActive()
     {
         return !empty($_SESSION) && $_SESSION['active'];
+    }
+
+    public function inModmode($board_id = '')
+    {
+        $board_id = (is_null($board_id)) ? '' : $board_id;
+        $user = $this->authorize->getUser($_SESSION['username']);
+        return $_SESSION['modmode'] && $user->boardPerm($board_id, 'perm_modmode_access');
     }
 
     public function sessionIsIgnored($reason = 'default', $value = null)

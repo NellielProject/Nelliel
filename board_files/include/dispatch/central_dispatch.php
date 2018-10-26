@@ -40,15 +40,4 @@ function nel_central_dispatch()
     $snacks->applyBan($inputs);
     require_once INCLUDE_PATH . 'dispatch/admin_dispatch.php';
     nel_admin_dispatch($inputs);
-    /*if (isset($_GET['manage']))
-    {
-        require_once INCLUDE_PATH . 'dispatch/admin_dispatch.php';
-        nel_admin_dispatch($inputs);
-    }
-
-    if (isset($_GET['module']))
-    {
-        require_once INCLUDE_PATH . 'dispatch/general_dispatch.php';
-        nel_general_dispatch($inputs);
-    }*/
 }

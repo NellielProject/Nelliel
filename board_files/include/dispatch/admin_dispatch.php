@@ -6,13 +6,12 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_admin_dispatch($inputs)
 {
-    $sessions = new \Nelliel\Sessions();
+    $sessions = new \Nelliel\Sessions(nel_authorize());
     $inputs = nel_plugins()->processHook('nel-inb4-admin-dispatch', array(), $inputs);
     nel_verify_login_or_session($inputs['manage'], $inputs['action']);
 
     switch ($inputs['module'])
     {
-
         case 'render':
             switch ($inputs['action'])
             {
@@ -114,7 +113,7 @@ function nel_admin_dispatch($inputs)
 
                 if ($fgsfds->getCommand('noko') !== false)
                 {
-                    if ($sessions->sessionIsActive())
+                    if ($sessions->sessionIsActive() && $sessions->inModmode($inputs['board_id']))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
                                 '?module=render&action=view-thread&section=' . $fgsfds->getCommandData('noko', 'topic') .
@@ -129,7 +128,7 @@ function nel_admin_dispatch($inputs)
                 }
                 else
                 {
-                    if ($sessions->sessionIsActive())
+                    if ($sessions->sessionIsActive() && $sessions->inModmode($inputs['board_id']))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
                                 '?module=render&action=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
@@ -141,6 +140,8 @@ function nel_admin_dispatch($inputs)
                                 PHP_SELF2 . PHP_EXT . '">';
                     }
                 }
+
+                nel_clean_exit(false);
             }
             else if ($inputs['action'] === 'delete-post')
             {
@@ -184,6 +185,11 @@ function nel_admin_dispatch($inputs)
             {
                 ; // TODO: Add file hash
             }
+            else if ($inputs['action'] === 'load-panel')
+            {
+                $threads_panel = new \Nelliel\Admin\AdminThreads(nel_database(), nel_authorize(), $inputs['board_id']);
+                $threads_panel->actionDispatch($inputs);
+            }
             else
             {
                 if (isset($_POST['form_submit_report']))
@@ -191,7 +197,7 @@ function nel_admin_dispatch($inputs)
                     $reports_panel = new \Nelliel\Admin\AdminReports(nel_database(), nel_authorize(), $inputs['board_id']);
                     $reports_panel->actionDispatch($inputs);
 
-                    if ($sessions->sessionIsActive())
+                    if ($sessions->sessionIsActive() && $sessions->inModmode($inputs['board_id']))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
                                 '?module=render&action=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
@@ -209,7 +215,7 @@ function nel_admin_dispatch($inputs)
                     $thread_handler = new \Nelliel\ThreadHandler(nel_database(), $inputs['board_id']);
                     $thread_handler->processContentDeletes();
 
-                    if ($sessions->sessionIsActive())
+                    if ($sessions->sessionIsActive() && $sessions->inModmode($inputs['board_id']))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
                                 '?module=render&action=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
@@ -225,8 +231,6 @@ function nel_admin_dispatch($inputs)
                 }
             }
 
-            $threads_panel = new \Nelliel\Admin\AdminThreads(nel_database(), nel_authorize(), $inputs['board_id']);
-            $threads_panel->actionDispatch($inputs);
             break;
 
         case 'regen':

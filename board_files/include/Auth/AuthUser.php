@@ -117,11 +117,23 @@ class AuthUser extends AuthBase
         return true;
     }
 
-    public function boardRole($board_id, $return_id = false)
+    public function boardRole($board_id, $return_id = false, $check_allboard = true)
     {
         foreach ($this->user_roles as $user_role)
         {
             if ($user_role['board'] === $board_id)
+            {
+                if ($return_id)
+                {
+                    return $user_role['role_id'];
+                }
+                else
+                {
+                    return $user_role['role'];
+                }
+            }
+
+            if($check_allboard && $user_role['board'] === '')
             {
                 if ($return_id)
                 {

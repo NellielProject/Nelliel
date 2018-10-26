@@ -12,7 +12,7 @@ function nel_verify_login_or_session($manage, $action)
     $authorize = nel_authorize();
     $dbh = nel_database();
     $login_valid = false;
-    $sessions = new \Nelliel\Sessions();
+    $sessions = new \Nelliel\Sessions($authorize);
 
     if ($manage === 'login' && !is_null($action))
     {
@@ -96,7 +96,7 @@ function nel_verify_login_or_session($manage, $action)
 
 function nel_login()
 {
-    $sessions = new \Nelliel\Sessions();
+    $sessions = new \Nelliel\Sessions(nel_authorize());
 
     if (!$sessions->sessionIsIgnored())
     {

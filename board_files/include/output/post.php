@@ -43,8 +43,8 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
 
 function nel_render_post($board_id, $gen_data, $dom)
 {
-    $sessions = new \Nelliel\Sessions();
     $authorize = nel_authorize();
+    $sessions = new \Nelliel\Sessions($authorize);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $output_filter = new \Nelliel\OutputFilter();
@@ -101,54 +101,54 @@ function nel_render_post($board_id, $gen_data, $dom)
         $header_nodes['hide-post-thread']->changeID('hide-post-thread-' . $post_id);
     }
 
-    if (!$sessions->sessionIsIgnored('render'))
+    if ($sessions->inModmode($board_id))
     {
         $ip = @inet_ntop($post_data['ip_address']);
         $header_nodes['modmode-ip-address']->setContent(@inet_ntop($post_data['ip_address']));
         $header_nodes['modmode-ban-link']->extSetAttribute('href',
                 '?module=bans&board_id=test&action=new&ban_type=POST&content-id=' . $base_content_id .
-                '&ban_ip=' . rawurlencode($ip));
+                '&ban_ip=' . rawurlencode($ip) . '&modmode=true');
 
         if ($response)
         {
             $header_nodes['modmode-delete-link']->extSetAttribute('href',
-                    '?module=threads&board_id=test&action=delete-post&content-id=' . $base_content_id);
+                    '?module=threads&board_id=test&action=delete-post&content-id=' . $base_content_id . '&modmode=true');
             $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
                     '?module=multi&board_id=test&action=ban.delete-post&content-id=' . $base_content_id .
-                    '&ban_type=POST&ban_ip=' . rawurlencode($ip));
+                    '&ban_type=POST&ban_ip=' . rawurlencode($ip) . '&modmode=true');
             $header_nodes['modmode-lock-thread-link']->parentNode->remove();
             $header_nodes['modmode-sticky-thread-link']->parentNode->remove();
         }
         else
         {
             $header_nodes['modmode-delete-link']->extSetAttribute('href',
-                    '?module=threads&board_id=test&action=delete-thread&content-id=' . $base_content_id);
+                    '?module=threads&board_id=test&action=delete-thread&content-id=' . $base_content_id . '&modmode=true');
             $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
                     '?module=multi&board_id=test&action=ban.delete-thread&content-id=' . $base_content_id .
-                    '&ban_type=POST&ban_ip=' . rawurlencode($ip));
+                    '&ban_type=POST&ban_ip=' . rawurlencode($ip) . '&modmode=true');
 
             if ($thread_data['locked'] == 1)
             {
                 $header_nodes['modmode-lock-thread-link']->extSetAttribute('href',
-                        '?module=threads&board_id=test&action=unlock' . '&content-id=' . $base_content_id);
+                        '?module=threads&board_id=test&action=unlock' . '&content-id=' . $base_content_id . '&modmode=true');
                 $header_nodes['modmode-lock-thread-link']->setContent(_gettext('Unlock Thread'));
             }
             else
             {
                 $header_nodes['modmode-lock-thread-link']->extSetAttribute('href',
-                        '?module=threads&board_id=test&action=lock&content-id=' . $base_content_id);
+                        '?module=threads&board_id=test&action=lock&content-id=' . $base_content_id . '&modmode=true');
             }
 
             if ($thread_data['sticky'] == 1)
             {
                 $header_nodes['modmode-sticky-thread-link']->extSetAttribute('href',
-                        '?module=threads&board_id=test&action=unsticky&content-id=' . $base_content_id);
+                        '?module=threads&board_id=test&action=unsticky&content-id=' . $base_content_id . '&modmode=true');
                 $header_nodes['modmode-sticky-thread-link']->setContent(_gettext('Unsticky Thread'));
             }
             else
             {
                 $header_nodes['modmode-sticky-thread-link']->extSetAttribute('href',
-                        '?module=threads&board_id=test&action=sticky&content-id=' . $base_content_id);
+                        '?module=threads&board_id=test&action=sticky&content-id=' . $base_content_id . '&modmode=true');
             }
         }
     }
@@ -243,11 +243,11 @@ function nel_render_post($board_id, $gen_data, $dom)
     }
     else
     {
-        if (!$sessions->sessionIsIgnored('render'))
+        if ($sessions->inModmode($board_id))
         {
             $header_nodes['reply-to-link']->extSetAttribute('href',
                     PHP_SELF . '?module=render&action=view-thread&content-id=' . $base_content_id . '&section=' .
-                    $thread_id . '&board_id=' . $board_id);
+                    $thread_id . '&board_id=' . $board_id . '&modmode=true');
         }
         else
         {
@@ -304,11 +304,11 @@ function nel_render_post($board_id, $gen_data, $dom)
 
             $file_nodes = $temp_file_node->getElementsByAttributeName('data-parse-id', true);
 
-            if (!$sessions->sessionIsIgnored('render'))
+            if ($sessions->inModmode($board_id))
             {
                 $file_nodes['modmode-delete-link']->extSetAttribute('href',
                         '?module=threads&board_id=test&action=delete-file&post-id=' .
-                        $post_data['post_number'] . '&file-order=' . $file['file_order']);
+                        $post_data['post_number'] . '&file-order=' . $file['file_order'] . '&modmode=true');
             }
             else
             {
@@ -545,20 +545,20 @@ function nel_render_post($board_id, $gen_data, $dom)
 
 function nel_render_thread_form_bottom($board_id, $dom)
 {
-    $sessions = new \Nelliel\Sessions();
+    $sessions = new \Nelliel\Sessions(nel_authorize());
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $footer_form_element = $dom->getElementById('footer-form');
     $form_td_list = $footer_form_element->doXPathQuery(".//input");
     $dom->getElementById('board_id_field_footer')->extSetAttribute('value', $board_id);
 
-    if ($sessions->sessionIsIgnored('render'))
+    if ($sessions->inModmode($board_id))
     {
-        $dom->getElementById('admin-input-set1')->remove();
-        $dom->getElementById('bottom-submit-button')->setContent('Submit');
+        $dom->getElementById('bottom-pass-input')->remove();
     }
     else
     {
-        $dom->getElementById('bottom-pass-input')->remove();
+        $dom->getElementById('admin-input-set1')->remove();
+        $dom->getElementById('bottom-submit-button')->setContent('Submit');
     }
 
     if (!$board_settings['use_new_imgdel'])

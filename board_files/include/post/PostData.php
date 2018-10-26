@@ -79,8 +79,8 @@ class PostData
 
     public function staffPost($post)
     {
-        $sessions = new \Nelliel\Sessions();
         $authorize = nel_authorize();
+        $sessions = new \Nelliel\Sessions($authorize);
         $sessions->initializeSession('modmode', 'new-post');
 
         if(empty($_SESSION) || $post->content_data['post_as_staff'] === false)
@@ -96,8 +96,12 @@ class PostData
         }
 
         $role = $user->boardRole($this->board_id);
-        $post->content_data['poster_name'] = $user->auth_data['display_name'];
-        $post->content_data['mod_post'] = $role->auth_id;
+
+        if($role !== false)
+        {
+            $post->content_data['poster_name'] = $user->auth_data['display_name'];
+            $post->content_data['mod_post'] = $role->auth_id;
+        }
     }
 
     public function tripcodes($post)

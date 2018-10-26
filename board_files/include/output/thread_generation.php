@@ -11,7 +11,7 @@ function nel_thread_generator($board_id, $write, $response_to)
 {
     $dbh = nel_database();
     $language = new \Nelliel\language\Language(nel_authorize());
-    $sessions = new \Nelliel\Sessions();
+    $sessions = new \Nelliel\Sessions(nel_authorize());
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $file_handler = new \Nelliel\FileHandler();

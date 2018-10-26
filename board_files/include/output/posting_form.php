@@ -4,7 +4,7 @@ require_once INCLUDE_PATH . 'output/rules.php';
 function nel_render_posting_form($board_id, $render, $response_to, $dotdot = null)
 {
     $language = new \Nelliel\language\Language(nel_authorize());
-    $sessions = new \Nelliel\Sessions();
+    $sessions = new \Nelliel\Sessions(nel_authorize());
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $dom = $render->newDOMDocument();
@@ -15,9 +15,14 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     $posting_form->extSetAttribute('action', $dotdot . PHP_SELF . '?module=threads&area=general&action=new-post&board_id=' . $board_id);
     $dom->getElementById('board_id_field_post_form')->extSetAttribute('value', $board_id);
 
+    if($sessions->inModmode($board_id))
+    {
+        $posting_form->modifyAttribute('action', '&modmode=true', 'after');
+    }
+
     if ($response_to)
     {
-        if (!$sessions->sessionIsIgnored('render'))
+        if ($sessions->inModmode($board_id))
         {
             $return_url = PHP_SELF . '?module=render&area=view-index&section=0&board_id=' . $board_id;
         }
@@ -36,7 +41,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     $new_post_element = $posting_form->doXPathQuery(".//input[@name='new_post[post_info][response_to]']", $posting_form)->item(0);
     $new_post_element->extSetAttribute('value', $response_to);
 
-    if($sessions->sessionIsIgnored('render'))
+    if(!$sessions->inModmode($board_id))
     {
         $dom->getElementById('posting-form-staff')->remove();
     }
