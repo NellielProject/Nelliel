@@ -21,7 +21,8 @@ class AdminStaff extends AdminBase
     // TODO: Separate this out more.
     public function actionDispatch($inputs)
     {
-        $user = $this->authorize->getUser($_SESSION['username']);
+        $session = new \Nelliel\Sessions($this->authorize);
+        $user = $session->sessionUser();
 
         if (!$user->boardPerm('', 'perm_user_access') && !$user->boardPerm('', 'perm_role_access'))
         {

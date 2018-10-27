@@ -7,112 +7,91 @@ if (!defined('NELLIEL_VERSION'))
 require_once INCLUDE_PATH . 'output/management/main_panel.php';
 require_once INCLUDE_PATH . 'output/management/login_page.php';
 
-function nel_verify_login_or_session($manage, $action)
+function nel_verify_login()
 {
     $authorize = nel_authorize();
     $dbh = nel_database();
     $login_valid = false;
-    $sessions = new \Nelliel\Sessions($authorize);
 
-    if ($manage === 'login' && !is_null($action))
+    if (isset($_POST['username']) && $_POST['username'] !== '' && $authorize->userExists($_POST['username']))
     {
-        if ($_POST['username'] !== '' && $authorize->userExists($_POST['username'])) // TODO: Check if session? ('username' undefined index)
+        $user = $authorize->getUser($_POST['username']);
+        $user_login_fails = $user->auth_data['failed_logins'];
+        $last_user_attempt = $user->auth_data['last_failed_login'];
+
+        if ($user_login_fails > 10 && time() - $last_user_attempt < 300)
         {
-            $user = $authorize->getUser($_POST['username']);
-            $user_login_fails = $user->auth_data['failed_logins'];
-            $last_user_attempt = $user->auth_data['last_failed_login'];
+            nel_derp(212,
+                    _gettext(
+                            'This account has had too many failed login attempts and has been temporarily locked for 10 minutes.'));
+        }
 
-            if ($user_login_fails > 10 && time() - $last_user_attempt < 300)
-            {
-                nel_derp(212, _gettext('This account has had too many failed login attempts and has been temporarily locked for 10 minutes.'));
-            }
+        if ($user_login_fails > 20 && time() - $last_user_attempt < 1800)
+        {
+            nel_derp(213,
+                    _gettext(
+                            'This account has had too many failed login attempts and has been temporarily locked for 30 minutes.'));
+        }
 
-            if ($user_login_fails > 20 && time() - $last_user_attempt < 1800)
-            {
-                nel_derp(213, _gettext('This account has had too many failed login attempts and has been temporarily locked for 30 minutes.'));
-            }
-
-            if (nel_password_verify($_POST['super_sekrit'], $user->auth_data['user_password']))
-            {
-                $login_valid = true;
-                $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
-                $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), true);
-                $user_login_fails = 0;
-                $attempt_time = 0;
-            }
-            else
-            {
-                $user_login_fails ++;
-                $attempt_time = time();
-            }
-
-            $prepared = $dbh->prepare('UPDATE "' . USER_TABLE .
-                 '" SET "failed_logins" = ?, "last_failed_login" = ? WHERE "user_id" = ?');
-            $dbh->executePrepared($prepared, array($user_login_fails, $attempt_time, $_POST['username']), true);
-
-            if (!$login_valid)
-            {
-                nel_derp(210, _gettext('You have failed to login. Please wait a few seconds before trying again.'));
-            }
+        if (nel_password_verify($_POST['super_sekrit'], $user->auth_data['user_password']))
+        {
+            $login_valid = true;
+            $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
+            $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), true);
+            $user_login_fails = 0;
+            $attempt_time = 0;
         }
         else
         {
-            $prepared = $dbh->prepare('SELECT * FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ? LIMIT 1');
-            $result = $dbh->executePreparedFetch($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), PDO::FETCH_ASSOC, true);
-
-            if ($result !== false && !empty($result))
-            {
-                $last_period = time() - $result['last_attempt'];
-                $attempts = ($result['failed_attempts'] < 21472483647) ? $result['failed_attempts'] : 21472483647;
-
-                if ($last_period > 3600)
-                {
-                    $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
-                    $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), true);
-                }
-                else if ($last_period > 5)
-                {
-                    $attempts ++;
-                    $prepared = $dbh->prepare('UPDATE "' . LOGINS_TABLE .
-                         '" SET "last_attempt" = ?, "failed_attempts" = ? WHERE "ip_address" = ?');
-                    $dbh->executePrepared($prepared, array(time(), $attempts, @inet_pton($_SERVER['REMOTE_ADDR'])), true);
-                }
-                else
-                {
-                    nel_derp(211, _gettext('JFC! Slow down on the failure!'));
-                }
-            }
-            else
-            {
-                $prepared = $dbh->prepare('INSERT INTO "' . LOGINS_TABLE .
-                     '" (ip_address, failed_attempts, last_attempt) VALUES (?, ?, ?)');
-                $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR']), 1, time()), true);
-            }
+            $user_login_fails ++;
+            $attempt_time = time();
         }
-    }
 
-    $sessions->initializeSession($manage, $action, $login_valid);
-}
+        $prepared = $dbh->prepare(
+                'UPDATE "' . USER_TABLE . '" SET "failed_logins" = ?, "last_failed_login" = ? WHERE "user_id" = ?');
+        $dbh->executePrepared($prepared, array($user_login_fails, $attempt_time, $_POST['username']), true);
 
-function nel_login()
-{
-    $sessions = new \Nelliel\Sessions(nel_authorize());
-
-    if (!$sessions->sessionIsIgnored())
-    {
-        if(INPUT_BOARD_ID === '')
+        if (!$login_valid)
         {
-            nel_render_main_panel();
-        }
-        else
-        {
-            nel_render_main_board_panel(INPUT_BOARD_ID);
+            nel_derp(210, _gettext('You have failed to login. Please wait a few seconds before trying again.'));
         }
     }
     else
     {
-        nel_render_login_page();
+        $prepared = $dbh->prepare('SELECT * FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ? LIMIT 1');
+        $result = $dbh->executePreparedFetch($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), PDO::FETCH_ASSOC,
+                true);
+
+        if ($result !== false && !empty($result))
+        {
+            $last_period = time() - $result['last_attempt'];
+            $attempts = ($result['failed_attempts'] < 21472483647) ? $result['failed_attempts'] : 21472483647;
+
+            if ($last_period > 3600)
+            {
+                $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
+                $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), true);
+            }
+            else if ($last_period > 5)
+            {
+                $attempts ++;
+                $prepared = $dbh->prepare(
+                        'UPDATE "' . LOGINS_TABLE .
+                        '" SET "last_attempt" = ?, "failed_attempts" = ? WHERE "ip_address" = ?');
+                $dbh->executePrepared($prepared, array(time(), $attempts, @inet_pton($_SERVER['REMOTE_ADDR'])), true);
+            }
+            else
+            {
+                nel_derp(211, _gettext('JFC! Slow down on the failure!'));
+            }
+        }
+        else
+        {
+            $prepared = $dbh->prepare(
+                    'INSERT INTO "' . LOGINS_TABLE . '" (ip_address, failed_attempts, last_attempt) VALUES (?, ?, ?)');
+            $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR']), 1, time()), true);
+        }
     }
 
-    nel_clean_exit();
+    return $login_valid;
 }

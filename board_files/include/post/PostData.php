@@ -80,15 +80,14 @@ class PostData
     public function staffPost($post)
     {
         $authorize = nel_authorize();
-        $sessions = new \Nelliel\Sessions($authorize);
-        $sessions->initializeSession('modmode', 'new-post');
+        $session = new \Nelliel\Sessions($authorize);
 
-        if(empty($_SESSION) || $post->content_data['post_as_staff'] === false)
+        if($session->isActive() || $post->content_data['post_as_staff'] === false)
         {
             return;
         }
 
-        $user = $authorize->getUser($_SESSION['username']);
+        $user = $session->sessionUser();
 
         if(!$user->boardPerm($this->board_id, 'perm_post_as_staff'))
         {

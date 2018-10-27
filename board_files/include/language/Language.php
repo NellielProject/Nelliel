@@ -58,7 +58,8 @@ class Language
 
     public function extractLanguageStrings($file)
     {
-        $user = $this->authorize->getUser($_SESSION['username']);
+        $session = new \Nelliel\Sessions($authorize);
+        $user = $session->sessionUser();
 
         if (!$user->boardPerm('', 'perm_extract_gettext'))
         {

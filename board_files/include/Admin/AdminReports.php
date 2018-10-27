@@ -27,7 +27,8 @@ class AdminReports extends AdminBase
 
     public function actionDispatch($inputs)
     {
-        $user = $this->authorize->getUser($_SESSION['username']);
+        $session = new \Nelliel\Sessions($this->authorize);
+        $user = $session->sessionUser();
 
         if($inputs['action'] === 'dismiss')
         {

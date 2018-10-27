@@ -20,7 +20,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
 
     if ($write)
     {
-        $sessions->sessionIsIgnored('render', true);
+        $sessions->isIgnored('render', true);
     }
 
     $result = $dbh->query(
@@ -48,7 +48,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
         {
             $file_handler->writeFile($references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT,
                     $render->outputRenderSet(), FILE_PERM);
-            $sessions->sessionIsIgnored('render', false);
+            $sessions->isIgnored('render', false);
         }
         else
         {
@@ -222,6 +222,6 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
 
     if ($write)
     {
-        $sessions->sessionIsIgnored('render', false);
+        $sessions->isIgnored('render', false);
     }
 }

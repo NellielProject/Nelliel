@@ -167,7 +167,8 @@ class ContentThread extends ContentBase
 
     public function sticky()
     {
-        $user = $this->authorize->getUser($_SESSION['username']);
+        $session = new \Nelliel\Sessions($authorize);
+        $user = $session->sessionUser();
 
         if (!$user->boardPerm($this->board_id, 'perm_post_sticky'))
         {
@@ -186,7 +187,8 @@ class ContentThread extends ContentBase
 
     public function lock()
     {
-        $user = $this->authorize->getUser($_SESSION['username']);
+        $session = new \Nelliel\Sessions($authorize);
+        $user = $session->sessionUser();
 
         if (!$user->boardPerm($this->board_id, 'perm_post_lock'))
         {

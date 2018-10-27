@@ -145,7 +145,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
-    if ($sessions->sessionIsActive() || $sessions->inModmode($board_id))
+    if ($sessions->isActive() || $sessions->inModmode($board_id))
     {
         if (isset($extra_data['header']))
         {

@@ -177,8 +177,8 @@ class ContentPost extends ContentBase
     public function verifyModifyPerms()
     {
         $authorize = nel_authorize();
-        $sessions = new \Nelliel\Sessions($authorize);
-        $user = $authorize->getUser($_SESSION['username']);
+        $session = new \Nelliel\Sessions($authorize);
+        $user = $session->sessionUser();
 
         if (empty($this->content_data))
         {
@@ -187,7 +187,7 @@ class ContentPost extends ContentBase
 
         $flag = false;
 
-        if (!empty($this->content_data['mod_post']) && $sessions->sessionIsActive())
+        if (!empty($this->content_data['mod_post']) && $session->isActive())
         {
             $mod_post_user = $authorize->getUser($this->content_data['mod_post']);
             $flag = $authorize->roleLevelCheck($user->boardRole($this->board_id),
@@ -195,7 +195,7 @@ class ContentPost extends ContentBase
         }
         else
         {
-            if($sessions->sessionIsActive())
+            if($session->isActive())
             {
                 if ($user->boardPerm($this->board_id, 'perm_post_delete'))
                 {

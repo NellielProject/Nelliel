@@ -140,7 +140,8 @@ class BanHammer
 
     public function removeBan($board_id, $ban_id, $snacks = false)
     {
-        $user = $this->authorize->getUser($_SESSION['username']);
+        $session = new \Nelliel\Sessions($authorize);
+        $user = $session->sessionUser();
 
         if (!$snacks)
         {

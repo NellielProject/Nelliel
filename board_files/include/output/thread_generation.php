@@ -18,7 +18,7 @@ function nel_thread_generator($board_id, $write, $response_to)
 
     if ($write)
     {
-        $sessions->sessionIsIgnored('render', true);
+        $sessions->isIgnored('render', true);
     }
 
     $dotdot = ($write) ? '../../../' : '';
@@ -40,7 +40,7 @@ function nel_thread_generator($board_id, $write, $response_to)
 
     if (empty($treeline))
     {
-        $sessions->sessionIsIgnored('render', false);
+        $sessions->isIgnored('render', false);
         return;
     }
 
@@ -163,6 +163,6 @@ function nel_thread_generator($board_id, $write, $response_to)
 
     if ($write)
     {
-        $sessions->sessionIsIgnored('render', false);
+        $sessions->isIgnored('render', false);
     }
 }

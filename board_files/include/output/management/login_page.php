@@ -14,7 +14,7 @@ function nel_render_login_page()
     nel_render_general_header($render, null, null, array('header' => _gettext('Management Login')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/login.html');
-    $form_action = $url_constructor->dynamic(PHP_SELF, ['manage' => 'login', 'action' => 'login']);
+    $form_action = $url_constructor->dynamic(PHP_SELF, ['module' => 'login', 'action' => 'login']);
     $dom->getElementById('login-form')->extSetAttribute('action', $form_action);
     $language->i18nDom($dom);
     $render->appendHTMLFromDOM($dom);
