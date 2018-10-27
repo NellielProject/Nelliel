@@ -353,6 +353,7 @@ class TableInsertData
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'indent_marker', '>>']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'file_sha256', '1']);
         $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'file_sha512', '0']);
+        $dbh->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'enable_dynamic_pages', '0']);
         $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'graphics', '1']);
         $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'jpeg', '1']);
         $dbh->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'gif', '1']);
