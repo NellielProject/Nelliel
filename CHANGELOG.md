@@ -1,5 +1,34 @@
 # Nelliel Changelog
-## v0.9.9.5 (2018/10/10)
+## v0.9.10 (2018/10/26)
+### Added
+ - Additional permission checks at beginning of rendering
+ - URLConstructor class
+ - Setting for dynamic page rendering
+
+### Changed
+ - Clean up CHANGELOG.md a bit
+ - Reports panel links open in modmode
+ - Numerous permissions updates
+ - Rename Panel classes to broader-purpose Admin classes
+ - Improve permission checks
+ - Reports and File Filters panels can now be board-specific
+ - Prepare for changing create board to broader board management
+ - Extract text button changed to link
+ - Some updates to the Threads panel
+ - Overhaul of dispatch
+ - Update and improve Moderator Mode and its handling
+ - Overhaul of Sessions class and session handling
+ - Error ID now displayed on error page
+ 
+### Fixed
+ - Fix content not being deletable from Threads panel
+ - Fix various bugs in new Admin classes
+ - Fix content reporting
+
+### Removed
+ - general_dispatch.php
+
+## v0.9.9.5 (2018/10/19)
 ## Added
  - ERROR-REF.md to document error codes and location
  - Add permissions to reports panel and output
@@ -14,7 +43,7 @@
 ### Removed
  - Dropped `url` field from posts database
 
-## v0.9.9.4 (2018/10/10)
+## v0.9.9.4 (2018/10/18)
 ### Changed
  - Fix the broken setup routines
  - Add checks for main directory and board_files being writable
@@ -22,7 +51,7 @@
  - Improve installation directions
  - Update SmallPHPText library
 
-## v0.9.9.3 (2018/10/10)
+## v0.9.9.3 (2018/10/16)
 ### Changed
  - Converted all the control panels to a more standard Panel class
  - Fixed permissions overwriting other roles
@@ -32,12 +61,12 @@
 ### Removed
  - admin directory
 
-## v0.9.9.2 (2018/10/10)
+## v0.9.9.2 (2018/10/16)
 ### Changed
  - Changed some storage variables to statics
  - snacks.php converted into a class
 
-## v0.9.9.1 (2018/10/10)
+## v0.9.9.1 (2018/10/15)
 ### Changed
  - Update FGSFDS handling
  - Clean up some code and namespacing
@@ -55,7 +84,7 @@
  - Overhaul of authorization system
  - Debugging
 
-## v0.9.8 (2018/10/10)
+## v0.9.8 (2018/10/15)
 ### Breaking
  - Bump minimum requirements to PHP 5.6.25
 
@@ -67,10 +96,12 @@
 ### Changed
  - Update thread control panel
  - Update libraries
- - Fix show/hide thread js
  - Moved most of the thread and post functions inside their respective objects
  - Refine some of the FileHandler functions
  - Lots of cleanup and debugging
+
+### Fixed
+ - Fix show/hide thread js
 
 ### Removed
  - second_last_post which was no longer used
@@ -87,11 +118,13 @@
  - Moderator Mode restored and updated
 
 ### Changed
- - Fixed login page
  - Convert panel markup
- - Fix javascript initializing
  - Clean up perms
  - Various other cleanup and fixes
+ 
+### Fixed
+ - Fix javascript initializing
+ - Fixed login page
 
 ## v0.9.6.19 (2018/07/13)
 ### Added
@@ -112,8 +145,10 @@
  - Small improvement on filename filter
  - Convert more forms to links in management panels
  - Code and HTML cleanup
- - Fix numerous bugs
  - Update CSS
+ 
+### Fixed
+ - Fix numerous bugs
 
 ### Removed
  - Now-redundant output functions for footer and derp
