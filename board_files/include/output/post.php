@@ -13,7 +13,8 @@ function nel_render_insert_hr($dom)
 
 function nel_render_index_navigation($board_id, $dom, $render, $pages)
 {
-    $language = new \Nelliel\language\Language(nel_authorize());
+    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $language = new \Nelliel\language\Language($authorization);
     $dom_nav = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom_nav, 'index_navigation.html');
     $bottom_nav = $dom_nav->getElementById('index-bottom-nav');
@@ -43,8 +44,8 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
 
 function nel_render_post($board_id, $gen_data, $dom)
 {
-    $authorize = nel_authorize();
-    $sessions = new \Nelliel\Sessions($authorize);
+    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $sessions = new \Nelliel\Sessions($authorization);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $output_filter = new \Nelliel\OutputFilter();
@@ -197,7 +198,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     $tripcode = (!empty($post_data['tripcode'])) ? $board_settings['tripkey_marker'] . $post_data['tripcode'] : '';
     $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $board_settings['tripkey_marker'] .
             $board_settings['tripkey_marker'] . $post_data['secure_tripcode'] : '';
-            $capcode_text = ($post_data['mod_post']) ? $authorize->getRole($post_data['mod_post'])->auth_data['capcode_text'] : '';
+            $capcode_text = ($post_data['mod_post']) ? $authorization->getRole($post_data['mod_post'])->auth_data['capcode_text'] : '';
     $trip_line = $tripcode . $secure_tripcode . '&nbsp;&nbsp;' . $capcode_text;
 
     if ($post_data['email'])
@@ -545,7 +546,8 @@ function nel_render_post($board_id, $gen_data, $dom)
 
 function nel_render_thread_form_bottom($board_id, $dom)
 {
-    $sessions = new \Nelliel\Sessions(nel_authorize());
+    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $sessions = new \Nelliel\Sessions($authorization);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $footer_form_element = $dom->getElementById('footer-form');
     $form_td_list = $footer_form_element->doXPathQuery(".//input");

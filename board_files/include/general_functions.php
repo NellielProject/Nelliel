@@ -6,10 +6,10 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_delay = 2)
 {
-    $authorize = nel_authorize();
-    $authorize->saveUsers();
-    $authorize->saveRoles();
-    //$authorize->saveUserRoles();
+    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $authorization->saveUsers();
+    $authorization->saveRoles();
+    //$authorization->saveUserRoles();
 
     if ($redirect)
     {

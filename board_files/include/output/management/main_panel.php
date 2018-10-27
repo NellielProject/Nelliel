@@ -3,8 +3,8 @@
 function nel_render_main_panel()
 {
     $dbh = nel_database();
-    $language = new \Nelliel\language\Language(nel_authorize());
-    $authorize = nel_authorize();
+    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $language = new \Nelliel\language\Language($authorization);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -15,7 +15,7 @@ function nel_render_main_panel()
     $board_entry = $dom->getElementById('board-entry');
     $insert_before = $board_entry->parentNode->lastChild;
     $boards = $dbh->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
-    $session = new \Nelliel\Sessions($authorize);
+    $session = new \Nelliel\Sessions($authorization);
     $user = $session->sessionUser();
 
     if ($boards !== false)
@@ -108,8 +108,8 @@ function nel_render_main_panel()
 
 function nel_render_main_board_panel($board_id)
 {
-    $language = new \Nelliel\language\Language(nel_authorize());
-    $authorize = nel_authorize();
+    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $language = new \Nelliel\language\Language($authorization);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -119,7 +119,7 @@ function nel_render_main_board_panel($board_id)
     $render->loadTemplateFromFile($dom, 'management/main_board_panel.html');
     $manage_options = $dom->getElementById('manage-options');
     $settings = $dom->getElementById('module-board-settings');
-    $session = new \Nelliel\Sessions($authorize);
+    $session = new \Nelliel\Sessions($authorization);
     $user = $session->sessionUser();
 
     if ($user->boardPerm($board_id, 'perm_board_config_access'))

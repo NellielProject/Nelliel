@@ -25,7 +25,8 @@ require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'accessors.php';
 require_once INCLUDE_PATH . 'database.php';
 
-$language = new \Nelliel\language\Language(nel_authorize());
+$authorization = new \Nelliel\Auth\Authorization(nel_database());
+$language = new \Nelliel\language\Language($authorization);
 $language->loadLanguage(LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po');
 
 require_once INCLUDE_PATH . 'general_functions.php';
@@ -56,7 +57,7 @@ $out = nel_plugins()->processHook('nel-plugin-example-return', array('string'), 
 
 // IT'S GO TIME!
 ignore_user_abort(true);
-$snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database(), nel_authorize()));
+$snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database(), $authorization));
 $snacks->banSpambots();
 
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';

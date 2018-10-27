@@ -14,10 +14,10 @@ class AdminReports extends AdminBase
     private $board_id = '';
     private $defaults = false;
 
-    function __construct($database, $authorize, $board_id = null)
+    function __construct($database, $authorization, $board_id = null)
     {
         $this->database = $database;
-        $this->authorize = $authorize;
+        $this->authorization = $authorization;
 
         if(!is_null($board_id))
         {
@@ -27,7 +27,7 @@ class AdminReports extends AdminBase
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Sessions($this->authorize);
+        $session = new \Nelliel\Sessions($this->authorization);
         $user = $session->sessionUser();
 
         if($inputs['action'] === 'dismiss')

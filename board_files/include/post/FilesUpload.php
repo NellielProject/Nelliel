@@ -14,11 +14,13 @@ class FilesUpload
     private $board_id;
     private $uploaded_files = array();
     private $processed_files = array();
+    private $authorization;
 
-    function __construct($board_id, $files = array())
+    function __construct($board_id, $files = array(), $authorization)
     {
         $this->board_id = $board_id;
         $this->uploaded_files = $files;
+        $this->authorization = $authorization;
     }
 
     public function processFiles($response_to)
@@ -137,7 +139,7 @@ class FilesUpload
     public function doesFileExist($response_to, $file)
     {
         $dbh = nel_database();
-        $snacks = new \Nelliel\Snacks($dbh, new \Nelliel\BanHammer($dbh, nel_authorize()));
+        $snacks = new \Nelliel\Snacks($dbh, new \Nelliel\BanHammer($dbh, $this->authorization));
         $references = nel_parameters_and_data()->boardReferences($this->board_id);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $error_data = array('delete_files' => true, 'bad-filename' => $file->content_data['name'], 'files' => $this->uploaded_files,

@@ -13,16 +13,16 @@ class AdminThreads extends AdminBase
 {
     private $board_id;
 
-    function __construct($database, $authorize, $board_id = null)
+    function __construct($database, $authorization, $board_id = null)
     {
         $this->database = $database;
-        $this->authorize = $authorize;
+        $this->authorization = $authorization;
         $this->board_id = (is_null($board_id)) ? '' : $board_id;
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Sessions($authorize);
+        $session = new \Nelliel\Sessions($authorization);
         $user = $session->sessionUser();
 
         if($inputs['action'] === 'update')

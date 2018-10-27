@@ -12,16 +12,16 @@ require_once INCLUDE_PATH . 'output/management/staff_panel.php';
 // TODO: Split into user and role panels
 class AdminStaff extends AdminBase
 {
-    function __construct($database, $authorize)
+    function __construct($database, $authorization)
     {
         $this->database = $database;
-        $this->authorize = $authorize;
+        $this->authorization = $authorization;
     }
 
     // TODO: Separate this out more.
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Sessions($this->authorize);
+        $session = new \Nelliel\Sessions($this->authorization);
         $user = $session->sessionUser();
 
         if (!$user->boardPerm('', 'perm_user_access') && !$user->boardPerm('', 'perm_role_access'))
@@ -55,7 +55,7 @@ class AdminStaff extends AdminBase
             {
                 $user_id = (isset($_GET['user-id'])) ? $_GET['user-id'] : null;
 
-                if (!$this->authorize->userExists($user_id))
+                if (!$this->authorization->userExists($user_id))
                 {
                     nel_derp(230, _gettext('The specified user does not exist.'));
                 }
@@ -71,12 +71,12 @@ class AdminStaff extends AdminBase
             {
                 $user_id = (isset($_POST['user_id'])) ? $_POST['user_id'] : null;
 
-                if (!$this->authorize->userExists($user_id))
+                if (!$this->authorization->userExists($user_id))
                 {
                     nel_derp(230, _gettext('The specified user does not exist.'));
                 }
 
-                $user = $this->authorize->getUser($user_id);
+                $user = $this->authorization->getUser($user_id);
 
                 if (!$user->boardPerm('', 'perm_user_modify'))
                 {
@@ -125,7 +125,7 @@ class AdminStaff extends AdminBase
                     $user->auth_data[$key] = $value;
                 }
 
-                $this->authorize->saveUsers();
+                $this->authorization->saveUsers();
                 nel_render_staff_panel_user_edit($user_id);
             }
         }
@@ -151,7 +151,7 @@ class AdminStaff extends AdminBase
             {
                 $role_id = (isset($_GET['role-id'])) ? $_GET['role-id'] : null;
 
-                if (!$this->authorize->roleExists($role_id))
+                if (!$this->authorization->roleExists($role_id))
                 {
                     nel_derp(231, _gettext('The specified role does not exist.'));
                 }
@@ -167,12 +167,12 @@ class AdminStaff extends AdminBase
             {
                 $role_id = (isset($_POST['role_id'])) ? $_POST['role_id'] : null;
 
-                if (!$this->authorize->roleExists($role_id))
+                if (!$this->authorization->roleExists($role_id))
                 {
                     nel_derp(231, _gettext('The specified role does not exist.'));
                 }
 
-                $role = $this->authorize->getRole($role_id);
+                $role = $this->authorization->getRole($role_id);
 
                 if (!$user->boardPerm('', 'perm_role_modify'))
                 {
@@ -191,7 +191,7 @@ class AdminStaff extends AdminBase
                     $role->auth_data[$key] = $value;
                 }
 
-                $this->authorize->saveRoles();
+                $this->authorization->saveRoles();
                 nel_render_staff_panel_role_edit($role_id);
             }
         }

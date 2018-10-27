@@ -12,12 +12,12 @@ if (!defined('NELLIEL_VERSION'))
 class BanHammer
 {
     private $database;
-    private $authorize;
+    private $authorization;
 
-    public function __construct($database, $authorize)
+    public function __construct($database, $authorization)
     {
         $this->database = $database;
-        $this->authorize = $authorize;
+        $this->authorization = $authorization;
     }
 
     public function postToArray()
@@ -140,7 +140,7 @@ class BanHammer
 
     public function removeBan($board_id, $ban_id, $snacks = false)
     {
-        $session = new \Nelliel\Sessions($authorize);
+        $session = new \Nelliel\Sessions($authorization);
         $user = $session->sessionUser();
 
         if (!$snacks)

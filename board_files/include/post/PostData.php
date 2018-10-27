@@ -10,11 +10,13 @@ if (!defined('NELLIEL_VERSION'))
 class PostData
 {
     private $board_id;
+    private $authorization;
     private $staff_post;
 
-    function __construct($board_id, $staff_post = false)
+    function __construct($board_id, $authorization, $staff_post = false)
     {
         $this->board_id = $board_id;
+        $this->authorization = $authorization;
         $this->staff_post = $staff_post;
     }
 
@@ -79,8 +81,7 @@ class PostData
 
     public function staffPost($post)
     {
-        $authorize = nel_authorize();
-        $session = new \Nelliel\Sessions($authorize);
+        $session = new \Nelliel\Sessions($this->authorization);
 
         if($session->isActive() || $post->content_data['post_as_staff'] === false)
         {
@@ -107,7 +108,6 @@ class PostData
     {
         $references = nel_parameters_and_data()->boardReferences($this->board_id);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
-        $authorize = nel_authorize();
         $post->content_data['poster_name'] = preg_replace("/#+$/", "", $post->content_data['poster_name']);
         preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post->content_data['poster_name'], $name_pieces);
         $post->content_data['poster_name'] = $name_pieces[1];

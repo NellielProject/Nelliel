@@ -6,7 +6,8 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_general_footer($render, $board_id = null, $dotdot = null, $styles = false, $extra_links = false)
 {
-    $language = new \Nelliel\language\Language(nel_authorize());
+    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $language = new \Nelliel\language\Language($authorization);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'footer.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';

@@ -9,13 +9,13 @@ require_once INCLUDE_PATH . 'output/management/login_page.php';
 
 function nel_verify_login()
 {
-    $authorize = nel_authorize();
+    $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $dbh = nel_database();
     $login_valid = false;
 
-    if (isset($_POST['username']) && $_POST['username'] !== '' && $authorize->userExists($_POST['username']))
+    if (isset($_POST['username']) && $_POST['username'] !== '' && $authorization->userExists($_POST['username']))
     {
-        $user = $authorize->getUser($_POST['username']);
+        $user = $authorization->getUser($_POST['username']);
         $user_login_fails = $user->auth_data['failed_logins'];
         $last_user_attempt = $user->auth_data['last_failed_login'];
 

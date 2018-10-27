@@ -11,7 +11,8 @@ function nel_render_manage_boards_panel($user)
         nel_derp(370, _gettext('You are not allowed to access the board manager panel.'));
     }
 
-    $language = new \Nelliel\language\Language(nel_authorize());
+    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $language = new \Nelliel\language\Language($authorization);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);

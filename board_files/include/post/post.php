@@ -7,13 +7,14 @@ if (!defined('NELLIEL_VERSION'))
 function nel_process_new_post($inputs)
 {
     $dbh = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($dbh);
     $board_id = $inputs['board_id'];
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $error_data = array('board_id' => $board_id);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $archive = new \Nelliel\ArchiveAndPrune($dbh, $board_id, new \Nelliel\FileHandler());
     $file_handler = new \Nelliel\FileHandler();
-    $file_upload = new \Nelliel\post\FilesUpload($board_id, $_FILES);
+    $file_upload = new \Nelliel\post\FilesUpload($board_id, $_FILES, $authorization);
     $data_handler = new \Nelliel\post\PostData($board_id);
     $post = new \Nelliel\Content\ContentPost($dbh, new \Nelliel\ContentID(), $board_id);
     $data_handler->processPostData($post);

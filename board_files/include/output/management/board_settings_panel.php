@@ -7,7 +7,8 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_board_settings_panel($board_id, $defaults)
 {
     $dbh = nel_database();
-    $language = new \Nelliel\language\Language(nel_authorize());
+    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $language = new \Nelliel\language\Language($authorization);
     $filetypes = nel_parameters_and_data()->filetypeData();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();

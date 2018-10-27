@@ -11,11 +11,11 @@ class Sessions
 {
     private static $initialized = false;
     private static $user;
-    private $authorize;
+    private $authorization;
 
-    function __construct($authorize)
+    function __construct($authorization)
     {
-        $this->authorize = $authorize;
+        $this->authorization = $authorization;
 
         if (!self::$initialized)
         {
@@ -64,7 +64,7 @@ class Sessions
             }
             else
             {
-                self::$user = $this->authorize->getUser($_SESSION['username']);
+                self::$user = $this->authorization->getUser($_SESSION['username']);
                 $this->setVariables();
 
                 if ($module === 'login')
@@ -111,7 +111,7 @@ class Sessions
         if (nel_verify_login())
         {
             $this->setVariables();
-            self::$user = $this->authorize->getUser($_SESSION['username']);
+            self::$user = $this->authorization->getUser($_SESSION['username']);
         }
         else
         {

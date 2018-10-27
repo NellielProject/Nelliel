@@ -9,11 +9,11 @@ if (!defined('NELLIEL_VERSION'))
 
 class Language
 {
-    private $authorize;
+    private $authorization;
 
-    function __construct($authorize)
+    function __construct($authorization)
     {
-        $this->authorize = $authorize;
+        $this->authorization = $authorization;
     }
 
     public function loadLanguage($file = null)
@@ -58,7 +58,7 @@ class Language
 
     public function extractLanguageStrings($file)
     {
-        $session = new \Nelliel\Sessions($authorize);
+        $session = new \Nelliel\Sessions($authorization);
         $user = $session->sessionUser();
 
         if (!$user->boardPerm('', 'perm_extract_gettext'))

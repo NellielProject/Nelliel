@@ -9,7 +9,7 @@ require_once INCLUDE_PATH . 'login.php';
 function nel_central_dispatch()
 {
     nel_plugins()->processHook('nel-inb4-central-dispatch', array());
-    $authorize = nel_authorize();
+    $authorization = new \Nelliel\Auth\Authorization(nel_database());
 
     if (empty($_GET) && empty($_POST))
     {
@@ -36,7 +36,7 @@ function nel_central_dispatch()
     $inputs['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
     $inputs['content_id'] = (isset($_GET['content-id'])) ? $_GET['content-id'] : null;
 
-    $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database(), $authorize));
+    $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database(), $authorization));
     $snacks->applyBan($inputs);
 
     require_once INCLUDE_PATH . 'dispatch/module_dispatch.php';

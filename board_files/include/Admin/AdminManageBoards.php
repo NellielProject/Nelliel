@@ -12,15 +12,15 @@ require_once INCLUDE_PATH . 'output/management/manage_boards.php';
 class AdminManageBoards extends AdminBase
 {
 
-    function __construct($database, $authorize)
+    function __construct($database, $authorization)
     {
         $this->database = $database;
-        $this->authorize = $authorize;
+        $this->authorization = $authorization;
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Sessions($this->authorize);
+        $session = new \Nelliel\Sessions($this->authorization);
         $user = $session->sessionUser();
 
         if ($inputs['action'] === 'add')

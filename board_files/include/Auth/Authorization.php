@@ -10,8 +10,8 @@ if (!defined('NELLIEL_VERSION'))
 class Authorization
 {
     private $database;
-    private $users = array();
-    private $roles = array();
+    private static $users = array();
+    private static $roles = array();
 
     function __construct($database)
     {
@@ -20,16 +20,16 @@ class Authorization
 
     public function getUser($user_id)
     {
-        if (isset($this->users[$user_id]))
+        if (isset(self::$users[$user_id]))
         {
-            return $this->users[$user_id];
+            return self::$users[$user_id];
         }
 
-        $this->users[$user_id] = new AuthUser($this->database, $user_id);
+        self::$users[$user_id] = new AuthUser($this->database, $user_id);
 
-        if ($this->users[$user_id]->loadFromDatabase())
+        if (self::$users[$user_id]->loadFromDatabase())
         {
-            return $this->users[$user_id];
+            return self::$users[$user_id];
         }
 
         return false;
@@ -47,16 +47,16 @@ class Authorization
 
     public function getRole($role_id)
     {
-        if (isset($this->roles[$role_id]))
+        if (isset(self::$roles[$role_id]))
         {
-            return $this->roles[$role_id];
+            return self::$roles[$role_id];
         }
 
-        $this->roles[$role_id] = new AuthRole($this->database, $role_id);
+        self::$roles[$role_id] = new AuthRole($this->database, $role_id);
 
-        if ($this->roles[$role_id]->loadFromDatabase())
+        if (self::$roles[$role_id]->loadFromDatabase())
         {
-            return $this->roles[$role_id];
+            return self::$roles[$role_id];
         }
 
         return false;
@@ -84,8 +84,8 @@ class Authorization
             return true;
         }
 
-        $level1 = $this->roles[$role1]->auth_data['role_level'];
-        $level2 = $this->roles[$role2]->auth_data['role_level'];
+        $level1 = self::$roles[$role1]->auth_data['role_level'];
+        $level2 = self::$roles[$role2]->auth_data['role_level'];
 
         if ($false_if_equal)
         {
@@ -99,7 +99,7 @@ class Authorization
 
     public function saveUsers()
     {
-        foreach ($this->users as $user)
+        foreach (self::$users as $user)
         {
             $user->writeToDatabase();
         }
@@ -107,7 +107,7 @@ class Authorization
 
     public function saveRoles()
     {
-        foreach ($this->roles as $role)
+        foreach (self::$roles as $role)
         {
             $role->writeToDatabase();
         }

@@ -10,7 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 abstract class AdminBase
 {
     protected $database;
-    protected $authorize;
+    protected $authorization;
 
     public abstract function actionDispatch($inputs);
 

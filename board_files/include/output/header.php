@@ -7,8 +7,9 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_board_header($board_id, $render, $dotdot = null, $treeline = null)
 {
     $dbh = nel_database();
-    $language = new \Nelliel\language\Language(nel_authorize());
-    $session = new \Nelliel\Sessions(nel_authorize());
+    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $language = new \Nelliel\language\Language($authorization);
+    $session = new \Nelliel\Sessions($authorization);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $dom = $render->newDOMDocument();
@@ -115,8 +116,9 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
 
 function nel_render_general_header($render, $dotdot = null, $board_id = null, $extra_data = array())
 {
-    $language = new \Nelliel\language\Language(nel_authorize());
-    $session = new \Nelliel\Sessions(nel_authorize());
+    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $language = new \Nelliel\language\Language($authorization);
+    $session = new \Nelliel\Sessions($authorization);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
     $head_element = $dom->getElementsByTagName('head')->item(0);
