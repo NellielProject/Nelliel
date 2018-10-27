@@ -6,8 +6,8 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_board_header($board_id, $render, $dotdot = null, $treeline = null)
 {
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Sessions($authorization);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
@@ -45,7 +45,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $title_element->setContent($title_content);
     $board_navigation = $dom->getElementById("board-navigation");
     $board_navigation->appendChild($dom->createTextNode('[ '));
-    $board_data = $dbh->executeFetchAll('SELECT * FROM "nelliel_board_data"', PDO::FETCH_ASSOC);
+    $board_data = $database->executeFetchAll('SELECT * FROM "nelliel_board_data"', PDO::FETCH_ASSOC);
     $end = end($board_data);
 
     foreach ($board_data as $board)

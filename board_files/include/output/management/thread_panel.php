@@ -11,8 +11,8 @@ function nel_render_thread_panel_main($user, $board_id)
         nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
     }
 
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $render = new NellielTemplates\RenderCore();
@@ -22,7 +22,7 @@ function nel_render_thread_panel_main($user, $board_id)
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Threads')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel.html');
-    $thread_data = $dbh->executeFetchAll(
+    $thread_data = $database->executeFetchAll(
             'SELECT * FROM "' . $references['thread_table'] .
             '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC', PDO::FETCH_ASSOC);
     $thread_list_table = $dom->getElementById('thread-list');
@@ -34,7 +34,7 @@ function nel_render_thread_panel_main($user, $board_id)
         $temp_thread_row = $thread_row->cloneNode(true);
         $temp_thread_row->changeId('thread_row-' . $thread['thread_id']);
 
-        $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "post_number" = ? LIMIT 1');
+        $prepared = $database->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "post_number" = ? LIMIT 1');
         $prepared->bindValue(1, $thread['first_post'], PDO::PARAM_INT);
         $prepared->execute();
         $op_post = $prepared->fetch(PDO::FETCH_ASSOC);
@@ -140,8 +140,8 @@ function nel_render_thread_panel_expand($user, $board_id, $thread_id)
         nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
     }
 
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $render = new NellielTemplates\RenderCore();
@@ -153,8 +153,8 @@ function nel_render_thread_panel_expand($user, $board_id, $thread_id)
     $render->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
     $dom->getElementById('thread-list-form')->extSetAttribute('action',
             PHP_SELF . '?module=threads&action=update&board_id=' . $board_id);
-    $prepared = $dbh->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "parent_thread" = ?');
-    $post_data = $dbh->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
+    $prepared = $database->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "parent_thread" = ?');
+    $post_data = $database->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
     $post_list_table = $dom->getElementById('post-list');
     $post_row = $dom->getElementById('post-row-');
     $i = 0;

@@ -11,8 +11,8 @@ function nel_render_site_settings_panel($user)
         nel_derp(360, _gettext('You are not allowed to access the site settings.'));
     }
 
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -23,7 +23,7 @@ function nel_render_site_settings_panel($user)
     $render->loadTemplateFromFile($dom, 'management/site_settings_panel.html');
     $dom->getElementById('site-settings-form')->extSetAttribute('action',
             PHP_SELF . '?module=site-settings&action=update');
-    $result = $dbh->query('SELECT * FROM "nelliel_site_config"');
+    $result = $database->query('SELECT * FROM "nelliel_site_config"');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
 

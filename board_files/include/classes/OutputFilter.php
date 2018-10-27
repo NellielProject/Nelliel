@@ -61,7 +61,7 @@ class OutputFilter
 
     public function postQuoteLink($board_id, $target_element, $text_input)
     {
-        $dbh = nel_database();
+        $database = nel_database();
         $board_references = nel_parameters_and_data()->boardReferences($board_id);
         $text_segments = preg_split('#(>>[0-9]+)#', $text_input, null, PREG_SPLIT_DELIM_CAPTURE);
         $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
@@ -70,10 +70,10 @@ class OutputFilter
         {
             if (preg_match('#^>>([0-9]+)$#', $segment, $matches) === 1)
             {
-                $prepared = $dbh->prepare(
+                $prepared = $database->prepare(
                         'SELECT "parent_thread" FROM "' . $board_references['post_table'] .
                         '" WHERE "post_number" = ? LIMIT 1');
-                $parent_thread = $dbh->executePreparedFetch($prepared, array($matches[1]), PDO::FETCH_COLUMN);
+                $parent_thread = $database->executePreparedFetch($prepared, array($matches[1]), PDO::FETCH_COLUMN);
 
                 if ($parent_thread === false || empty($parent_thread))
                 {

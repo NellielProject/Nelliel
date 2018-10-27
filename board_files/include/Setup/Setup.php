@@ -98,8 +98,8 @@ class Setup
 
     private function checkForInnoDB()
     {
-        $dbh = nel_database();
-        $result = $dbh->query("SHOW ENGINES");
+        $database = nel_database();
+        $result = $database->query("SHOW ENGINES");
         $list = $result->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($list as $entry)

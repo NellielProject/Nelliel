@@ -9,8 +9,8 @@ require_once INCLUDE_PATH . 'output/post.php';
 
 function nel_thread_generator($board_id, $write, $response_to)
 {
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $sessions = new \Nelliel\Sessions($authorization);
     $references = nel_parameters_and_data()->boardReferences($board_id);
@@ -33,11 +33,11 @@ function nel_thread_generator($board_id, $write, $response_to)
     $render->startRenderTimer();
     $dom->getElementById('form-post-index')->extSetAttribute('action',
             $dotdot . PHP_SELF . '?module=threads&area=general&board_id=' . $board_id);
-    $prepared = $dbh->prepare('SELECT * FROM "' . $references['thread_table'] . '" WHERE "thread_id" = ? LIMIT 1');
-    $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($response_to), PDO::FETCH_ASSOC);
-    $prepared = $dbh->prepare(
+    $prepared = $database->prepare('SELECT * FROM "' . $references['thread_table'] . '" WHERE "thread_id" = ? LIMIT 1');
+    $gen_data['thread'] = $database->executePreparedFetch($prepared, array($response_to), PDO::FETCH_ASSOC);
+    $prepared = $database->prepare(
             'SELECT * FROM "' . $references['post_table'] . '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
-    $treeline = $dbh->executePreparedFetchAll($prepared, array($response_to), PDO::FETCH_ASSOC);
+    $treeline = $database->executePreparedFetchAll($prepared, array($response_to), PDO::FETCH_ASSOC);
 
     if (empty($treeline))
     {
@@ -77,8 +77,8 @@ function nel_thread_generator($board_id, $write, $response_to)
         if ($gen_data['post']['has_file'] == 1)
         {
             $query = 'SELECT * FROM "' . $references['file_table'] . '" WHERE "post_ref" = ? ORDER BY "file_order" ASC';
-            $prepared = $dbh->prepare($query);
-            $gen_data['files'] = $dbh->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']),
+            $prepared = $database->prepare($query);
+            $gen_data['files'] = $database->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']),
                     PDO::FETCH_ASSOC);
         }
 

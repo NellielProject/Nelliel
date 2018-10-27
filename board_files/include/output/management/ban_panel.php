@@ -11,8 +11,8 @@ function nel_render_main_ban_panel($user, $board_id)
         nel_derp(341, _gettext('You are not allowed to access the bans panel.'));
     }
 
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -22,7 +22,7 @@ function nel_render_main_ban_panel($user, $board_id)
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/bans_panel_main.html');
 
-    $ban_list = $dbh->executeFetchAll('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "ban_id" DESC', PDO::FETCH_ASSOC);
+    $ban_list = $database->executeFetchAll('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "ban_id" DESC', PDO::FETCH_ASSOC);
     $ban_info_table = $dom->getElementById('ban-info-table');
     $ban_info_row = $dom->getElementById('ban-info-row');
     $bgclass = 'row1';
@@ -108,7 +108,7 @@ function nel_render_ban_panel_modify($board_id)
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
     $ban_hammer = new \Nelliel\BanHammer(nel_database(), $authorization);
-    $dbh = nel_database();
+    $database = nel_database();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);

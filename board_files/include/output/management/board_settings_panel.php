@@ -6,8 +6,8 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_board_settings_panel($board_id, $defaults)
 {
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $filetypes = nel_parameters_and_data()->filetypeData();
     $render = new NellielTemplates\RenderCore();
@@ -20,7 +20,7 @@ function nel_render_board_settings_panel($board_id, $defaults)
     {
         nel_render_general_header($render, null, null,
                 array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Default Board Settings')));
-        $result = $dbh->query('SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"');
+        $result = $database->query('SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"');
         $dom->getElementById('board-settings-form')->extSetAttribute('action',
                 PHP_SELF . '?module=default-board-settings&action=update');
     }
@@ -29,7 +29,7 @@ function nel_render_board_settings_panel($board_id, $defaults)
         $references = nel_parameters_and_data()->boardReferences($board_id);
         nel_render_general_header($render, null, $board_id,
                 array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')));
-        $result = $dbh->query('SELECT * FROM "' . $references['config_table'] . '"');
+        $result = $database->query('SELECT * FROM "' . $references['config_table'] . '"');
         $dom->getElementById('board-settings-form')->extSetAttribute('action',
                 PHP_SELF . '?module=board-settings&action=update&board_id=' . $board_id);
     }

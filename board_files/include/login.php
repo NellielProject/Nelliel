@@ -10,7 +10,7 @@ require_once INCLUDE_PATH . 'output/management/login_page.php';
 function nel_verify_login()
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $dbh = nel_database();
+    $database = nel_database();
     $login_valid = false;
 
     if (isset($_POST['username']) && $_POST['username'] !== '' && $authorization->userExists($_POST['username']))
@@ -36,8 +36,8 @@ function nel_verify_login()
         if (nel_password_verify($_POST['super_sekrit'], $user->auth_data['user_password']))
         {
             $login_valid = true;
-            $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
-            $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), true);
+            $prepared = $database->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
+            $database->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), true);
             $user_login_fails = 0;
             $attempt_time = 0;
         }
@@ -47,9 +47,9 @@ function nel_verify_login()
             $attempt_time = time();
         }
 
-        $prepared = $dbh->prepare(
+        $prepared = $database->prepare(
                 'UPDATE "' . USER_TABLE . '" SET "failed_logins" = ?, "last_failed_login" = ? WHERE "user_id" = ?');
-        $dbh->executePrepared($prepared, array($user_login_fails, $attempt_time, $_POST['username']), true);
+        $database->executePrepared($prepared, array($user_login_fails, $attempt_time, $_POST['username']), true);
 
         if (!$login_valid)
         {
@@ -58,8 +58,8 @@ function nel_verify_login()
     }
     else
     {
-        $prepared = $dbh->prepare('SELECT * FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ? LIMIT 1');
-        $result = $dbh->executePreparedFetch($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), PDO::FETCH_ASSOC,
+        $prepared = $database->prepare('SELECT * FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ? LIMIT 1');
+        $result = $database->executePreparedFetch($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), PDO::FETCH_ASSOC,
                 true);
 
         if ($result !== false && !empty($result))
@@ -69,16 +69,16 @@ function nel_verify_login()
 
             if ($last_period > 3600)
             {
-                $prepared = $dbh->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
-                $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), true);
+                $prepared = $database->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
+                $database->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), true);
             }
             else if ($last_period > 5)
             {
                 $attempts ++;
-                $prepared = $dbh->prepare(
+                $prepared = $database->prepare(
                         'UPDATE "' . LOGINS_TABLE .
                         '" SET "last_attempt" = ?, "failed_attempts" = ? WHERE "ip_address" = ?');
-                $dbh->executePrepared($prepared, array(time(), $attempts, @inet_pton($_SERVER['REMOTE_ADDR'])), true);
+                $database->executePrepared($prepared, array(time(), $attempts, @inet_pton($_SERVER['REMOTE_ADDR'])), true);
             }
             else
             {
@@ -87,9 +87,9 @@ function nel_verify_login()
         }
         else
         {
-            $prepared = $dbh->prepare(
+            $prepared = $database->prepare(
                     'INSERT INTO "' . LOGINS_TABLE . '" (ip_address, failed_attempts, last_attempt) VALUES (?, ?, ?)');
-            $dbh->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR']), 1, time()), true);
+            $database->executePrepared($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR']), 1, time()), true);
         }
     }
 

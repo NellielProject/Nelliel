@@ -61,8 +61,8 @@ class Regen
 
     public function allPages($board_id)
     {
-        $dbh = nel_database();
-        $result = $dbh->query(
+        $database = nel_database();
+        $result = $database->query(
                 'SELECT "thread_id" FROM "' . nel_parameters_and_data()->boardReferences($board_id, 'thread_table') .
                 '" WHERE "archive_status" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);

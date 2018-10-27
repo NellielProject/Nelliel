@@ -9,8 +9,8 @@ require_once INCLUDE_PATH . 'output/post.php';
 
 function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
 {
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $sessions = new \Nelliel\Sessions($authorization);
     $references = nel_parameters_and_data()->boardReferences($board_id);
@@ -24,7 +24,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
         $sessions->isIgnored('render', true);
     }
 
-    $result = $dbh->query(
+    $result = $database->query(
             'SELECT "thread_id" FROM "' . $references['thread_table'] .
             '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC');
     $front_page_list = $result->fetchAll(PDO::FETCH_COLUMN);
@@ -86,14 +86,14 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
                 $dom->getElementById('outer-div')->appendChild($thread_element);
                 $post_append_target = $thread_element;
                 $query = 'SELECT * FROM "' . $references['thread_table'] . '" WHERE "thread_id" = ? LIMIT 1';
-                $prepared = $dbh->prepare($query);
-                $gen_data['thread'] = $dbh->executePreparedFetch($prepared, array($current_thread_id), PDO::FETCH_ASSOC);
+                $prepared = $database->prepare($query);
+                $gen_data['thread'] = $database->executePreparedFetch($prepared, array($current_thread_id), PDO::FETCH_ASSOC);
                 $post_count = $gen_data['thread']['post_count'];
                 $abbreviate = $post_count > $board_settings['abbreviate_thread'];
                 $query = 'SELECT * FROM "' . $references['post_table'] .
                         '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC';
-                $prepared = $dbh->prepare($query);
-                $treeline = $dbh->executePreparedFetchAll($prepared, array($current_thread_id), PDO::FETCH_ASSOC);
+                $prepared = $database->prepare($query);
+                $treeline = $database->executePreparedFetchAll($prepared, array($current_thread_id), PDO::FETCH_ASSOC);
 
                 $gen_data['thread']['first100'] = $post_count > 100;
                 $post_counter = 0;
@@ -106,8 +106,8 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
             {
                 $query = 'SELECT * FROM "' . $references['file_table'] .
                         '" WHERE "post_ref" = ? ORDER BY "file_order" ASC';
-                $prepared = $dbh->prepare($query);
-                $gen_data['files'] = $dbh->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']),
+                $prepared = $database->prepare($query);
+                $gen_data['files'] = $database->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']),
                         PDO::FETCH_ASSOC);
             }
 

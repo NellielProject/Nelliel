@@ -43,7 +43,7 @@ class SQLTables
 
     public function createPostsTable($table_name, $threads_table)
     {
-        $dbh = nel_database();
+        $database = nel_database();
         $auto_inc = $this->autoincrementColumn('INTEGER');
         $options = $this->tableOptions();
         $schema = "
@@ -76,7 +76,7 @@ class SQLTables
 
         if ($result)
         {
-            $dbh->query('CREATE INDEX index_' . $table_name . '_parent_thread ON ' . $table_name . ' (parent_thread);');
+            $database->query('CREATE INDEX index_' . $table_name . '_parent_thread ON ' . $table_name . ' (parent_thread);');
         }
 
         nel_setup_stuff_done($result);
@@ -84,7 +84,7 @@ class SQLTables
 
     public function createFilesTable($table_name, $posts_table)
     {
-        $dbh = nel_database();
+        $database = nel_database();
         $auto_inc = $this->autoincrementColumn('INTEGER');
         $options = $this->tableOptions();
         $schema = "
@@ -123,10 +123,10 @@ class SQLTables
 
         if ($result)
         {
-            $dbh->query('CREATE INDEX index_' . $table_name . '_post_ref ON ' . $table_name . ' (post_ref);');
-            $dbh->query('CREATE INDEX index_' . $table_name . '_md5 ON ' . $table_name . ' (md5);');
-            $dbh->query('CREATE INDEX index_' . $table_name . '_sha1 ON ' . $table_name . ' (sha1);');
-            $dbh->query('CREATE INDEX index_' . $table_name . '_sha256 ON ' . $table_name . ' (sha256);');
+            $database->query('CREATE INDEX index_' . $table_name . '_post_ref ON ' . $table_name . ' (post_ref);');
+            $database->query('CREATE INDEX index_' . $table_name . '_md5 ON ' . $table_name . ' (md5);');
+            $database->query('CREATE INDEX index_' . $table_name . '_sha1 ON ' . $table_name . ' (sha1);');
+            $database->query('CREATE INDEX index_' . $table_name . '_sha256 ON ' . $table_name . ' (sha256);');
         }
 
         nel_setup_stuff_done($result);
@@ -289,7 +289,7 @@ class SQLTables
 
     public function createBansTable($table_name)
     {
-        $dbh = nel_database();
+        $database = nel_database();
         $auto_inc = $this->autoincrementColumn('INTEGER');
         $options = $this->tableOptions();
         $schema = "
@@ -313,8 +313,8 @@ class SQLTables
 
         if ($result)
         {
-            $dbh->query('CREATE INDEX index_' . $table_name . '_ip_address_start ON ' . $table_name . ' (ip_address_start);');
-            $dbh->query('CREATE INDEX index_' . $table_name . '_ip_address_end ON ' . $table_name . ' (ip_address_end);');
+            $database->query('CREATE INDEX index_' . $table_name . '_ip_address_start ON ' . $table_name . ' (ip_address_start);');
+            $database->query('CREATE INDEX index_' . $table_name . '_ip_address_end ON ' . $table_name . ' (ip_address_end);');
         }
 
         nel_setup_stuff_done($result);
@@ -501,18 +501,18 @@ class SQLTables
 
     private function createTableQuery($schema, $table_name)
     {
-        $dbh = nel_database();
+        $database = nel_database();
 
-        if ($dbh->tableExists($table_name))
+        if ($database->tableExists($table_name))
         {
             return false;
         }
 
-        $result = $dbh->query($schema);
+        $result = $database->query($schema);
 
         if (!$result)
         {
-            $dbh->tableFail($table_name);
+            $database->tableFail($table_name);
         }
 
         return $result;

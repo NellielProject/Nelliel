@@ -11,8 +11,8 @@ function nel_render_file_filter_panel($user, $board_id = '')
         nel_derp(341, _gettext('You are not allowed to add file filters.'));
     }
 
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $url_constructor = new \Nelliel\URLConstructor();
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
@@ -25,13 +25,13 @@ function nel_render_file_filter_panel($user, $board_id = '')
 
     if ($board_id !== '')
     {
-        $prepared = $dbh->prepare(
+        $prepared = $database->prepare(
                 'SELECT * FROM "' . FILE_FILTER_TABLE . '" WHERE "board_id" = ? ORDER BY "entry" DESC');
-        $filters = $dbh->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_ASSOC);
+        $filters = $database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_ASSOC);
     }
     else
     {
-        $filters = $dbh->executeFetchAll('SELECT * FROM "' . FILE_FILTER_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
+        $filters = $database->executeFetchAll('SELECT * FROM "' . FILE_FILTER_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
     }
 
     $form_action = $url_constructor->dynamic(PHP_SELF, ['manage' => 'general', 'module' => 'file-filter', 'action' => 'add']);

@@ -6,17 +6,17 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_process_new_post($inputs)
 {
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $board_id = $inputs['board_id'];
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $error_data = array('board_id' => $board_id);
     $references = nel_parameters_and_data()->boardReferences($board_id);
-    $archive = new \Nelliel\ArchiveAndPrune($dbh, $board_id, new \Nelliel\FileHandler());
+    $archive = new \Nelliel\ArchiveAndPrune($database, $board_id, new \Nelliel\FileHandler());
     $file_handler = new \Nelliel\FileHandler();
     $file_upload = new \Nelliel\post\FilesUpload($board_id, $_FILES, $authorization);
     $data_handler = new \Nelliel\post\PostData($board_id);
-    $post = new \Nelliel\Content\ContentPost($dbh, new \Nelliel\ContentID(), $board_id);
+    $post = new \Nelliel\Content\ContentPost($database, new \Nelliel\ContentID(), $board_id);
     $data_handler->processPostData($post);
     $time = nel_get_microtime();
     $post->content_data['post_time'] = $time['time'];
@@ -85,7 +85,7 @@ function nel_process_new_post($inputs)
     $post->content_data['op'] = ($post->content_data['parent_thread'] == 0) ? 1 : 0;
     $post->content_data['has_file'] = ($post->content_data['file_count'] > 0) ? 1 : 0;
     $post->reserveDatabaseRow($time['time'], $time['milli']);
-    $thread = new \Nelliel\Content\ContentThread($dbh, new \Nelliel\ContentID(), $board_id);
+    $thread = new \Nelliel\Content\ContentThread($database, new \Nelliel\ContentID(), $board_id);
 
     if ($post->content_data['response_to'] == 0)
     {
@@ -172,7 +172,7 @@ function nel_process_new_post($inputs)
 
 function nel_is_post_ok($board_id, $post_data, $time)
 {
-    $dbh = nel_database();
+    $database = nel_database();
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $error_data = array('board_id' => $board_id);
@@ -183,22 +183,22 @@ function nel_is_post_ok($board_id, $post_data, $time)
     if ($post_data['parent_thread'] === 0) // TODO: Update this, doesn't look right
     {
         $thread_delay = $time - $board_settings['thread_delay'];
-        $prepared = $dbh->prepare(
+        $prepared = $database->prepare(
                 'SELECT COUNT(*) FROM "' . $references['post_table'] . '" WHERE "post_time" > ? AND "ip_address" = ?');
         $prepared->bindValue(1, $thread_delay, PDO::PARAM_STR);
         $prepared->bindValue(2, @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
-        $renzoku = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+        $renzoku = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
     }
     else
     {
         $reply_delay = $time - $board_settings['reply_delay'];
-        $prepared = $dbh->prepare(
+        $prepared = $database->prepare(
                 'SELECT COUNT(*) FROM "' . $references['post_table'] .
                 '" WHERE "parent_thread" = ? AND "post_time" > ? AND "ip_address" = ?');
         $prepared->bindValue(1, $post_data['parent_thread'], PDO::PARAM_INT);
         $prepared->bindValue(2, $reply_delay, PDO::PARAM_STR);
         $prepared->bindValue(3, @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
-        $renzoku = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+        $renzoku = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
     }
 
     if ($renzoku > 0)
@@ -208,10 +208,10 @@ function nel_is_post_ok($board_id, $post_data, $time)
 
     if ($post_data['parent_thread'] != 0)
     {
-        $prepared = $dbh->prepare(
+        $prepared = $database->prepare(
                 'SELECT "post_count", "archive_status", "locked" FROM "' . $references['thread_table'] .
                 '" WHERE "thread_id" = ? LIMIT 1');
-        $thread_info = $dbh->executePreparedFetch($prepared, array($post_data['parent_thread']), PDO::FETCH_ASSOC, true);
+        $thread_info = $database->executePreparedFetch($prepared, array($post_data['parent_thread']), PDO::FETCH_ASSOC, true);
 
         if (!empty($thread_info))
         {

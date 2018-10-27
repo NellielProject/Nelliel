@@ -6,8 +6,8 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_staff_panel_main()
 {
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -19,7 +19,7 @@ function nel_render_staff_panel_main()
 
     $user_list = $dom->getElementById('user-list');
     $user_list_nodes = $user_list->getElementsByAttributeName('data-parse-id', true);
-    $users = $dbh->executeFetchAll('SELECT "user_id", "display_name" FROM "' . USER_TABLE . '"', PDO::FETCH_ASSOC);
+    $users = $database->executeFetchAll('SELECT "user_id", "display_name" FROM "' . USER_TABLE . '"', PDO::FETCH_ASSOC);
 
     foreach ($users as $user)
     {
@@ -33,7 +33,7 @@ function nel_render_staff_panel_main()
 
     $role_list = $dom->getElementById('role-list');
     $role_list_nodes = $role_list->getElementsByAttributeName('data-parse-id', true);
-    $roles = $dbh->executeFetchAll('SELECT "role_id", "role_title" FROM "' . ROLES_TABLE . '"', PDO::FETCH_ASSOC);
+    $roles = $database->executeFetchAll('SELECT "role_id", "role_title" FROM "' . ROLES_TABLE . '"', PDO::FETCH_ASSOC);
 
     foreach ($roles as $role)
     {
@@ -54,8 +54,8 @@ function nel_render_staff_panel_main()
 
 function nel_render_staff_panel_user_edit($user_id)
 {
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -76,7 +76,7 @@ function nel_render_staff_panel_user_edit($user_id)
 
     $board_roles = $dom->getElementById('board-roles');
     $update_submit = $dom->getElementById('user-edit-submit');
-    $boards = $dbh->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+    $boards = $database->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
 
     if ($boards !== false)
     {
@@ -95,8 +95,8 @@ function nel_render_staff_panel_user_edit($user_id)
         }
     }
 
-    $prepared = $dbh->prepare('SELECT * FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ?');
-    $user_boards = $dbh->executePreparedFetchAll($prepared, array($user_id), PDO::FETCH_ASSOC);
+    $prepared = $database->prepare('SELECT * FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ?');
+    $user_boards = $database->executePreparedFetchAll($prepared, array($user_id), PDO::FETCH_ASSOC);
 
     if ($user_boards !== false)
     {

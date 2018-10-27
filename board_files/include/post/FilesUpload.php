@@ -138,8 +138,8 @@ class FilesUpload
 
     public function doesFileExist($response_to, $file)
     {
-        $dbh = nel_database();
-        $snacks = new \Nelliel\Snacks($dbh, new \Nelliel\BanHammer($dbh, $this->authorization));
+        $database = nel_database();
+        $snacks = new \Nelliel\Snacks($database, new \Nelliel\BanHammer($database, $this->authorization));
         $references = nel_parameters_and_data()->boardReferences($this->board_id);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $error_data = array('delete_files' => true, 'bad-filename' => $file->content_data['name'], 'files' => $this->uploaded_files,
@@ -179,7 +179,7 @@ class FilesUpload
         {
             $query = 'SELECT 1 FROM "' . $references['file_table'] .
                     '" WHERE "parent_thread" = "post_ref" AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
-            $prepared = $dbh->prepare($query);
+            $prepared = $database->prepare($query);
             $prepared->bindValue(1, $file->content_data['md5'], PDO::PARAM_LOB);
             $prepared->bindValue(2, $file->content_data['sha1'], PDO::PARAM_LOB);
             $prepared->bindValue(3, $file->content_data['sha256'], PDO::PARAM_LOB);
@@ -189,7 +189,7 @@ class FilesUpload
         {
             $query = 'SELECT 1 FROM "' . $references['file_table'] .
                     '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
-            $prepared = $dbh->prepare($query);
+            $prepared = $database->prepare($query);
             $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
             $prepared->bindValue(2, $file->content_data['md5'], PDO::PARAM_LOB);
             $prepared->bindValue(3, $file->content_data['sha1'], PDO::PARAM_LOB);
@@ -200,14 +200,14 @@ class FilesUpload
         {
             $query = 'SELECT 1 FROM "' . $references['file_table'] .
                     '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ? LIMIT 1';
-            $prepared = $dbh->prepare($query);
+            $prepared = $database->prepare($query);
             $prepared->bindValue(1, $file->content_data['md5'], PDO::PARAM_LOB);
             $prepared->bindValue(2, $file->content_data['sha1'], PDO::PARAM_LOB);
             $prepared->bindValue(3, $file->content_data['sha256'], PDO::PARAM_LOB);
             $prepared->bindValue(4, $file->content_data['sha512'], PDO::PARAM_LOB);
         }
 
-        $result = $dbh->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
+        $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
 
         if ($result)
         {

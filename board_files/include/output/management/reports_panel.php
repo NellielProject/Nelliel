@@ -11,8 +11,8 @@ function nel_render_reports_panel($user, $board_id = '')
         nel_derp(380, _gettext('You are not allowed to access the reports panel.'));
     }
 
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $url_constructor = new \Nelliel\URLConstructor();
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
@@ -25,13 +25,13 @@ function nel_render_reports_panel($user, $board_id = '')
 
     if ($board_id !== '')
     {
-        $prepared = $dbh->prepare(
+        $prepared = $database->prepare(
                 'SELECT * FROM "' . REPORTS_TABLE . '" WHERE "board_id" = ? ORDER BY "report_id" DESC');
-        $report_list = $dbh->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_ASSOC);
+        $report_list = $database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_ASSOC);
     }
     else
     {
-        $report_list = $dbh->executeFetchAll('SELECT * FROM "' . REPORTS_TABLE . '" ORDER BY "report_id" DESC',
+        $report_list = $database->executeFetchAll('SELECT * FROM "' . REPORTS_TABLE . '" ORDER BY "report_id" DESC',
                 PDO::FETCH_ASSOC);
     }
 
@@ -67,10 +67,10 @@ function nel_render_reports_panel($user, $board_id = '')
         }
         else if ($content_id->isFile())
         {
-            $prepared = $dbh->prepare(
+            $prepared = $database->prepare(
                     'SELECT "filename" FROM "' . $references['file_table'] .
                     '" WHERE "parent_thread" = ? AND post_ref = ? AND "file_order" = ? LIMIT 1');
-            $filename = $dbh->executePreparedFetch($prepared,
+            $filename = $database->executePreparedFetch($prepared,
                     [$content_id->thread_id, $content_id->post_id, $content_id->order_id], PDO::FETCH_COLUMN);
             $src_web_path = $board_web_path . rawurlencode($references['src_dir']) . '/';
             $content_link = $src_web_path . $content_id->thread_id . '/' . $content_id->post_id . '/' .

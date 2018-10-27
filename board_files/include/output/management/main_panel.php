@@ -2,8 +2,8 @@
 
 function nel_render_main_panel()
 {
-    $dbh = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -14,7 +14,7 @@ function nel_render_main_panel()
     $render->loadTemplateFromFile($dom, 'management/main_panel.html');
     $board_entry = $dom->getElementById('board-entry');
     $insert_before = $board_entry->parentNode->lastChild;
-    $boards = $dbh->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
+    $boards = $database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
     $session = new \Nelliel\Sessions($authorization);
     $user = $session->sessionUser();
 
