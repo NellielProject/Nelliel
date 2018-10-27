@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel\setup;
+namespace Nelliel\Setup;
 
 if (!defined('NELLIEL_VERSION'))
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel\setup;
+namespace Nelliel\Setup;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -13,7 +13,7 @@ class SQLTables
 
     function __construct()
     {
-        $this->insert_data = new \Nelliel\setup\TableInsertData();
+        $this->insert_data = new TableInsertData();
     }
 
     public function createThreadsTable($table_name)

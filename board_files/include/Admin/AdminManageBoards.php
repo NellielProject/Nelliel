@@ -56,7 +56,7 @@ class AdminManageBoards extends AdminBase
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "board_directory", "db_prefix") VALUES (?, ?, ?)');
         $this->database->executePrepared($prepared, array($board_id, $board_directory, $db_prefix));
-        $setup = new \Nelliel\setup\Setup();
+        $setup = new \Nelliel\Setup\Setup();
         $setup->createBoardTables($board_id);
         $setup->createBoardDirectories($board_id);
 

@@ -34,7 +34,7 @@ nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
 if (RUN_SETUP_CHECK)
 {
-    $setup = new \Nelliel\setup\Setup();
+    $setup = new \Nelliel\Setup\Setup();
     $board_id = (isset($_GET['board_id'])) ? $_GET['board_id'] : '';
     $setup->checkAll($board_id);
 }

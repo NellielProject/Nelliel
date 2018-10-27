@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel\setup;
+namespace Nelliel\Setup;
 
 use PDO;
 
@@ -43,7 +43,7 @@ class Setup
 
     public function createCoreTables()
     {
-        $sql_tables = new \Nelliel\setup\SQLTables();
+        $sql_tables = new SQLTables();
         $sql_tables->createSiteConfigTable(SITE_CONFIG_TABLE);
         $sql_tables->createBansTable(BAN_TABLE);
         $sql_tables->createUserTable(USER_TABLE);
@@ -67,7 +67,7 @@ class Setup
     public function createBoardTables($board_id)
     {
         $references = nel_parameters_and_data()->boardReferences($board_id);
-        $sql_tables = new \Nelliel\setup\SQLTables();
+        $sql_tables = new SQLTables();
         $sql_tables->createThreadsTable($references['thread_table']);
         $sql_tables->createThreadsTable($references['archive_thread_table']);
         $sql_tables->createPostsTable($references['post_table'], $references['thread_table']);
