@@ -8,7 +8,7 @@ function nel_render_login_page()
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $url_constructor = new \Nelliel\URLConstructor();
-    $language = new \Nelliel\language\Language($authorization);
+    $language = new \Nelliel\Language\Language($authorization);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);

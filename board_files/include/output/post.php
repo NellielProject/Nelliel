@@ -14,7 +14,7 @@ function nel_render_insert_hr($dom)
 function nel_render_index_navigation($board_id, $dom, $render, $pages)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $language = new \Nelliel\language\Language($authorization);
+    $language = new \Nelliel\Language\Language($authorization);
     $dom_nav = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom_nav, 'index_navigation.html');
     $bottom_nav = $dom_nav->getElementById('index-bottom-nav');

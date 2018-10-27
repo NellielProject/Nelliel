@@ -26,7 +26,7 @@ require_once INCLUDE_PATH . 'accessors.php';
 require_once INCLUDE_PATH . 'database.php';
 
 $authorization = new \Nelliel\Auth\Authorization(nel_database());
-$language = new \Nelliel\language\Language($authorization);
+$language = new \Nelliel\Language\Language($authorization);
 $language->loadLanguage(LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po');
 
 require_once INCLUDE_PATH . 'general_functions.php';

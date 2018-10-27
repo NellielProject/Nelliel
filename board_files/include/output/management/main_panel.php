@@ -4,7 +4,7 @@ function nel_render_main_panel()
 {
     $dbh = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($dbh);
-    $language = new \Nelliel\language\Language($authorization);
+    $language = new \Nelliel\Language\Language($authorization);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -109,7 +109,7 @@ function nel_render_main_panel()
 function nel_render_main_board_panel($board_id)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $language = new \Nelliel\language\Language($authorization);
+    $language = new \Nelliel\Language\Language($authorization);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);

@@ -14,7 +14,7 @@ function nel_render_reports_panel($user, $board_id = '')
     $dbh = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($dbh);
     $url_constructor = new \Nelliel\URLConstructor();
-    $language = new \Nelliel\language\Language($authorization);
+    $language = new \Nelliel\Language\Language($authorization);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);

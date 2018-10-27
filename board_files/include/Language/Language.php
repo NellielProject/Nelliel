@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel\language;
+namespace Nelliel\Language;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -66,7 +66,7 @@ class Language
             nel_derp(390, _gettext('You are not allowed to extract the gettext strings.'));
         }
 
-        $extractor = new \Nelliel\language\LanguageExtractor();
+        $extractor = new \Nelliel\Language\LanguageExtractor();
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->writeFile($file, $extractor->assemblePoString());
     }

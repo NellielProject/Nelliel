@@ -9,7 +9,7 @@ function nel_render_ban_page($board_id, $ban_info)
     require_once INCLUDE_PATH . 'output/header.php';
     require_once INCLUDE_PATH . 'output/footer.php';
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $language = new \Nelliel\language\Language($authorization);
+    $language = new \Nelliel\Language\Language($authorization);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);

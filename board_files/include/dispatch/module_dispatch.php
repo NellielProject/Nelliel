@@ -70,7 +70,7 @@ function nel_module_dispatch($inputs)
         case 'language':
             if ($inputs['action'] === 'extract-gettext')
             {
-                $language = new \Nelliel\language\Language($authorization);
+                $language = new \Nelliel\Language\Language($authorization);
                 $language->extractLanguageStrings(LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
             }
 
