@@ -4,11 +4,11 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_admin_dispatch($inputs)
+function nel_module_dispatch($inputs)
 {
     $sessions = new \Nelliel\Sessions(nel_authorize());
     $sessions->initializeSession($inputs['module'], $inputs['board_id']);
-    $inputs = nel_plugins()->processHook('nel-inb4-admin-dispatch', array(), $inputs);
+    $inputs = nel_plugins()->processHook('nel-inb4-module-dispatch', array(), $inputs);
 
     switch ($inputs['module'])
     {

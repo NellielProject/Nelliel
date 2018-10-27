@@ -38,6 +38,7 @@ function nel_central_dispatch()
 
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database(), $authorize));
     $snacks->applyBan($inputs);
-    require_once INCLUDE_PATH . 'dispatch/admin_dispatch.php';
-    nel_admin_dispatch($inputs);
+
+    require_once INCLUDE_PATH . 'dispatch/module_dispatch.php';
+    nel_module_dispatch($inputs);
 }

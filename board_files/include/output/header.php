@@ -8,7 +8,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
 {
     $dbh = nel_database();
     $language = new \Nelliel\language\Language(nel_authorize());
-    $sessions = new \Nelliel\Sessions(nel_authorize());
+    $session = new \Nelliel\Sessions(nel_authorize());
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $dom = $render->newDOMDocument();
@@ -93,7 +93,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
-    if ($sessions->inModmode($board_id))
+    if ($session->inModmode($board_id))
     {
         $dom->getElementById('manage-header-text')->setContent(_gettext('Mod Mode'));
         $dom->getElementById('manage-board-header')->remove();
@@ -102,7 +102,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     }
     else
     {
-        $top_admin_span->removeChild($a_elements->item(0)->parentNode);
+        $a_elements->item(0)->parentNode->remove();
         $dom->getElementById('manage-header')->remove();
         $dom->getElementById('manage-board-header')->remove();
         $dom->getElementById('manage-sub-header')->remove();
@@ -116,7 +116,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
 function nel_render_general_header($render, $dotdot = null, $board_id = null, $extra_data = array())
 {
     $language = new \Nelliel\language\Language(nel_authorize());
-    $sessions = new \Nelliel\Sessions(nel_authorize());
+    $session = new \Nelliel\Sessions(nel_authorize());
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
     $head_element = $dom->getElementsByTagName('head')->item(0);
@@ -145,7 +145,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
-    if ($sessions->isActive() || $sessions->inModmode($board_id))
+    if ($session->isActive() || $session->inModmode($board_id))
     {
         if (isset($extra_data['header']))
         {
