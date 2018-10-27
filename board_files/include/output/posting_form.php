@@ -4,7 +4,7 @@ require_once INCLUDE_PATH . 'output/rules.php';
 function nel_render_posting_form($board_id, $render, $response_to, $dotdot = null)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Sessions($authorization);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
@@ -150,6 +150,6 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
         $dom->removeChild($dom->getElementById('form-trap2'));
     }
 
-    $language->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    $translator->translateDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
 }

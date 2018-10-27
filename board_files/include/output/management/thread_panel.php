@@ -13,7 +13,7 @@ function nel_render_thread_panel_main($user, $board_id)
 
     $dbh = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($dbh);
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -126,7 +126,7 @@ function nel_render_thread_panel_main($user, $board_id)
 
     $thread_row->remove();
 
-    $language->i18nDom($dom);
+    $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -142,7 +142,7 @@ function nel_render_thread_panel_expand($user, $board_id, $thread_id)
 
     $dbh = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($dbh);
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -207,7 +207,7 @@ function nel_render_thread_panel_expand($user, $board_id, $thread_id)
 
     $post_row->remove();
 
-    $language->i18nDom($dom);
+    $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

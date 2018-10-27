@@ -8,7 +8,7 @@ function nel_render_login_page()
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $url_constructor = new \Nelliel\URLConstructor();
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -17,7 +17,7 @@ function nel_render_login_page()
     $render->loadTemplateFromFile($dom, 'management/login.html');
     $form_action = $url_constructor->dynamic(PHP_SELF, ['module' => 'login', 'action' => 'login']);
     $dom->getElementById('login-form')->extSetAttribute('action', $form_action);
-    $language->i18nDom($dom);
+    $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

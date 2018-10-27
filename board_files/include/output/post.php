@@ -14,7 +14,7 @@ function nel_render_insert_hr($dom)
 function nel_render_index_navigation($board_id, $dom, $render, $pages)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $dom_nav = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom_nav, 'index_navigation.html');
     $bottom_nav = $dom_nav->getElementById('index-bottom-nav');
@@ -39,7 +39,7 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
     }
 
     $nav_nodes['nav-link-container']->remove();
-    $language->i18nDom($bottom_nav, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    $translator->translateDom($bottom_nav, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
 }
 
 function nel_render_post($board_id, $gen_data, $dom)

@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_module_dispatch($inputs)
 {
-    $authorization = new \Nelliel\Auth\Authorization($dbh);
+    $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $sessions = new \Nelliel\Sessions($authorization);
     $sessions->initializeSession($inputs['module'], $inputs['board_id']);
     $inputs = nel_plugins()->processHook('nel-inb4-module-dispatch', array(), $inputs);
@@ -70,7 +70,7 @@ function nel_module_dispatch($inputs)
         case 'language':
             if ($inputs['action'] === 'extract-gettext')
             {
-                $language = new \Nelliel\Language\Language($authorization);
+                $translator = new \Nelliel\Language\Translator();
                 $language->extractLanguageStrings(LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
             }
 

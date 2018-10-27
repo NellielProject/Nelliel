@@ -14,7 +14,7 @@ function nel_render_reports_panel($user, $board_id = '')
     $dbh = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($dbh);
     $url_constructor = new \Nelliel\URLConstructor();
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -91,7 +91,7 @@ function nel_render_reports_panel($user, $board_id = '')
 
     $report_info_row->remove();
 
-    $language->i18nDom($dom);
+    $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

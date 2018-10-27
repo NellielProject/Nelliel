@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_general_footer($render, $board_id = null, $dotdot = null, $styles = false, $extra_links = false)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'footer.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
@@ -26,7 +26,7 @@ function nel_render_general_footer($render, $board_id = null, $dotdot = null, $s
     $dom->getElementById('nelliel-version')->setContent(NELLIEL_VERSION);
     $dom->getElementById('js-ui')->modifyAttribute('src', $dotdot, 'before');
     $locale = ($is_board) ? nel_parameters_and_data()->boardSettings($board_id, 'board_language') : DEFAULT_LOCALE;
-    $language->i18nDom($dom, $locale);
+    $translator->translateDom($dom, $locale);
     $dom->getElementById('timer-result')->setContent(round($render->endRenderTimer(), 4));
     $render->appendHTMLFromDOM($dom);
 }

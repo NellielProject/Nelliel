@@ -9,7 +9,7 @@ function nel_render_ban_page($board_id, $ban_info)
     require_once INCLUDE_PATH . 'output/header.php';
     require_once INCLUDE_PATH . 'output/footer.php';
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -91,7 +91,7 @@ function nel_render_ban_page($board_id, $ban_info)
         }
     }
 
-    $language->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    $translator->translateDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render, $board_id, null, true);
     echo $render->outputRenderSet();

@@ -8,7 +8,7 @@ function nel_render_staff_panel_main()
 {
     $dbh = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($dbh);
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -45,7 +45,7 @@ function nel_render_staff_panel_main()
     $role_list_nodes['edit-role-link']->remove();
     $dom->getElementById('new-role-link')->extSetAttribute('href', PHP_SELF . '?module=staff&section=role&action=new');
 
-    $language->i18nDom($dom);
+    $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -56,7 +56,7 @@ function nel_render_staff_panel_user_edit($user_id)
 {
     $dbh = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($dbh);
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -112,7 +112,7 @@ function nel_render_staff_panel_user_edit($user_id)
     $board_roles->parentNode->appendChild($update_submit);
 
     //$board_roles->remove();
-    $language->i18nDom($dom);
+    $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -122,7 +122,7 @@ function nel_render_staff_panel_user_edit($user_id)
 function nel_render_staff_panel_role_edit($role_id)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $role = $authorization->getRole($role_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -155,7 +155,7 @@ function nel_render_staff_panel_role_edit($role_id)
         }
     }
 
-    $language->i18nDom($dom);
+    $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

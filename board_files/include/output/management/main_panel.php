@@ -4,7 +4,7 @@ function nel_render_main_panel()
 {
     $dbh = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($dbh);
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -99,7 +99,7 @@ function nel_render_main_panel()
         $manage_options_nodes['module-extract-gettext']->remove();
     }
 
-    $language->i18nDom($dom);
+    $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -109,7 +109,7 @@ function nel_render_main_panel()
 function nel_render_main_board_panel($board_id)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -218,7 +218,7 @@ function nel_render_main_board_panel($board_id)
         $dom->getElementById('regen-all-caches')->parentNode->remove();
     }
 
-    $language->i18nDom($dom);
+    $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();

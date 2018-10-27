@@ -8,7 +8,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
 {
     $dbh = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($dbh);
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Sessions($authorization);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $references = nel_parameters_and_data()->boardReferences($board_id);
@@ -109,7 +109,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
         $dom->getElementById('manage-sub-header')->remove();
     }
 
-    $language->i18nDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    $translator->translateDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
 
     $render->appendHTMLFromDOM($dom);
 }
@@ -117,7 +117,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
 function nel_render_general_header($render, $dotdot = null, $board_id = null, $extra_data = array())
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Sessions($authorization);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
@@ -175,6 +175,6 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
         $dom->getElementById('manage-sub-header')->remove();
     }
 
-    $language->i18nDom($dom);
+    $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
 }

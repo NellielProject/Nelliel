@@ -13,7 +13,7 @@ function nel_render_main_ban_panel($user, $board_id)
 
     $dbh = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($dbh);
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -56,7 +56,7 @@ function nel_render_main_ban_panel($user, $board_id)
 
     $form_add_ban = $dom->getElementById('link-new-ban');
     $form_add_ban->extSetAttribute('href', PHP_SELF . '?module=board&module=bans&action=new&board_id=' . $board_id);
-    $language->i18nDom($dom);
+    $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -66,7 +66,7 @@ function nel_render_main_ban_panel($user, $board_id)
 function nel_render_ban_panel_add($board_id, $ip = '', $type = 'GENERAL')
 {
     $authorize = new \Nelliel\Auth\Authorization(nel_database());
-    $language = new \Nelliel\Language\Language($authorize);
+    $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -96,7 +96,7 @@ function nel_render_ban_panel_add($board_id, $ip = '', $type = 'GENERAL')
     $ban_nodes = $add_ban_form->getElementsByAttributeName('data-parse-id', true);
     $ban_nodes['ban-ip']->extSetAttribute('value', $ip);
     $dom->getElementById('ban-type')->extSetAttribute('value', $type);
-    $language->i18nDom($dom);
+    $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
@@ -106,7 +106,7 @@ function nel_render_ban_panel_add($board_id, $ip = '', $type = 'GENERAL')
 function nel_render_ban_panel_modify($board_id)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $language = new \Nelliel\Language\Language($authorization);
+    $translator = new \Nelliel\Language\Translator();
     $ban_hammer = new \Nelliel\BanHammer(nel_database(), $authorization);
     $dbh = nel_database();
     $render = new NellielTemplates\RenderCore();
@@ -165,7 +165,7 @@ function nel_render_ban_panel_modify($board_id)
         $dom->getElementById('ban-appealed-field')->extSetAttribute('checked', 'checked');
     }
 
-    $language->i18nDom($dom);
+    $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
     nel_render_general_footer($render);
     echo $render->outputRenderSet();
