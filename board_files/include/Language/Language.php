@@ -27,7 +27,7 @@ class Language
 
         if (!file_exists($file))
         {
-            include CACHE_PATH . 'language/en_US/LC_MESSAGES/nelliel_po.php';
+            $file = LOCALE_PATH . 'en_US/LC_MESSAGES/nelliel.po';
         }
 
         $language_array = array();
