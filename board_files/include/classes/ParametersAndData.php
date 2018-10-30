@@ -49,18 +49,26 @@ class ParametersAndData
 
             if ($settings === false || $cache_regen)
             {
-                $config_list = $this->database->executeFetchAll('SELECT * FROM "'. SITE_CONFIG_TABLE . '"', PDO::FETCH_ASSOC);
-
-                foreach ($config_list as $config)
+                if ($this->database->tableExists(SITE_CONFIG_TABLE))
                 {
-                    $config['setting'] = nel_cast_to_datatype($config['setting'], $config['data_type']);
-                    $settings[$config['config_name']] = $config['setting'];
+                    $config_list = $this->database->executeFetchAll('SELECT * FROM "' . SITE_CONFIG_TABLE . '"',
+                            PDO::FETCH_ASSOC);
+
+                    foreach ($config_list as $config)
+                    {
+                        $config['setting'] = nel_cast_to_datatype($config['setting'], $config['data_type']);
+                        $settings[$config['config_name']] = $config['setting'];
+                    }
+
+                    if (USE_INTERNAL_CACHE || $cache_regen)
+                    {
+                        $this->cache_handler->writeCacheFile(CACHE_PATH, 'site_settings.php',
+                                '$site_settings = ' . var_export($settings, true) . ';');
+                    }
                 }
-
-                if (USE_INTERNAL_CACHE || $cache_regen)
+                else
                 {
-                    $this->cache_handler->writeCacheFile(CACHE_PATH, 'site_settings.php',
-                            '$site_settings = ' . var_export($settings, true) . ';');
+                    $settings = self::$site_settings;
                 }
             }
 
@@ -88,7 +96,8 @@ class ParametersAndData
 
             if ($settings === false || $cache_regen)
             {
-                $prepared = $this->database->prepare('SELECT "db_prefix" FROM "' .BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
+                $prepared = $this->database->prepare(
+                        'SELECT "db_prefix" FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
                 $db_prefix = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
                 $config_table = $db_prefix . '_config';
                 $config_list = $this->database->executeFetchAll(
@@ -131,7 +140,8 @@ class ParametersAndData
 
             if ($settings === false || $cache_regen)
             {
-                $prepared = $this->database->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
+                $prepared = $this->database->prepare(
+                        'SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
                 $db_prefix = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
                 $config_table = $db_prefix . '_config';
                 $config_list = $this->database->executeFetchAll(
@@ -258,8 +268,8 @@ class ParametersAndData
 
             if (!$loaded)
             {
-                $filters = $this->database->executeFetchAll('SELECT "hash_type", "file_hash" FROM "nelliel_file_filters"',
-                        PDO::FETCH_ASSOC);
+                $filters = $this->database->executeFetchAll(
+                        'SELECT "hash_type", "file_hash" FROM "nelliel_file_filters"', PDO::FETCH_ASSOC);
 
                 foreach ($filters as $filter)
                 {
