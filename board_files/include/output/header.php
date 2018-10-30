@@ -45,7 +45,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $title_element->setContent($title_content);
     $board_navigation = $dom->getElementById("board-navigation");
     $board_navigation->appendChild($dom->createTextNode('[ '));
-    $board_data = $database->executeFetchAll('SELECT * FROM "nelliel_board_data"', PDO::FETCH_ASSOC);
+    $board_data = $database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE. '"', PDO::FETCH_ASSOC);
     $end = end($board_data);
 
     foreach ($board_data as $board)
@@ -143,7 +143,12 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $dom->getElementById('logo')->remove();
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
-    $a_elements->item(1)->extSetAttribute('href', nel_parameters_and_data()->siteSettings('home_page'));
+
+    if(!isset($extra_data['setup_error'])) // TODO: Handle this better
+    {
+        $a_elements->item(1)->extSetAttribute('href', nel_parameters_and_data()->siteSettings('home_page'));
+    }
+
     $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 

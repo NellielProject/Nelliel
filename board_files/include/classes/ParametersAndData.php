@@ -49,7 +49,7 @@ class ParametersAndData
 
             if ($settings === false || $cache_regen)
             {
-                $config_list = $this->database->executeFetchAll('SELECT * FROM "nelliel_site_config"', PDO::FETCH_ASSOC);
+                $config_list = $this->database->executeFetchAll('SELECT * FROM "'. SITE_CONFIG_TABLE . '"', PDO::FETCH_ASSOC);
 
                 foreach ($config_list as $config)
                 {
@@ -88,7 +88,7 @@ class ParametersAndData
 
             if ($settings === false || $cache_regen)
             {
-                $prepared = $this->database->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
+                $prepared = $this->database->prepare('SELECT "db_prefix" FROM "' .BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
                 $db_prefix = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
                 $config_table = $db_prefix . '_config';
                 $config_list = $this->database->executeFetchAll(
