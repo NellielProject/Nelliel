@@ -25,6 +25,11 @@ class Language
             $file = LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po';
         }
 
+        if (!file_exists($file))
+        {
+            include CACHE_PATH . 'language/en_US/LC_MESSAGES/nelliel_po.php';
+        }
+
         $language_array = array();
         $loaded = false;
         $file_id = $hash = md5_file($file);
