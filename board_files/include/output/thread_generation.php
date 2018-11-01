@@ -31,7 +31,7 @@ function nel_thread_generator($board_id, $write, $response_to)
     $expand_dom = $render->newDOMDocument();
     $collapse_dom = $render->newDOMDocument();
     $render->startRenderTimer();
-    $dom->getElementById('form-post-index')->extSetAttribute('action',
+    $dom->getElementById('form-content-action')->extSetAttribute('action',
             $dotdot . PHP_SELF . '?module=threads&area=general&board_id=' . $board_id);
     $prepared = $database->prepare('SELECT * FROM "' . $references['thread_table'] . '" WHERE "thread_id" = ? LIMIT 1');
     $gen_data['thread'] = $database->executePreparedFetch($prepared, array($response_to), PDO::FETCH_ASSOC);

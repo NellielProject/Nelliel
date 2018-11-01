@@ -70,7 +70,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
         $render->loadTemplateFromFile($dom, 'thread.html');
         $render->startRenderTimer();
         $translator->translateDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
-        $dom->getElementById('form-post-index')->extSetAttribute('action',
+        $dom->getElementById('form-content-action')->extSetAttribute('action',
                 $dotdot . PHP_SELF . '?module=threads&area=general&board_id=' . $board_id);
         nel_render_board_header($board_id, $render, $dotdot, $treeline);
         nel_render_posting_form($board_id, $render, $response_to, $dotdot);
@@ -83,7 +83,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
                 $current_thread_id = $front_page_list[$thread_counter];
                 $thread_element = $dom->getElementById('thread-')->cloneNode();
                 $thread_element->changeId('thread-' . $current_thread_id);
-                $dom->getElementById('outer-div')->appendChild($thread_element);
+                $dom->getElementById('form-content-action')->appendChild($thread_element);
                 $post_append_target = $thread_element;
                 $query = 'SELECT * FROM "' . $references['thread_table'] . '" WHERE "thread_id" = ? LIMIT 1';
                 $prepared = $database->prepare($query);

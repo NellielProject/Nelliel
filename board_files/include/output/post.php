@@ -8,7 +8,7 @@ function nel_render_insert_hr($dom)
 {
     $hr = $dom->createElement('hr');
     $hr->setAttribute('class', 'clear');
-    $dom->getElementById('outer-div')->appendChild($hr);
+    $dom->getElementById('form-content-action')->appendChild($hr);
 }
 
 function nel_render_index_navigation($board_id, $dom, $render, $pages)
@@ -18,7 +18,7 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
     $dom_nav = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom_nav, 'index_navigation.html');
     $bottom_nav = $dom_nav->getElementById('index-bottom-nav');
-    $bottom_nav = $dom->getElementById('outer-div')->appendChild($dom->importNode($bottom_nav, true));
+    $bottom_nav = $dom->getElementById('form-content-action')->appendChild($dom->importNode($bottom_nav, true));
     $nav_nodes = $bottom_nav->getElementsByAttributeName('data-parse-id', true);
 
     foreach ($pages as $key => $value)
@@ -553,16 +553,11 @@ function nel_render_thread_form_bottom($board_id, $dom)
     {
         $dom->getElementById('bottom-pass-input')->remove();
     }
-    else
-    {
-        $dom->getElementById('admin-input-set1')->remove();
-        $dom->getElementById('bottom-submit-button')->setContent('Submit');
-    }
 
     if (!$board_settings['use_new_imgdel'])
     {
         $form_td_list->item(4)->remove();
     }
 
-    $dom->getElementById('outer-div')->appendChild($footer_form_element);
+    $dom->getElementById('form-content-action')->appendChild($footer_form_element);
 }

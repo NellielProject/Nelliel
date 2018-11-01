@@ -1,115 +1,99 @@
-	<form id="form-post-index" accept-charset="utf-8" action="" method="post">
-		<div id="outer-div" class="outer-div">
-			<div id="thread-" class="thread-corral">
-				<div id="post-id-" class="post-corral">
-					<a id="p-number"></a>
-					<div id="indents" class="indents">&gt;&gt;</div>
-					<div id="post-container-" class="op-post">
-						<div id="post-header" class="post-header">
-							<div data-parse-id="modmode-header" class="modmode-header">
-								<span>[<span data-parse-id="modmode-ip-address"></span>]</span>
-								<span>[<a data-parse-id="modmode-ban-link" href="" data-i18n="gettext">Ban</a>]</span>
-								<span>[<a data-parse-id="modmode-delete-link" href="" data-i18n="gettext">Delete</a>]</span>
-								<span>[<a data-parse-id="modmode-ban-delete-link" href="" data-i18n="gettext">Ban and Delete</a>]</span>
-								<span>[<a data-parse-id="modmode-lock-thread-link" href="" data-i18n="gettext">Lock Thread</a>]</span>
-								<span>[<a data-parse-id="modmode-sticky-thread-link" href="" data-i18n="gettext">Sticky Thread</a>]</span>
-							</div>
-							<div data-parse-id="thread-header-options" class="thread-header-options">
-								<input id="thread_thread-id" class="op-thread-select" type="checkbox" name="" value="action" title="Select thread">
-								<span>[<a href="#" data-parse-id="hide-thread" data-command="hide-thread" data-id="" data-alt-visual="ShowThread" data-i18n="gettext" 
-								data-i18n-attributes="data-alt-visual">Hide Thread</a>]</span>
-								<span>[<a href="#" data-parse-id="expand-thread" data-i18n="gettext" data-command="expand-thread" data-id="" data-alt-visual="Collapse Thread" 
-								data-i18n-attributes="data-alt-visual">Expand Thread</a>]</span>
-								<span>[<a data-parse-id="reply-to-link" href="" data-i18n="gettext">Reply</a>]</span>
-								<span data-parse-id="sticky-icon" title="Sticky" data-i18n-attributes="title">&#128204;</span>
-								<span data-parse-id="locked-icon" title="Locked" data-i18n-attributes="title">&#128274;</span>
-							</div>
-							<div data-parse-id="post-header-options" class="op-post-header-options">
-								<input id="post_post-id" class="op-post-select" type="checkbox" name="" value="action" title="Select post">
-								<span>[<a href="#" data-parse-id="hide-post" data-command="hide-post" data-id="" data-alt-visual="Show Post" data-i18n="gettext" 
-								data-i18n-attributes="data-alt-visual">Hide Post</a>]</span>
-								<span>[<a data-parse-id="post-link-post" href="#" data-i18n="gettext" data-command="link-post" data-id="">Link</a>]</span>
-							</div>
-							<div data-parse-id="post-header-info" class="op-post-header-info">
-								<span data-parse-id="subject" class="-subject"></span>
-								<span data-parse-id="poster-name" class="-poster-name">
-								<a data-parse-id="poster-mailto" id="poster-mailto" href="mailto:" class="mailto-name"></a>
-								<span data-parse-id="trip-line-"></span>
-								</span>
-								<span data-parse-id="post-time-"></span>&nbsp;<span>No. </span>
-								<a data-parse-id="post-num-link" href="" class="post-link"></a>
-							</div>
+	<form id="form-content-action" class="form-content-action" accept-charset="utf-8" action="" method="post">
+		<div id="thread-" class="thread-corral">
+			<div id="post-id-" class="post-corral">
+				<a id="p-number"></a>
+				<div id="indents" class="indents">&gt;&gt;</div>
+				<div id="post-container-" class="op-post">
+					<div id="post-header" class="post-header">
+						<div data-parse-id="modmode-header" class="modmode-header">
+							<span>[<span data-parse-id="modmode-ip-address"></span>]</span>
+							<span>[<a data-parse-id="modmode-ban-link" href="" data-i18n="gettext">Ban</a>]</span>
+							<span>[<a data-parse-id="modmode-delete-link" href="" data-i18n="gettext">Delete</a>]</span>
+							<span>[<a data-parse-id="modmode-ban-delete-link" href="" data-i18n="gettext">Ban and Delete</a>]</span>
+							<span>[<a data-parse-id="modmode-lock-thread-link" href="" data-i18n="gettext">Lock Thread</a>]</span>
+							<span>[<a data-parse-id="modmode-sticky-thread-link" href="" data-i18n="gettext">Sticky Thread</a>]</span>
 						</div>
-						<div id="post-files-container-" class="op-files-container">
-							<div id="fileinfo-" class="">
-								<div data-parse-id="modmode-options">
-									<span>[<a  data-parse-id="modmode-delete-link" href="" data-i18n="gettext">Delete</a>]</span>
-								</div>
-								<div>
-								<input data-parse-id="select-file" type="checkbox" name="" value="action" title="Select file" class="file-select">
-								<a href="" id="file-link-" target="_blank"></a>
-								</div>
-								<div data-parse-id="filesize-display"></div>
-								<div>[<a data-parse-id="show-file-meta" href="#" data-i18n="gettext" data-command="show-file-meta" data-id="" data-alt-visual="Less file info" 
-									data-i18n-attributes="data-alt-visual">More file info</a>]</div>
-								<div data-parse-id="file-meta" class="file-meta hidden">
-									<div data-parse-id="file-source" class="file-source" data-i18n="gettext">Source:</div>
-									<div data-parse-id="file-license" class="file-license" data-i18n="gettext">License:</div>
-									<div data-parse-id="file-md5" class="file-hash">MD5:</div>
-									<div data-parse-id="file-sha1" class="file-hash">SHA1:</div>
-									<div data-parse-id="file-sha256" class="file-hash">SHA256:</div>
-									<div data-parse-id="file-sha512" class="file-hash">SHA512:</div>
-								</div>
-								<video id="video-preview-" preload="metadata" width="" controls>
-									<source src="" type="">
-								</video>
-								<a href="" id="file-location-" target="_blank" class="preview-link">
-								<img id="file-preview-" src="" width="" height="" alt="" class="" data-command="inline-expand" data-other-dims="" data-other-loc="">
-								</a>
-							</div>
+						<div data-parse-id="thread-header-options" class="thread-header-options">
+							<input id="thread_thread-id" class="op-thread-select" type="checkbox" name="" value="action" title="Select thread">
+							<span>[<a href="#" data-parse-id="hide-thread" data-command="hide-thread" data-id="" data-alt-visual="ShowThread" data-i18n="gettext" 
+							data-i18n-attributes="data-alt-visual">Hide Thread</a>]</span>
+							<span>[<a href="#" data-parse-id="expand-thread" data-i18n="gettext" data-command="expand-thread" data-id="" data-alt-visual="Collapse Thread" 
+							data-i18n-attributes="data-alt-visual">Expand Thread</a>]</span>
+							<span>[<a data-parse-id="reply-to-link" href="" data-i18n="gettext">Reply</a>]</span>
+							<span data-parse-id="sticky-icon" title="Sticky" data-i18n-attributes="title">&#128204;</span>
+							<span data-parse-id="locked-icon" title="Locked" data-i18n-attributes="title">&#128274;</span>
 						</div>
-						<div id="post-contents-" data-parse-id="post-contents" class="">
-							<p data-parse-id="post-text" class="">
-								<span data-parse-id="post-comment"></span>
-								<span data-parse-id="mod-comment" class="mod-comment"><b></b></span>
-							</p>
-							<div id="ban-"></div>
+						<div data-parse-id="post-header-options" class="op-post-header-options">
+							<input id="post_post-id" class="op-post-select" type="checkbox" name="" value="action" title="Select post">
+							<span>[<a href="#" data-parse-id="hide-post" data-command="hide-post" data-id="" data-alt-visual="Show Post" data-i18n="gettext" 
+							data-i18n-attributes="data-alt-visual">Hide Post</a>]</span>
+							<span>[<a data-parse-id="post-link-post" href="#" data-i18n="gettext" data-command="link-post" data-id="">Link</a>]</span>
+						</div>
+						<div data-parse-id="post-header-info" class="op-post-header-info">
+							<span data-parse-id="subject" class="-subject"></span>
+							<span data-parse-id="poster-name" class="-poster-name">
+							<a data-parse-id="poster-mailto" id="poster-mailto" href="mailto:" class="mailto-name"></a>
+							<span data-parse-id="trip-line-"></span>
+							</span>
+							<span data-parse-id="post-time-"></span>&nbsp;<span>No. </span>
+							<a data-parse-id="post-num-link" href="" class="post-link"></a>
 						</div>
 					</div>
-				</div>
-				<div id="thread-expand-">
-					<span class="omitted-posts"><span></span><span data-i18n="gettext"> posts omitted. Click Reply or Expand Thread to view.</span><br></span>
+					<div id="post-files-container-" class="op-files-container">
+						<div id="fileinfo-" class="">
+							<div data-parse-id="modmode-options">
+								<span>[<a  data-parse-id="modmode-delete-link" href="" data-i18n="gettext">Delete</a>]</span>
+							</div>
+							<div>
+							<input data-parse-id="select-file" type="checkbox" name="" value="action" title="Select file" class="file-select">
+							<a href="" id="file-link-" target="_blank"></a>
+							</div>
+							<div data-parse-id="filesize-display"></div>
+							<div>[<a data-parse-id="show-file-meta" href="#" data-i18n="gettext" data-command="show-file-meta" data-id="" data-alt-visual="Less file info" 
+								data-i18n-attributes="data-alt-visual">More file info</a>]</div>
+							<div data-parse-id="file-meta" class="file-meta hidden">
+								<div data-parse-id="file-source" class="file-source" data-i18n="gettext">Source:</div>
+								<div data-parse-id="file-license" class="file-license" data-i18n="gettext">License:</div>
+								<div data-parse-id="file-md5" class="file-hash">MD5:</div>
+								<div data-parse-id="file-sha1" class="file-hash">SHA1:</div>
+								<div data-parse-id="file-sha256" class="file-hash">SHA256:</div>
+								<div data-parse-id="file-sha512" class="file-hash">SHA512:</div>
+							</div>
+							<video id="video-preview-" preload="metadata" width="" controls>
+								<source src="" type="">
+							</video>
+							<a href="" id="file-location-" target="_blank" class="preview-link">
+							<img id="file-preview-" src="" width="" height="" alt="" class="" data-command="inline-expand" data-other-dims="" data-other-loc="">
+							</a>
+						</div>
+					</div>
+					<div id="post-contents-" data-parse-id="post-contents" class="">
+						<p data-parse-id="post-text" class="">
+							<span data-parse-id="post-comment"></span>
+							<span data-parse-id="mod-comment" class="mod-comment"><b></b></span>
+						</p>
+						<div id="ban-"></div>
+					</div>
 				</div>
 			</div>
-			<table id="footer-form" class="footer-form">
-				<tr>
-					<td>
-						<input type="hidden" name="action" value="update">
-						<input id="board_id_field_footer" type="hidden" name="board_id" value="">
-						<span id="admin-input-set1">
-						<input type="checkbox" name="delpost" id="dpost"><label for="dpost" data-i18n="gettext">Delete selected content</label><br>
-						<input type="checkbox" name="banpost" id="bpost"><label for="bpost" data-i18n="gettext">Ban selected posts</label><br>
-						<input type="hidden" name="mode" value="admin->modmode">
-						</span>
-						<div id="bottom-pass-input">
-							<label for="update-sekrit" data-i18n="gettext">Password:</label>&nbsp;<input type="password" name="update_sekrit" id="update-sekrit" size="12" value="">
-						</div>
-						<div>
-							<input id="bottom-submit-button" type="submit" name="form_submit_delete" value="Delete" data-i18n="gettext" data-i18n-attributes="value">
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<div id="bottom-pass-input">
-							<label for="report-reason-bottom" data-i18n="gettext">Report Reason:</label>&nbsp;<input type="text" name="report_reason" id="report-reason-bottom" size="30" value="">
-						</div>
-						<div>
-							<input id="report-button-bottom" type="submit" name="form_submit_report" value="Report" data-i18n="gettext" data-i18n-attributes="value">
-						</div>				
-
-					</td>
-				</tr>
-			</table>
+			<div id="thread-expand-">
+				<span class="omitted-posts"><span></span><span data-i18n="gettext"> posts omitted. Click Reply or Expand Thread to view.</span><br></span>
+			</div>
+		</div>
+		<div id="footer-form" class="footer-form">
+			<input type="hidden" name="action" value="update">
+			<input id="board_id_field_footer" type="hidden" name="board_id" value="">
+			<div id="bottom-pass-input">
+				<label for="update-sekrit" data-i18n="gettext">Password:</label>&nbsp;<input type="password" name="update_sekrit" id="update-sekrit" size="12" value="">
+			</div>
+			<div>
+				<input id="bottom-submit-button" type="submit" name="form_submit_delete" value="Delete" data-i18n="gettext" data-i18n-attributes="value">
+			</div>
+			<div id="bottom-report-input">
+				<label for="report-reason-bottom" data-i18n="gettext">Report Reason:</label>&nbsp;<input type="text" name="report_reason" id="report-reason-bottom" size="30" value="">
+			</div>
+			<div>
+				<input id="report-button-bottom" type="submit" name="form_submit_report" value="Report" data-i18n="gettext" data-i18n-attributes="value">
+			</div>	
 		</div>
 	</form>
