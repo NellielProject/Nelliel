@@ -288,6 +288,10 @@ a.post-link:visited {
     
 }
 
+.post-header {
+
+}
+
 /* OP post formatting */
 .op-post {
 	color: #000000;
@@ -338,6 +342,18 @@ a.post-link:visited {
 
 .op-thread-select {
 
+}
+
+.thread-header-options {
+	
+}
+
+.op-post-header-options {
+	margin-left: 1em;
+}
+
+.op-post-header-info {
+	margin-left: 1em;
 }
 
 /* Reply post formatting */
@@ -397,6 +413,14 @@ a.post-link:visited {
 }
 
 .reply-post-select {
+
+}
+
+.reply-post-header-options {
+
+}
+
+.reply-post-header-info {
 
 }
 
