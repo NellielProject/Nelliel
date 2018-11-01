@@ -25,7 +25,7 @@ class FilesUpload
 
     public function processFiles($response_to)
     {
-        $data_handler = new \Nelliel\post\PostData($this->board_id);
+        $data_handler = new \Nelliel\post\PostData($this->board_id, $this->authorization);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
         $post_data =

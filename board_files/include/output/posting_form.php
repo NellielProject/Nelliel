@@ -15,7 +15,6 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     $post_form_return_link = $dom->getElementById('post-form-return-link');
     $posting_form = $dom->getElementById('posting-form');
     $posting_form->extSetAttribute('action', $dotdot . PHP_SELF . '?module=threads&area=general&action=new-post&board_id=' . $board_id);
-    $dom->getElementById('board_id_field_post_form')->extSetAttribute('value', $board_id);
 
     if ($response_to)
     {

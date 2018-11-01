@@ -11,13 +11,11 @@ class PostData
 {
     private $board_id;
     private $authorization;
-    private $staff_post;
 
-    function __construct($board_id, $authorization, $staff_post = false)
+    function __construct($board_id, $authorization)
     {
         $this->board_id = $board_id;
         $this->authorization = $authorization;
-        $this->staff_post = $staff_post;
     }
 
     public function processPostData($post)
