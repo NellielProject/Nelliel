@@ -15,7 +15,7 @@ function nel_process_new_post($inputs)
     $archive = new \Nelliel\ArchiveAndPrune($database, $board_id, new \Nelliel\FileHandler());
     $file_handler = new \Nelliel\FileHandler();
     $file_upload = new \Nelliel\post\FilesUpload($board_id, $_FILES, $authorization);
-    $data_handler = new \Nelliel\post\PostData($board_id);
+    $data_handler = new \Nelliel\post\PostData($board_id, $authorization);
     $post = new \Nelliel\Content\ContentPost($database, new \Nelliel\ContentID(), $board_id);
     $data_handler->processPostData($post);
     $time = nel_get_microtime();
