@@ -332,11 +332,11 @@ a.post-link:visited {
 	clear: both;
 }
 
-.post-select {
-	margin-left: 15px;
+.op-post-select {
+	margin-left: 2em;
 }
 
-.thread-select {
+.op-thread-select {
 
 }
 
@@ -395,6 +395,10 @@ a.post-link:visited {
 	color: #00DD66;
     padding: 1px;
     float: left;
+}
+
+.reply-post-select {
+
 }
 
 /* Other */

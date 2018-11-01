@@ -171,6 +171,7 @@ function nel_render_post($board_id, $gen_data, $dom)
         $indents_element->removeAttribute('id');
 
         $post_checkbox = $new_post_dom->getElementById('post_post-id');
+        $post_checkbox->extSetAttribute('class', 'reply-post-select');
         $post_checkbox->changeId('post_' . $post_id);
         $post_checkbox->extSetAttribute('name', $base_content_id);
 
