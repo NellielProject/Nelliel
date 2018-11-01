@@ -52,16 +52,6 @@ function nel_render_post($board_id, $gen_data, $dom)
     $response = $gen_data['post']['op'] != 1;
     $post_data = $gen_data['post'];
     $thread_data = $gen_data['thread'];
-
-    if($response)
-    {
-        $base_content_id = \Nelliel\ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']);
-    }
-    else
-    {
-        $base_content_id = \Nelliel\ContentID::createIDString($post_data['parent_thread']);
-    }
-
     $thread_id = $post_data['parent_thread'];
     $post_id = $thread_id . '_' . $post_data['post_number'];
     $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-'), true);
@@ -77,7 +67,6 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     $indents_element = $new_post_dom->getElementById('indents');
     $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
-    $header_nodes['hide-post-thread']->extSetAttribute('data-id', $post_id);
 
     $board_web_path = '//' . $base_domain . '/' . rawurlencode($references['board_directory']) . '/';
     $pages_web_path = $board_web_path . rawurlencode($references['page_dir']) . '/';
@@ -87,20 +76,26 @@ function nel_render_post($board_id, $gen_data, $dom)
     $preview_web_path = $board_web_path . rawurlencode($references['thumb_dir']) . '/';
     $thread_preview_web_path = $preview_web_path . $thread_id . '/';
 
-    if ($gen_data['index_rendering'] && !$response)
+    if($response)
     {
-        $header_nodes['hide-post-thread']->setContent(_gettext('Hide Thread'));
-        $header_nodes['hide-post-thread']->extSetAttribute('data-alt-visual', _gettext('Show Thread'));
-        $header_nodes['hide-post-thread']->extSetAttribute('data-command', 'hide-thread');
-        $header_nodes['hide-post-thread']->changeID('hide-post-thread-' . $post_id);
+        $base_content_id = \Nelliel\ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']);
+        $header_nodes['thread-header-options']->remove();
+        $header_nodes['post-header-options']->extSetAttribute('class', 'reply-post-header-options');
+        $header_nodes['post-header-info']->extSetAttribute('class', 'reply-post-header-options');
     }
     else
     {
-        $header_nodes['hide-post-thread']->setContent(_gettext('Hide Post'));
-        $header_nodes['hide-post-thread']->extSetAttribute('data-alt-visual', _gettext('Show Post'));
-        $header_nodes['hide-post-thread']->extSetAttribute('data-command', 'hide-post');
-        $header_nodes['hide-post-thread']->changeID('hide-post-thread-' . $post_id);
+        $base_content_id = \Nelliel\ContentID::createIDString($post_data['parent_thread']);
     }
+
+    if ($gen_data['index_rendering'] && !$response)
+    {
+        $header_nodes['hide-thread']->extSetAttribute('data-id', $post_id);
+        $header_nodes['hide-thread']->changeID('hide-thread-' . $post_id);
+    }
+
+    $header_nodes['hide-post']->extSetAttribute('data-id', $post_id);
+    $header_nodes['hide-post']->changeID('hide-post-' . $post_id);
 
     if ($sessions->inModmode($board_id))
     {
@@ -155,7 +150,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     }
     else
     {
-        $header_nodes['modmode-options']->remove();
+        $header_nodes['modmode-header']->remove();
     }
 
     $new_post_dom->getElementById('p-number')->changeId('p' . $post_id);

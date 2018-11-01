@@ -58,7 +58,7 @@ nelliel.ui.applyHidePostThread = function() {
         var post_files = document.getElementById("post-files-container-" + id);
         var post_contents = document.getElementById("post-contents-" + id);
         var thread_container = document.getElementById("thread-expand-" + thread_id);
-        var element = document.getElementById("hide-post-thread-" + id);
+        var element = document.getElementById("hide-thread-" + id);
         
         if (thread_container !== null) {
             nelliel.ui.toggleHidden(thread_container);
@@ -79,7 +79,7 @@ nelliel.ui.applyHidePostThread = function() {
     for (var id in dataBin.hidden_posts) {
         var post_files = document.getElementById("post-files-container-" + id);
         var post_contents = document.getElementById("post-contents-" + id);
-        var element = document.getElementById("hide-post-thread-" + id);
+        var element = document.getElementById("hide-post-" + id);
 
         if (post_files !== null) {
             nelliel.ui.toggleHidden(post_files);
