@@ -554,10 +554,5 @@ function nel_render_thread_form_bottom($board_id, $dom)
         $dom->getElementById('bottom-pass-input')->remove();
     }
 
-    if (!$board_settings['use_new_imgdel'])
-    {
-        $form_td_list->item(4)->remove();
-    }
-
     $dom->getElementById('form-content-action')->appendChild($footer_form_element);
 }

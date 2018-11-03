@@ -34,8 +34,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
         $post_form_return_link->remove();
     }
 
-    $new_post_element = $posting_form->doXPathQuery(".//input[@name='new_post[post_info][response_to]']", $posting_form)->item(0);
-    $new_post_element->extSetAttribute('value', $response_to);
+    $dom->getElementById('posting-form-responseto')->extSetAttribute('value', $response_to);
 
     if(!$session->inModmode($board_id))
     {
@@ -57,7 +56,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     $source_block = $dom->getElementById('form-sauce-1');
     $license_block = $dom->getElementById('form-lol_drama-1');
     $alt_text_block = $dom->getElementById('form-alt_text-1');
-    $posting_form_table = $dom->getElementById('posting-form-table');
+    $posting_form_table = $dom->getElementById('posting-form-input');
     $source_block->getElementById('sauce-1')->extSetAttribute('maxlength', $board_settings['max_source_length']);
     $license_block->getElementById('lol_drama-1')->extSetAttribute('maxlength', $board_settings['max_license_length']);
 

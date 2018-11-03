@@ -1,29 +1,29 @@
 	<form id="site-settings-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
-	<div class="config-table">
-		<div class="config-row">
+	<div class="display-table">
+		<div class="display-row">
 			<b>Basic settings</b>
 		</div>
-		<div class="config-row">
-			<label class="config-cell" for="home_page" data-i18n="gettext">Site home page. Can be absolute or relative URL</label>
-			<input class="config-cell" type="text" name="home_page" id="home_page" size="50" value="">
+		<div class="display-row">
+			<label class="display-cell" for="home_page" data-i18n="gettext">Site home page. Can be absolute or relative URL</label>
+			<input class="display-cell" type="text" name="home_page" id="home_page" size="50" value="">
 		</div>
-		<div class="config-row">
+		<div class="display-row">
 			<b>Hashing and Passwords</b>
 		</div>
-		<div class="config-row">
-			<label class="config-cell" for="post_password_algorithm" data-i18n="gettext">Hash algorithm for post passwords</label>
-			<input class="config-cell" type="text" name="post_password_algorithm" id="post_password_algorithm" size="20" value="">
+		<div class="display-row">
+			<label class="display-cell" for="post_password_algorithm" data-i18n="gettext">Hash algorithm for post passwords</label>
+			<input class="display-cell" type="text" name="post_password_algorithm" id="post_password_algorithm" size="20" value="">
 		</div>
-		<div class="config-row">
-			<label class="config-cell" for="secure_tripcode_algorithm" data-i18n="gettext">Hash algorithm for secure tripcodes</label>
-			<input class="config-cell" type="text" name="secure_tripcode_algorithm" id="secure_tripcode_algorithm" size="20" value="">
+		<div class="display-row">
+			<label class="display-cell" for="secure_tripcode_algorithm" data-i18n="gettext">Hash algorithm for secure tripcodes</label>
+			<input class="display-cell" type="text" name="secure_tripcode_algorithm" id="secure_tripcode_algorithm" size="20" value="">
 		</div>
-		<div class="config-row">
+		<div class="display-row">
 			<input type="hidden" name="do_password_rehash" value="0">
 			<input type="checkbox" name="do_password_rehash" id="do_password_rehash" value="1">
 			<label for="do_password_rehash" data-i18n="gettext">Check if staff passwords need rehashing</label>
 		</div>
-		<div class="config-row">
+		<div class="display-row">
 			<input type="submit" value="Update board settings" data-i18n="gettext" data-i18n-attributes="value">
 		</div>
 	</div>

@@ -1,6 +1,6 @@
 /* General formatting */
 body {
-	background: #FFFFEE;
+	background-color: #FFFFEE;
 	color: #800000;
     font-size: 1.0em;
     font-family: serif;
@@ -97,7 +97,7 @@ a.post-link:visited {
 }
 
 .manage-header {
-    background: #EEAA88;
+    background-color: #EEAA88;
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
@@ -106,7 +106,7 @@ a.post-link:visited {
 }
 
 .manage-board-header {
-    background: #EEAA88;
+    background-color: #EEAA88;
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
@@ -115,7 +115,7 @@ a.post-link:visited {
 }
 
 .manage-sub-header {
-	background: #FFCCAA;
+	background-color: #FFCCAA;
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
@@ -124,42 +124,44 @@ a.post-link:visited {
 }
 
 .data-table {
-    background: #FFFFFF;
+    background-color: #FFFFFF;
     width: 100%;
 }
 
 .row1 {
-    background: #9AD2F6;
+    background-color: #9AD2F6;
     font-family: sans-serif;
 }
 
 .row2 {
-    background: #FFFFFF;
+    background-color: #FFFFFF;
     font-family: sans-serif;
 }
 
 /* Posting form formatting */
 .posting-form {
-    
-}
-
-.input-table {
+    border-spacing: 2px;
     margin-right: auto;
     margin-left: auto;
 }
 
 .posting-form-row {
-    text-align: left;
+	display: table-row;
 }
 
 .posting-form-label {
-    background: #EEAA88;
+	display: table-cell;
+    background-color: #EEAA88;
     font-weight: bold;
-    padding: 3px;
+    padding: 3px 5px 3px 5px;
+    background-clip: padding-box;
+    border: 1px solid #CC8888;
+    vertical-align: middle;
 }
 
 .posting-form-input {
-    padding: 3px;
+	display: table-cell;
+    padding: 5px;
 }
 
 .rules {
@@ -250,10 +252,6 @@ a.post-link:visited {
 }
 
 /* General post formatting */
-.none {
-    display: none;
-}
-
 .mod-comment {
     color: #FF0000;
     font-size: 1.05em;
@@ -298,7 +296,7 @@ a.post-link:visited {
 }
 
 .op-post.post-highlight {
-	background: #AABBFF;
+	background-color: #AABBFF;
 }
 
 .op-poster-name {
@@ -313,27 +311,8 @@ a.post-link:visited {
     font-weight: bold;
 }
 
-.op-post-text {
-    padding-left: 1.10em;
-    max-width: 70em;
-}
-
-.op-post-preview {
-    padding: 3px;
-    border: 0;
-}
-
-.op-post-multiple-preview {
-    padding: 3px;
-    border: 0;
-}
-
-.op-post-contents-multifile {
-	clear: both;
-}
-
 .op-post-select {
-	margin-left: 2em;
+
 }
 
 .op-thread-select {
@@ -354,7 +333,7 @@ a.post-link:visited {
 
 /* Reply post formatting */
 .reply-post {
-    background: #F0E0D6;
+    background-color: #F0E0D6;
     color: #800000;
     border: 1px solid #FFFFEE;
     padding: 5px;
@@ -365,7 +344,7 @@ a.post-link:visited {
 }
 
 .reply-post.post-highlight {
-	background: #AABBFF;
+	background-color: #AABBFF;
 }
 
 .reply-poster-name {
@@ -380,27 +359,8 @@ a.post-link:visited {
     font-weight: bold;
 }
 
-.reply-post-text {
-    padding-left: 1.10em;
-    max-width: 70em;
-}
-
-.reply-post-preview {
-    padding: 3px;
-    border: 0;
-}
-
-.reply-post-multiple-preview {
-    padding: 3px;
-    border: 0;
-}
-
 .reply-post-contents {
 	word-wrap: break-word;
-}
-
-.reply-post-contents-multifile {
-	clear: both;
 }
 
 .indents {
@@ -457,35 +417,33 @@ a.post-link:visited {
 }
 
 .hidden {
-	display: none;
+    display: none !important;
 }
 
 .display-block {
-	display: block;
+    display: block;
 }
 
-.config-table {
+.display-table {
 	display: table;
 }
 
-.config-row {
+.display-row {
 	display: table-row;
-	line-height: 1.6;
 }
 
-.config-cell {
-	display: table-cell;
-	padding-right: 1em;
+.display-cell {
+    display: table-cell;
 }
 
 .post-corral {
-	
+    
 }
 
 .post-quote-popup {
-	height: auto;
-	position: absolute;
-	display: block;
+    height: auto;
+    position: absolute;
+    display: block;
 }
 
 .reply-post.popup-mod {
