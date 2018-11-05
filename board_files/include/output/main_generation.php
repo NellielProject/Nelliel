@@ -12,7 +12,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
-    $sessions = new \Nelliel\Sessions($authorization);
+    $session = new \Nelliel\Session($authorization);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $file_handler = new \Nelliel\FileHandler();
@@ -21,7 +21,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
 
     if ($write)
     {
-        $sessions->isIgnored('render', true);
+        $session->isIgnored('render', true);
     }
 
     $result = $database->query(
@@ -49,7 +49,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
         {
             $file_handler->writeFile($references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT,
                     $render->outputRenderSet(), FILE_PERM);
-            $sessions->isIgnored('render', false);
+            $session->isIgnored('render', false);
         }
         else
         {
@@ -223,6 +223,6 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
 
     if ($write)
     {
-        $sessions->isIgnored('render', false);
+        $session->isIgnored('render', false);
     }
 }

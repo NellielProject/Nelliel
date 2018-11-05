@@ -17,14 +17,16 @@ function nel_render_derp($diagnostic, $board_id = null)
     $dom->getElementById('error-id')->setContent($diagnostic['error_id']);
     $dom->getElementById('error-message')->setContent($diagnostic['error_message']);
     $dom->getElementById('error-data')->setContent(''); // TODO: This actually have something
-    $session = new \Nelliel\Sessions($authorization);
+    $session = new \Nelliel\Session($authorization);
     $url_constructor = new \Nelliel\URLConstructor();
 
     if (!is_null($board_id))
     {
-        if($session->inModmode($board_id))
+        if ($session->inModmode($board_id))
         {
-            $return_link = $url_constructor->dynamic(PHP_SELF, ['module' => 'render', 'action' => 'view-index', 'section' => '0', 'board_id' => $board_id, 'modmode' => 'true']);
+            $return_link = $url_constructor->dynamic(PHP_SELF,
+                    ['manage' => 'true', 'module' => 'render', 'action' => 'view-index', 'section' => '0',
+                        'board_id' => $board_id, 'modmode' => 'true']);
         }
         else
         {

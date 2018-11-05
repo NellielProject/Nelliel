@@ -12,14 +12,14 @@ function nel_thread_generator($board_id, $write, $response_to)
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
-    $sessions = new \Nelliel\Sessions($authorization);
+    $session = new \Nelliel\Session($authorization);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $file_handler = new \Nelliel\FileHandler();
 
     if ($write)
     {
-        $sessions->isIgnored('render', true);
+        $session->isIgnored('render', true);
     }
 
     $dotdot = ($write) ? '../../../' : '';
@@ -41,7 +41,7 @@ function nel_thread_generator($board_id, $write, $response_to)
 
     if (empty($treeline))
     {
-        $sessions->isIgnored('render', false);
+        $session->isIgnored('render', false);
         return;
     }
 
@@ -164,6 +164,6 @@ function nel_thread_generator($board_id, $write, $response_to)
 
     if ($write)
     {
-        $sessions->isIgnored('render', false);
+        $session->isIgnored('render', false);
     }
 }

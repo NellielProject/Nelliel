@@ -22,7 +22,7 @@ class AdminThreads extends AdminBase
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Sessions($authorization);
+        $session = new \Nelliel\Session($this->authorization, true);
         $user = $session->sessionUser();
 
         if($inputs['action'] === 'update')

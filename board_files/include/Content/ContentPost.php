@@ -176,7 +176,7 @@ class ContentPost extends ContentBase
 
     public function verifyModifyPerms()
     {
-        $session = new \Nelliel\Sessions(new \Nelliel\Auth\Authorization($this->database));
+        $session = new \Nelliel\Session(new \Nelliel\Auth\Authorization($this->database));
         $user = $session->sessionUser();
 
         if (empty($this->content_data))

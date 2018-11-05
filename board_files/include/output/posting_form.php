@@ -5,7 +5,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
-    $session = new \Nelliel\Sessions($authorization);
+    $session = new \Nelliel\Session($authorization);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $dom = $render->newDOMDocument();

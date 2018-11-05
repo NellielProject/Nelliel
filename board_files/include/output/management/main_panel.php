@@ -15,7 +15,7 @@ function nel_render_main_panel()
     $board_entry = $dom->getElementById('board-entry');
     $insert_before = $board_entry->parentNode->lastChild;
     $boards = $database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
-    $session = new \Nelliel\Sessions($authorization);
+    $session = new \Nelliel\Session($authorization);
     $user = $session->sessionUser();
 
     if ($boards !== false)
@@ -119,7 +119,7 @@ function nel_render_main_board_panel($board_id)
     $render->loadTemplateFromFile($dom, 'management/main_board_panel.html');
     $manage_options = $dom->getElementById('manage-options');
     $settings = $dom->getElementById('module-board-settings');
-    $session = new \Nelliel\Sessions($authorization);
+    $session = new \Nelliel\Session($authorization);
     $user = $session->sessionUser();
 
     if ($user->boardPerm($board_id, 'perm_board_config_access'))

@@ -19,7 +19,7 @@ class AdminSiteSettings extends AdminBase
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Sessions($this->authorization);
+        $session = new \Nelliel\Session($this->authorization, true);
         $user = $session->sessionUser();
 
         if($inputs['action'] === 'update')

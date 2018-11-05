@@ -7,13 +7,32 @@ if (!defined('NELLIEL_VERSION'))
 function nel_module_dispatch($inputs)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $sessions = new \Nelliel\Sessions($authorization);
-    $sessions->initializeSession($inputs['module'], $inputs['board_id']);
     $inputs = nel_plugins()->processHook('nel-inb4-module-dispatch', array(), $inputs);
 
     switch ($inputs['module'])
     {
+        case 'login':
+            if (empty($_POST))
+            {
+                nel_render_login_page();
+            }
+            else
+            {
+                $session = new \Nelliel\Session($authorization, true);
+                $session->login();
+                nel_render_main_panel();
+            }
+
+            break;
+
+        case 'logout':
+            $session = new \Nelliel\Session($authorization, true);
+            $session->logout();
+            break;
+
         case 'render':
+            $session = new \Nelliel\Session($authorization, true);
+
             switch ($inputs['action'])
             {
                 case 'view-index':
@@ -30,7 +49,9 @@ function nel_module_dispatch($inputs)
             break;
 
         case 'main-panel':
-            if (!is_null($inputs['board_id']))
+            $session = new \Nelliel\Session($authorization, true);
+
+            if ($inputs['board_id'] !== '')
             {
                 nel_render_main_board_panel($inputs['board_id']);
             }
@@ -96,6 +117,7 @@ function nel_module_dispatch($inputs)
         case 'threads':
             $content_id = new \Nelliel\ContentID($inputs['content_id']);
             $fgsfds = new \Nelliel\FGSFDS();
+            $session = new \Nelliel\Session($authorization, true);
 
             if ($inputs['action'] === 'new-post')
             {
@@ -105,7 +127,7 @@ function nel_module_dispatch($inputs)
 
                 if ($fgsfds->getCommand('noko') !== false)
                 {
-                    if ($sessions->isActive() && $sessions->inModmode($inputs['board_id']))
+                    if ($session->isActive() && $session->inModmode($inputs['board_id']))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
                                 '?module=render&action=view-thread&section=' . $fgsfds->getCommandData('noko', 'topic') .
@@ -120,7 +142,7 @@ function nel_module_dispatch($inputs)
                 }
                 else
                 {
-                    if ($sessions->isActive() && $sessions->inModmode($inputs['board_id']))
+                    if ($session->isActive() && $session->inModmode($inputs['board_id']))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
                                 '?module=render&action=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
@@ -138,11 +160,13 @@ function nel_module_dispatch($inputs)
             else if ($inputs['action'] === 'delete-post')
             {
                 $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $inputs['board_id']);
+                $post->loadFromDatabase();
                 $post->remove();
             }
             else if ($inputs['action'] === 'delete-thread')
             {
                 $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id']);
+                $thread->loadFromDatabase();
                 $thread->remove();
             }
             else if ($inputs['action'] === 'sticky' || $inputs['action'] === 'unsticky')
@@ -150,6 +174,7 @@ function nel_module_dispatch($inputs)
                 if ($content_id->isPost())
                 {
                     $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $inputs['board_id']);
+                    $post->loadFromDatabase();
                     $post->convertToThread();
                     $new_content_id = new \Nelliel\ContentID();
                     $new_content_id->thread_id = $content_id->post_id;
@@ -159,18 +184,22 @@ function nel_module_dispatch($inputs)
                 }
                 else
                 {
+                    var_dump("here1");
                     $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id']);
+                    $thread->loadFromDatabase();
                     $thread->sticky();
                 }
             }
             else if ($inputs['action'] === 'lock' || $inputs['action'] === 'unlock')
             {
                 $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id']);
+                $thread->loadFromDatabase();
                 $thread->lock();
             }
             else if ($inputs['action'] === 'delete-file')
             {
                 $file = new \Nelliel\Content\ContentFile(nel_database(), $content_id, $inputs['board_id']);
+                $file->loadFromDatabase();
                 $file->remove();
             }
             else if ($inputs['action'] === 'ban-file')
@@ -189,7 +218,7 @@ function nel_module_dispatch($inputs)
                     $reports_panel = new \Nelliel\Admin\AdminReports(nel_database(), $authorization, $inputs['board_id']);
                     $reports_panel->actionDispatch($inputs);
 
-                    if ($sessions->isActive() && $sessions->inModmode($inputs['board_id']))
+                    if ($session->isActive() && $session->inModmode($inputs['board_id']))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
                                 '?module=render&action=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
@@ -207,7 +236,7 @@ function nel_module_dispatch($inputs)
                     $thread_handler = new \Nelliel\ThreadHandler(nel_database(), $inputs['board_id']);
                     $thread_handler->processContentDeletes();
 
-                    if ($sessions->isActive() && $sessions->inModmode($inputs['board_id']))
+                    if ($session->isActive() && $session->inModmode($inputs['board_id']))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
                                 '?module=render&action=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
@@ -249,11 +278,13 @@ function nel_module_dispatch($inputs)
                 if ($inputs['action'] === 'ban.delete-post')
                 {
                     $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $inputs['board_id']);
+                    $post->loadFromDatabase();
                     $post->remove();
                 }
                 else if ($inputs['action'] === 'ban.delete-thread')
                 {
                     $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id']);
+                    $thread->loadFromDatabase();
                     $thread->remove();
                 }
 

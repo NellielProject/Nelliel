@@ -45,7 +45,7 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
 function nel_render_post($board_id, $gen_data, $dom)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $sessions = new \Nelliel\Sessions($authorization);
+    $session = new \Nelliel\Session($authorization);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $output_filter = new \Nelliel\OutputFilter();
@@ -97,7 +97,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     $header_nodes['hide-post']->extSetAttribute('data-id', $post_id);
     $header_nodes['hide-post']->changeID('hide-post-' . $post_id);
 
-    if ($sessions->inModmode($board_id))
+    if ($session->inModmode($board_id))
     {
         $ip = @inet_ntop($post_data['ip_address']);
         $header_nodes['modmode-ip-address']->setContent(@inet_ntop($post_data['ip_address']));
@@ -240,7 +240,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     }
     else
     {
-        if ($sessions->inModmode($board_id))
+        if ($session->inModmode($board_id))
         {
             $header_nodes['reply-to-link']->extSetAttribute('href',
                     PHP_SELF . '?module=render&action=view-thread&content-id=' . $base_content_id . '&section=' .
@@ -301,7 +301,7 @@ function nel_render_post($board_id, $gen_data, $dom)
 
             $file_nodes = $temp_file_node->getElementsByAttributeName('data-parse-id', true);
 
-            if ($sessions->inModmode($board_id))
+            if ($session->inModmode($board_id))
             {
                 $file_nodes['modmode-delete-link']->extSetAttribute('href',
                         '?module=threads&board_id=test&action=delete-file&post-id=' .
@@ -543,13 +543,13 @@ function nel_render_post($board_id, $gen_data, $dom)
 function nel_render_thread_form_bottom($board_id, $dom)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $sessions = new \Nelliel\Sessions($authorization);
+    $session = new \Nelliel\Session($authorization);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $footer_form_element = $dom->getElementById('footer-form');
     $form_td_list = $footer_form_element->doXPathQuery(".//input");
     $dom->getElementById('board_id_field_footer')->extSetAttribute('value', $board_id);
 
-    if ($sessions->inModmode($board_id))
+    if ($session->inModmode($board_id))
     {
         $dom->getElementById('bottom-pass-input')->remove();
     }

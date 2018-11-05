@@ -57,9 +57,9 @@ These are the minimum browser versions Nelliel should be compatible with:
 
 ## Versioning
 Upon the initial 1.0 Release, Nelliel versioning will follow Major.Minor.Patch under these definitions:
- - Major: Significant backwards-incompatible changes or project-wide reconstruction.
- - Minor: Backwards-compatible changes, minor backwards-incompatible changes or new features introduced.
- - Patch: Bug fixes, code tweaks and feature refinements.
+ - Major: Significant breaking changes or project-wide reconstruction.
+ - Minor: Minor breaking changes or new features introduced.
+ - Patch: Bug fixes, code tweaks and refinements.
 
 When the version changes, the constant `NELLIEL_VERSION` in file `imgboard.php` must be updated. A git tag should be created upon Major or Minor changes, or when a release is created.
 

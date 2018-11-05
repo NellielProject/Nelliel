@@ -46,7 +46,7 @@ function nel_render_ban_page($board_id, $ban_info)
 
     if ($ban_info['appeal_status'] == 0)
     {
-        $appeal_form_element->extSetAttribute('action', PHP_SELF . '?module=ban-page&action=add-appeal');
+        $appeal_form_element->extSetAttribute('action', PHP_SELF . '?manage=true&module=ban-page&action=add-appeal');
 
         if (!empty($ban_info['board_id']))
         {

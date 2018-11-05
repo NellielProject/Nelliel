@@ -9,7 +9,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
-    $session = new \Nelliel\Sessions($authorization);
+    $session = new \Nelliel\Session($authorization);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $dom = $render->newDOMDocument();
@@ -91,7 +91,16 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', nel_parameters_and_data()->siteSettings('home_page'));
-    $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
+
+    if($session->isActive())
+    {
+        $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=main-panel');
+    }
+    else
+    {
+        $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
+    }
+
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
     if ($session->inModmode($board_id))
@@ -118,7 +127,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
-    $session = new \Nelliel\Sessions($authorization);
+    $session = new \Nelliel\Session($authorization);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
     $head_element = $dom->getElementsByTagName('head')->item(0);
@@ -144,7 +153,16 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', nel_parameters_and_data()->siteSettings('home_page'));
-    $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
+
+    if($session->isActive())
+    {
+        $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=main-panel');
+    }
+    else
+    {
+        $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
+    }
+
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
     if ($session->isActive() || $session->inModmode($board_id))
