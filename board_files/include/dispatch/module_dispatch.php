@@ -159,22 +159,19 @@ function nel_module_dispatch($inputs)
             }
             else if ($inputs['action'] === 'delete-post')
             {
-                $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $inputs['board_id']);
-                $post->loadFromDatabase();
+                $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $inputs['board_id'], true);
                 $post->remove();
             }
             else if ($inputs['action'] === 'delete-thread')
             {
-                $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id']);
-                $thread->loadFromDatabase();
+                $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id'], true);
                 $thread->remove();
             }
             else if ($inputs['action'] === 'sticky' || $inputs['action'] === 'unsticky')
             {
                 if ($content_id->isPost())
                 {
-                    $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $inputs['board_id']);
-                    $post->loadFromDatabase();
+                    $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $inputs['board_id'], true);
                     $post->convertToThread();
                     $new_content_id = new \Nelliel\ContentID();
                     $new_content_id->thread_id = $content_id->post_id;
@@ -185,21 +182,18 @@ function nel_module_dispatch($inputs)
                 else
                 {
                     var_dump("here1");
-                    $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id']);
-                    $thread->loadFromDatabase();
+                    $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id'], true);
                     $thread->sticky();
                 }
             }
             else if ($inputs['action'] === 'lock' || $inputs['action'] === 'unlock')
             {
-                $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id']);
-                $thread->loadFromDatabase();
+                $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id'], true);
                 $thread->lock();
             }
             else if ($inputs['action'] === 'delete-file')
             {
-                $file = new \Nelliel\Content\ContentFile(nel_database(), $content_id, $inputs['board_id']);
-                $file->loadFromDatabase();
+                $file = new \Nelliel\Content\ContentFile(nel_database(), $content_id, $inputs['board_id'], true);
                 $file->remove();
             }
             else if ($inputs['action'] === 'ban-file')
@@ -277,14 +271,12 @@ function nel_module_dispatch($inputs)
             {
                 if ($inputs['action'] === 'ban.delete-post')
                 {
-                    $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $inputs['board_id']);
-                    $post->loadFromDatabase();
+                    $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $inputs['board_id'], true);
                     $post->remove();
                 }
                 else if ($inputs['action'] === 'ban.delete-thread')
                 {
-                    $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id']);
-                    $thread->loadFromDatabase();
+                    $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id'], true);
                     $thread->remove();
                 }
 

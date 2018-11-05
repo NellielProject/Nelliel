@@ -12,11 +12,16 @@ if (!defined('NELLIEL_VERSION'))
 class ContentThread extends ContentBase
 {
 
-    function __construct($database, $content_id, $board_id)
+    function __construct($database, $content_id, $board_id, $db_load = false)
     {
         $this->database = $database;
         $this->content_id = $content_id;
         $this->board_id = $board_id;
+
+        if($db_load)
+        {
+            $this->loadFromDatabase();
+        }
     }
 
     public function loadFromDatabase($temp_database = null)
