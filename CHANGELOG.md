@@ -1,4 +1,32 @@
 # Nelliel Changelog
+## v0.9.11 (2018/11/05)
+### Added
+ - Option to delete boards from control panel
+ - Translator class
+
+### Changed
+ - `language` directory renamed to `Language``
+ - Update language handling
+ - $dbh references renamed to $database
+ - Moved Regen class
+ - Check if language locale exists, make sure we switch to default if not
+ - CSS tweaks
+ - Split post header into separate lines
+ - Clean up in rendering functions and templates
+ - Clean up posting form HTML
+ - Furthwer work on session handling
+ - `Sessions.php` renamed to `Session.php`
+ - Add parameter to Content classes to immediately load content from database when needed
+ - Update `ERROR-REF.md`
+ 
+### Fixed
+ - Formatting in `DEV-GUIDE.md`
+ - Missing locale handling
+ - Parameters missing for PostData class
+
+### Removed
+ - nel_authorize()
+
 ## v0.9.10 (2018/10/26)
 ### Added
  - Additional permission checks at beginning of rendering
