@@ -1,17 +1,17 @@
 	<form id="user-edit-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
 		<div class="display-table">
-			<div class="display-row">
-				<label for="bname" class="display-cell" data-i18n="gettext">User ID</label>
+			<label class="display-row">
+				<span class="display-cell" data-i18n="gettext">User ID</span>
 				<input id="user-id-field" class="display-cell" type="text" name="user_id" id="bname" size="30" value="">
-			</div>
-			<div class="display-row">
-				<label for="bpass" class="display-cell" data-i18n="gettext">New password (leave blank to keep current password)</label>
-				<input class="display-cell" type="text" name="user_password" id="bpass" size="30">
-			</div>
-			<div class="display-row">
-				<label for="display_name" class="display-cell" data-i18n="gettext">User display name</label>
+			</label>
+			<label class="display-row">
+				<span class="display-cell" data-i18n="gettext">New password (leave blank to keep current password)</span>
+				<input id="bpass" class="display-cell" type="text" name="user_password" size="30">
+			</label>
+			<label class="display-row">
+				<span class="display-cell" data-i18n="gettext">User display name</span>
 				<input id="display_name" class="display-cell" type="text" name="display_name" size="30" value="">
-			</div>
+			</label>
 		</div>
 		<hr>
 		<div class="display-table">
@@ -19,12 +19,12 @@
 				<span>Board</span>
 				<span>User role</span>
 			</div>
-			<div class="display-row" id="board-roles">
-				<label id="role-board-id-label-" class="display-cell" for="role-board-id-"></label>
-				<input class="display-cell" type="text" name="user_board_role" id="role-board-id-" size="30" value="">
-			</div>
-			<div class="display-row" id="user-edit-submit">
-				<input id="update-user-submit" type="submit" value="Update user" data-i18n="gettext" data-i18n-attributes="value">
-			</div>
+			<label class="display-row" id="board-roles">
+				<span class="display-cell" data-parse-id="user-board-role-label"></span>
+				<input data-parse-id="user-board-role-id" class="display-cell" type="text" name="user_board_role" size="30" value="">
+			</label>
+		</div>
+		<div>
+			<input type="submit" value="Update User" data-i18n="gettext" data-i18n-attributes="value">
 		</div>
 	</form>
