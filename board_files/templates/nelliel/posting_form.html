@@ -4,57 +4,59 @@
 		<form id="posting-form" class="display-table posting-form" accept-charset="utf-8" name="postingform" action="" method="post" enctype="multipart/form-data">
 			<input id="posting-form-responseto" type="hidden" name="new_post[post_info][response_to]" value="">
 			<div id="posting-form-input">
-				<div id="form-not-anonymous" class="posting-form-row">
-					<label for="not-anonymous" class="posting-form-label" data-i18n="gettext">Name</label>
-					<input id="not-anonymous" type="text" class="posting-form-input" name="new_post[post_info][not_anonymous]" size="30" maxlength="">
-				</div>
-				<div id="form-spam-target" class="posting-form-row">
-					<label for="spam-target" class="posting-form-label" data-i18n="gettext">E-mail</label>
-					<input id="spam-target" class="posting-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength="">
-				</div>
-				<div id="form-verb" class="posting-form-row">
-					<label for="verb" class="posting-form-label" data-i18n="gettext">Subject</label>
-					<input id="verb" class="posting-form-input" type="text" name="new_post[post_info][verb]" size="30" maxlength="">
-				</div>
-				<div id="form-wordswordswords" class="posting-form-row">
-					<label class="posting-form-label" for="wordswordswords" data-i18n="gettext">Comment</label>
+				<label data-parse-id="form-not-anonymous" class="posting-form-row">
+					<span class="posting-form-label" data-i18n="gettext">Name</span>
+					<input id="not-anonymous" type="text" class="posting-form-input" name="new_post[post_info][not_anonymous]" size="30" maxlength="255">
+				</label>
+				<label data-parse-id="form-spam-target" class="posting-form-row">
+					<span class="posting-form-label" data-i18n="gettext">E-mail</span>
+					<input id="spam-target" class="posting-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength="255">
+				</label>
+				<label class="posting-form-row">
+					<span class="posting-form-label" data-i18n="gettext">Subject</span>
+					<input id="verb" class="posting-form-input" type="text" name="new_post[post_info][verb]" size="30" maxlength="255">
+				</label>
+				<label class="posting-form-row">
+					<span class="posting-form-label" data-i18n="gettext">Comment</span>
 					<textarea id="wordswordswords" class="posting-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6"></textarea>
-				</div>
-				<div id="form-file-1" class="posting-form-row">
-					<label class="posting-form-label" for="up-file-1"><span data-i18n="gettext">File</span>&nbsp;<span id="file-num-1">1</span></label>
-					<input id="up-file-1" class="posting-form-input" type="file" name="up_file_1" data-command="reveal-file-input">
+				</label>
+				<span data-parse-id="form-file" class="posting-form-row">
+					<label data-parse-id="label-for-file" class="posting-form-label" for="up-file-1">
+						<span data-i18n="gettext">File</span>&nbsp;<span data-parse-id="file-num">1</span>
+					</label>
+					<input data-parse-id="up-file" id="up-file-1" class="posting-form-input" type="file" name="up_file_1" data-command="reveal-file-input">
 					<br>
-					<input id="add-sauce-1" type="button" value="Add Source" data-command="add-file-meta">&nbsp;
-					<input id="add-lol_drama-1" type="button" value="Add License" data-command="add-file-meta">&nbsp;
-					<input id="add-alt_text-1" type="button" value="Add Alt Description" data-command="add-file-meta">
-				</div>
-				<div id="form-sauce-1" class="posting-form-row hidden">
-					<label class="posting-form-label" for="sauce-1" data-i18n="gettext">Source</label>
-					<input id="sauce-1" class="posting-form-input" type="text" name="new_post[file_info][up_file_1][sauce]" maxlength="">
-				</div>
-				<div id="form-lol_drama-1" class="posting-form-row hidden">
-					<label class="posting-form-label" for="lol_drama-1" data-i18n="gettext">License</label>
-					<input id="lol_drama-1" class="posting-form-input" type="text" name="new_post[file_info][up_file_1][lol_drama]">
-				</div>
-				<div id="form-alt_text-1" class="posting-form-row hidden">
-					<label class="posting-form-label" for="alt_text-1" data-i18n="gettext">Alt text</label>
-					<input id="alt_text-1" class="posting-form-input" type="text" name="new_post[file_info][up_file_1][alt_text]" maxlength="">
-				</div>
-				<div id="form-fgsfds" class="posting-form-row">
-					<label class="posting-form-label" for="fgsfds">FGSFDS</label>
-					<input id="fgsfds" class="posting-form-input" type="text" name="new_post[post_info][fgsfds]" size="30">
-				</div>
-				<div id="form-sekrit" class="posting-form-row">
-					<label class="posting-form-label" for="posting-form-sekrit" data-i18n="gettext">Password</label>
+					<input data-parse-id="add-sauce" id="add-sauce-1" type="button" value="Add Source" data-command="add-file-meta">&nbsp;
+					<input data-parse-id="add-lol_drama" id="add-lol_drama-1" type="button" value="Add License" data-command="add-file-meta">&nbsp;
+					<input data-parse-id="add-alt_text" id="add-alt_text-1" type="button" value="Add Alt Description" data-command="add-file-meta">
+				</span>
+				<label data-parse-id="form-sauce" id="form-sauce-1" class="posting-form-row hidden">
+					<span class="posting-form-label" data-i18n="gettext">Source</span>
+					<input data-parse-id="sauce" class="posting-form-input" type="text" name="new_post[file_info][up_file_1][sauce]" maxlength="255">
+				</label>
+				<label data-parse-id="form-lol_drama" id="form-lol_drama-1" class="posting-form-row hidden">
+					<span class="posting-form-label" data-i18n="gettext">License</span>
+					<input data-parse-id="lol_drama" class="posting-form-input" type="text" name="new_post[file_info][up_file_1][lol_drama]" maxlength="255">
+				</label>
+				<label data-parse-id="form-alt_text" id="form-alt_text-1" class="posting-form-row hidden">
+					<span class="posting-form-label" data-i18n="gettext">Alt Text</span>
+					<input data-parse-id="alt_text" class="posting-form-input" type="text" name="new_post[file_info][up_file_1][alt_text]" maxlength="255">
+				</label>
+				<label data-parse-id="form-fgsfds" class="posting-form-row">
+					<span data-parse-id="fgsfds-name" class="posting-form-label">FGSFDS</span>
+					<input class="posting-form-input" type="text" name="new_post[post_info][fgsfds]" size="30">
+				</label>
+				<label data-parse-id="form-sekrit" class="posting-form-row">
+					<span data-parse-id="fgsfds-name" class="posting-form-label" data-i18n="gettext">Password</span>
 					<input id="posting-form-sekrit" type="password" name="new_post[post_info][sekrit]" size="12" maxlength="16" value="">&nbsp;&nbsp;
 					<span data-i18n="gettext">(Password used for file deletion)</span>
-				</div>
-				<div id="posting-form-staff" class="posting-form-row">
-					<label class="posting-form-label"></label>
+				</label>
+				<label data-parse-id="posting-form-staff" class="posting-form-row">
+					<span class="posting-form-label"></span>
 					<input type="hidden" name="post_as_staff" value="0">
 					<input type="checkbox" name="post_as_staff" value="1" title="Post as staff" data-i18n-attributes="title" checked>
 					<span data-i18n="gettext">Post as staff</span>
-				</div>
+				</label>
 				<div id="form-submit-clear" class="posting-form-row">
 					<span class="display-cell"></span>
 					<input type="submit" value="Submit" data-i18n="gettext" data-i18n-attributes="value">&nbsp;&nbsp;&nbsp;&nbsp;
