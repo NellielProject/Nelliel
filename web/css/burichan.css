@@ -170,8 +170,16 @@ a.post-link:visited {
 }
 
 .rules {
-    font-size: 0.8em;
+    font-size: 0.85em;
     font-family: sans-serif;
+}
+
+.rules-list {
+	
+}
+
+.rules-item {
+	
 }
 
 /* Files */

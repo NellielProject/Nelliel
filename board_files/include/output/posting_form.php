@@ -115,7 +115,7 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     }
 
     $rules = $dom->importNode(nel_render_rules_list($board_id), true);
-    $dom->getElementById('form-rules-list')->appendChild($rules);
+    $posting_form->appendChild($rules);
 
     if (!$board_settings['use_spambot_trap'])
     {
