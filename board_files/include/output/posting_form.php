@@ -51,8 +51,8 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
     }
     else
     {
-        $posting_form_nodes['form-not-anonymous']->extSetAttribute('maxlength', $board_settings['max_name_length']);
-        $posting_form_nodes['form-spam-target']->extSetAttribute('maxlength', $board_settings['max_email_length']);
+        $dom->getElementById('not-anonymous')->extSetAttribute('maxlength', $board_settings['max_name_length']);
+        $dom->getElementById('spam-target')->extSetAttribute('maxlength', $board_settings['max_email_length']);
     }
 
     // File Block
