@@ -18,7 +18,7 @@ function nel_module_dispatch($inputs)
             }
             else
             {
-                $session = new \Nelliel\Session($authorization, true);
+                $session = new \Nelliel\Session($authorization);
                 $session->login();
                 nel_render_main_panel();
             }
