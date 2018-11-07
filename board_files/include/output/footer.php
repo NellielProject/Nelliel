@@ -15,7 +15,7 @@ function nel_render_general_footer($render, $board_id = null, $dotdot = null, $s
 
     if (!$styles)
     {
-        $dom->getElementById('bottom-styles-span')->remove();
+        $dom->getElementById('bottom-styles')->remove();
     }
 
     if (!$extra_links)

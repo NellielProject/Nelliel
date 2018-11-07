@@ -51,8 +51,9 @@ a.post-link:visited {
 
 /* Header */
 .top-styles {
-    text-align: left;
     float: left;
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
 .logo {
@@ -84,8 +85,8 @@ a.post-link:visited {
 
 .bottom-styles {
     float: left;
-    text-align: left;
-    padding-top: 16px;
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
 .footer-form {
@@ -95,8 +96,9 @@ a.post-link:visited {
 
 /* Management */
 .admin-bar {
-    text-align: right;
     float: right;
+    padding-top: 6px;
+    padding-bottom: 6px;
 }
 
 .manage-header {
