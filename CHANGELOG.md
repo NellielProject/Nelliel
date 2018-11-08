@@ -1,4 +1,17 @@
 # Nelliel Changelog
+## v0.9.11.1 (2018/11/07)
+### Changed
+ - Cleanup of header and footer templates and rendering
+ - Session default length changed to 2 hours
+ - Cleanup rules and posting limits
+ - Update ban page
+ - Add post borders to Burichan and Futaba styles
+ - Various layout and rendering tweaks
+ 
+### Fixed
+ - Newlines in `ERROR-REF.md`
+ - Session age checks
+
 ## v0.9.11 (2018/11/05)
 ### Added
  - Option to delete boards from control panel
