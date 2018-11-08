@@ -48,13 +48,27 @@ class Session
         session_start();
     }
 
-    public function setup()
+    public function setup($login = false)
     {
         $this->startSession();
 
+        if(!$login)
+        {
+            if (empty($_SESSION))
+            {
+                nel_derp(220, _gettext('No valid session found.'));
+            }
+
+            if ($this->isOld())
+            {
+                $this->terminate();
+                nel_derp(221, _gettext('Session has expired.'));
+            }
+        }
+
         if (!$this->setVariables())
         {
-            nel_derp(223, _gettext('No valid session or session set up failed.'));
+            nel_derp(223, _gettext('Session set up failed.'));
         }
 
         self::$session_active = true;
@@ -71,6 +85,7 @@ class Session
         if (nel_verify_login())
         {
             $this->startSession();
+            $this->setup(true);
         }
         else
         {
@@ -84,12 +99,7 @@ class Session
     public function terminate()
     {
         session_unset();
-
-        if (session_status() === PHP_SESSION_ACTIVE)
-        {
-            session_destroy();
-        }
-
+        session_destroy();
         self::$session_active = false;
         setrawcookie("PHPSESSID", "", time() - 7200, "/");
     }
@@ -126,7 +136,7 @@ class Session
 
     public function isOld()
     {
-        return !isset($_SESSION['login_time']) || (time() - $_SESSION['last_activity']) > 3600;
+        return (time() - $_SESSION['last_activity']) > 7200;
     }
 
     public function sessionUser()

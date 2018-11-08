@@ -45,8 +45,8 @@ nelliel.setup.setupListeners = function() {
         nelliel.setup.addListenerIfElementExists(post_elements[i], "mouseout", nelliel.events.processMouseOut);
     }
 
-    nelliel.setup.addListenerIfElementExists(document.getElementById("top-styles-div"), "click", nelliel.events.processPostClicks);
-    nelliel.setup.addListenerIfElementExists(document.getElementById("bottom-styles-div"), "click", nelliel.events.processPostClicks);
+    nelliel.setup.addListenerIfElementExists(document.getElementById("top-styles"), "click", nelliel.events.processPostClicks);
+    nelliel.setup.addListenerIfElementExists(document.getElementById("bottom-styles"), "click", nelliel.events.processPostClicks);
     nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "click", nelliel.events.processPostClicks);
     nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "change", nelliel.events.processChanges);
     window.addEventListener("hashchange", nelliel.hashHandler);
@@ -187,6 +187,10 @@ nelliel.core.hashHandler = function () {
     if (location.hash.match(/#p[0-9_]+/)) {
         nelliel.ui.highlightPost(location.hash.replace("#p", ""));
     }
+}
+
+nelliel.core.getElementsByAttributeName = function (attribute_name, element) {
+    return element.querySelectorAll("[" + attribute_name + "]");
 }
 
 function addNewFileMeta(element, command) {
