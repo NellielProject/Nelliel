@@ -85,10 +85,6 @@ function nel_render_ban_page($board_id, $ban_info)
         {
             $ban_page_nodes['appeal-response-text']->setContent($ban_info['appeal_response']);
         }
-        else
-        {
-            $ban_page_nodes['appeal-response-text']->setContent(_gettext('No response has been given.'));
-        }
     }
 
     $translator->translateDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
