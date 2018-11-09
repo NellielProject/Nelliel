@@ -37,6 +37,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_login_attempts_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_permissions_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_permissions_schema', '001']);
+        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_reports_schema', '001']);
+        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_reports_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_roles_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_roles_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_site_config_schema', '001']);
