@@ -117,7 +117,7 @@ function nel_module_dispatch($inputs)
         case 'threads':
             $content_id = new \Nelliel\ContentID($inputs['content_id']);
             $fgsfds = new \Nelliel\FGSFDS();
-            $session = new \Nelliel\Session($authorization, true);
+            $session = new \Nelliel\Session($authorization);
 
             if ($inputs['action'] === 'new-post')
             {

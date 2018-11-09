@@ -79,9 +79,14 @@ class PostData
 
     public function staffPost($post)
     {
-        $session = new \Nelliel\Session($this->authorization);
+        if(!$post->content_data['post_as_staff'])
+        {
+            return;
+        }
 
-        if(!$session->isActive() || $post->content_data['post_as_staff'] === false)
+        $session = new \Nelliel\Session($this->authorization, true);
+
+        if(!$session->isActive())
         {
             return;
         }
