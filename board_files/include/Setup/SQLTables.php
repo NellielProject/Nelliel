@@ -92,7 +92,7 @@ class SQLTables
             entry                 " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             parent_thread           INTEGER NULL DEFAULT 0,
             post_ref                INTEGER NULL DEFAULT 0,
-            file_order              SMALLINT NULL DEFAULT 0,
+            content_order           SMALLINT NULL DEFAULT 0,
             type                    VARCHAR(255) NULL DEFAULT '',
             format                  VARCHAR(255) NULL DEFAULT '',
             mime                    VARCHAR(255) NULL DEFAULT '',
@@ -112,7 +112,9 @@ class SQLTables
             source                  VARCHAR(255) NULL DEFAULT '',
             license                 VARCHAR(255) NULL DEFAULT '',
             alt_text                VARCHAR(255) NULL DEFAULT '',
+            url                     VARCHAR(2048) NULL DEFAULT '',
             exif                    TEXT,
+            meta                    TEXT,
             CONSTRAINT fk_post_ref_" . $posts_table . "_post_number
             FOREIGN KEY(post_ref) REFERENCES " . $posts_table . "(post_number)
             ON UPDATE CASCADE

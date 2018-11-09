@@ -125,8 +125,8 @@ class ArchiveAndPrune
                 $this->references['post_table'] . '" WHERE "parent_thread" = ?');
         $this->database->executePrepared($prepared, array($thread_id));
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . $this->references['archive_file_table'] . '" SELECT * FROM "' .
-                $this->references['file_table'] . '" WHERE "parent_thread" = ?');
+                'INSERT INTO "' . $this->references['archive_content_table'] . '" SELECT * FROM "' .
+                $this->references['content_table'] . '" WHERE "parent_thread" = ?');
         $this->database->executePrepared($prepared, array($thread_id));
         $this->file_handler->moveFile($this->references['src_path'] . $thread_id,
                 $this->references['archive_src_path'] . $thread_id);
@@ -150,8 +150,8 @@ class ArchiveAndPrune
                 $this->references['archive_post_table'] . '" WHERE "parent_thread" = ?');
         $this->database->executePrepared($prepared, array($thread_id));
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . $this->references['file_table'] . '" SELECT * FROM "' .
-                $this->references['archive_file_table'] . '" WHERE "parent_thread" = ?');
+                'INSERT INTO "' . $this->references['content_table'] . '" SELECT * FROM "' .
+                $this->references['archive_content_table'] . '" WHERE "parent_thread" = ?');
         $this->database->executePrepared($prepared, array($thread_id));
         $this->file_handler->moveFile($this->references['archive_src_path'] . $thread_id,
                 $this->references['src_path'] . $thread_id);

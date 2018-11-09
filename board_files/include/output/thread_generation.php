@@ -76,7 +76,7 @@ function nel_thread_generator($board_id, $write, $response_to)
 
         if ($gen_data['post']['has_file'] == 1)
         {
-            $query = 'SELECT * FROM "' . $references['file_table'] . '" WHERE "post_ref" = ? ORDER BY "file_order" ASC';
+            $query = 'SELECT * FROM "' . $references['content_table'] . '" WHERE "post_ref" = ? ORDER BY "content_order" ASC';
             $prepared = $database->prepare($query);
             $gen_data['files'] = $database->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']),
                     PDO::FETCH_ASSOC);

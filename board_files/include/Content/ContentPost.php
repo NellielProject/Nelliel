@@ -170,7 +170,7 @@ class ContentPost extends ContentBase
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ?');
+                'SELECT COUNT("entry") FROM "' . $board_references['content_table'] . '" WHERE "post_ref" = ?');
         $file_count = $this->database->executePreparedFetch($prepared, array($this->content_id->post_id),
                 PDO::FETCH_COLUMN, true);
 
@@ -248,13 +248,13 @@ class ContentPost extends ContentBase
                 $this->content_id->post_id, true);
 
         $prepared = $this->database->prepare(
-                'SELECT entry FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ?');
+                'SELECT entry FROM "' . $board_references['content_table'] . '" WHERE "post_ref" = ?');
         $files = $this->database->executePreparedFetchAll($prepared, array($this->content_id->post_id), PDO::FETCH_ASSOC);
 
         foreach ($files as $file)
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $board_references['file_table'] . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
+                    'UPDATE "' . $board_references['content_table'] . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
             $this->database->executePrepared($prepared,
                     [$new_thread->content_id->thread_id, $this->content_id->post_id]);
         }

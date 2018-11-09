@@ -29,7 +29,7 @@ class ContentFile extends ContentBase
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $database->prepare(
-                'SELECT * FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ? AND "file_order" = ?');
+                'SELECT * FROM "' . $board_references['content_table'] . '" WHERE "post_ref" = ? AND "content_order" = ?');
         $result = $database->executePreparedFetch($prepared,
                 [$this->content_id->post_id, $this->content_id->order_id], PDO::FETCH_ASSOC);
 
@@ -52,15 +52,15 @@ class ContentFile extends ContentBase
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $database->prepare(
-                'SELECT "entry" FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ? AND "file_order" = ?');
+                'SELECT "entry" FROM "' . $board_references['content_table'] . '" WHERE "post_ref" = ? AND "content_order" = ?');
         $result = $database->executePreparedFetch($prepared,
                 [$this->content_id->post_id, $this->content_id->order_id], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $database->prepare(
-                    'UPDATE "' . $board_references['file_table'] . '" SET "parent_thread" = :parent_thread,
-                    "post_ref" = :post_ref, "file_order" = :file_order,
+                    'UPDATE "' . $board_references['content_table'] . '" SET "parent_thread" = :parent_thread,
+                    "post_ref" = :post_ref, "content_order" = :content_order,
                     "type" = :type, "format" = :format, "mime" = :mime,
                     "filename" = :filename, "extension" = :extension,
                     "display_width" = :display_width, "display_height" = :display_height, "preview_name" = :preview_name,
@@ -73,17 +73,17 @@ class ContentFile extends ContentBase
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . $board_references['file_table'] . '" ("parent_thread", "post_ref", "file_order", "type", "format", "mime",
+                    'INSERT INTO "' . $board_references['content_table'] . '" ("parent_thread", "post_ref", "content_order", "type", "format", "mime",
                     "filename", "extension", "display_width", "display_height", "preview_name", "preview_extension", "preview_width", "preview_height",
                     "filesize", "md5", "sha1", "sha256", "sha512", "source", "license", "alt_text", "exif") VALUES
-                    (:parent_thread, :post_ref, :file_order, :type, :format, :mime, :filename, :extension, :display_width, :display_height,
+                    (:parent_thread, :post_ref, :content_order, :type, :format, :mime, :filename, :extension, :display_width, :display_height,
                     :preview_name, :preview_extension, :preview_width, :preview_height, :filesize, :md5, :sha1, :sha256, :sha512,
                     :source, :license, :alt_text, :exif)');
         }
 
         $prepared->bindValue(':parent_thread', $this->contentDataOrDefault('parent_thread', 0), PDO::PARAM_INT);
         $prepared->bindValue(':post_ref', $this->contentDataOrDefault('post_ref', null), PDO::PARAM_INT);
-        $prepared->bindValue(':file_order', $this->contentDataOrDefault('file_order', 1), PDO::PARAM_INT);
+        $prepared->bindValue(':content_order', $this->contentDataOrDefault('content_order', 1), PDO::PARAM_INT);
         $prepared->bindValue(':type', $this->contentDataOrDefault('type', null), PDO::PARAM_STR);
         $prepared->bindValue(':format', $this->contentDataOrDefault('format', null), PDO::PARAM_STR);
         $prepared->bindValue(':mime', $this->contentDataOrDefault('mime', null), PDO::PARAM_STR);
@@ -146,7 +146,7 @@ class ContentFile extends ContentBase
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $database->prepare(
-                'DELETE FROM "' . $board_references['file_table'] . '" WHERE "post_ref" = ? AND "file_order" = ?');
+                'DELETE FROM "' . $board_references['content_table'] . '" WHERE "post_ref" = ? AND "content_order" = ?');
         $database->executePrepared($prepared, [$this->content_id->post_id, $this->content_id->order_id]);
         return true;
     }
