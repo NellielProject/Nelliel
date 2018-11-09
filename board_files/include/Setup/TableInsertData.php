@@ -464,7 +464,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['m4v', 'm4v', 'video', 'm4v', 'video/x-m4v', '^.{4}ftypmp(?:41|42|71)', 'MPEG-4 Video']);
         $database->executePrepared($prepared, ['mkv', 'mkv', 'video', 'matroska', 'video/x-matroska', '^\x1A\x45\xDF\xA3', 'Matroska Media']);
         $database->executePrepared($prepared, ['flv', 'flv', 'video', 'flash-video', 'video/x-flv', '^FLV\x01', 'Flash Video']);
-        $database->executePrepared($prepared, ['webm', 'webm', 'video', 'webm', 'video/webm', '^\x1A\x4\xDF\xA3', 'WebM']);
+        $database->executePrepared($prepared, ['webm', 'webm', 'video', 'webm', 'video/webm', '^\x1A\x45\xDF\xA3', 'WebM']);
         $database->executePrepared($prepared, ['3gp', '3gp', 'video', '3gp', 'video/3gpp', '^.{4}ftyp3gp', '3GP']);
         $database->executePrepared($prepared, ['ogv', 'ogv', 'video', 'ogg-video', 'video/ogg', '^OggS', 'Ogg Video']);
         $database->executePrepared($prepared, ['rtf', 'rtf', 'document', 'rich-text', 'application/rtf', '^\x7B\x5C\x72\x74\x66\x31', 'Rich Text']);
