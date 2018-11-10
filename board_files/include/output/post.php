@@ -100,7 +100,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     if ($session->inModmode($board_id))
     {
         $ip = @inet_ntop($post_data['ip_address']);
-        $header_nodes['modmode-ip-address']->setContent(@inet_ntop($post_data['ip_address']));
+        $header_nodes['modmode-ip-address']->setContent($ip);
         $header_nodes['modmode-ban-link']->extSetAttribute('href',
                 '?module=bans&board_id=test&action=new&ban_type=POST&content-id=' . $base_content_id .
                 '&ban_ip=' . rawurlencode($ip) . '&modmode=true');

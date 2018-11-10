@@ -28,6 +28,7 @@ class PostData
             $post->content_id->thread_id = $post->content_data['parent_thread'];
         }
 
+        $post->content_data['ip_address'] = inet_pton($_SERVER['REMOTE_ADDR']);
         $post->content_data['poster_name'] = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
         $post->content_data['email'] = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string');
         $post->content_data['subject'] = $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string');
