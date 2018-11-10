@@ -44,6 +44,7 @@ Error 220: No valid session.. (classes/Session.php)
 Error 221: Expired session. (classes/Session.php)  
 Error 222: Login not validated. (classes/Session.php)  
 Error 223: Session setup failed. (classes/Session.php)  
+Error 224: Secure session only. (classes/Session.php)  
 
 Error 230: User does not exist. (Admin/AdminStaff.php)  
 Error 231: Role does not exist. (Admin/AdminStaff.php)  
@@ -86,3 +87,7 @@ Error 390: perm_extract_gettext (language/Language.php)
 
 Error 400: perm_post_sticky (Content/ContentThread.php)  
 Error 401: perm_post_lock (Content/ContentThread.php)  
+
+Error 410: perm_regen_pages (dispatch/module_dispatch.php)  
+Error 411: perm_regen_caches (board cache) (dispatch/module_dispatch.php)  
+Error 412: perm_regen_caches (site cache) (dispatch/module_dispatch.php)  

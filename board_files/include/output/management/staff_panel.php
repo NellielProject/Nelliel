@@ -7,7 +7,6 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_staff_panel_main()
 {
     $database = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();

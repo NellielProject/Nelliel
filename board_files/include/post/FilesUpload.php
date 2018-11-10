@@ -139,7 +139,7 @@ class FilesUpload
     public function doesFileExist($response_to, $file)
     {
         $database = nel_database();
-        $snacks = new \Nelliel\Snacks($database, new \Nelliel\BanHammer($database, $this->authorization));
+        $snacks = new \Nelliel\Snacks($database, new \Nelliel\BanHammer($database));
         $references = nel_parameters_and_data()->boardReferences($this->board_id);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $error_data = array('delete_files' => true, 'bad-filename' => $file->content_data['name'], 'files' => $this->uploaded_files,
@@ -177,7 +177,7 @@ class FilesUpload
 
         if ($response_to === 0 && $board_settings['only_op_duplicates'])
         {
-            $query = 'SELECT 1 FROM "' . $references['file_table'] .
+            $query = 'SELECT 1 FROM "' . $references['content_table'] .
                     '" WHERE "parent_thread" = "post_ref" AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $file->content_data['md5'], PDO::PARAM_LOB);
@@ -187,7 +187,7 @@ class FilesUpload
         }
         else if ($response_to > 0 && $board_settings['only_thread_duplicates'])
         {
-            $query = 'SELECT 1 FROM "' . $references['file_table'] .
+            $query = 'SELECT 1 FROM "' . $references['content_table'] .
                     '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
@@ -198,7 +198,7 @@ class FilesUpload
         }
         else
         {
-            $query = 'SELECT 1 FROM "' . $references['file_table'] .
+            $query = 'SELECT 1 FROM "' . $references['content_table'] .
                     '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ? LIMIT 1';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $file->content_data['md5'], PDO::PARAM_LOB);

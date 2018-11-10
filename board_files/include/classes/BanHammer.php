@@ -12,12 +12,10 @@ if (!defined('NELLIEL_VERSION'))
 class BanHammer
 {
     private $database;
-    private $authorization;
 
-    public function __construct($database, $authorization)
+    public function __construct($database)
     {
         $this->database = $database;
-        $this->authorization = $authorization;
     }
 
     public function postToArray()

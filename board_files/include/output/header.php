@@ -11,7 +11,6 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
-    $references = nel_parameters_and_data()->boardReferences($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'header.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';

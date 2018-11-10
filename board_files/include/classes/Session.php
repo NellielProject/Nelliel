@@ -13,6 +13,7 @@ class Session
     private static $session_active = false;
     private static $in_modmode = false;
     private static $user;
+    private $session_name = 'NellielSession';
     private $authorization;
 
     function __construct($authorization, $setup = false)
@@ -24,8 +25,12 @@ class Session
             ini_set('session.use_cookies', 1);
             ini_set('session.use_only_cookies', 1);
             ini_set('session.cookie_httponly', 1);
-            ini_set('session.cookie_secure', 1);
-            //ini_set('session.cookie_secure', 1); // TODO: Use this once https properly supported
+
+            if (SECURE_SESSION_ONLY)
+            {
+                ini_set('session.cookie_secure', 1);
+            }
+
             self::$initialized = true;
         }
 
@@ -45,14 +50,20 @@ class Session
             return;
         }
 
+        session_name($this->session_name);
         session_start();
     }
 
     public function setup($login = false)
     {
+        if (SECURE_SESSION_ONLY && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'))
+        {
+            nel_derp(224, _gettext('Session requires a secure connection.'));
+        }
+
         $this->startSession();
 
-        if(!$login)
+        if (!$login)
         {
             if (empty($_SESSION))
             {
@@ -101,7 +112,7 @@ class Session
         session_unset();
         session_destroy();
         self::$session_active = false;
-        setrawcookie("PHPSESSID", "", time() - 7200, "/");
+        $this->setCookie(time() - 7200);
     }
 
     private function setVariables()
@@ -129,9 +140,9 @@ class Session
         return true;
     }
 
-    private function setCookie()
+    private function setCookie($expiry = 0)
     {
-        setrawcookie(session_name(), session_id(), 0, '/', '; HttpOnly');
+        setrawcookie(session_name(), session_id(), 0, '/', '', SECURE_SESSION_ONLY, true);
     }
 
     public function isOld()

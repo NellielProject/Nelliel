@@ -147,7 +147,7 @@ class ContentThread extends ContentBase
         $this->database->executePrepared($prepared, [$post_count, $this->content_id->thread_id]);
 
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $board_references['file_table'] . '" WHERE "parent_thread" = ?');
+                'SELECT COUNT("entry") FROM "' . $board_references['content_table'] . '" WHERE "parent_thread" = ?');
         $file_count = $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id],
                 PDO::FETCH_COLUMN);
 

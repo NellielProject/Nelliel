@@ -79,7 +79,7 @@ class JSONAPI
         $data_output = array();
         $data_output['parent_thread'] = nel_cast_to_datatype($post_data['parent_thread'], 'integer');
         $data_output['post_ref'] = nel_cast_to_datatype($post_data['post_ref'], 'integer');
-        $data_output['file_order'] = nel_cast_to_datatype($post_data['file_order'], 'integer');
+        $data_output['content_order'] = nel_cast_to_datatype($post_data['content_order'], 'integer');
         $data_output['type'] = nel_cast_to_datatype($thread_data['type'], 'string');
         $data_output['format'] = nel_cast_to_datatype($thread_data['format'], 'string');
         $data_output['mime'] = nel_cast_to_datatype($thread_data['mime'], 'string');
@@ -99,6 +99,9 @@ class JSONAPI
         $this->addIfNotEmpty($data_output, 'source', bin2hex($post_data['source']), 'string');
         $this->addIfNotEmpty($data_output, 'license', bin2hex($post_data['license']), 'string');
         $this->addIfNotEmpty($data_output, 'alt_text', bin2hex($post_data['alt_text']), 'string');
+        $this->addIfNotEmpty($data_output, 'url', bin2hex($post_data['url']), 'string');
+        $this->addIfNotEmpty($data_output, 'exif', bin2hex($post_data['exif']), 'string');
+        $this->addIfNotEmpty($data_output, 'meta', bin2hex($post_data['meta']), 'string');
         return json_encode($data_output);
     }
 }

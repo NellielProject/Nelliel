@@ -66,15 +66,15 @@ class Setup
 
     public function createBoardTables($board_id)
     {
-        $references = nel_parameters_and_data()->boardReferences($board_id);
+        $board_references = nel_parameters_and_data()->boardReferences($board_id);
         $sql_tables = new SQLTables();
-        $sql_tables->createThreadsTable($references['thread_table']);
-        $sql_tables->createThreadsTable($references['archive_thread_table']);
-        $sql_tables->createPostsTable($references['post_table'], $references['thread_table']);
-        $sql_tables->createPostsTable($references['archive_post_table'], $references['archive_thread_table']);
-        $sql_tables->createFilesTable($references['file_table'], $references['post_table']);
-        $sql_tables->createFilesTable($references['archive_file_table'], $references['archive_post_table']);
-        $sql_tables->createBoardConfigTable($references['config_table'], true);
+        $sql_tables->createThreadsTable($board_references['thread_table']);
+        $sql_tables->createThreadsTable($board_references['archive_thread_table']);
+        $sql_tables->createPostsTable($board_references['post_table'], $board_references['thread_table']);
+        $sql_tables->createPostsTable($board_references['archive_post_table'], $board_references['archive_thread_table']);
+        $sql_tables->createFilesTable($board_references['content_table'], $board_references['post_table']);
+        $sql_tables->createFilesTable($board_references['archive_content_table'], $board_references['archive_post_table']);
+        $sql_tables->createBoardConfigTable($board_references['config_table'], true);
     }
 
     public function createBoardDirectories($board_id)

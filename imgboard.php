@@ -1,5 +1,5 @@
 <?php
-define('NELLIEL_VERSION', 'v0.9.11'); // Version
+define('NELLIEL_VERSION', 'v0.9.11.2'); // Version
 define('NELLIEL_COPYRIGHT', '2010-2018 Nelliel Project'); // Copyright line
 define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('BASE_PATH', realpath('./') . '/'); // Base path for script
@@ -57,7 +57,7 @@ $out = nel_plugins()->processHook('nel-plugin-example-return', array('string'), 
 
 // IT'S GO TIME!
 ignore_user_abort(true);
-$snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database(), $authorization));
+$snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
 $snacks->banSpambots();
 
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';

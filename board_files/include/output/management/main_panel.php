@@ -1,9 +1,8 @@
 <?php
 
-function nel_render_main_panel()
+function nel_render_main_panel($user)
 {
     $database = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -15,8 +14,6 @@ function nel_render_main_panel()
     $board_entry = $dom->getElementById('board-entry');
     $insert_before = $board_entry->parentNode->lastChild;
     $boards = $database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
-    $session = new \Nelliel\Session($authorization, true);
-    $user = $session->sessionUser();
 
     if ($boards !== false)
     {
@@ -198,20 +195,20 @@ function nel_render_main_board_panel($board_id)
         $file_filters->remove();
     }
 
-    if ($user->boardPerm($board_id, 'perm_regen_index'))
+    if ($user->boardPerm($board_id, 'perm_regen_pages'))
     {
         $dom->getElementById('regen-all-pages')->extSetAttribute('href',
-                PHP_SELF . '?module=regen&action=all-pages&board_id=' . $board_id);
+                PHP_SELF . '?module=regen&action=board-all-pages&board_id=' . $board_id);
     }
     else
     {
         $dom->getElementById('regen-all-pages')->parentNode->remove();
     }
 
-    if ($user->boardPerm($board_id, 'perm_regen_caches'))
+    if ($user->boardPerm($board_id, 'perm_regen_cache'))
     {
         $dom->getElementById('regen-all-caches')->extSetAttribute('href',
-                PHP_SELF . '?module=regen&action=all-caches&board_id=' . $board_id);
+                PHP_SELF . '?module=regen&action=board-all-caches&board_id=' . $board_id);
     }
     else
     {

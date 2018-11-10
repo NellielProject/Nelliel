@@ -37,6 +37,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_login_attempts_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_permissions_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_permissions_schema', '001']);
+        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_reports_schema', '001']);
+        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_reports_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_roles_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_roles_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_site_config_schema', '001']);
@@ -95,9 +97,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_post_mod_comment', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_reports_access', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_reports_dismiss', 1]);
-        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_caches', 1]);
-        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_index', 1]);
-        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_threads', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_cache', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_pages', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_manage_boards_access', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_manage_boards_add', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_manage_boards_modify', 1]);
@@ -136,9 +137,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_post_mod_comment', 1]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_reports_access', 1]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_reports_dismiss', 1]);
-        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_caches', 1]);
-        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_index', 1]);
-        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_threads', 1]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_cache', 1]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_pages', 1]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_boards_access', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_boards_add', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_boards_modify', 0]);
@@ -177,9 +177,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['MOD', 'perm_post_mod_comment', 1]);
         $database->executePrepared($prepared, ['MOD', 'perm_reports_access', 1]);
         $database->executePrepared($prepared, ['MOD', 'perm_reports_dismiss', 1]);
-        $database->executePrepared($prepared, ['MOD', 'perm_regen_caches', 0]);
-        $database->executePrepared($prepared, ['MOD', 'perm_regen_index', 0]);
-        $database->executePrepared($prepared, ['MOD', 'perm_regen_threads', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_regen_cache', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_regen_pages', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_manage_boards_access', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_manage_boards_add', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_manage_boards_modify', 0]);
@@ -218,9 +217,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['JANITOR', 'perm_post_mod_comment', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_reports_access', 1]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_reports_dismiss', 0]);
-        $database->executePrepared($prepared, ['JANITOR', 'perm_regen_caches', 0]);
-        $database->executePrepared($prepared, ['JANITOR', 'perm_regen_index', 0]);
-        $database->executePrepared($prepared, ['JANITOR', 'perm_regen_threads', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_regen_cache', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_regen_pages', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_manage_boards_access', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_manage_boards_add', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_manage_boards_modify', 0]);
@@ -464,7 +462,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['m4v', 'm4v', 'video', 'm4v', 'video/x-m4v', '^.{4}ftypmp(?:41|42|71)', 'MPEG-4 Video']);
         $database->executePrepared($prepared, ['mkv', 'mkv', 'video', 'matroska', 'video/x-matroska', '^\x1A\x45\xDF\xA3', 'Matroska Media']);
         $database->executePrepared($prepared, ['flv', 'flv', 'video', 'flash-video', 'video/x-flv', '^FLV\x01', 'Flash Video']);
-        $database->executePrepared($prepared, ['webm', 'webm', 'video', 'webm', 'video/webm', '^\x1A\x4\xDF\xA3', 'WebM']);
+        $database->executePrepared($prepared, ['webm', 'webm', 'video', 'webm', 'video/webm', '^\x1A\x45\xDF\xA3', 'WebM']);
         $database->executePrepared($prepared, ['3gp', '3gp', 'video', '3gp', 'video/3gpp', '^.{4}ftyp3gp', '3GP']);
         $database->executePrepared($prepared, ['ogv', 'ogv', 'video', 'ogg-video', 'video/ogg', '^OggS', 'Ogg Video']);
         $database->executePrepared($prepared, ['rtf', 'rtf', 'document', 'rich-text', 'application/rtf', '^\x7B\x5C\x72\x74\x66\x31', 'Rich Text']);

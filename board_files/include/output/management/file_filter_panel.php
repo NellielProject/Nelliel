@@ -12,7 +12,6 @@ function nel_render_file_filter_panel($user, $board_id = '')
     }
 
     $database = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($database);
     $url_constructor = new \Nelliel\URLConstructor();
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();

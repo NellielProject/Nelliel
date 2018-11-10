@@ -12,7 +12,6 @@ function nel_render_main_ban_panel($user, $board_id)
     }
 
     $database = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -65,7 +64,6 @@ function nel_render_main_ban_panel($user, $board_id)
 
 function nel_render_ban_panel_add($board_id, $ip = '', $type = 'GENERAL')
 {
-    $authorize = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -105,9 +103,8 @@ function nel_render_ban_panel_add($board_id, $ip = '', $type = 'GENERAL')
 
 function nel_render_ban_panel_modify($board_id)
 {
-    $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
-    $ban_hammer = new \Nelliel\BanHammer(nel_database(), $authorization);
+    $ban_hammer = new \Nelliel\BanHammer(nel_database());
     $database = nel_database();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();

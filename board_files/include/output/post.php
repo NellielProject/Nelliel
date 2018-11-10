@@ -100,7 +100,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     if ($session->inModmode($board_id))
     {
         $ip = @inet_ntop($post_data['ip_address']);
-        $header_nodes['modmode-ip-address']->setContent(@inet_ntop($post_data['ip_address']));
+        $header_nodes['modmode-ip-address']->setContent($ip);
         $header_nodes['modmode-ban-link']->extSetAttribute('href',
                 '?module=bans&board_id=test&action=new&ban_type=POST&content-id=' . $base_content_id .
                 '&ban_ip=' . rawurlencode($ip) . '&modmode=true');
@@ -290,9 +290,9 @@ function nel_render_post($board_id, $gen_data, $dom)
 
         foreach ($gen_data['files'] as $file)
         {
-            $file_content_id = 'nci_' . $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['file_order'];
+            $file_content_id = 'nci_' . $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['content_order'];
             $full_filename = $file['filename'] . '.' . $file['extension'];
-            $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['file_order'];
+            $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['content_order'];
             $temp_file_dom = $new_post_dom->copyNodeIntoDocument($new_post_dom->getElementById('fileinfo-'), true);
 
             $temp_file_node = $temp_file_dom->getElementById('fileinfo-');
@@ -305,7 +305,7 @@ function nel_render_post($board_id, $gen_data, $dom)
             {
                 $file_nodes['modmode-delete-link']->extSetAttribute('href',
                         '?module=threads&board_id=test&action=delete-file&post-id=' .
-                        $post_data['post_number'] . '&file-order=' . $file['file_order'] . '&modmode=true');
+                        $post_data['post_number'] . '&file-order=' . $file['content_order'] . '&modmode=true');
             }
             else
             {
