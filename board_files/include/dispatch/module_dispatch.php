@@ -250,15 +250,35 @@ function nel_module_dispatch($inputs)
 
         case 'regen':
             $regen = new \Nelliel\Regen();
+            $session = new \Nelliel\Session($authorization, true);
+            $user = $session->sessionUser();
 
-            if ($inputs['action'] === 'all-pages')
+            if ($inputs['action'] === 'board-all-pages')
             {
+                if (!$user->boardPerm($inputs['board_id'], 'perm_regen_pages'))
+                {
+                    nel_derp(410, _gettext('You are not allowed to regenerate board pages.'));
+                }
+
                 $regen->allPages($inputs['board_id']);
             }
-
-            if ($inputs['action'] === 'all-caches')
+            else if ($inputs['action'] === 'board-all-caches')
             {
+                if (!$user->boardPerm($inputs['board_id'], 'perm_regen_cache'))
+                {
+                    nel_derp(411, _gettext('You are not allowed to regenerate board caches.'));
+                }
+
                 $regen->boardCache($inputs['board_id']);
+            }
+            else if ($inputs['action'] === 'site-all-caches')
+            {
+                if (!$user->boardPerm('', 'perm_regen_caches'))
+                {
+                    nel_derp(412, _gettext('You are not allowed to regenerate site caches.'));
+                }
+
+                $regen->siteCache();
             }
 
             nel_render_main_board_panel($inputs['board_id']);

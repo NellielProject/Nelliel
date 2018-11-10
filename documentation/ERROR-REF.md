@@ -86,3 +86,7 @@ Error 390: perm_extract_gettext (language/Language.php)
 
 Error 400: perm_post_sticky (Content/ContentThread.php)  
 Error 401: perm_post_lock (Content/ContentThread.php)  
+
+Error 410: perm_regen_pages (dispatch/module_dispatch.php)  
+Error 411: perm_regen_caches (board cache) (dispatch/module_dispatch.php)  
+Error 412: perm_regen_caches (site cache) (dispatch/module_dispatch.php)  

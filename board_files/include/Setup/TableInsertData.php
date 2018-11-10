@@ -97,9 +97,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_post_mod_comment', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_reports_access', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_reports_dismiss', 1]);
-        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_caches', 1]);
-        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_index', 1]);
-        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_threads', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_cache', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_regen_pages', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_manage_boards_access', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_manage_boards_add', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_manage_boards_modify', 1]);
@@ -138,9 +137,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_post_mod_comment', 1]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_reports_access', 1]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_reports_dismiss', 1]);
-        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_caches', 1]);
-        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_index', 1]);
-        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_threads', 1]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_cache', 1]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_regen_pages', 1]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_boards_access', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_boards_add', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_manage_boards_modify', 0]);
@@ -179,9 +177,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['MOD', 'perm_post_mod_comment', 1]);
         $database->executePrepared($prepared, ['MOD', 'perm_reports_access', 1]);
         $database->executePrepared($prepared, ['MOD', 'perm_reports_dismiss', 1]);
-        $database->executePrepared($prepared, ['MOD', 'perm_regen_caches', 0]);
-        $database->executePrepared($prepared, ['MOD', 'perm_regen_index', 0]);
-        $database->executePrepared($prepared, ['MOD', 'perm_regen_threads', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_regen_cache', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_regen_pages', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_manage_boards_access', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_manage_boards_add', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_manage_boards_modify', 0]);
@@ -220,9 +217,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['JANITOR', 'perm_post_mod_comment', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_reports_access', 1]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_reports_dismiss', 0]);
-        $database->executePrepared($prepared, ['JANITOR', 'perm_regen_caches', 0]);
-        $database->executePrepared($prepared, ['JANITOR', 'perm_regen_index', 0]);
-        $database->executePrepared($prepared, ['JANITOR', 'perm_regen_threads', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_regen_cache', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_regen_pages', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_manage_boards_access', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_manage_boards_add', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_manage_boards_modify', 0]);
