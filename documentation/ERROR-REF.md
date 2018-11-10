@@ -44,6 +44,7 @@ Error 220: No valid session.. (classes/Session.php)
 Error 221: Expired session. (classes/Session.php)  
 Error 222: Login not validated. (classes/Session.php)  
 Error 223: Session setup failed. (classes/Session.php)  
+Error 224: Secure session only. (classes/Session.php)  
 
 Error 230: User does not exist. (Admin/AdminStaff.php)  
 Error 231: Role does not exist. (Admin/AdminStaff.php)  

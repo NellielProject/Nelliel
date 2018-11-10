@@ -151,6 +151,10 @@ $base_config['use_internal_cache'] = true;
 // Enable or disable plugins
 $base_config['enable_plugins'] = true;
 
+// Forces Nelliel to only use sessions over a secure connection.
+// Once SSL set up for the site, it is recommended you set this to true.
+$base_config['secure_session_only'] = false;
+
 
 //
 // === Crypt Settings ===
