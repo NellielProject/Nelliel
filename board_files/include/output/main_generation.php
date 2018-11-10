@@ -81,8 +81,8 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
             if ($post_counter === -1)
             {
                 $current_thread_id = $front_page_list[$thread_counter];
-                $thread_element = $dom->getElementById('thread-')->cloneNode();
-                $thread_element->changeId('thread-' . $current_thread_id);
+                $thread_element = $dom->getElementById('thread-nci_0_0_0')->cloneNode();
+                $thread_element->changeId('thread-nci_' . $current_thread_id . '_0_0');
                 $dom->getElementById('form-content-action')->appendChild($thread_element);
                 $post_append_target = $thread_element;
                 $query = 'SELECT * FROM "' . $references['thread_table'] . '" WHERE "thread_id" = ? LIMIT 1';
@@ -149,8 +149,8 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
             }
         }
 
-        $dom->getElementById('post-id-')->remove();
-        $dom->getElementById('thread-')->remove();
+        $dom->getElementById('post-id-nci_0_0_0')->remove();
+        $dom->getElementById('thread-nci_0_0_0')->remove();
         $gen_data['posts_ending'] = true;
         $page_count = (int) ceil($counttree / $board_settings['threads_per_page']);
         $pages = array();

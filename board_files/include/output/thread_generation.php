@@ -129,12 +129,12 @@ function nel_thread_generator($board_id, $write, $response_to)
         }
 
         $imported = $dom->importNode($new_post_node, true);
-        $dom->getElementById('thread-')->appendChild($imported);
+        $dom->getElementById('thread-nci_0_0_0')->appendChild($imported);
         ++ $post_counter;
     }
 
-    $dom->getElementById('post-id-')->remove();
-    $dom->getElementById('thread-')->changeId('thread-' . $response_to);
+    $dom->getElementById('post-id-nci_0_0_0')->remove();
+    $dom->getElementById('thread-nci_0_0_0')->changeId('thread-nci_' . $response_to . '_0_0');
 
     if (!$hr_added)
     {

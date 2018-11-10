@@ -184,8 +184,8 @@ nelliel.posting_form.showNextFileInput = function (element) {
 }
 
 nelliel.core.hashHandler = function () {
-    if (location.hash.match(/#p[0-9_]+/)) {
-        nelliel.ui.highlightPost(location.hash.replace("#p", ""));
+    if (location.hash.match(/#nci_[0-9_]+/)) {
+        nelliel.ui.highlightPost(location.hash.replace("#", ""));
     }
 }
 
