@@ -156,6 +156,8 @@ function nel_render_post($board_id, $gen_data, $dom)
     $new_post_dom->getElementById('p-number')->changeId('p' . $post_id);
     $rev_post_id = $post_data['post_number'] . '_' . $post_data['parent_thread'];
 
+    $header_nodes['post-select']->extSetAttribute('name', $base_content_id);
+
     if ($response)
     {
         $post_type = 'reply';
@@ -164,27 +166,15 @@ function nel_render_post($board_id, $gen_data, $dom)
 
         $indents_element->setContent(nel_parameters_and_data()->boardSettings($board_id, 'indent_marker'));
         $indents_element->removeAttribute('id');
-
-        $post_checkbox = $new_post_dom->getElementById('post_post-id');
-        $post_checkbox->extSetAttribute('class', 'reply-post-select');
-        $post_checkbox->changeId('post_' . $post_id);
-        $post_checkbox->extSetAttribute('name', $base_content_id);
-
-        $new_post_dom->getElementById('thread_thread-id')->remove();
+        $header_nodes['post-select']->extSetAttribute('class', 'reply-post-select');
+        $header_nodes['thread-select']->remove();
     }
     else
     {
         $post_type = 'op';
         $post_type_class = 'op-';
         $indents_element->remove();
-
-        $thread_checkbox = $new_post_dom->getElementById('thread_thread-id');
-        $thread_checkbox->changeId('thread_' . $thread_id);
-        $thread_checkbox->extSetAttribute('name', $base_content_id);
-
-        $post_checkbox = $new_post_dom->getElementById('post_post-id');
-        $post_checkbox->changeId('post_' . $post_id);
-        $post_checkbox->extSetAttribute('name', $base_content_id);
+        $header_nodes['thread-select']->extSetAttribute('name', $base_content_id);
     }
 
     $header_nodes['subject']->modifyAttribute('class', $post_type, 'before');
@@ -201,12 +191,12 @@ function nel_render_post($board_id, $gen_data, $dom)
     {
         $header_nodes['poster-mailto']->modifyAttribute('href', $post_data['email'] . 'after');
         $header_nodes['poster-mailto']->setContent($post_data['poster_name']);
-        $header_nodes['trip-line-']->setContent($trip_line);
+        $header_nodes['trip-line']->setContent($trip_line);
     }
     else
     {
         $header_nodes['poster-mailto']->remove();
-        $header_nodes['trip-line-']->setContent($post_data['poster_name'] . $trip_line);
+        $header_nodes['trip-line']->setContent($post_data['poster_name'] . $trip_line);
     }
 
     $curr_time = $gen_data['post']['post_time'];
@@ -323,10 +313,8 @@ function nel_render_post($board_id, $gen_data, $dom)
                 $file['display_filename'] = substr($file['filename'], 0, 25) . '(...)';
             }
 
-            $file_text_link = $temp_file_dom->getElementById('file-link-');
-            $file_text_link->changeId('file-link-' . $file_id);
-            $file_text_link->extSetAttribute('href', $file['file_location'], 'none');
-            $file_text_link->setContent($file['display_filename'] . '.' . $file['extension']);
+            $file_nodes['file-link']->extSetAttribute('href', $file['file_location'], 'none');
+            $file_nodes['file-link']->setContent($file['display_filename'] . '.' . $file['extension']);
 
             $file['img_dim'] = !empty($file['display_width']) && !empty($file['display_height']);
             $file['filesize'] = round(((int) $file['filesize'] / 1024), 2);
@@ -385,29 +373,22 @@ function nel_render_post($board_id, $gen_data, $dom)
                 $file_nodes['file-sha512']->remove();
             }
 
-            $location_element = $temp_file_dom->getElementById('file-location-');
-            $video_preview = $temp_file_dom->getElementById('video-preview-');
-
             if ($board_settings['use_thumb'])
             {
                 if ($file['format'] == 'webm' || $file['format'] == 'mpeg4')
                 {
-                    $video_preview->changeId('video-preview-' . $file_id);
-                    $video_preview->extSetAttribute('width', $board_settings['max_width']);
-                    $video_preview_source = $video_preview->getElementsByTagName('source')->item(0);
-                    $video_preview_source->extSetAttribute('src', $file['file_location']);
-                    $video_preview_source->extSetAttribute('type', $file['mime']);
-
-                    $location_element->remove();
+                    $file_nodes['video-preview']->extSetAttribute('width', $board_settings['max_width']);
+                    $file_nodes['video-preview-source']->extSetAttribute('src', $file['file_location']);
+                    $file_nodes['video-preview-source']->extSetAttribute('type', $file['mime']);
+                    $file_nodes['file-location']->remove();
                 }
                 else
                 {
                     $full_preview_name = $file['preview_name'] . '.' . $file['preview_extension'];
                     $file['has_preview'] = false;
-                    $video_preview->remove();
+                    $file_nodes['video-preview']->remove();
 
-                    $location_element->extSetAttribute('href', $file['file_location'], 'none');
-                    $location_element->changeId('file-location-' . $file_id);
+                    $file_nodes['file-location']->extSetAttribute('href', $file['file_location'], 'none');
 
                     if (!empty($file['preview_name']))
                     {
@@ -454,26 +435,24 @@ function nel_render_post($board_id, $gen_data, $dom)
 
                     if ($file['has_preview'])
                     {
-                        $preview_element = $temp_file_dom->getElementById('file-preview-');
-                        $preview_element->changeId('file-preview-' . $file_id);
-                        $preview_element->extSetAttribute('src', $file['preview_location'], 'none');
-                        $preview_element->extSetAttribute('width', $file['preview_width']);
-                        $preview_element->extSetAttribute('height', $file['preview_height']);
-                        $preview_element->extSetAttribute('alt', $file['alt_text']);
-                        $preview_element->extSetAttribute('class', $post_type_class . $multiple_class . 'post-preview');
-                        $preview_element->extSetAttribute('data-other-dims',
+                        $file_nodes['file-preview']->extSetAttribute('src', $file['preview_location'], 'none');
+                        $file_nodes['file-preview']->extSetAttribute('width', $file['preview_width']);
+                        $file_nodes['file-preview']->extSetAttribute('height', $file['preview_height']);
+                        $file_nodes['file-preview']->extSetAttribute('alt', $file['alt_text']);
+                        $file_nodes['file-preview']->extSetAttribute('class', $post_type_class . $multiple_class . 'post-preview');
+                        $file_nodes['file-preview']->extSetAttribute('data-other-dims',
                                 'w' . $file['display_width'] . 'h' . $file['display_height']);
-                        $preview_element->extSetAttribute('data-other-loc', $file['file_location'], 'none');
+                        $file_nodes['file-preview']->extSetAttribute('data-other-loc', $file['file_location'], 'none');
                     }
                     else
                     {
-                        $location_element->remove();
+                        $file_nodes['file-location']->remove();
                     }
                 }
             }
             else
             {
-                $location_element->remove();
+                $file_nodes['file-location']->remove();
             }
 
             $imported = $new_post_dom->importNode($temp_file_node, true);
@@ -512,7 +491,6 @@ function nel_render_post($board_id, $gen_data, $dom)
         $contents_nodes['mod-comment']->remove();
     }
 
-    $contents_nodes['post-comment']->changeId('post-comment-' . $post_id);
     $output_filter->clearWhitespace($post_data['comment']);
 
     if ($post_data['comment'] === '')
@@ -536,7 +514,6 @@ function nel_render_post($board_id, $gen_data, $dom)
         }
     }
 
-    $new_post_dom->getElementById('ban-')->changeId('ban' . $post_data['post_number']);
     return $new_post_element;
 }
 
