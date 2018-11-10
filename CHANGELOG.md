@@ -1,4 +1,24 @@
 # Nelliel Changelog
+## v0.9.11.2 (2018/11/09)
+### Breaking
+ - Change file table to content table
+
+### Changed
+ - Update schema markers
+ - Permissions for regen options
+ - Cleanup rules and posting limits
+ - Update ban page
+ - Add post borders to Burichan and Futaba styles
+ - Various layout and rendering tweaks
+ 
+### Fixed
+ - WebM regex
+ - Session check during posting
+ - IP not being stored for posts
+
+### Added
+ - Option to only allow sessions over secure connections
+
 ## v0.9.11.1 (2018/11/07)
 ### Changed
  - Cleanup of header and footer templates and rendering
@@ -31,7 +51,7 @@
  - `Sessions.php` renamed to `Session.php`
  - Add parameter to Content classes to immediately load content from database when needed
  - Update `ERROR-REF.md`
- 
+
 ### Fixed
  - Formatting in `DEV-GUIDE.md`
  - Missing locale handling
@@ -60,7 +80,7 @@
  - Update and improve Moderator Mode and its handling
  - Overhaul of Sessions class and session handling
  - Error ID now displayed on error page
- 
+
 ### Fixed
  - Fix content not being deletable from Threads panel
  - Fix various bugs in new Admin classes
