@@ -12,7 +12,6 @@ function nel_render_site_settings_panel($user)
     }
 
     $database = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();

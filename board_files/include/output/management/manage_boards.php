@@ -12,7 +12,6 @@ function nel_render_manage_boards_panel($user)
     }
 
     $database = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $url_constructor = new \Nelliel\URLConstructor();

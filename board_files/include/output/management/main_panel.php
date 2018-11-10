@@ -1,9 +1,8 @@
 <?php
 
-function nel_render_main_panel()
+function nel_render_main_panel($user)
 {
     $database = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -15,8 +14,6 @@ function nel_render_main_panel()
     $board_entry = $dom->getElementById('board-entry');
     $insert_before = $board_entry->parentNode->lastChild;
     $boards = $database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
-    $session = new \Nelliel\Session($authorization, true);
-    $user = $session->sessionUser();
 
     if ($boards !== false)
     {

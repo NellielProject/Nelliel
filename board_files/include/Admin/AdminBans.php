@@ -19,7 +19,7 @@ class AdminBans extends AdminBase
         $this->database = $database;
         $this->authorization = $authorization;
         $this->board_id = (is_null($board_id)) ? '' : $board_id;
-        $this->ban_hammer = new \Nelliel\BanHammer($database, $authorization);
+        $this->ban_hammer = new \Nelliel\BanHammer($database);
     }
 
     // TODO: Separate this out more.

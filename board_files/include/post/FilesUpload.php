@@ -139,7 +139,7 @@ class FilesUpload
     public function doesFileExist($response_to, $file)
     {
         $database = nel_database();
-        $snacks = new \Nelliel\Snacks($database, new \Nelliel\BanHammer($database, $this->authorization));
+        $snacks = new \Nelliel\Snacks($database, new \Nelliel\BanHammer($database));
         $references = nel_parameters_and_data()->boardReferences($this->board_id);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $error_data = array('delete_files' => true, 'bad-filename' => $file->content_data['name'], 'files' => $this->uploaded_files,

@@ -37,7 +37,7 @@ function nel_central_dispatch()
     $inputs['content_id'] = (isset($_GET['content-id'])) ? $_GET['content-id'] : null;
     $inputs['modmode'] = (isset($_GET['modmode'])) ? $_GET['modmode'] : false;
 
-    $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database(), $authorization));
+    $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
     $snacks->applyBan($inputs);
 
     require_once INCLUDE_PATH . 'dispatch/module_dispatch.php';

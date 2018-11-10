@@ -6,7 +6,6 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_login_page()
 {
-    $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $url_constructor = new \Nelliel\URLConstructor();
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();

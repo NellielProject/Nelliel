@@ -20,7 +20,7 @@ function nel_module_dispatch($inputs)
             {
                 $session = new \Nelliel\Session($authorization);
                 $session->login();
-                nel_render_main_panel();
+                nel_render_main_panel($session->sessionUser());
             }
 
             break;
@@ -57,7 +57,7 @@ function nel_module_dispatch($inputs)
             }
             else
             {
-                nel_render_main_panel();
+                nel_render_main_panel($session->sessionUser());
             }
 
             break;
@@ -89,13 +89,15 @@ function nel_module_dispatch($inputs)
             break;
 
         case 'language':
+            $session = new \Nelliel\Session($authorization, true);
+
             if ($inputs['action'] === 'extract-gettext')
             {
                 $translator = new \Nelliel\Language\Translator();
                 $language->extractLanguageStrings(LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
             }
 
-            nel_render_main_panel();
+            nel_render_main_panel($session->sessionUser());
             break;
 
         case 'reports':

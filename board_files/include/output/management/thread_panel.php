@@ -12,7 +12,6 @@ function nel_render_thread_panel_main($user, $board_id)
     }
 
     $database = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $references = nel_parameters_and_data()->boardReferences($board_id);
     $render = new NellielTemplates\RenderCore();

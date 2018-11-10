@@ -7,7 +7,6 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_board_settings_panel($board_id, $defaults)
 {
     $database = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $filetypes = nel_parameters_and_data()->filetypeData();
     $render = new NellielTemplates\RenderCore();
