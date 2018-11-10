@@ -59,8 +59,8 @@ function nel_render_post($board_id, $gen_data, $dom)
     $thread_content_id = \Nelliel\ContentID::createIDString($post_data['parent_thread']);
     $post_content_id = \Nelliel\ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']);
 
-    $post_header_node = $new_post_dom->getElementById('post-header');
-    $post_header_node->removeAttribute('id');
+    $post_header_node = $new_post_dom->getElementById('header-nci_0_0_0');
+    $post_header_node->changeId('header-' . $post_content_id);
     $header_nodes = $post_header_node->getElementsByAttributeName('data-parse-id', true);
 
     $new_post_element = $new_post_dom->getElementById('post-id-');
@@ -89,12 +89,12 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     if ($gen_data['index_rendering'] && !$response)
     {
-        $header_nodes['hide-thread']->extSetAttribute('data-id', $post_id);
-        $header_nodes['hide-thread']->changeID('hide-thread-' . $post_id);
+        $header_nodes['hide-thread']->extSetAttribute('data-id', $post_content_id);
+        $header_nodes['hide-thread']->changeID('hide-thread-' . $post_content_id);
     }
 
-    $header_nodes['hide-post']->extSetAttribute('data-id', $post_id);
-    $header_nodes['hide-post']->changeID('hide-post-' . $post_id);
+    $header_nodes['hide-post']->extSetAttribute('data-id', $post_content_id);
+    $header_nodes['hide-post']->changeID('hide-post-' . $post_content_id);
 
     if ($session->inModmode($board_id))
     {
@@ -261,11 +261,11 @@ function nel_render_post($board_id, $gen_data, $dom)
     }
 
     $multiple_files = false;
-    $post_files_container = $new_post_dom->getElementById('post-files-container-');
+    $post_files_container = $new_post_dom->getElementById('files-nci_0_0_0');
 
     if ($post_data['has_file'] == 1)
     {
-        $post_files_container->changeId('post-files-container-' . $post_id);
+        $post_files_container->changeId('files-' . $post_content_id);
         $post_files_container->extSetAttribute('class', $post_type . '-files-container');
 
         $filecount = count($gen_data['files']);
@@ -465,8 +465,8 @@ function nel_render_post($board_id, $gen_data, $dom)
         $post_files_container->remove();
     }
 
-    $post_contents_element = $new_post_dom->getElementById('post-contents-');
-    $post_contents_element->changeId('post-contents-' . $post_id);
+    $post_contents_element = $new_post_dom->getElementById('post-contents-nci_0_0_0');
+    $post_contents_element->changeId('post-contents-' . $post_content_id);
 
     $contents_nodes = $post_contents_element->getElementsByAttributeName('data-parse-id', true);
 

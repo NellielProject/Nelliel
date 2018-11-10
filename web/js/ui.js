@@ -1,9 +1,9 @@
 nelliel.ui.hideShowThread = function(element, command) {
     var id = element.getAttribute("data-id");
     var thread_id = id.split('_')[0];
-    var post_files = document.getElementById("post-files-container-" + id);
+    var post_files = document.getElementById("files-" + id);
     var post_contents = document.getElementById("post-contents-" + id);
-    var thread_container = document.getElementById("thread-expand-" + thread_id);
+    var thread_container = document.getElementById("thread-expand-" + id);
     
     if (command === "hide-thread") {
         dataBin.hidden_threads[id] = Date.now();
@@ -30,7 +30,7 @@ nelliel.ui.hideShowThread = function(element, command) {
 
 nelliel.ui.hideShowPost = function(element, command) {
     var id = element.getAttribute("data-id");
-    var post_files = document.getElementById("post-files-container-" + id);
+    var post_files = document.getElementById("files-" + id);
     var post_contents = document.getElementById("post-contents-" + id);
     
     if (command == "hide-post") {
@@ -55,9 +55,9 @@ nelliel.ui.hideShowPost = function(element, command) {
 nelliel.ui.applyHidePostThread = function() {
     for (var id in dataBin.hidden_threads) {
         var thread_id = id.split('_')[0];
-        var post_files = document.getElementById("post-files-container-" + id);
+        var post_files = document.getElementById("files-" + id);
         var post_contents = document.getElementById("post-contents-" + id);
-        var thread_container = document.getElementById("thread-expand-" + thread_id);
+        var thread_container = document.getElementById("thread-expand-" + id);
         var element = document.getElementById("hide-thread-" + id);
         
         if (thread_container !== null) {
@@ -77,7 +77,7 @@ nelliel.ui.applyHidePostThread = function() {
     }
     
     for (var id in dataBin.hidden_posts) {
-        var post_files = document.getElementById("post-files-container-" + id);
+        var post_files = document.getElementById("files-" + id);
         var post_contents = document.getElementById("post-contents-" + id);
         var element = document.getElementById("hide-post-" + id);
 
@@ -102,8 +102,8 @@ nelliel.ui.showHideFileMeta = function(element, command) {
     nelliel.ui.switchDataCommand(element, "show-file-meta", "hide-file-meta");
 }
 
-nelliel.ui.expandCollapseThread = function(thread_id, command, element) {
-    var target_element = document.getElementById("thread-expand-" + thread_id);
+nelliel.ui.expandCollapseThread = function(id, thread_id, command, element) {
+    var target_element = document.getElementById("thread-expand-" + id);
 
     if (!target_element) {
         return;
