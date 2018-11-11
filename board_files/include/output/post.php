@@ -152,7 +152,7 @@ function nel_render_post($board_id, $gen_data, $dom)
         $header_nodes['modmode-header']->remove();
     }
 
-    $new_post_dom->getElementById('p-nci_0_0_0')->changeId($post_content_id->getIDString());
+    $new_post_dom->getElementById('thread-post-anchor')->changeId('t' . $post_content_id->thread_id . 'p' . $post_content_id->post_id);
     $rev_post_id = $post_data['post_number'] . '_' . $post_data['parent_thread'];
 
     $header_nodes['post-select']->extSetAttribute('name', $post_content_id->getIDString());
@@ -220,7 +220,7 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     $header_nodes['post-time-']->setContent($post_time);
     $header_nodes['post-num-link']->setContent($post_data['post_number']);
-    $header_nodes['post-num-link']->extSetAttribute('href', $thread_page_web_path . '#' . $post_content_id->getIDString(), 'none');
+    $header_nodes['post-num-link']->extSetAttribute('href', $thread_page_web_path . '#t' . $post_content_id->thread_id . 'p' . $post_content_id->post_id, 'none');
     $header_nodes['post-link-post']->extSetAttribute('data-content-id', $post_content_id->getIDString());
 
     if (!$gen_data['index_rendering'] || $response)

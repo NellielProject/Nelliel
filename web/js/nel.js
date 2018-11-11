@@ -180,8 +180,11 @@ nelliel.posting_form.showNextFileInput = function (element) {
 }
 
 nelliel.core.hashHandler = function () {
-    if (location.hash.match(/#nci_[0-9_]+/)) {
-        nelliel.ui.highlightPost(location.hash.replace("#", ""));
+    var hash_match = location.hash.match(/#t([0-9]+)p([0-9]+)/);
+    
+    if (hash_match !== null) {
+        var content_id = nelliel.core.contentID('nci_' + hash_match[1] + '_' + hash_match[2] + '_0');
+        nelliel.ui.highlightPost(content_id);
     }
 }
 

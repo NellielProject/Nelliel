@@ -124,8 +124,8 @@ nelliel.ui.expandCollapseThread = function(element, command) {
     request.send();
 }
 
-nelliel.ui.highlightPost = function(post_id) {
-    var post_container = document.getElementById("post-container-" + post_id);
+nelliel.ui.highlightPost = function(content_id) {
+    var post_container = document.getElementById("post-container-" + content_id.id_string);
     
     if (post_container !== null) {
         if(post_container.className.indexOf('post-hightlight') === -1) {
