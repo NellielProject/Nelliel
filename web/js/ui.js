@@ -1,14 +1,13 @@
 nelliel.ui.hideShowThread = function(element, command) {
-    var id = element.getAttribute("data-id");
-    var thread_id = id.split('_')[0];
-    var post_files = document.getElementById("files-" + id);
-    var post_contents = document.getElementById("post-contents-" + id);
-    var thread_container = document.getElementById("thread-expand-" + id);
+    var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
+    var post_files = document.getElementById("files-" + content_id.id_string);
+    var post_contents = document.getElementById("post-contents-" + content_id.id_string);
+    var thread_container = document.getElementById("thread-expand-" + content_id.id_string);
     
     if (command === "hide-thread") {
-        dataBin.hidden_threads[id] = Date.now();
+        dataBin.hidden_threads[content_id.id_string] = Date.now();
     } else if (command === "show-thread") {    
-        delete dataBin.hidden_threads[id];
+        delete dataBin.hidden_threads[content_id.id_string];
     }
 
     if (thread_container !== null) {
@@ -29,14 +28,14 @@ nelliel.ui.hideShowThread = function(element, command) {
 }
 
 nelliel.ui.hideShowPost = function(element, command) {
-    var id = element.getAttribute("data-id");
-    var post_files = document.getElementById("files-" + id);
-    var post_contents = document.getElementById("post-contents-" + id);
+    var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
+    var post_files = document.getElementById("files-" + content_id.id_string);
+    var post_contents = document.getElementById("post-contents-" + content_id.id_string);
     
     if (command == "hide-post") {
-        dataBin.hidden_posts[id] = Date.now();
+        dataBin.hidden_posts[content_id.id_string] = Date.now();
     } else if (command == "show-post") {
-        delete dataBin.hidden_posts[id];
+        delete dataBin.hidden_posts[content_id.id_string];
     }
     
     if (post_files !== null) {
@@ -94,22 +93,23 @@ nelliel.ui.applyHidePostThread = function() {
     }
 }
 
-nelliel.ui.showHideFileMeta = function(element, command) {
-    var full_id = element.getAttribute("data-id");
-    var meta_element = document.getElementById("file-meta-" + full_id);
+nelliel.ui.showHideFileMeta = function(element) {
+    var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
+    var meta_element = document.getElementById("file-meta-" + content_id.id_string);
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
     nelliel.ui.toggleHidden(meta_element);
     nelliel.ui.switchDataCommand(element, "show-file-meta", "hide-file-meta");
 }
 
-nelliel.ui.expandCollapseThread = function(id, thread_id, command, element) {
-    var target_element = document.getElementById("thread-expand-" + id);
+nelliel.ui.expandCollapseThread = function(element, command) {
+    var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
+    var target_element = document.getElementById("thread-expand-" + content_id.id_string);
 
     if (!target_element) {
         return;
     }
 
-    var url = "threads/" + thread_id + "/" + thread_id + "-" + command.split('-')[0] + ".html";
+    var url = "threads/" + content_id.thread_id + "/" + content_id.thread_id + "-" + command.split('-')[0] + ".html";
     var request = new XMLHttpRequest();
     request.open('GET', url);
     request.onload = function() {
@@ -211,8 +211,9 @@ nelliel.ui.hideLinkedPost = function(element, event) {
     }
 }
 
-nelliel.ui.linkPost = function(post_number) {
-    document.postingform.wordswordswords.value = document.postingform.wordswordswords.value + '>>' + post_number + '\n';
+nelliel.ui.linkPost = function(element) {
+    var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
+    document.postingform.wordswordswords.value = document.postingform.wordswordswords.value + '>>' + content_id.post_id + '\n';
 }
 
 nelliel.ui.toggleHidden = function(element) {

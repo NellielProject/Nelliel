@@ -117,8 +117,8 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
 
             if ($gen_data['post']['op'] == 1)
             {
-                $thread_content_id = \Nelliel\ContentID::createIDString($gen_data['thread']['thread_id'], $gen_data['post']['post_number']);
-                $expand_div = $dom->getElementById('thread-expand-')->cloneNode(true);
+                $thread_content_id = \Nelliel\ContentID::createIDString($gen_data['thread']['thread_id']);
+                $expand_div = $dom->getElementById('thread-expand-nci_0_0_0')->cloneNode(true);
                 $expand_div->changeId('thread-expand-' . $thread_content_id);
                 $post_append_target->appendChild($expand_div);
                 $post_append_target = $expand_div;

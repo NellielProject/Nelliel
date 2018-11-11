@@ -56,18 +56,18 @@ function nel_render_post($board_id, $gen_data, $dom)
     $post_id = $thread_id . '_' . $post_data['post_number'];
     $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-nci_0_0_0'), true);
 
-    $thread_content_id = \Nelliel\ContentID::createIDString($post_data['parent_thread']);
-    $post_content_id = \Nelliel\ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']);
+    $thread_content_id = new \Nelliel\ContentID(\Nelliel\ContentID::createIDString($post_data['parent_thread']));
+    $post_content_id = new \Nelliel\ContentID(\Nelliel\ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
 
     $post_header_node = $new_post_dom->getElementById('header-nci_0_0_0');
-    $post_header_node->changeId('header-' . $post_content_id);
+    $post_header_node->changeId('header-' . $post_content_id->getIDString());
     $header_nodes = $post_header_node->getElementsByAttributeName('data-parse-id', true);
 
     $new_post_element = $new_post_dom->getElementById('post-id-nci_0_0_0');
-    $new_post_element->changeId('post-id-' . $post_content_id);
+    $new_post_element->changeId('post-id-' . $post_content_id->getIDString());
 
     $post_container = $new_post_dom->getElementById('post-container-nci_0_0_0');
-    $post_container->changeId('post-container-' . $post_content_id);
+    $post_container->changeId('post-container-' . $post_content_id->getIDString());
 
     $indents_element = $new_post_dom->getElementById('indents');
     $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
@@ -89,27 +89,27 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     if ($gen_data['index_rendering'] && !$response)
     {
-        $header_nodes['hide-thread']->extSetAttribute('data-id', $post_content_id);
-        $header_nodes['hide-thread']->changeID('hide-thread-' . $post_content_id);
+        $header_nodes['hide-thread']->extSetAttribute('data-content-id', $post_content_id->getIDString());
+        $header_nodes['hide-thread']->changeID('hide-thread-' . $post_content_id->getIDString());
     }
 
-    $header_nodes['hide-post']->extSetAttribute('data-id', $post_content_id);
-    $header_nodes['hide-post']->changeID('hide-post-' . $post_content_id);
+    $header_nodes['hide-post']->extSetAttribute('data-content-id', $post_content_id->getIDString());
+    $header_nodes['hide-post']->changeID('hide-post-' . $post_content_id->getIDString());
 
     if ($session->inModmode($board_id))
     {
         $ip = @inet_ntop($post_data['ip_address']);
         $header_nodes['modmode-ip-address']->setContent($ip);
         $header_nodes['modmode-ban-link']->extSetAttribute('href',
-                '?module=bans&board_id=test&action=new&ban_type=POST&content-id=' . $post_content_id .
+                '?module=bans&board_id=test&action=new&ban_type=POST&content-id=' . $post_content_id->getIDString() .
                 '&ban_ip=' . rawurlencode($ip) . '&modmode=true');
 
         if ($response)
         {
             $header_nodes['modmode-delete-link']->extSetAttribute('href',
-                    '?module=threads&board_id=test&action=delete-post&content-id=' . $post_content_id . '&modmode=true');
+                    '?module=threads&board_id=test&action=delete-post&content-id=' . $post_content_id->getIDString() . '&modmode=true');
             $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
-                    '?module=multi&board_id=test&action=ban.delete-post&content-id=' . $post_content_id .
+                    '?module=multi&board_id=test&action=ban.delete-post&content-id=' . $post_content_id->getIDString() .
                     '&ban_type=POST&ban_ip=' . rawurlencode($ip) . '&modmode=true');
             $header_nodes['modmode-lock-thread-link']->parentNode->remove();
             $header_nodes['modmode-sticky-thread-link']->parentNode->remove();
@@ -117,33 +117,33 @@ function nel_render_post($board_id, $gen_data, $dom)
         else
         {
             $header_nodes['modmode-delete-link']->extSetAttribute('href',
-                    '?module=threads&board_id=test&action=delete-thread&content-id=' . $thread_content_id . '&modmode=true');
+                    '?module=threads&board_id=test&action=delete-thread&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
             $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
-                    '?module=multi&board_id=test&action=ban.delete-thread&content-id=' . $thread_content_id .
+                    '?module=multi&board_id=test&action=ban.delete-thread&content-id=' . $thread_content_id->getIDString() .
                     '&ban_type=POST&ban_ip=' . rawurlencode($ip) . '&modmode=true');
 
             if ($thread_data['locked'] == 1)
             {
                 $header_nodes['modmode-lock-thread-link']->extSetAttribute('href',
-                        '?module=threads&board_id=test&action=unlock' . '&content-id=' . $thread_content_id . '&modmode=true');
+                        '?module=threads&board_id=test&action=unlock' . '&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
                 $header_nodes['modmode-lock-thread-link']->setContent(_gettext('Unlock Thread'));
             }
             else
             {
                 $header_nodes['modmode-lock-thread-link']->extSetAttribute('href',
-                        '?module=threads&board_id=test&action=lock&content-id=' . $thread_content_id . '&modmode=true');
+                        '?module=threads&board_id=test&action=lock&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
             }
 
             if ($thread_data['sticky'] == 1)
             {
                 $header_nodes['modmode-sticky-thread-link']->extSetAttribute('href',
-                        '?module=threads&board_id=test&action=unsticky&content-id=' . $thread_content_id . '&modmode=true');
+                        '?module=threads&board_id=test&action=unsticky&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
                 $header_nodes['modmode-sticky-thread-link']->setContent(_gettext('Unsticky Thread'));
             }
             else
             {
                 $header_nodes['modmode-sticky-thread-link']->extSetAttribute('href',
-                        '?module=threads&board_id=test&action=sticky&content-id=' . $thread_content_id . '&modmode=true');
+                        '?module=threads&board_id=test&action=sticky&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
             }
         }
     }
@@ -152,10 +152,10 @@ function nel_render_post($board_id, $gen_data, $dom)
         $header_nodes['modmode-header']->remove();
     }
 
-    $new_post_dom->getElementById('p-number')->changeId($post_content_id);
+    $new_post_dom->getElementById('p-nci_0_0_0')->changeId($post_content_id->getIDString());
     $rev_post_id = $post_data['post_number'] . '_' . $post_data['parent_thread'];
 
-    $header_nodes['post-select']->extSetAttribute('name', $post_content_id);
+    $header_nodes['post-select']->extSetAttribute('name', $post_content_id->getIDString());
 
     if ($response)
     {
@@ -173,7 +173,7 @@ function nel_render_post($board_id, $gen_data, $dom)
         $post_type = 'op';
         $post_type_class = 'op-';
         $indents_element->remove();
-        $header_nodes['thread-select']->extSetAttribute('name', $thread_content_id);
+        $header_nodes['thread-select']->extSetAttribute('name', $thread_content_id->getIDString());
     }
 
     $header_nodes['subject']->modifyAttribute('class', $post_type, 'before');
@@ -220,8 +220,8 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     $header_nodes['post-time-']->setContent($post_time);
     $header_nodes['post-num-link']->setContent($post_data['post_number']);
-    $header_nodes['post-num-link']->extSetAttribute('href', $thread_page_web_path . $post_content_id, 'none');
-    $header_nodes['post-link-post']->extSetAttribute('data-id', $post_id);
+    $header_nodes['post-num-link']->extSetAttribute('href', $thread_page_web_path . '#' . $post_content_id->getIDString(), 'none');
+    $header_nodes['post-link-post']->extSetAttribute('data-content-id', $post_content_id->getIDString());
 
     if (!$gen_data['index_rendering'] || $response)
     {
@@ -232,7 +232,7 @@ function nel_render_post($board_id, $gen_data, $dom)
         if ($session->inModmode($board_id))
         {
             $header_nodes['reply-to-link']->extSetAttribute('href',
-                    PHP_SELF . '?module=render&action=view-thread&content-id=' . $thread_content_id . '&section=' .
+                    PHP_SELF . '?module=render&action=view-thread&content-id=' . $thread_content_id->getIDString() . '&section=' .
                     $thread_id . '&board_id=' . $board_id . '&modmode=true');
         }
         else
@@ -247,7 +247,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     }
     else
     {
-        $header_nodes['expand-thread']->extSetAttribute('data-id', $thread_id);
+        $header_nodes['expand-thread']->extSetAttribute('data-content-id', $thread_content_id->getIDString());
     }
 
     if ($response || !$thread_data['sticky'])
@@ -265,7 +265,7 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     if ($post_data['has_file'] == 1)
     {
-        $post_files_container->changeId('files-' . $post_content_id);
+        $post_files_container->changeId('files-' . $post_content_id->getIDString());
         $post_files_container->extSetAttribute('class', $post_type . '-files-container');
 
         $filecount = count($gen_data['files']);
@@ -325,9 +325,9 @@ function nel_render_post($board_id, $gen_data, $dom)
             }
 
             $file_nodes['filesize-display']->setContent($filesize_display);
-            $file_nodes['show-file-meta']->extSetAttribute('data-id', $file_id);
-            $file_nodes['show-file-meta']->changeId('show-file-meta-' . $file_id);
-            $file_nodes['file-meta']->changeId('file-meta-' . $file_id);
+            $file_nodes['show-file-meta']->extSetAttribute('data-content-id', $file_content_id);
+            $file_nodes['show-file-meta']->changeId('show-file-meta-' . $file_content_id);
+            $file_nodes['file-meta']->changeId('file-meta-' . $file_content_id);
 
             $output_filter->cleanAndEncode($file['source']);
             $output_filter->cleanAndEncode($file['license']);
@@ -466,7 +466,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     }
 
     $post_contents_element = $new_post_dom->getElementById('post-contents-nci_0_0_0');
-    $post_contents_element->changeId('post-contents-' . $post_content_id);
+    $post_contents_element->changeId('post-contents-' . $post_content_id->getIDString());
 
     $contents_nodes = $post_contents_element->getElementsByAttributeName('data-parse-id', true);
 

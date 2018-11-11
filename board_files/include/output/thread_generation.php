@@ -96,8 +96,8 @@ function nel_thread_generator($board_id, $write, $response_to)
         if ($gen_data['post']['op'] == 1)
         {
             $new_post_node = nel_render_post($board_id, $gen_data, $dom);
-            $expand_div = $dom->getElementById('thread-expand-');
-            $expand_div->changeId('thread-expand-' . $gen_data['thread']['thread_id']);
+            $expand_div = $dom->getElementById('thread-expand-nci_0_0_0');
+            $expand_div->changeId('thread-expand-' . \Nelliel\ContentID::createIDString($gen_data['thread']['thread_id']));
             $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
 
             if ($abbreviate)
@@ -120,7 +120,7 @@ function nel_thread_generator($board_id, $write, $response_to)
             if ($abbreviate && $post_counter > $total_posts - $board_settings['abbreviate_thread'])
             {
                 $import_node = $collapse_dom->importNode($new_post_node, true);
-                $collapse_dom->getElementById('thread-expand-' . $gen_data['thread']['thread_id'])->appendChild(
+                $collapse_dom->getElementById('thread-expand-' . \Nelliel\ContentID::createIDString($gen_data['thread']['thread_id']))->appendChild(
                         $import_node);
             }
 

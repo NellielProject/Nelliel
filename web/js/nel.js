@@ -5,7 +5,6 @@ nelliel.events = {};
 nelliel.posting_form = {};
 nelliel.ui = {};
 
-
 function dataBin() {
     ;
 }
@@ -68,23 +67,20 @@ nelliel.setup.fillForms = function(board) {
 
 nelliel.events.processPostClicks = function(event) {
     if (event.target.hasAttribute("data-command")) {
-        if (event.target.hasAttribute("data-id")) {
-            var id_set = event.target.getAttribute("data-id").split("_");
-            var thread_id = id_set[0];
-            var post_id = id_set[1];
-            var file_id = id_set[2];
+        if (event.target.hasAttribute("data-content-id")) {
+            var content_id = nelliel.core.contentID(event.target.getAttribute("data-content-id"))
         }
 
         var command = event.target.getAttribute("data-command");
 
         if (command === "expand-thread" || command === "collapse-thread") {
-            nelliel.ui.expandCollapseThread(id_set, thread_id, command, event.target);
+            nelliel.ui.expandCollapseThread(event.target, command);
         } else if (command === "change-style") {
             changeBoardStyle(dataBin.board_id, event.target.getAttribute("data-id"));
         } else if (command === "link-post") {
-            nelliel.ui.linkPost(post_id);
+            nelliel.ui.linkPost(event.target);
         } else if (command === "show-file-meta" || command === "hide-file-meta") {
-            nelliel.ui.showHideFileMeta(event.target, command);
+            nelliel.ui.showHideFileMeta(event.target);
         } else if (command === "add-file-meta") {
             addNewFileMeta(event.target, command);
         } else if (command === "inline-expand" || command === "inline-reduce") {
@@ -191,6 +187,16 @@ nelliel.core.hashHandler = function () {
 
 nelliel.core.getElementsByAttributeName = function (attribute_name, element) {
     return element.querySelectorAll("[" + attribute_name + "]");
+}
+
+nelliel.core.contentID = function (id_string) {
+    var content_id = {};
+    var segments = id_string.split('_');
+    content_id.id_string = id_string;
+    content_id.thread_id = segments[1];
+    content_id.post_id = segments[2];
+    content_id.content_order = segments[3];
+    return content_id;
 }
 
 function addNewFileMeta(element, command) {
