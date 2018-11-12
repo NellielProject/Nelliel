@@ -64,19 +64,20 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
 
     $board_navigation->appendChild($dom->createTextNode(' ]'));
 
-    $logo_element = $dom->getElementById('logo');
     $logo_image = $dom->getElementById('top-logo-image');
     $logo_text = $dom->getElementById('top-logo-text');
+    $logo_image->remove(); // TODO: Be able to use image for logo
 
-    if ($board_settings['show_logo'])
+    /*if ($board_settings['show_logo'])
     {
         $logo_image->extSetAttribute('src', $board_settings['board_logo']);
         $logo_image->extSetAttribute('alt', $board_settings['board_name']);
     }
     else
     {
-        $logo_element->removeChild($logo_image);
-    }
+        $logo_image->remove();
+        $logo_text->remove();
+    }*/
 
     if ($board_settings['show_title'])
     {
@@ -84,7 +85,7 @@ function nel_render_board_header($board_id, $render, $dotdot = null, $treeline =
     }
     else
     {
-        $logo_element->removeChild($logo_text);
+        $logo_text->remove();
     }
 
     $top_admin_span = $dom->getElementById('top-admin-span');
@@ -140,6 +141,9 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . '/' . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
+    $dom->getElementById('top-logo-image')->remove();
+    $dom->getElementById('top-logo-text')->remove();
+
     foreach ($link_elements as $element)
     {
         $content = $element->getAttribute('title');
@@ -148,7 +152,6 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
     $title_element->setContent('Nelliel Imageboard');
-    $dom->getElementById('logo')->remove();
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', nel_parameters_and_data()->siteSettings('home_page'));

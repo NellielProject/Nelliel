@@ -56,11 +56,23 @@ function nel_render_post($board_id, $gen_data, $dom)
     $post_id = $thread_id . '_' . $post_data['post_number'];
     $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-nci_0_0_0'), true);
 
+    if ($response)
+    {
+        $post_type = 'reply';
+        $post_type_class = 'reply-';
+    }
+    else
+    {
+        $post_type = 'op';
+        $post_type_class = 'op-';
+    }
+
     $thread_content_id = new \Nelliel\ContentID(\Nelliel\ContentID::createIDString($post_data['parent_thread']));
     $post_content_id = new \Nelliel\ContentID(\Nelliel\ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
 
     $post_header_node = $new_post_dom->getElementById('header-nci_0_0_0');
     $post_header_node->changeId('header-' . $post_content_id->getIDString());
+    $post_header_node->extSetAttribute('class', $post_type_class . 'post-header');
     $header_nodes = $post_header_node->getElementsByAttributeName('data-parse-id', true);
 
     $new_post_element = $new_post_dom->getElementById('post-id-nci_0_0_0');
@@ -159,8 +171,6 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     if ($response)
     {
-        $post_type = 'reply';
-        $post_type_class = 'reply-';
         $post_container->extSetAttribute('class', 'reply-post');
 
         $indents_element->setContent(nel_parameters_and_data()->boardSettings($board_id, 'indent_marker'));
@@ -170,25 +180,25 @@ function nel_render_post($board_id, $gen_data, $dom)
     }
     else
     {
-        $post_type = 'op';
-        $post_type_class = 'op-';
         $indents_element->remove();
         $header_nodes['thread-select']->extSetAttribute('name', $thread_content_id->getIDString());
     }
 
-    $header_nodes['subject']->modifyAttribute('class', $post_type, 'before');
+    $header_nodes['subject']->extSetAttribute('class', $post_type_class, 'subject');
     $header_nodes['subject']->setContent($post_data['subject']);
-    $header_nodes['poster-name']->modifyAttribute('class', $post_type, 'before');
+    $header_nodes['poster-name']->extSetAttribute('class', $post_type_class, 'subject');
 
     $tripcode = (!empty($post_data['tripcode'])) ? $board_settings['tripkey_marker'] . $post_data['tripcode'] : '';
     $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $board_settings['tripkey_marker'] .
             $board_settings['tripkey_marker'] . $post_data['secure_tripcode'] : '';
             $capcode_text = ($post_data['mod_post']) ? $authorization->getRole($post_data['mod_post'])->auth_data['capcode_text'] : '';
     $trip_line = $tripcode . $secure_tripcode . '&nbsp;&nbsp;' . $capcode_text;
+    $header_nodes['trip-line']->extSetAttribute('class', $post_type_class . 'trip-line');
 
-    if ($post_data['email'])
+    if (!nel_true_empty($post_data['email']))
     {
-        $header_nodes['poster-mailto']->modifyAttribute('href', $post_data['email'] . 'after');
+        $header_nodes['poster-mailto']->extSetAttribute('class', $post_type_class . 'mailto');
+        $header_nodes['poster-mailto']->modifyAttribute('href', $post_data['email'], 'after');
         $header_nodes['poster-mailto']->setContent($post_data['poster_name']);
         $header_nodes['trip-line']->setContent($trip_line);
     }
@@ -218,9 +228,12 @@ function nel_render_post($board_id, $gen_data, $dom)
             break;
     }
 
-    $header_nodes['post-time-']->setContent($post_time);
-    $header_nodes['post-num-link']->setContent($post_data['post_number']);
-    $header_nodes['post-num-link']->extSetAttribute('href', $thread_page_web_path . '#t' . $post_content_id->thread_id . 'p' . $post_content_id->post_id, 'none');
+    $header_nodes['post-time']->setContent($post_time);
+    $header_nodes['post-time']->extSetAttribute('class', $post_type_class . 'post-time');
+    $header_nodes['post-link']->extSetAttribute('class', $post_type_class . 'post-link');
+    $header_nodes['post-number-link']->setContent($post_data['post_number']);
+    $header_nodes['post-number-link']->extSetAttribute('class', $post_type_class . 'post-number-link');
+    $header_nodes['post-number-link']->extSetAttribute('href', $thread_page_web_path . '#t' . $post_content_id->thread_id . 'p' . $post_content_id->post_id, 'none');
     $header_nodes['post-link-post']->extSetAttribute('data-content-id', $post_content_id->getIDString());
 
     if (!$gen_data['index_rendering'] || $response)
@@ -265,9 +278,6 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     if ($post_data['has_file'] == 1)
     {
-        $post_files_container->changeId('files-' . $post_content_id->getIDString());
-        $post_files_container->extSetAttribute('class', $post_type . '-files-container');
-
         $filecount = count($gen_data['files']);
         $multiple_class = '';
 
@@ -276,6 +286,9 @@ function nel_render_post($board_id, $gen_data, $dom)
             $multiple_class = 'multiple-';
             $multiple_files = true;
         }
+
+        $post_files_container->changeId('files-' . $post_content_id->getIDString());
+        $post_files_container->extSetAttribute('class', $post_type_class . $multiple_class . 'files-container');
 
         foreach ($gen_data['files'] as $file)
         {
@@ -302,6 +315,7 @@ function nel_render_post($board_id, $gen_data, $dom)
             }
 
             $file_nodes['select-file']->extSetAttribute('name', $file_content_id);
+            $file_nodes['select-file']->extSetAttribute('class', $multiple_class . 'file-select');
 
             $file['file_location'] = $thread_src_web_path . $post_data['post_number'] . '/' .
                     rawurlencode($full_filename);
@@ -467,32 +481,20 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     $post_contents_element = $new_post_dom->getElementById('post-contents-nci_0_0_0');
     $post_contents_element->changeId('post-contents-' . $post_content_id->getIDString());
+    $post_contents_element->extSetAttribute('class', $post_type_class . 'post-contents');
 
     $contents_nodes = $post_contents_element->getElementsByAttributeName('data-parse-id', true);
-
-    if ($multiple_files)
-    {
-        $post_contents_element->extSetAttribute('class', $post_type_class . 'post-contents-multifile');
-    }
-    else
-    {
-        $post_contents_element->extSetAttribute('class', $post_type_class . 'post-contents');
-    }
-
     $contents_nodes['post-text']->extSetAttribute('class', $post_type_class . 'post-text');
 
-    if (!empty($post_data['mod_comment']))
+    if (!nel_true_empty($post_data['mod_comment']))
     {
         $contents_nodes['mod-comment']->setContent('(' . $post_data['mod_comment'] . ')');
     }
-    else
-    {
-        $contents_nodes['mod-comment']->remove();
-    }
 
     $output_filter->clearWhitespace($post_data['comment']);
+    $contents_nodes['post-comment']->extSetAttribute('class', $post_type_class . 'post-comment');
 
-    if ($post_data['comment'] === '')
+    if (nel_true_empty($post_data['comment']))
     {
         $contents_nodes['post-comment']->setContent(_gettext('(no comment)'));
     }

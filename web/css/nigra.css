@@ -1,21 +1,15 @@
-/* General formatting */
+/* Elements formatting */
 body {
     background-color: #101010;
     color: #EEEEEE;
     font-size: 1.0em;
     font-family: serif;
-    padding-left: 6px;
-    padding-right: 6px;
-}
-
-.form-content-action {
-    width: 100%;
-    height: 100%;
-    padding: 4px;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 img {
-	
+    
 }
 
 hr {
@@ -34,16 +28,11 @@ a:hover {
     color: #00BB88;
 }
 
-a.post-link:active {
-    text-decoration: none;
-}
-
-a.post-link:link {
-    text-decoration: none;
-}
-
-a.post-link:visited {
-    text-decoration: none;
+/* General formatting */
+.content-page {
+    width: 100%;
+    height: 100%;
+    padding: 4px;
 }
 
 /* Header */
@@ -53,20 +42,20 @@ a.post-link:visited {
     padding-bottom: 6px;
 }
 
-.logo {
-	color: #CC0000;
+.image-logo {
     text-align: center;
-    font-weight: bold;
-    width: 100%;
     clear: both;
 }
 
-.logo-alt-text {
+.text-logo {
+	color: #CC0000;
+    text-align: center;
     font-size: 2.0em;
+    clear: both;
 }
 
 .board-navigation {
-	text-align: center;
+    text-align: center;
 }
 
 .board-navigation-link {
@@ -181,69 +170,69 @@ a.post-link:visited {
 }
 
 /* Files */
-.post-files-container {
-
-}
-
 .file-select {
 
 }
 
-.multi-file-select {
+.multiple-file-select {
+
+}
+
+.op-files-container {
+
+}
+
+.op-multiple-files-container {
+
+}
+
+.reply-files-container {
+
+}
+
+.reply-multiple-files-container {
 
 }
 
 .op-fileinfo {
     float: left;
-    text-align: left;
-    text-decoration: none;
-	white-space: nowrap;
-    padding: 2px;
-    padding-left: 15px;
-    padding-right: 15px;
+    white-space: nowrap;
+    padding-left: 5px;
+    padding-right: 5px;
     margin: 3px;
     font-size: 0.95em;
 }
 
 .op-multiple-fileinfo {
     float: left;
-    text-align: left;
-    text-decoration: none;
-	white-space: nowrap;
-    padding: 2px;
-    padding-left: 15px;
-    padding-right: 15px;
+    white-space: nowrap;
+    padding-left: 5px;
+    padding-right: 5px;
     margin: 3px;
     font-size: 0.95em;
 }
 
 .reply-fileinfo {
     float: left;
-    text-align: left;
-    text-decoration: none;
     white-space: nowrap;
-    padding: 2px;
-    padding-right: 15px;
-    padding-left: 15px;
+    padding-left: 5px;
+    padding-right: 5px;
     margin: 3px;
     font-size: 0.95em;
 }
 
 .reply-multiple-fileinfo {
     float: left;
-    text-align: left;
-    text-decoration: none;
     white-space: nowrap;
-    padding: 2px;
-    padding-right: 15px;
-    padding-left: 15px;
+    padding-left: 5px;
+    padding-right: 5px;
     margin: 3px;
     font-size: 0.95em;
 }
 
 .file-meta {
-	white-space:normal;
-	word-wrap: break-word;
+    white-space:normal;
+    word-wrap: break-word;
 }
 
 .file-source {
@@ -259,7 +248,7 @@ a.post-link:visited {
 }
 
 .preview-link {
-	display: block;
+    display: block;
 }
 
 /* General post formatting */
@@ -277,7 +266,6 @@ a.post-link:visited {
 
 .omitted-posts {
     color: #00CC66;
-    font-size: 1.05em;
     font-weight: bold;
 }
 
@@ -289,15 +277,41 @@ a.post-link:visited {
     
 }
 
-.post-link {
+.thread-select {
+
+}
+
+.post-select {
+
+}
+
+.thread-header-options {
     
 }
 
-.post-header {
+.post-corral {
+    
+}
 
+.post-quote-popup {
+    height: auto;
+    position: absolute;
+    display: block;
 }
 
 /* OP post formatting */
+.op-post-header {
+	
+}
+
+.op-post-header-options {
+    margin-left: 1em;
+}
+
+.op-post-header-info {
+    margin-left: 1em;
+}
+
 .op-post {
     color: #EEEEEE;
     min-width: 15em;
@@ -322,27 +336,51 @@ a.post-link:visited {
     font-weight: bold;
 }
 
-.op-post-select {
-
-}
-
-.op-thread-select {
-
-}
-
-.thread-header-options {
+.op-mailto {
 	
 }
 
-.op-post-header-options {
-	margin-left: 1em;
+.op-trip-line {
+	
 }
 
-.op-post-header-info {
-	margin-left: 1em;
+.op-post-time {
+	
+}
+
+.op-post-link {
+    
+}
+
+.op-post-number-link {
+    
+}
+
+.op-post-contents {
+    word-wrap: break-word;
+}
+
+.op-post-text {
+
+}
+
+.op-post-comment {
+
 }
 
 /* Reply post formatting */
+.reply-post-header {
+	
+}
+
+.reply-post-header-options {
+
+}
+
+.reply-post-header-info {
+
+}
+
 .reply-post {
     background-color: #222222;
     color: #EEEEEE;
@@ -370,30 +408,46 @@ a.post-link:visited {
     font-weight: bold;
 }
 
+.reply-mailto {
+	
+}
+
+.reply-trip-line {
+	
+}
+
+.reply-post-time {
+	
+}
+
+.reply-post-link {
+    
+}
+
+.reply-post-number-link {
+    
+}
+
 .reply-post-contents {
-	word-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.reply-post-text {
+
+}
+
+.reply-post-comment {
+
 }
 
 .indents {
-	color: #00DD66;
+    color: #00DD66;
     padding: 1px;
     float: left;
 }
 
-.reply-post-select {
-
-}
-
-.reply-post-header-options {
-
-}
-
-.reply-post-header-info {
-
-}
-
 /* Other */
-.ban-bold {
+.bold {
     font-weight: bold;
 }
 
@@ -446,18 +500,4 @@ a.post-link:visited {
 
 .display-cell {
     display: table-cell;
-}
-
-.post-corral {
-    
-}
-
-.post-quote-popup {
-    height: auto;
-    position: absolute;
-    display: block;
-}
-
-.reply-post.popup-mod {
-    border: 1px solid #77DDFF;
 }

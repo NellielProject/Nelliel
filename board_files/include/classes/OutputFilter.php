@@ -81,7 +81,7 @@ class OutputFilter
                 }
                 else
                 {
-                    $p_anchor = '#nci_' . $parent_thread . '_' . $matches[1] . '_0';
+                    $p_anchor = '#t' . $parent_thread . 'p' . $matches[1];
                     $url = '//' . $base_domain . '/' . $board_references['board_directory'] . '/' . $board_references['page_dir'] . '/' .
                             $parent_thread . '/' . $parent_thread . '.html' . $p_anchor;
                     $segment_node = $target_element->ownerDocument->createElement('a', $matches[0]);
