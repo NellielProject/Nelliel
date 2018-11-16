@@ -15,18 +15,31 @@ function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_del
     {
         if (is_null($redirect_board))
         {
-            echo '<meta http-equiv="refresh" content="' . $redirect_delay . ';URL=' .
-                    nel_parameters_and_data()->siteSettings('home_page') . '">';
+            nel_redirect(nel_parameters_and_data()->siteSettings('home_page'), $redirect_delay);
         }
         else
         {
-            echo '<meta http-equiv="refresh" content="' . $redirect_delay . ';URL=' .
-                    nel_parameters_and_data()->boardReferences($redirect_board, 'board_directory') . '/' . PHP_SELF2 .
-                    PHP_EXT . '">';
+            $url = nel_parameters_and_data()->boardReferences($redirect_board, 'board_directory') . '/' . PHP_SELF2 .
+                    PHP_EXT;
+            nel_redirect($url, $redirect_delay);
         }
     }
 
     die();
+}
+
+function nel_redirect($url, $delay, $output = true)
+{
+    $redirect = '<meta http-equiv="refresh" content="' . $delay . ';URL=' . $url . '">';
+
+    if ($output)
+    {
+        echo $redirect;
+    }
+    else
+    {
+        return $redirect;
+    }
 }
 
 function nel_get_microtime($convert_int = true)
@@ -35,13 +48,15 @@ function nel_get_microtime($convert_int = true)
     $return_time = ['time' => $time];
     $split_time = explode(' ', $time);
 
-    if($convert_int)
+    if ($convert_int)
     {
-        $return_time = ['time' => intval($split_time[1]), 'milli' => intval(round($split_time[0], 3) * 1000), 'micro' => intval($split_time[0] * 1000000)];
+        $return_time = ['time' => intval($split_time[1]), 'milli' => intval(round($split_time[0], 3) * 1000),
+            'micro' => intval($split_time[0] * 1000000)];
     }
     else
     {
-        $return_time = ['time' => (float) $split_time[1], 'milli' => round($split_time[0], 3), 'micro' => (float) $split_time[0] * 1000000];
+        $return_time = ['time' => (float) $split_time[1], 'milli' => round($split_time[0], 3),
+            'micro' => (float) $split_time[0] * 1000000];
     }
 
     return $return_time;

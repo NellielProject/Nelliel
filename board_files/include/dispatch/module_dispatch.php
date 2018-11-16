@@ -78,8 +78,7 @@ function nel_module_dispatch($inputs)
             break;
 
         case 'file-filter':
-            $file_filters_panel = new \Nelliel\Admin\AdminFileFilters(nel_database(), $authorization,
-                    $inputs['board_id']);
+            $file_filters_panel = new \Nelliel\Admin\AdminFileFilters(nel_database(), $authorization, $inputs['board_id']);
             $file_filters_panel->actionDispatch($inputs);
             break;
 
@@ -131,29 +130,37 @@ function nel_module_dispatch($inputs)
                 {
                     if ($session->isActive() && $session->inModmode($inputs['board_id']))
                     {
-                        echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                                '?module=render&action=view-thread&section=' . $fgsfds->getCommandData('noko', 'topic') .
-                                '&board_id=' . $inputs['board_id'] . '">';
+                        $url_constructor = new \Nelliel\URLConstructor();
+                        $url = $url_constructor->dynamic(PHP_SELF,
+                                ['module' => 'render', 'action' => 'view-thread',
+                                    'section' => $fgsfds->getCommandData('noko', 'topic'),
+                                    'board_id' => $inputs['board_id']]);
+
+                        nel_redirect($url, 2);
                     }
                     else
                     {
-                        echo '<meta http-equiv="refresh" content="1;URL=' . $board_references['board_directory'] . '/' .
-                                $board_references['page_dir'] . '/' . $fgsfds->getCommandData('noko', 'topic') . '/' .
-                                $fgsfds->getCommandData('noko', 'topic') . '.html">';
+                        $url = $board_references['board_directory'] . '/' . $board_references['page_dir'] . '/' .
+                                $fgsfds->getCommandData('noko', 'topic') . '/' . $fgsfds->getCommandData('noko', 'topic') .
+                                '.html';
+                        nel_redirect($url, 2);
                     }
                 }
                 else
                 {
                     if ($session->isActive() && $session->inModmode($inputs['board_id']))
                     {
-                        echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                                '?module=render&action=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
+                        $url_constructor = new \Nelliel\URLConstructor();
+                        $url = $url_constructor->dynamic(PHP_SELF,
+                                ['module' => 'render', 'action' => 'view-index', 'section' => '0',
+                                    'board_id' => $inputs['board_id']]);
+
+                        nel_redirect($url, 2);
                     }
                     else
                     {
-                        echo '<meta http-equiv="refresh" content="1;URL=' .
-                                nel_parameters_and_data()->boardReferences($inputs['board_id'], 'board_directory') . '/' .
-                                PHP_SELF2 . PHP_EXT . '">';
+                        $url = PHP_SELF2 . PHP_EXT;
+                        nel_redirect($url, 2);
                     }
                 }
 
