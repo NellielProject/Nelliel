@@ -159,7 +159,8 @@ function nel_module_dispatch($inputs)
                     }
                     else
                     {
-                        $url = PHP_SELF2 . PHP_EXT;
+                        $url = $board_references['board_directory'] . '/' . PHP_SELF2 .
+                        PHP_EXT;
                         nel_redirect($url, 2);
                     }
                 }
