@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_rules_list($board_id)
 {
     $board_settings = nel_parameters_and_data()->boardSettings($board_id);
+    $filetypes = new \Nelliel\FileTypes(nel_database());
     $render = new NellielTemplates\RenderCore();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $dom = $render->newDOMDocument();
@@ -17,13 +18,18 @@ function nel_render_rules_list($board_id)
     $base_list_item->setAttributeNode($dom->createFullAttribute('class', 'rules-item'));
     $filetype_rules = $dom->copyNode($rules_nodes['rules-list'], $form_rules_list, 'append');
 
-    foreach (nel_parameters_and_data()->filetypeSettings($board_id) as $key => $value)
+    foreach ($filetypes->filetypeSettings($board_id) as $type => $formats)
     {
+        if(!$filetypes->typeIsEnabled($board_id, $type))
+        {
+            continue;
+        }
+
         $list_set = '';
 
-        foreach ($value as $name => $setting)
+        foreach ($formats as $name => $setting)
         {
-            if ($name == $key || $setting === false)
+            if ($name == $type || $setting === false)
             {
                 continue;
             }
@@ -35,7 +41,7 @@ function nel_render_rules_list($board_id)
         {
             $current_list_item = $dom->copyNode($base_list_item, $filetype_rules, 'append');
             $current_list_item->setContent(
-                    sprintf(_gettext('Supported %s file types: '), $key) . substr($list_set, 0, -2));
+                    sprintf(_gettext('Supported %s file types: '), $type) . substr($list_set, 0, -2));
             $filetype_rules->appendChild($current_list_item);
         }
     }
