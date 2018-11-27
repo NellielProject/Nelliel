@@ -365,6 +365,9 @@ class TableInsertData
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'art', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'cel', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'kcf', '0']);
+        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'ani', '0']);
+        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'icns', '0']);
+        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'illustrator', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'audio', 'bool', 'audio', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'audio', 'bool', 'wave', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'audio', 'bool', 'aiff', '0']);
@@ -437,6 +440,11 @@ class TableInsertData
         $database->executePrepared($prepared, ['art', 'art', 'graphics', 'art', 'image/x-jg', '^JG[\x03-\x04]\x0E', 'AOL ART']);
         $database->executePrepared($prepared, ['cel', 'cel', 'graphics', 'cel', 'application/octet-stream', '^KiSS(?:\x20\x04|\x20\x08|\x21\x20|\x20\x20)', 'Kisekae CEL']);
         $database->executePrepared($prepared, ['kcf', 'kcf', 'graphics', 'kcf', 'application/octet-stream', '^KiSS\x10)', 'Kisekae Pallete']);
+        $database->executePrepared($prepared, ['ani', 'ani', 'graphics', 'ani', 'application/x-navi-animation', '^RIFF\xF2\x19\x00\x00ACONLIST', 'Windows Animated Cursor']);
+        $database->executePrepared($prepared, ['icns', 'icns', 'graphics', 'icns', 'image/icns', '^icns', 'Mac OS Icon']);
+        $database->executePrepared($prepared, ['ai', 'ai', 'graphics', 'illustrator', 'application/postscript', '^%PDF', 'Adobe Illustrator']);
+        $database->executePrepared($prepared, ['ps', 'ps', 'graphics', 'postscript', 'application/postscript', '%!PS', 'PostScript']);
+        $database->executePrepared($prepared, ['eps', 'eps', 'graphics', 'postscript', 'application/postscript', '^\xC5\xD0\xD3\xC6|%!PS-Adobe-[0-9]\.[0-9] EPSF-[0-9]\.[0-9]', 'Encapsulated PostScript']);
         $database->executePrepared($prepared, ['wav', 'wav', 'audio', 'wave', 'audio/x-wave', '^RIFF.{4}WAVEfmt', 'WAVE']);
         $database->executePrepared($prepared, ['aif', 'aif', 'audio', 'aiff', 'audio/aiff', '^FORM.{4}AIFF', 'AIFF']);
         $database->executePrepared($prepared, ['aiff', 'aif', null, null, null, null, null]);
@@ -467,9 +475,12 @@ class TableInsertData
         $database->executePrepared($prepared, ['ogv', 'ogv', 'video', 'ogg-video', 'video/ogg', '^OggS', 'Ogg Video']);
         $database->executePrepared($prepared, ['rtf', 'rtf', 'document', 'rich-text', 'application/rtf', '^\x7B\x5C\x72\x74\x66\x31', 'Rich Text']);
         $database->executePrepared($prepared, ['pdf', 'pdf', 'document', 'pdf', 'application/pdf', '^\x25PDF', 'PDF']);
-        $database->executePrepared($prepared, ['doc', 'doc', 'document', 'msword', 'application/msword', '^\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1|\xDB\xA5\x2D\x00', 'Microsoft Word']);
-        $database->executePrepared($prepared, ['ppt', 'ppt', 'document', 'powerpoint', 'application/ms-powerpoint', '^\xD0\xCF\x11\xE0\xA1\\xB1\x1A\xE1', 'PowerPoint']);
-        $database->executePrepared($prepared, ['xls', 'xls', 'document', 'msexcel', 'application/ms-excel', '^\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', 'Microsoft Excel']);
+        $database->executePrepared($prepared, ['doc', 'doc', 'document', 'msword', 'application/msword', '^\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1|^\xDB\xA5\x2D\x00|^PK\x03\x04', 'Microsoft Word']);
+        $database->executePrepared($prepared, ['docx', 'doc', null, null, null, null, null]);
+        $database->executePrepared($prepared, ['ppt', 'ppt', 'document', 'powerpoint', 'application/ms-powerpoint', '^\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1|^PK\x03\x04', 'PowerPoint']);
+        $database->executePrepared($prepared, ['pptx', 'ppt', null, null, null, null, null]);
+        $database->executePrepared($prepared, ['xls', 'xls', 'document', 'msexcel', 'application/ms-excel', '^\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1|^PK\x03\x04', 'Microsoft Excel']);
+        $database->executePrepared($prepared, ['xlsx', 'xls', null, null, null, null, null]);
         $database->executePrepared($prepared, ['txt', 'txt', 'document', 'plaintext', 'text/plain', '', 'Plaintext']);
         $database->executePrepared($prepared, ['gz', 'gz', 'archive', 'gzip', 'application/gzip', '^\x1F\x8B\x08', 'GZip']);
         $database->executePrepared($prepared, ['tgz', 'gz', null, null, null, null, null]);
