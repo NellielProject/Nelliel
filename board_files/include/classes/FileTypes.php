@@ -35,7 +35,7 @@ class FileTypes
         return false;
     }
 
-    public function loadDataFromDatabase()
+    private function loadDataFromDatabase()
     {
         $filetypes = array();
         $db_results = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes"', PDO::FETCH_ASSOC);
@@ -65,19 +65,17 @@ class FileTypes
         self::$filetype_data = $filetypes;
     }
 
-    public function loadSettingsFromDatabase($board_id)
+    private function loadSettingsFromDatabase($board_id)
     {
         $settings = $this->loadArrayFromCache($board_id . '/filetype_settings.php', 'filetype_settings');
 
-        if ($settings === false || $cache_regen)
+        if ($settings === false || $cache_regen) // TODO: Handle cache regen
         {
-            $prepared = $this->database->prepare(
-                    'SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
+            $prepared = $this->database->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
             $db_prefix = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
             $config_table = $db_prefix . '_config';
             $config_list = $this->database->executeFetchAll(
-                    'SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'filetype_enable\'',
-                    PDO::FETCH_ASSOC);
+                    'SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'filetype_enable\'', PDO::FETCH_ASSOC);
             $settings = array();
 
             foreach ($config_list as $config)
@@ -95,22 +93,27 @@ class FileTypes
         self::$filetype_settings[$board_id] = $settings;
     }
 
-    public function getFiletypeData($extension = null)
+    public function isValidExtension($extension)
     {
-        if (empty(self::$filetype_data))
+        if (!isset(self::$filetype_data))
         {
             $this->loadDataFromDatabase();
         }
 
-        if (is_null($extension))
+        return isset(self::$filetype_data[$extension]);
+    }
+
+    public function extensionData($extension)
+    {
+        if (!$this->isValidExtension($extension))
         {
-            return self::$filetype_data;
+            return false;
         }
 
         return self::$filetype_data[$extension];
     }
 
-    public function filetypeSettings($board_id, $setting = null, $cache_regen = false)
+    public function settings($board_id, $setting = null, $cache_regen = false)
     {
         if ($board_id === '' || is_null($board_id))
         {
@@ -130,13 +133,50 @@ class FileTypes
         return self::$filetype_settings[$board_id][$setting];
     }
 
+    private function settingsLoaded()
+    {
+        return !empty(self::$filetype_settings);
+    }
+
+    public function extensionIsEnabled($board_id, $extension)
+    {
+        $extension_data = $this->extensionData($extension);
+
+        if ($extension_data === false)
+        {
+            return false;
+        }
+
+        $type = $extension_data['type'];
+        $format = $extension_data['format'];
+        return $this->typeIsEnabled($board_id, $type) && $this->formatIsEnabled($board_id, $type, $format);
+    }
+
     public function typeIsEnabled($board_id, $type)
     {
-        return isset(self::$filetype_settings[$board_id][$type][$type]) && self::$filetype_settings[$board_id][$type][$type];
+        if (!$this->settingsLoaded())
+        {
+            $this->loadSettingsFromDatabase($board_id);
+        }
+
+        return isset(self::$filetype_settings[$board_id][$type][$type]) &&
+                self::$filetype_settings[$board_id][$type][$type];
     }
 
     public function formatIsEnabled($board_id, $type, $format)
     {
-        return isset(self::$filetype_settings[$board_id][$type][$format]) && self::$filetype_settings[$board_id][$type][$format];
+        return isset(self::$filetype_settings[$board_id][$type][$format]) &&
+                self::$filetype_settings[$board_id][$type][$format];
+    }
+
+    public function verifyFile($extension, $file_path, $start_buffer = 65535, $end_buffer = 65535)
+    {
+        $file_length = filesize($file_path);
+        $end_offset = ($file_length < 65535) ? $file_length : $file_length - 65535;
+        $file_test_begin = file_get_contents($file_path, null, null, 0, 65535);
+        $file_test_end = file_get_contents($file_path, null, null, $end_offset);
+        $extension_data = $this->extensionData($extension);
+        return preg_match('#' . $extension_data['id_regex'] . '#', $file_test_begin) ||
+                preg_match('#' . $extension_data['id_regex'] . '#', $file_test_end);
     }
 }

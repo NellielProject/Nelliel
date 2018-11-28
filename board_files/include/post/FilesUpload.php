@@ -28,8 +28,7 @@ class FilesUpload
         $data_handler = new \Nelliel\post\PostData($this->board_id, $this->authorization);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
-        $post_data =
-        $file_count = 1;
+        $post_data = $file_count = 1;
         $filenames = array();
         $file_duplicate = 1;
 
@@ -67,7 +66,8 @@ class FilesUpload
                     }
 
                     $file->content_data['filename'] = $file->content_data['filename'] . '_' . $file_duplicate;
-                    $file->content_data['fullname'] = $file->content_data['filename'] . '.' . $file->content_data['extension'];
+                    $file->content_data['fullname'] = $file->content_data['filename'] . '.' .
+                            $file->content_data['extension'];
                     ++ $file_duplicate;
                 }
             }
@@ -142,8 +142,8 @@ class FilesUpload
         $snacks = new \Nelliel\Snacks($database, new \Nelliel\BanHammer($database));
         $references = nel_parameters_and_data()->boardReferences($this->board_id);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
-        $error_data = array('delete_files' => true, 'bad-filename' => $file->content_data['name'], 'files' => $this->uploaded_files,
-            'board_id' => $this->board_id);
+        $error_data = array('delete_files' => true, 'bad-filename' => $file->content_data['name'],
+            'files' => $this->uploaded_files, 'board_id' => $this->board_id);
         $is_banned = false;
         $file->content_data['md5'] = hash_file('md5', $file->content_data['location'], true);
         $is_banned = $snacks->fileHashIsBanned($file->content_data['md5'], 'md5');
@@ -217,39 +217,31 @@ class FilesUpload
 
     public function checkFiletype($file)
     {
-        $filetypes = nel_parameters_and_data()->filetypeData();
-        $filetype_settings = nel_parameters_and_data()->filetypeSettings($this->board_id);
-        $error_data = array('delete_files' => true, 'bad-filename' => $file->content_data['name'], 'files' => $this->uploaded_files,
-            'board_id' => $this->board_id);
+        $filetypes = new \Nelliel\FileTypes(nel_database());
+        $error_data = array('delete_files' => true, 'bad-filename' => $file->content_data['name'],
+            'files' => $this->uploaded_files, 'board_id' => $this->board_id);
         $this->getPathInfo($file);
         $test_ext = utf8_strtolower($file->content_data['extension']);
-        $file_length = filesize($file->content_data['location']);
-        $end_offset = ($file_length < 65535) ? $file_length : $file_length - 65535;
-        $file_test_begin = file_get_contents($file->content_data['location'], NULL, NULL, 0, 65535);
-        $file_test_end = file_get_contents($file->content_data['location'], NULL, NULL, $end_offset);
 
-        if (!array_key_exists($test_ext, $filetypes))
+        if (!$filetypes->isValidExtension($test_ext))
         {
             nel_derp(18, _gettext('Unrecognized file type.'), $error_data);
         }
 
-        if (!$filetype_settings[$filetypes[$test_ext]['type']][$filetypes[$test_ext]['type']] ||
-                !$filetype_settings[$filetypes[$test_ext]['type']][$filetypes[$test_ext]['format']])
+        $type_data = $filetypes->extensionData($test_ext);
+
+        if (!$filetypes->extensionIsEnabled($this->board_id, $test_ext))
         {
             nel_derp(19, _gettext('Filetype is not allowed.'), $error_data);
         }
 
-        if (preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test_begin) ||
-                preg_match('#' . $filetypes[$test_ext]['id_regex'] . '#', $file_test_end))
+        if (!$filetypes->verifyFile($test_ext, $file->content_data['location'], 65535, 65535))
         {
-            $file->content_data['type'] = $filetypes[$test_ext]['type'];
-            $file->content_data['format'] = $filetypes[$test_ext]['format'];
-            $file->content_data['mime'] = $filetypes[$test_ext]['mime'];
+            nel_derp(20, _gettext('Incorrect file type detected (does not match extension). Possible Hax.'), $error_data);
         }
-        else
-        {
-            nel_derp(20, _gettext('Incorrect file type detected (does not match extension). Possible Hax.'),
-                    $error_data);
-        }
+
+        $file->content_data['type'] = $type_data['type'];
+        $file->content_data['format'] = $type_data['format'];
+        $file->content_data['mime'] = $type_data['mime'];
     }
 }

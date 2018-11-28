@@ -18,7 +18,7 @@ function nel_render_rules_list($board_id)
     $base_list_item->setAttributeNode($dom->createFullAttribute('class', 'rules-item'));
     $filetype_rules = $dom->copyNode($rules_nodes['rules-list'], $form_rules_list, 'append');
 
-    foreach ($filetypes->filetypeSettings($board_id) as $type => $formats)
+    foreach ($filetypes->settings($board_id) as $type => $formats)
     {
         if(!$filetypes->typeIsEnabled($board_id, $type))
         {
