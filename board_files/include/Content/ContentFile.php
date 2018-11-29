@@ -121,9 +121,9 @@ class ContentFile extends ContentBase
                 DIRECTORY_PERM);
     }
 
-    public function remove()
+    public function remove($perm_override = false)
     {
-        if (!$this->verifyModifyPerms())
+        if (!$perm_override && !$this->verifyModifyPerms())
         {
             return false;
         }

@@ -214,7 +214,7 @@ class ArchiveAndPrune
         {
             $thread = new \Nelliel\Content\ContentThread($this->database, new ContentID('nci_' . $thread_id . '_0_0'),
                     $this->board_id);
-            $thread->remove();
+            $thread->remove(true);
         }
     }
 }

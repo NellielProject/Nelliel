@@ -100,9 +100,9 @@ class ContentThread extends ContentBase
         $file_handler->createDirectory($board_references['page_path'] . $this->content_id->thread_id, DIRECTORY_PERM);
     }
 
-    public function remove()
+    public function remove($perm_override = false)
     {
-        if (!$this->verifyModifyPerms())
+        if (!$perm_override && !$this->verifyModifyPerms())
         {
             return false;
         }
