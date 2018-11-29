@@ -172,7 +172,6 @@ class ArchiveAndPrune
             $move_list = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
         }
 
-        var_dump(debug_backtrace());
         foreach ($move_list as $thread_id)
         {
             $this->moveToArchive($thread_id);
