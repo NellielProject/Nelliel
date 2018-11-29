@@ -11,12 +11,14 @@ if (!defined('NELLIEL_VERSION'))
 
 class FileTypes
 {
+    private $cache_handler;
     private $database;
     private static $filetype_data;
     private static $filetype_settings;
 
     function __construct($database)
     {
+        $this->cache_handler = new \Nelliel\CacheHandler();
         $this->database = $database;
     }
 
@@ -65,11 +67,11 @@ class FileTypes
         self::$filetype_data = $filetypes;
     }
 
-    private function loadSettingsFromDatabase($board_id)
+    private function loadSettingsFromDatabase($board_id, $ignore_cache = false)
     {
         $settings = $this->loadArrayFromCache($board_id . '/filetype_settings.php', 'filetype_settings');
 
-        if ($settings === false || $cache_regen) // TODO: Handle cache regen
+        if ($settings === false)
         {
             $prepared = $this->database->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
             $db_prefix = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
@@ -81,12 +83,6 @@ class FileTypes
             foreach ($config_list as $config)
             {
                 $settings[$config['config_category']][utf8_strtolower($config['config_name'])] = (bool) $config['setting'];
-            }
-
-            if (USE_INTERNAL_CACHE || $cache_regen)
-            {
-                $this->cache_handler->writeCacheFile(CACHE_PATH . $board_id . '/', 'filetype_settings.php',
-                        '$filetype_settings = ' . var_export($settings, true) . ';');
             }
         }
 
@@ -139,23 +135,23 @@ class FileTypes
         return self::$filetype_settings[$board_id][$setting];
     }
 
-    private function settingsLoaded($board_id, $load_if_not = false)
+    private function settingsLoaded($board_id, $load_if_not = false, $ignore_cache = false)
     {
-        $result = !empty(self::$filetype_settings) || empty(self::$filetype_settings[$board_id]);
+        $result = empty(self::$filetype_settings) && empty(self::$filetype_settings[$board_id]);
 
-        if (!$result && $load_if_not)
+        if ($result && $load_if_not)
         {
-            $this->loadSettingsFromDatabase($board_id);
+            $this->loadSettingsFromDatabase($board_id, $ignore_cache);
         }
 
         return $result;
     }
 
-    private function filetypesLoaded($load_if_not = false)
+    private function filetypesLoaded($load_if_not = false, $ignore_cache = false)
     {
-        $result = !empty(self::$filetype_data);
+        $result = empty(self::$filetype_data);
 
-        if (!$result && $load_if_not)
+        if ($result && $load_if_not)
         {
             $this->loadDataFromDatabase();
             return true;
@@ -204,5 +200,15 @@ class FileTypes
         $extension_data = $this->extensionData($extension);
         return preg_match('#' . $extension_data['id_regex'] . '#', $file_test_begin) ||
                 preg_match('#' . $extension_data['id_regex'] . '#', $file_test_end);
+    }
+
+    public function generateSettingsCache($board_id)
+    {
+        if (USE_INTERNAL_CACHE)
+        {
+            $this->settingsLoaded($board_id, true, true);
+            $this->cache_handler->writeCacheFile(CACHE_PATH . $board_id . '/', 'filetype_settings.php',
+                    '$filetype_settings = ' . var_export(self::$filetype_settings[$board_id], true) . ';');
+        }
     }
 }

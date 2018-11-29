@@ -127,51 +127,6 @@ class ParametersAndData
         return self::$board_settings[$board_id][$setting];
     }
 
-    public function filetypeSettings($board_id, $setting = null, $cache_regen = false)
-    {
-        if ($board_id === '' || is_null($board_id))
-        {
-            return;
-        }
-
-        if (empty(self::$filetype_settings[$board_id]) || $cache_regen)
-        {
-            $settings = $this->loadArrayFromCache($board_id . '/filetype_settings.php', 'filetype_settings');
-
-            if ($settings === false || $cache_regen)
-            {
-                $prepared = $this->database->prepare(
-                        'SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
-                $db_prefix = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
-                $config_table = $db_prefix . '_config';
-                $config_list = $this->database->executeFetchAll(
-                        'SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'filetype_enable\'',
-                        PDO::FETCH_ASSOC);
-                $settings = array();
-
-                foreach ($config_list as $config)
-                {
-                    $settings[$config['config_category']][utf8_strtolower($config['config_name'])] = (bool) $config['setting'];
-                }
-
-                if (USE_INTERNAL_CACHE || $cache_regen)
-                {
-                    $this->cache_handler->writeCacheFile(CACHE_PATH . $board_id . '/', 'filetype_settings.php',
-                            '$filetype_settings = ' . var_export($settings, true) . ';');
-                }
-            }
-
-            self::$filetype_settings[$board_id] = $settings;
-        }
-
-        if (is_null($setting))
-        {
-            return self::$filetype_settings[$board_id];
-        }
-
-        return self::$filetype_settings[$board_id][$setting];
-    }
-
     public function boardReferences($board_id, $reference = null)
     {
         if ($board_id === '' || is_null($board_id))

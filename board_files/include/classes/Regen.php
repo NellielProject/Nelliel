@@ -32,7 +32,8 @@ class Regen
     public function boardCache($board_id)
     {
         nel_parameters_and_data()->boardSettings($board_id, null, true);
-        nel_parameters_and_data()->filetypeSettings($board_id, null, true);
+        $filetypes = new FileTypes(nel_database());
+        $filetypes->generateSettingsCache($board_id);
     }
 
     public function siteCache()
