@@ -64,17 +64,7 @@ class ThreadHandler
         if ($update_archive)
         {
             $archive = new ArchiveAndPrune($this->database, $this->board_id, new FileHandler());
-            $archive->updateAllArchiveStatus();
-
-            if ($board_settings['old_threads'] === 'ARCHIVE')
-            {
-                $archive->moveThreadsToArchive();
-                $archive->moveThreadsFromArchive();
-            }
-            else if ($board_settings['old_threads'] === 'PRUNE')
-            {
-                $archive->pruneThreads();
-            }
+            $archive->updateThreads();
         }
 
         $regen = new \Nelliel\Regen();

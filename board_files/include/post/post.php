@@ -152,16 +152,7 @@ function nel_process_new_post($inputs)
         }
     }
 
-    $archive->updateAllArchiveStatus();
-
-    if ($board_settings['old_threads'] === 'ARCHIVE')
-    {
-        $archive->moveThreadsToArchive();
-    }
-    else if ($board_settings['old_threads'] === 'PRUNE')
-    {
-        $archive->pruneThreads();
-    }
+    $archive->updateThreads();
 
     // Generate response page if it doesn't exist, otherwise update
     $regen = new \Nelliel\Regen();

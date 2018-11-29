@@ -37,6 +37,21 @@ class ArchiveAndPrune
         }
     }
 
+    public function updateThreads()
+    {
+        $this->updateAllArchiveStatus();
+
+        if ($this->board_settings['old_threads'] === 'ARCHIVE')
+        {
+            $this->moveThreadsToArchive();
+            $this->moveThreadsFromArchive();
+        }
+        else if ($this->board_settings['old_threads'] === 'PRUNE')
+        {
+            $this->pruneThreads();
+        }
+    }
+
     public function changeArchiveStatus($thread_id, $status, $table)
     {
         $prepared = $this->database->prepare('UPDATE "' . $table . '" SET "archive_status" = ? WHERE "thread_id" = ?');
@@ -159,9 +174,9 @@ class ArchiveAndPrune
                 $this->references['thumb_path'] . $thread_id);
         $this->file_handler->moveFile($this->references['archive_page_path'] . $thread_id,
                 $this->references['page_path'] . $thread_id);
-        $this->database->executePrepared($prepared, array($thread_id));
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . $this->references['archive_thread_table'] . '" WHERE "thread_id"= ?');
+        $this->database->executePrepared($prepared, array($thread_id));
     }
 
     public function moveThreadsToArchive($move_list = array())
