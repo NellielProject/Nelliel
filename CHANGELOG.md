@@ -1,4 +1,21 @@
 # Nelliel Changelog
+## v0.9.11.3 (2018/11/29)
+### Changed
+ - Overhauls of HTML and CSS
+ - Update Javascript functions to use content ids
+ - Replace $base_content_id with post/thread specific IDs
+ - Some database columns changed to DEFAULT NULL
+ - Update filetype handling
+ 
+### Fixed
+ - Non-noko redirect going to home page
+ - File formats showing in rules even when parent category is disabled
+
+### Added
+ - Standard redirect function
+ - New FileTypes class
+ - Support for .ai, .ps, .eps, .xlsx, .pptx, .docx extensions
+
 ## v0.9.11.2 (2018/11/09)
 ### Breaking
  - Change file table to content table
