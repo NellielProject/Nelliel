@@ -26,28 +26,13 @@ class ParametersAndData
         $this->cache_handler = $cache_handler;
     }
 
-    private function loadArrayFromCache($filename, $array_variable)
-    {
-        if (USE_INTERNAL_CACHE)
-        {
-            if (file_exists(CACHE_PATH . $filename))
-            {
-                include CACHE_PATH . $filename;
-                $array = $$array_variable;
-                return $array;
-            }
-        }
-
-        return false;
-    }
-
     public function siteSettings($setting = null, $cache_regen = false)
     {
         if (empty(self::$site_settings) || $cache_regen)
         {
-            $settings = $this->loadArrayFromCache('site_settings.php', 'site_settings');
+            $settings = $this->cache_handler->loadArrayFromCache('site_settings.php', 'site_settings');
 
-            if ($settings === false || $cache_regen)
+            if (empty($settings) || $cache_regen)
             {
                 if ($this->database->tableExists(SITE_CONFIG_TABLE))
                 {
@@ -92,9 +77,9 @@ class ParametersAndData
 
         if (empty(self::$board_settings[$board_id]) || $cache_regen)
         {
-            $settings = $this->loadArrayFromCache($board_id . '/board_settings.php', 'board_settings');
+            $settings = $this->cache_handler->loadArrayFromCache($board_id . '/board_settings.php', 'board_settings');
 
-            if ($settings === false || $cache_regen)
+            if (empty($settings) || $cache_regen)
             {
                 $prepared = $this->database->prepare(
                         'SELECT "db_prefix" FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');

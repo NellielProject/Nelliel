@@ -69,9 +69,9 @@ class FileTypes
 
     private function loadSettingsFromDatabase($board_id, $ignore_cache = false)
     {
-        $settings = $this->loadArrayFromCache($board_id . '/filetype_settings.php', 'filetype_settings');
+        $settings = $this->cache_handler->loadArrayFromCache($board_id . '/filetype_settings.php', 'filetype_settings');
 
-        if ($settings === false)
+        if (empty($settings))
         {
             $prepared = $this->database->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
             $db_prefix = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);

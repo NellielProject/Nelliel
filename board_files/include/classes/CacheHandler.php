@@ -22,6 +22,21 @@ class CacheHandler
         }
     }
 
+    public function loadArrayFromCache($filename, $array_variable)
+    {
+        if (USE_INTERNAL_CACHE)
+        {
+            if (file_exists(CACHE_PATH . $filename))
+            {
+                include CACHE_PATH . $filename;
+                $array = $$array_variable;
+                return $array;
+            }
+        }
+
+        return array();
+    }
+
     public function checkHash($id, $hash)
     {
         return isset($this->hashes[$id]) && hash_equals($this->hashes[$id], $hash);
