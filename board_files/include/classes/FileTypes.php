@@ -22,21 +22,6 @@ class FileTypes
         $this->database = $database;
     }
 
-    private function loadArrayFromCache($filename, $array_variable)
-    {
-        if (USE_INTERNAL_CACHE)
-        {
-            if (file_exists(CACHE_PATH . $filename))
-            {
-                include CACHE_PATH . $filename;
-                $array = $$array_variable;
-                return $array;
-            }
-        }
-
-        return false;
-    }
-
     private function loadDataFromDatabase()
     {
         $filetypes = array();
