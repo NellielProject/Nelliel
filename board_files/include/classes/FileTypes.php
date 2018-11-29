@@ -93,6 +93,12 @@ class FileTypes
         self::$filetype_settings[$board_id] = $settings;
     }
 
+    public function getFiletypeData()
+    {
+        $this->filetypesLoaded(true);
+        return self::$filetype_data;
+    }
+
     public function isValidExtension($extension)
     {
         if (!isset(self::$filetype_data))
@@ -133,9 +139,29 @@ class FileTypes
         return self::$filetype_settings[$board_id][$setting];
     }
 
-    private function settingsLoaded()
+    private function settingsLoaded($board_id, $load_if_not = false)
     {
-        return !empty(self::$filetype_settings);
+        $result = !empty(self::$filetype_settings) || empty(self::$filetype_settings[$board_id]);
+
+        if (!$result && $load_if_not)
+        {
+            $this->loadSettingsFromDatabase($board_id);
+        }
+
+        return $result;
+    }
+
+    private function filetypesLoaded($load_if_not = false)
+    {
+        $result = !empty(self::$filetype_data);
+
+        if (!$result && $load_if_not)
+        {
+            $this->loadDataFromDatabase();
+            return true;
+        }
+
+        return $result;
     }
 
     public function extensionIsEnabled($board_id, $extension)
@@ -154,7 +180,7 @@ class FileTypes
 
     public function typeIsEnabled($board_id, $type)
     {
-        if (!$this->settingsLoaded())
+        if (!$this->settingsLoaded($board_id, true))
         {
             $this->loadSettingsFromDatabase($board_id);
         }

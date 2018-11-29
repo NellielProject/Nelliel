@@ -220,46 +220,6 @@ class ParametersAndData
         return self::$board_references[$board_id][$reference];
     }
 
-    public function filetypeData($extension = null)
-    {
-        if (empty(self::$filetype_data))
-        {
-            $filetypes = array();
-            $db_results = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes"', PDO::FETCH_ASSOC);
-            $sub_extensions = array();
-
-            foreach ($db_results as $result)
-            {
-                if ($result['extension'] == $result['parent_extension'])
-                {
-                    $filetypes[$result['extension']] = $result;
-                }
-                else
-                {
-                    $sub_extensions[] = $result;
-                }
-            }
-
-            foreach ($sub_extensions as $sub_extension)
-            {
-                if (array_key_exists($sub_extension['parent_extension'], $filetypes))
-                {
-                    $filetypes[$sub_extension['extension']] = $filetypes[$sub_extension['parent_extension']];
-                    $filetypes[$sub_extension['extension']]['extension'] = $sub_extension['extension'];
-                }
-            }
-
-            self::$filetype_data = $filetypes;
-        }
-
-        if (is_null($extension))
-        {
-            return self::$filetype_data;
-        }
-
-        return self::$filetype_data[$extension];
-    }
-
     public function fileFilters()
     {
         if (empty(self::$file_filters))

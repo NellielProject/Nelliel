@@ -8,7 +8,7 @@ function nel_render_board_settings_panel($board_id, $defaults)
 {
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
-    $filetypes = nel_parameters_and_data()->filetypeData();
+    $filetypes = new \Nelliel\FileTypes($database);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -49,7 +49,7 @@ function nel_render_board_settings_panel($board_id, $defaults)
 
             if ($config_line['config_type'] === 'filetype_enable')
             {
-                foreach ($filetypes as $filetype)
+                foreach ($filetypes->getFiletypeData() as $filetype)
                 {
                     if ($filetype['format'] != $config_line['config_name'])
                     {
