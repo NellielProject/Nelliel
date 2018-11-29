@@ -132,10 +132,10 @@ class ArchiveAndPrune
                 $this->references['archive_src_path'] . $thread_id);
         $this->file_handler->moveFile($this->references['thumb_path'] . $thread_id,
                 $this->references['archive_thumb_path'] . $thread_id);
-        $this->file_handler->moveFile($references['page_path'] . $thread_id,
+        $this->file_handler->moveFile($this->references['page_path'] . $thread_id,
                 $this->references['archive_page_path'] . $thread_id);
-        $this->database->executePrepared($prepared, array($thread_id));
         $prepared = $this->database->prepare('DELETE FROM "' . $this->references['thread_table'] . '" WHERE "thread_id"= ?');
+        $this->database->executePrepared($prepared, array($thread_id));
     }
 
     public function moveFromArchive($thread_id)
@@ -172,6 +172,7 @@ class ArchiveAndPrune
             $move_list = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
         }
 
+        var_dump(debug_backtrace());
         foreach ($move_list as $thread_id)
         {
             $this->moveToArchive($thread_id);
