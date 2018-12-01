@@ -9,9 +9,11 @@ if (!defined('NELLIEL_VERSION'))
 
 class JSONAPI
 {
+    private $file_handler;
 
-    function __construct()
+    function __construct($file_handler)
     {
+        $this->file_handler = $file_handler;
     }
 
     private function addIfNotEmpty(&$data, $key, $value, $type)
@@ -30,6 +32,11 @@ class JSONAPI
         {
             $data[$key] = nel_cast_to_datatype($value, $type);
         }
+    }
+
+    public function writeThreadData()
+    {
+
     }
 
     public function assembleThreadData($thread_data)

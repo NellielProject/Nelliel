@@ -88,7 +88,7 @@ function nel_thread_generator($board_id, $write, $response_to)
             nel_render_insert_hr($dom);
             $hr_added = true;
             nel_render_general_footer($render, $board_id, $dotdot, true);
-            $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '-0-100.html',
+            $file_handler->writeFile($references['page_path'] . $response_to . '/thread-' . $response_to . '-0-100.html',
                     $render_temp->outputRenderSet(), FILE_PERM, true);
             unset($render_temp);
         }
@@ -149,11 +149,11 @@ function nel_thread_generator($board_id, $write, $response_to)
 
     if ($write)
     {
-        $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '.html',
+        $file_handler->writeFile($references['page_path'] . $response_to . '/thread-' . $response_to . '.html',
                 $render->outputRenderSet(), FILE_PERM, true);
-        $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '-expand.html',
+        $file_handler->writeFile($references['page_path'] . $response_to . '/thread-' . $response_to . '-expand.html',
                 $render->outputRenderSet('expand'), FILE_PERM, true);
-        $file_handler->writeFile($references['page_path'] . $response_to . '/' . $response_to . '-collapse.html',
+        $file_handler->writeFile($references['page_path'] . $response_to . '/thread-' . $response_to . '-collapse.html',
                 $render->outputRenderSet('collapse'), FILE_PERM, true);
     }
     else

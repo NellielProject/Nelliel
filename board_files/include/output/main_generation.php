@@ -214,7 +214,7 @@ function nel_main_thread_generator($board_id, $response_to, $write, $page = 0)
         else
         {
             $logfilename = ($page === 0) ? $references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT : $references['board_directory'] .
-                    '/' . PHP_SELF2 . $page . PHP_EXT;
+                    '/' . PHP_SELF2 . '-' . $page . PHP_EXT;
             $file_handler->writeFile($logfilename, $render->outputRenderSet(), FILE_PERM, true);
         }
 

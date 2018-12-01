@@ -109,7 +109,7 @@ nelliel.ui.expandCollapseThread = function(element, command) {
         return;
     }
 
-    var url = "threads/" + content_id.thread_id + "/" + content_id.thread_id + "-" + command.split('-')[0] + ".html";
+    var url = "threads/" + content_id.thread_id + "/thread-" + content_id.thread_id + "-" + command.split('-')[0] + ".html";
     var request = new XMLHttpRequest();
     request.open('GET', url);
     request.onload = function() {

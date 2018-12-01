@@ -86,7 +86,7 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     $board_web_path = '//' . $base_domain . '/' . rawurlencode($references['board_directory']) . '/';
     $pages_web_path = $board_web_path . rawurlencode($references['page_dir']) . '/';
-    $thread_page_web_path = $pages_web_path . $thread_id . '/' . $thread_id . '.html';
+    $thread_page_web_path = $pages_web_path . $thread_id . '/thread-' . $thread_id . '.html';
     $src_web_path = $board_web_path . rawurlencode($references['src_dir']) . '/';
     $thread_src_web_path = $src_web_path . $thread_id . '/';
     $preview_web_path = $board_web_path . rawurlencode($references['thumb_dir']) . '/';

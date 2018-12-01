@@ -83,7 +83,7 @@ class OutputFilter
                 {
                     $p_anchor = '#t' . $parent_thread . 'p' . $matches[1];
                     $url = '//' . $base_domain . '/' . $board_references['board_directory'] . '/' . $board_references['page_dir'] . '/' .
-                            $parent_thread . '/' . $parent_thread . '.html' . $p_anchor;
+                            $parent_thread . '/thread-' . $parent_thread . '.html' . $p_anchor;
                     $segment_node = $target_element->ownerDocument->createElement('a', $matches[0]);
                     $segment_node->extSetAttribute('class', 'link-quote');
                     $segment_node->extSetAttribute('data-command', 'show-linked-post');
