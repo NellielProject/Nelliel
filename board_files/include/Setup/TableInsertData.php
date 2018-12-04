@@ -23,6 +23,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'crypt', 'str', 'post_password_algorithm', 'sha256']);
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'crypt', 'str', 'secure_tripcode_algorithm', 'sha256']);
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'crypt', 'bool', 'do_password_rehash', '0']);
+        $database->executePrepared($prepared, ['core_setting', 'nelliel', 'output', 'str', 'index_filename_format', 'index-%d']);
+        $database->executePrepared($prepared, ['core_setting', 'nelliel', 'output', 'str', 'thread_filename_format', 'thread-%d']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_bans_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_bans_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_board_data_schema', '001']);
