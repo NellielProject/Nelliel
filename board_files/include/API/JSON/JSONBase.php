@@ -16,6 +16,8 @@ abstract class JSONBase
 
     public abstract function writeJSON();
 
+    public abstract function prepareData($data);
+
     protected function addIfNotEmpty(&$data, $key, $value, $type)
     {
         if ($value === null)
