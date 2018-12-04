@@ -17,6 +17,7 @@ define('JS_DIR', WEB_FILES . 'js'); // Javascript files here
 define('PHP_SELF', 'imgboard.php'); // Name of main script file
 define('PHP_SELF2', 'index'); // Name of board index
 define('PHP_EXT', '.html'); // Extension used for board pages
+define('JSON_EXT', '.json'); // Extension used for board pages
 
 define('BAN_TABLE', 'nelliel_bans'); // Contains ban info
 define('USER_TABLE', 'nelliel_users'); // Table of users

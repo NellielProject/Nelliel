@@ -45,6 +45,8 @@ function nel_thread_generator($board_id, $write, $response_to)
         return;
     }
 
+    $json_thread = new \Nelliel\API\JSON\JSONThread($board_id, $file_handler, $gen_data['thread']['thread_id']);
+    $json_thread->addThreadData($gen_data['thread']);
     $post_counter = 0;
     $gen_data['posts_ending'] = false;
     $gen_data['index_rendering'] = false;
@@ -62,6 +64,7 @@ function nel_thread_generator($board_id, $write, $response_to)
         }
 
         $gen_data['post'] = $treeline[$post_counter];
+        $json_thread->addPostData($gen_data['post']);
 
         if ($post_counter === 0)
         {
@@ -80,6 +83,11 @@ function nel_thread_generator($board_id, $write, $response_to)
             $prepared = $database->prepare($query);
             $gen_data['files'] = $database->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']),
                     PDO::FETCH_ASSOC);
+
+            foreach ($gen_data['files'] as $content_data)
+            {
+                $json_thread->addContentData($content_data);
+            }
         }
 
         if ($post_counter === 99)
@@ -155,6 +163,7 @@ function nel_thread_generator($board_id, $write, $response_to)
                 $render->outputRenderSet('expand'), FILE_PERM, true);
         $file_handler->writeFile($references['page_path'] . $response_to . '/thread-' . $response_to . '-collapse.html',
                 $render->outputRenderSet('collapse'), FILE_PERM, true);
+        $json_thread->writeJSON();
     }
     else
     {
