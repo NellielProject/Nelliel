@@ -1,4 +1,26 @@
 # Nelliel Changelog
+## v0.9.11.4 (2018/12/4)
+### Changed
+ - Regen no longer calls the archive/prune functions
+ - Archive and prune access simplified
+ - Perm override so thread pruning works again
+ - Move `loadArrayFromCache` to `CacheHandler` class
+ 
+### Fixed
+ - Not deleting when moved to archive
+
+### Added
+ - v0.1 of JSON API
+ - New site setting for custom output filenames
+
+### Removed
+ - Old `JSONAPI.php`
+
+## v0.9.11.2 (2018/11/09)
+### Breaking
+ - Change file table to content table
+
+
 ## v0.9.11.3 (2018/11/29)
 ### Changed
  - Overhauls of HTML and CSS
@@ -13,7 +35,7 @@
 
 ### Added
  - Standard redirect function
- - New FileTypes class
+ - New `FileTypes` class
  - Support for .ai, .ps, .eps, .xlsx, .pptx, .docx extensions
 
 ## v0.9.11.2 (2018/11/09)
@@ -55,7 +77,7 @@
  - Translator class
 
 ### Changed
- - `language` directory renamed to `Language``
+ - `language` directory renamed to `Language`
  - Update language handling
  - $dbh references renamed to $database
  - Moved Regen class
