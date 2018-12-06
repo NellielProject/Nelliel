@@ -156,7 +156,8 @@ nelliel.ui.inlineExpandReduce = function(element, command) {
 
 nelliel.ui.showLinkedPost = function(element, event) {
     var href = element.getAttribute("href");
-    var post_id = href.match(/#(nci_[0-9_]+)/)[1];
+    var anchor_matches = href.match(/#t([0-9]+)p([0-9]+)/);
+    var post_id = "nci_" + anchor_matches[1] + "_" + anchor_matches[2] + "_0";
 
     if (document.getElementById("post-quote-popup-" + post_id) !== null) {
         return;
@@ -188,7 +189,7 @@ nelliel.ui.showLinkedPost = function(element, event) {
             if (request.status === 200) {
                 var quoted_post = request.response.getElementById("post-container-" + post_id);
                 quoted_post.className = quoted_post.className.replace(/\op-post\b/g, "reply-post");
-                quoted_post.className += " popup-mod";
+                quoted_post.className += " reply-post.popup-mod";
                 popup_div.appendChild(quoted_post);
                 element.parentNode.insertBefore(popup_div, element);
                 var popup_rect = quoted_post.getBoundingClientRect();
@@ -203,7 +204,8 @@ nelliel.ui.showLinkedPost = function(element, event) {
 
 nelliel.ui.hideLinkedPost = function(element, event) {
     var href = element.getAttribute("href");
-    var post_id = href.match(/#(nci_[0-9_]+)/)[1];
+    var anchor_matches = href.match(/#t([0-9]+)p([0-9]+)/);
+    var post_id = "nci_" + anchor_matches[1] + "_" + anchor_matches[2] + "_0";
     var target_popup = document.getElementById("post-quote-popup-" + post_id);
 
     if (target_popup !== null) {
