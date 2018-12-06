@@ -5,7 +5,7 @@ Documentation on the basic functioning and usage of the plugin API.
 **This is currently an incomplete and changing standard with minimal hooks implemented.**
 
 ## API Access
- API methods can be accessed from an instance of `\Nelliel\PluginAPI` or from the function `nel_plugins()`.
+ API methods can be accessed from an instance of `\Nelliel\API\Plugin\PluginAPI` (preferred) or from the function `nel_plugins()`.
  
 ## Plugin Loading
 On start, Nelliel will scan the plugins directory for `nelliel-plugin.ini` files. Each file will be loaded, then the plugin initialization will proceed:

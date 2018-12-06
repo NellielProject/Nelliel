@@ -10,7 +10,7 @@ function nel_plugins()
 
     if (!isset($plugins))
     {
-        $plugins = new \Nelliel\API\PluginAPI();
+        $plugins = new \Nelliel\API\Plugin\PluginAPI();
     }
 
     return $plugins;
