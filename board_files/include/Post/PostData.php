@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel\post;
+namespace Nelliel\Post;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -28,7 +28,7 @@ class PostData
             $post->content_id->thread_id = $post->content_data['parent_thread'];
         }
 
-        $post->content_data['reply_to'] = $post->content_data['reply_to']; // This may enable nested posts in the future
+        $post->content_data['reply_to'] = $post->content_data['parent_thread']; // This may enable nested posts in the future
         $post->content_data['ip_address'] = inet_pton($_SERVER['REMOTE_ADDR']);
         $post->content_data['poster_name'] = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
         $post->content_data['email'] = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string');

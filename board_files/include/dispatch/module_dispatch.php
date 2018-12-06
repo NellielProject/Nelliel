@@ -123,7 +123,8 @@ function nel_module_dispatch($inputs)
             if ($inputs['action'] === 'new-post')
             {
                 require_once INCLUDE_PATH . 'post/post.php';
-                nel_process_new_post($inputs);
+                $new_post = new \Nelliel\Post\NewPost(nel_database(), $inputs['board_id']);
+                $new_post->processPost();
                 $board_references = nel_parameters_and_data()->boardReferences($inputs['board_id']);
 
                 if ($fgsfds->getCommand('noko') !== false)
@@ -323,4 +324,6 @@ function nel_module_dispatch($inputs)
         default:
             break;
     }
+
+    nel_plugins()->processHook('nel-in-after-module-dispatch', array());
 }

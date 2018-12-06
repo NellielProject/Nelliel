@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel\post;
+namespace Nelliel\Post;
 
 use PDO;
 
@@ -25,7 +25,7 @@ class FilesUpload
 
     public function processFiles($response_to)
     {
-        $data_handler = new \Nelliel\post\PostData($this->board_id, $this->authorization);
+        $data_handler = new PostData($this->board_id, $this->authorization);
         $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
         $post_data = $file_count = 1;
