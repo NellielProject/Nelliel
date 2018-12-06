@@ -45,6 +45,7 @@ class JSONContent extends JSONBase
         $this->addIfNotEmpty($content_array, 'url', bin2hex($data['url']), 'string');
         $this->addIfNotEmpty($content_array, 'exif', bin2hex($data['exif']), 'string');
         $this->addIfNotEmpty($content_array, 'meta', bin2hex($data['meta']), 'string');
+        $content_array = nel_plugins()->processHook('nel-json-prepare-content', array($data), $content_array);
         return $content_array;
     }
 

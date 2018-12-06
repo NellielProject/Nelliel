@@ -31,6 +31,7 @@ class JSONThread extends JSONBase
         $thread_array['thread_sage'] = nel_cast_to_datatype($data['thread_sage'], 'boolean');
         $thread_array['sticky'] = nel_cast_to_datatype($data['sticky'], 'boolean');
         $thread_array['locked'] = nel_cast_to_datatype($data['locked'], 'boolean');
+        $thread_array = nel_plugins()->processHook('nel-json-prepare-thread', array($data), $thread_array);
         return $thread_array;
     }
 
