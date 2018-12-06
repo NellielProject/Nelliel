@@ -50,6 +50,7 @@ class SQLTables
         CREATE TABLE " . $table_name . " (
             post_number           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             parent_thread           INTEGER DEFAULT NULL,
+            reply_to                INTEGER DEFAULT NULL,
             poster_name             VARCHAR(255) NULL DEFAULT '',
             post_password           VARCHAR(255) NULL DEFAULT '',
             tripcode                VARCHAR(255) NULL DEFAULT '',

@@ -58,7 +58,7 @@ class ContentPost extends ContentBase
         {
             $prepared = $database->prepare(
                     'UPDATE "' . $board_references['post_table'] . '" SET "parent_thread" = :parent_thread,
-                    "poster_name" = :poster_name, "post_password" = :post_password,
+                    "poster_name" = :poster_name, "reply_to" = :reply_to, "post_password" = :post_password,
                     "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "email" = :email,
                     "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address,
                     "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_file" = :has_file, "file_count" = :file_count,
@@ -69,7 +69,7 @@ class ContentPost extends ContentBase
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . $board_references['post_table'] . '" ("parent_thread", "poster_name", "post_password", "tripcode", "secure_tripcode", "email",
+                    'INSERT INTO "' . $board_references['post_table'] . '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "email",
                     "subject", "comment", "ip_address", "post_time", "post_time_milli", "has_file", "file_count", "op", "sage", "mod_post", "mod_comment") VALUES
                     (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :email, :subject, :comment, :ip_address, :post_time, :post_time_milli, :has_file, :file_count,
                     :op, :sage, :mod_post, :mod_comment)');
@@ -77,6 +77,7 @@ class ContentPost extends ContentBase
 
         $prepared->bindValue(':parent_thread',
                 $this->contentDataOrDefault('parent_thread', $this->content_id->thread_id), PDO::PARAM_INT);
+        $prepared->bindValue(':reply_to', $this->contentDataOrDefault('reply_to', $this->content_id->thread_id), PDO::PARAM_INT);
         $prepared->bindValue(':poster_name', $this->contentDataOrDefault('poster_name', null), PDO::PARAM_STR);
         $prepared->bindValue(':post_password', $this->contentDataOrDefault('post_password', null), PDO::PARAM_STR);
         $prepared->bindValue(':tripcode', $this->contentDataOrDefault('tripcode', null), PDO::PARAM_STR);
