@@ -26,6 +26,7 @@ class JSONPost extends JSONBase
         $post_array = array();
         $post_array['post_number'] = nel_cast_to_datatype($data['post_number'], 'integer');
         $post_array['parent_thread'] = nel_cast_to_datatype($data['parent_thread'], 'integer');
+        $post_array['reply_to'] = nel_cast_to_datatype($data['reply_to'], 'integer');
         $this->addIfNotEmpty($post_array, 'poster_name', $data['poster_name'], 'string');
         $this->addIfNotEmpty($post_array, 'tripcode', $data['tripcode'], 'string');
         $this->addIfNotEmpty($post_array, 'secure_tripcode', $data['secure_tripcode'], 'string');
@@ -40,5 +41,20 @@ class JSONPost extends JSONBase
         $post_array['sage'] = nel_cast_to_datatype($data['sage'], 'boolean');
         $this->addIfNotEmpty($post_array, 'mod_comment', $data['mod_comment'], 'string');
         return $post_array;
+    }
+
+    public function storeData($data)
+    {
+        $this->data_array = $data;
+    }
+
+    public function getStoredData()
+    {
+        return $this->data_array;
+    }
+
+    public function addContentData($content_data)
+    {
+        $this->data_array['content'][$content_data['content_order']] = $content_data;
     }
 }

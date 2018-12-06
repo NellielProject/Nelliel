@@ -18,6 +18,10 @@ abstract class JSONBase
 
     public abstract function prepareData($data);
 
+    public abstract function storeData($data);
+
+    public abstract function getStoredData();
+
     protected function addIfNotEmpty(&$data, $key, $value, $type)
     {
         if ($value === null)

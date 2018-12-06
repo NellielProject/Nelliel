@@ -23,8 +23,8 @@ class JSONThread extends JSONBase
         $this->file_path = $page_path;
         $filename_format = nel_parameters_and_data()->siteSettings('thread_filename_format');
         $this->file_name = sprintf('thread-%d', $thread_id);
-        $this->json_post = new \Nelliel\API\JSON\JSONPost($this->board_id);
-        $this->json_content = new \Nelliel\API\JSON\JSONContent($this->board_id);
+        $this->json_post = new JSONPost($this->board_id);
+        $this->json_content = new JSONContent($this->board_id);
     }
 
     public function writeJSON()
@@ -49,19 +49,23 @@ class JSONThread extends JSONBase
         return $thread_array;
     }
 
+    public function storeData($data)
+    {
+        $this->data_array = $data;
+    }
+
+    public function getStoredData()
+    {
+        return $this->data_array;
+    }
+
     public function addThreadData($thread_data)
     {
-        $this->data_array['thread'] = $this->prepareData($thread_data);
+        $this->data_array['thread'] = $thread_data;
     }
 
     public function addPostData($post_data)
     {
-        $this->data_array['posts'][$post_data['post_number']] = $this->json_post->prepareData($post_data);
-    }
-
-    public function addContentData($content_data)
-    {
-        $this->data_array['posts'][$content_data['post_ref']]['content'][$content_data['content_order']] = $this->json_content->prepareData(
-                $content_data);
+        $this->data_array['posts'][] = $post_data;
     }
 }

@@ -51,4 +51,14 @@ class JSONContent extends JSONBase
         $this->addIfNotEmpty($content_array, 'meta', bin2hex($data['meta']), 'string');
         return $content_array;
     }
+
+    public function storeData($data)
+    {
+        $this->data_array = $data;
+    }
+
+    public function getStoredData()
+    {
+        return $this->data_array;
+    }
 }
