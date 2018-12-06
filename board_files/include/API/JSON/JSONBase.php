@@ -14,13 +14,13 @@ abstract class JSONBase
     protected $file_path;
     protected $file_name;
 
-    public abstract function writeJSON();
-
     public abstract function prepareData($data);
 
     public abstract function storeData($data);
 
     public abstract function getStoredData();
+
+    public abstract function writeStoredData($file_path, $file_name);
 
     protected function addIfNotEmpty(&$data, $key, $value, $type)
     {

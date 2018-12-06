@@ -11,26 +11,11 @@ class JSONThread extends JSONBase
 {
     private $board_id;
     private $thread_id;
-    private $json_post;
-    private $json_content;
 
-    function __construct($board_id, $file_handler, $thread_id)
+    function __construct($board_id, $file_handler)
     {
         $this->board_id = $board_id;
         $this->file_handler = $file_handler;
-        $board_path = nel_parameters_and_data()->boardReferences($board_id, 'board_path');
-        $page_path = nel_parameters_and_data()->boardReferences($board_id, 'page_path') . $thread_id . '/';
-        $this->file_path = $page_path;
-        $filename_format = nel_parameters_and_data()->siteSettings('thread_filename_format');
-        $this->file_name = sprintf('thread-%d', $thread_id);
-        $this->json_post = new JSONPost($this->board_id);
-        $this->json_content = new JSONContent($this->board_id);
-    }
-
-    public function writeJSON()
-    {
-        $json_data = json_encode($this->data_array);
-        $this->file_handler->writeFile($this->file_path . $this->file_name . JSON_EXT, $json_data);
     }
 
     public function prepareData($data)
@@ -57,6 +42,12 @@ class JSONThread extends JSONBase
     public function getStoredData()
     {
         return $this->data_array;
+    }
+
+    public function writeStoredData($file_path, $file_name)
+    {
+        $json_data = json_encode($this->data_array);
+        $this->file_handler->writeFile($file_path . $file_name . JSON_EXT, $json_data);
     }
 
     public function addThreadData($thread_data)

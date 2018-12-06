@@ -11,14 +11,10 @@ class JSONPost extends JSONBase
 {
     private $board_id;
 
-    function __construct($board_id)
+    function __construct($board_id, $file_handler)
     {
         $this->board_id = $board_id;
-    }
-
-    public function writeJSON()
-    {
-        ;
+        $this->file_handler = $file_handler;
     }
 
     public function prepareData($data)
@@ -51,6 +47,11 @@ class JSONPost extends JSONBase
     public function getStoredData()
     {
         return $this->data_array;
+    }
+
+    public function writeStoredData($file_path, $file_name)
+    {
+        ;
     }
 
     public function addContentData($content_data)

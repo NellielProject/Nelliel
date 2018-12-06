@@ -84,6 +84,11 @@ function nel_numeric_html_entities_to_utf8(&$input)
 
 function nel_cast_to_datatype($value, $datatype)
 {
+    if(is_null($value))
+    {
+        return $value;
+    }
+
     if ($datatype === 'bool' || $datatype === 'boolean')
     {
         return (bool) $value;
