@@ -127,6 +127,7 @@ class ParametersAndData
             $board_path = BASE_PATH . $board_data['board_directory'] . '/';
             $new_reference['board_directory'] = $board_data['board_directory'];
             $new_reference['db_prefix'] = $board_data['db_prefix'];
+            $new_reference['locked'] = $board_data['locked'];
             $new_reference['src_dir'] = 'src';
             $new_reference['thumb_dir'] = 'thumb';
             $new_reference['page_dir'] = 'threads';

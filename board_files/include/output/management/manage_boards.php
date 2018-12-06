@@ -39,9 +39,25 @@ function nel_render_manage_boards_panel($user)
         $board_nodes['board-id']->setContent($board_info['board_id']);
         $board_nodes['board-directory']->setContent($board_info['board_directory']);
         $board_nodes['db-prefix']->setContent($board_info['db_prefix']);
-        $board_nodes['link-board-remove']->extSetAttribute('href',
-                $url_constructor->dynamic($base_path,
-                        ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'remove']));
+
+        if ($board_info['locked'] == 0)
+        {
+            $board_nodes['status']->setContent(_gettext('Active'));
+            $board_nodes['link-board-lock']->extSetAttribute('href',
+                    $url_constructor->dynamic($base_path,
+                            ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'lock']));
+            $board_nodes['link-board-lock']->setContent(_gettext('Lock Board'));
+        }
+        else
+        {
+            $board_nodes['status']->setContent(_gettext('Locked'));
+            $board_nodes['link-board-lock']->extSetAttribute('href',
+                    $url_constructor->dynamic($base_path,
+                            ['module' => 'manage-boards', 'board_id' => $board_info['board_id'],
+                                'action' => 'unlock']));
+            $board_nodes['link-board-lock']->setContent(_gettext('Unlock Board'));
+        }
+
         $board_info_table->appendChild($temp_board_info_row);
     }
 

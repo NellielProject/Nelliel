@@ -35,6 +35,16 @@ class AdminManageBoards extends AdminBase
             $this->remove($user);
             $this->renderPanel($user);
         }
+        else if ($inputs['action'] === 'lock')
+        {
+            $this->lock($user);
+            $this->renderPanel($user);
+        }
+        else if ($inputs['action'] === 'unlock')
+        {
+            $this->unlock($user);
+            $this->renderPanel($user);
+        }
         else
         {
             $this->renderPanel($user);
@@ -105,5 +115,29 @@ class AdminManageBoards extends AdminBase
 
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->eraserGun($board_references['board_path'], null, true);
+    }
+
+    public function lock($user)
+    {
+        if (!$user->boardPerm('', 'perm_manage_boards_modify'))
+        {
+            nel_derp(373, _gettext('You are not allowed to modify boards.'));
+        }
+
+        $board_id = $_GET['board_id'];
+        $prepared = $this->database->prepare('UPDATE "' . BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
+        $this->database->executePrepared($prepared, [$board_id]);
+    }
+
+    public function unlock($user)
+    {
+        if (!$user->boardPerm('', 'perm_manage_boards_modify'))
+        {
+            nel_derp(373, _gettext('You are not allowed to modify boards.'));
+        }
+
+        $board_id = $_GET['board_id'];
+        $prepared = $this->database->prepare('UPDATE "' . BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
+        $this->database->executePrepared($prepared, [$board_id]);
     }
 }

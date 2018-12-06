@@ -332,7 +332,8 @@ class SQLTables
             entry                   " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             board_id                VARCHAR(255) NOT NULL,
             board_directory         VARCHAR(255) NOT NULL,
-            db_prefix               VARCHAR(255) NOT NULL
+            db_prefix               VARCHAR(255) NOT NULL,
+            locked                  SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
         $result = $this->createTableQuery($schema, $table_name);
