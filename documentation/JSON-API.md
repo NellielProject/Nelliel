@@ -9,7 +9,7 @@ NOTE: This API is **not** directly compatible with the 4chan or vichan APIs.
 **API Version:** 0.2
 
 ## Thread JSON
-**Location:** http(s)://`<site url>`/`<board directory>`/threads/`<thread id>`/thread-`<thead id>`.json
+**Location:** http(s)://`<site url>`/`<board directory>`/threads/`<thread id>`/thread-`<thread id>`.json
 Will contain one thread object followed by a `posts` object which may contain one or more post objects. Each post object may contain one or more content objects.
 
 ### Thread object
