@@ -1,5 +1,24 @@
 # Nelliel Changelog
+## v0.9.12 (2018/12/6)
+### Added
+ - v0.2 of JSON API
+ - `reply_to` column in posts table
+ - JSONPost and JSONContent classes
+ - Add board lock option (doesn't do anything yet)
+
+### Changed
+ - Restructuring of JSON API processing
+ - Update documentation
+ - Convert `post.php` to NewPost class
+ 
+### Fixed
+ - Pop-ups for post links
+
 ## v0.9.11.4 (2018/12/4)
+### Added
+ - v0.1 of JSON API
+ - New site setting for custom output filenames
+
 ### Changed
  - Regen no longer calls the archive/prune functions
  - Archive and prune access simplified
@@ -9,19 +28,15 @@
 ### Fixed
  - Not deleting when moved to archive
 
-### Added
- - v0.1 of JSON API
- - New site setting for custom output filenames
-
 ### Removed
  - Old `JSONAPI.php`
 
-## v0.9.11.2 (2018/11/09)
-### Breaking
- - Change file table to content table
-
-
 ## v0.9.11.3 (2018/11/29)
+### Added
+ - Standard redirect function
+ - New `FileTypes` class
+ - Support for .ai, .ps, .eps, .xlsx, .pptx, .docx extensions
+
 ### Changed
  - Overhauls of HTML and CSS
  - Update Javascript functions to use content ids
@@ -33,14 +48,12 @@
  - Non-noko redirect going to home page
  - File formats showing in rules even when parent category is disabled
 
-### Added
- - Standard redirect function
- - New `FileTypes` class
- - Support for .ai, .ps, .eps, .xlsx, .pptx, .docx extensions
-
 ## v0.9.11.2 (2018/11/09)
 ### Breaking
  - Change file table to content table
+
+### Added
+ - Option to only allow sessions over secure connections
 
 ### Changed
  - Update schema markers
@@ -54,9 +67,6 @@
  - WebM regex
  - Session check during posting
  - IP not being stored for posts
-
-### Added
- - Option to only allow sessions over secure connections
 
 ## v0.9.11.1 (2018/11/07)
 ### Changed
