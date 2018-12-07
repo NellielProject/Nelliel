@@ -134,6 +134,11 @@ class ContentPost extends ContentBase
             return false;
         }
 
+        if(!$perm_override && nel_parameters_and_data()->boardReferences($this->board_id, 'locked'))
+        {
+            nel_derp(52, _gettext('Cannot remove post. Board is locked.'));
+        }
+
         $this->removeFromDatabase();
         $this->removeFromDisk();
         $thread = new ContentThread($this->database, $this->content_id, $this->board_id);
@@ -141,7 +146,7 @@ class ContentPost extends ContentBase
         return true;
     }
 
-    public function removeFromDatabase($temp_database = null)
+    protected function removeFromDatabase($temp_database = null)
     {
         if (empty($this->content_id->post_id))
         {
@@ -155,7 +160,7 @@ class ContentPost extends ContentBase
         return true;
     }
 
-    public function removeFromDisk()
+    protected function removeFromDisk()
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $file_handler = new \Nelliel\FileHandler();

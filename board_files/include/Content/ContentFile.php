@@ -128,6 +128,11 @@ class ContentFile extends ContentBase
             return false;
         }
 
+        if(!$perm_override && nel_parameters_and_data()->boardReferences($this->board_id, 'locked'))
+        {
+            nel_derp(51, _gettext('Cannot remove file. Board is locked.'));
+        }
+
         $this->removeFromDisk();
         $this->removeFromDatabase();
         $post = new ContentPost($this->database, $this->content_id, $this->board_id);
@@ -136,7 +141,7 @@ class ContentFile extends ContentBase
         $thread->updateCounts();
     }
 
-    public function removeFromDatabase($temp_database = null)
+    protected function removeFromDatabase($temp_database = null)
     {
         if (empty($this->content_id->order_id))
         {
@@ -151,7 +156,7 @@ class ContentFile extends ContentBase
         return true;
     }
 
-    public function removeFromDisk()
+    protected function removeFromDisk()
     {
         $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
 

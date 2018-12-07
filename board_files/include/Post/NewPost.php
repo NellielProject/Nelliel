@@ -22,8 +22,14 @@ class NewPost
 
     public function processPost()
     {
-        $authorization = new \Nelliel\Auth\Authorization($this->database);
         $error_data = array('board_id' => $this->board->id());
+
+        if($this->board->reference('locked'))
+        {
+                nel_derp(23, _gettext('Board is locked. Cannot make new post.'), $error_data);
+        }
+
+        $authorization = new \Nelliel\Auth\Authorization($this->database);
         $archive = new \Nelliel\ArchiveAndPrune($this->database, $this->board, new \Nelliel\FileHandler());
         $file_handler = new \Nelliel\FileHandler();
         $file_upload = new FilesUpload($this->board, $_FILES, $authorization);
@@ -168,8 +174,8 @@ class NewPost
 
             // Generate response page if it doesn't exist, otherwise update
             $regen = new \Nelliel\Regen();
-            $regen->threads($this->board->id(), true, array($thread->content_id->thread_id));
-            $regen->index($this->board->id());
+            $regen->threads($this->board, true, array($thread->content_id->thread_id));
+            $regen->index($this->board);
             return $thread->content_id->thread_id;
     }
 

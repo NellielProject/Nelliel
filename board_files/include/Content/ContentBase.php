@@ -47,9 +47,9 @@ abstract class ContentBase
 
     public abstract function remove();
 
-    public abstract function removeFromDatabase($temp_database = null);
+    protected abstract function removeFromDatabase($temp_database = null);
 
-    public abstract function removeFromDisk();
+    protected abstract function removeFromDisk();
 
     public abstract function updateCounts();
 

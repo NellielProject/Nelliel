@@ -21,8 +21,12 @@ Error 19: Filetype not allowed. (Post/FilesUpload.php)
 Error 20: Filetype does not match esxtension. (Post/FilesUpload.php)  
 Error 21: Duplicate file. (Post/FilesUpload.php)  
 Error 22: Banned file. (Post/FilesUpload.php)  
+Error 23: No new post, board locked. (Post/NewPost.php)  
 
 Error 50: Password does not match post. (Content/ContentPost.php)  
+Error 51: Board locked, can't remove file. (Content/ContentFile.php)  
+Error 52: Board locked, can't remove post. (Content/ContentPost.php)  
+Error 53: Board locked, can't remove thread. (Content/ContentThread.php)  
 
 Error 60: Filename purged by filter. (classes/FileHandler.php)  
 
