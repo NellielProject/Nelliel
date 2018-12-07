@@ -11,17 +11,13 @@ require_once INCLUDE_PATH . 'output/management/file_filter_panel.php';
 
 class AdminFileFilters extends AdminBase
 {
-    private $board_id = '';
+    private $board;
 
-    function __construct($database, $authorization, $board_id = null)
+    function __construct($database, $authorization, $board)
     {
         $this->database = $database;
         $this->authorization = $authorization;
-
-        if(!is_null($board_id))
-        {
-            $this->board_id = $board_id;
-        }
+        $this->board = $board;
     }
 
     public function actionDispatch($inputs)
@@ -45,7 +41,7 @@ class AdminFileFilters extends AdminBase
 
     public function renderPanel($user)
     {
-        nel_render_file_filter_panel($user, $this->board_id);
+        nel_render_file_filter_panel($user, $this->board);
     }
 
     public function creator($user)
@@ -84,7 +80,7 @@ class AdminFileFilters extends AdminBase
 
     public function remove($user)
     {
-        if (!$user->boardPerm($this->board_id, 'perm_file_filters_delete'))
+        if (!$user->boardPerm($this->board->id(), 'perm_file_filters_delete'))
         {
             nel_derp(342, _gettext('You are not allowed to remove file filters.'));
         }

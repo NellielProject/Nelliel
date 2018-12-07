@@ -68,50 +68,6 @@ class ParametersAndData
         return self::$site_settings[$setting];
     }
 
-    public function boardSettings($board_id, $setting = null, $cache_regen = false)
-    {
-        if ($board_id === '' || is_null($board_id))
-        {
-            return;
-        }
-
-        if (empty(self::$board_settings[$board_id]) || $cache_regen)
-        {
-            $settings = $this->cache_handler->loadArrayFromCache($board_id . '/board_settings.php', 'board_settings');
-
-            if (empty($settings) || $cache_regen)
-            {
-                $prepared = $this->database->prepare(
-                        'SELECT "db_prefix" FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
-                $db_prefix = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
-                $config_table = $db_prefix . '_config';
-                $config_list = $this->database->executeFetchAll(
-                        'SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
-
-                foreach ($config_list as $config)
-                {
-                    $config['setting'] = nel_cast_to_datatype($config['setting'], $config['data_type']);
-                    $settings[$config['config_name']] = $config['setting'];
-                }
-
-                if (USE_INTERNAL_CACHE || $cache_regen)
-                {
-                    $this->cache_handler->writeCacheFile(CACHE_PATH . $board_id . '/', 'board_settings.php',
-                            '$board_settings = ' . var_export($settings, true) . ';');
-                }
-            }
-
-            self::$board_settings[$board_id] = $settings;
-        }
-
-        if (is_null($setting))
-        {
-            return self::$board_settings[$board_id];
-        }
-
-        return self::$board_settings[$board_id][$setting];
-    }
-
     public function boardReferences($board_id, $reference = null)
     {
         if ($board_id === '' || is_null($board_id))

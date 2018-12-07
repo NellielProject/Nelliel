@@ -4,25 +4,24 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_thread_panel_main($user, $board_id)
+function nel_render_thread_panel_main($user, $board)
 {
-    if (!$user->boardPerm($board_id, 'perm_threads_access'))
+    if (!$user->boardPerm($board->id(), 'perm_threads_access'))
     {
         nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
     }
 
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
-    $references = nel_parameters_and_data()->boardReferences($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, $board_id,
+    nel_render_general_header($render, null, $board->id(),
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Threads')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel.html');
     $thread_data = $database->executeFetchAll(
-            'SELECT * FROM "' . $references['thread_table'] .
+            'SELECT * FROM "' . $board->reference('thread_table') .
             '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC', PDO::FETCH_ASSOC);
     $thread_list_table = $dom->getElementById('thread-list');
     $thread_row = $dom->getElementById('thread-row-');
@@ -33,7 +32,7 @@ function nel_render_thread_panel_main($user, $board_id)
         $temp_thread_row = $thread_row->cloneNode(true);
         $temp_thread_row->changeId('thread_row-' . $thread['thread_id']);
 
-        $prepared = $database->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "post_number" = ? LIMIT 1');
+        $prepared = $database->prepare('SELECT * FROM "' . $board->reference('post_table') . '" WHERE "post_number" = ? LIMIT 1');
         $prepared->bindValue(1, $thread['first_post'], PDO::PARAM_INT);
         $prepared->execute();
         $op_post = $prepared->fetch(PDO::FETCH_ASSOC);
@@ -53,14 +52,14 @@ function nel_render_thread_panel_main($user, $board_id)
         if ($thread['sticky'] == 1)
         {
             $sticky_thread_link->extSetAttribute('href',
-                    '?module=threads&board_id=' . $board_id . '&action=unsticky&content-id=' .
+                    '?module=threads&board_id=' . $board->id() . '&action=unsticky&content-id=' .
                     $base_content_id);
             $sticky_thread_link->setContent(_gettext('Unsticky Thread'));
         }
         else
         {
             $sticky_thread_link->extSetAttribute('href',
-                    '?module=threads&board_id=' . $board_id . '&action=sticky&content-id=' .
+                    '?module=threads&board_id=' . $board->id() . '&action=sticky&content-id=' .
                     $base_content_id);
         }
 
@@ -69,20 +68,20 @@ function nel_render_thread_panel_main($user, $board_id)
         if ($thread['locked'] == 1)
         {
             $lock_thread_link->extSetAttribute('href',
-                    '?module=threads&board_id=' . $board_id . '&action=unlock&content-id=' .
+                    '?module=threads&board_id=' . $board->id() . '&action=unlock&content-id=' .
                     $base_content_id);
             $lock_thread_link->setContent(_gettext('Unlock Thread'));
         }
         else
         {
             $lock_thread_link->extSetAttribute('href',
-                    '?module=threads&board_id=' . $board_id . '&action=lock&content-id=' .
+                    '?module=threads&board_id=' . $board->id() . '&action=lock&content-id=' .
                     $base_content_id);
         }
 
         $lock_thread_link = $temp_thread_row->getElementById('delete-thread-link-');
         $lock_thread_link->extSetAttribute('href',
-                '?module=threads&board_id=' . $board_id . '&action=delete-thread&content-id=' .
+                '?module=threads&board_id=' . $board->id() . '&action=delete-thread&content-id=' .
                 $base_content_id);
         $lock_thread_link->setContent(_gettext('Delete Thread'));
 
@@ -93,7 +92,7 @@ function nel_render_thread_panel_main($user, $board_id)
         $thread_subject_link = $temp_thread_row->getElementById('thread-subject-link-');
         $thread_subject_link->setContent($op_post['subject']);
         $thread_subject_link->extSetAttribute('href',
-                $references['page_dir'] . '/' . $thread['thread_id'] . '/' . $thread['thread_id'] . '.html', 'none');
+                $board->reference('page_dir') . '/' . $thread['thread_id'] . '/' . $thread['thread_id'] . '.html', 'none');
         $thread_subject_link->changeId('thread-subject-link-' . $thread['thread_id']);
 
         $thread_op_name = $temp_thread_row->getElementById('thread-op-name-');
@@ -132,9 +131,9 @@ function nel_render_thread_panel_main($user, $board_id)
     nel_clean_exit();
 }
 
-function nel_render_thread_panel_expand($user, $board_id, $thread_id)
+function nel_render_thread_panel_expand($user, $board, $thread_id)
 {
-    if (!$user->boardPerm($this->board_id, 'perm_threads_access'))
+    if (!$user->boardPerm($board->id(), 'perm_threads_access'))
     {
         nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
     }
@@ -142,17 +141,16 @@ function nel_render_thread_panel_expand($user, $board_id, $thread_id)
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
-    $references = nel_parameters_and_data()->boardReferences($board_id);
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, $board_id,
+    nel_render_general_header($render, null, $board->id(),
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Threads')));
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
     $dom->getElementById('thread-list-form')->extSetAttribute('action',
-            PHP_SELF . '?module=threads&action=update&board_id=' . $board_id);
-    $prepared = $database->prepare('SELECT * FROM "' . $references['post_table'] . '" WHERE "parent_thread" = ?');
+            PHP_SELF . '?module=threads&action=update&board_id=' . $board->id());
+    $prepared = $database->prepare('SELECT * FROM "' . $board->reference('post_table') . '" WHERE "parent_thread" = ?');
     $post_data = $database->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
     $post_list_table = $dom->getElementById('post-list');
     $post_row = $dom->getElementById('post-row-');
@@ -180,7 +178,7 @@ function nel_render_thread_panel_expand($user, $board_id, $thread_id)
         $post_subject_link = $temp_post_row->getElementById('post-subject-link-');
         $post_subject_link->setContent($post['subject']);
         $post_subject_link->extSetAttribute('href',
-                $references['page_dir'] . '/' . $post['parent_thread'] . '/' . $post['post_number'] . '.html', 'none');
+                $board->reference('page_dir') . '/' . $post['parent_thread'] . '/' . $post['post_number'] . '.html', 'none');
         $post_subject_link->changeId('post-subject-link-' . $post['post_number']);
 
         $post_name = $temp_post_row->getElementById('post-name-');

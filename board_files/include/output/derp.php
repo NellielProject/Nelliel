@@ -4,9 +4,10 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_derp($diagnostic, $board_id = null)
+function nel_render_derp($diagnostic, $board_id = '')
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $board = new \Nelliel\Board($board_id, new \Nelliel\CacheHandler(), nel_database());
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
@@ -20,24 +21,21 @@ function nel_render_derp($diagnostic, $board_id = null)
     $session = new \Nelliel\Session($authorization);
     $url_constructor = new \Nelliel\URLConstructor();
 
-    if (!is_null($board_id))
-    {
-        if ($session->inModmode($board_id))
+        if ($session->inModmode($board->id()))
         {
             $return_link = $url_constructor->dynamic(PHP_SELF,
                     ['manage' => 'true', 'module' => 'render', 'action' => 'view-index', 'section' => '0',
-                        'board_id' => $board_id, 'modmode' => 'true']);
+                        'board_id' => $board->id(), 'modmode' => 'true']);
         }
         else
         {
             $return_link = $dom->getElementById('return-link')->extSetAttribute('href',
-                    nel_parameters_and_data()->boardReferences($board_id, 'board_directory') . '/' . PHP_SELF2 . PHP_EXT);
+                    nel_parameters_and_data()->boardReferences($board->id(), 'board_directory') . '/' . PHP_SELF2 . PHP_EXT);
         }
-    }
 
-    $do_styles = (is_null($board_id)) ? false : true;
+    $do_styles = ($board->id() === '') ? false : true;
     $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render, $board_id, null, $do_styles);
+    nel_render_general_footer($render, $board, null, $do_styles);
     echo $render->outputRenderSet();
 }

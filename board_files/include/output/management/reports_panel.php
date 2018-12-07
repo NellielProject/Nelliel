@@ -4,9 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_reports_panel($user, $board_id = '')
+function nel_render_reports_panel($user, $board)
 {
-    if (!$user->boardPerm($board_id, 'perm_reports_access'))
+    if (!$user->boardPerm($board->id(), 'perm_reports_access'))
     {
         nel_derp(380, _gettext('You are not allowed to access the reports panel.'));
     }
@@ -22,11 +22,11 @@ function nel_render_reports_panel($user, $board_id = '')
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/reports_panel.html');
 
-    if ($board_id !== '')
+    if ($board->id() !== '')
     {
         $prepared = $database->prepare(
                 'SELECT * FROM "' . REPORTS_TABLE . '" WHERE "board_id" = ? ORDER BY "report_id" DESC');
-        $report_list = $database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_ASSOC);
+        $report_list = $database->executePreparedFetchAll($prepared, [$board->id()], PDO::FETCH_ASSOC);
     }
     else
     {

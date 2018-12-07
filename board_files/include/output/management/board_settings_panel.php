@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_board_settings_panel($board_id, $defaults)
+function nel_render_board_settings_panel($board, $defaults)
 {
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
@@ -25,12 +25,11 @@ function nel_render_board_settings_panel($board_id, $defaults)
     }
     else
     {
-        $references = nel_parameters_and_data()->boardReferences($board_id);
-        nel_render_general_header($render, null, $board_id,
+        nel_render_general_header($render, null, $board->id(),
                 array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')));
-        $result = $database->query('SELECT * FROM "' . $references['config_table'] . '"');
+        $result = $database->query('SELECT * FROM "' . $board->reference('config_table') . '"');
         $dom->getElementById('board-settings-form')->extSetAttribute('action',
-                PHP_SELF . '?module=board-settings&action=update&board_id=' . $board_id);
+                PHP_SELF . '?module=board-settings&action=update&board_id=' . $board->id());
     }
 
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -113,9 +112,9 @@ function nel_render_board_settings_panel($board_id, $defaults)
         }
     }
 
-    $translator->translateDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    $translator->translateDom($dom, $board->setting('board_language'));
     $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render);
+    nel_render_general_footer($render, $board);
     echo $render->outputRenderSet();
     nel_clean_exit();
 }

@@ -11,18 +11,14 @@ require_once INCLUDE_PATH . 'output/management/reports_panel.php';
 
 class AdminReports extends AdminBase
 {
-    private $board_id = '';
+    private $board;
     private $defaults = false;
 
-    function __construct($database, $authorization, $board_id = null)
+    function __construct($database, $authorization, $board)
     {
         $this->database = $database;
         $this->authorization = $authorization;
-
-        if(!is_null($board_id))
-        {
-            $this->board_id = $board_id;
-        }
+        $this->board = $board;
     }
 
     public function actionDispatch($inputs)
@@ -32,7 +28,7 @@ class AdminReports extends AdminBase
 
         if($inputs['action'] === 'dismiss')
         {
-            $this->dismiss($_GET['report_id']);
+            $this->dismiss($user, $_GET['report_id']);
             $this->renderPanel($user);
         }
         else if(isset($_POST['form_submit_report']))
@@ -47,7 +43,7 @@ class AdminReports extends AdminBase
 
     public function renderPanel($user)
     {
-        nel_render_reports_panel($user, $this->board_id);
+        nel_render_reports_panel($user, $this->board);
     }
 
     public function creator($user)
@@ -57,7 +53,6 @@ class AdminReports extends AdminBase
     public function add($user)
     {
         $report_data = array();
-        $report_data['board_id'] = (isset($_GET['board_id'])) ? $_GET['board_id'] : null;
         $report_data['reason'] = (isset($_POST['report_reason'])) ? $_POST['report_reason'] : null;
         $report_data['reporter_ip'] = $_SERVER['REMOTE_ADDR'];
         $base_content_id = new \Nelliel\ContentID();
@@ -80,7 +75,7 @@ class AdminReports extends AdminBase
                 '" ("board_id", "content_id", "reason", "reporter_ip") VALUES (?, ?, ?, ?)';
                 $prepared = $this->database->prepare($query);
                 $this->database->executePrepared($prepared,
-                        array($report_data['board_id'], $report_data['content_id'], $report_data['reason'],
+                        array($this->board->id(), $report_data['content_id'], $report_data['reason'],
                         @inet_pton($report_data['reporter_ip'])));
             }
         }
@@ -98,9 +93,9 @@ class AdminReports extends AdminBase
     {
     }
 
-    public function dismiss($report_id)
+    public function dismiss($user, $report_id)
     {
-        if (!$user->boardPerm($this->board_id, 'perm_reports_dismiss'))
+        if (!$user->boardPerm($this->board->id(), 'perm_reports_dismiss'))
         {
             nel_derp(381, _gettext('You are not allowed to dismiss reports.'));
         }

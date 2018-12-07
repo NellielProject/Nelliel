@@ -68,7 +68,7 @@ class Snacks
         $this->database->executePrepared($prepared, array($bawww, $ban_info['ban_id']));
     }
 
-    public function applyBan($inputs)
+    public function applyBan($inputs, $board)
     {
         $bans = $this->ban_hammer->getBansByIp($_SERVER['REMOTE_ADDR']);
         $ban_info = null;
@@ -84,7 +84,7 @@ class Snacks
 
             if (time() >= $length)
             {
-                $this->ban_hammer->removeBan($band['board_id'], $ban['ban_id'], true);
+                $this->ban_hammer->removeBan($board, $ban['ban_id'], true);
                 continue;
             }
 
@@ -124,7 +124,7 @@ class Snacks
             }
         }
 
-        nel_render_ban_page($inputs['board_id'], $ban_info);
+        nel_render_ban_page($board, $ban_info);
         nel_clean_exit();
     }
 }

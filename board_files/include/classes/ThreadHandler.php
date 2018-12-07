@@ -10,17 +10,16 @@ if (!defined('NELLIEL_VERSION'))
 class ThreadHandler
 {
     private $database;
-    private $board_id;
+    private $board;
 
-    function __construct($database, $board_id)
+    function __construct($database, $board)
     {
         $this->database = $database;
-        $this->board_id = $board_id;
+        $this->board = $board;
     }
 
     public function processContentDeletes()
     {
-        $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $updates = array();
         $update_archive = false;
 
@@ -39,18 +38,18 @@ class ThreadHandler
             {
                 if ($content_id->isThread())
                 {
-                    $thread = new \Nelliel\Content\ContentThread($this->database, $content_id, $this->board_id);
+                    $thread = new \Nelliel\Content\ContentThread($this->database, $content_id, $this->board->id());
                     $thread->remove();
                     $update_archive = true;
                 }
                 else if ($content_id->isPost())
                 {
-                    $post = new \Nelliel\Content\ContentPost($this->database, $content_id, $this->board_id);
+                    $post = new \Nelliel\Content\ContentPost($this->database, $content_id, $this->board->id());
                     $post->remove();
                 }
                 else if ($content_id->isFile())
                 {
-                    $file = new \Nelliel\Content\ContentFile($this->database, $content_id, $this->board_id);
+                    $file = new \Nelliel\Content\ContentFile($this->database, $content_id, $this->board->id());
                     $file->remove();
                 }
             }
@@ -63,12 +62,12 @@ class ThreadHandler
 
         if ($update_archive)
         {
-            $archive = new ArchiveAndPrune($this->database, $this->board_id, new FileHandler());
+            $archive = new ArchiveAndPrune($this->database, $this->board, new FileHandler());
             $archive->updateThreads();
         }
 
         $regen = new \Nelliel\Regen();
-        $regen->threads($this->board_id, true, $updates);
-        $regen->index($this->board_id);
+        $regen->threads($this->board->id(), true, $updates);
+        $regen->index($this->board->id());
     }
 }

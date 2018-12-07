@@ -11,7 +11,7 @@ function nel_render_insert_hr($dom)
     $dom->getElementById('form-content-action')->appendChild($hr);
 }
 
-function nel_render_index_navigation($board_id, $dom, $render, $pages)
+function nel_render_index_navigation($board, $dom, $render, $pages)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
@@ -39,15 +39,13 @@ function nel_render_index_navigation($board_id, $dom, $render, $pages)
     }
 
     $nav_nodes['nav-link-container']->remove();
-    $translator->translateDom($bottom_nav, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    $translator->translateDom($bottom_nav, $board->setting('board_language'));
 }
 
-function nel_render_post($board_id, $gen_data, $dom)
+function nel_render_post($board, $gen_data, $dom)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $session = new \Nelliel\Session($authorization);
-    $references = nel_parameters_and_data()->boardReferences($board_id);
-    $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $output_filter = new \Nelliel\OutputFilter();
     $response = $gen_data['post']['op'] != 1;
     $post_data = $gen_data['post'];
@@ -84,12 +82,12 @@ function nel_render_post($board_id, $gen_data, $dom)
     $indents_element = $new_post_dom->getElementById('indents');
     $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
 
-    $board_web_path = '//' . $base_domain . '/' . rawurlencode($references['board_directory']) . '/';
-    $pages_web_path = $board_web_path . rawurlencode($references['page_dir']) . '/';
+    $board_web_path = '//' . $base_domain . '/' . rawurlencode($board->reference('board_directory')) . '/';
+    $pages_web_path = $board_web_path . rawurlencode($board->reference('page_dir')) . '/';
     $thread_page_web_path = $pages_web_path . $thread_id . '/thread-' . $thread_id . '.html';
-    $src_web_path = $board_web_path . rawurlencode($references['src_dir']) . '/';
+    $src_web_path = $board_web_path . rawurlencode($board->reference('src_dir')) . '/';
     $thread_src_web_path = $src_web_path . $thread_id . '/';
-    $preview_web_path = $board_web_path . rawurlencode($references['thumb_dir']) . '/';
+    $preview_web_path = $board_web_path . rawurlencode($board->reference('thumb_dir')) . '/';
     $thread_preview_web_path = $preview_web_path . $thread_id . '/';
 
     if($response)
@@ -108,20 +106,20 @@ function nel_render_post($board_id, $gen_data, $dom)
     $header_nodes['hide-post']->extSetAttribute('data-content-id', $post_content_id->getIDString());
     $header_nodes['hide-post']->changeID('hide-post-' . $post_content_id->getIDString());
 
-    if ($session->inModmode($board_id))
+    if ($session->inModmode($board->id()))
     {
         $ip = @inet_ntop($post_data['ip_address']);
         $header_nodes['modmode-ip-address']->setContent($ip);
         $header_nodes['modmode-ban-link']->extSetAttribute('href',
-                '?module=bans&board_id=test&action=new&ban_type=POST&content-id=' . $post_content_id->getIDString() .
+                '?module=bans&board_id=' . $board->id() . '&action=new&ban_type=POST&content-id=' . $post_content_id->getIDString() .
                 '&ban_ip=' . rawurlencode($ip) . '&modmode=true');
 
         if ($response)
         {
             $header_nodes['modmode-delete-link']->extSetAttribute('href',
-                    '?module=threads&board_id=test&action=delete-post&content-id=' . $post_content_id->getIDString() . '&modmode=true');
+                    '?module=threads&board_id=' . $board->id() . '&action=delete-post&content-id=' . $post_content_id->getIDString() . '&modmode=true');
             $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
-                    '?module=multi&board_id=test&action=ban.delete-post&content-id=' . $post_content_id->getIDString() .
+                    '?module=multi&board_id=' . $board->id() . '&action=ban.delete-post&content-id=' . $post_content_id->getIDString() .
                     '&ban_type=POST&ban_ip=' . rawurlencode($ip) . '&modmode=true');
             $header_nodes['modmode-lock-thread-link']->parentNode->remove();
             $header_nodes['modmode-sticky-thread-link']->parentNode->remove();
@@ -129,33 +127,33 @@ function nel_render_post($board_id, $gen_data, $dom)
         else
         {
             $header_nodes['modmode-delete-link']->extSetAttribute('href',
-                    '?module=threads&board_id=test&action=delete-thread&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
+                    '?module=threads&board_id=' . $board->id() . '&action=delete-thread&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
             $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
-                    '?module=multi&board_id=test&action=ban.delete-thread&content-id=' . $thread_content_id->getIDString() .
+                    '?module=multi&board_id=' . $board->id() . '&action=ban.delete-thread&content-id=' . $thread_content_id->getIDString() .
                     '&ban_type=POST&ban_ip=' . rawurlencode($ip) . '&modmode=true');
 
             if ($thread_data['locked'] == 1)
             {
                 $header_nodes['modmode-lock-thread-link']->extSetAttribute('href',
-                        '?module=threads&board_id=test&action=unlock' . '&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
+                        '?module=threads&board_id=' . $board->id() . '&action=unlock' . '&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
                 $header_nodes['modmode-lock-thread-link']->setContent(_gettext('Unlock Thread'));
             }
             else
             {
                 $header_nodes['modmode-lock-thread-link']->extSetAttribute('href',
-                        '?module=threads&board_id=test&action=lock&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
+                        '?module=threads&board_id=' . $board->id() . '&action=lock&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
             }
 
             if ($thread_data['sticky'] == 1)
             {
                 $header_nodes['modmode-sticky-thread-link']->extSetAttribute('href',
-                        '?module=threads&board_id=test&action=unsticky&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
+                        '?module=threads&board_id=' . $board->id() . '&action=unsticky&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
                 $header_nodes['modmode-sticky-thread-link']->setContent(_gettext('Unsticky Thread'));
             }
             else
             {
                 $header_nodes['modmode-sticky-thread-link']->extSetAttribute('href',
-                        '?module=threads&board_id=test&action=sticky&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
+                        '?module=threads&board_id=' . $board->id() . '&action=sticky&content-id=' . $thread_content_id->getIDString() . '&modmode=true');
             }
         }
     }
@@ -173,7 +171,7 @@ function nel_render_post($board_id, $gen_data, $dom)
     {
         $post_container->extSetAttribute('class', 'reply-post');
 
-        $indents_element->setContent(nel_parameters_and_data()->boardSettings($board_id, 'indent_marker'));
+        $indents_element->setContent($board->setting('indent_marker'));
         $indents_element->removeAttribute('id');
         $header_nodes['post-select']->extSetAttribute('class', 'reply-post-select');
         $header_nodes['thread-select']->remove();
@@ -188,9 +186,9 @@ function nel_render_post($board_id, $gen_data, $dom)
     $header_nodes['subject']->setContent($post_data['subject']);
     $header_nodes['poster-name']->extSetAttribute('class', $post_type_class, 'subject');
 
-    $tripcode = (!empty($post_data['tripcode'])) ? $board_settings['tripkey_marker'] . $post_data['tripcode'] : '';
-    $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $board_settings['tripkey_marker'] .
-            $board_settings['tripkey_marker'] . $post_data['secure_tripcode'] : '';
+    $tripcode = (!empty($post_data['tripcode'])) ? $board->setting('tripkey_marker') . $post_data['tripcode'] : '';
+    $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $board->setting('tripkey_marker') .
+            $board->setting('tripkey_marker') . $post_data['secure_tripcode'] : '';
             $capcode_text = ($post_data['mod_post']) ? $authorization->getRole($post_data['mod_post'])->auth_data['capcode_text'] : '';
     $trip_line = $tripcode . $secure_tripcode . '&nbsp;&nbsp;' . $capcode_text;
     $header_nodes['trip-line']->extSetAttribute('class', $post_type_class . 'trip-line');
@@ -210,21 +208,21 @@ function nel_render_post($board_id, $gen_data, $dom)
 
     $curr_time = $gen_data['post']['post_time'];
 
-    switch ($board_settings['date_format'])
+    switch ($board->setting('date_format'))
     {
         case 'ISO':
-            $post_time = date("Y", $curr_time) . $board_settings['date_separator'] . date("m", $curr_time) .
-                    $board_settings['date_separator'] . date("d (D) H:i:s", $curr_time);
+            $post_time = date("Y", $curr_time) . $board->setting('date_separator') . date("m", $curr_time) .
+            $board->setting('date_separator') . date("d (D) H:i:s", $curr_time);
             break;
 
         case 'US':
-            $post_time = date("m", $curr_time) . $board_settings['date_separator'] . date("d", $curr_time) .
-                    $board_settings['date_separator'] . date("Y (D) H:i:s", $curr_time);
+            $post_time = date("m", $curr_time) . $board->setting('date_separator') . date("d", $curr_time) .
+            $board->setting('date_separator') . date("Y (D) H:i:s", $curr_time);
             break;
 
         case 'COM':
-            $post_time = date("d", $curr_time) . $board_settings['date_separator'] . date("m", $curr_time) .
-                    $board_settings['date_separator'] . date("Y (D) H:i:s", $curr_time);
+            $post_time = date("d", $curr_time) . $board->setting('date_separator') . date("m", $curr_time) .
+            $board->setting('date_separator') . date("Y (D) H:i:s", $curr_time);
             break;
     }
 
@@ -242,11 +240,11 @@ function nel_render_post($board_id, $gen_data, $dom)
     }
     else
     {
-        if ($session->inModmode($board_id))
+        if ($session->inModmode($board->id()))
         {
             $header_nodes['reply-to-link']->extSetAttribute('href',
                     PHP_SELF . '?module=render&action=view-thread&content-id=' . $thread_content_id->getIDString() . '&section=' .
-                    $thread_id . '&board_id=' . $board_id . '&modmode=true');
+                    $thread_id . '&board_id=' . $board->id() . '&modmode=true');
         }
         else
         {
@@ -303,10 +301,10 @@ function nel_render_post($board_id, $gen_data, $dom)
 
             $file_nodes = $temp_file_node->getElementsByAttributeName('data-parse-id', true);
 
-            if ($session->inModmode($board_id))
+            if ($session->inModmode($board->id()))
             {
                 $file_nodes['modmode-delete-link']->extSetAttribute('href',
-                        '?module=threads&board_id=test&action=delete-file&post-id=' .
+                        '?module=threads&board_id=' . $board->id() . '&action=delete-file&post-id=' .
                         $post_data['post_number'] . '&file-order=' . $file['content_order'] . '&modmode=true');
             }
             else
@@ -386,11 +384,11 @@ function nel_render_post($board_id, $gen_data, $dom)
                 $file_nodes['file-sha512']->remove();
             }
 
-            if ($board_settings['use_thumb'])
+            if ($board->setting('use_thumb'))
             {
                 if ($file['format'] == 'webm' || $file['format'] == 'mpeg4')
                 {
-                    $file_nodes['video-preview']->extSetAttribute('width', $board_settings['max_width']);
+                    $file_nodes['video-preview']->extSetAttribute('width', $board->setting('max_width'));
                     $file_nodes['video-preview-source']->extSetAttribute('src', $file['file_location']);
                     $file_nodes['video-preview-source']->extSetAttribute('type', $file['mime']);
                     $file_nodes['file-location']->remove();
@@ -411,17 +409,17 @@ function nel_render_post($board_id, $gen_data, $dom)
 
                         if ($filecount > 1)
                         {
-                            if ($file['preview_width'] > $board_settings['max_multi_width'] ||
-                                    $file['preview_height'] > $board_settings['max_multi_height'])
+                            if ($file['preview_width'] > $board->setting('max_multi_width') ||
+                                    $file['preview_height'] > $board->setting('max_multi_height'))
                             {
-                                $ratio = min(($board_settings['max_multi_height'] / $file['preview_height']),
-                                        ($board_settings['max_multi_width'] / $file['preview_width']));
+                                $ratio = min(($board->setting('max_multi_height') / $file['preview_height']),
+                                        ($board->setting('max_multi_width') / $file['preview_width']));
                                 $file['preview_width'] = intval($ratio * $file['preview_width']);
                                 $file['preview_height'] = intval($ratio * $file['preview_height']);
                             }
                         }
                     }
-                    else if ($board_settings['use_file_icon'])
+                    else if ($board->setting('use_file_icon'))
                     {
                         $format_icon = utf8_strtolower($file['format']) . '.png';
                         $type_icon = utf8_strtolower($file['type']) . '.png';
@@ -433,16 +431,16 @@ function nel_render_post($board_id, $gen_data, $dom)
                             $file['has_preview'] = true;
                             $file['preview_location'] = '//' . $base_domain . '/web/imagez/nelliel/filetype/' .
                                     utf8_strtolower($file['format']) . '/' . $format_icon;
-                            $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
-                            $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
+                                    $file['preview_width'] = ($board->setting('max_width') < 128) ? $board->setting('max_width') : '128';
+                                    $file['preview_height'] = ($board->setting('max_height') < 128) ? $board->setting('max_height') : '128';
                         }
                         else if (file_exists(WEB_PATH . 'imagez/nelliel/filetype/generic/' . $type_icon))
                         {
                             $file['has_preview'] = true;
                             $file['preview_location'] = '//' . $base_domain . '/web/imagez/nelliel/filetype/generic/' .
                                     $type_icon;
-                            $file['preview_width'] = ($board_settings['max_width'] < 128) ? $board_settings['max_width'] : '128';
-                            $file['preview_height'] = ($board_settings['max_height'] < 128) ? $board_settings['max_height'] : '128';
+                                    $file['preview_width'] = ($board->setting('max_width') < 128) ? $board->setting('max_width') : '128';
+                                    $file['preview_height'] = ($board->setting('max_height') < 128) ? $board->setting('max_height') : '128';
                         }
                     }
 
@@ -510,7 +508,7 @@ function nel_render_post($board_id, $gen_data, $dom)
                 $append_target = $quote_result;
             }
 
-            $output_filter->postQuoteLink($board_id, $append_target, $line);
+            $output_filter->postQuoteLink($board->id(), $append_target, $line);
             $append_target->appendChild($new_post_dom->createElement('br'));
         }
     }
@@ -518,16 +516,15 @@ function nel_render_post($board_id, $gen_data, $dom)
     return $new_post_element;
 }
 
-function nel_render_thread_form_bottom($board_id, $dom)
+function nel_render_thread_form_bottom($board, $dom)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $session = new \Nelliel\Session($authorization);
-    $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $footer_form_element = $dom->getElementById('footer-form');
     $form_td_list = $footer_form_element->doXPathQuery(".//input");
-    $dom->getElementById('board_id_field_footer')->extSetAttribute('value', $board_id);
+    $dom->getElementById('board_id_field_footer')->extSetAttribute('value', $board->id());
 
-    if ($session->inModmode($board_id))
+    if ($session->inModmode($board->id()))
     {
         $dom->getElementById('bottom-pass-input')->remove();
     }

@@ -136,14 +136,14 @@ class BanHammer
         $this->database->executePrepared($prepared);
     }
 
-    public function removeBan($board_id, $ban_id, $snacks = false)
+    public function removeBan($board, $ban_id, $snacks = false)
     {
         $session = new \Nelliel\Session($authorization);
         $user = $session->sessionUser();
 
         if (!$snacks)
         {
-            if (!$user->boardPerm($board_id, 'perm_ban_delete', true) && !$snacks)
+            if (!$user->boardPerm($board->id(), 'perm_ban_delete', true) && !$snacks)
             {
                 nel_derp(323, _gettext('You are not allowed to remove bans.'));
             }

@@ -69,18 +69,19 @@ class AdminManageBoards extends AdminBase
 
         $board_id = $_POST['new_board_id'];
         $board_directory = $_POST['board_directory'];
-        $db_prefix = $board_id;
+        $board = new \Nelliel\Board($board_id, new \Nelliel\CacheHandler(), $this->database);
+        $db_prefix = $board->id();
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "board_directory", "db_prefix") VALUES (?, ?, ?)');
-        $this->database->executePrepared($prepared, [$board_id, $board_directory, $db_prefix]);
+        $this->database->executePrepared($prepared, [$board->id(), $board_directory, $db_prefix]);
         $setup = new \Nelliel\Setup\Setup();
-        $setup->createBoardTables($board_id);
-        $setup->createBoardDirectories($board_id);
+        $setup->createBoardTables($board->id());
+        $setup->createBoardDirectories($board->id());
 
         if (USE_INTERNAL_CACHE)
         {
             $regen = new \Nelliel\Regen();
-            $regen->boardCache($board_id);
+            $regen->boardCache($board);
         }
     }
 

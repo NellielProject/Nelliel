@@ -11,22 +11,15 @@ require_once INCLUDE_PATH . 'output/management/board_settings_panel.php';
 
 class AdminBoardSettings extends AdminBase
 {
-    private $board_id = '';
+    private $board;
     private $defaults = false;
 
-    function __construct($database, $authorization, $board_id = null)
+    function __construct($database, $authorization, $board)
     {
         $this->database = $database;
         $this->authorization = $authorization;
-
-        if (is_null($board_id) || $board_id === '')
-        {
-            $this->defaults = true;
-        }
-        else
-        {
-            $this->board_id = $board_id;
-        }
+        $this->board = $board;
+        $this->defaults = ($this->board->id() === '') ? true : false;
     }
 
     public function actionDispatch($inputs)
@@ -47,7 +40,7 @@ class AdminBoardSettings extends AdminBase
 
     public function renderPanel($user)
     {
-        if (!$user->boardPerm($this->board_id, 'perm_board_config_access'))
+        if (!$user->boardPerm($this->board->id(), 'perm_board_config_access'))
         {
             nel_derp(330, _gettext('You are not allowed to modify the board settings.'));
         }
@@ -57,7 +50,7 @@ class AdminBoardSettings extends AdminBase
             nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
         }
 
-        nel_render_board_settings_panel($this->board_id, $this->defaults);
+        nel_render_board_settings_panel($this->board, $this->defaults);
     }
 
     public function creator($user)
@@ -74,7 +67,7 @@ class AdminBoardSettings extends AdminBase
 
     public function update($user)
     {
-        if (!$user->boardPerm($this->board_id, 'perm_board_config_modify'))
+        if (!$user->boardPerm($this->board->id(), 'perm_board_config_modify'))
         {
             nel_derp(330, _gettext('You are not allowed to modify the board settings.'));
         }
@@ -84,8 +77,7 @@ class AdminBoardSettings extends AdminBase
             nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
         }
 
-        $references = nel_parameters_and_data()->boardReferences($this->board_id);
-        $config_table = ($this->defaults) ? BOARD_DEFAULTS_TABLE : $references['config_table'];
+        $config_table = ($this->defaults) ? BOARD_DEFAULTS_TABLE : $this->board->reference('config_table');
 
         while ($item = each($_POST))
         {
@@ -102,8 +94,8 @@ class AdminBoardSettings extends AdminBase
         if (!$this->defaults)
         {
             $regen = new \Nelliel\Regen();
-            $regen->boardCache($this->board_id);
-            $regen->allPages($this->board_id);
+            $regen->boardCache($this->board);
+            $regen->allPages($this->board);
         }
     }
 

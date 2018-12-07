@@ -11,13 +11,13 @@ require_once INCLUDE_PATH . 'output/management/thread_panel.php';
 
 class AdminThreads extends AdminBase
 {
-    private $board_id;
+    private $board;
 
-    function __construct($database, $authorization, $board_id = null)
+    function __construct($database, $authorization, $board)
     {
         $this->database = $database;
         $this->authorization = $authorization;
-        $this->board_id = (is_null($board_id)) ? '' : $board_id;
+        $this->board = $board;
     }
 
     public function actionDispatch($inputs)
@@ -41,11 +41,11 @@ class AdminThreads extends AdminBase
         if (isset($_POST['expand_thread']))
         {
             $expand_data = explode(' ', $_POST['expand_thread']);
-            nel_render_thread_panel_expand($user, $this->board_id, $expand_data[1]);
+            nel_render_thread_panel_expand($user, $this->board, $expand_data[1]);
         }
         else
         {
-            nel_render_thread_panel_main($user, $this->board_id);
+            nel_render_thread_panel_main($user, $this->board);
         }
     }
 
@@ -63,12 +63,12 @@ class AdminThreads extends AdminBase
 
     public function update($user)
     {
-        if (!$user->boardPerm($this->board_id, 'perm_threads_modify'))
+        if (!$user->boardPerm($this->board->id(), 'perm_threads_modify'))
         {
             nel_derp(351, _gettext('You are not allowed to modify threads or posts.'));
         }
 
-        $thread_handler = new \Nelliel\ThreadHandler($this->database, $this->board_id);
+        $thread_handler = new \Nelliel\ThreadHandler($this->database, $this->board->id());
         $thread_handler->processContentDeletes();
     }
 

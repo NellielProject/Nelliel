@@ -9,18 +9,17 @@ if (!defined('NELLIEL_VERSION'))
 
 class PostData
 {
-    private $board_id;
+    private $board;
     private $authorization;
 
-    function __construct($board_id, $authorization)
+    function __construct($board, $authorization)
     {
-        $this->board_id = $board_id;
+        $this->board = $board;
         $this->authorization = $authorization;
     }
 
     public function processPostData($post)
     {
-        $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $post->content_data['parent_thread'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer');
 
         if($post->content_data['parent_thread'] != 0)
@@ -50,7 +49,7 @@ class PostData
             $post->content_data['poster_name'] = _gettext('Anonymous');
         }
 
-        if ($board_settings['force_anonymous'])
+        if ($this->board->setting('force_anonymous'))
         {
             $post->content_data['poster_name'] = _gettext('Anonymous');
             $post->content_data['email'] = '';
@@ -95,12 +94,12 @@ class PostData
 
         $user = $session->sessionUser();
 
-        if(!$user->boardPerm($this->board_id, 'perm_post_as_staff'))
+        if(!$user->boardPerm($this->board->id(), 'perm_post_as_staff'))
         {
             return;
         }
 
-        $role = $user->boardRole($this->board_id);
+        $role = $user->boardRole($this->board->id());
 
         if($role !== false)
         {
@@ -111,15 +110,13 @@ class PostData
 
     public function tripcodes($post)
     {
-        $references = nel_parameters_and_data()->boardReferences($this->board_id);
-        $board_settings = nel_parameters_and_data()->boardSettings($this->board_id);
         $post->content_data['poster_name'] = preg_replace("/#+$/", "", $post->content_data['poster_name']);
         preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post->content_data['poster_name'], $name_pieces);
         $post->content_data['poster_name'] = $name_pieces[1];
         $post->content_data['tripcode'] = '';
         $post->content_data['secure_tripcode'] = '';
 
-        if ($name_pieces[2] !== '' && $board_settings['allow_tripkeys'])
+        if ($name_pieces[2] !== '' && $this->board->setting('allow_tripkeys'))
         {
             $trip = $this->tripcodeCharsetConvert($name_pieces[2], 'SHIFT_JIS', 'UTF-8');
             $salt = substr($trip . 'H.', 1, 2);
@@ -128,7 +125,7 @@ class PostData
             $post->content_data['tripcode'] = substr(crypt($trip, $salt), -10);
         }
 
-        if ($name_pieces[3] !== '' && $board_settings['allow_tripkeys'])
+        if ($name_pieces[3] !== '' && $this->board->setting('allow_tripkeys'))
         {
             $trip = $name_pieces[3];
             $trip = hash(nel_parameters_and_data()->siteSettings('secure_tripcode_algorithm'), $trip . TRIPCODE_SALT);

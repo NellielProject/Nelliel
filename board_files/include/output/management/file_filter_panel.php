@@ -4,9 +4,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_file_filter_panel($user, $board_id = '')
+function nel_render_file_filter_panel($user, $board)
 {
-    if (!$user->boardPerm($board_id, 'perm_file_filters_access'))
+    if (!$user->boardPerm($board->id(), 'perm_file_filters_access'))
     {
         nel_derp(341, _gettext('You are not allowed to add file filters.'));
     }
@@ -22,11 +22,11 @@ function nel_render_file_filter_panel($user, $board_id = '')
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'management/file_filter_panel.html');
 
-    if ($board_id !== '')
+    if ($board->id() !== '')
     {
         $prepared = $database->prepare(
                 'SELECT * FROM "' . FILE_FILTER_TABLE . '" WHERE "board_id" = ? ORDER BY "entry" DESC');
-        $filters = $database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_ASSOC);
+        $filters = $database->executePreparedFetchAll($prepared, [$board->id()], PDO::FETCH_ASSOC);
     }
     else
     {
@@ -60,7 +60,7 @@ function nel_render_file_filter_panel($user, $board_id = '')
     $filter_list_nodes['file-filter-row']->remove();
     $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render);
+    nel_render_general_footer($render, $board);
     echo $render->outputRenderSet();
     nel_clean_exit();
 }

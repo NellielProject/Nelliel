@@ -1,31 +1,29 @@
 <?php
 require_once INCLUDE_PATH . 'output/rules.php';
 
-function nel_render_posting_form($board_id, $render, $response_to, $dotdot = null)
+function nel_render_posting_form($board, $render, $response_to, $dotdot = null)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
-    $references = nel_parameters_and_data()->boardReferences($board_id);
-    $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'posting_form.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $url_constructor = new \Nelliel\URLConstructor();
     $posting_form = $dom->getElementById('posting-form');
-    $posting_form->extSetAttribute('action', $dotdot . PHP_SELF . '?module=threads&area=general&action=new-post&board_id=' . $board_id);
+    $posting_form->extSetAttribute('action', $dotdot . PHP_SELF . '?module=threads&area=general&action=new-post&board_id=' . $board->id());
     $posting_form_input = $dom->getElementById('posting-form-input');
     $posting_form_nodes = $posting_form_input->getElementsByAttributeName('data-parse-id', true);
 
     if ($response_to)
     {
-        if ($session->inModmode($board_id))
+        if ($session->inModmode($board->id()))
         {
-            $return_url = $url_constructor->dynamic(PHP_SELF, ['module' => 'render', 'action' => 'view-index', 'section' => '0', 'board_id' => $board_id, 'modmode' => 'true']);
+            $return_url = $url_constructor->dynamic(PHP_SELF, ['module' => 'render', 'action' => 'view-index', 'section' => '0', 'board_id' => $board->id(), 'modmode' => 'true']);
         }
         else
         {
-            $return_url = $dotdot . $references['board_directory'] . '/' . PHP_SELF2 . PHP_EXT;
+            $return_url = $dotdot . $board->reference('board_directory') . '/' . PHP_SELF2 . PHP_EXT;
         }
 
         $dom->getElementById('return-url')->extSetAttribute('href', $return_url);
@@ -37,34 +35,34 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
 
     $dom->getElementById('posting-form-responseto')->extSetAttribute('value', $response_to);
 
-    if(!$session->inModmode($board_id))
+    if(!$session->inModmode($board->id()))
     {
         $posting_form_nodes['posting-form-staff']->remove();
     }
 
-    $dom->getElementById('verb')->extSetAttribute('maxlength', $board_settings['max_subject_length']);
+    $dom->getElementById('verb')->extSetAttribute('maxlength', $board->setting('max_subject_length'));
 
-    if ($board_settings['force_anonymous'])
+    if ($board->setting('force_anonymous'))
     {
         $posting_form_nodes['form-not-anonymous']->remove();
         $posting_form_nodes['form-spam-target']->remove();
     }
     else
     {
-        $dom->getElementById('not-anonymous')->extSetAttribute('maxlength', $board_settings['max_name_length']);
-        $dom->getElementById('spam-target')->extSetAttribute('maxlength', $board_settings['max_email_length']);
+        $dom->getElementById('not-anonymous')->extSetAttribute('maxlength', $board->setting('max_name_length'));
+        $dom->getElementById('spam-target')->extSetAttribute('maxlength', $board->setting('max_email_length'));
     }
 
     // File Block
-    $posting_form_nodes['sauce']->extSetAttribute('maxlength', $board_settings['max_source_length']);
-    $posting_form_nodes['lol_drama']->extSetAttribute('maxlength', $board_settings['max_license_length']);
+    $posting_form_nodes['sauce']->extSetAttribute('maxlength', $board->setting('max_source_length'));
+    $posting_form_nodes['lol_drama']->extSetAttribute('maxlength', $board->setting('max_license_length'));
     $posting_form_nodes['alt_text']->extSetAttribute('maxlength', '255');
 
-    if ($board_settings['allow_multifile'] && $board_settings['max_post_files'] > 1)
+    if ($board->setting('allow_multifile') && $board->setting('max_post_files') > 1)
     {
-        for ($i = 2, $j = 3; $i <= $board_settings['max_post_files']; ++ $i, ++ $j)
+        for ($i = 2, $j = 3; $i <= $board->setting('max_post_files'); ++ $i, ++ $j)
         {
-            if (!$response_to && !$board_settings['allow_op_multifile'])
+            if (!$response_to && !$board->setting('allow_op_multifile'))
             {
                 break;
             }
@@ -100,9 +98,9 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
         }
     }
 
-    if ($board_settings['use_fgsfds'])
+    if ($board->setting('use_fgsfds'))
     {
-        $posting_form_nodes['fgsfds-name']->setContent($board_settings['fgsfds_name']);
+        $posting_form_nodes['fgsfds-name']->setContent($board->setting('fgsfds_name'));
     }
     else
     {
@@ -114,15 +112,15 @@ function nel_render_posting_form($board_id, $render, $response_to, $dotdot = nul
         $dom->getElementById('which-post-mode')->setContent('Posting mode: Reply');
     }
 
-    $rules = $dom->importNode(nel_render_rules_list($board_id), true);
+    $rules = $dom->importNode(nel_render_rules_list($board), true);
     $posting_form->appendChild($rules);
 
-    if (!$board_settings['use_spambot_trap'])
+    if (!$board->setting('use_spambot_trap'))
     {
         $dom->removeChild($dom->getElementById('form-trap1'));
         $dom->removeChild($dom->getElementById('form-trap2'));
     }
 
-    $translator->translateDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    $translator->translateDom($dom, $board->setting('board_language'));
     $render->appendHTMLFromDOM($dom);
 }

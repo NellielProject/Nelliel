@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_module_dispatch($inputs)
+function nel_module_dispatch($inputs, $current_board)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $inputs = nel_plugins()->processHook('nel-inb4-module-dispatch', array(), $inputs);
@@ -37,12 +37,12 @@ function nel_module_dispatch($inputs)
             {
                 case 'view-index':
                     require_once INCLUDE_PATH . 'output/main_generation.php';
-                    nel_main_thread_generator($inputs['board_id'], 0, false, intval($inputs['section']));
+                    nel_main_thread_generator($current_board, 0, false, intval($inputs['section']));
                     break;
 
                 case 'view-thread':
                     require_once INCLUDE_PATH . 'output/thread_generation.php';
-                    nel_thread_generator($inputs['board_id'], false, intval($inputs['section']));
+                    nel_thread_generator($current_board, false, intval($inputs['section']));
                     break;
             }
 
@@ -51,9 +51,9 @@ function nel_module_dispatch($inputs)
         case 'main-panel':
             $session = new \Nelliel\Session($authorization, true);
 
-            if ($inputs['board_id'] !== '')
+            if ($current_board->id() !== '')
             {
-                nel_render_main_board_panel($inputs['board_id']);
+                nel_render_main_board_panel($current_board);
             }
             else
             {
@@ -78,12 +78,12 @@ function nel_module_dispatch($inputs)
             break;
 
         case 'file-filter':
-            $file_filters_panel = new \Nelliel\Admin\AdminFileFilters(nel_database(), $authorization, $inputs['board_id']);
+            $file_filters_panel = new \Nelliel\Admin\AdminFileFilters(nel_database(), $authorization, $current_board);
             $file_filters_panel->actionDispatch($inputs);
             break;
 
         case 'default-board-settings':
-            $board_settings_panel = new \Nelliel\Admin\AdminBoardSettings(nel_database(), $authorization);
+            $board_settings_panel = new \Nelliel\Admin\AdminBoardSettings(nel_database(), $authorization, $current_board);
             $board_settings_panel->actionDispatch($inputs);
             break;
 
@@ -100,18 +100,18 @@ function nel_module_dispatch($inputs)
             break;
 
         case 'reports':
-            $reports_panel = new \Nelliel\Admin\AdminReports(nel_database(), $authorization, $inputs['board_id']);
+            $reports_panel = new \Nelliel\Admin\AdminReports(nel_database(), $authorization, $current_board);
             $reports_panel->actionDispatch($inputs);
             break;
 
         case 'board-settings':
             $board_settings_panel = new \Nelliel\Admin\AdminBoardSettings(nel_database(), $authorization,
-                    $inputs['board_id']);
+                    $current_board);
             $board_settings_panel->actionDispatch($inputs);
             break;
 
         case 'bans':
-            $bans_panel = new \Nelliel\Admin\AdminBans(nel_database(), $authorization, $inputs['board_id']);
+            $bans_panel = new \Nelliel\Admin\AdminBans(nel_database(), $authorization, $current_board);
             $bans_panel->actionDispatch($inputs);
             break;
 
@@ -122,9 +122,8 @@ function nel_module_dispatch($inputs)
 
             if ($inputs['action'] === 'new-post')
             {
-                $new_post = new \Nelliel\Post\NewPost(nel_database(), $inputs['board_id']);
+                $new_post = new \Nelliel\Post\NewPost(nel_database(), $current_board);
                 $new_post->processPost();
-                $board_references = nel_parameters_and_data()->boardReferences($inputs['board_id']);
 
                 if ($fgsfds->getCommand('noko') !== false)
                 {
@@ -140,7 +139,7 @@ function nel_module_dispatch($inputs)
                     }
                     else
                     {
-                        $url = $board_references['board_directory'] . '/' . $board_references['page_dir'] . '/' .
+                        $url = $current_board->reference('board_directory') . '/' . $current_board->reference('page_dir') . '/' .
                                 $fgsfds->getCommandData('noko', 'topic') . '/thread-' . $fgsfds->getCommandData('noko', 'topic') .
                                 '.html';
                         nel_redirect($url, 2);
@@ -159,7 +158,7 @@ function nel_module_dispatch($inputs)
                     }
                     else
                     {
-                        $url = $board_references['board_directory'] . '/' . PHP_SELF2 .
+                        $url = $current_board->reference('board_directory') . '/' . PHP_SELF2 .
                         PHP_EXT;
                         nel_redirect($url, 2);
                     }
@@ -212,14 +211,14 @@ function nel_module_dispatch($inputs)
             }
             else if ($inputs['action'] === 'load-panel')
             {
-                $threads_panel = new \Nelliel\Admin\AdminThreads(nel_database(), $authorization, $inputs['board_id']);
+                $threads_panel = new \Nelliel\Admin\AdminThreads(nel_database(), $authorization, $current_board);
                 $threads_panel->actionDispatch($inputs);
             }
             else
             {
                 if (isset($_POST['form_submit_report']))
                 {
-                    $reports_panel = new \Nelliel\Admin\AdminReports(nel_database(), $authorization, $inputs['board_id']);
+                    $reports_panel = new \Nelliel\Admin\AdminReports(nel_database(), $authorization, $current_board);
                     $reports_panel->actionDispatch($inputs);
 
                     if ($session->isActive() && $session->inModmode($inputs['board_id']))
@@ -270,7 +269,7 @@ function nel_module_dispatch($inputs)
                     nel_derp(410, _gettext('You are not allowed to regenerate board pages.'));
                 }
 
-                $regen->allPages($inputs['board_id']);
+                $regen->allPages($current_board);
             }
             else if ($inputs['action'] === 'board-all-caches')
             {
@@ -279,7 +278,7 @@ function nel_module_dispatch($inputs)
                     nel_derp(411, _gettext('You are not allowed to regenerate board caches.'));
                 }
 
-                $regen->boardCache($inputs['board_id']);
+                $regen->boardCache($current_board);
             }
             else if ($inputs['action'] === 'site-all-caches')
             {
@@ -291,7 +290,7 @@ function nel_module_dispatch($inputs)
                 $regen->siteCache();
             }
 
-            nel_render_main_board_panel($inputs['board_id']);
+            nel_render_main_board_panel($current_board);
             break;
 
         case 'multi':
@@ -314,7 +313,7 @@ function nel_module_dispatch($inputs)
                 $regen->threads($inputs['board_id'], true, $content_id->thread_id);
                 $regen->index($inputs['board_id']);
                 $inputs['action'] = 'new';
-                $bans_panel = new \Nelliel\Admin\AdminBans(nel_database(), $authorization, $inputs['board_id']);
+                $bans_panel = new \Nelliel\Admin\AdminBans(nel_database(), $authorization, $current_board);
                 $bans_panel->actionDispatch($inputs);
             }
 

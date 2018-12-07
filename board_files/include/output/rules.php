@@ -4,9 +4,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_rules_list($board_id)
+function nel_render_rules_list($board)
 {
-    $board_settings = nel_parameters_and_data()->boardSettings($board_id);
     $filetypes = new \Nelliel\FileTypes(nel_database());
     $render = new NellielTemplates\RenderCore();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
@@ -18,9 +17,9 @@ function nel_render_rules_list($board_id)
     $base_list_item->setAttributeNode($dom->createFullAttribute('class', 'rules-item'));
     $filetype_rules = $dom->copyNode($rules_nodes['rules-list'], $form_rules_list, 'append');
 
-    foreach ($filetypes->settings($board_id) as $type => $formats)
+    foreach ($filetypes->settings($board->id()) as $type => $formats)
     {
-        if(!$filetypes->typeIsEnabled($board_id, $type))
+        if(!$filetypes->typeIsEnabled($board->id(), $type))
         {
             continue;
         }
@@ -48,11 +47,11 @@ function nel_render_rules_list($board_id)
 
     $post_limits = $dom->copyNode($rules_nodes['rules-list'], $form_rules_list, 'append');
     $size_limit = $dom->copyNode($base_list_item, $post_limits, 'append');
-    $size_limit->setContent(sprintf(_gettext('Maximum file size allowed is %dKB'), $board_settings['max_filesize']));
+    $size_limit->setContent(sprintf(_gettext('Maximum file size allowed is %dKB'), $board->setting('max_filesize')));
     $thumbnail_limit = $dom->copyNode($base_list_item, $post_limits, 'append');
     $thumbnail_limit->setContent(
-            sprintf(_gettext('Images greater than %d x %d pixels will be thumbnailed.'), $board_settings['max_width'],
-                    $board_settings['max_height']));
+            sprintf(_gettext('Images greater than %d x %d pixels will be thumbnailed.'), $board->setting('max_width'),
+                    $board->setting('max_height')));
     $rules_nodes['rules-list']->remove();
     return $form_rules_list;
 }

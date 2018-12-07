@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_ban_page($board_id, $ban_info)
+function nel_render_ban_page($board, $ban_info)
 {
     require_once INCLUDE_PATH . 'output/header.php';
     require_once INCLUDE_PATH . 'output/footer.php';
@@ -13,7 +13,7 @@ function nel_render_ban_page($board_id, $ban_info)
     $url_constructor = new \Nelliel\URLConstructor();
     $render->startRenderTimer();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_board_header($board_id, $render);
+    nel_render_board_header($board, $render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'ban_page.html');
     $banned_board = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board_id'];
@@ -87,8 +87,8 @@ function nel_render_ban_page($board_id, $ban_info)
         }
     }
 
-    $translator->translateDom($dom, nel_parameters_and_data()->boardSettings($board_id, 'board_language'));
+    $translator->translateDom($dom, $board->setting('board_language'));
     $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render, $board_id, null, true);
+    nel_render_general_footer($render, $board, null, true);
     echo $render->outputRenderSet();
 }

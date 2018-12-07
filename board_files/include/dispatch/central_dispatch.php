@@ -36,11 +36,12 @@ function nel_central_dispatch()
     $inputs['action'] = (isset($_GET['action'])) ? $_GET['action'] : null;
     $inputs['content_id'] = (isset($_GET['content-id'])) ? $_GET['content-id'] : null;
     $inputs['modmode'] = (isset($_GET['modmode'])) ? $_GET['modmode'] : false;
+    $current_board = new \Nelliel\Board($inputs['board_id'], new \Nelliel\CacheHandler(), nel_database());
 
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
-    $snacks->applyBan($inputs);
+    $snacks->applyBan($inputs, $current_board);
 
     require_once INCLUDE_PATH . 'dispatch/module_dispatch.php';
-    nel_module_dispatch($inputs);
+    nel_module_dispatch($inputs, $current_board);
     nel_plugins()->processHook('nel-in-after-central-dispatch', array());
 }
