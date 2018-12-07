@@ -122,7 +122,6 @@ function nel_module_dispatch($inputs)
 
             if ($inputs['action'] === 'new-post')
             {
-                require_once INCLUDE_PATH . 'post/post.php';
                 $new_post = new \Nelliel\Post\NewPost(nel_database(), $inputs['board_id']);
                 $new_post->processPost();
                 $board_references = nel_parameters_and_data()->boardReferences($inputs['board_id']);
@@ -142,7 +141,7 @@ function nel_module_dispatch($inputs)
                     else
                     {
                         $url = $board_references['board_directory'] . '/' . $board_references['page_dir'] . '/' .
-                                $fgsfds->getCommandData('noko', 'topic') . '/' . $fgsfds->getCommandData('noko', 'topic') .
+                                $fgsfds->getCommandData('noko', 'topic') . '/thread-' . $fgsfds->getCommandData('noko', 'topic') .
                                 '.html';
                         nel_redirect($url, 2);
                     }
