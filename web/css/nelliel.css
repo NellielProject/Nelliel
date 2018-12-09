@@ -1,7 +1,7 @@
 /* Elements formatting */
 body {
-    background-color: #77FFBB;
-    color: #000000;
+    background-color: #66EEAA;
+    color: #112211;
     font-size: 1.0em;
     font-family: serif;
     margin-left: 5px;
@@ -17,15 +17,15 @@ hr {
 }
 
 a {
-    color: #4400FF;
+    color: #3322EE;
 }
 
 a:visited {
-    color: #4400FF;
+    color: #3322EE;
 }
 
 a:hover {
-    color: #0000AA;
+    color: #AA2255;
 }
 
 /* General formatting */
@@ -142,11 +142,12 @@ a:hover {
 
 .posting-form-label {
 	display: table-cell;
-    background-color: #44BBFF;
+    background-color: #33AAEE;
     font-weight: bold;
+    color: #000000;
     padding: 3px 5px 3px 5px;
     background-clip: padding-box;
-    border: 1px solid #2299FF;
+    border: 1px solid #1188CC;
     vertical-align: middle;
 }
 
@@ -316,7 +317,7 @@ a:hover {
 }
 
 .op-post {
-    color: #000000;
+    color: #112211;
     min-width: 15em;
     height: 100%;
     padding-bottom: 6px;
@@ -328,13 +329,13 @@ a:hover {
 }
 
 .op-poster-name {
-    color: #7711BB;
+    color: #CC0077;
     text-decoration: none;
     font-weight: bold;
 }
 
 .op-subject {
-    color: #0044AA;
+    color: #6611BB;
     font-size: 1.05em;
     font-weight: bold;
 }
@@ -385,9 +386,9 @@ a:hover {
 }
 
 .reply-post {
-    background-color: #88EEFF;
-    color: #000000;
-    border: 1px solid #66CCFF;
+    background-color: #77CCEE;
+    color: #112211;
+    border: 1px solid #55AACC;
     padding: 5px;
     min-width: 15em;
     height: 100%;
@@ -396,17 +397,17 @@ a:hover {
 }
 
 .reply-post.post-highlight {
-    background-color: #AABBFF;
+    background-color: #DD99CC;
 }
 
 .reply-poster-name {
-    color: #7711BB;
+    color: #CC0077;
     text-decoration: none;
     font-weight: bold;
 }
 
 .reply-subject {
-    color: #0044AA;
+    color: #6611BB;
     font-size: 1.05em;
     font-weight: bold;
 }
