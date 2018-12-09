@@ -182,9 +182,9 @@ function nel_render_post($board, $gen_data, $dom)
         $header_nodes['thread-select']->extSetAttribute('name', $thread_content_id->getIDString());
     }
 
-    $header_nodes['subject']->extSetAttribute('class', $post_type_class, 'subject');
+    $header_nodes['subject']->extSetAttribute('class', $post_type_class . 'subject');
     $header_nodes['subject']->setContent($post_data['subject']);
-    $header_nodes['poster-name']->extSetAttribute('class', $post_type_class, 'subject');
+    $header_nodes['poster-name']->extSetAttribute('class', $post_type_class . 'poster-name');
 
     $tripcode = (!empty($post_data['tripcode'])) ? $board->setting('tripkey_marker') . $post_data['tripcode'] : '';
     $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $board->setting('tripkey_marker') .
