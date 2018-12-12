@@ -508,7 +508,7 @@ function nel_render_post($domain, $gen_data, $dom)
                 $append_target = $quote_result;
             }
 
-            $output_filter->postQuoteLink($domain->id(), $append_target, $line);
+            $output_filter->postQuoteLink($domain, $append_target, $line);
             $append_target->appendChild($new_post_dom->createElement('br'));
         }
     }

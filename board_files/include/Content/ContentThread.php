@@ -12,13 +12,13 @@ if (!defined('NELLIEL_VERSION'))
 class ContentThread extends ContentBase
 {
 
-    function __construct($database, $content_id, $board_id, $db_load = false)
+    function __construct($database, $content_id, $domain, $db_load = false)
     {
         $this->database = $database;
         $this->content_id = $content_id;
-        $this->board_id = $board_id;
+        $this->domain = $domain;
 
-        if($db_load)
+        if ($db_load)
         {
             $this->loadFromDatabase();
         }
@@ -27,9 +27,8 @@ class ContentThread extends ContentBase
     public function loadFromDatabase($temp_database = null)
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $database->prepare(
-                'SELECT * FROM "' . $board_references['thread_table'] . '" WHERE "thread_id" = ?');
+                'SELECT * FROM "' . $this->domain->reference('thread_table') . '" WHERE "thread_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->content_id->thread_id], PDO::FETCH_ASSOC);
 
         if (empty($result))
@@ -49,15 +48,14 @@ class ContentThread extends ContentBase
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $database->prepare(
-                'SELECT "thread_id" FROM "' . $board_references['thread_table'] . '" WHERE "thread_id" = ?');
+                'SELECT "thread_id" FROM "' . $this->domain->reference('thread_table') . '" WHERE "thread_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->content_id->thread_id], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $database->prepare(
-                    'UPDATE "' . $board_references['thread_table'] . '" SET "first_post" = :first_post,
+                    'UPDATE "' . $this->domain->reference('thread_table') . '" SET "first_post" = :first_post,
                     "last_post" = :last_post, "last_bump_time" = :last_bump_time, "last_bump_time_milli" = :last_bump_time_milli,
                     "total_files" = :total_files, "last_update" = :last_update, "last_update_milli" = :last_update_milli, "post_count" = :post_count,
                     "thread_sage" = :thread_sage, "sticky" = :sticky, "archive_status" = :archive_status,
@@ -66,7 +64,7 @@ class ContentThread extends ContentBase
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . $board_references['thread_table'] . '" ("thread_id", "first_post", "last_post",
+                    'INSERT INTO "' . $this->domain->reference('thread_table') . '" ("thread_id", "first_post", "last_post",
                     "last_bump_time", "last_bump_time_milli", "total_files", "last_update", "last_update_milli",
                     "post_count", "thread_sage", "sticky", "archive_status", "locked") VALUES
                     (:thread_id, :first_post, :last_post, :last_bump_time, :last_bump_time_milli, :total_files,
@@ -93,11 +91,13 @@ class ContentThread extends ContentBase
 
     public function createDirectories()
     {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->createDirectory($board_references['src_path'] . $this->content_id->thread_id, DIRECTORY_PERM);
-        $file_handler->createDirectory($board_references['thumb_path'] . $this->content_id->thread_id, DIRECTORY_PERM);
-        $file_handler->createDirectory($board_references['page_path'] . $this->content_id->thread_id, DIRECTORY_PERM);
+        $file_handler->createDirectory($this->domain->reference('src_path') . $this->content_id->thread_id,
+                DIRECTORY_PERM);
+        $file_handler->createDirectory($this->domain->reference('thumb_path') . $this->content_id->thread_id,
+                DIRECTORY_PERM);
+        $file_handler->createDirectory($this->domain->reference('page_path') . $this->content_id->thread_id,
+                DIRECTORY_PERM);
     }
 
     public function remove($perm_override = false)
@@ -107,7 +107,7 @@ class ContentThread extends ContentBase
             return false;
         }
 
-        if(!$perm_override && nel_parameters_and_data()->boardReferences($this->board_id, 'locked'))
+        if(!$perm_override && $this->domain->reference('locked'))
         {
             nel_derp(53, _gettext('Cannot remove thread. Board is locked.'));
         }
@@ -124,53 +124,53 @@ class ContentThread extends ContentBase
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-        $prepared = $database->prepare('DELETE FROM "' . $board_references['thread_table'] . '" WHERE "thread_id" = ?');
+        $prepared = $database->prepare(
+                'DELETE FROM "' . $this->domain->reference('thread_table') . '" WHERE "thread_id" = ?');
         $database->executePrepared($prepared, [$this->content_id->thread_id]);
         return true;
     }
 
     protected function removeFromDisk()
     {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->eraserGun($board_references['src_path'] . $this->content_id->thread_id, null, true);
-        $file_handler->eraserGun($board_references['thumb_path'] . $this->content_id->thread_id, null, true);
-        $file_handler->eraserGun($board_references['page_path'] . $this->content_id->thread_id, null, true);
+        $file_handler->eraserGun($this->domain->reference('src_path') . $this->content_id->thread_id, null, true);
+        $file_handler->eraserGun($this->domain->reference('thumb_path') . $this->content_id->thread_id, null, true);
+        $file_handler->eraserGun($this->domain->reference('page_path') . $this->content_id->thread_id, null, true);
     }
 
     public function updateCounts()
     {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $this->database->prepare(
-                'SELECT COUNT("post_number") FROM "' . $board_references['post_table'] . '" WHERE "parent_thread" = ?');
+                'SELECT COUNT("post_number") FROM "' . $this->domain->reference('post_table') .
+                '" WHERE "parent_thread" = ?');
         $post_count = $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id],
                 PDO::FETCH_COLUMN);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $board_references['thread_table'] . '" SET "post_count" = ? WHERE "thread_id" = ?');
+                'UPDATE "' . $this->domain->reference('thread_table') . '" SET "post_count" = ? WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$post_count, $this->content_id->thread_id]);
 
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $board_references['content_table'] . '" WHERE "parent_thread" = ?');
+                'SELECT COUNT("entry") FROM "' . $this->domain->reference('content_table') .
+                '" WHERE "parent_thread" = ?');
         $file_count = $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id],
                 PDO::FETCH_COLUMN);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $board_references['thread_table'] . '" SET "total_files" = ? WHERE "thread_id" = ?');
+                'UPDATE "' . $this->domain->reference('thread_table') . '" SET "total_files" = ? WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$file_count, $this->content_id->thread_id]);
 
         $first_post = $this->firstPost();
         $last_post = $this->lastPost();
         $prepared = $this->database->prepare(
-                'UPDATE "' . $board_references['thread_table'] .
+                'UPDATE "' . $$this->domain->reference('thread_table') .
                 '" SET "first_post" = ?, "last_post" = ? WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$first_post, $last_post, $this->content_id->thread_id]);
     }
 
     public function verifyModifyPerms()
     {
-        $post = new ContentPost($this->database, $this->content_id, $this->board_id);
+        $post = new ContentPost($this->database, $this->content_id, $this->domain);
         $post->content_id->post_id = $this->firstPost();
         return $post->verifyModifyPerms();
     }
@@ -180,7 +180,7 @@ class ContentThread extends ContentBase
         $session = new \Nelliel\Session(new \Nelliel\Auth\Authorization($this->database));
         $user = $session->sessionUser();
 
-        if (!$user->boardPerm($this->board_id, 'perm_post_sticky'))
+        if (!$user->boardPerm($this->domain->id(), 'perm_post_sticky'))
         {
             nel_derp(400, _gettext('You are not allowed to sticky or unsticky threads.'));
         }
@@ -200,7 +200,7 @@ class ContentThread extends ContentBase
         $session = new \Nelliel\Session(new \Nelliel\Auth\Authorization($this->database));
         $user = $session->sessionUser();
 
-        if (!$user->boardPerm($this->board_id, 'perm_post_lock'))
+        if (!$user->boardPerm($this->domain->id(), 'perm_post_lock'))
         {
             nel_derp(401, _gettext('You are not allowed to lock or unlock threads.'));
         }
@@ -217,18 +217,16 @@ class ContentThread extends ContentBase
 
     public function lastPost($no_sage = false)
     {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-
         if ($no_sage)
         {
             $prepared = $this->database->prepare(
-                    'SELECT "post_number" FROM "' . $board_references['post_table'] .
+                    'SELECT "post_number" FROM "' . $this->domain->reference('post_table') .
                     '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1');
         }
         else
         {
             $prepared = $this->database->prepare(
-                    'SELECT "post_number" FROM "' . $board_references['post_table'] .
+                    'SELECT "post_number" FROM "' . $this->domain->reference('post_table') .
                     '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1');
         }
 
@@ -237,9 +235,8 @@ class ContentThread extends ContentBase
 
     public function firstPost()
     {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $this->database->prepare(
-                'SELECT "post_number" FROM "' . $board_references['post_table'] .
+                'SELECT "post_number" FROM "' . $this->domain->reference('post_table') .
                 '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC LIMIT 1');
         return $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id], PDO::FETCH_COLUMN);
     }

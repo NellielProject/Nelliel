@@ -178,7 +178,8 @@ class ArchiveAndPrune
     {
         if (empty($move_list))
         {
-            $query = 'SELECT "thread_id" FROM "' . $this->domain->reference('thread_table') . '" WHERE "archive_status" = 2';
+            $query = 'SELECT "thread_id" FROM "' . $this->domain->reference('thread_table') .
+                    '" WHERE "archive_status" = 2';
             $move_list = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
         }
 
@@ -208,7 +209,7 @@ class ArchiveAndPrune
         foreach ($this->getThreadListForStatus(2) as $thread_id)
         {
             $thread = new \Nelliel\Content\ContentThread($this->database, new ContentID('nci_' . $thread_id . '_0_0'),
-                    $this->domain->id());
+                    $this->domain);
             $thread->remove(true);
         }
     }

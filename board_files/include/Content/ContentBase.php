@@ -12,6 +12,7 @@ abstract class ContentBase
     public $content_id;
     public $database;
     public $board_id;
+    public $domain;
     public $content_data = array();
 
     public function contentDataOrDefault($data_name, $default)

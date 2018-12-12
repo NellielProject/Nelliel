@@ -103,7 +103,7 @@ class AdminManageBoards extends AdminBase
         }
 
         $board_id = $_GET['board_id'];
-        $board_references = nel_parameters_and_data()->boardReferences($board_id);
+        $domain = new \Nelliel\Domain($board_id, new \Nelliel\CacheHandler(), $this->database);
         $prepared = $this->database->prepare('SELECT * FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ? LIMIT 1');
         $board_data = $this->database->executePreparedFetch($prepared, [$board_id], PDO::FETCH_ASSOC);
         $prepared = $this->database->prepare('DELETE FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
@@ -117,7 +117,7 @@ class AdminManageBoards extends AdminBase
         $this->database->query('DROP TABLE ' . $board_data['db_prefix'] . '_archive_threads');
 
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->eraserGun($board_references['board_path'], null, true);
+        $file_handler->eraserGun($domain->reference('board_path'), null, true);
     }
 
     public function lock($user)

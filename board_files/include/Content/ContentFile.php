@@ -12,11 +12,11 @@ if (!defined('NELLIEL_VERSION'))
 class ContentFile extends ContentBase
 {
 
-    function __construct($database, $content_id, $board_id, $db_load = false)
+    function __construct($database, $content_id, $domain, $db_load = false)
     {
         $this->database = $database;
         $this->content_id = $content_id;
-        $this->board_id = $board_id;
+        $this->domain = $domain;
 
         if($db_load)
         {
@@ -27,9 +27,8 @@ class ContentFile extends ContentBase
     public function loadFromDatabase($temp_database = null)
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $database->prepare(
-                'SELECT * FROM "' . $board_references['content_table'] . '" WHERE "post_ref" = ? AND "content_order" = ?');
+                'SELECT * FROM "' . $this->domain->reference('content_table') . '" WHERE "post_ref" = ? AND "content_order" = ?');
         $result = $database->executePreparedFetch($prepared,
                 [$this->content_id->post_id, $this->content_id->order_id], PDO::FETCH_ASSOC);
 
@@ -50,16 +49,15 @@ class ContentFile extends ContentBase
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $database->prepare(
-                'SELECT "entry" FROM "' . $board_references['content_table'] . '" WHERE "post_ref" = ? AND "content_order" = ?');
+                'SELECT "entry" FROM "' . $this->domain->reference('content_table') . '" WHERE "post_ref" = ? AND "content_order" = ?');
         $result = $database->executePreparedFetch($prepared,
                 [$this->content_id->post_id, $this->content_id->order_id], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $database->prepare(
-                    'UPDATE "' . $board_references['content_table'] . '" SET "parent_thread" = :parent_thread,
+                    'UPDATE "' . $this->domain->reference('content_table') . '" SET "parent_thread" = :parent_thread,
                     "post_ref" = :post_ref, "content_order" = :content_order,
                     "type" = :type, "format" = :format, "mime" = :mime,
                     "filename" = :filename, "extension" = :extension,
@@ -73,7 +71,7 @@ class ContentFile extends ContentBase
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . $board_references['content_table'] . '" ("parent_thread", "post_ref", "content_order", "type", "format", "mime",
+                    'INSERT INTO "' . $this->domain->reference('content_table') . '" ("parent_thread", "post_ref", "content_order", "type", "format", "mime",
                     "filename", "extension", "display_width", "display_height", "preview_name", "preview_extension", "preview_width", "preview_height",
                     "filesize", "md5", "sha1", "sha256", "sha512", "source", "license", "alt_text", "exif") VALUES
                     (:parent_thread, :post_ref, :content_order, :type, :format, :mime, :filename, :extension, :display_width, :display_height,
@@ -111,13 +109,12 @@ class ContentFile extends ContentBase
 
     public function createDirectories()
     {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->createDirectory(
-                $board_references['src_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
                 DIRECTORY_PERM);
         $file_handler->createDirectory(
-                $board_references['thumb_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                $this->domain->reference('thumb_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
                 DIRECTORY_PERM);
     }
 
@@ -128,16 +125,16 @@ class ContentFile extends ContentBase
             return false;
         }
 
-        if(!$perm_override && nel_parameters_and_data()->boardReferences($this->board_id, 'locked'))
+        if(!$perm_override && $this->domain->reference('locked'))
         {
             nel_derp(51, _gettext('Cannot remove file. Board is locked.'));
         }
 
         $this->removeFromDisk();
         $this->removeFromDatabase();
-        $post = new ContentPost($this->database, $this->content_id, $this->board_id);
+        $post = new ContentPost($this->database, $this->content_id, $this->domain);
         $post->updateCounts();
-        $thread = new ContentThread($this->database, $this->content_id, $this->board_id);
+        $thread = new ContentThread($this->database, $this->content_id, $this->domain);
         $thread->updateCounts();
     }
 
@@ -149,27 +146,24 @@ class ContentFile extends ContentBase
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $database->prepare(
-                'DELETE FROM "' . $board_references['content_table'] . '" WHERE "post_ref" = ? AND "content_order" = ?');
+                'DELETE FROM "' . $this->domain->reference('content_table') . '" WHERE "post_ref" = ? AND "content_order" = ?');
         $database->executePrepared($prepared, [$this->content_id->post_id, $this->content_id->order_id]);
         return true;
     }
 
     protected function removeFromDisk()
     {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-
         if (empty($this->content_data))
         {
             $this->loadFromDatabase();
         }
 
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->eraserGun($board_references['src_path'],
+        $file_handler->eraserGun($this->domain->reference('src_path'),
                 $this->content_id->thread_id . '/' . $this->content_id->post_id . '/' . $this->content_data['filename'] .
                 '.' . $this->content_data['extension']);
-        $file_handler->eraserGun($board_references['thumb_path'],
+                $file_handler->eraserGun($this->domain->reference('thumb_path'),
                 $this->content_id->thread_id . '/' . $this->content_id->post_id . '/' .
                 $this->content_data['preview_name'] . '.' . $this->content_data['preview_extension']);
     }
@@ -180,7 +174,7 @@ class ContentFile extends ContentBase
 
     public function verifyModifyPerms()
     {
-        $post = new ContentPost($this->database, $this->content_id, $this->board_id);
+        $post = new ContentPost($this->database, $this->content_id, $this->domain);
         return $post->verifyModifyPerms();
     }
 }

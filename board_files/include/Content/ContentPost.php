@@ -12,11 +12,11 @@ if (!defined('NELLIEL_VERSION'))
 class ContentPost extends ContentBase
 {
 
-    function __construct($database, $content_id, $board_id, $db_load = false)
+    function __construct($database, $content_id, $domain, $db_load = false)
     {
         $this->database = $database;
         $this->content_id = $content_id;
-        $this->board_id = $board_id;
+        $this->domain = $domain;
 
         if($db_load)
         {
@@ -27,9 +27,8 @@ class ContentPost extends ContentBase
     public function loadFromDatabase($temp_database = null)
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $database->prepare(
-                'SELECT * FROM "' . $board_references['post_table'] . '" WHERE "post_number" = ?');
+                'SELECT * FROM "' . $this->domain->reference('post_table') . '" WHERE "post_number" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id], PDO::FETCH_ASSOC);
 
         if (empty($result))
@@ -49,15 +48,14 @@ class ContentPost extends ContentBase
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $database->prepare(
-                'SELECT "post_number" FROM "' . $board_references['post_table'] . '" WHERE "post_number" = ?');
+                'SELECT "post_number" FROM "' . $this->domain->reference('post_table') . '" WHERE "post_number" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $database->prepare(
-                    'UPDATE "' . $board_references['post_table'] . '" SET "parent_thread" = :parent_thread,
+                    'UPDATE "' . $this->domain->reference('post_table') . '" SET "parent_thread" = :parent_thread,
                     "poster_name" = :poster_name, "reply_to" = :reply_to, "post_password" = :post_password,
                     "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "email" = :email,
                     "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address,
@@ -69,7 +67,7 @@ class ContentPost extends ContentBase
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . $board_references['post_table'] . '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "email",
+                    'INSERT INTO "' . $this->domain->reference('post_table') . '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "email",
                     "subject", "comment", "ip_address", "post_time", "post_time_milli", "has_file", "file_count", "op", "sage", "mod_post", "mod_comment") VALUES
                     (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :email, :subject, :comment, :ip_address, :post_time, :post_time_milli, :has_file, :file_count,
                     :op, :sage, :mod_post, :mod_comment)');
@@ -100,13 +98,12 @@ class ContentPost extends ContentBase
 
     public function reserveDatabaseRow($post_time, $post_time_milli, $temp_database = null)
     {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $parent_thread = $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'INSERT INTO "' . $board_references['post_table'] . '" ("post_time", "post_time_milli") VALUES (?, ?)');
+                'INSERT INTO "' . $this->domain->reference('post_table') . '" ("post_time", "post_time_milli") VALUES (?, ?)');
         $database->executePrepared($prepared, [$post_time, $post_time_milli]);
         $prepared = $database->prepare(
-                'SELECT "post_number" FROM "' . $board_references['post_table'] .
+                'SELECT "post_number" FROM "' . $this->domain->reference('post_table') .
                 '" WHERE "post_time" = ? AND post_time_milli = ? LIMIT 1');
         $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli],
                 PDO::FETCH_COLUMN, true);
@@ -117,13 +114,12 @@ class ContentPost extends ContentBase
 
     public function createDirectories()
     {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->createDirectory(
-                $board_references['src_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
                 DIRECTORY_PERM);
         $file_handler->createDirectory(
-                $board_references['thumb_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                $this->domain->reference('thumb_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
                 DIRECTORY_PERM);
     }
 
@@ -134,14 +130,14 @@ class ContentPost extends ContentBase
             return false;
         }
 
-        if(!$perm_override && nel_parameters_and_data()->boardReferences($this->board_id, 'locked'))
+        if(!$perm_override && $this->domain->reference('locked'))
         {
             nel_derp(52, _gettext('Cannot remove post. Board is locked.'));
         }
 
         $this->removeFromDatabase();
         $this->removeFromDisk();
-        $thread = new ContentThread($this->database, $this->content_id, $this->board_id);
+        $thread = new ContentThread($this->database, $this->content_id, $this->domain);
         $thread->updateCounts();
         return true;
     }
@@ -154,34 +150,31 @@ class ContentPost extends ContentBase
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
-        $prepared = $database->prepare('DELETE FROM "' . $board_references['post_table'] . '" WHERE "post_number" = ?');
+        $prepared = $database->prepare('DELETE FROM "' . $this->domain->reference('post_table') . '" WHERE "post_number" = ?');
         $database->executePrepared($prepared, [$this->content_id->post_id]);
         return true;
     }
 
     protected function removeFromDisk()
     {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->eraserGun(
-                $board_references['src_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id, null,
+                $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id, null,
                 true);
         $file_handler->eraserGun(
-                $board_references['thumb_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id, null,
+                $this->domain->reference('thumb_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id, null,
                 true);
     }
 
     public function updateCounts()
     {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $board_references['content_table'] . '" WHERE "post_ref" = ?');
+                'SELECT COUNT("entry") FROM "' . $this->domain->reference('content_table') . '" WHERE "post_ref" = ?');
         $file_count = $this->database->executePreparedFetch($prepared, array($this->content_id->post_id),
                 PDO::FETCH_COLUMN, true);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $board_references['post_table'] . '" SET "file_count" = ? WHERE "post_number" = ?');
+                'UPDATE "' . $this->domain->reference('post_table') . '" SET "file_count" = ? WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, array($file_count, $this->content_id->post_id));
     }
 
@@ -200,14 +193,14 @@ class ContentPost extends ContentBase
         if (!empty($this->content_data['mod_post']) && $session->isActive())
         {
             $mod_post_user = $authorization->getUser($this->content_data['mod_post']);
-            $flag = $authorization->roleLevelCheck($user->boardRole($this->board_id),
-                    $mod_post_user->boardRole($this->board_id));
+            $flag = $authorization->roleLevelCheck($user->boardRole($this->domain->id()),
+                    $mod_post_user->boardRole($this->domain->id()));
         }
         else
         {
             if($session->isActive())
             {
-                if ($user->boardPerm($this->board_id, 'perm_post_delete'))
+                if ($user->boardPerm($this->domain->id(), 'perm_post_delete'))
                 {
                     $flag = true;
                 }
@@ -227,12 +220,11 @@ class ContentPost extends ContentBase
 
     public function convertToThread()
     {
-        $board_references = nel_parameters_and_data()->boardReferences($this->board_id);
         $time = nel_get_microtime();
         $new_content_id = new \Nelliel\ContentID();
         $new_content_id->thread_id = $this->content_id->post_id;
         $new_content_id->post_id = $this->content_id->post_id;
-        $new_thread = new ContentThread($this->database, $new_content_id, $this->board_id);
+        $new_thread = new ContentThread($this->database, $new_content_id, $this->domain);
         $new_thread->content_data['thread_id'] = $this->content_id->post_id;
         $new_thread->content_data['first_post'] = $this->content_id->post_id;
         $new_thread->content_data['last_post'] = $this->content_id->post_id;
@@ -245,22 +237,22 @@ class ContentPost extends ContentBase
         $file_handler = new \Nelliel\FileHandler();
         $new_thread->createDirectories();
         $file_handler->moveDirectory(
-                $board_references['src_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id,
-                $board_references['src_path'] . '/' . $new_thread->content_id->thread_id . '/' .
+                $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                        $this->domain->reference('src_path') . '/' . $new_thread->content_id->thread_id . '/' .
                 $this->content_id->post_id, true);
         $file_handler->moveDirectory(
-                $board_references['thumb_path'] . $this->content_id->thread_id . '/' . $this->content_id->post_id,
-                $board_references['thumb_path'] . '/' . $new_thread->content_id->thread_id . '/' .
+                $this->domain->reference('thumb_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                        $this->domain->reference('thumb_path') . '/' . $new_thread->content_id->thread_id . '/' .
                 $this->content_id->post_id, true);
 
         $prepared = $this->database->prepare(
-                'SELECT entry FROM "' . $board_references['content_table'] . '" WHERE "post_ref" = ?');
+                'SELECT entry FROM "' . $this->domain->reference('content_table') . '" WHERE "post_ref" = ?');
         $files = $this->database->executePreparedFetchAll($prepared, array($this->content_id->post_id), PDO::FETCH_ASSOC);
 
         foreach ($files as $file)
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $board_references['content_table'] . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
+                    'UPDATE "' . $this->domain->reference('content_table') . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
             $this->database->executePrepared($prepared,
                     [$new_thread->content_id->thread_id, $this->content_id->post_id]);
         }

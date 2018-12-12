@@ -38,7 +38,7 @@ class FilesUpload
                 continue;
             }
 
-            $file = new \Nelliel\Content\ContentFile(nel_database(), new \Nelliel\ContentID(), $this->domain->id());
+            $file = new \Nelliel\Content\ContentFile(nel_database(), new \Nelliel\ContentID(), $this->domain);
             $new_file = array();
             $this->uploaded_files[$entry]['location'] = $file_data['tmp_name'];
             $file->content_data['location'] = $file_data['tmp_name'];

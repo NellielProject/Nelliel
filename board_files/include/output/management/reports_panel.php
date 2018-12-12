@@ -42,7 +42,7 @@ function nel_render_reports_panel($user, $domain)
         $temp_report_info_row = $report_info_row->cloneNode(true);
         $temp_report_info_row->extSetAttribute('class', $bgclass);
         $report_nodes = $temp_report_info_row->getElementsByAttributeName('data-parse-id', true);
-        $references = nel_parameters_and_data()->boardReferences($report_info['board_id']);
+        $references = $domain->reference();
         $content_id = new \Nelliel\ContentID($report_info['content_id']);
         $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
         $board_web_path = '//' . $base_domain . '/' . rawurlencode($references['board_directory']) . '/';

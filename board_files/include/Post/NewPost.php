@@ -34,7 +34,7 @@ class NewPost
         $file_handler = new \Nelliel\FileHandler();
         $file_upload = new FilesUpload($this->domain, $_FILES, $authorization);
         $data_handler = new PostData($this->domain, $authorization);
-        $post = new \Nelliel\Content\ContentPost($this->database, new \Nelliel\ContentID(), $this->domain->id());
+        $post = new \Nelliel\Content\ContentPost($this->database, new \Nelliel\ContentID(), $this->domain);
         $data_handler->processPostData($post);
         $time = nel_get_microtime();
         $post->content_data['post_time'] = $time['time'];
@@ -103,7 +103,7 @@ class NewPost
             $post->content_data['op'] = ($post->content_data['parent_thread'] == 0) ? 1 : 0;
             $post->content_data['has_file'] = ($post->content_data['file_count'] > 0) ? 1 : 0;
             $post->reserveDatabaseRow($time['time'], $time['milli']);
-            $thread = new \Nelliel\Content\ContentThread($this->database, new \Nelliel\ContentID(), $this->domain->id());
+            $thread = new \Nelliel\Content\ContentThread($this->database, new \Nelliel\ContentID(), $this->domain);
 
             if ($post->content_data['response_to'] == 0)
             {

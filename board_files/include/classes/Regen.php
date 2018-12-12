@@ -14,7 +14,6 @@ class Regen
 
     function __construct()
     {
-
     }
 
     private function getTemporaryDomain($domain_id)
@@ -36,7 +35,6 @@ class Regen
             ++ $i;
         }
     }
-
 
     public function boardCache($domain)
     {
@@ -60,8 +58,7 @@ class Regen
     {
         $database = nel_database();
         $result = $database->query(
-                'SELECT "thread_id" FROM "' . nel_parameters_and_data()->boardReferences($domain->id(), 'thread_table') .
-                '" WHERE "archive_status" = 0');
+                'SELECT "thread_id" FROM "' . reference('thread_table') . '" WHERE "archive_status" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
         $this->threads($domain, true, $ids);
         $this->index($domain);

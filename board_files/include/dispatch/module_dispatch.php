@@ -105,8 +105,7 @@ function nel_module_dispatch($inputs, $domain)
             break;
 
         case 'board-settings':
-            $board_settings_panel = new \Nelliel\Admin\AdminBoardSettings(nel_database(), $authorization,
-                    $domain);
+            $board_settings_panel = new \Nelliel\Admin\AdminBoardSettings(nel_database(), $authorization, $domain);
             $board_settings_panel->actionDispatch($inputs);
             break;
 
@@ -140,8 +139,8 @@ function nel_module_dispatch($inputs, $domain)
                     else
                     {
                         $url = $domain->reference('board_directory') . '/' . $domain->reference('page_dir') . '/' .
-                                $fgsfds->getCommandData('noko', 'topic') . '/thread-' . $fgsfds->getCommandData('noko', 'topic') .
-                                '.html';
+                                $fgsfds->getCommandData('noko', 'topic') . '/thread-' .
+                                $fgsfds->getCommandData('noko', 'topic') . '.html';
                         nel_redirect($url, 2);
                     }
                 }
@@ -158,8 +157,7 @@ function nel_module_dispatch($inputs, $domain)
                     }
                     else
                     {
-                        $url = $domain->reference('board_directory') . '/' . PHP_SELF2 .
-                        PHP_EXT;
+                        $url = $domain->reference('board_directory') . '/' . PHP_SELF2 . PHP_EXT;
                         nel_redirect($url, 2);
                     }
                 }
@@ -168,41 +166,40 @@ function nel_module_dispatch($inputs, $domain)
             }
             else if ($inputs['action'] === 'delete-post')
             {
-                $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $inputs['board_id'], true);
+                $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $domain, true);
                 $post->remove();
             }
             else if ($inputs['action'] === 'delete-thread')
             {
-                $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id'], true);
+                $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $domain, true);
                 $thread->remove();
             }
             else if ($inputs['action'] === 'sticky' || $inputs['action'] === 'unsticky')
             {
                 if ($content_id->isPost())
                 {
-                    $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $inputs['board_id'], true);
+                    $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $domain, true);
                     $post->convertToThread();
                     $new_content_id = new \Nelliel\ContentID();
                     $new_content_id->thread_id = $content_id->post_id;
                     $new_content_id->post_id = $content_id->post_id;
-                    $new_thread = new \Nelliel\Content\ContentThread(nel_database(), $new_content_id, $inputs['board_id']);
+                    $new_thread = new \Nelliel\Content\ContentThread(nel_database(), $new_content_id, $domain);
                     $new_thread->sticky();
                 }
                 else
                 {
-                    var_dump("here1");
-                    $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id'], true);
+                    $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $domain, true);
                     $thread->sticky();
                 }
             }
             else if ($inputs['action'] === 'lock' || $inputs['action'] === 'unlock')
             {
-                $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id'], true);
+                $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $domain, true);
                 $thread->lock();
             }
             else if ($inputs['action'] === 'delete-file')
             {
-                $file = new \Nelliel\Content\ContentFile(nel_database(), $content_id, $inputs['board_id'], true);
+                $file = new \Nelliel\Content\ContentFile(nel_database(), $content_id, $domain, true);
                 $file->remove();
             }
             else if ($inputs['action'] === 'ban-file')
@@ -228,8 +225,7 @@ function nel_module_dispatch($inputs, $domain)
                     }
                     else
                     {
-                        echo '<meta http-equiv="refresh" content="1;URL=' .
-                                nel_parameters_and_data()->boardReferences($inputs['board_id'], 'board_directory') . '/' .
+                        echo '<meta http-equiv="refresh" content="1;URL=' . $domain->reference('board_directory') . '/' .
                                 PHP_SELF2 . PHP_EXT . '">';
                     }
                 }
@@ -246,8 +242,7 @@ function nel_module_dispatch($inputs, $domain)
                     }
                     else
                     {
-                        echo '<meta http-equiv="refresh" content="1;URL=' .
-                                nel_parameters_and_data()->boardReferences($inputs['board_id'], 'board_directory') . '/' .
+                        echo '<meta http-equiv="refresh" content="1;URL=' . $domain->reference('board_directory') . '/' .
                                 PHP_SELF2 . PHP_EXT . '">';
                     }
 
@@ -300,12 +295,12 @@ function nel_module_dispatch($inputs, $domain)
             {
                 if ($inputs['action'] === 'ban.delete-post')
                 {
-                    $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $inputs['board_id'], true);
+                    $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $domain, true);
                     $post->remove();
                 }
                 else if ($inputs['action'] === 'ban.delete-thread')
                 {
-                    $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $inputs['board_id'], true);
+                    $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $domain, true);
                     $thread->remove();
                 }
 
