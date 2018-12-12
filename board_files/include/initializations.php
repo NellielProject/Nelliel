@@ -33,7 +33,7 @@ define('BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults'); // Default config for 
 define('REPORTS_TABLE', 'nelliel_reports'); // Content reports
 define('FRONT_END_TABLE', 'nelliel_front_end'); // Templates and styles
 
-define('TEMPLATE_PATH', FILES_PATH . 'templates/'); // Base template path
+define('TEMPLATE_PATH', FILES_PATH . 'templates/nelliel-default/'); // Base template path
 
 // Set default values here in case the config is missing something
 $base_config['defaultadmin'] = '';

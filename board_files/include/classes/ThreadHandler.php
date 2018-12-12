@@ -10,12 +10,12 @@ if (!defined('NELLIEL_VERSION'))
 class ThreadHandler
 {
     private $database;
-    private $board;
+    private $domain;
 
-    function __construct($database, $board)
+    function __construct($database, $domain)
     {
         $this->database = $database;
-        $this->board = $board;
+        $this->board = $domain;
     }
 
     public function processContentDeletes()

@@ -11,13 +11,13 @@ require_once INCLUDE_PATH . 'output/management/thread_panel.php';
 
 class AdminThreads extends AdminBase
 {
-    private $board;
+    private $domain;
 
-    function __construct($database, $authorization, $board)
+    function __construct($database, $authorization, $domain)
     {
         $this->database = $database;
         $this->authorization = $authorization;
-        $this->board = $board;
+        $this->board = $domain;
     }
 
     public function actionDispatch($inputs)

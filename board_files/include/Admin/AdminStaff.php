@@ -92,26 +92,26 @@ class AdminStaff extends AdminBase
                 {
                     if (strpos($key, 'user_board_role') !== false)
                     {
-                        $board = substr($key, 16);
+                        $board_id = substr($key, 16);
 
-                        if($board === false)
+                        if($board_id === false)
                         {
-                            $board = '';
+                            $board_id = '';
                         }
 
-                        if(!$user->boardRole($board))
+                        if(!$user->boardRole($board_id))
                         {
-                            $user->changeOrAddBoardRole($board, $value);
+                            $user->changeOrAddBoardRole($board_id, $value);
                             continue;
                         }
 
                         if ($value === '')
                         {
-                            $user->removeBoardRole($board, $value);
+                            $user->removeBoardRole($board_id, $value);
                         }
                         else
                         {
-                            $user->ChangeOrAddBoardRole($board, $value);
+                            $user->ChangeOrAddBoardRole($board_id, $value);
                         }
 
                         continue;

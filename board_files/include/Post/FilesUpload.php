@@ -11,14 +11,14 @@ if (!defined('NELLIEL_VERSION'))
 
 class FilesUpload
 {
-    private $board;
+    private $domain;
     private $uploaded_files = array();
     private $processed_files = array();
     private $authorization;
 
-    function __construct($board, $files = array(), $authorization)
+    function __construct($domain, $files = array(), $authorization)
     {
-        $this->board = $board;
+        $this->board = $domain;
         $this->uploaded_files = $files;
         $this->authorization = $authorization;
     }

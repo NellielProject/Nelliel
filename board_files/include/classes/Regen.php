@@ -16,7 +16,7 @@ class Regen
     {
     }
 
-    public function threads($board, $write, $ids)
+    public function threads($domain, $write, $ids)
     {
         require_once INCLUDE_PATH . 'output/thread_generation.php';
         $threads = count($ids);
@@ -24,16 +24,16 @@ class Regen
 
         while ($i < $threads)
         {
-            nel_thread_generator($board, $write, $ids[$i]);
+            nel_thread_generator($domain, $write, $ids[$i]);
             ++ $i;
         }
     }
 
-    public function boardCache($board)
+    public function boardCache($domain)
     {
-        $board->regenCache();
+        $domain->regenCache();
         $filetypes = new FileTypes(nel_database());
-        $filetypes->generateSettingsCache($board->id());
+        $filetypes->generateSettingsCache($domain->id());
     }
 
     public function siteCache()
@@ -41,20 +41,20 @@ class Regen
         nel_parameters_and_data()->siteSettings(null, true);
     }
 
-    public function index($board)
+    public function index($domain)
     {
         require_once INCLUDE_PATH . 'output/main_generation.php';
-        nel_main_thread_generator($board, 0, true);
+        nel_main_thread_generator($domain, 0, true);
     }
 
-    public function allPages($board)
+    public function allPages($domain)
     {
         $database = nel_database();
         $result = $database->query(
-                'SELECT "thread_id" FROM "' . nel_parameters_and_data()->boardReferences($board->id(), 'thread_table') .
+                'SELECT "thread_id" FROM "' . nel_parameters_and_data()->boardReferences($domain->id(), 'thread_table') .
                 '" WHERE "archive_status" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
-        $this->threads($board, true, $ids);
-        $this->index($board);
+        $this->threads($domain, true, $ids);
+        $this->index($domain);
     }
 }

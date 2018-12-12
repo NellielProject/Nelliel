@@ -4,21 +4,21 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_board_header($board, $dotdot = null, $treeline = null)
+function nel_render_board_header($domain, $dotdot = null, $treeline = null)
 {
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
-    $dom = $board->renderInstance()->newDOMDocument();
-    $board->renderInstance()->loadTemplateFromFile($dom, 'header.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'header.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent(
-            'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $board->id() . '\');};');
-    $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $board->id() . '"));');
+            'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\');};');
+    $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $domain->id() . '"));');
     $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . '/' . 'html5shiv-printshiv.js"></script><![endif]';
     $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
@@ -29,15 +29,15 @@ function nel_render_board_header($board, $dotdot = null, $treeline = null)
     }
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
-    $title_content = $board->setting('board_name');
+    $title_content = $domain->setting('board_name');
 
     if (isset($treeline[0]['subject']) && $treeline[0]['subject'] === '')
     {
-        $title_content = $board->setting('board_name') . ' > Thread #' . $treeline[0]['post_number'];
+        $title_content = $domain->setting('board_name') . ' > Thread #' . $treeline[0]['post_number'];
     }
     else
     {
-        $title_content = $board->setting('board_name') . ' > ' . $treeline[0]['subject'];
+        $title_content = $domain->setting('board_name') . ' > ' . $treeline[0]['subject'];
     }
 
     $title_element->setContent($title_content);
@@ -51,7 +51,7 @@ function nel_render_board_header($board, $dotdot = null, $treeline = null)
         $board_link = $dom->createElement('a');
         $board_link->extSetAttribute('class', 'board-navigation-link');
         $board_link->extSetAttribute('href', $dotdot . $data['board_directory']);
-        $board_link->extSetAttribute('title', $board->setting('board_name'));
+        $board_link->extSetAttribute('title', $domain->setting('board_name'));
         $board_link->setContent($data['board_directory']);
         $board_navigation->appendChild($board_link);
 
@@ -78,9 +78,9 @@ function nel_render_board_header($board, $dotdot = null, $treeline = null)
         $logo_text->remove();
     }*/
 
-    if ($board->setting('show_title'))
+    if ($domain->setting('show_title'))
     {
-        $logo_text->setContent($board->setting('board_name'));
+        $logo_text->setContent($domain->setting('board_name'));
     }
     else
     {
@@ -102,7 +102,7 @@ function nel_render_board_header($board, $dotdot = null, $treeline = null)
 
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
-    if ($session->inModmode($board->id()))
+    if ($session->inModmode($domain->id()))
     {
         $dom->getElementById('manage-header-text')->setContent(_gettext('Mod Mode'));
         $dom->getElementById('manage-board-header')->remove();
@@ -117,9 +117,9 @@ function nel_render_board_header($board, $dotdot = null, $treeline = null)
         $dom->getElementById('manage-sub-header')->remove();
     }
 
-    $translator->translateDom($dom, $board->setting('board_language'));
+    $translator->translateDom($dom, $domain->setting('board_language'));
 
-    $board->renderInstance()->appendHTMLFromDOM($dom);
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
 }
 
 function nel_render_general_header($render, $dotdot = null, $board_id = null, $extra_data = array())

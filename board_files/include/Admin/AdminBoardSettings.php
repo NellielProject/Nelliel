@@ -11,14 +11,14 @@ require_once INCLUDE_PATH . 'output/management/board_settings_panel.php';
 
 class AdminBoardSettings extends AdminBase
 {
-    private $board;
+    private $domain;
     private $defaults = false;
 
-    function __construct($database, $authorization, $board)
+    function __construct($database, $authorization, $domain)
     {
         $this->database = $database;
         $this->authorization = $authorization;
-        $this->board = $board;
+        $this->board = $domain;
         $this->defaults = ($this->board->id() === '') ? true : false;
     }
 

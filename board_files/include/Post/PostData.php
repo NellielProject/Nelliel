@@ -9,12 +9,12 @@ if (!defined('NELLIEL_VERSION'))
 
 class PostData
 {
-    private $board;
+    private $domain;
     private $authorization;
 
-    function __construct($board, $authorization)
+    function __construct($domain, $authorization)
     {
-        $this->board = $board;
+        $this->board = $domain;
         $this->authorization = $authorization;
     }
 

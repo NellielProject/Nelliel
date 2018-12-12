@@ -15,14 +15,14 @@ class ArchiveAndPrune
     private $file_handler;
     private $start_buffer;
     private $end_buffer;
-    private $board;
+    private $domain;
 
-    function __construct($database, $board, $file_handler)
+    function __construct($database, $domain, $file_handler)
     {
         $this->database = $database;
-        $this->board = $board;
-        $this->start_buffer = $board->setting('threads_per_page') * $board->setting('page_limit');
-        $this->end_buffer = $board->setting('threads_per_page') * $board->setting('page_buffer');
+        $this->board = $domain;
+        $this->start_buffer = $domain->setting('threads_per_page') * $domain->setting('page_limit');
+        $this->end_buffer = $domain->setting('threads_per_page') * $domain->setting('page_buffer');
         $this->file_handler = $file_handler;
 
         if ($this->end_buffer == 0)

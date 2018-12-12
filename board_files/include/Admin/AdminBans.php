@@ -11,14 +11,14 @@ require_once INCLUDE_PATH . 'output/management/ban_panel.php';
 
 class AdminBans extends AdminBase
 {
-    private $board;
+    private $domain;
     private $ban_hammer;
 
-    function __construct($database, $authorization, $board)
+    function __construct($database, $authorization, $domain)
     {
         $this->database = $database;
         $this->authorization = $authorization;
-        $this->board = $board;
+        $this->board = $domain;
         $this->ban_hammer = new \Nelliel\BanHammer($database);
     }
 

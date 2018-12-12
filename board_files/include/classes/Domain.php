@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-class Board
+class DOmain
 {
     private $board_id;
     private $board_settings;

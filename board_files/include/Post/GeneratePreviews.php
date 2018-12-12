@@ -9,11 +9,11 @@ if (!defined('NELLIEL_VERSION'))
 
 class GeneratePreviews
 {
-    private $board;
+    private $domain;
 
-    function __construct($board)
+    function __construct($domain)
     {
-        $this->board = $board;
+        $this->board = $domain;
     }
 
     public function generate($files, $preview_path)

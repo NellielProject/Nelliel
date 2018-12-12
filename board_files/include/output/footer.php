@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_general_footer($render, $board = null, $dotdot = null, $styles = false, $extra_links = false)
+function nel_render_general_footer($render, $domain = null, $dotdot = null, $styles = false, $extra_links = false)
 {
     $translator = new \Nelliel\Language\Translator();
     $dom = $render->newDOMDocument();
@@ -23,7 +23,7 @@ function nel_render_general_footer($render, $board = null, $dotdot = null, $styl
 
     $dom->getElementById('nelliel-version')->setContent(NELLIEL_VERSION);
     $dom->getElementById('js-ui')->modifyAttribute('src', $dotdot, 'before');
-    $locale = (!is_null($board)) ? $board->setting('board_language') : DEFAULT_LOCALE;
+    $locale = (!is_null($domain)) ? $domain->setting('board_language') : DEFAULT_LOCALE;
     $translator->translateDom($dom, $locale);
     $dom->getElementById('timer-result')->setContent(round($render->endRenderTimer(), 4));
     $render->appendHTMLFromDOM($dom);

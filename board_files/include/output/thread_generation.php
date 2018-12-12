@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 require_once INCLUDE_PATH . 'output/posting_form.php';
 require_once INCLUDE_PATH . 'output/post.php';
 
-function nel_thread_generator($board, $write, $thread_id)
+function nel_thread_generator($domain, $write, $thread_id)
 {
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
@@ -22,19 +22,19 @@ function nel_thread_generator($board, $write, $thread_id)
     }
 
     $dotdot = ($write) ? '../../../' : '';
-    $board->renderInstance(new NellielTemplates\RenderCore());
-    $dom = $board->renderInstance()->newDOMDocument();
-    $board->renderInstance()->loadTemplateFromFile($dom, 'thread.html');
-    $translator->translateDom($dom, $board->setting('board_language'));
-    $expand_dom = $board->renderInstance()->newDOMDocument();
-    $collapse_dom = $board->renderInstance()->newDOMDocument();
-    $board->renderInstance()->startRenderTimer();
+    $domain->renderInstance(new NellielTemplates\RenderCore());
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'thread.html');
+    $translator->translateDom($dom, $domain->setting('board_language'));
+    $expand_dom = $domain->renderInstance()->newDOMDocument();
+    $collapse_dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->startRenderTimer();
     $dom->getElementById('form-content-action')->extSetAttribute('action',
-            $dotdot . PHP_SELF . '?module=threads&area=general&board_id=' . $board->id());
-    $prepared = $database->prepare('SELECT * FROM "' . $board->reference('thread_table') . '" WHERE "thread_id" = ? LIMIT 1');
+            $dotdot . PHP_SELF . '?module=threads&area=general&board_id=' . $domain->id());
+    $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('thread_table') . '" WHERE "thread_id" = ? LIMIT 1');
     $gen_data['thread'] = $database->executePreparedFetch($prepared, array($thread_id), PDO::FETCH_ASSOC);
     $prepared = $database->prepare(
-            'SELECT * FROM "' . $board->reference('post_table') . '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+            'SELECT * FROM "' . $domain->reference('post_table') . '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
     $treeline = $database->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
 
     if (empty($treeline))
@@ -43,17 +43,17 @@ function nel_thread_generator($board, $write, $thread_id)
         return;
     }
 
-    $json_thread = new \Nelliel\API\JSON\JSONThread($board->id(), $file_handler);
+    $json_thread = new \Nelliel\API\JSON\JSONThread($domain->id(), $file_handler);
     $json_thread->addThreadData($json_thread->prepareData($gen_data['thread']));
-    $json_post = new \Nelliel\API\JSON\JSONPost($board->id(), $file_handler);
-    $json_content = new \Nelliel\API\JSON\JSONContent($board->id(), $file_handler);
+    $json_post = new \Nelliel\API\JSON\JSONPost($domain->id(), $file_handler);
+    $json_content = new \Nelliel\API\JSON\JSONContent($domain->id(), $file_handler);
     $post_counter = 0;
     $gen_data['posts_ending'] = false;
     $gen_data['index_rendering'] = false;
     $gen_data['abbreviate'] = false;
     $hr_added = false;
     $total_posts = $gen_data['thread']['post_count'];
-    $abbreviate = $total_posts > $board->setting('abbreviate_thread');
+    $abbreviate = $total_posts > $domain->setting('abbreviate_thread');
 
     while ($post_counter < $total_posts)
     {
@@ -69,8 +69,8 @@ function nel_thread_generator($board, $write, $thread_id)
 
         if ($post_counter === 0)
         {
-            nel_render_board_header($board, $dotdot, $treeline);
-            nel_render_posting_form($board, $board->renderInstance(), $thread_id, $dotdot);
+            nel_render_board_header($domain, $dotdot, $treeline);
+            nel_render_posting_form($domain, $thread_id, $dotdot);
         }
 
         if ($post_counter == $total_posts - 1)
@@ -80,7 +80,7 @@ function nel_thread_generator($board, $write, $thread_id)
 
         if ($gen_data['post']['has_file'] == 1)
         {
-            $query = 'SELECT * FROM "' . $board->reference('content_table') .
+            $query = 'SELECT * FROM "' . $domain->reference('content_table') .
                     '" WHERE "post_ref" = ? ORDER BY "content_order" ASC';
             $prepared = $database->prepare($query);
             $gen_data['files'] = $database->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']),
@@ -94,19 +94,19 @@ function nel_thread_generator($board, $write, $thread_id)
 
         if ($post_counter === 99)
         {
-            $render_temp = clone $board->renderInstance();
+            $render_temp = clone $domain->renderInstance();
             nel_render_insert_hr($dom);
             $hr_added = true;
-            nel_render_general_footer($board->renderInstance(), $board, $dotdot, true);
+            nel_render_general_footer($domain->renderInstance(), $domain, $dotdot, true);
             $file_handler->writeFile(
-                    $board->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-0-100.html',
+                    $domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-0-100.html',
                     $render_temp->outputRenderSet(), FILE_PERM, true);
             unset($rendertemp);
         }
 
         if ($gen_data['post']['op'] == 1)
         {
-            $new_post_node = nel_render_post($board, $gen_data, $dom);
+            $new_post_node = nel_render_post($domain, $gen_data, $dom);
             $expand_div = $dom->getElementById('thread-expand-nci_0_0_0');
             $expand_div->changeId(
                     'thread-expand-' . \Nelliel\ContentID::createIDString($gen_data['thread']['thread_id']));
@@ -114,7 +114,7 @@ function nel_thread_generator($board, $write, $thread_id)
 
             if ($abbreviate)
             {
-                $omitted_element->firstChild->setContent($total_posts - $board->setting('abbreviate_thread'));
+                $omitted_element->firstChild->setContent($total_posts - $domain->setting('abbreviate_thread'));
             }
             else
             {
@@ -127,9 +127,9 @@ function nel_thread_generator($board, $write, $thread_id)
         }
         else
         {
-            $new_post_node = nel_render_post($board, $gen_data, $dom);
+            $new_post_node = nel_render_post($domain, $gen_data, $dom);
 
-            if ($abbreviate && $post_counter > $total_posts - $board->setting('abbreviate_thread'))
+            if ($abbreviate && $post_counter > $total_posts - $domain->setting('abbreviate_thread'))
             {
                 $import_node = $collapse_dom->importNode($new_post_node, true);
                 $collapse_dom->getElementById(
@@ -155,25 +155,25 @@ function nel_thread_generator($board, $write, $thread_id)
         nel_render_insert_hr($dom);
     }
 
-    nel_render_thread_form_bottom($board, $dom);
-    $board->renderInstance()->appendHTMLFromDOM($dom);
-    $board->renderInstance()->appendHTMLFromDOM($collapse_dom, 'collapse');
-    $board->renderInstance()->appendHTMLFromDOM($expand_dom, 'expand');
-    nel_render_general_footer($board->renderInstance(), $board, $dotdot, true);
+    nel_render_thread_form_bottom($domain, $dom);
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    $domain->renderInstance()->appendHTMLFromDOM($collapse_dom, 'collapse');
+    $domain->renderInstance()->appendHTMLFromDOM($expand_dom, 'expand');
+    nel_render_general_footer($domain->renderInstance(), $domain, $dotdot, true);
 
     if ($write)
     {
-        $file_handler->writeFile($board->reference('page_path') . $thread_id . '/thread-' . $thread_id . '.html',
-                $board->renderInstance()->outputRenderSet(), FILE_PERM, true);
-        $file_handler->writeFile($board->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-expand.html',
-                $board->renderInstance()->outputRenderSet('expand'), FILE_PERM, true);
-        $file_handler->writeFile($board->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-collapse.html',
-                $board->renderInstance()->outputRenderSet('collapse'), FILE_PERM, true);
-        $json_thread->writeStoredData($board->reference('page_path') . $thread_id . '/', sprintf('thread-%d', $thread_id));
+        $file_handler->writeFile($domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '.html',
+                $domain->renderInstance()->outputRenderSet(), FILE_PERM, true);
+        $file_handler->writeFile($domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-expand.html',
+                $domain->renderInstance()->outputRenderSet('expand'), FILE_PERM, true);
+        $file_handler->writeFile($domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-collapse.html',
+                $domain->renderInstance()->outputRenderSet('collapse'), FILE_PERM, true);
+        $json_thread->writeStoredData($domain->reference('page_path') . $thread_id . '/', sprintf('thread-%d', $thread_id));
     }
     else
     {
-        echo $board->renderInstance()->outputRenderSet();
+        echo $domain->renderInstance()->outputRenderSet();
         nel_clean_exit();
     }
 

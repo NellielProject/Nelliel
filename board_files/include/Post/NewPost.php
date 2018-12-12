@@ -11,13 +11,13 @@ if (!defined('NELLIEL_VERSION'))
 
 class NewPost
 {
-    private $board;
+    private $domain;
     private $database;
 
-    function __construct($database, $board)
+    function __construct($database, $domain)
     {
         $this->database = $database;
-        $this->board = $board;
+        $this->board = $domain;
     }
 
     public function processPost()

@@ -91,25 +91,25 @@ function nel_render_staff_panel_user_edit($user_id)
 
     if ($boards !== false)
     {
-        foreach ($boards as $board)
+        foreach ($boards as $domain)
         {
             $new_board = $board_roles->cloneNode(true);
             $board_roles->parentNode->appendChild($new_board);
             $new_board->removeAttribute('id');
             $new_board_nodes = $new_board->getElementsByAttributeName('data-parse-id', true);
 
-            if($board === '')
+            if($domain === '')
             {
                 $new_board_nodes['user-board-role-label']->setContent(_gettext('All Boards'));
             }
             else
             {
-                $new_board_nodes['user-board-role-label']->setContent($board);
+                $new_board_nodes['user-board-role-label']->setContent($domain);
             }
 
-            $new_board_nodes['user-board-role-id']->extSetAttribute('name', 'user_board_role_' . $board);
+            $new_board_nodes['user-board-role-id']->extSetAttribute('name', 'user_board_role_' . $domain);
 
-            if(isset($user_boards[$board]))
+            if(isset($user_boards[$domain]))
             {
                 $new_board_nodes['user-board-role-id']->extSetAttribute('value', $board_role['role_id']);
             }
