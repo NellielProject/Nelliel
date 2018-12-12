@@ -37,6 +37,7 @@ class Regen
         }
     }
 
+
     public function boardCache($domain)
     {
         $domain->regenCache();
@@ -44,9 +45,9 @@ class Regen
         $filetypes->generateSettingsCache($domain->id());
     }
 
-    public function siteCache()
+    public function siteCache($domain)
     {
-        nel_parameters_and_data()->siteSettings(null, true);
+        $domain->regenCache();
     }
 
     public function index($domain)

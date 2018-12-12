@@ -287,7 +287,7 @@ function nel_module_dispatch($inputs, $domain)
                     nel_derp(412, _gettext('You are not allowed to regenerate site caches.'));
                 }
 
-                $regen->siteCache();
+                $regen->siteCache($domain);
             }
 
             nel_render_main_board_panel($domain);

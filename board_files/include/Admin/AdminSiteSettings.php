@@ -67,7 +67,7 @@ class AdminSiteSettings extends AdminBase
         }
 
         $regen = new \Nelliel\Regen();
-        $regen->siteCache();
+        $regen->siteCache($this->domain);
     }
 
     public function remove($user)

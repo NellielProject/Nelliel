@@ -34,7 +34,14 @@ class Domain
     {
         if (empty($this->domain_settings))
         {
-            $this->loadSettings();
+            if ($this->domain_id === '')
+            {
+                $this->loadSiteSettings();
+            }
+            else
+            {
+                $this->loadBoardSettings();
+            }
         }
 
         if (is_null($setting))
@@ -44,7 +51,6 @@ class Domain
 
         return $this->domain_settings[$setting];
     }
-
 
     public function reference($reference = null)
     {
@@ -90,13 +96,14 @@ class Domain
         return $this->domain_references[$reference];
     }
 
-    private function loadSettings()
+    private function loadBoardSettings()
     {
-        $settings = $this->cache_handler->loadArrayFromCache($this->domain_id . '/domain_settings.php', 'domain_settings');
+        $settings = $this->cache_handler->loadArrayFromCache($this->domain_id . '/domain_settings.php',
+                'domain_settings');
 
         if (empty($settings))
         {
-            $settings = $this->loadSettingsFromDatabase();
+            $settings = $this->loadBoardSettingsFromDatabase();
 
             if (USE_INTERNAL_CACHE)
             {
@@ -108,11 +115,28 @@ class Domain
         $this->domain_settings = $settings;
     }
 
-    private function loadSettingsFromDatabase()
+    private function loadSiteSettings()
+    {
+        $settings = $this->cache_handler->loadArrayFromCache('site_settings.php', 'site_settings');
+
+        if (empty($settings))
+        {
+            $settings = $this->loadSiteSettingsFromDatabase();
+
+            if (USE_INTERNAL_CACHE)
+            {
+                $this->cache_handler->writeCacheFile(CACHE_PATH . $this->domain_id . '/', 'domain_settings.php',
+                        '$domain_settings = ' . var_export($settings, true) . ';');
+            }
+        }
+
+        $this->domain_settings = $settings;
+    }
+
+    private function loadBoardSettingsFromDatabase()
     {
         $settings = array();
-        $prepared = $this->database->prepare(
-                'SELECT "db_prefix" FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
+        $prepared = $this->database->prepare('SELECT "db_prefix" FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $db_prefix = $this->database->executePreparedFetch($prepared, array($this->domain_id), PDO::FETCH_COLUMN);
         $config_table = $db_prefix . '_config';
         $config_list = $this->database->executeFetchAll(
@@ -127,20 +151,42 @@ class Domain
         return $settings;
     }
 
+    private function loadSiteSettingsFromDatabase()
+    {
+        $settings = array();
+        $config_list = $this->database->executeFetchAll('SELECT * FROM "' . SITE_CONFIG_TABLE . '"', PDO::FETCH_ASSOC);
+
+        foreach ($config_list as $config)
+        {
+            $config['setting'] = nel_cast_to_datatype($config['setting'], $config['data_type']);
+            $settings[$config['config_name']] = $config['setting'];
+        }
+
+        return $settings;
+    }
+
     public function regenCache()
     {
-        $settings = $this->loadSettingsFromDatabase();
-
         if (USE_INTERNAL_CACHE)
         {
-            $this->cache_handler->writeCacheFile(CACHE_PATH . $this->domain_id . '/', 'domain_settings.php',
-                    '$domain_settings = ' . var_export($settings, true) . ';');
+            if ($this->domain_id === '')
+            {
+                $settings = $this->loadSiteSettingsFromDatabase();
+                $this->cache_handler->writeCacheFile(CACHE_PATH, 'site_settings.php',
+                        '$site_settings = ' . var_export($settings, true) . ';');
+            }
+            else
+            {
+                $settings = $this->loadBoardSettingsFromDatabase();
+                $this->cache_handler->writeCacheFile(CACHE_PATH . $this->domain_id . '/', 'domain_settings.php',
+                        '$domain_settings = ' . var_export($settings, true) . ';');
+            }
         }
     }
 
     public function renderInstance($new_instance = null)
     {
-        if(!is_null($new_instance))
+        if (!is_null($new_instance))
         {
             $this->render_instance = $new_instance;
             $this->render_instance->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH); // TODO: Update for new front end stuff
