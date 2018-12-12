@@ -14,13 +14,11 @@ function nel_render_file_filter_panel($user, $domain)
     $database = nel_database();
     $url_constructor = new \Nelliel\URLConstructor();
     $translator = new \Nelliel\Language\Translator();
-    $render = new NellielTemplates\RenderCore();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null,
+    $domain->renderInstance()->startRenderTimer();
+    nel_render_general_header($domain->renderInstance(), null, null,
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('File Filters')));
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'management/file_filter_panel.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/file_filter_panel.html');
 
     if ($domain->id() !== '')
     {
@@ -59,8 +57,8 @@ function nel_render_file_filter_panel($user, $domain)
 
     $filter_list_nodes['file-filter-row']->remove();
     $translator->translateDom($dom);
-    $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render, $domain);
-    echo $render->outputRenderSet();
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($domain);
+    echo $domain->renderInstance()->outputRenderSet();
     nel_clean_exit();
 }

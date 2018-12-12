@@ -1,32 +1,30 @@
 <?php
 
-function nel_render_main_panel($user)
+function nel_render_main_panel($domain, $user)
 {
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
-    $render = new NellielTemplates\RenderCore();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null,
+    $domain->renderInstance()->startRenderTimer();
+    nel_render_general_header($domain->renderInstance(), null, null,
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Options')));
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'management/main_panel.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/main_panel.html');
     $board_entry = $dom->getElementById('board-entry');
     $insert_before = $board_entry->parentNode->lastChild;
     $boards = $database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
 
     if ($boards !== false)
     {
-        foreach ($boards as $domain)
+        foreach ($boards as $board)
         {
             $entry = $board_entry->cloneNode(true);
             $board_entry->parentNode->insertBefore($entry, $insert_before);
             $entry->removeAttribute('id');
             $entry_elements = $entry->getElementsByAttributeName('data-parse-id', true);
             $entry_elements['board-link']->extSetAttribute('href',
-                    PHP_SELF . '?module=main-panel&board_id=' . $domain['board_id']);
-            $entry_elements['board-link']->extSetAttribute('title', $domain['board_id']);
-            $entry_elements['board-link']->setContent('/' . $domain['board_id'] . '/');
+                    PHP_SELF . '?module=main-panel&board_id=' . $board['board_id']);
+            $entry_elements['board-link']->extSetAttribute('title', $board['board_id']);
+            $entry_elements['board-link']->setContent('/' . $board['board_id'] . '/');
         }
     }
 
@@ -97,9 +95,9 @@ function nel_render_main_panel($user)
     }
 
     $translator->translateDom($dom);
-    $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render);
-    echo $render->outputRenderSet();
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($domain);
+    echo $domain->renderInstance()->outputRenderSet();
     nel_clean_exit();
 }
 
@@ -107,13 +105,11 @@ function nel_render_main_board_panel($domain)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
-    $render = new NellielTemplates\RenderCore();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, $domain->id(),
+    $domain->renderInstance()->startRenderTimer();
+    nel_render_general_header($domain->renderInstance(), null, $domain->id(),
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Options')));
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'management/main_board_panel.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/main_board_panel.html');
     $manage_options = $dom->getElementById('manage-options');
     $settings = $dom->getElementById('module-board-settings');
     $session = new \Nelliel\Session($authorization, true);
@@ -216,8 +212,8 @@ function nel_render_main_board_panel($domain)
     }
 
     $translator->translateDom($dom);
-    $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render, $domain);
-    echo $render->outputRenderSet();
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($domain);
+    echo $domain->renderInstance()->outputRenderSet();
     nel_clean_exit();
 }

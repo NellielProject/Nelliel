@@ -9,49 +9,49 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-class DOmain
+class Domain
 {
-    private $board_id;
-    private $board_settings;
-    private $board_references;
+    private $domain_id;
+    private $domain_settings;
+    private $domain_references;
     private $cache_handler;
     private $database;
     private $render_instance;
 
-    public function __construct($board_id, $cache_handler, $database)
+    public function __construct($domain_id, $cache_handler, $database)
     {
-        $this->board_id = $board_id;
+        $this->domain_id = $domain_id;
         $this->cache_handler = $cache_handler;
         $this->database = $database;
     }
 
     public function id()
     {
-        return $this->board_id;
+        return $this->domain_id;
     }
 
     public function setting($setting = null)
     {
-        if (empty($this->board_settings))
+        if (empty($this->domain_settings))
         {
             $this->loadSettings();
         }
 
         if (is_null($setting))
         {
-            return $this->board_settings;
+            return $this->domain_settings;
         }
 
-        return $this->board_settings[$setting];
+        return $this->domain_settings[$setting];
     }
 
 
     public function reference($reference = null)
     {
-        if (empty($this->board_references))
+        if (empty($this->domain_references))
         {
             $prepared = $this->database->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
-            $board_data = $this->database->executePreparedFetch($prepared, array($this->board_id), PDO::FETCH_ASSOC);
+            $board_data = $this->database->executePreparedFetch($prepared, array($this->domain_id), PDO::FETCH_ASSOC);
             $new_reference = array();
             $board_path = BASE_PATH . $board_data['board_directory'] . '/';
             $new_reference['board_directory'] = $board_data['board_directory'];
@@ -79,20 +79,20 @@ class DOmain
             $new_reference['archive_thread_table'] = $new_reference['db_prefix'] . '_archive_threads';
             $new_reference['archive_content_table'] = $new_reference['db_prefix'] . '_archive_content';
             $new_reference['config_table'] = $new_reference['db_prefix'] . '_config';
-            $this->board_references = $new_reference;
+            $this->domain_references = $new_reference;
         }
 
         if (is_null($reference))
         {
-            return $this->board_references;
+            return $this->domain_references;
         }
 
-        return $this->board_references[$reference];
+        return $this->domain_references[$reference];
     }
 
     private function loadSettings()
     {
-        $settings = $this->cache_handler->loadArrayFromCache($this->board_id . '/board_settings.php', 'board_settings');
+        $settings = $this->cache_handler->loadArrayFromCache($this->domain_id . '/domain_settings.php', 'domain_settings');
 
         if (empty($settings))
         {
@@ -100,12 +100,12 @@ class DOmain
 
             if (USE_INTERNAL_CACHE)
             {
-                $this->cache_handler->writeCacheFile(CACHE_PATH . $this->board_id . '/', 'board_settings.php',
-                        '$board_settings = ' . var_export($settings, true) . ';');
+                $this->cache_handler->writeCacheFile(CACHE_PATH . $this->domain_id . '/', 'domain_settings.php',
+                        '$domain_settings = ' . var_export($settings, true) . ';');
             }
         }
 
-        $this->board_settings = $settings;
+        $this->domain_settings = $settings;
     }
 
     private function loadSettingsFromDatabase()
@@ -113,7 +113,7 @@ class DOmain
         $settings = array();
         $prepared = $this->database->prepare(
                 'SELECT "db_prefix" FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
-        $db_prefix = $this->database->executePreparedFetch($prepared, array($this->board_id), PDO::FETCH_COLUMN);
+        $db_prefix = $this->database->executePreparedFetch($prepared, array($this->domain_id), PDO::FETCH_COLUMN);
         $config_table = $db_prefix . '_config';
         $config_list = $this->database->executeFetchAll(
                 'SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);
@@ -133,8 +133,8 @@ class DOmain
 
         if (USE_INTERNAL_CACHE)
         {
-            $this->cache_handler->writeCacheFile(CACHE_PATH . $this->board_id . '/', 'board_settings.php',
-                    '$board_settings = ' . var_export($settings, true) . ';');
+            $this->cache_handler->writeCacheFile(CACHE_PATH . $this->domain_id . '/', 'domain_settings.php',
+                    '$domain_settings = ' . var_export($settings, true) . ';');
         }
     }
 

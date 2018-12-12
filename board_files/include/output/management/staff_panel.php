@@ -4,17 +4,15 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_staff_panel_main()
+function nel_render_staff_panel_main($domain)
 {
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
-    $render = new NellielTemplates\RenderCore();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null,
+    $domain->renderInstance()->startRenderTimer();
+    nel_render_general_header($domain->renderInstance(), null, null,
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Staff')));
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'management/staff_panel_main.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/staff_panel_main.html');
 
     $user_list = $dom->getElementById('user-list');
     $user_list_nodes = $user_list->getElementsByAttributeName('data-parse-id', true);
@@ -45,24 +43,22 @@ function nel_render_staff_panel_main()
     $dom->getElementById('new-role-link')->extSetAttribute('href', PHP_SELF . '?module=staff&section=role&action=new');
 
     $translator->translateDom($dom);
-    $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render);
-    echo $render->outputRenderSet();
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($domain);
+    echo $domain->renderInstance()->outputRenderSet();
     nel_clean_exit();
 }
 
-function nel_render_staff_panel_user_edit($user_id)
+function nel_render_staff_panel_user_edit($domain, $user_id)
 {
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
-    $render = new NellielTemplates\RenderCore();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null,
+    $domain->renderInstance()->startRenderTimer();
+    nel_render_general_header($domain->renderInstance(), null, null,
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Staff: Edit User')));
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'management/staff_panel_user_edit.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/staff_panel_user_edit.html');
     $dom->getElementById('user-edit-form')->extSetAttribute('action',
             PHP_SELF . '?module=staff&section=user&action=update');
 
@@ -118,24 +114,22 @@ function nel_render_staff_panel_user_edit($user_id)
 
     $board_roles->remove();
     $translator->translateDom($dom);
-    $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render);
-    echo $render->outputRenderSet();
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($domain);
+    echo $domain->renderInstance()->outputRenderSet();
     nel_clean_exit();
 }
 
-function nel_render_staff_panel_role_edit($role_id)
+function nel_render_staff_panel_role_edit($domain, $role_id)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
     $role = $authorization->getRole($role_id);
-    $render = new NellielTemplates\RenderCore();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null,
+    $domain->renderInstance()->startRenderTimer();
+    nel_render_general_header($domain->renderInstance(), null, null,
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Staff: Edit Role')));
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'management/staff_panel_role_edit.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/staff_panel_role_edit.html');
     $dom->getElementById('role-edit-form')->extSetAttribute('action',
             PHP_SELF . '?module=staff&section=role&action=update');
 
@@ -161,8 +155,8 @@ function nel_render_staff_panel_role_edit($role_id)
     }
 
     $translator->translateDom($dom);
-    $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render);
-    echo $render->outputRenderSet();
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($domain);
+    echo $domain->renderInstance()->outputRenderSet();
     nel_clean_exit();
 }

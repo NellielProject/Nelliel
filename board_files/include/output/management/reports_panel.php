@@ -14,13 +14,11 @@ function nel_render_reports_panel($user, $domain)
     $database = nel_database();
     $url_constructor = new \Nelliel\URLConstructor();
     $translator = new \Nelliel\Language\Translator();
-    $render = new NellielTemplates\RenderCore();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null,
+    $domain->renderInstance()->startRenderTimer();
+    nel_render_general_header($domain->renderInstance(), null, null,
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Reports')));
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'management/reports_panel.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/reports_panel.html');
 
     if ($domain->id() !== '')
     {
@@ -91,8 +89,8 @@ function nel_render_reports_panel($user, $domain)
     $report_info_row->remove();
 
     $translator->translateDom($dom);
-    $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render);
-    echo $render->outputRenderSet();
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($domain);
+    echo $domain->renderInstance()->outputRenderSet();
     nel_clean_exit();
 }

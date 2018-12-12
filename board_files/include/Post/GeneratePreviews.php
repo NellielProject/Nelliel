@@ -13,7 +13,7 @@ class GeneratePreviews
 
     function __construct($domain)
     {
-        $this->board = $domain;
+        $this->domain = $domain;
     }
 
     public function generate($files, $preview_path)
@@ -36,21 +36,21 @@ class GeneratePreviews
                 $dim = getimagesize($files[$i]->content_data['location']);
                 $files[$i]->content_data['display_width'] = $dim[0];
                 $files[$i]->content_data['display_height'] = $dim[1];
-                $ratio = min(($this->board->setting('max_height') / $files[$i]->content_data['display_height']),
-                        ($this->board->setting('max_width') / $files[$i]->content_data['display_width']));
+                $ratio = min(($this->domain->setting('max_height') / $files[$i]->content_data['display_height']),
+                        ($this->domain->setting('max_width') / $files[$i]->content_data['display_width']));
                 $files[$i]->content_data['preview_width'] = ($ratio < 1) ? intval(
                         $ratio * $files[$i]->content_data['display_width']) : $files[$i]->content_data['display_width'];
                 $files[$i]->content_data['preview_height'] = ($ratio < 1) ? intval(
                         $ratio * $files[$i]->content_data['display_height']) : $files[$i]->content_data['display_height'];
             }
 
-            if ($this->board->setting('use_thumb') && $files[$i]->content_data['type'] === 'graphics')
+            if ($this->domain->setting('use_thumb') && $files[$i]->content_data['type'] === 'graphics')
             {
                 $file_handler->createDirectory($preview_path, DIRECTORY_PERM, true);
                 $magick_available = $this->magickAvailable();
                 $files[$i]->content_data['preview_name'] = $files[$i]->content_data['filename'] . '-preview';
 
-                if ($this->board->setting('use_png_thumb'))
+                if ($this->domain->setting('use_png_thumb'))
                 {
                     $files[$i]->content_data['preview_extension'] = 'png';
                 }
@@ -59,7 +59,7 @@ class GeneratePreviews
                     $files[$i]->content_data['preview_extension'] = 'jpg';
                 }
 
-                if ($this->board->setting('use_magick') && $magick_available !== false)
+                if ($this->domain->setting('use_magick') && $magick_available !== false)
                 {
                     if ($magick_available === 'imagick')
                     {
@@ -109,12 +109,12 @@ class GeneratePreviews
         $iterations = $image->getImageIterations();
         $image = $image->coalesceimages();
 
-        if ($file->content_data['format'] === 'gif' && $iterations > 0 && $this->board->setting('animated_gif_preview'))
+        if ($file->content_data['format'] === 'gif' && $iterations > 0 && $this->domain->setting('animated_gif_preview'))
         {
             $file->content_data['preview_extension'] = 'gif';
 
-            if ($file->content_data['display_width'] <= $this->board->setting('max_width') &&
-                    $file->content_data['display_height'] <= $this->board->setting('max_height'))
+            if ($file->content_data['display_width'] <= $this->domain->setting('max_width') &&
+                    $file->content_data['display_height'] <= $this->domain->setting('max_height'))
             {
                 copy($file->content_data['location'],
                         $preview_path . $file->content_data['preview_name'] . '.' .
@@ -137,14 +137,14 @@ class GeneratePreviews
             $image->thumbnailImage($file->content_data['preview_width'], $file->content_data['preview_height'], true);
             $image->sharpenImage(0, 0.5);
 
-            if ($this->board->setting('use_png_thumb'))
+            if ($this->domain->setting('use_png_thumb'))
             {
                 $image->setImageFormat('png');
             }
             else
             {
                 $image->setImageFormat('jpeg');
-                $image->setImageCompressionQuality($this->board->setting('jpeg_quality'));
+                $image->setImageCompressionQuality($this->domain->setting('jpeg_quality'));
             }
 
             $image->writeImage(
@@ -154,11 +154,11 @@ class GeneratePreviews
 
     public function imagemagickPreview($file, $preview_path)
     {
-        if ($file->content_data['format'] === 'gif' && $iterations > 0 && $this->board->setting('animated_gif_preview'))
+        if ($file->content_data['format'] === 'gif' && $iterations > 0 && $this->domain->setting('animated_gif_preview'))
         {
             $file->content_data['preview_extension'] = 'gif';
             $cmd_resize = 'convert ' . escapeshellarg($file->content_data['location']) . ' -coalesce -thumbnail ' .
-                    $this->board->setting('max_width') . 'x' . $this->board->setting('max_height') . escapeshellarg(
+                    $this->domain->setting('max_width') . 'x' . $this->domain->setting('max_height') . escapeshellarg(
                             $preview_path . $file->content_data['preview_name'] . '.' .
                             $file->content_data['preview_extension']);
             exec($cmd_resize);
@@ -167,10 +167,10 @@ class GeneratePreviews
         }
         else
         {
-            if ($this->board->setting('use_png_thumb'))
+            if ($this->domain->setting('use_png_thumb'))
             {
                 $cmd_resize = 'convert ' . escapeshellarg($file->content_data['location']) . ' -resize ' .
-                        $this->board->setting('max_width') . 'x' . $this->board->setting('max_height') .
+                        $this->domain->setting('max_width') . 'x' . $this->domain->setting('max_height') .
                         '\> -quality 00 -sharpen 0x0.5 ' . escapeshellarg(
                                 $preview_path . $file->content_data['preview_name'] . '.' .
                                 $file->content_data['preview_extension']);
@@ -178,8 +178,8 @@ class GeneratePreviews
             else
             {
                 $cmd_resize = 'convert ' . escapeshellarg($file->content_data['location']) . ' -resize ' .
-                        $this->board->setting('max_width') . 'x' . $this->board->setting('max_height') . '\> -quality ' .
-                        $this->board->setting('jpeg_quality') . ' -sharpen 0x0.5 ' . escapeshellarg(
+                        $this->domain->setting('max_width') . 'x' . $this->domain->setting('max_height') . '\> -quality ' .
+                        $this->domain->setting('jpeg_quality') . ' -sharpen 0x0.5 ' . escapeshellarg(
                                 $preview_path . $file->content_data['preview_name'] . '.' .
                                 $file->content_data['preview_extension']);
             }
@@ -219,7 +219,7 @@ class GeneratePreviews
                     $file->content_data['preview_height'], $file->content_data['display_width'],
                     $file->content_data['display_height']);
 
-            if ($this->board->setting('use_png_thumb'))
+            if ($this->domain->setting('use_png_thumb'))
             {
                 imagepng($preview,
                         $preview_path . $file->content_data['preview_name'] . '.' .
@@ -229,7 +229,7 @@ class GeneratePreviews
             {
                 imagejpeg($preview,
                         $preview_path . $file->content_data['preview_name'] . '.' .
-                        $file->content_data['preview_extension'], $this->board->setting('jpeg_quality'));
+                        $file->content_data['preview_extension'], $this->domain->setting('jpeg_quality'));
             }
         }
     }

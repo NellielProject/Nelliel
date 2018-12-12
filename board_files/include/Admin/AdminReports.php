@@ -18,7 +18,7 @@ class AdminReports extends AdminBase
     {
         $this->database = $database;
         $this->authorization = $authorization;
-        $this->board = $domain;
+        $this->domain = $domain;
     }
 
     public function actionDispatch($inputs)
@@ -43,7 +43,7 @@ class AdminReports extends AdminBase
 
     public function renderPanel($user)
     {
-        nel_render_reports_panel($user, $this->board);
+        nel_render_reports_panel($user, $this->domain);
     }
 
     public function creator($user)
@@ -75,7 +75,7 @@ class AdminReports extends AdminBase
                 '" ("board_id", "content_id", "reason", "reporter_ip") VALUES (?, ?, ?, ?)';
                 $prepared = $this->database->prepare($query);
                 $this->database->executePrepared($prepared,
-                        array($this->board->id(), $report_data['content_id'], $report_data['reason'],
+                        array($this->domain->id(), $report_data['content_id'], $report_data['reason'],
                         @inet_pton($report_data['reporter_ip'])));
             }
         }
@@ -95,7 +95,7 @@ class AdminReports extends AdminBase
 
     public function dismiss($user, $report_id)
     {
-        if (!$user->boardPerm($this->board->id(), 'perm_reports_dismiss'))
+        if (!$user->boardPerm($this->domain->id(), 'perm_reports_dismiss'))
         {
             nel_derp(381, _gettext('You are not allowed to dismiss reports.'));
         }

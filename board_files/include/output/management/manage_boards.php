@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_manage_boards_panel($user)
+function nel_render_manage_boards_panel($domain, $user)
 {
     if (!$user->boardPerm('', 'perm_manage_boards_access'))
     {
@@ -13,14 +13,12 @@ function nel_render_manage_boards_panel($user)
 
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
-    $render = new NellielTemplates\RenderCore();
     $url_constructor = new \Nelliel\URLConstructor();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null,
+    $domain->renderInstance()->startRenderTimer();
+    nel_render_general_header($domain->renderInstance(), null, null,
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Create new board')));
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'management/manage_boards_panel_main.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/manage_boards_panel_main.html');
     $dom->getElementById('create-board-form')->extSetAttribute('action', PHP_SELF . '?module=manage-boards&action=add');
     $board_data = $database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC',
             PDO::FETCH_ASSOC);
@@ -63,8 +61,8 @@ function nel_render_manage_boards_panel($user)
 
     $board_info_row->remove();
     $translator->translateDom($dom);
-    $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render);
-    echo $render->outputRenderSet();
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($domain);
+    echo $domain->renderInstance()->outputRenderSet();
     nel_clean_exit();
 }

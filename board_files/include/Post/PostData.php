@@ -14,7 +14,7 @@ class PostData
 
     function __construct($domain, $authorization)
     {
-        $this->board = $domain;
+        $this->domain = $domain;
         $this->authorization = $authorization;
     }
 
@@ -49,7 +49,7 @@ class PostData
             $post->content_data['poster_name'] = _gettext('Anonymous');
         }
 
-        if ($this->board->setting('force_anonymous'))
+        if ($this->domain->setting('force_anonymous'))
         {
             $post->content_data['poster_name'] = _gettext('Anonymous');
             $post->content_data['email'] = '';
@@ -94,12 +94,12 @@ class PostData
 
         $user = $session->sessionUser();
 
-        if(!$user->boardPerm($this->board->id(), 'perm_post_as_staff'))
+        if(!$user->boardPerm($this->domain->id(), 'perm_post_as_staff'))
         {
             return;
         }
 
-        $role = $user->boardRole($this->board->id());
+        $role = $user->boardRole($this->domain->id());
 
         if($role !== false)
         {
@@ -116,7 +116,7 @@ class PostData
         $post->content_data['tripcode'] = '';
         $post->content_data['secure_tripcode'] = '';
 
-        if ($name_pieces[2] !== '' && $this->board->setting('allow_tripkeys'))
+        if ($name_pieces[2] !== '' && $this->domain->setting('allow_tripkeys'))
         {
             $trip = $this->tripcodeCharsetConvert($name_pieces[2], 'SHIFT_JIS', 'UTF-8');
             $salt = substr($trip . 'H.', 1, 2);
@@ -125,7 +125,7 @@ class PostData
             $post->content_data['tripcode'] = substr(crypt($trip, $salt), -10);
         }
 
-        if ($name_pieces[3] !== '' && $this->board->setting('allow_tripkeys'))
+        if ($name_pieces[3] !== '' && $this->domain->setting('allow_tripkeys'))
         {
             $trip = $name_pieces[3];
             $trip = hash(nel_parameters_and_data()->siteSettings('secure_tripcode_algorithm'), $trip . TRIPCODE_SALT);

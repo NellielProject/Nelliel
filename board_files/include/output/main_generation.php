@@ -40,7 +40,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         $domain->renderInstance()->startRenderTimer();
         nel_render_board_header($domain, $dotdot, $treeline);
         nel_render_posting_form($domain, $response_to, $dotdot);
-        nel_render_general_footer($domain->renderInstance(), $domain, $dotdot, true);;
+        nel_render_general_footer($domain, $dotdot, true);;
 
         if ($write)
         {
@@ -199,7 +199,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         nel_render_index_navigation($domain, $dom, $pages);
         nel_render_thread_form_bottom($domain, $dom);
         $domain->renderInstance()->appendHTMLFromDOM($dom);
-        nel_render_general_footer($domain->renderInstance(), $domain, $dotdot, true);
+        nel_render_general_footer($domain, $dotdot, true);
 
         if (!$write)
         {

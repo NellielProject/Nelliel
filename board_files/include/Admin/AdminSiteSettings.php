@@ -11,10 +11,13 @@ require_once INCLUDE_PATH . 'output/management/site_settings_panel.php';
 
 class AdminSiteSettings extends AdminBase
 {
-    function __construct($database, $authorization)
+    private $domain;
+
+    function __construct($database, $authorization, $domain)
     {
         $this->database = $database;
         $this->authorization = $authorization;
+        $this->domain = $domain;
     }
 
     public function actionDispatch($inputs)
@@ -35,7 +38,7 @@ class AdminSiteSettings extends AdminBase
 
     public function renderPanel($user)
     {
-        nel_render_site_settings_panel($user);
+        nel_render_site_settings_panel($this->domain, $user);
     }
 
     public function creator($user)

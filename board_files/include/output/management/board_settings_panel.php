@@ -9,15 +9,13 @@ function nel_render_board_settings_panel($domain, $defaults)
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
     $filetypes = new \Nelliel\FileTypes($database);
-    $render = new NellielTemplates\RenderCore();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'management/board_settings_panel.html');
+    $domain->renderInstance()->startRenderTimer();
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/board_settings_panel.html');
 
     if ($defaults === true)
     {
-        nel_render_general_header($render, null, null,
+        nel_render_general_header($domain->renderInstance(), null, null,
                 array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Default Board Settings')));
         $result = $database->query('SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"');
         $dom->getElementById('board-settings-form')->extSetAttribute('action',
@@ -25,7 +23,7 @@ function nel_render_board_settings_panel($domain, $defaults)
     }
     else
     {
-        nel_render_general_header($render, null, $domain->id(),
+        nel_render_general_header($domain->renderInstance(), null, $domain->id(),
                 array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')));
         $result = $database->query('SELECT * FROM "' . $domain->reference('config_table') . '"');
         $dom->getElementById('board-settings-form')->extSetAttribute('action',
@@ -113,8 +111,8 @@ function nel_render_board_settings_panel($domain, $defaults)
     }
 
     $translator->translateDom($dom, $domain->setting('board_language'));
-    $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render, $domain);
-    echo $render->outputRenderSet();
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($domain);
+    echo $domain->renderInstance()->outputRenderSet();
     nel_clean_exit();
 }

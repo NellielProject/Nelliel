@@ -13,13 +13,11 @@ function nel_render_thread_panel_main($user, $domain)
 
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
-    $render = new NellielTemplates\RenderCore();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, $domain->id(),
+    $domain->renderInstance()->startRenderTimer();
+    nel_render_general_header($domain->renderInstance(), null, $domain->id(),
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Threads')));
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'management/thread_panel.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/thread_panel.html');
     $thread_data = $database->executeFetchAll(
             'SELECT * FROM "' . $domain->reference('thread_table') .
             '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC', PDO::FETCH_ASSOC);
@@ -125,9 +123,9 @@ function nel_render_thread_panel_main($user, $domain)
     $thread_row->remove();
 
     $translator->translateDom($dom);
-    $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render);
-    echo $render->outputRenderSet();
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($domain);
+    echo $domain->renderInstance()->outputRenderSet();
     nel_clean_exit();
 }
 
@@ -141,13 +139,11 @@ function nel_render_thread_panel_expand($user, $domain, $thread_id)
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
-    $render = new NellielTemplates\RenderCore();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, $domain->id(),
+    $domain->renderInstance()->startRenderTimer();
+    nel_render_general_header($domain->renderInstance(), null, $domain->id(),
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Threads')));
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
     $dom->getElementById('thread-list-form')->extSetAttribute('action',
             PHP_SELF . '?module=threads&action=update&board_id=' . $domain->id());
     $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('post_table') . '" WHERE "parent_thread" = ?');
@@ -205,8 +201,8 @@ function nel_render_thread_panel_expand($user, $domain, $thread_id)
     $post_row->remove();
 
     $translator->translateDom($dom);
-    $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render);
-    echo $render->outputRenderSet();
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($domain);
+    echo $domain->renderInstance()->outputRenderSet();
     nel_clean_exit();
 }

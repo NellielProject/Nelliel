@@ -36,6 +36,6 @@ function nel_render_derp($diagnostic, $board_id = '')
     $do_styles = ($domain->id() === '') ? false : true;
     $translator->translateDom($dom);
     $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render, $domain, null, $do_styles);
+    nel_render_general_footer($domain, null, $do_styles);
     echo $render->outputRenderSet();
 }

@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_site_settings_panel($user)
+function nel_render_site_settings_panel($domain, $user)
 {
     if (!$user->boardPerm('', 'perm_site_config_access'))
     {
@@ -13,13 +13,11 @@ function nel_render_site_settings_panel($user)
 
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
-    $render = new NellielTemplates\RenderCore();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_general_header($render, null, null,
+    $domain->renderInstance()->startRenderTimer();
+    nel_render_general_header($domain->renderInstance(), null, null,
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Site Settings')));
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'management/site_settings_panel.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/site_settings_panel.html');
     $dom->getElementById('site-settings-form')->extSetAttribute('action',
             PHP_SELF . '?module=site-settings&action=update');
     $result = $database->query('SELECT * FROM "nelliel_site_config"');
@@ -49,8 +47,8 @@ function nel_render_site_settings_panel($user)
     }
 
     $translator->translateDom($dom);
-    $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render);
-    echo $render->outputRenderSet();
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($domain);
+    echo $domain->renderInstance()->outputRenderSet();
     nel_clean_exit();
 }

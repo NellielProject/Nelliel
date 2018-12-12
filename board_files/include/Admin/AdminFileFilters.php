@@ -17,7 +17,7 @@ class AdminFileFilters extends AdminBase
     {
         $this->database = $database;
         $this->authorization = $authorization;
-        $this->board = $domain;
+        $this->domain = $domain;
     }
 
     public function actionDispatch($inputs)
@@ -41,7 +41,7 @@ class AdminFileFilters extends AdminBase
 
     public function renderPanel($user)
     {
-        nel_render_file_filter_panel($user, $this->board);
+        nel_render_file_filter_panel($user, $this->domain);
     }
 
     public function creator($user)
@@ -80,7 +80,7 @@ class AdminFileFilters extends AdminBase
 
     public function remove($user)
     {
-        if (!$user->boardPerm($this->board->id(), 'perm_file_filters_delete'))
+        if (!$user->boardPerm($this->domain->id(), 'perm_file_filters_delete'))
         {
             nel_derp(342, _gettext('You are not allowed to remove file filters.'));
         }

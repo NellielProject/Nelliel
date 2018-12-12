@@ -12,10 +12,13 @@ require_once INCLUDE_PATH . 'output/management/staff_panel.php';
 // TODO: Split into user and role panels
 class AdminStaff extends AdminBase
 {
-    function __construct($database, $authorization)
+    private $domain;
+
+    function __construct($database, $authorization, $domain)
     {
         $this->database = $database;
         $this->authorization = $authorization;
+        $this->domain = $domain;
     }
 
     // TODO: Separate this out more.
@@ -47,7 +50,7 @@ class AdminStaff extends AdminBase
                     nel_derp(301, _gettext('You are not allowed to modify users.'));
                 }
 
-                nel_render_staff_panel_user_edit(null);
+                nel_render_staff_panel_user_edit($this->domain, null);
                 return;
             }
 
@@ -65,7 +68,7 @@ class AdminStaff extends AdminBase
                     nel_derp(301, _gettext('You are not allowed to modify users.'));
                 }
 
-                nel_render_staff_panel_user_edit($user_id);
+                nel_render_staff_panel_user_edit($this->domain, $user_id);
             }
             else if ($inputs['action'] === 'update')
             {
@@ -126,7 +129,7 @@ class AdminStaff extends AdminBase
                 }
 
                 $this->authorization->saveUsers();
-                nel_render_staff_panel_user_edit($user_id);
+                nel_render_staff_panel_user_edit($this->domain, $user_id);
             }
         }
         else if ($inputs['section'] === 'role')
@@ -143,7 +146,7 @@ class AdminStaff extends AdminBase
                     nel_derp(311, _gettext('You are not allowed to add roles.'));
                 }
 
-                nel_render_staff_panel_role_edit(null);
+                nel_render_staff_panel_role_edit($this->domain, null);
                 return;
             }
 
@@ -161,7 +164,7 @@ class AdminStaff extends AdminBase
                     nel_derp(312, _gettext('You are not allowed to modify roles.'));
                 }
 
-                nel_render_staff_panel_role_edit($role_id);
+                nel_render_staff_panel_role_edit($this->domain, $role_id);
             }
             else if ($inputs['action'] === 'update')
             {
@@ -192,7 +195,7 @@ class AdminStaff extends AdminBase
                 }
 
                 $this->authorization->saveRoles();
-                nel_render_staff_panel_role_edit($role_id);
+                nel_render_staff_panel_role_edit($this->domain, $role_id);
             }
         }
         else
@@ -203,7 +206,7 @@ class AdminStaff extends AdminBase
 
     public function renderPanel($user)
     {
-        nel_render_staff_panel_main();
+        nel_render_staff_panel_main($this->domain);
     }
 
     public function creator($user)

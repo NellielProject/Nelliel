@@ -18,14 +18,14 @@ class FilesUpload
 
     function __construct($domain, $files = array(), $authorization)
     {
-        $this->board = $domain;
+        $this->domain = $domain;
         $this->uploaded_files = $files;
         $this->authorization = $authorization;
     }
 
     public function processFiles($response_to)
     {
-        $data_handler = new PostData($this->board, $this->authorization);
+        $data_handler = new PostData($this->domain, $this->authorization);
         $file_handler = new \Nelliel\FileHandler();
         $post_data = $file_count = 1;
         $filenames = array();
@@ -38,7 +38,7 @@ class FilesUpload
                 continue;
             }
 
-            $file = new \Nelliel\Content\ContentFile(nel_database(), new \Nelliel\ContentID(), $this->board->id());
+            $file = new \Nelliel\Content\ContentFile(nel_database(), new \Nelliel\ContentID(), $this->domain->id());
             $new_file = array();
             $this->uploaded_files[$entry]['location'] = $file_data['tmp_name'];
             $file->content_data['location'] = $file_data['tmp_name'];
@@ -74,7 +74,7 @@ class FilesUpload
             array_push($filenames, $file->content_data['fullname']);
             array_push($this->processed_files, $file);
 
-            if ($file_count == $this->board->setting('max_post_files'))
+            if ($file_count == $this->domain->setting('max_post_files'))
             {
                 break;
             }
@@ -96,9 +96,9 @@ class FilesUpload
     public function checkForErrors($file)
     {
         $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files,
-            'board_id' => $this->board->id());
+            'board_id' => $this->domain->id());
 
-        if ($file['size'] > $this->board->setting('max_filesize') * 1024)
+        if ($file['size'] > $this->domain->setting('max_filesize') * 1024)
         {
             nel_derp(11, _gettext('Spoon is too big.'), $error_data);
         }
@@ -139,7 +139,7 @@ class FilesUpload
         $database = nel_database();
         $snacks = new \Nelliel\Snacks($database, new \Nelliel\BanHammer($database));
         $error_data = array('delete_files' => true, 'bad-filename' => $file->content_data['name'],
-            'files' => $this->uploaded_files, 'board_id' => $this->board->id());
+            'files' => $this->uploaded_files, 'board_id' => $this->domain->id());
         $is_banned = false;
         $file->content_data['md5'] = hash_file('md5', $file->content_data['location'], true);
         $is_banned = $snacks->fileHashIsBanned($file->content_data['md5'], 'md5');
@@ -152,7 +152,7 @@ class FilesUpload
 
         $file->content_data['sha256'] = null;
 
-        if (!$is_banned && $this->board->setting('file_sha256'))
+        if (!$is_banned && $this->domain->setting('file_sha256'))
         {
             $file->content_data['sha256'] = hash_file('sha256', $file->content_data['location'], true);
             $is_banned = $snacks->fileHashIsBanned($file->content_data['sha256'], 'sha256');
@@ -160,7 +160,7 @@ class FilesUpload
 
         $file->content_data['sha512'] = null;
 
-        if (!$is_banned && $this->board->setting('file_sha512'))
+        if (!$is_banned && $this->domain->setting('file_sha512'))
         {
             $file->content_data['sha512'] = hash_file('sha512', $file->content_data['location'], true);
             $is_banned = $snacks->fileHashIsBanned($file->content_data['sha512'], 'sha512');
@@ -171,9 +171,9 @@ class FilesUpload
             nel_derp(22, _gettext('That file is banned.'), $error_data);
         }
 
-        if ($response_to === 0 && $this->board->setting('only_op_duplicates'))
+        if ($response_to === 0 && $this->domain->setting('only_op_duplicates'))
         {
-            $query = 'SELECT 1 FROM "' . $this->board->reference('content_table') .
+            $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
                     '" WHERE "parent_thread" = "post_ref" AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $file->content_data['md5'], PDO::PARAM_LOB);
@@ -181,9 +181,9 @@ class FilesUpload
             $prepared->bindValue(3, $file->content_data['sha256'], PDO::PARAM_LOB);
             $prepared->bindValue(4, $file->content_data['sha512'], PDO::PARAM_LOB);
         }
-        else if ($response_to > 0 && $this->board->setting('only_thread_duplicates'))
+        else if ($response_to > 0 && $this->domain->setting('only_thread_duplicates'))
         {
-            $query = 'SELECT 1 FROM "' . $this->board->reference('content_table') .
+            $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
                     '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
@@ -194,7 +194,7 @@ class FilesUpload
         }
         else
         {
-            $query = 'SELECT 1 FROM "' . $this->board->reference('content_table') .
+            $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
                     '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ? LIMIT 1';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $file->content_data['md5'], PDO::PARAM_LOB);
@@ -215,7 +215,7 @@ class FilesUpload
     {
         $filetypes = new \Nelliel\FileTypes(nel_database());
         $error_data = array('delete_files' => true, 'bad-filename' => $file->content_data['name'],
-            'files' => $this->uploaded_files, 'board_id' => $this->board->id());
+            'files' => $this->uploaded_files, 'board_id' => $this->domain->id());
         $this->getPathInfo($file);
         $test_ext = utf8_strtolower($file->content_data['extension']);
 
@@ -226,7 +226,7 @@ class FilesUpload
 
         $type_data = $filetypes->extensionData($test_ext);
 
-        if (!$filetypes->extensionIsEnabled($this->board->id(), $test_ext))
+        if (!$filetypes->extensionIsEnabled($this->domain->id(), $test_ext))
         {
             nel_derp(19, _gettext('Filetype is not allowed.'), $error_data);
         }

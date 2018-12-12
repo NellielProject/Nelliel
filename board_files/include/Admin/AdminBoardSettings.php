@@ -18,8 +18,8 @@ class AdminBoardSettings extends AdminBase
     {
         $this->database = $database;
         $this->authorization = $authorization;
-        $this->board = $domain;
-        $this->defaults = ($this->board->id() === '') ? true : false;
+        $this->domain = $domain;
+        $this->defaults = ($this->domain->id() === '') ? true : false;
     }
 
     public function actionDispatch($inputs)
@@ -40,7 +40,7 @@ class AdminBoardSettings extends AdminBase
 
     public function renderPanel($user)
     {
-        if (!$user->boardPerm($this->board->id(), 'perm_board_config_access'))
+        if (!$user->boardPerm($this->domain->id(), 'perm_board_config_access'))
         {
             nel_derp(330, _gettext('You are not allowed to modify the board settings.'));
         }
@@ -50,7 +50,7 @@ class AdminBoardSettings extends AdminBase
             nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
         }
 
-        nel_render_board_settings_panel($this->board, $this->defaults);
+        nel_render_board_settings_panel($this->domain, $this->defaults);
     }
 
     public function creator($user)
@@ -67,7 +67,7 @@ class AdminBoardSettings extends AdminBase
 
     public function update($user)
     {
-        if (!$user->boardPerm($this->board->id(), 'perm_board_config_modify'))
+        if (!$user->boardPerm($this->domain->id(), 'perm_board_config_modify'))
         {
             nel_derp(330, _gettext('You are not allowed to modify the board settings.'));
         }
@@ -77,7 +77,7 @@ class AdminBoardSettings extends AdminBase
             nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
         }
 
-        $config_table = ($this->defaults) ? BOARD_DEFAULTS_TABLE : $this->board->reference('config_table');
+        $config_table = ($this->defaults) ? BOARD_DEFAULTS_TABLE : $this->domain->reference('config_table');
 
         while ($item = each($_POST))
         {
@@ -94,8 +94,8 @@ class AdminBoardSettings extends AdminBase
         if (!$this->defaults)
         {
             $regen = new \Nelliel\Regen();
-            $regen->boardCache($this->board);
-            $regen->allPages($this->board);
+            $regen->boardCache($this->domain);
+            $regen->allPages($this->domain);
         }
     }
 

@@ -14,6 +14,14 @@ class Regen
 
     function __construct()
     {
+
+    }
+
+    private function getTemporaryDomain($domain_id)
+    {
+        $domain = new \Nelliel\Domain($domain_id, new \Nelliel\CacheHandler(), nel_database());
+        $domain->renderInstance(new \NellielTemplates\RenderCore());
+        return $domain;
     }
 
     public function threads($domain, $write, $ids)
@@ -24,7 +32,7 @@ class Regen
 
         while ($i < $threads)
         {
-            nel_thread_generator($domain, $write, $ids[$i]);
+            nel_thread_generator($this->getTemporaryDomain($domain->id()), $write, $ids[$i]);
             ++ $i;
         }
     }
@@ -44,7 +52,7 @@ class Regen
     public function index($domain)
     {
         require_once INCLUDE_PATH . 'output/main_generation.php';
-        nel_main_thread_generator($domain, 0, true);
+        nel_main_thread_generator($this->getTemporaryDomain($domain->id()), 0, true);
     }
 
     public function allPages($domain)

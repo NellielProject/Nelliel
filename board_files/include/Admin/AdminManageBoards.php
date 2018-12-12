@@ -13,11 +13,13 @@ use PDO;
 
 class AdminManageBoards extends AdminBase
 {
+    private $domain;
 
-    function __construct($database, $authorization)
+    function __construct($database, $authorization, $domain)
     {
         $this->database = $database;
         $this->authorization = $authorization;
+        $this->domain = $domain;
     }
 
     public function actionDispatch($inputs)
@@ -53,7 +55,7 @@ class AdminManageBoards extends AdminBase
 
     public function renderPanel($user)
     {
-        nel_render_manage_boards_panel($user);
+        nel_render_manage_boards_panel($this->domain, $user);
     }
 
     public function creator($user)
