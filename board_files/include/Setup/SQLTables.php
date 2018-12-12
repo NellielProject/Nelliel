@@ -400,6 +400,30 @@ class SQLTables
         nel_setup_stuff_done($result);
     }
 
+    public function createFrontEndTable($table_name)
+    {
+        $auto_inc = $this->autoincrementColumn('INTEGER');
+        $options = $this->tableOptions();
+        $schema = "
+        CREATE TABLE " . $table_name . " (
+            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            id                      VARCHAR(255) NOT NULL,
+            resource_type           VARCHAR(255) NOT NULL,
+            storage                 VARCHAR(255) NOT NULL,
+            display_name            VARCHAR(255) DEFAULT NULL,
+            location                VARCHAR(255) DEFAULT NULL
+        ) " . $options . ";";
+
+        $result = $this->createTableQuery($schema, $table_name);
+
+        if ($result !== false)
+        {
+            $this->insert_data->frontEndDefaults();
+        }
+
+        nel_setup_stuff_done($result);
+    }
+
     private function autoincrementColumn($int_column)
     {
         $auto = '';

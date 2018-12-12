@@ -327,7 +327,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_files_row', '3']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_multi_width', '175']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_multi_height', '175']);
-        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'jpeg_quality', '85']);
+        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'jpeg_quality', '90']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_width', '256']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_height', '256']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_filesize', '4096']);
@@ -353,6 +353,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'file_sha256', '1']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'file_sha512', '0']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'enable_dynamic_pages', '0']);
+        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'frontend', 'bool', 'template_id', 'nelliel-template']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'graphics', '1']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'jpeg', '1']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'gif', '1']);
@@ -510,6 +511,19 @@ class TableInsertData
         $database->executePrepared($prepared, ['zlb', 'blorb', null, null, null, null, null]);
         $database->executePrepared($prepared, ['tbz', 'bz2', null, null, null, null, null]);
         $database->executePrepared($prepared, ['tbz', 'bz2', null, null, null, null, null]);
+        nel_setup_stuff_done(true);
+    }
+
+    public function frontEndDefaults()
+    {
+        $database = nel_database();
+        $insert_query = "INSERT INTO " . FRONT_END_TABLE . " (id, resource_type, storage, display_name, location) VALUES (?, ?, ?, ?, ?)";
+        $prepared = $database->prepare($insert_query);
+        $database->executePrepared($prepared, ['nelliel-css', 'css', 'file', 'Nelliel', 'nelliel-default/nelliel.css']);
+        $database->executePrepared($prepared, ['futaba-css', 'css', 'file', 'Futaba', 'nelliel-default/futaba.css']);
+        $database->executePrepared($prepared, ['burichan-css', 'css', 'file', 'Burichan', 'nelliel-default/burichan.css']);
+        $database->executePrepared($prepared, ['nigra-css', 'css', 'file', 'Nigra', 'nelliel-default/nigra.css']);
+        $database->executePrepared($prepared, ['nelliel-template', 'template', 'directory', 'Nelliel Default Template', 'nelliel-default']);
         nel_setup_stuff_done(true);
     }
 }
