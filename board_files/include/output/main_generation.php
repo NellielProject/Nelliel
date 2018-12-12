@@ -14,6 +14,7 @@ function nel_main_thread_generator($board, $response_to, $write, $page = 0)
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
     $file_handler = new \Nelliel\FileHandler();
+    $board->renderInstance(new NellielTemplates\RenderCore());
     $thread_table = $gen_data = array();
     $dotdot = ($write) ? '../' : '';
 
@@ -36,23 +37,20 @@ function nel_main_thread_generator($board, $response_to, $write, $page = 0)
     // Special handling when there's no content
     if ($counttree === 0)
     {
-        $render = new NellielTemplates\RenderCore();
-        $board->renderInstance($render);
-        $render->startRenderTimer();
-        $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+        $board->renderInstance()->startRenderTimer();
         nel_render_board_header($board, $dotdot, $treeline);
-        nel_render_posting_form($board, $render, $response_to, $dotdot);
-        nel_render_general_footer($render, $board, $dotdot, true);;
+        nel_render_posting_form($board, $board->renderInstance(), $response_to, $dotdot);
+        nel_render_general_footer($board->renderInstance(), $board, $dotdot, true);;
 
         if ($write)
         {
             $file_handler->writeFile($board->reference('board_directory') . '/' . PHP_SELF2 . PHP_EXT,
-                    $render->outputRenderSet(), FILE_PERM);
+                    $board->renderInstance()->outputRenderSet(), FILE_PERM);
             $session->isIgnored('render', false);
         }
         else
         {
-            echo $render->outputRenderSet();
+            echo $board->renderInstance()->outputRenderSet();
         }
 
         return;
@@ -63,17 +61,14 @@ function nel_main_thread_generator($board, $response_to, $write, $page = 0)
 
     while ($thread_counter < $counttree)
     {
-        $render = new NellielTemplates\RenderCore();
-        $board->renderInstance($render);
-        $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-        $dom = $render->newDOMDocument();
-        $render->loadTemplateFromFile($dom, 'thread.html');
-        $render->startRenderTimer();
+        $dom = $board->renderInstance()->newDOMDocument();
+        $board->renderInstance()->loadTemplateFromFile($dom, 'thread.html');
+        $board->renderInstance()->startRenderTimer();
         $translator->translateDom($dom, $board->setting('board_language'));
         $dom->getElementById('form-content-action')->extSetAttribute('action',
                 $dotdot . PHP_SELF . '?module=threads&area=general&board_id=' . $board->id());
         nel_render_board_header($board, $dotdot, $treeline);
-        nel_render_posting_form($board, $render, $response_to, $dotdot);
+        nel_render_posting_form($board, $board->renderInstance(), $response_to, $dotdot);
         $sub_page_thread_counter = 0;
 
         while ($sub_page_thread_counter < $board->setting('threads_per_page'))
@@ -201,25 +196,25 @@ function nel_main_thread_generator($board, $response_to, $write, $page = 0)
 
         $pages[_gettext('Next')] = $next;
 
-        nel_render_index_navigation($board, $dom, $render, $pages);
+        nel_render_index_navigation($board, $dom, $board->renderInstance(), $pages);
         nel_render_thread_form_bottom($board, $dom);
-        $render->appendHTMLFromDOM($dom);
-        nel_render_general_footer($render, $board, $dotdot, true);
+        $board->renderInstance()->appendHTMLFromDOM($dom);
+        nel_render_general_footer($board->renderInstance(), $board, $dotdot, true);
 
         if (!$write)
         {
-            echo $render->outputRenderSet();
+            echo $board->renderInstance()->outputRenderSet();
             nel_clean_exit();
         }
         else
         {
             $logfilename = ($page === 0) ? $board->reference('board_directory') . '/' . PHP_SELF2 . PHP_EXT : $board->reference('board_directory') .
                     '/' . PHP_SELF2 . '-' . $page . PHP_EXT;
-            $file_handler->writeFile($logfilename, $render->outputRenderSet(), FILE_PERM, true);
+            $file_handler->writeFile($logfilename, $board->renderInstance()->outputRenderSet(), FILE_PERM, true);
         }
 
         ++ $page;
-        unset($render);
+        //unset($board->renderInstance());
     }
 
     if ($write)

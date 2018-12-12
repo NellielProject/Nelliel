@@ -22,15 +22,13 @@ function nel_thread_generator($board, $write, $thread_id)
     }
 
     $dotdot = ($write) ? '../../../' : '';
-    $render = new NellielTemplates\RenderCore();
-    $board->renderInstance($render);
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'thread.html');
+    $board->renderInstance(new NellielTemplates\RenderCore());
+    $dom = $board->renderInstance()->newDOMDocument();
+    $board->renderInstance()->loadTemplateFromFile($dom, 'thread.html');
     $translator->translateDom($dom, $board->setting('board_language'));
-    $expand_dom = $render->newDOMDocument();
-    $collapse_dom = $render->newDOMDocument();
-    $render->startRenderTimer();
+    $expand_dom = $board->renderInstance()->newDOMDocument();
+    $collapse_dom = $board->renderInstance()->newDOMDocument();
+    $board->renderInstance()->startRenderTimer();
     $dom->getElementById('form-content-action')->extSetAttribute('action',
             $dotdot . PHP_SELF . '?module=threads&area=general&board_id=' . $board->id());
     $prepared = $database->prepare('SELECT * FROM "' . $board->reference('thread_table') . '" WHERE "thread_id" = ? LIMIT 1');
@@ -72,7 +70,7 @@ function nel_thread_generator($board, $write, $thread_id)
         if ($post_counter === 0)
         {
             nel_render_board_header($board, $dotdot, $treeline);
-            nel_render_posting_form($board, $render, $thread_id, $dotdot);
+            nel_render_posting_form($board, $board->renderInstance(), $thread_id, $dotdot);
         }
 
         if ($post_counter == $total_posts - 1)
@@ -96,14 +94,14 @@ function nel_thread_generator($board, $write, $thread_id)
 
         if ($post_counter === 99)
         {
-            $render_temp = clone $render;
+            $render_temp = clone $board->renderInstance();
             nel_render_insert_hr($dom);
             $hr_added = true;
-            nel_render_general_footer($render, $board, $dotdot, true);
+            nel_render_general_footer($board->renderInstance(), $board, $dotdot, true);
             $file_handler->writeFile(
                     $board->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-0-100.html',
                     $render_temp->outputRenderSet(), FILE_PERM, true);
-            unset($render_temp);
+            unset($rendertemp);
         }
 
         if ($gen_data['post']['op'] == 1)
@@ -158,24 +156,24 @@ function nel_thread_generator($board, $write, $thread_id)
     }
 
     nel_render_thread_form_bottom($board, $dom);
-    $render->appendHTMLFromDOM($dom);
-    $render->appendHTMLFromDOM($collapse_dom, 'collapse');
-    $render->appendHTMLFromDOM($expand_dom, 'expand');
-    nel_render_general_footer($render, $board, $dotdot, true);
+    $board->renderInstance()->appendHTMLFromDOM($dom);
+    $board->renderInstance()->appendHTMLFromDOM($collapse_dom, 'collapse');
+    $board->renderInstance()->appendHTMLFromDOM($expand_dom, 'expand');
+    nel_render_general_footer($board->renderInstance(), $board, $dotdot, true);
 
     if ($write)
     {
         $file_handler->writeFile($board->reference('page_path') . $thread_id . '/thread-' . $thread_id . '.html',
-                $render->outputRenderSet(), FILE_PERM, true);
+                $board->renderInstance()->outputRenderSet(), FILE_PERM, true);
         $file_handler->writeFile($board->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-expand.html',
-                $render->outputRenderSet('expand'), FILE_PERM, true);
+                $board->renderInstance()->outputRenderSet('expand'), FILE_PERM, true);
         $file_handler->writeFile($board->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-collapse.html',
-                $render->outputRenderSet('collapse'), FILE_PERM, true);
+                $board->renderInstance()->outputRenderSet('collapse'), FILE_PERM, true);
         $json_thread->writeStoredData($board->reference('page_path') . $thread_id . '/', sprintf('thread-%d', $thread_id));
     }
     else
     {
-        echo $render->outputRenderSet();
+        echo $board->renderInstance()->outputRenderSet();
         nel_clean_exit();
     }
 
