@@ -37,9 +37,10 @@ function nel_main_thread_generator($board, $response_to, $write, $page = 0)
     if ($counttree === 0)
     {
         $render = new NellielTemplates\RenderCore();
+        $board->renderInstance($render);
         $render->startRenderTimer();
         $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-        nel_render_board_header($board, $render, $dotdot, $treeline);
+        nel_render_board_header($board, $dotdot, $treeline);
         nel_render_posting_form($board, $render, $response_to, $dotdot);
         nel_render_general_footer($render, $board, $dotdot, true);;
 
@@ -63,6 +64,7 @@ function nel_main_thread_generator($board, $response_to, $write, $page = 0)
     while ($thread_counter < $counttree)
     {
         $render = new NellielTemplates\RenderCore();
+        $board->renderInstance($render);
         $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
         $dom = $render->newDOMDocument();
         $render->loadTemplateFromFile($dom, 'thread.html');
@@ -70,7 +72,7 @@ function nel_main_thread_generator($board, $response_to, $write, $page = 0)
         $translator->translateDom($dom, $board->setting('board_language'));
         $dom->getElementById('form-content-action')->extSetAttribute('action',
                 $dotdot . PHP_SELF . '?module=threads&area=general&board_id=' . $board->id());
-        nel_render_board_header($board, $render, $dotdot, $treeline);
+        nel_render_board_header($board, $dotdot, $treeline);
         nel_render_posting_form($board, $render, $response_to, $dotdot);
         $sub_page_thread_counter = 0;
 

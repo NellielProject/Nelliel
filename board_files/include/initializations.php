@@ -31,6 +31,9 @@ define('FILETYPE_TABLE', 'nelliel_filetypes'); // Site-wide filetypes
 define('FILE_FILTER_TABLE', 'nelliel_file_filters'); // Site-wide file filters
 define('BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults'); // Default config for new boards
 define('REPORTS_TABLE', 'nelliel_reports'); // Content reports
+define('FRONT_END_TABLE', 'nelliel_front_end'); // Templates and styles
+
+define('TEMPLATE_PATH', FILES_PATH . 'templates/'); // Base template path
 
 // Set default values here in case the config is missing something
 $base_config['defaultadmin'] = '';

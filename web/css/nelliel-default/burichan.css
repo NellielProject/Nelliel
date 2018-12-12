@@ -1,9 +1,9 @@
 /* Elements formatting */
 body {
-    background-color: #88F0AF;
-    color: #112211;
+    background-color: #EEF2FF;
+	color: #000000;
     font-size: 1.0em;
-    font-family: serif;
+    font-family: sans-serif;
     margin-left: 5px;
     margin-right: 5px;
 }
@@ -13,19 +13,22 @@ img {
 }
 
 hr {
-    color: #006688;
+	color: #000000;
 }
 
 a {
-    color: #3322CC;
+    color: #34345C;
+    text-decoration: none;
 }
 
 a:visited {
-    color: #3322CC;
+    color: #34345C;
+    text-decoration: none;
 }
 
 a:hover {
-    color: #AA2255;
+    color: #DD0000;
+    text-decoration: none;
 }
 
 /* General formatting */
@@ -48,7 +51,7 @@ a:hover {
 }
 
 .text-logo {
-	color: #6600CC;
+    color: #AF0A0F;
     text-align: center;
     font-size: 2.0em;
     clear: both;
@@ -88,7 +91,7 @@ a:hover {
 }
 
 .manage-header {
-    background-color: #33AAFF;
+    background-color: #9988EE;
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
@@ -97,7 +100,7 @@ a:hover {
 }
 
 .manage-board-header {
-    background-color: #33AAFF;
+    background-color: #9988EE;
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
@@ -106,7 +109,7 @@ a:hover {
 }
 
 .manage-sub-header {
-    background-color: #55CCFF;
+    background-color: #BBAAFF;
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
@@ -120,12 +123,12 @@ a:hover {
 }
 
 .row1 {
-    background-color: #99CCFF;
+    background-color: #9AD2F6;
     font-family: sans-serif;
 }
 
 .row2 {
-    background-color: #BBEEFF;
+    background-color: #FFFFFF;
     font-family: sans-serif;
 }
 
@@ -142,12 +145,11 @@ a:hover {
 
 .posting-form-label {
 	display: table-cell;
-    background-color: #33AAEE;
+    background-color: #9988EE;
     font-weight: bold;
-    color: #000000;
     padding: 3px 5px 3px 5px;
     background-clip: padding-box;
-    border: 1px solid #1188CC;
+    border: 1px solid #7766EE;
     vertical-align: middle;
 }
 
@@ -259,18 +261,19 @@ a:hover {
 }
 
 .old-post {
-    color: #DD1100;
+	color: #CC1105;
     font-size: 1.05em;
     font-weight: bold;
 }
 
 .omitted-posts {
-    color: #5500CC;
+    color: #070707;
     font-weight: bold;
 }
 
 .post-quote {
-    color: #339900;
+    background-color: #C4C2EE;
+    color: #FFFFFF;
 }
 
 .link-quote {
@@ -299,10 +302,6 @@ a:hover {
     display: block;
 }
 
-.reply-post.popup-mod {
-    border: 1px solid #88EEFF;
-}
-
 /* OP post formatting */
 .op-post-header {
 	
@@ -317,7 +316,7 @@ a:hover {
 }
 
 .op-post {
-    color: #112211;
+	color: #000000;
     min-width: 15em;
     height: 100%;
     padding-bottom: 6px;
@@ -325,17 +324,18 @@ a:hover {
 }
 
 .op-post.post-highlight {
-    background-color: #AABBFF;
+	background-color: #AABBFF;
 }
 
 .op-poster-name {
-    color: #CC0077;
+	color: #117743;
     text-decoration: none;
     font-weight: bold;
 }
 
 .op-subject {
-    color: #6611BB;
+    color: #0F0C5D;
+    font-size: 1.05em;
     font-weight: bold;
 }
 
@@ -385,9 +385,9 @@ a:hover {
 }
 
 .reply-post {
-    background-color: #88E4F6;
-    color: #112211;
-    border: 1px solid #66C2D4;
+    background-color: #D6DAF0;
+    color: #000000;
+    border: 1px solid #B4B8F0;
     padding: 5px;
     min-width: 15em;
     height: 100%;
@@ -396,17 +396,18 @@ a:hover {
 }
 
 .reply-post.post-highlight {
-    background-color: #DD99CC;
+	background-color: #AABBFF;
 }
 
 .reply-poster-name {
-    color: #CC0077;
+	color: #117743;
     text-decoration: none;
     font-weight: bold;
 }
 
 .reply-subject {
-    color: #6611BB;
+	color: #0F0C5D;
+    font-size: 1.05em;
     font-weight: bold;
 }
 

@@ -4,14 +4,14 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_board_header($board, $render, $dotdot = null, $treeline = null)
+function nel_render_board_header($board, $dotdot = null, $treeline = null)
 {
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'header.html');
+    $dom = $board->renderInstance()->newDOMDocument();
+    $board->renderInstance()->loadTemplateFromFile($dom, 'header.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $link_elements = $head_element->getElementsByTagName('link');
@@ -119,7 +119,7 @@ function nel_render_board_header($board, $render, $dotdot = null, $treeline = nu
 
     $translator->translateDom($dom, $board->setting('board_language'));
 
-    $render->appendHTMLFromDOM($dom);
+    $board->renderInstance()->appendHTMLFromDOM($dom);
 }
 
 function nel_render_general_header($render, $dotdot = null, $board_id = null, $extra_data = array())

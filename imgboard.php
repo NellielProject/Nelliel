@@ -8,7 +8,7 @@ define('INCLUDE_PATH', FILES_PATH . 'include/'); // Base include files path
 define('CONFIG_PATH', BASE_PATH . 'configuration/'); // Base config path
 define('LIBRARY_PATH', FILES_PATH . 'libraries/'); // Libraries path
 define('PLUGINS_PATH', FILES_PATH . 'plugins/'); // Base plugins path
-define('TEMPLATE_PATH', FILES_PATH . 'templates/nelliel/'); // Base template path
+
 define('LANGUAGE_PATH', FILES_PATH . 'languages/'); // Language path
 define('LOCALE_PATH', LANGUAGE_PATH . 'locale/'); // Locale files path
 define('CACHE_PATH', FILES_PATH . 'cache/'); // Base cache path

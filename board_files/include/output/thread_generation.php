@@ -23,6 +23,7 @@ function nel_thread_generator($board, $write, $thread_id)
 
     $dotdot = ($write) ? '../../../' : '';
     $render = new NellielTemplates\RenderCore();
+    $board->renderInstance($render);
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'thread.html');
@@ -70,7 +71,7 @@ function nel_thread_generator($board, $write, $thread_id)
 
         if ($post_counter === 0)
         {
-            nel_render_board_header($board, $render, $dotdot, $treeline);
+            nel_render_board_header($board, $dotdot, $treeline);
             nel_render_posting_form($board, $render, $thread_id, $dotdot);
         }
 

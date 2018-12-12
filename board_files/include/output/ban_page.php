@@ -9,13 +9,12 @@ function nel_render_ban_page($board, $ban_info)
     require_once INCLUDE_PATH . 'output/header.php';
     require_once INCLUDE_PATH . 'output/footer.php';
     $translator = new \Nelliel\Language\Translator();
-    $render = new NellielTemplates\RenderCore();
+    $board->renderInstance(new NellielTemplates\RenderCore());
     $url_constructor = new \Nelliel\URLConstructor();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
-    nel_render_board_header($board, $render);
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'ban_page.html');
+    $board->renderInstance()->startRenderTimer();
+    nel_render_board_header($board);
+    $dom = $board->renderInstance()->newDOMDocument();
+    $board->renderInstance()->loadTemplateFromFile($dom, 'ban_page.html');
     $banned_board = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board_id'];
     $ban_page_nodes = $dom->getElementsByAttributeName('data-parse-id', true);
     $ban_page_nodes['banned-board']->setContent($banned_board);
@@ -88,7 +87,7 @@ function nel_render_ban_page($board, $ban_info)
     }
 
     $translator->translateDom($dom, $board->setting('board_language'));
-    $render->appendHTMLFromDOM($dom);
-    nel_render_general_footer($render, $board, null, true);
-    echo $render->outputRenderSet();
+    $board->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($board->renderInstance(), $board, null, true);
+    echo $board->renderInstance()->outputRenderSet();
 }

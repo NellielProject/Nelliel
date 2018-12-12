@@ -16,6 +16,7 @@ class Board
     private $board_references;
     private $cache_handler;
     private $database;
+    private $render_instance;
 
     public function __construct($board_id, $cache_handler, $database)
     {
@@ -135,5 +136,16 @@ class Board
             $this->cache_handler->writeCacheFile(CACHE_PATH . $this->board_id . '/', 'board_settings.php',
                     '$board_settings = ' . var_export($settings, true) . ';');
         }
+    }
+
+    public function renderInstance($new_instance = null)
+    {
+        if(!is_null($new_instance))
+        {
+            $this->render_instance = $new_instance;
+            $this->render_instance->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH); // TODO: Update for new front end stuff
+        }
+
+        return $this->render_instance;
     }
 }
