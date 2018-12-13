@@ -41,7 +41,7 @@ class AdminTemplates extends AdminBase
 
     public function renderPanel($user)
     {
-        nel_render_template_panel($user, $this->domain);
+        nel_render_templates_panel($user, $this->domain);
     }
 
     public function creator($user)

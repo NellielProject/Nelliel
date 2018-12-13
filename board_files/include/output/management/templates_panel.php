@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_template_panel($user, $domain)
+function nel_render_templates_panel($user, $domain)
 {
     if (!$user->boardPerm($domain->id(), 'perm_template_access'))
     {
@@ -18,7 +18,7 @@ function nel_render_template_panel($user, $domain)
     nel_render_general_header($domain->renderInstance(), null, null,
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Template Management')));
     $dom = $domain->renderInstance()->newDOMDocument();
-    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/template_panel.html');
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'management/templates_panel.html');
 
     $templates = $database->executeFetchAll(
             'SELECT * FROM "' . FRONT_END_TABLE . '" WHERE "resource_type" = \'template\' ORDER BY "entry" DESC',
