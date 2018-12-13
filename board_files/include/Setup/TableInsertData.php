@@ -119,6 +119,10 @@ class TableInsertData
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_filetypes_add', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_filetypes_modify', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_filetypes_delete', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_styles_access', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_styles_add', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_styles_modify', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_styles_delete', 1]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_site_config_access', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_site_config_modify', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_board_defaults_access', 0]);
@@ -167,6 +171,10 @@ class TableInsertData
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_filetypes_add', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_filetypes_modify', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_filetypes_delete', 0]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_styles_access', 0]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_styles_add', 0]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_styles_modify', 0]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_styles_delete', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_site_config_access', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_site_config_modify', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_board_defaults_access', 0]);
@@ -215,6 +223,10 @@ class TableInsertData
         $database->executePrepared($prepared, ['MOD', 'perm_filetypes_add', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_filetypes_modify', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_filetypes_delete', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_styles_access', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_styles_add', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_styles_modify', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_styles_delete', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_site_config_access', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_site_config_modify', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_board_defaults_access', 0]);
@@ -263,6 +275,10 @@ class TableInsertData
         $database->executePrepared($prepared, ['JANITOR', 'perm_filetypes_add', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_filetypes_modify', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_filetypes_delete', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_styles_access', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_styles_add', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_styles_modify', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_styles_delete', 0]);
         nel_setup_stuff_done(true);
     }
 
@@ -558,10 +574,10 @@ class TableInsertData
         $database = nel_database();
         $insert_query = "INSERT INTO " . FRONT_END_TABLE . " (id, resource_type, storage, display_name, location) VALUES (?, ?, ?, ?, ?)";
         $prepared = $database->prepare($insert_query);
-        $database->executePrepared($prepared, ['nelliel-css', 'css', 'file', 'Nelliel', 'nelliel-default/nelliel.css']);
-        $database->executePrepared($prepared, ['futaba-css', 'css', 'file', 'Futaba', 'nelliel-default/futaba.css']);
-        $database->executePrepared($prepared, ['burichan-css', 'css', 'file', 'Burichan', 'nelliel-default/burichan.css']);
-        $database->executePrepared($prepared, ['nigra-css', 'css', 'file', 'Nigra', 'nelliel-default/nigra.css']);
+        $database->executePrepared($prepared, ['nelliel-css', 'css-file', 'file', 'Nelliel', 'nelliel-default/nelliel.css']);
+        $database->executePrepared($prepared, ['futaba-css', 'css-file', 'file', 'Futaba', 'nelliel-default/futaba.css']);
+        $database->executePrepared($prepared, ['burichan-css', 'css-file', 'file', 'Burichan', 'nelliel-default/burichan.css']);
+        $database->executePrepared($prepared, ['nigra-css', 'css-file', 'file', 'Nigra', 'nelliel-default/nigra.css']);
         $database->executePrepared($prepared, ['nelliel-template-basic', 'template', 'directory', 'Nelliel Basic Template', 'nelliel_basic']);
         $database->executePrepared($prepared, ['nelliel-filetype-basic', 'filetype-icon-set', 'directory', 'Nelliel Filetype Icon Set', 'nelliel_basic']);
         nel_setup_stuff_done(true);

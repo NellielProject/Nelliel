@@ -104,6 +104,16 @@ function nel_render_main_panel($domain, $user)
         $manage_options_nodes['module-link-filetypes']->remove();
     }
 
+    if ($user->boardPerm('', 'perm_styles_access'))
+    {
+        $manage_options_nodes['module-link-styles']->extSetAttribute('href',
+                PHP_SELF . '?module=styles');
+    }
+    else
+    {
+        $manage_options_nodes['module-link-styles']->remove();
+    }
+
     if ($user->boardPerm('', 'perm_extract_gettext'))
     {
         $manage_options_nodes['module-extract-gettext']->extSetAttribute('href',

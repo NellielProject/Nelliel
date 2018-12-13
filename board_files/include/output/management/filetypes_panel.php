@@ -16,7 +16,7 @@ function nel_render_filetypes_panel($user, $domain)
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
     nel_render_general_header($domain->renderInstance(), null, null,
-            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Filetype Management')));
+            array('header' => _gettext('General Management'), 'sub_header' => _gettext('Filetype Management')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/filetypes_panel.html');
 

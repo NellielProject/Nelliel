@@ -324,6 +324,11 @@ function nel_module_dispatch($inputs, $domain)
             $filetypes_panel->actionDispatch($inputs);
             break;
 
+        case 'styles':
+            $styles_panel = new \Nelliel\Admin\AdminStyles(nel_database(), $authorization, $domain);
+            $styles_panel->actionDispatch($inputs);
+            break;
+
         default:
             break;
     }

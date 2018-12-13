@@ -16,7 +16,7 @@ function nel_render_templates_panel($user, $domain)
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
     nel_render_general_header($domain->renderInstance(), null, null,
-            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Template Management')));
+            array('header' => _gettext('General Management'), 'sub_header' => _gettext('Template Management')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/templates_panel.html');
 
