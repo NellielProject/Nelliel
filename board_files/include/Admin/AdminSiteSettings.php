@@ -27,7 +27,7 @@ class AdminSiteSettings extends AdminBase
 
         if($inputs['action'] === 'update')
         {
-            $this->add($user);
+            $this->update($user);
             $this->renderPanel($user);
         }
         else
