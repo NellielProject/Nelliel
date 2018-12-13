@@ -84,7 +84,7 @@ function nel_render_main_panel($domain, $user)
         $manage_options_nodes['module-link-reports']->remove();
     }
 
-    if ($user->boardPerm('', 'perm_template_access'))
+    if ($user->boardPerm('', 'perm_templates_access'))
     {
         $manage_options_nodes['module-link-templates']->extSetAttribute('href',
                 PHP_SELF . '?module=templates');
@@ -92,6 +92,16 @@ function nel_render_main_panel($domain, $user)
     else
     {
         $manage_options_nodes['module-link-templates']->remove();
+    }
+
+    if ($user->boardPerm('', 'perm_filetypes_access'))
+    {
+        $manage_options_nodes['module-link-filetypes']->extSetAttribute('href',
+                PHP_SELF . '?module=filetypes');
+    }
+    else
+    {
+        $manage_options_nodes['module-link-filetypes']->remove();
     }
 
     if ($user->boardPerm('', 'perm_extract_gettext'))

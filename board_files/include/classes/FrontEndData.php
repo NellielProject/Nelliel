@@ -14,6 +14,7 @@ class FrontEndData
     private $database;
     private $css_styles = array();
     private $templates = array();
+    private $filetype_icon_sets = array();
 
     function __construct($database)
     {
@@ -33,6 +34,10 @@ class FrontEndData
             else if ($data['resource_type'] == 'template')
             {
                 $this->templates[$data['id']] = $data;
+            }
+            else if ($data['resource_type'] == 'filetype-icon-set')
+            {
+                $this->filetype_icon_sets[$data['id']] = $data;
             }
         }
     }
@@ -65,5 +70,20 @@ class FrontEndData
         }
 
         return $this->templates[$template];
+    }
+
+    public function filetypeIconSet($set = null)
+    {
+        if (empty($this->filetype_icon_sets))
+        {
+            $this->loadData();
+        }
+
+        if (is_null($set))
+        {
+            return $this->filetype_icon_sets;
+        }
+
+        return $this->filetype_icon_sets[$set];
     }
 }

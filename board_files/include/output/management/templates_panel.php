@@ -6,9 +6,9 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_templates_panel($user, $domain)
 {
-    if (!$user->boardPerm($domain->id(), 'perm_template_access'))
+    if (!$user->boardPerm($domain->id(), 'perm_templates_access'))
     {
-        nel_derp(341, _gettext('You are not allowed to access the template panel.'));
+        nel_derp(341, _gettext('You are not allowed to access the templates panel.'));
     }
 
     $database = nel_database();

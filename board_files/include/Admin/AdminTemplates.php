@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'output/management/template_panel.php';
+require_once INCLUDE_PATH . 'output/management/templates_panel.php';
 
 class AdminTemplates extends AdminBase
 {
@@ -50,7 +50,7 @@ class AdminTemplates extends AdminBase
 
     public function add($user)
     {
-        if (!$user->boardPerm('', 'perm_template_add'))
+        if (!$user->boardPerm('', 'perm_templates_add'))
         {
             nel_derp(341, _gettext('You are not allowed to add templates.'));
         }
@@ -75,7 +75,7 @@ class AdminTemplates extends AdminBase
 
     public function remove($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_template_delete'))
+        if (!$user->boardPerm($this->domain->id(), 'perm_templates_delete'))
         {
             nel_derp(342, _gettext('You are not allowed to remove templates.'));
         }
