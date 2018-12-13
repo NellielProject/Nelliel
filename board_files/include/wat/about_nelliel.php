@@ -10,7 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_about_nelliel_screen()
 {
     $render = new NellielTemplates\RenderCore();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH . 'nelliel-default/');
     nel_render_general_header($render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'about_nelliel.html');

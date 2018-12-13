@@ -45,7 +45,7 @@ if (nel_setup_stuff_done())
     if (USE_INTERNAL_CACHE)
     {
         $regen = new \Nelliel\Regen();
-        $regen->siteCache(new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database());
+        $regen->siteCache(new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database()));
     }
 }
 

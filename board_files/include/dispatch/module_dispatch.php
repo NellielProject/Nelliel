@@ -14,7 +14,7 @@ function nel_module_dispatch($inputs, $domain)
         case 'login':
             if (empty($_POST))
             {
-                nel_render_login_page();
+                nel_render_login_page($domain);
             }
             else
             {

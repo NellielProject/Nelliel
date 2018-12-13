@@ -189,7 +189,9 @@ class Domain
         if (!is_null($new_instance))
         {
             $this->render_instance = $new_instance;
-            $this->render_instance->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH); // TODO: Update for new front end stuff
+            $front_end_data = new \Nelliel\FrontEndData($this->database);
+            $template_path = TEMPLATE_PATH . $front_end_data->template($this->setting('template_id'))['location'];
+            $this->render_instance->getTemplateInstance()->setTemplatePath($template_path); // TODO: Update for new front end stuff
         }
 
         return $this->render_instance;

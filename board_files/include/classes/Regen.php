@@ -58,7 +58,7 @@ class Regen
     {
         $database = nel_database();
         $result = $database->query(
-                'SELECT "thread_id" FROM "' . reference('thread_table') . '" WHERE "archive_status" = 0');
+                'SELECT "thread_id" FROM "' . $domain->reference('thread_table') . '" WHERE "archive_status" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
         $this->threads($domain, true, $ids);
         $this->index($domain);

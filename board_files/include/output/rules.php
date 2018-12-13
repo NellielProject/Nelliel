@@ -8,7 +8,7 @@ function nel_render_rules_list($domain)
 {
     $filetypes = new \Nelliel\FileTypes(nel_database());
     $render = new NellielTemplates\RenderCore();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH . 'nelliel-default/');
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'posting_rules.html');
     $form_rules_list = $dom->getElementById('form-rules-list');

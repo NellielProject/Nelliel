@@ -11,7 +11,7 @@ function nel_render_derp($diagnostic, $board_id = '')
     $translator = new \Nelliel\Language\Translator();
     $render = new NellielTemplates\RenderCore();
     $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH);
+    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH . 'nelliel-default/');
     nel_render_general_header($render);
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'derp.html');
