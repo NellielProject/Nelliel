@@ -84,6 +84,16 @@ function nel_render_main_panel($domain, $user)
         $manage_options_nodes['module-link-reports']->remove();
     }
 
+    if ($user->boardPerm('', 'perm_template_access'))
+    {
+        $manage_options_nodes['module-link-templates']->extSetAttribute('href',
+                PHP_SELF . '?module=templates');
+    }
+    else
+    {
+        $manage_options_nodes['module-link-templates']->remove();
+    }
+
     if ($user->boardPerm('', 'perm_extract_gettext'))
     {
         $manage_options_nodes['module-extract-gettext']->extSetAttribute('href',

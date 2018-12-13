@@ -111,6 +111,10 @@ class TableInsertData
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_file_filters_add', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_file_filters_modify', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_file_filters_delete', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_template_access', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_template_add', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_template_modify', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_template_delete', 1]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_site_config_access', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_site_config_modify', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_board_defaults_access', 0]);
@@ -151,6 +155,10 @@ class TableInsertData
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_file_filters_add', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_file_filters_modify', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_file_filters_delete', 0]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_template_access', 0]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_template_add', 0]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_template_modify', 0]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_template_delete', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_site_config_access', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_site_config_modify', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_board_defaults_access', 0]);
@@ -191,6 +199,10 @@ class TableInsertData
         $database->executePrepared($prepared, ['MOD', 'perm_file_filters_add', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_file_filters_modify', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_file_filters_delete', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_template_access', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_template_add', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_template_modify', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_template_delete', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_site_config_access', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_site_config_modify', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_board_defaults_access', 0]);
@@ -231,6 +243,10 @@ class TableInsertData
         $database->executePrepared($prepared, ['JANITOR', 'perm_file_filters_add', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_file_filters_modify', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_file_filters_delete', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_template_access', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_template_add', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_template_modify', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_template_delete', 0]);
         nel_setup_stuff_done(true);
     }
 

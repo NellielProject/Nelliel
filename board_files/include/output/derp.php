@@ -8,13 +8,12 @@ function nel_render_derp($diagnostic, $board_id = '')
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $domain = new \Nelliel\Domain($board_id, new \Nelliel\CacheHandler(), nel_database());
+    $domain->renderInstance(new NellielTemplates\RenderCore());
     $translator = new \Nelliel\Language\Translator();
-    $render = new NellielTemplates\RenderCore();
-    $render->startRenderTimer();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_PATH . 'nelliel-default/');
-    nel_render_general_header($render);
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'derp.html');
+    $domain->renderInstance()->startRenderTimer();
+    nel_render_general_header($domain->renderInstance());
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'derp.html');
     $dom->getElementById('error-id')->setContent($diagnostic['error_id']);
     $dom->getElementById('error-message')->setContent($diagnostic['error_message']);
     $dom->getElementById('error-data')->setContent(''); // TODO: This actually have something
@@ -35,7 +34,7 @@ function nel_render_derp($diagnostic, $board_id = '')
 
     $do_styles = ($domain->id() === '') ? false : true;
     $translator->translateDom($dom);
-    $render->appendHTMLFromDOM($dom);
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
     nel_render_general_footer($domain, null, $do_styles);
-    echo $render->outputRenderSet();
+    echo $domain->renderInstance()->outputRenderSet();
 }

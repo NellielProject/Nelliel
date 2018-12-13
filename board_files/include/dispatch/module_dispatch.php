@@ -314,6 +314,11 @@ function nel_module_dispatch($inputs, $domain)
 
             break;
 
+        case 'templates':
+            $templates_panel = new \Nelliel\Admin\AdminTemplates(nel_database(), $authorization, $domain);
+            $templates_panel->actionDispatch($inputs);
+            break;
+
         default:
             break;
     }
