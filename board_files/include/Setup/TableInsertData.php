@@ -26,7 +26,6 @@ class TableInsertData
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'output', 'str', 'index_filename_format', 'index-%d']);
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'output', 'str', 'thread_filename_format', 'thread-%d']);
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'bool', 'template_id', 'nelliel-template-basic']);
-        $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'bool', 'filetype_icon_set_id', 'nelliel-filetype-basic']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_bans_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_bans_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_board_data_schema', '001']);
