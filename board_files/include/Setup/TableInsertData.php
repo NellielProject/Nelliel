@@ -459,6 +459,7 @@ class TableInsertData
         $insert_query = "INSERT INTO " . FILETYPE_TABLE .
         " (extension, parent_extension, type, format, mime, id_regex, label) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $prepared = $database->prepare($insert_query);
+        $database->executePrepared($prepared, ['', null, 'graphics', null, null, null, 'Graphics files']);
         $database->executePrepared($prepared, ['jpg', 'jpg', 'graphics', 'jpeg', 'image/jpeg', '^\xFF\xD8\xFF', 'JPEG']);
         $database->executePrepared($prepared, ['jpeg', 'jpg', null, null, null, null, null]);
         $database->executePrepared($prepared, ['jpe', 'jpg', null, null, null, null, null]);
@@ -481,6 +482,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['ai', 'ai', 'graphics', 'illustrator', 'application/postscript', '^%PDF', 'Adobe Illustrator']);
         $database->executePrepared($prepared, ['ps', 'ps', 'graphics', 'postscript', 'application/postscript', '%!PS', 'PostScript']);
         $database->executePrepared($prepared, ['eps', 'eps', 'graphics', 'postscript', 'application/postscript', '^\xC5\xD0\xD3\xC6|%!PS-Adobe-[0-9]\.[0-9] EPSF-[0-9]\.[0-9]', 'Encapsulated PostScript']);
+        $database->executePrepared($prepared, ['', null, 'audio', null, null, null, 'Audio files']);
         $database->executePrepared($prepared, ['wav', 'wav', 'audio', 'wave', 'audio/x-wave', '^RIFF.{4}WAVEfmt', 'WAVE']);
         $database->executePrepared($prepared, ['aif', 'aif', 'audio', 'aiff', 'audio/aiff', '^FORM.{4}AIFF', 'AIFF']);
         $database->executePrepared($prepared, ['aiff', 'aif', null, null, null, null, null]);
@@ -495,6 +497,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['wma', 'wma', 'audio', 'wma', 'audio/x-ms-wma', '^\x30\x26\xB2\x75\x8E\x66\xCF\x11\xA6\xD9\x00\xAA\x00\x62\xCE\x6C', 'Windows Media Audio']);
         $database->executePrepared($prepared, ['midi', 'midi', 'audio', 'midi', 'audio/midi', '^MThd', 'MIDI']);
         $database->executePrepared($prepared, ['mid', 'midi', null, null, null, null, null]);
+        $database->executePrepared($prepared, ['', null, 'video', null, null, null, 'Video files']);
         $database->executePrepared($prepared, ['mpg', 'mpg', 'video', 'mpeg', 'video/mpeg', '^\x00\x00\x01[\xB0-\xBF]', 'MPEG-1/MPEG-2']);
         $database->executePrepared($prepared, ['mpeg', 'mpg', null, null, null, null, null]);
         $database->executePrepared($prepared, ['mpe', 'mpg', null, null, null, null, null]);
@@ -509,6 +512,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['webm', 'webm', 'video', 'webm', 'video/webm', '^\x1A\x45\xDF\xA3', 'WebM']);
         $database->executePrepared($prepared, ['3gp', '3gp', 'video', '3gp', 'video/3gpp', '^.{4}ftyp3gp', '3GP']);
         $database->executePrepared($prepared, ['ogv', 'ogv', 'video', 'ogg-video', 'video/ogg', '^OggS', 'Ogg Video']);
+        $database->executePrepared($prepared, ['', null, 'document', null, null, null, 'Text and document files']);
         $database->executePrepared($prepared, ['rtf', 'rtf', 'document', 'rich-text', 'application/rtf', '^\x7B\x5C\x72\x74\x66\x31', 'Rich Text']);
         $database->executePrepared($prepared, ['pdf', 'pdf', 'document', 'pdf', 'application/pdf', '^\x25PDF', 'PDF']);
         $database->executePrepared($prepared, ['doc', 'doc', 'document', 'msword', 'application/msword', '^\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1|^\xDB\xA5\x2D\x00|^PK\x03\x04', 'Microsoft Word']);
@@ -518,6 +522,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['xls', 'xls', 'document', 'msexcel', 'application/ms-excel', '^\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1|^PK\x03\x04', 'Microsoft Excel']);
         $database->executePrepared($prepared, ['xlsx', 'xls', null, null, null, null, null]);
         $database->executePrepared($prepared, ['txt', 'txt', 'document', 'plaintext', 'text/plain', '', 'Plaintext']);
+        $database->executePrepared($prepared, ['', null, 'archive', null, null, null, 'Archive files']);
         $database->executePrepared($prepared, ['gz', 'gz', 'archive', 'gzip', 'application/gzip', '^\x1F\x8B\x08', 'GZip']);
         $database->executePrepared($prepared, ['tgz', 'gz', null, null, null, null, null]);
         $database->executePrepared($prepared, ['gzip', 'gz', null, null, null, null, null]);
@@ -535,6 +540,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['sitx', 'sit', null, null, null, null, null]);
         $database->executePrepared($prepared, ['iso', 'iso', 'archive', 'iso', 'application/x-iso-image', '^(.{32769}|.{34817}|.{36865})CD001', 'ISO Disk Image']);
         $database->executePrepared($prepared, ['dmg', 'dmg', 'archive', 'dmg', 'application/x-apple-diskimage', 'koly.{508}$', 'Apple Disk Image']);
+        $database->executePrepared($prepared, ['', null, 'other', null, null, null, 'Other files']);
         $database->executePrepared($prepared, ['swf', 'swf', 'other', 'flash-shockwave', 'application/x-shockwave-flash', '^CWS|FWS|ZWS', 'Flash/Shockwave']);
         $database->executePrepared($prepared, ['blorb', 'blorb', 'other', 'blorb', 'application/x-blorb', '^FORM.{4}IFRSRIdx', 'Blorb']);
         $database->executePrepared($prepared, ['blb', 'blorb', null, null, null, null, null]);

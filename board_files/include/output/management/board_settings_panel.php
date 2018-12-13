@@ -48,11 +48,19 @@ function nel_render_board_settings_panel($domain, $defaults)
             {
                 foreach ($filetypes->getFiletypeData() as $filetype)
                 {
+                    // For category entries
+                    if ($filetype['extension'] == '' && !empty($filetype['type']))
+                    {
+                        $dom->getElementById('category-' . $filetype['type'])->setContent($filetype['label']);
+                    }
+
+                    // Not the filetype we're looking for
                     if ($filetype['format'] != $config_line['config_name'])
                     {
                         continue;
                     }
 
+                    // Fill in filetype enable/disable checkboxes
                     if ($filetype['extension'] == $filetype['parent_extension'])
                     {
                         $dom->getElementById('l_' . $filetype['format'])->addContent(
