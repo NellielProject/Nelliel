@@ -1,4 +1,19 @@
 # Nelliel Changelog
+## v0.9.13 (2018/12/12)
+### Added
+ - Templates panel
+ - Ability to add more templates
+ - Board locking
+
+### Changed
+ - Board class changed to Domain
+ - Handle render instances inside Dmain class
+ 
+### Fixed
+ - A couple errors in `module_dispatch.php`
+ - An error in HTML class output
+ - Site settings not updating
+
 ## v0.9.12 (2018/12/6)
 ### Added
  - v0.2 of JSON API
