@@ -14,6 +14,7 @@ class FrontEndData
     private $database;
     private $css_styles = array();
     private $templates = array();
+    private $default_template = array();
     private $filetype_icon_sets = array();
 
     function __construct($database)
@@ -34,6 +35,10 @@ class FrontEndData
             else if ($data['resource_type'] == 'template')
             {
                 $this->templates[$data['id']] = $data;
+            }
+            else if ($data['resource_type'] == 'default-template')
+            {
+                $this->default_template = $data;
             }
             else if ($data['resource_type'] == 'filetype-icon-set')
             {
@@ -57,7 +62,7 @@ class FrontEndData
         return $this->css_styles[$style];
     }
 
-    public function template($template = null)
+    public function template($template = null, $return_default = true)
     {
         if (empty($this->templates))
         {
@@ -67,6 +72,11 @@ class FrontEndData
         if (is_null($template))
         {
             return $this->templates;
+        }
+
+        if(!isset($this->templates[$template]) && $return_default)
+        {
+            return $this->default_template;
         }
 
         return $this->templates[$template];

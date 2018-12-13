@@ -578,7 +578,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['futaba-css', 'css-file', 'file', 'Futaba', 'nelliel-default/futaba.css']);
         $database->executePrepared($prepared, ['burichan-css', 'css-file', 'file', 'Burichan', 'nelliel-default/burichan.css']);
         $database->executePrepared($prepared, ['nigra-css', 'css-file', 'file', 'Nigra', 'nelliel-default/nigra.css']);
-        $database->executePrepared($prepared, ['nelliel-template-basic', 'template', 'directory', 'Nelliel Basic Template', 'nelliel_basic']);
+        $database->executePrepared($prepared, ['nelliel-template-basic', 'default-template', 'directory', 'Nelliel Basic Template', 'nelliel_basic']);
         $database->executePrepared($prepared, ['nelliel-filetype-basic', 'filetype-icon-set', 'directory', 'Nelliel Filetype Icon Set', 'nelliel_basic']);
         nel_setup_stuff_done(true);
     }

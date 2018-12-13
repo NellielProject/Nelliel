@@ -18,7 +18,7 @@
 		</div>
 	</form>
 	<hr>
-	<table id="template-list" class="data-table">
+	<table id="installed-template-list" class="data-table">
 		<tr class="manage-header">
 			<th data-i18n="gettext">Template ID</th>
 			<th data-i18n="gettext">Name</th>
@@ -29,7 +29,23 @@
 			<td data-parse-id="template-id"></td>
 			<td data-parse-id="template-name"></td>
 			<td data-parse-id="template-directory"></td>
-			<td>
+			<td data-parse-id="template-action-1">
+				<a class="display-cell" data-parse-id="template-remove-link" href="" data-i18n="gettext">Remove Template</a>
+			</td>
+		</tr>
+	</table>
+	<table id="available-template-list" class="data-table">
+		<tr class="manage-header">
+			<th data-i18n="gettext">Template ID</th>
+			<th data-i18n="gettext">Name</th>
+			<th data-i18n="gettext">Directory</th>
+			<th data-i18n="gettext">Remove</th>
+		</tr>
+		<tr data-parse-id="template-row" class="row1">
+			<td data-parse-id="template-id"></td>
+			<td data-parse-id="template-name"></td>
+			<td data-parse-id="template-directory"></td>
+			<td data-parse-id="template-action-1">
 				<a class="display-cell" data-parse-id="template-remove-link" href="" data-i18n="gettext">Remove Template</a>
 			</td>
 		</tr>
