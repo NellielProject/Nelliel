@@ -52,7 +52,7 @@ class AdminFileFilters extends AdminBase
     {
         if (!$user->boardPerm('', 'perm_file_filters_add'))
         {
-            nel_derp(341, _gettext('You are not allowed to add file filters.'));
+            nel_derp(341, _gettext('You are not allowed to modify file filters.'));
         }
 
         $type = $_POST['hash_type'];
@@ -82,7 +82,7 @@ class AdminFileFilters extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_file_filters_delete'))
         {
-            nel_derp(342, _gettext('You are not allowed to remove file filters.'));
+            nel_derp(341, _gettext('You are not allowed to modify file filters.'));
         }
 
         $filter_id = $_GET['filter-id'];

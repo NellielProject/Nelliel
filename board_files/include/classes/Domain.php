@@ -98,8 +98,8 @@ class Domain
 
     private function loadBoardSettings()
     {
-        $settings = $this->cache_handler->loadArrayFromCache($this->domain_id . '/domain_settings.php',
-                'domain_settings');
+        $settings = $this->cache_handler->loadArrayFromCache($this->domain_id . '/board_settings.php',
+                'board_settings');
 
         if (empty($settings))
         {
@@ -107,8 +107,8 @@ class Domain
 
             if (USE_INTERNAL_CACHE)
             {
-                $this->cache_handler->writeCacheFile(CACHE_PATH . $this->domain_id . '/', 'domain_settings.php',
-                        '$domain_settings = ' . var_export($settings, true) . ';');
+                $this->cache_handler->writeCacheFile(CACHE_PATH . $this->domain_id . '/', 'board_settings.php',
+                        '$board_settings = ' . var_export($settings, true) . ';');
             }
         }
 

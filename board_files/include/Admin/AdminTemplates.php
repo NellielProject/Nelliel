@@ -56,7 +56,7 @@ class AdminTemplates extends AdminBase
     {
         if (!$user->boardPerm('', 'perm_templates_add'))
         {
-            nel_derp(341, _gettext('You are not allowed to add templates.'));
+            nel_derp(421, _gettext('You are not allowed to modify templates.'));
         }
 
         $template_id = $_GET['template-id'];
@@ -93,7 +93,7 @@ class AdminTemplates extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_templates_delete'))
         {
-            nel_derp(342, _gettext('You are not allowed to remove templates.'));
+            nel_derp(421, _gettext('You are not allowed to modify templates.'));
         }
 
         $template_id = $_GET['template-id'];
@@ -106,7 +106,7 @@ class AdminTemplates extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_templates_modify'))
         {
-            nel_derp(342, _gettext('You are not allowed to modify styles.'));
+            nel_derp(421, _gettext('You are not allowed to modify templates.'));
         }
 
         $template_id = $_GET['template-id'];

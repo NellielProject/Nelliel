@@ -145,7 +145,7 @@ class BanHammer
         {
             if (!$user->boardPerm($domain->id(), 'perm_ban_delete', true) && !$snacks)
             {
-                nel_derp(323, _gettext('You are not allowed to remove bans.'));
+                nel_derp(321, _gettext('You are not allowed to modify bans.'));
             }
         }
 

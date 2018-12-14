@@ -23,8 +23,9 @@ class FilesUpload
         $this->authorization = $authorization;
     }
 
-    public function processFiles($response_to)
+    public function processFiles($post)
     {
+        $response_to = $post->content_data['response_to'];
         $data_handler = new PostData($this->domain, $this->authorization);
         $file_handler = new \Nelliel\FileHandler();
         $post_data = $file_count = 1;
@@ -55,13 +56,19 @@ class FilesUpload
             $file->content_data['license'] = $data_handler->checkEntry($form_info['lol_drama'], 'string');
             $file->content_data['alt_text'] = $data_handler->checkEntry($form_info['alt_text'], 'string');
 
+            if (strlen($file->content_data['fullname'] >= 255))
+            {
+                $file->content_data['filename'] = substr($file->content_data['filename'], 0, -5);
+            }
+
             foreach ($filenames as $filename)
             {
                 if (strcasecmp($filename, $file->content_data['fullname']) === 0)
                 {
-                    if (strlen($file->content_data['fullname'] >= 255))
+                    if (strlen($file->content_data['fullname']) >= 255)
                     {
-                        $file->content_data['filename'] = substr($file->content_data['filename'], 0, -5);
+                        $overage = strlen($file->content_data['fullname']) - 250;
+                        $file->content_data['filename'] = substr($file->content_data['filename'], 0, $overage);
                     }
 
                     $file->content_data['filename'] = $file->content_data['filename'] . '_' . $file_duplicate;
@@ -69,6 +76,15 @@ class FilesUpload
                             $file->content_data['extension'];
                     ++ $file_duplicate;
                 }
+            }
+
+            // Timestamp filename option
+            if ($this->domain->setting('timestamp_filename'))
+            {
+                $file->content_data['filename'] = $post->content_data['post_time'] .
+                $post->content_data['post_time_milli'];
+                $file->content_data['fullname'] = $file->content_data['filename'] . '.' .
+                        $file->content_data['extension'];
             }
 
             array_push($filenames, $file->content_data['fullname']);

@@ -66,7 +66,7 @@ class AdminBans extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_ban_add'))
         {
-            nel_derp(321, _gettext('You are not allowed to add new bans.'));
+            nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
         $ip = (isset($_GET['ban_ip'])) ? $_GET['ban_ip'] : '';
@@ -78,7 +78,7 @@ class AdminBans extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_ban_add'))
         {
-            nel_derp(321, _gettext('You are not allowed to add new bans.'));
+            nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
         $ban_input = $this->ban_hammer->postToArray();
@@ -104,7 +104,7 @@ class AdminBans extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_ban_modify'))
         {
-            nel_derp(322, _gettext('You are not allowed to modify bans.'));
+            nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
         nel_render_ban_panel_modify($this->domain);
@@ -114,7 +114,7 @@ class AdminBans extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_ban_modify'))
         {
-            nel_derp(322, _gettext('You are not allowed to modify bans.'));
+            nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
         $ban_input = $this->ban_hammer->postToArray();
@@ -125,7 +125,7 @@ class AdminBans extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_ban_delete'))
         {
-            nel_derp(323, _gettext('You are not allowed to delete bans.'));
+            nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
         $ban_input = $this->ban_hammer->postToArray();

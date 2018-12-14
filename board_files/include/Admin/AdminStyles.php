@@ -56,7 +56,7 @@ class AdminStyles extends AdminBase
     {
         if (!$user->boardPerm('', 'perm_styles_add'))
         {
-            nel_derp(341, _gettext('You are not allowed to add styles.'));
+            nel_derp(431, _gettext('You are not allowed to modify styles.'));
         }
 
         $style_id = $_GET['style-id'];
@@ -79,7 +79,7 @@ class AdminStyles extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_styles_delete'))
         {
-            nel_derp(342, _gettext('You are not allowed to remove styles.'));
+            nel_derp(431, _gettext('You are not allowed to modify styles.'));
         }
 
         $style_id = $_GET['style-id'];
@@ -92,7 +92,7 @@ class AdminStyles extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_styles_modify'))
         {
-            nel_derp(342, _gettext('You are not allowed to modify styles.'));
+            nel_derp(431, _gettext('You are not allowed to modify styles.'));
         }
 
         $style_id = $_GET['style-id'];

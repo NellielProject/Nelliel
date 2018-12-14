@@ -55,24 +55,21 @@ Error 231: Role does not exist. (Admin/AdminStaff.php)
 Error 232: No valid action. (Admin/AdminStaff.php)  
 
 Error 300: perm_user_access (Admin/AdminStaff.php)  
-Error 301: perm_user_add (Admin/AdminStaff.php)  
-Error 302: perm_user_modify (Admin/AdminStaff.php)  
+Error 301: perm_user_modify (Admin/AdminStaff.php)  
 
 Error 310: perm_role_access (Admin/AdminStaff.php)  
-Error 311: perm_role_add (Admin/AdminStaff.php)  
-Error 312: perm_role_modify (Admin/AdminStaff.php)  
+Error 311: perm_role_modify (Admin/AdminStaff.php)  
 
 Error 320: perm_ban_access (Admin/AdminBans.php)  
-Error 321: perm_ban_add (Admin/AdminBans.php)  
-Error 322: perm_ban_modify (Admin/AdminBans.php)  
-Error 323: perm_ban_delete (Admin/AdminBans.php, classes/BanHammer.php)  
+Error 321: perm_ban_modify (Admin/AdminBans.php, classes/BanHammer.php)  
 
-Error 330: perm_manage_board_config (Admin/AdminBoardSettings.php)  
-Error 332: perm_manage_board_defaults (Admin/AdminBoardSettings.php)  
+Error 330: perm_board_config_access (Admin/AdminBoardSettings.php)  
+Error 331: perm_board_config_modify (Admin/AdminBoardSettings.php)  
+Error 332: perm_board_defaults_access (Admin/AdminBoardSettings.php)  
+Error 333: perm_board_defaults_modify (Admin/AdminBoardSettings.php)  
 
 Error 340: perm_file_filters_access (Admin/AdminFileFilters.php)  
-Error 341: perm_file_filters_add (Admin/AdminFileFilters.php)  
-Error 342: perm_file_filters_delete (Admin/AdminFileFilters.php)  
+Error 341: perm_file_filters_modify (Admin/AdminFileFilters.php)  
 
 Error 350: perm_threads_access (Admin/AdminThreads.php)  
 Error 351: perm_threads_modify (Admin/AdminThreads.php)  
@@ -81,9 +78,7 @@ Error 360: perm_site_config_access (Admin/AdminSiteSettings.php)
 Error 361: perm_site_config_modify (Admin/AdminSiteSettings.php)  
 
 Error 370: perm_manage_boards_access (Admin/AdminManageBoards.php)  
-Error 371: perm_manage_boards_add (Admin/AdminManageBoards.php)  
-Error 372: perm_manage_boards_delete (Admin/AdminManageBoards.php)  
-Error 373: perm_manage_boards_modify (Admin/AdminManageBoards.php)  
+Error 371: perm_manage_boards_modify (Admin/AdminManageBoards.php)  
 
 Error 380: perm_reports_access (Admin/AdminReports.php)  
 Error 381: perm_reports_dismiss (Admin/AdminBoardSettings.php)  
@@ -96,3 +91,12 @@ Error 401: perm_post_lock (Content/ContentThread.php)
 Error 410: perm_regen_pages (dispatch/module_dispatch.php)  
 Error 411: perm_regen_caches (board cache) (dispatch/module_dispatch.php)  
 Error 412: perm_regen_caches (site cache) (dispatch/module_dispatch.php)  
+
+Error 420: perm_templates_access (Admin/AdminTemplates.php)  
+Error 421: perm_templates_modify (Admin/AdminTemplates.php)  
+
+Error 430: perm_filetypes_access (Admin/AdminFiletypes.php)  
+Error 431: perm_filetypes_modify (Admin/AdminFiletypes.php)  
+
+Error 440: perm_styles_access (Admin/AdminStyles.php)  
+Error 441: perm_styles_modify (Admin/AdminStyles.php)  

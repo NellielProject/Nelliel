@@ -81,7 +81,7 @@ class AdminFiletypes extends AdminBase
     {
         if (!$user->boardPerm('', 'perm_filetypes_add'))
         {
-            nel_derp(341, _gettext('You are not allowed to add filetypes or filetype icon sets.'));
+            nel_derp(421, _gettext('You are not allowed to modify styles.'));
         }
 
         $icon_set_id = $_GET['icon-set-id'];
@@ -107,7 +107,7 @@ class AdminFiletypes extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_filetypes_delete'))
         {
-            nel_derp(342, _gettext('You are not allowed to remove filetypes or filetype icon sets.'));
+            nel_derp(421, _gettext('You are not allowed to modify styles.'));
         }
 
         $icon_set_id = $_GET['icon-set-id'];
@@ -120,7 +120,7 @@ class AdminFiletypes extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_filetypes_modify'))
         {
-            nel_derp(342, _gettext('You are not allowed to modify filetypes.'));
+            nel_derp(421, _gettext('You are not allowed to modify styles.'));
         }
 
         $icon_set_id = $_GET['icon-set-id'];

@@ -143,7 +143,7 @@ class AdminStaff extends AdminBase
             {
                 if (!$user->boardPerm('', 'perm_role_add'))
                 {
-                    nel_derp(311, _gettext('You are not allowed to add roles.'));
+                    nel_derp(311, _gettext('You are not allowed to modify roles.'));
                 }
 
                 nel_render_staff_panel_role_edit($this->domain, null);
@@ -161,7 +161,7 @@ class AdminStaff extends AdminBase
 
                 if (!$user->boardPerm('', 'perm_role_modify'))
                 {
-                    nel_derp(312, _gettext('You are not allowed to modify roles.'));
+                    nel_derp(311, _gettext('You are not allowed to modify roles.'));
                 }
 
                 nel_render_staff_panel_role_edit($this->domain, $role_id);

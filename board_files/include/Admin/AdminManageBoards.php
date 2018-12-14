@@ -66,7 +66,7 @@ class AdminManageBoards extends AdminBase
     {
         if (!$user->boardPerm('', 'perm_manage_boards_add'))
         {
-            nel_derp(371, _gettext('You are not allowed to create new boards.'));
+            nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
 
         $board_id = $_POST['new_board_id'];
@@ -99,7 +99,7 @@ class AdminManageBoards extends AdminBase
     {
         if (!$user->boardPerm('', 'perm_manage_boards_delete'))
         {
-            nel_derp(372, _gettext('You are not allowed to create new boards.'));
+            nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
 
         $board_id = $_GET['board_id'];
@@ -124,7 +124,7 @@ class AdminManageBoards extends AdminBase
     {
         if (!$user->boardPerm('', 'perm_manage_boards_modify'))
         {
-            nel_derp(373, _gettext('You are not allowed to modify boards.'));
+            nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
 
         $board_id = $_GET['board_id'];
@@ -136,7 +136,7 @@ class AdminManageBoards extends AdminBase
     {
         if (!$user->boardPerm('', 'perm_manage_boards_modify'))
         {
-            nel_derp(373, _gettext('You are not allowed to modify boards.'));
+            nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
 
         $board_id = $_GET['board_id'];

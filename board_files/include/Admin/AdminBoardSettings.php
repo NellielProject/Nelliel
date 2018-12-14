@@ -42,12 +42,12 @@ class AdminBoardSettings extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_board_config_access'))
         {
-            nel_derp(330, _gettext('You are not allowed to modify the board settings.'));
+            nel_derp(330, _gettext('You are not allowed to access the board settings panel.'));
         }
 
         if ($this->defaults && !$user->boardPerm('', 'perm_board_defaults_access'))
         {
-            nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
+            nel_derp(332, _gettext('You are not allowed to access the default board settings panel.'));
         }
 
         nel_render_board_settings_panel($this->domain, $this->defaults);
@@ -69,12 +69,12 @@ class AdminBoardSettings extends AdminBase
     {
         if (!$user->boardPerm($this->domain->id(), 'perm_board_config_modify'))
         {
-            nel_derp(330, _gettext('You are not allowed to modify the board settings.'));
+            nel_derp(331, _gettext('You are not allowed to modify the board settings.'));
         }
 
         if ($this->defaults && !$user->boardPerm('', 'perm_board_defaults_modify'))
         {
-            nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
+            nel_derp(333, _gettext('You are not allowed to modify the default board settings.'));
         }
 
         $config_table = ($this->defaults) ? BOARD_DEFAULTS_TABLE : $this->domain->reference('config_table');
