@@ -11,7 +11,7 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $url_constructor = new \Nelliel\URLConstructor();
     $posting_form = $dom->getElementById('posting-form');
-    $posting_form->extSetAttribute('action', $dotdot . PHP_SELF . '?module=threads&area=general&action=new-post&board_id=' . $domain->id());
+    $posting_form->extSetAttribute('action', $dotdot . PHP_SELF . '?module=threads&action=new-post&board_id=' . $domain->id());
     $posting_form_input = $dom->getElementById('posting-form-input');
     $posting_form_nodes = $posting_form_input->getElementsByAttributeName('data-parse-id', true);
 
