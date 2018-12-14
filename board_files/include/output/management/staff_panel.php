@@ -124,6 +124,7 @@ function nel_render_staff_panel_user_edit($domain, $user_id)
 
 function nel_render_staff_panel_role_edit($domain, $role_id)
 {
+    $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
     $role = $authorization->getRole($role_id);
@@ -136,6 +137,7 @@ function nel_render_staff_panel_role_edit($domain, $role_id)
             PHP_SELF . '?module=staff&section=role&action=update');
     $role_settings_table = $dom->getElementById('role-edit-settings');
     $role_settings_nodes = $role_settings_table->getElementsByAttributeName('data-parse-id', true);
+    $permissions_list = $database->executeFetchAll('SELECT * FROM "' . PERMISSIONS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
 
     if (!is_null($role_id))
     {
@@ -144,19 +146,19 @@ function nel_render_staff_panel_role_edit($domain, $role_id)
         $dom->getElementById('role_title')->extSetAttribute('value', $role->auth_data['role_title']);
         $dom->getElementById('capcode_text')->extSetAttribute('value', $role->auth_data['capcode_text']);
 
-        foreach ($role->permissions->auth_data as $key => $value)
+        foreach ($permissions_list as $permission)
         {
             $permission_row = $dom->copyNode($role_settings_nodes['permissions-row'], $role_settings_table, 'append');
             $permission_row_nodes = $permission_row->getElementsByAttributeName('data-parse-id', true);
 
-            if ($value === true)
+            if($role->checkPermission($permission['permission']))
             {
-                $permission_row_nodes['entry-checkbox']->extSetAttribute('checked', $value);
+                $permission_row_nodes['entry-checkbox']->extSetAttribute('checked', true);
             }
 
-            $permission_row_nodes['entry-checkbox']->extSetAttribute('name', $key);
-            $permission_row_nodes['entry-hidden-checkbox']->extSetAttribute('name', $key);
-            $permission_row_nodes['entry-label']->setContent($key);
+            $permission_row_nodes['entry-checkbox']->extSetAttribute('name', $permission['permission']);
+            $permission_row_nodes['entry-hidden-checkbox']->extSetAttribute('name', $permission['permission']);
+            $permission_row_nodes['entry-label']->setContent('(' . $permission['permission'] . ') - ' . $permission['description']);
         }
     }
 

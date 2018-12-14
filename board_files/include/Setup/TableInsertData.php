@@ -67,10 +67,10 @@ class TableInsertData
         nel_setup_stuff_done(true);
     }
 
-    public function permissionsDefaults()
+    public function rolePermissionsDefaults()
     {
         $database = nel_database();
-        $insert_query = 'INSERT INTO "' . PERMISSIONS_TABLE . '" ("role_id", "perm_id", "perm_setting") VALUES (?, ?, ?)';
+        $insert_query = 'INSERT INTO "' . ROLE_PERMISSIONS_TABLE . '" ("role_id", "perm_id", "perm_setting") VALUES (?, ?, ?)';
         $prepared = $database->prepare($insert_query);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_site_config_access', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_site_config_modify', 1]);
@@ -216,6 +216,50 @@ class TableInsertData
         $database->executePrepared($prepared, ['JANITOR', 'perm_filetypes_modify', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_styles_access', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_styles_modify', 0]);
+        nel_setup_stuff_done(true);
+    }
+
+    public function permissionsDefaults()
+    {
+        $database = nel_database();
+        $insert_query = 'INSERT INTO "' . PERMISSIONS_TABLE . '" ("permission", "description") VALUES (?, ?)';
+        $prepared = $database->prepare($insert_query);
+        $database->executePrepared($prepared, ['perm_site_config_access', 'Access the Site Settings panel']);
+        $database->executePrepared($prepared, ['perm_site_config_modify', 'Modify site settings']);
+        $database->executePrepared($prepared, ['perm_board_defaults_access', 'Access the Board Defaults panel']);
+        $database->executePrepared($prepared, ['perm_board_defaults_modify', 'Modify board defaults']);
+        $database->executePrepared($prepared, ['perm_board_config_access', 'Access the Board Settings panel']);
+        $database->executePrepared($prepared, ['perm_board_config_modify', 'Modify board settings']);
+        $database->executePrepared($prepared, ['perm_user_access', 'Access the Users panel']);
+        $database->executePrepared($prepared, ['perm_user_modify', 'Modify users']);
+        $database->executePrepared($prepared, ['perm_role_access', 'Access the Roles panel']);
+        $database->executePrepared($prepared, ['perm_role_modify', 'Modify roles']);
+        $database->executePrepared($prepared, ['perm_ban_access', 'Access the Bans panel']);
+        $database->executePrepared($prepared, ['perm_ban_modify', 'Modify bans']);
+        $database->executePrepared($prepared, ['perm_modmode_access', 'Access to Moderator Mode']);
+        $database->executePrepared($prepared, ['perm_threads_access', 'Access the Threads panel']);
+        $database->executePrepared($prepared, ['perm_threads_modify', 'Modify threads and posts']);
+        $database->executePrepared($prepared, ['perm_post_delete', 'Delete posts']);
+        $database->executePrepared($prepared, ['perm_post_as_staff', 'Post as staff']);
+        $database->executePrepared($prepared, ['perm_post_in_locked', 'Post in locked thread']);
+        $database->executePrepared($prepared, ['perm_post_sticky', 'Sticky/unsticky posts and threads']);
+        $database->executePrepared($prepared, ['perm_post_lock', 'Lock/unlock threads']);
+        $database->executePrepared($prepared, ['perm_post_mod_comment', 'Add staff commentary to a post']);
+        $database->executePrepared($prepared, ['perm_reports_access', 'Access the Reports panel']);
+        $database->executePrepared($prepared, ['perm_reports_dismiss', 'Dismiss reports']);
+        $database->executePrepared($prepared, ['perm_regen_cache', 'Regenerate caches']);
+        $database->executePrepared($prepared, ['perm_regen_pages', 'Regenerate pages']);
+        $database->executePrepared($prepared, ['perm_manage_boards_access', 'Access the Manage Boards panel']);
+        $database->executePrepared($prepared, ['perm_manage_boards_modify', 'Modify boards']);
+        $database->executePrepared($prepared, ['perm_extract_gettext', 'Extract Gettext strings']);
+        $database->executePrepared($prepared, ['perm_file_filters_access', 'Access the File Filters panel']);
+        $database->executePrepared($prepared, ['perm_file_filters_modify', 'Modify file filters']);
+        $database->executePrepared($prepared, ['perm_templates_access', 'Access the Templates panel']);
+        $database->executePrepared($prepared, ['perm_templates_modify', 'Modify templates']);
+        $database->executePrepared($prepared, ['perm_filetypes_access', 'Access the Filetypes panel']);
+        $database->executePrepared($prepared, ['perm_filetypes_modify', 'Modify filetypes']);
+        $database->executePrepared($prepared, ['perm_styles_access', 'Access the Styles panel']);
+        $database->executePrepared($prepared, ['perm_styles_modify', 'Modify styles']);
         nel_setup_stuff_done(true);
     }
 

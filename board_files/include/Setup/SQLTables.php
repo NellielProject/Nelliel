@@ -252,7 +252,7 @@ class SQLTables
         nel_setup_stuff_done($result);
     }
 
-    public function createPermissionsTable($table_name)
+    public function createRolePermissionsTable($table_name)
     {
         $auto_inc = $this->autoincrementColumn('INTEGER');
         $options = $this->tableOptions();
@@ -262,6 +262,27 @@ class SQLTables
             role_id                 VARCHAR(255) NULL DEFAULT '',
             perm_id                 VARCHAR(255) NOT NULL,
             perm_setting            SMALLINT NOT NULL DEFAULT 0
+        ) " . $options . ";";
+
+        $result = $this->createTableQuery($schema, $table_name);
+
+        if ($result !== false)
+        {
+            $this->insert_data->rolePermissionsDefaults();
+        }
+
+        nel_setup_stuff_done($result);
+    }
+
+    public function createPermissionsTable($table_name)
+    {
+        $auto_inc = $this->autoincrementColumn('INTEGER');
+        $options = $this->tableOptions();
+        $schema = "
+        CREATE TABLE " . $table_name . " (
+            entry                   " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            permission              VARCHAR(255) NULL DEFAULT '',
+            description             VARCHAR(255) NULL DEFAULT ''
         ) " . $options . ";";
 
         $result = $this->createTableQuery($schema, $table_name);

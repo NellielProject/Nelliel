@@ -23,6 +23,7 @@ define('BAN_TABLE', 'nelliel_bans'); // Contains ban info
 define('USER_TABLE', 'nelliel_users'); // Table of users
 define('ROLES_TABLE', 'nelliel_roles'); // Table of roles
 define('USER_ROLE_TABLE', 'nelliel_user_role'); // Which role is assigned to a user
+define('ROLE_PERMISSIONS_TABLE', 'nelliel_role_permissions'); // Permissions
 define('PERMISSIONS_TABLE', 'nelliel_permissions'); // Permissions
 define('LOGINS_TABLE', 'nelliel_login_attempts'); // Record of failed login attempts
 define('BOARD_DATA_TABLE', 'nelliel_board_data'); // Basic data on each board

@@ -49,6 +49,7 @@ class Setup
         $sql_tables->createUserTable(USER_TABLE);
         $sql_tables->createRolesTable(ROLES_TABLE);
         $sql_tables->createUserRoleTable(USER_ROLE_TABLE);
+        $sql_tables->createRolePermissionsTable(ROLE_PERMISSIONS_TABLE);
         $sql_tables->createPermissionsTable(PERMISSIONS_TABLE);
         $sql_tables->createLoginsTable(LOGINS_TABLE);
         $sql_tables->createBoardDataTable(BOARD_DATA_TABLE);
