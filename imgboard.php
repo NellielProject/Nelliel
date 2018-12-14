@@ -21,9 +21,9 @@ require_once LIBRARY_PATH . 'random_compat/lib/random.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'output/header.php';
 require_once INCLUDE_PATH . 'output/footer.php';
-require_once INCLUDE_PATH . 'derp.php';
-require_once INCLUDE_PATH . 'accessors.php';
 require_once INCLUDE_PATH . 'database.php';
+require_once INCLUDE_PATH . 'accessors.php';
+require_once INCLUDE_PATH . 'derp.php';
 
 $authorization = new \Nelliel\Auth\Authorization(nel_database());
 $language = new \Nelliel\Language\Language($authorization);

@@ -10,7 +10,7 @@ function nel_derp($error_id, $error_message, $error_data = array())
 {
     $backtrace = debug_backtrace();
     $diagnostic = array();
-    $board_id = (isset($error_data['board_id'])) ? $error_data['board_id'] : null;
+    $domain_id = (isset($error_data['board_id'])) ? $error_data['board_id'] : '';
     $diagnostic['error_id'] = (!empty($error_id)) ? $error_id : 0;
     $diagnostic['error_message'] = (!empty($error_message)) ? $error_message : "I just don't know what went wrong!";
 
@@ -28,6 +28,6 @@ function nel_derp($error_id, $error_message, $error_data = array())
         }
     }
 
-    nel_render_derp($diagnostic, $board_id);
+    nel_render_derp($diagnostic, $domain_id);
     nel_clean_exit();
 }

@@ -4,10 +4,10 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_derp($diagnostic, $board_id = '')
+function nel_render_derp($diagnostic, $domain_id = '')
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $domain = new \Nelliel\Domain($board_id, new \Nelliel\CacheHandler(), nel_database());
+    $domain = new \Nelliel\Domain($domain_id, new \Nelliel\CacheHandler(), nel_database());
     $domain->renderInstance(new NellielTemplates\RenderCore());
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
