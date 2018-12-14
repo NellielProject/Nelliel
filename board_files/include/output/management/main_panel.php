@@ -34,8 +34,7 @@ function nel_render_main_panel($domain, $user)
 
     if ($user->boardPerm('', 'perm_manage_boards_access'))
     {
-        $manage_options_nodes['module-link-manage-boards']->extSetAttribute('href',
-                PHP_SELF . '?module=manage-boards');
+        $manage_options_nodes['module-link-manage-boards']->extSetAttribute('href', PHP_SELF . '?module=manage-boards');
     }
     else
     {
@@ -53,16 +52,14 @@ function nel_render_main_panel($domain, $user)
 
     if ($user->boardPerm('', 'perm_site_config_access'))
     {
-        $manage_options_nodes['module-link-site-settings']->extSetAttribute('href',
-                PHP_SELF . '?module=site-settings');
+        $manage_options_nodes['module-link-site-settings']->extSetAttribute('href', PHP_SELF . '?module=site-settings');
     }
     else
     {
         $manage_options_nodes['module-link-site-settings']->remove();
     }
 
-    $manage_options_nodes['module-link-file-filters']->extSetAttribute('href',
-            PHP_SELF . '?module=file-filter');
+    $manage_options_nodes['module-link-file-filters']->extSetAttribute('href', PHP_SELF . '?module=file-filter');
 
     if ($user->boardPerm('', 'perm_board_defaults_access'))
     {
@@ -76,8 +73,7 @@ function nel_render_main_panel($domain, $user)
 
     if ($user->boardPerm('', 'perm_reports_access'))
     {
-        $manage_options_nodes['module-link-reports']->extSetAttribute('href',
-                PHP_SELF . '?module=reports');
+        $manage_options_nodes['module-link-reports']->extSetAttribute('href', PHP_SELF . '?module=reports');
     }
     else
     {
@@ -86,8 +82,7 @@ function nel_render_main_panel($domain, $user)
 
     if ($user->boardPerm('', 'perm_templates_access'))
     {
-        $manage_options_nodes['module-link-templates']->extSetAttribute('href',
-                PHP_SELF . '?module=templates');
+        $manage_options_nodes['module-link-templates']->extSetAttribute('href', PHP_SELF . '?module=templates');
     }
     else
     {
@@ -96,8 +91,7 @@ function nel_render_main_panel($domain, $user)
 
     if ($user->boardPerm('', 'perm_filetypes_access'))
     {
-        $manage_options_nodes['module-link-filetypes']->extSetAttribute('href',
-                PHP_SELF . '?module=filetypes');
+        $manage_options_nodes['module-link-filetypes']->extSetAttribute('href', PHP_SELF . '?module=filetypes');
     }
     else
     {
@@ -106,8 +100,7 @@ function nel_render_main_panel($domain, $user)
 
     if ($user->boardPerm('', 'perm_styles_access'))
     {
-        $manage_options_nodes['module-link-styles']->extSetAttribute('href',
-                PHP_SELF . '?module=styles');
+        $manage_options_nodes['module-link-styles']->extSetAttribute('href', PHP_SELF . '?module=styles');
     }
     else
     {
@@ -116,8 +109,7 @@ function nel_render_main_panel($domain, $user)
 
     if ($user->boardPerm('', 'perm_permissions_access'))
     {
-        $manage_options_nodes['module-link-permissions']->extSetAttribute('href',
-                PHP_SELF . '?module=permissions');
+        $manage_options_nodes['module-link-permissions']->extSetAttribute('href', PHP_SELF . '?module=permissions');
     }
     else
     {
@@ -126,8 +118,7 @@ function nel_render_main_panel($domain, $user)
 
     if ($user->boardPerm('', 'perm_icon_sets_access'))
     {
-        $manage_options_nodes['module-link-icon-sets']->extSetAttribute('href',
-                PHP_SELF . '?module=icon-sets');
+        $manage_options_nodes['module-link-icon-sets']->extSetAttribute('href', PHP_SELF . '?module=icon-sets');
     }
     else
     {
@@ -181,8 +172,7 @@ function nel_render_main_board_panel($domain)
     if ($user->boardPerm($domain->id(), 'perm_ban_access'))
     {
         $bans_elements = $bans->getElementsByAttributeName('data-parse-id', true);
-        $bans_elements['bans-link']->extSetAttribute('href',
-                PHP_SELF . '?module=bans&board_id=' . $domain->id());
+        $bans_elements['bans-link']->extSetAttribute('href', PHP_SELF . '?module=bans&board_id=' . $domain->id());
     }
     else
     {
@@ -195,7 +185,7 @@ function nel_render_main_board_panel($domain)
     {
         $threads_elements = $threads->getElementsByAttributeName('data-parse-id', true);
         $threads_elements['threads-link']->extSetAttribute('href',
-                PHP_SELF . '?module=threads&board_id=' . $domain->id());
+                PHP_SELF . '?module=threads-admin&board_id=' . $domain->id());
     }
     else
     {

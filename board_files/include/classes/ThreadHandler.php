@@ -67,7 +67,7 @@ class ThreadHandler
         }
 
         $regen = new \Nelliel\Regen();
-        $regen->threads($this->domain->id(), true, $updates);
-        $regen->index($this->domain->id());
+        $regen->threads($this->domain, true, $updates);
+        $regen->index($this->domain);
     }
 }

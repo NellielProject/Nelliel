@@ -163,7 +163,7 @@ class ContentThread extends ContentBase
         $first_post = $this->firstPost();
         $last_post = $this->lastPost();
         $prepared = $this->database->prepare(
-                'UPDATE "' . $$this->domain->reference('thread_table') .
+                'UPDATE "' . $this->domain->reference('thread_table') .
                 '" SET "first_post" = ?, "last_post" = ? WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$first_post, $last_post, $this->content_id->thread_id]);
     }
@@ -177,7 +177,7 @@ class ContentThread extends ContentBase
 
     public function sticky()
     {
-        $session = new \Nelliel\Session(new \Nelliel\Auth\Authorization($this->database));
+        $session = new \Nelliel\Session(new \Nelliel\Auth\Authorization($this->database), true);
         $user = $session->sessionUser();
 
         if (!$user->boardPerm($this->domain->id(), 'perm_post_sticky'))
@@ -197,7 +197,7 @@ class ContentThread extends ContentBase
 
     public function lock()
     {
-        $session = new \Nelliel\Session(new \Nelliel\Auth\Authorization($this->database));
+        $session = new \Nelliel\Session(new \Nelliel\Auth\Authorization($this->database), true);
         $user = $session->sessionUser();
 
         if (!$user->boardPerm($this->domain->id(), 'perm_post_lock'))

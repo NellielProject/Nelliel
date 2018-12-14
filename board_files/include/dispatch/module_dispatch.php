@@ -114,6 +114,18 @@ function nel_module_dispatch($inputs, $domain)
             $bans_panel->actionDispatch($inputs);
             break;
 
+        case 'threads-admin':
+            $threads_admin = new \Nelliel\Admin\AdminThreads(nel_database(), $authorization, $domain);
+            $threads_admin->actionDispatch($inputs);
+
+            if ($inputs['action'] === 'ban-delete')
+            {
+                $bans_panel = new \Nelliel\Admin\AdminBans(nel_database(), $authorization, $domain);
+                $bans_panel->actionDispatch($inputs);
+            }
+
+            break;
+
         case 'threads':
             $content_id = new \Nelliel\ContentID($inputs['content_id']);
             $fgsfds = new \Nelliel\FGSFDS();
@@ -174,29 +186,6 @@ function nel_module_dispatch($inputs, $domain)
                 $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $domain, true);
                 $thread->remove();
             }
-            else if ($inputs['action'] === 'sticky' || $inputs['action'] === 'unsticky')
-            {
-                if ($content_id->isPost())
-                {
-                    $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $domain, true);
-                    $post->convertToThread();
-                    $new_content_id = new \Nelliel\ContentID();
-                    $new_content_id->thread_id = $content_id->post_id;
-                    $new_content_id->post_id = $content_id->post_id;
-                    $new_thread = new \Nelliel\Content\ContentThread(nel_database(), $new_content_id, $domain);
-                    $new_thread->sticky();
-                }
-                else
-                {
-                    $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $domain, true);
-                    $thread->sticky();
-                }
-            }
-            else if ($inputs['action'] === 'lock' || $inputs['action'] === 'unlock')
-            {
-                $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $domain, true);
-                $thread->lock();
-            }
             else if ($inputs['action'] === 'delete-file')
             {
                 $file = new \Nelliel\Content\ContentFile(nel_database(), $content_id, $domain, true);
@@ -205,11 +194,6 @@ function nel_module_dispatch($inputs, $domain)
             else if ($inputs['action'] === 'ban-file')
             {
                 ; // TODO: Add file hash
-            }
-            else if ($inputs['action'] === 'load-panel')
-            {
-                $threads_panel = new \Nelliel\Admin\AdminThreads(nel_database(), $authorization, $domain);
-                $threads_panel->actionDispatch($inputs);
             }
             else
             {
@@ -286,32 +270,6 @@ function nel_module_dispatch($inputs, $domain)
             }
 
             nel_render_main_board_panel($domain);
-            break;
-
-        case 'multi':
-            $content_id = new \Nelliel\ContentID($inputs['content_id']);
-
-            if ($inputs['action'] === 'ban.delete-post' || $inputs['action'] === 'ban.delete-thread')
-            {
-                if ($inputs['action'] === 'ban.delete-post')
-                {
-                    $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $domain, true);
-                    $post->remove();
-                }
-                else if ($inputs['action'] === 'ban.delete-thread')
-                {
-                    $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $domain, true);
-                    $thread->remove();
-                }
-
-                $regen = new \Nelliel\Regen();
-                $regen->threads($domain, true, $content_id->thread_id);
-                $regen->index($domain);
-                $inputs['action'] = 'new';
-                $bans_panel = new \Nelliel\Admin\AdminBans(nel_database(), $authorization, $domain);
-                $bans_panel->actionDispatch($inputs);
-            }
-
             break;
 
         case 'templates':

@@ -32,7 +32,7 @@ class AdminBans extends AdminBase
         {
             $this->editor($user);
         }
-        else if ($inputs['action'] === 'new')
+        else if ($inputs['action'] === 'new' || $inputs['action'] === 'ban-delete')
         {
             $this->creator($user);
         }
@@ -96,8 +96,8 @@ class AdminBans extends AdminBase
 
                 $this->database->executePrepared($prepared, array($_POST['mod_post_comment'], $_GET['post-id']));
                 $regen = new \Nelliel\Regen();
-                $regen->threads($this->domain->id(), true, array($_GET['post-id']));
-                $regen->index($this->domain->id());
+                $regen->threads($this->domain, true, array($_GET['post-id']));
+                $regen->index($this->domain);
             }
         }
     }
