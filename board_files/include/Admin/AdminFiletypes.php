@@ -27,24 +27,11 @@ class AdminFiletypes extends AdminBase
 
         if ($inputs['action'] === 'add')
         {
-            if ($inputs['section'] == 'icon-set')
-            {
-                $this->addIconSet($user);
-            }
+            $this->add($user);
         }
         else if ($inputs['action'] == 'remove')
         {
-            if ($inputs['section'] == 'icon-set')
-            {
-                $this->removeIconSet($user);
-            }
-        }
-        else if ($inputs['action'] == 'make-default')
-        {
-            if ($inputs['section'] == 'icon-set')
-            {
-                $this->makeDefault($user);;
-            }
+            $this->remove($user);
         }
         else
         {
@@ -63,6 +50,24 @@ class AdminFiletypes extends AdminBase
 
     public function add($user)
     {
+        if (!$user->boardPerm('', 'perm_filetypes_modify'))
+        {
+            nel_derp(431, _gettext('You are not allowed to modify filetypes.'));
+        }
+
+        $extension = $_POST['extension'];
+        $parent_extension = $_POST['parent_extension'];
+        $type = $_POST['type'];
+        $format = $_POST['format'];
+        $mime = $_POST['mime'];
+        $regex = $_POST['regex'];
+        $label = $_POST['label'];
+        $prepared = $this->database->prepare(
+                'INSERT INTO "' . FILETYPE_TABLE .
+                '" ("extension", "parent_extension", "type", "format", "mime", "id_regex", "label") VALUES (?, ?, ?, ?, ?, ?, ?)');
+        $this->database->executePrepared($prepared,
+                [$extension, $parent_extension, $type, $format, $mime, $regex, $label]);
+        $this->renderPanel($user);
     }
 
     public function editor($user)
@@ -75,58 +80,14 @@ class AdminFiletypes extends AdminBase
 
     public function remove($user)
     {
-    }
-
-    public function addIconSet($user)
-    {
-        if (!$user->boardPerm('', 'perm_filetypes_modify'))
-        {
-            nel_derp(421, _gettext('You are not allowed to modify styles.'));
-        }
-
-        $icon_set_id = $_GET['icon-set-id'];
-        $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
-        $template_inis = $ini_parser->parseDirectories(ICON_SET_PATH . 'filetype/', 'icon_set_info.ini');
-
-        foreach ($template_inis as $ini)
-        {
-            if ($ini['id'] === $icon_set_id)
-            {
-                $name = $ini['name'];
-                $directory = $ini['directory'];
-            }
-        }
-        $prepared = $this->database->prepare(
-                'INSERT INTO "' . ICON_SET_TABLE .
-                '" ("id", "name", "directory", "set_type", "is_default") VALUES (?, ?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$icon_set_id, $name, $directory, 'filetype', 0]);
-        $this->renderPanel($user);
-    }
-
-    public function removeIconSet($user)
-    {
         if (!$user->boardPerm($this->domain->id(), 'perm_filetypes_modify'))
         {
-            nel_derp(421, _gettext('You are not allowed to modify styles.'));
+            nel_derp(431, _gettext('You are not allowed to modify filetypes.'));
         }
 
-        $icon_set_id = $_GET['icon-set-id'];
-        $prepared = $this->database->prepare('DELETE FROM "' . ICON_SET_TABLE . '" WHERE "id" = ?');
-        $this->database->executePrepared($prepared, array($icon_set_id));
-        $this->renderPanel($user);
-    }
-
-    public function makeDefault($user)
-    {
-        if (!$user->boardPerm($this->domain->id(), 'perm_filetypes_modify'))
-        {
-            nel_derp(421, _gettext('You are not allowed to modify styles.'));
-        }
-
-        $icon_set_id = $_GET['icon-set-id'];
-        $this->database->exec('UPDATE "' . ICON_SET_TABLE . '" SET "is_default" = 0 WHERE "set_type" = \'filetype\'');
-        $prepared = $this->database->prepare('UPDATE "' . ICON_SET_TABLE . '" SET "is_default" = ? WHERE "id" = ?');
-        $this->database->executePrepared($prepared, [1, $icon_set_id]);
+        $filetype_id = $_GET['filetype-id'];
+        $prepared = $this->database->prepare('DELETE FROM "' . FILETYPE_TABLE . '" WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, array($filetype_id));
         $this->renderPanel($user);
     }
 }

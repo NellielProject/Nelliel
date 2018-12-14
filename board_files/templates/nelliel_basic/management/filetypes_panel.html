@@ -1,39 +1,60 @@
-	<div data-i18n="gettext" style="font-size: 1.30em; font-weight: bold; text-align: center;">Installed Icon Sets</div>
-	<table id="installed-icon-set-list" class="data-table">
-		<tr class="manage-header">
-			<th data-i18n="gettext">Icon Set ID</th>
-			<th data-i18n="gettext">Name</th>
-			<th data-i18n="gettext">Directory</th>
-			<th data-i18n="gettext">Make Default</th>
-			<th data-i18n="gettext">Remove</th>
-		</tr>
-		<tr data-parse-id="icon-set-row" class="row1">
-			<td data-parse-id="icon-set-id"></td>
-			<td data-parse-id="icon-set-name"></td>
-			<td data-parse-id="icon-set-directory"></td>
-			<td data-parse-id="icon-set-action-1">
-				<a class="display-cell" data-parse-id="icon-set-default-link" href="" data-i18n="gettext">Make Default</a>
-			</td>
-			<td data-parse-id="icon-set-action-2">
-				<a class="display-cell" data-parse-id="icon-set-remove-link" href="" data-i18n="gettext">Remove Icon Set</a>
-			</td>
-		</tr>
-	</table>
+	<form id="add-filetype-form" accept-charset="utf-8" action="" method="post">
+		<div class="display-table">
+			<div class="display-row">
+				<label for="extension" class="display-cell" data-i18n="gettext">Extension</label>
+				<input id="extension" class="display-cell" type="text" name="extension" size="30">
+			</div>
+			<div class="display-row">
+				<label for="parent_extension" class="display-cell" data-i18n="gettext">Parent Extension</label>
+				<input id="parentextension" class="display-cell" type="text" name="parent_extension" size="30">
+			</div>
+			<div class="display-row">
+				<label for="type" class="display-cell" data-i18n="gettext">Type</label>
+				<input id="type" class="display-cell" type="text" name="type" size="30">
+			</div>
+			<div class="display-row">
+				<label for="format" class="display-cell" data-i18n="gettext">Format</label>
+				<input id="format" class="display-cell" type="text" name="format" size="30">
+			</div>
+			<div class="display-row">
+				<label for="mime" class="display-cell" data-i18n="gettext">Mime type</label>
+				<input id="mime" class="display-cell" type="text" name="mime" size="30">
+			</div>
+			<div class="display-row">
+				<label for="regex" class="display-cell" data-i18n="gettext">Identification regex</label>
+				<input id="regex" class="display-cell" type="text" name="regex" size="30">
+			</div>
+			<div class="display-row">
+				<label for="label" class="display-cell" data-i18n="gettext">Label</label>
+				<input id="label" class="display-cell" type="text" name="label" size="30">
+			</div>
+			<div class="display-row">
+				<input type="submit" value="Add Filetype" data-i18n="gettext" data-i18n-attributes="value">
+			</div>
+		</div>
+	</form>
 	<hr>
-	<div data-i18n="gettext" style="font-size: 1.30em; font-weight: bold; text-align: center;">Available Icon Sets</div>
-	<table id="available-icon-set-list" class="data-table">
+	<table id="filetype-list" class="data-table">
 		<tr class="manage-header">
-			<th data-i18n="gettext">Icon Set ID</th>
-			<th data-i18n="gettext">Name</th>
-			<th data-i18n="gettext">Directory</th>
+			<th data-i18n="gettext">Extension</th>
+			<th data-i18n="gettext">Parent Extension</th>
+			<th data-i18n="gettext">Type</th>
+			<th data-i18n="gettext">Format</th>
+			<th data-i18n="gettext">Mime</th>
+			<th data-i18n="gettext">Regex</th>
+			<th data-i18n="gettext">Label</th>
 			<th data-i18n="gettext">Remove</th>
 		</tr>
-		<tr data-parse-id="icon-set-row" class="row1">
-			<td data-parse-id="icon-set-id"></td>
-			<td data-parse-id="icon-set-name"></td>
-			<td data-parse-id="icon-set-directory"></td>
-			<td data-parse-id="icon-set-action-1">
-				<a class="display-cell" data-parse-id="icon-set-install-link" href="" data-i18n="gettext">Install Icon Set</a>
+		<tr data-parse-id="filetype-row" class="row1">
+			<td data-parse-id="extension"></td>
+			<td data-parse-id="parent-extension"></td>
+			<td data-parse-id="type"></td>
+			<td data-parse-id="format"></td>
+			<td data-parse-id="mime"></td>
+			<td data-parse-id="regex"></td>
+			<td data-parse-id="label"></td>
+			<td>
+				<a class="display-cell" data-parse-id="filetype-remove-link" href="" data-i18n="gettext">Remove Filetype</a>
 			</td>
 		</tr>
 	</table>

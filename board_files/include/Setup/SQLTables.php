@@ -374,8 +374,7 @@ class SQLTables
             format                  VARCHAR(255) NULL DEFAULT '',
             mime                    VARCHAR(255) NULL DEFAULT '',
             id_regex                VARCHAR(512) NULL DEFAULT '',
-            label                   VARCHAR(255) NULL DEFAULT '',
-            description             TEXT NULL DEFAULT ''
+            label                   VARCHAR(255) NULL DEFAULT ''
         ) " . $options . ";";
 
         $result = $this->createTableQuery($schema, $table_name);

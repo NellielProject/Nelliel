@@ -334,6 +334,11 @@ function nel_module_dispatch($inputs, $domain)
             $permissions_panel->actionDispatch($inputs);
             break;
 
+        case 'icon-sets':
+            $icon_sets_panel = new \Nelliel\Admin\AdminIconSets(nel_database(), $authorization, $domain);
+            $icon_sets_panel->actionDispatch($inputs);
+            break;
+
         default:
             break;
     }

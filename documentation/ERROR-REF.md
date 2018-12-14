@@ -101,5 +101,8 @@ Error 431: perm_filetypes_modify (Admin/AdminFiletypes.php)
 Error 440: perm_styles_access (Admin/AdminStyles.php)  
 Error 441: perm_styles_modify (Admin/AdminStyles.php)  
 
-Error 450: perm_styles_access (Admin/AdminPermissions.php)  
-Error 451: perm_styles_modify (Admin/AdminPermissions.php)  
+Error 450: perm_permissions_access (Admin/AdminPermissions.php)  
+Error 451: perm_permissions_modify (Admin/AdminPermissions.php)  
+
+Error 460: perm_icon_sets_access (Admin/AdminIconSets.php)  
+Error 461: perm_icon_sets_modify (Admin/AdminIconSets.php)  
