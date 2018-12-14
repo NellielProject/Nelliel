@@ -13,9 +13,6 @@ class ContentID
     public $post_id = 0;
     public $order_id = 0;
     protected $id_string = 'nci_0_0_0';
-    protected $is_thread = false;
-    protected $is_post = false;
-    protected $is_file = false;
 
     function __construct($id_string = 'nci_0_0_0')
     {
@@ -24,9 +21,6 @@ class ContentID
         $this->thread_id = $id_array['thread'];
         $this->post_id = $id_array['post'];
         $this->order_id = $id_array['order'];
-        $this->is_file = $id_array['order'] > 0;
-        $this->is_post = !$this->is_file && $id_array['post'] > 0;
-        $this->is_thread = !$this->is_file && !$this->is_post && $id_array['thread'] > 0;
     }
 
     public static function isContentID($string)
@@ -51,21 +45,21 @@ class ContentID
 
     public function getIDString()
     {
-        return $this->id_string;
+        return $this->createIDString($this->thread_id, $this->post_id, $this->order_id);
     }
 
     public function isThread()
     {
-        return $this->is_thread;
+        return !$this->isPost() && !$this->isFile() && $this->thread_id > 0;
     }
 
     public function isPost()
     {
-        return $this->is_post;
+        return !$this->isFile() && $this->post_id > 0;
     }
 
     public function isFile()
     {
-        return $this->is_file;
+        return $this->order_id > 0;
     }
 }
