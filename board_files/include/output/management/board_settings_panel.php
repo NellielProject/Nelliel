@@ -12,13 +12,15 @@ function nel_render_board_settings_panel($domain, $defaults)
     $domain->renderInstance()->startRenderTimer();
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/board_settings_panel.html');
+    $settings_form = $dom->getElementById('board-settings-form');
+    $settings_form_nodes = $settings_form->getElementsByAttributeName('data-parse-id', true);
 
     if ($defaults === true)
     {
         nel_render_general_header($domain->renderInstance(), null, null,
                 array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Default Board Settings')));
         $result = $database->query('SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"');
-        $dom->getElementById('board-settings-form')->extSetAttribute('action',
+        $settings_form->extSetAttribute('action',
                 PHP_SELF . '?module=default-board-settings&action=update');
     }
     else
@@ -26,56 +28,84 @@ function nel_render_board_settings_panel($domain, $defaults)
         nel_render_general_header($domain->renderInstance(), null, $domain->id(),
                 array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')));
         $result = $database->query('SELECT * FROM "' . $domain->reference('config_table') . '"');
-        $dom->getElementById('board-settings-form')->extSetAttribute('action',
+        $settings_form->extSetAttribute('action',
                 PHP_SELF . '?module=board-settings&action=update&board_id=' . $domain->id());
     }
 
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
 
+    $all_filetypes = $filetypes->getFiletypeData();
+    $all_categories = $filetypes->getFiletypeCategories();
+    $category_nodes = array();
+    $filetype_entries_nodes = array();
+
+    foreach ($all_categories as $category)
+    {
+        $filetype_category = $dom->copyNode($settings_form_nodes['filetype-category-table'], $settings_form, 'append');
+        $category_nodes['category-' . $category['type']] = $filetype_category;
+        $filetype_category_nodes = $filetype_category->getElementsByAttributeName('data-parse-id', true);
+        $filetype_category_nodes['category-header']->setContent($category['label']);
+        $filetype_category->changeId('category-' . $category['type']);
+        $filetype_category_nodes['entry-label']->setContent('Allow ' . $category['type']);
+        $filetype_entries_nodes[$category['type']] = $filetype_category_nodes['filetype-entry']->getElementsByAttributeName('data-parse-id', true);
+    }
+
+    $count = 0;
+    $current_entry_row = null;
+
+    foreach ($all_filetypes as $filetype)
+    {
+        if ($filetype['extension'] == $filetype['parent_extension'])
+        {
+            if($count > 2)
+            {
+                $count = 0;
+            }
+
+            if($count === 0)
+            {
+                $parent_category = $category_nodes['category-' . $filetype['type']];
+                $current_entry_row = $dom->copyNode($settings_form_nodes['filetype-entry-row'], $parent_category, 'append');
+                $current_entry_row->getElementsByAttributeName('data-parse-id', true)['filetype-entry']->remove();
+            }
+
+            $current_entry = $dom->copyNode($settings_form_nodes['filetype-entry'], $current_entry_row, 'append');
+            $current_entry_nodes = $current_entry->getElementsByAttributeName('data-parse-id', true);
+            $current_entry_nodes['entry-label']->addContent($filetype['label'] . ' - .' . $filetype['extension'], 'before');
+            $filetype_entries_nodes[$filetype['format']] = $current_entry_nodes;
+            $count++;
+        }
+        else
+        {
+            $filetype_entries_nodes[$filetype['format']]['entry-label']->addContent(', .' . $filetype['extension'], 'after');
+        }
+    }
+
     foreach ($rows as $config_line)
     {
         if ($config_line['data_type'] === 'bool')
         {
-            $config_element = $dom->getElementById($config_line['config_name']);
-
-            if (is_null($config_element))
-            {
-                continue;
-            }
-
             if ($config_line['config_type'] === 'filetype_enable')
             {
-                foreach ($filetypes->getFiletypeData() as $filetype)
+                if ($config_line['setting'] == 1)
                 {
-                    // For category entries
-                    if ($filetype['extension'] == '' && !empty($filetype['type']))
-                    {
-                        $dom->getElementById('category-' . $filetype['type'])->setContent($filetype['label']);
-                    }
-
-                    // Not the filetype we're looking for
-                    if ($filetype['format'] != $config_line['config_name'])
-                    {
-                        continue;
-                    }
-
-                    // Fill in filetype enable/disable checkboxes
-                    if ($filetype['extension'] == $filetype['parent_extension'])
-                    {
-                        $dom->getElementById('l_' . $filetype['format'])->addContent(
-                                $filetype['label'] . ' - .' . $filetype['extension'], 'before');
-                    }
-                    else
-                    {
-                        $dom->getElementById('l_' . $filetype['format'])->addContent(', .' . $filetype['extension']);
-                    }
+                    $filetype_entries_nodes[$config_line['config_name']]['entry-checkbox']->extSetAttribute('checked', 'true');
                 }
             }
-
-            if ($config_line['setting'] == 1)
+            else
             {
-                $config_element->extSetAttribute('checked', 'true');
+                $config_element = $dom->getElementById($config_line['config_name']);
+
+                if (is_null($config_element))
+                {
+                    continue;
+                }
+
+                if ($config_line['setting'] == 1)
+                {
+                    $config_element->extSetAttribute('checked', 'true');
+                }
             }
         }
         else
@@ -118,6 +148,7 @@ function nel_render_board_settings_panel($domain, $defaults)
         }
     }
 
+    $settings_form_nodes['filetype-category-table']->remove();
     $translator->translateDom($dom, $domain->setting('language'));
     $domain->renderInstance()->appendHTMLFromDOM($dom);
     nel_render_general_footer($domain);

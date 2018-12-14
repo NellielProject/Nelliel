@@ -476,6 +476,14 @@ a:hover {
     text-align: center;
 }
 
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
 .nelliel-license-div {
     font-size: 1.0em;
     text-align: left;

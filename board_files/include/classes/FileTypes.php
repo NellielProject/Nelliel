@@ -15,6 +15,7 @@ class FileTypes
     private $database;
     private static $filetype_data;
     private static $filetype_settings;
+    private static $filetype_categories;
 
     function __construct($database)
     {
@@ -25,11 +26,18 @@ class FileTypes
     private function loadDataFromDatabase()
     {
         $filetypes = array();
-        $db_results = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes"', PDO::FETCH_ASSOC);
+        $db_results = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes" ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
         $sub_extensions = array();
+        $categories = array();
 
         foreach ($db_results as $result)
         {
+            if($result['extension'] == '')
+            {
+                $categories[$result['type']] = $result;
+                continue;
+            }
+
             if ($result['extension'] == $result['parent_extension'])
             {
                 $filetypes[$result['extension']] = $result;
@@ -39,6 +47,8 @@ class FileTypes
                 $sub_extensions[] = $result;
             }
         }
+
+        self::$filetype_categories = $categories;
 
         foreach ($sub_extensions as $sub_extension)
         {
@@ -78,6 +88,12 @@ class FileTypes
     {
         $this->filetypesLoaded(true);
         return self::$filetype_data;
+    }
+
+    public function getFiletypeCategories()
+    {
+        $this->filetypesLoaded(true);
+        return self::$filetype_categories;
     }
 
     public function isValidExtension($extension)
