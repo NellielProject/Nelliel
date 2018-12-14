@@ -1,0 +1,30 @@
+	<form id="add-permission-form" accept-charset="utf-8" action="" method="post">
+		<div class="display-table">
+			<div class="display-row">
+				<label for="permission" class="display-cell" data-i18n="gettext">Permission</label>
+				<input id="permission" class="display-cell" type="text" name="permission" size="30">
+			</div>
+			<div class="display-row">
+				<label for="description" class="display-cell" data-i18n="gettext">Short description</label>
+				<input id="description" class="display-cell" type="text" name="description" size="30">
+			</div>
+			<div class="display-row">
+				<input type="submit" value="Add Permission" data-i18n="gettext" data-i18n-attributes="value">
+			</div>
+		</div>
+	</form>
+	<hr>
+	<table id="permission-list" class="data-table">
+		<tr class="manage-header">
+			<th data-i18n="gettext">Permission</th>
+			<th data-i18n="gettext">Description</th>
+			<th data-i18n="gettext">Remove</th>
+		</tr>
+		<tr data-parse-id="permission-row" class="row1">
+			<td data-parse-id="permission"></td>
+			<td data-parse-id="description"></td>
+			<td>
+				<a class="display-cell" data-parse-id="permission-remove-link" href="" data-i18n="gettext">Remove Permission</a>
+			</td>
+		</tr>
+	</table>

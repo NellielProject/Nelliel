@@ -64,7 +64,7 @@ class AdminManageBoards extends AdminBase
 
     public function add($user)
     {
-        if (!$user->boardPerm('', 'perm_manage_boards_add'))
+        if (!$user->boardPerm('', 'perm_manage_boards_modify'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
@@ -97,7 +97,7 @@ class AdminManageBoards extends AdminBase
 
     public function remove($user)
     {
-        if (!$user->boardPerm('', 'perm_manage_boards_delete'))
+        if (!$user->boardPerm('', 'perm_manage_boards_modify'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }

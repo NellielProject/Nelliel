@@ -54,7 +54,7 @@ class AdminStyles extends AdminBase
 
     public function add($user)
     {
-        if (!$user->boardPerm('', 'perm_styles_add'))
+        if (!$user->boardPerm('', 'perm_styles_modify'))
         {
             nel_derp(431, _gettext('You are not allowed to modify styles.'));
         }
@@ -77,7 +77,7 @@ class AdminStyles extends AdminBase
 
     public function remove($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_styles_delete'))
+        if (!$user->boardPerm($this->domain->id(), 'perm_styles_modify'))
         {
             nel_derp(431, _gettext('You are not allowed to modify styles.'));
         }

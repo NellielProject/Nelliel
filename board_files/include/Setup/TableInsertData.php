@@ -108,6 +108,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_filetypes_modify', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_styles_access', 1]);
         $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_styles_modify', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_permissions_access', 1]);
+        $database->executePrepared($prepared, ['SUPER_ADMIN', 'perm_permissions_modify', 1]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_site_config_access', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_site_config_modify', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_board_defaults_access', 0]);
@@ -144,6 +146,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_filetypes_modify', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_styles_access', 0]);
         $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_styles_modify', 0]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_permissions_access', 0]);
+        $database->executePrepared($prepared, ['BOARD_ADMIN', 'perm_permissions_modify', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_site_config_access', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_site_config_modify', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_board_defaults_access', 0]);
@@ -180,6 +184,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['MOD', 'perm_filetypes_modify', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_styles_access', 0]);
         $database->executePrepared($prepared, ['MOD', 'perm_styles_modify', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_permissions_access', 0]);
+        $database->executePrepared($prepared, ['MOD', 'perm_permissions_modify', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_site_config_access', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_site_config_modify', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_board_defaults_access', 0]);
@@ -216,6 +222,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['JANITOR', 'perm_filetypes_modify', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_styles_access', 0]);
         $database->executePrepared($prepared, ['JANITOR', 'perm_styles_modify', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_permissions_access', 0]);
+        $database->executePrepared($prepared, ['JANITOR', 'perm_permissions_modify', 0]);
         nel_setup_stuff_done(true);
     }
 
@@ -260,6 +268,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['perm_filetypes_modify', 'Modify filetypes']);
         $database->executePrepared($prepared, ['perm_styles_access', 'Access the Styles panel']);
         $database->executePrepared($prepared, ['perm_styles_modify', 'Modify styles']);
+        $database->executePrepared($prepared, ['perm_permissions_access', 'Access the Permissions panel']);
+        $database->executePrepared($prepared, ['perm_permissions_modify', 'Modify permissions']);
         nel_setup_stuff_done(true);
     }
 

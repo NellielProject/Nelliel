@@ -22,7 +22,7 @@ function nel_render_filetypes_panel($user, $domain)
     $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
     $icon_set_inis = $ini_parser->parseDirectories(FILETYPE_ICON_PATH, 'icon_set_info.ini');
     $icon_sets = $database->executeFetchAll(
-            'SELECT * FROM "' . ICON_SET_TABLE . '" WHERE "set_type" = \'filetype\' ORDER BY "entry" DESC',
+            'SELECT * FROM "' . ICON_SET_TABLE . '" WHERE "set_type" = \'filetype\' ORDER BY "entry" ASC',
             PDO::FETCH_ASSOC);
     $installed_ids = array();
     $default_icon_set_id = '';

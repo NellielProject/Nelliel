@@ -79,7 +79,7 @@ class AdminFiletypes extends AdminBase
 
     public function addIconSet($user)
     {
-        if (!$user->boardPerm('', 'perm_filetypes_add'))
+        if (!$user->boardPerm('', 'perm_filetypes_modify'))
         {
             nel_derp(421, _gettext('You are not allowed to modify styles.'));
         }
@@ -105,7 +105,7 @@ class AdminFiletypes extends AdminBase
 
     public function removeIconSet($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_filetypes_delete'))
+        if (!$user->boardPerm($this->domain->id(), 'perm_filetypes_modify'))
         {
             nel_derp(421, _gettext('You are not allowed to modify styles.'));
         }

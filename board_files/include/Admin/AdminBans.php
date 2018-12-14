@@ -64,7 +64,7 @@ class AdminBans extends AdminBase
 
     public function creator($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_ban_add'))
+        if (!$user->boardPerm($this->domain->id(), 'perm_ban_modify'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
@@ -76,7 +76,7 @@ class AdminBans extends AdminBase
 
     public function add($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_ban_add'))
+        if (!$user->boardPerm($this->domain->id(), 'perm_ban_modify'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
@@ -123,7 +123,7 @@ class AdminBans extends AdminBase
 
     public function remove($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_ban_delete'))
+        if (!$user->boardPerm($this->domain->id(), 'perm_ban_modify'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }

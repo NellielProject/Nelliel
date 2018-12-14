@@ -329,6 +329,11 @@ function nel_module_dispatch($inputs, $domain)
             $styles_panel->actionDispatch($inputs);
             break;
 
+        case 'permissions':
+            $permissions_panel = new \Nelliel\Admin\AdminPermissions(nel_database(), $authorization, $domain);
+            $permissions_panel->actionDispatch($inputs);
+            break;
+
         default:
             break;
     }

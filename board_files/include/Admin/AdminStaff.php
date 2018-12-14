@@ -45,7 +45,7 @@ class AdminStaff extends AdminBase
 
             if ($inputs['action'] === 'new')
             {
-                if (!$user->boardPerm('', 'perm_user_add'))
+                if (!$user->boardPerm('', 'perm_user_modify'))
                 {
                     nel_derp(301, _gettext('You are not allowed to modify users.'));
                 }
@@ -141,7 +141,7 @@ class AdminStaff extends AdminBase
 
             if ($inputs['action'] === 'new')
             {
-                if (!$user->boardPerm('', 'perm_role_add'))
+                if (!$user->boardPerm('', 'perm_role_modify'))
                 {
                     nel_derp(311, _gettext('You are not allowed to modify roles.'));
                 }
