@@ -58,7 +58,7 @@ class FilesUpload
 
             if (strlen($file->content_data['fullname'] >= 255))
             {
-                $file->content_data['filename'] = substr($file->content_data['filename'], 0, -5);
+                $file->content_data['filename'] = substr($file->content_data['filename'], 0, 254);
             }
 
             foreach ($filenames as $filename)
