@@ -17,6 +17,7 @@ class Domain
     private $cache_handler;
     private $database;
     private $render_instance;
+    private $render_active;
 
     public function __construct($domain_id, $cache_handler, $database)
     {
@@ -200,5 +201,15 @@ class Domain
         }
 
         return $this->render_instance;
+    }
+
+    public function renderActive($status = null)
+    {
+        if(!is_null($status))
+        {
+            $this->render_active = $status;
+        }
+
+        return $this->render_active;
     }
 }

@@ -31,7 +31,9 @@ class Regen
 
         while ($i < $threads)
         {
-            nel_thread_generator($this->getTemporaryDomain($domain->id()), $write, $ids[$i]);
+            $temp_domain = $this->getTemporaryDomain($domain->id());
+            $temp_domain->renderActive(true);
+            nel_thread_generator($temp_domain, $write, $ids[$i]);
             ++ $i;
         }
     }
@@ -51,7 +53,9 @@ class Regen
     public function index($domain)
     {
         require_once INCLUDE_PATH . 'output/main_generation.php';
-        nel_main_thread_generator($this->getTemporaryDomain($domain->id()), 0, true);
+        $temp_domain = $this->getTemporaryDomain($domain->id());
+        $temp_domain->renderActive(true);
+        nel_main_thread_generator($temp_domain, 0, true);
     }
 
     public function allPages($domain)

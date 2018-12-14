@@ -91,7 +91,7 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', nel_parameters_and_data()->siteSettings('home_page'));
 
-    if($session->isActive())
+    if($session->isActive() && !$domain->renderActive())
     {
         $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=main-panel');
     }
