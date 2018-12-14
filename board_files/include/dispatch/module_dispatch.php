@@ -63,28 +63,28 @@ function nel_module_dispatch($inputs, $domain)
             break;
 
         case 'staff':
-            $staff_panel = new \Nelliel\Admin\AdminStaff(nel_database(), $authorization, $domain);
-            $staff_panel->actionDispatch($inputs);
+            $staff_admin = new \Nelliel\Admin\AdminStaff(nel_database(), $authorization, $domain);
+            $staff_admin->actionDispatch($inputs);
             break;
 
         case 'site-settings':
-            $site_settings_panel = new \Nelliel\Admin\AdminSiteSettings(nel_database(), $authorization, $domain);
-            $site_settings_panel->actionDispatch($inputs);
+            $site_settings_admin = new \Nelliel\Admin\AdminSiteSettings(nel_database(), $authorization, $domain);
+            $site_settings_admin->actionDispatch($inputs);
             break;
 
         case 'manage-boards':
-            $create_board_panel = new \Nelliel\Admin\AdminManageBoards(nel_database(), $authorization, $domain);
-            $create_board_panel->actionDispatch($inputs);
+            $create_board_admin = new \Nelliel\Admin\AdminManageBoards(nel_database(), $authorization, $domain);
+            $create_board_admin->actionDispatch($inputs);
             break;
 
         case 'file-filter':
-            $file_filters_panel = new \Nelliel\Admin\AdminFileFilters(nel_database(), $authorization, $domain);
-            $file_filters_panel->actionDispatch($inputs);
+            $file_filters_admin = new \Nelliel\Admin\AdminFileFilters(nel_database(), $authorization, $domain);
+            $file_filters_admin->actionDispatch($inputs);
             break;
 
         case 'default-board-settings':
-            $board_settings_panel = new \Nelliel\Admin\AdminBoardSettings(nel_database(), $authorization, $domain);
-            $board_settings_panel->actionDispatch($inputs);
+            $board_settings_admin = new \Nelliel\Admin\AdminBoardSettings(nel_database(), $authorization, $domain);
+            $board_settings_admin->actionDispatch($inputs);
             break;
 
         case 'language':
@@ -100,18 +100,18 @@ function nel_module_dispatch($inputs, $domain)
             break;
 
         case 'reports':
-            $reports_panel = new \Nelliel\Admin\AdminReports(nel_database(), $authorization, $domain);
-            $reports_panel->actionDispatch($inputs);
+            $reports_admin = new \Nelliel\Admin\AdminReports(nel_database(), $authorization, $domain);
+            $reports_admin->actionDispatch($inputs);
             break;
 
         case 'board-settings':
-            $board_settings_panel = new \Nelliel\Admin\AdminBoardSettings(nel_database(), $authorization, $domain);
-            $board_settings_panel->actionDispatch($inputs);
+            $board_settings_admin = new \Nelliel\Admin\AdminBoardSettings(nel_database(), $authorization, $domain);
+            $board_settings_admin->actionDispatch($inputs);
             break;
 
         case 'bans':
-            $bans_panel = new \Nelliel\Admin\AdminBans(nel_database(), $authorization, $domain);
-            $bans_panel->actionDispatch($inputs);
+            $bans_admin = new \Nelliel\Admin\AdminBans(nel_database(), $authorization, $domain);
+            $bans_admin->actionDispatch($inputs);
             break;
 
         case 'threads-admin':
@@ -120,8 +120,8 @@ function nel_module_dispatch($inputs, $domain)
 
             if ($inputs['action'] === 'ban-delete')
             {
-                $bans_panel = new \Nelliel\Admin\AdminBans(nel_database(), $authorization, $domain);
-                $bans_panel->actionDispatch($inputs);
+                $bans_admin = new \Nelliel\Admin\AdminBans(nel_database(), $authorization, $domain);
+                $bans_admin->actionDispatch($inputs);
             }
 
             break;
@@ -199,8 +199,8 @@ function nel_module_dispatch($inputs, $domain)
             {
                 if (isset($_POST['form_submit_report']))
                 {
-                    $reports_panel = new \Nelliel\Admin\AdminReports(nel_database(), $authorization, $domain);
-                    $reports_panel->actionDispatch($inputs);
+                    $reports_admin = new \Nelliel\Admin\AdminReports(nel_database(), $authorization, $domain);
+                    $reports_admin->actionDispatch($inputs);
 
                     if ($session->isActive() && $session->inModmode($inputs['board_id']))
                     {
@@ -273,28 +273,28 @@ function nel_module_dispatch($inputs, $domain)
             break;
 
         case 'templates':
-            $templates_panel = new \Nelliel\Admin\AdminTemplates(nel_database(), $authorization, $domain);
-            $templates_panel->actionDispatch($inputs);
+            $templates_admin = new \Nelliel\Admin\AdminTemplates(nel_database(), $authorization, $domain);
+            $templates_admin->actionDispatch($inputs);
             break;
 
         case 'filetypes':
-            $filetypes_panel = new \Nelliel\Admin\AdminFiletypes(nel_database(), $authorization, $domain);
-            $filetypes_panel->actionDispatch($inputs);
+            $filetypes_admin = new \Nelliel\Admin\AdminFiletypes(nel_database(), $authorization, $domain);
+            $filetypes_admin->actionDispatch($inputs);
             break;
 
         case 'styles':
-            $styles_panel = new \Nelliel\Admin\AdminStyles(nel_database(), $authorization, $domain);
-            $styles_panel->actionDispatch($inputs);
+            $styles_admin = new \Nelliel\Admin\AdminStyles(nel_database(), $authorization, $domain);
+            $styles_admin->actionDispatch($inputs);
             break;
 
         case 'permissions':
-            $permissions_panel = new \Nelliel\Admin\AdminPermissions(nel_database(), $authorization, $domain);
-            $permissions_panel->actionDispatch($inputs);
+            $permissions_admin = new \Nelliel\Admin\AdminPermissions(nel_database(), $authorization, $domain);
+            $permissions_admin->actionDispatch($inputs);
             break;
 
         case 'icon-sets':
-            $icon_sets_panel = new \Nelliel\Admin\AdminIconSets(nel_database(), $authorization, $domain);
-            $icon_sets_panel->actionDispatch($inputs);
+            $icon_sets_admin = new \Nelliel\Admin\AdminIconSets(nel_database(), $authorization, $domain);
+            $icon_sets_admin->actionDispatch($inputs);
             break;
 
         default:
