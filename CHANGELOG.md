@@ -1,4 +1,21 @@
 # Nelliel Changelog
+## v0.9.14 (2018/12/14)
+### Breaking
+ - Lots of things
+
+### Added
+ - INIParser class
+ - Customizable templates, icon sets and styles and easier installation
+
+### Changed
+ - Truncate filenames over 255 characters
+ - Change board_language to language and add site setting
+ - Trim down permissions and update role editor
+ - More dynamic category handling for filetypes
+ 
+### Fixed
+ - null id being sent to Domain by derp
+
 ## v0.9.13 (2018/12/12)
 ### Added
  - Templates panel
