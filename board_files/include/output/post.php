@@ -39,7 +39,7 @@ function nel_render_index_navigation($domain, $dom, $pages)
     }
 
     $nav_nodes['nav-link-container']->remove();
-    $translator->translateDom($bottom_nav, $domain->setting('board_language'));
+    $translator->translateDom($bottom_nav, $domain->setting('language'));
 }
 
 function nel_render_post($domain, $gen_data, $dom)

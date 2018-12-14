@@ -86,7 +86,7 @@ function nel_render_ban_page($domain, $ban_info)
         }
     }
 
-    $translator->translateDom($dom, $domain->setting('board_language'));
+    $translator->translateDom($dom, $domain->setting('language'));
     $domain->renderInstance()->appendHTMLFromDOM($dom);
     nel_render_general_footer($domain, null, true);
     echo $domain->renderInstance()->outputRenderSet();

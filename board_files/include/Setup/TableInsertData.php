@@ -26,6 +26,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'output', 'str', 'index_filename_format', 'index-%d']);
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'output', 'str', 'thread_filename_format', 'thread-%d']);
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'bool', 'template_id', 'nelliel-template-basic']);
+        $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'str', 'language', 'en-US']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_bans_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'current_bans_schema', '001']);
         $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'str', 'original_board_data_schema', '001']);
@@ -304,7 +305,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'board_name', 'Nelliel-powered image board']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'board_favicon', '']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'board_logo', '']);
-        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'board_language', 'en-US']);
+        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'language', 'en-US']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'thread_delay', '120']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'reply_delay', '60']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'abbreviate_thread', '5']);

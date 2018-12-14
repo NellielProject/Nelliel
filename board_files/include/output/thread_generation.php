@@ -25,7 +25,7 @@ function nel_thread_generator($domain, $write, $thread_id)
     $domain->renderInstance(new NellielTemplates\RenderCore());
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'thread.html');
-    $translator->translateDom($dom, $domain->setting('board_language'));
+    $translator->translateDom($dom, $domain->setting('language'));
     $expand_dom = $domain->renderInstance()->newDOMDocument();
     $collapse_dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->startRenderTimer();

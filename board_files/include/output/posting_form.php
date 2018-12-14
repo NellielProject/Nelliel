@@ -121,6 +121,6 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
         $dom->removeChild($dom->getElementById('form-trap2'));
     }
 
-    $translator->translateDom($dom, $domain->setting('board_language'));
+    $translator->translateDom($dom, $domain->setting('language'));
     $domain->renderInstance()->appendHTMLFromDOM($dom);
 }

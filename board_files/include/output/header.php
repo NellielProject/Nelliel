@@ -117,7 +117,7 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
         $dom->getElementById('manage-sub-header')->remove();
     }
 
-    $translator->translateDom($dom, $domain->setting('board_language'));
+    $translator->translateDom($dom, $domain->setting('language'));
 
     $domain->renderInstance()->appendHTMLFromDOM($dom);
 }
