@@ -13,50 +13,83 @@ class FrontEndData
 {
     private $database;
     private $css_styles = array();
+    private $default_css_style = array();
     private $templates = array();
     private $default_template = array();
     private $filetype_icon_sets = array();
+    private $default_filetype_icon_set = array();
 
     function __construct($database)
     {
         $this->database = $database;
     }
 
-    private function loadData()
+    private function loadStylesData()
     {
-        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . FRONT_END_TABLE . '"', PDO::FETCH_ASSOC);
+        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . STYLES_TABLE . '"', PDO::FETCH_ASSOC);
 
         foreach ($all_data as $data)
         {
-            if ($data['resource_type'] == 'css')
+            if ($data['is_default'] == 1)
+            {
+                $this->default_css_style = $data;
+            }
+            else
             {
                 $this->css_styles[$data['id']] = $data;
             }
-            else if ($data['resource_type'] == 'template')
+        }
+    }
+
+    private function loadFiletypeIconData()
+    {
+        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . ICON_SET_TABLE . '" WHERE "set_type" = \'filetype\'', PDO::FETCH_ASSOC);
+
+        foreach ($all_data as $data)
+        {
+            if ($data['is_default'] == 1)
             {
-                $this->templates[$data['id']] = $data;
+                $this->default_filetype_icon_set = $data;
             }
-            else if ($data['resource_type'] == 'default-template')
-            {
-                $this->default_template = $data;
-            }
-            else if ($data['resource_type'] == 'filetype-icon-set')
+            else
             {
                 $this->filetype_icon_sets[$data['id']] = $data;
             }
         }
     }
 
-    public function cssStyle($style = null)
+    private function loadTemplateData()
+    {
+        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . TEMPLATE_TABLE . '"', PDO::FETCH_ASSOC);
+
+        foreach ($all_data as $data)
+        {
+            if ($data['is_default'] == 1)
+            {
+                $this->default_template = $data;
+            }
+            else
+            {
+                $this->templates[$data['id']] = $data;
+            }
+        }
+    }
+
+    public function style($style = null, $return_default = true)
     {
         if (empty($this->css_styles))
         {
-            $this->loadData();
+            $this->loadStylesData();
         }
 
         if (is_null($style))
         {
             return $this->css_styles;
+        }
+
+        if(!isset($this->css_styles[$template]) && $return_default)
+        {
+            return $this->default_css_style;
         }
 
         return $this->css_styles[$style];
@@ -66,7 +99,7 @@ class FrontEndData
     {
         if (empty($this->templates))
         {
-            $this->loadData();
+            $this->loadTemplateData();
         }
 
         if (is_null($template))
@@ -82,16 +115,21 @@ class FrontEndData
         return $this->templates[$template];
     }
 
-    public function filetypeIconSet($set = null)
+    public function filetypeIconSet($set = null, $return_default = true)
     {
         if (empty($this->filetype_icon_sets))
         {
-            $this->loadData();
+            $this->loadFiletypeIconData();
         }
 
         if (is_null($set))
         {
             return $this->filetype_icon_sets;
+        }
+
+        if(!isset($this->filetype_icon_sets[$set]) && $return_default)
+        {
+            return $this->default_filetype_icon_set;
         }
 
         return $this->filetype_icon_sets[$set];

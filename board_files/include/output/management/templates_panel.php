@@ -16,29 +16,27 @@ function nel_render_templates_panel($user, $domain)
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
     nel_render_general_header($domain->renderInstance(), null, null,
-            array('header' => _gettext('General Management'), 'sub_header' => _gettext('Template Management')));
+            array('header' => _gettext('General Management'), 'sub_header' => _gettext('Templates')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/templates_panel.html');
-
     $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
     $template_inis = $ini_parser->parseDirectories(TEMPLATE_PATH, 'template_info.ini');
 
-    $templates = $database->executeFetchAll(
-            'SELECT * FROM "' . FRONT_END_TABLE .
-            '" WHERE "resource_type" = \'template\' OR "resource_type" = \'default-template\' ORDER BY "entry" DESC',
+    $templates = $database->executeFetchAll('SELECT * FROM "' . TEMPLATE_TABLE . '" ORDER BY "entry" DESC',
             PDO::FETCH_ASSOC);
-
-    $form_action = $url_constructor->dynamic(PHP_SELF,
-            ['manage' => 'general', 'module' => 'templates', 'action' => 'add']);
-    $dom->getElementById('add-template-form')->extSetAttribute('action', $form_action);
     $installed_ids = array();
-
+    $default_template_id = '';
     $installed_template_list = $dom->getElementById('installed-template-list');
     $installed_template_list_nodes = $installed_template_list->getElementsByAttributeName('data-parse-id', true);
     $bgclass = 'row1';
 
     foreach ($templates as $template)
     {
+        if ($template['is_default'] == 1)
+        {
+            $default_template_id = $template['id'];
+        }
+
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $installed_ids[] = $template['id'];
         $template_row = $dom->copyNode($installed_template_list_nodes['template-row'], $installed_template_list,
@@ -46,16 +44,22 @@ function nel_render_templates_panel($user, $domain)
         $template_row->modifyAttribute('class', ' ' . $bgclass, 'after');
         $template_row_nodes = $template_row->getElementsByAttributeName('data-parse-id', true);
         $template_row_nodes['template-id']->setContent($template['id']);
-        $template_row_nodes['template-name']->setContent($template['display_name']);
-        $template_row_nodes['template-directory']->setContent($template['location']);
+        $template_row_nodes['template-name']->setContent($template['name']);
+        $template_row_nodes['template-directory']->setContent($template['directory']);
+        $template_row_nodes['template-output']->setContent($template['output_type']);
 
-        if ($template['resource_type'] === 'default-template')
+        if ($template['is_default'] == 1)
         {
+            $template_row_nodes['template-default-link']->remove();
             $template_row_nodes['template-remove-link']->remove();
             $template_row_nodes['template-action-1']->setContent(_gettext('Default Template'));
         }
         else
         {
+            $default_link = $url_constructor->dynamic(PHP_SELF,
+                    ['manage' => 'general', 'module' => 'templates', 'action' => 'make-default',
+                        'template-id' => $template['id']]);
+            $template_row_nodes['template-default-link']->extSetAttribute('href', $default_link);
             $remove_link = $url_constructor->dynamic(PHP_SELF,
                     ['manage' => 'general', 'module' => 'templates', 'action' => 'remove',
                         'template-id' => $template['id']]);
@@ -71,26 +75,32 @@ function nel_render_templates_panel($user, $domain)
 
     foreach ($template_inis as $template)
     {
+        if ($template['id'] === $default_template_id)
+        {
+            continue;
+        }
+
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $template_row = $dom->copyNode($available_template_list_nodes['template-row'], $available_template_list,
                 'append');
         $template_row->modifyAttribute('class', ' ' . $bgclass, 'after');
         $template_row_nodes = $template_row->getElementsByAttributeName('data-parse-id', true);
-        $template_row_nodes['template-id']->setContent($template['template_id']);
-        $template_row_nodes['template-name']->setContent($template['template_name']);
-        $template_row_nodes['template-directory']->setContent($template['template_directory']);
+        $template_row_nodes['template-id']->setContent($template['id']);
+        $template_row_nodes['template-name']->setContent($template['name']);
+        $template_row_nodes['template-directory']->setContent($template['directory']);
+        $template_row_nodes['template-output']->setContent($template['output_type']);
 
-        if (in_array($template['template_id'], $installed_ids))
+        if (in_array($template['id'], $installed_ids))
         {
-            $template_row_nodes['template-remove-link']->remove();
+            $template_row_nodes['template-install-link']->remove();
             $template_row_nodes['template-action-1']->setContent(_gettext('Template Installed'));
         }
         else
         {
             $remove_link = $url_constructor->dynamic(PHP_SELF,
-                    ['manage' => 'general', 'module' => 'templates', 'action' => 'remove',
-                        'template-id' => $template['template_id']]);
-            $template_row_nodes['template-remove-link']->extSetAttribute('href', $remove_link);
+                    ['manage' => 'general', 'module' => 'templates', 'action' => 'add',
+                        'template-id' => $template['id']]);
+            $template_row_nodes['template-install-link']->extSetAttribute('href', $remove_link);
         }
     }
 

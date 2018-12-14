@@ -33,6 +33,10 @@ class AdminTemplates extends AdminBase
         {
             $this->remove($user);
         }
+        else if ($inputs['action'] == 'make-default')
+        {
+            $this->makeDefault($user);
+        }
         else
         {
             $this->renderPanel($user);
@@ -55,13 +59,25 @@ class AdminTemplates extends AdminBase
             nel_derp(341, _gettext('You are not allowed to add templates.'));
         }
 
-        $id = $_POST['template_id'];
-        $display_name = $_POST['display_name'];
-        $directory = $_POST['directory'];
+        $template_id = $_GET['template-id'];
+
+        $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
+        $template_inis = $ini_parser->parseDirectories(TEMPLATE_PATH, 'template_info.ini');
+
+        foreach ($template_inis as $ini)
+        {
+            if ($ini['id'] === $template_id)
+            {
+                $display_name = $ini['name'];
+                $directory = $ini['directory'];
+                $output = $ini['output_type'];
+            }
+        }
+
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . FRONT_END_TABLE .
-                '" ("id", "resource_type", "storage", "display_name", "location") VALUES (?, ?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$id, 'template', 'directory', $display_name, $directory]);
+                'INSERT INTO "' . TEMPLATE_TABLE .
+                '" ("id", "name", "directory", "output_type", "is_default") VALUES (?, ?, ?, ?, ?)');
+        $this->database->executePrepared($prepared, [$template_id, $display_name, $directory, $output, 0]);
         $this->renderPanel($user);
     }
 
@@ -81,8 +97,22 @@ class AdminTemplates extends AdminBase
         }
 
         $template_id = $_GET['template-id'];
-        $prepared = $this->database->prepare('DELETE FROM "' . FRONT_END_TABLE . '" WHERE "id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . TEMPLATE_TABLE . '" WHERE "id" = ?');
         $this->database->executePrepared($prepared, array($template_id));
+        $this->renderPanel($user);
+    }
+
+    public function makeDefault($user)
+    {
+        if (!$user->boardPerm($this->domain->id(), 'perm_templates_modify'))
+        {
+            nel_derp(342, _gettext('You are not allowed to modify styles.'));
+        }
+
+        $template_id = $_GET['template-id'];
+        $this->database->exec('UPDATE "' . TEMPLATE_TABLE . '" SET "is_default" = 0');
+        $prepared = $this->database->prepare('UPDATE "' . TEMPLATE_TABLE . '" SET "is_default" = ? WHERE "id" = ?');
+        $this->database->executePrepared($prepared, [1, $template_id]);
         $this->renderPanel($user);
     }
 }

@@ -569,17 +569,33 @@ class TableInsertData
         nel_setup_stuff_done(true);
     }
 
-    public function frontEndDefaults()
+    public function styleDefaults()
     {
         $database = nel_database();
-        $insert_query = "INSERT INTO " . FRONT_END_TABLE . " (id, resource_type, storage, display_name, location) VALUES (?, ?, ?, ?, ?)";
+        $insert_query = "INSERT INTO " . STYLES_TABLE . " (id, name, file, is_default) VALUES (?, ?, ?, ?)";
         $prepared = $database->prepare($insert_query);
-        $database->executePrepared($prepared, ['nelliel-css', 'css-file', 'file', 'Nelliel', 'nelliel-default/nelliel.css']);
-        $database->executePrepared($prepared, ['futaba-css', 'css-file', 'file', 'Futaba', 'nelliel-default/futaba.css']);
-        $database->executePrepared($prepared, ['burichan-css', 'css-file', 'file', 'Burichan', 'nelliel-default/burichan.css']);
-        $database->executePrepared($prepared, ['nigra-css', 'css-file', 'file', 'Nigra', 'nelliel-default/nigra.css']);
-        $database->executePrepared($prepared, ['nelliel-template-basic', 'default-template', 'directory', 'Nelliel Basic Template', 'nelliel_basic']);
-        $database->executePrepared($prepared, ['nelliel-filetype-basic', 'filetype-icon-set', 'directory', 'Nelliel Filetype Icon Set', 'nelliel_basic']);
+        $database->executePrepared($prepared, ['nelliel-css', 'Nelliel', 'nelliel-default/nelliel.css', 1]);
+        $database->executePrepared($prepared, ['futaba-css', 'Futaba', 'nelliel-default/futaba.css', 0]);
+        $database->executePrepared($prepared, ['burichan-css', 'Burichan', 'nelliel-default/burichan.css', 0]);
+        $database->executePrepared($prepared, ['nigra-css', 'Nigra', 'nelliel-default/nigra.css', 0]);
+        nel_setup_stuff_done(true);
+    }
+
+    public function templateDefaults()
+    {
+        $database = nel_database();
+        $insert_query = "INSERT INTO " . TEMPLATE_TABLE . " (id, name, directory, output_type, is_default) VALUES (?, ?, ?, ?, ?)";
+        $prepared = $database->prepare($insert_query);
+        $database->executePrepared($prepared, ['nelliel-template-basic', 'Nelliel Basic Template', 'nelliel_basic', 'html', 1]);
+        nel_setup_stuff_done(true);
+    }
+
+    public function iconSetDefaults()
+    {
+        $database = nel_database();
+        $insert_query = "INSERT INTO " . ICON_SET_TABLE . " (id, name, directory, set_type, is_default) VALUES (?, ?, ?, ?, ?)";
+        $prepared = $database->prepare($insert_query);
+        $database->executePrepared($prepared, ['nelliel-filetype-icon-basic', 'Nelliel Basic Filetype Icon Set', 'nelliel_basic', 'filetype', 1]);
         nel_setup_stuff_done(true);
     }
 }

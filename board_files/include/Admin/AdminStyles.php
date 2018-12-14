@@ -33,6 +33,10 @@ class AdminStyles extends AdminBase
         {
             $this->remove($user);
         }
+        else if ($inputs['action'] == 'make-default')
+        {
+            $this->makeDefault($user);
+        }
         else
         {
             $this->renderPanel($user);
@@ -55,14 +59,11 @@ class AdminStyles extends AdminBase
             nel_derp(341, _gettext('You are not allowed to add styles.'));
         }
 
-        $id = $_POST['style_id'];
-        $display_name = $_POST['display_name'];
-        $directory = $_POST['directory'];
+        $style_id = $_GET['style-id'];
+
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . FRONT_END_TABLE .
-                '" ("id", "resource_type", "storage", "display_name", "location") VALUES (?, ?, ?, ?, ?)');
-        $this->database->executePrepared($prepared,
-                [$id, 'css', 'file', $display_name, $directory]);
+                'INSERT INTO "' . STYLES_TABLE . '" ("id", "name", "file", "is_default") VALUES (?, ?, ?, ?)');
+        $this->database->executePrepared($prepared, [$id, 'css', 'file', 0]);
         $this->renderPanel($user);
     }
 
@@ -82,8 +83,22 @@ class AdminStyles extends AdminBase
         }
 
         $style_id = $_GET['style-id'];
-        $prepared = $this->database->prepare('DELETE FROM "' . FRONT_END_TABLE . '" WHERE "id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . STYLES_TABLE . '" WHERE "id" = ?');
         $this->database->executePrepared($prepared, array($style_id));
+        $this->renderPanel($user);
+    }
+
+    public function makeDefault($user)
+    {
+        if (!$user->boardPerm($this->domain->id(), 'perm_styles_modify'))
+        {
+            nel_derp(342, _gettext('You are not allowed to modify styles.'));
+        }
+
+        $style_id = $_GET['style-id'];
+        $this->database->exec('UPDATE "' . STYLES_TABLE . '" SET "is_default" = 0');
+        $prepared = $this->database->prepare('UPDATE "' . STYLES_TABLE . '" SET "is_default" = ? WHERE "id" = ?');
+        $this->database->executePrepared($prepared, [1, $style_id]);
         $this->renderPanel($user);
     }
 }

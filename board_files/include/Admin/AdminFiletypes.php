@@ -39,6 +39,13 @@ class AdminFiletypes extends AdminBase
                 $this->removeIconSet($user);
             }
         }
+        else if ($inputs['action'] == 'make-default')
+        {
+            if ($inputs['section'] == 'icon-set')
+            {
+                $this->makeDefault($user);;
+            }
+        }
         else
         {
             $this->renderPanel($user);
@@ -77,14 +84,22 @@ class AdminFiletypes extends AdminBase
             nel_derp(341, _gettext('You are not allowed to add filetypes or filetype icon sets.'));
         }
 
-        $id = $_POST['icon_set_id'];
-        $display_name = $_POST['display_name'];
-        $directory = $_POST['directory'];
+        $icon_set_id = $_GET['icon-set-id'];
+        $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
+        $template_inis = $ini_parser->parseDirectories(ICON_SET_PATH . 'filetype/', 'icon_set_info.ini');
+
+        foreach ($template_inis as $ini)
+        {
+            if ($ini['id'] === $icon_set_id)
+            {
+                $name = $ini['name'];
+                $directory = $ini['directory'];
+            }
+        }
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . FRONT_END_TABLE .
-                '" ("id", "resource_type", "storage", "display_name", "location") VALUES (?, ?, ?, ?, ?)');
-        $this->database->executePrepared($prepared,
-                [$id, 'filetype-icon-set', 'directory', $display_name, $directory]);
+                'INSERT INTO "' . ICON_SET_TABLE .
+                '" ("id", "name", "directory", "set_type", "is_default") VALUES (?, ?, ?, ?, ?)');
+        $this->database->executePrepared($prepared, [$icon_set_id, $name, $directory, 'filetype', 0]);
         $this->renderPanel($user);
     }
 
@@ -95,9 +110,23 @@ class AdminFiletypes extends AdminBase
             nel_derp(342, _gettext('You are not allowed to remove filetypes or filetype icon sets.'));
         }
 
-        $template_id = $_GET['icon-set-id'];
-        $prepared = $this->database->prepare('DELETE FROM "' . FRONT_END_TABLE . '" WHERE "id" = ?');
-        $this->database->executePrepared($prepared, array($template_id));
+        $icon_set_id = $_GET['icon-set-id'];
+        $prepared = $this->database->prepare('DELETE FROM "' . ICON_SET_TABLE . '" WHERE "id" = ?');
+        $this->database->executePrepared($prepared, array($icon_set_id));
+        $this->renderPanel($user);
+    }
+
+    public function makeDefault($user)
+    {
+        if (!$user->boardPerm($this->domain->id(), 'perm_filetypes_modify'))
+        {
+            nel_derp(342, _gettext('You are not allowed to modify filetypes.'));
+        }
+
+        $icon_set_id = $_GET['icon-set-id'];
+        $this->database->exec('UPDATE "' . ICON_SET_TABLE . '" SET "is_default" = 0 WHERE "set_type" = \'filetype\'');
+        $prepared = $this->database->prepare('UPDATE "' . ICON_SET_TABLE . '" SET "is_default" = ? WHERE "id" = ?');
+        $this->database->executePrepared($prepared, [1, $icon_set_id]);
         $this->renderPanel($user);
     }
 }

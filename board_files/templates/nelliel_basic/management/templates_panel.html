@@ -1,52 +1,43 @@
-	<form id="add-template-form" accept-charset="utf-8" action="" method="post">
-		<div class="display-table">
-			<div class="display-row">
-				<label for="template-id" class="display-cell" data-i18n="gettext">Template ID</label>
-				<input id="template-id" class="display-cell" type="text" name="template_id" size="30">
-			</div>
-			<div class="display-row">
-				<label for="template-name" class="display-cell" data-i18n="gettext">Template Name</label>
-				<input id="template-name" class="display-cell" type="text" name="display_name" size="30">
-			</div>
-			<div class="display-row">
-				<label for="template-directory" class="display-cell" data-i18n="gettext">Template Directory</label>
-				<input id="template-directory" class="display-cell" type="text" name="directory" size="30">
-			</div>
-			<div class="display-row">
-				<input type="submit" value="Add Template" data-i18n="gettext" data-i18n-attributes="value">
-			</div>
-		</div>
-	</form>
-	<hr>
+	<div data-i18n="gettext" style="font-size: 1.30em; font-weight: bold; text-align: center;">Installed Templates</div>
 	<table id="installed-template-list" class="data-table">
 		<tr class="manage-header">
 			<th data-i18n="gettext">Template ID</th>
 			<th data-i18n="gettext">Name</th>
 			<th data-i18n="gettext">Directory</th>
+			<th data-i18n="gettext">Output</th>
+			<th data-i18n="gettext">Make Default</th>
 			<th data-i18n="gettext">Remove</th>
 		</tr>
 		<tr data-parse-id="template-row" class="row1">
 			<td data-parse-id="template-id"></td>
 			<td data-parse-id="template-name"></td>
 			<td data-parse-id="template-directory"></td>
+			<td data-parse-id="template-output"></td>
 			<td data-parse-id="template-action-1">
+				<a class="display-cell" data-parse-id="template-default-link" href="" data-i18n="gettext">Make Default</a>
+			</td>
+			<td data-parse-id="template-action-2">
 				<a class="display-cell" data-parse-id="template-remove-link" href="" data-i18n="gettext">Remove Template</a>
 			</td>
 		</tr>
 	</table>
+	<hr>
+	<div data-i18n="gettext" style="font-size: 1.30em; font-weight: bold; text-align: center;">Available Templates</div>
 	<table id="available-template-list" class="data-table">
 		<tr class="manage-header">
 			<th data-i18n="gettext">Template ID</th>
 			<th data-i18n="gettext">Name</th>
 			<th data-i18n="gettext">Directory</th>
-			<th data-i18n="gettext">Remove</th>
+			<th data-i18n="gettext">Output</th>
+			<th data-i18n="gettext">Install</th>
 		</tr>
 		<tr data-parse-id="template-row" class="row1">
 			<td data-parse-id="template-id"></td>
 			<td data-parse-id="template-name"></td>
 			<td data-parse-id="template-directory"></td>
+			<td data-parse-id="template-output"></td>
 			<td data-parse-id="template-action-1">
-				<a class="display-cell" data-parse-id="template-remove-link" href="" data-i18n="gettext">Remove Template</a>
+				<a class="display-cell" data-parse-id="template-install-link" href="" data-i18n="gettext">Install Template</a>
 			</td>
 		</tr>
 	</table>
