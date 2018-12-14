@@ -49,6 +49,11 @@ class Domain
             return $this->domain_settings;
         }
 
+        if(!isset($this->domain_settings[$setting]))
+        {
+            return null;
+        }
+
         return $this->domain_settings[$setting];
     }
 

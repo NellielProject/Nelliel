@@ -101,7 +101,8 @@ class BanHammer
         $prepared->bindParam(':all_boards', $ban_input['all_boards'], PDO::PARAM_INT);
         $prepared->bindParam(':type', $ban_input['type'], PDO::PARAM_STR);
         $prepared->bindParam(':creator', $ban_input['creator'], PDO::PARAM_STR);
-        $prepared->bindParam(':ip_address_start', @inet_pton($ban_input['ip_address_start']), PDO::PARAM_LOB);
+        $encoded_ip = @inet_pton($ban_input['ip_address_start']);
+        $prepared->bindParam(':ip_address_start', $encoded_ip, PDO::PARAM_LOB);
         $prepared->bindParam(':reason', $ban_input['reason'], PDO::PARAM_STR);
         $prepared->bindParam(':length', $ban_input['length'], PDO::PARAM_INT);
 

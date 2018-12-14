@@ -39,26 +39,26 @@ class AdminBans extends AdminBase
         else if ($inputs['action'] === 'add')
         {
             $this->add($user);
-            $this->renderPanel($user);
         }
         else if ($inputs['action'] === 'remove')
         {
             $this->remove($user);
-            $this->renderPanel($user);
         }
         else if ($inputs['action'] === 'update')
         {
             $this->update($user);
-            $this->renderPanel($user);
         }
         else
         {
             $this->renderPanel($user);
         }
+
+        $this->applyNewBan();
     }
 
     public function renderPanel($user)
     {
+
         nel_render_main_ban_panel($user, $this->domain);
     }
 
@@ -71,6 +71,8 @@ class AdminBans extends AdminBase
 
         $ip = (isset($_GET['ban_ip'])) ? $_GET['ban_ip'] : '';
         $type = (isset($_GET['ban_type'])) ? $_GET['ban_type'] : 'GENERAL';
+        $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
+        $this->applyNewBan();
         nel_render_ban_panel_add($this->domain, $ip, $type);
     }
 
@@ -107,6 +109,7 @@ class AdminBans extends AdminBase
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
+        $this->applyNewBan();
         nel_render_ban_panel_modify($this->domain);
     }
 
@@ -132,5 +135,9 @@ class AdminBans extends AdminBase
         $this->ban_hammer->removeBan($this->domain->id(), $_GET['ban_id']);
     }
 
-
+    private function applyNewBan()
+    {
+        $snacks = new \Nelliel\Snacks($this->database, new \Nelliel\BanHammer($this->database));
+        $snacks->applyBan(array(), $this->domain);
+    }
 }

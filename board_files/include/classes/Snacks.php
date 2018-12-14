@@ -115,7 +115,7 @@ class Snacks
             return;
         }
 
-        if ($inputs['module'] === 'ban-page')
+        if (!empty($inputs) && $inputs['module'] === 'ban-page')
         {
             if ($inputs['action'] === 'add-appeal')
             {
