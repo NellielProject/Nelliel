@@ -92,7 +92,7 @@ function nel_module_dispatch($inputs, $domain)
 
             if ($inputs['action'] === 'extract-gettext')
             {
-                $translator = new \Nelliel\Language\Translator();
+                $language = new \Nelliel\Language\Language($authorization);
                 $language->extractLanguageStrings(LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
             }
 
