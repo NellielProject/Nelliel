@@ -22,7 +22,8 @@ function nel_render_staff_panel_main($domain)
     {
         $user_node = $dom->copyNode($user_list_nodes['edit-user-link'], $user_list, 'append');
         $user_node->setContent($user['user_id'] . ' - ' . $user['display_name']);
-        $user_node->extSetAttribute('href', PHP_SELF . '?module=staff&section=user&action=edit&user-id=' . $user['user_id']);
+        $user_node->extSetAttribute('href',
+                PHP_SELF . '?module=staff&section=user&action=edit&user-id=' . $user['user_id']);
     }
 
     $user_list_nodes['edit-user-link']->remove();
@@ -36,7 +37,8 @@ function nel_render_staff_panel_main($domain)
     {
         $role_node = $dom->copyNode($role_list_nodes['edit-role-link'], $role_list, 'append');
         $role_node->setContent($role['role_id'] . ' - ' . $role['role_title']);
-        $role_node->extSetAttribute('href', PHP_SELF . '?module=staff&section=role&action=edit&role-id=' . $role['role_id']);
+        $role_node->extSetAttribute('href',
+                PHP_SELF . '?module=staff&section=role&action=edit&role-id=' . $role['role_id']);
     }
 
     $role_list_nodes['edit-role-link']->remove();
@@ -94,7 +96,7 @@ function nel_render_staff_panel_user_edit($domain, $user_id)
             $new_board->removeAttribute('id');
             $new_board_nodes = $new_board->getElementsByAttributeName('data-parse-id', true);
 
-            if($domain === '')
+            if ($domain === '')
             {
                 $new_board_nodes['user-board-role-label']->setContent(_gettext('All Boards'));
             }
@@ -105,7 +107,7 @@ function nel_render_staff_panel_user_edit($domain, $user_id)
 
             $new_board_nodes['user-board-role-id']->extSetAttribute('name', 'user_board_role_' . $domain);
 
-            if(isset($user_boards[$domain]))
+            if (isset($user_boards[$domain]))
             {
                 $new_board_nodes['user-board-role-id']->extSetAttribute('value', $board_role['role_id']);
             }
@@ -132,6 +134,8 @@ function nel_render_staff_panel_role_edit($domain, $role_id)
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/staff_panel_role_edit.html');
     $dom->getElementById('role-edit-form')->extSetAttribute('action',
             PHP_SELF . '?module=staff&section=role&action=update');
+    $role_settings_table = $dom->getElementById('role-edit-settings');
+    $role_settings_nodes = $role_settings_table->getElementsByAttributeName('data-parse-id', true);
 
     if (!is_null($role_id))
     {
@@ -142,18 +146,21 @@ function nel_render_staff_panel_role_edit($domain, $role_id)
 
         foreach ($role->permissions->auth_data as $key => $value)
         {
+            $permission_row = $dom->copyNode($role_settings_nodes['permissions-row'], $role_settings_table, 'append');
+            $permission_row_nodes = $permission_row->getElementsByAttributeName('data-parse-id', true);
+
             if ($value === true)
             {
-                $element = $dom->getElementById($key);
-
-                if(!is_null($element))
-                {
-                    $element->extSetAttribute('checked', $value);
-                }
+                $permission_row_nodes['entry-checkbox']->extSetAttribute('checked', $value);
             }
+
+            $permission_row_nodes['entry-checkbox']->extSetAttribute('name', $key);
+            $permission_row_nodes['entry-hidden-checkbox']->extSetAttribute('name', $key);
+            $permission_row_nodes['entry-label']->setContent($key);
         }
     }
 
+    $role_settings_nodes['permissions-row']->remove();
     $translator->translateDom($dom);
     $domain->renderInstance()->appendHTMLFromDOM($dom);
     nel_render_general_footer($domain);
