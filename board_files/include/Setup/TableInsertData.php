@@ -358,6 +358,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'ani', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'icns', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'illustrator', '0']);
+        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'postscript', '0']);
+        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'eps', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'audio', 'bool', 'audio', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'audio', 'bool', 'wave', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'audio', 'bool', 'aiff', '0']);
@@ -376,19 +378,19 @@ class TableInsertData
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'avi', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'wmv', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'mpeg4', '1']);
-        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'matroska', '0']);
-        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'flash-video', '0']);
+        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'mkv', '0']);
+        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'flv', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'webm', '1']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', '3gp', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'ogg-video', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'm4v', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'document', 'bool', 'document', '0']);
-        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'document', 'bool', 'rich-text', '0']);
+        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'document', 'bool', 'rtf', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'document', 'bool', 'pdf', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'document', 'bool', 'msword', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'document', 'bool', 'powerpoint', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'document', 'bool', 'msexcel', '0']);
-        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'document', 'bool', 'plaintext', '0']);
+        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'document', 'bool', 'txt', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'archive', 'bool', 'archive', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'archive', 'bool', 'gzip', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'archive', 'bool', 'bzip2', '0']);
@@ -402,7 +404,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'archive', 'bool', 'iso', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'archive', 'bool', 'dmg', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'other', 'bool', 'other', '0']);
-        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'other', 'bool', 'flash-shockwave', '0']);
+        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'other', 'bool', 'swf', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'other', 'bool', 'blorb', '0']);
         nel_setup_stuff_done(true);
     }
@@ -435,7 +437,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['icns', 'icns', 'graphics', 'icns', 'image/icns', '^icns', 'Mac OS Icon', '']);
         $database->executePrepared($prepared, ['ai', 'ai', 'graphics', 'illustrator', 'application/postscript', '^%PDF', 'Adobe Illustrator', '']);
         $database->executePrepared($prepared, ['ps', 'ps', 'graphics', 'postscript', 'application/postscript', '%!PS', 'PostScript', '']);
-        $database->executePrepared($prepared, ['eps', 'eps', 'graphics', 'postscript', 'application/postscript', '^\xC5\xD0\xD3\xC6|%!PS-Adobe-[0-9]\.[0-9] EPSF-[0-9]\.[0-9]', 'Encapsulated PostScript', '']);
+        $database->executePrepared($prepared, ['eps', 'eps', 'graphics', 'eps', 'application/postscript', '^\xC5\xD0\xD3\xC6|%!PS-Adobe-[0-9]\.[0-9] EPSF-[0-9]\.[0-9]', 'Encapsulated PostScript', '']);
         $database->executePrepared($prepared, ['', null, 'audio', null, null, null, 'Audio files', null]);
         $database->executePrepared($prepared, ['wav', 'wav', 'audio', 'wave', 'audio/x-wave', '^RIFF.{4}WAVEfmt', 'WAVE', '']);
         $database->executePrepared($prepared, ['aif', 'aif', 'audio', 'aiff', 'audio/aiff', '^FORM.{4}AIFF', 'AIFF', '']);
@@ -461,13 +463,13 @@ class TableInsertData
         $database->executePrepared($prepared, ['mp4', 'mp4', 'video', 'mpeg4', 'video/mp4', '^.{4}ftyp(?:iso2|isom|mp41|mp42)', 'MPEG-4 Media', '']);
         $database->executePrepared($prepared, ['m4v', 'm4v', 'video', 'm4v', 'video/x-m4v', '^.{4}ftypmp(?:41|42|71)', 'MPEG-4 Video', '']);
         $database->executePrepared($prepared, ['m4v', 'm4v', 'video', 'm4v', 'video/x-m4v', '^.{4}ftypmp(?:41|42|71)', 'MPEG-4 Video', '']);
-        $database->executePrepared($prepared, ['mkv', 'mkv', 'video', 'matroska', 'video/x-matroska', '^\x1A\x45\xDF\xA3', 'Matroska Media', '']);
-        $database->executePrepared($prepared, ['flv', 'flv', 'video', 'flash-video', 'video/x-flv', '^FLV\x01', 'Flash Video', '']);
+        $database->executePrepared($prepared, ['mkv', 'mkv', 'video', 'mkv', 'video/x-matroska', '^\x1A\x45\xDF\xA3', 'Matroska Media', '']);
+        $database->executePrepared($prepared, ['flv', 'flv', 'video', 'flv', 'video/x-flv', '^FLV\x01', 'Flash Video', '']);
         $database->executePrepared($prepared, ['webm', 'webm', 'video', 'webm', 'video/webm', '^\x1A\x45\xDF\xA3', 'WebM', '']);
         $database->executePrepared($prepared, ['3gp', '3gp', 'video', '3gp', 'video/3gpp', '^.{4}ftyp3gp', '3GP', '']);
         $database->executePrepared($prepared, ['ogv', 'ogv', 'video', 'ogg-video', 'video/ogg', '^OggS', 'Ogg Video', '']);
         $database->executePrepared($prepared, ['', null, 'document', null, null, null, 'Text and document files', null]);
-        $database->executePrepared($prepared, ['rtf', 'rtf', 'document', 'rich-text', 'application/rtf', '^\x7B\x5C\x72\x74\x66\x31', 'Rich Text', '']);
+        $database->executePrepared($prepared, ['rtf', 'rtf', 'document', 'rtf', 'application/rtf', '^\x7B\x5C\x72\x74\x66\x31', 'Rich Text', '']);
         $database->executePrepared($prepared, ['pdf', 'pdf', 'document', 'pdf', 'application/pdf', '^\x25PDF', 'PDF', '']);
         $database->executePrepared($prepared, ['doc', 'doc', 'document', 'msword', 'application/msword', '^\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1|^\xDB\xA5\x2D\x00|^PK\x03\x04', 'Microsoft Word', '']);
         $database->executePrepared($prepared, ['docx', 'doc', null, null, null, null, null, null]);
@@ -475,7 +477,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['pptx', 'ppt', null, null, null, null, null, null]);
         $database->executePrepared($prepared, ['xls', 'xls', 'document', 'msexcel', 'application/ms-excel', '^\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1|^PK\x03\x04', 'Microsoft Excel', '']);
         $database->executePrepared($prepared, ['xlsx', 'xls', null, null, null, null, null, null]);
-        $database->executePrepared($prepared, ['txt', 'txt', 'document', 'plaintext', 'text/plain', '', 'Plaintext', '']);
+        $database->executePrepared($prepared, ['txt', 'txt', 'document', 'txt', 'text/plain', '', 'Plaintext', '']);
         $database->executePrepared($prepared, ['', null, 'archive', null, null, null, 'Archive files', null]);
         $database->executePrepared($prepared, ['gz', 'gz', 'archive', 'gzip', 'application/gzip', '^\x1F\x8B\x08', 'GZip', '']);
         $database->executePrepared($prepared, ['tgz', 'gz', null, null, null, null, null, null]);
@@ -495,7 +497,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['iso', 'iso', 'archive', 'iso', 'application/x-iso-image', '^(.{32769}|.{34817}|.{36865})CD001', 'ISO Disk Image', '']);
         $database->executePrepared($prepared, ['dmg', 'dmg', 'archive', 'dmg', 'application/x-apple-diskimage', 'koly.{508}$', 'Apple Disk Image', '']);
         $database->executePrepared($prepared, ['', null, 'other', null, null, null, 'Other files', null]);
-        $database->executePrepared($prepared, ['swf', 'swf', 'other', 'flash-shockwave', 'application/x-shockwave-flash', '^CWS|FWS|ZWS', 'Flash/Shockwave', '']);
+        $database->executePrepared($prepared, ['swf', 'swf', 'other', 'swf', 'application/x-shockwave-flash', '^CWS|FWS|ZWS', 'Flash/Shockwave', '']);
         $database->executePrepared($prepared, ['blorb', 'blorb', 'other', 'blorb', 'application/x-blorb', '^FORM.{4}IFRSRIdx', 'Blorb', '']);
         $database->executePrepared($prepared, ['blb', 'blorb', null, null, null, null, null, null]);
         $database->executePrepared($prepared, ['gblorb', 'blorb', null, null, null, null, null, null]);
