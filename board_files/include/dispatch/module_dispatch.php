@@ -249,6 +249,8 @@ function nel_module_dispatch($inputs, $domain)
                 }
 
                 $regen->allPages($domain);
+                $archive = new \Nelliel\ArchiveAndPrune(nel_database(), $domain, new \Nelliel\FileHandler());
+                $archive->updateThreads();
             }
             else if ($inputs['action'] === 'board-all-caches')
             {

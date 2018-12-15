@@ -40,7 +40,8 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         $domain->renderInstance()->startRenderTimer();
         nel_render_board_header($domain, $dotdot, $treeline);
         nel_render_posting_form($domain, $response_to, $dotdot);
-        nel_render_general_footer($domain, $dotdot, true);;
+        nel_render_general_footer($domain, $dotdot, true);
+        ;
 
         if ($write)
         {
@@ -56,11 +57,12 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         return;
     }
 
-    $thread_counter = $page * $domain->setting('threads_per_page');
+    $thread_counter = 0;
     $post_counter = -1;
 
     while ($thread_counter < $counttree)
     {
+        $domain->renderInstance(new \NellielTemplates\RenderCore());
         $dom = $domain->renderInstance()->newDOMDocument();
         $domain->renderInstance()->loadTemplateFromFile($dom, 'thread.html');
         $domain->renderInstance()->startRenderTimer();
@@ -82,7 +84,8 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
                 $post_append_target = $thread_element;
                 $query = 'SELECT * FROM "' . $domain->reference('thread_table') . '" WHERE "thread_id" = ? LIMIT 1';
                 $prepared = $database->prepare($query);
-                $gen_data['thread'] = $database->executePreparedFetch($prepared, array($current_thread_id), PDO::FETCH_ASSOC);
+                $gen_data['thread'] = $database->executePreparedFetch($prepared, array($current_thread_id),
+                        PDO::FETCH_ASSOC);
                 $post_count = $gen_data['thread']['post_count'];
                 $abbreviate = $post_count > $domain->setting('abbreviate_thread');
                 $query = 'SELECT * FROM "' . $domain->reference('post_table') .
@@ -102,8 +105,8 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
                 $query = 'SELECT * FROM "' . $domain->reference('content_table') .
                         '" WHERE "post_ref" = ? ORDER BY "content_order" ASC';
                 $prepared = $database->prepare($query);
-                $gen_data['files'] = $database->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']),
-                        PDO::FETCH_ASSOC);
+                $gen_data['files'] = $database->executePreparedFetchAll($prepared,
+                        array($gen_data['post']['post_number']), PDO::FETCH_ASSOC);
             }
 
             $new_post_element = nel_render_post($domain, $gen_data, $dom);
@@ -150,56 +153,63 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         $page_count = (int) ceil($counttree / $domain->setting('threads_per_page'));
         $pages = array();
         $modmode_base = 'imgboard.php?module=render&action=view-index&modmode=true&section=';
+        $index_filename = 'index' . PHP_EXT;
+        $index_format = $domain->setting('index_filename_format');
+        $last_page = $page_count - 1;
+        $nav_pieces = array();
+        $nav_pieces['prev']['text'] = _gettext('Previous');
 
         if ($page === 0)
         {
-            $prev = '';
-        }
-        else if ($page === 1)
-        {
-            $prev = ($write) ? PHP_SELF2 . PHP_EXT : $modmode_base . '0&board_id=' . $domain->id();
+            $nav_pieces[0]['link'] = '';
         }
         else
         {
-            $prev = ($write) ? PHP_SELF2 . ($page - 1) . PHP_EXT : $modmode_base . ($page - 1) . '&board_id=' . $domain->id();
+            $nav_pieces[0]['link'] = 'index' . PHP_EXT;
         }
 
-        if ($page === ($page_count - 1) || $domain->setting('page_limit') === 1)
-        {
-            $next = '';
-        }
-        else
-        {
-            $next = ($write) ? PHP_SELF2 . ($page + 1) . PHP_EXT : $modmode_base . ($page + 1) . '&board_id=' . $domain->id();
-        }
+        $nav_pieces[0]['text'] = 0;
 
-        $pages[_gettext('Previous')] = $prev;
-        $i = 0;
-
-        while ($i < $page_count)
+        for ($i = 1; $i < $page_count; ++ $i)
         {
-            if ($i === 0)
+            if($i === $page)
             {
-                $pages[$i] = $prev;
-            }
-            else if ($i === ($page_count - 1))
-            {
-                $pages[$i] = $next;
+                $nav_pieces[$i]['link'] = '';
             }
             else
             {
-                $pages[$i] = PHP_SELF2 . ($i) . PHP_EXT;
+                $nav_pieces[$i]['link'] = sprintf($index_format, $i) . PHP_EXT;
             }
 
-            ++ $i;
+            $nav_pieces[$i]['text'] = $i;
         }
 
-        $pages[_gettext('Next')] = $next;
+        $nav_pieces['next']['text'] = _gettext('Next');
+        $nav_pieces['prev']['link'] = $nav_pieces[0]['link'];
 
-        nel_render_index_navigation($domain, $dom, $pages);
+        if ($page === $last_page)
+        {
+            $nav_pieces[$last_page]['link'] = '';
+            $nav_pieces['next']['link'] = $nav_pieces[$last_page]['link'];
+        }
+        else
+        {
+            $nav_pieces['next']['link'] = $nav_pieces[$page + 1]['link'];
+        }
+
+        nel_render_index_navigation($domain, $dom, $nav_pieces);
         nel_render_thread_form_bottom($domain, $dom);
         $domain->renderInstance()->appendHTMLFromDOM($dom);
         nel_render_general_footer($domain, $dotdot, true);
+
+        if ($page > 0)
+        {
+            $index_filename = sprintf($index_format, $page) . PHP_EXT;
+        }
+        else
+        {
+            $index_filename = 'index' . PHP_EXT;
+        }
 
         if (!$write)
         {
@@ -208,13 +218,11 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         }
         else
         {
-            $logfilename = ($page === 0) ? $domain->reference('board_directory') . '/' . PHP_SELF2 . PHP_EXT : $domain->reference('board_directory') .
-                    '/' . PHP_SELF2 . '-' . $page . PHP_EXT;
-            $file_handler->writeFile($logfilename, $domain->renderInstance()->outputRenderSet(), FILE_PERM, true);
+            $file_handler->writeFile($domain->reference('board_directory') . '/' . $index_filename,
+                    $domain->renderInstance()->outputRenderSet(), FILE_PERM, true);
         }
 
         ++ $page;
-        //unset($domain->renderInstance());
     }
 
     if ($write)

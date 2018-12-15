@@ -11,7 +11,7 @@ function nel_render_insert_hr($dom)
     $dom->getElementById('form-content-action')->appendChild($hr);
 }
 
-function nel_render_index_navigation($domain, $dom, $pages)
+function nel_render_index_navigation($domain, $dom, $nav_pieces)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
@@ -21,21 +21,21 @@ function nel_render_index_navigation($domain, $dom, $pages)
     $bottom_nav = $dom->getElementById('form-content-action')->appendChild($dom->importNode($bottom_nav, true));
     $nav_nodes = $bottom_nav->getElementsByAttributeName('data-parse-id', true);
 
-    foreach ($pages as $key => $value)
+    foreach ($nav_pieces as $piece)
     {
-        $temp_page_nav = $dom->copyNode($nav_nodes['nav-link-container'], $bottom_nav, 'append');
-        $page_link = $temp_page_nav->doXPathQuery(".//a")->item(0);
-        $content = $key;
+         $temp_page_nav = $dom->copyNode($nav_nodes['nav-link-container'], $bottom_nav, 'append');
+         $page_link = $temp_page_nav->doXPathQuery(".//a")->item(0);
+         $content = $piece['text'];
 
-        if ($value !== '')
-        {
-            $page_link->extSetAttribute('href', $value, 'attribute');
+         if ($piece['link'] !== '')
+         {
+             $page_link->extSetAttribute('href', $piece['link'], 'attribute');
             $page_link->setContent($content);
-        }
-        else
-        {
+         }
+         else
+         {
             $temp_page_nav->replaceChild($dom->createTextNode($content), $page_link);
-        }
+         }
     }
 
     $nav_nodes['nav-link-container']->remove();
