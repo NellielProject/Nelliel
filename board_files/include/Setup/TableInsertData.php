@@ -408,7 +408,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'gif', '1']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'png', '1']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'jpeg2000', '1']);
-        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'tiff', '0']);
+        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'tiff', '1']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'bmp', '1']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'icon', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'bool', 'photoshop', '0']);
@@ -434,7 +434,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'audio', 'bool', 'wma', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'audio', 'bool', 'midi', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'audio', 'bool', 'ac3', '0']);
-        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'video', '0']);
+        $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'video', '1']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'mpeg', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'quicktime', '0']);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'video', 'bool', 'avi', '0']);

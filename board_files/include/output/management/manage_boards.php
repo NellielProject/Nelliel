@@ -56,6 +56,10 @@ function nel_render_manage_boards_panel($domain, $user)
             $board_nodes['link-board-lock']->setContent(_gettext('Unlock Board'));
         }
 
+        $board_nodes['link-board-remove']->extSetAttribute('href',
+                $url_constructor->dynamic($base_path,
+                        ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'remove']));
+        $board_nodes['link-board-remove']->setContent(_gettext('!DANGER! Remove Board'));
         $board_info_table->appendChild($temp_board_info_row);
     }
 

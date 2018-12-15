@@ -11,7 +11,7 @@ require_once INCLUDE_PATH . 'output/management/manage_boards.php';
 
 use PDO;
 
-class AdminManageBoards extends AdminBase
+class AdminBoards extends AdminBase
 {
     private $domain;
 
@@ -30,27 +30,29 @@ class AdminManageBoards extends AdminBase
         if ($inputs['action'] === 'add')
         {
             $this->add($user);
-            $this->renderPanel($user);
         }
         else if ($inputs['action'] === 'remove')
         {
-            $this->remove($user);
-            $this->renderPanel($user);
+            if(isset($_GET['action-confirmed']) && $_GET['action-confirmed'] === 'true')
+            {
+                $this->remove($user);
+            }
+            else
+            {
+                $this->createInterstitial();
+                nel_clean_exit();
+            }
         }
         else if ($inputs['action'] === 'lock')
         {
             $this->lock($user);
-            $this->renderPanel($user);
         }
         else if ($inputs['action'] === 'unlock')
         {
             $this->unlock($user);
-            $this->renderPanel($user);
         }
-        else
-        {
-            $this->renderPanel($user);
-        }
+
+        $this->renderPanel($user);
     }
 
     public function renderPanel($user)
@@ -104,20 +106,46 @@ class AdminManageBoards extends AdminBase
 
         $board_id = $_GET['board_id'];
         $domain = new \Nelliel\Domain($board_id, new \Nelliel\CacheHandler(), $this->database);
-        $prepared = $this->database->prepare('SELECT * FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ? LIMIT 1');
-        $board_data = $this->database->executePreparedFetch($prepared, [$board_id], PDO::FETCH_ASSOC);
-        $prepared = $this->database->prepare('DELETE FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
-        $this->database->executePrepared($prepared, [$board_id]);
-        $this->database->query('DROP TABLE ' . $board_data['db_prefix'] . '_config');
-        $this->database->query('DROP TABLE ' . $board_data['db_prefix'] . '_files');
-        $this->database->query('DROP TABLE ' . $board_data['db_prefix'] . '_posts');
-        $this->database->query('DROP TABLE ' . $board_data['db_prefix'] . '_threads');
-        $this->database->query('DROP TABLE ' . $board_data['db_prefix'] . '_archive_files');
-        $this->database->query('DROP TABLE ' . $board_data['db_prefix'] . '_archive_posts');
-        $this->database->query('DROP TABLE ' . $board_data['db_prefix'] . '_archive_threads');
+
+        if($this->database->tableExists($domain->reference('config_table')))
+        {
+            $this->database->query('DROP TABLE ' . $domain->reference('config_table'));
+        }
+
+        if($this->database->tableExists($domain->reference('content_table')))
+        {
+            $this->database->query('DROP TABLE ' . $domain->reference('content_table'));
+        }
+
+        if($this->database->tableExists($domain->reference('post_table')))
+        {
+            $this->database->query('DROP TABLE ' . $domain->reference('post_table'));
+        }
+
+        if($this->database->tableExists($domain->reference('thread_table')))
+        {
+            $this->database->query('DROP TABLE ' . $domain->reference('thread_table'));
+        }
+
+        if($this->database->tableExists($domain->reference('archive_content_table')))
+        {
+            $this->database->query('DROP TABLE ' . $domain->reference('archive_content_table'));
+        }
+
+        if($this->database->tableExists($domain->reference('archive_post_table')))
+        {
+            $this->database->query('DROP TABLE ' . $domain->reference('archive_post_table'));
+        }
+
+        if($this->database->tableExists($domain->reference('archive_thread_table')))
+        {
+            $this->database->query('DROP TABLE ' . $domain->reference('archive_thread_table'));
+        }
 
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->eraserGun($domain->reference('board_path'), null, true);
+        $prepared = $this->database->prepare('DELETE FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
+        $this->database->executePrepared($prepared, [$board_id]);
     }
 
     public function lock($user)
@@ -142,5 +170,17 @@ class AdminManageBoards extends AdminBase
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare('UPDATE "' . BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
+    }
+
+    public function createInterstitial()
+    {
+        require_once INCLUDE_PATH . 'output/interstitial_page.php';
+        $message = _gettext('Are you certain you want to delete the board? Everything will be gone and this cannot be undone!');
+        $url_constructor = new \Nelliel\URLConstructor();
+        $continue_link['href'] = $url_constructor->dynamic(PHP_SELF,
+                ['module' => 'manage-boards', 'action' => 'remove', 'action-confirmed' => 'true',
+                'board_id' => $_GET['board_id']]);
+        $continue_link['text'] = _gettext('Confirm and delete the board.');
+        nel_render_interstitial($this->domain, $message, $continue_link);
     }
 }

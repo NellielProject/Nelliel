@@ -73,7 +73,7 @@ function nel_module_dispatch($inputs, $domain)
             break;
 
         case 'manage-boards':
-            $create_board_admin = new \Nelliel\Admin\AdminManageBoards(nel_database(), $authorization, $domain);
+            $create_board_admin = new \Nelliel\Admin\AdminBoards(nel_database(), $authorization, $domain);
             $create_board_admin->actionDispatch($inputs);
             break;
 
