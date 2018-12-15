@@ -148,6 +148,7 @@ function nel_render_board_settings_panel($domain, $defaults)
         }
     }
 
+    $settings_form->appendChild($dom->getElementById('bottom-submit'));
     $settings_form_nodes['filetype-category-table']->remove();
     $translator->translateDom($dom, $domain->setting('language'));
     $domain->renderInstance()->appendHTMLFromDOM($dom);
