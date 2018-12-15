@@ -104,7 +104,7 @@ class ContentPost extends ContentBase
         $database->executePrepared($prepared, [$post_time, $post_time_milli]);
         $prepared = $database->prepare(
                 'SELECT "post_number" FROM "' . $this->domain->reference('post_table') .
-                '" WHERE "post_time" = ? AND post_time_milli = ? LIMIT 1');
+                '" WHERE "post_time" = ? AND post_time_milli = ?');
         $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli],
                 PDO::FETCH_COLUMN, true);
         $this->content_id->thread_id = ($this->content_id->thread_id == 0) ? $result : $this->content_id->thread_id;

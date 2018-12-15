@@ -190,7 +190,7 @@ class FilesUpload
         if ($response_to === 0 && $this->domain->setting('only_op_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
-                    '" WHERE "parent_thread" = "post_ref" AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
+                    '" WHERE "parent_thread" = "post_ref" AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $file->content_data['md5'], PDO::PARAM_LOB);
             $prepared->bindValue(2, $file->content_data['sha1'], PDO::PARAM_LOB);
@@ -200,7 +200,7 @@ class FilesUpload
         else if ($response_to > 0 && $this->domain->setting('only_thread_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
-                    '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?) LIMIT 1';
+                    '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
             $prepared->bindValue(2, $file->content_data['md5'], PDO::PARAM_LOB);
@@ -211,7 +211,7 @@ class FilesUpload
         else
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
-                    '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ? LIMIT 1';
+                    '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $file->content_data['md5'], PDO::PARAM_LOB);
             $prepared->bindValue(2, $file->content_data['sha1'], PDO::PARAM_LOB);

@@ -62,7 +62,7 @@ class BanHammer
 
     public function getBanById($ban_id, $convert_length = false)
     {
-        $prepared = $this->database->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ban_id" = ? LIMIT 1');
+        $prepared = $this->database->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ban_id" = ?');
         $ban_info = $this->database->executePreparedFetch($prepared, array($ban_id), PDO::FETCH_ASSOC);
 
         if ($ban_info === false)

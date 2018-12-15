@@ -22,7 +22,7 @@ class AuthUser extends AuthBase
     public function loadFromDatabase($temp_database = null)
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT * FROM "' . USER_TABLE . '" WHERE "user_id" = ? LIMIT 1');
+        $prepared = $database->prepare('SELECT * FROM "' . USER_TABLE . '" WHERE "user_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->auth_id], PDO::FETCH_ASSOC, true);
 
         if (empty($result))

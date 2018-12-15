@@ -30,7 +30,7 @@ function nel_render_thread_panel_main($user, $domain)
         $temp_thread_row = $thread_row->cloneNode(true);
         $temp_thread_row->changeId('thread_row-' . $thread['thread_id']);
 
-        $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('post_table') . '" WHERE "post_number" = ? LIMIT 1');
+        $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('post_table') . '" WHERE "post_number" = ?');
         $prepared->bindValue(1, $thread['first_post'], PDO::PARAM_INT);
         $prepared->execute();
         $op_post = $prepared->fetch(PDO::FETCH_ASSOC);

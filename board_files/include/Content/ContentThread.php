@@ -221,13 +221,13 @@ class ContentThread extends ContentBase
         {
             $prepared = $this->database->prepare(
                     'SELECT "post_number" FROM "' . $this->domain->reference('post_table') .
-                    '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1');
+                    '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC');
         }
         else
         {
             $prepared = $this->database->prepare(
                     'SELECT "post_number" FROM "' . $this->domain->reference('post_table') .
-                    '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1');
+                    '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC');
         }
 
         return $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id], PDO::FETCH_COLUMN);
@@ -237,7 +237,7 @@ class ContentThread extends ContentBase
     {
         $prepared = $this->database->prepare(
                 'SELECT "post_number" FROM "' . $this->domain->reference('post_table') .
-                '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC LIMIT 1');
+                '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
         return $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id], PDO::FETCH_COLUMN);
     }
 }

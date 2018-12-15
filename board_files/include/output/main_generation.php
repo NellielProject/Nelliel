@@ -82,7 +82,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
                 $thread_element->changeId('thread-nci_' . $current_thread_id . '_0_0');
                 $dom->getElementById('form-content-action')->appendChild($thread_element);
                 $post_append_target = $thread_element;
-                $query = 'SELECT * FROM "' . $domain->reference('thread_table') . '" WHERE "thread_id" = ? LIMIT 1';
+                $query = 'SELECT * FROM "' . $domain->reference('thread_table') . '" WHERE "thread_id" = ?';
                 $prepared = $database->prepare($query);
                 $gen_data['thread'] = $database->executePreparedFetch($prepared, array($current_thread_id),
                         PDO::FETCH_ASSOC);

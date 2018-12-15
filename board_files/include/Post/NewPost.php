@@ -219,7 +219,7 @@ class NewPost
         {
             $prepared = $this->database->prepare(
                     'SELECT "post_count", "archive_status", "locked" FROM "' . $this->domain->reference('thread_table') .
-                    '" WHERE "thread_id" = ? LIMIT 1');
+                    '" WHERE "thread_id" = ?');
             $thread_info = $this->database->executePreparedFetch($prepared, array($post_data['parent_thread']),
                     PDO::FETCH_ASSOC, true);
 

@@ -22,7 +22,7 @@ class AuthRole extends AuthBase
     public function loadFromDatabase($temp_database = null)
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT * FROM "' . ROLES_TABLE . '" WHERE "role_id" = ? LIMIT 1');
+        $prepared = $database->prepare('SELECT * FROM "' . ROLES_TABLE . '" WHERE "role_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->auth_id], PDO::FETCH_ASSOC, true);
 
         if (empty($result))

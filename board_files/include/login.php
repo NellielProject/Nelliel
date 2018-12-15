@@ -58,7 +58,7 @@ function nel_verify_login()
     }
     else
     {
-        $prepared = $database->prepare('SELECT * FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ? LIMIT 1');
+        $prepared = $database->prepare('SELECT * FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
         $result = $database->executePreparedFetch($prepared, array(@inet_pton($_SERVER['REMOTE_ADDR'])), PDO::FETCH_ASSOC,
                 true);
 

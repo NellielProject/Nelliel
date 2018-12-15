@@ -66,7 +66,7 @@ function nel_render_reports_panel($user, $domain)
         {
             $prepared = $database->prepare(
                     'SELECT "filename" FROM "' . $references['content_table'] .
-                    '" WHERE "parent_thread" = ? AND post_ref = ? AND "content_order" = ? LIMIT 1');
+                    '" WHERE "parent_thread" = ? AND post_ref = ? AND "content_order" = ?');
             $filename = $database->executePreparedFetch($prepared,
                     [$content_id->thread_id, $content_id->post_id, $content_id->order_id], PDO::FETCH_COLUMN);
             $src_web_path = $board_web_path . rawurlencode($references['src_dir']) . '/';

@@ -71,7 +71,7 @@ class OutputFilter
             {
                 $prepared = $database->prepare(
                         'SELECT "parent_thread" FROM "' . $domain->reference('post_table') .
-                        '" WHERE "post_number" = ? LIMIT 1');
+                        '" WHERE "post_number" = ?');
                 $parent_thread = $database->executePreparedFetch($prepared, array($matches[1]), PDO::FETCH_COLUMN);
 
                 if ($parent_thread === false || empty($parent_thread))
