@@ -1,4 +1,38 @@
 # Nelliel Changelog
+## v0.9.15 (2018/12/15)
+### Breaking
+ - Database schema change
+ - Raise minimum requirements and dev target version
+
+### Added
+ - Permissions panel
+ - Delete option for boards, with interstitial warning page
+
+### Changed
+ - Now requires a minimum of PHP 7.0
+ - Filetype settings now render dynamically from database
+ - Permissions now render dynamically from database
+ - Improve ContentID class
+ - Update dispatch variable names
+ - Fix up Reports panel
+ - Update time format handling
+ - Clear out some unused gettext attributes from templates
+ - Assorted cleanup in code and templates
+ 
+### Fixed
+ - Gettext extractor
+ - Some filetype entries
+ - Ban stuff
+ - User edit panel
+ - Threads panel
+ - Moderator Mode
+ - Small issue in settings panels
+ - Index navigation menu
+ - Manage link being to main-panel when it should be login
+ 
+### Removed
+  - Ununsed isIgnored method from Session class
+
 ## v0.9.14 (2018/12/14)
 ### Breaking
  - Lots of things
@@ -12,7 +46,7 @@
  - Change board_language to language and add site setting
  - Trim down permissions and update role editor
  - More dynamic category handling for filetypes
- 
+
 ### Fixed
  - null id being sent to Domain by derp
 

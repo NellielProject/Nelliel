@@ -1,5 +1,5 @@
 <?php
-define('NELLIEL_VERSION', 'v0.9.14'); // Version
+define('NELLIEL_VERSION', 'v0.9.15'); // Version
 define('NELLIEL_COPYRIGHT', '2010-2018 Nelliel Project'); // Copyright line
 define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('BASE_PATH', realpath('./') . '/'); // Base path for script
@@ -25,6 +25,7 @@ require_once INCLUDE_PATH . 'crypt.php';
 nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
 nel_plugins()->loadPlugins();
+
 // A demo point. Does nothing.
 nel_plugins()->processHook('nel-plugin-example', array(5));
 $out = nel_plugins()->processHook('nel-plugin-example-return', array('string'), 5);
