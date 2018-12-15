@@ -29,16 +29,13 @@ class AdminReports extends AdminBase
         if($inputs['action'] === 'dismiss')
         {
             $this->dismiss($user, $_GET['report_id']);
-            $this->renderPanel($user);
         }
         else if(isset($_POST['form_submit_report']))
         {
             $this->add($user);
         }
-        else
-        {
-            $this->renderPanel($user);
-        }
+
+        $this->renderPanel($user);
     }
 
     public function renderPanel($user)
