@@ -4,7 +4,6 @@
 		<table id="post-list" class="data-table">
 			<tr class="manage-header">
 				<th data-i18n="gettext">Post Number</th>
-				<th data-i18n="gettext">Delete Post</th>
 				<th data-i18n="gettext">Thread</th>
 				<th data-i18n="gettext">Time</th>
 				<th data-i18n="gettext">IP</th>
@@ -12,12 +11,10 @@
 				<th data-i18n="gettext">Email</th>
 				<th data-i18n="gettext">Subject</th>
 				<th data-i18n="gettext">Comment</th>
+				<th data-i18n="gettext">Actions</th>
 			</tr>
 			<tr id="post-row-" class="row1">
 				<td id="post-post-number-"></td>
-				<td>
-					<input id="delete-post-" type="checkbox" name="" value="action" title="Delete entire post">
-				</td>
 				<td>
 					<span id="post-thread-"></span>
 				</td>
@@ -39,10 +36,10 @@
 				<td>
 					<span id="post-comment-"></span>
 				</td>
+				<td>
+					<span>[<a id="sticky-link-" href=""></a>]&nbsp;</span>
+					<span>[<a id="delete-link-" href=""></a>]</span>
+				</td>
 			</tr>
 		</table>
-		<div>
-			<input type="submit" name="dostuff" value="Update">&nbsp;
-			<input type=reset value="Reset">
-		</div>
 	</form>

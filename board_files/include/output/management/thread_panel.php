@@ -20,7 +20,7 @@ function nel_render_thread_panel_main($user, $domain)
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/thread_panel.html');
     $thread_data = $database->executeFetchAll(
             'SELECT * FROM "' . $domain->reference('thread_table') .
-            '" ORDER BY "sticky" DESC, "last_update" DESC, "thread_id" DESC', PDO::FETCH_ASSOC);
+            '" ORDER BY "sticky" DESC, "last_update" DESC', PDO::FETCH_ASSOC);
     $thread_list_table = $dom->getElementById('thread-list');
     $thread_row = $dom->getElementById('thread-row-');
     $i = 0;
@@ -38,53 +38,62 @@ function nel_render_thread_panel_main($user, $domain)
 
         $base_content_id = 'nci_' . $thread['thread_id'] . '_0_0';
 
-        $expand_thread_button = $temp_thread_row->getElementById('expand-thread-button-');
-        $expand_thread_button->extSetAttribute('value', _gettext('Expand') . ' ' . $thread['thread_id']);
-        $expand_thread_button->changeId('expand-thread-button-' . $thread['thread_id']);
+        $expand_link = $temp_thread_row->getElementById('expand-link-');
+        $expand_link->changeId('expand-link-' . $thread['thread_id']);
+        $expand_link->extSetAttribute('href',
+                '?module=threads-admin&board_id=' . $domain->id() . '&action=expand-thread&content-id=' .
+                $base_content_id);
+        $expand_link->setContent(_gettext('Expand Thread'));
+
         $thread_post_number = $temp_thread_row->getElementById('thread-post-number-');
         $thread_post_number->setContent($thread['thread_id']);
         $thread_post_number->changeId('thread-post-number-' . $thread['thread_id']);
 
-        $sticky_thread_link = $temp_thread_row->getElementById('sticky-thread-link-');
+        $sticky_link = $temp_thread_row->getElementById('sticky-link-');
+        $sticky_link->changeId('sticky-link-' . $thread['thread_id']);
 
         if ($thread['sticky'] == 1)
         {
-            $sticky_thread_link->extSetAttribute('href',
+            $sticky_link->extSetAttribute('href',
                     '?module=threads-admin&board_id=' . $domain->id() . '&action=unsticky&content-id=' .
                     $base_content_id);
-            $sticky_thread_link->setContent(_gettext('Unsticky Thread'));
+            $sticky_link->setContent(_gettext('Unsticky Thread'));
         }
         else
         {
-            $sticky_thread_link->extSetAttribute('href',
+            $sticky_link->extSetAttribute('href',
                     '?module=threads-admin&board_id=' . $domain->id() . '&action=sticky&content-id=' .
                     $base_content_id);
+            $sticky_link->setContent(_gettext('Sticky Thread'));
         }
 
-        $lock_thread_link = $temp_thread_row->getElementById('lock-thread-link-');
+        $lock_link = $temp_thread_row->getElementById('lock-link-');
+        $lock_link->changeId('lock-link-' . $thread['thread_id']);
 
         if ($thread['locked'] == 1)
         {
-            $lock_thread_link->extSetAttribute('href',
+            $lock_link->extSetAttribute('href',
                     '?module=threads-admin&board_id=' . $domain->id() . '&action=unlock&content-id=' .
                     $base_content_id);
-            $lock_thread_link->setContent(_gettext('Unlock Thread'));
+            $lock_link->setContent(_gettext('Unlock Thread'));
         }
         else
         {
-            $lock_thread_link->extSetAttribute('href',
+            $lock_link->extSetAttribute('href',
                     '?module=threads-admin&board_id=' . $domain->id() . '&action=lock&content-id=' .
                     $base_content_id);
+            $lock_link->setContent(_gettext('Lock Thread'));
         }
 
-        $lock_thread_link = $temp_thread_row->getElementById('delete-thread-link-');
-        $lock_thread_link->extSetAttribute('href',
+        $delete_link = $temp_thread_row->getElementById('delete-link-');
+        $delete_link->changeId('delete-link-' . $thread['thread_id']);
+        $delete_link->extSetAttribute('href',
                 '?module=threads-admin&board_id=' . $domain->id() . '&action=delete&content-id=' .
                 $base_content_id);
-        $lock_thread_link->setContent(_gettext('Delete Thread'));
+        $delete_link->setContent(_gettext('Delete Thread'));
 
         $thread_last_update = $temp_thread_row->getElementById('thread-last-update-');
-        $thread_last_update->setContent(date("D F jS Y  H:i:s", $thread['last_update'] / 1000));
+        $thread_last_update->setContent(date($domain->setting('date_format'), $thread['last_update']));
         $thread_last_update->changeId('thread-last-update-' . $thread['thread_id']);
 
         $thread_subject_link = $temp_thread_row->getElementById('thread-subject-link-');
@@ -94,7 +103,7 @@ function nel_render_thread_panel_main($user, $domain)
         $thread_subject_link->changeId('thread-subject-link-' . $thread['thread_id']);
 
         $thread_op_name = $temp_thread_row->getElementById('thread-op-name-');
-        $thread_op_name->setContent($thread['thread_id']);
+        $thread_op_name->setContent($op_post['poster_name']);
         $thread_op_name->changeId('thread-op-name-' . $thread['thread_id']);
         $thread_op_ip = $temp_thread_row->getElementById('thread-op-ip-');
         $thread_op_ip->setContent(@inet_ntop($op_post['ip_address']));
@@ -141,12 +150,12 @@ function nel_render_thread_panel_expand($user, $domain, $thread_id)
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
     nel_render_general_header($domain->renderInstance(), null, $domain->id(),
-            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Threads')));
+            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Expanded Thread')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
     $dom->getElementById('thread-list-form')->extSetAttribute('action',
             PHP_SELF . '?module=threads&action=update&board_id=' . $domain->id());
-    $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('post_table') . '" WHERE "parent_thread" = ?');
+    $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('post_table') . '" WHERE "parent_thread" = ? ORDER BY "post_time" DESC');
     $post_data = $database->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
     $post_list_table = $dom->getElementById('post-list');
     $post_row = $dom->getElementById('post-row-');
@@ -162,14 +171,23 @@ function nel_render_thread_panel_expand($user, $domain, $thread_id)
         $post_post_number = $temp_post_row->getElementById('post-post-number-');
         $post_post_number->setContent($post['post_number']);
         $post_post_number->changeId('post-post-number-' . $post['post_number']);
-        $delete_post = $temp_post_row->getElementById('delete-post-');
-        $delete_post->extSetAttribute('name', $base_content_id);
-        $delete_post->changeId('delete-post-' . $post['post_number']);
+        $delete_link = $temp_post_row->getElementById('delete-link-');
+        $delete_link->changeId('delete-link-' . $post['post_number']);
+        $delete_link->extSetAttribute('href',
+                '?module=threads-admin&board_id=' . $domain->id() . '&action=delete&content-id=' .
+                $base_content_id);
+        $delete_link->setContent(_gettext('Delete Post'));
+        $sticky_link = $temp_post_row->getElementById('sticky-link-');
+        $sticky_link->changeId('sticky-link-' . $post['post_number']);
+        $sticky_link->extSetAttribute('href',
+                '?module=threads-admin&board_id=' . $domain->id() . '&action=sticky&content-id=' .
+                $base_content_id);
+        $sticky_link->setContent(_gettext('Sticky Post'));
         $post_parent_thread = $temp_post_row->getElementById('post-thread-');
         $post_parent_thread->setContent($post['parent_thread']);
         $post_parent_thread->changeId('post-thread-' . $post['parent_thread']);
         $post_last_update = $temp_post_row->getElementById('post-time-');
-        $post_last_update->setContent(date("D F jS Y  H:i:s", $post['post_time'] / 1000));
+        $post_last_update->setContent(date($domain->setting('date_format'), $post['post_time']));
         $post_last_update->changeId('post-time-' . $post['post_number']); /////
         $post_subject_link = $temp_post_row->getElementById('post-subject-link-');
         $post_subject_link->setContent($post['subject']);

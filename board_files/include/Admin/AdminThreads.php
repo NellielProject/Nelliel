@@ -54,9 +54,10 @@ class AdminThreads extends AdminBase
             $this->remove($user);
             return;
         }
-        else
+        else if ($inputs['action'] === 'expand')
         {
             $this->renderPanel($user);
+            return;
         }
 
         $this->renderPanel($user);
@@ -64,10 +65,10 @@ class AdminThreads extends AdminBase
 
     public function renderPanel($user)
     {
-        if (isset($_POST['expand_thread']))
+        if (isset($_GET['action']) && $_GET['action'] === 'expand-thread')
         {
-            $expand_data = explode(' ', $_POST['expand_thread']);
-            nel_render_thread_panel_expand($user, $this->domain, $expand_data[1]);
+            $content_id = new \Nelliel\ContentID($_GET['content-id']);
+            nel_render_thread_panel_expand($user, $this->domain, $content_id->thread_id);
         }
         else
         {
