@@ -20,29 +20,29 @@ function nel_render_site_settings_panel($domain, $user)
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/site_settings_panel.html');
     $dom->getElementById('site-settings-form')->extSetAttribute('action',
             PHP_SELF . '?module=site-settings&action=update');
-    $result = $database->query('SELECT * FROM "nelliel_site_config"');
+    $result = $database->query('SELECT * FROM "' . SITE_CONFIG_TABLE . '"');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);
 
     foreach ($rows as $config_line)
     {
+        $config_element = $dom->getElementById($config_line['config_name']);
+
+        if (is_null($config_element))
+        {
+            continue;
+        }
+
         if ($config_line['data_type'] === 'bool')
         {
-            $config_element = $dom->getElementById($config_line['config_name']);
-
-            if (!is_null($config_element) && $config_line['setting'] == 1)
+            if ($config_line['setting'] == 1)
             {
                 $config_element->extSetAttribute('checked', 'true');
             }
         }
         else
         {
-            $config_element = $dom->getElementById($config_line['config_name']);
-
-            if (!is_null($config_element))
-            {
-                $config_element->extSetAttribute('value', $config_line['setting']);
-            }
+            $config_element->extSetAttribute('value', $config_line['setting']);
         }
     }
 

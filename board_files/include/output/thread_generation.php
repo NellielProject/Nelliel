@@ -15,12 +15,6 @@ function nel_thread_generator($domain, $write, $thread_id)
     $session = new \Nelliel\Session($authorization);
     $site_settings = nel_parameters_and_data()->siteSettings();
     $file_handler = new \Nelliel\FileHandler();
-
-    if ($write)
-    {
-        $session->isIgnored('render', true);
-    }
-
     $dotdot = ($write) ? '../../../' : '';
     $domain->renderInstance(new NellielTemplates\RenderCore());
     $dom = $domain->renderInstance()->newDOMDocument();
@@ -39,7 +33,6 @@ function nel_thread_generator($domain, $write, $thread_id)
 
     if (empty($treeline))
     {
-        $session->isIgnored('render', false);
         return;
     }
 
@@ -175,10 +168,5 @@ function nel_thread_generator($domain, $write, $thread_id)
     {
         echo $domain->renderInstance()->outputRenderSet();
         nel_clean_exit();
-    }
-
-    if ($write)
-    {
-        $session->isIgnored('render', false);
     }
 }

@@ -20,8 +20,7 @@ function nel_render_board_settings_panel($domain, $defaults)
         nel_render_general_header($domain->renderInstance(), null, null,
                 array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Default Board Settings')));
         $result = $database->query('SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"');
-        $settings_form->extSetAttribute('action',
-                PHP_SELF . '?module=default-board-settings&action=update');
+        $settings_form->extSetAttribute('action', PHP_SELF . '?module=default-board-settings&action=update');
     }
     else
     {
@@ -48,7 +47,8 @@ function nel_render_board_settings_panel($domain, $defaults)
         $filetype_category_nodes['category-header']->setContent($category['label']);
         $filetype_category->changeId('category-' . $category['type']);
         $filetype_category_nodes['entry-label']->setContent('Allow ' . $category['type']);
-        $filetype_entries_nodes[$category['type']] = $filetype_category_nodes['filetype-entry']->getElementsByAttributeName('data-parse-id', true);
+        $filetype_entries_nodes[$category['type']] = $filetype_category_nodes['filetype-entry']->getElementsByAttributeName(
+                'data-parse-id', true);
     }
 
     $count = 0;
@@ -58,27 +58,30 @@ function nel_render_board_settings_panel($domain, $defaults)
     {
         if ($filetype['extension'] == $filetype['parent_extension'])
         {
-            if($count > 2)
+            if ($count > 2)
             {
                 $count = 0;
             }
 
-            if($count === 0)
+            if ($count === 0)
             {
                 $parent_category = $category_nodes['category-' . $filetype['type']];
-                $current_entry_row = $dom->copyNode($settings_form_nodes['filetype-entry-row'], $parent_category, 'append');
+                $current_entry_row = $dom->copyNode($settings_form_nodes['filetype-entry-row'], $parent_category,
+                        'append');
                 $current_entry_row->getElementsByAttributeName('data-parse-id', true)['filetype-entry']->remove();
             }
 
             $current_entry = $dom->copyNode($settings_form_nodes['filetype-entry'], $current_entry_row, 'append');
             $current_entry_nodes = $current_entry->getElementsByAttributeName('data-parse-id', true);
-            $current_entry_nodes['entry-label']->addContent($filetype['label'] . ' - .' . $filetype['extension'], 'before');
+            $current_entry_nodes['entry-label']->addContent($filetype['label'] . ' - .' . $filetype['extension'],
+                    'before');
             $filetype_entries_nodes[$filetype['format']] = $current_entry_nodes;
-            $count++;
+            $count ++;
         }
         else
         {
-            $filetype_entries_nodes[$filetype['format']]['entry-label']->addContent(', .' . $filetype['extension'], 'after');
+            $filetype_entries_nodes[$filetype['format']]['entry-label']->addContent(', .' . $filetype['extension'],
+                    'after');
         }
     }
 
@@ -86,12 +89,15 @@ function nel_render_board_settings_panel($domain, $defaults)
     {
         if ($config_line['data_type'] === 'bool')
         {
+            if ($config_line['setting'] != 1)
+            {
+                continue;
+            }
+
             if ($config_line['config_type'] === 'filetype_enable')
             {
-                if ($config_line['setting'] == 1)
-                {
-                    $filetype_entries_nodes[$config_line['config_name']]['entry-checkbox']->extSetAttribute('checked', 'true');
-                }
+                $filetype_entries_nodes[$config_line['config_name']]['entry-checkbox']->extSetAttribute('checked',
+                        'true');
             }
             else
             {
@@ -102,15 +108,11 @@ function nel_render_board_settings_panel($domain, $defaults)
                     continue;
                 }
 
-                if ($config_line['setting'] == 1)
-                {
-                    $config_element->extSetAttribute('checked', 'true');
-                }
+                $config_element->extSetAttribute('checked', 'true');
             }
         }
         else
         {
-            // TODO: Can be simplified
             switch ($config_line['setting'])
             {
                 case 'ARCHIVE':

@@ -57,12 +57,10 @@ function nel_render_templates_panel($user, $domain)
         else
         {
             $default_link = $url_constructor->dynamic(PHP_SELF,
-                    ['manage' => 'general', 'module' => 'templates', 'action' => 'make-default',
-                        'template-id' => $template['id']]);
+                    ['module' => 'templates', 'action' => 'make-default', 'template-id' => $template['id']]);
             $template_row_nodes['template-default-link']->extSetAttribute('href', $default_link);
             $remove_link = $url_constructor->dynamic(PHP_SELF,
-                    ['manage' => 'general', 'module' => 'templates', 'action' => 'remove',
-                        'template-id' => $template['id']]);
+                    ['module' => 'templates', 'action' => 'remove', 'template-id' => $template['id']]);
             $template_row_nodes['template-remove-link']->extSetAttribute('href', $remove_link);
         }
     }
@@ -98,8 +96,7 @@ function nel_render_templates_panel($user, $domain)
         else
         {
             $remove_link = $url_constructor->dynamic(PHP_SELF,
-                    ['manage' => 'general', 'module' => 'templates', 'action' => 'add',
-                        'template-id' => $template['id']]);
+                    ['module' => 'templates', 'action' => 'add', 'template-id' => $template['id']]);
             $template_row_nodes['template-install-link']->extSetAttribute('href', $remove_link);
         }
     }

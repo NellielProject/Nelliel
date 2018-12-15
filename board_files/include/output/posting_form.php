@@ -17,7 +17,7 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
 
     if ($response_to)
     {
-        if ($session->inModmode($domain->id()))
+        if ($session->inModmode($domain->id()) && !$domain->renderActive())
         {
             $return_url = $url_constructor->dynamic(PHP_SELF, ['module' => 'render', 'action' => 'view-index', 'section' => '0', 'board_id' => $domain->id(), 'modmode' => 'true']);
         }

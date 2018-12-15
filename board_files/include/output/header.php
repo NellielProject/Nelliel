@@ -102,19 +102,18 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
 
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
-    if ($session->inModmode($domain->id()))
+    $dom->getElementById('manage-board-header')->remove();
+    $dom->getElementById('manage-sub-header')->remove();
+
+    if ($session->inModmode($domain->id()) && !$domain->renderActive())
     {
         $dom->getElementById('manage-header-text')->setContent(_gettext('Mod Mode'));
-        $dom->getElementById('manage-board-header')->remove();
-        $dom->getElementById('manage-sub-header')->remove();
         $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=logout');
     }
     else
     {
         $a_elements->item(0)->parentNode->remove();
         $dom->getElementById('manage-header')->remove();
-        $dom->getElementById('manage-board-header')->remove();
-        $dom->getElementById('manage-sub-header')->remove();
     }
 
     $translator->translateDom($dom, $domain->setting('language'));
@@ -166,7 +165,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
 
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
-    if ($session->isActive() || $session->inModmode($board_id))
+    if (($session->isActive() || $session->inModmode($board_id)))
     {
         if (isset($extra_data['header']))
         {

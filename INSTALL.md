@@ -11,5 +11,5 @@ Basic installation guide. Should be enough to get things up and running.
 	- Set `sqltype` to whichever type of database you are using. The current options are MYSQL, MARIADB, POSTGRESQL and SQLITE
 	- There is a config section for each type of SQL database. You only need to configure the section for the one you are using; the others can be left alone.
 5. Go to `imgboard.php` in a browser and give it a moment to run the install routines. If anything goes wrong it should give an error message.
-6. If installation is successful you should be redirected to the default home page. From there you can log in to create boards and further configure the script. You can also go to `imgboard.php?manage=login` to access the login page.
+6. If installation is successful you should be redirected to the default home page. From there you can log in to create boards and further configure the script. You can also go to `imgboard.php?module=login` to access the login page.
 7. Once you have logged in and confirmed things are working, go back to the `config.php` and set `defaultadmin` and `defaultadmin_pass` back to empty.

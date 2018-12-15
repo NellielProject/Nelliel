@@ -29,7 +29,6 @@ function nel_central_dispatch()
     }
 
     $inputs = array();
-    $inputs['manage'] = (isset($_GET['manage'])) ? true : false;
     $inputs['module'] = (isset($_GET['module'])) ? $_GET['module'] : null;
     $inputs['section'] = (isset($_GET['section'])) ? $_GET['section'] : null;
     $inputs['board_id'] = (isset($_GET['board_id'])) ? $_GET['board_id'] : '';

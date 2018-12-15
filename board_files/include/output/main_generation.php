@@ -17,12 +17,6 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
     $domain->renderInstance(new NellielTemplates\RenderCore());
     $thread_table = $gen_data = array();
     $dotdot = ($write) ? '../' : '';
-
-    if ($write)
-    {
-        $session->isIgnored('render', true);
-    }
-
     $result = $database->query(
             'SELECT "thread_id" FROM "' . $domain->reference('thread_table') .
             '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC');
@@ -47,7 +41,6 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         {
             $file_handler->writeFile($domain->reference('board_directory') . '/' . PHP_SELF2 . PHP_EXT,
                     $domain->renderInstance()->outputRenderSet(), FILE_PERM);
-            $session->isIgnored('render', false);
         }
         else
         {
@@ -223,10 +216,5 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         }
 
         ++ $page;
-    }
-
-    if ($write)
-    {
-        $session->isIgnored('render', false);
     }
 }

@@ -171,19 +171,4 @@ class Session
         $board_id = (is_null($board_id)) ? '' : $board_id;
         return self::$in_modmode && self::$user->boardPerm($board_id, 'perm_modmode_access');
     }
-
-    public function isIgnored($reason = 'default', $value = null)
-    {
-        if (!$this->isActive())
-        {
-            return true;
-        }
-
-        if (!is_null($value))
-        {
-            $_SESSION['ignores'][$reason] = $value;
-        }
-
-        return isset($_SESSION['ignores'][$reason]) && $_SESSION['ignores'][$reason];
-    }
 }

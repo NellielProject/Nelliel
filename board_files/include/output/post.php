@@ -107,7 +107,7 @@ function nel_render_post($domain, $gen_data, $dom)
     $header_nodes['hide-post']->extSetAttribute('data-content-id', $post_content_id->getIDString());
     $header_nodes['hide-post']->changeID('hide-post-' . $post_content_id->getIDString());
 
-    if ($session->inModmode($domain->id()))
+    if ($session->inModmode($domain->id()) && !$domain->renderActive())
     {
         $ip = @inet_ntop($post_data['ip_address']);
         $header_nodes['modmode-ip-address']->setContent($ip);
@@ -230,7 +230,7 @@ function nel_render_post($domain, $gen_data, $dom)
     }
     else
     {
-        if ($session->inModmode($domain->id()))
+        if ($session->inModmode($domain->id()) && !$domain->renderActive())
         {
             $header_nodes['reply-to-link']->extSetAttribute('href',
                     PHP_SELF . '?module=render&action=view-thread&content-id=' . $thread_content_id->getIDString() .
@@ -295,7 +295,7 @@ function nel_render_post($domain, $gen_data, $dom)
 
             $file_nodes = $temp_file_node->getElementsByAttributeName('data-parse-id', true);
 
-            if ($session->inModmode($domain->id()))
+            if ($session->inModmode($domain->id()) && !$domain->renderActive())
             {
                 $file_nodes['modmode-delete-link']->extSetAttribute('href',
                         '?module=threads-admin&board_id=' . $domain->id() . '&action=delete&content-id=' .
@@ -524,7 +524,7 @@ function nel_render_thread_form_bottom($domain, $dom)
     $form_td_list = $footer_form_element->doXPathQuery(".//input");
     $dom->getElementById('board_id_field_footer')->extSetAttribute('value', $domain->id());
 
-    if ($session->inModmode($domain->id()))
+    if ($session->inModmode($domain->id()) && !$domain->renderActive())
     {
         $dom->getElementById('bottom-pass-input')->remove();
     }

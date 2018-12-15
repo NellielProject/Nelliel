@@ -33,6 +33,11 @@ function nel_module_dispatch($inputs, $domain)
         case 'render':
             $session = new \Nelliel\Session($authorization, true);
 
+            if(!$session->inModmode($domain->id()))
+            {
+                $domain->renderActive(true);
+            }
+
             switch ($inputs['action'])
             {
                 case 'view-index':

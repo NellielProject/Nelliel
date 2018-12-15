@@ -21,8 +21,8 @@ function nel_render_icon_sets_panel($user, $domain)
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/icon_sets_panel.html');
     $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
     $icon_set_inis = $ini_parser->parseDirectories(FILETYPE_ICON_PATH, 'icon_set_info.ini');
-    $icon_sets = $database->executeFetchAll('SELECT * FROM "' . ICON_SET_TABLE . '" ORDER BY "set_type" ASC, "is_default" DESC',
-            PDO::FETCH_ASSOC);
+    $icon_sets = $database->executeFetchAll(
+            'SELECT * FROM "' . ICON_SET_TABLE . '" ORDER BY "set_type" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
     $installed_ids = array();
     $installed_icon_set_list = $dom->getElementById('installed-icon-set-list');
     $installed_icon_set_list_nodes = $installed_icon_set_list->getElementsByAttributeName('data-parse-id', true);
@@ -49,12 +49,12 @@ function nel_render_icon_sets_panel($user, $domain)
         else
         {
             $default_link = $url_constructor->dynamic(PHP_SELF,
-                    ['manage' => 'general', 'module' => 'icon-sets', 'action' => 'make-default',
-                        'icon-set-id' => $icon_set['id'], 'set-type' => $icon_set['set_type']]);
+                    ['module' => 'icon-sets', 'action' => 'make-default', 'icon-set-id' => $icon_set['id'],
+                        'set-type' => $icon_set['set_type']]);
             $icon_set_row_nodes['icon-set-default-link']->extSetAttribute('href', $default_link);
             $remove_link = $url_constructor->dynamic(PHP_SELF,
-                    ['manage' => 'general', 'module' => 'icon-sets', 'action' => 'remove',
-                        'icon-set-id' => $icon_set['id'], 'set-type' => $icon_set['set_type']]);
+                    ['module' => 'icon-sets', 'action' => 'remove', 'icon-set-id' => $icon_set['id'],
+                        'set-type' => $icon_set['set_type']]);
             $icon_set_row_nodes['icon-set-remove-link']->extSetAttribute('href', $remove_link);
         }
     }
@@ -84,8 +84,8 @@ function nel_render_icon_sets_panel($user, $domain)
         else
         {
             $install_link = $url_constructor->dynamic(PHP_SELF,
-                    ['manage' => 'general', 'module' => 'icon-sets', 'action' => 'add',
-                        'icon-set-id' => $icon_set['id'], 'set-type' => $icon_set['set_type']]);
+                    ['module' => 'icon-sets', 'action' => 'add', 'icon-set-id' => $icon_set['id'],
+                        'set-type' => $icon_set['set_type']]);
             $icon_set_row_nodes['icon-set-install-link']->extSetAttribute('href', $install_link);
         }
     }
