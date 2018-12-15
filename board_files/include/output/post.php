@@ -214,26 +214,7 @@ function nel_render_post($domain, $gen_data, $dom)
         $header_nodes['trip-line']->setContent($post_data['poster_name'] . $trip_line);
     }
 
-    $curr_time = $gen_data['post']['post_time'];
-
-    switch ($domain->setting('date_format'))
-    {
-        case 'ISO':
-            $post_time = date("Y", $curr_time) . $domain->setting('date_separator') . date("m", $curr_time) .
-                    $domain->setting('date_separator') . date("d (D) H:i:s", $curr_time);
-            break;
-
-        case 'US':
-            $post_time = date("m", $curr_time) . $domain->setting('date_separator') . date("d", $curr_time) .
-                    $domain->setting('date_separator') . date("Y (D) H:i:s", $curr_time);
-            break;
-
-        case 'COM':
-            $post_time = date("d", $curr_time) . $domain->setting('date_separator') . date("m", $curr_time) .
-                    $domain->setting('date_separator') . date("Y (D) H:i:s", $curr_time);
-            break;
-    }
-
+    $post_time = date($domain->setting('date_format'), $gen_data['post']['post_time']);
     $header_nodes['post-time']->setContent($post_time);
     $header_nodes['post-time']->extSetAttribute('class', $post_type_class . 'post-time');
     $header_nodes['post-link']->extSetAttribute('class', $post_type_class . 'post-link');

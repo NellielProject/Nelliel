@@ -393,9 +393,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_posts', '1000']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'int', 'max_bumps', '1000']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'tripkey_marker', '!']);
-        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'date_format', 'ISO']);
+        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'date_format', 'Y/m/d (D) H:i:s']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'old_threads', 'ARCHIVE']);
-        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'date_separator', '/']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'fgsfds_name', 'FGSFDS']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'indent_marker', '>>']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'file_sha256', '1']);

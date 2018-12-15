@@ -113,18 +113,6 @@ function nel_render_board_settings_panel($domain, $defaults)
             // TODO: Can be simplified
             switch ($config_line['setting'])
             {
-                case 'ISO':
-                    $dom->getElementById('date_iso')->extSetAttribute('checked', 'true');
-                    break;
-
-                case 'COM':
-                    $dom->getElementById('date_com')->extSetAttribute('checked', 'true');
-                    break;
-
-                case 'US':
-                    $dom->getElementById('date_us')->extSetAttribute('checked', 'true');
-                    break;
-
                 case 'ARCHIVE':
                     $dom->getElementById('old_threads_a')->extSetAttribute('checked', 'true');
                     break;
