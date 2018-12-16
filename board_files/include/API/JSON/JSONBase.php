@@ -13,6 +13,7 @@ abstract class JSONBase
     protected $file_handler;
     protected $file_path;
     protected $file_name;
+    protected $domain;
 
     public abstract function prepareData($data);
 

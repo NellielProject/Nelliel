@@ -9,11 +9,10 @@ if (!defined('NELLIEL_VERSION'))
 
 class JSONPost extends JSONBase
 {
-    private $board_id;
 
-    function __construct($board_id, $file_handler)
+    function __construct($domain, $file_handler)
     {
-        $this->board_id = $board_id;
+        $this->domain = $domain;
         $this->file_handler = $file_handler;
     }
 
@@ -31,6 +30,7 @@ class JSONPost extends JSONBase
         $this->addIfNotEmpty($post_array, 'comment', $data['comment'], 'string');
         $post_array['post_time'] = nel_cast_to_datatype($data['post_time'], 'integer');
         $post_array['post_time_milli'] = nel_cast_to_datatype($data['post_time_milli'], 'integer');
+        $post_array['timestamp'] = date($this->domain->setting('date_format'), $data['post_time']);
         $post_array['has_file'] = nel_cast_to_datatype($data['has_file'], 'boolean');
         $post_array['file_count'] = nel_cast_to_datatype($data['file_count'], 'integer');
         $post_array['op'] = nel_cast_to_datatype($data['op'], 'boolean');

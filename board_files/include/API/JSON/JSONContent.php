@@ -9,11 +9,10 @@ if (!defined('NELLIEL_VERSION'))
 
 class JSONContent extends JSONBase
 {
-    private $board_id;
 
-    function __construct($board_id, $file_handler)
+    function __construct($domain, $file_handler)
     {
-        $this->board_id = $board_id;
+        $this->domain = $domain;
         $this->file_handler = $file_handler;
     }
 

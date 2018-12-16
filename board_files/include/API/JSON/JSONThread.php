@@ -9,12 +9,10 @@ if (!defined('NELLIEL_VERSION'))
 
 class JSONThread extends JSONBase
 {
-    private $board_id;
-    private $thread_id;
 
-    function __construct($board_id, $file_handler)
+    function __construct($domain, $file_handler)
     {
-        $this->board_id = $board_id;
+        $this->domain = $domain;
         $this->file_handler = $file_handler;
     }
 
