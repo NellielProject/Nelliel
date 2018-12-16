@@ -1,19 +1,37 @@
-# Nelliel JSON API
 
-This is the read-only API for Nelliel. The basis is similar to the 4chan and vichan read-only APIs: a JSON-encoded output representing content such as threads or indexes. This documentation covers the base API outputs and should work on all Nelliel installs. Additional output may be included by plugins or other mods a specific site is running.
+# Nelliel JSON API
+This is the read-only API for Nelliel. It is a JSON-encoded output representing content such as threads and indexes. This documentation covers the base API outputs and should apply to all Nelliel installs. Additional output may be included by plugins or other mods a specific site is running.
 
 NOTE: This API is **not** directly compatible with the 4chan or vichan APIs.
 
 **NOTE: The API is currently unfinished and should not be used yet except for testing.**
 
-**API Version:** 0.2
+**API Version:** 0.3
+
+## Index JSON
+**Location:** http(s)://`<site url>`/`<board directory>`/index-`<index page>`.json
+
+NOTE: Index pages start at 0.
+
+Contains one `index` object.
 
 ## Thread JSON
 **Location:** http(s)://`<site url>`/`<board directory>`/threads/`<thread id>`/thread-`<thread id>`.json
-Will contain one thread object followed by a `posts` object which may contain one or more post objects. Each post object may contain one or more content objects.
 
-### Thread object
-Contains information for a thread.
+Contains one `thread` object.
+
+## Object Descriptors
+### `index`
+Contains information for an index. An `index` object may contain a `thread-list` object.
+
+|Attribute          |Type|Possible Values            |Optional|Description        |                               
+|:------------------|:-------- |:--------------------|:-------|:------------------|
+
+### `thread-list`
+Contains zero or more `thread` objects.
+
+### `thread`
+Contains information for a thread. A `thread` object may contain a `post-list` object.
 
 |Attribute          |Type|Possible Values            |Optional|Description        |                               
 |:------------------|:-------- |:--------------------|:-------|:------------------|
@@ -28,8 +46,11 @@ Contains information for a thread.
 |`sticky`           |`integer` |0 or 1               |No      |Is the thread stickied. Boolean integer value: 0 is false, 1 is true|
 |`locked`           |`integer` |0 or 1               |No      |Is the thread locked. Boolean integer value: 0 is false, 1 is true|
 
-### Post object
-Contains information for a post.
+### `post-list`
+Contains zero or more `post` objects.
+
+### `post`
+Contains information for a post. A `post` object may contain a `content-list` object.
 
 |Attribute         |Type|Possible Values            |Optional|Description        |                               
 |:-----------------|:---------|:--------------------|:-------|:------------------|
@@ -44,13 +65,17 @@ Contains information for a post.
 |`comment`         |`string`  |text                 |Yes     |Commentary. May contain HTML or other formatting.|
 |`post_time`       |`integer` |64-bit Unix timestamp|No      |Time the post was made.|
 |`post_time_milli` |`integer` |0-999                |No      |Post time milliseconds. Used with `post_time` when high precision is needed.|
+|`timestamp`       |`integer` |text                 |No      |Formatted version of `post_time`|
 |`has_file`        |`integer` |0 or 1               |No      |If the post has a file. Boolean integer value: 0 is false, 1 is true|
 |`file_count`      |`integer` |0-32767              |No      |File count for the post.|
 |`op`              |`integer` |0 or 1               |No      |Is the post OP (first in thread). Boolean integer value: 0 is false, 1 is true|
 |`sage`            |`integer` |0 or 1               |No      |Is the post saged. Boolean integer value: 0 is false, 1 is true|
 |`mod_comment`     |`string`  |text                 |Yes     |Comment added by staff|
 
-### Content object
+### `content-list`
+Contains zero or more `content` objects.
+
+### `content`
 Contains the information for a file or other content.
 
 |Attribute          |Type|Possible Values               |Optional|Description        |                               
@@ -79,4 +104,3 @@ Contains the information for a file or other content.
 |`url`              |`string`  |text                    |Yes     |URL (mostly for embeds).|
 |`exif`             |`string`  |text                    |Yes     |EXIF data.|
 |`meta`             |`string`  |text                    |Yes     |Other metadata.|
-

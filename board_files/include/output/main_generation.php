@@ -27,6 +27,13 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
     $counttree = count($front_page_list);
     $gen_data['posts_ending'] = false;
     $gen_data['index_rendering'] = true;
+    $gen_data['index'] = array();
+
+    $json_index = new \Nelliel\API\JSON\JSONIndex($domain->id(), $file_handler);
+    $json_index->prepareData($gen_data['index'], true); // TODO: Work out actual data
+    $json_thread = new \Nelliel\API\JSON\JSONThread($domain->id(), $file_handler);
+    $json_post = new \Nelliel\API\JSON\JSONPost($domain, $file_handler);
+    $json_content = new \Nelliel\API\JSON\JSONContent($domain, $file_handler);
 
     // Special handling when there's no content
     if ($counttree === 0)
@@ -41,6 +48,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         {
             $file_handler->writeFile($domain->reference('board_directory') . '/' . PHP_SELF2 . PHP_EXT,
                     $domain->renderInstance()->outputRenderSet(), FILE_PERM);
+            $json_index->writeStoredData($domain->reference('board_directory') . '/', sprintf('index-%d', $page));
         }
         else
         {
@@ -79,6 +87,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
                 $prepared = $database->prepare($query);
                 $gen_data['thread'] = $database->executePreparedFetch($prepared, array($current_thread_id),
                         PDO::FETCH_ASSOC);
+                $json_thread->prepareData($gen_data['thread'], true);
                 $post_count = $gen_data['thread']['post_count'];
                 $abbreviate = $post_count > $domain->setting('abbreviate_thread');
                 $query = 'SELECT * FROM "' . $domain->reference('post_table') .
@@ -92,6 +101,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
 
             $gen_data['abbreviate'] = $abbreviate;
             $gen_data['post'] = $treeline[$post_counter];
+            $json_post->prepareData($gen_data['post'], true);
 
             if ($gen_data['post']['has_file'] == 1)
             {
@@ -100,6 +110,11 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
                 $prepared = $database->prepare($query);
                 $gen_data['files'] = $database->executePreparedFetchAll($prepared,
                         array($gen_data['post']['post_number']), PDO::FETCH_ASSOC);
+
+                foreach ($gen_data['files'] as $content_data)
+                {
+                    $json_post->addContentData($json_content->prepareData($content_data));
+                }
             }
 
             $new_post_element = nel_render_post($domain, $gen_data, $dom);
@@ -138,6 +153,9 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
             {
                 ++ $post_counter;
             }
+
+            $json_thread->addPostData($json_post->getStoredData());
+            $json_index->addThreadData($json_thread->getStoredData());
         }
 
         $dom->getElementById('post-id-nci_0_0_0')->remove();
@@ -213,6 +231,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         {
             $file_handler->writeFile($domain->reference('board_directory') . '/' . $index_filename,
                     $domain->renderInstance()->outputRenderSet(), FILE_PERM, true);
+            $json_index->writeStoredData($domain->reference('board_directory') . '/', sprintf('index-%d', $page));
         }
 
         ++ $page;

@@ -16,7 +16,7 @@ class JSONThread extends JSONBase
         $this->file_handler = $file_handler;
     }
 
-    public function prepareData($data)
+    public function prepareData($data, $store = false)
     {
         $thread_array = array();
         $thread_array['thread_id'] = nel_cast_to_datatype($data['thread_id'], 'integer');
@@ -30,7 +30,15 @@ class JSONThread extends JSONBase
         $thread_array['sticky'] = nel_cast_to_datatype($data['sticky'], 'boolean');
         $thread_array['locked'] = nel_cast_to_datatype($data['locked'], 'boolean');
         $thread_array = nel_plugins()->processHook('nel-json-prepare-thread', array($data), $thread_array);
-        return $thread_array;
+
+        if($store)
+        {
+            $this->data_array = $thread_array;
+        }
+        else
+        {
+            return $thread_array;
+        }
     }
 
     public function storeData($data)
@@ -49,13 +57,8 @@ class JSONThread extends JSONBase
         $this->file_handler->writeFile($file_path . $file_name . JSON_EXT, $json_data);
     }
 
-    public function addThreadData($thread_data)
-    {
-        $this->data_array['thread'] = $thread_data;
-    }
-
     public function addPostData($post_data)
     {
-        $this->data_array['posts'][] = $post_data;
+        $this->data_array['post-list'][] = $post_data;
     }
 }

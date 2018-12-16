@@ -37,7 +37,7 @@ function nel_thread_generator($domain, $write, $thread_id)
     }
 
     $json_thread = new \Nelliel\API\JSON\JSONThread($domain->id(), $file_handler);
-    $json_thread->addThreadData($json_thread->prepareData($gen_data['thread']));
+    $json_thread->prepareData($gen_data['thread'], true);
     $json_post = new \Nelliel\API\JSON\JSONPost($domain, $file_handler);
     $json_content = new \Nelliel\API\JSON\JSONContent($domain, $file_handler);
     $post_counter = 0;
@@ -57,8 +57,7 @@ function nel_thread_generator($domain, $write, $thread_id)
         }
 
         $gen_data['post'] = $treeline[$post_counter];
-        $json_post_data = $json_post->prepareData($gen_data['post']);
-        $json_post->storeData($json_post_data);
+        $json_post->prepareData($gen_data['post'], true);
 
         if ($post_counter === 0)
         {

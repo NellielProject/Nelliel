@@ -16,7 +16,7 @@ class JSONPost extends JSONBase
         $this->file_handler = $file_handler;
     }
 
-    public function prepareData($data)
+    public function prepareData($data, $store = false)
     {
         $post_array = array();
         $post_array['post_number'] = nel_cast_to_datatype($data['post_number'], 'integer');
@@ -37,7 +37,15 @@ class JSONPost extends JSONBase
         $post_array['sage'] = nel_cast_to_datatype($data['sage'], 'boolean');
         $this->addIfNotEmpty($post_array, 'mod_comment', $data['mod_comment'], 'string');
         $post_array = nel_plugins()->processHook('nel-json-prepare-post', array($data), $post_array);
-        return $post_array;
+
+        if($store)
+        {
+            $this->data_array = $post_array;
+        }
+        else
+        {
+            return $post_array;
+        }
     }
 
     public function storeData($data)
@@ -57,6 +65,6 @@ class JSONPost extends JSONBase
 
     public function addContentData($content_data)
     {
-        $this->data_array['content'][$content_data['content_order']] = $content_data;
+        $this->data_array['content-list'][] = $content_data;
     }
 }

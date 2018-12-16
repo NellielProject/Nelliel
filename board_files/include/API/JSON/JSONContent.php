@@ -16,7 +16,7 @@ class JSONContent extends JSONBase
         $this->file_handler = $file_handler;
     }
 
-    public function prepareData($data)
+    public function prepareData($data, $store = false)
     {
         $content_array = array();
         $content_array['parent_thread'] = nel_cast_to_datatype($data['parent_thread'], 'integer');
@@ -45,7 +45,15 @@ class JSONContent extends JSONBase
         $this->addIfNotEmpty($content_array, 'exif', bin2hex($data['exif']), 'string');
         $this->addIfNotEmpty($content_array, 'meta', bin2hex($data['meta']), 'string');
         $content_array = nel_plugins()->processHook('nel-json-prepare-content', array($data), $content_array);
-        return $content_array;
+
+        if($store)
+        {
+            $this->data_array = $content_array;
+        }
+        else
+        {
+            return $content_array;
+        }
     }
 
     public function storeData($data)
