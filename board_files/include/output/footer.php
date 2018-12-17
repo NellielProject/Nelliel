@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_general_footer($domain, $dotdot = null, $styles = false, $extra_links = false)
+function nel_render_general_footer($domain, $dotdot = null, $styles = false)
 {
     $translator = new \Nelliel\Language\Translator();
     $dom = $domain->renderInstance()->newDOMDocument();
@@ -14,11 +14,6 @@ function nel_render_general_footer($domain, $dotdot = null, $styles = false, $ex
     if (!$styles)
     {
         $dom->getElementById('bottom-styles')->remove();
-    }
-
-    if (!$extra_links)
-    {
-        $dom->getElementById('bottom-extra-links')->remove();
     }
 
     $dom->getElementById('nelliel-version')->setContent(NELLIEL_VERSION);
