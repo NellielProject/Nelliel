@@ -19,8 +19,6 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
     $dom->getElementById('js-onload')->setContent(
             'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\');};');
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $domain->id() . '"));');
-    $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . '/' . 'html5shiv-printshiv.js"></script><![endif]';
-    $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
     foreach ($link_elements as $element)
     {
@@ -136,8 +134,6 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $dom->getElementById('js-onload')->setContent(
             'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $board_id . '\');};');
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $board_id . '"));');
-    $html5shiv = '[if lt IE 9]><script src="' . $dotdot . JS_DIR . '/' . 'html5shiv-printshiv.js"></script><![endif]';
-    $head_element->doXPathQuery('//comment()')->item(0)->data = $html5shiv;
 
     $dom->getElementById('top-logo-image')->remove();
     $dom->getElementById('top-logo-text')->remove();
