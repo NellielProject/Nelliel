@@ -136,7 +136,7 @@ function nel_thread_generator($domain, $write, $thread_id)
         $imported = $dom->importNode($new_post_node, true);
         $dom->getElementById('thread-nci_0_0_0')->appendChild($imported);
         ++ $post_counter;
-        $json_thread->addPostData($json_post->getStoredData());
+        $json_thread->addPostData($json_post->retrieveData(true));
     }
 
     $dom->getElementById('post-id-nci_0_0_0')->remove();

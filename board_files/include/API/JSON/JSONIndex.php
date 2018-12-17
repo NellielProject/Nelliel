@@ -14,31 +14,38 @@ class JSONIndex extends JSONBase
     {
         $this->domain = $domain;
         $this->file_handler = $file_handler;
+        $this->data_array['index'] = array();
     }
 
     public function prepareData($data, $store = false)
     {
         $index_array = array();
+        $index_array['thread_count'] = nel_cast_to_datatype($data['thread_count'], 'integer');
         $index_array = nel_plugins()->processHook('nel-json-prepare-post', array($data), $index_array);
 
-        if($store)
+        if ($store)
         {
-            $this->data_array = $index_array;
+            $this->data_array['index'] = $index_array;
         }
-        else
-        {
-            return $index_array;
-        }
+
+        return $index_array;
     }
 
     public function storeData($data)
     {
-        $this->data_array = $data;
+        $this->data_array['index'] = $data;
     }
 
-    public function getStoredData()
+    public function retrieveData($all_data = null)
     {
-        return $this->data_array;
+        if($all_data)
+        {
+            return $this->data_array;
+        }
+        else
+        {
+            return $this->data_array['index'];
+        }
     }
 
     public function writeStoredData($file_path, $file_name)

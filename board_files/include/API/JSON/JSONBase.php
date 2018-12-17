@@ -15,11 +15,11 @@ abstract class JSONBase
     protected $file_name;
     protected $domain;
 
-    public abstract function prepareData($data, $store);
+    public abstract function prepareData($data, $store = false);
 
     public abstract function storeData($data);
 
-    public abstract function getStoredData();
+    public abstract function retrieveData($all_data = false);
 
     public abstract function writeStoredData($file_path, $file_name);
 

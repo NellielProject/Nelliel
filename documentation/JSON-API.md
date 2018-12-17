@@ -1,39 +1,40 @@
-
 # Nelliel JSON API
-This is the read-only API for Nelliel. It is a JSON-encoded output representing content such as threads and indexes. This documentation covers the base API outputs and should apply to all Nelliel installs. Additional output may be included by plugins or other mods a specific site is running.
+Nelliel's JSON API provides a read-only representation of resources such as threads and indexes. This documentation covers the base API outputs and should apply to all Nelliel installs. Additional output may be included by plugins or other mods a specific site is running.
 
 NOTE: This API is **not** directly compatible with the 4chan or vichan APIs.
 
-**NOTE: The API is currently unfinished and should not be used yet except for testing.**
+**NOTE: The base API is currently unfinished and should not be used except for testing.**
 
-**API Version:** 0.3
+**API Version:** 0.4
 
-## Index JSON
-**Location:** http(s)://`<site url>`/`<board directory>`/index-`<index page>`.json
+## Endpoints
+### Index
+**Location:** http(s)://`:site_url`/`:board_directory`/index-`:index_number`.json
 
-NOTE: Index pages start at 0.
+NOTE: For index pages, `:index-number` starts at 0.
 
-Contains one `index` object.
+Contains a representation of the specified index page.
 
-## Thread JSON
-**Location:** http(s)://`<site url>`/`<board directory>`/threads/`<thread id>`/thread-`<thread id>`.json
+### Thread
+**Location:** http(s)://`:site_url`/`:board_directory`/threads/`:thread_id`/thread-`:thread_id`.json
 
-Contains one `thread` object.
+Contains a representation of the specified thread.
 
 ## Object Descriptors
 ### `index`
-Contains information for an index. An `index` object may contain a `thread-list` object.
+Contains information about an index page.
 
-|Attribute          |Type|Possible Values            |Optional|Description        |                               
+|Attribute Key      |Type      |Possible Values      |Optional|Description        |                               
 |:------------------|:-------- |:--------------------|:-------|:------------------|
+|`thread_count`     |`integer` |1-2147483647         |No      |Number of threads on the page.|
 
 ### `thread-list`
 Contains zero or more `thread` objects.
 
 ### `thread`
-Contains information for a thread. A `thread` object may contain a `post-list` object.
+Contains information about a thread.
 
-|Attribute          |Type|Possible Values            |Optional|Description        |                               
+|Attribute Key      |Type      |Possible Values      |Optional|Description        |                               
 |:------------------|:-------- |:--------------------|:-------|:------------------|
 |`thread_id`        |`integer` |1-2147483647         |No      |ID of the thread.|
 |`first_post`       |`integer` |1-2147483647 or null |No      |First post in the thread. null if there are no posts.|
@@ -50,9 +51,9 @@ Contains information for a thread. A `thread` object may contain a `post-list` o
 Contains zero or more `post` objects.
 
 ### `post`
-Contains information for a post. A `post` object may contain a `content-list` object.
+Contains information about a post.
 
-|Attribute         |Type|Possible Values            |Optional|Description        |                               
+|Attribute Key     |Type      |Possible Values      |Optional|Description        |                               
 |:-----------------|:---------|:--------------------|:-------|:------------------|
 |`post_number`     |`integer` |1-2147483647         |No      |Post ID.|
 |`parent_thread`   |`integer` |1-2147483647 or null |No      |ID of the parent thread. It is possible for a post to have no thread.|
@@ -76,9 +77,9 @@ Contains information for a post. A `post` object may contain a `content-list` ob
 Contains zero or more `content` objects.
 
 ### `content`
-Contains the information for a file or other content.
+Contains the information about a file or other content.
 
-|Attribute          |Type|Possible Values               |Optional|Description        |                               
+|Attribute Key      |Type      |Possible Values         |Optional|Description        |                               
 |:------------------|:---------|:-----------------------|:-------|:------------------|
 |`parent_thread`    |`integer` |1-2147483647 or null    |No      |ID of the parent thread. null if there is no parent thread.|
 |`post_ref`         |`integer` |1-2147483647 or null    |No      |ID of post the content is in. null if there is no post ref.|

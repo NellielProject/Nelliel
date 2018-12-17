@@ -27,13 +27,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
     $counttree = count($front_page_list);
     $gen_data['posts_ending'] = false;
     $gen_data['index_rendering'] = true;
-    $gen_data['index'] = array();
-
     $json_index = new \Nelliel\API\JSON\JSONIndex($domain->id(), $file_handler);
-    $json_index->prepareData($gen_data['index'], true); // TODO: Work out actual data
-    $json_thread = new \Nelliel\API\JSON\JSONThread($domain->id(), $file_handler);
-    $json_post = new \Nelliel\API\JSON\JSONPost($domain, $file_handler);
-    $json_content = new \Nelliel\API\JSON\JSONContent($domain, $file_handler);
 
     // Special handling when there's no content
     if ($counttree === 0)
@@ -59,7 +53,6 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
     }
 
     $thread_counter = 0;
-    $post_counter = -1;
 
     while ($thread_counter < $counttree)
     {
@@ -73,11 +66,15 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         nel_render_board_header($domain, $dotdot, $treeline);
         nel_render_posting_form($domain, $response_to, $dotdot);
         $sub_page_thread_counter = 0;
+        $post_counter = -1;
 
         while ($sub_page_thread_counter < $domain->setting('threads_per_page'))
         {
+            $json_content = new \Nelliel\API\JSON\JSONContent($domain, $file_handler);
+
             if ($post_counter === -1)
             {
+                $json_thread = new \Nelliel\API\JSON\JSONThread($domain->id(), $file_handler);
                 $current_thread_id = $front_page_list[$thread_counter];
                 $thread_element = $dom->getElementById('thread-nci_0_0_0')->cloneNode();
                 $thread_element->changeId('thread-nci_' . $current_thread_id . '_0_0');
@@ -101,6 +98,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
 
             $gen_data['abbreviate'] = $abbreviate;
             $gen_data['post'] = $treeline[$post_counter];
+            $json_post = new \Nelliel\API\JSON\JSONPost($domain, $file_handler);
             $json_post->prepareData($gen_data['post'], true);
 
             if ($gen_data['post']['has_file'] == 1)
@@ -142,8 +140,11 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
                 }
             }
 
+            $json_thread->addPostData($json_post->retrieveData(true));
+
             if (empty($treeline[$post_counter + 1]))
             {
+                $json_index->addThreadData($json_thread->retrieveData(true));
                 $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? $domain->setting('threads_per_page') : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
                 nel_render_insert_hr($dom);
@@ -153,11 +154,9 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
             {
                 ++ $post_counter;
             }
-
-            $json_thread->addPostData($json_post->getStoredData());
-            $json_index->addThreadData($json_thread->getStoredData());
         }
 
+        $gen_data['index']['thread_count'] = $thread_counter;
         $dom->getElementById('post-id-nci_0_0_0')->remove();
         $dom->getElementById('thread-nci_0_0_0')->remove();
         $gen_data['posts_ending'] = true;
@@ -231,6 +230,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         {
             $file_handler->writeFile($domain->reference('board_directory') . '/' . $index_filename,
                     $domain->renderInstance()->outputRenderSet(), FILE_PERM, true);
+            $json_index->prepareData($gen_data['index'], true);
             $json_index->writeStoredData($domain->reference('board_directory') . '/', sprintf('index-%d', $page));
         }
 

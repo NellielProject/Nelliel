@@ -14,6 +14,7 @@ class JSONThread extends JSONBase
     {
         $this->domain = $domain;
         $this->file_handler = $file_handler;
+        $this->data_array['thread'] = array();
     }
 
     public function prepareData($data, $store = false)
@@ -31,24 +32,29 @@ class JSONThread extends JSONBase
         $thread_array['locked'] = nel_cast_to_datatype($data['locked'], 'boolean');
         $thread_array = nel_plugins()->processHook('nel-json-prepare-thread', array($data), $thread_array);
 
-        if($store)
+        if ($store)
         {
-            $this->data_array = $thread_array;
+            $this->data_array['thread'] = $thread_array;
         }
-        else
-        {
-            return $thread_array;
-        }
+
+        return $thread_array;
     }
 
     public function storeData($data)
     {
-        $this->data_array = $data;
+        $this->data_array['thread'] = $data;
     }
 
-    public function getStoredData()
+    public function retrieveData($all_data = false)
     {
-        return $this->data_array;
+        if($all_data)
+        {
+            return $this->data_array;
+        }
+        else
+        {
+            return $this->data_array['thread'];
+        }
     }
 
     public function writeStoredData($file_path, $file_name)

@@ -14,6 +14,7 @@ class JSONPost extends JSONBase
     {
         $this->domain = $domain;
         $this->file_handler = $file_handler;
+        $this->data_array['post'] = array();
     }
 
     public function prepareData($data, $store = false)
@@ -38,14 +39,12 @@ class JSONPost extends JSONBase
         $this->addIfNotEmpty($post_array, 'mod_comment', $data['mod_comment'], 'string');
         $post_array = nel_plugins()->processHook('nel-json-prepare-post', array($data), $post_array);
 
-        if($store)
+        if ($store)
         {
-            $this->data_array = $post_array;
+            $this->data_array['post'] = $post_array;
         }
-        else
-        {
-            return $post_array;
-        }
+
+        return $post_array;
     }
 
     public function storeData($data)
@@ -53,9 +52,16 @@ class JSONPost extends JSONBase
         $this->data_array = $data;
     }
 
-    public function getStoredData()
+    public function retrieveData($all_data = false)
     {
-        return $this->data_array;
+        if($all_data)
+        {
+            return $this->data_array;
+        }
+        else
+        {
+            return $this->data_array['thread'];
+        }
     }
 
     public function writeStoredData($file_path, $file_name)
