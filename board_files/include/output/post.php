@@ -50,8 +50,6 @@ function nel_render_post($domain, $gen_data, $dom)
     $response = $gen_data['post']['op'] != 1;
     $post_data = $gen_data['post'];
     $thread_data = $gen_data['thread'];
-    $thread_id = $post_data['parent_thread'];
-    $post_id = $thread_id . '_' . $post_data['post_number'];
     $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-nci_0_0_0'), true);
 
     if ($response)
@@ -85,11 +83,11 @@ function nel_render_post($domain, $gen_data, $dom)
 
     $board_web_path = '//' . $base_domain . '/' . rawurlencode($domain->reference('board_directory')) . '/';
     $pages_web_path = $board_web_path . rawurlencode($domain->reference('page_dir')) . '/';
-    $thread_page_web_path = $pages_web_path . $thread_id . '/thread-' . $thread_id . '.html';
+    $thread_page_web_path = $pages_web_path . $thread_content_id->thread_id . '/thread-' . $thread_content_id->thread_id . '.html';
     $src_web_path = $board_web_path . rawurlencode($domain->reference('src_dir')) . '/';
-    $thread_src_web_path = $src_web_path . $thread_id . '/';
+    $thread_src_web_path = $src_web_path . $thread_content_id->thread_id . '/';
     $preview_web_path = $board_web_path . rawurlencode($domain->reference('thumb_dir')) . '/';
-    $thread_preview_web_path = $preview_web_path . $thread_id . '/';
+    $thread_preview_web_path = $preview_web_path . $thread_content_id->thread_id . '/';
 
     if ($response)
     {
@@ -101,7 +99,7 @@ function nel_render_post($domain, $gen_data, $dom)
     if ($gen_data['index_rendering'] && !$response)
     {
         $header_nodes['hide-thread']->extSetAttribute('data-content-id', $post_content_id->getIDString());
-        $header_nodes['hide-thread']->changeID('hide-thread-' . $post_content_id->getIDString());
+        $header_nodes['hide-thread']->changeID('hide-thread-' . $thread_content_id->getIDString());
     }
 
     $header_nodes['hide-post']->extSetAttribute('data-content-id', $post_content_id->getIDString());
@@ -234,7 +232,7 @@ function nel_render_post($domain, $gen_data, $dom)
         {
             $header_nodes['reply-to-link']->extSetAttribute('href',
                     PHP_SELF . '?module=render&action=view-thread&content-id=' . $thread_content_id->getIDString() .
-                    '&section=' . $thread_id . '&board_id=' . $domain->id() . '&modmode=true');
+                    '&section=' . $thread_content_id->thread_id . '&board_id=' . $domain->id() . '&modmode=true');
         }
         else
         {
