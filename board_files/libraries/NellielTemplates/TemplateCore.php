@@ -85,10 +85,10 @@ class TemplateCore
     private function checkHTMLFixes($template)
     {
         $template_contents = $this->templates[$template]['contents'];
-        $this->templates[$template]['fix_status']['doctype'] = (preg_match('#<!DOCTYPE#', $template_contents) === 0) ? true : false;
-        $this->templates[$template]['fix_status']['html_open'] = (preg_match('#<html>#', $template_contents) === 0) ? true : false;
+        $this->templates[$template]['fix_status']['doctype'] = (preg_match('#<!DOCTYPE.*?>#', $template_contents) === 0) ? true : false;
+        $this->templates[$template]['fix_status']['html_open'] = (preg_match('#<html.*?>#', $template_contents) === 0) ? true : false;
         $this->templates[$template]['fix_status']['html_close'] = (preg_match('#</html>#', $template_contents) === 0) ? true : false;
-        $this->templates[$template]['fix_status']['body_open'] = (preg_match('#<body>#', $template_contents) === 0) ? true : false;
+        $this->templates[$template]['fix_status']['body_open'] = (preg_match('#<body.*?>#', $template_contents) === 0) ? true : false;
         $this->templates[$template]['fix_status']['body_close'] = (preg_match('#<\/body>#', $template_contents) === 0) ? true : false;
     }
 

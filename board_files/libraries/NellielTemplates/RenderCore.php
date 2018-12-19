@@ -10,7 +10,7 @@ class RenderCore
 
     function __construct()
     {
-        $this->version = '1.0.2';
+        $this->version = '1.0.3';
         $this->template_instance = new TemplateCore($this);
         libxml_use_internal_errors(true);
         $this->createRenderSet('default');
