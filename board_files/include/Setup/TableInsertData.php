@@ -19,7 +19,7 @@ class TableInsertData
         $database = nel_database();
         $insert_query = "INSERT INTO " . SITE_CONFIG_TABLE . " (config_type, config_owner, config_category, data_type, config_name, setting) VALUES (?, ?, ?, ?, ?, ?)";
         $prepared = $database->prepare($insert_query);
-        $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'str', 'home_page', '../']);
+        $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'str', 'home_page', '/']);
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'crypt', 'str', 'post_password_algorithm', 'sha256']);
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'crypt', 'str', 'secure_tripcode_algorithm', 'sha256']);
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'crypt', 'bool', 'do_password_rehash', '0']);

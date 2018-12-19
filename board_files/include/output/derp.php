@@ -19,17 +19,33 @@ function nel_render_derp($diagnostic, $domain_id = '')
     $dom->getElementById('error-data')->setContent(''); // TODO: This actually have something
     $session = new \Nelliel\Session($authorization);
     $url_constructor = new \Nelliel\URLConstructor();
+    $base_domain = pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
 
     if ($session->inModmode($domain->id()))
     {
-        $return_link = $url_constructor->dynamic(PHP_SELF,
-                ['module' => 'render', 'action' => 'view-index', 'section' => '0', 'board_id' => $domain->id(),
-                    'modmode' => 'true']);
+        if ($domain->id() === '')
+        {
+            ; // TODO: Figure out this one
+        }
+        else
+        {
+            $return_link = $url_constructor->dynamic(PHP_SELF,
+                    ['module' => 'render', 'action' => 'view-index', 'section' => '0', 'board_id' => $domain->id(),
+                        'modmode' => 'true']);
+        }
     }
     else
     {
-        $return_link = $dom->getElementById('return-link')->extSetAttribute('href',
-                nel_parameters_and_data()->boardReferences($domain->id(), 'board_directory') . '/' . PHP_SELF2 . PHP_EXT);
+        if ($domain->id() === '')
+        {
+            $return_link = $dom->getElementById('return-link')->extSetAttribute('href',
+                    $base_domain . $domain->setting('home_page'));
+        }
+        else
+        {
+            $return_link = $dom->getElementById('return-link')->extSetAttribute('href',
+                    $base_domain . '/' . $domain->reference('board_directory') . '/');
+        }
     }
 
     $do_styles = ($domain->id() === '') ? false : true;
