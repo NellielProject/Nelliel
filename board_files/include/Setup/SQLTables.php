@@ -492,6 +492,22 @@ class SQLTables
         nel_setup_stuff_done($result);
     }
 
+    public function createCaptchaTable($table_name)
+    {
+        $auto_inc = $this->autoincrementColumn('INTEGER');
+        $options = $this->tableOptions();
+        $schema = "
+        CREATE TABLE " . $table_name . " (
+            cookie_key              VARCHAR(255) NOT NULL,
+            answer_text             VARCHAR(255) NOT NULL,
+            case_sensitive          SMALLINT NOT NULL DEFAULT 0,
+            time_created            BIGINT NOT NULL DEFAULT 0
+        ) " . $options . ";";
+
+        $result = $this->createTableQuery($schema, $table_name);
+        nel_setup_stuff_done($result);
+    }
+
     private function autoincrementColumn($int_column)
     {
         $auto = '';

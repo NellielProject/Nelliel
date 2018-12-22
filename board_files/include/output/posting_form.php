@@ -7,6 +7,7 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
     $dom = $domain->renderInstance()->newDOMDocument();
+    $site_domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database());
     $domain->renderInstance()->loadTemplateFromFile($dom, 'posting_form.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $url_constructor = new \Nelliel\URLConstructor();
@@ -107,6 +108,30 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
         $posting_form_nodes['form-fgsfds']->remove();
     }
 
+    if (!$domain->setting('use_captcha'))
+    {
+        $posting_form_nodes['form-captcha']->remove();
+    }
+    else
+    {
+        $posting_form_nodes['captcha-image']->extSetAttribute('src', $dotdot . PHP_SELF . '?get-captcha');
+    }
+
+    if (!$domain->setting('use_recaptcha'))
+    {
+        $posting_form_nodes['form-recaptcha']->remove();
+    }
+    else
+    {
+        $posting_form_nodes['recaptcha-sitekey']->extSetAttribute('data-sitekey', $site_domain->setting('recaptcha_site_key'));
+    }
+
+    if (!$domain->setting('use_spambot_trap'))
+    {
+        $dom->removeChild($dom->getElementById('form-nope1'));
+        $dom->removeChild($dom->getElementById('form-nope2'));
+    }
+
     if ($response_to)
     {
         $dom->getElementById('which-post-mode')->setContent('Posting mode: Reply');
@@ -114,13 +139,6 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
 
     $rules = $dom->importNode(nel_render_rules_list($domain), true);
     $posting_form->appendChild($rules);
-
-    if (!$domain->setting('use_spambot_trap'))
-    {
-        $dom->removeChild($dom->getElementById('form-trap1'));
-        $dom->removeChild($dom->getElementById('form-trap2'));
-    }
-
     $translator->translateDom($dom, $domain->setting('language'));
     $domain->renderInstance()->appendHTMLFromDOM($dom);
 }

@@ -10,25 +10,33 @@ require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'autoload.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
 require_once LIBRARY_PATH . 'random_compat/lib/random.php';
-require_once INCLUDE_PATH . 'output/header.php';
-require_once INCLUDE_PATH . 'output/footer.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'accessors.php';
-require_once INCLUDE_PATH . 'derp.php';
-
-$authorization = new \Nelliel\Auth\Authorization(nel_database());
-$language = new \Nelliel\Language\Language($authorization);
-$language->loadLanguage(LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po');
-
-require_once INCLUDE_PATH . 'general_functions.php';
-require_once INCLUDE_PATH . 'crypt.php';
-nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
 nel_plugins()->loadPlugins();
 
 // A demo point. Does nothing.
 nel_plugins()->processHook('nel-plugin-example', array(5));
 $out = nel_plugins()->processHook('nel-plugin-example-return', array('string'), 5);
+
+require_once INCLUDE_PATH . 'general_functions.php';
+
+// Check if we're just returning a CAPTCHA image
+if(isset($_GET['get-captcha']))
+{
+    nel_get_captcha();
+}
+
+require_once INCLUDE_PATH . 'output/header.php';
+require_once INCLUDE_PATH . 'output/footer.php';
+require_once INCLUDE_PATH . 'derp.php';
+
+$authorization = new \Nelliel\Auth\Authorization(nel_database());
+$language = new \Nelliel\Language\Language($authorization);
+$language->loadLanguage(LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po');
+
+require_once INCLUDE_PATH . 'crypt.php';
+nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
 if (RUN_SETUP_CHECK)
 {

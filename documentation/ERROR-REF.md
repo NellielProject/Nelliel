@@ -22,6 +22,7 @@ Error 20: Filetype does not match esxtension. (Post/FilesUpload.php)
 Error 21: Duplicate file. (Post/FilesUpload.php)  
 Error 22: Banned file. (Post/FilesUpload.php)  
 Error 23: No new post, board locked. (Post/NewPost.php)  
+Error 24: CAPTCHA failed or is spambot. (Post/NewPost.php)  
 
 Error 50: Password does not match post. (Content/ContentPost.php)  
 Error 51: Board locked, can't remove file. (Content/ContentFile.php)  

@@ -57,6 +57,21 @@
 					<input type="checkbox" name="post_as_staff" value="1" title="Post as staff" data-i18n-attributes="title" checked>
 					<span data-i18n="gettext">Post as staff</span>
 				</label>
+				<div data-parse-id="form-captcha" class="posting-form-row">
+					<span class="posting-form-label"></span>
+					<div>
+						<img data-parse-id="captcha-image" src="">
+					</div>
+					<div data-i18n="gettext">Enter the characters shown in the image above.</div>
+					<div>
+						<input id="posting-form-captcha" class="posting-form-input" type="text" name="new_post[captcha]" size="12" maxlength="16" value="">
+					</div>
+				</div>
+				<div data-parse-id="form-recaptcha" class="posting-form-row">
+					<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+					<span class="posting-form-label"></span>
+					<div data-parse-id="recaptcha-sitekey" class="g-recaptcha" data-sitekey=""></div>
+				</div>
 				<div id="form-submit-clear" class="posting-form-row">
 					<span class="display-cell"></span>
 					<input type="submit" value="Submit" data-i18n="gettext" data-i18n-attributes="value">&nbsp;&nbsp;&nbsp;&nbsp;
@@ -66,11 +81,11 @@
 					<span class="display-cell"></span>
 					<span id="which-post-mode" class="posting-form-input" data-i18n="gettext">Posting mode: New thread</span>
 				</div>
-				<div id="form-trap1" class="hidden">
+				<div id="form-nope1" class="hidden">
 					<label for="website_url" data-i18n="gettext">Never put anything in this field!</label>
 					<input id="website_url" type="text" name="website_url" size="30" autocomplete="off">
 				</div>
-				<div id="form-trap2" class="hidden">
+				<div id="form-nope2" class="hidden">
 					<label for="user_comments" data-i18n="gettext">Never put anything in this field!</label>
 					<input id="user_comments" type="text" name="user_comments" size="30" autocomplete="off">
 				</div>

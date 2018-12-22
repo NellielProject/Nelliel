@@ -24,6 +24,27 @@ class NewPost
     {
         $error_data = array('board_id' => $this->domain->id());
 
+        if ($this->domain->setting('use_captcha') || $this->domain->setting('use_recaptcha'))
+        {
+            $captcha = new \Nelliel\CAPTCHA($database);
+            $captcha_result = false;
+
+            if ($this->domain->setting('use_captcha'))
+            {
+                $captcha_result = $captcha->verifyCaptcha();
+            }
+
+            if ($this->domain->setting('use_recaptcha'))
+            {
+                $captcha_result = $captcha->verifyReCaptcha();
+            }
+
+            if(!$captcha_result)
+            {
+                nel_derp(24, _gettext('CAPTCHA test failed or you appear to be a spambot.'), $error_data);
+            }
+        }
+
         if ($this->domain->reference('locked'))
         {
             nel_derp(23, _gettext('Board is locked. Cannot make new post.'), $error_data);

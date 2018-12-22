@@ -297,6 +297,20 @@
 			</tr>
 			<tr>
 				<td>
+					<input type="hidden" name="use_captcha" value="0">
+					<input type="checkbox" name="use_captcha" id="use_captcha" value="1">
+					<label for="use_captcha" data-i18n="gettext">Use a CAPTCHA for new posts and threads. Requires a CAPTCHA plugin to work</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="use_recaptcha" value="0">
+					<input type="checkbox" name="use_recaptcha" id="use_recaptcha" value="1">
+					<label for="use_recaptcha" data-i18n="gettext">Use a ReCAPTCHA for new posts and threads</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
 					<input type="hidden" name="only_thread_duplicates" value="0">
 					<input type="checkbox" name="only_thread_duplicates" id="only_thread_duplicates" value="1">
 					<label for="only_thread_duplicates" data-i18n="gettext">Only check for duplicates in current thread when replying</label>

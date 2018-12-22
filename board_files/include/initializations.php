@@ -35,6 +35,7 @@ define('REPORTS_TABLE', 'nelliel_reports'); // Content reports
 define('STYLES_TABLE', 'nelliel_styles'); // Styles
 define('TEMPLATE_TABLE', 'nelliel_templates'); // Templates
 define('ICON_SET_TABLE', 'nelliel_icon_sets'); // Icon Sets
+define('CAPTCHA_TABLE', 'nelliel_captcha'); // CAPTCHA data
 
 define('CONFIG_PATH', BASE_PATH . 'configuration/'); // Base config path
 define('LIBRARY_PATH', FILES_PATH . 'libraries/'); // Libraries path

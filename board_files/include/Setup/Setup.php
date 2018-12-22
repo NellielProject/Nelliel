@@ -60,6 +60,7 @@ class Setup
         $sql_tables->createStylesTable(STYLES_TABLE);
         $sql_tables->createTemplatesTable(TEMPLATE_TABLE);
         $sql_tables->createIconSetTable(ICON_SET_TABLE);
+        $sql_tables->createCaptchaTable(CAPTCHA_TABLE);
     }
 
     public function createCoreDirectories()
