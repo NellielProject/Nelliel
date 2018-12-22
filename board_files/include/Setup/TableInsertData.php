@@ -363,7 +363,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'allow_multifile', '0']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'allow_op_multifile', '0']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'use_fgsfds', '1']);
-        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'use_spambot_trap', '1']);
+        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'use_honeypot', '1']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'only_thread_duplicates', '1']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'bool', 'only_op_duplicates', '1']);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'str', 'board_name', 'Nelliel-powered image board']);

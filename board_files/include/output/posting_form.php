@@ -12,7 +12,8 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $url_constructor = new \Nelliel\URLConstructor();
     $posting_form = $dom->getElementById('posting-form');
-    $posting_form->extSetAttribute('action', $dotdot . PHP_SELF . '?module=threads&action=new-post&board_id=' . $domain->id());
+    $posting_form->extSetAttribute('action',
+            $dotdot . PHP_SELF . '?module=threads&action=new-post&board_id=' . $domain->id());
     $posting_form_input = $dom->getElementById('posting-form-input');
     $posting_form_nodes = $posting_form_input->getElementsByAttributeName('data-parse-id', true);
 
@@ -20,7 +21,9 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
     {
         if ($session->inModmode($domain->id()) && !$domain->renderActive())
         {
-            $return_url = $url_constructor->dynamic(PHP_SELF, ['module' => 'render', 'action' => 'view-index', 'section' => '0', 'board_id' => $domain->id(), 'modmode' => 'true']);
+            $return_url = $url_constructor->dynamic(PHP_SELF,
+                    ['module' => 'render', 'action' => 'view-index', 'section' => '0', 'board_id' => $domain->id(),
+                        'modmode' => 'true']);
         }
         else
         {
@@ -36,7 +39,7 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
 
     $dom->getElementById('posting-form-responseto')->extSetAttribute('value', $response_to);
 
-    if(!$session->inModmode($domain->id()))
+    if (!$session->inModmode($domain->id()))
     {
         $posting_form_nodes['posting-form-staff']->remove();
     }
@@ -86,11 +89,13 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
             $temp_license_block = $posting_form_nodes['form-lol_drama']->cloneNode(true);
             $temp_license_block->changeId('form-lol_drama-' . $i);
             $temp_license_block_nodes = $temp_license_block->getElementsByAttributeName('data-parse-id', true);
-            $temp_license_block_nodes['lol_drama']->extSetAttribute('name', 'new_post[file_info][up_file_' . $i . '][lol_drama]');
+            $temp_license_block_nodes['lol_drama']->extSetAttribute('name',
+                    'new_post[file_info][up_file_' . $i . '][lol_drama]');
             $temp_alt_text_block = $posting_form_nodes['form-alt_text']->cloneNode(true);
             $temp_alt_text_block->changeId('form-alt_text-' . $i);
             $temp_alt_text_block_nodes = $temp_alt_text_block->getElementsByAttributeName('data-parse-id', true);
-            $temp_alt_text_block_nodes['alt_text']->extSetAttribute('name', 'new_post[file_info][up_file_' . $i . '][alt_text]');
+            $temp_alt_text_block_nodes['alt_text']->extSetAttribute('name',
+                    'new_post[file_info][up_file_' . $i . '][alt_text]');
             $insert_before_point = $posting_form_nodes['form-fgsfds'];
             $posting_form_input->insertBefore($temp_file_block, $insert_before_point);
             $posting_form_input->insertBefore($temp_source_block, $insert_before_point);
@@ -123,13 +128,21 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
     }
     else
     {
-        $posting_form_nodes['recaptcha-sitekey']->extSetAttribute('data-sitekey', $site_domain->setting('recaptcha_site_key'));
+        $posting_form_nodes['recaptcha-sitekey']->extSetAttribute('data-sitekey',
+                $site_domain->setting('recaptcha_site_key'));
     }
 
-    if (!$domain->setting('use_spambot_trap'))
+    if ($domain->setting('use_honeypot'))
     {
-        $dom->removeChild($dom->getElementById('form-nope1'));
-        $dom->removeChild($dom->getElementById('form-nope2'));
+        $posting_form_nodes['a-username-field']->extSetAttribute('name', $domain->id() . '_' . BASE_HONEYPOT_FIELD1);
+        $posting_form_nodes['a-website_url-field']->extSetAttribute('name', $domain->id() . '_' . BASE_HONEYPOT_FIELD2);
+        $posting_form_nodes['a-signature-field']->extSetAttribute('name', $domain->id() . '_' . BASE_HONEYPOT_FIELD3);
+    }
+    else
+    {
+        $dom->getElementById('form-user-info-1')->remove();
+        $dom->getElementById('form-user-info-2')->remove();
+        $dom->getElementById('form-user-info-3')->remove();
     }
 
     if ($response_to)

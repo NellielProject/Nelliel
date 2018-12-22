@@ -20,15 +20,20 @@ class Snacks
         $this->ban_hammer = $ban_hammer;
     }
 
-    public function banSpambots()
+    public function checkHoneypot($domain)
     {
-        if (!empty($_POST[_gettext('TEXT_SPAMBOT_FIELD1')]) || !empty($_POST[_gettext('TEXT_SPAMBOT_FIELD2')]))
+        if (!empty($_POST[$domain->id() . '_' . BASE_HONEYPOT_FIELD1]) ||
+                !empty($_POST[$domain->id() . '_' . BASE_HONEYPOT_FIELD2]) ||
+                !empty($_POST[$domain->id() . '_' . BASE_HONEYPOT_FIELD3]))
         {
             $ban_input['type'] = 'SPAMBOT';
             $ban_input['ip_address_start'] = $_SERVER['REMOTE_ADDR'];
             $ban_input['reason'] = 'Ur a spambot. Nobody wants any. GTFO!';
+            $ban_input['start_time'] = time();
             $ban_input['length'] = 86400 * 9001;
+            $ban_input['all_boards'] = 1;
             $this->ban_hammer->addBan($ban_input);
+            $this->applyBan($domain);
         }
     }
 
@@ -48,7 +53,7 @@ class Snacks
     {
         $bawww = $_POST['ban_appeal'];
 
-        if(empty($bawww))
+        if (empty($bawww))
         {
             return;
         }
@@ -63,12 +68,12 @@ class Snacks
             nel_derp(151, _gettext('You have already appealed your ban.'));
         }
 
-
-        $prepared = $this->database->prepare('UPDATE "' . BAN_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ban_id" = ?');
+        $prepared = $this->database->prepare(
+                'UPDATE "' . BAN_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ban_id" = ?');
         $this->database->executePrepared($prepared, array($bawww, $ban_info['ban_id']));
     }
 
-    public function applyBan($inputs, $domain)
+    public function applyBan($domain)
     {
         $bans = $this->ban_hammer->getBansByIp($_SERVER['REMOTE_ADDR']);
         $ban_info = null;
@@ -88,9 +93,9 @@ class Snacks
                 continue;
             }
 
-            if($ban['all_boards'] != 0)
+            if ($ban['all_boards'] != 0)
             {
-                if(is_null($ban_info))
+                if (is_null($ban_info))
                 {
                     $ban_info = $ban;
                 }
@@ -98,12 +103,12 @@ class Snacks
                 continue;
             }
 
-            if(empty($inputs['board_id']))
+            if (empty($domain->id()))
             {
                 break;
             }
 
-            if ($inputs['board_id'] === $ban['board_id'])
+            if ($domain->id() === $ban['board_id'])
             {
                 $ban_info = $ban;
                 continue;

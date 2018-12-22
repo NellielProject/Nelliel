@@ -56,8 +56,6 @@ if (nel_setup_stuff_done())
 
 // IT'S GO TIME!
 ignore_user_abort(true);
-$snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
-$snacks->banSpambots();
 
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 

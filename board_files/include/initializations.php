@@ -49,6 +49,10 @@ define('LANGUAGE_PATH', FILES_PATH . 'languages/'); // Language path
 define('LOCALE_PATH', LANGUAGE_PATH . 'locale/'); // Locale files path
 define('SQLITE_DB_DEFAULT_PATH', FILES_PATH); // Base SQLite DB location
 
+define('BASE_HONEYPOT_FIELD1', 'website_url'); // Honeypot field name
+define('BASE_HONEYPOT_FIELD2', 'username'); // Honeypot field name
+define('BASE_HONEYPOT_FIELD3', 'signature'); // Honeypot field name
+
 // Set default values here in case the config is missing something
 $base_config['defaultadmin'] = '';
 $base_config['defaultadmin_pass'] = '';

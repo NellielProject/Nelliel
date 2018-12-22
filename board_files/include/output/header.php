@@ -20,6 +20,13 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
             'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\');};');
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $domain->id() . '"));');
 
+    if ($domain->setting('use_honeypot'))
+    {
+        $honeypot_css = '#form-user-info-1{position: absolute; top: 3px; left: -9001px;}#form-user-info-2{display: none !important;}#form-user-info-3{display: none !important;}';
+        $style_element = $dom->createElement('style', $honeypot_css);
+        $dom->getElementsByTagName('head')->item(0)->appendChild($style_element);
+    }
+
     foreach ($link_elements as $element)
     {
         $content = $element->getAttribute('title');
@@ -41,7 +48,7 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
     $title_element->setContent($title_content);
     $board_navigation = $dom->getElementById("board-navigation");
     $board_navigation->appendChild($dom->createTextNode('[ '));
-    $board_data = $database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE. '"', PDO::FETCH_ASSOC);
+    $board_data = $database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
     $end = end($board_data);
 
     foreach ($board_data as $data)
@@ -66,15 +73,15 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
     $logo_image->remove(); // TODO: Be able to use image for logo
 
     /*if ($board_settings['show_logo'])
-    {
-        $logo_image->extSetAttribute('src', $board_settings['board_logo']);
-        $logo_image->extSetAttribute('alt', $board_settings['board_name']);
-    }
-    else
-    {
-        $logo_image->remove();
-        $logo_text->remove();
-    }*/
+     {
+     $logo_image->extSetAttribute('src', $board_settings['board_logo']);
+     $logo_image->extSetAttribute('alt', $board_settings['board_name']);
+     }
+     else
+     {
+     $logo_image->remove();
+     $logo_text->remove();
+     }*/
 
     if ($domain->setting('show_title'))
     {
@@ -89,7 +96,7 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', nel_parameters_and_data()->siteSettings('home_page'));
 
-    if($session->isActive() && !$domain->renderActive())
+    if ($session->isActive() && !$domain->renderActive())
     {
         $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=main-panel');
     }
@@ -150,7 +157,7 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     $a_elements = $top_admin_span->getElementsByTagName('a');
     $a_elements->item(1)->extSetAttribute('href', nel_parameters_and_data()->siteSettings('home_page'));
 
-    if($session->isActive())
+    if ($session->isActive())
     {
         $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=main-panel');
     }

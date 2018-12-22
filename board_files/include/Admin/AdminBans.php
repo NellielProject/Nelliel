@@ -138,6 +138,6 @@ class AdminBans extends AdminBase
     private function applyNewBan()
     {
         $snacks = new \Nelliel\Snacks($this->database, new \Nelliel\BanHammer($this->database));
-        $snacks->applyBan(array(), $this->domain);
+        $snacks->applyBan($this->domain);
     }
 }

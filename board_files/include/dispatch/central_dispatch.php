@@ -36,10 +36,10 @@ function nel_central_dispatch()
     $inputs['content_id'] = (isset($_GET['content-id'])) ? $_GET['content-id'] : null;
     $inputs['modmode'] = (isset($_GET['modmode'])) ? $_GET['modmode'] : false;
     $domain = new \Nelliel\Domain($inputs['board_id'], new \Nelliel\CacheHandler(), nel_database());
-    $domain->renderInstance(new \NellielTemplates\RenderCore());
-
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
-    $snacks->applyBan($inputs, $domain);
+    $snacks->applyBan($domain);
+    $snacks->checkHoneypot($domain);
+    $domain->renderInstance(new \NellielTemplates\RenderCore());
 
     require_once INCLUDE_PATH . 'dispatch/module_dispatch.php';
     nel_module_dispatch($inputs, $domain);
