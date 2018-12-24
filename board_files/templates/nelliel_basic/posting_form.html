@@ -1,6 +1,7 @@
 		<div id="post-form-return-link">
 			[<a id="return-url" href="" data-i18n="gettext">Return</a>]
 		</div>
+
 		<form id="posting-form" class="display-table posting-form" accept-charset="utf-8" name="postingform" action="" method="post" enctype="multipart/form-data">
 			<input id="posting-form-responseto" type="hidden" name="new_post[post_info][response_to]" value="">
 			<div id="posting-form-input">
@@ -10,7 +11,7 @@
 				</label>
 				<label data-parse-id="form-spam-target" class="posting-form-row">
 					<span class="posting-form-label" data-i18n="gettext">E-mail</span>
-					<input id="spam-target" class="posting-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength="255">
+					<input id="spam-target" class="posting-form-input" type="url" name="new_post[post_info][spam_target]" size="30" maxlength="255">
 				</label>
 				<label data-parse-id="form-verb" class="posting-form-row">
 					<span class="posting-form-label" data-i18n="gettext">Subject</span>
@@ -73,8 +74,12 @@
 					<div data-parse-id="recaptcha-sitekey" class="g-recaptcha" data-sitekey=""></div>
 				</div>
 				<label id="form-user-info-1" class="posting-form-row">
+					<span class="posting-form-label" data-i18n="gettext">Do not ever check this!</span>
+					<input data-parse-id="a-signature-box" type="checkbox" name="" value="display" autocomplete="off" tabindex="-1">
+				</label>
+				<label id="form-user-info-2" class="posting-form-row">
 					<span class="posting-form-label" data-i18n="gettext">Never put anything in this field!</span>
-					<input data-parse-id="a-username-field" type="text" name="" size="30" autocomplete="off" tabindex="-1">
+					<input data-parse-id="a-signature-field" type="text" name="" size="30" autocomplete="off" tabindex="-1">
 				</label>
 				<div id="form-submit-clear" class="posting-form-row">
 					<span class="display-cell"></span>
@@ -85,13 +90,9 @@
 					<span class="display-cell"></span>
 					<span id="which-post-mode" class="posting-form-input" data-i18n="gettext">Posting mode: New thread</span>
 				</div>
-				<label id="form-user-info-2" class="posting-form-row">
-					<span class="posting-form-label" data-i18n="gettext">Never put anything in this field!</span>
-					<input data-parse-id="a-website_url-field" type="text" name="" size="30" autocomplete="off" tabindex="-1">
-				</label>
 				<label id="form-user-info-3" class="posting-form-row">
 					<span class="posting-form-label" data-i18n="gettext">Never put anything in this field!</span>
-					<input data-parse-id="a-signature-field" type="text" name="" size="30" autocomplete="off" tabindex="-1">
+					<input data-parse-id="a-website-field" type="text" placeholder="http://www.mywebsite.com" name="" size="30" autocomplete="off" tabindex="-1">
 				</label>
 			</div>
 		</form>

@@ -22,7 +22,7 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
 
     if ($domain->setting('use_honeypot'))
     {
-        $honeypot_css = '#form-user-info-1{position: absolute; top: 3px; left: -9001px;}#form-user-info-2{display: none !important;}#form-user-info-3{display: none !important;}';
+        $honeypot_css = '#form-user-info-1{display: none !important;}#form-user-info-2{display: none !important;}#form-user-info-3{position: absolute; top: 3px; left: -9001px;}';
         $style_element = $dom->createElement('style', $honeypot_css);
         $dom->getElementsByTagName('head')->item(0)->appendChild($style_element);
     }

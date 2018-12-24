@@ -134,9 +134,9 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
 
     if ($domain->setting('use_honeypot'))
     {
-        $posting_form_nodes['a-username-field']->extSetAttribute('name', $domain->id() . '_' . BASE_HONEYPOT_FIELD1);
-        $posting_form_nodes['a-website_url-field']->extSetAttribute('name', $domain->id() . '_' . BASE_HONEYPOT_FIELD2);
-        $posting_form_nodes['a-signature-field']->extSetAttribute('name', $domain->id() . '_' . BASE_HONEYPOT_FIELD3);
+        $posting_form_nodes['a-signature-box']->extSetAttribute('name', BASE_HONEYPOT_FIELD1 . '_' . $domain->id());
+        $posting_form_nodes['a-signature-field']->extSetAttribute('name', BASE_HONEYPOT_FIELD2 . '_' . $domain->id());
+        $posting_form_nodes['a-website-field']->extSetAttribute('name', BASE_HONEYPOT_FIELD3 . '_' . $domain->id());
     }
     else
     {

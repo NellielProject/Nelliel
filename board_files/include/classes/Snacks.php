@@ -22,9 +22,9 @@ class Snacks
 
     public function checkHoneypot($domain)
     {
-        if (!empty($_POST[$domain->id() . '_' . BASE_HONEYPOT_FIELD1]) ||
-                !empty($_POST[$domain->id() . '_' . BASE_HONEYPOT_FIELD2]) ||
-                !empty($_POST[$domain->id() . '_' . BASE_HONEYPOT_FIELD3]))
+        if (!empty($_POST[BASE_HONEYPOT_FIELD1 . '_' . $domain->id()]) ||
+                !empty($_POST[BASE_HONEYPOT_FIELD2 . '_' . $domain->id()]) ||
+                !empty($_POST[BASE_HONEYPOT_FIELD3 . '_' . $domain->id()]))
         {
             $ban_input['type'] = 'SPAMBOT';
             $ban_input['ip_address_start'] = $_SERVER['REMOTE_ADDR'];
