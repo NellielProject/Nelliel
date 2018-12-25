@@ -121,12 +121,12 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="radio" name="old_threads" id="old_threads_a" value="ARCHIVE"> 
-					<label for="old_threads_a" data-i18n="gettext">Archive</label><br>
-					<input type="radio" name="old_threads" id="old_threads_p" value="PRUNE"> 
-					<label for="old_threads_p" data-i18n="gettext">Prune</label><br>
-					<input type="radio" name="old_threads" id="old_threads_n" value="NOTHING"> 
-					<label for="old_threads_n" data-i18n="gettext">Nothing</label>
+					<input type="radio" name="old_threads" id="old_threads_ARCHIVE" value="ARCHIVE"> 
+					<label for="old_threads_ARCHIVE" data-i18n="gettext">Archive</label><br>
+					<input type="radio" name="old_threads" id="old_threads_PRUNE" value="PRUNE"> 
+					<label for="old_threads_PRUNE" data-i18n="gettext">Prune</label><br>
+					<input type="radio" name="old_threads" id="old_threads_NOTHING" value="NOTHING"> 
+					<label for="old_threads_NOTHING" data-i18n="gettext">Nothing</label>
 				</td>
 			</tr>
 			<tr>
@@ -307,6 +307,17 @@
 					<input type="hidden" name="use_recaptcha" value="0">
 					<input type="checkbox" name="use_recaptcha" id="use_recaptcha" value="1">
 					<label for="use_recaptcha" data-i18n="gettext">Use a ReCAPTCHA for new posts and threads</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span data-i18n="gettext" data-i18n="gettext">ReCAPTCHA type:</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="radio" name="recaptcha_type" id="recaptcha_type_CHECKBOX" value="CHECKBOX"> 
+					<label for="recaptcha_type_CHECKBOX" data-i18n="gettext">Checkbox</label><br>
 				</td>
 			</tr>
 			<tr>

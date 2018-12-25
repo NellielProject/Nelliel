@@ -142,12 +142,13 @@ class SQLTables
         $schema = "
         CREATE TABLE " . $table_name . " (
             entry                   " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            config_name             VARCHAR(255) NOT NULL,
             config_type             VARCHAR(255) NULL DEFAULT '',
             config_owner            VARCHAR(255) NULL DEFAULT 'nelliel',
             config_category         VARCHAR(255) NULL DEFAULT 'general',
             data_type               VARCHAR(255) NULL DEFAULT '',
-            setting                 VARCHAR(255) NULL DEFAULT ''
+            config_name             VARCHAR(255) NOT NULL,
+            setting                 VARCHAR(255) NULL DEFAULT '',
+            select_type             SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
         $result = $this->createTableQuery($schema, $table_name);
@@ -174,12 +175,13 @@ class SQLTables
         $schema = "
         CREATE TABLE " . $table_name . " (
             entry                   " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            config_name             VARCHAR(255) NOT NULL,
             config_type             VARCHAR(255) NULL DEFAULT '',
             config_owner            VARCHAR(255) NULL DEFAULT 'nelliel',
             config_category         VARCHAR(255) NULL DEFAULT 'general',
             data_type               VARCHAR(255) NULL DEFAULT '',
-            setting                 VARCHAR(255) NULL DEFAULT ''
+            config_name             VARCHAR(255) NOT NULL,
+            setting                 VARCHAR(255) NULL DEFAULT '',
+            select_type             SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
         $result = $this->createTableQuery($schema, $table_name);

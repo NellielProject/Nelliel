@@ -87,14 +87,14 @@ function nel_render_board_settings_panel($domain, $defaults)
 
     foreach ($rows as $config_line)
     {
-        if ($config_line['data_type'] === 'bool')
+        if ($config_line['data_type'] == 'boolean')
         {
             if ($config_line['setting'] != 1)
             {
                 continue;
             }
 
-            if ($config_line['config_type'] === 'filetype_enable')
+            if ($config_line['config_type'] == 'filetype_enable')
             {
                 $filetype_entries_nodes[$config_line['config_name']]['entry-checkbox']->extSetAttribute('checked',
                         'true');
@@ -113,27 +113,19 @@ function nel_render_board_settings_panel($domain, $defaults)
         }
         else
         {
-            switch ($config_line['setting'])
+            if ($config_line['select_type'] == 1)
             {
-                case 'ARCHIVE':
-                    $dom->getElementById('old_threads_a')->extSetAttribute('checked', 'true');
-                    break;
+                $dom->getElementById($config_line['config_name'] . '_' . $config_line['setting'])->extSetAttribute(
+                        'checked', 'true');
+            }
+            else
+            {
+                $config_element = $dom->getElementById($config_line['config_name']);
 
-                case 'PRUNE':
-                    $dom->getElementById('old_threads_p')->extSetAttribute('checked', 'true');
-                    break;
-
-                case 'NOTHING':
-                    $dom->getElementById('old_threads_n')->extSetAttribute('checked', 'true');
-                    break;
-
-                default:
-                    $config_element = $dom->getElementById($config_line['config_name']);
-
-                    if (!is_null($config_element))
-                    {
-                        $config_element->extSetAttribute('value', $config_line['setting']);
-                    }
+                if (!is_null($config_element))
+                {
+                    $config_element->extSetAttribute('value', $config_line['setting']);
+                }
             }
         }
     }
