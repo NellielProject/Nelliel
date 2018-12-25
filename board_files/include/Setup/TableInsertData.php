@@ -14,6 +14,31 @@ class TableInsertData
     {
     }
 
+    public function versionDefaults()
+    {
+        $database = nel_database();
+        $insert_query = 'INSERT INTO "' . VERSION_TABLE . '" ("item_id", "item_type", "structure_version", "data_version") VALUES (?, ?, ?, ?)';
+        $prepared = $database->prepare($insert_query);
+        $database->executePrepared($prepared, [BAN_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [BOARD_DATA_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [BOARD_DEFAULTS_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [CAPTCHA_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [FILETYPE_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [FILE_FILTER_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [ICON_SET_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [LOGINS_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [PERMISSIONS_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [REPORTS_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [ROLES_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [ROLE_PERMISSIONS_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [SITE_CONFIG_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [STYLES_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [TEMPLATE_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [USER_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [USER_ROLE_TABLE, "table", '1', '1']);
+        nel_setup_stuff_done(true);
+    }
+
     public function siteConfigDefaults()
     {
         $database = nel_database();
@@ -29,31 +54,6 @@ class TableInsertData
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'string', 'language', 'en-US', 0]);
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'string', 'recaptcha_site_key', '', 0]);
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'string', 'recaptcha_sekrit_key', '', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_bans_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_bans_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_board_data_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_board_data_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_board_defaults_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_board_defaults_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_filetypes_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_filetypes_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_file_filters_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_file_filters_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_login_attempts_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_login_attempts_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_permissions_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_permissions_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_reports_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_reports_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_roles_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_roles_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_site_config_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_site_config_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_users_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_users_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_user_role_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_user_role_schema', '001', 0]);
-
         nel_setup_stuff_done(true);
     }
 
@@ -340,14 +340,6 @@ class TableInsertData
         $insert_query = 'INSERT INTO "' . $config_table .
         '" ("config_type", "config_owner", "config_category", "data_type", "config_name", "setting", "select_type") VALUES (?, ?, ?, ?, ?, ?, ?)';
         $prepared = $database->prepare($insert_query);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_config_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_config_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_files_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_files_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_posts_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_posts_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'original_threads_schema', '001', 0]);
-        $database->executePrepared($prepared, ['schema_version', 'nelliel', 'database', 'string', 'current_threads_schema', '001', 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'allow_tripkeys', '1', 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'force_anonymous', '0', 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'show_title', '1', 0]);
