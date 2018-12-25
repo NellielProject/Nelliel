@@ -48,7 +48,8 @@ class AuthPermissions extends AuthBase
 
         foreach ($this->auth_data as $perm => $setting)
         {
-            $prepared = $database->prepare('SELECT "entry" FROM "' . ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ? AND "perm_id" = ?');
+            $prepared = $database->prepare(
+                    'SELECT "entry" FROM "' . ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ? AND "perm_id" = ?');
             $result = $database->executePreparedFetch($prepared, [$this->auth_id, $perm], PDO::FETCH_COLUMN);
 
             if ($result)
@@ -71,6 +72,10 @@ class AuthPermissions extends AuthBase
             $database->executePrepared($prepared);
         }
         return true;
+    }
+
+    public function setupNew()
+    {
     }
 }
 

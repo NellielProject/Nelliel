@@ -67,9 +67,14 @@ function nel_module_dispatch($inputs, $domain)
 
             break;
 
-        case 'staff':
-            $staff_admin = new \Nelliel\Admin\AdminStaff(nel_database(), $authorization, $domain);
-            $staff_admin->actionDispatch($inputs);
+        case 'users':
+            $users_admin = new \Nelliel\Admin\AdminUsers(nel_database(), $authorization, $domain);
+            $users_admin->actionDispatch($inputs);
+            break;
+
+        case 'roles':
+            $roles_admin = new \Nelliel\Admin\AdminRoles(nel_database(), $authorization, $domain);
+            $roles_admin->actionDispatch($inputs);
             break;
 
         case 'site-settings':

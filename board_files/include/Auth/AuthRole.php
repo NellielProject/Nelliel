@@ -70,9 +70,15 @@ class AuthRole extends AuthBase
         return true;
     }
 
+    public function setupNew()
+    {
+        $this->permissions = new AuthPermissions($this->database, $this->auth_id);
+        $this->permissions->setupNew();
+    }
+
     public function checkPermission($permission_id)
     {
-        if(isset($this->permissions->auth_data[$permission_id]))
+        if (isset($this->permissions->auth_data[$permission_id]))
         {
             return $this->permissions->auth_data[$permission_id];
         }

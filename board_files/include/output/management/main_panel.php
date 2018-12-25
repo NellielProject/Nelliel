@@ -41,13 +41,22 @@ function nel_render_main_panel($domain, $user)
         $manage_options_nodes['module-link-manage-boards']->remove();
     }
 
-    if ($user->boardPerm('', 'perm_user_access') || $user->boardPerm('', 'perm_role_access'))
+    if ($user->boardPerm('', 'perm_user_access'))
     {
-        $manage_options_nodes['module-link-staff']->extSetAttribute('href', PHP_SELF . '?module=staff');
+        $manage_options_nodes['module-link-users']->extSetAttribute('href', PHP_SELF . '?module=users');
     }
     else
     {
-        $manage_options_nodes['module-link-staff']->remove();
+        $manage_options_nodes['module-link-users']->remove();
+    }
+
+    if ($user->boardPerm('', 'perm_role_access'))
+    {
+        $manage_options_nodes['module-link-roles']->extSetAttribute('href', PHP_SELF . '?module=roles');
+    }
+    else
+    {
+        $manage_options_nodes['module-link-roles']->remove();
     }
 
     if ($user->boardPerm('', 'perm_site_config_access'))

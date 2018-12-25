@@ -117,6 +117,10 @@ class AuthUser extends AuthBase
         return true;
     }
 
+    public function setupNew()
+    {
+    }
+
     public function boardRole($board_id, $return_id = false, $check_allboard = true)
     {
         foreach ($this->user_roles as $user_role)
@@ -133,7 +137,7 @@ class AuthUser extends AuthBase
                 }
             }
 
-            if($check_allboard && $user_role['board'] === '')
+            if ($check_allboard && $user_role['board'] === '')
             {
                 if ($return_id)
                 {
@@ -161,8 +165,8 @@ class AuthUser extends AuthBase
             }
         }
 
-        $this->user_roles[] = ['role_id' => $role_id, 'board' => $board_id,
-            'role' => $this->setupAuthRole($role_id)];
+        $this->user_roles[] = ['role_id' => $role_id, 'board' => $board_id, 'role' => $this->setupAuthRole(
+                $role_id)];
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . USER_ROLE_TABLE . '" ("user_id", "role_id", "board") VALUES
                     (?, ?, ?)');

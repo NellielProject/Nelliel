@@ -18,6 +18,12 @@ class Authorization
         $this->database = $database;
     }
 
+    public function newUser($user_id)
+    {
+        self::$users[$user_id] = new AuthUser($this->database, $user_id);
+        return self::$users[$user_id];
+    }
+
     public function getUser($user_id)
     {
         if (isset(self::$users[$user_id]))
@@ -43,6 +49,12 @@ class Authorization
         }
 
         return false;
+    }
+
+    public function newRole($role_id)
+    {
+        self::$roles[$role_id] = new AuthRole($this->database, $role_id);
+        return self::$roles[$role_id];
     }
 
     public function getRole($role_id)
