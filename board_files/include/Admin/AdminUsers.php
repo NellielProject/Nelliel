@@ -96,12 +96,14 @@ class AdminUsers extends AdminBase
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
 
-        $update_user = $this->authorization->newUser($this->user_id);
-        $update_user->setupNew();
-
-        if (isset($_POST['user_password']) && !empty($_POST['user_password']))
+        if(!$this->authorization->userExists($this->user_id))
         {
-            $update_user->auth_data['user_password'] = nel_password_hash($_POST['user_password'], NEL_PASSWORD_ALGORITHM);
+            $update_user = $this->authorization->newUser($this->user_id);
+        }
+        else
+        {
+            $update_user = $this->authorization->getUser($this->user_id);
+            $update_user->loadFromDatabase();
         }
 
         foreach ($_POST as $key => $value)
@@ -135,6 +137,11 @@ class AdminUsers extends AdminBase
 
             if ($key === 'user_password')
             {
+                if (!empty($value))
+                {
+                    $update_user->auth_data['user_password'] = nel_password_hash($value, NEL_PASSWORD_ALGORITHM);
+                }
+
                 continue;
             }
 

@@ -21,6 +21,7 @@ class Authorization
     public function newUser($user_id)
     {
         self::$users[$user_id] = new AuthUser($this->database, $user_id);
+        self::$users[$user_id]->setupNew();
         return self::$users[$user_id];
     }
 
@@ -54,6 +55,7 @@ class Authorization
     public function newRole($role_id)
     {
         self::$roles[$role_id] = new AuthRole($this->database, $role_id);
+        self::$roles[$role_id]->setupNew();
         return self::$roles[$role_id];
     }
 
