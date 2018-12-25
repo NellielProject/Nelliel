@@ -18,20 +18,30 @@ function nel_render_roles_panel_main($user, $domain)
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Roles')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/roles_panel_main.html');
-
-    $role_list = $dom->getElementById('role-list');
-    $role_list_nodes = $role_list->getElementsByAttributeName('data-parse-id', true);
-    $roles = $database->executeFetchAll('SELECT "role_id", "role_title" FROM "' . ROLES_TABLE . '"', PDO::FETCH_ASSOC);
+    $role_info_table = $dom->getElementById('role-info-table');
+    $role_info_table_nodes = $role_info_table->getElementsByAttributeName('data-parse-id', true);
+    $roles = $database->executeFetchAll('SELECT * FROM "' . ROLES_TABLE . '"', PDO::FETCH_ASSOC);
+    $bgclass = 'row1';
 
     foreach ($roles as $role)
     {
-        $role_node = $dom->copyNode($role_list_nodes['edit-role-link'], $role_list, 'append');
-        $role_node->setContent($role['role_id'] . ' - ' . $role['role_title']);
-        $role_node->extSetAttribute('href', PHP_SELF . '?module=roles&action=edit&role-id=' . $role['role_id']);
+        $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
+        $role_row = $dom->copyNode($role_info_table_nodes['role-info-row'], $role_info_table, 'append');
+        $role_row->extSetAttribute('class', $bgclass);
+        $role_row_nodes = $role_row->getElementsByAttributeName('data-parse-id', true);
+        $role_row_nodes['role-id']->setContent($role['role_id']);
+        $role_row_nodes['level']->setContent($role['role_level']);
+        $role_row_nodes['title']->setContent($role['role_title']);
+        $role_row_nodes['capcode-text']->setContent($role['capcode_text']);
+        $role_row_nodes['role-edit-link']->extSetAttribute('href',
+                PHP_SELF . '?module=roles&action=edit&role-id=' . $role['role_id']);
+        $role_row_nodes['role-remove-link']->extSetAttribute('href',
+                PHP_SELF . '?module=roles&action=remove&role-id=' . $role['role_id']);
     }
 
-    $role_list_nodes['edit-role-link']->remove();
+    $role_info_table_nodes['role-info-row']->remove();
     $dom->getElementById('new-role-link')->extSetAttribute('href', PHP_SELF . '?module=roles&action=new');
+
 
     $translator->translateDom($dom);
     $domain->renderInstance()->appendHTMLFromDOM($dom);

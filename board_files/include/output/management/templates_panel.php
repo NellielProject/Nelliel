@@ -41,7 +41,7 @@ function nel_render_templates_panel($user, $domain)
         $installed_ids[] = $template['id'];
         $template_row = $dom->copyNode($installed_template_list_nodes['template-row'], $installed_template_list,
                 'append');
-        $template_row->modifyAttribute('class', ' ' . $bgclass, 'after');
+        $template_row->extSetAttribute('class', $bgclass);
         $template_row_nodes = $template_row->getElementsByAttributeName('data-parse-id', true);
         $template_row_nodes['template-id']->setContent($template['id']);
         $template_row_nodes['template-name']->setContent($template['name']);

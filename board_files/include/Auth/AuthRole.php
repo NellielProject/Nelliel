@@ -76,6 +76,24 @@ class AuthRole extends AuthBase
         $this->permissions->setupNew();
     }
 
+    public function remove()
+    {
+        $authorization = new \Nelliel\Auth\Authorization($this->database);
+        $prepared = $this->database->prepare(
+                'SELECT "user_id", "board" FROM "' . USER_ROLE_TABLE . '" WHERE "role_id" = ?');
+        $user_roles = $this->database->executePreparedFetchAll($prepared, [$this->auth_id], PDO::FETCH_ASSOC);
+
+        foreach($user_roles as $user_role)
+        {
+            $authorization->getUser($user_role['user_id'])->removeBoardRole($user_role['board'], $this->auth_id);
+        }
+
+        $prepared = $this->database->prepare('DELETE FROM "' . ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ?');
+        $this->database->executePrepared($prepared, [$this->auth_id]);
+        $prepared = $this->database->prepare('DELETE FROM "' . ROLES_TABLE . '" WHERE "role_id" = ?');
+        $this->database->executePrepared($prepared, [$this->auth_id]);
+    }
+
     public function checkPermission($permission_id)
     {
         if (isset($this->permissions->auth_data[$permission_id]))
@@ -86,4 +104,3 @@ class AuthRole extends AuthBase
         return false;
     }
 }
-

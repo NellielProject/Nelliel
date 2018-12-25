@@ -48,6 +48,10 @@ class AdminUsers extends AdminBase
         {
             $this->update($user);
         }
+        else if ($inputs['action'] === 'remove')
+        {
+            $this->remove($user);
+        }
 
         $this->renderPanel($user);
     }
@@ -154,5 +158,6 @@ class AdminUsers extends AdminBase
 
     public function remove($user)
     {
+        $this->authorization->removeUser($this->user_id);
     }
 }

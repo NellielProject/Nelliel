@@ -47,8 +47,7 @@ class AuthUser extends AuthBase
                 continue;
             }
 
-            $role = $this->setupAuthRole($row['role_id']);
-            $this->user_roles[] = ['role_id' => $row['role_id'], 'board' => $row['board'], 'role' => $role];
+            $this->changeOrAddBoardRole($row['board'], $row['role_id']);
         }
 
         return true;
@@ -121,6 +120,15 @@ class AuthUser extends AuthBase
     {
     }
 
+    public function remove()
+    {
+        $prepared = $this->database->prepare(
+                'DELETE FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ?');
+        $this->database->executePrepared($prepared, [$this->auth_id]);
+        $prepared = $this->database->prepare('DELETE FROM "' . USER_TABLE . '" WHERE "user_id" = ?');
+        $this->database->executePrepared($prepared, [$this->auth_id]);
+    }
+
     public function boardRole($board_id, $return_id = false, $check_allboard = true)
     {
         foreach ($this->user_roles as $user_role)
@@ -165,12 +173,8 @@ class AuthUser extends AuthBase
             }
         }
 
-        $this->user_roles[] = ['role_id' => $role_id, 'board' => $board_id, 'role' => $this->setupAuthRole(
-                $role_id)];
-        $prepared = $this->database->prepare(
-                'INSERT INTO "' . USER_ROLE_TABLE . '" ("user_id", "role_id", "board") VALUES
-                    (?, ?, ?)');
-        $this->database->executePrepared($prepared, [$this->auth_id, $role_id, $board_id]);
+        $this->user_roles[] = ['role_id' => $role_id, 'board' => $board_id,
+            'role' => $this->setupAuthRole($role_id)];
     }
 
     public function removeBoardRole($board_id, $role_id)

@@ -1,8 +1,21 @@
-	<div id="user-list">
-		<a data-parse-id="edit-user-link" href="" class="display-block"></a>
-	</div>
+	<table id="user-info-table" class="data-table">
+		<tr class="manage-header">
+			<th data-i18n="gettext">User ID</th>
+			<th data-i18n="gettext">Display Name</th>
+			<th data-i18n="gettext">Active</th>
+			<th data-i18n="gettext">Actions</th>
+		</tr>
+		<tr data-parse-id="user-info-row" class="row1">
+			<td data-parse-id="user-id"></td>
+			<td data-parse-id="display-name"></td>
+			<td data-parse-id="active"></td>
+			<td data-parse-id="actions">
+				<span>[<a data-parse-id="user-edit-link" href="" data-i18n="gettext">Edit</a>]</span>
+				<span>[<a data-parse-id="user-remove-link" href="" data-i18n="gettext">Remove</a>]</span>
+			</td>
+		</tr>
+	</table>
 	<hr>
 	<div id="new-user">
-		<a id="new-user-link" href="" data-i18n="gettext">Add New User</a>
+		<a id="new-user-link" href="" data-i18n="gettext">New User</a>
 	</div>
-	<hr>

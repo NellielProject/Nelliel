@@ -77,5 +77,9 @@ class AuthPermissions extends AuthBase
     public function setupNew()
     {
     }
+
+    public function remove()
+    {
+    }
 }
 

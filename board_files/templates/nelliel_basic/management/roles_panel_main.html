@@ -1,7 +1,23 @@
-	<div id="role-list">
-		<a data-parse-id="edit-role-link" href="" class="display-block"></a>
-	</div>
+	<table id="role-info-table" class="data-table">
+		<tr class="manage-header">
+			<th data-i18n="gettext">Role ID</th>
+			<th data-i18n="gettext">Level</th>
+			<th data-i18n="gettext">Title</th>
+			<th data-i18n="gettext">Capcode Text</th>
+			<th data-i18n="gettext">Actions</th>
+		</tr>
+		<tr data-parse-id="role-info-row" class="row1">
+			<td data-parse-id="role-id"></td>
+			<td data-parse-id="level"></td>
+			<td data-parse-id="title"></td>
+			<td data-parse-id="capcode-text"></td>
+			<td data-parse-id="actions">
+				<span>[<a data-parse-id="role-edit-link" href="" data-i18n="gettext">Edit</a>]</span>
+				<span>[<a data-parse-id="role-remove-link" href="" data-i18n="gettext">Remove</a>]</span>
+			</td>
+		</tr>
+	</table>
 	<hr>
 	<div id="new-role">
-		<a id="new-role-link" href="" data-i18n="gettext">Add New Role</a>
+		<a id="new-role-link" href="" data-i18n="gettext">New Role</a>
 	</div>

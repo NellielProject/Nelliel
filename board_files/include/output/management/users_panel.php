@@ -18,20 +18,28 @@ function nel_render_users_panel_main($user, $domain)
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Users')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/users_panel_main.html');
+    $user_info_table = $dom->getElementById('user-info-table');
+    $user_info_table_nodes = $user_info_table->getElementsByAttributeName('data-parse-id', true);
+    $users = $database->executeFetchAll('SELECT * FROM "' . USER_TABLE . '"',
+            PDO::FETCH_ASSOC);
+    $bgclass = 'row1';
 
-    $user_list = $dom->getElementById('user-list');
-    $user_list_nodes = $user_list->getElementsByAttributeName('data-parse-id', true);
-    $users = $database->executeFetchAll('SELECT "user_id", "display_name" FROM "' . USER_TABLE . '"', PDO::FETCH_ASSOC);
-
-    foreach ($users as $user)
+    foreach ($users as $user_info)
     {
-        $user_node = $dom->copyNode($user_list_nodes['edit-user-link'], $user_list, 'append');
-        $user_node->setContent($user['user_id'] . ' - ' . $user['display_name']);
-        $user_node->extSetAttribute('href',
-                PHP_SELF . '?module=users&action=edit&user-id=' . $user['user_id']);
+        $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
+        $user_row = $dom->copyNode($user_info_table_nodes['user-info-row'], $user_info_table, 'append');
+        $user_row->extSetAttribute('class', $bgclass);
+        $user_row_nodes = $user_row->getElementsByAttributeName('data-parse-id', true);
+        $user_row_nodes['user-id']->setContent($user_info['user_id']);
+        $user_row_nodes['display-name']->setContent($user_info['display_name']);
+        $user_row_nodes['active']->setContent($user_info['active']);
+        $user_row_nodes['user-edit-link']->extSetAttribute('href',
+                PHP_SELF . '?module=users&action=edit&user-id=' . $user_info['user_id']);
+        $user_row_nodes['user-remove-link']->extSetAttribute('href',
+                PHP_SELF . '?module=users&action=remove&user-id=' . $user_info['user_id']);
     }
 
-    $user_list_nodes['edit-user-link']->remove();
+    $user_info_table_nodes['user-info-row']->remove();
     $dom->getElementById('new-user-link')->extSetAttribute('href', PHP_SELF . '?module=users&action=new');
 
     $translator->translateDom($dom);
@@ -59,8 +67,7 @@ function nel_render_users_panel_edit($user, $domain, $user_id)
 
     if (is_null($user_id))
     {
-        $dom->getElementById('user-edit-form')->extSetAttribute('action',
-                PHP_SELF . '?module=users&action=add');
+        $dom->getElementById('user-edit-form')->extSetAttribute('action', PHP_SELF . '?module=users&action=add');
     }
     else
     {

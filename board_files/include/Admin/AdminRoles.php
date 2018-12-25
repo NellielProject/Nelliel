@@ -48,6 +48,10 @@ class AdminRoles extends AdminBase
         {
             $this->update($user);
         }
+        else if ($inputs['action'] === 'remove')
+        {
+            $this->remove($user);
+        }
 
         $this->renderPanel($user);
     }
@@ -117,5 +121,6 @@ class AdminRoles extends AdminBase
 
     public function remove($user)
     {
+        $this->authorization->removeRole($this->role_id);
     }
 }

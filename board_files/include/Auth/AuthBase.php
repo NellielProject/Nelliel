@@ -28,5 +28,7 @@ abstract class AuthBase
     public abstract function writeToDatabase($temp_database = null);
 
     public abstract function setupNew();
+
+    public abstract function remove();
 }
 

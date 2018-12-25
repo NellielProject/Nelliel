@@ -25,6 +25,16 @@ class Authorization
         return self::$users[$user_id];
     }
 
+    public function userExists($user_id)
+    {
+        if ($this->getUser($user_id) !== false)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public function getUser($user_id)
     {
         if (isset(self::$users[$user_id]))
@@ -42,14 +52,16 @@ class Authorization
         return false;
     }
 
-    public function userExists($user_id)
+    public function removeUser($user_id)
     {
-        if ($this->getUser($user_id) !== false)
+        if (!isset(self::$users[$user_id]))
         {
-            return true;
+            return false;
         }
 
-        return false;
+        self::$users[$user_id]->remove();
+        unset(self::$users[$user_id]);
+        return true;
     }
 
     public function newRole($role_id)
@@ -57,6 +69,16 @@ class Authorization
         self::$roles[$role_id] = new AuthRole($this->database, $role_id);
         self::$roles[$role_id]->setupNew();
         return self::$roles[$role_id];
+    }
+
+    public function roleExists($role_id)
+    {
+        if ($this->getRole($role_id) !== false)
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public function getRole($role_id)
@@ -76,14 +98,16 @@ class Authorization
         return false;
     }
 
-    public function roleExists($role_id)
+    public function removeRole($role_id)
     {
-        if ($this->getRole($role_id) !== false)
+        if (!isset(self::$roles[$role_id]))
         {
-            return true;
+            return false;
         }
 
-        return false;
+        self::$roles[$role_id]->remove();
+        unset(self::$roles[$role_id]);
+        return true;
     }
 
     public function roleLevelCheck($role1, $role2, $false_if_equal = false)
