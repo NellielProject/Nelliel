@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_board_settings_panel($domain, $defaults)
+function nel_render_board_settings_panel($user, $domain, $defaults)
 {
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
@@ -85,38 +85,36 @@ function nel_render_board_settings_panel($domain, $defaults)
         }
     }
 
+    $user_lock_override = $user->boardPerm($domain->id(), 'perm_board_config_lock_override');
+
     foreach ($rows as $config_line)
     {
         if ($config_line['data_type'] == 'boolean')
         {
             if ($config_line['setting'] != 1)
             {
-                continue;
-            }
-
-            if ($config_line['config_type'] == 'filetype_enable')
-            {
-                $filetype_entries_nodes[$config_line['config_name']]['entry-checkbox']->extSetAttribute('checked',
-                        'true');
-            }
-            else
-            {
-                $config_element = $dom->getElementById($config_line['config_name']);
-
-                if (is_null($config_element))
+                if ($config_line['config_type'] == 'filetype_enable')
                 {
-                    continue;
+                    $filetype_entries_nodes[$config_line['config_name']]['entry-checkbox']->extSetAttribute('checked',
+                            'true');
                 }
+                else
+                {
+                    $config_element = $dom->getElementById($config_line['config_name']);
 
-                $config_element->extSetAttribute('checked', 'true');
+                    if (!is_null($config_element))
+                    {
+                        $config_element->extSetAttribute('checked', 'true');
+                    }
+                }
             }
         }
         else
         {
             if ($config_line['select_type'] == 1)
             {
-                $dom->getElementById($config_line['config_name'] . '_' . $config_line['setting'])->extSetAttribute(
-                        'checked', 'true');
+                $config_element = $dom->getElementById($config_line['config_name'] . '_' . $config_line['setting']);
+                $config_element->extSetAttribute('checked', 'true');
             }
             else
             {
@@ -126,6 +124,41 @@ function nel_render_board_settings_panel($domain, $defaults)
                 {
                     $config_element->extSetAttribute('value', $config_line['setting']);
                 }
+            }
+        }
+
+        if (!$defaults)
+        {
+            if ($config_line['edit_lock'] == 1 && !$user_lock_override)
+            {
+                $config_element->extSetAttribute('disabled', 'true');
+            }
+        }
+
+        $config_element_lock = $dom->getElementById($config_line['config_name'] . '_lock');
+
+        if (!is_null($config_element_lock))
+        {
+            if ($defaults)
+            {
+                if ($config_line['edit_lock'] == 1)
+                {
+                    $config_element_lock->extSetAttribute('checked', 'true');
+                }
+            }
+            else
+            {
+                if($config_line['select_type'] == 1)
+                {
+                    $blank_lock_element = $dom->getElementById($config_line['config_name'] . '_blank_lock');
+
+                    if (!is_null($blank_lock_element))
+                    {
+                        $blank_lock_element->remove();
+                    }
+                }
+
+                $config_element_lock->parentNode->remove();
             }
         }
     }

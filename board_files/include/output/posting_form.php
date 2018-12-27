@@ -129,7 +129,7 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
     else
     {
         $posting_form_nodes['recaptcha-sitekey']->extSetAttribute('data-sitekey',
-                $site_domain->setting('recaptcha_site_key'));
+                $domain->setting('recaptcha_site_key'));
     }
 
     if ($domain->setting('use_honeypot'))

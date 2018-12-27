@@ -26,7 +26,7 @@ class NewPost
 
         if ($this->domain->setting('use_captcha') || $this->domain->setting('use_recaptcha'))
         {
-            $captcha = new \Nelliel\CAPTCHA($database);
+            $captcha = new \Nelliel\CAPTCHA($database, $domain);
             $captcha_result = false;
 
             if ($this->domain->setting('use_captcha'))
