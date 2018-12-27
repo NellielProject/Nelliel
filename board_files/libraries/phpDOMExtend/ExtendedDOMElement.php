@@ -9,9 +9,27 @@ use DOMAttr;
 
 class ExtendedDOMElement extends DOMElement
 {
+    private $innerHTML;
+
     function __construct()
     {
         parent::__construct();
+    }
+
+    public function __get($property) {
+
+        if($property === 'innerHTML')
+        {
+            return $this->innerHTML();
+        }
+    }
+
+    public function __set($property, $value) {
+
+        if($property === 'innerHTML')
+        {
+            return $this->innerHTML($value);
+        }
     }
 
     /**
@@ -301,7 +319,6 @@ class ExtendedDOMElement extends DOMElement
      * @param DOMNode $refnode The reference node. If not supplied, newnode is appended to the children.
      * @return DOMNode The inserted node.
      */
-
     public function insertAfter($newnode, $refnode = null)
     {
         if(is_null($refnode))
@@ -322,5 +339,39 @@ class ExtendedDOMElement extends DOMElement
         }
 
         return $newnode;
+    }
+
+    /**
+     * If no string is passed, will return the current innerHTML
+     * If string is passed, will update the innerHTML
+     *
+     * @param string $new_html Optional string to replace current innerHTML
+     * @return DOMNode The innerHTML of the element.
+     */
+    public function innerHTML($new_html = null)
+    {
+        if(is_null($new_html))
+        {
+            $inner_document = $this->getInnerNodes();
+            return $inner_document->saveHTML();
+        }
+
+        $temp_dom = new ExtendedDOMDocument();
+        $temp_dom->loadHTML('<domxtend>' . $new_html . '</domxtend>');
+        $temp_node = $temp_dom->getElementsByTagName('domxtend')->item(0);
+        $imported_temp_node = $this->ownerDocument->importNode($temp_node, true);
+
+        foreach($this->getInnerNodes(true) as $inner_node)
+        {
+            $this->removeChild($inner_node);
+        }
+
+        foreach($imported_temp_node->getInnerNodes(true) as $inner_node)
+        {
+            $this->appendChild($inner_node);
+        }
+
+        $imported_temp_node->remove();
+        return $new_html;
     }
 }
