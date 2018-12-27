@@ -38,6 +38,7 @@ function nel_render_board_settings_panel($user, $domain, $defaults)
     $all_categories = $filetypes->getFiletypeCategories();
     $category_nodes = array();
     $filetype_entries_nodes = array();
+    $category_row_count = array();
 
     foreach ($all_categories as $category)
     {
@@ -49,21 +50,21 @@ function nel_render_board_settings_panel($user, $domain, $defaults)
         $filetype_category_nodes['entry-label']->setContent('Allow ' . $category['type']);
         $filetype_entries_nodes[$category['type']] = $filetype_category_nodes['filetype-entry']->getElementsByAttributeName(
                 'data-parse-id', true);
+        $category_row_count[$category['type']] = 0;
     }
 
-    $count = 0;
     $current_entry_row = null;
 
     foreach ($all_filetypes as $filetype)
     {
         if ($filetype['extension'] == $filetype['parent_extension'])
         {
-            if ($count > 2)
+            if ($category_row_count[$filetype['type']] >= 3)
             {
-                $count = 0;
+                $category_row_count[$filetype['type']] = 0;
             }
 
-            if ($count === 0)
+            if ($category_row_count[$filetype['type']] === 0)
             {
                 $parent_category = $category_nodes['category-' . $filetype['type']];
                 $current_entry_row = $dom->copyNode($settings_form_nodes['filetype-entry-row'], $parent_category,
@@ -76,7 +77,9 @@ function nel_render_board_settings_panel($user, $domain, $defaults)
             $current_entry_nodes['entry-label']->addContent($filetype['label'] . ' - .' . $filetype['extension'],
                     'before');
             $filetype_entries_nodes[$filetype['format']] = $current_entry_nodes;
-            $count ++;
+            $current_entry_nodes['entry-hidden-checkbox']->extSetAttribute('name', $filetype['format']);
+            $current_entry_nodes['entry-checkbox']->extSetAttribute('name', $filetype['format']);
+            $category_row_count[$filetype['type']] ++;
         }
         else
         {
@@ -91,7 +94,7 @@ function nel_render_board_settings_panel($user, $domain, $defaults)
     {
         if ($config_line['data_type'] == 'boolean')
         {
-            if ($config_line['setting'] != 1)
+            if ($config_line['setting'] == 1)
             {
                 if ($config_line['config_type'] == 'filetype_enable')
                 {

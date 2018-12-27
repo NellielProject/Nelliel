@@ -82,18 +82,6 @@ class AdminBoardSettings extends AdminBase
         $config_table = ($this->defaults) ? BOARD_DEFAULTS_TABLE : $this->domain->reference('config_table');
         $lock_override = $user->boardPerm($this->domain->id(), 'perm_board_config_lock_override');
 
-        if ($this->defaults)
-        {
-            $query = 'SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"';
-            $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
-            $board_domains = array();
-
-            foreach ($board_ids as $board_id)
-            {
-                $board_domains[] = new \Nelliel\Domain($board_id, new \Nelliel\CacheHandler(), $this->database);
-            }
-        }
-
         while ($item = each($_POST))
         {
             if ($item[0] === 'jpeg_quality' && $item[1] > 100)
@@ -106,7 +94,7 @@ class AdminBoardSettings extends AdminBase
                 $config_name = substr($item[0], 0, strlen($item[0]) - 5);
                 $this->setLock($config_table, $config_name, $item[1]);
 
-                foreach ($board_domains as $board_domain)
+                foreach ($this->getBoardDomains() as $board_domain)
                 {
                     $this->setLock($board_domain->reference('config_table'), $config_name, $item[1]);
                 }
@@ -150,5 +138,19 @@ class AdminBoardSettings extends AdminBase
                     'UPDATE "' . $config_table . '" SET "setting" = ? WHERE "config_name" = ? AND "edit_lock" = 0');
             $this->database->executePrepared($prepared, array($setting, $config_name), true);
         }
+    }
+
+    private function getBoardDomains()
+    {
+        $query = 'SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"';
+        $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
+        $board_domains = array();
+
+        foreach ($board_ids as $board_id)
+        {
+            $board_domains[] = new \Nelliel\Domain($board_id, new \Nelliel\CacheHandler(), $this->database);
+        }
+
+        return $board_domains;
     }
 }

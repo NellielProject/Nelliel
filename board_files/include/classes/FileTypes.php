@@ -64,7 +64,10 @@ class FileTypes
 
     private function loadSettingsFromDatabase($board_id, $ignore_cache = false)
     {
-        $settings = $this->cache_handler->loadArrayFromCache($board_id . '/filetype_settings.php', 'filetype_settings');
+        if(!$ignore_cache)
+        {
+            $settings = $this->cache_handler->loadArrayFromCache($board_id . '/filetype_settings.php', 'filetype_settings');
+        }
 
         if (empty($settings))
         {
