@@ -20,7 +20,7 @@ class JSONContent extends JSONBase
     public function prepareData($data, $store = false)
     {
         $content_array = array();
-        $content_array['parent_thread'] = nel_cast_to_datatype($data['parent_thread'], 'integer');
+        $this->addIfNotEmpty($content_array, 'parent_thread', $data['parent_thread'], 'integer');
         $content_array['post_ref'] = nel_cast_to_datatype($data['post_ref'], 'integer');
         $content_array['content_order'] = nel_cast_to_datatype($data['content_order'], 'integer');
         $content_array['type'] = nel_cast_to_datatype($data['type'], 'string');

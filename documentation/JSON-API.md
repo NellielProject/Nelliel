@@ -34,18 +34,21 @@ Contains zero or more `thread` objects.
 ### `thread`
 Contains information about a thread.
 
-|Attribute Key      |Type      |Possible Values      |Optional|Description        |                               
-|:------------------|:-------- |:--------------------|:-------|:------------------|
-|`thread_id`        |`integer` |1-2147483647         |No      |ID of the thread.|
-|`first_post`       |`integer` |1-2147483647 or null |No      |First post in the thread. null if there are no posts.|
-|`last_post`        |`integer` |1-2147483647 or null |No      |Last post in the thread. null if there are no posts.|
-|`total_files`      |`integer` |0-2147483647         |No      |Total files in the thread.|
-|`last_update`      |`integer` |64-bit Unix timestamp|No      |Last thread update.|
-|`last_update_milli`|`integer` |0-999                |No      |Last thread update milliseconds. Used with `last_update` when high precision is needed.|
-|`post_count`       |`integer` |0-2147483647         |No      |Total number of posts in the thread. It is possible for a thread to have no posts.|
-|`thread_sage`      |`integer` |0 or 1               |No      |Is the thread permasaged. Boolean integer value: 0 is false, 1 is true|
-|`sticky`           |`integer` |0 or 1               |No      |Is the thread stickied. Boolean integer value: 0 is false, 1 is true|
-|`locked`           |`integer` |0 or 1               |No      |Is the thread locked. Boolean integer value: 0 is false, 1 is true|
+|Attribute Key         |Type      |Possible Values      |Optional|Description        |                               
+|:---------------------|:-------- |:--------------------|:-------|:------------------|
+|`thread_id`           |`integer` |1-2147483647         |No      |ID of the thread.|
+|`first_post`          |`integer` |1-2147483647         |Yes     |First post in the thread. Omitted only if thread has no posts.|
+|`last_post`           |`integer` |1-2147483647         |Yes     |Last post in the thread. Omitted only if thread has no posts.|
+|`last_bump_time`      |`integer` |64-bit Unix timestamp|No      |Last thread bump time.|
+|`last_bump_time_milli`|`integer` |0-999                |No      |Last thread bump time milliseconds. Used with `last_bump_time` when high precision is needed.|
+|`last_update`         |`integer` |64-bit Unix timestamp|No      |Last thread update.|
+|`last_update_milli`   |`integer` |0-999                |No      |Last thread update milliseconds. Used with `last_update` when high precision is needed.|
+|`post_count`          |`integer` |0-2147483647         |No      |Total number of posts in the thread. It is possible for a thread to have 0 posts.|
+|`total_files`         |`integer` |0-2147483647         |No      |Total files in the thread.|
+|`thread_sage`         |`integer` |0 or 1               |No      |Is the thread permasaged. Boolean integer value: 0 is false, 1 is true.|
+|`sticky`              |`integer` |0 or 1               |No      |Is the thread stickied. Boolean integer value: 0 is false, 1 is true.|
+|`locked`              |`integer` |0 or 1               |No      |Is the thread locked. Boolean integer value: 0 is false, 1 is true.|
+|`slug`                |`string ` |text                 |Yes     |Human-friendly thread ID.|
 
 ### `post-list`
 Contains zero or more `post` objects.
@@ -56,8 +59,8 @@ Contains information about a post.
 |Attribute Key     |Type      |Possible Values      |Optional|Description        |                               
 |:-----------------|:---------|:--------------------|:-------|:------------------|
 |`post_number`     |`integer` |1-2147483647         |No      |Post ID.|
-|`parent_thread`   |`integer` |1-2147483647 or null |No      |ID of the parent thread. It is possible for a post to have no thread.|
-|`reply_to`        |`integer` |1-2147483647 or null |No      |ID of the post being replied to. null if not replying to a post.|
+|`parent_thread`   |`integer` |1-2147483647         |No      |ID of the parent thread.|
+|`reply_to`        |`integer` |1-2147483647         |Yes     |ID of the post being replied to. Omitted if not replying to a post.|
 |`poster_name`     |`string`  |text                 |Yes     |Name of the poster.|
 |`tripcode`        |`string`  |text                 |Yes     |Tripcode.|
 |`secure_tripcode` |`string`  |text                 |Yes     |Secure tripcode.|
@@ -67,11 +70,11 @@ Contains information about a post.
 |`post_time`       |`integer` |64-bit Unix timestamp|No      |Time the post was made.|
 |`post_time_milli` |`integer` |0-999                |No      |Post time milliseconds. Used with `post_time` when high precision is needed.|
 |`timestamp`       |`integer` |text                 |No      |Formatted version of `post_time`|
-|`has_file`        |`integer` |0 or 1               |No      |If the post has a file. Boolean integer value: 0 is false, 1 is true|
+|`has_file`        |`integer` |0 or 1               |No      |If the post has a file. Boolean integer value: 0 is false, 1 is true.|
 |`file_count`      |`integer` |0-32767              |No      |File count for the post.|
-|`op`              |`integer` |0 or 1               |No      |Is the post OP (first in thread). Boolean integer value: 0 is false, 1 is true|
-|`sage`            |`integer` |0 or 1               |No      |Is the post saged. Boolean integer value: 0 is false, 1 is true|
-|`mod_comment`     |`string`  |text                 |Yes     |Comment added by staff|
+|`op`              |`integer` |0 or 1               |No      |Is the post OP (first in thread). Boolean integer value: 0 is false, 1 is true.|
+|`sage`            |`integer` |0 or 1               |No      |Is the post saged. Boolean integer value: 0 is false, 1 is true.|
+|`mod_comment`     |`string`  |text                 |Yes     |Comment added by staff.|
 
 ### `content-list`
 Contains zero or more `content` objects.
@@ -81,8 +84,8 @@ Contains the information about a file or other content.
 
 |Attribute Key      |Type      |Possible Values         |Optional|Description        |                               
 |:------------------|:---------|:-----------------------|:-------|:------------------|
-|`parent_thread`    |`integer` |1-2147483647 or null    |No      |ID of the parent thread. null if there is no parent thread.|
-|`post_ref`         |`integer` |1-2147483647 or null    |No      |ID of post the content is in. null if there is no post ref.|
+|`parent_thread`    |`integer` |1-2147483647            |Yes     |ID of the parent thread. Omitted only if not part of a thread.|
+|`post_ref`         |`integer` |1-2147483647            |No      |ID of post the content is in.|
 |`content_order`    |`integer` |1-32767                 |No      |Order in which the content was added.|
 |`type`             |`string`  |text                    |No      |Type of content.|
 |`format`           |`string`  |text                    |No      |Format of content.|

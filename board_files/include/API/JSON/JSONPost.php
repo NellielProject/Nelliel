@@ -22,7 +22,7 @@ class JSONPost extends JSONBase
         $post_array = array();
         $post_array['post_number'] = nel_cast_to_datatype($data['post_number'], 'integer');
         $post_array['parent_thread'] = nel_cast_to_datatype($data['parent_thread'], 'integer');
-        $post_array['reply_to'] = nel_cast_to_datatype($data['reply_to'], 'integer');
+        $this->addIfNotEmpty($post_array, 'reply_to', $data['reply_to'], 'integer');
         $this->addIfNotEmpty($post_array, 'poster_name', $data['poster_name'], 'string');
         $this->addIfNotEmpty($post_array, 'tripcode', $data['tripcode'], 'string');
         $this->addIfNotEmpty($post_array, 'secure_tripcode', $data['secure_tripcode'], 'string');
