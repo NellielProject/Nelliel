@@ -41,9 +41,6 @@ Error 150: IP doesn't match ban. (classes/Snacks.php)
 Error 151: Already appealed. (classes/Snacks.php)  
 
 Error 210: Login fail. (login.php)  
-Error 211: Login attempts too fast. (login.php)  
-Error 212: Too many failed login attempts (10 minutes). (login.php)  
-Error 213: Too many failed login attempts (30 minutes). (login.php)  
 
 Error 220: No valid session.. (classes/Session.php)  
 Error 221: Expired session. (classes/Session.php)  
