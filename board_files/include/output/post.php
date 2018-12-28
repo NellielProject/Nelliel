@@ -190,27 +190,29 @@ function nel_render_post($domain, $gen_data, $dom)
 
     $header_nodes['subject']->extSetAttribute('class', $post_type_class . 'subject');
     $header_nodes['subject']->setContent($post_data['subject']);
-    $header_nodes['poster-name']->extSetAttribute('class', $post_type_class . 'poster-name');
 
     $tripcode = (!empty($post_data['tripcode'])) ? $domain->setting('tripkey_marker') . $post_data['tripcode'] : '';
     $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $domain->setting('tripkey_marker') .
             $domain->setting('tripkey_marker') . $post_data['secure_tripcode'] : '';
-    $capcode_text = ($post_data['mod_post']) ? $authorization->getRole($post_data['mod_post'])->auth_data['capcode_text'] : '';
-    $trip_line = $tripcode . $secure_tripcode . '&nbsp;&nbsp;' . $capcode_text;
-    $header_nodes['trip-line']->extSetAttribute('class', $post_type_class . 'trip-line');
+    $capcode_text = ($post_data['mod_post_id']) ? $authorization->getRole($post_data['mod_post_id'])->auth_data['capcode_text'] : '';
+    $trip_line = $tripcode . $secure_tripcode;
 
     if (!nel_true_empty($post_data['email']))
     {
         $header_nodes['poster-mailto']->extSetAttribute('class', $post_type_class . 'mailto');
         $header_nodes['poster-mailto']->modifyAttribute('href', $post_data['email'], 'after');
         $header_nodes['poster-mailto']->setContent($post_data['poster_name']);
-        $header_nodes['trip-line']->setContent($trip_line);
     }
     else
     {
         $header_nodes['poster-mailto']->remove();
-        $header_nodes['trip-line']->setContent($post_data['poster_name'] . $trip_line);
+        $header_nodes['poster-name']->extSetAttribute('class', $post_type_class . 'poster-name');
+        $header_nodes['poster-name']->setContent($post_data['poster_name']);
     }
+
+    $header_nodes['trip-line']->extSetAttribute('class', $post_type_class . 'trip-line');
+    $header_nodes['trip-line']->setContent($trip_line);
+    $header_nodes['capcode']->innerHTML = $capcode_text;
 
     $post_time = date($domain->setting('date_format'), $gen_data['post']['post_time']);
     $header_nodes['post-time']->setContent($post_time);

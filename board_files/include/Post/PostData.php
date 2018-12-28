@@ -37,12 +37,12 @@ class PostData
         $post->content_data['post_password'] = $this->checkEntry($_POST['new_post']['post_info']['sekrit'], 'string');
         $post->content_data['response_to'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer');
         $post->content_data['post_as_staff'] = (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false;
-        $post->content_data['mod_post'] = null;
+        $post->content_data['mod_post_id'] = null;
 
         if ($post->content_data['poster_name'] !== '')
         {
-            $this->staffPost($post);
             $this->tripcodes($post);
+            $this->staffPost($post);
         }
         else
         {
@@ -104,7 +104,7 @@ class PostData
         if($role !== false)
         {
             $post->content_data['poster_name'] = $user->auth_data['display_name'];
-            $post->content_data['mod_post'] = $role->auth_id;
+            $post->content_data['mod_post_id'] = $role->auth_id;
         }
     }
 
@@ -115,6 +115,7 @@ class PostData
         $post->content_data['poster_name'] = $name_pieces[1];
         $post->content_data['tripcode'] = '';
         $post->content_data['secure_tripcode'] = '';
+
 
         if ($name_pieces[2] !== '' && $this->domain->setting('allow_tripkeys'))
         {

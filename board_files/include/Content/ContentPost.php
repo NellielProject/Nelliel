@@ -60,7 +60,7 @@ class ContentPost extends ContentBase
                     "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "email" = :email,
                     "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address,
                     "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_file" = :has_file, "file_count" = :file_count,
-                    "op" = :op, "sage" = :sage, "mod_post" = :mod_post, "mod_comment" = :mod_comment
+                    "op" = :op, "sage" = :sage, "mod_post_id" = :mod_post_id, "mod_comment" = :mod_comment
                     WHERE "post_number" = :post_number');
             $prepared->bindValue(':post_number', $this->content_id->post_id, PDO::PARAM_INT);
         }
@@ -68,9 +68,9 @@ class ContentPost extends ContentBase
         {
             $prepared = $database->prepare(
                     'INSERT INTO "' . $this->domain->reference('post_table') . '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "email",
-                    "subject", "comment", "ip_address", "post_time", "post_time_milli", "has_file", "file_count", "op", "sage", "mod_post", "mod_comment") VALUES
+                    "subject", "comment", "ip_address", "post_time", "post_time_milli", "has_file", "file_count", "op", "sage", "mod_post_id", "mod_comment") VALUES
                     (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :email, :subject, :comment, :ip_address, :post_time, :post_time_milli, :has_file, :file_count,
-                    :op, :sage, :mod_post, :mod_comment)');
+                    :op, :sage, :mod_post_id, :mod_comment)');
         }
 
         $prepared->bindValue(':parent_thread',
@@ -90,7 +90,7 @@ class ContentPost extends ContentBase
         $prepared->bindValue(':file_count', $this->contentDataOrDefault('file_count', 0), PDO::PARAM_INT);
         $prepared->bindValue(':op', $this->contentDataOrDefault('op', 0), PDO::PARAM_INT);
         $prepared->bindValue(':sage', $this->contentDataOrDefault('sage', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':mod_post', $this->contentDataOrDefault('mod_post', null), PDO::PARAM_STR);
+        $prepared->bindValue(':mod_post_id', $this->contentDataOrDefault('mod_post_id', null), PDO::PARAM_STR);
         $prepared->bindValue(':mod_comment', $this->contentDataOrDefault('mod_comment', null), PDO::PARAM_STR);
         $database->executePrepared($prepared);
         return true;
@@ -190,9 +190,9 @@ class ContentPost extends ContentBase
 
         $flag = false;
 
-        if (!empty($this->content_data['mod_post']) && $session->isActive())
+        if (!empty($this->content_data['mod_post_id']) && $session->isActive())
         {
-            $mod_post_user = $authorization->getUser($this->content_data['mod_post']);
+            $mod_post_user = $authorization->getUser($this->content_data['mod_post_id']);
             $flag = $authorization->roleLevelCheck($user->boardRole($this->domain->id()),
                     $mod_post_user->boardRole($this->domain->id()));
         }

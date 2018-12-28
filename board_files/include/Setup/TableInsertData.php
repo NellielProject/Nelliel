@@ -304,9 +304,9 @@ class TableInsertData
         }
 
         $insert_query = "INSERT INTO " . USER_TABLE .
-        " (user_id, user_password, active, failed_logins, last_failed_login) VALUES (?, ?, ?, ?, ?)";
+        " (user_id, user_password, active, last_login) VALUES (?, ?, ?, ?)";
         $prepared = $database->prepare($insert_query);
-        $database->executePrepared($prepared, [DEFAULTADMIN, nel_password_hash(DEFAULTADMIN_PASS, NEL_PASSWORD_ALGORITHM), 1, 1, 0]);
+        $database->executePrepared($prepared, [DEFAULTADMIN, nel_password_hash(DEFAULTADMIN_PASS, NEL_PASSWORD_ALGORITHM), 1, 0]);
         nel_setup_stuff_done($result);
     }
 

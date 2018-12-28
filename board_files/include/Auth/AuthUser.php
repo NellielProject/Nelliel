@@ -68,22 +68,21 @@ class AuthUser extends AuthBase
         {
             $prepared = $database->prepare(
                     'UPDATE "' . USER_TABLE .
-                    '" SET "user_id" = :user_id, "display_name" = :display_name, "user_password" = :user_password, "active" = :active, "failed_logins" = :failed_logins, "last_failed_login" = :last_failed_login WHERE "entry" = :entry');
+                    '" SET "user_id" = :user_id, "display_name" = :display_name, "user_password" = :user_password, "active" = :active, "last_login" = :last_login WHERE "entry" = :entry');
             $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
         }
         else
         {
             $prepared = $database->prepare(
                     'INSERT INTO "' . USER_TABLE . '" ("user_id", "display_name", "user_password", "active", "failed_logins", "last_failed_login") VALUES
-                    (:user_id, :display_name, :user_password, :active, :failed_logins, :last_failed_login)');
+                    (:user_id, :display_name, :user_password, :active, :last_login)');
         }
 
         $prepared->bindValue(':user_id', $this->authDataOrDefault('user_id', $this->auth_id), PDO::PARAM_STR);
         $prepared->bindValue(':display_name', $this->authDataOrDefault('display_name', null), PDO::PARAM_STR);
         $prepared->bindValue(':user_password', $this->authDataOrDefault('user_password', null), PDO::PARAM_STR);
         $prepared->bindValue(':active', $this->authDataOrDefault('active', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':failed_logins', $this->authDataOrDefault('failed_logins', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':last_failed_login', $this->authDataOrDefault('last_failed_login', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':last_login', $this->authDataOrDefault('last_login', 0), PDO::PARAM_INT);
         $database->executePrepared($prepared);
 
         foreach ($this->user_roles as $user_role)

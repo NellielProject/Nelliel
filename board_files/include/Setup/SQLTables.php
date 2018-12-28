@@ -23,19 +23,19 @@ class SQLTables
         $schema = "
         CREATE TABLE " . $table_name . " (
             thread_id               INTEGER NOT NULL PRIMARY KEY,
-            first_post              INTEGER NULL DEFAULT 0,
-            last_post               INTEGER NULL DEFAULT 0,
-            last_bump_time          BIGINT DEFAULT NULL,
-            last_bump_time_milli    SMALLINT DEFAULT NULL,
-            total_files             INTEGER NOT NULL DEFAULT 0,
-            last_update             BIGINT DEFAULT NULL,
-            last_update_milli       SMALLINT DEFAULT NULL,
+            first_post              INTEGER DEFAULT NULL,
+            last_post               INTEGER DEFAULT NULL,
+            last_bump_time          BIGINT NOT NULL,
+            last_bump_time_milli    SMALLINT NOT NULL,
+            last_update             BIGINT NOT NULL,
+            last_update_milli       SMALLINT NOT NULL,
             post_count              INTEGER NOT NULL DEFAULT 0,
+            total_files             INTEGER NOT NULL DEFAULT 0,
             thread_sage             SMALLINT NOT NULL DEFAULT 0,
             sticky                  SMALLINT NOT NULL DEFAULT 0,
             archive_status          SMALLINT NOT NULL DEFAULT 0,
             locked                  SMALLINT NOT NULL DEFAULT 0,
-            slug                    VARCHAR(255) NULL DEFAULT ''
+            slug                    VARCHAR(255) DEFAULT NULL
         ) " . $options . ";";
 
         $result = $this->createTableQuery($schema, $table_name);
@@ -58,15 +58,15 @@ class SQLTables
             secure_tripcode         VARCHAR(255) DEFAULT NULL,
             email                   VARCHAR(255) DEFAULT NULL,
             subject                 VARCHAR(255) DEFAULT NULL,
-            comment                 TEXT NULL DEFAULT '',
+            comment                 TEXT DEFAULT NULL,
             ip_address              " . $this->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            post_time               BIGINT DEFAULT NULL,
-            post_time_milli         SMALLINT DEFAULT NULL,
+            post_time               BIGINT NOT NULL,
+            post_time_milli         SMALLINT NOT NULL,
             has_file                SMALLINT NOT NULL DEFAULT 0,
             file_count              SMALLINT NOT NULL DEFAULT 0,
             op                      SMALLINT NOT NULL DEFAULT 0,
             sage                    SMALLINT NOT NULL DEFAULT 0,
-            mod_post                VARCHAR(255) DEFAULT NULL,
+            mod_post_id             VARCHAR(255) DEFAULT NULL,
             mod_comment             VARCHAR(255) DEFAULT NULL,
             CONSTRAINT fk_parent_thread_" . $threads_table . "_thread_id
             FOREIGN KEY (parent_thread) REFERENCES " . $threads_table . "(thread_id)
@@ -84,7 +84,7 @@ class SQLTables
         nel_setup_stuff_done($result);
     }
 
-    public function createFilesTable($table_name, $posts_table)
+    public function createContentTable($table_name, $posts_table)
     {
         $database = nel_database();
         $auto_inc = $this->autoincrementColumn('INTEGER');
@@ -94,14 +94,14 @@ class SQLTables
             entry                 " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             parent_thread           INTEGER DEFAULT NULL,
             post_ref                INTEGER DEFAULT NULL,
-            content_order           SMALLINT NULL DEFAULT 0,
-            type                    VARCHAR(255) DEFAULT NULL,
-            format                  VARCHAR(255) DEFAULT NULL,
+            content_order           SMALLINT NOT NULL DEFAULT 0,
+            type                    VARCHAR(255) NOT NULL,
+            format                  VARCHAR(255) NOT NULL,
             mime                    VARCHAR(255) DEFAULT NULL,
             filename                VARCHAR(255) DEFAULT NULL,
             extension               VARCHAR(255) DEFAULT NULL,
-            display_width           INTEGER NULL DEFAULT 0,
-            display_height          INTEGER NULL DEFAULT 0,
+            display_width           INTEGER DEFAULT NULL,
+            display_height          INTEGER DEFAULT NULL,
             preview_name            VARCHAR(255) DEFAULT NULL,
             preview_extension       VARCHAR(255) DEFAULT NULL,
             preview_width           SMALLINT DEFAULT NULL,
@@ -115,8 +115,8 @@ class SQLTables
             license                 VARCHAR(255) DEFAULT NULL,
             alt_text                VARCHAR(255) DEFAULT NULL,
             url                     VARCHAR(2048) DEFAULT NULL,
-            exif                    TEXT NULL DEFAULT '',
-            meta                    TEXT NULL DEFAULT '',
+            exif                    TEXT DEFAULT NULL,
+            meta                    TEXT DEFAULT NULL,
             CONSTRAINT fk_post_ref_" . $posts_table . "_post_number
             FOREIGN KEY(post_ref) REFERENCES " . $posts_table . "(post_number)
             ON UPDATE CASCADE
@@ -148,7 +148,7 @@ class SQLTables
             config_category         VARCHAR(255) DEFAULT NULL,
             data_type               VARCHAR(255) DEFAULT NULL,
             config_name             VARCHAR(255) NOT NULL,
-            setting                 VARCHAR(255) NOT NULL DEFAULT '',
+            setting                 VARCHAR(255) NOT NULL,
             select_type             SMALLINT NOT NULL DEFAULT 0,
             edit_lock               SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
@@ -182,7 +182,7 @@ class SQLTables
             config_category         VARCHAR(255) DEFAULT NULL,
             data_type               VARCHAR(255) DEFAULT NULL,
             config_name             VARCHAR(255) NOT NULL,
-            setting                 VARCHAR(255) NOT NULL DEFAULT '',
+            setting                 VARCHAR(255) NOT NULL,
             select_type             SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
@@ -207,8 +207,7 @@ class SQLTables
             display_name            VARCHAR(255) DEFAULT NULL,
             user_password           VARCHAR(255) DEFAULT NULL,
             active                  SMALLINT NOT NULL DEFAULT 0,
-            failed_logins           SMALLINT NOT NULL DEFAULT 0,
-            last_failed_login       BIGINT DEFAULT NULL
+            last_login              BIGINT NOT NULL
         ) " . $options . ";";
 
         $result = $this->createTableQuery($schema, $table_name);
@@ -226,7 +225,7 @@ class SQLTables
             role_id                 VARCHAR(255) NOT NULL,
             role_level              SMALLINT NOT NULL DEFAULT 0,
             role_title              VARCHAR(255) DEFAULT NULL,
-            capcode_text            VARCHAR(255) DEFAULT NULL
+            capcode_text            TEXT DEFAULT NULL
         ) " . $options . ";";
 
         $result = $this->createTableQuery($schema, $table_name);
@@ -248,7 +247,7 @@ class SQLTables
             entry                   " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             user_id                 VARCHAR(255) NOT NULL,
             role_id                 VARCHAR(255) NOT NULL,
-            board                   VARCHAR(255) NOT NULL DEFAULT ''
+            board                   VARCHAR(255) NOT NULL
         ) " . $options . ";";
 
         $result = $this->createTableQuery($schema, $table_name);
@@ -286,7 +285,7 @@ class SQLTables
         CREATE TABLE " . $table_name . " (
             entry                   " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             permission              VARCHAR(255) NOT NULL,
-            description             VARCHAR(255) NOT NULL
+            description             VARCHAR(255) NOT NULL DEFAULT ''
         ) " . $options . ";";
 
         $result = $this->createTableQuery($schema, $table_name);
@@ -306,7 +305,7 @@ class SQLTables
         $schema = "
         CREATE TABLE " . $table_name . " (
             ip_address              " . $this->sqlAlternatives('VARBINARY', '16') . " NOT NULL UNIQUE,
-            last_attempt            BIGINT DEFAULT NULL
+            last_attempt            BIGINT NOT NULL
         ) " . $options . ";";
 
         $result = $this->createTableQuery($schema, $table_name);

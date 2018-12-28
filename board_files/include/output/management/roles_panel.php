@@ -87,7 +87,7 @@ function nel_render_roles_panel_edit($user, $domain, $role_id)
         $dom->getElementById('role_id')->extSetAttribute('value', $role->auth_data['role_id']);
         $dom->getElementById('role_level')->extSetAttribute('value', $role->auth_data['role_level']);
         $dom->getElementById('role_title')->extSetAttribute('value', $role->auth_data['role_title']);
-        $dom->getElementById('capcode_text')->extSetAttribute('value', $role->auth_data['capcode_text']);
+        $dom->getElementById('capcode_text')->setContent($role->auth_data['capcode_text']);
     }
 
     foreach ($permissions_list as $permission)

@@ -78,8 +78,8 @@ class Setup
         $sql_tables->createThreadsTable($board_references['archive_thread_table']);
         $sql_tables->createPostsTable($board_references['post_table'], $board_references['thread_table']);
         $sql_tables->createPostsTable($board_references['archive_post_table'], $board_references['archive_thread_table']);
-        $sql_tables->createFilesTable($board_references['content_table'], $board_references['post_table']);
-        $sql_tables->createFilesTable($board_references['archive_content_table'], $board_references['archive_post_table']);
+        $sql_tables->createContentTable($board_references['content_table'], $board_references['post_table']);
+        $sql_tables->createContentTable($board_references['archive_content_table'], $board_references['archive_post_table']);
         $sql_tables->createBoardConfigTable($board_references['config_table'], true);
     }
 

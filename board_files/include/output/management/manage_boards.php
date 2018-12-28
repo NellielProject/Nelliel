@@ -16,7 +16,7 @@ function nel_render_manage_boards_panel($domain, $user)
     $url_constructor = new \Nelliel\URLConstructor();
     $domain->renderInstance()->startRenderTimer();
     nel_render_general_header($domain->renderInstance(), null, null,
-            array('header' => _gettext('General Management'), 'sub_header' => _gettext('Create new board')));
+            array('header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/manage_boards_panel_main.html');
     $dom->getElementById('create-board-form')->extSetAttribute('action', PHP_SELF . '?module=manage-boards&action=add');
