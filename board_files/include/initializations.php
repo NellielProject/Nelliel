@@ -57,7 +57,7 @@ define('BASE_HONEYPOT_FIELD3', 'website'); // Honeypot field name
 // Set default values here in case the config is missing something
 $base_config['defaultadmin'] = '';
 $base_config['defaultadmin_pass'] = '';
-$base_config['tripcode_salt'] = 'sodiumz';
+$base_config['tripcode_pepper'] = 'sodiumz';
 $base_config['run_setup_check'] = true;
 $base_config['directory_perm'] = '0775';
 $base_config['file_perm'] = '0664';
@@ -75,7 +75,7 @@ require_once CONFIG_PATH . 'config.php';
 
 define('DEFAULTADMIN', $base_config['defaultadmin']);
 define('DEFAULTADMIN_PASS', $base_config['defaultadmin_pass']);
-define('TRIPCODE_SALT', $base_config['tripcode_salt']);
+define('TRIPCODE_PEPPER', $base_config['tripcode_pepper']);
 define('RUN_SETUP_CHECK', (bool)$base_config['run_setup_check']);
 define('DIRECTORY_PERM', $base_config['directory_perm']);
 define('FILE_PERM', $base_config['file_perm']);

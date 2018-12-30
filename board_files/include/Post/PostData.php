@@ -129,7 +129,7 @@ class PostData
         if ($name_pieces[3] !== '' && $this->domain->setting('allow_tripkeys'))
         {
             $trip = $name_pieces[3];
-            $trip = hash(nel_parameters_and_data()->siteSettings('secure_tripcode_algorithm'), $trip . TRIPCODE_SALT);
+            $trip = hash(nel_parameters_and_data()->siteSettings('secure_tripcode_algorithm'), $trip . TRIPCODE_PEPPER);
             $trip = base64_encode(pack("H*", $trip));
             $post->content_data['secure_tripcode'] = substr($trip, 2, 10);
         }
