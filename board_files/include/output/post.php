@@ -523,11 +523,5 @@ function nel_render_thread_form_bottom($domain, $dom)
     $footer_form_element = $dom->getElementById('footer-form');
     $form_td_list = $footer_form_element->doXPathQuery(".//input");
     $dom->getElementById('board_id_field_footer')->extSetAttribute('value', $domain->id());
-
-    if ($session->inModmode($domain->id()) && !$domain->renderActive())
-    {
-        $dom->getElementById('bottom-pass-input')->remove();
-    }
-
     $dom->getElementById('form-content-action')->appendChild($footer_form_element);
 }

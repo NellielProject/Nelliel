@@ -226,7 +226,7 @@ function nel_module_dispatch($inputs, $domain)
 
                 if (isset($_POST['form_submit_delete']))
                 {
-                    $thread_handler = new \Nelliel\ThreadHandler(nel_database(), $inputs['board_id']);
+                    $thread_handler = new \Nelliel\ThreadHandler(nel_database(), $domain);
                     $thread_handler->processContentDeletes();
 
                     if ($session->isActive() && $session->inModmode($inputs['board_id']))
