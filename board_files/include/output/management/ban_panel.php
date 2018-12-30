@@ -14,7 +14,7 @@ function nel_render_main_ban_panel($user, $domain)
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance(), null, $domain->id(),
+    nel_render_general_header($domain, null,
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/bans_panel_main.html');
@@ -64,7 +64,7 @@ function nel_render_ban_panel_add($domain, $ip = '', $type = 'GENERAL')
 {
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance(), null, $domain->id(),
+    nel_render_general_header($domain, null,
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
@@ -103,7 +103,7 @@ function nel_render_ban_panel_modify($domain)
     $ban_hammer = new \Nelliel\BanHammer(nel_database());
     $database = nel_database();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance(), null, $domain->id(),
+    nel_render_general_header($domain, null,
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/bans_panel_modify_ban.html');

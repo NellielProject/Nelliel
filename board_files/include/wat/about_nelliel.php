@@ -11,7 +11,7 @@ function nel_about_nelliel_screen()
 {
     $domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database());
     $domain->renderInstance(new \NellielTemplates\RenderCore());
-    nel_render_general_header($domain->renderInstance());
+    nel_render_general_header($domain);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'about_nelliel.html');
     $dom->getElementById('version')->setContent('Version: ' . NELLIEL_VERSION);

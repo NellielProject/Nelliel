@@ -11,7 +11,7 @@ function nel_render_derp($diagnostic, $domain_id = '')
     $domain->renderInstance(new NellielTemplates\RenderCore());
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance());
+    nel_render_general_header($domain);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'derp.html');
     $dom->getElementById('error-id')->setContent($diagnostic['error_id']);
@@ -49,7 +49,7 @@ function nel_render_derp($diagnostic, $domain_id = '')
     }
 
     $do_styles = ($domain->id() === '') ? false : true;
-    $translator->translateDom($dom);
+    $translator->translateDom($dom, $domain->setting('language'));
     $domain->renderInstance()->appendHTMLFromDOM($dom);
     nel_render_general_footer($domain, null, $do_styles);
     echo $domain->renderInstance()->outputRenderSet();

@@ -17,14 +17,14 @@ function nel_render_board_settings_panel($user, $domain, $defaults)
 
     if ($defaults === true)
     {
-        nel_render_general_header($domain->renderInstance(), null, null,
+        nel_render_general_header($domain, null,
                 array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Default Board Settings')));
         $result = $database->query('SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"');
         $settings_form->extSetAttribute('action', PHP_SELF . '?module=default-board-settings&action=update');
     }
     else
     {
-        nel_render_general_header($domain->renderInstance(), null, $domain->id(),
+        nel_render_general_header($domain, null,
                 array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')));
         $result = $database->query('SELECT * FROM "' . $domain->reference('config_table') . '"');
         $settings_form->extSetAttribute('action',
@@ -151,7 +151,7 @@ function nel_render_board_settings_panel($user, $domain, $defaults)
             }
             else
             {
-                if($config_line['select_type'] == 1)
+                if ($config_line['select_type'] == 1)
                 {
                     $blank_lock_element = $dom->getElementById($config_line['config_name'] . '_blank_lock');
 

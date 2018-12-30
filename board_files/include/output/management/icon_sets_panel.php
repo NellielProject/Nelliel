@@ -15,7 +15,7 @@ function nel_render_icon_sets_panel($user, $domain)
     $url_constructor = new \Nelliel\URLConstructor();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance(), null, null,
+    nel_render_general_header($domain, null,
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Icon Sets')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/icon_sets_panel.html');

@@ -14,7 +14,7 @@ function nel_render_roles_panel_main($user, $domain)
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance(), null, null,
+    nel_render_general_header($domain, null,
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Roles')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/roles_panel_main.html');
@@ -62,7 +62,7 @@ function nel_render_roles_panel_edit($user, $domain, $role_id)
     $translator = new \Nelliel\Language\Translator();
     $role = $authorization->getRole($role_id);
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance(), null, null,
+    nel_render_general_header($domain, null,
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Edit Role')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/roles_panel_edit.html');

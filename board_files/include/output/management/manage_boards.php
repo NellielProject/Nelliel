@@ -15,7 +15,7 @@ function nel_render_manage_boards_panel($domain, $user)
     $translator = new \Nelliel\Language\Translator();
     $url_constructor = new \Nelliel\URLConstructor();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance(), null, null,
+    nel_render_general_header($domain, null,
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/manage_boards_panel_main.html');
@@ -76,7 +76,7 @@ function nel_render_board_removal_interstitial($domain, $message, $continue_link
     $domain->renderInstance(new NellielTemplates\RenderCore());
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance(), null, $domain->id(),
+    nel_render_general_header($domain, null,
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Confirm Board Deletion')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, '/management/interstitials/board_removal.html');

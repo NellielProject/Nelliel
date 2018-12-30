@@ -15,7 +15,7 @@ function nel_render_file_filter_panel($user, $domain)
     $url_constructor = new \Nelliel\URLConstructor();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance(), null, null,
+    nel_render_general_header($domain, null,
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('File Filters')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/file_filter_panel.html');

@@ -149,7 +149,7 @@ function nel_render_thread_panel_expand($user, $domain, $thread_id)
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance(), null, $domain->id(),
+    nel_render_general_header($domain, null,
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Expanded Thread')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');

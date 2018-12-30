@@ -126,21 +126,20 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
     $domain->renderInstance()->appendHTMLFromDOM($dom);
 }
 
-function nel_render_general_header($render, $dotdot = null, $board_id = null, $extra_data = array())
+function nel_render_general_header($domain, $dotdot = null, $extra_data = array())
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'header.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'header.html');
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
-    $board_id = (!is_null($board_id)) ? $board_id : '';
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent(
-            'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $board_id . '\');};');
-    $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $board_id . '"));');
+            'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\');};');
+    $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $domain->id() . '"));');
 
     $dom->getElementById('top-logo-image')->remove();
     $dom->getElementById('top-logo-text')->remove();
@@ -168,16 +167,16 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
 
     $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
 
-    if (($session->isActive() || $session->inModmode($board_id)))
+    if (($session->isActive() || $session->inModmode($domain->id())))
     {
         if (isset($extra_data['header']))
         {
             $dom->getElementById('manage-header-text')->setContent($extra_data['header']);
         }
 
-        if ($board_id !== '')
+        if ($domain->id() !== '')
         {
-            $board_data = _gettext('Current Board:') . ' ' . $board_id;
+            $board_data = _gettext('Current Board:') . ' ' . $domain->id();
             $dom->getElementById('manage-board-header-data')->setContent($board_data);
         }
 
@@ -197,5 +196,5 @@ function nel_render_general_header($render, $dotdot = null, $board_id = null, $e
     }
 
     $translator->translateDom($dom);
-    $render->appendHTMLFromDOM($dom);
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
 }

@@ -18,8 +18,7 @@ function nel_render_general_footer($domain, $dotdot = null, $styles = false)
 
     $dom->getElementById('nelliel-version')->setContent(NELLIEL_VERSION);
     $dom->getElementById('js-ui')->modifyAttribute('src', $dotdot, 'before');
-    $locale = ($domain->id() === '') ? DEFAULT_LOCALE : $domain->setting('language');
-    $translator->translateDom($dom, $locale);
+    $translator->translateDom($dom, $domain->setting('language'));
     $dom->getElementById('timer-result')->setContent(round($domain->renderInstance()->endRenderTimer(), 4));
     $domain->renderInstance()->appendHTMLFromDOM($dom);
 }

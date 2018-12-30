@@ -5,7 +5,7 @@ function nel_render_main_panel($domain, $user)
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance(), null, null,
+    nel_render_general_header($domain, null,
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Options')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/main_panel.html');
@@ -156,7 +156,7 @@ function nel_render_main_board_panel($domain)
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance(), null, $domain->id(),
+    nel_render_general_header($domain, null,
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Options')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/main_board_panel.html');
