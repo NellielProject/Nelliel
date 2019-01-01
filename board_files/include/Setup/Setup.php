@@ -16,8 +16,29 @@ class Setup
     {
     }
 
+    public function generateConfigValues($current_values = null)
+    {
+        $generated = $generated ?? array();
+        $generated['tripcode_pepper'] = $generated['tripcode_pepper'] ?? base64_encode(random_bytes(32));
+        return $generated;
+    }
+
+    public function checkGenerated()
+    {
+        if (!file_exists(CONFIG_PATH . 'generated.php'))
+        {
+            $file_handler = new \Nelliel\FileHandler();
+            $generated = $this->generateConfigValues();
+            $prepend = "\n" . '// DO NOT EDIT THESE VALUES OR REMOVE THIS FILE UNLESS YOU HAVE A DAMN GOOD REASON';
+            $file_handler->writeInternalFile(CONFIG_PATH . 'generated.php',
+                    $prepend . "\n" . '$generated = ' . var_export($generated, true));
+        }
+    }
+
     public function checkAll($board_id)
     {
+        $this->checkGenerated();
+
         if ((SQLTYPE === 'MYSQL' || SQLTYPE === 'MARIADB') && !$this->checkForInnoDB())
         {
             nel_derp(102,
@@ -79,7 +100,8 @@ class Setup
         $sql_tables->createPostsTable($board_references['post_table'], $board_references['thread_table']);
         $sql_tables->createPostsTable($board_references['archive_post_table'], $board_references['archive_thread_table']);
         $sql_tables->createContentTable($board_references['content_table'], $board_references['post_table']);
-        $sql_tables->createContentTable($board_references['archive_content_table'], $board_references['archive_post_table']);
+        $sql_tables->createContentTable($board_references['archive_content_table'],
+                $board_references['archive_post_table']);
         $sql_tables->createBoardConfigTable($board_references['config_table'], true);
     }
 

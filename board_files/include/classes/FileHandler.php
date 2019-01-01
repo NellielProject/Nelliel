@@ -23,7 +23,6 @@ class FileHandler
             $this->createDirectory(dirname($file), $dir_chmod, true);
         }
 
-        if ($temp_move)
         {
             $file = uniqid();
         }
@@ -41,6 +40,16 @@ class FileHandler
         }
 
         return $result;
+    }
+
+    public function writeInternalFile($file, $output, $use_header = true, $temp_move = true)
+    {
+        if($use_header)
+        {
+            $output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} ' . $output;
+        }
+
+        return $this->writeFile($file, $output, FILE_PERM, true, DIRECTORY_PERM, $temp_move);
     }
 
     public function createDirectory($directory, $dir_chmod = DIRECTORY_PERM, $recursive = false)

@@ -64,7 +64,7 @@ class CacheHandler
             return; // TODO: Work out so this can be a proper error
         }
 
-        $header = (!empty($header)) ? $headeer : $this->default_header;
+        $header = (!empty($header)) ? $header : $this->default_header;
         $file_handler = new FileHandler();
         $file_handler->writeFile($path . $filename, $header . $content . $footer, $file_perm, true);
     }

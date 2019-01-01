@@ -71,11 +71,17 @@ $crypt_config['argon2_memory_cost'] = 1024;
 $crypt_config['argon2_time_cost'] = 2;
 $crypt_config['argon2_threads'] = 2;
 
+$setup = new \Nelliel\Setup\Setup();
+$setup->checkGenerated();
+
+require_once CONFIG_PATH . 'generated.php';
+
+define('TRIPCODE_PEPPER', $generated['tripcode_pepper']);
+
 require_once CONFIG_PATH . 'config.php';
 
 define('DEFAULTADMIN', $base_config['defaultadmin']);
 define('DEFAULTADMIN_PASS', $base_config['defaultadmin_pass']);
-define('TRIPCODE_PEPPER', $base_config['tripcode_pepper']);
 define('RUN_SETUP_CHECK', (bool)$base_config['run_setup_check']);
 define('DIRECTORY_PERM', $base_config['directory_perm']);
 define('FILE_PERM', $base_config['file_perm']);
@@ -111,3 +117,8 @@ define('NEL_PASSWORD_BCRYPT_COST', $crypt_config['password_bcrypt_cost']);
 define('NEL_PASSWORD_ARGON2_MEMORY_COST', $crypt_config['password_argon2_memory_cost']);
 define('NEL_PASSWORD_ARGON2_TIME_COST', $crypt_config['password_argon2_time_cost']);
 define('NEL_PASSWORD_ARGON2_THREADS', $crypt_config['password_argon2_threads']);
+
+unset($generated);
+unset($base_config);
+unset($db_config);
+unset($crypt_config);

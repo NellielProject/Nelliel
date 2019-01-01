@@ -20,10 +20,6 @@ if (!defined('NELLIEL_VERSION'))
 $base_config['defaultadmin'] = '';
 $base_config['defaultadmin_pass'] = '';
 
-// Pepper used for secure tripcodes
-// Change this setting ONCE when you do initial setup. Any further changes will alter the secure tripcode output.
-$base_config['tripcode_pepper'] = 'sodiumz';
-
 // The fallback default value for locale.
 // If a locale is specified elsewhere but no language file exists for it, Nelliel will use this value instead.
 // Locale should follow the standard format using ISO-639 and ISO-3166 codes.
