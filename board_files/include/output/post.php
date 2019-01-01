@@ -23,19 +23,19 @@ function nel_render_index_navigation($domain, $dom, $nav_pieces)
 
     foreach ($nav_pieces as $piece)
     {
-         $temp_page_nav = $dom->copyNode($nav_nodes['nav-link-container'], $bottom_nav, 'append');
-         $page_link = $temp_page_nav->doXPathQuery(".//a")->item(0);
-         $content = $piece['text'];
+        $temp_page_nav = $dom->copyNode($nav_nodes['nav-link-container'], $bottom_nav, 'append');
+        $page_link = $temp_page_nav->doXPathQuery(".//a")->item(0);
+        $content = $piece['text'];
 
-         if ($piece['link'] !== '')
-         {
-             $page_link->extSetAttribute('href', $piece['link'], 'attribute');
+        if ($piece['link'] !== '')
+        {
+            $page_link->extSetAttribute('href', $piece['link'], 'attribute');
             $page_link->setContent($content);
-         }
-         else
-         {
+        }
+        else
+        {
             $temp_page_nav->replaceChild($dom->createTextNode($content), $page_link);
-         }
+        }
     }
 
     $nav_nodes['nav-link-container']->remove();
@@ -83,7 +83,8 @@ function nel_render_post($domain, $gen_data, $dom)
 
     $board_web_path = '//' . $base_domain . '/' . rawurlencode($domain->reference('board_directory')) . '/';
     $pages_web_path = $board_web_path . rawurlencode($domain->reference('page_dir')) . '/';
-    $thread_page_web_path = $pages_web_path . $thread_content_id->thread_id . '/thread-' . $thread_content_id->thread_id . '.html';
+    $thread_page_web_path = $pages_web_path . $thread_content_id->thread_id . '/thread-' . $thread_content_id->thread_id .
+            '.html';
     $src_web_path = $board_web_path . rawurlencode($domain->reference('src_dir')) . '/';
     $thread_src_web_path = $src_web_path . $thread_content_id->thread_id . '/';
     $preview_web_path = $board_web_path . rawurlencode($domain->reference('thumb_dir')) . '/';
@@ -104,6 +105,10 @@ function nel_render_post($domain, $gen_data, $dom)
 
     $header_nodes['hide-post']->extSetAttribute('data-content-id', $post_content_id->getIDString());
     $header_nodes['hide-post']->changeID('hide-post-' . $post_content_id->getIDString());
+
+    $raw_poster_id = hash('sha256', @inet_ntop($post_data['ip_address']) . $thread_data['thread_id'] . TRIPCODE_PEPPER);
+    $poster_id = substr($raw_poster_id, 0, $domain->setting('poster_id_length'));
+    $header_nodes['poster-id']->setContent('ID: ' . $poster_id);
 
     if ($session->inModmode($domain->id()) && !$domain->renderActive())
     {
@@ -160,7 +165,6 @@ function nel_render_post($domain, $gen_data, $dom)
         $header_nodes['modmode-ban-delete-link']->extSetAttribute('href',
                 '?module=threads-admin&board_id=' . $domain->id() . '&action=ban-delete&content-id=' .
                 $temp_content_id->getIDString() . '&ban_type=POST&ban_ip=' . rawurlencode($ip) . '&modmode=true');
-
     }
     else
     {
@@ -299,7 +303,7 @@ function nel_render_post($domain, $gen_data, $dom)
             {
                 $file_nodes['modmode-delete-link']->extSetAttribute('href',
                         '?module=threads-admin&board_id=' . $domain->id() . '&action=delete&content-id=' .
-                $file_content_id->getIDString() . '&modmode=true');
+                        $file_content_id->getIDString() . '&modmode=true');
             }
             else
             {
@@ -417,7 +421,8 @@ function nel_render_post($domain, $gen_data, $dom)
                     {
                         $front_end_data = new \Nelliel\FrontEndData(nel_database());
                         $icon_set = $front_end_data->filetypeIconSet($domain->setting('filetype_icon_set_id'));
-                        $icons_web_path = '//' . $base_domain . '/' . WEB_FILES . 'icon_sets/filetype/' . $icon_set['directory'] . '/';
+                        $icons_web_path = '//' . $base_domain . '/' . WEB_FILES . 'icon_sets/filetype/' .
+                                $icon_set['directory'] . '/';
                         $icons_file_path = FILETYPE_ICON_PATH . $icon_set['directory'] . '/';
                         $format_icon = utf8_strtolower($file['format']) . '.png';
                         $type_icon = utf8_strtolower($file['type']) . '.png';
@@ -432,7 +437,7 @@ function nel_render_post($domain, $gen_data, $dom)
                             $file['preview_height'] = ($domain->setting('max_height') < 128) ? $domain->setting(
                                     'max_height') : '128';
                         }
-                        else if (file_exists($icons_file_path  . 'generic/' . $type_icon))
+                        else if (file_exists($icons_file_path . 'generic/' . $type_icon))
                         {
                             $file['has_preview'] = true;
                             $file['preview_location'] = $icons_web_path . '/generic/' . $type_icon;

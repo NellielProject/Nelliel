@@ -31,7 +31,7 @@ class Setup
             $generated = $this->generateConfigValues();
             $prepend = "\n" . '// DO NOT EDIT THESE VALUES OR REMOVE THIS FILE UNLESS YOU HAVE A DAMN GOOD REASON';
             $file_handler->writeInternalFile(CONFIG_PATH . 'generated.php',
-                    $prepend . "\n" . '$generated = ' . var_export($generated, true));
+                    $prepend . "\n" . '$generated = ' . var_export($generated, true) . ';');
         }
     }
 

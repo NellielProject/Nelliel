@@ -5,9 +5,10 @@ define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('BASE_PATH', realpath('./') . '/'); // Base path for script
 define('FILES_PATH', BASE_PATH . 'board_files/'); // Base board files path
 define('INCLUDE_PATH', FILES_PATH . 'include/'); // Base include files path
+define('LIBRARY_PATH', FILES_PATH . 'libraries/'); // Libraries path
 
-require_once INCLUDE_PATH . 'initializations.php';
 require_once INCLUDE_PATH . 'autoload.php';
+require_once INCLUDE_PATH . 'initializations.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
 require_once LIBRARY_PATH . 'random_compat/lib/random.php';
 require_once INCLUDE_PATH . 'database.php';

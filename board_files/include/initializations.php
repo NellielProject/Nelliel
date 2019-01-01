@@ -39,7 +39,6 @@ define('CAPTCHA_TABLE', 'nelliel_captcha'); // CAPTCHA data
 define('VERSION_TABLE', 'nelliel_version'); // Version data
 
 define('CONFIG_PATH', BASE_PATH . 'configuration/'); // Base config path
-define('LIBRARY_PATH', FILES_PATH . 'libraries/'); // Libraries path
 define('CACHE_PATH', FILES_PATH . 'cache/'); // Base cache path
 define('WEB_PATH', BASE_PATH . WEB_FILES); // Base web path
 define('TEMPLATE_PATH', FILES_PATH . 'templates/'); // Base template path
@@ -70,13 +69,6 @@ $crypt_config['password_bcrypt_cost'] = 12;
 $crypt_config['argon2_memory_cost'] = 1024;
 $crypt_config['argon2_time_cost'] = 2;
 $crypt_config['argon2_threads'] = 2;
-
-$setup = new \Nelliel\Setup\Setup();
-$setup->checkGenerated();
-
-require_once CONFIG_PATH . 'generated.php';
-
-define('TRIPCODE_PEPPER', $generated['tripcode_pepper']);
 
 require_once CONFIG_PATH . 'config.php';
 
@@ -117,6 +109,13 @@ define('NEL_PASSWORD_BCRYPT_COST', $crypt_config['password_bcrypt_cost']);
 define('NEL_PASSWORD_ARGON2_MEMORY_COST', $crypt_config['password_argon2_memory_cost']);
 define('NEL_PASSWORD_ARGON2_TIME_COST', $crypt_config['password_argon2_time_cost']);
 define('NEL_PASSWORD_ARGON2_THREADS', $crypt_config['password_argon2_threads']);
+
+$setup = new \Nelliel\Setup\Setup();
+$setup->checkGenerated();
+
+require_once CONFIG_PATH . 'generated.php';
+
+define('TRIPCODE_PEPPER', $generated['tripcode_pepper']);
 
 unset($generated);
 unset($base_config);

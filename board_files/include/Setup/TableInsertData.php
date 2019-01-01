@@ -405,6 +405,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'use_captcha', '0', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'use_recaptcha', '0', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'string', 'recaptcha_type', 'CHECKBOX', 1, 0]);
+        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'integer', 'poster_id_length', '6', 0, 0]);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'boolean', 'graphics', '1', 0, 0]);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'boolean', 'jpeg', '1', 0, 0]);
         $database->executePrepared($prepared, ['filetype_enable', 'nelliel', 'graphics', 'boolean', 'gif', '1', 0, 0]);
