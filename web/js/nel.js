@@ -9,8 +9,9 @@ function dataBin() {
     ;
 }
 
-nelliel.setup.doImportantStuff = function(board_id) {
+nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     dataBin.board_id = board_id;
+    dataBin.is_modmode = is_modmode;
     dataBin.hidden_threads_id = "hidden_threads_" + board_id;
     dataBin.hidden_posts_id = "hidden_posts_" + board_id;
     nelliel.setup.localStorageInitCheck();

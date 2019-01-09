@@ -17,7 +17,8 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent(
-            'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\');};');
+            'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\', \'' .
+            $session->inModmode($domain->id()) . '\');};');
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $domain->id() . '"));');
 
     if ($domain->setting('use_honeypot'))
@@ -138,7 +139,8 @@ function nel_render_general_header($domain, $dotdot = null, $extra_data = array(
     $link_elements = $head_element->getElementsByTagName('link');
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent(
-            'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\');};');
+            'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\', \'' .
+            $session->inModmode($domain->id()) . '\');};');
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $domain->id() . '"));');
 
     $dom->getElementById('top-logo-image')->remove();
