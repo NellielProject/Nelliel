@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 require_once INCLUDE_PATH . 'output/posting_form.php';
 require_once INCLUDE_PATH . 'output/post.php';
 
-function nel_thread_generator($domain, $write, $thread_id)
+function nel_thread_generator($domain, $write, $thread_id, $command = null)
 {
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
@@ -28,7 +28,8 @@ function nel_thread_generator($domain, $write, $thread_id)
     $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('thread_table') . '" WHERE "thread_id" = ?');
     $gen_data['thread'] = $database->executePreparedFetch($prepared, array($thread_id), PDO::FETCH_ASSOC);
     $prepared = $database->prepare(
-            'SELECT * FROM "' . $domain->reference('post_table') . '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+            'SELECT * FROM "' . $domain->reference('post_table') .
+            '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
     $treeline = $database->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
 
     if (empty($treeline))
@@ -157,15 +158,36 @@ function nel_thread_generator($domain, $write, $thread_id)
     {
         $file_handler->writeFile($domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '.html',
                 $domain->renderInstance()->outputRenderSet(), FILE_PERM, true);
-        $file_handler->writeFile($domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-expand.html',
+        $file_handler->writeFile(
+                $domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-expand.html',
                 $domain->renderInstance()->outputRenderSet('expand'), FILE_PERM, true);
-        $file_handler->writeFile($domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-collapse.html',
+        $file_handler->writeFile(
+                $domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-collapse.html',
                 $domain->renderInstance()->outputRenderSet('collapse'), FILE_PERM, true);
-        $json_thread->writeStoredData($domain->reference('page_path') . $thread_id . '/', sprintf('thread-%d', $thread_id));
+        $json_thread->writeStoredData($domain->reference('page_path') . $thread_id . '/',
+                sprintf('thread-%d', $thread_id));
     }
     else
     {
-        echo $domain->renderInstance()->outputRenderSet();
+
+        switch ($command)
+        {
+            case 'view-thread':
+                echo $domain->renderInstance()->outputRenderSet();
+                break;
+
+            case 'expand-thread':
+                echo $domain->renderInstance()->outputRenderSet('expand');
+                break;
+
+            case 'collapse-thread':
+                echo $domain->renderInstance()->outputRenderSet('collapse');
+                break;
+
+            default:
+                echo $domain->renderInstance()->outputRenderSet();
+        }
+
         nel_clean_exit();
     }
 }

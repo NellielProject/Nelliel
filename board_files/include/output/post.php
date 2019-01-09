@@ -253,6 +253,11 @@ function nel_render_post($domain, $gen_data, $dom)
     else
     {
         $header_nodes['expand-thread']->extSetAttribute('data-content-id', $thread_content_id->getIDString());
+
+        if ($session->inModmode($domain->id()) && !$domain->renderActive())
+        {
+            $header_nodes['expand-thread']->modifyAttribute('data-command', '-render', 'after');
+        }
     }
 
     if ($response || !$thread_data['sticky'])

@@ -47,7 +47,17 @@ function nel_module_dispatch($inputs, $domain)
 
                 case 'view-thread':
                     require_once INCLUDE_PATH . 'output/thread_generation.php';
-                    nel_thread_generator($domain, false, intval($inputs['section']));
+                    nel_thread_generator($domain, false, intval($inputs['section']), $inputs['action']);
+                    break;
+
+                case 'expand-thread':
+                    require_once INCLUDE_PATH . 'output/thread_generation.php';
+                    nel_thread_generator($domain, false, intval($inputs['section']), $inputs['action']);
+                    break;
+
+                case 'collapse-thread':
+                    require_once INCLUDE_PATH . 'output/thread_generation.php';
+                    nel_thread_generator($domain, false, intval($inputs['section']), $inputs['action']);
                     break;
             }
 

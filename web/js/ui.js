@@ -101,7 +101,7 @@ nelliel.ui.showHideFileMeta = function(element) {
     nelliel.ui.switchDataCommand(element, "show-file-meta", "hide-file-meta");
 }
 
-nelliel.ui.expandCollapseThread = function(element, command) {
+nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     var target_element = document.getElementById("thread-expand-" + content_id.id_string);
 
@@ -109,13 +109,23 @@ nelliel.ui.expandCollapseThread = function(element, command) {
         return;
     }
 
-    var url = "threads/" + content_id.thread_id + "/thread-" + content_id.thread_id + "-" + command.split('-')[0] + ".html";
+    if(dynamic) {
+        var url = "imgboard.php?module=render&action=" + command.split('-')[0] + "-thread&board_id=" + dataBin.board_id + "&section=" + content_id.thread_id;
+        var command1 = "expand-thread-render";
+        var command2 = "collapse-thread-render";
+    }
+    else {
+        var url = "threads/" + content_id.thread_id + "/thread-" + content_id.thread_id + "-" + command.split('-')[0] + ".html";
+        var command1 = "expand-thread";
+        var command2 = "collapse-thread";
+    }
+
     var request = new XMLHttpRequest();
     request.open('GET', url);
     request.onload = function() {
         if (request.status === 200) {
             nelliel.ui.swapContentAttribute(element, "data-alt-visual");
-            nelliel.ui.switchDataCommand(element, "expand-thread", "collapse-thread");
+            nelliel.ui.switchDataCommand(element, command1, command2);
             target_element.innerHTML = request.responseText;
             nelliel.ui.applyHidePostThread();
         }

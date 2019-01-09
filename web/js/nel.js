@@ -75,6 +75,8 @@ nelliel.events.processPostClicks = function(event) {
 
         if (command === "expand-thread" || command === "collapse-thread") {
             nelliel.ui.expandCollapseThread(event.target, command);
+        } else if (command === "expand-thread-render" || command === "collapse-thread-render") {
+            nelliel.ui.expandCollapseThread(event.target, command, true);
         } else if (command === "change-style") {
             changeBoardStyle(dataBin.board_id, event.target.getAttribute("data-id"));
         } else if (command === "link-post") {
