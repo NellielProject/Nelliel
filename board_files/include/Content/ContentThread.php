@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-class ContentThread extends ContentBase
+class ContentThread extends ContentHandler
 {
 
     function __construct($database, $content_id, $domain, $db_load = false)

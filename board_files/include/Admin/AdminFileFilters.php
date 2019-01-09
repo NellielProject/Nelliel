@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/file_filter_panel.php';
 
-class AdminFileFilters extends AdminBase
+class AdminFileFilters extends AdminHandler
 {
     private $domain;
 

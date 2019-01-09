@@ -11,7 +11,7 @@ require_once INCLUDE_PATH . 'output/management/manage_boards.php';
 
 use PDO;
 
-class AdminBoards extends AdminBase
+class AdminBoards extends AdminHandler
 {
     private $domain;
 

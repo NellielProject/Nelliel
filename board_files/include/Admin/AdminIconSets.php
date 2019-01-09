@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/icon_sets_panel.php';
 
-class AdminIconSets extends AdminBase
+class AdminIconSets extends AdminHandler
 {
     private $domain;
 

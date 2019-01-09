@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/users_panel.php';
 
-class AdminUsers extends AdminBase
+class AdminUsers extends AdminHandler
 {
     private $domain;
     private $user_id;

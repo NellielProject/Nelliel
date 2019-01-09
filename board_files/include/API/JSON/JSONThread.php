@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-class JSONThread extends JSONBase
+class JSONThread extends JSONOutput
 {
 
     function __construct($domain, $file_handler)

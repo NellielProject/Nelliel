@@ -11,7 +11,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/filetypes_panel.php';
 
-class AdminFiletypes extends AdminBase
+class AdminFiletypes extends AdminHandler
 {
     private $domain;
 

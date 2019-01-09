@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-class AuthUser extends AuthBase
+class AuthUser extends AuthHandler
 {
     public $user_roles = array();
 

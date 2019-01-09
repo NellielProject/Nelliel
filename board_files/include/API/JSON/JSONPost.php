@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-class JSONPost extends JSONBase
+class JSONPost extends JSONOutput
 {
 
     function __construct($domain, $file_handler)

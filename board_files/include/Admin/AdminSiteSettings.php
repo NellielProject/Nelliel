@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/site_settings_panel.php';
 
-class AdminSiteSettings extends AdminBase
+class AdminSiteSettings extends AdminHandler
 {
     private $domain;
 

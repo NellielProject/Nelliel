@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/styles_panel.php';
 
-class AdminStyles extends AdminBase
+class AdminStyles extends AdminHandler
 {
     private $domain;
 

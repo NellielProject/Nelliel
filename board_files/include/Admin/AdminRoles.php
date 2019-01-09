@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/roles_panel.php';
 
-class AdminRoles extends AdminBase
+class AdminRoles extends AdminHandler
 {
     private $domain;
     private $role_id;

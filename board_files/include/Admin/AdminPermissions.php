@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/permissions_panel.php';
 
-class AdminPermissions extends AdminBase
+class AdminPermissions extends AdminHandler
 {
     private $domain;
 

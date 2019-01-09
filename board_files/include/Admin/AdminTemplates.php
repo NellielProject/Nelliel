@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/templates_panel.php';
 
-class AdminTemplates extends AdminBase
+class AdminTemplates extends AdminHandler
 {
     private $domain;
 

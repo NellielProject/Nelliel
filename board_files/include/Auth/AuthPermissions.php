@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-class AuthPermissions extends AuthBase
+class AuthPermissions extends AuthHandler
 {
 
     function __construct($database, $role_id)

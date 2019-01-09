@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/reports_panel.php';
 
-class AdminReports extends AdminBase
+class AdminReports extends AdminHandler
 {
     private $domain;
     private $defaults = false;

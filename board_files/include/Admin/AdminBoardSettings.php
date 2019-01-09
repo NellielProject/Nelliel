@@ -11,7 +11,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/board_settings_panel.php';
 
-class AdminBoardSettings extends AdminBase
+class AdminBoardSettings extends AdminHandler
 {
     private $domain;
     private $defaults = false;

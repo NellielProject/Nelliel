@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/ban_panel.php';
 
-class AdminBans extends AdminBase
+class AdminBans extends AdminHandler
 {
     private $domain;
     private $ban_hammer;

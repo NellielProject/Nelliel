@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/management/thread_panel.php';
 
-class AdminThreads extends AdminBase
+class AdminThreads extends AdminHandler
 {
     private $domain;
 
