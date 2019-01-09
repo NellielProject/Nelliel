@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-abstract class AuthBase
+abstract class AuthHandler
 {
     public $database;
     public $auth_data = array();

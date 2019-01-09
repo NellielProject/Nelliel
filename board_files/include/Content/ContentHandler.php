@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-abstract class ContentBase
+abstract class ContentHandler
 {
     public $content_id;
     public $database;

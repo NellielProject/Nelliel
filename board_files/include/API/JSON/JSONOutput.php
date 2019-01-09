@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-abstract class JSONBase
+abstract class JSONOutput
 {
     protected $data_array = array();
     protected $file_handler;
