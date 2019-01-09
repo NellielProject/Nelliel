@@ -64,6 +64,7 @@ Contains information about a post.
 |`poster_name`     |`string`  |text                 |Yes     |Name of the poster.|
 |`tripcode`        |`string`  |text                 |Yes     |Tripcode.|
 |`secure_tripcode` |`string`  |text                 |Yes     |Secure tripcode.|
+|`capcode_text`    |`string`  |text                 |Yes     |Capcode text. May contain HTML.|
 |`email`           |`string`  |text                 |Yes     |E-Mail address.|
 |`subject`         |`string`  |text                 |Yes     |Subject of the post.|
 |`comment`         |`string`  |text                 |Yes     |Commentary. May contain HTML or other formatting.|

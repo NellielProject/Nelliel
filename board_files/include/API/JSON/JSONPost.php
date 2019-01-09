@@ -19,6 +19,7 @@ class JSONPost extends JSONOutput
 
     public function prepareData($data, $store = false)
     {
+        $authorization = new \Nelliel\Auth\Authorization(nel_database());
         $post_array = array();
         $post_array['post_number'] = nel_cast_to_datatype($data['post_number'], 'integer');
         $post_array['parent_thread'] = nel_cast_to_datatype($data['parent_thread'], 'integer');
@@ -26,6 +27,8 @@ class JSONPost extends JSONOutput
         $this->addIfNotEmpty($post_array, 'poster_name', $data['poster_name'], 'string');
         $this->addIfNotEmpty($post_array, 'tripcode', $data['tripcode'], 'string');
         $this->addIfNotEmpty($post_array, 'secure_tripcode', $data['secure_tripcode'], 'string');
+        $capcode_text = (!empty($data['mod_post_id'])) ? $authorization->getRole($data['mod_post_id'])->auth_data['capcode_text'] : '';
+        $this->addIfNotEmpty($post_array, 'capcode_text', $capcode_text, 'string');
         $this->addIfNotEmpty($post_array, 'email', $data['email'], 'string');
         $this->addIfNotEmpty($post_array, 'subject', $data['subject'], 'string');
         $this->addIfNotEmpty($post_array, 'comment', $data['comment'], 'string');
