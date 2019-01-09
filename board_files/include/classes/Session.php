@@ -12,6 +12,7 @@ class Session
     private static $initialized = false;
     private static $session_active = false;
     private static $in_modmode = false;
+    private static $modmode;
     private static $user;
     private $session_name = 'NellielSession';
     private $authorization;
@@ -137,6 +138,7 @@ class Session
 
         $_SESSION['last_activity'] = time();
         self::$in_modmode = (isset($_GET['modmode'])) ? (bool) $_GET['modmode'] : false;
+        self::$modmode = new ModMode();
         return true;
     }
 
@@ -159,6 +161,11 @@ class Session
     public function isActive()
     {
         return self::$session_active;
+    }
+
+    public function modmode()
+    {
+        return self::$modmode;
     }
 
     public function inModmode($board_id = '')

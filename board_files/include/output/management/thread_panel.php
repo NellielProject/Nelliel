@@ -14,13 +14,13 @@ function nel_render_thread_panel_main($user, $domain)
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain->renderInstance(), null, $domain->id(),
+    nel_render_general_header($domain, null,
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Threads')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/thread_panel.html');
     $thread_data = $database->executeFetchAll(
-            'SELECT * FROM "' . $domain->reference('thread_table') .
-            '" ORDER BY "sticky" DESC, "last_update" DESC', PDO::FETCH_ASSOC);
+            'SELECT * FROM "' . $domain->reference('thread_table') . '" ORDER BY "sticky" DESC, "last_update" DESC',
+            PDO::FETCH_ASSOC);
     $thread_list_table = $dom->getElementById('thread-list');
     $thread_row = $dom->getElementById('thread-row-');
     $i = 0;
@@ -30,7 +30,8 @@ function nel_render_thread_panel_main($user, $domain)
         $temp_thread_row = $thread_row->cloneNode(true);
         $temp_thread_row->changeId('thread_row-' . $thread['thread_id']);
 
-        $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('post_table') . '" WHERE "post_number" = ?');
+        $prepared = $database->prepare(
+                'SELECT * FROM "' . $domain->reference('post_table') . '" WHERE "post_number" = ?');
         $prepared->bindValue(1, $thread['first_post'], PDO::PARAM_INT);
         $prepared->execute();
         $op_post = $prepared->fetch(PDO::FETCH_ASSOC);
@@ -55,15 +56,13 @@ function nel_render_thread_panel_main($user, $domain)
         if ($thread['sticky'] == 1)
         {
             $sticky_link->extSetAttribute('href',
-                    '?module=threads-admin&board_id=' . $domain->id() . '&action=unsticky&content-id=' .
-                    $base_content_id);
+                    '?module=threads-admin&board_id=' . $domain->id() . '&action=unsticky&content-id=' . $base_content_id);
             $sticky_link->setContent(_gettext('Unsticky Thread'));
         }
         else
         {
             $sticky_link->extSetAttribute('href',
-                    '?module=threads-admin&board_id=' . $domain->id() . '&action=sticky&content-id=' .
-                    $base_content_id);
+                    '?module=threads-admin&board_id=' . $domain->id() . '&action=sticky&content-id=' . $base_content_id);
             $sticky_link->setContent(_gettext('Sticky Thread'));
         }
 
@@ -73,23 +72,20 @@ function nel_render_thread_panel_main($user, $domain)
         if ($thread['locked'] == 1)
         {
             $lock_link->extSetAttribute('href',
-                    '?module=threads-admin&board_id=' . $domain->id() . '&action=unlock&content-id=' .
-                    $base_content_id);
+                    '?module=threads-admin&board_id=' . $domain->id() . '&action=unlock&content-id=' . $base_content_id);
             $lock_link->setContent(_gettext('Unlock Thread'));
         }
         else
         {
             $lock_link->extSetAttribute('href',
-                    '?module=threads-admin&board_id=' . $domain->id() . '&action=lock&content-id=' .
-                    $base_content_id);
+                    '?module=threads-admin&board_id=' . $domain->id() . '&action=lock&content-id=' . $base_content_id);
             $lock_link->setContent(_gettext('Lock Thread'));
         }
 
         $delete_link = $temp_thread_row->getElementById('delete-link-');
         $delete_link->changeId('delete-link-' . $thread['thread_id']);
         $delete_link->extSetAttribute('href',
-                '?module=threads-admin&board_id=' . $domain->id() . '&action=delete&content-id=' .
-                $base_content_id);
+                '?module=threads-admin&board_id=' . $domain->id() . '&action=delete&content-id=' . $base_content_id);
         $delete_link->setContent(_gettext('Delete Thread'));
 
         $thread_last_update = $temp_thread_row->getElementById('thread-last-update-');
@@ -99,7 +95,8 @@ function nel_render_thread_panel_main($user, $domain)
         $thread_subject_link = $temp_thread_row->getElementById('thread-subject-link-');
         $thread_subject_link->setContent($op_post['subject']);
         $thread_subject_link->extSetAttribute('href',
-                $domain->reference('page_dir') . '/' . $thread['thread_id'] . '/' . $thread['thread_id'] . '.html', 'none');
+                $domain->reference('page_dir') . '/' . $thread['thread_id'] . '/' . $thread['thread_id'] . '.html',
+                'none');
         $thread_subject_link->changeId('thread-subject-link-' . $thread['thread_id']);
 
         $thread_op_name = $temp_thread_row->getElementById('thread-op-name-');
@@ -155,7 +152,9 @@ function nel_render_thread_panel_expand($user, $domain, $thread_id)
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
     $dom->getElementById('thread-list-form')->extSetAttribute('action',
             PHP_SELF . '?module=threads&action=update&board_id=' . $domain->id());
-    $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('post_table') . '" WHERE "parent_thread" = ? ORDER BY "post_time" DESC');
+    $prepared = $database->prepare(
+            'SELECT * FROM "' . $domain->reference('post_table') .
+            '" WHERE "parent_thread" = ? ORDER BY "post_time" DESC');
     $post_data = $database->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
     $post_list_table = $dom->getElementById('post-list');
     $post_row = $dom->getElementById('post-row-');
@@ -174,14 +173,12 @@ function nel_render_thread_panel_expand($user, $domain, $thread_id)
         $delete_link = $temp_post_row->getElementById('delete-link-');
         $delete_link->changeId('delete-link-' . $post['post_number']);
         $delete_link->extSetAttribute('href',
-                '?module=threads-admin&board_id=' . $domain->id() . '&action=delete&content-id=' .
-                $base_content_id);
+                '?module=threads-admin&board_id=' . $domain->id() . '&action=delete&content-id=' . $base_content_id);
         $delete_link->setContent(_gettext('Delete Post'));
         $sticky_link = $temp_post_row->getElementById('sticky-link-');
         $sticky_link->changeId('sticky-link-' . $post['post_number']);
         $sticky_link->extSetAttribute('href',
-                '?module=threads-admin&board_id=' . $domain->id() . '&action=sticky&content-id=' .
-                $base_content_id);
+                '?module=threads-admin&board_id=' . $domain->id() . '&action=sticky&content-id=' . $base_content_id);
         $sticky_link->setContent(_gettext('Sticky Post'));
         $post_parent_thread = $temp_post_row->getElementById('post-thread-');
         $post_parent_thread->setContent($post['parent_thread']);
@@ -192,7 +189,8 @@ function nel_render_thread_panel_expand($user, $domain, $thread_id)
         $post_subject_link = $temp_post_row->getElementById('post-subject-link-');
         $post_subject_link->setContent($post['subject']);
         $post_subject_link->extSetAttribute('href',
-                $domain->reference('page_dir') . '/' . $post['parent_thread'] . '/' . $post['post_number'] . '.html', 'none');
+                $domain->reference('page_dir') . '/' . $post['parent_thread'] . '/' . $post['post_number'] . '.html',
+                'none');
         $post_subject_link->changeId('post-subject-link-' . $post['post_number']);
 
         $post_name = $temp_post_row->getElementById('post-name-');
