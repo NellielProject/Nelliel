@@ -65,6 +65,8 @@ class AdminThreads extends AdminHandler
 
     public function renderPanel($user)
     {
+        $this->domain->renderInstance();
+
         if (isset($_GET['action']) && $_GET['action'] === 'expand-thread')
         {
             $content_id = new \Nelliel\ContentID($_GET['content-id']);
@@ -121,9 +123,7 @@ class AdminThreads extends AdminHandler
             $file->remove();
         }
 
-        $regen = new \Nelliel\Regen();
-        $regen->threads($this->domain, true, $content_id->thread_id);
-        $regen->index($this->domain);
+        $this->regenThread($content_id->thread_id, true);
     }
 
     public function sticky($user)
@@ -150,6 +150,8 @@ class AdminThreads extends AdminHandler
             $thread = new \Nelliel\Content\ContentThread($this->database, $content_id, $this->domain, true);
             $thread->sticky();
         }
+
+        $this->regenThread($content_id->thread_id, true);
     }
 
     public function unsticky($user)
@@ -157,6 +159,7 @@ class AdminThreads extends AdminHandler
         $content_id = new \Nelliel\ContentID($_GET['content-id']);
         $thread = new \Nelliel\Content\ContentThread($this->database, $content_id, $this->domain, true);
         $thread->sticky();
+        $this->regenThread($content_id->thread_id, true);
     }
 
     public function lock($user)
@@ -164,6 +167,7 @@ class AdminThreads extends AdminHandler
         $content_id = new \Nelliel\ContentID($_GET['content-id']);
         $thread = new \Nelliel\Content\ContentThread($this->database, $content_id, $this->domain, true);
         $thread->lock();
+        $this->regenThread($content_id->thread_id, true);
     }
 
     public function unlock($user)
@@ -171,5 +175,17 @@ class AdminThreads extends AdminHandler
         $content_id = new \Nelliel\ContentID($_GET['content-id']);
         $thread = new \Nelliel\Content\ContentThread($this->database, $content_id, $this->domain, true);
         $thread->lock();
+        $this->regenThread($content_id->thread_id, true);
+    }
+
+    public function regenThread($thread_id, $regen_index = false)
+    {
+        $regen = new \Nelliel\Regen();
+        $regen->threads($this->domain, true, $thread_id);
+
+        if($regen_index)
+        {
+            $regen->index($this->domain);
+        }
     }
 }

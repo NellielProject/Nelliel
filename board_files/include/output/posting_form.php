@@ -39,7 +39,7 @@ function nel_render_posting_form($domain, $response_to, $dotdot = null)
 
     $dom->getElementById('posting-form-responseto')->extSetAttribute('value', $response_to);
 
-    if (!$session->inModmode($domain->id()))
+    if (!$session->inModmode($domain->id()) || $domain->renderActive())
     {
         $posting_form_nodes['posting-form-staff']->remove();
     }
