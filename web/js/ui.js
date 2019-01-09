@@ -1,5 +1,5 @@
 nelliel.ui.hideShowThread = function(element, command) {
-    var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
+    var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     var post_files = document.getElementById("files-" + content_id.id_string);
     var post_contents = document.getElementById("post-contents-" + content_id.id_string);
     var thread_container = document.getElementById("thread-expand-" + "nci_" + content_id.thread_id + "_0_0");
