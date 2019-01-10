@@ -30,7 +30,7 @@ function nel_render_derp($diagnostic, $domain_id = '')
         else
         {
             $return_link = $url_constructor->dynamic(PHP_SELF,
-                    ['module' => 'render', 'action' => 'view-index', 'section' => '0', 'board_id' => $domain->id(),
+                    ['module' => 'render', 'action' => 'view-index', 'index' => '0', 'board_id' => $domain->id(),
                         'modmode' => 'true']);
         }
     }

@@ -207,7 +207,7 @@ function nel_render_main_board_panel($domain)
     {
         $modmode_elements = $modmode->getElementsByAttributeName('data-parse-id', true);
         $modmode_elements['modmode-link']->extSetAttribute('href',
-                PHP_SELF . '?module=render&action=view-index&section=0&board_id=' . $domain->id() . '&modmode=true');
+                PHP_SELF . '?module=render&action=view-index&index=0&board_id=' . $domain->id() . '&modmode=true');
     }
     else
     {

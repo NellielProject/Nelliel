@@ -162,7 +162,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         $gen_data['posts_ending'] = true;
         $page_count = (int) ceil($counttree / $domain->setting('threads_per_page'));
         $pages = array();
-        $modmode_base = 'imgboard.php?module=render&action=view-index&modmode=true&section=';
+        $modmode_base = 'imgboard.php?module=render&action=view-index&modmode=true&index=';
         $index_filename = 'index' . PHP_EXT;
         $index_format = $domain->setting('index_filename_format');
         $last_page = $page_count - 1;

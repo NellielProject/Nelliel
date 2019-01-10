@@ -238,7 +238,7 @@ function nel_render_post($domain, $gen_data, $dom)
         {
             $header_nodes['reply-to-link']->extSetAttribute('href',
                     PHP_SELF . '?module=render&action=view-thread&content-id=' . $thread_content_id->getIDString() .
-                    '&section=' . $thread_content_id->thread_id . '&board_id=' . $domain->id() . '&modmode=true');
+                    '&thread=' . $thread_content_id->thread_id . '&board_id=' . $domain->id() . '&modmode=true');
         }
         else
         {

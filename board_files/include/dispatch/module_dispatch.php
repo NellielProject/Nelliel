@@ -31,6 +31,8 @@ function nel_module_dispatch($inputs, $domain)
             break;
 
         case 'render':
+            $inputs['index'] = $_GET['index'] ?? null;
+            $inputs['thread'] = $_GET['thread'] ?? null;
             $session = new \Nelliel\Session($authorization, true);
 
             if(!$session->inModmode($domain->id()))
@@ -42,22 +44,22 @@ function nel_module_dispatch($inputs, $domain)
             {
                 case 'view-index':
                     require_once INCLUDE_PATH . 'output/main_generation.php';
-                    nel_main_thread_generator($domain, 0, false, intval($inputs['section']));
+                    nel_main_thread_generator($domain, 0, false, intval($inputs['index']));
                     break;
 
                 case 'view-thread':
                     require_once INCLUDE_PATH . 'output/thread_generation.php';
-                    nel_thread_generator($domain, false, intval($inputs['section']), $inputs['action']);
+                    nel_thread_generator($domain, false, intval($inputs['thread']), $inputs['action']);
                     break;
 
                 case 'expand-thread':
                     require_once INCLUDE_PATH . 'output/thread_generation.php';
-                    nel_thread_generator($domain, false, intval($inputs['section']), $inputs['action']);
+                    nel_thread_generator($domain, false, intval($inputs['thread']), $inputs['action']);
                     break;
 
                 case 'collapse-thread':
                     require_once INCLUDE_PATH . 'output/thread_generation.php';
-                    nel_thread_generator($domain, false, intval($inputs['section']), $inputs['action']);
+                    nel_thread_generator($domain, false, intval($inputs['thread']), $inputs['action']);
                     break;
             }
 
@@ -163,7 +165,7 @@ function nel_module_dispatch($inputs, $domain)
                         $url_constructor = new \Nelliel\URLConstructor();
                         $url = $url_constructor->dynamic(PHP_SELF,
                                 ['module' => 'render', 'action' => 'view-thread',
-                                    'section' => $fgsfds->getCommandData('noko', 'topic'),
+                                    'thread' => $fgsfds->getCommandData('noko', 'topic'),
                                     'board_id' => $inputs['board_id']]);
 
                         nel_redirect($url, 2);
@@ -182,7 +184,7 @@ function nel_module_dispatch($inputs, $domain)
                     {
                         $url_constructor = new \Nelliel\URLConstructor();
                         $url = $url_constructor->dynamic(PHP_SELF,
-                                ['module' => 'render', 'action' => 'view-index', 'section' => '0',
+                                ['module' => 'render', 'action' => 'view-index', 'index' => '0',
                                     'board_id' => $inputs['board_id']]);
 
                         nel_redirect($url, 2);
@@ -225,7 +227,7 @@ function nel_module_dispatch($inputs, $domain)
                     if ($session->isActive() && $session->inModmode($inputs['board_id']))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                                '?module=render&action=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
+                                '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';
                     }
                     else
                     {
@@ -242,7 +244,7 @@ function nel_module_dispatch($inputs, $domain)
                     if ($session->isActive() && $session->inModmode($inputs['board_id']))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
-                                '?module=render&action=view-index&section=0&board_id=' . $inputs['board_id'] . '">';
+                                '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';
                     }
                     else
                     {

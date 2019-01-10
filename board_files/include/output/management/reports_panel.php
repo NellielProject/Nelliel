@@ -59,7 +59,7 @@ function nel_render_reports_panel($user, $domain)
         if ($content_id->isThread())
         {
             $content_link = $url_constructor->dynamic($base_path,
-                    ['module' => 'render', 'action' => 'view-thread', 'section' => $content_id->thread_id,
+                    ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
                         'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                         'modmode' => 'true']);
             $report_nodes['link-file-url']->remove();
@@ -67,9 +67,9 @@ function nel_render_reports_panel($user, $domain)
         else if ($content_id->isPost())
         {
             $content_link = $url_constructor->dynamic($base_path,
-                    ['module' => 'render', 'action' => 'view-thread', 'section' => $content_id->thread_id,
+                    ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
                         'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
-                        'section' => $content_id->thread_id, 'modmode' => 'true']);
+                        'modmode' => 'true']);
             $content_link .= '#t' . $content_id->thread_id . 'p' . $content_id->post_id;
             $report_nodes['link-file-url']->remove();
         }
@@ -83,12 +83,12 @@ function nel_render_reports_panel($user, $domain)
             $src_web_path = $board_web_path . rawurlencode($current_domain->reference('src_dir')) . '/';
             $file_link = $src_web_path . $content_id->thread_id . '/' . $content_id->post_id . '/' .
                     rawurlencode($filename);
-                    $report_nodes['link-file-url']->extSetAttribute('href', $file_link);
+            $report_nodes['link-file-url']->extSetAttribute('href', $file_link);
 
             $content_link = $url_constructor->dynamic($base_path,
-                    ['module' => 'render', 'action' => 'view-thread', 'section' => $content_id->thread_id,
+                    ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
                         'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
-                        'section' => $content_id->thread_id, 'modmode' => 'true']);
+                        'modmode' => 'true']);
             $content_link .= '#t' . $content_id->thread_id . 'p' . $content_id->post_id;
         }
 
