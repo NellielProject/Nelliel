@@ -1,4 +1,48 @@
 # Nelliel Changelog
+## v0.9.16 (2019/01/10)
+### Breaking
+ - Database overhauls
+ - JSON API changes
+
+### Added
+ - Default index.html
+ - CAPTCHA/ReCAPTCHA support
+ - Separate Users and Roles panels
+ - ModMode class
+ - Poster IDs
+
+### Changed
+ - JSON uses domain now
+ - Update NellielTemplates library
+ - Update phpDOMExtend
+ - Update honeypot system
+ - Update database version tracking
+ - Update Users and Roles panels
+ - Simplify login code
+ - Update board settings and database
+ - Update and debug filetypes
+ - More conversion to domain
+ - Tripcode salt changed to pepper and now autogens
+ - Cleanup temporary globals in imgboard.php
+ - Pass modmode status to js
+ - Convert some things to the new null coalesce operator
+ - Change abstract class naming
+ - Various tweaks and fixes
+
+### Fixed
+ - wat pages
+ - Hide thread not working
+ - Return link incorrect
+ - User update not working
+ - Modmode errors
+ - Expand/Collapse not working in dynamic render
+ 
+### Removed
+  - html5shiv
+  - Some unused things from footer
+  - Old Staff panel and output
+  - The section parameter
+
 ## v0.9.15 (2018/12/15)
 ### Breaking
  - Database schema change
