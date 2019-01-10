@@ -50,6 +50,8 @@ function nel_render_board_settings_panel($user, $domain, $defaults)
         $filetype_category_nodes['entry-label']->setContent('Allow ' . $category['type']);
         $filetype_entries_nodes[$category['type']] = $filetype_category_nodes['filetype-entry']->getElementsByAttributeName(
                 'data-parse-id', true);
+        $filetype_entries_nodes[$category['type']]['entry-hidden-checkbox']->extSetAttribute('name', $category['type']);
+        $filetype_entries_nodes[$category['type']]['entry-checkbox']->extSetAttribute('name', $category['type']);
         $category_row_count[$category['type']] = 0;
     }
 
