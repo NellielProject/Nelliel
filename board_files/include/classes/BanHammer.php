@@ -21,23 +21,23 @@ class BanHammer
     public function postToArray()
     {
         $ban_input = array();
-        $ban_input['ban_id'] = (isset($_POST['ban_id'])) ? $_POST['ban_id'] : null;
-        $ban_input['board'] = (isset($_POST['ban_board'])) ? $_POST['ban_board'] : null;
+        $ban_input['ban_id'] = $_POST['ban_id'] ?? null;
+        $ban_input['board'] = $_POST['ban_board'] ?? null;
         $ban_input['all_boards'] = (isset($_POST['ban_all_boards']) && $_POST['ban_all_boards'] > 0) ? 1 : 0;
-        $ban_input['type'] = (isset($_POST['ban_type'])) ? $_POST['ban_type'] : null;
-        $ban_input['creator'] = (isset($_SESSION['username'])) ? $_SESSION['username'] : null;
-        $ban_input['ip_address_start'] = (isset($_POST['ban_ip'])) ? $_POST['ban_ip'] : null;
-        $ban_input['years'] = (isset($_POST['ban_time_years'])) ? $_POST['ban_time_years'] : 0;
-        $ban_input['months'] = (isset($_POST['ban_time_months'])) ? $_POST['ban_time_months'] : 0;
-        $ban_input['days'] = (isset($_POST['ban_time_days'])) ? $_POST['ban_time_days'] : 0;
-        $ban_input['hours'] = (isset($_POST['ban_time_hours'])) ? $_POST['ban_time_hours'] : 0;
-        $ban_input['minutes'] = (isset($_POST['ban_time_minutes'])) ? $_POST['ban_time_minutes'] : 0;
-        $ban_input['seconds'] = (isset($_POST['ban_time_seconds'])) ? $_POST['ban_time_seconds'] : 0;
-        $ban_input['start_time'] = (isset($_POST['ban_start_time'])) ? $_POST['ban_start_time'] : null;
-        $ban_input['reason'] = (isset($_POST['ban_reason'])) ? $_POST['ban_reason'] : null;
-        $ban_input['appeal'] = (isset($_POST['ban_appeal'])) ? $_POST['ban_appeal'] : null;
-        $ban_input['appeal_response'] = (isset($_POST['ban_appeal_response'])) ? $_POST['ban_appeal_response'] : null;
-        $ban_input['appeal_status'] = (isset($_POST['ban_appeal_status'])) ? $_POST['ban_appeal_status'] : null;
+        $ban_input['type'] = $_POST['ban_type'] ?? null;
+        $ban_input['creator'] = $_SESSION['username'] ?? null;
+        $ban_input['ip_address_start'] = $_POST['ban_ip'] ?? null;
+        $ban_input['years'] = $_POST['ban_time_years'] ?? 0;
+        $ban_input['months'] = $_POST['ban_time_months'] ?? 0;
+        $ban_input['days'] = $_POST['ban_time_days'] ?? 0;
+        $ban_input['hours'] = $_POST['ban_time_hours'] ?? 0;
+        $ban_input['minutes'] = $_POST['ban_time_minutes'] ?? 0;
+        $ban_input['seconds'] = $_POST['ban_time_seconds'] ?? 0;
+        $ban_input['start_time'] = $_POST['ban_start_time'] ?? null;
+        $ban_input['reason'] = $_POST['ban_reason'] ?? null;
+        $ban_input['appeal'] = $_POST['ban_appeal'] ?? null;
+        $ban_input['appeal_response'] = $_POST['ban_appeal_response'] ?? null;
+        $ban_input['appeal_status'] = $_POST['ban_appeal_status'] ?? null;
         $ban_input['length'] = $this->combineTimeToSeconds($ban_input);
         return $ban_input;
     }

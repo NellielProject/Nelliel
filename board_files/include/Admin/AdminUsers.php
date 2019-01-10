@@ -25,7 +25,7 @@ class AdminUsers extends AdminHandler
     {
         $session = new \Nelliel\Session($this->authorization, true);
         $user = $session->sessionUser();
-        $this->user_id = (isset($_GET['user-id'])) ? $_GET['user-id'] : null;
+        $this->user_id = $_GET['user-id'] ?? null;
 
         if (!is_null($this->user_id) && !$this->authorization->userExists($this->user_id))
         {

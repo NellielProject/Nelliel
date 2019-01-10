@@ -25,7 +25,7 @@ class AdminRoles extends AdminHandler
     {
         $session = new \Nelliel\Session($this->authorization, true);
         $user = $session->sessionUser();
-        $this->role_id = (isset($_GET['role-id'])) ? $_GET['role-id'] : null;
+        $this->role_id = $_GET['role-id'] ?? null;
 
         if (!is_null($this->role_id) && !$this->authorization->roleExists($this->role_id))
         {

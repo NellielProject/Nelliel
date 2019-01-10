@@ -69,8 +69,8 @@ class AdminBans extends AdminHandler
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
-        $ip = (isset($_GET['ban_ip'])) ? $_GET['ban_ip'] : '';
-        $type = (isset($_GET['ban_type'])) ? $_GET['ban_type'] : 'GENERAL';
+        $ip = $_GET['ban_ip'] ?? '';
+        $type = $_GET['ban_type'] ?? 'GENERAL';
         $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
         $this->applyNewBan();
         nel_render_ban_panel_add($this->domain, $ip, $type);

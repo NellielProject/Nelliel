@@ -50,7 +50,7 @@ class AdminReports extends AdminHandler
     public function add($user)
     {
         $report_data = array();
-        $report_data['reason'] = (isset($_POST['report_reason'])) ? $_POST['report_reason'] : null;
+        $report_data['reason'] = $_POST['report_reason'] ?? null;
         $report_data['reporter_ip'] = $_SERVER['REMOTE_ADDR'];
         $base_content_id = new \Nelliel\ContentID();
 
