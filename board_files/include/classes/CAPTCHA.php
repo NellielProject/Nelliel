@@ -28,14 +28,14 @@ class CAPTCHA
 
     public function verifyReCaptcha()
     {
-        $site_domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), $this->database);
-
         if (!isset($_POST['g-recaptcha-response']))
         {
             return false;
         }
 
+        $site_domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), $this->database);
         $response = $_POST['g-recaptcha-response'];
+        nel_plugins()->processHook('nel-verify-recaptcha', array($reponse));
         $result = file_get_contents(
                 'https://www.google.com/recaptcha/api/siteverify?secret=' . $site_domain->setting('recaptcha_sekrit_key') .
                 '&response=' . $response);

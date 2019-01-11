@@ -51,6 +51,8 @@ class FGSFDS
         {
             return self::$commands[$command][$data_id];
         }
+
+        return false;
     }
 
     public function addCommand($command)

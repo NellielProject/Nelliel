@@ -17,15 +17,13 @@ On start, Nelliel will scan the plugins directory for `nelliel-plugin.ini` files
 ## Hooks
 The core of Nelliel's plugin API is hooks. These may be set at almost any part of Nelliel's code or in the code of plugins. When the code execution reaches a hook, it will check for any functions or methods registered to it and execute those before continuing.
 
-In order to avoid naming collisions, hooks set by Nelliel will be prepended by `nel-`. Hooks set by plugins must be prepended by a unique identifier such as the plugin name.
+In order to avoid naming collisions, hooks set by Nelliel are prepended by `nel-`. Hooks set by plugins must also be prepended by a unique identifier.
 
 ## Hook Creation
 Both Nelliel and plugins can define hooks. This is done by using `processHook`. 3 parameters can be passed:
 1. `$hook_name` - [Required] A string identifying the hook.
-2. `$args` - [Required] An array of variables or parameters to be passed on to any registered functions or methods.
-3. `$returnable` - [Optional] An optional variable that should be returned. If not passed, will have the value null.
-  
-If `$returnable` is given, all plugin methods and functions registered to the hook should return the variable as-is or with a modified value. If it is not returned or the type has been changed, the previous value will be passed on instead.
+2. `$args` - [Required] An array of variables or parameters to be passed on to any registered functions or methods. This can be an empty array.
+3. `$returnable` - [Optional] An optional value that should be returned, possibly with modifications.
 
 ## Function Registration
 To add a function to a hook, call `addFunction`. Four parameters can be passed:

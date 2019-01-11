@@ -41,6 +41,6 @@ function nel_central_dispatch()
     $domain->renderInstance(new \NellielTemplates\RenderCore());
 
     require_once INCLUDE_PATH . 'dispatch/module_dispatch.php';
-    nel_module_dispatch($inputs, $domain);
-    nel_plugins()->processHook('nel-in-after-central-dispatch', array());
+    $inputs = nel_module_dispatch($inputs, $domain);
+    nel_plugins()->processHook('nel-in-after-central-dispatch', array($inputs, $domain));
 }

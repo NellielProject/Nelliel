@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_module_dispatch($inputs, $domain)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $inputs = nel_plugins()->processHook('nel-inb4-module-dispatch', array(), $inputs);
+    $inputs = nel_plugins()->processHook('nel-inb4-module-dispatch', array($domain), $inputs);
 
     switch ($inputs['module'])
     {
@@ -325,5 +325,6 @@ function nel_module_dispatch($inputs, $domain)
             break;
     }
 
-    nel_plugins()->processHook('nel-in-after-module-dispatch', array());
+    $inputs = nel_plugins()->processHook('nel-in-after-module-dispatch', array($domain), $inputs);
+    return $inputs;
 }
