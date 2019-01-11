@@ -20,6 +20,8 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     
     if(board_id === "") {
         setStyle(nelliel.core.getCookie("base-style"));
+    }
+    else {
         setStyle(nelliel.core.getCookie("style-" + board_id));
     }
     
