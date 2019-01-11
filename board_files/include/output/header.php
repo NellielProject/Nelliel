@@ -14,7 +14,7 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
     $domain->renderInstance()->loadTemplateFromFile($dom, 'header.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $head_element = $dom->getElementsByTagName('head')->item(0);
-    $link_elements = $head_element->getElementsByTagName('link');
+    nel_build_header_styles($dom, $dotdot);
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent(
             'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\', \'' .
@@ -26,12 +26,6 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
         $honeypot_css = '#form-user-info-1{display: none !important;}#form-user-info-2{display: none !important;}#form-user-info-3{position: absolute; top: 3px; left: -9001px;}';
         $style_element = $dom->createElement('style', $honeypot_css);
         $dom->getElementsByTagName('head')->item(0)->appendChild($style_element);
-    }
-
-    foreach ($link_elements as $element)
-    {
-        $content = $element->getAttribute('title');
-        $element->extSetAttribute('href', $dotdot . CSS_DIR . '/' . strtolower($content) . '.css');
     }
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
@@ -136,21 +130,14 @@ function nel_render_general_header($domain, $dotdot = null, $extra_data = array(
     $domain->renderInstance()->loadTemplateFromFile($dom, 'header.html');
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
-    $link_elements = $head_element->getElementsByTagName('link');
+    nel_build_header_styles($dom, $dotdot);
     $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
     $dom->getElementById('js-onload')->setContent(
             'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\', \'' .
             $session->inModmode($domain->id()) . '\');};');
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $domain->id() . '"));');
-
     $dom->getElementById('top-logo-image')->remove();
     $dom->getElementById('top-logo-text')->remove();
-
-    foreach ($link_elements as $element)
-    {
-        $content = $element->getAttribute('title');
-        $element->extSetAttribute('href', $dotdot . CSS_DIR . '/' . strtolower($content) . '.css');
-    }
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
     $title_element->setContent('Nelliel Imageboard');
@@ -199,4 +186,36 @@ function nel_render_general_header($domain, $dotdot = null, $extra_data = array(
 
     $translator->translateDom($dom);
     $domain->renderInstance()->appendHTMLFromDOM($dom);
+}
+
+function nel_build_header_styles($dom, $dotdot)
+{
+    $database = nel_database();
+    $head_element = $dom->getElementsByTagName('head')->item(0);
+    $top_styles_nav = $dom->getElementById('top-styles');
+    $styles = $database->executeFetchAll('SELECT * FROM "' . STYLES_TABLE . '" ORDER BY "entry", "is_default" DESC', PDO::FETCH_ASSOC);
+
+    foreach ($styles as $style)
+    {
+        $new_head_link = $dom->createElement('link');
+
+        if($style['is_default'])
+        {
+            $new_head_link->extSetAttribute('rel', 'stylesheet');
+        }
+        else
+        {
+            $new_head_link->extSetAttribute('rel', 'alternate stylesheet');
+        }
+
+        $new_head_link->extSetAttribute('data-id', 'style-board');
+        $new_head_link->extSetAttribute('type', 'text/css');
+        $new_head_link->extSetAttribute('href', $dotdot . CSS_DIR . '/' . $style['file']);
+        $new_head_link->extSetAttribute('title', $style['name']);
+        $head_element->appendChild($new_head_link);
+
+        $style_link = $dom->createElement('span');
+        $style_link->innerHTML('<span>[<a href="#" data-command="change-style" data-id="' . $style['name'] . '">' . $style['name'] . '</a>]&nbsp;</span>');
+        $top_styles_nav->appendChild($style_link);
+    }
 }

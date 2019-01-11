@@ -577,10 +577,11 @@ class TableInsertData
         $database = nel_database();
         $insert_query = "INSERT INTO " . STYLES_TABLE . " (id, name, file, is_default) VALUES (?, ?, ?, ?)";
         $prepared = $database->prepare($insert_query);
-        $database->executePrepared($prepared, ['nelliel-css', 'Nelliel', 'nelliel-default/nelliel.css', 1]);
-        $database->executePrepared($prepared, ['futaba-css', 'Futaba', 'nelliel-default/futaba.css', 0]);
-        $database->executePrepared($prepared, ['burichan-css', 'Burichan', 'nelliel-default/burichan.css', 0]);
-        $database->executePrepared($prepared, ['nigra-css', 'Nigra', 'nelliel-default/nigra.css', 0]);
+        $database->executePrepared($prepared, ['nelliel-css', 'Nelliel', 'nelliel.css', 1]);
+        $database->executePrepared($prepared, ['nelliel-b-css', 'Nelliel B', 'nelliel-b.css', 0]);
+        $database->executePrepared($prepared, ['futaba-css', 'Futaba', 'futaba.css', 0]);
+        $database->executePrepared($prepared, ['burichan-css', 'Burichan', 'burichan.css', 0]);
+        $database->executePrepared($prepared, ['nigra-css', 'Nigra', 'nigra.css', 0]);
         nel_setup_stuff_done(true);
     }
 
