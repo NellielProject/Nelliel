@@ -17,6 +17,12 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     nelliel.setup.localStorageInitCheck();
     dataBin.hidden_threads = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_threads_id, true);
     dataBin.hidden_posts = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_posts_id, true);
+    
+    if(board_id === "") {
+        setStyle(nelliel.core.getCookie("base-style"));
+        setStyle(nelliel.core.getCookie("style-" + board_id));
+    }
+    
     nelliel.setup.setupListeners();
     nelliel.core.hashHandler();
     
@@ -221,7 +227,7 @@ function setStyle(style) {
 
     for (i = 0; i < allstyles.length; i++) {
         allstyles[i].disabled = true;
-        
+
         if (allstyles[i].getAttribute("data-id") == "style-board") {
             if (allstyles[i].title == style) {
                 allstyles[i].disabled = false;
