@@ -40,7 +40,7 @@ class PluginAPI
         return false;
     }
 
-    private function verifyOrCreateHook($hook_name, $new = true)
+    private function verifyOrCreateHook(string $hook_name, bool $new = true)
     {
         if (!$this->isValidHook($hook_name))
         {
@@ -58,7 +58,7 @@ class PluginAPI
     }
 
     // Register hook functions here
-    public function addFunction($hook_name, $function_name, $plugin_id, $priority = 10)
+    public function addFunction(string $hook_name, string $function_name, $plugin_id, int $priority = 10)
     {
         if (!$this->isValidPlugin($plugin_id))
         {
@@ -71,7 +71,7 @@ class PluginAPI
     }
 
     // Register hook methods here
-    public function addMethod($hook_name, $class, $method_name, $plugin_id, $priority = 10)
+    public function addMethod(string $hook_name, $class, string $method_name, $plugin_id, $priority = 10)
     {
         if (!$this->isValidPlugin($plugin_id))
         {
@@ -83,7 +83,7 @@ class PluginAPI
         return true;
     }
 
-    public function removeFunction($hook_name, $function_name, $plugin_id)
+    public function removeFunction(string $hook_name, string $function_name, $plugin_id)
     {
         if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id))
         {
@@ -94,7 +94,7 @@ class PluginAPI
         return true;
     }
 
-    public function removeMethod($hook_name, $class, $method_name, $plugin_id)
+    public function removeMethod(string $hook_name, $class, string $method_name, $plugin_id)
     {
         if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id))
         {
@@ -105,7 +105,7 @@ class PluginAPI
         return true;
     }
 
-    public function processHook($hook_name, $args, $returnable = null)
+    public function processHook(string $hook_name, array $args, $returnable = null)
     {
         if (!ENABLE_PLUGINS || !$this->isValidHook($hook_name))
         {
@@ -144,7 +144,7 @@ class PluginAPI
         return substr(md5(random_bytes(16)), -8);
     }
 
-    private function isValidHook($hook_name)
+    private function isValidHook(string $hook_name)
     {
         return isset(self::$hooks[$hook_name]) && self::$hooks[$hook_name] instanceof PluginHook;
     }
