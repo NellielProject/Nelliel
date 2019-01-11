@@ -215,8 +215,12 @@ function nel_build_header_styles($dom, $dotdot)
         $new_head_link->extSetAttribute('title', $style['name']);
         $head_element->appendChild($new_head_link);
 
-        $style_link = $dom->createElement('span');
-        $style_link->innerHTML('<span>[<a href="#" data-command="change-style" data-id="' . $style['id'] . '">' . $style['name'] . '</a>]&nbsp;</span>');
+        $style_link = $dom->createElement('a');
+        $style_link->extSetAttribute('href', '#');
+        $style_link->extSetAttribute('data-command', 'change-style');
+        $style_link->extSetAttribute('data-id', $style['id']);
+        $style_link->setContent('[' . $style['name'] . ']');
         $top_styles_nav->appendChild($style_link);
+        $top_styles_nav->appendChild($dom->createTextNode("\n"));
     }
 }
