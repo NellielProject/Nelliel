@@ -230,8 +230,8 @@ function setStyle(style) {
     for (i = 0; i < allstyles.length; i++) {
         allstyles[i].disabled = true;
 
-        if (allstyles[i].getAttribute("data-id") == "style-board") {
-            if (allstyles[i].title == style) {
+        if (allstyles[i].getAttribute("data-parse-id") == "style-board") {
+            if (allstyles[i].getAttribute("data-id") == style) {
                 allstyles[i].disabled = false;
             }
         }

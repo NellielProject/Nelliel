@@ -208,14 +208,15 @@ function nel_build_header_styles($dom, $dotdot)
             $new_head_link->extSetAttribute('rel', 'alternate stylesheet');
         }
 
-        $new_head_link->extSetAttribute('data-id', 'style-board');
+        $new_head_link->extSetAttribute('data-parse-id', 'style-board');
+        $new_head_link->extSetAttribute('data-id', $style['id']);
         $new_head_link->extSetAttribute('type', 'text/css');
         $new_head_link->extSetAttribute('href', $dotdot . CSS_DIR . '/' . $style['file']);
         $new_head_link->extSetAttribute('title', $style['name']);
         $head_element->appendChild($new_head_link);
 
         $style_link = $dom->createElement('span');
-        $style_link->innerHTML('<span>[<a href="#" data-command="change-style" data-id="' . $style['name'] . '">' . $style['name'] . '</a>]&nbsp;</span>');
+        $style_link->innerHTML('<span>[<a href="#" data-command="change-style" data-id="' . $style['id'] . '">' . $style['name'] . '</a>]&nbsp;</span>');
         $top_styles_nav->appendChild($style_link);
     }
 }

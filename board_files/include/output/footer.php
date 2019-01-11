@@ -36,7 +36,7 @@ function nel_build_footer_styles($dom, $dotdot)
     foreach ($styles as $style)
     {
         $style_link = $dom->createElement('span');
-        $style_link->innerHTML('<span>[<a href="#" data-command="change-style" data-id="' . $style['name'] . '">' . $style['name'] . '</a>]&nbsp;</span>');
+        $style_link->innerHTML('<span>[<a href="#" data-command="change-style" data-id="' . $style['id'] . '">' . $style['name'] . '</a>]&nbsp;</span>');
         $bottom_styles_nav->appendChild($style_link);
     }
 }
