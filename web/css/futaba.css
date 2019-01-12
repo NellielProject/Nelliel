@@ -1,8 +1,11 @@
 /* Elements formatting */
+html {
+	font-size: 100%;
+}
+
 body {
 	background-color: #FFFFEE;
 	color: #800000;
-    font-size: 1.0em;
     font-family: serif;
     margin-left: 5px;
     margin-right: 5px;
@@ -50,7 +53,7 @@ a:hover {
 .text-logo {
     color: #800000;
     text-align: center;
-    font-size: 2.0em;
+    font-size: 2.0rem;
     clear: both;
 }
 
@@ -66,7 +69,7 @@ a:hover {
 .footer {
     clear: both;
     text-align: center;
-    font-size: 0.8em;
+    font-size: 0.8rem;
 }
 
 .bottom-styles {
@@ -156,7 +159,7 @@ a:hover {
 }
 
 .rules {
-    font-size: 0.85em;
+    font-size: 0.85rem;
     font-family: sans-serif;
 }
 
@@ -199,7 +202,7 @@ a:hover {
     padding-left: 5px;
     padding-right: 5px;
     margin: 3px;
-    font-size: 0.95em;
+    font-size: 0.95rem;
 }
 
 .op-multiple-fileinfo {
@@ -208,7 +211,7 @@ a:hover {
     padding-left: 5px;
     padding-right: 5px;
     margin: 3px;
-    font-size: 0.95em;
+    font-size: 0.95rem;
 }
 
 .reply-fileinfo {
@@ -217,7 +220,7 @@ a:hover {
     padding-left: 5px;
     padding-right: 5px;
     margin: 3px;
-    font-size: 0.95em;
+    font-size: 0.95rem;
 }
 
 .reply-multiple-fileinfo {
@@ -226,7 +229,7 @@ a:hover {
     padding-left: 5px;
     padding-right: 5px;
     margin: 3px;
-    font-size: 0.95em;
+    font-size: 0.95rem;
 }
 
 .file-meta {
@@ -253,13 +256,13 @@ a:hover {
 /* General post formatting */
 .mod-comment {
     color: #FF0000;
-    font-size: 1.05em;
+    font-size: 1.05rem;
     font-weight: bold;
 }
 
 .old-post {
 	color: #CC1105;
-    font-size: 1.05em;
+    font-size: 1.05rem;
     font-weight: bold;
 }
 
@@ -298,6 +301,10 @@ a:hover {
     display: block;
 }
 
+.poster-id {
+	
+}
+
 /* OP post formatting */
 .op-post-header {
 	
@@ -312,7 +319,6 @@ a:hover {
 }
 
 .op-post {
-	color: #800000;
     min-width: 15em;
     height: 100%;
     padding-bottom: 6px;
@@ -331,7 +337,7 @@ a:hover {
 
 .op-subject {
 	color: #CC1105;
-    font-size: 1.05em;
+    font-size: 1.05rem;
     font-weight: bold;
 }
 
@@ -382,7 +388,6 @@ a:hover {
 
 .reply-post {
     background-color: #F0E0D6;
-    color: #800000;
     border: 1px solid #D0C0D6;
     padding: 5px;
     min-width: 15em;
@@ -403,7 +408,7 @@ a:hover {
 
 .reply-subject {
     color: #CC1105;
-    font-size: 1.05em;
+    font-size: 1.05rem;
     font-weight: bold;
 }
 
@@ -482,7 +487,6 @@ a:hover {
 }
 
 .nelliel-license-div {
-    font-size: 1.0em;
     text-align: left;
     margin: auto;
     max-width: 60em;

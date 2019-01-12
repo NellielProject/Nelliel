@@ -1,8 +1,11 @@
 /* Elements formatting */
+html {
+	font-size: 100%;
+}
+
 body {
-    background-color: #88F6B0;
-    color: #112211;
-    font-size: 1.0em;
+    background-color: #7FEAA0;
+    color: #16006F;
     font-family: serif;
     margin-left: 5px;
     margin-right: 5px;
@@ -13,19 +16,19 @@ img {
 }
 
 hr {
-    color: #006688;
+    color: #558866;
 }
 
 a {
-    color: #3322CC;
+    color: #3322DF;
 }
 
 a:visited {
-    color: #3322CC;
+    color: #3322DF;
 }
 
 a:hover {
-    color: #AA2255;
+    color: #CC22DF;
 }
 
 /* General formatting */
@@ -48,9 +51,9 @@ a:hover {
 }
 
 .text-logo {
-	color: #6600CC;
+	color: #6000CC;
     text-align: center;
-    font-size: 2.0em;
+    font-size: 2.0rem;
     clear: both;
 }
 
@@ -66,7 +69,7 @@ a:hover {
 .footer {
     clear: both;
     text-align: center;
-    font-size: 0.8em;
+    font-size: 0.8rem;
 }
 
 .bottom-styles {
@@ -142,12 +145,11 @@ a:hover {
 
 .posting-form-label {
 	display: table-cell;
-    background-color: #33AAEE;
+    background-color: #00AAF0;
     font-weight: bold;
-    color: #000000;
     padding: 3px 5px 3px 5px;
     background-clip: padding-box;
-    border: 1px solid #1188CC;
+    border: 1px solid #0088D0;
     vertical-align: middle;
 }
 
@@ -157,7 +159,7 @@ a:hover {
 }
 
 .rules {
-    font-size: 0.85em;
+    font-size: 0.85rem;
     font-family: sans-serif;
 }
 
@@ -200,7 +202,7 @@ a:hover {
     padding-left: 5px;
     padding-right: 5px;
     margin: 3px;
-    font-size: 0.95em;
+    font-size: 0.95rem;
 }
 
 .op-multiple-fileinfo {
@@ -209,7 +211,7 @@ a:hover {
     padding-left: 5px;
     padding-right: 5px;
     margin: 3px;
-    font-size: 0.95em;
+    font-size: 0.95rem;
 }
 
 .reply-fileinfo {
@@ -218,7 +220,7 @@ a:hover {
     padding-left: 5px;
     padding-right: 5px;
     margin: 3px;
-    font-size: 0.95em;
+    font-size: 0.95rem;
 }
 
 .reply-multiple-fileinfo {
@@ -227,7 +229,7 @@ a:hover {
     padding-left: 5px;
     padding-right: 5px;
     margin: 3px;
-    font-size: 0.95em;
+    font-size: 0.95rem;
 }
 
 .file-meta {
@@ -254,13 +256,13 @@ a:hover {
 /* General post formatting */
 .mod-comment {
     color: #FF0000;
-    font-size: 1.05em;
+    font-size: 1.05rem;
     font-weight: bold;
 }
 
 .old-post {
     color: #DD1100;
-    font-size: 1.05em;
+    font-size: 1.05rem;
     font-weight: bold;
 }
 
@@ -299,6 +301,10 @@ a:hover {
     display: block;
 }
 
+.poster-id {
+	
+}
+
 .reply-post.popup-mod {
     border: 1px solid #88EEFF;
 }
@@ -317,7 +323,6 @@ a:hover {
 }
 
 .op-post {
-    color: #112211;
     min-width: 15em;
     height: 100%;
     padding-bottom: 6px;
@@ -329,13 +334,14 @@ a:hover {
 }
 
 .op-poster-name {
-    color: #CC0077;
+    color: #B92050;
     text-decoration: none;
     font-weight: bold;
 }
 
 .op-subject {
     color: #6611BB;
+    font-size: 1.05rem;
     font-weight: bold;
 }
 
@@ -385,9 +391,8 @@ a:hover {
 }
 
 .reply-post {
-    background-color: #88E4F6;
-    color: #112211;
-    border: 1px solid #66C2D4;
+    background-color: #7FCAE0;
+    border: 1px solid #5DA8C0;
     padding: 5px;
     min-width: 15em;
     height: 100%;
@@ -396,11 +401,11 @@ a:hover {
 }
 
 .reply-post.post-highlight {
-    background-color: #DD99CC;
+    background-color: #CF9ACA;
 }
 
 .reply-poster-name {
-    color: #CC0077;
+    color: #B92050;
     text-decoration: none;
     font-weight: bold;
 }
@@ -485,7 +490,6 @@ a:hover {
 }
 
 .nelliel-license-div {
-    font-size: 1.0em;
     text-align: left;
     margin: auto;
     max-width: 60em;
