@@ -40,10 +40,9 @@ define('VERSION_TABLE', 'nelliel_version'); // Version data
 
 define('CONFIG_PATH', BASE_PATH . 'configuration/'); // Base config path
 define('CACHE_PATH', FILES_PATH . 'cache/'); // Base cache path
-define('WEB_PATH', BASE_PATH . WEB_FILES); // Base web path
+define('WEB_PATH', BASE_PATH . ASSETS); // Base web path
 define('TEMPLATE_PATH', FILES_PATH . 'templates/'); // Base template path
 define('ICON_SET_PATH', WEB_PATH . 'icon_sets/'); // Base icon set path
-define('FILETYPE_ICON_PATH', ICON_SET_PATH . 'filetype/'); // Base filetype icon set path
 define('PLUGINS_PATH', FILES_PATH . 'plugins/'); // Base plugins path
 define('LANGUAGE_PATH', FILES_PATH . 'languages/'); // Language path
 define('LOCALE_PATH', LANGUAGE_PATH . 'locale/'); // Locale files path

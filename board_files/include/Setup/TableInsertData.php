@@ -599,7 +599,7 @@ class TableInsertData
         $database = nel_database();
         $insert_query = "INSERT INTO " . ICON_SET_TABLE . " (id, name, directory, set_type, is_default) VALUES (?, ?, ?, ?, ?)";
         $prepared = $database->prepare($insert_query);
-        $database->executePrepared($prepared, ['nelliel-filetype-icon-basic', 'Nelliel Basic Filetype Icon Set', 'nelliel_basic', 'filetype', 1]);
+        $database->executePrepared($prepared, ['filetype-nelliel-basic', 'Nelliel Basic Filetype Icon Set', 'filetype_nelliel_basic', 'filetype', 1]);
         nel_setup_stuff_done(true);
     }
 }
