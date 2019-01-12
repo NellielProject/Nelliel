@@ -481,7 +481,9 @@ class SQLTables
             entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             id                      VARCHAR(255) NOT NULL,
             name                    VARCHAR(255) NOT NULL,
-            file                    VARCHAR(255) NOT NULL,
+            directory               VARCHAR(255) NOT NULL,
+            main_file               VARCHAR(255) NOT NULL,
+            style_type              VARCHAR(255) NOT NULL,
             is_default              SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 

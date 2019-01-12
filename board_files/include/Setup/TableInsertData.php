@@ -575,13 +575,13 @@ class TableInsertData
     public function styleDefaults()
     {
         $database = nel_database();
-        $insert_query = "INSERT INTO " . STYLES_TABLE . " (id, name, file, is_default) VALUES (?, ?, ?, ?)";
+        $insert_query = "INSERT INTO " . STYLES_TABLE . " (id, name, directory, main_file, style_type, is_default) VALUES (?, ?, ?, ?, ?, ?)";
         $prepared = $database->prepare($insert_query);
-        $database->executePrepared($prepared, ['nelliel-css', 'Nelliel', 'nelliel.css', 1]);
-        $database->executePrepared($prepared, ['nelliel-b-css', 'Nelliel B', 'nelliel-b.css', 0]);
-        $database->executePrepared($prepared, ['futaba-css', 'Futaba', 'futaba.css', 0]);
-        $database->executePrepared($prepared, ['burichan-css', 'Burichan', 'burichan.css', 0]);
-        $database->executePrepared($prepared, ['nigra-css', 'Nigra', 'nigra.css', 0]);
+        $database->executePrepared($prepared, ['style-nelliel', 'Nelliel', 'nelliel', 'nelliel.css', 'css', 1]);
+        $database->executePrepared($prepared, ['style-nelliel-b', 'Nelliel B', 'nelliel_b', 'nelliel_b.css', 'css', 0]);
+        $database->executePrepared($prepared, ['style-futaba', 'Futaba', 'futaba', 'futaba.css', 'css', 0]);
+        $database->executePrepared($prepared, ['style-burichan', 'Burichan', 'burichan', 'burichan.css', 'css', 0]);
+        $database->executePrepared($prepared, ['style-nigra', 'Nigra', 'nigra', 'nigra.css', 'css', 0]);
         nel_setup_stuff_done(true);
     }
 

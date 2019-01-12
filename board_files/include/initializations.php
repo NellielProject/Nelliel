@@ -11,7 +11,7 @@ if (ini_get('date.timezone') === '')
 
 define('ASSETS', 'assets/'); // Directory for CSS, Javascript and other web-related support files
 define('IMAGES_DIR', ASSETS . 'imagez'); // Images used by Nelliel go here
-define('CSS_DIR', ASSETS . 'css'); // CSS files here
+define('CSS_DIR', ASSETS . 'styles'); // CSS files here
 define('JS_DIR', ASSETS . 'js'); // Javascript files here
 
 define('PHP_SELF', 'imgboard.php'); // Name of main script file
@@ -43,6 +43,7 @@ define('CACHE_PATH', FILES_PATH . 'cache/'); // Base cache path
 define('WEB_PATH', BASE_PATH . ASSETS); // Base web path
 define('TEMPLATE_PATH', FILES_PATH . 'templates/'); // Base template path
 define('ICON_SET_PATH', WEB_PATH . 'icon_sets/'); // Base icon set path
+define('STYLES_PATH', WEB_PATH . 'styles/'); // Base icon set path
 define('PLUGINS_PATH', FILES_PATH . 'plugins/'); // Base plugins path
 define('LANGUAGE_PATH', FILES_PATH . 'languages/'); // Language path
 define('LOCALE_PATH', LANGUAGE_PATH . 'locale/'); // Locale files path
