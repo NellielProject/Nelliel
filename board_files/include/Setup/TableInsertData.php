@@ -400,7 +400,7 @@ class TableInsertData
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'file_sha512', '0', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'enable_dynamic_pages', '0', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'string', 'template_id', 'nelliel-template', 0, 0]);
-        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'string', 'filetype_icon_set_id', 'nelliel-filetype-icon-basic', 0, 0]);
+        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'string', 'filetype_icon_set_id', 'filetype-nelliel-basic', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'timestamp_filename', '0', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'use_captcha', '0', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'use_recaptcha', '0', 0, 0]);
