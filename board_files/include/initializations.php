@@ -9,10 +9,10 @@ if (ini_get('date.timezone') === '')
     date_default_timezone_set('UTC');
 }
 
-define('WEB_FILES', 'web/'); // Directory for CSS, Javascript and other web-related support files
-define('IMAGES_DIR', WEB_FILES . 'imagez'); // Images used by Nelliel go here
-define('CSS_DIR', WEB_FILES . 'css'); // CSS files here
-define('JS_DIR', WEB_FILES . 'js'); // Javascript files here
+define('ASSETS', 'assets/'); // Directory for CSS, Javascript and other web-related support files
+define('IMAGES_DIR', ASSETS . 'imagez'); // Images used by Nelliel go here
+define('CSS_DIR', ASSETS . 'css'); // CSS files here
+define('JS_DIR', ASSETS . 'js'); // Javascript files here
 
 define('PHP_SELF', 'imgboard.php'); // Name of main script file
 define('PHP_SELF2', 'index'); // Name of board index
