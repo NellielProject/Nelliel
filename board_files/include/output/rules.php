@@ -7,10 +7,8 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_rules_list($domain)
 {
     $filetypes = new \Nelliel\FileTypes(nel_database());
-    $render = new \Nelliel\RenderCore();
-    $render->getTemplateInstance()->setTemplatePath(TEMPLATE_FILE_PATH . 'nelliel_basic/');
-    $dom = $render->newDOMDocument();
-    $render->loadTemplateFromFile($dom, 'posting_rules.html');
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'posting_rules.html');
     $form_rules_list = $dom->getElementById('form-rules-list');
     $rules_nodes = $form_rules_list->getElementsByAttributeName('data-parse-id', true);
     $base_list_item = $dom->createElement('li');

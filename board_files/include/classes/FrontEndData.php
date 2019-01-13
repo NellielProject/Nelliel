@@ -12,8 +12,8 @@ if (!defined('NELLIEL_VERSION'))
 class FrontEndData
 {
     private $database;
-    private $css_styles = array();
-    private $default_css_style = array();
+    private $styles = array();
+    private $default_style = array();
     private $templates = array();
     private $default_template = array();
     private $filetype_icon_sets = array();
@@ -34,11 +34,11 @@ class FrontEndData
 
             if ($data['is_default'] == 1)
             {
-                $this->default_css_style = $info;
+                $this->default_style = $info;
             }
             else
             {
-                $this->css_styles[$data['id']] = $info;
+                $this->cstyles[$data['id']] = $info;
             }
         }
     }
@@ -90,22 +90,22 @@ class FrontEndData
 
     public function style($style = null, $return_default = true)
     {
-        if (empty($this->css_styles))
+        if (empty($this->styles))
         {
             $this->loadStylesData();
         }
 
         if (is_null($style))
         {
-            return $this->css_styles;
+            return $this->styles;
         }
 
-        if (!isset($this->css_styles[$template]) && $return_default)
+        if (!isset($this->styles[$template]) && $return_default)
         {
             return $this->default_css_style;
         }
 
-        return $this->css_styles[$style];
+        return $this->styles[$style];
     }
 
     public function template($template = null, $return_default = true)
