@@ -83,6 +83,17 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
         $favicon->remove();
     }
 
+    $site_banner = $dom->getElementById('top-site-banner');
+
+    if ($site_domain->setting('show_site_banner'))
+    {
+        $site_banner->extSetAttribute('src', $site_domain->setting('site_banner'));
+    }
+    else
+    {
+        $site_banner->remove();
+    }
+
     if ($domain->setting('show_board_banner'))
     {
         $board_banner->extSetAttribute('src', $domain->setting('board_banner'));
@@ -139,9 +150,11 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
 
 function nel_render_general_header($domain, $dotdot = null, $extra_data = array())
 {
-    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
+    $site_domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), $database);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'header.html');
     $head_element = $dom->getElementsByTagName('head')->item(0);
@@ -154,6 +167,26 @@ function nel_render_general_header($domain, $dotdot = null, $extra_data = array(
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $domain->id() . '"));');
     $dom->getElementById('top-board-banner')->remove();
     $dom->getElementById('top-board-title')->remove();
+    $dom->getElementById('top-site-banner')->remove();
+
+    $favicon = $dom->getElementById('favicon-link');
+
+    if($site_domain->setting('show_site_favicon') || $domain->setting('show_board_favicon'))
+    {
+        if ($site_domain->setting('show_site_favicon'))
+        {
+            $favicon->extSetAttribute('href', $site_domain->setting('site_favicon'));
+        }
+
+        if ($domain->setting('show_board_favicon'))
+        {
+            $favicon->extSetAttribute('href', $domain->setting('board_favicon'));
+        }
+    }
+    else
+    {
+        $favicon->remove();
+    }
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
     $title_element->setContent('Nelliel Imageboard');

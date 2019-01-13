@@ -44,6 +44,11 @@ a:hover {
     padding-bottom: 6px;
 }
 
+.site-banner {
+    text-align: center;
+    clear: both;
+}
+
 .board-banner {
     text-align: center;
     clear: both;

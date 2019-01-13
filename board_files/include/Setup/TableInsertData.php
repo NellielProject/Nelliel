@@ -54,6 +54,8 @@ class TableInsertData
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'string', 'recaptcha_sekrit_key', '', 0]);
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'string', 'site_favicon', '', 0]);
         $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'boolean', 'show_site_favicon', '0', 0]);
+        $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'string', 'site_banner', '', 0]);
+        $database->executePrepared($prepared, ['core_setting', 'nelliel', 'general', 'boolean', 'show_site_banner', '0', 0]);
         nel_setup_stuff_done(true);
     }
 
