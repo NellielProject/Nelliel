@@ -23,7 +23,13 @@ function nel_render_general_footer($domain, $dotdot = null, $styles = false)
     $dom->getElementById('nelliel-version')->setContent(NELLIEL_VERSION);
     $dom->getElementById('js-ui')->modifyAttribute('src', $dotdot, 'before');
     $translator->translateDom($dom, $domain->setting('language'));
-    $dom->getElementById('timer-result')->setContent(round($domain->renderInstance()->endRenderTimer(), 4));
+
+    if($domain->setting('display_render_timer'))
+    {
+        $timer_out = sprintf(_gettext('This page was created in %s seconds.'), round($domain->renderInstance()->endRenderTimer(), 4));
+        $dom->getElementById('footer-timer')->setContent($timer_out);
+    }
+
     $domain->renderInstance()->appendHTMLFromDOM($dom);
 }
 
