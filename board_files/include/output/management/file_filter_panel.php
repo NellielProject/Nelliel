@@ -23,12 +23,12 @@ function nel_render_file_filter_panel($user, $domain)
     if ($domain->id() !== '')
     {
         $prepared = $database->prepare(
-                'SELECT * FROM "' . FILE_FILTER_TABLE . '" WHERE "board_id" = ? ORDER BY "entry" DESC');
+                'SELECT * FROM "' . FILE_FILTERS_TABLE . '" WHERE "board_id" = ? ORDER BY "entry" DESC');
         $filters = $database->executePreparedFetchAll($prepared, [$domain->id()], PDO::FETCH_ASSOC);
     }
     else
     {
-        $filters = $database->executeFetchAll('SELECT * FROM "' . FILE_FILTER_TABLE . '" ORDER BY "entry" DESC',
+        $filters = $database->executeFetchAll('SELECT * FROM "' . FILE_FILTERS_TABLE . '" ORDER BY "entry" DESC',
                 PDO::FETCH_ASSOC);
     }
 

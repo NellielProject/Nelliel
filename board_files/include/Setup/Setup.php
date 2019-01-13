@@ -66,16 +66,16 @@ class Setup
     {
         $sql_tables = new SQLTables();
         $sql_tables->createSiteConfigTable(SITE_CONFIG_TABLE);
-        $sql_tables->createBansTable(BAN_TABLE);
-        $sql_tables->createUserTable(USER_TABLE);
+        $sql_tables->createBansTable(BANS_TABLE);
+        $sql_tables->createUserTable(USERS_TABLE);
         $sql_tables->createRolesTable(ROLES_TABLE);
         $sql_tables->createUserRoleTable(USER_ROLE_TABLE);
         $sql_tables->createRolePermissionsTable(ROLE_PERMISSIONS_TABLE);
         $sql_tables->createPermissionsTable(PERMISSIONS_TABLE);
-        $sql_tables->createLoginsTable(LOGINS_TABLE);
+        $sql_tables->createLoginsTable(LOGIN_ATTEMPTS_TABLE);
         $sql_tables->createBoardDataTable(BOARD_DATA_TABLE);
-        $sql_tables->createFiletypeTable(FILETYPE_TABLE);
-        $sql_tables->createFileFilterTable(FILE_FILTER_TABLE);
+        $sql_tables->createFiletypeTable(FILETYPES_TABLE);
+        $sql_tables->createFileFilterTable(FILE_FILTERS_TABLE);
         $sql_tables->createBoardConfigTable(BOARD_DEFAULTS_TABLE, false);
         $sql_tables->createReportsTable(REPORTS_TABLE);
         $sql_tables->createTemplatesTable(TEMPLATES_TABLE);

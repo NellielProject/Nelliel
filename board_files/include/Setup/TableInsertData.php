@@ -20,20 +20,22 @@ class TableInsertData
         $insert_query = 'INSERT INTO "' . VERSION_TABLE . '" ("item_id", "item_type", "structure_version", "data_version") VALUES (?, ?, ?, ?)';
         $prepared = $database->prepare($insert_query);
         $database->executePrepared($prepared, [ASSETS_TABLE, "table", '1', '1']);
-        $database->executePrepared($prepared, [BAN_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [BANS_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [BOARD_DATA_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [BOARD_DEFAULTS_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [CAPTCHA_TABLE, "table", '1', '1']);
-        $database->executePrepared($prepared, [FILETYPE_TABLE, "table", '1', '1']);
-        $database->executePrepared($prepared, [FILE_FILTER_TABLE, "table", '1', '1']);
-        $database->executePrepared($prepared, [LOGINS_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [FILE_FILTERS_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [FILETYPES_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [LOGIN_ATTEMPTS_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [PERMISSIONS_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [REPORTS_TABLE, "table", '1', '1']);
-        $database->executePrepared($prepared, [ROLES_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [ROLE_PERMISSIONS_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [ROLES_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [SITE_CONFIG_TABLE, "table", '1', '1']);
-        $database->executePrepared($prepared, [USER_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [TEMPLATES_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [USER_ROLE_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [USERS_TABLE, "table", '1', '1']);
+        $database->executePrepared($prepared, [VERSION_TABLE, "table", '1', '1']);
         nel_setup_stuff_done(true);
     }
 
@@ -298,14 +300,14 @@ class TableInsertData
         }
 
         $database = nel_database();
-        $result = $database->query('SELECT 1 FROM "' . USER_TABLE . '" WHERE "user_id" = \'' . DEFAULTADMIN . '\'');
+        $result = $database->query('SELECT 1 FROM "' . USERS_TABLE . '" WHERE "user_id" = \'' . DEFAULTADMIN . '\'');
 
         if ($result->fetch() !== false)
         {
             return false;
         }
 
-        $insert_query = "INSERT INTO " . USER_TABLE .
+        $insert_query = "INSERT INTO " . USERS_TABLE .
         " (user_id, user_password, active, last_login) VALUES (?, ?, ?, ?)";
         $prepared = $database->prepare($insert_query);
         $database->executePrepared($prepared, [DEFAULTADMIN, nel_password_hash(DEFAULTADMIN_PASS, NEL_PASSWORD_ALGORITHM), 1, 0]);
@@ -480,7 +482,7 @@ class TableInsertData
     public function filetypes()
     {
         $database = nel_database();
-        $insert_query = "INSERT INTO " . FILETYPE_TABLE .
+        $insert_query = "INSERT INTO " . FILETYPES_TABLE .
         " (extension, parent_extension, type, format, mime, id_regex, label) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $prepared = $database->prepare($insert_query);
         $database->executePrepared($prepared, ['', null, 'graphics', null, null, null, 'Graphics files']);

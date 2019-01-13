@@ -69,7 +69,7 @@ class Snacks
         }
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . BAN_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ban_id" = ?');
+                'UPDATE "' . BANS_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ban_id" = ?');
         $this->database->executePrepared($prepared, array($bawww, $ban_info['ban_id']));
     }
 

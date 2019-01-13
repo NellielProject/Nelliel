@@ -62,7 +62,7 @@ class BanHammer
 
     public function getBanById($ban_id, $convert_length = false)
     {
-        $prepared = $this->database->prepare('SELECT * FROM "' . BAN_TABLE . '" WHERE "ban_id" = ?');
+        $prepared = $this->database->prepare('SELECT * FROM "' . BANS_TABLE . '" WHERE "ban_id" = ?');
         $ban_info = $this->database->executePreparedFetch($prepared, array($ban_id), PDO::FETCH_ASSOC);
 
         if ($ban_info === false)
@@ -81,7 +81,7 @@ class BanHammer
     public function getBansByIp($ban_ip)
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . BAN_TABLE . '" WHERE "ip_address_start" = ? AND "ip_address_end" IS NULL');
+                'SELECT * FROM "' . BANS_TABLE . '" WHERE "ip_address_start" = ? AND "ip_address_end" IS NULL');
         $ban_info = $this->database->executePreparedFetchAll($prepared, array(@inet_pton($ban_ip)), PDO::FETCH_ASSOC);
 
         if ($ban_info === false)
@@ -95,7 +95,7 @@ class BanHammer
     public function addBan($ban_input)
     {
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . BAN_TABLE . '" ("board_id", "all_boards", "type", "creator", "ip_address_start", "reason", "length", "start_time")
+                'INSERT INTO "' . BANS_TABLE . '" ("board_id", "all_boards", "type", "creator", "ip_address_start", "reason", "length", "start_time")
 								VALUES (:board_id, :all_boards, :type, :creator, :ip_address_start, :reason, :length, :start_time)');
         $prepared->bindParam(':board_id', $ban_input['board'], PDO::PARAM_STR);
         $prepared->bindParam(':all_boards', $ban_input['all_boards'], PDO::PARAM_INT);
@@ -121,7 +121,7 @@ class BanHammer
     public function modifyBan($ban_input)
     {
         $prepared = $this->database->prepare(
-                'UPDATE "' . BAN_TABLE .
+                'UPDATE "' . BANS_TABLE .
                 '" SET "board_id" = :board_id, "all_boards" = :all_boards, "type" = :type, "ip_address_start" = :ip_address_start, "reason" = :reason, "length" = :length, "start_time" = :start_time, "appeal" = :appeal, "appeal_response" = :appeal_response, "appeal_status" = :appeal_status WHERE "ban_id" = :ban_id');
         $prepared->bindParam(':ban_id', $ban_input['ban_id'], PDO::PARAM_INT);
         $prepared->bindParam(':board_id', $ban_input['board'], PDO::PARAM_STR);
@@ -150,7 +150,7 @@ class BanHammer
             }
         }
 
-        $prepared = $this->database->prepare('DELETE FROM "' . BAN_TABLE . '" WHERE "ban_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . BANS_TABLE . '" WHERE "ban_id" = ?');
         $this->database->executePrepared($prepared, array($ban_id));
     }
 }

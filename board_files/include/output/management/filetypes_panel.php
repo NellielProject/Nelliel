@@ -20,7 +20,7 @@ function nel_render_filetypes_panel($user, $domain)
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/filetypes_panel.html');
     $filetypes = $database->executeFetchAll(
-            'SELECT * FROM "' . FILETYPE_TABLE . '" WHERE "extension" <> \'\' ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
+            'SELECT * FROM "' . FILETYPES_TABLE . '" WHERE "extension" <> \'\' ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
     $form_action = $url_constructor->dynamic(PHP_SELF, ['module' => 'filetypes', 'action' => 'add']);
     $dom->getElementById('add-filetype-form')->extSetAttribute('action', $form_action);
 

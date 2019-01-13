@@ -20,7 +20,7 @@ function nel_render_users_panel_main($user, $domain)
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/users_panel_main.html');
     $user_info_table = $dom->getElementById('user-info-table');
     $user_info_table_nodes = $user_info_table->getElementsByAttributeName('data-parse-id', true);
-    $users = $database->executeFetchAll('SELECT * FROM "' . USER_TABLE . '"',
+    $users = $database->executeFetchAll('SELECT * FROM "' . USERS_TABLE . '"',
             PDO::FETCH_ASSOC);
     $bgclass = 'row1';
 

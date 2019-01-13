@@ -24,7 +24,7 @@ function nel_verify_login()
                 nel_password_verify($_POST['super_sekrit'], $user->auth_data['user_password']))
         {
             $login_valid = true;
-            $prepared = $database->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
+            $prepared = $database->prepare('DELETE FROM "' . LOGIN_ATTEMPTS_TABLE . '" WHERE "ip_address" = ?');
             $database->executePrepared($prepared, [@inet_pton($_SERVER['REMOTE_ADDR'])], true);
             nel_clear_old_login_attempts($database, $cleanup_time);
         }
@@ -32,7 +32,7 @@ function nel_verify_login()
 
     if (!$login_valid)
     {
-        $prepared = $database->prepare('SELECT "last_attempt" FROM "' . LOGINS_TABLE . '" WHERE "ip_address" = ?');
+        $prepared = $database->prepare('SELECT "last_attempt" FROM "' . LOGIN_ATTEMPTS_TABLE . '" WHERE "ip_address" = ?');
         $result = $database->executePreparedFetch($prepared, [@inet_pton($_SERVER['REMOTE_ADDR'])], PDO::FETCH_ASSOC,
                 true);
 
@@ -41,7 +41,7 @@ function nel_verify_login()
             if (($attempt_time - $result['last_attempt']) > $delay_seconds)
             {
                 $prepared = $database->prepare(
-                        'UPDATE "' . LOGINS_TABLE . '" SET "last_attempt" = ? WHERE "ip_address" = ?');
+                        'UPDATE "' . LOGIN_ATTEMPTS_TABLE . '" SET "last_attempt" = ? WHERE "ip_address" = ?');
                 $database->executePrepared($prepared, [$attempt_time, @inet_pton($_SERVER['REMOTE_ADDR'])], true);
                 nel_clear_old_login_attempts($database, $cleanup_time);
             }
@@ -49,7 +49,7 @@ function nel_verify_login()
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . LOGINS_TABLE . '" (ip_address, last_attempt) VALUES (?, ?)');
+                    'INSERT INTO "' . LOGIN_ATTEMPTS_TABLE . '" (ip_address, last_attempt) VALUES (?, ?)');
             $database->executePrepared($prepared, [@inet_pton($_SERVER['REMOTE_ADDR']), $attempt_time], true);
             nel_clear_old_login_attempts($database, $cleanup_time);
         }
@@ -62,6 +62,6 @@ function nel_verify_login()
 
 function nel_clear_old_login_attempts($database, $cleanup_time)
 {
-    $prepared = $database->prepare('DELETE FROM "' . LOGINS_TABLE . '" WHERE "last_attempt" > ?');
+    $prepared = $database->prepare('DELETE FROM "' . LOGIN_ATTEMPTS_TABLE . '" WHERE "last_attempt" > ?');
     $database->executePrepared($prepared, [$cleanup_time], true);
 }

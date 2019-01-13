@@ -17,12 +17,12 @@ function nel_render_main_ban_panel($user, $domain)
     if ($domain->id() !== '')
     {
         $prepared = $database->prepare(
-                'SELECT * FROM "' . BAN_TABLE . '" WHERE "board_id" = ? ORDER BY "ban_id" DESC');
+                'SELECT * FROM "' . BANS_TABLE . '" WHERE "board_id" = ? ORDER BY "ban_id" DESC');
         $ban_list = $database->executePreparedFetchAll($prepared, [$domain->id()], PDO::FETCH_ASSOC);
     }
     else
     {
-        $ban_list = $database->executeFetchAll('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "ban_id" DESC', PDO::FETCH_ASSOC);
+        $ban_list = $database->executeFetchAll('SELECT * FROM "' . BANS_TABLE . '" ORDER BY "ban_id" DESC', PDO::FETCH_ASSOC);
     }
 
     $ban_info_table = $dom->getElementById('ban-info-table');

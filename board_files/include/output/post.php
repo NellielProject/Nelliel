@@ -426,12 +426,10 @@ function nel_render_post($domain, $gen_data, $dom)
                     {
                         $front_end_data = new \Nelliel\FrontEndData(nel_database());
                         $icon_set = $front_end_data->filetypeIconSet($domain->setting('filetype_icon_set_id'));
-                        $icons_web_path = '//' . $base_domain . '/' . ASSETS . 'icon_sets/filetype/' .
-                                $icon_set['directory'] . '/';
-                        $icons_file_path = FILETYPE_ICON_PATH . $icon_set['directory'] . '/';
+                        $icons_web_path = '//' . $base_domain . '/' . ICON_SETS_WEB_PATH . $icon_set['directory'] . '/';
+                        $icons_file_path = ICON_SETS_FILE_PATH . $icon_set['directory'] . '/';
                         $format_icon = utf8_strtolower($file['format']) . '.png';
                         $type_icon = utf8_strtolower($file['type']) . '.png';
-
                         if (file_exists($icons_file_path . utf8_strtolower($file['type']) . '/' . $format_icon))
                         {
                             $file['has_preview'] = true;

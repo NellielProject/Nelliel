@@ -22,7 +22,7 @@ class AuthUser extends AuthHandler
     public function loadFromDatabase($temp_database = null)
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT * FROM "' . USER_TABLE . '" WHERE "user_id" = ?');
+        $prepared = $database->prepare('SELECT * FROM "' . USERS_TABLE . '" WHERE "user_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->auth_id], PDO::FETCH_ASSOC, true);
 
         if (empty($result))
@@ -61,20 +61,20 @@ class AuthUser extends AuthHandler
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT "entry" FROM "' . USER_TABLE . '" WHERE "user_id" = ?');
+        $prepared = $database->prepare('SELECT "entry" FROM "' . USERS_TABLE . '" WHERE "user_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->auth_id], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $database->prepare(
-                    'UPDATE "' . USER_TABLE .
+                    'UPDATE "' . USERS_TABLE .
                     '" SET "user_id" = :user_id, "display_name" = :display_name, "user_password" = :user_password, "active" = :active, "last_login" = :last_login WHERE "entry" = :entry');
             $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
         }
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . USER_TABLE . '" ("user_id", "display_name", "user_password", "active", "failed_logins", "last_failed_login") VALUES
+                    'INSERT INTO "' . USERS_TABLE . '" ("user_id", "display_name", "user_password", "active", "failed_logins", "last_failed_login") VALUES
                     (:user_id, :display_name, :user_password, :active, :last_login)');
         }
 
@@ -124,7 +124,7 @@ class AuthUser extends AuthHandler
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [$this->auth_id]);
-        $prepared = $this->database->prepare('DELETE FROM "' . USER_TABLE . '" WHERE "user_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . USERS_TABLE . '" WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [$this->auth_id]);
     }
 

@@ -9,35 +9,33 @@ if (ini_get('date.timezone') === '')
     date_default_timezone_set('UTC');
 }
 
-define('ASSETS', 'assets/'); // Directory for CSS, Javascript and other web-related support files
-
-define('ASSETS_DIR', 'assets'); // Directory for CSS, Javascript and other web-related support files
-define('STYLES_DIR', 'styles'); // Directory for CSS, Javascript and other web-related support files
-define('ICON_SET_DIR', 'icon_sets'); // Directory for CSS, Javascript and other web-related support files
-define('IMAGES_DIR', ASSETS . 'imagez'); // Images used by Nelliel go here
-define('JS_DIR', ASSETS . 'js'); // Javascript files here
+define('ASSETS_DIR', 'assets');
+define('STYLES_DIR', 'styles');
+define('ICON_SET_DIR', 'icon_sets');
+define('IMAGES_DIR', ASSETS_DIR . 'imagez');
+define('JS_DIR', ASSETS_DIR . 'js');
 
 define('PHP_SELF', 'imgboard.php'); // Name of main script file
 define('PHP_SELF2', 'index'); // Name of board index
 define('PHP_EXT', '.html'); // Extension used for board pages
 define('JSON_EXT', '.json'); // Extension used for board pages
 
-define('BAN_TABLE', 'nelliel_bans');
-define('USER_TABLE', 'nelliel_users');
-define('ROLES_TABLE', 'nelliel_roles');
-define('USER_ROLE_TABLE', 'nelliel_user_role');
-define('ROLE_PERMISSIONS_TABLE', 'nelliel_role_permissions');
-define('PERMISSIONS_TABLE', 'nelliel_permissions');
-define('LOGINS_TABLE', 'nelliel_login_attempts');
-define('BOARD_DATA_TABLE', 'nelliel_board_data');
-define('SITE_CONFIG_TABLE', 'nelliel_site_config');
-define('FILETYPE_TABLE', 'nelliel_filetypes');
-define('FILE_FILTER_TABLE', 'nelliel_file_filters');
-define('BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults');
-define('REPORTS_TABLE', 'nelliel_reports');
-define('TEMPLATES_TABLE', 'nelliel_templates');
 define('ASSETS_TABLE', 'nelliel_assets');
+define('BANS_TABLE', 'nelliel_bans');
+define('BOARD_DATA_TABLE', 'nelliel_board_data');
+define('BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults');
 define('CAPTCHA_TABLE', 'nelliel_captcha');
+define('FILE_FILTERS_TABLE', 'nelliel_file_filters');
+define('FILETYPES_TABLE', 'nelliel_filetypes');
+define('LOGIN_ATTEMPTS_TABLE', 'nelliel_login_attempts');
+define('PERMISSIONS_TABLE', 'nelliel_permissions');
+define('REPORTS_TABLE', 'nelliel_reports');
+define('ROLE_PERMISSIONS_TABLE', 'nelliel_role_permissions');
+define('ROLES_TABLE', 'nelliel_roles');
+define('SITE_CONFIG_TABLE', 'nelliel_site_config');
+define('TEMPLATES_TABLE', 'nelliel_templates');
+define('USER_ROLE_TABLE', 'nelliel_user_role');
+define('USERS_TABLE', 'nelliel_users');
 define('VERSION_TABLE', 'nelliel_version');
 
 define('CONFIG_FILE_PATH', BASE_PATH . 'configuration/');
