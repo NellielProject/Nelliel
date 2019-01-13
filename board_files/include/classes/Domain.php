@@ -113,7 +113,7 @@ class Domain
 
             if (USE_INTERNAL_CACHE)
             {
-                $this->cache_handler->writeCacheFile(CACHE_PATH . $this->domain_id . '/', 'domain_settings.php',
+                $this->cache_handler->writeCacheFile(CACHE_FILE_PATH . $this->domain_id . '/', 'domain_settings.php',
                         '$domain_settings = ' . var_export($settings, true) . ';');
             }
         }
@@ -131,7 +131,7 @@ class Domain
 
             if (USE_INTERNAL_CACHE)
             {
-                $this->cache_handler->writeCacheFile(CACHE_PATH . $this->domain_id . '/', 'domain_settings.php',
+                $this->cache_handler->writeCacheFile(CACHE_FILE_PATH . $this->domain_id . '/', 'domain_settings.php',
                         '$domain_settings = ' . var_export($settings, true) . ';');
             }
         }
@@ -178,13 +178,13 @@ class Domain
             if ($this->domain_id === '')
             {
                 $settings = $this->loadSiteSettingsFromDatabase();
-                $this->cache_handler->writeCacheFile(CACHE_PATH, 'site_settings.php',
+                $this->cache_handler->writeCacheFile(CACHE_FILE_PATH, 'site_settings.php',
                         '$site_settings = ' . var_export($settings, true) . ';');
             }
             else
             {
                 $settings = $this->loadBoardSettingsFromDatabase();
-                $this->cache_handler->writeCacheFile(CACHE_PATH . $this->domain_id . '/', 'domain_settings.php',
+                $this->cache_handler->writeCacheFile(CACHE_FILE_PATH . $this->domain_id . '/', 'domain_settings.php',
                         '$domain_settings = ' . var_export($settings, true) . ';');
             }
         }

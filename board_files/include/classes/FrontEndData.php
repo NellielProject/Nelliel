@@ -26,51 +26,64 @@ class FrontEndData
 
     private function loadStylesData()
     {
-        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . STYLES_TABLE . '"', PDO::FETCH_ASSOC);
+        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\'', PDO::FETCH_ASSOC);
 
         foreach ($all_data as $data)
         {
+            $info = json_decode($data['info'], true);
+
             if ($data['is_default'] == 1)
             {
-                $this->default_css_style = $data;
+                $this->default_css_style = $info;
             }
             else
             {
-                $this->css_styles[$data['id']] = $data;
+                $this->css_styles[$data['id']] = $info;
             }
         }
     }
 
     private function loadFiletypeIconData()
     {
-        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . ICON_SET_TABLE . '" WHERE "set_type" = \'filetype\'', PDO::FETCH_ASSOC);
+        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'icon-set\'',
+                PDO::FETCH_ASSOC);
 
         foreach ($all_data as $data)
         {
+            $info = json_decode($data['info'], true);
+
+            if ($info['set_type'] !== 'filetype')
+            {
+                continue;
+            }
+
             if ($data['is_default'] == 1)
             {
-                $this->default_filetype_icon_set = $data;
+                $this->default_filetype_icon_set = $info;
             }
             else
             {
-                $this->filetype_icon_sets[$data['id']] = $data;
+                $this->templates[$data['id']] = $info;
             }
         }
     }
 
     private function loadTemplateData()
     {
-        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . TEMPLATE_TABLE . '"', PDO::FETCH_ASSOC);
+        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'template\'',
+                PDO::FETCH_ASSOC);
 
         foreach ($all_data as $data)
         {
+            $info = json_decode($data['info'], true);
+
             if ($data['is_default'] == 1)
             {
-                $this->default_template = $data;
+                $this->default_template = $info;
             }
             else
             {
-                $this->templates[$data['id']] = $data;
+                $this->templates[$data['id']] = $info;
             }
         }
     }
@@ -87,7 +100,7 @@ class FrontEndData
             return $this->css_styles;
         }
 
-        if(!isset($this->css_styles[$template]) && $return_default)
+        if (!isset($this->css_styles[$template]) && $return_default)
         {
             return $this->default_css_style;
         }
@@ -107,7 +120,7 @@ class FrontEndData
             return $this->templates;
         }
 
-        if(!isset($this->templates[$template]) && $return_default)
+        if (!isset($this->templates[$template]) && $return_default)
         {
             return $this->default_template;
         }
@@ -127,7 +140,7 @@ class FrontEndData
             return $this->filetype_icon_sets;
         }
 
-        if(!isset($this->filetype_icon_sets[$set]) && $return_default)
+        if (!isset($this->filetype_icon_sets[$set]) && $return_default)
         {
             return $this->default_filetype_icon_set;
         }

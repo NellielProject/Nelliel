@@ -48,7 +48,7 @@ if (RUN_SETUP_CHECK)
     unset ($setup);
 }
 
-require_once CONFIG_PATH . 'generated.php';
+require_once CONFIG_FILE_PATH . 'generated.php';
 
 if (nel_setup_stuff_done())
 {

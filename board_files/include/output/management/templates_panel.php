@@ -22,21 +22,16 @@ function nel_render_templates_panel($user, $domain)
     $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
     $template_inis = $ini_parser->parseDirectories(TEMPLATE_PATH, 'template_info.ini');
 
-    $templates = $database->executeFetchAll('SELECT * FROM "' . TEMPLATE_TABLE . '" ORDER BY "entry" DESC',
-            PDO::FETCH_ASSOC);
+    $templates = $database->executeFetchAll(
+            'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'template\' ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
     $installed_ids = array();
-    $default_template_id = '';
     $installed_template_list = $dom->getElementById('installed-template-list');
     $installed_template_list_nodes = $installed_template_list->getElementsByAttributeName('data-parse-id', true);
     $bgclass = 'row1';
 
     foreach ($templates as $template)
     {
-        if ($template['is_default'] == 1)
-        {
-            $default_template_id = $template['id'];
-        }
-
+        $template_info = json_decode($template['info'], true);
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $installed_ids[] = $template['id'];
         $template_row = $dom->copyNode($installed_template_list_nodes['template-row'], $installed_template_list,
@@ -44,9 +39,9 @@ function nel_render_templates_panel($user, $domain)
         $template_row->extSetAttribute('class', $bgclass);
         $template_row_nodes = $template_row->getElementsByAttributeName('data-parse-id', true);
         $template_row_nodes['template-id']->setContent($template['id']);
-        $template_row_nodes['template-name']->setContent($template['name']);
-        $template_row_nodes['template-directory']->setContent($template['directory']);
-        $template_row_nodes['template-output']->setContent($template['output_type']);
+        $template_row_nodes['template-name']->setContent($template_info['name']);
+        $template_row_nodes['template-directory']->setContent($template_info['directory']);
+        $template_row_nodes['template-output']->setContent($template_info['output_type']);
 
         if ($template['is_default'] == 1)
         {
@@ -73,11 +68,6 @@ function nel_render_templates_panel($user, $domain)
 
     foreach ($template_inis as $template)
     {
-        if ($template['id'] === $default_template_id)
-        {
-            continue;
-        }
-
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $template_row = $dom->copyNode($available_template_list_nodes['template-row'], $available_template_list,
                 'append');

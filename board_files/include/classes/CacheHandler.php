@@ -26,9 +26,9 @@ class CacheHandler
     {
         if (USE_INTERNAL_CACHE)
         {
-            if (file_exists(CACHE_PATH . $filename))
+            if (file_exists(CACHE_FILE_PATH . $filename))
             {
-                include CACHE_PATH . $filename;
+                include CACHE_FILE_PATH . $filename;
                 $array = $$array_variable;
                 return $array;
             }
@@ -44,9 +44,9 @@ class CacheHandler
 
     public function loadHashes()
     {
-        if (file_exists(CACHE_PATH . 'hashes.php'))
+        if (file_exists(CACHE_FILE_PATH . 'hashes.php'))
         {
-            include CACHE_PATH . 'hashes.php';
+            include CACHE_FILE_PATH . 'hashes.php';
             $this->hashes = $hashes;
         }
     }
@@ -54,12 +54,12 @@ class CacheHandler
     public function updateHash($id, $hash)
     {
         $this->hashes[$id] = $hash;
-        $this->writeCacheFile(CACHE_PATH, 'hashes.php', '$hashes = ' . var_export($this->hashes, true) . ';');
+        $this->writeCacheFile(CACHE_FILE_PATH, 'hashes.php', '$hashes = ' . var_export($this->hashes, true) . ';');
     }
 
     public function writeCacheFile($path, $filename, $content, $header = '', $footer = '', $file_perm = FILE_PERM)
     {
-        if (!is_writable(CACHE_PATH))
+        if (!is_writable(CACHE_FILE_PATH))
         {
             return; // TODO: Work out so this can be a proper error
         }

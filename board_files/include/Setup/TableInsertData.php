@@ -19,21 +19,19 @@ class TableInsertData
         $database = nel_database();
         $insert_query = 'INSERT INTO "' . VERSION_TABLE . '" ("item_id", "item_type", "structure_version", "data_version") VALUES (?, ?, ?, ?)';
         $prepared = $database->prepare($insert_query);
+        $database->executePrepared($prepared, [ASSETS_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [BAN_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [BOARD_DATA_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [BOARD_DEFAULTS_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [CAPTCHA_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [FILETYPE_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [FILE_FILTER_TABLE, "table", '1', '1']);
-        $database->executePrepared($prepared, [ICON_SET_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [LOGINS_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [PERMISSIONS_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [REPORTS_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [ROLES_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [ROLE_PERMISSIONS_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [SITE_CONFIG_TABLE, "table", '1', '1']);
-        $database->executePrepared($prepared, [STYLES_TABLE, "table", '1', '1']);
-        $database->executePrepared($prepared, [TEMPLATE_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [USER_TABLE, "table", '1', '1']);
         $database->executePrepared($prepared, [USER_ROLE_TABLE, "table", '1', '1']);
         nel_setup_stuff_done(true);
@@ -572,34 +570,25 @@ class TableInsertData
         nel_setup_stuff_done(true);
     }
 
-    public function styleDefaults()
+    public function assetDefaults()
     {
         $database = nel_database();
-        $insert_query = "INSERT INTO " . STYLES_TABLE . " (id, name, directory, main_file, style_type, is_default) VALUES (?, ?, ?, ?, ?, ?)";
+        $insert_query = "INSERT INTO " . ASSETS_TABLE . " (id, type, is_default, info) VALUES (?, ?, ?, ?)";
         $prepared = $database->prepare($insert_query);
-        $database->executePrepared($prepared, ['style-nelliel', 'Nelliel', 'nelliel', 'nelliel.css', 'css', 1]);
-        $database->executePrepared($prepared, ['style-nelliel-b', 'Nelliel B', 'nelliel_b', 'nelliel_b.css', 'css', 0]);
-        $database->executePrepared($prepared, ['style-futaba', 'Futaba', 'futaba', 'futaba.css', 'css', 0]);
-        $database->executePrepared($prepared, ['style-burichan', 'Burichan', 'burichan', 'burichan.css', 'css', 0]);
-        $database->executePrepared($prepared, ['style-nigra', 'Nigra', 'nigra', 'nigra.css', 'css', 0]);
-        nel_setup_stuff_done(true);
-    }
-
-    public function templateDefaults()
-    {
-        $database = nel_database();
-        $insert_query = "INSERT INTO " . TEMPLATE_TABLE . " (id, name, directory, output_type, is_default) VALUES (?, ?, ?, ?, ?)";
-        $prepared = $database->prepare($insert_query);
-        $database->executePrepared($prepared, ['nelliel-template-basic', 'Nelliel Basic Template', 'nelliel_basic', 'html', 1]);
-        nel_setup_stuff_done(true);
-    }
-
-    public function iconSetDefaults()
-    {
-        $database = nel_database();
-        $insert_query = "INSERT INTO " . ICON_SET_TABLE . " (id, name, directory, set_type, is_default) VALUES (?, ?, ?, ?, ?)";
-        $prepared = $database->prepare($insert_query);
-        $database->executePrepared($prepared, ['filetype-nelliel-basic', 'Nelliel Basic Filetype Icon Set', 'filetype_nelliel_basic', 'filetype', 1]);
+        $database->executePrepared($prepared, ['template-nelliel-basic', 'template', 1,
+        '{"id": "template-nelliel-basic","directory": "nelliel_basic","name": "Nelliel Basic Template","version": "1.0","description": "The basic template for Nelliel.","output_type": "html"}']);
+        $database->executePrepared($prepared, ['filetype-nelliel-basic', 'icon-set', 1,
+        '{"id": "filetype-nelliel-basic","directory": "filetype_nelliel_basic","name": "Nelliel Basic Filetype Icon Set","set_type": "filetype","version": "1.0","description": "The basic filetype icon set for Nelliel."}']);
+        $database->executePrepared($prepared, ['style-nelliel', 'style', 1,
+        '{"id": "style-nelliel","directory": "nelliel","main_file": "nelliel.css","name": "Nelliel","version": "1.0","description": "Nelliel style","style_type": "css"}']);
+        $database->executePrepared($prepared, ['style-nelliel-b', 'style', 0,
+        '{"id": "style-nelliel-b","directory": "nelliel_b","main_file": "nelliel_b.css","name": "Nelliel B","version": "1.0","description": "Nelliel B style","style_type": "css"}']);
+        $database->executePrepared($prepared, ['style-futaba', 'style', 0,
+        '{"id": "style-futaba","directory": "futaba","main_file": "futaba.css","name": "Futaba","version": "1.0","description": "Futaba style","style_type": "css"}']);
+        $database->executePrepared($prepared, ['style-burichan', 'style', 0,
+        '{"id": "style-burichan","directory": "burichan","main_file": "burichan.css","name": "Burichan","version": "1.0","description": "Burichan style","style_type": "css"}']);
+        $database->executePrepared($prepared, ['style-nigra', 'style', 0,
+        '{"id": "style-nigra","directory": "nigra","main_file": "nigra.css","name": "Nigra","version": "1.0","description": "Nigra style","style_type": "css"}']);
         nel_setup_stuff_done(true);
     }
 }

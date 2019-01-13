@@ -21,9 +21,9 @@ function nel_render_styles_panel($user, $domain)
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/styles_panel.html');
 
     $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
-    $style_inis = $ini_parser->parseDirectories(STYLES_PATH, 'style_info.ini');
+    $style_inis = $ini_parser->parseDirectories(STYLES_WEB_PATH, 'style_info.ini');
     $styles = $database->executeFetchAll(
-            'SELECT * FROM "' . STYLES_TABLE . '" ORDER BY "style_type" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
+            'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
     $installed_ids = array();
     $installed_style_list = $dom->getElementById('installed-style-list');
     $installed_style_list_nodes = $installed_style_list->getElementsByAttributeName('data-parse-id', true);
@@ -31,6 +31,7 @@ function nel_render_styles_panel($user, $domain)
 
     foreach ($styles as $style)
     {
+        $style_info = json_decode($style['info'], true);
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $installed_ids[] = $style['id'];
         $style_row = $dom->copyNode($installed_style_list_nodes['style-row'], $installed_style_list,
@@ -38,9 +39,9 @@ function nel_render_styles_panel($user, $domain)
         $style_row->modifyAttribute('class', ' ' . $bgclass, 'after');
         $style_row_nodes = $style_row->getElementsByAttributeName('data-parse-id', true);
         $style_row_nodes['id']->setContent($style['id']);
-        $style_row_nodes['style_type']->setContent(strtoupper($style['style_type']));
-        $style_row_nodes['name']->setContent($style['name']);
-        $style_row_nodes['directory']->setContent($style['directory']);
+        $style_row_nodes['style_type']->setContent(strtoupper($style_info['style_type']));
+        $style_row_nodes['name']->setContent($style_info['name']);
+        $style_row_nodes['directory']->setContent($style_info['directory']);
 
         if ($style['is_default'] == 1)
         {
@@ -52,11 +53,11 @@ function nel_render_styles_panel($user, $domain)
         {
             $default_link = $url_constructor->dynamic(PHP_SELF,
                     ['module' => 'styles', 'action' => 'make-default', 'style-id' => $style['id'],
-                    'style-type' => $style['style_type']]);
+                    'style-type' => $style_info['style_type']]);
                     $style_row_nodes['default-link']->extSetAttribute('href', $default_link);
                     $remove_link = $url_constructor->dynamic(PHP_SELF,
                             ['module' => 'styles', 'action' => 'remove', 'style-id' => $style['id'],
-                            'set-type' => $style['style_type']]);
+                            'set-type' => $style_info['style_type']]);
                             $style_row_nodes['remove-link']->extSetAttribute('href', $remove_link);
         }
     }

@@ -211,7 +211,7 @@ class FileTypes
         if (USE_INTERNAL_CACHE)
         {
             $this->settingsLoaded($board_id, true, true);
-            $this->cache_handler->writeCacheFile(CACHE_PATH . $board_id . '/', 'filetype_settings.php',
+            $this->cache_handler->writeCacheFile(CACHE_FILE_PATH . $board_id . '/', 'filetype_settings.php',
                     '$filetype_settings = ' . var_export(self::$filetype_settings[$board_id], true) . ';');
         }
     }

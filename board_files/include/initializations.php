@@ -10,8 +10,11 @@ if (ini_get('date.timezone') === '')
 }
 
 define('ASSETS', 'assets/'); // Directory for CSS, Javascript and other web-related support files
+
+define('ASSETS_DIR', 'assets'); // Directory for CSS, Javascript and other web-related support files
+define('STYLES_DIR', 'styles'); // Directory for CSS, Javascript and other web-related support files
+define('ICON_SET_DIR', 'icon_sets'); // Directory for CSS, Javascript and other web-related support files
 define('IMAGES_DIR', ASSETS . 'imagez'); // Images used by Nelliel go here
-define('CSS_DIR', ASSETS . 'styles'); // CSS files here
 define('JS_DIR', ASSETS . 'js'); // Javascript files here
 
 define('PHP_SELF', 'imgboard.php'); // Name of main script file
@@ -32,22 +35,22 @@ define('FILETYPE_TABLE', 'nelliel_filetypes'); // Site-wide filetypes
 define('FILE_FILTER_TABLE', 'nelliel_file_filters'); // Site-wide file filters
 define('BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults'); // Default config for new boards
 define('REPORTS_TABLE', 'nelliel_reports'); // Content reports
-define('STYLES_TABLE', 'nelliel_styles'); // Styles
-define('TEMPLATE_TABLE', 'nelliel_templates'); // Templates
-define('ICON_SET_TABLE', 'nelliel_icon_sets'); // Icon Sets
+define('ASSETS_TABLE', 'nelliel_assets'); // Assets
 define('CAPTCHA_TABLE', 'nelliel_captcha'); // CAPTCHA data
 define('VERSION_TABLE', 'nelliel_version'); // Version data
 
-define('CONFIG_PATH', BASE_PATH . 'configuration/'); // Base config path
-define('CACHE_PATH', FILES_PATH . 'cache/'); // Base cache path
-define('WEB_PATH', BASE_PATH . ASSETS); // Base web path
+define('CONFIG_FILE_PATH', BASE_PATH . 'configuration/');
+define('CACHE_FILE_PATH', FILES_PATH . 'cache/');
 define('TEMPLATE_PATH', FILES_PATH . 'templates/'); // Base template path
-define('ICON_SET_PATH', WEB_PATH . 'icon_sets/'); // Base icon set path
-define('STYLES_PATH', WEB_PATH . 'styles/'); // Base icon set path
 define('PLUGINS_PATH', FILES_PATH . 'plugins/'); // Base plugins path
 define('LANGUAGE_PATH', FILES_PATH . 'languages/'); // Language path
 define('LOCALE_PATH', LANGUAGE_PATH . 'locale/'); // Locale files path
 define('SQLITE_DB_DEFAULT_PATH', FILES_PATH); // Base SQLite DB location
+define('STYLES_FILE_PATH', BASE_PATH . ASSETS_DIR . '/' . STYLES_DIR . '/');
+define('ICON_SETS_FILE_PATH', BASE_PATH . ASSETS_DIR . '/' . ICON_SET_DIR . '/');
+
+define('STYLES_WEB_PATH', ASSETS_DIR . '/' . STYLES_DIR . '/');
+define('ICON_SETS_WEB_PATH', ASSETS_DIR . '/' . ICON_SET_DIR . '/');
 
 define('BASE_HONEYPOT_FIELD1', 'display_signature'); // Honeypot field name
 define('BASE_HONEYPOT_FIELD2', 'signature'); // Honeypot field name
@@ -70,7 +73,7 @@ $crypt_config['argon2_memory_cost'] = 1024;
 $crypt_config['argon2_time_cost'] = 2;
 $crypt_config['argon2_threads'] = 2;
 
-require_once CONFIG_PATH . 'config.php';
+require_once CONFIG_FILE_PATH . 'config.php';
 
 define('DEFAULTADMIN', $base_config['defaultadmin']);
 define('DEFAULTADMIN_PASS', $base_config['defaultadmin_pass']);
@@ -113,7 +116,7 @@ define('NEL_PASSWORD_ARGON2_THREADS', $crypt_config['password_argon2_threads']);
 $setup = new \Nelliel\Setup\Setup();
 $setup->checkGenerated();
 
-require_once CONFIG_PATH . 'generated.php';
+require_once CONFIG_FILE_PATH . 'generated.php';
 
 define('TRIPCODE_PEPPER', $generated['tripcode_pepper']);
 

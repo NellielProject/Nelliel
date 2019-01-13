@@ -60,7 +60,6 @@ class AdminTemplates extends AdminHandler
         }
 
         $template_id = $_GET['template-id'];
-
         $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
         $template_inis = $ini_parser->parseDirectories(TEMPLATE_PATH, 'template_info.ini');
 
@@ -68,16 +67,13 @@ class AdminTemplates extends AdminHandler
         {
             if ($ini['id'] === $template_id)
             {
-                $display_name = $ini['name'];
-                $directory = $ini['directory'];
-                $output = $ini['output_type'];
+                $info = json_encode($ini);
             }
         }
 
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . TEMPLATE_TABLE .
-                '" ("id", "name", "directory", "output_type", "is_default") VALUES (?, ?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$template_id, $display_name, $directory, $output, 0]);
+                'INSERT INTO "' . ASSETS_TABLE . '" ("id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
+        $this->database->executePrepared($prepared, [$template_id, 'template', 0, $info]);
         $this->renderPanel($user);
     }
 
@@ -97,8 +93,9 @@ class AdminTemplates extends AdminHandler
         }
 
         $template_id = $_GET['template-id'];
-        $prepared = $this->database->prepare('DELETE FROM "' . TEMPLATE_TABLE . '" WHERE "id" = ?');
-        $this->database->executePrepared($prepared, array($template_id));
+        $prepared = $this->database->prepare(
+                'DELETE FROM "' . ASSETS_TABLE . '" WHERE "id" = ? AND "type" = \'template\'');
+        $this->database->executePrepared($prepared, [$template_id]);
         $this->renderPanel($user);
     }
 
@@ -110,9 +107,9 @@ class AdminTemplates extends AdminHandler
         }
 
         $template_id = $_GET['template-id'];
-        $this->database->exec('UPDATE "' . TEMPLATE_TABLE . '" SET "is_default" = 0');
-        $prepared = $this->database->prepare('UPDATE "' . TEMPLATE_TABLE . '" SET "is_default" = ? WHERE "id" = ?');
-        $this->database->executePrepared($prepared, [1, $template_id]);
+        $this->database->exec('UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 0 WHERE "type" = \'template\'');
+        $prepared = $this->database->prepare('UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 1 WHERE "id" = ?');
+        $this->database->executePrepared($prepared, [$template_id]);
         $this->renderPanel($user);
     }
 }

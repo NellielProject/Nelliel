@@ -58,24 +58,22 @@ class AdminIconSets extends AdminHandler
         {
             nel_derp(461, _gettext('You are not allowed to modify icon setss.'));
         }
-
         $icon_set_id = $_GET['icon-set-id'];
         $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
-        $icon_set_inis = $ini_parser->parseDirectories(ICON_SET_PATH, 'icon_set_info.ini');
+        $icon_set_inis = $ini_parser->parseDirectories(ICON_SETS_FILE_PATH, 'icon_set_info.ini');
 
         foreach ($icon_set_inis as $ini)
         {
             if ($ini['id'] === $icon_set_id)
             {
-                $name = $ini['name'];
-                $directory = $ini['directory'];
-                $set_type = $ini['set_type'];
+                $info = json_encode($ini);
             }
         }
+
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . ICON_SET_TABLE .
-                '" ("id", "name", "directory", "set_type", "is_default") VALUES (?, ?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$icon_set_id, $name, $directory, $set_type, 0]);
+                'INSERT INTO "' . ASSETS_TABLE .
+                '" ("id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
+        $this->database->executePrepared($prepared, [$icon_set_id, 'icon-set', 0, $info]);
         $this->renderPanel($user);
     }
 
@@ -95,9 +93,8 @@ class AdminIconSets extends AdminHandler
         }
 
         $icon_set_id = $_GET['icon-set-id'];
-        $set_type = $_GET['set-type'];
-        $prepared = $this->database->prepare('DELETE FROM "' . ICON_SET_TABLE . '" WHERE "id" = ? AND "set_type" = ?');
-        $this->database->executePrepared($prepared, array($icon_set_id, $set_type));
+        $prepared = $this->database->prepare('DELETE FROM "' . ASSETS_TABLE . '" WHERE "id" = ? AND "type" = ?');
+        $this->database->executePrepared($prepared, array($icon_set_id, 'icon-set'));
         $this->renderPanel($user);
     }
 
@@ -110,10 +107,9 @@ class AdminIconSets extends AdminHandler
 
         $icon_set_id = $_GET['icon-set-id'];
         $set_type = $_GET['set-type'];
-        $prepared = $this->database->prepare('UPDATE "' . ICON_SET_TABLE . '" SET "is_default" = 0 WHERE "set_type" = ?');
-        $this->database->executePrepared($prepared, [$set_type]);
-        $prepared = $this->database->prepare('UPDATE "' . ICON_SET_TABLE . '" SET "is_default" = 1 WHERE "id" = ? AND "set_type" = ?');
-        $this->database->executePrepared($prepared, [$icon_set_id, $set_type]);
+        $this->database->exec('UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 0 WHERE "type" = \'icon-set\'');
+        $prepared = $this->database->prepare('UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 1 WHERE "id" = ? AND "type" = \'icon-set\'');
+        $this->database->executePrepared($prepared, [$icon_set_id]);
         $this->renderPanel($user);
     }
 }

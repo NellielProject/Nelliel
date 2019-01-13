@@ -193,10 +193,11 @@ function nel_build_header_styles($dom, $dotdot)
     $database = nel_database();
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $top_styles_nav = $dom->getElementById('top-styles');
-    $styles = $database->executeFetchAll('SELECT * FROM "' . STYLES_TABLE . '" ORDER BY "entry", "is_default" DESC', PDO::FETCH_ASSOC);
+    $styles = $database->executeFetchAll('SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC', PDO::FETCH_ASSOC);
 
     foreach ($styles as $style)
     {
+        $info = json_decode($style['info'], true);
         $new_head_link = $dom->createElement('link');
 
         if($style['is_default'])
@@ -211,15 +212,15 @@ function nel_build_header_styles($dom, $dotdot)
         $new_head_link->extSetAttribute('data-parse-id', 'style-board');
         $new_head_link->extSetAttribute('data-id', $style['id']);
         $new_head_link->extSetAttribute('type', 'text/css');
-        $new_head_link->extSetAttribute('href', $dotdot . CSS_DIR . '/' . $style['directory'] . '/' . $style['main_file']);
-        $new_head_link->extSetAttribute('title', $style['name']);
+        $new_head_link->extSetAttribute('href', $dotdot . STYLES_WEB_PATH . $info['directory'] . '/' . $info['main_file']);
+        $new_head_link->extSetAttribute('title', $info['name']);
         $head_element->appendChild($new_head_link);
 
         $style_link = $dom->createElement('a');
         $style_link->extSetAttribute('href', '#');
         $style_link->extSetAttribute('data-command', 'change-style');
         $style_link->extSetAttribute('data-id', $style['id']);
-        $style_link->setContent('[' . $style['name'] . ']');
+        $style_link->setContent('[' . $info['name'] . ']');
         $top_styles_nav->appendChild($style_link);
         $top_styles_nav->appendChild($dom->createTextNode("\n"));
     }

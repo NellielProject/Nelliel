@@ -20,9 +20,9 @@ function nel_render_icon_sets_panel($user, $domain)
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/icon_sets_panel.html');
     $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
-    $icon_set_inis = $ini_parser->parseDirectories(ICON_SET_PATH, 'icon_set_info.ini');
+    $icon_set_inis = $ini_parser->parseDirectories(ICON_SETS_WEB_PATH, 'icon_set_info.ini');
     $icon_sets = $database->executeFetchAll(
-            'SELECT * FROM "' . ICON_SET_TABLE . '" ORDER BY "set_type" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
+            'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'icon-set\' ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
     $installed_ids = array();
     $installed_icon_set_list = $dom->getElementById('installed-icon-set-list');
     $installed_icon_set_list_nodes = $installed_icon_set_list->getElementsByAttributeName('data-parse-id', true);
@@ -30,6 +30,7 @@ function nel_render_icon_sets_panel($user, $domain)
 
     foreach ($icon_sets as $icon_set)
     {
+        $icon_set_info = json_decode($icon_set['info'], true);
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $installed_ids[] = $icon_set['id'];
         $icon_set_row = $dom->copyNode($installed_icon_set_list_nodes['icon-set-row'], $installed_icon_set_list,
@@ -37,9 +38,9 @@ function nel_render_icon_sets_panel($user, $domain)
         $icon_set_row->modifyAttribute('class', ' ' . $bgclass, 'after');
         $icon_set_row_nodes = $icon_set_row->getElementsByAttributeName('data-parse-id', true);
         $icon_set_row_nodes['id']->setContent($icon_set['id']);
-        $icon_set_row_nodes['set_type']->setContent(strtoupper($icon_set['set_type']));
-        $icon_set_row_nodes['name']->setContent($icon_set['name']);
-        $icon_set_row_nodes['directory']->setContent($icon_set['directory']);
+        $icon_set_row_nodes['set_type']->setContent(strtoupper($icon_set_info['set_type']));
+        $icon_set_row_nodes['name']->setContent($icon_set_info['name']);
+        $icon_set_row_nodes['directory']->setContent($icon_set_info['directory']);
 
         if ($icon_set['is_default'] == 1)
         {
@@ -51,11 +52,11 @@ function nel_render_icon_sets_panel($user, $domain)
         {
             $default_link = $url_constructor->dynamic(PHP_SELF,
                     ['module' => 'icon-sets', 'action' => 'make-default', 'icon-set-id' => $icon_set['id'],
-                        'set-type' => $icon_set['set_type']]);
+                        'set-type' => $icon_set_info['set_type']]);
             $icon_set_row_nodes['default-link']->extSetAttribute('href', $default_link);
             $remove_link = $url_constructor->dynamic(PHP_SELF,
                     ['module' => 'icon-sets', 'action' => 'remove', 'icon-set-id' => $icon_set['id'],
-                        'set-type' => $icon_set['set_type']]);
+                        'set-type' => $icon_set_info['set_type']]);
             $icon_set_row_nodes['remove-link']->extSetAttribute('href', $remove_link);
         }
     }

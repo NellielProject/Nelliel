@@ -58,12 +58,21 @@ class AdminStyles extends AdminHandler
         {
             nel_derp(431, _gettext('You are not allowed to modify styles.'));
         }
-
         $style_id = $_GET['style-id'];
+        $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
+        $style_inis = $ini_parser->parseDirectories(STYLES_FILE_PATH, 'style_info.ini');
+
+        foreach ($style_inis as $ini)
+        {
+            if ($ini['id'] === $style_id)
+            {
+                $info = json_encode($ini);
+            }
+        }
 
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . STYLES_TABLE . '" ("id", "name", "file", "is_default") VALUES (?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$id, 'css', 'file', 0]);
+                'INSERT INTO "' . ASSETS_TABLE . '" ("id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
+        $this->database->executePrepared($prepared, [$style_id, 'style', 0, $info]);
         $this->renderPanel($user);
     }
 
@@ -83,7 +92,7 @@ class AdminStyles extends AdminHandler
         }
 
         $style_id = $_GET['style-id'];
-        $prepared = $this->database->prepare('DELETE FROM "' . STYLES_TABLE . '" WHERE "id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . ASSETS_TABLE . '" WHERE "id" = ? AND "type" = \'style\'');
         $this->database->executePrepared($prepared, array($style_id));
         $this->renderPanel($user);
     }
@@ -96,9 +105,10 @@ class AdminStyles extends AdminHandler
         }
 
         $style_id = $_GET['style-id'];
-        $this->database->exec('UPDATE "' . STYLES_TABLE . '" SET "is_default" = 0');
-        $prepared = $this->database->prepare('UPDATE "' . STYLES_TABLE . '" SET "is_default" = ? WHERE "id" = ?');
-        $this->database->executePrepared($prepared, [1, $style_id]);
+        $this->database->exec('UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 0 WHERE "type" = \'style\'');
+        $prepared = $this->database->prepare(
+                'UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 1 WHERE "id" = ? AND "type" = \'style\'');
+        $this->database->executePrepared($prepared, [$style_id]);
         $this->renderPanel($user);
     }
 }

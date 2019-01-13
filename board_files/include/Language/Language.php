@@ -37,9 +37,9 @@ class Language
 
         if ($cache_handler->checkHash($file, $hash) && USE_INTERNAL_CACHE)
         {
-            if (file_exists(CACHE_PATH . 'language/' . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel_po.php'))
+            if (file_exists(CACHE_FILE_PATH . 'language/' . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel_po.php'))
             {
-                include CACHE_PATH . 'language/' . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel_po.php';
+                include CACHE_FILE_PATH . 'language/' . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel_po.php';
                 $loaded = true;
             }
         }
@@ -52,7 +52,7 @@ class Language
             if (USE_INTERNAL_CACHE)
             {
                 $cache_handler->updateHash($file, $hash);
-                $cache_handler->writeCacheFile(CACHE_PATH . 'language/' . DEFAULT_LOCALE . '/LC_MESSAGES/', 'nelliel_po.php', '$language_array = ' .
+                $cache_handler->writeCacheFile(CACHE_FILE_PATH . 'language/' . DEFAULT_LOCALE . '/LC_MESSAGES/', 'nelliel_po.php', '$language_array = ' .
                     var_export($language_array, true) . ';');
             }
         }

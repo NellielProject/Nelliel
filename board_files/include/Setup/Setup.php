@@ -25,12 +25,12 @@ class Setup
 
     public function checkGenerated()
     {
-        if (!file_exists(CONFIG_PATH . 'generated.php'))
+        if (!file_exists(CONFIG_FILE_PATH . 'generated.php'))
         {
             $file_handler = new \Nelliel\FileHandler();
             $generated = $this->generateConfigValues();
             $prepend = "\n" . '// DO NOT EDIT THESE VALUES OR REMOVE THIS FILE UNLESS YOU HAVE A DAMN GOOD REASON';
-            $file_handler->writeInternalFile(CONFIG_PATH . 'generated.php',
+            $file_handler->writeInternalFile(CONFIG_FILE_PATH . 'generated.php',
                     $prepend . "\n" . '$generated = ' . var_export($generated, true) . ';');
         }
     }
@@ -78,9 +78,7 @@ class Setup
         $sql_tables->createFileFilterTable(FILE_FILTER_TABLE);
         $sql_tables->createBoardConfigTable(BOARD_DEFAULTS_TABLE, false);
         $sql_tables->createReportsTable(REPORTS_TABLE);
-        $sql_tables->createStylesTable(STYLES_TABLE);
-        $sql_tables->createTemplatesTable(TEMPLATE_TABLE);
-        $sql_tables->createIconSetTable(ICON_SET_TABLE);
+        $sql_tables->createAssetsTable(ASSETS_TABLE);
         $sql_tables->createCaptchaTable(CAPTCHA_TABLE);
         $sql_tables->createVersionTable(VERSION_TABLE);
     }
@@ -88,7 +86,7 @@ class Setup
     public function createCoreDirectories()
     {
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->createDirectory(CACHE_PATH, DIRECTORY_PERM, true);
+        $file_handler->createDirectory(CACHE_FILE_PATH, DIRECTORY_PERM, true);
     }
 
     public function createBoardTables($board_id)

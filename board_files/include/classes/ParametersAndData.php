@@ -47,7 +47,7 @@ class ParametersAndData
 
                     if (USE_INTERNAL_CACHE || $cache_regen)
                     {
-                        $this->cache_handler->writeCacheFile(CACHE_PATH, 'site_settings.php',
+                        $this->cache_handler->writeCacheFile(CACHE_FILE_PATH, 'site_settings.php',
                                 '$site_settings = ' . var_export($settings, true) . ';');
                     }
                 }
