@@ -14,8 +14,9 @@
 					<input id="ban-board-field"  type="text" name="ban_board" size="24" maxlength="255" value="">
 				</td>
 			</tr>
-			<tr>
+			<tr id="ban-all-boards-row">
 				<td>
+					<input type="hidden" name="ban_all_boards" value="0">
 					<input id="ban-all-boards-field" type="checkbox" name="ban_all_boards" value="1">
 					<span data-i18n="gettext">Ban from all boards. This overrides any specific boards.</span>
 				</td>

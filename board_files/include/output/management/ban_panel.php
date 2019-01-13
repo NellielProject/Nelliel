@@ -6,11 +6,6 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_main_ban_panel($user, $domain)
 {
-    if (!$user->boardPerm('', 'perm_ban_access'))
-    {
-        nel_derp(341, _gettext('You are not allowed to access the bans panel.'));
-    }
-
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
@@ -19,7 +14,17 @@ function nel_render_main_ban_panel($user, $domain)
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/bans_panel_main.html');
 
-    $ban_list = $database->executeFetchAll('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "ban_id" DESC', PDO::FETCH_ASSOC);
+    if ($domain->id() !== '')
+    {
+        $prepared = $database->prepare(
+                'SELECT * FROM "' . BAN_TABLE . '" WHERE "board_id" = ? ORDER BY "ban_id" DESC');
+        $ban_list = $database->executePreparedFetchAll($prepared, [$domain->id()], PDO::FETCH_ASSOC);
+    }
+    else
+    {
+        $ban_list = $database->executeFetchAll('SELECT * FROM "' . BAN_TABLE . '" ORDER BY "ban_id" DESC', PDO::FETCH_ASSOC);
+    }
+
     $ban_info_table = $dom->getElementById('ban-info-table');
     $ban_info_row = $dom->getElementById('ban-info-row');
     $bgclass = 'row1';
@@ -60,7 +65,7 @@ function nel_render_main_ban_panel($user, $domain)
     nel_clean_exit();
 }
 
-function nel_render_ban_panel_add($domain, $ip = '', $type = 'GENERAL')
+function nel_render_ban_panel_add($user, $domain, $ip = '', $type = 'GENERAL')
 {
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
@@ -68,6 +73,11 @@ function nel_render_ban_panel_add($domain, $ip = '', $type = 'GENERAL')
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
+
+    if (!$user->boardPerm('', 'perm_ban_modify'))
+    {
+        $dom->getElementById('ban-all-boards-row')->remove();
+    }
 
     if (!empty($domain->id()))
     {
@@ -97,7 +107,7 @@ function nel_render_ban_panel_add($domain, $ip = '', $type = 'GENERAL')
     nel_clean_exit();
 }
 
-function nel_render_ban_panel_modify($domain)
+function nel_render_ban_panel_modify($user, $domain)
 {
     $translator = new \Nelliel\Language\Translator();
     $ban_hammer = new \Nelliel\BanHammer(nel_database());
@@ -107,6 +117,12 @@ function nel_render_ban_panel_modify($domain)
             array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/bans_panel_modify_ban.html');
+
+    if (!$user->boardPerm('', 'perm_ban_modify'))
+    {
+        var_dump("yesy");
+        $dom->getElementById('ban-all-boards-field')->extSetAttribute('disabled', 'true');
+    }
 
     $dom->getElementById('modify-ban-form')->extSetAttribute('action',
             PHP_SELF . '?module=board&module=bans&action=update&board_id=' . $domain->id());

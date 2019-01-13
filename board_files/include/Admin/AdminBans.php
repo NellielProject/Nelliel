@@ -58,6 +58,10 @@ class AdminBans extends AdminHandler
 
     public function renderPanel($user)
     {
+        if (!$user->boardPerm($this->domain->id(), 'perm_ban_access'))
+        {
+            nel_derp(341, _gettext('You are not allowed to access the bans panel.'));
+        }
 
         nel_render_main_ban_panel($user, $this->domain);
     }
@@ -73,7 +77,7 @@ class AdminBans extends AdminHandler
         $type = $_GET['ban_type'] ?? 'GENERAL';
         $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
         $this->applyNewBan();
-        nel_render_ban_panel_add($this->domain, $ip, $type);
+        nel_render_ban_panel_add($user, $this->domain, $ip, $type);
     }
 
     public function add($user)
@@ -100,6 +104,8 @@ class AdminBans extends AdminHandler
                 $regen->index($this->domain);
             }
         }
+
+        $this->renderPanel($user);
     }
 
     public function editor($user)
@@ -110,7 +116,7 @@ class AdminBans extends AdminHandler
         }
 
         $this->applyNewBan();
-        nel_render_ban_panel_modify($this->domain);
+        nel_render_ban_panel_modify($user, $this->domain);
     }
 
     public function update($user)
@@ -121,7 +127,14 @@ class AdminBans extends AdminHandler
         }
 
         $ban_input = $this->ban_hammer->postToArray();
+
+        if ($ban_input['all_boards'] === 1 && !$user->boardPerm('', 'perm_ban_modify'))
+        {
+            nel_derp(322, _gettext('You are not allowed to ban from all boards.'));
+        }
+
         $this->ban_hammer->modifyBan($ban_input);
+        $this->renderPanel($user);
     }
 
     public function remove($user)
@@ -133,6 +146,7 @@ class AdminBans extends AdminHandler
 
         $ban_input = $this->ban_hammer->postToArray();
         $this->ban_hammer->removeBan($this->domain->id(), $_GET['ban_id']);
+        $this->renderPanel($user);
     }
 
     private function applyNewBan()

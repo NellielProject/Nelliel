@@ -60,6 +60,7 @@ Error 311: perm_role_modify (Admin/AdminStaff.php)
 
 Error 320: perm_ban_access (Admin/AdminBans.php)  
 Error 321: perm_ban_modify (Admin/AdminBans.php, classes/BanHammer.php)  
+Error 322: perm_ban_modify (all_boards) (Admin/AdminBans.php)  
 
 Error 330: perm_board_config_access (Admin/AdminBoardSettings.php)  
 Error 331: perm_board_config_modify (Admin/AdminBoardSettings.php)  

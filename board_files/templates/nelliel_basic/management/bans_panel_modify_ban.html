@@ -22,6 +22,11 @@
 					<input id="ban-time-years" type="text" name="ban_time_years" size="6" maxlength="12" value="0">&nbsp;&nbsp;&nbsp;
 					<span data-i18n="gettext">Days:</span>
 					<input id="ban-time-days" type="text" name="ban_time_days" size="6" maxlength="12" value="0">&nbsp;&nbsp;&nbsp;
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>
 					<span data-i18n="gettext">Hours:</span>
 					<input id="ban-time-hours"  type="text" name="ban_time_hours" size="6" maxlength="12" value="0">&nbsp;&nbsp;&nbsp;
 					<span data-i18n="gettext">Minutes:</span>
@@ -36,7 +41,7 @@
 					<input id="ban-board-field"  type="text" name="ban_board" size="24" maxlength="255" value="">
 				</td>
 			</tr>
-			<tr>
+			<tr id="ban-all-boards-row">
 				<td>
 					<input type="hidden" name="ban_all_boards" value="0">
 					<input id="ban-all-boards-field" type="checkbox" name="ban_all_boards" value="1">
