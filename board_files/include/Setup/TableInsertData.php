@@ -345,9 +345,9 @@ class TableInsertData
         $prepared = $database->prepare($insert_query);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'allow_tripkeys', '1', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'force_anonymous', '0', 0, 0]);
-        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'show_title', '1', 0, 0]);
-        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'show_favicon', '0', 0, 0]);
-        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'show_logo', '0', 0, 0]);
+        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'show_board_title', '1', 0, 0]);
+        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'show_board_favicon', '0', 0, 0]);
+        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'show_board_banner', '0', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'use_thumb', '1', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'use_magick', '0', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'use_file_icon', '1', 0, 0]);
@@ -361,9 +361,9 @@ class TableInsertData
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'use_honeypot', '1', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'only_thread_duplicates', '1', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'boolean', 'only_op_duplicates', '1', 0, 0]);
-        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'string', 'board_name', 'Nelliel-powered image board', 0, 0]);
+        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'string', 'board_title', 'Nelliel-powered image board', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'string', 'board_favicon', '', 0, 0]);
-        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'string', 'board_logo', '', 0, 0]);
+        $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'string', 'board_banner', '', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'string', 'language', 'en-US', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'integer', 'thread_delay', '120', 0, 0]);
         $database->executePrepared($prepared, ['board_setting', 'nelliel', 'general', 'integer', 'reply_delay', '60', 0, 0]);

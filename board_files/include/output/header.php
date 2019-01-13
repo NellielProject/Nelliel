@@ -62,29 +62,26 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
     }
 
     $board_navigation->appendChild($dom->createTextNode(' ]'));
+    $board_banner = $dom->getElementById('top-board-banner');
 
-    $logo_image = $dom->getElementById('top-logo-image');
-    $logo_text = $dom->getElementById('top-logo-text');
-    $logo_image->remove(); // TODO: Be able to use image for logo
-
-    /*if ($board_settings['show_logo'])
-     {
-     $logo_image->extSetAttribute('src', $board_settings['board_logo']);
-     $logo_image->extSetAttribute('alt', $board_settings['board_name']);
-     }
-     else
-     {
-     $logo_image->remove();
-     $logo_text->remove();
-     }*/
-
-    if ($domain->setting('show_title'))
+    if ($domain->setting('show_board_banner'))
     {
-        $logo_text->setContent($domain->setting('board_name'));
+        $board_banner->extSetAttribute('src', $domain->setting('board_banner'));
     }
     else
     {
-        $logo_text->remove();
+        $board_banner->remove();
+    }
+
+    $board_title = $dom->getElementById('top-board-title');
+
+    if ($domain->setting('show_board_title'))
+    {
+        $board_title->setContent($domain->setting('board_title'));
+    }
+    else
+    {
+        $board_title->remove();
     }
 
     $top_admin_span = $dom->getElementById('top-admin-span');
@@ -136,8 +133,8 @@ function nel_render_general_header($domain, $dotdot = null, $extra_data = array(
             'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\', \'' .
             $session->inModmode($domain->id()) . '\');};');
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $domain->id() . '"));');
-    $dom->getElementById('top-logo-image')->remove();
-    $dom->getElementById('top-logo-text')->remove();
+    $dom->getElementById('top-board-banner')->remove();
+    $dom->getElementById('top-board-title')->remove();
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
     $title_element->setContent('Nelliel Imageboard');
@@ -193,14 +190,16 @@ function nel_build_header_styles($dom, $dotdot)
     $database = nel_database();
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $top_styles_menu = $dom->getElementById('top-styles-menu');
-    $styles = $database->executeFetchAll('SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC', PDO::FETCH_ASSOC);
+    $styles = $database->executeFetchAll(
+            'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
+            PDO::FETCH_ASSOC);
 
     foreach ($styles as $style)
     {
         $info = json_decode($style['info'], true);
         $new_head_link = $dom->createElement('link');
 
-        if($style['is_default'])
+        if ($style['is_default'])
         {
             $new_head_link->extSetAttribute('rel', 'stylesheet');
         }
@@ -212,7 +211,8 @@ function nel_build_header_styles($dom, $dotdot)
         $new_head_link->extSetAttribute('data-parse-id', 'style-board');
         $new_head_link->extSetAttribute('data-id', $style['id']);
         $new_head_link->extSetAttribute('type', 'text/css');
-        $new_head_link->extSetAttribute('href', $dotdot . STYLES_WEB_PATH . $info['directory'] . '/' . $info['main_file']);
+        $new_head_link->extSetAttribute('href',
+                $dotdot . STYLES_WEB_PATH . $info['directory'] . '/' . $info['main_file']);
         $new_head_link->extSetAttribute('title', $info['name']);
         $head_element->appendChild($new_head_link);
 

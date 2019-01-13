@@ -44,12 +44,12 @@ a:hover {
     padding-bottom: 6px;
 }
 
-.image-logo {
+.board-banner {
     text-align: center;
     clear: both;
 }
 
-.text-logo {
+.board-title {
 	color: #CC0000;
     text-align: center;
     font-size: 2.0rem;
@@ -69,6 +69,7 @@ a:hover {
     clear: both;
     text-align: center;
     font-size: 0.8rem;
+    padding-top: 5px;
 }
 
 .bottom-styles {
