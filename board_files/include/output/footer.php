@@ -30,18 +30,16 @@ function nel_render_general_footer($domain, $dotdot = null, $styles = false)
 function nel_build_footer_styles($dom, $dotdot)
 {
     $database = nel_database();
-    $bottom_styles_nav = $dom->getElementById('bottom-styles');
+    $bottom_styles_menu = $dom->getElementById('bottom-styles-menu');
     $styles = $database->executeFetchAll('SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC', PDO::FETCH_ASSOC);
 
     foreach ($styles as $style)
     {
         $info = json_decode($style['info'], true);
-        $style_link = $dom->createElement('a');
-        $style_link->extSetAttribute('href', '#');
-        $style_link->extSetAttribute('data-command', 'change-style');
-        $style_link->extSetAttribute('data-id', $style['id']);
-        $style_link->setContent('[' . $info['name'] . ']');
-        $bottom_styles_nav->appendChild($style_link);
-        $bottom_styles_nav->appendChild($dom->createTextNode("\n"));
+        $style_option = $dom->createElement('option', $info['name']);
+        $style_option->extSetAttribute('data-command', 'change-style');
+        $style_option->extSetAttribute('data-id', $style['id']);
+        $style_option->extSetAttribute('value', $style['id']);
+        $bottom_styles_menu->appendChild($style_option);
     }
 }

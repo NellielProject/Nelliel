@@ -17,7 +17,7 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     nelliel.setup.localStorageInitCheck();
     dataBin.hidden_threads = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_threads_id, true);
     dataBin.hidden_posts = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_posts_id, true);
-    
+
     if(board_id === "") {
         setStyle(nelliel.core.getCookie("base-style"));
     }
@@ -87,7 +87,7 @@ nelliel.events.processPostClicks = function(event) {
         } else if (command === "expand-thread-render" || command === "collapse-thread-render") {
             nelliel.ui.expandCollapseThread(event.target, command, true);
         } else if (command === "change-style") {
-            changeBoardStyle(dataBin.board_id, event.target.getAttribute("data-id"));
+            setStyle(event.target.getAttribute("data-id"), true);
         } else if (command === "link-post") {
             nelliel.ui.linkPost(event.target);
         } else if (command === "show-file-meta" || command === "hide-file-meta") {
@@ -220,10 +220,21 @@ function addNewFileMeta(element, command) {
     element.className += " hidden";
 }
 
-function setStyle(style) {
+function setStyle(style, update_cookie = false) {
     if(style == null) {
         return;
     }
+    
+    if(update_cookie) {
+        if(dataBin.board_id == "") {
+            style_cookie = "base-style";
+        } else {
+            style_cookie = "style-" + dataBin.board_id;
+        }
+        
+        nelliel.core.setCookie(style_cookie, style, 9001);
+    }
+
 
     var allstyles = document.getElementsByTagName("link");
 
@@ -236,21 +247,15 @@ function setStyle(style) {
             }
         }
     }
-}
-
-function changeBoardStyle(board_id, style) {
-    if(style == null) {
-        return;
+    
+    var top_element = document.getElementById("top-styles-menu");
+    var bottom_element = document.getElementById("bottom-styles-menu");
+    
+    if(top_element !== null) {
+        top_element.value = style;
     }
     
-    var allstyles = document.getElementsByTagName("link");
-    
-    if(board_id == "") {
-        style_cookie = "base-style";
-    } else {
-        style_cookie = "style-" + board_id;
+    if(bottom_element !== null) {
+        bottom_element.value = style;
     }
-    
-    setStyle(style);
-    nelliel.core.setCookie(style_cookie, style, 9001);
 }

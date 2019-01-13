@@ -192,7 +192,7 @@ function nel_build_header_styles($dom, $dotdot)
 {
     $database = nel_database();
     $head_element = $dom->getElementsByTagName('head')->item(0);
-    $top_styles_nav = $dom->getElementById('top-styles');
+    $top_styles_menu = $dom->getElementById('top-styles-menu');
     $styles = $database->executeFetchAll('SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC', PDO::FETCH_ASSOC);
 
     foreach ($styles as $style)
@@ -216,12 +216,10 @@ function nel_build_header_styles($dom, $dotdot)
         $new_head_link->extSetAttribute('title', $info['name']);
         $head_element->appendChild($new_head_link);
 
-        $style_link = $dom->createElement('a');
-        $style_link->extSetAttribute('href', '#');
-        $style_link->extSetAttribute('data-command', 'change-style');
-        $style_link->extSetAttribute('data-id', $style['id']);
-        $style_link->setContent('[' . $info['name'] . ']');
-        $top_styles_nav->appendChild($style_link);
-        $top_styles_nav->appendChild($dom->createTextNode("\n"));
+        $style_option = $dom->createElement('option', $info['name']);
+        $style_option->extSetAttribute('data-command', 'change-style');
+        $style_option->extSetAttribute('data-id', $style['id']);
+        $style_option->extSetAttribute('value', $style['id']);
+        $top_styles_menu->appendChild($style_option);
     }
 }
