@@ -371,7 +371,6 @@ class ExtendedDOMElement extends DOMElement
             $this->appendChild($inner_node);
         }
 
-        $imported_temp_node->remove();
         return $new_html;
     }
 }
