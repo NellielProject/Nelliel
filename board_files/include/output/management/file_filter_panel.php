@@ -43,7 +43,7 @@ function nel_render_file_filter_panel($user, $domain)
     {
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $filter_row = $dom->copyNode($filter_list_nodes['file-filter-row'], $filter_list, 'append');
-        $filter_row->modifyAttribute('class', ' ' . $bgclass, 'after');
+        $filter_row->extSetAttribute('class', $bgclass);
         $filter_row_nodes = $filter_row->getElementsByAttributeName('data-parse-id', true);
         $filter_row_nodes['filter-id']->setContent($filter['entry']);
         $filter_row_nodes['hash-type']->setContent($filter['hash_type']);

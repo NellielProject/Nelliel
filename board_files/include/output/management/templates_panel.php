@@ -71,7 +71,7 @@ function nel_render_templates_panel($user, $domain)
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $template_row = $dom->copyNode($available_template_list_nodes['template-row'], $available_template_list,
                 'append');
-        $template_row->modifyAttribute('class', ' ' . $bgclass, 'after');
+        $template_row->extSetAttribute('class', $bgclass);
         $template_row_nodes = $template_row->getElementsByAttributeName('data-parse-id', true);
         $template_row_nodes['id']->setContent($template['id']);
         $template_row_nodes['name']->setContent($template['name']);

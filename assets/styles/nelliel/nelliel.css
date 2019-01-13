@@ -90,7 +90,7 @@ a:hover {
 }
 
 .manage-header {
-    background-color: #33AAFF;
+    background-color: #33AAEE;
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
@@ -98,7 +98,7 @@ a:hover {
 }
 
 .manage-board-header {
-    background-color: #33AAFF;
+    background-color: #33AAEE;
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
@@ -106,11 +106,18 @@ a:hover {
 }
 
 .manage-sub-header {
-    background-color: #55CCFF;
+    background-color: #55BBFF;
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
     padding: 3px;
+}
+
+.manage-section-header {
+	font-size: 1.4rem;
+	font-weight: bold;
+    text-align: center;
+    padding: 5px;
 }
 
 .data-table {

@@ -33,7 +33,7 @@ function nel_render_permissions_panel($user, $domain)
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $permission_row = $dom->copyNode($permission_list_nodes['permission-row'], $permission_list, 'append');
         $permission_row_nodes = $permission_row->getElementsByAttributeName('data-parse-id', true);
-        $permission_row->modifyAttribute('class', ' ' . $bgclass, 'after');
+        $permission_row->extSetAttribute('class', $bgclass);
         $permission_row_nodes['permission']->setContent($permission['permission']);
         $permission_row_nodes['description']->setContent($permission['description']);
         $remove_link = $url_constructor->dynamic(PHP_SELF,

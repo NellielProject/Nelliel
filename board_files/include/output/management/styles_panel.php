@@ -36,7 +36,7 @@ function nel_render_styles_panel($user, $domain)
         $installed_ids[] = $style['id'];
         $style_row = $dom->copyNode($installed_style_list_nodes['style-row'], $installed_style_list,
                 'append');
-        $style_row->modifyAttribute('class', ' ' . $bgclass, 'after');
+        $style_row->extSetAttribute('class', $bgclass);
         $style_row_nodes = $style_row->getElementsByAttributeName('data-parse-id', true);
         $style_row_nodes['id']->setContent($style['id']);
         $style_row_nodes['style_type']->setContent(strtoupper($style_info['style_type']));
@@ -73,7 +73,7 @@ function nel_render_styles_panel($user, $domain)
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $style_row = $dom->copyNode($available_style_list_nodes['style-row'], $available_style_list,
                 'append');
-        $style_row->modifyAttribute('class', ' ' . $bgclass, 'after');
+        $style_row->extSetAttribute('class', $bgclass);
         $style_row_nodes = $style_row->getElementsByAttributeName('data-parse-id', true);
         $style_row_nodes['id']->setContent($style['id']);
         $style_row_nodes['style_type']->setContent(strtoupper($style['style_type']));

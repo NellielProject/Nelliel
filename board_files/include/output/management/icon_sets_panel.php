@@ -35,7 +35,7 @@ function nel_render_icon_sets_panel($user, $domain)
         $installed_ids[] = $icon_set['id'];
         $icon_set_row = $dom->copyNode($installed_icon_set_list_nodes['icon-set-row'], $installed_icon_set_list,
                 'append');
-        $icon_set_row->modifyAttribute('class', ' ' . $bgclass, 'after');
+        $icon_set_row->extSetAttribute('class', $bgclass);
         $icon_set_row_nodes = $icon_set_row->getElementsByAttributeName('data-parse-id', true);
         $icon_set_row_nodes['id']->setContent($icon_set['id']);
         $icon_set_row_nodes['set_type']->setContent(strtoupper($icon_set_info['set_type']));
@@ -72,7 +72,7 @@ function nel_render_icon_sets_panel($user, $domain)
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $icon_set_row = $dom->copyNode($available_icon_set_list_nodes['icon-set-row'], $available_icon_set_list,
                 'append');
-        $icon_set_row->modifyAttribute('class', ' ' . $bgclass, 'after');
+        $icon_set_row->extSetAttribute('class', $bgclass);
         $icon_set_row_nodes = $icon_set_row->getElementsByAttributeName('data-parse-id', true);
         $icon_set_row_nodes['id']->setContent($icon_set['id']);
         $icon_set_row_nodes['set_type']->setContent(strtoupper($icon_set['set_type']));

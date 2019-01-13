@@ -33,7 +33,7 @@ function nel_render_filetypes_panel($user, $domain)
         $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
         $filetype_row = $dom->copyNode($filetype_list_nodes['filetype-row'], $filetype_list, 'append');
         $filetype_row_nodes = $filetype_row->getElementsByAttributeName('data-parse-id', true);
-        $filetype_row->modifyAttribute('class', ' ' . $bgclass, 'after');
+        $filetype_row->extSetAttribute('class', $bgclass);
         $filetype_row_nodes['extension']->setContent($filetype['extension']);
         $filetype_row_nodes['parent-extension']->setContent($filetype['parent_extension']);
         $filetype_row_nodes['type']->setContent($filetype['type']);

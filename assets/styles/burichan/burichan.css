@@ -116,6 +116,13 @@ a:hover {
     padding: 3px;
 }
 
+.manage-section-header {
+	font-size: 1.4rem;
+	font-weight: bold;
+    text-align: center;
+    padding: 5px;
+}
+
 .data-table {
     background-color: #FFFFFF;
     width: 100%;
