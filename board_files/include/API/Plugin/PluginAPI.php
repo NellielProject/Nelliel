@@ -124,7 +124,7 @@ class PluginAPI
         }
 
         $file_handler = new \Nelliel\FileHandler();
-        $plugin_files = $file_handler->recursiveFileList(PLUGINS_PATH);
+        $plugin_files = $file_handler->recursiveFileList(PLUGINS_FILE_PATH);
 
         foreach ($plugin_files as $file)
         {

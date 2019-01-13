@@ -78,6 +78,7 @@ class Setup
         $sql_tables->createFileFilterTable(FILE_FILTER_TABLE);
         $sql_tables->createBoardConfigTable(BOARD_DEFAULTS_TABLE, false);
         $sql_tables->createReportsTable(REPORTS_TABLE);
+        $sql_tables->createTemplatesTable(TEMPLATES_TABLE);
         $sql_tables->createAssetsTable(ASSETS_TABLE);
         $sql_tables->createCaptchaTable(CAPTCHA_TABLE);
         $sql_tables->createVersionTable(VERSION_TABLE);

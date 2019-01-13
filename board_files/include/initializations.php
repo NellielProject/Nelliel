@@ -22,35 +22,37 @@ define('PHP_SELF2', 'index'); // Name of board index
 define('PHP_EXT', '.html'); // Extension used for board pages
 define('JSON_EXT', '.json'); // Extension used for board pages
 
-define('BAN_TABLE', 'nelliel_bans'); // Contains ban info
-define('USER_TABLE', 'nelliel_users'); // Table of users
-define('ROLES_TABLE', 'nelliel_roles'); // Table of roles
-define('USER_ROLE_TABLE', 'nelliel_user_role'); // Which role is assigned to a user
-define('ROLE_PERMISSIONS_TABLE', 'nelliel_role_permissions'); // Permissions
-define('PERMISSIONS_TABLE', 'nelliel_permissions'); // Permissions
-define('LOGINS_TABLE', 'nelliel_login_attempts'); // Record of failed login attempts
-define('BOARD_DATA_TABLE', 'nelliel_board_data'); // Basic data on each board
-define('SITE_CONFIG_TABLE', 'nelliel_site_config'); // Site-wide config settings
-define('FILETYPE_TABLE', 'nelliel_filetypes'); // Site-wide filetypes
-define('FILE_FILTER_TABLE', 'nelliel_file_filters'); // Site-wide file filters
-define('BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults'); // Default config for new boards
-define('REPORTS_TABLE', 'nelliel_reports'); // Content reports
-define('ASSETS_TABLE', 'nelliel_assets'); // Assets
-define('CAPTCHA_TABLE', 'nelliel_captcha'); // CAPTCHA data
-define('VERSION_TABLE', 'nelliel_version'); // Version data
+define('BAN_TABLE', 'nelliel_bans');
+define('USER_TABLE', 'nelliel_users');
+define('ROLES_TABLE', 'nelliel_roles');
+define('USER_ROLE_TABLE', 'nelliel_user_role');
+define('ROLE_PERMISSIONS_TABLE', 'nelliel_role_permissions');
+define('PERMISSIONS_TABLE', 'nelliel_permissions');
+define('LOGINS_TABLE', 'nelliel_login_attempts');
+define('BOARD_DATA_TABLE', 'nelliel_board_data');
+define('SITE_CONFIG_TABLE', 'nelliel_site_config');
+define('FILETYPE_TABLE', 'nelliel_filetypes');
+define('FILE_FILTER_TABLE', 'nelliel_file_filters');
+define('BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults');
+define('REPORTS_TABLE', 'nelliel_reports');
+define('TEMPLATES_TABLE', 'nelliel_templates');
+define('ASSETS_TABLE', 'nelliel_assets');
+define('CAPTCHA_TABLE', 'nelliel_captcha');
+define('VERSION_TABLE', 'nelliel_version');
 
 define('CONFIG_FILE_PATH', BASE_PATH . 'configuration/');
 define('CACHE_FILE_PATH', FILES_PATH . 'cache/');
-define('TEMPLATE_PATH', FILES_PATH . 'templates/'); // Base template path
-define('PLUGINS_PATH', FILES_PATH . 'plugins/'); // Base plugins path
-define('LANGUAGE_PATH', FILES_PATH . 'languages/'); // Language path
-define('LOCALE_PATH', LANGUAGE_PATH . 'locale/'); // Locale files path
-define('SQLITE_DB_DEFAULT_PATH', FILES_PATH); // Base SQLite DB location
+define('TEMPLATE_FILE_PATH', FILES_PATH . 'templates/');
+define('PLUGINS_FILE_PATH', FILES_PATH . 'plugins/');
+define('LANGUAGE_FILE_PATH', FILES_PATH . 'languages/');
+define('LOCALE_FILE_PATH', LANGUAGE_FILE_PATH . 'locale/');
 define('STYLES_FILE_PATH', BASE_PATH . ASSETS_DIR . '/' . STYLES_DIR . '/');
 define('ICON_SETS_FILE_PATH', BASE_PATH . ASSETS_DIR . '/' . ICON_SET_DIR . '/');
 
 define('STYLES_WEB_PATH', ASSETS_DIR . '/' . STYLES_DIR . '/');
 define('ICON_SETS_WEB_PATH', ASSETS_DIR . '/' . ICON_SET_DIR . '/');
+
+define('SQLITE_DB_DEFAULT_PATH', FILES_PATH); // Base SQLite DB location
 
 define('BASE_HONEYPOT_FIELD1', 'display_signature'); // Honeypot field name
 define('BASE_HONEYPOT_FIELD2', 'signature'); // Honeypot field name

@@ -570,13 +570,21 @@ class TableInsertData
         nel_setup_stuff_done(true);
     }
 
+    public function templatesDefaults()
+    {
+        $database = nel_database();
+        $insert_query = "INSERT INTO " . TEMPLATES_TABLE . " (id, is_default, info) VALUES (?, ?, ?)";
+        $prepared = $database->prepare($insert_query);
+        $database->executePrepared($prepared, ['template-nelliel-basic', 1,
+        '{"id": "template-nelliel-basic","directory": "nelliel_basic","name": "Nelliel Basic Template","version": "1.0","description": "The basic template for Nelliel.","output_type": "html"}']);
+        nel_setup_stuff_done(true);
+    }
+
     public function assetDefaults()
     {
         $database = nel_database();
         $insert_query = "INSERT INTO " . ASSETS_TABLE . " (id, type, is_default, info) VALUES (?, ?, ?, ?)";
         $prepared = $database->prepare($insert_query);
-        $database->executePrepared($prepared, ['template-nelliel-basic', 'template', 1,
-        '{"id": "template-nelliel-basic","directory": "nelliel_basic","name": "Nelliel Basic Template","version": "1.0","description": "The basic template for Nelliel.","output_type": "html"}']);
         $database->executePrepared($prepared, ['filetype-nelliel-basic', 'icon-set', 1,
         '{"id": "filetype-nelliel-basic","directory": "filetype_nelliel_basic","name": "Nelliel Basic Filetype Icon Set","set_type": "filetype","version": "1.0","description": "The basic filetype icon set for Nelliel."}']);
         $database->executePrepared($prepared, ['style-nelliel', 'style', 1,

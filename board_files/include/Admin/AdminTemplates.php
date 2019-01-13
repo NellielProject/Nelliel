@@ -61,7 +61,7 @@ class AdminTemplates extends AdminHandler
 
         $template_id = $_GET['template-id'];
         $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
-        $template_inis = $ini_parser->parseDirectories(TEMPLATE_PATH, 'template_info.ini');
+        $template_inis = $ini_parser->parseDirectories(TEMPLATE_FILE_PATH, 'template_info.ini');
 
         foreach ($template_inis as $ini)
         {
@@ -72,7 +72,7 @@ class AdminTemplates extends AdminHandler
         }
 
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . ASSETS_TABLE . '" ("id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
+                'INSERT INTO "' . TEMPLATES_TABLE . '" ("id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$template_id, 'template', 0, $info]);
         $this->renderPanel($user);
     }
@@ -94,7 +94,7 @@ class AdminTemplates extends AdminHandler
 
         $template_id = $_GET['template-id'];
         $prepared = $this->database->prepare(
-                'DELETE FROM "' . ASSETS_TABLE . '" WHERE "id" = ? AND "type" = \'template\'');
+                'DELETE FROM "' . TEMPLATES_TABLE . '" WHERE "id" = ? AND "type" = \'template\'');
         $this->database->executePrepared($prepared, [$template_id]);
         $this->renderPanel($user);
     }
@@ -107,8 +107,8 @@ class AdminTemplates extends AdminHandler
         }
 
         $template_id = $_GET['template-id'];
-        $this->database->exec('UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 0 WHERE "type" = \'template\'');
-        $prepared = $this->database->prepare('UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 1 WHERE "id" = ?');
+        $this->database->exec('UPDATE "' . TEMPLATES_TABLE . '" SET "is_default" = 0');
+        $prepared = $this->database->prepare('UPDATE "' . TEMPLATES_TABLE . '" SET "is_default" = 1 WHERE "id" = ?');
         $this->database->executePrepared($prepared, [$template_id]);
         $this->renderPanel($user);
     }

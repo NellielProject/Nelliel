@@ -22,12 +22,12 @@ class Language
 
         if (empty($file))
         {
-            $file = LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po';
+            $file = LOCALE_FILE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po';
         }
 
         if (!file_exists($file))
         {
-            $file = LOCALE_PATH . 'en_US/LC_MESSAGES/nelliel.po';
+            $file = LOCALE_FILE_PATH . 'en_US/LC_MESSAGES/nelliel.po';
         }
 
         $language_array = array();

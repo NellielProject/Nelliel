@@ -34,7 +34,7 @@ require_once INCLUDE_PATH . 'output/footer.php';
 require_once INCLUDE_PATH . 'derp.php';
 
 $language = new \Nelliel\Language\Language(new \Nelliel\Auth\Authorization(nel_database()));
-$language->loadLanguage(LOCALE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po');
+$language->loadLanguage(LOCALE_FILE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po');
 unset($language);
 
 require_once INCLUDE_PATH . 'crypt.php';

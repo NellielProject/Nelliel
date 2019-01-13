@@ -115,7 +115,7 @@ function nel_module_dispatch($inputs, $domain)
             if ($inputs['action'] === 'extract-gettext')
             {
                 $language = new \Nelliel\Language\Language($authorization);
-                $language->extractLanguageStrings(LANGUAGE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
+                $language->extractLanguageStrings(LANGUAGE_FILE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
             }
 
             nel_render_main_panel($domain, $session->sessionUser());
