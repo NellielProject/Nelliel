@@ -36,7 +36,6 @@ a:hover {
 
 /* General formatting */
 .content-page {
-    width: 100%;
     height: 100%;
     padding: 4px;
 }
@@ -99,7 +98,6 @@ a:hover {
     font-weight: bold;
     text-align: center;
     padding: 3px;
-    width: 100%;
 }
 
 .manage-board-header {
@@ -108,7 +106,6 @@ a:hover {
     font-weight: bold;
     text-align: center;
     padding: 3px;
-    width: 100%;
 }
 
 .manage-sub-header {
@@ -117,7 +114,6 @@ a:hover {
     font-weight: bold;
     text-align: center;
     padding: 3px;
-    width: 100%;
 }
 
 .data-table {
