@@ -12,8 +12,8 @@ if (ini_get('date.timezone') === '')
 define('ASSETS_DIR', 'assets');
 define('STYLES_DIR', 'styles');
 define('ICON_SET_DIR', 'icon_sets');
-define('IMAGES_DIR', ASSETS_DIR . 'imagez');
-define('JS_DIR', ASSETS_DIR . 'js');
+define('IMAGES_DIR', 'imagez');
+define('SCRIPT_DIR', 'script');
 
 define('PHP_SELF', 'imgboard.php'); // Name of main script file
 define('PHP_SELF2', 'index'); // Name of board index
@@ -47,6 +47,8 @@ define('LOCALE_FILE_PATH', LANGUAGE_FILE_PATH . 'locale/');
 define('STYLES_FILE_PATH', BASE_PATH . ASSETS_DIR . '/' . STYLES_DIR . '/');
 define('ICON_SETS_FILE_PATH', BASE_PATH . ASSETS_DIR . '/' . ICON_SET_DIR . '/');
 
+define('SCRIPT_WEB_PATH', ASSETS_DIR . '/' . SCRIPT_DIR . '/');
+define('IMAGES_WEB_PATH', ASSETS_DIR . '/' . IMAGES_DIR . '/');
 define('STYLES_WEB_PATH', ASSETS_DIR . '/' . STYLES_DIR . '/');
 define('ICON_SETS_WEB_PATH', ASSETS_DIR . '/' . ICON_SET_DIR . '/');
 

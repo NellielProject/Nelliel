@@ -16,7 +16,7 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $head_element = $dom->getElementsByTagName('head')->item(0);
     nel_build_header_styles($dom, $dotdot);
-    $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
+    $dom->getElementById('js-main-file')->extSetAttribute('src', $dotdot . SCRIPT_WEB_PATH . 'nel.js');
     $dom->getElementById('js-onload')->setContent(
             'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\', \'' .
             $session->inModmode($domain->id()) . '\');};');
@@ -160,7 +160,7 @@ function nel_render_general_header($domain, $dotdot = null, $extra_data = array(
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     nel_build_header_styles($dom, $dotdot);
-    $dom->getElementById('js-main-file')->modifyAttribute('src', $dotdot, 'before');
+    $dom->getElementById('js-main-file')->extSetAttribute('src', $dotdot . SCRIPT_WEB_PATH . 'nel.js');
     $dom->getElementById('js-onload')->setContent(
             'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\', \'' .
             $session->inModmode($domain->id()) . '\');};');
