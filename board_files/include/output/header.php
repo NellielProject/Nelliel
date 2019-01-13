@@ -10,6 +10,7 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
+    $site_domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), $database);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'header.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
@@ -63,6 +64,24 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
 
     $board_navigation->appendChild($dom->createTextNode(' ]'));
     $board_banner = $dom->getElementById('top-board-banner');
+    $favicon = $dom->getElementById('favicon-link');
+
+    if($site_domain->setting('show_site_favicon') || $domain->setting('show_board_favicon'))
+    {
+        if ($site_domain->setting('show_site_favicon'))
+        {
+            $favicon->extSetAttribute('href', $site_domain->setting('site_favicon'));
+        }
+
+        if ($domain->setting('show_board_favicon'))
+        {
+            $favicon->extSetAttribute('href', $domain->setting('board_favicon'));
+        }
+    }
+    else
+    {
+        $favicon->remove();
+    }
 
     if ($domain->setting('show_board_banner'))
     {

@@ -33,7 +33,7 @@ function nel_render_site_settings_panel($domain, $user)
             continue;
         }
 
-        if ($config_line['data_type'] === 'bool')
+        if ($config_line['data_type'] === 'boolean')
         {
             if ($config_line['setting'] == 1)
             {
