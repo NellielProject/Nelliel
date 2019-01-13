@@ -9,7 +9,7 @@ function nel_render_ban_page($domain, $ban_info)
     require_once INCLUDE_PATH . 'output/header.php';
     require_once INCLUDE_PATH . 'output/footer.php';
     $translator = new \Nelliel\Language\Translator();
-    $domain->renderInstance(new NellielTemplates\RenderCore());
+    $domain->renderInstance(new \Nelliel\RenderCore());
     $url_constructor = new \Nelliel\URLConstructor();
     $domain->renderInstance()->startRenderTimer();
     nel_render_board_header($domain);

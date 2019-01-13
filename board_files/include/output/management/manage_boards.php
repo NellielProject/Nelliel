@@ -73,7 +73,7 @@ function nel_render_manage_boards_panel($domain, $user)
 
 function nel_render_board_removal_interstitial($domain, $message, $continue_link)
 {
-    $domain->renderInstance(new NellielTemplates\RenderCore());
+    $domain->renderInstance(new \Nelliel\RenderCore());
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
     nel_render_general_header($domain, null,

@@ -19,7 +19,7 @@ class Regen
     private function getTemporaryDomain($domain_id)
     {
         $domain = new \Nelliel\Domain($domain_id, new \Nelliel\CacheHandler(), nel_database());
-        $domain->renderInstance(new \NellielTemplates\RenderCore());
+        $domain->renderInstance(new RenderCore());
         return $domain;
     }
 

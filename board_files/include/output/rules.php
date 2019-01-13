@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_rules_list($domain)
 {
     $filetypes = new \Nelliel\FileTypes(nel_database());
-    $render = new NellielTemplates\RenderCore();
+    $render = new \Nelliel\RenderCore();
     $render->getTemplateInstance()->setTemplatePath(TEMPLATE_FILE_PATH . 'nelliel_basic/');
     $dom = $render->newDOMDocument();
     $render->loadTemplateFromFile($dom, 'posting_rules.html');

@@ -14,7 +14,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
     $file_handler = new \Nelliel\FileHandler();
-    $domain->renderInstance(new NellielTemplates\RenderCore());
+    $domain->renderInstance(new \Nelliel\RenderCore());
     $thread_table = $gen_data = array();
     $dotdot = ($write) ? '../' : '';
     $result = $database->query(
@@ -56,7 +56,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
 
     while ($thread_counter < $counttree)
     {
-        $domain->renderInstance(new \NellielTemplates\RenderCore());
+        $domain->renderInstance(new \Nelliel\RenderCore());
         $dom = $domain->renderInstance()->newDOMDocument();
         $domain->renderInstance()->loadTemplateFromFile($dom, 'thread.html');
         $domain->renderInstance()->startRenderTimer();

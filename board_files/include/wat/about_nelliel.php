@@ -10,7 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_about_nelliel_screen()
 {
     $domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database());
-    $domain->renderInstance(new \NellielTemplates\RenderCore());
+    $domain->renderInstance(new \Nelliel\RenderCore());
     nel_render_general_header($domain);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'about_nelliel.html');

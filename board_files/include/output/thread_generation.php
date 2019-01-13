@@ -16,7 +16,7 @@ function nel_thread_generator($domain, $write, $thread_id, $command = null)
     $site_settings = nel_parameters_and_data()->siteSettings();
     $file_handler = new \Nelliel\FileHandler();
     $dotdot = ($write) ? '../../../' : '';
-    $domain->renderInstance(new NellielTemplates\RenderCore());
+    $domain->renderInstance(new \Nelliel\RenderCore());
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'thread.html');
     $translator->translateDom($dom, $domain->setting('language'));
