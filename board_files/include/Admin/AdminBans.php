@@ -22,7 +22,6 @@ class AdminBans extends AdminHandler
         $this->ban_hammer = new \Nelliel\BanHammer($database);
     }
 
-    // TODO: Separate this out more.
     public function actionDispatch($inputs)
     {
         $session = new \Nelliel\Session($this->authorization, true);

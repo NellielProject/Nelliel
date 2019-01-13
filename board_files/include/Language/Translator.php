@@ -15,7 +15,6 @@ class Translator
 
     public function translateDom($dom, $language = 'en_US')
     {
-        // TODO: Access domain when $language is passed
         $content_node_list = $dom->getElementsByAttributeName('data-i18n');
         $attribute_node_list = $dom->getElementsByAttributeName('data-i18n-attributes');
 

@@ -209,7 +209,7 @@ class NewPost
         // Check for flood
         // If post is a reply, also check if the thread still exists
 
-        if ($post_data['parent_thread'] === 0) // TODO: Update this, doesn't look right
+        if ($post_data['parent_thread'] == 0)
         {
             $thread_delay = $time - $this->domain->setting('thread_delay');
             $prepared = $this->database->prepare(

@@ -197,7 +197,7 @@ class Domain
             $this->render_instance = $new_instance;
             $front_end_data = new \Nelliel\FrontEndData($this->database);
             $template_path = TEMPLATE_FILE_PATH . $front_end_data->template($this->setting('template_id'))['directory'];
-            $this->render_instance->getTemplateInstance()->setTemplatePath($template_path); // TODO: Update for new front end stuff
+            $this->render_instance->getTemplateInstance()->setTemplatePath($template_path);
         }
 
         return $this->render_instance;
