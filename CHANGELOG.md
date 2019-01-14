@@ -1,4 +1,44 @@
 # Nelliel Changelog
+## v0.9.17 (2019/01/14)
+### Breaking
+ - Moar database
+
+### Added
+ - Nelliel B style
+ - Option for site banner
+ - Site and board-specific favicons support
+ - Type hints
+ - Can now set user as active/inactive
+
+### Changed
+ - Plugin API tweaks
+ - Add more plugin hooks
+ - Improve styles menu
+ - `web` directory is now `assets`
+ - Update to icon set, template and style handling
+ - Styles now "packaged" like templates and icon sets are
+ - Update naming of constants
+ - Move RenderCore class in from NellielTemplates
+ - Update about page and copyright date
+ - Update javascript handling of styles
+ - Update phpDOMExtend and NellielTemplates libraries
+ - Rendering timer now optional
+ - Board banners and titles working properly now
+ - Many tweaks and bits of cleanup
+
+### Fixed
+ - Formatting
+ - Automatic style change
+ - Fix some perm issues
+ - Panel rendering
+ - Horizontal scroll bar
+ - Fix default icons
+ - Hide thread not being removed in thread view
+ - Input form spacing
+
+### Removed
+  - Some TODOs that were completed or no longer relevant
+
 ## v0.9.16 (2019/01/10)
 ### Breaking
  - Database overhauls
@@ -36,7 +76,7 @@
  - User update not working
  - Modmode errors
  - Expand/Collapse not working in dynamic render
- 
+
 ### Removed
   - html5shiv
   - Some unused things from footer
@@ -103,7 +143,7 @@
 ### Changed
  - Board class changed to Domain
  - Handle render instances inside Dmain class
- 
+
 ### Fixed
  - A couple errors in `module_dispatch.php`
  - An error in HTML class output
@@ -120,7 +160,7 @@
  - Restructuring of JSON API processing
  - Update documentation
  - Convert `post.php` to NewPost class
- 
+
 ### Fixed
  - Pop-ups for post links
 
@@ -134,7 +174,7 @@
  - Archive and prune access simplified
  - Perm override so thread pruning works again
  - Move `loadArrayFromCache` to `CacheHandler` class
- 
+
 ### Fixed
  - Not deleting when moved to archive
 
@@ -153,7 +193,7 @@
  - Replace $base_content_id with post/thread specific IDs
  - Some database columns changed to DEFAULT NULL
  - Update filetype handling
- 
+
 ### Fixed
  - Non-noko redirect going to home page
  - File formats showing in rules even when parent category is disabled
@@ -186,7 +226,7 @@
  - Update ban page
  - Add post borders to Burichan and Futaba styles
  - Various layout and rendering tweaks
- 
+
 ### Fixed
  - Newlines in `ERROR-REF.md`
  - Session age checks
