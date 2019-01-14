@@ -61,6 +61,7 @@ class Session
     {
         if (SECURE_SESSION_ONLY && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'))
         {
+            $this->terminate();
             nel_derp(224, _gettext('Session requires a secure connection.'));
         }
 
@@ -128,6 +129,13 @@ class Session
             }
 
             $_SESSION['username'] = $_POST['username'];
+        }
+
+        $user = $this->authorization->getUser($_SESSION['username']);
+
+        if(!$user->active())
+        {
+            nel_derp(225, _gettext('Not an active user.'));
         }
 
         self::$user = $this->authorization->getUser($_SESSION['username']);

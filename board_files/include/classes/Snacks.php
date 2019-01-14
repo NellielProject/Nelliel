@@ -75,6 +75,11 @@ class Snacks
 
     public function applyBan(Domain $domain)
     {
+        if($domain->id() === '')
+        {
+            return;
+        }
+
         $bans = $this->ban_hammer->getBansByIp($_SERVER['REMOTE_ADDR']);
         $ban_info = null;
 

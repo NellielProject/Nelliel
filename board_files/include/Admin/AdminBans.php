@@ -117,7 +117,6 @@ class AdminBans extends AdminHandler
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
-        $this->applyNewBan();
         nel_render_ban_panel_modify($user, $this->domain);
     }
 
@@ -149,11 +148,5 @@ class AdminBans extends AdminHandler
         $ban_input = $this->ban_hammer->postToArray();
         $this->ban_hammer->removeBan($this->domain->id(), $_GET['ban_id']);
         $this->renderPanel($user);
-    }
-
-    private function applyNewBan()
-    {
-        $snacks = new \Nelliel\Snacks($this->database, new \Nelliel\BanHammer($this->database));
-        $snacks->applyBan($this->domain);
     }
 }

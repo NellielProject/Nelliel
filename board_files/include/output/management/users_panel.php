@@ -71,11 +71,16 @@ function nel_render_users_panel_edit($user, \Nelliel\Domain $domain, $user_id)
     }
     else
     {
-        $user = $authorization->getUser($user_id);
-        $dom->getElementById('user-id-field')->extSetAttribute('value', $user->auth_data['user_id']);
-        $dom->getElementById('display_name')->extSetAttribute('value', $user->auth_data['display_name']);
+        $edit_user = $authorization->getUser($user_id);
+        $dom->getElementById('user-id-field')->extSetAttribute('value', $edit_user->auth_data['user_id']);
+        $dom->getElementById('display_name')->extSetAttribute('value', $edit_user->auth_data['display_name']);
         $dom->getElementById('user-edit-form')->extSetAttribute('action',
                 PHP_SELF . '?module=users&action=update&user-id=' . $user_id);
+
+        if($edit_user->active())
+        {
+            $dom->getElementById('user-active')->extSetAttribute('checked', 'true');
+        }
     }
 
     $board_roles = $dom->getElementById('board-roles');

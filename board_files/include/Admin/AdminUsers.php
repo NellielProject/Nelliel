@@ -86,7 +86,7 @@ class AdminUsers extends AdminHandler
         nel_render_users_panel_edit($user, $this->domain, $this->user_id);
     }
 
-    public function editor($user) // GG
+    public function editor($user)
     {
         if (!$user->boardPerm('', 'perm_user_modify'))
         {
@@ -96,7 +96,7 @@ class AdminUsers extends AdminHandler
         nel_render_users_panel_edit($user, $this->domain, $this->user_id);
     }
 
-    public function update($user) // GG
+    public function update($user)
     {
         if (!$user->boardPerm('', 'perm_user_modify'))
         {

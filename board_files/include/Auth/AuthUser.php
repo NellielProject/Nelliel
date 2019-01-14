@@ -121,8 +121,7 @@ class AuthUser extends AuthHandler
 
     public function remove()
     {
-        $prepared = $this->database->prepare(
-                'DELETE FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [$this->auth_id]);
         $prepared = $this->database->prepare('DELETE FROM "' . USERS_TABLE . '" WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [$this->auth_id]);
@@ -172,8 +171,8 @@ class AuthUser extends AuthHandler
             }
         }
 
-        $this->user_roles[] = ['role_id' => $role_id, 'board' => $board_id,
-            'role' => $this->setupAuthRole($role_id)];
+        $this->user_roles[] = ['role_id' => $role_id, 'board' => $board_id, 'role' => $this->setupAuthRole(
+                $role_id)];
     }
 
     public function removeBoardRole($board_id, $role_id)
@@ -222,6 +221,11 @@ class AuthUser extends AuthHandler
         $role = new AuthRole($this->database, $role_id);
         $role->loadFromDatabase();
         return $role;
+    }
+
+    public function active()
+    {
+        return boolval($this->auth_data['active']);
     }
 }
 
