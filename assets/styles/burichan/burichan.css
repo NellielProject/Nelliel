@@ -34,6 +34,10 @@ a:hover {
     text-decoration: none;
 }
 
+form {
+	border-spacing: 2px;
+}
+
 /* General formatting */
 .content-page {
     height: 100%;

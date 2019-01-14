@@ -70,7 +70,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 
     if ($user->boardPerm('', 'perm_file_filters_access'))
     {
-        $manage_options_nodes['module-link-file-filters']->extSetAttribute('href', PHP_SELF . '?module=site-settings');
+        $manage_options_nodes['module-link-file-filters']->extSetAttribute('href', PHP_SELF . '?module=file-filters');
     }
     else
     {
