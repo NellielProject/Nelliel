@@ -97,9 +97,9 @@ class AdminBans extends AdminHandler
                 $prepared = $this->database->prepare(
                         'UPDATE "' . $post_table . '" SET "mod_comment" = ? WHERE "post_number" = ?');
 
-                $this->database->executePrepared($prepared, array($_POST['mod_post_comment'], $_GET['post-id']));
+                $this->database->executePrepared($prepared, [$_POST['mod_post_comment'], $_GET['post-id']]);
                 $regen = new \Nelliel\Regen();
-                $regen->threads($this->domain, true, array($_GET['post-id']));
+                $regen->threads($this->domain, true, [$_GET['post-id']]);
                 $regen->index($this->domain);
             }
         }

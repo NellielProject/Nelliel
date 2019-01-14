@@ -24,16 +24,18 @@ function nel_verify_login()
                 nel_password_verify($_POST['super_sekrit'], $user->auth_data['user_password']))
         {
             $login_valid = true;
-            $prepared = $database->prepare('DELETE FROM "' . LOGIN_ATTEMPTS_TABLE . '" WHERE "ip_address" = ?');
-            $database->executePrepared($prepared, [@inet_pton($_SERVER['REMOTE_ADDR'])], true);
+            $prepared = $database->prepare('DELETE FROM "' . LOGIN_ATTEMPTS_TABLE . '" WHERE "ip_address" = :ip_address');
+            $prepared->bindValue(':ip_address', @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
+            $database->executePrepared($prepared, null, true);
             nel_clear_old_login_attempts($database, $cleanup_time);
         }
     }
 
     if (!$login_valid)
     {
-        $prepared = $database->prepare('SELECT "last_attempt" FROM "' . LOGIN_ATTEMPTS_TABLE . '" WHERE "ip_address" = ?');
-        $result = $database->executePreparedFetch($prepared, [@inet_pton($_SERVER['REMOTE_ADDR'])], PDO::FETCH_ASSOC,
+        $prepared = $database->prepare('SELECT "last_attempt" FROM "' . LOGIN_ATTEMPTS_TABLE . '" WHERE "ip_address" = :ip_address');
+        $prepared->bindValue(':ip_address', @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
+        $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC,
                 true);
 
         if (!empty($result))
@@ -41,16 +43,20 @@ function nel_verify_login()
             if (($attempt_time - $result['last_attempt']) > $delay_seconds)
             {
                 $prepared = $database->prepare(
-                        'UPDATE "' . LOGIN_ATTEMPTS_TABLE . '" SET "last_attempt" = ? WHERE "ip_address" = ?');
-                $database->executePrepared($prepared, [$attempt_time, @inet_pton($_SERVER['REMOTE_ADDR'])], true);
+                        'UPDATE "' . LOGIN_ATTEMPTS_TABLE . '" SET "last_attempt" = :last_attempt WHERE "ip_address" = :ip_address');
+                $prepared->bindValue(':last_attempt', $attempt_time, PDO::PARAM_INT);
+                $prepared->bindValue(':ip_address', @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
+                $database->executePrepared($prepared, null, true);
                 nel_clear_old_login_attempts($database, $cleanup_time);
             }
         }
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . LOGIN_ATTEMPTS_TABLE . '" (ip_address, last_attempt) VALUES (?, ?)');
-            $database->executePrepared($prepared, [@inet_pton($_SERVER['REMOTE_ADDR']), $attempt_time], true);
+                    'INSERT INTO "' . LOGIN_ATTEMPTS_TABLE . '" (ip_address, last_attempt) VALUES (:ip_address, :last_attempt)');
+            $prepared->bindValue(':ip_address', @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
+            $prepared->bindValue(':last_attempt', $attempt_time, PDO::PARAM_INT);
+            $database->executePrepared($prepared, null, true);
             nel_clear_old_login_attempts($database, $cleanup_time);
         }
 

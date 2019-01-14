@@ -80,7 +80,7 @@ class AdminPermissions extends AdminHandler
 
         $permission = $_GET['permission'];
         $prepared = $this->database->prepare('DELETE FROM "' . PERMISSIONS_TABLE . '" WHERE "permission" = ?');
-        $this->database->executePrepared($prepared, array($permission));
+        $this->database->executePrepared($prepared, [$permission]);
         $this->renderPanel($user);
     }
 }

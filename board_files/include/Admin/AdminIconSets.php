@@ -94,7 +94,7 @@ class AdminIconSets extends AdminHandler
 
         $icon_set_id = $_GET['icon-set-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . ASSETS_TABLE . '" WHERE "id" = ? AND "type" = ?');
-        $this->database->executePrepared($prepared, array($icon_set_id, 'icon-set'));
+        $this->database->executePrepared($prepared, [$icon_set_id, 'icon-set']);
         $this->renderPanel($user);
     }
 

@@ -82,7 +82,7 @@ class FilesUpload
             if ($this->domain->setting('timestamp_filename'))
             {
                 $file->content_data['filename'] = $post->content_data['post_time'] .
-                $post->content_data['post_time_milli'];
+                        $post->content_data['post_time_milli'];
                 $file->content_data['fullname'] = $file->content_data['filename'] . '.' .
                         $file->content_data['extension'];
             }
@@ -111,8 +111,8 @@ class FilesUpload
 
     public function checkForErrors($file)
     {
-        $error_data = array('delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files,
-            'board_id' => $this->domain->id());
+        $error_data = ['delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->uploaded_files,
+            'board_id' => $this->domain->id()];
 
         if ($file['size'] > $this->domain->setting('max_filesize') * 1024)
         {
@@ -154,8 +154,8 @@ class FilesUpload
     {
         $database = nel_database();
         $snacks = new \Nelliel\Snacks($database, new \Nelliel\BanHammer($database));
-        $error_data = array('delete_files' => true, 'bad-filename' => $file->content_data['name'],
-            'files' => $this->uploaded_files, 'board_id' => $this->domain->id());
+        $error_data = ['delete_files' => true, 'bad-filename' => $file->content_data['name'],
+            'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
         $is_banned = false;
         $file->content_data['md5'] = hash_file('md5', $file->content_data['location'], true);
         $is_banned = $snacks->fileHashIsBanned($file->content_data['md5'], 'md5');
@@ -230,8 +230,8 @@ class FilesUpload
     public function checkFiletype($file)
     {
         $filetypes = new \Nelliel\FileTypes(nel_database());
-        $error_data = array('delete_files' => true, 'bad-filename' => $file->content_data['name'],
-            'files' => $this->uploaded_files, 'board_id' => $this->domain->id());
+        $error_data = ['delete_files' => true, 'bad-filename' => $file->content_data['name'],
+            'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
         $this->getPathInfo($file);
         $test_ext = utf8_strtolower($file->content_data['extension']);
 

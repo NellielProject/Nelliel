@@ -45,7 +45,7 @@ class JSONContent extends JSONOutput
         $this->addIfNotEmpty($content_array, 'url', $data['url'], 'string');
         $this->addIfNotEmpty($content_array, 'exif', $data['exif'], 'string');
         $this->addIfNotEmpty($content_array, 'meta', $data['meta'], 'string');
-        $content_array = nel_plugins()->processHook('nel-json-prepare-content', array($data), $content_array);
+        $content_array = nel_plugins()->processHook('nel-json-prepare-content', [$data], $content_array);
 
         if ($store)
         {

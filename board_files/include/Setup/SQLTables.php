@@ -542,7 +542,7 @@ class SQLTables
             $auto = 'AUTOINCREMENT';
         }
 
-        return array($int_column, $auto);
+        return [$int_column, $auto];
     }
 
     private function sqlAlternatives($datatype, $length)

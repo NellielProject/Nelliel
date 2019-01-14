@@ -26,11 +26,11 @@ function nel_thread_generator($domain, $write, $thread_id, $command = null)
     $dom->getElementById('form-content-action')->extSetAttribute('action',
             $dotdot . PHP_SELF . '?module=threads&board_id=' . $domain->id());
     $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('thread_table') . '" WHERE "thread_id" = ?');
-    $gen_data['thread'] = $database->executePreparedFetch($prepared, array($thread_id), PDO::FETCH_ASSOC);
+    $gen_data['thread'] = $database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
     $prepared = $database->prepare(
             'SELECT * FROM "' . $domain->reference('post_table') .
             '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
-    $treeline = $database->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
+    $treeline = $database->executePreparedFetchAll($prepared, [$thread_id], PDO::FETCH_ASSOC);
 
     if (empty($treeline))
     {
@@ -76,7 +76,7 @@ function nel_thread_generator($domain, $write, $thread_id, $command = null)
             $query = 'SELECT * FROM "' . $domain->reference('content_table') .
                     '" WHERE "post_ref" = ? ORDER BY "content_order" ASC';
             $prepared = $database->prepare($query);
-            $gen_data['files'] = $database->executePreparedFetchAll($prepared, array($gen_data['post']['post_number']),
+            $gen_data['files'] = $database->executePreparedFetchAll($prepared, [$gen_data['post']['post_number']],
                     PDO::FETCH_ASSOC);
 
             foreach ($gen_data['files'] as $content_data)
@@ -100,7 +100,7 @@ function nel_thread_generator($domain, $write, $thread_id, $command = null)
         if ($gen_data['post']['op'] == 1)
         {
             $new_post_node = nel_render_post($domain, $gen_data, $dom);
-            $expand_div = $dom->getElementById('thread-expand-nci_0_0_0');
+            $expand_div = $dom->getElementById('thread-expand-cid_0_0_0');
             $expand_div->changeId(
                     'thread-expand-' . \Nelliel\ContentID::createIDString($gen_data['thread']['thread_id']));
             $omitted_element = $expand_div->getElementsByClassName('omitted-posts')->item(0);
@@ -135,13 +135,13 @@ function nel_thread_generator($domain, $write, $thread_id, $command = null)
         }
 
         $imported = $dom->importNode($new_post_node, true);
-        $dom->getElementById('thread-nci_0_0_0')->appendChild($imported);
+        $dom->getElementById('thread-cid_0_0_0')->appendChild($imported);
         ++ $post_counter;
         $json_thread->addPostData($json_post->retrieveData(true));
     }
 
-    $dom->getElementById('post-id-nci_0_0_0')->remove();
-    $dom->getElementById('thread-nci_0_0_0')->changeId('thread-nci_' . $thread_id . '_0_0');
+    $dom->getElementById('post-id-cid_0_0_0')->remove();
+    $dom->getElementById('thread-cid_0_0_0')->changeId('thread-cid_' . $thread_id . '_0_0');
 
     if (!$hr_added)
     {

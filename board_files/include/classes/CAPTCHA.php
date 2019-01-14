@@ -35,7 +35,7 @@ class CAPTCHA
 
         $site_domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), $this->database);
         $response = $_POST['g-recaptcha-response'];
-        nel_plugins()->processHook('nel-verify-recaptcha', array($reponse));
+        nel_plugins()->processHook('nel-verify-recaptcha', [$reponse]);
         $result = file_get_contents(
                 'https://www.google.com/recaptcha/api/siteverify?secret=' . $site_domain->setting('recaptcha_sekrit_key') .
                 '&response=' . $response);

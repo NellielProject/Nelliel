@@ -42,5 +42,5 @@ function nel_central_dispatch()
 
     require_once INCLUDE_PATH . 'dispatch/module_dispatch.php';
     $inputs = nel_module_dispatch($inputs, $domain);
-    nel_plugins()->processHook('nel-in-after-central-dispatch', array($inputs, $domain));
+    nel_plugins()->processHook('nel-in-after-central-dispatch', [$inputs, $domain]);
 }

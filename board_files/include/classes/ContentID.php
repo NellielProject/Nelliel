@@ -12,9 +12,9 @@ class ContentID
     public $thread_id = 0;
     public $post_id = 0;
     public $order_id = 0;
-    protected $id_string = 'nci_0_0_0';
+    protected $id_string = 'cid_0_0_0';
 
-    function __construct($id_string = 'nci_0_0_0')
+    function __construct(string $id_string = 'cid_0_0_0')
     {
         $this->id_string = $id_string;
         $id_array = self::parseIDString($id_string);
@@ -23,17 +23,17 @@ class ContentID
         $this->order_id = $id_array['order'];
     }
 
-    public static function isContentID($string)
+    public static function isContentID(string $string)
     {
-        return preg_match('/nci_[0-9]+_[0-9]+_[0-9]+/', $string) === 1;
+        return preg_match('/cid_[0-9]+_[0-9]+_[0-9]+/', $string) === 1;
     }
 
     public static function createIDString($thread_id = 0, $post_id = 0, $order_id = 0)
     {
-        return 'nci_' . $thread_id . '_' . $post_id . '_' . $order_id;
+        return 'cid_' . $thread_id . '_' . $post_id . '_' . $order_id;
     }
 
-    public static function parseIDString($id_string)
+    public static function parseIDString(string $id_string)
     {
         $id_split = explode('_', $id_string);
         $id_array = array();

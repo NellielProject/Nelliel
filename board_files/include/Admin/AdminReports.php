@@ -26,11 +26,11 @@ class AdminReports extends AdminHandler
         $session = new \Nelliel\Session($this->authorization, true);
         $user = $session->sessionUser();
 
-        if($inputs['action'] === 'dismiss')
+        if ($inputs['action'] === 'dismiss')
         {
             $this->dismiss($user, $_GET['report_id']);
         }
-        else if(isset($_POST['form_submit_report']))
+        else if (isset($_POST['form_submit_report']))
         {
             $this->add($user);
         }
@@ -69,11 +69,11 @@ class AdminReports extends AdminHandler
             {
                 $report_data['content_id'] = $content_id->getIDString();
                 $query = 'INSERT INTO "' . REPORTS_TABLE .
-                '" ("board_id", "content_id", "reason", "reporter_ip") VALUES (?, ?, ?, ?)';
+                        '" ("board_id", "content_id", "reason", "reporter_ip") VALUES (?, ?, ?, ?)';
                 $prepared = $this->database->prepare($query);
                 $this->database->executePrepared($prepared,
-                        array($this->domain->id(), $report_data['content_id'], $report_data['reason'],
-                        @inet_pton($report_data['reporter_ip'])));
+                        [$this->domain->id(), $report_data['content_id'], $report_data['reason'],
+                            @inet_pton($report_data['reporter_ip'])]);
             }
         }
     }
@@ -98,7 +98,6 @@ class AdminReports extends AdminHandler
         }
 
         $prepared = $this->database->prepare('DELETE FROM "' . REPORTS_TABLE . '" WHERE "report_id" = ?');
-        $this->database->executePrepared($prepared, array($report_id));
+        $this->database->executePrepared($prepared, [$report_id]);
     }
-
 }

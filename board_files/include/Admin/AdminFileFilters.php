@@ -87,7 +87,7 @@ class AdminFileFilters extends AdminHandler
 
         $filter_id = $_GET['filter-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . FILE_FILTERS_TABLE . '" WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, array($filter_id));
+        $this->database->executePrepared($prepared, [$filter_id]);
         $this->renderPanel($user);
     }
 

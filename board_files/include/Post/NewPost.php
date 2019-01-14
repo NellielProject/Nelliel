@@ -22,7 +22,7 @@ class NewPost
 
     public function processPost()
     {
-        $error_data = array('board_id' => $this->domain->id());
+        $error_data = ['board_id' => $this->domain->id()];
 
         if ($this->domain->setting('use_captcha') || $this->domain->setting('use_recaptcha'))
         {
@@ -39,7 +39,7 @@ class NewPost
                 $captcha_result = $captcha->verifyReCaptcha();
             }
 
-            if(!$captcha_result)
+            if (!$captcha_result)
             {
                 nel_derp(24, _gettext('CAPTCHA test failed or you appear to be a spambot.'), $error_data);
             }
@@ -197,14 +197,14 @@ class NewPost
 
         // Generate response page if it doesn't exist, otherwise update
         $regen = new \Nelliel\Regen();
-        $regen->threads($this->domain, true, array($thread->content_id->thread_id));
+        $regen->threads($this->domain, true, [$thread->content_id->thread_id]);
         $regen->index($this->domain);
         return $thread->content_id->thread_id;
     }
 
     private function isPostOk($post_data, $time)
     {
-        $error_data = array('board_id' => $this->domain->id());
+        $error_data = ['board_id' => $this->domain->id()];
 
         // Check for flood
         // If post is a reply, also check if the thread still exists
@@ -241,7 +241,7 @@ class NewPost
             $prepared = $this->database->prepare(
                     'SELECT "post_count", "archive_status", "locked" FROM "' . $this->domain->reference('thread_table') .
                     '" WHERE "thread_id" = ?');
-            $thread_info = $this->database->executePreparedFetch($prepared, array($post_data['parent_thread']),
+            $thread_info = $this->database->executePreparedFetch($prepared, [$post_data['parent_thread']],
                     PDO::FETCH_ASSOC, true);
 
             if (!empty($thread_info))

@@ -37,7 +37,7 @@ function nel_render_thread_panel_main($user, $domain)
         $op_post = $prepared->fetch(PDO::FETCH_ASSOC);
         unset($result);
 
-        $base_content_id = 'nci_' . $thread['thread_id'] . '_0_0';
+        $base_content_id = 'cid_' . $thread['thread_id'] . '_0_0';
 
         $expand_link = $temp_thread_row->getElementById('expand-link-');
         $expand_link->changeId('expand-link-' . $thread['thread_id']);
@@ -165,7 +165,7 @@ function nel_render_thread_panel_expand($user, $domain, $thread_id)
         $temp_post_row = $post_row->cloneNode(true);
         $temp_post_row->changeId('post-row-' . $post['post_number']);
 
-        $base_content_id = 'nci_' . $post['parent_thread'] . '_' . $post['post_number'] . '_0';
+        $base_content_id = 'cid_' . $post['parent_thread'] . '_' . $post['post_number'] . '_0';
 
         $post_post_number = $temp_post_row->getElementById('post-post-number-');
         $post_post_number->setContent($post['post_number']);

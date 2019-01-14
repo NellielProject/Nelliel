@@ -21,7 +21,7 @@ class JSONIndex extends JSONOutput
     {
         $index_array = array();
         $index_array['thread_count'] = nel_cast_to_datatype($data['thread_count'], 'integer');
-        $index_array = nel_plugins()->processHook('nel-json-prepare-post', array($data), $index_array);
+        $index_array = nel_plugins()->processHook('nel-json-prepare-post', [$data], $index_array);
 
         if ($store)
         {

@@ -129,7 +129,7 @@ class Session
         }
 
         self::$user = $this->authorization->getUser($_SESSION['username']);
-        $_SESSION['ignores'] = array('default' => false);
+        $_SESSION['ignores'] = ['default' => false];
 
         if (!isset($_SESSION['login_time']))
         {

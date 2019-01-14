@@ -49,7 +49,7 @@ class ArchiveAndPrune
     public function changeArchiveStatus($thread_id, $status, $table)
     {
         $prepared = $this->database->prepare('UPDATE "' . $table . '" SET "archive_status" = ? WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, array($status, $thread_id));
+        $this->database->executePrepared($prepared, [$status, $thread_id]);
     }
 
     public function getFullThreadList()
@@ -64,7 +64,7 @@ class ArchiveAndPrune
     {
         $prepared = $this->database->prepare(
                 'SELECT "thread_id" FROM "' . $this->domain->reference('thread_table') . '" WHERE "archive_status" = ?');
-        $thread_list = $this->database->executePreparedFetchAll($prepared, array($status), PDO::FETCH_COLUMN);
+        $thread_list = $this->database->executePreparedFetchAll($prepared, [$status], PDO::FETCH_COLUMN);
         return $thread_list;
     }
 
@@ -128,15 +128,15 @@ class ArchiveAndPrune
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . $this->domain->reference('archive_thread_table') . '" SELECT * FROM "' .
                 $this->domain->reference('thread_table') . '" WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, array($thread_id));
+        $this->database->executePrepared($prepared, [$thread_id]);
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . $this->domain->reference('archive_post_table') . '" SELECT * FROM "' .
                 $this->domain->reference('post_table') . '" WHERE "parent_thread" = ?');
-        $this->database->executePrepared($prepared, array($thread_id));
+        $this->database->executePrepared($prepared, [$thread_id]);
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . $this->domain->reference('archive_content_table') . '" SELECT * FROM "' .
                 $this->domain->reference('content_table') . '" WHERE "parent_thread" = ?');
-        $this->database->executePrepared($prepared, array($thread_id));
+        $this->database->executePrepared($prepared, [$thread_id]);
         $this->file_handler->moveFile($this->domain->reference('src_path') . $thread_id,
                 $this->domain->reference('archive_src_path') . $thread_id);
         $this->file_handler->moveFile($this->domain->reference('thumb_path') . $thread_id,
@@ -145,7 +145,7 @@ class ArchiveAndPrune
                 $this->domain->reference('archive_page_path') . $thread_id);
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . $this->domain->reference('thread_table') . '" WHERE "thread_id"= ?');
-        $this->database->executePrepared($prepared, array($thread_id));
+        $this->database->executePrepared($prepared, [$thread_id]);
     }
 
     public function moveFromArchive($thread_id)
@@ -154,15 +154,15 @@ class ArchiveAndPrune
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . $this->domain->reference('thread_table') . '" SELECT * FROM "' .
                 $this->domain->reference('archive_thread_table') . '" WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, array($thread_id));
+        $this->database->executePrepared($prepared, [$thread_id]);
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . $this->domain->reference('post_table') . '" SELECT * FROM "' .
                 $this->domain->reference('archive_post_table') . '" WHERE "parent_thread" = ?');
-        $this->database->executePrepared($prepared, array($thread_id));
+        $this->database->executePrepared($prepared, [$thread_id]);
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . $this->domain->reference('content_table') . '" SELECT * FROM "' .
                 $this->domain->reference('archive_content_table') . '" WHERE "parent_thread" = ?');
-        $this->database->executePrepared($prepared, array($thread_id));
+        $this->database->executePrepared($prepared, [$thread_id]);
         $this->file_handler->moveFile($this->domain->reference('archive_src_path') . $thread_id,
                 $this->domain->reference('src_path') . $thread_id);
         $this->file_handler->moveFile($this->domain->reference('archive_thumb_path') . $thread_id,
@@ -171,7 +171,7 @@ class ArchiveAndPrune
                 $this->domain->reference('page_path') . $thread_id);
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . $this->domain->reference('archive_thread_table') . '" WHERE "thread_id"= ?');
-        $this->database->executePrepared($prepared, array($thread_id));
+        $this->database->executePrepared($prepared, [$thread_id]);
     }
 
     public function moveThreadsToArchive($move_list = array())
@@ -208,7 +208,7 @@ class ArchiveAndPrune
     {
         foreach ($this->getThreadListForStatus(2) as $thread_id)
         {
-            $thread = new \Nelliel\Content\ContentThread($this->database, new ContentID('nci_' . $thread_id . '_0_0'),
+            $thread = new \Nelliel\Content\ContentThread($this->database, new ContentID('cid_' . $thread_id . '_0_0'),
                     $this->domain);
             $thread->remove(true);
         }

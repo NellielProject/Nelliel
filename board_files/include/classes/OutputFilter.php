@@ -16,7 +16,7 @@ class OutputFilter
     {
     }
 
-    public function cleanAndEncode(&$string)
+    public function cleanAndEncode(string &$string)
     {
         if (preg_match("#^\s*$#", $string))
         {
@@ -32,7 +32,7 @@ class OutputFilter
         $string = htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
     }
 
-    public function clearWhitespace(&$string)
+    public function clearWhitespace(string &$string)
     {
         if (ctype_space($string))
         {
@@ -40,13 +40,13 @@ class OutputFilter
         }
     }
 
-    public function newlinesToArray($string)
+    public function newlinesToArray(string $string)
     {
         $text_array = preg_split('#\r\n?|\n#', $string);
         return $text_array;
     }
 
-    public function postQuote($target_element, $text_input)
+    public function postQuote($target_element, string $text_input)
     {
         if (preg_match('#^\s*>>#', $text_input) === 1)
         {
@@ -59,7 +59,7 @@ class OutputFilter
         return false;
     }
 
-    public function postQuoteLink($domain, $target_element, $text_input)
+    public function postQuoteLink($domain, $target_element, string $text_input)
     {
         $database = nel_database();
         $text_segments = preg_split('#(>>[0-9]+)#', $text_input, null, PREG_SPLIT_DELIM_CAPTURE);
@@ -72,7 +72,7 @@ class OutputFilter
                 $prepared = $database->prepare(
                         'SELECT "parent_thread" FROM "' . $domain->reference('post_table') .
                         '" WHERE "post_number" = ?');
-                $parent_thread = $database->executePreparedFetch($prepared, array($matches[1]), PDO::FETCH_COLUMN);
+                $parent_thread = $database->executePreparedFetch($prepared, [$matches[1]], PDO::FETCH_COLUMN);
 
                 if ($parent_thread === false || empty($parent_thread))
                 {

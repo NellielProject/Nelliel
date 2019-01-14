@@ -33,7 +33,7 @@ class JSONThread extends JSONOutput
         $thread_array['sticky'] = nel_cast_to_datatype($data['sticky'], 'boolean');
         $thread_array['locked'] = nel_cast_to_datatype($data['locked'], 'boolean');
         $this->addIfNotEmpty($thread_array, 'slug', $data['slug'], 'string');
-        $thread_array = nel_plugins()->processHook('nel-json-prepare-thread', array($data), $thread_array);
+        $thread_array = nel_plugins()->processHook('nel-json-prepare-thread', [$data], $thread_array);
 
         if ($store)
         {

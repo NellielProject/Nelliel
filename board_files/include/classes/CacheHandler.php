@@ -22,7 +22,7 @@ class CacheHandler
         }
     }
 
-    public function loadArrayFromCache($filename, $array_variable)
+    public function loadArrayFromCache(string $filename, $array_variable)
     {
         if (USE_INTERNAL_CACHE)
         {
@@ -57,7 +57,7 @@ class CacheHandler
         $this->writeCacheFile(CACHE_FILE_PATH, 'hashes.php', '$hashes = ' . var_export($this->hashes, true) . ';');
     }
 
-    public function writeCacheFile($path, $filename, $content, $header = '', $footer = '', $file_perm = FILE_PERM)
+    public function writeCacheFile($path, string $filename, $content, string $header = '', string $footer = '', $file_perm = FILE_PERM)
     {
         if (!is_writable(CACHE_FILE_PATH))
         {

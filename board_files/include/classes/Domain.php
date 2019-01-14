@@ -63,7 +63,7 @@ class Domain
         if (empty($this->domain_references))
         {
             $prepared = $this->database->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
-            $board_data = $this->database->executePreparedFetch($prepared, array($this->domain_id), PDO::FETCH_ASSOC);
+            $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_ASSOC);
             $new_reference = array();
             $board_path = BASE_PATH . $board_data['board_directory'] . '/';
             $new_reference['board_directory'] = $board_data['board_directory'];
@@ -143,7 +143,7 @@ class Domain
     {
         $settings = array();
         $prepared = $this->database->prepare('SELECT "db_prefix" FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
-        $db_prefix = $this->database->executePreparedFetch($prepared, array($this->domain_id), PDO::FETCH_COLUMN);
+        $db_prefix = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);
         $config_table = $db_prefix . '_config';
         $config_list = $this->database->executeFetchAll(
                 'SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'board_setting\'', PDO::FETCH_ASSOC);

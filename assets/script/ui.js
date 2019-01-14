@@ -2,7 +2,7 @@ nelliel.ui.hideShowThread = function(element, command) {
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     var post_files = document.getElementById("files-" + content_id.id_string);
     var post_contents = document.getElementById("post-contents-" + content_id.id_string);
-    var thread_container = document.getElementById("thread-expand-" + "nci_" + content_id.thread_id + "_0_0");
+    var thread_container = document.getElementById("thread-expand-" + "cid_" + content_id.thread_id + "_0_0");
 
     if (command === "hide-thread") {
         dataBin.hidden_threads[content_id.id_string] = Date.now();
@@ -172,7 +172,7 @@ nelliel.ui.inlineExpandReduce = function(element, command) {
 nelliel.ui.showLinkedPost = function(element, event) {
     var href = element.getAttribute("href");
     var anchor_matches = href.match(/#t([0-9]+)p([0-9]+)/);
-    var post_id = "nci_" + anchor_matches[1] + "_" + anchor_matches[2] + "_0";
+    var post_id = "cid_" + anchor_matches[1] + "_" + anchor_matches[2] + "_0";
 
     if (document.getElementById("post-quote-popup-" + post_id) !== null) {
         return;
@@ -220,7 +220,7 @@ nelliel.ui.showLinkedPost = function(element, event) {
 nelliel.ui.hideLinkedPost = function(element, event) {
     var href = element.getAttribute("href");
     var anchor_matches = href.match(/#t([0-9]+)p([0-9]+)/);
-    var post_id = "nci_" + anchor_matches[1] + "_" + anchor_matches[2] + "_0";
+    var post_id = "cid_" + anchor_matches[1] + "_" + anchor_matches[2] + "_0";
     var target_popup = document.getElementById("post-quote-popup-" + post_id);
 
     if (target_popup !== null) {

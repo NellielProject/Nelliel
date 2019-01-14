@@ -76,13 +76,13 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
             {
                 $json_thread = new \Nelliel\API\JSON\JSONThread($domain->id(), $file_handler);
                 $current_thread_id = $front_page_list[$thread_counter];
-                $thread_element = $dom->getElementById('thread-nci_0_0_0')->cloneNode();
-                $thread_element->changeId('thread-nci_' . $current_thread_id . '_0_0');
+                $thread_element = $dom->getElementById('thread-cid_0_0_0')->cloneNode();
+                $thread_element->changeId('thread-cid_' . $current_thread_id . '_0_0');
                 $dom->getElementById('form-content-action')->appendChild($thread_element);
                 $post_append_target = $thread_element;
                 $query = 'SELECT * FROM "' . $domain->reference('thread_table') . '" WHERE "thread_id" = ?';
                 $prepared = $database->prepare($query);
-                $gen_data['thread'] = $database->executePreparedFetch($prepared, array($current_thread_id),
+                $gen_data['thread'] = $database->executePreparedFetch($prepared, [$current_thread_id],
                         PDO::FETCH_ASSOC);
                 $json_thread->prepareData($gen_data['thread'], true);
                 $post_count = $gen_data['thread']['post_count'];
@@ -90,7 +90,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
                 $query = 'SELECT * FROM "' . $domain->reference('post_table') .
                         '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC';
                 $prepared = $database->prepare($query);
-                $treeline = $database->executePreparedFetchAll($prepared, array($current_thread_id), PDO::FETCH_ASSOC);
+                $treeline = $database->executePreparedFetchAll($prepared, [$current_thread_id], PDO::FETCH_ASSOC);
 
                 $gen_data['thread']['first100'] = $post_count > 100;
                 $post_counter = 0;
@@ -106,8 +106,8 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
                 $query = 'SELECT * FROM "' . $domain->reference('content_table') .
                         '" WHERE "post_ref" = ? ORDER BY "content_order" ASC';
                 $prepared = $database->prepare($query);
-                $gen_data['files'] = $database->executePreparedFetchAll($prepared,
-                        array($gen_data['post']['post_number']), PDO::FETCH_ASSOC);
+                $gen_data['files'] = $database->executePreparedFetchAll($prepared, [
+                    $gen_data['post']['post_number']], PDO::FETCH_ASSOC);
 
                 foreach ($gen_data['files'] as $content_data)
                 {
@@ -122,7 +122,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
             if ($gen_data['post']['op'] == 1)
             {
                 $thread_content_id = \Nelliel\ContentID::createIDString($gen_data['thread']['thread_id']);
-                $expand_div = $dom->getElementById('thread-expand-nci_0_0_0')->cloneNode(true);
+                $expand_div = $dom->getElementById('thread-expand-cid_0_0_0')->cloneNode(true);
                 $expand_div->changeId('thread-expand-' . $thread_content_id);
                 $post_append_target->appendChild($expand_div);
                 $post_append_target = $expand_div;
@@ -157,8 +157,8 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
         }
 
         $gen_data['index']['thread_count'] = $thread_counter;
-        $dom->getElementById('post-id-nci_0_0_0')->remove();
-        $dom->getElementById('thread-nci_0_0_0')->remove();
+        $dom->getElementById('post-id-cid_0_0_0')->remove();
+        $dom->getElementById('thread-cid_0_0_0')->remove();
         $gen_data['posts_ending'] = true;
         $page_count = (int) ceil($counttree / $domain->setting('threads_per_page'));
         $pages = array();
@@ -182,7 +182,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
 
         for ($i = 1; $i < $page_count; ++ $i)
         {
-            if($i === $page)
+            if ($i === $page)
             {
                 $nav_pieces[$i]['link'] = '';
             }

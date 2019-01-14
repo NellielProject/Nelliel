@@ -88,7 +88,7 @@ class FrontEndData
         }
     }
 
-    public function style($style = null, $return_default = true)
+    public function style($style = null, bool $return_default = true)
     {
         if (empty($this->styles))
         {
@@ -108,7 +108,7 @@ class FrontEndData
         return $this->styles[$style];
     }
 
-    public function template($template = null, $return_default = true)
+    public function template($template = null, bool $return_default = true)
     {
         if (empty($this->templates))
         {
@@ -128,7 +128,7 @@ class FrontEndData
         return $this->templates[$template];
     }
 
-    public function filetypeIconSet($set = null, $return_default = true)
+    public function filetypeIconSet($set = null, bool $return_default = true)
     {
         if (empty($this->filetype_icon_sets))
         {

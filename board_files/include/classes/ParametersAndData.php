@@ -78,7 +78,7 @@ class ParametersAndData
         if (empty(self::$board_references[$board_id]))
         {
             $prepared = $this->database->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
-            $board_data = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_ASSOC);
+            $board_data = $this->database->executePreparedFetch($prepared, [$board_id], PDO::FETCH_ASSOC);
             $new_reference = array();
             $board_path = BASE_PATH . $board_data['board_directory'] . '/';
             $new_reference['board_directory'] = $board_data['board_directory'];

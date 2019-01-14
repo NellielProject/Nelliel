@@ -102,9 +102,6 @@ $db_config['postgresql_password'] = '';
 // Which schema to use. Default is 'public'
 $db_config['postgresql_schema'] = 'public';
 
-// Path where the database is to be located
-$db_config['postgresql_encoding'] = 'UTF8';
-
 // The character encoding to use.
 // You must make sure this matches or is compatible with what the database uses!
 $db_config['postgresql_encoding'] = 'UTF-8';

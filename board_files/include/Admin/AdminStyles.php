@@ -93,7 +93,7 @@ class AdminStyles extends AdminHandler
 
         $style_id = $_GET['style-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . ASSETS_TABLE . '" WHERE "id" = ? AND "type" = \'style\'');
-        $this->database->executePrepared($prepared, array($style_id));
+        $this->database->executePrepared($prepared, [$style_id]);
         $this->renderPanel($user);
     }
 

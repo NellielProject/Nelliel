@@ -63,7 +63,7 @@ class AdminSiteSettings extends AdminHandler
         while ($item = each($_POST))
         {
             $prepared = $this->database->prepare('UPDATE "nelliel_site_config" SET "setting" = ? WHERE "config_name" = ?');
-            $this->database->executePrepared($prepared, array($item[1], $item[0]), true);
+            $this->database->executePrepared($prepared, [$item[1], $item[0]], true);
         }
 
         $regen = new \Nelliel\Regen();

@@ -72,7 +72,7 @@ class FileTypes
         if (empty($settings))
         {
             $prepared = $this->database->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
-            $db_prefix = $this->database->executePreparedFetch($prepared, array($board_id), PDO::FETCH_COLUMN);
+            $db_prefix = $this->database->executePreparedFetch($prepared, [$board_id], PDO::FETCH_COLUMN);
             $config_table = $db_prefix . '_config';
             $config_list = $this->database->executeFetchAll(
                     'SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'filetype_enable\'', PDO::FETCH_ASSOC);
@@ -99,7 +99,7 @@ class FileTypes
         return self::$filetype_categories;
     }
 
-    public function isValidExtension($extension)
+    public function isValidExtension(string $extension)
     {
         if (!isset(self::$filetype_data))
         {
@@ -109,7 +109,7 @@ class FileTypes
         return isset(self::$filetype_data[$extension]);
     }
 
-    public function extensionData($extension)
+    public function extensionData(string $extension)
     {
         if (!$this->isValidExtension($extension))
         {
@@ -164,7 +164,7 @@ class FileTypes
         return $result;
     }
 
-    public function extensionIsEnabled($board_id, $extension)
+    public function extensionIsEnabled($board_id, string $extension)
     {
         $extension_data = $this->extensionData($extension);
 
@@ -195,7 +195,7 @@ class FileTypes
                 self::$filetype_settings[$board_id][$type][$format];
     }
 
-    public function verifyFile($extension, $file_path, $start_buffer = 65535, $end_buffer = 65535)
+    public function verifyFile(string $extension, $file_path, $start_buffer = 65535, $end_buffer = 65535)
     {
         $file_length = filesize($file_path);
         $end_offset = ($file_length < 65535) ? $file_length : $file_length - 65535;

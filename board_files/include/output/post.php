@@ -50,7 +50,7 @@ function nel_render_post($domain, $gen_data, $dom)
     $response = $gen_data['post']['op'] != 1;
     $post_data = $gen_data['post'];
     $thread_data = $gen_data['thread'];
-    $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-nci_0_0_0'), true);
+    $new_post_dom = $dom->copyNodeIntoDocument($dom->getElementById('post-id-cid_0_0_0'), true);
 
     if ($response)
     {
@@ -67,15 +67,15 @@ function nel_render_post($domain, $gen_data, $dom)
     $post_content_id = new \Nelliel\ContentID(
             \Nelliel\ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
 
-    $post_header_node = $new_post_dom->getElementById('header-nci_0_0_0');
+    $post_header_node = $new_post_dom->getElementById('header-cid_0_0_0');
     $post_header_node->changeId('header-' . $post_content_id->getIDString());
     $post_header_node->extSetAttribute('class', $post_type_class . 'post-header');
     $header_nodes = $post_header_node->getElementsByAttributeName('data-parse-id', true);
 
-    $new_post_element = $new_post_dom->getElementById('post-id-nci_0_0_0');
+    $new_post_element = $new_post_dom->getElementById('post-id-cid_0_0_0');
     $new_post_element->changeId('post-id-' . $post_content_id->getIDString());
 
-    $post_container = $new_post_dom->getElementById('post-container-nci_0_0_0');
+    $post_container = $new_post_dom->getElementById('post-container-cid_0_0_0');
     $post_container->changeId('post-container-' . $post_content_id->getIDString());
 
     $indents_element = $new_post_dom->getElementById('indents');
@@ -275,7 +275,7 @@ function nel_render_post($domain, $gen_data, $dom)
     }
 
     $multiple_files = false;
-    $post_files_container = $new_post_dom->getElementById('files-nci_0_0_0');
+    $post_files_container = $new_post_dom->getElementById('files-cid_0_0_0');
 
     if ($post_data['has_file'] == 1)
     {
@@ -299,10 +299,10 @@ function nel_render_post($domain, $gen_data, $dom)
             $file_content_id->order_id = $file['content_order'];
             $full_filename = $file['filename'] . '.' . $file['extension'];
             $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['content_order'];
-            $temp_file_dom = $new_post_dom->copyNodeIntoDocument($new_post_dom->getElementById('fileinfo-nci_0_0_0'),
+            $temp_file_dom = $new_post_dom->copyNodeIntoDocument($new_post_dom->getElementById('fileinfo-cid_0_0_0'),
                     true);
 
-            $temp_file_node = $temp_file_dom->getElementById('fileinfo-nci_0_0_0');
+            $temp_file_node = $temp_file_dom->getElementById('fileinfo-cid_0_0_0');
             $temp_file_node->changeId('fileinfo-' . $file_content_id->getIDString());
             $temp_file_node->extSetAttribute('class', $post_type_class . $multiple_class . 'fileinfo');
 
@@ -482,14 +482,14 @@ function nel_render_post($domain, $gen_data, $dom)
             $post_files_container->appendChild($imported);
         }
 
-        $new_post_dom->getElementById('fileinfo-nci_0_0_0')->remove();
+        $new_post_dom->getElementById('fileinfo-cid_0_0_0')->remove();
     }
     else
     {
         $post_files_container->remove();
     }
 
-    $post_contents_element = $new_post_dom->getElementById('post-contents-nci_0_0_0');
+    $post_contents_element = $new_post_dom->getElementById('post-contents-cid_0_0_0');
     $post_contents_element->changeId('post-contents-' . $post_content_id->getIDString());
     $post_contents_element->extSetAttribute('class', $post_type_class . 'post-contents');
 

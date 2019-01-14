@@ -60,10 +60,10 @@ class BanHammer
                 ($time['hours'] * 3600) + ($time['minutes'] * 60) + $time['seconds'];
     }
 
-    public function getBanById($ban_id, $convert_length = false)
+    public function getBanById($ban_id, bool $convert_length = false)
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . BANS_TABLE . '" WHERE "ban_id" = ?');
-        $ban_info = $this->database->executePreparedFetch($prepared, array($ban_id), PDO::FETCH_ASSOC);
+        $ban_info = $this->database->executePreparedFetch($prepared, [$ban_id], PDO::FETCH_ASSOC);
 
         if ($ban_info === false)
         {
@@ -81,8 +81,9 @@ class BanHammer
     public function getBansByIp($ban_ip)
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . BANS_TABLE . '" WHERE "ip_address_start" = ? AND "ip_address_end" IS NULL');
-        $ban_info = $this->database->executePreparedFetchAll($prepared, array(@inet_pton($ban_ip)), PDO::FETCH_ASSOC);
+                'SELECT * FROM "' . BANS_TABLE . '" WHERE "ip_address_start" = :ip_address_start AND "ip_address_end" IS NULL');
+        $prepared->bindValue(':ip_address_start', $ban_ip, PDO::PARAM_LOB);
+        $ban_info = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
 
         if ($ban_info === false)
         {
@@ -92,7 +93,7 @@ class BanHammer
         return $ban_info;
     }
 
-    public function addBan($ban_input)
+    public function addBan(array $ban_input)
     {
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . BANS_TABLE . '" ("board_id", "all_boards", "type", "creator", "ip_address_start", "reason", "length", "start_time")
@@ -118,7 +119,7 @@ class BanHammer
         $this->database->executePrepared($prepared);
     }
 
-    public function modifyBan($ban_input)
+    public function modifyBan(array $ban_input)
     {
         $prepared = $this->database->prepare(
                 'UPDATE "' . BANS_TABLE .
@@ -137,7 +138,7 @@ class BanHammer
         $this->database->executePrepared($prepared);
     }
 
-    public function removeBan($domain, $ban_id, $snacks = false)
+    public function removeBan($domain, $ban_id, bool $snacks = false)
     {
         $session = new \Nelliel\Session($authorization);
         $user = $session->sessionUser();
@@ -151,7 +152,7 @@ class BanHammer
         }
 
         $prepared = $this->database->prepare('DELETE FROM "' . BANS_TABLE . '" WHERE "ban_id" = ?');
-        $this->database->executePrepared($prepared, array($ban_id));
+        $this->database->executePrepared($prepared, [$ban_id]);
     }
 }
 
