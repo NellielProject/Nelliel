@@ -102,6 +102,10 @@ function nel_render_post($domain, $gen_data, $dom)
         $header_nodes['hide-thread']->extSetAttribute('data-content-id', $post_content_id->getIDString());
         $header_nodes['hide-thread']->changeID('hide-thread-' . $thread_content_id->getIDString());
     }
+    else
+    {
+        $header_nodes['hide-thread']->parentNode->remove();
+    }
 
     $header_nodes['hide-post']->extSetAttribute('data-content-id', $post_content_id->getIDString());
     $header_nodes['hide-post']->changeID('hide-post-' . $post_content_id->getIDString());
