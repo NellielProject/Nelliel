@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_roles_panel_main($user, $domain)
+function nel_render_roles_panel_main($user, \Nelliel\Domain $domain)
 {
     if (!$user->boardPerm('', 'perm_role_access'))
     {
@@ -50,7 +50,7 @@ function nel_render_roles_panel_main($user, $domain)
     nel_clean_exit();
 }
 
-function nel_render_roles_panel_edit($user, $domain, $role_id)
+function nel_render_roles_panel_edit($user, \Nelliel\Domain $domain, $role_id)
 {
     if (!$user->boardPerm('', 'perm_role_access'))
     {

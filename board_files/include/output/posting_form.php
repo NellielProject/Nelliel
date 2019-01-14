@@ -1,7 +1,12 @@
 <?php
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
+
 require_once INCLUDE_PATH . 'output/rules.php';
 
-function nel_render_posting_form($domain, $response_to, $dotdot = null)
+function nel_render_posting_form(\Nelliel\Domain $domain, $response_to, $dotdot = null)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();

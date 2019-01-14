@@ -348,11 +348,25 @@ function nel_render_post($domain, $gen_data, $dom)
             $file_nodes['show-file-meta']->changeId('show-file-meta-' . $file_content_id->getIDString());
             $file_nodes['file-meta']->changeId('file-meta-' . $file_content_id->getIDString());
 
-            $output_filter->cleanAndEncode($file['source']);
-            $output_filter->cleanAndEncode($file['license']);
+            if (!empty($file['source']))
+            {
+                $output_filter->cleanAndEncode($file['source']);
+                $file_nodes['file-source']->setContent('Source: ' . $file['source']);
+            }
+            else
+            {
+                $file_nodes['file-source']->remove();
+            }
 
-            $file_nodes['file-source']->setContent('Source: ' . $file['source']);
-            $file_nodes['file-license']->setContent('License: ' . $file['license']);
+            if (!empty($file['license']))
+            {
+                $output_filter->cleanAndEncode($file['license']);
+                $file_nodes['file-license']->setContent('License: ' . $file['license']);
+            }
+            else
+            {
+                $file_nodes['file-license']->remove();
+            }
 
             // TODO: Find a way to streamline this
             if (!empty($file['md5']))

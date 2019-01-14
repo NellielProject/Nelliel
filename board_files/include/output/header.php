@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_board_header($domain, $dotdot = null, $treeline = null)
+function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treeline = null)
 {
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
@@ -148,7 +148,7 @@ function nel_render_board_header($domain, $dotdot = null, $treeline = null)
     $domain->renderInstance()->appendHTMLFromDOM($dom);
 }
 
-function nel_render_general_header($domain, $dotdot = null, $extra_data = array())
+function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $extra_data = array())
 {
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);

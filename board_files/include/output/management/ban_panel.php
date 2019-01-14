@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_main_ban_panel($user, $domain)
+function nel_render_main_ban_panel($user, \Nelliel\Domain $domain)
 {
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
@@ -65,7 +65,7 @@ function nel_render_main_ban_panel($user, $domain)
     nel_clean_exit();
 }
 
-function nel_render_ban_panel_add($user, $domain, $ip = '', $type = 'GENERAL')
+function nel_render_ban_panel_add($user, \Nelliel\Domain $domain, $ip = '', $type = 'GENERAL')
 {
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
@@ -107,7 +107,7 @@ function nel_render_ban_panel_add($user, $domain, $ip = '', $type = 'GENERAL')
     nel_clean_exit();
 }
 
-function nel_render_ban_panel_modify($user, $domain)
+function nel_render_ban_panel_modify($user, \Nelliel\Domain $domain)
 {
     $translator = new \Nelliel\Language\Translator();
     $ban_hammer = new \Nelliel\BanHammer(nel_database());

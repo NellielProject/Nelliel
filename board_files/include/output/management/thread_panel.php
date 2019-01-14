@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_thread_panel_main($user, $domain)
+function nel_render_thread_panel_main($user, \Nelliel\Domain $domain)
 {
     if (!$user->boardPerm($domain->id(), 'perm_threads_access'))
     {
@@ -135,7 +135,7 @@ function nel_render_thread_panel_main($user, $domain)
     nel_clean_exit();
 }
 
-function nel_render_thread_panel_expand($user, $domain, $thread_id)
+function nel_render_thread_panel_expand($user, \Nelliel\Domain $domain, $thread_id)
 {
     if (!$user->boardPerm($domain->id(), 'perm_threads_access'))
     {

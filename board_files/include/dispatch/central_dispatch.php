@@ -29,10 +29,10 @@ function nel_central_dispatch()
     }
 
     $inputs = array();
-    $inputs['module'] = $_GET['module'] ?? null;
+    $inputs['module'] = $_GET['module'] ?? '';
     $inputs['board_id'] = $_GET['board_id'] ?? '';
-    $inputs['action'] = $_GET['action'] ?? null;
-    $inputs['content_id'] = $_GET['content-id'] ?? null;
+    $inputs['action'] = $_GET['action'] ?? '';
+    $inputs['content_id'] = $_GET['content-id'] ?? '';
     $inputs['modmode'] = $_GET['modmode'] ?? false;
     $domain = new \Nelliel\Domain($inputs['board_id'], new \Nelliel\CacheHandler(), nel_database());
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));

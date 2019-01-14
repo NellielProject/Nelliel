@@ -11,7 +11,7 @@ class INIParser
 {
     protected $file_handler;
 
-    function __construct($file_handler)
+    function __construct(FileHandler $file_handler)
     {
         $this->file_handler = $file_handler;
     }

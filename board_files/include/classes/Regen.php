@@ -23,7 +23,7 @@ class Regen
         return $domain;
     }
 
-    public function threads($domain, $write, $ids)
+    public function threads(Domain $domain, $write, $ids)
     {
         require_once INCLUDE_PATH . 'output/thread_generation.php';
         $threads = count($ids);
@@ -38,19 +38,19 @@ class Regen
         }
     }
 
-    public function boardCache($domain)
+    public function boardCache(Domain $domain)
     {
         $domain->regenCache();
         $filetypes = new FileTypes(nel_database());
         $filetypes->generateSettingsCache($domain->id());
     }
 
-    public function siteCache($domain)
+    public function siteCache(Domain $domain)
     {
         $domain->regenCache();
     }
 
-    public function index($domain)
+    public function index(Domain $domain)
     {
         require_once INCLUDE_PATH . 'output/main_generation.php';
         $temp_domain = $this->getTemporaryDomain($domain->id());
@@ -58,7 +58,7 @@ class Regen
         nel_main_thread_generator($temp_domain, 0, true);
     }
 
-    public function allPages($domain)
+    public function allPages(Domain $domain)
     {
         $database = nel_database();
         $result = $database->query(

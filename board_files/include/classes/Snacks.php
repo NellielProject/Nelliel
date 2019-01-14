@@ -14,13 +14,13 @@ class Snacks
     private $database;
     private $ban_hammer;
 
-    function __construct($database, $ban_hammer)
+    function __construct($database, BanHammer $ban_hammer)
     {
         $this->database = $database;
         $this->ban_hammer = $ban_hammer;
     }
 
-    public function checkHoneypot($domain)
+    public function checkHoneypot(Domain $domain)
     {
         if (!empty($_POST[BASE_HONEYPOT_FIELD1 . '_' . $domain->id()]) ||
                 !empty($_POST[BASE_HONEYPOT_FIELD2 . '_' . $domain->id()]) ||
@@ -73,7 +73,7 @@ class Snacks
         $this->database->executePrepared($prepared, [$bawww, $ban_info['ban_id']]);
     }
 
-    public function applyBan($domain)
+    public function applyBan(Domain $domain)
     {
         $bans = $this->ban_hammer->getBansByIp($_SERVER['REMOTE_ADDR']);
         $ban_info = null;

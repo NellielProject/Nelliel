@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_board_settings_panel($user, $domain, $defaults)
+function nel_render_board_settings_panel($user, \Nelliel\Domain $domain, $defaults)
 {
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();

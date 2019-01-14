@@ -7,6 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Auth\Authorization;
+
 class Session
 {
     private static $initialized = false;
@@ -17,7 +19,7 @@ class Session
     private $session_name = 'NellielSession';
     private $authorization;
 
-    function __construct($authorization, $setup = false)
+    function __construct(Authorization $authorization, bool $setup = false)
     {
         $this->authorization = $authorization;
 
@@ -55,7 +57,7 @@ class Session
         session_start();
     }
 
-    public function setup($login = false)
+    public function setup(bool $login = false)
     {
         if (SECURE_SESSION_ONLY && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'))
         {

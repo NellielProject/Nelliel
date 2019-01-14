@@ -15,11 +15,11 @@ abstract class JSONOutput
     protected $file_name;
     protected $domain;
 
-    public abstract function prepareData($data, $store = false);
+    public abstract function prepareData(array $data, bool $store = false);
 
-    public abstract function storeData($data);
+    public abstract function storeData(array $data);
 
-    public abstract function retrieveData($all_data = false);
+    public abstract function retrieveData(bool $all_data = false);
 
     public abstract function writeStoredData($file_path, $file_name);
 

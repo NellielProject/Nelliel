@@ -7,6 +7,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domain;
+use Nelliel\Auth\Authorization;
+
 require_once INCLUDE_PATH . 'output/management/ban_panel.php';
 
 class AdminBans extends AdminHandler
@@ -14,7 +17,7 @@ class AdminBans extends AdminHandler
     private $domain;
     private $ban_hammer;
 
-    function __construct($database, $authorization, $domain)
+    function __construct($database, Authorization $authorization, Domain $domain)
     {
         $this->database = $database;
         $this->authorization = $authorization;

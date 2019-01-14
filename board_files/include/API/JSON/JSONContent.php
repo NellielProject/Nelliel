@@ -7,17 +7,20 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use \Nelliel\Domain;
+use \Nelliel\FileHandler;
+
 class JSONContent extends JSONOutput
 {
 
-    function __construct($domain, $file_handler)
+    function __construct(Domain $domain, FileHandler $file_handler)
     {
         $this->domain = $domain;
         $this->file_handler = $file_handler;
         $this->data_array['content'] = array();
     }
 
-    public function prepareData($data, $store = false)
+    public function prepareData(array $data, bool $store = false)
     {
         $content_array = array();
         $this->addIfNotEmpty($content_array, 'parent_thread', $data['parent_thread'], 'integer');
@@ -55,12 +58,12 @@ class JSONContent extends JSONOutput
         return $content_array;
     }
 
-    public function storeData($data)
+    public function storeData(array $data)
     {
         $this->data_array['content'] = $data;
     }
 
-    public function retrieveData($all_data = false)
+    public function retrieveData(bool $all_data = false)
     {
         if($all_data)
         {

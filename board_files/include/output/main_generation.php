@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 require_once INCLUDE_PATH . 'output/posting_form.php';
 require_once INCLUDE_PATH . 'output/post.php';
 
-function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
+function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write, $page = 0)
 {
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
@@ -27,7 +27,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
     $counttree = count($front_page_list);
     $gen_data['posts_ending'] = false;
     $gen_data['index_rendering'] = true;
-    $json_index = new \Nelliel\API\JSON\JSONIndex($domain->id(), $file_handler);
+    $json_index = new \Nelliel\API\JSON\JSONIndex($domain, $file_handler);
 
     // Special handling when there's no content
     if ($counttree === 0)
@@ -74,7 +74,7 @@ function nel_main_thread_generator($domain, $response_to, $write, $page = 0)
 
             if ($post_counter === -1)
             {
-                $json_thread = new \Nelliel\API\JSON\JSONThread($domain->id(), $file_handler);
+                $json_thread = new \Nelliel\API\JSON\JSONThread($domain, $file_handler);
                 $current_thread_id = $front_page_list[$thread_counter];
                 $thread_element = $dom->getElementById('thread-cid_0_0_0')->cloneNode();
                 $thread_element->changeId('thread-cid_' . $current_thread_id . '_0_0');

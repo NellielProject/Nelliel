@@ -62,7 +62,7 @@ class FileTypes
         self::$filetype_data = $filetypes;
     }
 
-    private function loadSettingsFromDatabase($board_id, $ignore_cache = false)
+    private function loadSettingsFromDatabase($board_id, bool $ignore_cache = false)
     {
         if(!$ignore_cache)
         {
@@ -119,7 +119,7 @@ class FileTypes
         return self::$filetype_data[$extension];
     }
 
-    public function settings($board_id, $setting = null, $cache_regen = false)
+    public function settings($board_id, string $setting = null, bool $cache_regen = false)
     {
         if ($board_id === '' || is_null($board_id))
         {
@@ -139,7 +139,7 @@ class FileTypes
         return self::$filetype_settings[$board_id][$setting];
     }
 
-    private function settingsLoaded($board_id, $load_if_not = false, $ignore_cache = false)
+    private function settingsLoaded($board_id, bool $load_if_not = false, bool $ignore_cache = false)
     {
         $result = empty(self::$filetype_settings) && empty(self::$filetype_settings[$board_id]);
 
@@ -151,7 +151,7 @@ class FileTypes
         return $result;
     }
 
-    private function filetypesLoaded($load_if_not = false, $ignore_cache = false)
+    private function filetypesLoaded(bool $load_if_not = false, bool $ignore_cache = false)
     {
         $result = empty(self::$filetype_data);
 

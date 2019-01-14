@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_site_settings_panel($domain, $user)
+function nel_render_site_settings_panel(\Nelliel\Domain $domain, $user)
 {
     if (!$user->boardPerm('', 'perm_site_config_access'))
     {

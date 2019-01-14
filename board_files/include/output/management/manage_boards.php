@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_manage_boards_panel($domain, $user)
+function nel_render_manage_boards_panel(\Nelliel\Domain $domain, $user)
 {
     if (!$user->boardPerm('', 'perm_manage_boards_access'))
     {
@@ -71,7 +71,7 @@ function nel_render_manage_boards_panel($domain, $user)
     nel_clean_exit();
 }
 
-function nel_render_board_removal_interstitial($domain, $message, $continue_link)
+function nel_render_board_removal_interstitial(\Nelliel\Domain $domain, $message, $continue_link)
 {
     $domain->renderInstance(new \Nelliel\RenderCore());
     $translator = new \Nelliel\Language\Translator();

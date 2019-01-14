@@ -19,7 +19,7 @@ class Domain
     private $render_instance;
     private $render_active;
 
-    public function __construct($domain_id, $cache_handler, $database)
+    public function __construct(string $domain_id, CacheHandler $cache_handler, $database)
     {
         $this->domain_id = $domain_id;
         $this->cache_handler = $cache_handler;
@@ -31,7 +31,7 @@ class Domain
         return $this->domain_id;
     }
 
-    public function setting($setting = null)
+    public function setting(string $setting = null)
     {
         if (empty($this->domain_settings))
         {
@@ -58,7 +58,7 @@ class Domain
         return $this->domain_settings[$setting];
     }
 
-    public function reference($reference = null)
+    public function reference(string $reference = null)
     {
         if (empty($this->domain_references))
         {

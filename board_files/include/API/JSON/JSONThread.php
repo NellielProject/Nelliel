@@ -7,17 +7,20 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use \Nelliel\Domain;
+use \Nelliel\FileHandler;
+
 class JSONThread extends JSONOutput
 {
 
-    function __construct($domain, $file_handler)
+    function __construct(Domain $domain, FileHandler $file_handler)
     {
         $this->domain = $domain;
         $this->file_handler = $file_handler;
         $this->data_array['thread'] = array();
     }
 
-    public function prepareData($data, $store = false)
+    public function prepareData(array $data, bool $store = false)
     {
         $thread_array = array();
         $thread_array['thread_id'] = nel_cast_to_datatype($data['thread_id'], 'integer');
@@ -43,12 +46,12 @@ class JSONThread extends JSONOutput
         return $thread_array;
     }
 
-    public function storeData($data)
+    public function storeData(array $data)
     {
         $this->data_array['thread'] = $data;
     }
 
-    public function retrieveData($all_data = false)
+    public function retrieveData(bool $all_data = false)
     {
         if($all_data)
         {
@@ -66,7 +69,7 @@ class JSONThread extends JSONOutput
         $this->file_handler->writeFile($file_path . $file_name . JSON_EXT, $json_data);
     }
 
-    public function addPostData($post_data)
+    public function addPostData(array $post_data)
     {
         $this->data_array['post-list'][] = $post_data;
     }

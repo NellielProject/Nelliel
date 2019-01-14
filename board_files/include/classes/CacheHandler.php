@@ -12,7 +12,7 @@ class CacheHandler
     private $hashes;
     private $default_header;
 
-    function __construct($no_hash_load = false)
+    function __construct(bool $no_hash_load = false)
     {
         $this->default_header = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}';
 

@@ -7,15 +7,16 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'output/management/manage_boards.php';
+use Nelliel\Domain;
+use Nelliel\Auth\Authorization;
 
-use PDO;
+require_once INCLUDE_PATH . 'output/management/manage_boards.php';
 
 class AdminBoards extends AdminHandler
 {
     private $domain;
 
-    function __construct($database, $authorization, $domain)
+    function __construct($database, Authorization $authorization, Domain $domain)
     {
         $this->database = $database;
         $this->authorization = $authorization;

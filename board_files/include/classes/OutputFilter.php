@@ -16,37 +16,42 @@ class OutputFilter
     {
     }
 
-    public function cleanAndEncode(string &$string)
+    public function cleanAndEncode(&$string)
     {
+        if(empty($string))
+        {
+            return;
+        }
+
         if (preg_match("#^\s*$#", $string))
         {
             $string = '';
-        }
-
-        if ($string === '')
-        {
-            return;
         }
 
         $string = trim($string);
         $string = htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
     }
 
-    public function clearWhitespace(string &$string)
+    public function clearWhitespace(&$string)
     {
+        if(empty($string))
+        {
+            return;
+        }
+
         if (ctype_space($string))
         {
             $string = '';
         }
     }
 
-    public function newlinesToArray(string $string)
+    public function newlinesToArray($string)
     {
         $text_array = preg_split('#\r\n?|\n#', $string);
         return $text_array;
     }
 
-    public function postQuote($target_element, string $text_input)
+    public function postQuote($target_element, $text_input)
     {
         if (preg_match('#^\s*>>#', $text_input) === 1)
         {
@@ -59,7 +64,7 @@ class OutputFilter
         return false;
     }
 
-    public function postQuoteLink($domain, $target_element, string $text_input)
+    public function postQuoteLink(Domain $domain, $target_element, $text_input)
     {
         $database = nel_database();
         $text_segments = preg_split('#(>>[0-9]+)#', $text_input, null, PREG_SPLIT_DELIM_CAPTURE);

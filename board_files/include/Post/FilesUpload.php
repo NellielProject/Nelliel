@@ -3,6 +3,7 @@
 namespace Nelliel\Post;
 
 use PDO;
+use \Nelliel\Domain;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -16,7 +17,7 @@ class FilesUpload
     private $processed_files = array();
     private $authorization;
 
-    function __construct($domain, $files = array(), $authorization)
+    function __construct(Domain $domain, array $files = array(), $authorization)
     {
         $this->domain = $domain;
         $this->uploaded_files = $files;

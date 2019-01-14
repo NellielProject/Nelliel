@@ -20,13 +20,13 @@ class ParametersAndData
     private static $filetype_data = array();
     private static $file_filters = array();
 
-    function __construct($database, $cache_handler)
+    function __construct($database, CacheHandler $cache_handler)
     {
         $this->database = $database;
         $this->cache_handler = $cache_handler;
     }
 
-    public function siteSettings($setting = null, $cache_regen = false)
+    public function siteSettings(string $setting = null, bool $cache_regen = false)
     {
         if (empty(self::$site_settings) || $cache_regen)
         {
@@ -68,7 +68,7 @@ class ParametersAndData
         return self::$site_settings[$setting];
     }
 
-    public function boardReferences($board_id, $reference = null)
+    public function boardReferences($board_id, string $reference = null)
     {
         if ($board_id === '' || is_null($board_id))
         {

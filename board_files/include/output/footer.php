@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_general_footer($domain, $dotdot = null, $styles = false)
+function nel_render_general_footer(\Nelliel\Domain $domain, $dotdot = null, $styles = false)
 {
     $translator = new \Nelliel\Language\Translator();
     $dom = $domain->renderInstance()->newDOMDocument();

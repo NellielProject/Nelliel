@@ -1,6 +1,6 @@
 <?php
 
-function nel_render_main_panel($domain, $user)
+function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 {
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();

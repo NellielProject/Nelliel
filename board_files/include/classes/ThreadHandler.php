@@ -12,7 +12,7 @@ class ThreadHandler
     private $database;
     private $domain;
 
-    function __construct($database, $domain)
+    function __construct($database, Domain $domain)
     {
         $this->database = $database;
         $this->domain = $domain;

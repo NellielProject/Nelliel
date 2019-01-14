@@ -25,7 +25,7 @@ class URLConstructor
         return $new_url;
     }
 
-    private function appendDynamicParameter(&$url, $parameter_name, $parameter_value, $encode = true)
+    private function appendDynamicParameter(&$url, $parameter_name, $parameter_value, bool $encode = true)
     {
         $new_parameter = '';
 

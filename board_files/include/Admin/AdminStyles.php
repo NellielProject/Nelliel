@@ -7,13 +7,16 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domain;
+use Nelliel\Auth\Authorization;
+
 require_once INCLUDE_PATH . 'output/management/styles_panel.php';
 
 class AdminStyles extends AdminHandler
 {
     private $domain;
 
-    function __construct($database, $authorization, $domain)
+    function __construct($database, Authorization $authorization, Domain $domain)
     {
         $this->database = $database;
         $this->authorization = $authorization;

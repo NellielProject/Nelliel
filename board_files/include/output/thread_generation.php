@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 require_once INCLUDE_PATH . 'output/posting_form.php';
 require_once INCLUDE_PATH . 'output/post.php';
 
-function nel_thread_generator($domain, $write, $thread_id, $command = null)
+function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $command = null)
 {
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
@@ -37,7 +37,7 @@ function nel_thread_generator($domain, $write, $thread_id, $command = null)
         return;
     }
 
-    $json_thread = new \Nelliel\API\JSON\JSONThread($domain->id(), $file_handler);
+    $json_thread = new \Nelliel\API\JSON\JSONThread($domain, $file_handler);
     $json_thread->prepareData($gen_data['thread'], true);
     $json_post = new \Nelliel\API\JSON\JSONPost($domain, $file_handler);
     $json_content = new \Nelliel\API\JSON\JSONContent($domain, $file_handler);

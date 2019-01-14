@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_users_panel_main($user, $domain)
+function nel_render_users_panel_main($user, \Nelliel\Domain $domain)
 {
     if (!$user->boardPerm('', 'perm_user_access'))
     {
@@ -49,7 +49,7 @@ function nel_render_users_panel_main($user, $domain)
     nel_clean_exit();
 }
 
-function nel_render_users_panel_edit($user, $domain, $user_id)
+function nel_render_users_panel_edit($user, \Nelliel\Domain $domain, $user_id)
 {
     if (!$user->boardPerm('', 'perm_user_access'))
     {

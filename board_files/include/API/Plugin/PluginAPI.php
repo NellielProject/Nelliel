@@ -71,7 +71,7 @@ class PluginAPI
     }
 
     // Register hook methods here
-    public function addMethod(string $hook_name, $class, string $method_name, $plugin_id, $priority = 10)
+    public function addMethod(string $hook_name, $class, string $method_name, $plugin_id, int $priority = 10)
     {
         if (!$this->isValidPlugin($plugin_id))
         {

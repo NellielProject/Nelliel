@@ -7,6 +7,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domain;
+use Nelliel\Auth\Authorization;
+
 require_once INCLUDE_PATH . 'output/management/users_panel.php';
 
 class AdminUsers extends AdminHandler
@@ -14,7 +17,7 @@ class AdminUsers extends AdminHandler
     private $domain;
     private $user_id;
 
-    function __construct($database, $authorization, $domain)
+    function __construct($database, Authorization $authorization, Domain $domain)
     {
         $this->database = $database;
         $this->authorization = $authorization;

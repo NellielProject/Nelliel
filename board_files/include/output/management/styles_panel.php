@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_styles_panel($user, $domain)
+function nel_render_styles_panel($user, \Nelliel\Domain $domain)
 {
     if (!$user->boardPerm($domain->id(), 'perm_styles_access'))
     {

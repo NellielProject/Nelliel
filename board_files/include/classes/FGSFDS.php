@@ -12,7 +12,7 @@ class FGSFDS
     private static $raw_fgsfds = '';
     private static $commands = array();
 
-    function __construct($raw_fgsfds = null)
+    function __construct(string $raw_fgsfds = null)
     {
         if (!is_null($raw_fgsfds))
         {
@@ -25,7 +25,7 @@ class FGSFDS
         }
     }
 
-    public function parseRaw($raw_fgsfds)
+    public function parseRaw(string $raw_fgsfds)
     {
         return preg_split('#[\s,]#u', $raw_fgsfds);
     }
@@ -35,7 +35,7 @@ class FGSFDS
         return self::$commands;
     }
 
-    public function getCommand($command)
+    public function getCommand(string $command)
     {
         if (isset(self::$commands[$command]))
         {
@@ -45,7 +45,7 @@ class FGSFDS
         return false;
     }
 
-    public function getCommandData($command, $data_id)
+    public function getCommandData(string $command, $data_id)
     {
         if (isset(self::$commands[$command]))
         {
@@ -55,7 +55,7 @@ class FGSFDS
         return false;
     }
 
-    public function addCommand($command)
+    public function addCommand(string $command)
     {
         if (!isset(self::$commands[$command]))
         {
@@ -66,7 +66,7 @@ class FGSFDS
         return false;
     }
 
-    public function modifyCommandData($command, $data_id, $data)
+    public function modifyCommandData(string $command, $data_id, $data)
     {
         if (isset(self::$commands[$command]))
         {
