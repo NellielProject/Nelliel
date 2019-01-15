@@ -29,18 +29,22 @@ class NellielPDO extends PDO
                 $result = $this->query(
                         "SELECT schema_name FROM information_schema.schemata WHERE schema_name = '" . $database . "';");
                 break;
+
             case 'MARIADB':
                 $result = $this->query(
                         "SELECT schema_name FROM information_schema.schemata WHERE schema_name = '" . $database . "';");
                 break;
+
             case 'POSTGRESQL':
                 $result = $this->query(
                         "SELECT nspname FROM pg_catalog.pg_namespace WHERE nspname = '" . $database . "';");
                 break;
+
             case 'SQLITE':
                 $result = $this->query(
-                "SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $database . "'");
+                        "SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $database . "'");
                 break;
+
             default:
                 return false;
         }
@@ -58,25 +62,58 @@ class NellielPDO extends PDO
                         "SELECT table_name FROM information_schema.tables WHERE table_schema = '" . MYSQL_DB .
                         "' AND table_name = '" . $table . "';");
                 break;
+
             case 'MARIADB':
                 $result = $this->query(
                         "SELECT table_name FROM information_schema.tables WHERE table_schema = '" . MARIADB_DB .
                         "' AND table_name = '" . $table . "';");
                 break;
+
             case 'POSTGRESQL':
                 $result = $this->query(
                         "SELECT table_name FROM information_schema.tables WHERE table_schema = '" . POSTGRESQL_SCHEMA .
                         "' AND table_name = '" . $table . "';");
                 break;
+
             case 'SQLITE':
                 $result = $this->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $table . "'");
                 break;
+
             default:
                 return false;
         }
 
         $test = $result->fetch(PDO::FETCH_NUM);
         return $test[0] == $table;
+    }
+
+    public function rowExists(string $table_name, array $columns, array $values, array $pdo_types = null)
+    {
+        $query = 'SELECT 1 FROM "' . $table_name . '" WHERE ';
+
+        foreach ($columns as $column)
+        {
+            $query .= ' "' . $column . '" = :' . $column . ' AND ';
+        }
+
+        $query = substr($query, 0, -5);
+        $prepared = nel_database()->prepare($query);
+        $count = count($columns);
+
+        for ($i = 0; $i < $count; $i ++)
+        {
+            if (!is_null($pdo_types))
+            {
+                $prepared->bindValue(':' . $columns[$i], $values[$i], $pdo_types[$i]);
+            }
+            else
+            {
+                $prepared->bindValue(':' . $columns[$i], $values[$i]);
+            }
+        }
+
+        $result = nel_database()->executePreparedFetch($prepared, $values, PDO::FETCH_COLUMN);
+        return $result !== false;
     }
 
     public function tableFail($table)
@@ -181,68 +218,5 @@ class NellielPDO extends PDO
         }
 
         return $fetched_result;
-    }
-
-    public function generateParameterIds($column_names)
-    {
-        $identifiers = array();
-
-        foreach ($column_names as $name)
-        {
-            array_push($identifiers, ':' . $name);
-        }
-
-        return $identifiers;
-    }
-
-    public function formatColumns($columns)
-    {
-        $column_count = count($columns);
-        $columns_sql = '(';
-
-        for ($i = 0; $i < $column_count; $i ++)
-        {
-            $columns_sql .= '"' . $columns[$i] . '"';
-
-            if ($i < $column_count - 1)
-            {
-                $columns_sql .= ', ';
-            }
-            else
-            {
-                $columns_sql .= ')';
-            }
-        }
-
-        return $columns_sql;
-    }
-
-    public function formatValues($values)
-    {
-        $values_count = count($values);
-        $values_sql = '(';
-
-        for ($i = 0; $i < $values_count; $i ++)
-        {
-            $values_sql .= $values[$i];
-
-            if ($i < $values_count - 1)
-            {
-                $values_sql .= ', ';
-            }
-            else
-            {
-                $values_sql .= ')';
-            }
-        }
-
-        return $values_sql;
-    }
-
-    public function buildBasicInsertQuery($table, $columns, $values)
-    {
-        $query = 'INSERT INTO "' . $table . '" ' . $this->formatColumns($columns) . ' VALUES ' .
-                $this->formatValues($values);
-        return $query;
     }
 }
