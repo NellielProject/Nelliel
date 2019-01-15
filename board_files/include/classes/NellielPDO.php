@@ -19,72 +19,117 @@ class NellielPDO extends PDO
         parent::__construct($dsn, $username, $password, $options);
     }
 
-    public function databaseExists($database)
+    public function databaseExists(string $database_name)
     {
-        $result = null;
-
         switch (SQLTYPE)
         {
             case 'MYSQL':
-                $result = $this->query(
-                        "SELECT schema_name FROM information_schema.schemata WHERE schema_name = '" . $database . "';");
+                $prepared = $this->prepare('SELECT 1 FROM "information_schema"."schemata" WHERE "schema_name" = ?');
+                $result = $this->executePreparedFetch($prepared, [$database_name], PDO::FETCH_COLUMN);
                 break;
 
             case 'MARIADB':
-                $result = $this->query(
-                        "SELECT schema_name FROM information_schema.schemata WHERE schema_name = '" . $database . "';");
+                $prepared = $this->prepare('SELECT 1 FROM "information_schema"."schemata" WHERE "schema_name" = ?');
+                $result = $this->executePreparedFetch($prepared, [$database_name], PDO::FETCH_COLUMN);
                 break;
 
             case 'POSTGRESQL':
-                $result = $this->query(
-                        "SELECT nspname FROM pg_catalog.pg_namespace WHERE nspname = '" . $database . "';");
+                $prepared = $this->prepare('SELECT 1 FROM "information_schema"."schemata" WHERE "catalog_name" = ?');
+                $result = $this->executePreparedFetch($prepared, [$database_name], PDO::FETCH_COLUMN);
                 break;
 
             case 'SQLITE':
-                $result = $this->query(
-                        "SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $database . "'");
+                $result = true; // If database didn't exist, there would be no connection
                 break;
 
             default:
-                return false;
+                $result = false;
         }
 
-        $test = $result->fetch(PDO::FETCH_NUM);
-        return $test[0] == $database;
+        return $result !== false;
     }
 
-    public function tableExists($table)
+    public function tableExists(string $table_name)
     {
         switch (SQLTYPE)
         {
             case 'MYSQL':
-                $result = $this->query(
-                        "SELECT table_name FROM information_schema.tables WHERE table_schema = '" . MYSQL_DB .
-                        "' AND table_name = '" . $table . "';");
+                $prepared = $this->prepare(
+                        'SELECT 1 FROM "information_schema"."tables" WHERE "table_schema" = ? AND "table_name" = ?');
+                $result = $this->executePreparedFetch($prepared, [MYSQL_DB, $table_name], PDO::FETCH_COLUMN);
                 break;
 
             case 'MARIADB':
-                $result = $this->query(
-                        "SELECT table_name FROM information_schema.tables WHERE table_schema = '" . MARIADB_DB .
-                        "' AND table_name = '" . $table . "';");
+                $prepared = $this->prepare(
+                        'SELECT 1 FROM "information_schema"."tables" WHERE "table_schema" = ? AND "table_name" = ?');
+                $result = $this->executePreparedFetch($prepared, [MARIADB_DB, $table_name], PDO::FETCH_COLUMN);
                 break;
 
             case 'POSTGRESQL':
-                $result = $this->query(
-                        "SELECT table_name FROM information_schema.tables WHERE table_schema = '" . POSTGRESQL_SCHEMA .
-                        "' AND table_name = '" . $table . "';");
+                $prepared = $this->prepare(
+                        'SELECT 1 FROM "information_schema"."tables" WHERE "table_schema" = ? AND "table_name" = ?');
+                $result = $this->executePreparedFetch($prepared, [POSTGRESQL_SCHEMA, $table_name], PDO::FETCH_COLUMN);
                 break;
 
             case 'SQLITE':
-                $result = $this->query("SELECT name FROM sqlite_master WHERE type = 'table' AND name='" . $table . "'");
+                $prepared = $this->prepare('SELECT 1 FROM "sqlite_master" WHERE "type" = \'table\' AND "name" = ?');
+                $result = $this->executePreparedFetch($prepared, [$table_name], PDO::FETCH_COLUMN);
                 break;
 
             default:
-                return false;
+                $result = false;
         }
 
-        $test = $result->fetch(PDO::FETCH_NUM);
-        return $test[0] == $table;
+        return $result !== false;
+    }
+
+    public function columnExists(string $table_name, string $column_name)
+    {
+        switch (SQLTYPE)
+        {
+            case 'MYSQL':
+                $prepared = $this->prepare(
+                        'SELECT 1 FROM "information_schema"."columns" WHERE "table_schema" = ? AND "table_name" = ? AND "column_name" = ?');
+                $result = $this->executePreparedFetch($prepared, [MYSQL_DB, $table_name, $column_name],
+                        PDO::FETCH_COLUMN);
+                break;
+
+            case 'MARIADB':
+                $prepared = $this->prepare(
+                        'SELECT 1 FROM "information_schema"."columns" WHERE "table_schema" = ? AND "table_name" = ? AND "column_name" = ?');
+                $result = $this->executePreparedFetch($prepared, [MARIADB_DB, $table_name, $column_name],
+                        PDO::FETCH_COLUMN);
+                break;
+
+            case 'POSTGRESQL':
+                $prepared = $this->prepare(
+                        'SELECT 1 FROM "information_schema"."columns" WHERE "table_schema" = ? AND "table_name" = ? AND "column_name" = ?');
+                $result = $this->executePreparedFetch($prepared, [POSTGRESQL_SCHEMA, $table_name, $column_name],
+                        PDO::FETCH_COLUMN);
+                break;
+
+            case 'SQLITE':
+                // SQLite being speshul again
+                $prepared = $this->prepare('PRAGMA table_info("' . $table_name . '")');
+                $result1 = $this->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
+                $result = false;
+
+                foreach ($result1 as $row)
+                {
+                    if ($row['name'] == $column_name)
+                    {
+                        $result = true;
+                        break;
+                    }
+                }
+
+                break;
+
+            default:
+                $result = false;
+        }
+
+        return $result !== false;
     }
 
     public function rowExists(string $table_name, array $columns, array $values, array $pdo_types = null)
