@@ -161,15 +161,6 @@ class NellielPDO extends PDO
         return $result !== false;
     }
 
-    public function tableFail($table)
-    {
-        nel_derp(103,
-                sprintf(
-                        _gettext(
-                                'Creation of %s failed! Check database settings and config.php then retry installation.'),
-                        $table));
-    }
-
     public function executeFetch($query, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)
     {
         $result = $this->query($query);
