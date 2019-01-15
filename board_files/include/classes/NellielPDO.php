@@ -142,7 +142,7 @@ class NellielPDO extends PDO
         }
 
         $query = substr($query, 0, -5);
-        $prepared = nel_database()->prepare($query);
+        $prepared = $this->prepare($query);
         $count = count($columns);
 
         for ($i = 0; $i < $count; $i ++)
@@ -157,7 +157,7 @@ class NellielPDO extends PDO
             }
         }
 
-        $result = nel_database()->executePreparedFetch($prepared, $values, PDO::FETCH_COLUMN);
+        $result = $this->executePreparedFetch($prepared, $values, PDO::FETCH_COLUMN);
         return $result !== false;
     }
 
