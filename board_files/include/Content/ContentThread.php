@@ -28,7 +28,7 @@ class ContentThread extends ContentHandler
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'SELECT * FROM "' . $this->domain->reference('thread_table') . '" WHERE "thread_id" = ?');
+                'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->content_id->thread_id], PDO::FETCH_ASSOC);
 
         if (empty($result))
@@ -49,13 +49,13 @@ class ContentThread extends ContentHandler
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'SELECT "thread_id" FROM "' . $this->domain->reference('thread_table') . '" WHERE "thread_id" = ?');
+                'SELECT "thread_id" FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->content_id->thread_id], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $database->prepare(
-                    'UPDATE "' . $this->domain->reference('thread_table') . '" SET "first_post" = :first_post,
+                    'UPDATE "' . $this->domain->reference('threads_table') . '" SET "first_post" = :first_post,
                     "last_post" = :last_post, "last_bump_time" = :last_bump_time, "last_bump_time_milli" = :last_bump_time_milli,
                     "total_files" = :total_files, "last_update" = :last_update, "last_update_milli" = :last_update_milli, "post_count" = :post_count,
                     "thread_sage" = :thread_sage, "sticky" = :sticky, "archive_status" = :archive_status,
@@ -64,7 +64,7 @@ class ContentThread extends ContentHandler
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . $this->domain->reference('thread_table') . '" ("thread_id", "first_post", "last_post",
+                    'INSERT INTO "' . $this->domain->reference('threads_table') . '" ("thread_id", "first_post", "last_post",
                     "last_bump_time", "last_bump_time_milli", "total_files", "last_update", "last_update_milli",
                     "post_count", "thread_sage", "sticky", "archive_status", "locked") VALUES
                     (:thread_id, :first_post, :last_post, :last_bump_time, :last_bump_time_milli, :total_files,
@@ -125,7 +125,7 @@ class ContentThread extends ContentHandler
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'DELETE FROM "' . $this->domain->reference('thread_table') . '" WHERE "thread_id" = ?');
+                'DELETE FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $database->executePrepared($prepared, [$this->content_id->thread_id]);
         return true;
     }
@@ -141,13 +141,13 @@ class ContentThread extends ContentHandler
     public function updateCounts()
     {
         $prepared = $this->database->prepare(
-                'SELECT COUNT("post_number") FROM "' . $this->domain->reference('post_table') .
+                'SELECT COUNT("post_number") FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "parent_thread" = ?');
         $post_count = $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id],
                 PDO::FETCH_COLUMN);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->domain->reference('thread_table') . '" SET "post_count" = ? WHERE "thread_id" = ?');
+                'UPDATE "' . $this->domain->reference('threads_table') . '" SET "post_count" = ? WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$post_count, $this->content_id->thread_id]);
 
         $prepared = $this->database->prepare(
@@ -157,13 +157,13 @@ class ContentThread extends ContentHandler
                 PDO::FETCH_COLUMN);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->domain->reference('thread_table') . '" SET "total_files" = ? WHERE "thread_id" = ?');
+                'UPDATE "' . $this->domain->reference('threads_table') . '" SET "total_files" = ? WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$file_count, $this->content_id->thread_id]);
 
         $first_post = $this->firstPost();
         $last_post = $this->lastPost();
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->domain->reference('thread_table') .
+                'UPDATE "' . $this->domain->reference('threads_table') .
                 '" SET "first_post" = ?, "last_post" = ? WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$first_post, $last_post, $this->content_id->thread_id]);
     }
@@ -220,13 +220,13 @@ class ContentThread extends ContentHandler
         if ($no_sage)
         {
             $prepared = $this->database->prepare(
-                    'SELECT "post_number" FROM "' . $this->domain->reference('post_table') .
+                    'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC');
         }
         else
         {
             $prepared = $this->database->prepare(
-                    'SELECT "post_number" FROM "' . $this->domain->reference('post_table') .
+                    'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC');
         }
 
@@ -236,7 +236,7 @@ class ContentThread extends ContentHandler
     public function firstPost()
     {
         $prepared = $this->database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('post_table') .
+                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
         return $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id], PDO::FETCH_COLUMN);
     }

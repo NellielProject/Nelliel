@@ -34,9 +34,9 @@ define('ROLE_PERMISSIONS_TABLE', 'nelliel_role_permissions');
 define('ROLES_TABLE', 'nelliel_roles');
 define('SITE_CONFIG_TABLE', 'nelliel_site_config');
 define('TEMPLATES_TABLE', 'nelliel_templates');
-define('USER_ROLE_TABLE', 'nelliel_user_role');
+define('USER_ROLES_TABLE', 'nelliel_user_roles');
 define('USERS_TABLE', 'nelliel_users');
-define('VERSION_TABLE', 'nelliel_version');
+define('VERSIONS_TABLE', 'nelliel_version');
 
 define('CONFIG_FILE_PATH', BASE_PATH . 'configuration/');
 define('CACHE_FILE_PATH', FILES_PATH . 'cache/');

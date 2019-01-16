@@ -18,7 +18,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
     $thread_table = $gen_data = array();
     $dotdot = ($write) ? '../' : '';
     $result = $database->query(
-            'SELECT "thread_id" FROM "' . $domain->reference('thread_table') .
+            'SELECT "thread_id" FROM "' . $domain->reference('threads_table') .
             '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC');
     $front_page_list = $result->fetchAll(PDO::FETCH_COLUMN);
     unset($result);
@@ -80,14 +80,14 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
                 $thread_element->changeId('thread-cid_' . $current_thread_id . '_0_0');
                 $dom->getElementById('form-content-action')->appendChild($thread_element);
                 $post_append_target = $thread_element;
-                $query = 'SELECT * FROM "' . $domain->reference('thread_table') . '" WHERE "thread_id" = ?';
+                $query = 'SELECT * FROM "' . $domain->reference('threads_table') . '" WHERE "thread_id" = ?';
                 $prepared = $database->prepare($query);
                 $gen_data['thread'] = $database->executePreparedFetch($prepared, [$current_thread_id],
                         PDO::FETCH_ASSOC);
                 $json_thread->prepareData($gen_data['thread'], true);
                 $post_count = $gen_data['thread']['post_count'];
                 $abbreviate = $post_count > $domain->setting('abbreviate_thread');
-                $query = 'SELECT * FROM "' . $domain->reference('post_table') .
+                $query = 'SELECT * FROM "' . $domain->reference('posts_table') .
                         '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC';
                 $prepared = $database->prepare($query);
                 $treeline = $database->executePreparedFetchAll($prepared, [$current_thread_id], PDO::FETCH_ASSOC);

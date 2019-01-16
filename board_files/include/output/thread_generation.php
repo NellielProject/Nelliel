@@ -25,10 +25,10 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
     $domain->renderInstance()->startRenderTimer();
     $dom->getElementById('form-content-action')->extSetAttribute('action',
             $dotdot . PHP_SELF . '?module=threads&board_id=' . $domain->id());
-    $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('thread_table') . '" WHERE "thread_id" = ?');
+    $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('threads_table') . '" WHERE "thread_id" = ?');
     $gen_data['thread'] = $database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
     $prepared = $database->prepare(
-            'SELECT * FROM "' . $domain->reference('post_table') .
+            'SELECT * FROM "' . $domain->reference('posts_table') .
             '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
     $treeline = $database->executePreparedFetchAll($prepared, [$thread_id], PDO::FETCH_ASSOC);
 

@@ -96,7 +96,7 @@ class AdminBans extends AdminHandler
         {
             if (isset($_POST['mod_post_comment']) && !empty($_POST['mod_post_comment']))
             {
-                $post_table = $this->domain->reference('post_table');
+                $post_table = $this->domain->reference('posts_table');
                 $prepared = $this->database->prepare(
                         'UPDATE "' . $post_table . '" SET "mod_comment" = ? WHERE "post_number" = ?');
 

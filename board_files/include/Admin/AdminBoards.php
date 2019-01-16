@@ -118,14 +118,14 @@ class AdminBoards extends AdminHandler
             $this->database->query('DROP TABLE ' . $domain->reference('content_table'));
         }
 
-        if($this->database->tableExists($domain->reference('post_table')))
+        if($this->database->tableExists($domain->reference('posts_table')))
         {
-            $this->database->query('DROP TABLE ' . $domain->reference('post_table'));
+            $this->database->query('DROP TABLE ' . $domain->reference('posts_table'));
         }
 
-        if($this->database->tableExists($domain->reference('thread_table')))
+        if($this->database->tableExists($domain->reference('threads_table')))
         {
-            $this->database->query('DROP TABLE ' . $domain->reference('thread_table'));
+            $this->database->query('DROP TABLE ' . $domain->reference('threads_table'));
         }
 
         if($this->database->tableExists($domain->reference('archive_content_table')))
@@ -133,14 +133,14 @@ class AdminBoards extends AdminHandler
             $this->database->query('DROP TABLE ' . $domain->reference('archive_content_table'));
         }
 
-        if($this->database->tableExists($domain->reference('archive_post_table')))
+        if($this->database->tableExists($domain->reference('archive_posts_table')))
         {
-            $this->database->query('DROP TABLE ' . $domain->reference('archive_post_table'));
+            $this->database->query('DROP TABLE ' . $domain->reference('archive_posts_table'));
         }
 
-        if($this->database->tableExists($domain->reference('archive_thread_table')))
+        if($this->database->tableExists($domain->reference('archive_threads_table')))
         {
-            $this->database->query('DROP TABLE ' . $domain->reference('archive_thread_table'));
+            $this->database->query('DROP TABLE ' . $domain->reference('archive_threads_table'));
         }
 
         $file_handler = new \Nelliel\FileHandler();

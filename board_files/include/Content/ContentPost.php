@@ -28,7 +28,7 @@ class ContentPost extends ContentHandler
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'SELECT * FROM "' . $this->domain->reference('post_table') . '" WHERE "post_number" = ?');
+                'SELECT * FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id], PDO::FETCH_ASSOC);
 
         if (empty($result))
@@ -49,13 +49,13 @@ class ContentPost extends ContentHandler
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('post_table') . '" WHERE "post_number" = ?');
+                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $database->prepare(
-                    'UPDATE "' . $this->domain->reference('post_table') . '" SET "parent_thread" = :parent_thread,
+                    'UPDATE "' . $this->domain->reference('posts_table') . '" SET "parent_thread" = :parent_thread,
                     "poster_name" = :poster_name, "reply_to" = :reply_to, "post_password" = :post_password,
                     "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "email" = :email,
                     "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address,
@@ -67,7 +67,7 @@ class ContentPost extends ContentHandler
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . $this->domain->reference('post_table') . '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "email",
+                    'INSERT INTO "' . $this->domain->reference('posts_table') . '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "email",
                     "subject", "comment", "ip_address", "post_time", "post_time_milli", "has_file", "file_count", "op", "sage", "mod_post_id", "mod_comment") VALUES
                     (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :email, :subject, :comment, :ip_address, :post_time, :post_time_milli, :has_file, :file_count,
                     :op, :sage, :mod_post_id, :mod_comment)');
@@ -101,11 +101,11 @@ class ContentPost extends ContentHandler
     {
         $parent_thread = $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'INSERT INTO "' . $this->domain->reference('post_table') .
+                'INSERT INTO "' . $this->domain->reference('posts_table') .
                 '" ("post_time", "post_time_milli") VALUES (?, ?)');
         $database->executePrepared($prepared, [$post_time, $post_time_milli]);
         $prepared = $database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('post_table') .
+                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "post_time" = ? AND post_time_milli = ?');
         $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli], PDO::FETCH_COLUMN, true);
         $this->content_id->thread_id = ($this->content_id->thread_id == 0) ? $result : $this->content_id->thread_id;
@@ -152,7 +152,7 @@ class ContentPost extends ContentHandler
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'DELETE FROM "' . $this->domain->reference('post_table') . '" WHERE "post_number" = ?');
+                'DELETE FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $database->executePrepared($prepared, [$this->content_id->post_id]);
         return true;
     }
@@ -176,7 +176,7 @@ class ContentPost extends ContentHandler
                 PDO::FETCH_COLUMN, true);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->domain->reference('post_table') . '" SET "file_count" = ? WHERE "post_number" = ?');
+                'UPDATE "' . $this->domain->reference('posts_table') . '" SET "file_count" = ? WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$file_count, $this->content_id->post_id]);
     }
 

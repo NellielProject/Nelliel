@@ -64,24 +64,44 @@ class Setup
 
     public function createCoreTables()
     {
-        $sql_tables = new SQLTables();
-        $sql_tables->createSiteConfigTable(SITE_CONFIG_TABLE);
-        $sql_tables->createBansTable(BANS_TABLE);
-        $sql_tables->createUserTable(USERS_TABLE);
-        $sql_tables->createRolesTable(ROLES_TABLE);
-        $sql_tables->createUserRoleTable(USER_ROLE_TABLE);
-        $sql_tables->createRolePermissionsTable(ROLE_PERMISSIONS_TABLE);
-        $sql_tables->createPermissionsTable(PERMISSIONS_TABLE);
-        $sql_tables->createLoginsTable(LOGIN_ATTEMPTS_TABLE);
-        $sql_tables->createBoardDataTable(BOARD_DATA_TABLE);
-        $sql_tables->createFiletypeTable(FILETYPES_TABLE);
-        $sql_tables->createFileFilterTable(FILE_FILTERS_TABLE);
-        $sql_tables->createBoardConfigTable(BOARD_DEFAULTS_TABLE, false);
-        $sql_tables->createReportsTable(REPORTS_TABLE);
-        $sql_tables->createTemplatesTable(TEMPLATES_TABLE);
-        $sql_tables->createAssetsTable(ASSETS_TABLE);
-        $sql_tables->createCaptchaTable(CAPTCHA_TABLE);
-        $sql_tables->createVersionTable(VERSION_TABLE);
+        $database = nel_database();
+        $sql_helpers = new SQLHelpers($database);
+        $assets_table = new TableAssets($database, $sql_helpers);
+        $assets_table->setup();
+        $bans_table = new TableBans($database, $sql_helpers);
+        $bans_table->setup();
+        $board_data_table = new TableBoardData($database, $sql_helpers);
+        $board_data_table->setup();
+        $captcha_table = new TableCaptcha($database, $sql_helpers);
+        $captcha_table->setup();
+        $board_defaults_table = new TableBoardConfig($database, $sql_helpers);
+        $board_defaults_table->tableName(BOARD_DEFAULTS_TABLE);
+        $board_defaults_table->setup();
+        $board_defaults_table->insertDefaults();
+        $file_filters_table = new TableFileFilters($database, $sql_helpers);
+        $file_filters_table->setup();
+        $filetypes_table = new TableFiletypes($database, $sql_helpers);
+        $filetypes_table->setup();
+        $login_attempts_table = new TableLoginAttempts($database, $sql_helpers);
+        $login_attempts_table->setup();
+        $permissions_table = new TablePermissions($database, $sql_helpers);
+        $permissions_table->setup();
+        $reports_table = new TableReports($database, $sql_helpers);
+        $reports_table->setup();
+        $role_permissions_table = new TableRolePermissions($database, $sql_helpers);
+        $role_permissions_table->setup();
+        $roles_table = new TableRoles($database, $sql_helpers);
+        $roles_table->setup();
+        $site_config_table = new TableSiteConfig($database, $sql_helpers);
+        $site_config_table->setup();
+        $templates_table = new TableTemplates($database, $sql_helpers);
+        $templates_table->setup();
+        $user_roles_table = new TableUserRoles($database, $sql_helpers);
+        $user_roles_table->setup();
+        $users_table = new TableUsers($database, $sql_helpers);
+        $users_table->setup();
+        $versions_table = new TableVersions($database, $sql_helpers);
+        $versions_table->setup();
     }
 
     public function createCoreDirectories()
@@ -92,16 +112,28 @@ class Setup
 
     public function createBoardTables($board_id)
     {
+        $database = nel_database();
+        $sql_helpers = new SQLHelpers($database);
         $board_references = nel_parameters_and_data()->boardReferences($board_id);
-        $sql_tables = new SQLTables();
-        $sql_tables->createThreadsTable($board_references['thread_table']);
-        $sql_tables->createThreadsTable($board_references['archive_thread_table']);
-        $sql_tables->createPostsTable($board_references['post_table'], $board_references['thread_table']);
-        $sql_tables->createPostsTable($board_references['archive_post_table'], $board_references['archive_thread_table']);
-        $sql_tables->createContentTable($board_references['content_table'], $board_references['post_table']);
-        $sql_tables->createContentTable($board_references['archive_content_table'],
-                $board_references['archive_post_table']);
-        $sql_tables->createBoardConfigTable($board_references['config_table'], true);
+        $threads_table = new TableThreads($database, $sql_helpers);
+        $threads_table->tableName($board_references['threads_table']);
+        $threads_table->createTable();
+        $threads_table->tableName($board_references['archive_threads_table']);
+        $threads_table->createTable();
+        $posts_table = new TablePosts($database, $sql_helpers);
+        $posts_table->tableName($board_references['posts_table']);
+        $posts_table->createTable(['threads_table' => $board_references['threads_table']]);
+        $posts_table->tableName($board_references['archive_posts_table']);
+        $posts_table->createTable(['threads_table' => $board_references['archive_threads_table']]);
+        $content_table = new TableContent($database, $sql_helpers);
+        $content_table->tableName($board_references['content_table']);
+        $content_table->createTable(['posts_table' => $board_references['posts_table']]);
+        $content_table->tableName($board_references['archive_content_table']);
+        $content_table->createTable(['posts_table' => $board_references['archive_posts_table']]);
+        $content_table = new TableBoardConfig($database, $sql_helpers);
+        $content_table->tableName($board_references['config_table']);
+        $content_table->setup();
+        $content_table->copyFrom(BOARD_DEFAULTS_TABLE);
     }
 
     public function createBoardDirectories($board_id)

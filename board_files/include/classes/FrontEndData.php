@@ -70,7 +70,7 @@ class FrontEndData
 
     private function loadTemplateData()
     {
-        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'template\'',
+        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . TEMPLATES_TABLE . '"',
                 PDO::FETCH_ASSOC);
 
         foreach ($all_data as $data)

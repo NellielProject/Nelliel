@@ -32,7 +32,7 @@ class AuthUser extends AuthHandler
 
         $this->auth_data = $result;
 
-        $prepared = $database->prepare('SELECT * FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ?');
+        $prepared = $database->prepare('SELECT * FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
         $result = $database->executePreparedFetchAll($prepared, [$this->auth_id], PDO::FETCH_ASSOC, true);
 
         if (empty($result))
@@ -88,21 +88,21 @@ class AuthUser extends AuthHandler
         foreach ($this->user_roles as $user_role)
         {
             $prepared = $database->prepare(
-                    'SELECT "entry" FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ? AND "board" = ?');
+                    'SELECT "entry" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "board" = ?');
             $result = $database->executePreparedFetch($prepared, [$this->auth_id, $user_role['board']],
                     PDO::FETCH_COLUMN);
 
             if ($result)
             {
                 $prepared = $database->prepare(
-                        'UPDATE "' . USER_ROLE_TABLE .
+                        'UPDATE "' . USER_ROLES_TABLE .
                         '" SET "user_id" = :user_id, "role_id" = :role_id, "board" = :board WHERE "entry" = :entry');
                 $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
             }
             else
             {
                 $prepared = $database->prepare(
-                        'INSERT INTO "' . USER_ROLE_TABLE . '" ("user_id", "role_id", "board") VALUES
+                        'INSERT INTO "' . USER_ROLES_TABLE . '" ("user_id", "role_id", "board") VALUES
                     (:user_id, :role_id, :board)');
             }
 
@@ -121,7 +121,7 @@ class AuthUser extends AuthHandler
 
     public function remove()
     {
-        $prepared = $this->database->prepare('DELETE FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [$this->auth_id]);
         $prepared = $this->database->prepare('DELETE FROM "' . USERS_TABLE . '" WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [$this->auth_id]);
@@ -182,7 +182,7 @@ class AuthUser extends AuthHandler
             if ($user_role['board'] === $board_id)
             {
                 $prepared = $this->database->prepare(
-                        'DELETE FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ? AND "board" = ?');
+                        'DELETE FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "board" = ?');
                 $this->database->executePrepared($prepared, [$this->auth_id, $board_id]);
                 unset($this->user_roles[$index]);
             }

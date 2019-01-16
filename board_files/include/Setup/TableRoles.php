@@ -17,24 +17,35 @@ class TableRoles extends TableHandler
         $this->database = $database;
         $this->sql_helpers = $sql_helpers;
         $this->table_name = ROLES_TABLE;
-        $this->columns = ['role_id', 'role_level', 'role_title', 'capcode_text'];
-        $this->pdo_types = [PDO::PARAM_STR, PDO::PARAM_INT, PDO::PARAM_STR, PDO::PARAM_STR];
+        $this->columns = [
+            'entry' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => true],
+            'role_id' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
+            'role_level' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
+            'role_title' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
+            'capcode_text' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false]];
+        $this->splitColumnInfo();
     }
 
-    public function createTable()
+    public function setup()
+    {
+        $this->createTable();
+        $this->insertDefaults();
+    }
+
+    public function createTable(array $other_tables = null)
     {
         $auto_inc = $this->sql_helpers->autoincrementColumn('INTEGER');
         $options = $this->sql_helpers->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry                   " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            role_id                 VARCHAR(255) NOT NULL,
-            role_level              SMALLINT NOT NULL DEFAULT 0,
-            role_title              VARCHAR(255) DEFAULT NULL,
-            capcode_text            TEXT DEFAULT NULL
+            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            role_id             VARCHAR(255) NOT NULL,
+            role_level          SMALLINT NOT NULL DEFAULT 0,
+            role_title          VARCHAR(255) DEFAULT NULL,
+            capcode_text        TEXT DEFAULT NULL
         ) " . $options . ";";
 
-        $this->sql_helpers->createTableQuery($schema, $this->table_name);
+        return $this->sql_helpers->createTableQuery($schema, $this->table_name);
     }
 
     public function insertDefaults()

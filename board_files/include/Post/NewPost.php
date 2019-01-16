@@ -213,7 +213,7 @@ class NewPost
         {
             $thread_delay = $time - $this->domain->setting('thread_delay');
             $prepared = $this->database->prepare(
-                    'SELECT COUNT(*) FROM "' . $this->domain->reference('post_table') .
+                    'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "post_time" > ? AND "ip_address" = ?');
             $prepared->bindValue(1, $thread_delay, PDO::PARAM_STR);
             $prepared->bindValue(2, @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
@@ -223,7 +223,7 @@ class NewPost
         {
             $reply_delay = $time - $this->domain->setting('reply_delay');
             $prepared = $this->database->prepare(
-                    'SELECT COUNT(*) FROM "' . $this->domain->reference('post_table') .
+                    'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? AND "post_time" > ? AND "ip_address" = ?');
             $prepared->bindValue(1, $post_data['parent_thread'], PDO::PARAM_INT);
             $prepared->bindValue(2, $reply_delay, PDO::PARAM_STR);
@@ -239,7 +239,7 @@ class NewPost
         if ($post_data['parent_thread'] != 0)
         {
             $prepared = $this->database->prepare(
-                    'SELECT "post_count", "archive_status", "locked" FROM "' . $this->domain->reference('thread_table') .
+                    'SELECT "post_count", "archive_status", "locked" FROM "' . $this->domain->reference('threads_table') .
                     '" WHERE "thread_id" = ?');
             $thread_info = $this->database->executePreparedFetch($prepared, [$post_data['parent_thread']],
                     PDO::FETCH_ASSOC, true);

@@ -99,11 +99,11 @@ class ParametersAndData
                     $new_reference['thumb_dir'] . '/';
             $new_reference['archive_page_path'] = $board_path . $new_reference['archive_dir'] . '/' .
                     $new_reference['page_dir'] . '/';
-            $new_reference['post_table'] = $new_reference['db_prefix'] . '_posts';
-            $new_reference['thread_table'] = $new_reference['db_prefix'] . '_threads';
+            $new_reference['posts_table'] = $new_reference['db_prefix'] . '_posts';
+            $new_reference['threads_table'] = $new_reference['db_prefix'] . '_threads';
             $new_reference['content_table'] = $new_reference['db_prefix'] . '_content';
-            $new_reference['archive_post_table'] = $new_reference['db_prefix'] . '_archive_posts';
-            $new_reference['archive_thread_table'] = $new_reference['db_prefix'] . '_archive_threads';
+            $new_reference['archive_posts_table'] = $new_reference['db_prefix'] . '_archive_posts';
+            $new_reference['archive_threads_table'] = $new_reference['db_prefix'] . '_archive_threads';
             $new_reference['archive_content_table'] = $new_reference['db_prefix'] . '_archive_content';
             $new_reference['config_table'] = $new_reference['db_prefix'] . '_config';
             self::$board_references[$board_id] = $new_reference;

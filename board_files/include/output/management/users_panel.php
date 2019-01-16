@@ -87,7 +87,7 @@ function nel_render_users_panel_edit($user, \Nelliel\Domain $domain, $user_id)
     $boards = $database->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
     array_unshift($boards, '');
 
-    $prepared = $database->prepare('SELECT * FROM "' . USER_ROLE_TABLE . '" WHERE "user_id" = ?');
+    $prepared = $database->prepare('SELECT * FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
     $result = $database->executePreparedFetchAll($prepared, array($user_id), PDO::FETCH_ASSOC);
     $user_boards = array();
 

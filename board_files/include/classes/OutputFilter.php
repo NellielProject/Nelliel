@@ -75,7 +75,7 @@ class OutputFilter
             if (preg_match('#^>>([0-9]+)$#', $segment, $matches) === 1)
             {
                 $prepared = $database->prepare(
-                        'SELECT "parent_thread" FROM "' . $domain->reference('post_table') .
+                        'SELECT "parent_thread" FROM "' . $domain->reference('posts_table') .
                         '" WHERE "post_number" = ?');
                 $parent_thread = $database->executePreparedFetch($prepared, [$matches[1]], PDO::FETCH_COLUMN);
 

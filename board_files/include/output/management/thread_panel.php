@@ -19,7 +19,7 @@ function nel_render_thread_panel_main($user, \Nelliel\Domain $domain)
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/thread_panel.html');
     $thread_data = $database->executeFetchAll(
-            'SELECT * FROM "' . $domain->reference('thread_table') . '" ORDER BY "sticky" DESC, "last_update" DESC',
+            'SELECT * FROM "' . $domain->reference('threads_table') . '" ORDER BY "sticky" DESC, "last_update" DESC',
             PDO::FETCH_ASSOC);
     $thread_list_table = $dom->getElementById('thread-list');
     $thread_row = $dom->getElementById('thread-row-');
@@ -31,7 +31,7 @@ function nel_render_thread_panel_main($user, \Nelliel\Domain $domain)
         $temp_thread_row->changeId('thread_row-' . $thread['thread_id']);
 
         $prepared = $database->prepare(
-                'SELECT * FROM "' . $domain->reference('post_table') . '" WHERE "post_number" = ?');
+                'SELECT * FROM "' . $domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $prepared->bindValue(1, $thread['first_post'], PDO::PARAM_INT);
         $prepared->execute();
         $op_post = $prepared->fetch(PDO::FETCH_ASSOC);
@@ -153,7 +153,7 @@ function nel_render_thread_panel_expand($user, \Nelliel\Domain $domain, $thread_
     $dom->getElementById('thread-list-form')->extSetAttribute('action',
             PHP_SELF . '?module=threads&action=update&board_id=' . $domain->id());
     $prepared = $database->prepare(
-            'SELECT * FROM "' . $domain->reference('post_table') .
+            'SELECT * FROM "' . $domain->reference('posts_table') .
             '" WHERE "parent_thread" = ? ORDER BY "post_time" DESC');
     $post_data = $database->executePreparedFetchAll($prepared, array($thread_id), PDO::FETCH_ASSOC);
     $post_list_table = $dom->getElementById('post-list');

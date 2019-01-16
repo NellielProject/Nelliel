@@ -120,7 +120,6 @@ function nel_render_ban_panel_modify($user, \Nelliel\Domain $domain)
 
     if (!$user->boardPerm('', 'perm_ban_modify'))
     {
-        var_dump("yesy");
         $dom->getElementById('ban-all-boards-field')->extSetAttribute('disabled', 'true');
     }
 
