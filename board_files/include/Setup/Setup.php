@@ -2,18 +2,46 @@
 
 namespace Nelliel\Setup;
 
-use PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
+
+use PDO;
 
 class Setup
 {
 
     function __construct()
     {
+    }
+
+    public function install()
+    {
+        if ($this->checkInstallDone())
+        {
+            die(_gettext('Install already completed successfully!'));
+        }
+
+        $this->checkDBEngine();
+        $this->mainDirWritable();
+        $this->boardFilesDirWritable();
+        $this->configDirWritable();
+        $this->checkGenerated();
+        $this->createCoreTables();
+        $this->createCoreDirectories();
+        $regen = new \Nelliel\Regen();
+        $regen->siteCache(new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database()));
+        $file_handler = new \Nelliel\FileHandler();
+        $file_handler->writeInternalFile(BASE_PATH . 'install_done.php','');
+        echo _gettext("Install has finished with no apparent problems! When you're ready to continue, follow this link: ");
+        echo '<a href="' . BASE_WEB_PATH . '">' . _gettext('Default home page') . '</a>';
+        nel_clean_exit();
+    }
+
+    public function checkInstallDone()
+    {
+        return file_exists(BASE_PATH . 'install_done.php');
     }
 
     public function generateConfigValues($current_values = null)
@@ -35,31 +63,46 @@ class Setup
         }
     }
 
-    public function checkAll($board_id)
+    public function boardFilesDirWritable()
     {
-        $this->checkGenerated();
+        if (!is_writable(FILES_PATH))
+        {
+            nel_derp(104, _gettext('Board files directory is missing or not writable. Admin should check this out.'));
+        }
+    }
 
+    public function mainDirWritable()
+    {
+        if (!is_writable(BASE_PATH))
+        {
+            nel_derp(105, _gettext('Nelliel main directory is not writable. Admin should check this out.'));
+        }
+    }
+
+    public function configDirWritable()
+    {
+        if (!is_writable(CONFIG_FILE_PATH))
+        {
+            nel_derp(106, _gettext('Board files directory is missing or not writable. Admin should check this out.'));
+        }
+    }
+
+    public function checkDBEngine()
+    {
         if ((SQLTYPE === 'MYSQL' || SQLTYPE === 'MARIADB') && !$this->checkForInnoDB())
         {
             nel_derp(102,
                     _gettext(
                             'InnoDB engine is required for MySQL or MariaDB support. However the engine is not available for some reason.'));
         }
+    }
 
+    public function checkCore($board_id)
+    {
+        $this->checkGenerated();
+        $this->checkDBEngine();
         $this->createCoreTables();
-
-        if (!is_writable(FILES_PATH))
-        {
-            nel_derp(104, _gettext('Board files directory is missing or not writable. Admin should check this out.'));
-        }
-
         $this->createCoreDirectories();
-
-        if ($board_id !== '')
-        {
-            $this->createBoardTables($board_id);
-            $this->createBoardDirectories($board_id);
-        }
     }
 
     public function createCoreTables()
@@ -139,12 +182,6 @@ class Setup
     public function createBoardDirectories($board_id)
     {
         $file_handler = new \Nelliel\FileHandler();
-
-        if (!is_writable(BASE_PATH))
-        {
-            nel_derp(105, _gettext('Nelliel main directory is not writable. Admin should check this out.'));
-        }
-
         $references = nel_parameters_and_data()->boardReferences($board_id);
         $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM, true);
         $file_handler->createDirectory($references['thumb_path'], DIRECTORY_PERM, true);

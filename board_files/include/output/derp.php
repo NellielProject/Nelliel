@@ -54,3 +54,13 @@ function nel_render_derp($diagnostic, $domain_id = '')
     nel_render_general_footer($domain, null, $do_styles);
     echo $domain->renderInstance()->outputRenderSet();
 }
+
+function nel_render_simple_derp($diagnostic)
+{
+    echo _gettext('oh god how did this get in here');
+    echo '<br>';
+    echo _gettext('Error ID: ') . $diagnostic['error_id'];
+    echo '<br>';
+    echo _gettext('Error Message: ') . $diagnostic['error_message'];
+    die();
+}

@@ -40,27 +40,24 @@ unset($language);
 require_once INCLUDE_PATH . 'crypt.php';
 nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
-if (RUN_SETUP_CHECK)
+$setup = new \Nelliel\Setup\Setup();
+
+if(isset($_GET['install']))
 {
-    $setup = new \Nelliel\Setup\Setup();
-    $board_id = (isset($_GET['board_id'])) ? $_GET['board_id'] : '';
-    $setup->checkAll($board_id);
-    unset ($setup);
+    $setup->install();
 }
+
+if(!$setup->checkInstallDone())
+{
+    nel_derp(107, _gettext('Installation has not been done yet or is not complete.'));
+}
+
+unset ($setup);
 
 require_once CONFIG_FILE_PATH . 'generated.php';
 
-if (nel_setup_stuff_done())
-{
-    if (USE_INTERNAL_CACHE)
-    {
-        $regen = new \Nelliel\Regen();
-        $regen->siteCache(new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database()));
-        unset($regen);
-    }
-}
-
 // IT'S GO TIME!
+define('SETUP_GOOD', true);
 ignore_user_abort(true);
 
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';

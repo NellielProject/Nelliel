@@ -51,6 +51,7 @@ define('SCRIPT_WEB_PATH', ASSETS_DIR . '/' . SCRIPT_DIR . '/');
 define('IMAGES_WEB_PATH', ASSETS_DIR . '/' . IMAGES_DIR . '/');
 define('STYLES_WEB_PATH', ASSETS_DIR . '/' . STYLES_DIR . '/');
 define('ICON_SETS_WEB_PATH', ASSETS_DIR . '/' . ICON_SET_DIR . '/');
+define('BASE_WEB_PATH', pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME) . '/');
 
 define('SQLITE_DB_DEFAULT_PATH', FILES_PATH); // Base SQLite DB location
 

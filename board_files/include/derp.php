@@ -28,6 +28,14 @@ function nel_derp($error_id, $error_message, $error_data = array())
         }
     }
 
-    nel_render_derp($diagnostic, $domain_id);
+    if(!defined('SETUP_GOOD'))
+    {
+        nel_render_simple_derp($diagnostic);
+    }
+    else
+    {
+        nel_render_derp($diagnostic, $domain_id);
+    }
+
     nel_clean_exit();
 }

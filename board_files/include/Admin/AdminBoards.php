@@ -82,12 +82,14 @@ class AdminBoards extends AdminHandler
         $setup = new \Nelliel\Setup\Setup();
         $setup->createBoardTables($domain->id());
         $setup->createBoardDirectories($domain->id());
+        $regen = new \Nelliel\Regen();
 
         if (USE_INTERNAL_CACHE)
         {
-            $regen = new \Nelliel\Regen();
             $regen->boardCache($domain);
         }
+
+        $regen->allPages($domain);
     }
 
     public function editor($user)
