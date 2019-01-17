@@ -34,13 +34,13 @@ function nel_render_roles_panel_main($user, \Nelliel\Domain $domain)
         $role_row_nodes['title']->setContent($role['role_title']);
         $role_row_nodes['capcode-text']->setContent($role['capcode_text']);
         $role_row_nodes['role-edit-link']->extSetAttribute('href',
-                PHP_SELF . '?module=roles&action=edit&role-id=' . $role['role_id']);
+                MAIN_SCRIPT . '?module=roles&action=edit&role-id=' . $role['role_id']);
         $role_row_nodes['role-remove-link']->extSetAttribute('href',
-                PHP_SELF . '?module=roles&action=remove&role-id=' . $role['role_id']);
+                MAIN_SCRIPT . '?module=roles&action=remove&role-id=' . $role['role_id']);
     }
 
     $role_info_table_nodes['role-info-row']->remove();
-    $dom->getElementById('new-role-link')->extSetAttribute('href', PHP_SELF . '?module=roles&action=new');
+    $dom->getElementById('new-role-link')->extSetAttribute('href', MAIN_SCRIPT . '?module=roles&action=new');
 
 
     $translator->translateDom($dom);
@@ -69,12 +69,12 @@ function nel_render_roles_panel_edit($user, \Nelliel\Domain $domain, $role_id)
 
     if (is_null($role_id))
     {
-        $dom->getElementById('role-edit-form')->extSetAttribute('action', PHP_SELF . '?module=roles&action=add');
+        $dom->getElementById('role-edit-form')->extSetAttribute('action', MAIN_SCRIPT . '?module=roles&action=add');
     }
     else
     {
         $dom->getElementById('role-edit-form')->extSetAttribute('action',
-                PHP_SELF . '?module=roles&action=update&role-id=' . $role_id);
+                MAIN_SCRIPT . '?module=roles&action=update&role-id=' . $role_id);
     }
 
     $role_settings_table = $dom->getElementById('role-edit-settings');

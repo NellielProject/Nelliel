@@ -24,7 +24,7 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
     $collapse_dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->startRenderTimer();
     $dom->getElementById('form-content-action')->extSetAttribute('action',
-            $dotdot . PHP_SELF . '?module=threads&board_id=' . $domain->id());
+            $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $domain->id());
     $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('threads_table') . '" WHERE "thread_id" = ?');
     $gen_data['thread'] = $database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
     $prepared = $database->prepare(

@@ -20,7 +20,7 @@ function nel_render_templates_panel($user, \Nelliel\Domain $domain)
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/templates_panel.html');
     $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
-    $template_inis = $ini_parser->parseDirectories(TEMPLATE_FILE_PATH, 'template_info.ini');
+    $template_inis = $ini_parser->parseDirectories(TEMPLATES_FILE_PATH, 'template_info.ini');
 
     $templates = $database->executeFetchAll(
             'SELECT * FROM "' . TEMPLATES_TABLE . '" ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
@@ -51,10 +51,10 @@ function nel_render_templates_panel($user, \Nelliel\Domain $domain)
         }
         else
         {
-            $default_link = $url_constructor->dynamic(PHP_SELF,
+            $default_link = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'templates', 'action' => 'make-default', 'template-id' => $template['id']]);
             $template_row_nodes['template-default-link']->extSetAttribute('href', $default_link);
-            $remove_link = $url_constructor->dynamic(PHP_SELF,
+            $remove_link = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'templates', 'action' => 'remove', 'template-id' => $template['id']]);
             $template_row_nodes['remove-link']->extSetAttribute('href', $remove_link);
         }
@@ -85,7 +85,7 @@ function nel_render_templates_panel($user, \Nelliel\Domain $domain)
         }
         else
         {
-            $remove_link = $url_constructor->dynamic(PHP_SELF,
+            $remove_link = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'templates', 'action' => 'add', 'template-id' => $template['id']]);
             $template_row_nodes['install-link']->extSetAttribute('href', $remove_link);
         }

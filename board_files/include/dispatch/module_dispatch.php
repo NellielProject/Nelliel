@@ -117,7 +117,7 @@ function nel_module_dispatch($inputs, Domain $domain)
             if ($inputs['action'] === 'extract-gettext')
             {
                 $language = new \Nelliel\Language\Language($authorization);
-                $language->extractLanguageStrings(LANGUAGE_FILE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
+                $language->extractLanguageStrings(LANGUAGES_FILE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
             }
 
             nel_render_main_panel($domain, $session->sessionUser());
@@ -165,7 +165,7 @@ function nel_module_dispatch($inputs, Domain $domain)
                     if ($session->isActive() && $session->inModmode($inputs['board_id']))
                     {
                         $url_constructor = new \Nelliel\URLConstructor();
-                        $url = $url_constructor->dynamic(PHP_SELF,
+                        $url = $url_constructor->dynamic(MAIN_SCRIPT,
                                 ['module' => 'render', 'action' => 'view-thread',
                                     'thread' => $fgsfds->getCommandData('noko', 'topic'),
                                     'board_id' => $inputs['board_id']]);
@@ -185,7 +185,7 @@ function nel_module_dispatch($inputs, Domain $domain)
                     if ($session->isActive() && $session->inModmode($inputs['board_id']))
                     {
                         $url_constructor = new \Nelliel\URLConstructor();
-                        $url = $url_constructor->dynamic(PHP_SELF,
+                        $url = $url_constructor->dynamic(MAIN_SCRIPT,
                                 ['module' => 'render', 'action' => 'view-index', 'index' => '0',
                                     'board_id' => $inputs['board_id']]);
 
@@ -193,7 +193,7 @@ function nel_module_dispatch($inputs, Domain $domain)
                     }
                     else
                     {
-                        $url = $domain->reference('board_directory') . '/' . PHP_SELF2 . PHP_EXT;
+                        $url = $domain->reference('board_directory') . '/' . MAIN_INDEX . PAGE_EXT;
                         nel_redirect($url, 2);
                     }
                 }
@@ -228,13 +228,13 @@ function nel_module_dispatch($inputs, Domain $domain)
 
                     if ($session->isActive() && $session->inModmode($inputs['board_id']))
                     {
-                        echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
+                        echo '<meta http-equiv="refresh" content="1;URL=' . MAIN_SCRIPT .
                                 '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';
                     }
                     else
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . $domain->reference('board_directory') . '/' .
-                                PHP_SELF2 . PHP_EXT . '">';
+                                MAIN_INDEX . PAGE_EXT . '">';
                     }
                 }
 
@@ -245,13 +245,13 @@ function nel_module_dispatch($inputs, Domain $domain)
 
                     if ($session->isActive() && $session->inModmode($inputs['board_id']))
                     {
-                        echo '<meta http-equiv="refresh" content="1;URL=' . PHP_SELF .
+                        echo '<meta http-equiv="refresh" content="1;URL=' . MAIN_SCRIPT .
                                 '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';
                     }
                     else
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . $domain->reference('board_directory') . '/' .
-                                PHP_SELF2 . PHP_EXT . '">';
+                                MAIN_INDEX . PAGE_EXT . '">';
                     }
 
                     nel_clean_exit(true, $inputs['board_id']);

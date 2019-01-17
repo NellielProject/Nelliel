@@ -46,10 +46,10 @@ function nel_render_main_ban_panel($user, \Nelliel\Domain $domain)
         $ban_nodes['ban-appeal-response']->setContent($ban_info['appeal_response']);
         $ban_nodes['ban-appeal-status']->setContent($ban_info['appeal_status']);
         $ban_nodes['link-modify-ban']->extSetAttribute('href',
-                PHP_SELF . '?module=board&module=bans&action=modify&ban_id=' . $ban_info['ban_id'] . '&board_id=' .
+                MAIN_SCRIPT . '?module=board&module=bans&action=modify&ban_id=' . $ban_info['ban_id'] . '&board_id=' .
                 $domain->id());
         $ban_nodes['link-remove-ban']->extSetAttribute('href',
-                PHP_SELF . '?module=board&module=bans&action=remove&ban_id=' . $ban_info['ban_id'] . '&board_id=' .
+                MAIN_SCRIPT . '?module=board&module=bans&action=remove&ban_id=' . $ban_info['ban_id'] . '&board_id=' .
                 $domain->id());
         $ban_info_table->appendChild($temp_ban_info_row);
     }
@@ -57,7 +57,7 @@ function nel_render_main_ban_panel($user, \Nelliel\Domain $domain)
     $ban_info_row->remove();
 
     $form_add_ban = $dom->getElementById('link-new-ban');
-    $form_add_ban->extSetAttribute('href', PHP_SELF . '?module=board&module=bans&action=new&board_id=' . $domain->id());
+    $form_add_ban->extSetAttribute('href', MAIN_SCRIPT . '?module=board&module=bans&action=new&board_id=' . $domain->id());
     $translator->translateDom($dom);
     $domain->renderInstance()->appendHTMLFromDOM($dom);
     nel_render_general_footer($domain);
@@ -96,7 +96,7 @@ function nel_render_ban_panel_add($user, \Nelliel\Domain $domain, $ip = '', $typ
 
     $add_ban_form = $dom->getElementById('add-ban-form');
     $add_ban_form->extSetAttribute('action',
-            PHP_SELF . '?module=board&module=bans&action=add&board_id=' . $domain->id() . $post_param);
+            MAIN_SCRIPT . '?module=board&module=bans&action=add&board_id=' . $domain->id() . $post_param);
     $ban_nodes = $add_ban_form->getElementsByAttributeName('data-parse-id', true);
     $ban_nodes['ban-ip']->extSetAttribute('value', $ip);
     $dom->getElementById('ban-type')->extSetAttribute('value', $type);
@@ -124,7 +124,7 @@ function nel_render_ban_panel_modify($user, \Nelliel\Domain $domain)
     }
 
     $dom->getElementById('modify-ban-form')->extSetAttribute('action',
-            PHP_SELF . '?module=board&module=bans&action=update&board_id=' . $domain->id());
+            MAIN_SCRIPT . '?module=board&module=bans&action=update&board_id=' . $domain->id());
     $ban_id = $_GET['ban_id'];
     $ban_info = $ban_hammer->getBanById($ban_id, true);
     $dom->getElementById('ban-ip-field')->extSetAttribute('value', @inet_ntop($ban_info['ip_address_start']));

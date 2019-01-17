@@ -19,8 +19,8 @@ function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_del
         }
         else
         {
-            $url = nel_parameters_and_data()->boardReferences($redirect_board, 'board_directory') . '/' . PHP_SELF2 .
-                    PHP_EXT;
+            $url = nel_parameters_and_data()->boardReferences($redirect_board, 'board_directory') . '/' . MAIN_INDEX .
+                    PAGE_EXT;
             nel_redirect($url, $redirect_delay);
         }
     }

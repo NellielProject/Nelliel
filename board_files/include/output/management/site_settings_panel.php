@@ -19,7 +19,7 @@ function nel_render_site_settings_panel(\Nelliel\Domain $domain, $user)
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/site_settings_panel.html');
     $dom->getElementById('site-settings-form')->extSetAttribute('action',
-            PHP_SELF . '?module=site-settings&action=update');
+            MAIN_SCRIPT . '?module=site-settings&action=update');
     $result = $database->query('SELECT * FROM "' . SITE_CONFIG_TABLE . '"');
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);
     unset($result);

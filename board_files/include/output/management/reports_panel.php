@@ -51,9 +51,9 @@ function nel_render_reports_panel($user, \Nelliel\Domain $domain)
         $temp_report_info_row->extSetAttribute('class', $bgclass);
         $report_nodes = $temp_report_info_row->getElementsByAttributeName('data-parse-id', true);
         $content_id = new \Nelliel\ContentID($report_info['content_id']);
-        $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
+        $base_domain = BASE_DOMAIN . pathinfo($_SERVER['MAIN_SCRIPT'], PATHINFO_DIRNAME);
         $board_web_path = '//' . $base_domain . '/' . rawurlencode($current_domain->reference('board_directory')) . '/';
-        $base_path = '//' . $base_domain . '/' . PHP_SELF;
+        $base_path = '//' . $base_domain . '/' . MAIN_SCRIPT;
         $content_link = '';
 
         if ($content_id->isThread())
@@ -99,7 +99,7 @@ function nel_render_reports_panel($user, \Nelliel\Domain $domain)
         $report_nodes['report-reason']->setContent($report_info['reason']);
         $report_nodes['reporter-ip']->setContent(@inet_ntop($report_info['reporter_ip']));
         $report_nodes['link-report-dismiss']->extSetAttribute('href',
-                PHP_SELF . '?module=reports&board_id=' . $report_info['board_id'] . '&action=dismiss&report_id=' .
+                MAIN_SCRIPT . '?module=reports&board_id=' . $report_info['board_id'] . '&action=dismiss&report_id=' .
                 $report_info['report_id']);
         $report_info_table->appendChild($temp_report_info_row);
     }

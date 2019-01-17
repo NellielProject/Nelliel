@@ -179,7 +179,7 @@ class AdminBoards extends AdminHandler
     {
         $message = _gettext('Are you certain you want to delete the board? Everything will be gone and this cannot be undone!');
         $url_constructor = new \Nelliel\URLConstructor();
-        $continue_link['href'] = $url_constructor->dynamic(PHP_SELF,
+        $continue_link['href'] = $url_constructor->dynamic(MAIN_SCRIPT,
                 ['module' => 'manage-boards', 'action' => 'remove', 'action-confirmed' => 'true',
                 'board_id' => $_GET['board_id']]);
         $continue_link['text'] = _gettext('Confirm and delete the board.');

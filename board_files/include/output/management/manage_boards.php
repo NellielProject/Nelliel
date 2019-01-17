@@ -19,14 +19,14 @@ function nel_render_manage_boards_panel(\Nelliel\Domain $domain, $user)
             array('header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/manage_boards_panel_main.html');
-    $dom->getElementById('create-board-form')->extSetAttribute('action', PHP_SELF . '?module=manage-boards&action=add');
+    $dom->getElementById('create-board-form')->extSetAttribute('action', MAIN_SCRIPT . '?module=manage-boards&action=add');
     $board_data = $database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC',
             PDO::FETCH_ASSOC);
     $bgclass = 'row1';
     $board_info_table = $dom->getElementById('board-info-table');
     $board_info_row = $dom->getElementById('board-info-row');
-    $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
-    $base_path = '//' . $base_domain . '/' . PHP_SELF;
+    $base_domain = BASE_DOMAIN . pathinfo($_SERVER['MAIN_SCRIPT'], PATHINFO_DIRNAME);
+    $base_path = '//' . $base_domain . '/' . MAIN_SCRIPT;
 
     foreach ($board_data as $board_info)
     {

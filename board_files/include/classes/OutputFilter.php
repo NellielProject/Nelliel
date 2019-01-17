@@ -68,7 +68,7 @@ class OutputFilter
     {
         $database = nel_database();
         $text_segments = preg_split('#(>>[0-9]+)#', $text_input, null, PREG_SPLIT_DELIM_CAPTURE);
-        $base_domain = $_SERVER['SERVER_NAME'] . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
+        $base_domain = BASE_DOMAIN . BASE_WEB_PATH;
 
         foreach ($text_segments as $segment)
         {

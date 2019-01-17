@@ -11,14 +11,15 @@ if (ini_get('date.timezone') === '')
 
 define('ASSETS_DIR', 'assets');
 define('STYLES_DIR', 'styles');
-define('ICON_SET_DIR', 'icon_sets');
+define('ICON_SETS_DIR', 'icon_sets');
 define('IMAGES_DIR', 'imagez');
-define('SCRIPT_DIR', 'script');
+define('SCRIPTS_DIR', 'scripts');
 
-define('PHP_SELF', 'imgboard.php'); // Name of main script file
-define('PHP_SELF2', 'index'); // Name of board index
-define('PHP_EXT', '.html'); // Extension used for board pages
-define('JSON_EXT', '.json'); // Extension used for board pages
+define('BASE_DOMAIN', $_SERVER['SERVER_NAME']);
+define('MAIN_SCRIPT', 'imgboard.php');
+define('MAIN_INDEX', 'index');
+define('PAGE_EXT', '.html');
+define('JSON_EXT', '.json');
 
 define('ASSETS_TABLE', 'nelliel_assets');
 define('BANS_TABLE', 'nelliel_bans');
@@ -40,20 +41,19 @@ define('VERSIONS_TABLE', 'nelliel_version');
 
 define('CONFIG_FILE_PATH', BASE_PATH . 'configuration/');
 define('CACHE_FILE_PATH', FILES_PATH . 'cache/');
-define('TEMPLATE_FILE_PATH', FILES_PATH . 'templates/');
+define('TEMPLATES_FILE_PATH', FILES_PATH . 'templates/');
 define('PLUGINS_FILE_PATH', FILES_PATH . 'plugins/');
-define('LANGUAGE_FILE_PATH', FILES_PATH . 'languages/');
-define('LOCALE_FILE_PATH', LANGUAGE_FILE_PATH . 'locale/');
+define('LANGUAGES_FILE_PATH', FILES_PATH . 'languages/');
+define('LOCALE_FILE_PATH', LANGUAGES_FILE_PATH . 'locale/');
 define('STYLES_FILE_PATH', BASE_PATH . ASSETS_DIR . '/' . STYLES_DIR . '/');
-define('ICON_SETS_FILE_PATH', BASE_PATH . ASSETS_DIR . '/' . ICON_SET_DIR . '/');
+define('ICON_SETS_FILE_PATH', BASE_PATH . ASSETS_DIR . '/' . ICON_SETS_DIR . '/');
 
-define('SCRIPT_WEB_PATH', ASSETS_DIR . '/' . SCRIPT_DIR . '/');
+define('SCRIPTS_WEB_PATH', ASSETS_DIR . '/' . SCRIPTS_DIR . '/');
 define('IMAGES_WEB_PATH', ASSETS_DIR . '/' . IMAGES_DIR . '/');
 define('STYLES_WEB_PATH', ASSETS_DIR . '/' . STYLES_DIR . '/');
-define('ICON_SETS_WEB_PATH', ASSETS_DIR . '/' . ICON_SET_DIR . '/');
+define('ICON_SETS_WEB_PATH', ASSETS_DIR . '/' . ICON_SETS_DIR . '/');
 define('BASE_WEB_PATH', pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME) . '/');
-
-define('SQLITE_DB_DEFAULT_PATH', FILES_PATH); // Base SQLite DB location
+define('SQLITE_DB_DEFAULT_PATH', FILES_PATH);
 
 define('BASE_HONEYPOT_FIELD1', 'display_signature'); // Honeypot field name
 define('BASE_HONEYPOT_FIELD2', 'signature'); // Honeypot field name

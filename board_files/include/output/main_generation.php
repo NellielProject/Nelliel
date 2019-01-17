@@ -40,7 +40,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
 
         if ($write)
         {
-            $file_handler->writeFile($domain->reference('board_directory') . '/' . PHP_SELF2 . PHP_EXT,
+            $file_handler->writeFile($domain->reference('board_directory') . '/' . MAIN_INDEX . PAGE_EXT,
                     $domain->renderInstance()->outputRenderSet(), FILE_PERM);
             $json_index->writeStoredData($domain->reference('board_directory') . '/', sprintf('index-%d', $page));
         }
@@ -62,7 +62,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
         $domain->renderInstance()->startRenderTimer();
         $translator->translateDom($dom, $domain->setting('language'));
         $dom->getElementById('form-content-action')->extSetAttribute('action',
-                $dotdot . PHP_SELF . '?module=threads&board_id=' . $domain->id());
+                $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $domain->id());
         nel_render_board_header($domain, $dotdot, $treeline);
         nel_render_posting_form($domain, $response_to, $dotdot);
         $sub_page_thread_counter = 0;
@@ -163,7 +163,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
         $page_count = (int) ceil($counttree / $domain->setting('threads_per_page'));
         $pages = array();
         $modmode_base = 'imgboard.php?module=render&action=view-index&modmode=true&index=';
-        $index_filename = 'index' . PHP_EXT;
+        $index_filename = 'index' . PAGE_EXT;
         $index_format = $domain->setting('index_filename_format');
         $last_page = $page_count - 1;
         $nav_pieces = array();
@@ -175,7 +175,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
         }
         else
         {
-            $nav_pieces[0]['link'] = 'index' . PHP_EXT;
+            $nav_pieces[0]['link'] = 'index' . PAGE_EXT;
         }
 
         $nav_pieces[0]['text'] = 0;
@@ -188,7 +188,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
             }
             else
             {
-                $nav_pieces[$i]['link'] = sprintf($index_format, $i) . PHP_EXT;
+                $nav_pieces[$i]['link'] = sprintf($index_format, $i) . PAGE_EXT;
             }
 
             $nav_pieces[$i]['text'] = $i;
@@ -214,11 +214,11 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
 
         if ($page > 0)
         {
-            $index_filename = sprintf($index_format, $page) . PHP_EXT;
+            $index_filename = sprintf($index_format, $page) . PAGE_EXT;
         }
         else
         {
-            $index_filename = 'index' . PHP_EXT;
+            $index_filename = 'index' . PAGE_EXT;
         }
 
         if (!$write)

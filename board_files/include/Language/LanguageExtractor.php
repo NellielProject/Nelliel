@@ -148,7 +148,7 @@ class LanguageExtractor
     private function parseHTMLFiles($strings = array())
     {
         $file_handler = new \Nelliel\FileHandler();
-        $html_files = $file_handler->recursiveFileList(TEMPLATE_FILE_PATH . 'nelliel_basic/');
+        $html_files = $file_handler->recursiveFileList(TEMPLATES_FILE_PATH . 'nelliel_basic/');
         $render = new \Nelliel\RenderCore();
 
         foreach ($html_files as $file)

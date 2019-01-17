@@ -16,7 +16,7 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $head_element = $dom->getElementsByTagName('head')->item(0);
     nel_build_header_styles($dom, $dotdot);
-    $dom->getElementById('js-main-file')->extSetAttribute('src', $dotdot . SCRIPT_WEB_PATH . 'nel.js');
+    $dom->getElementById('js-main-file')->extSetAttribute('src', $dotdot . SCRIPTS_WEB_PATH . 'nel.js');
     $dom->getElementById('js-onload')->setContent(
             'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\', \'' .
             $session->inModmode($domain->id()) . '\');};');
@@ -120,14 +120,14 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
 
     if ($session->isActive() && !$domain->renderActive())
     {
-        $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=main-panel');
+        $a_elements->item(2)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=main-panel');
     }
     else
     {
-        $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
+        $a_elements->item(2)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=login');
     }
 
-    $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
+    $a_elements->item(3)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?about_nelliel');
 
     $dom->getElementById('manage-board-header')->remove();
     $dom->getElementById('manage-sub-header')->remove();
@@ -135,7 +135,7 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
     if ($session->inModmode($domain->id()) && !$domain->renderActive())
     {
         $dom->getElementById('manage-header-text')->setContent(_gettext('Mod Mode'));
-        $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=logout');
+        $a_elements->item(0)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=logout');
     }
     else
     {
@@ -160,7 +160,7 @@ function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $ext
     $head_element = $dom->getElementsByTagName('head')->item(0);
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     nel_build_header_styles($dom, $dotdot);
-    $dom->getElementById('js-main-file')->extSetAttribute('src', $dotdot . SCRIPT_WEB_PATH . 'nel.js');
+    $dom->getElementById('js-main-file')->extSetAttribute('src', $dotdot . SCRIPTS_WEB_PATH . 'nel.js');
     $dom->getElementById('js-onload')->setContent(
             'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\', \'' .
             $session->inModmode($domain->id()) . '\');};');
@@ -196,14 +196,14 @@ function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $ext
 
     if ($session->isActive())
     {
-        $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=main-panel');
+        $a_elements->item(2)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=main-panel');
     }
     else
     {
-        $a_elements->item(2)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=login');
+        $a_elements->item(2)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=login');
     }
 
-    $a_elements->item(3)->extSetAttribute('href', $dotdot . PHP_SELF . '?about_nelliel');
+    $a_elements->item(3)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?about_nelliel');
 
     if (($session->isActive() || $session->inModmode($domain->id())))
     {
@@ -223,7 +223,7 @@ function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $ext
             $dom->getElementById('manage-sub-header-text')->setContent($extra_data['sub_header']);
         }
 
-        $a_elements->item(0)->extSetAttribute('href', $dotdot . PHP_SELF . '?module=logout');
+        $a_elements->item(0)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=logout');
     }
     else
     {

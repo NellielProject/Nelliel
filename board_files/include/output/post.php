@@ -79,7 +79,7 @@ function nel_render_post($domain, $gen_data, $dom)
     $post_container->changeId('post-container-' . $post_content_id->getIDString());
 
     $indents_element = $new_post_dom->getElementById('indents');
-    $base_domain = $_SERVER['SERVER_NAME'] . BASE_WEB_PATH;
+    $base_domain = BASE_DOMAIN . BASE_WEB_PATH;
     $board_web_path = '//' . $base_domain . '/' . rawurlencode($domain->reference('board_directory')) . '/';
     $pages_web_path = $board_web_path . rawurlencode($domain->reference('page_dir')) . '/';
     $thread_page_web_path = $pages_web_path . $thread_content_id->thread_id . '/thread-' . $thread_content_id->thread_id .
@@ -240,7 +240,7 @@ function nel_render_post($domain, $gen_data, $dom)
         if ($session->inModmode($domain->id()) && !$domain->renderActive())
         {
             $header_nodes['reply-to-link']->extSetAttribute('href',
-                    PHP_SELF . '?module=render&action=view-thread&content-id=' . $thread_content_id->getIDString() .
+                    MAIN_SCRIPT . '?module=render&action=view-thread&content-id=' . $thread_content_id->getIDString() .
                     '&thread=' . $thread_content_id->thread_id . '&board_id=' . $domain->id() . '&modmode=true');
         }
         else

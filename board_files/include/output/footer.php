@@ -21,7 +21,7 @@ function nel_render_general_footer(\Nelliel\Domain $domain, $dotdot = null, $sty
     }
 
     $dom->getElementById('nelliel-version')->setContent(NELLIEL_VERSION);
-    $dom->getElementById('js-ui')->extSetAttribute('src', $dotdot . SCRIPT_WEB_PATH . 'ui.js');
+    $dom->getElementById('js-ui')->extSetAttribute('src', $dotdot . SCRIPTS_WEB_PATH . 'ui.js');
     $translator->translateDom($dom, $domain->setting('language'));
 
     if($domain->setting('display_render_timer'))

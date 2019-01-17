@@ -20,7 +20,7 @@ function nel_render_board_settings_panel($user, \Nelliel\Domain $domain, $defaul
         nel_render_general_header($domain, null,
                 array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Default Board Settings')));
         $result = $database->query('SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"');
-        $settings_form->extSetAttribute('action', PHP_SELF . '?module=default-board-settings&action=update');
+        $settings_form->extSetAttribute('action', MAIN_SCRIPT . '?module=default-board-settings&action=update');
     }
     else
     {
@@ -28,7 +28,7 @@ function nel_render_board_settings_panel($user, \Nelliel\Domain $domain, $defaul
                 array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')));
         $result = $database->query('SELECT * FROM "' . $domain->reference('config_table') . '"');
         $settings_form->extSetAttribute('action',
-                PHP_SELF . '?module=board-settings&action=update&board_id=' . $domain->id());
+                MAIN_SCRIPT . '?module=board-settings&action=update&board_id=' . $domain->id());
     }
 
     $rows = $result->fetchAll(PDO::FETCH_ASSOC);

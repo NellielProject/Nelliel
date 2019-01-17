@@ -32,7 +32,7 @@ function nel_render_file_filter_panel($user, \Nelliel\Domain $domain)
                 PDO::FETCH_ASSOC);
     }
 
-    $form_action = $url_constructor->dynamic(PHP_SELF, ['module' => 'file-filter', 'action' => 'add']);
+    $form_action = $url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'file-filter', 'action' => 'add']);
     $dom->getElementById('add-file-filter-form')->extSetAttribute('action', $form_action);
 
     $filter_list = $dom->getElementById('filter-list');
@@ -50,7 +50,7 @@ function nel_render_file_filter_panel($user, \Nelliel\Domain $domain)
         $filter_row_nodes['file-hash']->setContent(bin2hex($filter['file_hash']));
         $filter_row_nodes['file-notes']->setContent($filter['file_notes']);
         $filter_row_nodes['board-id']->setContent($filter['board_id']);
-        $remove_link = $url_constructor->dynamic(PHP_SELF,
+        $remove_link = $url_constructor->dynamic(MAIN_SCRIPT,
                 ['module' => 'file-filter', 'action' => 'remove', 'filter-id' => $filter['entry']]);
         $filter_row_nodes['filter-remove-link']->extSetAttribute('href', $remove_link);
     }

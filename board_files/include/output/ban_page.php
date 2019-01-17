@@ -45,7 +45,7 @@ function nel_render_ban_page(\Nelliel\Domain $domain, $ban_info)
 
     if ($ban_info['appeal_status'] == 0)
     {
-        $ban_page_nodes['appeal-form']->extSetAttribute('action', $url_constructor->dynamic(PHP_SELF, ['module' => 'ban-page', 'action' => 'add-appeal']));
+        $ban_page_nodes['appeal-form']->extSetAttribute('action', $url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'ban-page', 'action' => 'add-appeal']));
 
         if (!empty($ban_info['board_id']))
         {

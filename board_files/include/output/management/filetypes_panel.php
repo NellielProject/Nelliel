@@ -21,7 +21,7 @@ function nel_render_filetypes_panel($user, \Nelliel\Domain $domain)
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/filetypes_panel.html');
     $filetypes = $database->executeFetchAll(
             'SELECT * FROM "' . FILETYPES_TABLE . '" WHERE "extension" <> \'\' ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
-    $form_action = $url_constructor->dynamic(PHP_SELF, ['module' => 'filetypes', 'action' => 'add']);
+    $form_action = $url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'filetypes', 'action' => 'add']);
     $dom->getElementById('add-filetype-form')->extSetAttribute('action', $form_action);
 
     $filetype_list = $dom->getElementById('filetype-list');
@@ -41,7 +41,7 @@ function nel_render_filetypes_panel($user, \Nelliel\Domain $domain)
         $filetype_row_nodes['mime']->setContent($filetype['mime']);
         $filetype_row_nodes['regex']->setContent($filetype['id_regex']);
         $filetype_row_nodes['label']->setContent($filetype['label']);
-        $remove_link = $url_constructor->dynamic(PHP_SELF,
+        $remove_link = $url_constructor->dynamic(MAIN_SCRIPT,
                 ['module' => 'filetypes', 'action' => 'remove', 'filetype-id' => $filetype['entry']]);
         $filetype_row_nodes['filetype-remove-link']->extSetAttribute('href', $remove_link);
     }

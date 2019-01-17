@@ -22,7 +22,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
             $entry->removeAttribute('id');
             $entry_elements = $entry->getElementsByAttributeName('data-parse-id', true);
             $entry_elements['board-link']->extSetAttribute('href',
-                    PHP_SELF . '?module=main-panel&board_id=' . $board['board_id']);
+                    MAIN_SCRIPT . '?module=main-panel&board_id=' . $board['board_id']);
             $entry_elements['board-link']->extSetAttribute('title', $board['board_id']);
             $entry_elements['board-link']->setContent('/' . $board['board_id'] . '/');
         }
@@ -34,7 +34,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 
     if ($user->boardPerm('', 'perm_manage_boards_access'))
     {
-        $manage_options_nodes['module-link-manage-boards']->extSetAttribute('href', PHP_SELF . '?module=manage-boards');
+        $manage_options_nodes['module-link-manage-boards']->extSetAttribute('href', MAIN_SCRIPT . '?module=manage-boards');
     }
     else
     {
@@ -43,7 +43,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 
     if ($user->boardPerm('', 'perm_user_access'))
     {
-        $manage_options_nodes['module-link-users']->extSetAttribute('href', PHP_SELF . '?module=users');
+        $manage_options_nodes['module-link-users']->extSetAttribute('href', MAIN_SCRIPT . '?module=users');
     }
     else
     {
@@ -52,7 +52,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 
     if ($user->boardPerm('', 'perm_role_access'))
     {
-        $manage_options_nodes['module-link-roles']->extSetAttribute('href', PHP_SELF . '?module=roles');
+        $manage_options_nodes['module-link-roles']->extSetAttribute('href', MAIN_SCRIPT . '?module=roles');
     }
     else
     {
@@ -61,7 +61,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 
     if ($user->boardPerm('', 'perm_site_config_access'))
     {
-        $manage_options_nodes['module-link-site-settings']->extSetAttribute('href', PHP_SELF . '?module=site-settings');
+        $manage_options_nodes['module-link-site-settings']->extSetAttribute('href', MAIN_SCRIPT . '?module=site-settings');
     }
     else
     {
@@ -70,7 +70,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 
     if ($user->boardPerm('', 'perm_file_filters_access'))
     {
-        $manage_options_nodes['module-link-file-filters']->extSetAttribute('href', PHP_SELF . '?module=file-filters');
+        $manage_options_nodes['module-link-file-filters']->extSetAttribute('href', MAIN_SCRIPT . '?module=file-filters');
     }
     else
     {
@@ -80,7 +80,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
     if ($user->boardPerm('', 'perm_board_defaults_access'))
     {
         $manage_options_nodes['module-link-board-defaults']->extSetAttribute('href',
-                PHP_SELF . '?module=default-board-settings');
+                MAIN_SCRIPT . '?module=default-board-settings');
     }
     else
     {
@@ -89,7 +89,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 
     if ($user->boardPerm('', 'perm_reports_access'))
     {
-        $manage_options_nodes['module-link-reports']->extSetAttribute('href', PHP_SELF . '?module=reports');
+        $manage_options_nodes['module-link-reports']->extSetAttribute('href', MAIN_SCRIPT . '?module=reports');
     }
     else
     {
@@ -98,7 +98,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 
     if ($user->boardPerm('', 'perm_templates_access'))
     {
-        $manage_options_nodes['module-link-templates']->extSetAttribute('href', PHP_SELF . '?module=templates');
+        $manage_options_nodes['module-link-templates']->extSetAttribute('href', MAIN_SCRIPT . '?module=templates');
     }
     else
     {
@@ -107,7 +107,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 
     if ($user->boardPerm('', 'perm_filetypes_access'))
     {
-        $manage_options_nodes['module-link-filetypes']->extSetAttribute('href', PHP_SELF . '?module=filetypes');
+        $manage_options_nodes['module-link-filetypes']->extSetAttribute('href', MAIN_SCRIPT . '?module=filetypes');
     }
     else
     {
@@ -116,7 +116,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 
     if ($user->boardPerm('', 'perm_styles_access'))
     {
-        $manage_options_nodes['module-link-styles']->extSetAttribute('href', PHP_SELF . '?module=styles');
+        $manage_options_nodes['module-link-styles']->extSetAttribute('href', MAIN_SCRIPT . '?module=styles');
     }
     else
     {
@@ -125,7 +125,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 
     if ($user->boardPerm('', 'perm_permissions_access'))
     {
-        $manage_options_nodes['module-link-permissions']->extSetAttribute('href', PHP_SELF . '?module=permissions');
+        $manage_options_nodes['module-link-permissions']->extSetAttribute('href', MAIN_SCRIPT . '?module=permissions');
     }
     else
     {
@@ -134,7 +134,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 
     if ($user->boardPerm('', 'perm_icon_sets_access'))
     {
-        $manage_options_nodes['module-link-icon-sets']->extSetAttribute('href', PHP_SELF . '?module=icon-sets');
+        $manage_options_nodes['module-link-icon-sets']->extSetAttribute('href', MAIN_SCRIPT . '?module=icon-sets');
     }
     else
     {
@@ -144,7 +144,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
     if ($user->boardPerm('', 'perm_extract_gettext'))
     {
         $manage_options_nodes['module-extract-gettext']->extSetAttribute('href',
-                PHP_SELF . '?module=language&action=extract-gettext');
+                MAIN_SCRIPT . '?module=language&action=extract-gettext');
     }
     else
     {
@@ -176,7 +176,7 @@ function nel_render_main_board_panel($domain)
     {
         $settings_elements = $settings->getElementsByAttributeName('data-parse-id', true);
         $settings_elements['board-settings-link']->extSetAttribute('href',
-                PHP_SELF . '?module=board-settings&board_id=' . $domain->id());
+                MAIN_SCRIPT . '?module=board-settings&board_id=' . $domain->id());
     }
     else
     {
@@ -188,7 +188,7 @@ function nel_render_main_board_panel($domain)
     if ($user->boardPerm($domain->id(), 'perm_ban_access'))
     {
         $bans_elements = $bans->getElementsByAttributeName('data-parse-id', true);
-        $bans_elements['bans-link']->extSetAttribute('href', PHP_SELF . '?module=bans&board_id=' . $domain->id());
+        $bans_elements['bans-link']->extSetAttribute('href', MAIN_SCRIPT . '?module=bans&board_id=' . $domain->id());
     }
     else
     {
@@ -201,7 +201,7 @@ function nel_render_main_board_panel($domain)
     {
         $threads_elements = $threads->getElementsByAttributeName('data-parse-id', true);
         $threads_elements['threads-link']->extSetAttribute('href',
-                PHP_SELF . '?module=threads-admin&board_id=' . $domain->id());
+                MAIN_SCRIPT . '?module=threads-admin&board_id=' . $domain->id());
     }
     else
     {
@@ -214,7 +214,7 @@ function nel_render_main_board_panel($domain)
     {
         $modmode_elements = $modmode->getElementsByAttributeName('data-parse-id', true);
         $modmode_elements['modmode-link']->extSetAttribute('href',
-                PHP_SELF . '?module=render&action=view-index&index=0&board_id=' . $domain->id() . '&modmode=true');
+                MAIN_SCRIPT . '?module=render&action=view-index&index=0&board_id=' . $domain->id() . '&modmode=true');
     }
     else
     {
@@ -227,7 +227,7 @@ function nel_render_main_board_panel($domain)
     {
         $reports_elements = $reports->getElementsByAttributeName('data-parse-id', true);
         $reports_elements['reports-link']->extSetAttribute('href',
-                PHP_SELF . '?module=reports&board_id=' . $domain->id());
+                MAIN_SCRIPT . '?module=reports&board_id=' . $domain->id());
     }
     else
     {
@@ -240,7 +240,7 @@ function nel_render_main_board_panel($domain)
     {
         $file_filters_elements = $file_filters->getElementsByAttributeName('data-parse-id', true);
         $file_filters_elements['file-filters-link']->extSetAttribute('href',
-                PHP_SELF . '?module=file-filter&board_id=' . $domain->id());
+                MAIN_SCRIPT . '?module=file-filter&board_id=' . $domain->id());
     }
     else
     {
@@ -250,7 +250,7 @@ function nel_render_main_board_panel($domain)
     if ($user->boardPerm($domain->id(), 'perm_regen_pages'))
     {
         $dom->getElementById('regen-all-pages')->extSetAttribute('href',
-                PHP_SELF . '?module=regen&action=board-all-pages&board_id=' . $domain->id());
+                MAIN_SCRIPT . '?module=regen&action=board-all-pages&board_id=' . $domain->id());
     }
     else
     {
@@ -260,7 +260,7 @@ function nel_render_main_board_panel($domain)
     if ($user->boardPerm($domain->id(), 'perm_regen_cache'))
     {
         $dom->getElementById('regen-all-caches')->extSetAttribute('href',
-                PHP_SELF . '?module=regen&action=board-all-caches&board_id=' . $domain->id());
+                MAIN_SCRIPT . '?module=regen&action=board-all-caches&board_id=' . $domain->id());
     }
     else
     {

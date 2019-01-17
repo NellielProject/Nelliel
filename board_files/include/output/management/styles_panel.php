@@ -51,11 +51,11 @@ function nel_render_styles_panel($user, \Nelliel\Domain $domain)
         }
         else
         {
-            $default_link = $url_constructor->dynamic(PHP_SELF,
+            $default_link = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'styles', 'action' => 'make-default', 'style-id' => $style['id'],
                     'style-type' => $style_info['style_type']]);
                     $style_row_nodes['default-link']->extSetAttribute('href', $default_link);
-                    $remove_link = $url_constructor->dynamic(PHP_SELF,
+                    $remove_link = $url_constructor->dynamic(MAIN_SCRIPT,
                             ['module' => 'styles', 'action' => 'remove', 'style-id' => $style['id'],
                             'set-type' => $style_info['style_type']]);
                             $style_row_nodes['remove-link']->extSetAttribute('href', $remove_link);
@@ -87,7 +87,7 @@ function nel_render_styles_panel($user, \Nelliel\Domain $domain)
         }
         else
         {
-            $install_link = $url_constructor->dynamic(PHP_SELF,
+            $install_link = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'styles', 'action' => 'add', 'style-id' => $style['id'],
                     'style-type' => $style['style_type']]);
                     $style_row_nodes['install-link']->extSetAttribute('href', $install_link);

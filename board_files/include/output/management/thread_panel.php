@@ -151,7 +151,7 @@ function nel_render_thread_panel_expand($user, \Nelliel\Domain $domain, $thread_
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/thread_panel_expand.html');
     $dom->getElementById('thread-list-form')->extSetAttribute('action',
-            PHP_SELF . '?module=threads&action=update&board_id=' . $domain->id());
+            MAIN_SCRIPT . '?module=threads&action=update&board_id=' . $domain->id());
     $prepared = $database->prepare(
             'SELECT * FROM "' . $domain->reference('posts_table') .
             '" WHERE "parent_thread" = ? ORDER BY "post_time" DESC');

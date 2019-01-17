@@ -19,7 +19,6 @@ function nel_render_derp($diagnostic, $domain_id = '')
     $dom->getElementById('error-data')->setContent(''); // TODO: This actually have something
     $session = new \Nelliel\Session($authorization);
     $url_constructor = new \Nelliel\URLConstructor();
-    $base_domain = pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
 
     if ($session->inModmode($domain->id()))
     {
@@ -29,7 +28,7 @@ function nel_render_derp($diagnostic, $domain_id = '')
         }
         else
         {
-            $return_link = $url_constructor->dynamic(PHP_SELF,
+            $return_link = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'render', 'action' => 'view-index', 'index' => '0', 'board_id' => $domain->id(),
                         'modmode' => 'true']);
         }
@@ -39,12 +38,12 @@ function nel_render_derp($diagnostic, $domain_id = '')
         if ($domain->id() === '')
         {
             $return_link = $dom->getElementById('return-link')->extSetAttribute('href',
-                    $base_domain . $domain->setting('home_page'));
+                    BASE_WEB_PATH . $domain->setting('home_page'));
         }
         else
         {
             $return_link = $dom->getElementById('return-link')->extSetAttribute('href',
-                    $base_domain . '/' . $domain->reference('board_directory') . '/');
+                    BASE_WEB_PATH . '/' . $domain->reference('board_directory') . '/');
         }
     }
 

@@ -64,7 +64,7 @@ class AdminTemplates extends AdminHandler
 
         $template_id = $_GET['template-id'];
         $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
-        $template_inis = $ini_parser->parseDirectories(TEMPLATE_FILE_PATH, 'template_info.ini');
+        $template_inis = $ini_parser->parseDirectories(TEMPLATES_FILE_PATH, 'template_info.ini');
 
         foreach ($template_inis as $ini)
         {

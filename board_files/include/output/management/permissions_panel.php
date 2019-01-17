@@ -21,7 +21,7 @@ function nel_render_permissions_panel($user, \Nelliel\Domain $domain)
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/permissions_panel.html');
     $permissions = $database->executeFetchAll('SELECT * FROM "' . PERMISSIONS_TABLE . '" ORDER BY "entry" ASC',
             PDO::FETCH_ASSOC);
-    $form_action = $url_constructor->dynamic(PHP_SELF, ['module' => 'permissions', 'action' => 'add']);
+    $form_action = $url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'permissions', 'action' => 'add']);
     $dom->getElementById('add-permission-form')->extSetAttribute('action', $form_action);
 
     $permission_list = $dom->getElementById('permission-list');
@@ -36,7 +36,7 @@ function nel_render_permissions_panel($user, \Nelliel\Domain $domain)
         $permission_row->extSetAttribute('class', $bgclass);
         $permission_row_nodes['permission']->setContent($permission['permission']);
         $permission_row_nodes['description']->setContent($permission['description']);
-        $remove_link = $url_constructor->dynamic(PHP_SELF,
+        $remove_link = $url_constructor->dynamic(MAIN_SCRIPT,
                 ['module' => 'permissions', 'action' => 'remove', 'permission' => $permission['permission']]);
         $permission_row_nodes['permission-remove-link']->extSetAttribute('href', $remove_link);
     }

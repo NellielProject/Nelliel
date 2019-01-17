@@ -34,13 +34,13 @@ function nel_render_users_panel_main($user, \Nelliel\Domain $domain)
         $user_row_nodes['display-name']->setContent($user_info['display_name']);
         $user_row_nodes['active']->setContent($user_info['active']);
         $user_row_nodes['user-edit-link']->extSetAttribute('href',
-                PHP_SELF . '?module=users&action=edit&user-id=' . $user_info['user_id']);
+                MAIN_SCRIPT . '?module=users&action=edit&user-id=' . $user_info['user_id']);
         $user_row_nodes['user-remove-link']->extSetAttribute('href',
-                PHP_SELF . '?module=users&action=remove&user-id=' . $user_info['user_id']);
+                MAIN_SCRIPT . '?module=users&action=remove&user-id=' . $user_info['user_id']);
     }
 
     $user_info_table_nodes['user-info-row']->remove();
-    $dom->getElementById('new-user-link')->extSetAttribute('href', PHP_SELF . '?module=users&action=new');
+    $dom->getElementById('new-user-link')->extSetAttribute('href', MAIN_SCRIPT . '?module=users&action=new');
 
     $translator->translateDom($dom);
     $domain->renderInstance()->appendHTMLFromDOM($dom);
@@ -67,7 +67,7 @@ function nel_render_users_panel_edit($user, \Nelliel\Domain $domain, $user_id)
 
     if (is_null($user_id))
     {
-        $dom->getElementById('user-edit-form')->extSetAttribute('action', PHP_SELF . '?module=users&action=add');
+        $dom->getElementById('user-edit-form')->extSetAttribute('action', MAIN_SCRIPT . '?module=users&action=add');
     }
     else
     {
@@ -75,7 +75,7 @@ function nel_render_users_panel_edit($user, \Nelliel\Domain $domain, $user_id)
         $dom->getElementById('user-id-field')->extSetAttribute('value', $edit_user->auth_data['user_id']);
         $dom->getElementById('display_name')->extSetAttribute('value', $edit_user->auth_data['display_name']);
         $dom->getElementById('user-edit-form')->extSetAttribute('action',
-                PHP_SELF . '?module=users&action=update&user-id=' . $user_id);
+                MAIN_SCRIPT . '?module=users&action=update&user-id=' . $user_id);
 
         if($edit_user->active())
         {

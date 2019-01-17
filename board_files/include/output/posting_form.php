@@ -18,7 +18,7 @@ function nel_render_posting_form(\Nelliel\Domain $domain, $response_to, $dotdot 
     $url_constructor = new \Nelliel\URLConstructor();
     $posting_form = $dom->getElementById('posting-form');
     $posting_form->extSetAttribute('action',
-            $dotdot . PHP_SELF . '?module=threads&action=new-post&board_id=' . $domain->id());
+            $dotdot . MAIN_SCRIPT . '?module=threads&action=new-post&board_id=' . $domain->id());
     $posting_form_input = $dom->getElementById('posting-form-input');
     $posting_form_nodes = $posting_form_input->getElementsByAttributeName('data-parse-id', true);
 
@@ -26,13 +26,13 @@ function nel_render_posting_form(\Nelliel\Domain $domain, $response_to, $dotdot 
     {
         if ($session->inModmode($domain->id()) && !$domain->renderActive())
         {
-            $return_url = $url_constructor->dynamic(PHP_SELF,
+            $return_url = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'render', 'action' => 'view-index', 'index' => '0', 'board_id' => $domain->id(),
                         'modmode' => 'true']);
         }
         else
         {
-            $return_url = $dotdot . $domain->reference('board_directory') . '/' . PHP_SELF2 . PHP_EXT;
+            $return_url = $dotdot . $domain->reference('board_directory') . '/' . MAIN_INDEX . PAGE_EXT;
         }
 
         $dom->getElementById('return-url')->extSetAttribute('href', $return_url);
@@ -124,7 +124,7 @@ function nel_render_posting_form(\Nelliel\Domain $domain, $response_to, $dotdot 
     }
     else
     {
-        $posting_form_nodes['captcha-image']->extSetAttribute('src', $dotdot . PHP_SELF . '?get-captcha');
+        $posting_form_nodes['captcha-image']->extSetAttribute('src', $dotdot . MAIN_SCRIPT . '?get-captcha');
     }
 
     if (!$domain->setting('use_recaptcha'))

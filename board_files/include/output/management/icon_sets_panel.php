@@ -50,11 +50,11 @@ function nel_render_icon_sets_panel($user, \Nelliel\Domain $domain)
         }
         else
         {
-            $default_link = $url_constructor->dynamic(PHP_SELF,
+            $default_link = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'icon-sets', 'action' => 'make-default', 'icon-set-id' => $icon_set['id'],
                         'set-type' => $icon_set_info['set_type']]);
             $icon_set_row_nodes['default-link']->extSetAttribute('href', $default_link);
-            $remove_link = $url_constructor->dynamic(PHP_SELF,
+            $remove_link = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'icon-sets', 'action' => 'remove', 'icon-set-id' => $icon_set['id'],
                         'set-type' => $icon_set_info['set_type']]);
             $icon_set_row_nodes['remove-link']->extSetAttribute('href', $remove_link);
@@ -86,7 +86,7 @@ function nel_render_icon_sets_panel($user, \Nelliel\Domain $domain)
         }
         else
         {
-            $install_link = $url_constructor->dynamic(PHP_SELF,
+            $install_link = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'icon-sets', 'action' => 'add', 'icon-set-id' => $icon_set['id'],
                         'set-type' => $icon_set['set_type']]);
             $icon_set_row_nodes['install-link']->extSetAttribute('href', $install_link);
