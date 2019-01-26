@@ -46,6 +46,11 @@ class RenderCore
 
     public function endRenderTimer($render_set = 'default')
     {
+        if(!isset($this->render_sets[$render_set]['start_time']))
+        {
+            return 0;
+        }
+
         $this->render_sets[$render_set]['end_time'] = microtime(true);
         return $this->render_sets[$render_set]['end_time'] - $this->render_sets[$render_set]['start_time'];
     }

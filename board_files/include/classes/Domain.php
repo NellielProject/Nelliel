@@ -19,6 +19,7 @@ class Domain
     private $render_instance;
     private $render_active;
     private $file_filters;
+    private $template_path;
 
     public function __construct(string $domain_id, CacheHandler $cache_handler, $database)
     {
@@ -215,8 +216,8 @@ class Domain
         {
             $this->render_instance = $new_instance;
             $front_end_data = new \Nelliel\FrontEndData($this->database);
-            $template_path = TEMPLATES_FILE_PATH . $front_end_data->template($this->setting('template_id'))['directory'];
-            $this->render_instance->getTemplateInstance()->setTemplatePath($template_path);
+            $this->templatePath(TEMPLATES_FILE_PATH . $front_end_data->template($this->setting('template_id'))['directory']);
+            $this->render_instance->getTemplateInstance()->setTemplatePath($this->template_path);
         }
 
         return $this->render_instance;
@@ -251,5 +252,15 @@ class Domain
         }
 
         return $this->file_filters;
+    }
+
+    public function templatePath($new_path = null)
+    {
+        if(!is_null($new_path))
+        {
+            $this->template_path = $new_path;
+        }
+
+        return $this->template_path;
     }
 }
