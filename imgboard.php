@@ -10,12 +10,23 @@ define('LIBRARY_PATH', FILES_PATH . 'libraries/'); // Libraries path
 require_once INCLUDE_PATH . 'autoload.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
+
+$gettext = new \SmallPHPGettext\SmallPHPGettext();
+$gettext->registerFunctions();
+$language = new \Nelliel\Language\Language($gettext);
+$language->loadLanguage(LOCALE_FILE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po');
+unset($gettext);
+unset($language);
+
+require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'accessors.php';
 
-nel_plugins()->loadPlugins();
+$plugins_api = new \Nelliel\API\Plugin\PluginAPI();
+$plugins_api->loadPlugins();
+unset($plugins_api);
 
-// A demo point. Does nothing.
+// Example plugin hooks
 nel_plugins()->processHook('nel-plugin-example', array(5));
 $out = nel_plugins()->processHook('nel-plugin-example-return', array('string'), 5);
 unset($out);
@@ -27,14 +38,6 @@ if(isset($_GET['get-captcha']))
 {
     nel_get_captcha();
 }
-
-require_once INCLUDE_PATH . 'output/header.php';
-require_once INCLUDE_PATH . 'output/footer.php';
-require_once INCLUDE_PATH . 'derp.php';
-
-$language = new \Nelliel\Language\Language(new \Nelliel\Auth\Authorization(nel_database()));
-$language->loadLanguage(LOCALE_FILE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po');
-unset($language);
 
 require_once INCLUDE_PATH . 'crypt.php';
 nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
@@ -53,12 +56,13 @@ if(!$setup->checkInstallDone())
 
 unset ($setup);
 
-require_once CONFIG_FILE_PATH . 'generated.php';
-
 // IT'S GO TIME!
 define('SETUP_GOOD', true);
 ignore_user_abort(true);
 
+require_once CONFIG_FILE_PATH . 'generated.php';
+require_once INCLUDE_PATH . 'output/header.php';
+require_once INCLUDE_PATH . 'output/footer.php';
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 
 nel_central_dispatch();

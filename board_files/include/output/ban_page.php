@@ -6,8 +6,6 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_ban_page(\Nelliel\Domain $domain, $ban_info)
 {
-    require_once INCLUDE_PATH . 'output/header.php';
-    require_once INCLUDE_PATH . 'output/footer.php';
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance(new \Nelliel\RenderCore());
     $url_constructor = new \Nelliel\URLConstructor();

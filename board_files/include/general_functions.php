@@ -107,13 +107,6 @@ function nel_cast_to_datatype($value, $datatype)
     }
 }
 
-function nel_setup_stuff_done($status = null)
-{
-    static $stuff_done = false;
-    $stuff_done = (is_bool($status)) ? $status : $stuff_done;
-    return $stuff_done;
-}
-
 function nel_true_empty($variable)
 {
     return is_null($variable) || $variable === '' || $variable === array();

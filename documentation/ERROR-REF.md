@@ -37,6 +37,8 @@ Error 103: Failed to create database table. (classes/NellielPDO.php)
 Error 104: board_files not writable. (Setup/Setup.php)  
 Error 105: Main directory not writable. (Setup/Setup.php)  
 Error 106: Config directory not writable. (Setup/Setup.php)  
+Error 107: Install not done. (imgboard.php)  
+Error 108: Install already done. (Setup/Setup.php)  
 
 Error 150: IP doesn't match ban. (classes/Snacks.php)  
 Error 151: Already appealed. (classes/Snacks.php)  

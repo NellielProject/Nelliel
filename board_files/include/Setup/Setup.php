@@ -20,7 +20,7 @@ class Setup
     {
         if ($this->checkInstallDone())
         {
-            die(_gettext('Install already completed successfully!'));
+            nel_derp(108, _gettext('Installation has already been completed!'));
         }
 
         $this->checkDBEngine();
@@ -33,8 +33,9 @@ class Setup
         $regen = new \Nelliel\Regen();
         $regen->siteCache(new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database()));
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->writeInternalFile(BASE_PATH . 'install_done.php','');
-        echo _gettext("Install has finished with no apparent problems! When you're ready to continue, follow this link: ");
+        $file_handler->writeInternalFile(BASE_PATH . 'install_done.php', '');
+        echo _gettext(
+                "Install has finished with no apparent problems! When you're ready to continue, follow this link: ");
         echo '<a href="' . BASE_WEB_PATH . '">' . _gettext('Default home page') . '</a>';
         nel_clean_exit();
     }

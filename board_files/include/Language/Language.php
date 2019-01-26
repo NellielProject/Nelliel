@@ -9,17 +9,15 @@ if (!defined('NELLIEL_VERSION'))
 
 class Language
 {
-    private $authorization;
+    private $gettext;
 
-    function __construct($authorization)
+    function __construct($gettext)
     {
-        $this->authorization = $authorization;
+        $this->gettext = $gettext;
     }
 
     public function loadLanguage($file = null)
     {
-        $gettext = new \SmallPHPGettext\SmallPHPGettext();
-
         if (empty($file))
         {
             $file = LOCALE_FILE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po';
@@ -57,15 +55,11 @@ class Language
             }
         }
 
-        $gettext->addDomainFromArray($language_array);
-        $gettext->registerFunctions();
+        $this->gettext->addDomainFromArray($language_array);
     }
 
-    public function extractLanguageStrings($file)
+    public function extractLanguageStrings($user, $file)
     {
-        $session = new \Nelliel\Session($this->authorization);
-        $user = $session->sessionUser();
-
         if (!$user->boardPerm('', 'perm_extract_gettext'))
         {
             nel_derp(390, _gettext('You are not allowed to extract the gettext strings.'));
