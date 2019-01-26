@@ -10,7 +10,6 @@ define('LIBRARY_PATH', FILES_PATH . 'libraries/'); // Libraries path
 require_once INCLUDE_PATH . 'autoload.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
-require_once LIBRARY_PATH . 'random_compat/lib/random.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'accessors.php';
 
@@ -64,4 +63,3 @@ require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 
 nel_central_dispatch();
 nel_clean_exit();
-
