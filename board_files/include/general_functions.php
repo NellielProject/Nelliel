@@ -6,6 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_delay = 2)
 {
+    $site_domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database());
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $authorization->saveUsers();
     $authorization->saveRoles();
@@ -15,11 +16,12 @@ function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_del
     {
         if (is_null($redirect_board))
         {
-            nel_redirect(nel_parameters_and_data()->siteSettings('home_page'), $redirect_delay);
+            nel_redirect($site_domain->setting('home_page'), $redirect_delay);
         }
         else
         {
-            $url = nel_parameters_and_data()->boardReferences($redirect_board, 'board_directory') . '/' . MAIN_INDEX .
+            $domain = new \Nelliel\Domain($redirect_board, new \Nelliel\CacheHandler(), nel_database());
+            $url = $domain->reference('board_directory') . '/' . MAIN_INDEX .
                     PAGE_EXT;
             nel_redirect($url, $redirect_delay);
         }

@@ -158,7 +158,8 @@ class Setup
     {
         $database = nel_database();
         $sql_helpers = new SQLHelpers($database);
-        $board_references = nel_parameters_and_data()->boardReferences($board_id);
+        $domain = new \Nelliel\Domain($board_id, new \Nelliel\CacheHandler(), nel_database());
+        $references = $domain->reference();
         $threads_table = new TableThreads($database, $sql_helpers);
         $threads_table->tableName($board_references['threads_table']);
         $threads_table->createTable();
@@ -183,7 +184,8 @@ class Setup
     public function createBoardDirectories($board_id)
     {
         $file_handler = new \Nelliel\FileHandler();
-        $references = nel_parameters_and_data()->boardReferences($board_id);
+        $domain = new \Nelliel\Domain($board_id, new \Nelliel\CacheHandler(), nel_database());
+        $references = $domain->reference();
         $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM, true);
         $file_handler->createDirectory($references['thumb_path'], DIRECTORY_PERM, true);
         $file_handler->createDirectory($references['page_path'], DIRECTORY_PERM, true);

@@ -116,7 +116,7 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
 
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
-    $a_elements->item(1)->extSetAttribute('href', nel_parameters_and_data()->siteSettings('home_page'));
+    $a_elements->item(1)->extSetAttribute('href', $site_domain->setting('home_page'));
 
     if ($session->isActive() && !$domain->renderActive())
     {
@@ -192,7 +192,7 @@ function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $ext
     $title_element->setContent('Nelliel Imageboard');
     $top_admin_span = $dom->getElementById('top-admin-span');
     $a_elements = $top_admin_span->getElementsByTagName('a');
-    $a_elements->item(1)->extSetAttribute('href', nel_parameters_and_data()->siteSettings('home_page'));
+    $a_elements->item(1)->extSetAttribute('href', $site_domain->setting('home_page'));
 
     if ($session->isActive())
     {

@@ -112,6 +112,7 @@ class PostData
 
     public function tripcodes($post)
     {
+        $site_domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database());
         $post->content_data['poster_name'] = preg_replace("/#+$/", "", $post->content_data['poster_name']);
         preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post->content_data['poster_name'], $name_pieces);
         $post->content_data['poster_name'] = $name_pieces[1];
@@ -131,7 +132,7 @@ class PostData
         if ($name_pieces[3] !== '' && $this->domain->setting('allow_tripkeys'))
         {
             $trip = $name_pieces[3];
-            $trip = hash(nel_parameters_and_data()->siteSettings('secure_tripcode_algorithm'), $trip . TRIPCODE_PEPPER);
+            $trip = hash($site_domain->setting('secure_tripcode_algorithm'), $trip . TRIPCODE_PEPPER);
             $trip = base64_encode(pack("H*", $trip));
             $post->content_data['secure_tripcode'] = substr($trip, 2, 10);
         }

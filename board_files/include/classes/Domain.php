@@ -18,6 +18,7 @@ class Domain
     private $database;
     private $render_instance;
     private $render_active;
+    private $file_filters;
 
     public function __construct(string $domain_id, CacheHandler $cache_handler, $database)
     {
@@ -50,7 +51,7 @@ class Domain
             return $this->domain_settings;
         }
 
-        if(!isset($this->domain_settings[$setting]))
+        if (!isset($this->domain_settings[$setting]))
         {
             return null;
         }
@@ -62,36 +63,14 @@ class Domain
     {
         if (empty($this->domain_references))
         {
-            $prepared = $this->database->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
-            $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_ASSOC);
-            $new_reference = array();
-            $board_path = BASE_PATH . $board_data['board_directory'] . '/';
-            $new_reference['board_directory'] = $board_data['board_directory'];
-            $new_reference['db_prefix'] = $board_data['db_prefix'];
-            $new_reference['locked'] = (bool) $board_data['locked'];
-            $new_reference['src_dir'] = 'src';
-            $new_reference['thumb_dir'] = 'thumb';
-            $new_reference['page_dir'] = 'threads';
-            $new_reference['archive_dir'] = 'archive';
-            $new_reference['board_path'] = $board_path;
-            $new_reference['src_path'] = $board_path . $new_reference['src_dir'] . '/';
-            $new_reference['thumb_path'] = $board_path . $new_reference['thumb_dir'] . '/';
-            $new_reference['page_path'] = $board_path . $new_reference['page_dir'] . '/';
-            $new_reference['archive_path'] = $board_path . $new_reference['archive_dir'] . '/';
-            $new_reference['archive_src_path'] = $board_path . $new_reference['archive_dir'] . '/' .
-                    $new_reference['src_dir'] . '/';
-            $new_reference['archive_thumb_path'] = $board_path . $new_reference['archive_dir'] . '/' .
-                    $new_reference['thumb_dir'] . '/';
-            $new_reference['archive_page_path'] = $board_path . $new_reference['archive_dir'] . '/' .
-                    $new_reference['page_dir'] . '/';
-            $new_reference['posts_table'] = $new_reference['db_prefix'] . '_posts';
-            $new_reference['threads_table'] = $new_reference['db_prefix'] . '_threads';
-            $new_reference['content_table'] = $new_reference['db_prefix'] . '_content';
-            $new_reference['archive_posts_table'] = $new_reference['db_prefix'] . '_archive_posts';
-            $new_reference['archive_threads_table'] = $new_reference['db_prefix'] . '_archive_threads';
-            $new_reference['archive_content_table'] = $new_reference['db_prefix'] . '_archive_content';
-            $new_reference['config_table'] = $new_reference['db_prefix'] . '_config';
-            $this->domain_references = $new_reference;
+            if ($this->domain_id === '')
+            {
+                $this->loadSiteReferences();
+            }
+            else
+            {
+                $this->loadBoardReferences();
+            }
         }
 
         if (is_null($reference))
@@ -100,6 +79,46 @@ class Domain
         }
 
         return $this->domain_references[$reference];
+    }
+
+    private function loadSiteReferences()
+    {
+        $new_reference = array();
+        $this->domain_references = $new_reference;
+    }
+
+    private function loadBoardReferences()
+    {
+        $prepared = $this->database->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
+        $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_ASSOC);
+        $new_reference = array();
+        $board_path = BASE_PATH . $board_data['board_directory'] . '/';
+        $new_reference['board_directory'] = $board_data['board_directory'];
+        $new_reference['db_prefix'] = $board_data['db_prefix'];
+        $new_reference['locked'] = (bool) $board_data['locked'];
+        $new_reference['src_dir'] = 'src';
+        $new_reference['thumb_dir'] = 'thumb';
+        $new_reference['page_dir'] = 'threads';
+        $new_reference['archive_dir'] = 'archive';
+        $new_reference['board_path'] = $board_path;
+        $new_reference['src_path'] = $board_path . $new_reference['src_dir'] . '/';
+        $new_reference['thumb_path'] = $board_path . $new_reference['thumb_dir'] . '/';
+        $new_reference['page_path'] = $board_path . $new_reference['page_dir'] . '/';
+        $new_reference['archive_path'] = $board_path . $new_reference['archive_dir'] . '/';
+        $new_reference['archive_src_path'] = $board_path . $new_reference['archive_dir'] . '/' .
+                $new_reference['src_dir'] . '/';
+        $new_reference['archive_thumb_path'] = $board_path . $new_reference['archive_dir'] . '/' .
+                $new_reference['thumb_dir'] . '/';
+        $new_reference['archive_page_path'] = $board_path . $new_reference['archive_dir'] . '/' .
+                $new_reference['page_dir'] . '/';
+        $new_reference['posts_table'] = $new_reference['db_prefix'] . '_posts';
+        $new_reference['threads_table'] = $new_reference['db_prefix'] . '_threads';
+        $new_reference['content_table'] = $new_reference['db_prefix'] . '_content';
+        $new_reference['archive_posts_table'] = $new_reference['db_prefix'] . '_archive_posts';
+        $new_reference['archive_threads_table'] = $new_reference['db_prefix'] . '_archive_threads';
+        $new_reference['archive_content_table'] = $new_reference['db_prefix'] . '_archive_content';
+        $new_reference['config_table'] = $new_reference['db_prefix'] . '_config';
+        $this->domain_references = $new_reference;
     }
 
     private function loadBoardSettings()
@@ -205,11 +224,32 @@ class Domain
 
     public function renderActive($status = null)
     {
-        if(!is_null($status))
+        if (!is_null($status))
         {
             $this->render_active = $status;
         }
 
         return $this->render_active;
+    }
+
+    public function fileFilters()
+    {
+        if (empty($this->file_filters))
+        {
+            $loaded = false;
+
+            if (!$loaded)
+            {
+                $filters = $this->database->executeFetchAll(
+                        'SELECT "hash_type", "file_hash" FROM "nelliel_file_filters"', PDO::FETCH_ASSOC);
+
+                foreach ($filters as $filter)
+                {
+                    $this->file_filters[$filter['hash_type']][] = $filter['file_hash'];
+                }
+            }
+        }
+
+        return $this->file_filters;
     }
 }

@@ -13,7 +13,6 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
-    $site_settings = nel_parameters_and_data()->siteSettings();
     $file_handler = new \Nelliel\FileHandler();
     $dotdot = ($write) ? '../../../' : '';
     $domain->renderInstance(new \Nelliel\RenderCore());

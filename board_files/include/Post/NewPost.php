@@ -22,6 +22,7 @@ class NewPost
 
     public function processPost()
     {
+        $site_domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), $this->database);
         $error_data = ['board_id' => $this->domain->id()];
 
         if ($this->domain->setting('use_captcha') || $this->domain->setting('use_recaptcha'))
@@ -107,7 +108,7 @@ class NewPost
         {
             $cpass = $post->content_data['post_password'];
             $post->content_data['post_password'] = nel_generate_salted_hash(
-                    nel_parameters_and_data()->siteSettings('post_password_algorithm'),
+                    $site_domain->setting('post_password_algorithm'),
                     $post->content_data['post_password']);
         }
         else

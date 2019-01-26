@@ -77,7 +77,9 @@ function nel_password_verify($password, $hash)
 
 function nel_password_needs_rehash($hash, $algorithm, $options = array())
 {
-    if (!nel_parameters_and_data()->siteSettings('do_password_rehash'))
+    $site_domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database());
+
+    if (!$site_domain->setting('do_password_rehash'))
     {
         return false;
     }
