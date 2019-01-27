@@ -14,7 +14,7 @@ class ContentID
     public $order_id = 0;
     protected $id_string = 'cid_0_0_0';
 
-    function __construct($id_string = 'cid_0_0_0')
+    function __construct(string $id_string = 'cid_0_0_0')
     {
         $this->id_string = $id_string;
         $id_array = self::parseIDString($id_string);

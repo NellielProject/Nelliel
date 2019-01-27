@@ -16,14 +16,14 @@ class Regen
     {
     }
 
-    private function getTemporaryDomainBoard($domain_id)
+    private function getTemporaryDomainBoard(string $domain_id)
     {
-        $domain = new \Nelliel\DomainBoard($domain_id, new \Nelliel\CacheHandler(), nel_database());
+        $domain = new DomainBoard($domain_id, new CacheHandler(), nel_database());
         $domain->renderInstance(new RenderCore());
         return $domain;
     }
 
-    public function threads(Domain $domain, $write, $ids)
+    public function threads(Domain $domain, bool $write, array $ids)
     {
         require_once INCLUDE_PATH . 'output/thread_generation.php';
         $threads = count($ids);

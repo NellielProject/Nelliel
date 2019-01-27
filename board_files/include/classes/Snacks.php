@@ -39,7 +39,7 @@ class Snacks
 
     public function fileHashIsBanned($file_hash, $hash_type)
     {
-        $site_domain = new \Nelliel\DomainSite(new CacheHandler(), $this->database());
+        $site_domain = new DomainSite(new CacheHandler(), $this->database());
         $banned_hashes = $Site_domain->fileFilters();
 
         if (!isset($banned_hashes[$hash_type]))

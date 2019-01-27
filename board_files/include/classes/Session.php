@@ -178,7 +178,7 @@ class Session
         return self::$modmode;
     }
 
-    public function inModmode($board_id = '')
+    public function inModmode(string $board_id = '')
     {
         if (!$this->isActive())
         {

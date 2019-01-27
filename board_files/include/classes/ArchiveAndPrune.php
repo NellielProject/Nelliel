@@ -17,7 +17,7 @@ class ArchiveAndPrune
     private $end_buffer;
     private $domain;
 
-    function __construct($database, $domain, $file_handler)
+    function __construct($database, Domain $domain, $file_handler)
     {
         $this->database = $database;
         $this->domain = $domain;

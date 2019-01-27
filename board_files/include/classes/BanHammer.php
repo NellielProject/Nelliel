@@ -138,7 +138,7 @@ class BanHammer
         $this->database->executePrepared($prepared);
     }
 
-    public function removeBan($domain, $ban_id, bool $snacks = false)
+    public function removeBan(Domain $domain, $ban_id, bool $snacks = false)
     {
         $session = new \Nelliel\Session($authorization);
         $user = $session->sessionUser();

@@ -19,7 +19,7 @@ class FileTypes
 
     function __construct($database)
     {
-        $this->cache_handler = new \Nelliel\CacheHandler();
+        $this->cache_handler = new CacheHandler();
         $this->database = $database;
     }
 
@@ -62,7 +62,7 @@ class FileTypes
         self::$filetype_data = $filetypes;
     }
 
-    private function loadSettingsFromDatabase($board_id, bool $ignore_cache = false)
+    private function loadSettingsFromDatabase(string $board_id, bool $ignore_cache = false)
     {
         if(!$ignore_cache)
         {
@@ -119,7 +119,7 @@ class FileTypes
         return self::$filetype_data[$extension];
     }
 
-    public function settings($board_id, string $setting = null, bool $cache_regen = false)
+    public function settings(string $board_id, string $setting = null, bool $cache_regen = false)
     {
         if ($board_id === '' || is_null($board_id))
         {
@@ -139,7 +139,7 @@ class FileTypes
         return self::$filetype_settings[$board_id][$setting];
     }
 
-    private function settingsLoaded($board_id, bool $load_if_not = false, bool $ignore_cache = false)
+    private function settingsLoaded(string $board_id, bool $load_if_not = false, bool $ignore_cache = false)
     {
         $result = empty(self::$filetype_settings) && empty(self::$filetype_settings[$board_id]);
 
@@ -164,7 +164,7 @@ class FileTypes
         return $result;
     }
 
-    public function extensionIsEnabled($board_id, string $extension)
+    public function extensionIsEnabled(string $board_id, string $extension)
     {
         $extension_data = $this->extensionData($extension);
 
@@ -178,7 +178,7 @@ class FileTypes
         return $this->typeIsEnabled($board_id, $type) && $this->formatIsEnabled($board_id, $type, $format);
     }
 
-    public function typeIsEnabled($board_id, $type)
+    public function typeIsEnabled(string $board_id, string $type)
     {
         if (!$this->settingsLoaded($board_id, true))
         {
@@ -189,7 +189,7 @@ class FileTypes
                 self::$filetype_settings[$board_id][$type][$type];
     }
 
-    public function formatIsEnabled($board_id, $type, $format)
+    public function formatIsEnabled(string $board_id, string $type, string $format)
     {
         return isset(self::$filetype_settings[$board_id][$type][$format]) &&
                 self::$filetype_settings[$board_id][$type][$format];
@@ -206,7 +206,7 @@ class FileTypes
                 preg_match('#' . $extension_data['id_regex'] . '#', $file_test_end);
     }
 
-    public function generateSettingsCache($board_id)
+    public function generateSettingsCache(string $board_id)
     {
         if (USE_INTERNAL_CACHE)
         {

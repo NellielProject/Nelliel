@@ -66,7 +66,7 @@ class ThreadHandler
             $archive->updateThreads();
         }
 
-        $regen = new \Nelliel\Regen();
+        $regen = new Regen();
         $regen->threads($this->domain, true, $updates);
         $regen->index($this->domain);
     }

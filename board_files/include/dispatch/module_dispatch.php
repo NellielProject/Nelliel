@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use \Nelliel\Domain;
 
-function nel_module_dispatch($inputs, Domain $domain)
+function nel_module_dispatch(array $inputs, Domain $domain)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $inputs = nel_plugins()->processHook('nel-inb4-module-dispatch', [$domain], $inputs);
