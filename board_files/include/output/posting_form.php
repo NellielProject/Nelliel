@@ -12,7 +12,7 @@ function nel_render_posting_form(\Nelliel\Domain $domain, $response_to, $dotdot 
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
     $dom = $domain->renderInstance()->newDOMDocument();
-    $site_domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database());
+    $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database());
     $domain->renderInstance()->loadTemplateFromFile($dom, 'posting_form.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $url_constructor = new \Nelliel\URLConstructor();

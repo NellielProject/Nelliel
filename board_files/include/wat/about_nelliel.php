@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 //
 function nel_about_nelliel_screen()
 {
-    $domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database());
+    $domain = new \Nelliel\DomainBoard('', new \Nelliel\CacheHandler(), nel_database());
     $domain->renderInstance(new \Nelliel\RenderCore());
     $domain->renderInstance()->startRenderTimer();
     nel_render_general_header($domain);

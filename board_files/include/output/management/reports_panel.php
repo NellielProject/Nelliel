@@ -41,7 +41,7 @@ function nel_render_reports_panel($user, \Nelliel\Domain $domain)
     {
         if (!isset($domains[$report_info['board_id']]))
         {
-            $domains[$report_info['board_id']] = new \Nelliel\Domain($report_info['board_id'],
+            $domains[$report_info['board_id']] = new \Nelliel\DomainBoard($report_info['board_id'],
                     new \Nelliel\CacheHandler(), $database);
         }
 
@@ -51,7 +51,7 @@ function nel_render_reports_panel($user, \Nelliel\Domain $domain)
         $temp_report_info_row->extSetAttribute('class', $bgclass);
         $report_nodes = $temp_report_info_row->getElementsByAttributeName('data-parse-id', true);
         $content_id = new \Nelliel\ContentID($report_info['content_id']);
-        $base_domain = BASE_DOMAIN . pathinfo($_SERVER['MAIN_SCRIPT'], PATHINFO_DIRNAME);
+        $base_domain = BASE_DOMAIN . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
         $board_web_path = '//' . $base_domain . '/' . rawurlencode($current_domain->reference('board_directory')) . '/';
         $base_path = '//' . $base_domain . '/' . MAIN_SCRIPT;
         $content_link = '';

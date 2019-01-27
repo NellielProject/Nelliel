@@ -25,7 +25,7 @@ function nel_render_manage_boards_panel(\Nelliel\Domain $domain, $user)
     $bgclass = 'row1';
     $board_info_table = $dom->getElementById('board-info-table');
     $board_info_row = $dom->getElementById('board-info-row');
-    $base_domain = BASE_DOMAIN . pathinfo($_SERVER['MAIN_SCRIPT'], PATHINFO_DIRNAME);
+    $base_domain = BASE_DOMAIN . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
     $base_path = '//' . $base_domain . '/' . MAIN_SCRIPT;
 
     foreach ($board_data as $board_info)

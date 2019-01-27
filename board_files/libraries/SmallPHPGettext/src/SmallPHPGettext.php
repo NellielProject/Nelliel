@@ -77,18 +77,18 @@ class SmallPHPGettext
         $this->addDomainFromArray($domain, $category);
     }
 
-    public function getDomain($domain, $category = null)
+    public function getDomainBoard($domain, $category = null)
     {
         $category = (!empty($category)) ? $category : $this->default_category;
         return (isset($this->categories[$category][$domain])) ? $this->categories[$category][$domain] : null;
     }
 
-    public function getDefaultDomain()
+    public function getDefaultDomainBoard()
     {
         return $this->default_domain;
     }
 
-    public function setDefaultDomain($domain)
+    public function setDefaultDomainBoard($domain)
     {
         $this->default_domain = $domain;
     }

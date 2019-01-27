@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_delay = 2)
 {
-    $site_domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), nel_database());
+    $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database());
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $authorization->saveUsers();
     $authorization->saveRoles();
@@ -20,7 +20,7 @@ function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_del
         }
         else
         {
-            $domain = new \Nelliel\Domain($redirect_board, new \Nelliel\CacheHandler(), nel_database());
+            $domain = new \Nelliel\DomainBoard($redirect_board, new \Nelliel\CacheHandler(), nel_database());
             $url = $domain->reference('board_directory') . '/' . MAIN_INDEX .
                     PAGE_EXT;
             nel_redirect($url, $redirect_delay);

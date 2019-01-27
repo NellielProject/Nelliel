@@ -34,7 +34,7 @@ function nel_central_dispatch()
     $inputs['action'] = $_GET['action'] ?? '';
     $inputs['content_id'] = $_GET['content-id'] ?? '';
     $inputs['modmode'] = $_GET['modmode'] ?? false;
-    $domain = new \Nelliel\Domain($inputs['board_id'], new \Nelliel\CacheHandler(), nel_database());
+    $domain = new \Nelliel\DomainBoard($inputs['board_id'], new \Nelliel\CacheHandler(), nel_database());
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
     $snacks->applyBan($domain);
     $snacks->checkHoneypot($domain);

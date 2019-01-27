@@ -124,7 +124,7 @@ class AdminFiletypes extends AdminHandler
 
         foreach ($board_ids as $board_id)
         {
-            $board_domains[] = new \Nelliel\Domain($board_id, new \Nelliel\CacheHandler(), $this->database);
+            $board_domains[] = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), $this->database);
         }
 
         return $board_domains;

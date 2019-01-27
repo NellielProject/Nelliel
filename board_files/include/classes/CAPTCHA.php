@@ -33,7 +33,7 @@ class CAPTCHA
             return false;
         }
 
-        $site_domain = new \Nelliel\Domain('', new \Nelliel\CacheHandler(), $this->database);
+        $site_domain = new DomainSite(new CacheHandler(), $this->database);
         $response = $_POST['g-recaptcha-response'];
         nel_plugins()->processHook('nel-verify-recaptcha', [$reponse]);
         $result = file_get_contents(
