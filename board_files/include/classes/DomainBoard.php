@@ -99,24 +99,4 @@ class DomainBoard extends Domain
                     '$domain_settings = ' . var_export($settings, true) . ';');
         }
     }
-
-    public function fileFilters()
-    {
-        if (empty($this->file_filters))
-        {
-            $loaded = false;
-
-            if (!$loaded)
-            {
-                $filters = $this->database->executeFetchAll(
-                        'SELECT "hash_type", "file_hash" FROM "nelliel_file_filters"', PDO::FETCH_ASSOC);
-                foreach ($filters as $filter)
-                {
-                    $this->file_filters[$filter['hash_type']][] = $filter['file_hash'];
-                }
-            }
-        }
-
-        return $this->file_filters;
-    }
 }
