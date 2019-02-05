@@ -29,6 +29,7 @@ define('CAPTCHA_TABLE', 'nelliel_captcha');
 define('FILE_FILTERS_TABLE', 'nelliel_file_filters');
 define('FILETYPES_TABLE', 'nelliel_filetypes');
 define('LOGIN_ATTEMPTS_TABLE', 'nelliel_login_attempts');
+define('NEWS_TABLE', 'nelliel_news');
 define('PERMISSIONS_TABLE', 'nelliel_permissions');
 define('REPORTS_TABLE', 'nelliel_reports');
 define('ROLE_PERMISSIONS_TABLE', 'nelliel_role_permissions');

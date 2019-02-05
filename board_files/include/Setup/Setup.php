@@ -128,6 +128,8 @@ class Setup
         $filetypes_table->setup();
         $login_attempts_table = new TableLoginAttempts($database, $sql_helpers);
         $login_attempts_table->setup();
+        $news_table = new TableNews($database, $sql_helpers);
+        $news_table->setup();
         $permissions_table = new TablePermissions($database, $sql_helpers);
         $permissions_table->setup();
         $reports_table = new TableReports($database, $sql_helpers);
