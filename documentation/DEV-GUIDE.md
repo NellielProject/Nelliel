@@ -1,8 +1,8 @@
 # Nelliel Development Standards and Guideline
 
-A guide to the development standards of Nelliel. Any contributions to the core codebase must follow these guidelines. Pull requests not adhering to the guidelines must be fixed before acceptance.
+A guide to the development standards of Nelliel. Any contributions to the core codebase or official plugins must follow these guidelines. Pull requests not adhering to the guidelines must be fixed before acceptance.
  
-Developers of mods, plugins or other unofficial contributions are encouraged to follow this guide but it is not mandatory.
+Developers of mods, plugins or other unofficial contributions are not required to follow this guide.
 
 ## Coding Style and Formatting
 Nelliel follows the [PSR-1](http://www.php-fig.org/psr/psr-1/) and [PSR-4](http://www.php-fig.org/psr/psr-4/) standards.
@@ -13,6 +13,7 @@ In addition:
  - 4-space indentation for code; tabs are used for indentation of HTML.
  - Single quotes `' '` should be used for strings when practical.
  - No `?>` closing tags.
+ - Constants should be ALL CAPS.
 
 ## Functions, Classes and Structure
  - Procedural is not evil. OOP is not the Holy Grail. Use what makes sense for a given situation.
@@ -30,7 +31,7 @@ Query requirements:
  - All identifiers should be treated as case sensitive.
  - Non-parameterized string literals must be placed inside single quotes `' '`.
  - SQL keywords should be ALL CAPS.
- - Database NULL is treated as unknown value.
+ - Database NULL should be treated as unknown value.
  
 ## Targets and Version Support
 Any stable core functions and features contributed to Nelliel must be fully functional with the minimum versions listed below in addition to all later versions of the software. These minimum requirements will change over time due to certain circumstances including (but not limited to):
@@ -43,10 +44,10 @@ At present Nelliel has a target version of **PHP 7.0**.
 
 ### Database Support
 Minimum supported RDBMS versions:
- - MySQL 5.6.39
- - MariaDB 10.0.33
- - PostgreSQL 9.4.14
- - SQLite 3.16.0
+ - MySQL 5.6
+ - MariaDB 10.0
+ - PostgreSQL 9.4
+ - SQLite 3.16
 
 ### Browser Support
 These are the minimum browser versions Nelliel must be compatible with:
