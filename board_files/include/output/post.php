@@ -519,7 +519,7 @@ function nel_render_post($domain, $gen_data, $dom)
 
     if (nel_true_empty($post_data['comment']))
     {
-        $contents_nodes['post-comment']->setContent(_gettext('(no comment)'));
+        $contents_nodes['post-comment']->setContent($domain->setting('no_comment_text'));
     }
     else
     {
