@@ -12,6 +12,8 @@ use PDO;
 class DomainSite extends Domain
 {
 
+    private $file_filters;
+
     public function __construct(CacheHandler $cache_handler, $database)
     {
         $this->domain_id = '';

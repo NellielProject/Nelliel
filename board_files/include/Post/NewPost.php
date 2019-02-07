@@ -22,7 +22,7 @@ class NewPost
 
     public function processPost()
     {
-        $site_domain = new \Nelliel\DomainSite('', new \Nelliel\CacheHandler(), $this->database);
+        $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database);
         $error_data = ['board_id' => $this->domain->id()];
 
         if ($this->domain->setting('use_captcha') || $this->domain->setting('use_recaptcha'))
