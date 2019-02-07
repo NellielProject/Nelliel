@@ -24,6 +24,7 @@ class TableFileFilters extends TableHandler
             'file_notes' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
             'board_id' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false]];
         $this->splitColumnInfo();
+        $this->schema_version = 1;
     }
 
     public function setup()

@@ -24,6 +24,7 @@ class TableRoles extends TableHandler
             'role_title' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
             'capcode_text' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false]];
         $this->splitColumnInfo();
+        $this->schema_version = 1;
     }
 
     public function setup()

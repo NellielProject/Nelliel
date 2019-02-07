@@ -23,6 +23,7 @@ class TableUserRoles extends TableHandler
             'role_id' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
             'board' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false]];
         $this->splitColumnInfo();
+        $this->schema_version = 1;
     }
 
     public function setup()

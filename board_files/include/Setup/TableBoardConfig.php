@@ -28,6 +28,7 @@ class TableBoardConfig extends TableHandler
             'select_type' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
             'edit_lock' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false]];
         $this->splitColumnInfo();
+        $this->schema_version = 1;
     }
 
     public function setup()

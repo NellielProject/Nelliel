@@ -24,6 +24,7 @@ class TableVersions extends TableHandler
             'structure_version' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
             'data_version' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false]];
         $this->splitColumnInfo();
+        $this->schema_version = 1;
     }
 
     public function setup()
@@ -58,6 +59,7 @@ class TableVersions extends TableHandler
         $this->insertDefaultRow([FILE_FILTERS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([FILETYPES_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([LOGIN_ATTEMPTS_TABLE, "table", '1', '1']);
+        $this->insertDefaultRow([NEWS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([PERMISSIONS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([REPORTS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([ROLE_PERMISSIONS_TABLE, "table", '1', '1']);

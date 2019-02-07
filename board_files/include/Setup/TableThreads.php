@@ -33,6 +33,7 @@ class TableThreads extends TableHandler
             'locked' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
             'slug' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false]];
         $this->splitColumnInfo();
+        $this->schema_version = 1;
     }
 
     public function setup()

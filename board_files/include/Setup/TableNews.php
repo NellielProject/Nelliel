@@ -24,6 +24,7 @@ class TableNews extends TableHandler
             'headline' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
             'text' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false]];
         $this->splitColumnInfo();
+        $this->schema_version = 1;
     }
 
     public function setup()

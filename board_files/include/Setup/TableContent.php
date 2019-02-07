@@ -48,6 +48,7 @@ class TableContent extends TableHandler
             'exif' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
             'meta' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false]];
         $this->splitColumnInfo();
+        $this->schema_version = 1;
     }
 
     public function setup()

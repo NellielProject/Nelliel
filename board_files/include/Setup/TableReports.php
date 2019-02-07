@@ -24,6 +24,7 @@ class TableReports extends TableHandler
             'reason' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
             'reporter_ip' => ['pdo_type' => PDO::PARAM_LOB, 'auto_inc' => false]];
         $this->splitColumnInfo();
+        $this->schema_version = 1;
     }
 
     public function setup()

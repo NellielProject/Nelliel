@@ -23,6 +23,7 @@ class TableCaptcha extends TableHandler
             'case_sensitive' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
             'time_created' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false]];
         $this->splitColumnInfo();
+        $this->schema_version = 1;
     }
 
     public function setup()

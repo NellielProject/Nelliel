@@ -38,6 +38,7 @@ class TablePosts extends TableHandler
             'mod_post_id' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
             'mod_comment' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false]];
         $this->splitColumnInfo();
+        $this->schema_version = 1;
     }
 
     public function setup()

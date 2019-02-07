@@ -19,6 +19,7 @@ abstract class TableHandler
     protected $pdo_types;
     protected $increment_column;
     protected $other_tables;
+    protected $schema_version;
 
     public abstract function setup();
 
@@ -95,5 +96,10 @@ abstract class TableHandler
             $prepared = $this->database->prepare($insert_query);
             $this->database->executePrepared($prepared);
         }
+    }
+
+    public function schemaVersion()
+    {
+        return $this->schema_version;
     }
 }

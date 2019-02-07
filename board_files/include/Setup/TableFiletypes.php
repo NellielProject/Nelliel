@@ -28,6 +28,7 @@ class TableFiletypes extends TableHandler
             'label' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
             'type_def' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false]];
         $this->splitColumnInfo();
+        $this->schema_version = 1;
     }
 
     public function setup()
