@@ -523,9 +523,21 @@ function nel_render_post($domain, $gen_data, $dom)
     }
     else
     {
+        $line_count = 0;
+        $append_target = $contents_nodes['post-comment'];
+
         foreach ($output_filter->newlinesToArray($post_data['comment']) as $line)
         {
-            $append_target = $contents_nodes['post-comment'];
+            if($gen_data['index_rendering'] && $line_count == $domain->setting('comment_display_lines'))
+            {
+                $hidden_click_span = $new_post_dom->createElement('span', _gettext('This is a long comment. '));
+                $full_comment_link = $new_post_dom->createElement('a', _gettext('Click here for the full text'));
+                $full_comment_link->extSetAttribute('href', $thread_page_web_path . '#t' . $post_content_id->thread_id . 'p' . $post_content_id->post_id, 'none');
+                $hidden_click_span->appendChild($full_comment_link);
+                $append_target->appendChild($hidden_click_span);
+                break;
+            }
+
             $quote_result = $output_filter->postQuote($append_target, $line);
 
             if ($quote_result !== false)
@@ -535,6 +547,7 @@ function nel_render_post($domain, $gen_data, $dom)
 
             $output_filter->postQuoteLink($domain, $append_target, $line);
             $append_target->appendChild($new_post_dom->createElement('br'));
+            ++$line_count;
         }
     }
 
