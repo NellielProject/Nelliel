@@ -2,7 +2,7 @@
 		<table>
 			<tr>
 				<td>
-					<br><b>Basic settings</b>
+					<span class="bold" data-i18n="gettext">General Settings</span>
 				</td>
 			</tr>
 			<tr>
@@ -108,32 +108,6 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="thread_delay_lock" value="0">
-					<input type="checkbox" name="thread_delay_lock" id="thread_delay_lock" value="1">
-					<label for="thread_delay_lock" data-i18n="gettext">Lock</label>
-				</td>
-				<td>
-					<label for="thread_delay" data-i18n="gettext">Delay between new threads (seconds)</label>
-				</td>
-				<td>
-					<input type="text" name="thread_delay" id="thread_delay" size="8" value="">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="hidden" name="reply_delay_lock" value="0">
-					<input type="checkbox" name="reply_delay_lock" id="reply_delay_lock" value="1">
-					<label for="reply_delay_lock" data-i18n="gettext">Lock</label>
-				</td>
-				<td>
-					<label for="reply_delay" data-i18n="gettext">Delay between new posts (seconds)</label>
-				</td>
-				<td>
-					<input type="text" name="reply_delay" id="reply_delay" size="8" value="">
-				</td>
-			</tr>
-			<tr>
-				<td>
 					<input type="hidden" name="abbreviate_thread_lock" value="0">
 					<input type="checkbox" name="abbreviate_thread_lock" id="abbreviate_thread_lock" value="1">
 					<label for="abbreviate_thread_lock" data-i18n="gettext">Lock</label>
@@ -186,27 +160,6 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="old_threads_lock" value="0">
-					<input type="checkbox" name="old_threads_lock" id="old_threads_lock" value="1">
-					<label for="old_threads_lock" data-i18n="gettext">Lock</label>
-				</td>
-				<td>
-					<span data-i18n="gettext" data-i18n="gettext">How to handle old threads:</span>
-				</td>
-			</tr>
-			<tr>
-				<td id="old_threads_blank_lock"></td>
-				<td>
-					<input type="radio" name="old_threads" id="old_threads_ARCHIVE" value="ARCHIVE"> 
-					<label for="old_threads_ARCHIVE" data-i18n="gettext">Archive</label><br>
-					<input type="radio" name="old_threads" id="old_threads_PRUNE" value="PRUNE"> 
-					<label for="old_threads_PRUNE" data-i18n="gettext">Prune</label><br>
-					<input type="radio" name="old_threads" id="old_threads_NOTHING" value="NOTHING"> 
-					<label for="old_threads_NOTHING" data-i18n="gettext">Nothing</label>
-				</td>
-			</tr>
-			<tr>
-				<td>
 					<input type="hidden" name="max_posts_lock" value="0">
 					<input type="checkbox" name="max_posts_lock" id="max_posts_lock" value="1">
 					<label for="max_posts_lock" data-i18n="gettext">Lock</label>
@@ -233,6 +186,65 @@
 			</tr>
 			<tr>
 				<td>
+					<input type="hidden" name="old_threads_lock" value="0">
+					<input type="checkbox" name="old_threads_lock" id="old_threads_lock" value="1">
+					<label for="old_threads_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<span data-i18n="gettext" data-i18n="gettext">How to handle old threads:</span>
+				</td>
+			</tr>
+			<tr>
+				<td id="old_threads_blank_lock"></td>
+				<td>
+					<input type="radio" name="old_threads" id="old_threads_ARCHIVE" value="ARCHIVE"> 
+					<label for="old_threads_ARCHIVE" data-i18n="gettext">Archive</label><br>
+					<input type="radio" name="old_threads" id="old_threads_PRUNE" value="PRUNE"> 
+					<label for="old_threads_PRUNE" data-i18n="gettext">Prune</label><br>
+					<input type="radio" name="old_threads" id="old_threads_NOTHING" value="NOTHING"> 
+					<label for="old_threads_NOTHING" data-i18n="gettext">Nothing</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="template_id_lock" value="0">
+					<input type="checkbox" name="template_id_lock" id="template_id_lock" value="1">
+					<label for="template_id_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<label for="template_id" data-i18n="gettext">ID of template for board to use</label>
+				</td>
+				<td>
+					<input type="text" name="template_id" id="template_id" size="30" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="filetype_icon_set_id_lock" value="0">
+					<input type="checkbox" name="filetype_icon_set_id_lock" id="filetype_icon_set_id_lock" value="1">
+					<label for="filetype_icon_set_id_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<label for="filetype_icon_set_id" data-i18n="gettext">ID of icon set to use with filetypes</label>
+				</td>
+				<td>
+					<input type="text" name="filetype_icon_set_id" id="filetype_icon_set_id" size="30" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="display_render_timer_lock" value="0">
+					<input type="checkbox" name="display_render_timer_lock" id="display_render_timer_lock" value="1">
+					<label for="display_render_timer_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<input type="hidden" name="display_render_timer" value="0">
+					<input type="checkbox" name="display_render_timer" id="display_render_timer" value="1">
+					<label for="display_render_timer" data-i18n="gettext">Display the rendering timer</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
 					<input type="hidden" name="enable_dynamic_pages_lock" value="0">
 					<input type="checkbox" name="enable_dynamic_pages_lock" id="enable_dynamic_pages_lock" value="1">
 					<label for="enable_dynamic_pages_lock" data-i18n="gettext">Lock</label>
@@ -241,6 +253,64 @@
 					<input type="hidden" name="enable_dynamic_pages" value="0">
 					<input type="checkbox" name="enable_dynamic_pages" id="enable_dynamic_pages" value="1">
 					<label for="enable_dynamic_pages" data-i18n="gettext">Allow visitors to use dynamic page rendering</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<hr>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<span class="bold" data-i18n="gettext">Posting Parameters</span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="require_image_start_lock" value="0">
+					<input type="checkbox" name="require_image_start_lock" id="require_image_start_lock" value="1">
+					<label for="require_image_start_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<input type="hidden" name="require_image_start" value="0">
+					<input type="checkbox" name="require_image_start" id="require_image_start" value="1">
+					<label for="require_image_start" data-i18n="gettext">Require image or file to start new thread</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="require_image_always_lock" value="0">
+					<input type="checkbox" name="require_image_always_lock" id="require_image_always_lock" value="1">
+					<label for="require_image_always_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<input type="hidden" name="require_image_always" value="0">
+					<input type="checkbox" name="require_image_always" id="require_image_always" value="1">
+					<label for="require_image_always" data-i18n="gettext">Always require an image or file</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="only_thread_duplicates_lock" value="0">
+					<input type="checkbox" name="only_thread_duplicates_lock" id="only_thread_duplicates_lock" value="1">
+					<label for="only_thread_duplicates_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<input type="hidden" name="only_thread_duplicates" value="0">
+					<input type="checkbox" name="only_thread_duplicates" id="only_thread_duplicates" value="1">
+					<label for="only_thread_duplicates" data-i18n="gettext">Only check for duplicates in current thread when replying</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="only_op_duplicates_lock" value="0">
+					<input type="checkbox" name="only_op_duplicates_lock" id="only_op_duplicates_lock" value="1">
+					<label for="only_op_duplicates_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<input type="hidden" name="only_op_duplicates" value="0">
+					<input type="checkbox" name="only_op_duplicates" id="only_op_duplicates" value="1">
+					<label for="only_op_duplicates" data-i18n="gettext">Only check for duplicates in other op posts when creating new thread</label>
 				</td>
 			</tr>
 			<tr>
@@ -269,15 +339,26 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="tripkey_marker_lock" value="0">
-					<input type="checkbox" name="tripkey_marker_lock" id="tripkey_marker_lock" value="1">
-					<label for="tripkey_marker_lock" data-i18n="gettext">Lock</label>
+					<input type="hidden" name="allow_multifile_lock" value="0">
+					<input type="checkbox" name="allow_multifile_lock" id="allow_multifile_lock" value="1">
+					<label for="allow_multifile_lock" data-i18n="gettext">Lock</label>
 				</td>
 				<td>
-					<label for="tripkey_marker" data-i18n="gettext">Tripcode marker</label>
+					<input type="hidden" name="allow_multifile" value="0">
+					<input type="checkbox" name="allow_multifile" id="allow_multifile" value="1">
+					<label for="allow_multifile" data-i18n="gettext">Allow mutiple files per post</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="allow_op_multifile_lock" value="0">
+					<input type="checkbox" name="allow_op_multifile_lock" id="allow_op_multifile_lock" value="1">
+					<label for="allow_op_multifile_lock" data-i18n="gettext">Lock</label>
 				</td>
 				<td>
-					<input type="text" name="tripkey_marker" id="tripkey_marker" size="8" value="">
+					<input type="hidden" name="allow_op_multifile" value="0">
+					<input type="checkbox" name="allow_op_multifile" id="allow_op_multifile" value="1">
+					<label for="allow_op_multifile" data-i18n="gettext">Allow first post in thread to have multiple files</label>
 				</td>
 			</tr>
 			<tr>
@@ -307,51 +388,41 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="require_image_start_lock" value="0">
-					<input type="checkbox" name="require_image_start_lock" id="require_image_start_lock" value="1">
-					<label for="require_image_start_lock" data-i18n="gettext">Lock</label>
+					<input type="hidden" name="max_post_files_lock" value="0">
+					<input type="checkbox" name="max_post_files_lock" id="max_post_files_lock" value="1">
+					<label for="max_post_files_lock" data-i18n="gettext">Lock</label>
 				</td>
 				<td>
-					<input type="hidden" name="require_image_start" value="0">
-					<input type="checkbox" name="require_image_start" id="require_image_start" value="1">
-					<label for="require_image_start" data-i18n="gettext">Require image or file to start new thread</label>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="hidden" name="require_image_always_lock" value="0">
-					<input type="checkbox" name="require_image_always_lock" id="require_image_always_lock" value="1">
-					<label for="require_image_always_lock" data-i18n="gettext">Lock</label>
+					<label for="max_post_files" data-i18n="gettext">Maximum number of files per post</label>
 				</td>
 				<td>
-					<input type="hidden" name="require_image_always" value="0">
-					<input type="checkbox" name="require_image_always" id="require_image_always" value="1">
-					<label for="require_image_always" data-i18n="gettext">Always require an image or file</label>
+					<input type="text" name="max_post_files" id="max_post_files" size="8" value="">
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="use_honeypot_lock" value="0">
-					<input type="checkbox" name="use_honeypot_lock" id="use_honeypot_lock" value="1">
-					<label for="use_honeypot_lock" data-i18n="gettext">Lock</label>
+					<input type="hidden" name="thread_delay_lock" value="0">
+					<input type="checkbox" name="thread_delay_lock" id="thread_delay_lock" value="1">
+					<label for="thread_delay_lock" data-i18n="gettext">Lock</label>
 				</td>
 				<td>
-					<input type="hidden" name="use_honeypot" value="0">
-					<input type="checkbox" name="use_honeypot" id="use_honeypot" value="1">
-					<label for="use_honeypot" data-i18n="gettext">Use honeypot to block spambots.</label>
+					<label for="thread_delay" data-i18n="gettext">Delay between new threads (seconds)</label>
+				</td>
+				<td>
+					<input type="text" name="thread_delay" id="thread_delay" size="8" value="">
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="indent_marker_lock" value="0">
-					<input type="checkbox" name="indent_marker_lock" id="indent_marker_lock" value="1">
-					<label for="indent_marker_lock" data-i18n="gettext">Lock</label>
+					<input type="hidden" name="reply_delay_lock" value="0">
+					<input type="checkbox" name="reply_delay_lock" id="reply_delay_lock" value="1">
+					<label for="reply_delay_lock" data-i18n="gettext">Lock</label>
 				</td>
 				<td>
-					<label for="indent_marker" data-i18n="gettext">Set the indent marker next to replies</label>
+					<label for="reply_delay" data-i18n="gettext">Delay between new posts (seconds)</label>
 				</td>
 				<td>
-					<input type="text" name="indent_marker" id="indent_marker" size="8" value="">
+					<input type="text" name="reply_delay" id="reply_delay" size="8" value="">
 				</td>
 			</tr>
 			<tr>
@@ -473,6 +544,18 @@
 			</tr>
 			<tr>
 				<td>
+					<input type="hidden" name="use_honeypot_lock" value="0">
+					<input type="checkbox" name="use_honeypot_lock" id="use_honeypot_lock" value="1">
+					<label for="use_honeypot_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<input type="hidden" name="use_honeypot" value="0">
+					<input type="checkbox" name="use_honeypot" id="use_honeypot" value="1">
+					<label for="use_honeypot" data-i18n="gettext">Use honeypot to block spambots.</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
 					<input type="hidden" name="use_captcha_lock" value="0">
 					<input type="checkbox" name="use_captcha_lock" id="use_captcha_lock" value="1">
 					<label for="use_captcha_lock" data-i18n="gettext">Lock</label>
@@ -514,76 +597,12 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="only_thread_duplicates_lock" value="0">
-					<input type="checkbox" name="only_thread_duplicates_lock" id="only_thread_duplicates_lock" value="1">
-					<label for="only_thread_duplicates_lock" data-i18n="gettext">Lock</label>
-				</td>
-				<td>
-					<input type="hidden" name="only_thread_duplicates" value="0">
-					<input type="checkbox" name="only_thread_duplicates" id="only_thread_duplicates" value="1">
-					<label for="only_thread_duplicates" data-i18n="gettext">Only check for duplicates in current thread when replying</label>
+					<hr>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="only_op_duplicates_lock" value="0">
-					<input type="checkbox" name="only_op_duplicates_lock" id="only_op_duplicates_lock" value="1">
-					<label for="only_op_duplicates_lock" data-i18n="gettext">Lock</label>
-				</td>
-				<td>
-					<input type="hidden" name="only_op_duplicates" value="0">
-					<input type="checkbox" name="only_op_duplicates" id="only_op_duplicates" value="1">
-					<label for="only_op_duplicates" data-i18n="gettext">Only check for duplicates in other op posts when creating new thread</label>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="hidden" name="allow_multifile_lock" value="0">
-					<input type="checkbox" name="allow_multifile_lock" id="allow_multifile_lock" value="1">
-					<label for="allow_multifile_lock" data-i18n="gettext">Lock</label>
-				</td>
-				<td>
-					<input type="hidden" name="allow_multifile" value="0">
-					<input type="checkbox" name="allow_multifile" id="allow_multifile" value="1">
-					<label for="allow_multifile" data-i18n="gettext">Allow mutiple files per post</label>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="hidden" name="allow_op_multifile_lock" value="0">
-					<input type="checkbox" name="allow_op_multifile_lock" id="allow_op_multifile_lock" value="1">
-					<label for="allow_op_multifile_lock" data-i18n="gettext">Lock</label>
-				</td>
-				<td>
-					<input type="hidden" name="allow_op_multifile" value="0">
-					<input type="checkbox" name="allow_op_multifile" id="allow_op_multifile" value="1">
-					<label for="allow_op_multifile" data-i18n="gettext">Allow first post in thread to have multiple files</label>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="hidden" name="max_post_files_lock" value="0">
-					<input type="checkbox" name="max_post_files_lock" id="max_post_files_lock" value="1">
-					<label for="max_post_files_lock" data-i18n="gettext">Lock</label>
-				</td>
-				<td>
-					<label for="max_post_files" data-i18n="gettext">Maximum number of files per post</label>
-				</td>
-				<td>
-					<input type="text" name="max_post_files" id="max_post_files" size="8" value="">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="hidden" name="max_files_row_lock" value="0">
-					<input type="checkbox" name="max_files_row_lock" id="max_files_row_lock" value="1">
-					<label for="max_files_row_lock" data-i18n="gettext">Lock</label>
-				</td>
-				<td>
-					<label for="max_files_row" data-i18n="gettext">Number of files to display in each row of post</label>
-				</td>
-				<td>
-					<input type="text" name="max_files_row" id="max_files_row" size="8" value="">
+					<span class="bold" data-i18n="gettext">Content Handling and Rendering</span>
 				</td>
 			</tr>
 			<tr>
@@ -660,19 +679,6 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="jpeg_quality_lock" value="0">
-					<input type="checkbox" name="jpeg_quality_lock" id="jpeg_quality_lock" value="1">
-					<label for="jpeg_quality_lock" data-i18n="gettext">Lock</label>
-				</td>
-				<td>
-					<label for="jpeg_quality" data-i18n="gettext">JPEG thumbnail quality (0 - 100)</label>
-				</td>
-				<td>
-					<input type="text" name="jpeg_quality" id="jpeg_quality" size="8" value="">
-				</td>
-			</tr>
-			<tr>
-				<td>
 					<input type="hidden" name="file_sha256_lock" value="0">
 					<input type="checkbox" name="file_sha256_lock" id="file_sha256_lock" value="1">
 					<label for="file_sha256_lock" data-i18n="gettext">Lock</label>
@@ -693,6 +699,32 @@
 					<input type="hidden" name="file_sha512" value="0">
 					<input type="checkbox" name="file_sha512" id="file_sha512" value="1">
 					<label for="file_sha512" data-i18n="gettext">Generate a SHA512 hash for uploaded files</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="max_files_row_lock" value="0">
+					<input type="checkbox" name="max_files_row_lock" id="max_files_row_lock" value="1">
+					<label for="max_files_row_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<label for="max_files_row" data-i18n="gettext">Number of files to display in each row of post</label>
+				</td>
+				<td>
+					<input type="text" name="max_files_row" id="max_files_row" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="jpeg_quality_lock" value="0">
+					<input type="checkbox" name="jpeg_quality_lock" id="jpeg_quality_lock" value="1">
+					<label for="jpeg_quality_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<label for="jpeg_quality" data-i18n="gettext">JPEG thumbnail quality (0 - 100)</label>
+				</td>
+				<td>
+					<input type="text" name="jpeg_quality" id="jpeg_quality" size="8" value="">
 				</td>
 			</tr>
 			<tr>
@@ -749,40 +781,28 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="template_id_lock" value="0">
-					<input type="checkbox" name="template_id_lock" id="template_id_lock" value="1">
-					<label for="template_id_lock" data-i18n="gettext">Lock</label>
+					<input type="hidden" name="indent_marker_lock" value="0">
+					<input type="checkbox" name="indent_marker_lock" id="indent_marker_lock" value="1">
+					<label for="indent_marker_lock" data-i18n="gettext">Lock</label>
 				</td>
 				<td>
-					<label for="template_id" data-i18n="gettext">ID of template for board to use</label>
+					<label for="indent_marker" data-i18n="gettext">Set the indent marker next to replies</label>
 				</td>
 				<td>
-					<input type="text" name="template_id" id="template_id" size="30" value="">
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<input type="hidden" name="filetype_icon_set_id_lock" value="0">
-					<input type="checkbox" name="filetype_icon_set_id_lock" id="filetype_icon_set_id_lock" value="1">
-					<label for="filetype_icon_set_id_lock" data-i18n="gettext">Lock</label>
-				</td>
-				<td>
-					<label for="filetype_icon_set_id" data-i18n="gettext">ID of icon set to use with filetypes</label>
-				</td>
-				<td>
-					<input type="text" name="filetype_icon_set_id" id="filetype_icon_set_id" size="30" value="">
+					<input type="text" name="indent_marker" id="indent_marker" size="8" value="">
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="display_render_timer_lock" value="0">
-					<input type="checkbox" name="display_render_timer_lock" id="display_render_timer_lock" value="1">
-					<label for="display_render_timer_lock" data-i18n="gettext">Lock</label>
+					<input type="hidden" name="tripkey_marker_lock" value="0">
+					<input type="checkbox" name="tripkey_marker_lock" id="tripkey_marker_lock" value="1">
+					<label for="tripkey_marker_lock" data-i18n="gettext">Lock</label>
 				</td>
 				<td>
-					<input type="hidden" name="display_render_timer" value="0">
-					<input type="checkbox" name="display_render_timer" id="display_render_timer" value="1">
-					<label for="display_render_timer" data-i18n="gettext">Display the rendering timer</label>
+					<label for="tripkey_marker" data-i18n="gettext">Tripcode marker</label>
+				</td>
+				<td>
+					<input type="text" name="tripkey_marker" id="tripkey_marker" size="8" value="">
 				</td>
 			</tr>
 		</table>
