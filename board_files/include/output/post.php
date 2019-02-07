@@ -511,7 +511,7 @@ function nel_render_post($domain, $gen_data, $dom)
 
     if (!nel_true_empty($post_data['mod_comment']))
     {
-        $contents_nodes['mod-comment']->setContent('(' . $post_data['mod_comment'] . ')');
+        $contents_nodes['mod-comment']->setContent($post_data['mod_comment']);
     }
 
     $output_filter->clearWhitespace($post_data['comment']);
