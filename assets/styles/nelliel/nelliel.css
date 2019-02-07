@@ -4,7 +4,7 @@ html {
 }
 
 body {
-    background-color: #7FEAA0;
+    background-color: #7FDA8F;
     color: #16006F;
     font-family: serif;
     margin-left: 5px;
@@ -404,8 +404,8 @@ form {
 }
 
 .reply-post {
-    background-color: #7FCAE0;
-    border: 1px solid #5DA8C0;
+    background-color: #88BED0;
+    border: 1px solid #669CB0;
     padding: 5px;
     min-width: 15em;
     height: 100%;
