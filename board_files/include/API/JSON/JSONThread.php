@@ -63,10 +63,10 @@ class JSONThread extends JSONOutput
         }
     }
 
-    public function writeStoredData($file_path, $file_name)
+    public function writeStoredData($path, $filename)
     {
         $json_data = json_encode($this->data_array);
-        $this->file_handler->writeFile($file_path . $file_name . JSON_EXT, $json_data);
+        $this->file_handler->writeFile($path . $filename . JSON_EXT, $json_data);
     }
 
     public function addPostData(array $post_data)

@@ -161,11 +161,9 @@ class ContentPost extends ContentHandler
     {
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->eraserGun(
-                $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
-                null, true);
+                $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id);
         $file_handler->eraserGun(
-                $this->domain->reference('thumb_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
-                null, true);
+                $this->domain->reference('thumb_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id);
     }
 
     public function updateCounts()

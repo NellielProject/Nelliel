@@ -146,7 +146,7 @@ class AdminBoards extends AdminHandler
         }
 
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->eraserGun($domain->reference('board_path'), null, true);
+        $file_handler->eraserGun($domain->reference('board_path'));
         $prepared = $this->database->prepare('DELETE FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
     }

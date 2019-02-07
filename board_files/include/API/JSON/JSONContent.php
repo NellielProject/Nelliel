@@ -75,7 +75,7 @@ class JSONContent extends JSONOutput
         }
     }
 
-    public function writeStoredData($file_path, $file_name)
+    public function writeStoredData($path, $filename)
     {
         ;
     }

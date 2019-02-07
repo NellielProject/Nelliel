@@ -11,8 +11,6 @@ abstract class JSONOutput
 {
     protected $data_array = array();
     protected $file_handler;
-    protected $file_path;
-    protected $file_name;
     protected $domain;
 
     public abstract function prepareData(array $data, bool $store = false);
@@ -21,7 +19,7 @@ abstract class JSONOutput
 
     public abstract function retrieveData(bool $all_data = false);
 
-    public abstract function writeStoredData($file_path, $file_name);
+    public abstract function writeStoredData($path, $filename);
 
     protected function addIfNotEmpty(&$data, $key, $value, $type)
     {

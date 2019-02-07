@@ -133,9 +133,9 @@ class ContentThread extends ContentHandler
     protected function removeFromDisk()
     {
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->eraserGun($this->domain->reference('src_path') . $this->content_id->thread_id, null, true);
-        $file_handler->eraserGun($this->domain->reference('thumb_path') . $this->content_id->thread_id, null, true);
-        $file_handler->eraserGun($this->domain->reference('page_path') . $this->content_id->thread_id, null, true);
+        $file_handler->eraserGun($this->domain->reference('src_path') . $this->content_id->thread_id);
+        $file_handler->eraserGun($this->domain->reference('thumb_path') . $this->content_id->thread_id);
+        $file_handler->eraserGun($this->domain->reference('page_path') . $this->content_id->thread_id);
     }
 
     public function updateCounts()

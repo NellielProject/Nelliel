@@ -107,11 +107,11 @@ class FileHandler
         }
     }
 
-    public function eraserGun($path, $filename = null, $is_directory = false)
+    public function eraserGun($path, $filename = null)
     {
         clearstatcache();
 
-        if ($is_directory && file_exists($path))
+        if (is_null($filename) && file_exists($path) && is_dir($path))
         {
 
             $files = glob($this->pathFileJoin($path, '*'));
@@ -120,7 +120,7 @@ class FileHandler
             {
                 if (is_dir($file))
                 {
-                    $this->eraserGun($file, null, true);
+                    $this->eraserGun($file);
                 }
                 else
                 {
