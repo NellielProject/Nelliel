@@ -31,7 +31,7 @@ class Setup
         $this->createCoreTables();
         $this->createCoreDirectories();
         $regen = new \Nelliel\Regen();
-        $regen->siteCache(new \Nelliel\DomainBoard('', new \Nelliel\CacheHandler(), nel_database()));
+        $regen->siteCache(new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database()));
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->writeInternalFile(BASE_PATH . 'install_done.php', '');
         echo _gettext(

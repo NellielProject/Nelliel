@@ -88,6 +88,7 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_multi_width', '175', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_multi_height', '175', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'jpeg_quality', '90', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'png_compression', '6', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_width', '256', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_height', '256', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_filesize', '4096', 0, 0]);

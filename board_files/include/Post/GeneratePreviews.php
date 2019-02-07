@@ -140,6 +140,7 @@ class GeneratePreviews
             if ($this->domain->setting('use_png_thumb'))
             {
                 $image->setImageFormat('png');
+                $image->setImageCompressionQuality($this->domain->setting('png_compression'));
             }
             else
             {
@@ -171,7 +172,7 @@ class GeneratePreviews
             {
                 $cmd_resize = 'convert ' . escapeshellarg($file->content_data['location']) . ' -resize ' .
                         $this->domain->setting('max_width') . 'x' . $this->domain->setting('max_height') .
-                        '\> -quality 00 -sharpen 0x0.5 ' . escapeshellarg(
+                        '\> -quality ' . $this->domain->setting('png_compression') . ' -sharpen 0x0.5 ' . escapeshellarg(
                                 $preview_path . $file->content_data['preview_name'] . '.' .
                                 $file->content_data['preview_extension']);
             }
@@ -223,7 +224,7 @@ class GeneratePreviews
             {
                 imagepng($preview,
                         $preview_path . $file->content_data['preview_name'] . '.' .
-                        $file->content_data['preview_extension'], -1);
+                        $file->content_data['preview_extension'], $this->domain->setting('png_compression'));
             }
             else
             {
