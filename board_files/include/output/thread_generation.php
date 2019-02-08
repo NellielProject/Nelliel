@@ -14,6 +14,7 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
     $file_handler = new \Nelliel\FileHandler();
+    $gen_data = array('thread' => array());
     $dotdot = ($write) ? '../../../' : '';
     $domain->renderInstance(new \Nelliel\RenderCore());
     $dom = $domain->renderInstance()->newDOMDocument();
@@ -25,7 +26,13 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
     $dom->getElementById('form-content-action')->extSetAttribute('action',
             $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $domain->id());
     $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('threads_table') . '" WHERE "thread_id" = ?');
-    $gen_data['thread'] = $database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
+    $thread_data = $database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
+
+    if(!empty($thread_data))
+    {
+        $gen_data['thread'] = $thread_data;
+    }
+
     $prepared = $database->prepare(
             'SELECT * FROM "' . $domain->reference('posts_table') .
             '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');

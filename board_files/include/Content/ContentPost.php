@@ -138,6 +138,18 @@ class ContentPost extends ContentHandler
 
         $this->removeFromDatabase();
         $this->removeFromDisk();
+
+        $query = 'SELECT "entry" FROM "' . $this->domain->reference('content_table') .
+        '" WHERE "post_ref" = ?';
+        $prepared = $this->database->prepare($query);
+        $content_entries = $this->database->executePreparedFetchAll($prepared, [$this->content_id->post_id], PDO::FETCH_COLUMN);
+
+        foreach($content_entries as $entry)
+        {
+            $content = new ContentFile($this->database, $this->content_id, $this->domain);
+            $content->remove();
+        }
+
         $thread = new ContentThread($this->database, $this->content_id, $this->domain);
         $thread->updateCounts();
         return true;
