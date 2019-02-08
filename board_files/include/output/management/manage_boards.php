@@ -25,8 +25,6 @@ function nel_render_manage_boards_panel(\Nelliel\Domain $domain, $user)
     $bgclass = 'row1';
     $board_info_table = $dom->getElementById('board-info-table');
     $board_info_row = $dom->getElementById('board-info-row');
-    $base_domain = BASE_DOMAIN . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
-    $base_path = '//' . $base_domain . '/' . MAIN_SCRIPT;
 
     foreach ($board_data as $board_info)
     {
@@ -42,7 +40,7 @@ function nel_render_manage_boards_panel(\Nelliel\Domain $domain, $user)
         {
             $board_nodes['status']->setContent(_gettext('Active'));
             $board_nodes['link-board-lock']->extSetAttribute('href',
-                    $url_constructor->dynamic($base_path,
+                    $url_constructor->dynamic(MAIN_SCRIPT,
                             ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'lock']));
             $board_nodes['link-board-lock']->setContent(_gettext('Lock Board'));
         }
@@ -50,14 +48,14 @@ function nel_render_manage_boards_panel(\Nelliel\Domain $domain, $user)
         {
             $board_nodes['status']->setContent(_gettext('Locked'));
             $board_nodes['link-board-lock']->extSetAttribute('href',
-                    $url_constructor->dynamic($base_path,
+                    $url_constructor->dynamic(MAIN_SCRIPT,
                             ['module' => 'manage-boards', 'board_id' => $board_info['board_id'],
                                 'action' => 'unlock']));
             $board_nodes['link-board-lock']->setContent(_gettext('Unlock Board'));
         }
 
         $board_nodes['link-board-remove']->extSetAttribute('href',
-                $url_constructor->dynamic($base_path,
+                $url_constructor->dynamic(MAIN_SCRIPT,
                         ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'remove']));
         $board_nodes['link-board-remove']->setContent(_gettext('!!DANGER!! Remove Board'));
         $board_info_table->appendChild($temp_board_info_row);

@@ -53,12 +53,11 @@ function nel_render_reports_panel($user, \Nelliel\Domain $domain)
         $content_id = new \Nelliel\ContentID($report_info['content_id']);
         $base_domain = BASE_DOMAIN . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
         $board_web_path = '//' . $base_domain . '/' . rawurlencode($current_domain->reference('board_directory')) . '/';
-        $base_path = '//' . $base_domain . '/' . MAIN_SCRIPT;
         $content_link = '';
 
         if ($content_id->isThread())
         {
-            $content_link = $url_constructor->dynamic($base_path,
+            $content_link = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
                         'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                         'modmode' => 'true']);
@@ -66,7 +65,7 @@ function nel_render_reports_panel($user, \Nelliel\Domain $domain)
         }
         else if ($content_id->isPost())
         {
-            $content_link = $url_constructor->dynamic($base_path,
+            $content_link = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
                         'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                         'modmode' => 'true']);
@@ -85,7 +84,7 @@ function nel_render_reports_panel($user, \Nelliel\Domain $domain)
                     rawurlencode($filename);
             $report_nodes['link-file-url']->extSetAttribute('href', $file_link);
 
-            $content_link = $url_constructor->dynamic($base_path,
+            $content_link = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
                         'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                         'modmode' => 'true']);

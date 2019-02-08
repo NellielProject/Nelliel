@@ -15,7 +15,15 @@ define('ICON_SETS_DIR', 'icon_sets');
 define('IMAGES_DIR', 'imagez');
 define('SCRIPTS_DIR', 'scripts');
 
-define('BASE_DOMAIN', $_SERVER['SERVER_NAME']);
+if($_SERVER['SERVER_PORT'] != 80 && empty($_SERVER['HTTPS']))
+{
+    define('BASE_DOMAIN', $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT']);
+}
+else
+{
+    define('BASE_DOMAIN', $_SERVER['SERVER_NAME']);
+}
+
 define('MAIN_SCRIPT', 'imgboard.php');
 define('MAIN_INDEX', 'index');
 define('PAGE_EXT', '.html');
