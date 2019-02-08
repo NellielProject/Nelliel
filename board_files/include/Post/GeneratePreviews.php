@@ -216,9 +216,12 @@ class GeneratePreviews
 
         if ($preview !== false)
         {
+            $sharpen_matrix = [[0.0, -0.5, 0.0],[-0.5, 6.5, -0.5],[0.0, -0.5, 0.0]];
+            $divisor = array_sum(array_map('array_sum', $sharpen_matriz));
             imagecopyresampled($preview, $image, 0, 0, 0, 0, $file->content_data['preview_width'],
                     $file->content_data['preview_height'], $file->content_data['display_width'],
                     $file->content_data['display_height']);
+            imageconvolution($preview, $sharpen_matrix, $divisor, 0);
 
             if ($this->domain->setting('use_png_thumb'))
             {
