@@ -107,7 +107,7 @@ function nel_default_database_connection()
 
             $dsn = 'sqlite:' . $path . SQLITE_DB_NAME;
             $connection = nel_new_database_connection($dsn);
-            $connection->exec('PRAGMA encoding = "' . SQLITE_ENCODING . '";');
+            $connection->exec('PRAGMA encoding = "' . SQLITE_ENCODING . '"; PRAGMA foreign_keys = ON;');
             break;
 
         default:
