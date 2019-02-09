@@ -79,8 +79,8 @@ function nel_render_post($domain, $gen_data, $dom)
     $post_container->changeId('post-container-' . $post_content_id->getIDString());
 
     $indents_element = $new_post_dom->getElementById('indents');
-    $base_domain = BASE_DOMAIN . BASE_WEB_PATH;
-    $board_web_path = '//' . $base_domain . '/' . rawurlencode($domain->reference('board_directory')) . '/';
+    $base_domain_path = BASE_DOMAIN . BASE_WEB_PATH;
+    $board_web_path = '//' . $base_domain_path . rawurlencode($domain->reference('board_directory')) . '/';
     $pages_web_path = $board_web_path . rawurlencode($domain->reference('page_dir')) . '/';
     $thread_page_web_path = $pages_web_path . $thread_content_id->thread_id . '/thread-' . $thread_content_id->thread_id .
             '.html';
@@ -443,7 +443,7 @@ function nel_render_post($domain, $gen_data, $dom)
                     {
                         $front_end_data = new \Nelliel\FrontEndData(nel_database());
                         $icon_set = $front_end_data->filetypeIconSet($domain->setting('filetype_icon_set_id'));
-                        $icons_web_path = '//' . $base_domain . '/' . ICON_SETS_WEB_PATH . $icon_set['directory'] . '/';
+                        $icons_web_path = '//' . $base_domain_path . '/' . ICON_SETS_WEB_PATH . $icon_set['directory'] . '/';
                         $icons_file_path = ICON_SETS_FILE_PATH . $icon_set['directory'] . '/';
                         $format_icon = utf8_strtolower($file['format']) . '.png';
                         $type_icon = utf8_strtolower($file['type']) . '.png';

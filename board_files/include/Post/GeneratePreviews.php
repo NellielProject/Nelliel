@@ -227,7 +227,7 @@ class GeneratePreviews
 
         if ($preview !== false)
         {
-            $sharpen_matrix = [[0.0, -0.5, 0.0], [-0.5, 6.5, -0.5], [0.0, -0.5, 0.0]];
+            $sharpen_matrix = [[0.0, -0.25, 0.0], [-0.25, 5.0, -0.25], [0.0, -0.25, 0.0]];
             $divisor = array_sum(array_map('array_sum', $sharpen_matrix));
             imagecopyresampled($preview, $image, 0, 0, 0, 0, $file->content_data['preview_width'],
                     $file->content_data['preview_height'], $file->content_data['display_width'],
