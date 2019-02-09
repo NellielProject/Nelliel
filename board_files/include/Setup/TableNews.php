@@ -41,8 +41,8 @@ class TableNews extends TableHandler
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             poster_id       VARCHAR(255) NOT NULL,
             time            BIGINT NOT NULL,
-            headline        VARCHAR(255) NOT NULL,
-            text            TEXT NOT NULL
+            headline        VARCHAR(255) DEFAULT NULL,
+            text            TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $this->sql_helpers->createTableQuery($schema, $this->table_name);

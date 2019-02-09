@@ -8,7 +8,7 @@ function nel_render_styles_panel($user, \Nelliel\Domain $domain)
 {
     if (!$user->boardPerm($domain->id(), 'perm_styles_access'))
     {
-        nel_derp(341, _gettext('You are not allowed to access the filetypes panel.'));
+        nel_derp(440, _gettext('You are not allowed to access the styles panel.'));
     }
 
     $database = nel_database();

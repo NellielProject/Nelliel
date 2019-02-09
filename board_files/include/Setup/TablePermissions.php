@@ -86,5 +86,7 @@ class TablePermissions extends TableHandler
         $this->insertDefaultRow(['perm_styles_modify', 'Modify styles']);
         $this->insertDefaultRow(['perm_permissions_access', 'Access the Permissions panel']);
         $this->insertDefaultRow(['perm_permissions_modify', 'Modify permissions']);
+        $this->insertDefaultRow(['perm_news_access', 'Access the News panel']);
+        $this->insertDefaultRow(['perm_news_modify', 'Modify news']);
     }
 }

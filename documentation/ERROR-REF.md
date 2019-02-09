@@ -109,3 +109,6 @@ Error 451: perm_permissions_modify (Admin/AdminPermissions.php)
 
 Error 460: perm_icon_sets_access (Admin/AdminIconSets.php)  
 Error 461: perm_icon_sets_modify (Admin/AdminIconSets.php)  
+
+Error 470: perm_news_access (Admin/AdminNews.php)  
+Error 471: perm_news_modify (Admin/AdminNews.php)  

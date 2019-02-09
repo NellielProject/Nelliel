@@ -90,6 +90,8 @@ class TableRolePermissions extends TableHandler
         $this->insertDefaultRow(['SUPER_ADMIN', 'perm_permissions_modify', 1]);
         $this->insertDefaultRow(['SUPER_ADMIN', 'perm_icon_sets_access', 1]);
         $this->insertDefaultRow(['SUPER_ADMIN', 'perm_icon_sets_modify', 1]);
+        $this->insertDefaultRow(['SUPER_ADMIN', 'perm_news_access', 1]);
+        $this->insertDefaultRow(['SUPER_ADMIN', 'perm_news_modify', 1]);
         $this->insertDefaultRow(['BOARD_ADMIN', 'perm_site_config_access', 0]);
         $this->insertDefaultRow(['BOARD_ADMIN', 'perm_site_config_modify', 0]);
         $this->insertDefaultRow(['BOARD_ADMIN', 'perm_board_defaults_access', 0]);
@@ -131,6 +133,8 @@ class TableRolePermissions extends TableHandler
         $this->insertDefaultRow(['BOARD_ADMIN', 'perm_permissions_modify', 0]);
         $this->insertDefaultRow(['BOARD_ADMIN', 'perm_icon_sets_access', 0]);
         $this->insertDefaultRow(['BOARD_ADMIN', 'perm_icon_sets_modify', 0]);
+        $this->insertDefaultRow(['BOARD_ADMIN', 'perm_news_access', 0]);
+        $this->insertDefaultRow(['BOARD_ADMIN', 'perm_news_modify', 0]);
         $this->insertDefaultRow(['MOD', 'perm_site_config_access', 0]);
         $this->insertDefaultRow(['MOD', 'perm_site_config_modify', 0]);
         $this->insertDefaultRow(['MOD', 'perm_board_defaults_access', 0]);
@@ -172,6 +176,8 @@ class TableRolePermissions extends TableHandler
         $this->insertDefaultRow(['MOD', 'perm_permissions_modify', 0]);
         $this->insertDefaultRow(['MOD', 'perm_icon_sets_access', 0]);
         $this->insertDefaultRow(['MOD', 'perm_icon_sets_modify', 0]);
+        $this->insertDefaultRow(['MOD', 'perm_news_access', 0]);
+        $this->insertDefaultRow(['MOD', 'perm_news_modify', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_site_config_access', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_site_config_modify', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_board_defaults_access', 0]);
@@ -213,5 +219,7 @@ class TableRolePermissions extends TableHandler
         $this->insertDefaultRow(['JANITOR', 'perm_permissions_modify', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_icon_sets_access', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_icon_sets_modify', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_news_access', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_news_modify', 0]);
     }
 }

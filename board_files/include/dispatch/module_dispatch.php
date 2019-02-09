@@ -323,6 +323,11 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $icon_sets_admin->actionDispatch($inputs);
             break;
 
+        case 'news':
+            $news_admin = new \Nelliel\Admin\AdminNews(nel_database(), $authorization, $domain);
+            $news_admin->actionDispatch($inputs);
+            break;
+
         default:
             break;
     }

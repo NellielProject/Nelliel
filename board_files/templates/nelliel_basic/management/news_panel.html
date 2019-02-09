@@ -1,0 +1,29 @@
+	<form id="add-news-form" accept-charset="utf-8" action="" method="post">
+		<div class="display-table">
+			<div class="display-row">
+				<label for="headline" class="display-cell" data-i18n="gettext">Headline</label>
+				<input id="headline" class="display-cell" type="text" name="headline" size="30">
+			</div>
+			<div class="display-row">
+				<label for="news-text" class="display-cell" data-i18n="gettext">News text</label>
+				<textarea id="news-text" class="display-cell" name="news-text" cols="80" rows="6"></textarea>
+			</div>
+			<div class="display-row">
+				<input type="submit" value="Post News" data-i18n="gettext" data-i18n-attributes="value">
+			</div>
+		</div>
+	</form>
+	<hr>
+	<table id="news-entry-list" class="data-table">
+		<tr class="manage-header">
+			<th data-i18n="gettext">Headline</th>
+			<th data-i18n="gettext">Date</th>
+		</tr>
+		<tr data-parse-id="news-entry-row" class="row1">
+			<td data-parse-id="headline"></td>
+			<td data-parse-id="time"></td>
+			<td>
+				<a class="display-cell" data-parse-id="news-remove-link" href="" data-i18n="gettext">Remove</a>
+			</td>
+		</tr>
+	</table>

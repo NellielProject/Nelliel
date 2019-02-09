@@ -141,6 +141,15 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
         $manage_options_nodes['module-link-icon-sets']->remove();
     }
 
+    if ($user->boardPerm('', 'perm_news_access'))
+    {
+        $manage_options_nodes['module-link-news']->extSetAttribute('href', MAIN_SCRIPT . '?module=news');
+    }
+    else
+    {
+        $manage_options_nodes['module-link-news']->remove();
+    }
+
     if ($user->boardPerm('', 'perm_extract_gettext'))
     {
         $manage_options_nodes['module-extract-gettext']->extSetAttribute('href',
