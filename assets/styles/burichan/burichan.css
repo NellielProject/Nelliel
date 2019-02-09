@@ -56,6 +56,18 @@ form {
     clear: both;
 }
 
+.site-name {
+	font-size: 2.0rem;
+	font-weight: bold;
+    text-align: center;
+    clear: both;
+}
+
+.site-slogan {
+    text-align: center;
+    clear: both;
+}
+
 .board-banner {
     text-align: center;
     clear: both;

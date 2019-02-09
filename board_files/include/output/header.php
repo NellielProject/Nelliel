@@ -66,33 +66,18 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
     $board_banner = $dom->getElementById('top-board-banner');
     $favicon = $dom->getElementById('favicon-link');
 
-    if ($site_domain->setting('show_site_favicon') || $domain->setting('show_board_favicon'))
+    if ($domain->setting('show_board_favicon'))
     {
-        if ($site_domain->setting('show_site_favicon'))
-        {
-            $favicon->extSetAttribute('href', $site_domain->setting('site_favicon'));
-        }
-
-        if ($domain->setting('show_board_favicon'))
-        {
-            $favicon->extSetAttribute('href', $domain->setting('board_favicon'));
-        }
+        $favicon->extSetAttribute('href', $domain->setting('board_favicon'));
     }
     else
     {
-        $favicon->remove();
+        $favicon->extSetAttribute('href', $site_domain->setting('site_favicon'));
     }
 
-    $site_banner = $dom->getElementById('top-site-banner');
-
-    if ($site_domain->setting('show_site_banner'))
-    {
-        $site_banner->extSetAttribute('src', $site_domain->setting('site_banner'));
-    }
-    else
-    {
-        $site_banner->remove();
-    }
+    $top_site_name = $dom->getElementById('top-site-name')->remove();
+    $top_site_slogan = $dom->getElementById('top-site-slogan')->remove();
+    $top_site_banner = $dom->getElementById('top-site-banner')->remove();
 
     if ($domain->setting('show_board_banner'))
     {
@@ -168,29 +153,30 @@ function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $ext
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $domain->id() . '"));');
     $dom->getElementById('top-board-banner')->remove();
     $dom->getElementById('top-board-title')->remove();
-    $dom->getElementById('top-site-banner')->remove();
 
     $favicon = $dom->getElementById('favicon-link');
+    $favicon->extSetAttribute('href', $site_domain->setting('site_favicon'));
 
-    if ($site_domain->setting('show_site_favicon') || $domain->setting('show_board_favicon'))
+    $top_site_name = $dom->getElementById('top-site-name');
+    $top_site_slogan = $dom->getElementById('top-site-slogan');
+    $top_site_banner = $dom->getElementById('top-site-banner');
+
+    if(isset($extra_data['use_site_titles']) && $extra_data['use_site_titles'])
     {
-        if ($site_domain->setting('show_site_favicon'))
-        {
-            $favicon->extSetAttribute('href', $site_domain->setting('site_favicon'));
-        }
-
-        if ($domain->setting('show_board_favicon'))
-        {
-            $favicon->extSetAttribute('href', $domain->setting('board_favicon'));
-        }
+        $top_site_name->setContent($site_domain->setting('site_name'));
+        $top_site_slogan->setContent($site_domain->setting('site_slogan'));
+        $top_site_banner->extSetAttribute('src', $site_domain->setting('site_banner'));
     }
     else
     {
-        $favicon->remove();
+        $top_site_name->remove();
+        $top_site_slogan->remove();
+        $top_site_banner->remove();
     }
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
     $title_element->setContent('Nelliel Imageboard');
+
     $top_nav_menu = $dom->getElementById('top-nav-menu');
     $top_nav_menu_nodes = $top_nav_menu->getElementsByAttributeName('data-parse-id', true);
     $top_nav_menu_nodes['home']->extSetAttribute('href', $site_domain->setting('home_page'));
@@ -207,7 +193,7 @@ function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $ext
 
     $top_nav_menu_nodes['about-nelliel']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?about_nelliel');
 
-    if (($session->isActive() || $session->inModmode($domain->id())))
+    if (($session->isActive() || $session->inModmode($domain->id())) && !$domain->renderActive())
     {
         if (isset($extra_data['header']))
         {
@@ -262,22 +248,11 @@ function nel_render_simple_header(\Nelliel\Domain $domain, $dotdot = null)
             $dotdot . STYLES_WEB_PATH . $style_info['directory'] . '/' . $style_info['main_file']);
     $head_element->appendChild($style_link);
 
-    $site_banner = $dom->getElementById('top-site-banner');
-
-    if ($site_domain->setting('show_site_banner'))
-    {
-        $site_banner->extSetAttribute('src', $site_domain->setting('site_banner'));
-    }
-    else
-    {
-        $site_banner->remove();
-    }
-
     $favicon = $dom->getElementById('favicon-link');
 
     if ($site_domain->setting('show_site_favicon'))
     {
-            $favicon->extSetAttribute('href', $site_domain->setting('site_favicon'));
+        $favicon->extSetAttribute('href', $site_domain->setting('site_favicon'));
     }
     else
     {

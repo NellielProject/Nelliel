@@ -11,8 +11,9 @@ function nel_render_news()
     $domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database());
     $translator = new \Nelliel\Language\Translator();
     $file_handler = new \Nelliel\FileHandler();
+    $domain->renderActive(true);
     $domain->renderInstance()->startRenderTimer();
-    nel_render_simple_header($domain);
+    nel_render_general_header($domain, null, ['use_site_titles' => true]);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'news.html');
     $output_filter = new \Nelliel\OutputFilter();

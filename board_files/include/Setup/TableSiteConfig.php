@@ -67,10 +67,10 @@ class TableSiteConfig extends TableHandler
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'language', 'en-US', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'recaptcha_site_key', '', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'recaptcha_sekrit_key', '', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'site_name', '', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'site_slogan', '', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'site_favicon', '', 0]);
-        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'show_site_favicon', '0', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'site_banner', '', 0]);
-        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'show_site_banner', '0', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'display_render_timer', '1', 0]);
     }
 }
