@@ -88,6 +88,8 @@ function nel_render_post($domain, $gen_data, $dom)
     $thread_src_web_path = $src_web_path . $thread_content_id->thread_id . '/';
     $preview_web_path = $board_web_path . rawurlencode($domain->reference('thumb_dir')) . '/';
     $thread_preview_web_path = $preview_web_path . $thread_content_id->thread_id . '/';
+    $header_nodes['post-header-options']->changeId('post-header-options-' . $post_content_id->getIDString());
+    $header_nodes['post-header-info']->changeId('post-header-info-' . $post_content_id->getIDString());
 
     if ($response)
     {

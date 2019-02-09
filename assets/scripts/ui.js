@@ -2,6 +2,7 @@ nelliel.ui.hideShowThread = function(element, command) {
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     var post_files = document.getElementById("files-" + content_id.id_string);
     var post_contents = document.getElementById("post-contents-" + content_id.id_string);
+    var post_header_options = document.getElementById("post-header-options-" + content_id.id_string);
     var thread_container = document.getElementById("thread-expand-" + "cid_" + content_id.thread_id + "_0_0");
 
     if (command === "hide-thread") {
@@ -13,13 +14,17 @@ nelliel.ui.hideShowThread = function(element, command) {
     if (thread_container !== null) {
         nelliel.ui.toggleHidden(thread_container);
     }
-    
+
     if (post_files !== null) {
         nelliel.ui.toggleHidden(post_files);
     }
-    
+
     if (post_contents !== null) {
         nelliel.ui.toggleHidden(post_contents);
+    }
+    
+    if (post_header_options !== null) {
+        nelliel.ui.toggleHidden(post_header_options);
     }
 
     nelliel.core.storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
@@ -31,33 +36,45 @@ nelliel.ui.hideShowPost = function(element, command) {
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
     var post_files = document.getElementById("files-" + content_id.id_string);
     var post_contents = document.getElementById("post-contents-" + content_id.id_string);
-    
+
     if (command == "hide-post") {
         dataBin.hidden_posts[content_id.id_string] = Date.now();
     } else if (command == "show-post") {
         delete dataBin.hidden_posts[content_id.id_string];
     }
-    
+
     if (post_files !== null) {
         nelliel.ui.toggleHidden(post_files);
     }
-    
+
     if (post_contents !== null) {
         nelliel.ui.toggleHidden(post_contents);
     }
-    
+
     nelliel.core.storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
     nelliel.ui.switchDataCommand(element, "hide-post", "show-post");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
 }
 
 nelliel.ui.applyHidePostThread = function() {
+    var cids = [];
+
     for (var id in dataBin.hidden_threads) {
-        var thread_id = id.split('_')[0];
-        var post_files = document.getElementById("files-" + id);
-        var post_contents = document.getElementById("post-contents-" + id);
-        var thread_container = document.getElementById("thread-expand-" + id);
-        var element = document.getElementById("hide-thread-" + id);
+        var content_id = nelliel.core.contentID(id);
+        var post_files = document.getElementById("files-" + content_id.id_string);
+        var post_contents = document.getElementById("post-contents-" + content_id.id_string);
+        var post_header_options = document.getElementById("post-header-options-" + content_id.id_string);
+        var thread_container = document.getElementById("thread-expand-" + "cid_" + content_id.thread_id + "_0_0");
+        var element = document.getElementById("hide-thread-" + "cid_" + content_id.thread_id + "_0_0");
+        
+        nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
+        nelliel.ui.swapContentAttribute(element, "data-alt-visual");
+
+        if (cids.includes(id)) {
+            continue;
+        } else {
+            cids.push(id);
+        }
         
         if (thread_container !== null) {
             nelliel.ui.toggleHidden(thread_container);
@@ -71,25 +88,33 @@ nelliel.ui.applyHidePostThread = function() {
             nelliel.ui.toggleHidden(post_contents);
         }
         
-        nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
-        nelliel.ui.swapContentAttribute(element, "data-alt-visual");
+        if (post_header_options !== null) {
+            nelliel.ui.toggleHidden(post_header_options);
+        }
     }
-    
+
     for (var id in dataBin.hidden_posts) {
-        var post_files = document.getElementById("files-" + id);
-        var post_contents = document.getElementById("post-contents-" + id);
-        var element = document.getElementById("hide-post-" + id);
+        var content_id = nelliel.core.contentID(id);
+        var post_files = document.getElementById("files-" + content_id.id_string);
+        var post_contents = document.getElementById("post-contents-" + content_id.id_string);
+        var element = document.getElementById("hide-post-" + content_id.id_string);
+
+        nelliel.ui.switchDataCommand(element, "hide-post", "show-post");
+        nelliel.ui.swapContentAttribute(element, "data-alt-visual");
+
+        if (cids.includes(id)) {
+            continue;
+        } else {
+            cids.push(id);
+        }
 
         if (post_files !== null) {
             nelliel.ui.toggleHidden(post_files);
         }
-        
+
         if (post_contents !== null) {
             nelliel.ui.toggleHidden(post_contents);
         }
-        
-        nelliel.ui.switchDataCommand(element, "hide-post", "show-post");
-        nelliel.ui.swapContentAttribute(element, "data-alt-visual");
     }
 }
 
@@ -109,7 +134,7 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
         return;
     }
 
-    if(dynamic) {
+    if (dynamic) {
         var url = "imgboard.php?module=render&action=" + command.split('-')[0] + "-thread&board_id=" + dataBin.board_id + "&thread=" + content_id.thread_id;
         
         if(dataBin.is_modmode) {
@@ -118,8 +143,7 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
         
         var command1 = "expand-thread-render";
         var command2 = "collapse-thread-render";
-    }
-    else {
+    } else {
         var url = "threads/" + content_id.thread_id + "/thread-" + content_id.thread_id + "-" + command.split('-')[0] + ".html";
         var command1 = "expand-thread";
         var command2 = "collapse-thread";
@@ -143,7 +167,7 @@ nelliel.ui.highlightPost = function(content_id) {
     var post_container = document.getElementById("post-container-" + content_id.id_string);
     
     if (post_container !== null) {
-        if(post_container.className.indexOf('post-hightlight') === -1) {
+        if (post_container.className.indexOf('post-hightlight') === -1) {
             post_container.className += " post-highlight";
         } else {
             post_container.className = post_container.className.replace(/\post-highlight\b/g, "");
@@ -234,7 +258,7 @@ nelliel.ui.linkPost = function(element) {
 }
 
 nelliel.ui.toggleHidden = function(element) {
-    if(element.className.search("hidden") === -1) {
+    if (element.className.search("hidden") === -1) {
         element.className += " hidden";
     } else {
         element.className = element.className.replace(/\bhidden\b/g, "");
@@ -252,8 +276,7 @@ nelliel.ui.switchDataCommand = function(element, option_one, option_two) {
 
     if (data_command.indexOf(option_one) > -1 ) {
         element.setAttribute("data-command", option_two);
-    }
-    else if (data_command.indexOf(option_two) > -1 ) {
+    } else if (data_command.indexOf(option_two) > -1 ) {
         element.setAttribute("data-command", option_one);
     }
 }
