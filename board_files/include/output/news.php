@@ -14,9 +14,20 @@ function nel_render_news()
     $domain->renderActive(true);
     $domain->renderInstance()->startRenderTimer();
     nel_render_general_header($domain, null, ['use_site_titles' => true]);
+    $dom = nel_render_news_list($domain);
+    $translator->translateDom($dom, $domain->setting('language'));
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+    nel_render_general_footer($domain);
+    $file_handler->writeFile(BASE_PATH . 'news.html', $domain->renderInstance()->outputRenderSet());
+}
+
+function nel_render_news_list($domain)
+{
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $output_filter = new \Nelliel\OutputFilter();
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'news.html');
-    $output_filter = new \Nelliel\OutputFilter();
     $news_entries = $database->executeFetchAll('SELECT * FROM "' . NEWS_TABLE . '" ORDER BY "time" ASC',
             PDO::FETCH_ASSOC);
     $news_page = $dom->getElementById('news-page');
@@ -39,9 +50,6 @@ function nel_render_news()
     }
 
     $news_page_nodes['news-entry']->remove();
-    $translator->translateDom($dom, $domain->setting('language'));
-    $domain->renderInstance()->appendHTMLFromDOM($dom);
-    nel_render_general_footer($domain);
-    $file_handler->writeFile(BASE_PATH . 'news.html', $domain->renderInstance()->outputRenderSet());
+    return $dom;
 }
 
