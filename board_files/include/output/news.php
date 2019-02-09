@@ -21,7 +21,7 @@ function nel_render_news()
     $file_handler->writeFile(BASE_PATH . 'news.html', $domain->renderInstance()->outputRenderSet());
 }
 
-function nel_render_news_list($domain)
+function nel_render_news_list(\Nelliel\Domain $domain, int $limit = 0)
 {
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
@@ -32,9 +32,15 @@ function nel_render_news_list($domain)
             PDO::FETCH_ASSOC);
     $news_page = $dom->getElementById('news-page');
     $news_page_nodes = $news_page->getElementsByAttributeName('data-parse-id', true);
+    $limit_counter = 0;
 
     foreach ($news_entries as $news_entry)
     {
+        if($limit_counter !== 0 && $limit_counter >= $limit)
+        {
+            break;
+        }
+
         $news_entry_div = $dom->copyNode($news_page_nodes['news-entry'], $news_page, 'append');
         $news_entry_nodes = $news_entry_div->getElementsByAttributeName('data-parse-id', true);
         $poster_name = $authorization->getUser($news_entry['poster_id'])->auth_data['display_name'];
@@ -47,6 +53,8 @@ function nel_render_news_list($domain)
             $news_entry_nodes['text']->appendChild($dom->createTextNode($line));
             $news_entry_nodes['text']->appendChild($dom->createElement('br'));
         }
+
+        ++$limit_counter;
     }
 
     $news_page_nodes['news-entry']->remove();

@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treeline = null)
+function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treeline = null, $index_render = false)
 {
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
@@ -30,15 +30,18 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
     }
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
-    $title_content = $domain->setting('board_name');
+    $title_content = $domain->setting('board_title');
 
-    if (isset($treeline[0]['subject']) && $treeline[0]['subject'] === '')
+    if(!$index_render)
     {
-        $title_content = $domain->setting('board_name') . ' > Thread #' . $treeline[0]['post_number'];
-    }
-    else
-    {
-        $title_content = $domain->setting('board_name') . ' > ' . $treeline[0]['subject'];
+        if (!isset($treeline[0]['subject']) || nel_true_empty($treeline[0]['subject']))
+        {
+            $title_content = $domain->setting('board_title') . ' > Thread #' . $treeline[0]['post_number'];
+        }
+        else
+        {
+            $title_content = $domain->setting('board_title') . ' > ' . $treeline[0]['subject'];
+        }
     }
 
     $title_element->setContent($title_content);

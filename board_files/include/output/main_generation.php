@@ -33,7 +33,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
     if ($counttree === 0)
     {
         $domain->renderInstance()->startRenderTimer();
-        nel_render_board_header($domain, $dotdot, $treeline);
+        nel_render_board_header($domain, $dotdot, $treeline, true);
         nel_render_posting_form($domain, $response_to, $dotdot);
         nel_render_general_footer($domain, $dotdot, true);
         ;
@@ -63,7 +63,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
         $translator->translateDom($dom, $domain->setting('language'));
         $dom->getElementById('form-content-action')->extSetAttribute('action',
                 $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $domain->id());
-        nel_render_board_header($domain, $dotdot, $treeline);
+        nel_render_board_header($domain, $dotdot, $treeline, true);
         nel_render_posting_form($domain, $response_to, $dotdot);
         $sub_page_thread_counter = 0;
         $post_counter = -1;
