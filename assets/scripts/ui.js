@@ -11,22 +11,10 @@ nelliel.ui.hideShowThread = function(element, command) {
         delete dataBin.hidden_threads[content_id.id_string];
     }
 
-    if (thread_container !== null) {
-        nelliel.ui.toggleHidden(thread_container);
-    }
-
-    if (post_files !== null) {
-        nelliel.ui.toggleHidden(post_files);
-    }
-
-    if (post_contents !== null) {
-        nelliel.ui.toggleHidden(post_contents);
-    }
-    
-    if (post_header_options !== null) {
-        nelliel.ui.toggleHidden(post_header_options);
-    }
-
+    nelliel.ui.toggleHidden(thread_container);
+    nelliel.ui.toggleHidden(post_files);
+    nelliel.ui.toggleHidden(post_contents);
+    nelliel.ui.toggleHidden(post_header_options);
     nelliel.core.storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
     nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
@@ -43,14 +31,8 @@ nelliel.ui.hideShowPost = function(element, command) {
         delete dataBin.hidden_posts[content_id.id_string];
     }
 
-    if (post_files !== null) {
-        nelliel.ui.toggleHidden(post_files);
-    }
-
-    if (post_contents !== null) {
-        nelliel.ui.toggleHidden(post_contents);
-    }
-
+    nelliel.ui.toggleHidden(post_files);
+    nelliel.ui.toggleHidden(post_contents);
     nelliel.core.storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
     nelliel.ui.switchDataCommand(element, "hide-post", "show-post");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
@@ -75,22 +57,11 @@ nelliel.ui.applyHidePostThread = function() {
         } else {
             cids.push(id);
         }
-        
-        if (thread_container !== null) {
-            nelliel.ui.toggleHidden(thread_container);
-        }
-        
-        if (post_files !== null) {
-            nelliel.ui.toggleHidden(post_files);
-        }
-        
-        if (post_contents !== null) {
-            nelliel.ui.toggleHidden(post_contents);
-        }
-        
-        if (post_header_options !== null) {
-            nelliel.ui.toggleHidden(post_header_options);
-        }
+
+        nelliel.ui.toggleHidden(thread_container);
+        nelliel.ui.toggleHidden(post_files);
+        nelliel.ui.toggleHidden(post_contents);
+        nelliel.ui.toggleHidden(post_header_options);
     }
 
     for (var id in dataBin.hidden_posts) {
@@ -108,13 +79,8 @@ nelliel.ui.applyHidePostThread = function() {
             cids.push(id);
         }
 
-        if (post_files !== null) {
-            nelliel.ui.toggleHidden(post_files);
-        }
-
-        if (post_contents !== null) {
-            nelliel.ui.toggleHidden(post_contents);
-        }
+        nelliel.ui.toggleHidden(post_files);
+        nelliel.ui.toggleHidden(post_contents);
     }
 }
 
@@ -258,6 +224,10 @@ nelliel.ui.linkPost = function(element) {
 }
 
 nelliel.ui.toggleHidden = function(element) {
+    if (element === null) {
+        return;
+    }
+    
     if (element.className.search("hidden") === -1) {
         element.className += " hidden";
     } else {

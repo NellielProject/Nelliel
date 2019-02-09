@@ -118,6 +118,8 @@ class Setup
         $board_data_table->setup();
         $captcha_table = new TableCaptcha($database, $sql_helpers);
         $captcha_table->setup();
+        $cites_table = new TableCites($database, $sql_helpers);
+        $cites_table->setup();
         $board_defaults_table = new TableBoardConfig($database, $sql_helpers);
         $board_defaults_table->tableName(BOARD_DEFAULTS_TABLE);
         $board_defaults_table->setup();
