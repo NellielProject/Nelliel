@@ -73,6 +73,12 @@ form {
 
 }
 
+.top-nav-menu {
+    float: right;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
 /* Footer */
 .footer {
     clear: both;
@@ -93,12 +99,6 @@ form {
 }
 
 /* Management */
-.admin-bar {
-    float: right;
-    padding-top: 6px;
-    padding-bottom: 6px;
-}
-
 .manage-header {
     background-color: #404040;
     font-family: sans-serif;
@@ -463,6 +463,43 @@ form {
     color: #22BB88;
     padding: 1px;
     float: left;
+}
+
+/* News */
+
+.news-page {
+    margin: auto;
+    max-width: 60rem;
+    text-align: left;
+    border: 2px solid #114499;
+}
+
+.news-entry {
+	border-bottom: 1px solid;
+}
+
+.news-headline-bar {
+	padding: 3px;
+	background-color: #404040;
+}
+
+.news-headline {
+	font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.news-poster {
+    font-size: 1.0rem;
+}
+
+.news-time {
+    font-size: 1.0rem;
+}
+
+.news-text {
+    padding: 3px;
+    text-align: left;
+    background-color: #2A2A2A;
 }
 
 /* Other */

@@ -66,7 +66,7 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
     $board_banner = $dom->getElementById('top-board-banner');
     $favicon = $dom->getElementById('favicon-link');
 
-    if($site_domain->setting('show_site_favicon') || $domain->setting('show_board_favicon'))
+    if ($site_domain->setting('show_site_favicon') || $domain->setting('show_board_favicon'))
     {
         if ($site_domain->setting('show_site_favicon'))
         {
@@ -114,20 +114,21 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
         $board_title->remove();
     }
 
-    $top_admin_span = $dom->getElementById('top-admin-span');
-    $a_elements = $top_admin_span->getElementsByTagName('a');
-    $a_elements->item(1)->extSetAttribute('href', $site_domain->setting('home_page'));
+    $top_nav_menu = $dom->getElementById('top-nav-menu');
+    $top_nav_menu_nodes = $top_nav_menu->getElementsByAttributeName('data-parse-id', true);
+    $top_nav_menu_nodes['home']->extSetAttribute('href', $site_domain->setting('home_page'));
+    $top_nav_menu_nodes['news']->extSetAttribute('href', $dotdot . 'news.html');
 
     if ($session->isActive() && !$domain->renderActive())
     {
-        $a_elements->item(2)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=main-panel');
+        $top_nav_menu_nodes['manage']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=main-panel');
     }
     else
     {
-        $a_elements->item(2)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=login');
+        $top_nav_menu_nodes['manage']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=login');
     }
 
-    $a_elements->item(3)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?about_nelliel');
+    $top_nav_menu_nodes['about-nelliel']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?about_nelliel');
 
     $dom->getElementById('manage-board-header')->remove();
     $dom->getElementById('manage-sub-header')->remove();
@@ -135,11 +136,11 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
     if ($session->inModmode($domain->id()) && !$domain->renderActive())
     {
         $dom->getElementById('manage-header-text')->setContent(_gettext('Mod Mode'));
-        $a_elements->item(0)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=logout');
+        $top_nav_menu_nodes['logout']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=logout');
     }
     else
     {
-        $a_elements->item(0)->parentNode->remove();
+        $top_nav_menu_nodes['logout']->parentNode->remove();
         $dom->getElementById('manage-header')->remove();
     }
 
@@ -171,7 +172,7 @@ function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $ext
 
     $favicon = $dom->getElementById('favicon-link');
 
-    if($site_domain->setting('show_site_favicon') || $domain->setting('show_board_favicon'))
+    if ($site_domain->setting('show_site_favicon') || $domain->setting('show_board_favicon'))
     {
         if ($site_domain->setting('show_site_favicon'))
         {
@@ -190,20 +191,21 @@ function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $ext
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
     $title_element->setContent('Nelliel Imageboard');
-    $top_admin_span = $dom->getElementById('top-admin-span');
-    $a_elements = $top_admin_span->getElementsByTagName('a');
-    $a_elements->item(1)->extSetAttribute('href', $site_domain->setting('home_page'));
+    $top_nav_menu = $dom->getElementById('top-nav-menu');
+    $top_nav_menu_nodes = $top_nav_menu->getElementsByAttributeName('data-parse-id', true);
+    $top_nav_menu_nodes['home']->extSetAttribute('href', $site_domain->setting('home_page'));
+    $top_nav_menu_nodes['news']->extSetAttribute('href', $dotdot . 'news.html');
 
-    if ($session->isActive())
+    if ($session->isActive() && !$domain->renderActive())
     {
-        $a_elements->item(2)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=main-panel');
+        $top_nav_menu_nodes['manage']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=main-panel');
     }
     else
     {
-        $a_elements->item(2)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=login');
+        $top_nav_menu_nodes['manage']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=login');
     }
 
-    $a_elements->item(3)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?about_nelliel');
+    $top_nav_menu_nodes['about-nelliel']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?about_nelliel');
 
     if (($session->isActive() || $session->inModmode($domain->id())))
     {
@@ -223,14 +225,63 @@ function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $ext
             $dom->getElementById('manage-sub-header-text')->setContent($extra_data['sub_header']);
         }
 
-        $a_elements->item(0)->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=logout');
+        $top_nav_menu_nodes['logout']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=logout');
     }
     else
     {
-        $top_admin_span->removeChild($a_elements->item(0)->parentNode);
+        $top_nav_menu_nodes['logout']->parentNode->remove();
         $dom->getElementById('manage-header')->remove();
         $dom->getElementById('manage-board-header')->remove();
         $dom->getElementById('manage-sub-header')->remove();
+    }
+
+    $translator->translateDom($dom);
+    $domain->renderInstance()->appendHTMLFromDOM($dom);
+}
+
+function nel_render_simple_header(\Nelliel\Domain $domain, $dotdot = null)
+{
+    $database = nel_database();
+    $authorization = new \Nelliel\Auth\Authorization($database);
+    $translator = new \Nelliel\Language\Translator();
+    $session = new \Nelliel\Session($authorization);
+    $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $database);
+    $dotdot = (!empty($dotdot)) ? $dotdot : '';
+    $dom = $domain->renderInstance()->newDOMDocument();
+    $domain->renderInstance()->loadTemplateFromFile($dom, 'simple_header.html');
+    $head_element = $dom->getElementsByTagName('head')->item(0);
+    $dotdot = (!empty($dotdot)) ? $dotdot : '';
+    $dom->getElementById('js-main-file')->extSetAttribute('src', $dotdot . SCRIPTS_WEB_PATH . 'nel.js');
+    $style_data = $database->executeFetch(
+            'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' AND "is_default" = 1', PDO::FETCH_ASSOC);
+    $style_info = json_decode($style_data['info'], true);
+    $style_link = $dom->createElement('link');
+    $style_link->extSetAttribute('rel', 'stylesheet');
+    $style_link->extSetAttribute('type', 'text/css');
+    $style_link->extSetAttribute('href',
+            $dotdot . STYLES_WEB_PATH . $style_info['directory'] . '/' . $style_info['main_file']);
+    $head_element->appendChild($style_link);
+
+    $site_banner = $dom->getElementById('top-site-banner');
+
+    if ($site_domain->setting('show_site_banner'))
+    {
+        $site_banner->extSetAttribute('src', $site_domain->setting('site_banner'));
+    }
+    else
+    {
+        $site_banner->remove();
+    }
+
+    $favicon = $dom->getElementById('favicon-link');
+
+    if ($site_domain->setting('show_site_favicon'))
+    {
+            $favicon->extSetAttribute('href', $site_domain->setting('site_favicon'));
+    }
+    else
+    {
+        $favicon->remove();
     }
 
     $translator->translateDom($dom);

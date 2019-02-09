@@ -11,6 +11,7 @@ use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
 require_once INCLUDE_PATH . 'output/management/news_panel.php';
+require_once INCLUDE_PATH . 'output/news.php';
 
 class AdminNews extends AdminHandler
 {
@@ -66,6 +67,7 @@ class AdminNews extends AdminHandler
         $prepared = $this->database->prepare($query);
         $this->database->executePrepared($prepared,
                 [$news_info['poster_id'], $news_info['headline'], $news_info['time'], $news_info['text']]);
+        nel_render_news();
     }
 
     public function editor($user)
@@ -86,6 +88,6 @@ class AdminNews extends AdminHandler
         $entry = $_GET['entry'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEWS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$entry]);
-        $this->renderPanel($user);
+        nel_render_news();
     }
 }

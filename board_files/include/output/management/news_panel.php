@@ -34,7 +34,7 @@ function nel_render_news_panel($user, \Nelliel\Domain $domain)
         $news_entry_row->extSetAttribute('class', $bgclass);
         $news_entry_row_nodes = $news_entry_row->getElementsByAttributeName('data-parse-id', true);
         $news_entry_row_nodes['headline']->setContent($news_entry['headline']);
-        $news_entry_row_nodes['time']->setContent($news_entry['time']);
+        $news_entry_row_nodes['time']->setContent(date('Y/m/d (D) H:i:s', $news_entry['time']));
         $remove_link = $url_constructor->dynamic(MAIN_SCRIPT,
                 ['module' => 'news', 'action' => 'remove', 'entry' => $news_entry['entry']]);
         $news_entry_row_nodes['news-remove-link']->extSetAttribute('href', $remove_link);

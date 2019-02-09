@@ -80,6 +80,14 @@ abstract class Domain
 
     public function renderInstance($new_instance = null)
     {
+        if (is_null($new_instance) && empty($this->render_instance))
+        {
+            $this->render_instance = new RenderCore();
+            $front_end_data = new FrontEndData($this->database);
+            $this->templatePath(TEMPLATES_FILE_PATH . $front_end_data->template($this->setting('template_id'))['directory']);
+            $this->render_instance->getTemplateInstance()->setTemplatePath($this->template_path);
+        }
+
         if (!is_null($new_instance))
         {
             $this->render_instance = $new_instance;
@@ -87,6 +95,7 @@ abstract class Domain
             $this->templatePath(TEMPLATES_FILE_PATH . $front_end_data->template($this->setting('template_id'))['directory']);
             $this->render_instance->getTemplateInstance()->setTemplatePath($this->template_path);
         }
+
         return $this->render_instance;
     }
 
