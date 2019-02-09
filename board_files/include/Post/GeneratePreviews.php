@@ -155,24 +155,35 @@ class GeneratePreviews
 
     public function imagemagickPreview($file, $preview_path)
     {
-        if ($file->content_data['format'] === 'gif' && $iterations > 0 && $this->domain->setting('animated_gif_preview'))
+        if ($file->content_data['format'] === 'gif' && $this->domain->setting('animated_gif_preview'))
         {
-            $file->content_data['preview_extension'] = 'gif';
-            $cmd_resize = 'convert ' . escapeshellarg($file->content_data['location']) . ' -coalesce -thumbnail ' .
-                    $this->domain->setting('max_width') . 'x' . $this->domain->setting('max_height') . escapeshellarg(
-                            $preview_path . $file->content_data['preview_name'] . '.' .
-                            $file->content_data['preview_extension']);
-            exec($cmd_resize);
-            chmod($preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension'],
-                    octdec(FILE_PERM));
+            if ($file->content_data['display_width'] <= $this->domain->setting('max_width') &&
+                    $file->content_data['display_height'] <= $this->domain->setting('max_height'))
+            {
+                copy($file->content_data['location'],
+                        $preview_path . $file->content_data['preview_name'] . '.' .
+                        $file->content_data['preview_extension']);
+            }
+            else
+            {
+                $file->content_data['preview_extension'] = 'gif';
+                $cmd_resize = 'convert ' . escapeshellarg($file->content_data['location']) . ' -coalesce -resize ' .
+                        $this->domain->setting('max_width') . 'x' . $this->domain->setting('max_height') . ' ' . escapeshellarg(
+                                $preview_path . $file->content_data['preview_name'] . '.' .
+                                $file->content_data['preview_extension']);
+                exec($cmd_resize);
+                chmod(
+                        $preview_path . $file->content_data['preview_name'] . '.' .
+                        $file->content_data['preview_extension'], octdec(FILE_PERM));
+            }
         }
         else
         {
             if ($this->domain->setting('use_png_thumb'))
             {
                 $cmd_resize = 'convert ' . escapeshellarg($file->content_data['location']) . ' -resize ' .
-                        $this->domain->setting('max_width') . 'x' . $this->domain->setting('max_height') .
-                        '\> -quality ' . $this->domain->setting('png_compression') . ' -sharpen 0x0.5 ' . escapeshellarg(
+                        $this->domain->setting('max_width') . 'x' . $this->domain->setting('max_height') . '\> -quality ' .
+                        $this->domain->setting('png_compression') . ' -sharpen 0x0.5 ' . escapeshellarg(
                                 $preview_path . $file->content_data['preview_name'] . '.' .
                                 $file->content_data['preview_extension']);
             }
@@ -216,8 +227,8 @@ class GeneratePreviews
 
         if ($preview !== false)
         {
-            $sharpen_matrix = [[0.0, -0.5, 0.0],[-0.5, 6.5, -0.5],[0.0, -0.5, 0.0]];
-            $divisor = array_sum(array_map('array_sum', $sharpen_matriz));
+            $sharpen_matrix = [[0.0, -0.5, 0.0], [-0.5, 6.5, -0.5], [0.0, -0.5, 0.0]];
+            $divisor = array_sum(array_map('array_sum', $sharpen_matrix));
             imagecopyresampled($preview, $image, 0, 0, 0, 0, $file->content_data['preview_width'],
                     $file->content_data['preview_height'], $file->content_data['display_width'],
                     $file->content_data['display_height']);
