@@ -550,7 +550,7 @@ function nel_render_post($domain, $gen_data, $dom)
             {
                 if (!$cites->generateCiteElement($domain, $append_target, $post_content_id, $segment))
                 {
-                    if (preg_match('#^\s*>>#', $segment) === 1)
+                    if (preg_match('#^\s*>#', $segment) === 1)
                     {
                         $segment_node = $output_filter->postQuote($append_target, $segment);
                     }
