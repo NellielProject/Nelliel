@@ -831,6 +831,30 @@
 					<input type="text" name="no_comment_text" id="no_comment_text" size="30" value="">
 				</td>
 			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="display_post_backlinks_lock" value="0">
+					<input type="checkbox" name="display_post_backlinks_lock" id="display_post_backlinks_lock" value="1">
+					<label for="display_post_backlinks_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<input type="hidden" name="display_post_backlinks" value="0">
+					<input type="checkbox" name="display_post_backlinks" id="display_post_backlinks" value="1">
+					<label for="display_post_backlinks" data-i18n="gettext">Display backlinks for a post that has been referenced</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="display_poster_id_lock" value="0">
+					<input type="checkbox" name="display_poster_id_lock" id="display_poster_id_lock" value="1">
+					<label for="display_poster_id_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<input type="hidden" name="display_poster_id" value="0">
+					<input type="checkbox" name="display_poster_id" id="display_poster_id" value="1">
+					<label for="display_poster_id" data-i18n="gettext">Display ID for posters in a thread</label>
+				</td>
+			</tr>
 		</table>
 		<hr>
 		<table data-parse-id="filetype-category-table" class="text-left">

@@ -113,29 +113,40 @@ function nel_render_post($domain, $gen_data, $dom)
     $header_nodes['hide-post']->extSetAttribute('data-content-id', $post_content_id->getIDString());
     $header_nodes['hide-post']->changeID('hide-post-' . $post_content_id->getIDString());
 
-    $raw_poster_id = hash('sha256', @inet_ntop($post_data['ip_address']) . $thread_data['thread_id'] . TRIPCODE_PEPPER);
-    $poster_id = substr($raw_poster_id, 0, $domain->setting('poster_id_length'));
-    $header_nodes['poster-id']->setContent('ID: ' . $poster_id);
-
-    $prepared = $database->prepare('SELECT * FROM "' . CITES_TABLE . '" WHERE "target_board" = ? AND "target_post" = ?');
-    $cite_list = $database->executePreparedFetchAll($prepared, [$domain->id(), $post_content_id->post_id], PDO::FETCH_ASSOC);
-
-    foreach ($cite_list as $cite)
+    if ($domain->setting('display_poster_id'))
     {
-        if($cite['source_board'] == $domain->id())
-        {
-            $backlink_text = '>>' . $cite['source_post'];
-        }
-        else
-        {
-            $backlink_text = '>>>/' . $cite['source_board'] . '/' . $cite['source_post'];
-        }
+        $raw_poster_id = hash('sha256',
+                @inet_ntop($post_data['ip_address']) . $thread_data['thread_id'] . TRIPCODE_PEPPER);
+        $poster_id = substr($raw_poster_id, 0, $domain->setting('poster_id_length'));
+        $header_nodes['poster-id']->setContent('ID: ' . $poster_id);
+    }
 
-        $post_backlink = $cites->createPostLinkElement($domain, $header_nodes['post-header-info'], $post_content_id, $backlink_text, 'post-backlink');
+    if ($domain->setting('display_post_backlinks'))
+    {
 
-        if($post_backlink->hasAttribute('href'))
+        $prepared = $database->prepare(
+                'SELECT * FROM "' . CITES_TABLE . '" WHERE "target_board" = ? AND "target_post" = ?');
+        $cite_list = $database->executePreparedFetchAll($prepared, [$domain->id(), $post_content_id->post_id],
+                PDO::FETCH_ASSOC);
+
+        foreach ($cite_list as $cite)
         {
-            $header_nodes['post-header-info']->appendChild($post_backlink);
+            if ($cite['source_board'] == $domain->id())
+            {
+                $backlink_text = '>>' . $cite['source_post'];
+            }
+            else
+            {
+                $backlink_text = '>>>/' . $cite['source_board'] . '/' . $cite['source_post'];
+            }
+
+            $post_backlink = $cites->createPostLinkElement($domain, $header_nodes['post-header-info'], $post_content_id,
+                    $backlink_text, 'post-backlink');
+
+            if ($post_backlink->hasAttribute('href'))
+            {
+                $header_nodes['post-header-info']->appendChild($post_backlink);
+            }
         }
     }
 
