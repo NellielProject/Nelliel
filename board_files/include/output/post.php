@@ -47,6 +47,7 @@ function nel_render_post($domain, $gen_data, $dom)
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $session = new \Nelliel\Session($authorization);
     $output_filter = new \Nelliel\OutputFilter();
+    $cites = new \Nelliel\Cites(nel_database());
     $response = $gen_data['post']['op'] != 1;
     $post_data = $gen_data['post'];
     $thread_data = $gen_data['thread'];
@@ -540,14 +541,7 @@ function nel_render_post($domain, $gen_data, $dom)
                 break;
             }
 
-            $quote_result = $output_filter->postQuote($append_target, $line);
-
-            if ($quote_result !== false)
-            {
-                $append_target = $quote_result;
-            }
-
-            $output_filter->postQuoteLink($domain, $append_target, $line);
+            $cites->generateLink($domain, $append_target, $line);
             $append_target->appendChild($new_post_dom->createElement('br'));
             ++$line_count;
         }
