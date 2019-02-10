@@ -54,9 +54,9 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
     {
         $board_link = $dom->createElement('a');
         $board_link->extSetAttribute('class', 'board-navigation-link');
-        $board_link->extSetAttribute('href', $dotdot . $data['board_directory']);
+        $board_link->extSetAttribute('href', $dotdot . $data['board_id']);
         $board_link->extSetAttribute('title', $domain->setting('board_name'));
-        $board_link->setContent($data['board_directory']);
+        $board_link->setContent($data['board_id']);
         $board_navigation->appendChild($board_link);
 
         if ($data !== $end)

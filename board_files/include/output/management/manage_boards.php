@@ -33,7 +33,7 @@ function nel_render_manage_boards_panel(\Nelliel\Domain $domain, $user)
         $temp_board_info_row->extSetAttribute('class', $bgclass);
         $board_nodes = $temp_board_info_row->getElementsByAttributeName('data-parse-id', true);
         $board_nodes['board-id']->setContent($board_info['board_id']);
-        $board_nodes['board-directory']->setContent($board_info['board_directory']);
+        $board_nodes['board-directory']->setContent($board_info['board_id']);
         $board_nodes['db-prefix']->setContent($board_info['db_prefix']);
 
         if ($board_info['locked'] == 0)

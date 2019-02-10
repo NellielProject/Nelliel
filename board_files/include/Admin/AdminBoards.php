@@ -73,12 +73,11 @@ class AdminBoards extends AdminHandler
         }
 
         $board_id = $_POST['new_board_id'];
-        $board_directory = $_POST['board_directory'];
         $domain = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), $this->database);
         $db_prefix = $domain->id();
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "board_directory", "db_prefix") VALUES (?, ?, ?)');
-        $this->database->executePrepared($prepared, [$domain->id(), $board_directory, $db_prefix]);
+                'INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "db_prefix") VALUES (?, ?, ?)');
+        $this->database->executePrepared($prepared, [$domain->id(), $db_prefix]);
         $setup = new \Nelliel\Setup\Setup();
         $setup->createBoardTables($domain->id());
         $setup->createBoardDirectories($domain->id());
