@@ -38,10 +38,10 @@ class TableCites extends TableHandler
         $options = $this->sql_helpers->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            source_board    VARCHAR(255) DEFAULT NULL,
+            source_board    VARCHAR(255) NOT NULL,
             source_thread   INTEGER DEFAULT NULL,
             source_post     INTEGER DEFAULT NULL,
-            target_board    VARCHAR(255) DEFAULT NULL,
+            target_board    VARCHAR(255) NOT NULL,
             target_thread   INTEGER DEFAULT NULL,
             target_post     INTEGER DEFAULT NULL
         ) " . $options . ";";

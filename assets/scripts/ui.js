@@ -176,35 +176,24 @@ nelliel.ui.showLinkedPost = function(element, event) {
     var element_rect = element.getBoundingClientRect();
     nelliel.ui.addBoundingClientRectProperties(element_rect);
 
-    if (document.getElementById("post-container-" + post_id) !== null) {
-        var quoted_post = document.getElementById("post-container-" + post_id).cloneNode(true);
-        quoted_post.className = quoted_post.className.replace(/\op-post\b/g, "reply-post");
-        quoted_post.className += " popup-mod";
-        popup_div.appendChild(quoted_post);
-        element.parentNode.insertBefore(popup_div, element);
-        var popup_rect = quoted_post.getBoundingClientRect();
-        nelliel.ui.addBoundingClientRectProperties(popup_rect);
-        popup_div.style.left = (element_rect.right + offsetX + 10) + 'px';
-        popup_div.style.top = ((element_rect.y + offsetY) - (popup_rect.height / 2)) + 'px';
-    } else {
-        var request = new XMLHttpRequest();
-        request.open('GET', element.getAttribute("href"));
-        request.responseType = "document";
-        request.onload = function() {
-            if (request.status === 200) {
-                var quoted_post = request.response.getElementById("post-container-" + post_id);
-                quoted_post.className = quoted_post.className.replace(/\op-post\b/g, "reply-post");
-                quoted_post.className += " reply-post.popup-mod";
-                popup_div.appendChild(quoted_post);
-                element.parentNode.insertBefore(popup_div, element);
-                var popup_rect = quoted_post.getBoundingClientRect();
-                nelliel.ui.addBoundingClientRectProperties(popup_rect);
-                popup_div.style.left = (element_rect.right + offsetX + 5) + 'px';
-                popup_div.style.top = ((element_rect.y + offsetY) - (popup_rect.height / 2)) + 'px';
-            }
-        };
-        request.send();
-    }
+    var request = new XMLHttpRequest();
+    request.open('GET', element.getAttribute("href"));
+    request.responseType = "document";
+
+    request.onload = function() {
+        if (request.status === 200) {
+            var quoted_post = request.response.getElementById("post-container-" + post_id);
+            quoted_post.className = quoted_post.className.replace(/\op-post\b/g, "reply-post");
+            popup_div.appendChild(quoted_post);
+            element.parentNode.insertBefore(popup_div, element);
+            var popup_rect = quoted_post.getBoundingClientRect();
+            nelliel.ui.addBoundingClientRectProperties(popup_rect);
+            popup_div.style.left = (element_rect.right + offsetX + 5) + 'px';
+            popup_div.style.top = ((element_rect.y + offsetY) - (popup_rect.height / 2)) + 'px';
+        }
+    };
+
+    request.send();
 }
 
 nelliel.ui.hideLinkedPost = function(element, event) {

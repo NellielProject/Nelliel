@@ -446,7 +446,8 @@ function nel_render_post($domain, $gen_data, $dom)
                     {
                         $front_end_data = new \Nelliel\FrontEndData(nel_database());
                         $icon_set = $front_end_data->filetypeIconSet($domain->setting('filetype_icon_set_id'));
-                        $icons_web_path = '//' . $base_domain_path . '/' . ICON_SETS_WEB_PATH . $icon_set['directory'] . '/';
+                        $icons_web_path = '//' . $base_domain_path . '/' . ICON_SETS_WEB_PATH . $icon_set['directory'] .
+                                '/';
                         $icons_file_path = ICON_SETS_FILE_PATH . $icon_set['directory'] . '/';
                         $format_icon = utf8_strtolower($file['format']) . '.png';
                         $type_icon = utf8_strtolower($file['type']) . '.png';
@@ -531,19 +532,39 @@ function nel_render_post($domain, $gen_data, $dom)
 
         foreach ($output_filter->newlinesToArray($post_data['comment']) as $line)
         {
-            if($gen_data['index_rendering'] && $line_count == $domain->setting('comment_display_lines'))
+            if ($gen_data['index_rendering'] && $line_count == $domain->setting('comment_display_lines'))
             {
                 $hidden_click_span = $new_post_dom->createElement('span', _gettext('This is a long comment. '));
                 $full_comment_link = $new_post_dom->createElement('a', _gettext('Click here for the full text'));
-                $full_comment_link->extSetAttribute('href', $thread_page_web_path . '#t' . $post_content_id->thread_id . 'p' . $post_content_id->post_id, 'none');
+                $full_comment_link->extSetAttribute('href',
+                        $thread_page_web_path . '#t' . $post_content_id->thread_id . 'p' . $post_content_id->post_id,
+                        'none');
                 $hidden_click_span->appendChild($full_comment_link);
                 $append_target->appendChild($hidden_click_span);
                 break;
             }
 
-            $cites->generateLink($domain, $append_target, $line);
+            $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, null, PREG_SPLIT_DELIM_CAPTURE);
+
+            foreach ($segments as $segment)
+            {
+                if (!$cites->generateCiteElement($domain, $append_target, $post_content_id, $segment))
+                {
+                    if (preg_match('#^\s*>>#', $segment) === 1)
+                    {
+                        $segment_node = $output_filter->postQuote($append_target, $segment);
+                    }
+                    else
+                    {
+                        $segment_node = $append_target->ownerDocument->createTextNode($segment);
+                    }
+
+                    $append_target->appendChild($segment_node);
+                }
+            }
+
             $append_target->appendChild($new_post_dom->createElement('br'));
-            ++$line_count;
+            ++ $line_count;
         }
     }
 
