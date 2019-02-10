@@ -33,7 +33,7 @@ class Setup
         $regen = new \Nelliel\Regen();
         $regen->siteCache(new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database()));
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->writeInternalFile(BASE_PATH . 'install_done.php', '');
+        $file_handler->writeInternalFile(BASE_PATH . 'install_done.php', '', true, false);
         echo _gettext(
                 "Install has finished with no apparent problems! When you're ready to continue, follow this link: ");
         echo '<a href="' . BASE_WEB_PATH . '">' . _gettext('Default home page') . '</a>';
@@ -60,7 +60,7 @@ class Setup
             $generated = $this->generateConfigValues();
             $prepend = "\n" . '// DO NOT EDIT THESE VALUES OR REMOVE THIS FILE UNLESS YOU HAVE A DAMN GOOD REASON';
             $file_handler->writeInternalFile(CONFIG_FILE_PATH . 'generated.php',
-                    $prepend . "\n" . '$generated = ' . var_export($generated, true) . ';');
+                    $prepend . "\n" . '$generated = ' . var_export($generated, true) . ';', true, false);
         }
     }
 

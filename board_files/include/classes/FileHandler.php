@@ -23,6 +23,7 @@ class FileHandler
             $this->createDirectory(dirname($file), $dir_chmod, true);
         }
 
+        if ($temp_move)
         {
             $file = uniqid();
         }

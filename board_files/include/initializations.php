@@ -129,9 +129,11 @@ define('NEL_PASSWORD_ARGON2_THREADS', $crypt_config['password_argon2_threads']);
 $setup = new \Nelliel\Setup\Setup();
 $setup->checkGenerated();
 
-require_once CONFIG_FILE_PATH . 'generated.php';
-
-define('TRIPCODE_PEPPER', $generated['tripcode_pepper']);
+if(file_exists(CONFIG_FILE_PATH . 'generated.php'))
+{
+    include_once CONFIG_FILE_PATH . 'generated.php';
+    define('TRIPCODE_PEPPER', $generated['tripcode_pepper']);
+}
 
 unset($generated);
 unset($base_config);
