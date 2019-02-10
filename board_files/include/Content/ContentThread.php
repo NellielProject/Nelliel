@@ -107,7 +107,7 @@ class ContentThread extends ContentHandler
             return false;
         }
 
-        if(!$perm_override && $this->domain->reference('locked'))
+        if (!$perm_override && $this->domain->reference('locked'))
         {
             nel_derp(53, _gettext('Cannot remove thread. Board is locked.'));
         }
@@ -127,6 +127,9 @@ class ContentThread extends ContentHandler
         $prepared = $database->prepare(
                 'DELETE FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $database->executePrepared($prepared, [$this->content_id->thread_id]);
+        $prepared = $database->prepare(
+                'DELETE FROM "' . CITES_TABLE . '" WHERE "source_thread" = ? OR "target_thread" = ?');
+        $database->executePrepared($prepared, [$this->content_id->thread_id, $this->content_id->thread_id]);
         return true;
     }
 

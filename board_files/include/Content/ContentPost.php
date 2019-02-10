@@ -139,12 +139,12 @@ class ContentPost extends ContentHandler
         $this->removeFromDatabase();
         $this->removeFromDisk();
 
-        $query = 'SELECT "entry" FROM "' . $this->domain->reference('content_table') .
-        '" WHERE "post_ref" = ?';
+        $query = 'SELECT "entry" FROM "' . $this->domain->reference('content_table') . '" WHERE "post_ref" = ?';
         $prepared = $this->database->prepare($query);
-        $content_entries = $this->database->executePreparedFetchAll($prepared, [$this->content_id->post_id], PDO::FETCH_COLUMN);
+        $content_entries = $this->database->executePreparedFetchAll($prepared, [$this->content_id->post_id],
+                PDO::FETCH_COLUMN);
 
-        foreach($content_entries as $entry)
+        foreach ($content_entries as $entry)
         {
             $content = new ContentFile($this->database, $this->content_id, $this->domain);
             $content->remove();
@@ -166,6 +166,9 @@ class ContentPost extends ContentHandler
         $prepared = $database->prepare(
                 'DELETE FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $database->executePrepared($prepared, [$this->content_id->post_id]);
+        $prepared = $database->prepare(
+                'DELETE FROM "' . CITES_TABLE . '" WHERE "source_post" = ? OR "target_post" = ?');
+        $database->executePrepared($prepared, [$this->content_id->post_id, $this->content_id->post_id]);
         return true;
     }
 
@@ -266,8 +269,8 @@ class ContentPost extends ContentHandler
             $prepared = $this->database->prepare(
                     'UPDATE "' . $this->domain->reference('content_table') .
                     '" SET "parent_thread" = ? WHERE "post_ref" = ?');
-            $this->database->executePrepared($prepared,
-                    [$new_thread->content_id->thread_id, $this->content_id->post_id]);
+            $this->database->executePrepared($prepared, [$new_thread->content_id->thread_id,
+                $this->content_id->post_id]);
         }
 
         $this->loadFromDatabase();

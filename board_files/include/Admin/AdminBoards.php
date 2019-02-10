@@ -34,7 +34,7 @@ class AdminBoards extends AdminHandler
         }
         else if ($inputs['action'] === 'remove')
         {
-            if(isset($_GET['action-confirmed']) && $_GET['action-confirmed'] === 'true')
+            if (isset($_GET['action-confirmed']) && $_GET['action-confirmed'] === 'true')
             {
                 $this->remove($user);
             }
@@ -110,37 +110,37 @@ class AdminBoards extends AdminHandler
         $board_id = $_GET['board_id'];
         $domain = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), $this->database);
 
-        if($this->database->tableExists($domain->reference('config_table')))
+        if ($this->database->tableExists($domain->reference('config_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('config_table'));
         }
 
-        if($this->database->tableExists($domain->reference('content_table')))
+        if ($this->database->tableExists($domain->reference('content_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('content_table'));
         }
 
-        if($this->database->tableExists($domain->reference('posts_table')))
+        if ($this->database->tableExists($domain->reference('posts_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('posts_table'));
         }
 
-        if($this->database->tableExists($domain->reference('threads_table')))
+        if ($this->database->tableExists($domain->reference('threads_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('threads_table'));
         }
 
-        if($this->database->tableExists($domain->reference('archive_content_table')))
+        if ($this->database->tableExists($domain->reference('archive_content_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('archive_content_table'));
         }
 
-        if($this->database->tableExists($domain->reference('archive_posts_table')))
+        if ($this->database->tableExists($domain->reference('archive_posts_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('archive_posts_table'));
         }
 
-        if($this->database->tableExists($domain->reference('archive_threads_table')))
+        if ($this->database->tableExists($domain->reference('archive_threads_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('archive_threads_table'));
         }
@@ -149,6 +149,9 @@ class AdminBoards extends AdminHandler
         $file_handler->eraserGun($domain->reference('board_path'));
         $prepared = $this->database->prepare('DELETE FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
+        $prepared = $database->prepare(
+                'DELETE FROM "' . CITES_TABLE . '" WHERE "source_board" = ? OR "target_board" = ?');
+        $database->executePrepared($prepared, [$board_id, $board_id]);
     }
 
     public function lock($user)
@@ -177,11 +180,12 @@ class AdminBoards extends AdminHandler
 
     public function createInterstitial()
     {
-        $message = _gettext('Are you certain you want to delete the board? Everything will be gone and this cannot be undone!');
+        $message = _gettext(
+                'Are you certain you want to delete the board? Everything will be gone and this cannot be undone!');
         $url_constructor = new \Nelliel\URLConstructor();
         $continue_link['href'] = $url_constructor->dynamic(MAIN_SCRIPT,
                 ['module' => 'manage-boards', 'action' => 'remove', 'action-confirmed' => 'true',
-                'board_id' => $_GET['board_id']]);
+                    'board_id' => $_GET['board_id']]);
         $continue_link['text'] = _gettext('Confirm and delete the board.');
         nel_render_board_removal_interstitial($this->domain, $message, $continue_link);
     }
