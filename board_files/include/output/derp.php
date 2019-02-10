@@ -7,7 +7,16 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_derp($diagnostic, $domain_id = '')
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $domain = new \Nelliel\DomainBoard($domain_id, new \Nelliel\CacheHandler(), nel_database());
+
+    if($domain_id === '')
+    {
+        $domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database());
+    }
+    else
+    {
+        $domain = new \Nelliel\DomainBoard($domain_id, new \Nelliel\CacheHandler(), nel_database());
+    }
+
     $domain->renderInstance(new \Nelliel\RenderCore());
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
