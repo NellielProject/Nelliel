@@ -114,7 +114,7 @@ class ContentFile extends ContentHandler
                 $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
                 DIRECTORY_PERM);
         $file_handler->createDirectory(
-                $this->domain->reference('thumb_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
                 DIRECTORY_PERM);
     }
 
@@ -163,7 +163,7 @@ class ContentFile extends ContentHandler
         $file_handler->eraserGun($this->domain->reference('src_path'),
                 $this->content_id->thread_id . '/' . $this->content_id->post_id . '/' . $this->content_data['filename'] .
                 '.' . $this->content_data['extension']);
-                $file_handler->eraserGun($this->domain->reference('thumb_path'),
+                $file_handler->eraserGun($this->domain->reference('preview_path'),
                 $this->content_id->thread_id . '/' . $this->content_id->post_id . '/' .
                 $this->content_data['preview_name'] . '.' . $this->content_data['preview_extension']);
     }

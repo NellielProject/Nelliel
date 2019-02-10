@@ -389,7 +389,7 @@ msgid "Number of files to display in each row of post"
 msgstr ""
 
 #: board_files/templates/nelliel/management/board_settings_panel.html
-msgid "Use thumbnails"
+msgid "Use previews"
 msgstr ""
 
 #: board_files/templates/nelliel/management/board_settings_panel.html
@@ -405,7 +405,7 @@ msgid "Use newer, individual file delete"
 msgstr ""
 
 #: board_files/templates/nelliel/management/board_settings_panel.html
-msgid "Use PNG for thumbnails instead of JPEG"
+msgid "Use PNG for previews instead of JPEG"
 msgstr ""
 
 #: board_files/templates/nelliel/management/board_settings_panel.html
@@ -413,7 +413,7 @@ msgid "Create animated GIF preview"
 msgstr ""
 
 #: board_files/templates/nelliel/management/board_settings_panel.html
-msgid "JPEG thumbnail quality (0 - 100)"
+msgid "JPEG preview quality (0 - 100)"
 msgstr ""
 
 #: board_files/templates/nelliel/management/board_settings_panel.html

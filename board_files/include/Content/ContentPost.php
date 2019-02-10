@@ -120,7 +120,7 @@ class ContentPost extends ContentHandler
                 $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
                 DIRECTORY_PERM);
         $file_handler->createDirectory(
-                $this->domain->reference('thumb_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
                 DIRECTORY_PERM);
     }
 
@@ -178,7 +178,7 @@ class ContentPost extends ContentHandler
         $file_handler->eraserGun(
                 $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id);
         $file_handler->eraserGun(
-                $this->domain->reference('thumb_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id);
+                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id);
     }
 
     public function updateCounts()
@@ -256,8 +256,8 @@ class ContentPost extends ContentHandler
                 $this->domain->reference('src_path') . '/' . $new_thread->content_id->thread_id . '/' .
                 $this->content_id->post_id, true);
         $file_handler->moveDirectory(
-                $this->domain->reference('thumb_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
-                $this->domain->reference('thumb_path') . '/' . $new_thread->content_id->thread_id . '/' .
+                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                $this->domain->reference('preview_path') . '/' . $new_thread->content_id->thread_id . '/' .
                 $this->content_id->post_id, true);
 
         $prepared = $this->database->prepare(

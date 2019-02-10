@@ -48,18 +48,18 @@ class DomainBoard extends Domain
         $new_reference['db_prefix'] = $board_data['db_prefix'];
         $new_reference['locked'] = (bool) $board_data['locked'];
         $new_reference['src_dir'] = 'src';
-        $new_reference['thumb_dir'] = 'thumb';
+        $new_reference['preview_dir'] = 'preview';
         $new_reference['page_dir'] = 'threads';
         $new_reference['archive_dir'] = 'archive';
         $new_reference['board_path'] = $board_path;
         $new_reference['src_path'] = $board_path . $new_reference['src_dir'] . '/';
-        $new_reference['thumb_path'] = $board_path . $new_reference['thumb_dir'] . '/';
+        $new_reference['preview_path'] = $board_path . $new_reference['preview_dir'] . '/';
         $new_reference['page_path'] = $board_path . $new_reference['page_dir'] . '/';
         $new_reference['archive_path'] = $board_path . $new_reference['archive_dir'] . '/';
         $new_reference['archive_src_path'] = $board_path . $new_reference['archive_dir'] . '/' .
                 $new_reference['src_dir'] . '/';
-        $new_reference['archive_thumb_path'] = $board_path . $new_reference['archive_dir'] . '/' .
-                $new_reference['thumb_dir'] . '/';
+        $new_reference['archive_preview_path'] = $board_path . $new_reference['archive_dir'] . '/' .
+                $new_reference['preview_dir'] . '/';
         $new_reference['archive_page_path'] = $board_path . $new_reference['archive_dir'] . '/' .
                 $new_reference['page_dir'] . '/';
         $new_reference['posts_table'] = $new_reference['db_prefix'] . '_posts';

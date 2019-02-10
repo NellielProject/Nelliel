@@ -165,10 +165,10 @@ class NewPost
         $fgsfds->modifyCommandData('noko', 'topic', $thread->content_id->thread_id);
         $src_path = $this->domain->reference('src_path') . $thread->content_id->thread_id . '/' .
                 $post->content_id->post_id . '/';
-        $preview_path = $this->domain->reference('thumb_path') . $thread->content_id->thread_id . '/' .
+        $preview_path = $this->domain->reference('preview_path') . $thread->content_id->thread_id . '/' .
                 $post->content_id->post_id . '/';
 
-        // Make thumbnails and do final file processing
+        // Make previews and do final file processing
         $gen_previews = new GeneratePreviews($this->domain);
         $files = $gen_previews->generate($files, $preview_path);
         clearstatcache();

@@ -44,13 +44,13 @@ class GeneratePreviews
                         $ratio * $files[$i]->content_data['display_height']) : $files[$i]->content_data['display_height'];
             }
 
-            if ($this->domain->setting('use_thumb') && $files[$i]->content_data['type'] === 'graphics')
+            if ($this->domain->setting('use_preview') && $files[$i]->content_data['type'] === 'graphics')
             {
                 $file_handler->createDirectory($preview_path, DIRECTORY_PERM, true);
                 $magick_available = $this->magickAvailable();
                 $files[$i]->content_data['preview_name'] = $files[$i]->content_data['filename'] . '-preview';
 
-                if ($this->domain->setting('use_png_thumb'))
+                if ($this->domain->setting('use_png_preview'))
                 {
                     $files[$i]->content_data['preview_extension'] = 'png';
                 }
@@ -137,7 +137,7 @@ class GeneratePreviews
             $image->thumbnailImage($file->content_data['preview_width'], $file->content_data['preview_height'], true);
             $image->sharpenImage(0, 0.5);
 
-            if ($this->domain->setting('use_png_thumb'))
+            if ($this->domain->setting('use_png_preview'))
             {
                 $image->setImageFormat('png');
                 $image->setImageCompressionQuality($this->domain->setting('png_compression'));
@@ -179,7 +179,7 @@ class GeneratePreviews
         }
         else
         {
-            if ($this->domain->setting('use_png_thumb'))
+            if ($this->domain->setting('use_png_preview'))
             {
                 $cmd_resize = 'convert ' . escapeshellarg($file->content_data['location']) . ' -resize ' .
                         $this->domain->setting('max_width') . 'x' . $this->domain->setting('max_height') . '\> -quality ' .
@@ -234,7 +234,7 @@ class GeneratePreviews
                     $file->content_data['display_height']);
             imageconvolution($preview, $sharpen_matrix, $divisor, 0);
 
-            if ($this->domain->setting('use_png_thumb'))
+            if ($this->domain->setting('use_png_preview'))
             {
                 imagepng($preview,
                         $preview_path . $file->content_data['preview_name'] . '.' .

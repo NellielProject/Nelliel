@@ -87,7 +87,7 @@ function nel_render_post($domain, $gen_data, $dom)
             '.html';
     $src_web_path = $board_web_path . rawurlencode($domain->reference('src_dir')) . '/';
     $thread_src_web_path = $src_web_path . $thread_content_id->thread_id . '/';
-    $preview_web_path = $board_web_path . rawurlencode($domain->reference('thumb_dir')) . '/';
+    $preview_web_path = $board_web_path . rawurlencode($domain->reference('preview_dir')) . '/';
     $thread_preview_web_path = $preview_web_path . $thread_content_id->thread_id . '/';
     $header_nodes['post-header-options']->changeId('post-header-options-' . $post_content_id->getIDString());
     $header_nodes['post-header-info']->changeId('post-header-info-' . $post_content_id->getIDString());
@@ -407,7 +407,7 @@ function nel_render_post($domain, $gen_data, $dom)
                 $file_nodes['file-sha512']->remove();
             }
 
-            if ($domain->setting('use_thumb'))
+            if ($domain->setting('use_preview'))
             {
                 if ($file['format'] == 'webm' || $file['format'] == 'mpeg4')
                 {

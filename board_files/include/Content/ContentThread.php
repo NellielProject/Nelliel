@@ -94,7 +94,7 @@ class ContentThread extends ContentHandler
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->createDirectory($this->domain->reference('src_path') . $this->content_id->thread_id,
                 DIRECTORY_PERM);
-        $file_handler->createDirectory($this->domain->reference('thumb_path') . $this->content_id->thread_id,
+        $file_handler->createDirectory($this->domain->reference('preview_path') . $this->content_id->thread_id,
                 DIRECTORY_PERM);
         $file_handler->createDirectory($this->domain->reference('page_path') . $this->content_id->thread_id,
                 DIRECTORY_PERM);
@@ -137,7 +137,7 @@ class ContentThread extends ContentHandler
     {
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->eraserGun($this->domain->reference('src_path') . $this->content_id->thread_id);
-        $file_handler->eraserGun($this->domain->reference('thumb_path') . $this->content_id->thread_id);
+        $file_handler->eraserGun($this->domain->reference('preview_path') . $this->content_id->thread_id);
         $file_handler->eraserGun($this->domain->reference('page_path') . $this->content_id->thread_id);
     }
 

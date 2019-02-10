@@ -139,8 +139,8 @@ class ArchiveAndPrune
         $this->database->executePrepared($prepared, [$thread_id]);
         $this->file_handler->moveFile($this->domain->reference('src_path') . $thread_id,
                 $this->domain->reference('archive_src_path') . $thread_id);
-        $this->file_handler->moveFile($this->domain->reference('thumb_path') . $thread_id,
-                $this->domain->reference('archive_thumb_path') . $thread_id);
+        $this->file_handler->moveFile($this->domain->reference('preview_path') . $thread_id,
+                $this->domain->reference('archive_preview_path') . $thread_id);
         $this->file_handler->moveFile($this->domain->reference('page_path') . $thread_id,
                 $this->domain->reference('archive_page_path') . $thread_id);
         $prepared = $this->database->prepare(
@@ -165,8 +165,8 @@ class ArchiveAndPrune
         $this->database->executePrepared($prepared, [$thread_id]);
         $this->file_handler->moveFile($this->domain->reference('archive_src_path') . $thread_id,
                 $this->domain->reference('src_path') . $thread_id);
-        $this->file_handler->moveFile($this->domain->reference('archive_thumb_path') . $thread_id,
-                $this->domain->reference('thumb_path') . $thread_id);
+        $this->file_handler->moveFile($this->domain->reference('archive_preview_path') . $thread_id,
+                $this->domain->reference('preview_path') . $thread_id);
         $this->file_handler->moveFile($this->domain->reference('archive_page_path') . $thread_id,
                 $this->domain->reference('page_path') . $thread_id);
         $prepared = $this->database->prepare(

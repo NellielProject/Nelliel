@@ -191,11 +191,11 @@ class Setup
         $domain = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), nel_database());
         $references = $domain->reference();
         $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM, true);
-        $file_handler->createDirectory($references['thumb_path'], DIRECTORY_PERM, true);
+        $file_handler->createDirectory($references['preview_path'], DIRECTORY_PERM, true);
         $file_handler->createDirectory($references['page_path'], DIRECTORY_PERM, true);
         $file_handler->createDirectory($references['archive_path'], DIRECTORY_PERM, true);
         $file_handler->createDirectory($references['archive_src_path'], DIRECTORY_PERM, true);
-        $file_handler->createDirectory($references['archive_thumb_path'], DIRECTORY_PERM, true);
+        $file_handler->createDirectory($references['archive_preview_path'], DIRECTORY_PERM, true);
         $file_handler->createDirectory($references['archive_page_path'], DIRECTORY_PERM, true);
     }
 

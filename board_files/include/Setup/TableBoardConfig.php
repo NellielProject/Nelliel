@@ -63,10 +63,10 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'show_board_title', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'show_board_favicon', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'show_board_banner', '0', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_thumb', '1', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_preview', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_magick', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_file_icon', '1', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_png_thumb', '0', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_png_preview', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'animated_gif_preview', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'require_image_start', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'require_image_always', '0', 0, 0]);
