@@ -1,4 +1,8 @@
 nelliel.ui.hideShowThread = function(element, command) {
+    if(element === null) {
+        return;
+    }
+
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     var post_files = document.getElementById("files-" + content_id.id_string);
     var post_contents = document.getElementById("post-contents-" + content_id.id_string);
@@ -21,9 +25,14 @@ nelliel.ui.hideShowThread = function(element, command) {
 }
 
 nelliel.ui.hideShowPost = function(element, command) {
+    if(element === null) {
+        return;
+    }
+
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
     var post_files = document.getElementById("files-" + content_id.id_string);
     var post_contents = document.getElementById("post-contents-" + content_id.id_string);
+
 
     if (command == "hide-post") {
         dataBin.hidden_posts[content_id.id_string] = Date.now();
@@ -48,7 +57,6 @@ nelliel.ui.applyHidePostThread = function() {
         var post_header_options = document.getElementById("post-header-options-" + content_id.id_string);
         var thread_container = document.getElementById("thread-expand-" + "cid_" + content_id.thread_id + "_0_0");
         var element = document.getElementById("hide-thread-" + "cid_" + content_id.thread_id + "_0_0");
-        
         nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
         nelliel.ui.swapContentAttribute(element, "data-alt-visual");
 
@@ -85,6 +93,10 @@ nelliel.ui.applyHidePostThread = function() {
 }
 
 nelliel.ui.showHideFileMeta = function(element) {
+    if(element === null) {
+        return;
+    }
+
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
     var meta_element = document.getElementById("file-meta-" + content_id.id_string);
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
@@ -93,6 +105,10 @@ nelliel.ui.showHideFileMeta = function(element) {
 }
 
 nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
+    if(element === null) {
+        return;
+    }
+
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     var target_element = document.getElementById("thread-expand-" + content_id.id_string);
 
@@ -142,6 +158,10 @@ nelliel.ui.highlightPost = function(content_id) {
 }
 
 nelliel.ui.inlineExpandReduce = function(element, command) {
+    if(element === null) {
+        return;
+    }
+
     if (element.hasAttribute("data-other-dims")) {
         var new_location = element.getAttribute("data-other-loc");
         var old_location = element.getAttribute("src");
@@ -160,6 +180,10 @@ nelliel.ui.inlineExpandReduce = function(element, command) {
 }
 
 nelliel.ui.showLinkedPost = function(element, event) {
+    if(element === null) {
+        return;
+    }
+
     var href = element.getAttribute("href");
     var anchor_matches = href.match(/#t([0-9]+)p([0-9]+)/);
     var post_id = "cid_" + anchor_matches[1] + "_" + anchor_matches[2] + "_0";
@@ -197,6 +221,10 @@ nelliel.ui.showLinkedPost = function(element, event) {
 }
 
 nelliel.ui.hideLinkedPost = function(element, event) {
+    if(element === null) {
+        return;
+    }
+
     var href = element.getAttribute("href");
     var anchor_matches = href.match(/#t([0-9]+)p([0-9]+)/);
     var post_id = "cid_" + anchor_matches[1] + "_" + anchor_matches[2] + "_0";
@@ -208,6 +236,10 @@ nelliel.ui.hideLinkedPost = function(element, event) {
 }
 
 nelliel.ui.linkPost = function(element) {
+    if(element === null) {
+        return;
+    }
+
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
     document.postingform.wordswordswords.value = document.postingform.wordswordswords.value + '>>' + content_id.post_id + '\n';
 }
@@ -225,12 +257,20 @@ nelliel.ui.toggleHidden = function(element) {
 }
 
 nelliel.ui.swapContentAttribute = function(element, attribute_name) {
+    if(element === null) {
+        return;
+    }
+
     var inner = element.innerHTML;
     element.innerHTML = element.getAttribute(attribute_name);
     element.setAttribute(attribute_name, inner);
 }
 
 nelliel.ui.switchDataCommand = function(element, option_one, option_two) {
+    if(element === null) {
+        return;
+    }
+
     var data_command = element.getAttribute("data-command");
 
     if (data_command.indexOf(option_one) > -1 ) {

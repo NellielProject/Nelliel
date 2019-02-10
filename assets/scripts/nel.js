@@ -24,7 +24,7 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     else {
         setStyle(nelliel.core.getCookie("style-" + board_id));
     }
-    
+
     nelliel.setup.setupListeners();
     nelliel.core.hashHandler();
     
@@ -53,8 +53,8 @@ nelliel.setup.setupListeners = function() {
         nelliel.setup.addListenerIfElementExists(post_elements[i], "mouseout", nelliel.events.processMouseOut);
     }
 
-    nelliel.setup.addListenerIfElementExists(document.getElementById("top-styles"), "click", nelliel.events.processPostClicks);
-    nelliel.setup.addListenerIfElementExists(document.getElementById("bottom-styles"), "click", nelliel.events.processPostClicks);
+    nelliel.setup.addListenerIfElementExists(document.getElementById("top-styles-menu"), "change", nelliel.events.processPostClicks);
+    nelliel.setup.addListenerIfElementExists(document.getElementById("bottom-styles-menu"), "change", nelliel.events.processPostClicks);
     nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "click", nelliel.events.processPostClicks);
     nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "change", nelliel.events.processChanges);
     window.addEventListener("hashchange", nelliel.hashHandler);
@@ -87,7 +87,7 @@ nelliel.events.processPostClicks = function(event) {
         } else if (command === "expand-thread-render" || command === "collapse-thread-render") {
             nelliel.ui.expandCollapseThread(event.target, command, true);
         } else if (command === "change-style") {
-            setStyle(event.target.getAttribute("data-id"), true);
+            setStyle(event.target.value, true);
         } else if (command === "link-post") {
             nelliel.ui.linkPost(event.target);
         } else if (command === "show-file-meta" || command === "hide-file-meta") {

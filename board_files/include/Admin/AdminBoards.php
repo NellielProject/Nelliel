@@ -76,7 +76,7 @@ class AdminBoards extends AdminHandler
         $domain = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), $this->database);
         $db_prefix = $domain->id();
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "db_prefix") VALUES (?, ?, ?)');
+                'INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "db_prefix") VALUES (?, ?)');
         $this->database->executePrepared($prepared, [$domain->id(), $db_prefix]);
         $setup = new \Nelliel\Setup\Setup();
         $setup->createBoardTables($domain->id());
@@ -148,9 +148,9 @@ class AdminBoards extends AdminHandler
         $file_handler->eraserGun($domain->reference('board_path'));
         $prepared = $this->database->prepare('DELETE FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $prepared = $database->prepare(
+        $prepared = $this->database->prepare(
                 'DELETE FROM "' . CITES_TABLE . '" WHERE "source_board" = ? OR "target_board" = ?');
-        $database->executePrepared($prepared, [$board_id, $board_id]);
+        $this->database->executePrepared($prepared, [$board_id, $board_id]);
     }
 
     public function lock($user)

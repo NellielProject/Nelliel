@@ -298,8 +298,8 @@ function nel_build_header_styles($dom, $dotdot)
         $head_element->appendChild($new_head_link);
 
         $style_option = $dom->createElement('option', $info['name']);
-        $style_option->extSetAttribute('data-command', 'change-style');
-        $style_option->extSetAttribute('data-id', $style['id']);
+        //$style_option->extSetAttribute('data-command', 'change-style');
+        //$style_option->extSetAttribute('data-id', $style['id']);
         $style_option->extSetAttribute('value', $style['id']);
         $top_styles_menu->appendChild($style_option);
     }
