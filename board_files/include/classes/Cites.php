@@ -100,7 +100,8 @@ class Cites
                     $cite_data['target_board'], $cite_data['target_thread'], $cite_data['target_post']]);
     }
 
-    public function generateCiteElement(Domain $domain, $target_element, ContentID $source_content_id, string $text_input)
+    public function createPostLinkElement(Domain $domain, $dom_element, ContentID $source_content_id, string $text_input,
+            $css_class = 'post-link')
     {
         $cite_data = array();
 
@@ -145,6 +146,8 @@ class Cites
             }
         }
 
+        $segment_node = $dom_element->ownerDocument->createElement('a', $text_input);
+
         if (!empty($cite_data))
         {
             $base_domain = BASE_DOMAIN . BASE_WEB_PATH;
@@ -152,14 +155,11 @@ class Cites
             $p_anchor = '#t' . $cite_data['target_thread'] . 'p' . $cite_data['target_post'];
             $url = '//' . $base_domain . $cite_data['target_board'] . '/' . $target_domain->reference('page_dir') . '/' .
                     $cite_data['target_thread'] . '/thread-' . $cite_data['target_thread'] . '.html' . $p_anchor;
-            $segment_node = $target_element->ownerDocument->createElement('a', $text_input);
-            $segment_node->extSetAttribute('class', 'link-quote');
+            $segment_node->extSetAttribute('class', $css_class);
             $segment_node->extSetAttribute('data-command', 'show-linked-post');
             $segment_node->extSetAttribute('href', $url);
-            $target_element->appendChild($segment_node);
-            return true;
         }
 
-        return false;
+        return $segment_node;
     }
 }

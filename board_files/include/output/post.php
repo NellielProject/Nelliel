@@ -44,6 +44,7 @@ function nel_render_index_navigation($domain, $dom, $nav_pieces)
 
 function nel_render_post($domain, $gen_data, $dom)
 {
+    $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $session = new \Nelliel\Session($authorization);
     $output_filter = new \Nelliel\OutputFilter();
@@ -115,6 +116,28 @@ function nel_render_post($domain, $gen_data, $dom)
     $raw_poster_id = hash('sha256', @inet_ntop($post_data['ip_address']) . $thread_data['thread_id'] . TRIPCODE_PEPPER);
     $poster_id = substr($raw_poster_id, 0, $domain->setting('poster_id_length'));
     $header_nodes['poster-id']->setContent('ID: ' . $poster_id);
+
+    $prepared = $database->prepare('SELECT * FROM "' . CITES_TABLE . '" WHERE "target_board" = ? AND "target_post" = ?');
+    $cite_list = $database->executePreparedFetchAll($prepared, [$domain->id(), $post_content_id->post_id], PDO::FETCH_ASSOC);
+
+    foreach ($cite_list as $cite)
+    {
+        if($cite['source_board'] == $domain->id())
+        {
+            $backlink_text = '>>' . $cite['source_post'];
+        }
+        else
+        {
+            $backlink_text = '>>>/' . $cite['source_board'] . '/' . $cite['source_post'];
+        }
+
+        $post_backlink = $cites->createPostLinkElement($domain, $header_nodes['post-header-info'], $post_content_id, $backlink_text, 'post-backlink');
+
+        if($post_backlink->hasAttribute('href'))
+        {
+            $header_nodes['post-header-info']->appendChild($post_backlink);
+        }
+    }
 
     if ($session->inModmode($domain->id()) && !$domain->renderActive())
     {
@@ -548,19 +571,21 @@ function nel_render_post($domain, $gen_data, $dom)
 
             foreach ($segments as $segment)
             {
-                if (!$cites->generateCiteElement($domain, $append_target, $post_content_id, $segment))
+                $post_link = $cites->createPostLinkElement($domain, $append_target, $post_content_id, $segment);
+
+                if (!$post_link->hasAttribute('href'))
                 {
                     if (preg_match('#^\s*>#', $segment) === 1)
                     {
-                        $segment_node = $output_filter->postQuote($append_target, $segment);
+                        $post_link = $output_filter->postQuote($append_target, $segment);
                     }
                     else
                     {
-                        $segment_node = $append_target->ownerDocument->createTextNode($segment);
+                        $post_link = $append_target->ownerDocument->createTextNode($segment);
                     }
-
-                    $append_target->appendChild($segment_node);
                 }
+
+                $append_target->appendChild($post_link);
             }
 
             $append_target->appendChild($new_post_dom->createElement('br'));

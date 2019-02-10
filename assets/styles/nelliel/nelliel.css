@@ -300,8 +300,14 @@ form {
     color: #992244;
 }
 
-.link-quote {
+.post-link {
     
+}
+
+.post-backlink {
+    font-size: 0.8rem;
+    padding-left: 2px;
+    padding-right: 2px;
 }
 
 .thread-select {
