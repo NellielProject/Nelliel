@@ -103,7 +103,7 @@ class AdminUsers extends AdminHandler
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
 
-        if(!$this->authorization->userExists($this->user_id))
+        if (!$this->authorization->userExists($this->user_id))
         {
             $update_user = $this->authorization->newUser($this->user_id);
         }
@@ -111,6 +111,13 @@ class AdminUsers extends AdminHandler
         {
             $update_user = $this->authorization->getUser($this->user_id);
             $update_user->loadFromDatabase();
+        }
+
+        if ($update_user->domainRole($board_id) &&
+                $update_user->domainRole($board_id)->auth_data['role_level'] >
+                $user->domainRole($board_id)->auth_data['role_level'])
+        {
+            nel_derp(232, _gettext('Cannot create or modify users of higher level than yourself.'));
         }
 
         foreach ($_POST as $key => $value)
@@ -124,7 +131,7 @@ class AdminUsers extends AdminHandler
                     $board_id = '';
                 }
 
-                if (!$update_user->boardRole($board_id))
+                if (!$update_user->domainRole($board_id))
                 {
                     $update_user->changeOrAddBoardRole($board_id, $value);
                     continue;

@@ -101,7 +101,7 @@ class PostData
             return;
         }
 
-        $role = $user->boardRole($this->domain->id());
+        $role = $user->domainRole($this->domain->id());
 
         if($role !== false)
         {

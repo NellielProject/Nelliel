@@ -127,7 +127,7 @@ class AuthUser extends AuthHandler
         $this->database->executePrepared($prepared, [$this->auth_id]);
     }
 
-    public function boardRole($board_id, $return_id = false, $check_allboard = true)
+    public function domainRole($board_id, $return_id = false, $check_allboard = true)
     {
         foreach ($this->user_roles as $user_role)
         {
@@ -196,7 +196,7 @@ class AuthUser extends AuthHandler
         $role_perm = false;
         $role2_perm = false;
 
-        $role = $this->boardRole($board_id);
+        $role = $this->domainRole($board_id);
 
         if ($role)
         {
@@ -205,7 +205,7 @@ class AuthUser extends AuthHandler
 
         if ($check_allboard && $board_id !== '')
         {
-            $role2 = $this->boardRole('');
+            $role2 = $this->domainRole('');
 
             if ($role2)
             {

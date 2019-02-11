@@ -208,8 +208,8 @@ class ContentPost extends ContentHandler
         if (!empty($this->content_data['mod_post_id']) && $session->isActive())
         {
             $mod_post_user = $authorization->getUser($this->content_data['mod_post_id']);
-            $flag = $authorization->roleLevelCheck($user->boardRole($this->domain->id()),
-                    $mod_post_user->boardRole($this->domain->id()));
+            $flag = $authorization->roleLevelCheck($user->domainRole($this->domain->id()),
+                    $mod_post_user->domainRole($this->domain->id()));
         }
         else
         {

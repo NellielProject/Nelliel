@@ -52,9 +52,9 @@ Error 223: Session setup failed. (classes/Session.php)
 Error 224: Secure session only. (classes/Session.php)  
 Error 225: Inactive user. (classes/Session.php)  
 
-Error 230: User does not exist. (Admin/AdminStaff.php)  
-Error 231: Role does not exist. (Admin/AdminStaff.php)  
-Error 232: No valid action. (Admin/AdminStaff.php)  
+Error 230: User does not exist. (Admin/AdminUsers.php)  
+Error 231: Role does not exist. (Admin/AdminRoles.php)  
+Error 232: Cannot modify higher level. (Admin/AdminRoles.php)  
 
 Error 300: perm_user_access (Admin/AdminStaff.php)  
 Error 301: perm_user_modify (Admin/AdminStaff.php)  

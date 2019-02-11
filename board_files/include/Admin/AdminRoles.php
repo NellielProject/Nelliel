@@ -115,6 +115,11 @@ class AdminRoles extends AdminHandler
                 continue;
             }
 
+            if($key === 'role_level' && $value > $user->domainRole($this->domain->id())->auth_data['role_level'])
+            {
+                nel_derp(232, _gettext('Cannot create or modify roles of higher level than yourself.'));
+            }
+
             $role->auth_data[$key] = $value;
         }
 
