@@ -23,7 +23,7 @@ function nel_render_index_navigation($domain, $dom, $nav_pieces)
 
     foreach ($nav_pieces as $piece)
     {
-        $temp_page_nav = $dom->copyNode($nav_nodes['nav-link-container'], $bottom_nav, 'append');
+        $temp_page_nav = $dom->copyNode($nav_nodes['nav-link-container'], $nav_nodes['catalog-link-container'], 'before');
         $page_link = $temp_page_nav->doXPathQuery(".//a")->item(0);
         $content = $piece['text'];
 
@@ -39,6 +39,16 @@ function nel_render_index_navigation($domain, $dom, $nav_pieces)
     }
 
     $nav_nodes['nav-link-container']->remove();
+
+    if($domain->setting('generate_catalog'))
+    {
+        $nav_nodes['catalog-link']->extSetAttribute('href', 'catalog.html');
+    }
+    else
+    {
+        $nav_nodes['catalog-link-container']->remove();
+    }
+
     $translator->translateDom($bottom_nav, $domain->setting('language'));
 }
 

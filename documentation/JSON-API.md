@@ -11,7 +11,7 @@ NOTE: This API is **not** directly compatible with the 4chan or vichan APIs.
 ### Index
 **Location:** http(s)://`:site_url`/`:board_directory`/index-`:index_number`.json
 
-NOTE: For index pages, `:index-number` starts at 0.
+NOTE: For index pages, `:index-number` starts at 1.
 
 Contains a representation of the specified index page.
 

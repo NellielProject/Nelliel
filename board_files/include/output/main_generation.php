@@ -42,7 +42,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
         {
             $file_handler->writeFile($domain->reference('board_directory') . '/' . MAIN_INDEX . PAGE_EXT,
                     $domain->renderInstance()->outputRenderSet(), FILE_PERM);
-            $json_index->writeStoredData($domain->reference('board_directory') . '/', sprintf('index-%d', $page));
+            $json_index->writeStoredData($domain->reference('board_directory') . '/', sprintf('index-%d', $page + 1));
         }
         else
         {
@@ -178,7 +178,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
             $nav_pieces[0]['link'] = 'index' . PAGE_EXT;
         }
 
-        $nav_pieces[0]['text'] = 0;
+        $nav_pieces[0]['text'] = '1';
 
         for ($i = 1; $i < $page_count; ++ $i)
         {
@@ -214,7 +214,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
 
         if ($page > 0)
         {
-            $index_filename = sprintf($index_format, $page) . PAGE_EXT;
+            $index_filename = sprintf($index_format, $page + 1) . PAGE_EXT;
         }
         else
         {
@@ -231,7 +231,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
             $file_handler->writeFile($domain->reference('board_directory') . '/' . $index_filename,
                     $domain->renderInstance()->outputRenderSet(), FILE_PERM, true);
             $json_index->prepareData($gen_data['index'], true);
-            $json_index->writeStoredData($domain->reference('board_directory') . '/', sprintf('index-%d', $page));
+            $json_index->writeStoredData($domain->reference('board_directory') . '/', sprintf('index-%d', $page + 1));
         }
 
         ++ $page;

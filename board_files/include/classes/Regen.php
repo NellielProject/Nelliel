@@ -53,9 +53,13 @@ class Regen
     public function index(Domain $domain)
     {
         require_once INCLUDE_PATH . 'output/main_generation.php';
-        $temp_domain = $this->getTemporaryDomainBoard($domain->id());
-        $temp_domain->renderActive(true);
-        nel_main_thread_generator($temp_domain, 0, true);
+        require_once INCLUDE_PATH . 'output/catalog.php';
+        $index_domain = $this->getTemporaryDomainBoard($domain->id());
+        $index_domain->renderActive(true);
+        nel_main_thread_generator($index_domain, 0, true);
+        $catalog_domain = $this->getTemporaryDomainBoard($domain->id());
+        $catalog_domain->renderActive(true);
+        nel_render_catalog($catalog_domain, true);
     }
 
     public function allPages(Domain $domain)

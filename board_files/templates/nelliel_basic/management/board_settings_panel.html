@@ -257,6 +257,18 @@
 			</tr>
 			<tr>
 				<td>
+					<input type="hidden" name="generate_catalog_lock" value="0">
+					<input type="checkbox" name="generate_catalog_lock" id="generate_catalog_lock" value="1">
+					<label for="generate_catalog_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<input type="hidden" name="generate_catalog" value="0">
+					<input type="checkbox" name="generate_catalog" id="generate_catalog" value="1">
+					<label for="generate_catalog" data-i18n="gettext">Generate catalog page for this board</label>
+				</td>
+			</tr>
+			<tr>
+				<td>
 					<hr>
 				</td>
 			</tr>
@@ -790,6 +802,32 @@
 				</td>
 				<td>
 					<input type="text" name="max_multi_height" id="max_multi_height" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="max_catalog_width_lock" value="0">
+					<input type="checkbox" name="max_catalog_width_lock" id="max_catalog_width_lock" value="1">
+					<label for="max_catalog_width_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<label for="max_catalog_width" data-i18n="gettext">Maximum preview width for catalog entries</label>
+				</td>
+				<td>
+					<input type="text" name="max_catalog_width" id="max_catalog_width" size="8" value="">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<input type="hidden" name="max_catalog_height_lock" value="0">
+					<input type="checkbox" name="max_catalog_height_lock" id="max_catalog_height_lock" value="1">
+					<label for="max_catalog_height_lock" data-i18n="gettext">Lock</label>
+				</td>
+				<td>
+					<label for="max_catalog_height" data-i18n="gettext">Maximum preview height for catalog entries</label>
+				</td>
+				<td>
+					<input type="text" name="max_catalog_height" id="max_catalog_height" size="8" value="">
 				</td>
 			</tr>
 			<tr>

@@ -34,12 +34,9 @@ class AdminBoardSettings extends AdminHandler
         if ($inputs['action'] === 'update')
         {
             $this->update($user);
-            $this->renderPanel($user);
         }
-        else
-        {
-            $this->renderPanel($user);
-        }
+
+        $this->renderPanel($user);
     }
 
     public function renderPanel($user)

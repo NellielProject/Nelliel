@@ -160,6 +160,41 @@ form {
     font-family: sans-serif;
 }
 
+/* Catalog */
+.catalog-title {
+	color: #AF0A0F;
+    text-align: center;
+    font-size: 1.25rem;
+    clear: both;
+}
+
+.catalog-entry {
+	float: left;
+    background-color: #D6DAF0;
+    border: 1px solid #B4B8F0;
+    font-size: .95rem;
+	margin: 3px;
+	padding: 3px;
+	width: 14rem;
+	height: 14rem;
+}
+
+.catalog-open-link {
+	text-align: center;
+}
+
+.catalog-thread-info {
+	text-align: center;
+	font-weight: bold;
+	margin-bottom: 3px;
+}
+
+.catalog-subject {
+	text-align: center;
+    color: #0F0C5D;
+    font-weight: bold;
+}
+
 /* Posting form formatting */
 .posting-form {
     border-spacing: 2px;
