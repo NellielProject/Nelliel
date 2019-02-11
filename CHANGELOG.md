@@ -1,4 +1,51 @@
 # Nelliel Changelog
+## v0.9.18 (2019/02/10)
+### Breaking
+ - Database
+ - Some settings
+
+### Added
+ - `rowExists` and `columnExists` methods added to `NellielPDO`
+ - `TableHandler` classes for database tables
+ - News page and panel
+ - Settings for no comment text, display poster IDs, display backlinks
+ - PNG compression level
+ - Sharpening for GD previews
+ - Site name and slogan
+ - Much improved handling of post links, can now do cross-board links and see backlink references for a post
+
+### Changed
+ - Update `INSTALL.md`
+ - Installation process more robust, gives better error feedback
+ - Various cleanup and tweaks
+ - Loading rearrangement
+ - Documentation updates
+ - Improve `Domain` handling
+ - Filename and path cleanup
+ - Organize board settings panel
+ - Style tweaks
+ - Update handling
+ - Improve thread and post hiding
+ - Combine `board_directory` and `board_id`
+ - Most thumb references changed to preview
+ - More null checks in `ui.js``
+ - Broke up huge post rendering function a little
+
+### Fixed
+ - Bugs in Domain classes
+ - Mod comments no longer have parentheses around them
+ - Various posting errors
+ - Animated GIF previews
+ - Enable foreign keys in SQLite
+ - Error page rendering errors
+ - > quoting
+ - Various Rendering stuff
+ - Many other bugs
+
+### Removed
+  - random_compat library
+  - ParametersAndData class
+
 ## v0.9.17 (2019/01/14)
 ### Breaking
  - Moar database
