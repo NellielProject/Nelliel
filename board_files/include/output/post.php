@@ -69,11 +69,6 @@ function nel_render_post($domain, $gen_data, $dom)
     $post_content_id = new \Nelliel\ContentID(
             \Nelliel\ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
 
-    $post_header_node = $new_post_dom->getElementById('header-cid_0_0_0');
-    $post_header_node->changeId('header-' . $post_content_id->getIDString());
-    $post_header_node->extSetAttribute('class', $post_type_class . 'post-header');
-    $header_nodes = $post_header_node->getElementsByAttributeName('data-parse-id', true);
-
     $new_post_element = $new_post_dom->getElementById('post-id-cid_0_0_0');
     $new_post_element->changeId('post-id-' . $post_content_id->getIDString());
 
@@ -90,6 +85,11 @@ function nel_render_post($domain, $gen_data, $dom)
     $thread_src_web_path = $src_web_path . $thread_content_id->thread_id . '/';
     $preview_web_path = $board_web_path . rawurlencode($domain->reference('preview_dir')) . '/';
     $thread_preview_web_path = $preview_web_path . $thread_content_id->thread_id . '/';
+
+    $post_header_node = $new_post_dom->getElementById('header-cid_0_0_0');
+    $post_header_node->changeId('header-' . $post_content_id->getIDString());
+    $post_header_node->extSetAttribute('class', $post_type_class . 'post-header');
+    $header_nodes = $post_header_node->getElementsByAttributeName('data-parse-id', true);
     $header_nodes['post-header-options']->changeId('post-header-options-' . $post_content_id->getIDString());
     $header_nodes['post-header-info']->changeId('post-header-info-' . $post_content_id->getIDString());
 
@@ -329,37 +329,122 @@ function nel_render_post($domain, $gen_data, $dom)
 
         foreach ($gen_data['files'] as $file)
         {
-            $file_content_id = new \Nelliel\ContentID();
-            $file_content_id->thread_id = $post_data['parent_thread'];
-            $file_content_id->post_id = $post_data['post_number'];
-            $file_content_id->order_id = $file['content_order'];
-            $full_filename = $file['filename'] . '.' . $file['extension'];
-            $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['content_order'];
-            $temp_file_dom = $new_post_dom->copyNodeIntoDocument($new_post_dom->getElementById('fileinfo-cid_0_0_0'),
-                    true);
+            nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_container, $post_type_class, $multiple_class, $thread_src_web_path, $thread_preview_web_path,  $preview_web_path, $filecount);
+        }
 
-            $temp_file_node = $temp_file_dom->getElementById('fileinfo-cid_0_0_0');
-            $temp_file_node->changeId('fileinfo-' . $file_content_id->getIDString());
-            $temp_file_node->extSetAttribute('class', $post_type_class . $multiple_class . 'fileinfo');
+        $new_post_dom->getElementById('fileinfo-cid_0_0_0')->remove();
+    }
+    else
+    {
+        $post_files_container->remove();
+    }
 
-            $file_nodes = $temp_file_node->getElementsByAttributeName('data-parse-id', true);
+    nel_render_comment($new_post_dom, $output_filter, $post_type_class, $post_content_id, $post_data, $domain, $cites, $gen_data, $thread_page_web_path);
+    return $new_post_element;
+}
 
-            if ($session->inModmode($domain->id()) && !$domain->renderActive())
+function nel_render_comment($new_post_dom, $output_filter, $post_type_class, $post_content_id, $post_data, $domain, $cites, $gen_data, $thread_page_web_path)
+{
+    $post_contents_element = $new_post_dom->getElementById('post-contents-cid_0_0_0');
+    $post_contents_element->changeId('post-contents-' . $post_content_id->getIDString());
+    $post_contents_element->extSetAttribute('class', $post_type_class . 'post-contents');
+
+    $contents_nodes = $post_contents_element->getElementsByAttributeName('data-parse-id', true);
+    $contents_nodes['post-text']->extSetAttribute('class', $post_type_class . 'post-text');
+
+    if (!nel_true_empty($post_data['mod_comment']))
+    {
+        $contents_nodes['mod-comment']->setContent($post_data['mod_comment']);
+    }
+
+    $output_filter->clearWhitespace($post_data['comment']);
+    $contents_nodes['post-comment']->extSetAttribute('class', $post_type_class . 'post-comment');
+
+    if (nel_true_empty($post_data['comment']))
+    {
+        $contents_nodes['post-comment']->setContent($domain->setting('no_comment_text'));
+    }
+    else
+    {
+        $line_count = 0;
+        $append_target = $contents_nodes['post-comment'];
+
+        foreach ($output_filter->newlinesToArray($post_data['comment']) as $line)
+        {
+            if ($gen_data['index_rendering'] && $line_count == $domain->setting('comment_display_lines'))
             {
-                $file_nodes['modmode-delete-link']->extSetAttribute('href',
-                        '?module=threads-admin&board_id=' . $domain->id() . '&action=delete&content-id=' .
-                        $file_content_id->getIDString() . '&modmode=true');
+                $hidden_click_span = $new_post_dom->createElement('span', _gettext('This is a long comment. '));
+                $full_comment_link = $new_post_dom->createElement('a', _gettext('Click here for the full text'));
+                $full_comment_link->extSetAttribute('href',
+                        $thread_page_web_path . '#t' . $post_content_id->thread_id . 'p' . $post_content_id->post_id,
+                        'none');
+                        $hidden_click_span->appendChild($full_comment_link);
+                        $append_target->appendChild($hidden_click_span);
+                        break;
             }
-            else
+
+            $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, null, PREG_SPLIT_DELIM_CAPTURE);
+
+            foreach ($segments as $segment)
             {
-                $file_nodes['modmode-options']->remove();
+                $post_link = $cites->createPostLinkElement($domain, $append_target, $post_content_id, $segment);
+
+                if (!$post_link->hasAttribute('href'))
+                {
+                    if (preg_match('#^\s*>#', $segment) === 1)
+                    {
+                        $post_link = $output_filter->postQuote($append_target, $segment);
+                    }
+                    else
+                    {
+                        $post_link = $append_target->ownerDocument->createTextNode($segment);
+                    }
+                }
+
+                $append_target->appendChild($post_link);
             }
 
-            $file_nodes['select-file']->extSetAttribute('name', $file_content_id->getIDString());
-            $file_nodes['select-file']->extSetAttribute('class', $multiple_class . 'file-select');
+            $append_target->appendChild($new_post_dom->createElement('br'));
+            ++ $line_count;
+        }
+    }
+}
 
-            $file['file_location'] = $thread_src_web_path . $post_data['post_number'] . '/' .
-                    rawurlencode($full_filename);
+function nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_container, $post_type_class, $multiple_class, $thread_src_web_path, $thread_preview_web_path,  $preview_web_path, $filecount)
+{
+    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $session = new \Nelliel\Session($authorization);
+    $file_content_id = new \Nelliel\ContentID();
+    $file_content_id->thread_id = $post_data['parent_thread'];
+    $file_content_id->post_id = $post_data['post_number'];
+    $file_content_id->order_id = $file['content_order'];
+    $full_filename = $file['filename'] . '.' . $file['extension'];
+    $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['content_order'];
+    $temp_file_dom = $new_post_dom->copyNodeIntoDocument($new_post_dom->getElementById('fileinfo-cid_0_0_0'),
+            true);
+
+    $temp_file_node = $temp_file_dom->getElementById('fileinfo-cid_0_0_0');
+    $temp_file_node->changeId('fileinfo-' . $file_content_id->getIDString());
+    $temp_file_node->extSetAttribute('class', $post_type_class . $multiple_class . 'fileinfo');
+
+    $file_nodes = $temp_file_node->getElementsByAttributeName('data-parse-id', true);
+
+    if ($session->inModmode($domain->id()) && !$domain->renderActive())
+    {
+        $file_nodes['modmode-delete-link']->extSetAttribute('href',
+                '?module=threads-admin&board_id=' . $domain->id() . '&action=delete&content-id=' .
+                $file_content_id->getIDString() . '&modmode=true');
+    }
+    else
+    {
+        $file_nodes['modmode-options']->remove();
+    }
+
+    $file_nodes['select-file']->extSetAttribute('name', $file_content_id->getIDString());
+    $file_nodes['select-file']->extSetAttribute('class', $multiple_class . 'file-select');
+
+    $file['file_location'] = $thread_src_web_path . $post_data['post_number'] . '/' .
+            rawurlencode($full_filename);
             $file['display_filename'] = $file['filename'];
 
             if (strlen($file['filename']) > 32)
@@ -464,24 +549,24 @@ function nel_render_post($domain, $gen_data, $dom)
                         $file['preview_location'] = $thread_preview_web_path . $post_data['post_number'] . '/' .
                                 rawurlencode($full_preview_name);
 
-                        if ($filecount > 1)
-                        {
-                            if ($file['preview_width'] > $domain->setting('max_multi_width') ||
-                                    $file['preview_height'] > $domain->setting('max_multi_height'))
-                            {
-                                $ratio = min(($domain->setting('max_multi_height') / $file['preview_height']),
-                                        ($domain->setting('max_multi_width') / $file['preview_width']));
-                                $file['preview_width'] = intval($ratio * $file['preview_width']);
-                                $file['preview_height'] = intval($ratio * $file['preview_height']);
-                            }
-                        }
+                                if ($filecount > 1)
+                                {
+                                    if ($file['preview_width'] > $domain->setting('max_multi_width') ||
+                                            $file['preview_height'] > $domain->setting('max_multi_height'))
+                                    {
+                                        $ratio = min(($domain->setting('max_multi_height') / $file['preview_height']),
+                                                ($domain->setting('max_multi_width') / $file['preview_width']));
+                                        $file['preview_width'] = intval($ratio * $file['preview_width']);
+                                        $file['preview_height'] = intval($ratio * $file['preview_height']);
+                                    }
+                                }
                     }
                     else if ($domain->setting('use_file_icon'))
                     {
                         $front_end_data = new \Nelliel\FrontEndData(nel_database());
                         $icon_set = $front_end_data->filetypeIconSet($domain->setting('filetype_icon_set_id'));
                         $icons_web_path = '//' . $base_domain_path . '/' . ICON_SETS_WEB_PATH . $icon_set['directory'] .
-                                '/';
+                        '/';
                         $icons_file_path = ICON_SETS_FILE_PATH . $icon_set['directory'] . '/';
                         $format_icon = utf8_strtolower($file['format']) . '.png';
                         $type_icon = utf8_strtolower($file['type']) . '.png';
@@ -490,10 +575,10 @@ function nel_render_post($domain, $gen_data, $dom)
                             $file['has_preview'] = true;
                             $file['preview_location'] = $icons_web_path . utf8_strtolower($file['type']) . '/' .
                                     $format_icon;
-                            $file['preview_width'] = ($domain->setting('max_width') < 128) ? $domain->setting(
-                                    'max_width') : '128';
-                            $file['preview_height'] = ($domain->setting('max_height') < 128) ? $domain->setting(
-                                    'max_height') : '128';
+                                    $file['preview_width'] = ($domain->setting('max_width') < 128) ? $domain->setting(
+                                            'max_width') : '128';
+                                    $file['preview_height'] = ($domain->setting('max_height') < 128) ? $domain->setting(
+                                            'max_height') : '128';
                         }
                         else if (file_exists($icons_file_path . 'generic/' . $type_icon))
                         {
@@ -531,80 +616,6 @@ function nel_render_post($domain, $gen_data, $dom)
 
             $imported = $new_post_dom->importNode($temp_file_node, true);
             $post_files_container->appendChild($imported);
-        }
-
-        $new_post_dom->getElementById('fileinfo-cid_0_0_0')->remove();
-    }
-    else
-    {
-        $post_files_container->remove();
-    }
-
-    $post_contents_element = $new_post_dom->getElementById('post-contents-cid_0_0_0');
-    $post_contents_element->changeId('post-contents-' . $post_content_id->getIDString());
-    $post_contents_element->extSetAttribute('class', $post_type_class . 'post-contents');
-
-    $contents_nodes = $post_contents_element->getElementsByAttributeName('data-parse-id', true);
-    $contents_nodes['post-text']->extSetAttribute('class', $post_type_class . 'post-text');
-
-    if (!nel_true_empty($post_data['mod_comment']))
-    {
-        $contents_nodes['mod-comment']->setContent($post_data['mod_comment']);
-    }
-
-    $output_filter->clearWhitespace($post_data['comment']);
-    $contents_nodes['post-comment']->extSetAttribute('class', $post_type_class . 'post-comment');
-
-    if (nel_true_empty($post_data['comment']))
-    {
-        $contents_nodes['post-comment']->setContent($domain->setting('no_comment_text'));
-    }
-    else
-    {
-        $line_count = 0;
-        $append_target = $contents_nodes['post-comment'];
-
-        foreach ($output_filter->newlinesToArray($post_data['comment']) as $line)
-        {
-            if ($gen_data['index_rendering'] && $line_count == $domain->setting('comment_display_lines'))
-            {
-                $hidden_click_span = $new_post_dom->createElement('span', _gettext('This is a long comment. '));
-                $full_comment_link = $new_post_dom->createElement('a', _gettext('Click here for the full text'));
-                $full_comment_link->extSetAttribute('href',
-                        $thread_page_web_path . '#t' . $post_content_id->thread_id . 'p' . $post_content_id->post_id,
-                        'none');
-                $hidden_click_span->appendChild($full_comment_link);
-                $append_target->appendChild($hidden_click_span);
-                break;
-            }
-
-            $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, null, PREG_SPLIT_DELIM_CAPTURE);
-
-            foreach ($segments as $segment)
-            {
-                $post_link = $cites->createPostLinkElement($domain, $append_target, $post_content_id, $segment);
-
-                if (!$post_link->hasAttribute('href'))
-                {
-                    if (preg_match('#^\s*>#', $segment) === 1)
-                    {
-                        $post_link = $output_filter->postQuote($append_target, $segment);
-                    }
-                    else
-                    {
-                        $post_link = $append_target->ownerDocument->createTextNode($segment);
-                    }
-                }
-
-                $append_target->appendChild($post_link);
-            }
-
-            $append_target->appendChild($new_post_dom->createElement('br'));
-            ++ $line_count;
-        }
-    }
-
-    return $new_post_element;
 }
 
 function nel_render_thread_form_bottom($domain, $dom)
