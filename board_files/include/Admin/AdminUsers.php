@@ -14,7 +14,6 @@ require_once INCLUDE_PATH . 'output/management/users_panel.php';
 
 class AdminUsers extends AdminHandler
 {
-    private $domain;
     private $user_id;
 
     function __construct($database, Authorization $authorization, Domain $domain)
@@ -66,7 +65,7 @@ class AdminUsers extends AdminHandler
 
     public function creator($user)
     {
-        if (!$user->boardPerm('', 'perm_user_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_user_modify'))
         {
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
@@ -76,7 +75,7 @@ class AdminUsers extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->boardPerm('', 'perm_user_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_user_modify'))
         {
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
@@ -88,7 +87,7 @@ class AdminUsers extends AdminHandler
 
     public function editor($user)
     {
-        if (!$user->boardPerm('', 'perm_user_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_user_modify'))
         {
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
@@ -98,7 +97,7 @@ class AdminUsers extends AdminHandler
 
     public function update($user)
     {
-        if (!$user->boardPerm('', 'perm_user_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_user_modify'))
         {
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
@@ -113,37 +112,38 @@ class AdminUsers extends AdminHandler
             $update_user->loadFromDatabase();
         }
 
-        if ($update_user->domainRole($board_id) &&
-                $update_user->domainRole($board_id)->auth_data['role_level'] >
-                $user->domainRole($board_id)->auth_data['role_level'])
+        foreach ($_POST as $key => $value) // TODO: Improve this
         {
-            nel_derp(232, _gettext('Cannot create or modify users of higher level than yourself.'));
-        }
-
-        foreach ($_POST as $key => $value)
-        {
-            if (strpos($key, 'user_board_role') !== false)
+            if (strpos($key, 'board_role') !== false || strpos($key, 'scope_role') !== false)
             {
-                $board_id = substr($key, 16);
-
-                if ($board_id === false)
+                if(strpos($key, 'board_role') !== false || $key === 'scope_role_allboards')
                 {
-                    $board_id = '';
+                    if($key === 'scope_role_allboards')
+                    {
+                        $role_domain = '';
+                    }
+                    else
+                    {
+                        $role_domain = substr($key, 11);
+                    }
+
+                    $domain = new \Nelliel\DomainBoard($role_domain, new \Nelliel\CacheHandler(), $this->database);
                 }
-
-                if (!$update_user->domainRole($board_id))
+                else if(strpos($key, 'scope_role') !== false)
                 {
-                    $update_user->changeOrAddBoardRole($board_id, $value);
-                    continue;
+                    if($key === 'scope_role_general')
+                    {
+                        $domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database);
+                    }
                 }
 
                 if ($value === '')
                 {
-                    $update_user->removeBoardRole($board_id, $value);
+                    $update_user->removeRole($domain->scope(), $domain->id(), $value);
                 }
                 else
                 {
-                    $update_user->ChangeOrAddBoardRole($board_id, $value);
+                    $update_user->ChangeOrAddRole($domain->scope(), $domain->id(), $value);
                 }
 
                 continue;

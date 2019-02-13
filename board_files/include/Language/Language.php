@@ -58,9 +58,9 @@ class Language
         $this->gettext->addDomainFromArray($language_array);
     }
 
-    public function extractLanguageStrings($user, $file)
+    public function extractLanguageStrings($domain, $user, $file)
     {
-        if (!$user->boardPerm('', 'perm_extract_gettext'))
+        if (!$user->domainPermission($domain, 'perm_extract_gettext'))
         {
             nel_derp(390, _gettext('You are not allowed to extract the gettext strings.'));
         }

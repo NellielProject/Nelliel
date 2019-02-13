@@ -96,12 +96,12 @@ class PostData
 
         $user = $session->sessionUser();
 
-        if(!$user->boardPerm($this->domain->id(), 'perm_post_as_staff'))
+        if(!$user->domainPermission($this->domain, 'perm_post_as_staff'))
         {
             return;
         }
 
-        $role = $user->domainRole($this->domain->id());
+        $role = $user->domainRole($this->domain);
 
         if($role !== false)
         {

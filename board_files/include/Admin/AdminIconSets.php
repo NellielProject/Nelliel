@@ -14,7 +14,6 @@ require_once INCLUDE_PATH . 'output/management/icon_sets_panel.php';
 
 class AdminIconSets extends AdminHandler
 {
-    private $domain;
 
     function __construct($database, Authorization $authorization, Domain $domain)
     {
@@ -57,7 +56,7 @@ class AdminIconSets extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->boardPerm('', 'perm_icon_sets_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_icon_sets_modify'))
         {
             nel_derp(461, _gettext('You are not allowed to modify icon setss.'));
         }
@@ -90,7 +89,7 @@ class AdminIconSets extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_icon_sets_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_icon_sets_modify'))
         {
             nel_derp(461, _gettext('You are not allowed to modify icon sets.'));
         }
@@ -103,7 +102,7 @@ class AdminIconSets extends AdminHandler
 
     public function makeDefault($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_icon_sets_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_icon_sets_modify'))
         {
             nel_derp(461, _gettext('You are not allowed to modify icon sets.'));
         }

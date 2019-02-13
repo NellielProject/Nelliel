@@ -14,8 +14,6 @@ require_once INCLUDE_PATH . 'output/management/manage_boards.php';
 
 class AdminBoards extends AdminHandler
 {
-    private $domain;
-
     function __construct($database, Authorization $authorization, Domain $domain)
     {
         $this->database = $database;
@@ -67,7 +65,7 @@ class AdminBoards extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->boardPerm('', 'perm_manage_boards_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_boards_modify'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
@@ -101,7 +99,7 @@ class AdminBoards extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->boardPerm('', 'perm_manage_boards_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_boards_modify'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
@@ -155,7 +153,7 @@ class AdminBoards extends AdminHandler
 
     public function lock($user)
     {
-        if (!$user->boardPerm('', 'perm_manage_boards_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_boards_modify'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
@@ -167,7 +165,7 @@ class AdminBoards extends AdminHandler
 
     public function unlock($user)
     {
-        if (!$user->boardPerm('', 'perm_manage_boards_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_boards_modify'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }

@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_users_panel_main($user, \Nelliel\Domain $domain)
 {
-    if (!$user->boardPerm('', 'perm_user_access'))
+    if (!$user->domainPermission($domain, 'perm_user_access'))
     {
         nel_derp(300, _gettext('You are not allowed to access the users panel.'));
     }
@@ -20,8 +20,7 @@ function nel_render_users_panel_main($user, \Nelliel\Domain $domain)
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/users_panel_main.html');
     $user_info_table = $dom->getElementById('user-info-table');
     $user_info_table_nodes = $user_info_table->getElementsByAttributeName('data-parse-id', true);
-    $users = $database->executeFetchAll('SELECT * FROM "' . USERS_TABLE . '"',
-            PDO::FETCH_ASSOC);
+    $users = $database->executeFetchAll('SELECT * FROM "' . USERS_TABLE . '"', PDO::FETCH_ASSOC);
     $bgclass = 'row1';
 
     foreach ($users as $user_info)
@@ -33,6 +32,7 @@ function nel_render_users_panel_main($user, \Nelliel\Domain $domain)
         $user_row_nodes['user-id']->setContent($user_info['user_id']);
         $user_row_nodes['display-name']->setContent($user_info['display_name']);
         $user_row_nodes['active']->setContent($user_info['active']);
+        $user_row_nodes['super-admin']->setContent($user_info['super_admin']);
         $user_row_nodes['user-edit-link']->extSetAttribute('href',
                 MAIN_SCRIPT . '?module=users&action=edit&user-id=' . $user_info['user_id']);
         $user_row_nodes['user-remove-link']->extSetAttribute('href',
@@ -51,7 +51,7 @@ function nel_render_users_panel_main($user, \Nelliel\Domain $domain)
 
 function nel_render_users_panel_edit($user, \Nelliel\Domain $domain, $user_id)
 {
-    if (!$user->boardPerm('', 'perm_user_access'))
+    if (!$user->domainPermission($domain, 'perm_user_access'))
     {
         nel_derp(300, _gettext('You are not allowed to access the users panel.'));
     }
@@ -73,55 +73,45 @@ function nel_render_users_panel_edit($user, \Nelliel\Domain $domain, $user_id)
     {
         $edit_user = $authorization->getUser($user_id);
         $dom->getElementById('user-id-field')->extSetAttribute('value', $edit_user->auth_data['user_id']);
-        $dom->getElementById('display_name')->extSetAttribute('value', $edit_user->auth_data['display_name']);
+        $dom->getElementById('display-name')->extSetAttribute('value', $edit_user->auth_data['display_name']);
         $dom->getElementById('user-edit-form')->extSetAttribute('action',
                 MAIN_SCRIPT . '?module=users&action=update&user-id=' . $user_id);
 
-        if($edit_user->active())
+        if ($edit_user->active())
         {
             $dom->getElementById('user-active')->extSetAttribute('checked', 'true');
+        }
+
+        if ($edit_user->isSuperAdmin())
+        {
+            $dom->getElementById('super-admin')->extSetAttribute('checked', 'true');
         }
     }
 
     $board_roles = $dom->getElementById('board-roles');
-    $boards = $database->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
-    array_unshift($boards, '');
-
     $prepared = $database->prepare('SELECT * FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
-    $result = $database->executePreparedFetchAll($prepared, array($user_id), PDO::FETCH_ASSOC);
-    $user_boards = array();
+    $user_roles = $database->executePreparedFetchAll($prepared, array($user_id), PDO::FETCH_ASSOC);
 
-    if ($result !== false)
+    if ($user_roles !== false)
     {
-        foreach ($result as $board_role)
+        foreach ($user_roles as $user_role)
         {
-            $user_boards[$board_role['board']] = $board_role['role_id'];
-        }
-    }
-
-    if ($boards !== false)
-    {
-        foreach ($boards as $board)
-        {
-            $new_board = $board_roles->cloneNode(true);
-            $board_roles->parentNode->appendChild($new_board);
-            $new_board->removeAttribute('id');
-            $new_board_nodes = $new_board->getElementsByAttributeName('data-parse-id', true);
-
-            if ($board === '')
+            if ($user_role['scope'] == 'GENERAL')
             {
-                $new_board_nodes['user-board-role-label']->setContent(_gettext('All Boards'));
+                $dom->getElementById('scope-role-general')->extSetAttribute('value', $user_role['role_id']);
             }
-            else
+            else if ($user_role['scope'] == 'ALL_BOARDS')
             {
-                $new_board_nodes['user-board-role-label']->setContent($board);
+                $dom->getElementById('scope-role-allboards')->extSetAttribute('value', $user_role['role_id']);
             }
-
-            $new_board_nodes['user-board-role-id']->extSetAttribute('name', 'user_board_role_' . $board);
-
-            if (isset($user_boards[$board]))
+            else if ($user_role['scope'] == 'BOARD')
             {
-                $new_board_nodes['user-board-role-id']->extSetAttribute('value', $user_boards[$board]);
+                $board_roles->parentNode->appendChild($board_roles->cloneNode(true));
+                $new_board->removeAttribute('id');
+                $new_board_nodes = $new_board->getElementsByAttributeName('data-parse-id', true);
+                $new_board_nodes['board-role-label']->setContent($user_role['domain']);
+                $new_board_nodes['board-role']->extSetAttribute('name', 'board_role_' . $user_role['domain']);
+                $new_board_nodes['board-role']->extSetAttribute('value', $user_role['domain']);
             }
         }
     }

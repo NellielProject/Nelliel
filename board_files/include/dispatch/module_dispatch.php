@@ -37,7 +37,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $inputs['thread'] = $_GET['thread'] ?? null;
             $session = new \Nelliel\Session($authorization, true);
 
-            if(!$session->inModmode($domain->id()))
+            if(!$session->inModmode($domain))
             {
                 $domain->renderActive(true);
             }
@@ -101,7 +101,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $create_board_admin->actionDispatch($inputs);
             break;
 
-        case 'file-filter':
+        case 'file-filters':
             $file_filters_admin = new \Nelliel\Admin\AdminFileFilters(nel_database(), $authorization, $domain);
             $file_filters_admin->actionDispatch($inputs);
             break;
@@ -117,7 +117,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             if ($inputs['action'] === 'extract-gettext')
             {
                 $language = new \Nelliel\Language\Language(new \SmallPHPGettext\SmallPHPGettext());
-                $language->extractLanguageStrings($session->sessionUser(), LANGUAGES_FILE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
+                $language->extractLanguageStrings($domain, $session->sessionUser(), LANGUAGES_FILE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
             }
 
             nel_render_main_panel($domain, $session->sessionUser());
@@ -162,7 +162,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 if ($fgsfds->getCommand('noko') !== false)
                 {
-                    if ($session->isActive() && $session->inModmode($inputs['board_id']))
+                    if ($session->isActive() && $session->inModmode($domain))
                     {
                         $url_constructor = new \Nelliel\URLConstructor();
                         $url = $url_constructor->dynamic(MAIN_SCRIPT,
@@ -182,7 +182,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 }
                 else
                 {
-                    if ($session->isActive() && $session->inModmode($inputs['board_id']))
+                    if ($session->isActive() && $session->inModmode($domain))
                     {
                         $url_constructor = new \Nelliel\URLConstructor();
                         $url = $url_constructor->dynamic(MAIN_SCRIPT,
@@ -226,7 +226,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     $reports_admin = new \Nelliel\Admin\AdminReports(nel_database(), $authorization, $domain);
                     $reports_admin->actionDispatch($inputs);
 
-                    if ($session->isActive() && $session->inModmode($inputs['board_id']))
+                    if ($session->isActive() && $session->inModmode($domain))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . MAIN_SCRIPT .
                                 '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';
@@ -243,7 +243,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     $thread_handler = new \Nelliel\ThreadHandler(nel_database(), $domain);
                     $thread_handler->processContentDeletes();
 
-                    if ($session->isActive() && $session->inModmode($inputs['board_id']))
+                    if ($session->isActive() && $session->inModmode($domain))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . MAIN_SCRIPT .
                                 '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';
@@ -267,7 +267,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             if ($inputs['action'] === 'board-all-pages')
             {
-                if (!$user->boardPerm($inputs['board_id'], 'perm_regen_pages'))
+                if (!$user->domainPermission($domain, 'perm_regen_pages'))
                 {
                     nel_derp(410, _gettext('You are not allowed to regenerate board pages.'));
                 }
@@ -278,7 +278,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             }
             else if ($inputs['action'] === 'board-all-caches')
             {
-                if (!$user->boardPerm($inputs['board_id'], 'perm_regen_cache'))
+                if (!$user->domainPermission($domain, 'perm_regen_cache'))
                 {
                     nel_derp(411, _gettext('You are not allowed to regenerate board caches.'));
                 }
@@ -287,7 +287,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             }
             else if ($inputs['action'] === 'site-all-caches')
             {
-                if (!$user->boardPerm('', 'perm_regen_caches'))
+                if (!$user->domainPermission($domain, 'perm_regen_caches'))
                 {
                     nel_derp(412, _gettext('You are not allowed to regenerate site caches.'));
                 }

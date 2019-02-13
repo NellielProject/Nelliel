@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_thread_panel_main($user, \Nelliel\Domain $domain)
 {
-    if (!$user->boardPerm($domain->id(), 'perm_threads_access'))
+    if (!$user->domainPermission($domain, 'perm_threads_access'))
     {
         nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
     }
@@ -137,7 +137,7 @@ function nel_render_thread_panel_main($user, \Nelliel\Domain $domain)
 
 function nel_render_thread_panel_expand($user, \Nelliel\Domain $domain, $thread_id)
 {
-    if (!$user->boardPerm($domain->id(), 'perm_threads_access'))
+    if (!$user->domainPermission($domain, 'perm_threads_access'))
     {
         nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
     }

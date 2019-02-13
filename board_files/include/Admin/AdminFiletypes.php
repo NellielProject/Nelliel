@@ -15,7 +15,6 @@ require_once INCLUDE_PATH . 'output/management/filetypes_panel.php';
 
 class AdminFiletypes extends AdminHandler
 {
-    private $domain;
 
     function __construct($database, Authorization $authorization, Domain $domain)
     {
@@ -54,7 +53,7 @@ class AdminFiletypes extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->boardPerm('', 'perm_filetypes_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_filetypes_modify'))
         {
             nel_derp(431, _gettext('You are not allowed to modify filetypes.'));
         }
@@ -94,7 +93,7 @@ class AdminFiletypes extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_filetypes_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_filetypes_modify'))
         {
             nel_derp(431, _gettext('You are not allowed to modify filetypes.'));
         }

@@ -178,14 +178,13 @@ class Session
         return self::$modmode;
     }
 
-    public function inModmode(string $board_id = '')
+    public function inModmode(Domain $domain)
     {
         if (!$this->isActive())
         {
             return false;
         }
 
-        $board_id = (is_null($board_id)) ? '' : $board_id;
-        return self::$in_modmode && self::$user->boardPerm($board_id, 'perm_modmode_access');
+        return self::$in_modmode && self::$user->domainPermission($domain, 'perm_modmode_access');
     }
 }

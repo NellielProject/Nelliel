@@ -15,7 +15,6 @@ require_once INCLUDE_PATH . 'output/news.php';
 
 class AdminNews extends AdminHandler
 {
-    private $domain;
     private $defaults = false;
 
     function __construct($database, Authorization $authorization, Domain $domain)
@@ -53,7 +52,7 @@ class AdminNews extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_news_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_news_modify'))
         {
             nel_derp(471, _gettext('You are not allowed to modify news.'));
         }
@@ -67,7 +66,7 @@ class AdminNews extends AdminHandler
         $prepared = $this->database->prepare($query);
         $this->database->executePrepared($prepared,
                 [$news_info['poster_id'], $news_info['headline'], $news_info['time'], $news_info['text']]);
-        nel_render_news();
+        $this->regenNews();
     }
 
     public function editor($user)
@@ -80,7 +79,7 @@ class AdminNews extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_news_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_news_modify'))
         {
             nel_derp(471, _gettext('You are not allowed to modify news.'));
         }
@@ -88,6 +87,12 @@ class AdminNews extends AdminHandler
         $entry = $_GET['entry'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEWS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$entry]);
-        nel_render_news();
+        $this->regenNews();
+    }
+
+    private function regenNews()
+    {
+        $regen = new \Nelliel\Regen();
+        $regen->news($this->domain);
     }
 }

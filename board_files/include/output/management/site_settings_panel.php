@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_site_settings_panel(\Nelliel\Domain $domain, $user)
 {
-    if (!$user->boardPerm('', 'perm_site_config_access'))
+    if (!$user->domainPermission($domain, 'perm_site_config_access'))
     {
         nel_derp(360, _gettext('You are not allowed to access the site settings.'));
     }

@@ -14,7 +14,6 @@ require_once INCLUDE_PATH . 'output/management/templates_panel.php';
 
 class AdminTemplates extends AdminHandler
 {
-    private $domain;
 
     function __construct($database, Authorization $authorization, Domain $domain)
     {
@@ -57,7 +56,7 @@ class AdminTemplates extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->boardPerm('', 'perm_templates_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_templates_modify'))
         {
             nel_derp(421, _gettext('You are not allowed to modify templates.'));
         }
@@ -90,7 +89,7 @@ class AdminTemplates extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_templates_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_templates_modify'))
         {
             nel_derp(421, _gettext('You are not allowed to modify templates.'));
         }
@@ -104,7 +103,7 @@ class AdminTemplates extends AdminHandler
 
     public function makeDefault($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_templates_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_templates_modify'))
         {
             nel_derp(421, _gettext('You are not allowed to modify templates.'));
         }

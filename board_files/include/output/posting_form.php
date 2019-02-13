@@ -24,7 +24,7 @@ function nel_render_posting_form(\Nelliel\Domain $domain, $response_to, $dotdot 
 
     if ($response_to)
     {
-        if ($session->inModmode($domain->id()) && !$domain->renderActive())
+        if ($session->inModmode($domain) && !$domain->renderActive())
         {
             $return_url = $url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'render', 'action' => 'view-index', 'index' => '0', 'board_id' => $domain->id(),
@@ -44,7 +44,7 @@ function nel_render_posting_form(\Nelliel\Domain $domain, $response_to, $dotdot 
 
     $dom->getElementById('posting-form-responseto')->extSetAttribute('value', $response_to);
 
-    if (!$session->inModmode($domain->id()) || $domain->renderActive())
+    if (!$session->inModmode($domain) || $domain->renderActive())
     {
         $posting_form_nodes['posting-form-staff']->remove();
     }

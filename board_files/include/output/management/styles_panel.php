@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_styles_panel($user, \Nelliel\Domain $domain)
 {
-    if (!$user->boardPerm($domain->id(), 'perm_styles_access'))
+    if (!$user->domainPermission($domain, 'perm_styles_access'))
     {
         nel_derp(440, _gettext('You are not allowed to access the styles panel.'));
     }

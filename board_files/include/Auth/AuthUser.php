@@ -31,23 +31,12 @@ class AuthUser extends AuthHandler
         }
 
         $this->auth_data = $result;
-
         $prepared = $database->prepare('SELECT * FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
         $result = $database->executePreparedFetchAll($prepared, [$this->auth_id], PDO::FETCH_ASSOC, true);
 
-        if (empty($result))
-        {
-            return false;
-        }
-
         foreach ($result as $row)
         {
-            if ($row['role_id'] === '')
-            {
-                continue;
-            }
-
-            $this->changeOrAddBoardRole($row['board'], $row['role_id']);
+            $this->changeOrAddRole($row['scope'], $row['domain_id'], $row['role_id']);
         }
 
         return true;
@@ -68,48 +57,55 @@ class AuthUser extends AuthHandler
         {
             $prepared = $database->prepare(
                     'UPDATE "' . USERS_TABLE .
-                    '" SET "user_id" = :user_id, "display_name" = :display_name, "user_password" = :user_password, "active" = :active, "last_login" = :last_login WHERE "entry" = :entry');
+                    '" SET "user_id" = :user_id, "display_name" = :display_name, "user_password" = :user_password, "active" = :active, "super_admin" = :super_admin, "last_login" = :last_login WHERE "entry" = :entry');
             $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
         }
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . USERS_TABLE . '" ("user_id", "display_name", "user_password", "active", "failed_logins", "last_failed_login") VALUES
-                    (:user_id, :display_name, :user_password, :active, :last_login)');
+                    'INSERT INTO "' . USERS_TABLE . '" ("user_id", "display_name", "user_password", "active", "super_admin", "last_login") VALUES
+                    (:user_id, :display_name, :user_password, :active, :super_admin, :last_login)');
         }
 
         $prepared->bindValue(':user_id', $this->authDataOrDefault('user_id', $this->auth_id), PDO::PARAM_STR);
         $prepared->bindValue(':display_name', $this->authDataOrDefault('display_name', null), PDO::PARAM_STR);
         $prepared->bindValue(':user_password', $this->authDataOrDefault('user_password', null), PDO::PARAM_STR);
         $prepared->bindValue(':active', $this->authDataOrDefault('active', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':super_admin', $this->authDataOrDefault('super_admin', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_login', $this->authDataOrDefault('last_login', 0), PDO::PARAM_INT);
         $database->executePrepared($prepared);
 
-        foreach ($this->user_roles as $user_role)
+        foreach ($this->user_roles as $scope => $user_roles)
         {
-            $prepared = $database->prepare(
-                    'SELECT "entry" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "board" = ?');
-            $result = $database->executePreparedFetch($prepared, [$this->auth_id, $user_role['board']],
-                    PDO::FETCH_COLUMN);
-
-            if ($result)
+            foreach ($user_roles as $user_role)
             {
-                $prepared = $database->prepare(
-                        'UPDATE "' . USER_ROLES_TABLE .
-                        '" SET "user_id" = :user_id, "role_id" = :role_id, "board" = :board WHERE "entry" = :entry');
-                $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
-            }
-            else
-            {
-                $prepared = $database->prepare(
-                        'INSERT INTO "' . USER_ROLES_TABLE . '" ("user_id", "role_id", "board") VALUES
-                    (:user_id, :role_id, :board)');
-            }
 
-            $prepared->bindValue(':user_id', $this->auth_id, PDO::PARAM_STR);
-            $prepared->bindValue(':role_id', $user_role['role_id'], PDO::PARAM_STR);
-            $prepared->bindValue(':board', $user_role['board'], PDO::PARAM_STR);
-            $database->executePrepared($prepared);
+                $prepared = $database->prepare(
+                        'SELECT "entry" FROM "' . USER_ROLES_TABLE .
+                        '" WHERE "user_id" = ? AND "scope" = ? AND "domain_id" = ?');
+                $result = $database->executePreparedFetch($prepared, [$this->auth_id, $scope,
+                    $user_role['domain_id']], PDO::FETCH_COLUMN);
+
+                if ($result)
+                {
+                    $prepared = $database->prepare(
+                            'UPDATE "' . USER_ROLES_TABLE .
+                            '" SET "user_id" = :user_id, "role_id" = :role_id, "scope" = :scope, "domain_id" = :domain_id WHERE "entry" = :entry');
+                    $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
+                }
+                else
+                {
+                    $prepared = $database->prepare(
+                            'INSERT INTO "' . USER_ROLES_TABLE . '" ("user_id", "role_id", "scope", "domain_id") VALUES
+                    (:user_id, :role_id, :scope, :domain_id)');
+                }
+
+                $prepared->bindValue(':user_id', $this->auth_id, PDO::PARAM_STR);
+                $prepared->bindValue(':role_id', $user_role['role_id'], PDO::PARAM_STR);
+                $prepared->bindValue(':scope', $scope, PDO::PARAM_STR);
+                $prepared->bindValue(':domain_id', $user_role['domain_id'], PDO::PARAM_STR);
+                $database->executePrepared($prepared);
+            }
         }
 
         return true;
@@ -127,11 +123,16 @@ class AuthUser extends AuthHandler
         $this->database->executePrepared($prepared, [$this->auth_id]);
     }
 
-    public function domainRole($board_id, $return_id = false, $check_allboard = true)
+    public function domainRole($domain, $return_id = false, $escalate = true)
     {
-        foreach ($this->user_roles as $user_role)
+        if (!isset($this->user_roles[$domain->scope()]))
         {
-            if ($user_role['board'] === $board_id)
+            return false;
+        }
+
+        foreach ($this->user_roles[$domain->scope()] as $user_role)
+        {
+            if ($user_role['domain_id'] === $domain->id())
             {
                 if ($return_id)
                 {
@@ -143,7 +144,7 @@ class AuthUser extends AuthHandler
                 }
             }
 
-            if ($check_allboard && $user_role['board'] === '')
+            if ($escalate && $user_role['board'] === '')
             {
                 if ($return_id)
                 {
@@ -159,61 +160,81 @@ class AuthUser extends AuthHandler
         return false;
     }
 
-    public function changeOrAddBoardRole($board_id, $role_id)
+    public function changeOrAddRole($scope, $domain_id, $role_id)
     {
-        foreach ($this->user_roles as $index => $user_role)
+        if (!isset($this->user_roles[$scope]))
         {
-            if ($user_role['board'] === $board_id)
+            $this->user_roles[$scope] = array();
+        }
+
+        foreach ($this->user_roles[$scope] as $index => $user_role)
+        {
+            if ($user_role['domain_id'] === $domain_id)
             {
-                $this->user_roles[$index]['role_id'] = $role_id;
-                $this->user_roles[$index]['role'] = $this->setupAuthRole($role_id);
+                $this->user_roles[$scope][$index]['role_id'] = $role_id;
+                $this->user_roles[$scope][$index]['role'] = $this->setupAuthRole($role_id);
                 return;
             }
         }
 
-        $this->user_roles[] = ['role_id' => $role_id, 'board' => $board_id, 'role' => $this->setupAuthRole(
-                $role_id)];
+        $this->user_roles[$scope][] = ['role_id' => $role_id, 'domain_id' => $domain_id,
+            'role' => $this->setupAuthRole($role_id)];
     }
 
-    public function removeBoardRole($board_id, $role_id)
+    public function removeRole($scope, $domain_id, $role_id)
     {
-        foreach ($this->user_roles as $index => $user_role)
+        if (!isset($this->user_roles[$scope]))
         {
-            if ($user_role['board'] === $board_id)
+            return;
+        }
+
+        foreach ($this->user_roles[$scope] as $index => $user_role)
+        {
+            if ($user_role['domain_id'] === $domain_id)
             {
                 $prepared = $this->database->prepare(
-                        'DELETE FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "board" = ?');
-                $this->database->executePrepared($prepared, [$this->auth_id, $board_id]);
-                unset($this->user_roles[$index]);
+                        'DELETE FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
+                $this->database->executePrepared($prepared, [$this->auth_id, $domain_id]);
+                unset($this->user_roles[$scope][$index]);
+            }
+        }
+    }
+
+    public function domainPermission($domain, $perm_id, $escalate = true)
+    {
+        if ($this->isSuperAdmin())
+        {
+            return true;
+        }
+
+        $role_perm = false;
+        $role = $this->domainRole($domain);
+
+        if ($role && $role->checkPermission($perm_id))
+        {
+            return true;
+        }
+
+        if ($escalate) // TODO: Better way to escalate
+        {
+            $temp_domain = new \Nelliel\DomainBoard('ALL_BOARDS', new \Nelliel\CacheHandler(), $this->database);
+            $role = $this->domainRole($temp_domain);
+
+            if ($role && $role->checkPermission($perm_id))
+            {
+                return true;
+            }
+
+            $temp_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database);
+            $role = $this->domainRole($temp_domain);
+
+            if ($role && $role->checkPermission($perm_id))
+            {
+                return true;
             }
         }
 
         return false;
-    }
-
-    public function boardPerm($board_id, $perm, $check_allboard = true)
-    {
-        $role_perm = false;
-        $role2_perm = false;
-
-        $role = $this->domainRole($board_id);
-
-        if ($role)
-        {
-            $role_perm = $role->checkPermission($perm);
-        }
-
-        if ($check_allboard && $board_id !== '')
-        {
-            $role2 = $this->domainRole('');
-
-            if ($role2)
-            {
-                $role2_perm = $role2->checkPermission($perm);
-            }
-        }
-
-        return $role_perm || $role2_perm;
     }
 
     private function setupAuthRole($role_id)
@@ -227,5 +248,9 @@ class AuthUser extends AuthHandler
     {
         return boolval($this->auth_data['active']);
     }
-}
 
+    public function isSuperAdmin()
+    {
+        return boolval($this->auth_data['super_admin']);
+    }
+}

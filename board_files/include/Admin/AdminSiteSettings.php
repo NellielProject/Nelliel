@@ -14,7 +14,6 @@ require_once INCLUDE_PATH . 'output/management/site_settings_panel.php';
 
 class AdminSiteSettings extends AdminHandler
 {
-    private $domain;
 
     function __construct($database, Authorization $authorization, Domain $domain)
     {
@@ -58,7 +57,7 @@ class AdminSiteSettings extends AdminHandler
 
     public function update($user)
     {
-        if (!$user->boardPerm('', 'perm_site_config_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_site_config_modify'))
         {
             nel_derp(361, _gettext('You are not allowed to modify the site settings.'));
         }

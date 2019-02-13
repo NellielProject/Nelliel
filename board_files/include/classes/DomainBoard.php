@@ -15,6 +15,16 @@ class DomainBoard extends Domain
     public function __construct(string $domain_id, CacheHandler $cache_handler, $database)
     {
         $this->domain_id = $domain_id;
+
+        if($domain_id === '')
+        {
+            $this->scope = 'ALL_BOARDS';
+        }
+        else
+        {
+            $this->scope = 'BOARD';
+        }
+
         $this->cache_handler = $cache_handler;
         $this->database = $database;
     }

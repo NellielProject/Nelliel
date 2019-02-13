@@ -85,7 +85,7 @@ class AuthRole extends AuthHandler
 
         foreach($user_roles as $user_role)
         {
-            $authorization->getUser($user_role['user_id'])->removeBoardRole($user_role['board'], $this->auth_id);
+            $authorization->getUser($user_role['user_id'])->removeRole($user_role['scope'], $user_role['domain'], $this->auth_id);
         }
 
         $prepared = $this->database->prepare('DELETE FROM "' . ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ?');

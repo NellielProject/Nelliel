@@ -14,7 +14,6 @@ require_once INCLUDE_PATH . 'output/management/ban_panel.php';
 
 class AdminBans extends AdminHandler
 {
-    private $domain;
     private $ban_hammer;
 
     function __construct($database, Authorization $authorization, Domain $domain)
@@ -60,7 +59,7 @@ class AdminBans extends AdminHandler
 
     public function renderPanel($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_ban_access'))
+        if (!$user->domainPermission($this->domain, 'perm_ban_access'))
         {
             nel_derp(341, _gettext('You are not allowed to access the bans panel.'));
         }
@@ -70,7 +69,7 @@ class AdminBans extends AdminHandler
 
     public function creator($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_ban_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
@@ -84,7 +83,7 @@ class AdminBans extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_ban_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
@@ -112,7 +111,7 @@ class AdminBans extends AdminHandler
 
     public function editor($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_ban_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
@@ -122,14 +121,14 @@ class AdminBans extends AdminHandler
 
     public function update($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_ban_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
         $ban_input = $this->ban_hammer->postToArray();
 
-        if ($ban_input['all_boards'] === 1 && !$user->boardPerm('', 'perm_ban_modify'))
+        if ($ban_input['all_boards'] === 1 && !$user->domainPermission($this->domain, 'perm_ban_modify'))
         {
             nel_derp(322, _gettext('You are not allowed to ban from all boards.'));
         }
@@ -140,7 +139,7 @@ class AdminBans extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_ban_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }

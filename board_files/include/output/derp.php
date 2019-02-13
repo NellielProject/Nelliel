@@ -29,7 +29,7 @@ function nel_render_derp($diagnostic, $domain_id = '')
     $session = new \Nelliel\Session($authorization);
     $url_constructor = new \Nelliel\URLConstructor();
 
-    if ($session->inModmode($domain->id()))
+    if ($session->inModmode($domain))
     {
         if ($domain->id() === '')
         {

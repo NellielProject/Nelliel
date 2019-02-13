@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_reports_panel($user, \Nelliel\Domain $domain)
 {
-    if (!$user->boardPerm($domain->id(), 'perm_reports_access'))
+    if (!$user->domainPermission($domain, 'perm_reports_access'))
     {
         nel_derp(380, _gettext('You are not allowed to access the reports panel.'));
     }

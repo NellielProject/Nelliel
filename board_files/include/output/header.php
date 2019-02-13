@@ -19,7 +19,7 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
     $dom->getElementById('js-main-file')->extSetAttribute('src', $dotdot . SCRIPTS_WEB_PATH . 'nel.js');
     $dom->getElementById('js-onload')->setContent(
             'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\', \'' .
-            $session->inModmode($domain->id()) . '\');};');
+            $session->inModmode($domain) . '\');};');
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $domain->id() . '"));');
 
     if ($domain->setting('use_honeypot'))
@@ -121,7 +121,7 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
     $dom->getElementById('manage-board-header')->remove();
     $dom->getElementById('manage-sub-header')->remove();
 
-    if ($session->inModmode($domain->id()) && !$domain->renderActive())
+    if ($session->inModmode($domain) && !$domain->renderActive())
     {
         $dom->getElementById('manage-header-text')->setContent(_gettext('Mod Mode'));
         $top_nav_menu_nodes['logout']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=logout');
@@ -152,7 +152,7 @@ function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $ext
     $dom->getElementById('js-main-file')->extSetAttribute('src', $dotdot . SCRIPTS_WEB_PATH . 'nel.js');
     $dom->getElementById('js-onload')->setContent(
             'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $domain->id() . '\', \'' .
-            $session->inModmode($domain->id()) . '\');};');
+            $session->inModmode($domain) . '\');};');
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $domain->id() . '"));');
     $dom->getElementById('top-board-banner')->remove();
     $dom->getElementById('top-board-title')->remove();
@@ -196,7 +196,7 @@ function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $ext
 
     $top_nav_menu_nodes['about-nelliel']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?about_nelliel');
 
-    if (($session->isActive() || $session->inModmode($domain->id())) && !$domain->renderActive())
+    if (($session->isActive() || $session->inModmode($domain)) && !$domain->renderActive())
     {
         if (isset($extra_data['header']))
         {

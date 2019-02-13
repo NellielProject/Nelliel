@@ -23,6 +23,13 @@ class Regen
         return $domain;
     }
 
+    private function getTemporaryDomainSite()
+    {
+        $domain = new DomainSite(new CacheHandler(), nel_database());
+        $domain->renderInstance(new RenderCore());
+        return $domain;
+    }
+
     public function threads(Domain $domain, bool $write, array $ids)
     {
         require_once INCLUDE_PATH . 'output/thread_generation.php';
@@ -48,6 +55,14 @@ class Regen
     public function siteCache(Domain $domain)
     {
         $domain->regenCache();
+    }
+
+    public function news(Domain $domain)
+    {
+        require_once INCLUDE_PATH . 'output/news.php';
+        $news_domain = $this->getTemporaryDomainSite();
+        $news_domain->renderActive(true);
+        nel_render_news($news_domain);
     }
 
     public function index(Domain $domain)

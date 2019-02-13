@@ -11,6 +11,7 @@ abstract class AdminHandler
 {
     protected $database;
     protected $authorization;
+    protected $domain;
 
     public abstract function actionDispatch($inputs);
 

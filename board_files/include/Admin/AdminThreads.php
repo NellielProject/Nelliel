@@ -14,7 +14,6 @@ require_once INCLUDE_PATH . 'output/management/thread_panel.php';
 
 class AdminThreads extends AdminHandler
 {
-    private $domain;
 
     function __construct($database, Authorization $authorization, Domain $domain)
     {
@@ -95,7 +94,7 @@ class AdminThreads extends AdminHandler
 
     public function update($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_threads_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_threads_modify'))
         {
             nel_derp(351, _gettext('You are not allowed to modify threads or posts.'));
         }
@@ -131,7 +130,7 @@ class AdminThreads extends AdminHandler
 
     public function sticky($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_post_sticky'))
+        if (!$user->domainPermission($this->domain, 'perm_post_sticky'))
         {
             nel_derp(351, _gettext('You are not allowed to modify threads or posts.'));
         }
@@ -181,7 +180,7 @@ class AdminThreads extends AdminHandler
         $this->regenThread($content_id->thread_id, true);
     }
 
-    public function regenThread($thread_id, $regen_index = false)
+    private function regenThread($thread_id, $regen_index = false)
     {
         $regen = new \Nelliel\Regen();
         $regen->threads($this->domain, true, [$thread_id]);

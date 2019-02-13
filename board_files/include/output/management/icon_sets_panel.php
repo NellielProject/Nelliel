@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_icon_sets_panel($user, \Nelliel\Domain $domain)
 {
-    if (!$user->boardPerm($domain->id(), 'perm_icon_sets_access'))
+    if (!$user->domainPermission($domain, 'perm_icon_sets_access'))
     {
         nel_derp(460, _gettext('You are not allowed to access the Icon Sets panel.'));
     }

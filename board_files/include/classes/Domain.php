@@ -10,6 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 abstract class Domain
 {
     protected $domain_id;
+    protected $scope;
     protected $domain_settings;
     protected $domain_references;
     protected $cache_handler;
@@ -21,6 +22,11 @@ abstract class Domain
     public function id()
     {
         return $this->domain_id;
+    }
+
+    public function scope()
+    {
+        return $this->scope;
     }
 
     public function setting(string $setting = null)

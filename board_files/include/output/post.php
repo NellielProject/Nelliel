@@ -160,7 +160,7 @@ function nel_render_post($domain, $gen_data, $dom)
         }
     }
 
-    if ($session->inModmode($domain->id()) && !$domain->renderActive())
+    if ($session->inModmode($domain) && !$domain->renderActive())
     {
         $ip = @inet_ntop($post_data['ip_address']);
         $header_nodes['modmode-ip-address']->setContent($ip);
@@ -284,7 +284,7 @@ function nel_render_post($domain, $gen_data, $dom)
     }
     else
     {
-        if ($session->inModmode($domain->id()) && !$domain->renderActive())
+        if ($session->inModmode($domain) && !$domain->renderActive())
         {
             $header_nodes['reply-to-link']->extSetAttribute('href',
                     MAIN_SCRIPT . '?module=render&action=view-thread&content-id=' . $thread_content_id->getIDString() .
@@ -304,7 +304,7 @@ function nel_render_post($domain, $gen_data, $dom)
     {
         $header_nodes['expand-thread']->extSetAttribute('data-content-id', $thread_content_id->getIDString());
 
-        if ($session->inModmode($domain->id()) && !$domain->renderActive())
+        if ($session->inModmode($domain) && !$domain->renderActive())
         {
             $header_nodes['expand-thread']->modifyAttribute('data-command', '-render', 'after');
         }
@@ -439,7 +439,7 @@ function nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_
 
     $file_nodes = $temp_file_node->getElementsByAttributeName('data-parse-id', true);
 
-    if ($session->inModmode($domain->id()) && !$domain->renderActive())
+    if ($session->inModmode($domain) && !$domain->renderActive())
     {
         $file_nodes['modmode-delete-link']->extSetAttribute('href',
                 '?module=threads-admin&board_id=' . $domain->id() . '&action=delete&content-id=' .

@@ -14,7 +14,6 @@ require_once INCLUDE_PATH . 'output/management/roles_panel.php';
 
 class AdminRoles extends AdminHandler
 {
-    private $domain;
     private $role_id;
 
     function __construct($database, Authorization $authorization, Domain $domain)
@@ -66,7 +65,7 @@ class AdminRoles extends AdminHandler
 
     public function creator($user)
     {
-        if (!$user->boardPerm('', 'perm_role_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_role_modify'))
         {
             nel_derp(311, _gettext('You are not allowed to modify roles.'));
         }
@@ -76,7 +75,7 @@ class AdminRoles extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->boardPerm('', 'perm_role_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_role_modify'))
         {
             nel_derp(311, _gettext('You are not allowed to modify roles.'));
         }
@@ -88,7 +87,7 @@ class AdminRoles extends AdminHandler
 
     public function editor($user)
     {
-        if (!$user->boardPerm('', 'perm_role_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_role_modify'))
         {
             nel_derp(311, _gettext('You are not allowed to modify roles.'));
         }
@@ -98,7 +97,7 @@ class AdminRoles extends AdminHandler
 
     public function update($user)
     {
-        if (!$user->boardPerm('', 'perm_role_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_role_modify'))
         {
             nel_derp(312, _gettext('You are not allowed to modify roles.'));
         }
@@ -115,9 +114,9 @@ class AdminRoles extends AdminHandler
                 continue;
             }
 
-            if($key === 'role_level' && $value > $user->domainRole($this->domain->id())->auth_data['role_level'])
+            if($key === 'super_admin' && !$user->isSuperAdmin())
             {
-                nel_derp(232, _gettext('Cannot create or modify roles of higher level than yourself.'));
+                nel_derp(232, _gettext('You cannot create or modify Super Admin users.'));
             }
 
             $role->auth_data[$key] = $value;

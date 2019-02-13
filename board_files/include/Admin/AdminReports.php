@@ -14,7 +14,6 @@ require_once INCLUDE_PATH . 'output/management/reports_panel.php';
 
 class AdminReports extends AdminHandler
 {
-    private $domain;
     private $defaults = false;
 
     function __construct($database, Authorization $authorization, Domain $domain)
@@ -95,7 +94,7 @@ class AdminReports extends AdminHandler
 
     public function dismiss($user, $report_id)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_reports_dismiss'))
+        if (!$user->domainPermission($this->domain, 'perm_reports_dismiss'))
         {
             nel_derp(381, _gettext('You are not allowed to dismiss reports.'));
         }

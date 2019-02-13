@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_manage_boards_panel(\Nelliel\Domain $domain, $user)
 {
-    if (!$user->boardPerm('', 'perm_manage_boards_access'))
+    if (!$user->domainPermission($domain, 'perm_manage_boards_access'))
     {
         nel_derp(370, _gettext('You are not allowed to access the board manager panel.'));
     }

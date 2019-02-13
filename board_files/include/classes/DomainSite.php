@@ -17,6 +17,7 @@ class DomainSite extends Domain
     public function __construct(CacheHandler $cache_handler, $database)
     {
         $this->domain_id = '';
+        $this->scope = 'GENERAL';
         $this->cache_handler = $cache_handler;
         $this->database = $database;
     }

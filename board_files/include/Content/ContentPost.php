@@ -120,8 +120,8 @@ class ContentPost extends ContentHandler
                 $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
                 DIRECTORY_PERM);
         $file_handler->createDirectory(
-                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
-                DIRECTORY_PERM);
+                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' .
+                $this->content_id->post_id, DIRECTORY_PERM);
     }
 
     public function remove($perm_override = false)
@@ -166,8 +166,7 @@ class ContentPost extends ContentHandler
         $prepared = $database->prepare(
                 'DELETE FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $database->executePrepared($prepared, [$this->content_id->post_id]);
-        $prepared = $database->prepare(
-                'DELETE FROM "' . CITES_TABLE . '" WHERE "source_post" = ? OR "target_post" = ?');
+        $prepared = $database->prepare('DELETE FROM "' . CITES_TABLE . '" WHERE "source_post" = ? OR "target_post" = ?');
         $database->executePrepared($prepared, [$this->content_id->post_id, $this->content_id->post_id]);
         return true;
     }
@@ -178,7 +177,8 @@ class ContentPost extends ContentHandler
         $file_handler->eraserGun(
                 $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id);
         $file_handler->eraserGun(
-                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id);
+                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' .
+                $this->content_id->post_id);
     }
 
     public function updateCounts()
@@ -208,14 +208,14 @@ class ContentPost extends ContentHandler
         if (!empty($this->content_data['mod_post_id']) && $session->isActive())
         {
             $mod_post_user = $authorization->getUser($this->content_data['mod_post_id']);
-            $flag = $authorization->roleLevelCheck($user->domainRole($this->domain->id()),
-                    $mod_post_user->domainRole($this->domain->id()));
+            $flag = $authorization->roleLevelCheck($user->domainRole($this->domain),
+                    $mod_post_user->domainRole($this->domain));
         }
         else
         {
             if ($session->isActive())
             {
-                if ($user->boardPerm($this->domain->id(), 'perm_post_delete'))
+                if ($user->domainPermission($this->domain, 'perm_post_delete'))
                 {
                     $flag = true;
                 }
@@ -256,7 +256,8 @@ class ContentPost extends ContentHandler
                 $this->domain->reference('src_path') . '/' . $new_thread->content_id->thread_id . '/' .
                 $this->content_id->post_id, true);
         $file_handler->moveDirectory(
-                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' .
+                $this->content_id->post_id,
                 $this->domain->reference('preview_path') . '/' . $new_thread->content_id->thread_id . '/' .
                 $this->content_id->post_id, true);
 
@@ -269,8 +270,8 @@ class ContentPost extends ContentHandler
             $prepared = $this->database->prepare(
                     'UPDATE "' . $this->domain->reference('content_table') .
                     '" SET "parent_thread" = ? WHERE "post_ref" = ?');
-            $this->database->executePrepared($prepared, [$new_thread->content_id->thread_id,
-                $this->content_id->post_id]);
+            $this->database->executePrepared($prepared,
+                    [$new_thread->content_id->thread_id, $this->content_id->post_id]);
         }
 
         $this->loadFromDatabase();

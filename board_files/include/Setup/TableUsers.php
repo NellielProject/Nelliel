@@ -23,6 +23,7 @@ class TableUsers extends TableHandler
             'display_name' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
             'user_password' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
             'active' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
+            'super_admin' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
             'last_login' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false]];
         $this->splitColumnInfo();
         $this->schema_version = 1;
@@ -45,6 +46,7 @@ class TableUsers extends TableHandler
             display_name        VARCHAR(255) DEFAULT NULL,
             user_password       VARCHAR(255) DEFAULT NULL,
             active              SMALLINT NOT NULL DEFAULT 0,
+            super_admin         SMALLINT NOT NULL DEFAULT 0,
             last_login          BIGINT DEFAULT NULL
         ) " . $options . ";";
 
@@ -66,6 +68,6 @@ class TableUsers extends TableHandler
             return;
         }
 
-        $this->insertDefaultRow([DEFAULTADMIN, 'Super Admin', nel_password_hash(DEFAULTADMIN_PASS, NEL_PASSWORD_ALGORITHM), 1, null]);
+        $this->insertDefaultRow([DEFAULTADMIN, 'Super Admin', nel_password_hash(DEFAULTADMIN_PASS, NEL_PASSWORD_ALGORITHM), 1, 1, null]);
     }
 }

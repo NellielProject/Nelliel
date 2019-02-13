@@ -14,7 +14,6 @@ require_once INCLUDE_PATH . 'output/management/file_filter_panel.php';
 
 class AdminFileFilters extends AdminHandler
 {
-    private $domain;
 
     function __construct($database, Authorization $authorization, Domain $domain)
     {
@@ -28,18 +27,16 @@ class AdminFileFilters extends AdminHandler
         $session = new \Nelliel\Session($this->authorization, true);
         $user = $session->sessionUser();
 
-        if($inputs['action'] === 'add')
+        if ($inputs['action'] === 'add')
         {
             $this->add($user);
         }
-        else if($inputs['action'] == 'remove')
+        else if ($inputs['action'] == 'remove')
         {
             $this->remove($user);
         }
-        else
-        {
-            $this->renderPanel($user);
-        }
+
+        $this->renderPanel($user);
     }
 
     public function renderPanel($user)
@@ -53,7 +50,7 @@ class AdminFileFilters extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->boardPerm('', 'perm_file_filters_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_file_filters_modify'))
         {
             nel_derp(341, _gettext('You are not allowed to modify file filters.'));
         }
@@ -64,10 +61,12 @@ class AdminFileFilters extends AdminHandler
         $output_filter = new \Nelliel\OutputFilter();
         $hashes = $output_filter->newlinesToArray($_POST['file_hashes']);
 
-        foreach($hashes as $hash)
+        foreach ($hashes as $hash)
         {
-            $prepared = $this->database->prepare('INSERT INTO "' . FILE_FILTERS_TABLE . '" ("hash_type", "file_hash", "file_notes", "board_id") VALUES (?, ?, ?, ?)');
-            $this->database->executePrepared($prepared, [$type, pack("H*" , $hash), $notes, $board_id]);
+            $prepared = $this->database->prepare(
+                    'INSERT INTO "' . FILE_FILTERS_TABLE .
+                    '" ("hash_type", "file_hash", "file_notes", "board_id") VALUES (?, ?, ?, ?)');
+            $this->database->executePrepared($prepared, [$type, pack("H*", $hash), $notes, $board_id]);
         }
 
         $this->renderPanel($user);
@@ -83,7 +82,7 @@ class AdminFileFilters extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_file_filters_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_file_filters_modify'))
         {
             nel_derp(341, _gettext('You are not allowed to modify file filters.'));
         }
@@ -93,6 +92,4 @@ class AdminFileFilters extends AdminHandler
         $this->database->executePrepared($prepared, [$filter_id]);
         $this->renderPanel($user);
     }
-
-
 }

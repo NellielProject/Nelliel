@@ -40,10 +40,10 @@ class TableRoles extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            role_id             VARCHAR(255) NOT NULL,
-            role_level          SMALLINT NOT NULL DEFAULT 0,
-            role_title          VARCHAR(255) DEFAULT NULL,
-            capcode_text        TEXT DEFAULT NULL
+            role_id         VARCHAR(255) NOT NULL,
+            role_level      SMALLINT NOT NULL DEFAULT 0,
+            role_title      VARCHAR(255) DEFAULT NULL,
+            capcode_text    TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $this->sql_helpers->createTableQuery($schema, $this->table_name);
@@ -51,7 +51,8 @@ class TableRoles extends TableHandler
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow(['SUPER_ADMIN', 1000, 'Site Administrator', '## Site Administrator ##']);
+        $this->insertDefaultRow(['SUPER_ADMIN', 9001, 'Super Administrator', '## God Mode ##']);
+        $this->insertDefaultRow(['SITE_ADMIN', 1000, 'Site Administrator', '## Site Administrator ##']);
         $this->insertDefaultRow(['BOARD_ADMIN', 100, 'Board Administrator', '## Board Administrator ##']);
         $this->insertDefaultRow(['MOD', 50, 'Moderator', '## Moderator ##']);
         $this->insertDefaultRow(['JANITOR', 10, 'Janitor', '## Janitor ##']);

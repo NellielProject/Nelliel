@@ -4,11 +4,10 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_render_news()
+function nel_render_news($domain)
 {
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database());
     $translator = new \Nelliel\Language\Translator();
     $file_handler = new \Nelliel\FileHandler();
     $domain->renderActive(true);
@@ -36,7 +35,7 @@ function nel_render_news_list(\Nelliel\Domain $domain, int $limit = 0)
 
     foreach ($news_entries as $news_entry)
     {
-        if($limit_counter !== 0 && $limit_counter >= $limit)
+        if($limit !== 0 && $limit_counter >= $limit)
         {
             break;
         }

@@ -14,7 +14,6 @@ require_once INCLUDE_PATH . 'output/management/permissions_panel.php';
 
 class AdminPermissions extends AdminHandler
 {
-    private $domain;
 
     function __construct($database, Authorization $authorization, Domain $domain)
     {
@@ -53,7 +52,7 @@ class AdminPermissions extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->boardPerm('', 'perm_permissions_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_permissions_modify'))
         {
             nel_derp(451, _gettext('You are not allowed to modify permissions.'));
         }
@@ -76,7 +75,7 @@ class AdminPermissions extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_permissions_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_permissions_modify'))
         {
             nel_derp(451, _gettext('You are not allowed to modify permissions.'));
         }

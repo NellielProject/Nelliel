@@ -183,7 +183,7 @@ class ContentThread extends ContentHandler
         $session = new \Nelliel\Session(new \Nelliel\Auth\Authorization($this->database), true);
         $user = $session->sessionUser();
 
-        if (!$user->boardPerm($this->domain->id(), 'perm_post_sticky'))
+        if (!$user->domainPermission($this->domain, 'perm_post_sticky'))
         {
             nel_derp(400, _gettext('You are not allowed to sticky or unsticky threads.'));
         }
@@ -203,7 +203,7 @@ class ContentThread extends ContentHandler
         $session = new \Nelliel\Session(new \Nelliel\Auth\Authorization($this->database), true);
         $user = $session->sessionUser();
 
-        if (!$user->boardPerm($this->domain->id(), 'perm_post_lock'))
+        if (!$user->domainPermission($this->domain, 'perm_post_lock'))
         {
             nel_derp(401, _gettext('You are not allowed to lock or unlock threads.'));
         }

@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_roles_panel_main($user, \Nelliel\Domain $domain)
 {
-    if (!$user->boardPerm('', 'perm_role_access'))
+    if (!$user->domainPermission($domain, 'perm_role_access'))
     {
         nel_derp(310, _gettext('You are not allowed to access the staff panel.'));
     }
@@ -52,7 +52,7 @@ function nel_render_roles_panel_main($user, \Nelliel\Domain $domain)
 
 function nel_render_roles_panel_edit($user, \Nelliel\Domain $domain, $role_id)
 {
-    if (!$user->boardPerm('', 'perm_role_access'))
+    if (!$user->domainPermission($domain, 'perm_role_access'))
     {
         nel_derp(310, _gettext('You are not allowed to access the roles panel.'));
     }

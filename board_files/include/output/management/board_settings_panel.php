@@ -90,7 +90,7 @@ function nel_render_board_settings_panel($user, \Nelliel\Domain $domain, $defaul
         }
     }
 
-    $user_lock_override = $user->boardPerm($domain->id(), 'perm_board_config_lock_override');
+    $user_lock_override = $user->domainPermission($domain, 'perm_board_config_lock_override');
 
     foreach ($rows as $config_line)
     {

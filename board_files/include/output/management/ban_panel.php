@@ -74,7 +74,7 @@ function nel_render_ban_panel_add($user, \Nelliel\Domain $domain, $ip = '', $typ
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
 
-    if (!$user->boardPerm('', 'perm_ban_modify'))
+    if (!$user->domainPermission($domain, 'perm_ban_modify'))
     {
         $dom->getElementById('ban-all-boards-row')->remove();
     }
@@ -118,7 +118,7 @@ function nel_render_ban_panel_modify($user, \Nelliel\Domain $domain)
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/bans_panel_modify_ban.html');
 
-    if (!$user->boardPerm('', 'perm_ban_modify'))
+    if (!$user->domainPermission($domain, 'perm_ban_modify'))
     {
         $dom->getElementById('ban-all-boards-field')->extSetAttribute('disabled', 'true');
     }

@@ -14,7 +14,6 @@ require_once INCLUDE_PATH . 'output/management/styles_panel.php';
 
 class AdminStyles extends AdminHandler
 {
-    private $domain;
 
     function __construct($database, Authorization $authorization, Domain $domain)
     {
@@ -57,7 +56,7 @@ class AdminStyles extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->boardPerm('', 'perm_styles_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_styles_modify'))
         {
             nel_derp(431, _gettext('You are not allowed to modify styles.'));
         }
@@ -89,7 +88,7 @@ class AdminStyles extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_styles_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_styles_modify'))
         {
             nel_derp(431, _gettext('You are not allowed to modify styles.'));
         }
@@ -102,7 +101,7 @@ class AdminStyles extends AdminHandler
 
     public function makeDefault($user)
     {
-        if (!$user->boardPerm($this->domain->id(), 'perm_styles_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_styles_modify'))
         {
             nel_derp(431, _gettext('You are not allowed to modify styles.'));
         }
