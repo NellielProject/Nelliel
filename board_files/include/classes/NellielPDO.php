@@ -135,29 +135,45 @@ class NellielPDO extends PDO
     public function rowExists(string $table_name, array $columns, array $values, array $pdo_types = null)
     {
         $query = 'SELECT 1 FROM "' . $table_name . '" WHERE ';
+        $count = count($columns);
+        $final_values = $values;
+        $final_columns = $columns;
 
-        foreach ($columns as $column)
+        for ($i = 0; $i < $count; $i ++)
         {
-            $query .= ' "' . $column . '" = :' . $column . ' AND ';
+            if(is_null($values[$i]))
+            {
+                unset($final_columns[$i]);
+                unset($final_values[$i]);
+                continue;
+            }
+        }
+
+        $final_columns = array_values($final_columns);
+        $final_values = array_values($final_values);
+        $count = count($final_columns);
+
+        for ($i = 0; $i < $count; $i ++)
+        {
+            $query .= ' "' . $final_columns[$i] . '" = :' . $final_columns[$i] . ' AND ';
         }
 
         $query = substr($query, 0, -5);
         $prepared = $this->prepare($query);
-        $count = count($columns);
 
         for ($i = 0; $i < $count; $i ++)
         {
             if (!is_null($pdo_types))
             {
-                $prepared->bindValue(':' . $columns[$i], $values[$i], $pdo_types[$i]);
+                $prepared->bindValue(':' . $final_columns[$i], $final_values[$i], $pdo_types[$i]);
             }
             else
             {
-                $prepared->bindValue(':' . $columns[$i], $values[$i]);
+                $prepared->bindValue(':' . $final_columns[$i], $final_values[$i]);
             }
         }
 
-        $result = $this->executePreparedFetch($prepared, $values, PDO::FETCH_COLUMN);
+        $result = $this->executePreparedFetch($prepared, $final_values, PDO::FETCH_COLUMN);
         return $result !== false;
     }
 
