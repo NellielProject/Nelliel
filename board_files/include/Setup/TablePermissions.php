@@ -17,11 +17,10 @@ class TablePermissions extends TableHandler
         $this->database = $database;
         $this->sql_helpers = $sql_helpers;
         $this->table_name = PERMISSIONS_TABLE;
-        $this->columns = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => true],
-            'permission' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'description' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false]];
-        $this->splitColumnInfo();
+        $this->columns_data = [
+            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
+            'permission' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'description' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

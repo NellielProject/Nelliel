@@ -17,10 +17,9 @@ class TableLoginAttempts extends TableHandler
         $this->database = $database;
         $this->sql_helpers = $sql_helpers;
         $this->table_name = LOGIN_ATTEMPTS_TABLE;
-        $this->columns = [
-            'ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'auto_inc' => false],
-            'last_attempt' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false]];
-        $this->splitColumnInfo();
+        $this->columns_data = [
+            'ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
+            'last_attempt' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

@@ -17,17 +17,16 @@ class TableFiletypes extends TableHandler
         $this->database = $database;
         $this->sql_helpers = $sql_helpers;
         $this->table_name = FILETYPES_TABLE;
-        $this->columns = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => true],
-            'extension' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'parent_extension' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'type' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'format' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'mime' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'id_regex' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'label' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'type_def' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false]];
-        $this->splitColumnInfo();
+        $this->columns_data = [
+            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
+            'extension' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'parent_extension' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'format' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'mime' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'id_regex' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'label' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'type_def' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

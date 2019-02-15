@@ -17,22 +17,21 @@ class TableThreads extends TableHandler
         $this->database = $database;
         $this->sql_helpers = $sql_helpers;
         $this->table_name = '_threads';
-        $this->columns = [
-            'thread_id' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'first_post' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'last_post' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'last_bump_time' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'last_bump_time_milli' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'last_update' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'last_update_milli' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'post_count' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'total_files' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'thread_sage' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'sticky' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'archive_status' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'locked' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'slug' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false]];
-        $this->splitColumnInfo();
+        $this->columns_data = [
+            'thread_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'first_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'last_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'last_bump_time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'last_bump_time_milli' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'last_update' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'last_update_milli' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'post_count' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'total_files' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'thread_sage' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'sticky' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'archive_status' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'slug' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

@@ -17,13 +17,12 @@ class TableVersions extends TableHandler
         $this->database = $database;
         $this->sql_helpers = $sql_helpers;
         $this->table_name = VERSIONS_TABLE;
-        $this->columns = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => true],
-            'item_id' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'item_type' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'structure_version' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'data_version' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false]];
-        $this->splitColumnInfo();
+        $this->columns_data = [
+            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
+            'item_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'item_type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'structure_version' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'data_version' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

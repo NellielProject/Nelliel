@@ -17,12 +17,11 @@ class TableRolePermissions extends TableHandler
         $this->database = $database;
         $this->sql_helpers = $sql_helpers;
         $this->table_name = ROLE_PERMISSIONS_TABLE;
-        $this->columns = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => true],
-            'role_id' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'perm_id' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'perm_setting' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false]];
-        $this->splitColumnInfo();
+        $this->columns_data = [
+            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
+            'role_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'perm_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'perm_setting' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

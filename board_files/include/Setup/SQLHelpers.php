@@ -149,13 +149,8 @@ class SQLHelpers
     }
 
 
-    public function insertIfNotExists(string $table_name, array $columns, array $values, array $pdo_types = null)
+    public function compileExecuteInsert(string $table_name, array $columns, array $values, array $pdo_types = null)
     {
-        if($this->database->rowExists($table_name, $columns, $values, $pdo_types))
-        {
-            return false;
-        }
-
         $query = 'INSERT INTO "' . $table_name . '" (';
 
         foreach($columns as $column)

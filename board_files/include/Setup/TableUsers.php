@@ -17,15 +17,14 @@ class TableUsers extends TableHandler
         $this->database = $database;
         $this->sql_helpers = $sql_helpers;
         $this->table_name = USERS_TABLE;
-        $this->columns = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => true],
-            'user_id' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'display_name' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'user_password' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'active' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'super_admin' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'last_login' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false]];
-        $this->splitColumnInfo();
+        $this->columns_data = [
+        'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
+        'user_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+        'display_name' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+        'user_password' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+        'active' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+        'super_admin' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+        'last_login' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

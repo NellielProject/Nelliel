@@ -17,14 +17,13 @@ class TableCites extends TableHandler
         $this->database = $database;
         $this->sql_helpers = $sql_helpers;
         $this->table_name = CITES_TABLE;
-        $this->columns = [
-            'source_board' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'source_thread' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'source_post' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'target_board' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'target_thread' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'target_post' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false]];
-        $this->splitColumnInfo();
+        $this->columns_data = [
+            'source_board' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'source_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'source_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'target_board' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'target_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'target_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

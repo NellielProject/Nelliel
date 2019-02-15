@@ -17,16 +17,15 @@ class TableSiteConfig extends TableHandler
         $this->database = $database;
         $this->sql_helpers = $sql_helpers;
         $this->table_name = SITE_CONFIG_TABLE;
-        $this->columns = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => true],
-            'config_type' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'config_owner' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'config_category' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'data_type' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'config_name' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'setting' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'select_type' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false]];
-        $this->splitColumnInfo();
+        $this->columns_data = [
+            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
+            'config_type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'config_owner' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'config_category' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'data_type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'config_name' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'setting' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'select_type' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

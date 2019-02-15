@@ -17,21 +17,20 @@ class TableBans extends TableHandler
         $this->database = $database;
         $this->sql_helpers = $sql_helpers;
         $this->table_name = BANS_TABLE;
-        $this->columns = [
-            'ban_id' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => true],
-            'board_id' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'all_boards' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'type' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'creator' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'ip_address_start' => ['pdo_type' => PDO::PARAM_LOB, 'auto_inc' => false],
-            'ip_address_end' => ['pdo_type' => PDO::PARAM_LOB, 'auto_inc' => false],
-            'reason' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'length' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'start_time' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'appeal' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'appeal_response' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'appeal_status' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false]];
-        $this->splitColumnInfo();
+        $this->columns_data = [
+            'ban_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
+            'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'all_boards' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'creator' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'ip_address_start' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
+            'ip_address_end' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
+            'reason' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'length' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'start_time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'appeal' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'appeal_response' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'appeal_status' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

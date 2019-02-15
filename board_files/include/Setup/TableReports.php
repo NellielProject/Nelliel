@@ -17,13 +17,12 @@ class TableReports extends TableHandler
         $this->database = $database;
         $this->sql_helpers = $sql_helpers;
         $this->table_name = REPORTS_TABLE;
-        $this->columns = [
-            'report_id' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => true],
-            'board_id' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'content_id' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'reason' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'reporter_ip' => ['pdo_type' => PDO::PARAM_LOB, 'auto_inc' => false]];
-        $this->splitColumnInfo();
+        $this->columns_data = [
+            'report_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
+            'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'content_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'reason' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'reporter_ip' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

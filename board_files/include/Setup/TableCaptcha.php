@@ -17,12 +17,11 @@ class TableCaptcha extends TableHandler
         $this->database = $database;
         $this->sql_helpers = $sql_helpers;
         $this->table_name = CAPTCHA_TABLE;
-        $this->columns = [
-            'cookie_key' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'answer_text' => ['pdo_type' => PDO::PARAM_STR, 'auto_inc' => false],
-            'case_sensitive' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false],
-            'time_created' => ['pdo_type' => PDO::PARAM_INT, 'auto_inc' => false]];
-        $this->splitColumnInfo();
+        $this->columns_data = [
+            'cookie_key' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'answer_text' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'case_sensitive' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'time_created' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
