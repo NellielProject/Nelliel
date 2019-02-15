@@ -40,7 +40,7 @@ function nel_render_index_navigation($domain, $dom, $nav_pieces)
 
     $nav_nodes['nav-link-container']->remove();
 
-    if($domain->setting('generate_catalog'))
+    if ($domain->setting('generate_catalog'))
     {
         $nav_nodes['catalog-link']->extSetAttribute('href', 'catalog.html');
     }
@@ -336,10 +336,21 @@ function nel_render_post($domain, $gen_data, $dom)
 
         $post_files_container->changeId('files-' . $post_content_id->getIDString());
         $post_files_container->extSetAttribute('class', $post_type_class . $multiple_class . 'files-container');
+        $row_counter = 0;
 
         foreach ($gen_data['files'] as $file)
         {
-            nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_container, $post_type_class, $multiple_class, $thread_src_web_path, $thread_preview_web_path,  $preview_web_path, $filecount);
+            if($row_counter >= $domain->setting('max_files_row'))
+            {
+                $newline_div = $new_post_dom->createElement('div');
+                $newline_div->extSetAttribute('class', 'clear');
+                $post_files_container->appendChild($new_post_dom->importNode($newline_div, true));
+                $row_counter = 0;
+            }
+
+            nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_container, $post_type_class,
+                    $multiple_class, $thread_src_web_path, $thread_preview_web_path, $preview_web_path, $filecount);
+            ++$row_counter;
         }
 
         $new_post_dom->getElementById('fileinfo-cid_0_0_0')->remove();
@@ -349,11 +360,13 @@ function nel_render_post($domain, $gen_data, $dom)
         $post_files_container->remove();
     }
 
-    nel_render_comment($new_post_dom, $output_filter, $post_type_class, $post_content_id, $post_data, $domain, $cites, $gen_data, $thread_page_web_path);
+    nel_render_comment($new_post_dom, $output_filter, $post_type_class, $post_content_id, $post_data, $domain, $cites,
+            $gen_data, $thread_page_web_path);
     return $new_post_element;
 }
 
-function nel_render_comment($new_post_dom, $output_filter, $post_type_class, $post_content_id, $post_data, $domain, $cites, $gen_data, $thread_page_web_path)
+function nel_render_comment($new_post_dom, $output_filter, $post_type_class, $post_content_id, $post_data, $domain,
+        $cites, $gen_data, $thread_page_web_path)
 {
     $post_contents_element = $new_post_dom->getElementById('post-contents-cid_0_0_0');
     $post_contents_element->changeId('post-contents-' . $post_content_id->getIDString());
@@ -388,9 +401,9 @@ function nel_render_comment($new_post_dom, $output_filter, $post_type_class, $po
                 $full_comment_link->extSetAttribute('href',
                         $thread_page_web_path . '#t' . $post_content_id->thread_id . 'p' . $post_content_id->post_id,
                         'none');
-                        $hidden_click_span->appendChild($full_comment_link);
-                        $append_target->appendChild($hidden_click_span);
-                        break;
+                $hidden_click_span->appendChild($full_comment_link);
+                $append_target->appendChild($hidden_click_span);
+                break;
             }
 
             $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, null, PREG_SPLIT_DELIM_CAPTURE);
@@ -420,7 +433,8 @@ function nel_render_comment($new_post_dom, $output_filter, $post_type_class, $po
     }
 }
 
-function nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_container, $post_type_class, $multiple_class, $thread_src_web_path, $thread_preview_web_path,  $preview_web_path, $filecount)
+function nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_container, $post_type_class,
+        $multiple_class, $thread_src_web_path, $thread_preview_web_path, $preview_web_path, $filecount)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $session = new \Nelliel\Session($authorization);
@@ -430,9 +444,7 @@ function nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_
     $file_content_id->order_id = $file['content_order'];
     $full_filename = $file['filename'] . '.' . $file['extension'];
     $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['content_order'];
-    $temp_file_dom = $new_post_dom->copyNodeIntoDocument($new_post_dom->getElementById('fileinfo-cid_0_0_0'),
-            true);
-
+    $temp_file_dom = $new_post_dom->copyNodeIntoDocument($new_post_dom->getElementById('fileinfo-cid_0_0_0'), true);
     $temp_file_node = $temp_file_dom->getElementById('fileinfo-cid_0_0_0');
     $temp_file_node->changeId('fileinfo-' . $file_content_id->getIDString());
     $temp_file_node->extSetAttribute('class', $post_type_class . $multiple_class . 'fileinfo');
@@ -453,179 +465,172 @@ function nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_
     $file_nodes['select-file']->extSetAttribute('name', $file_content_id->getIDString());
     $file_nodes['select-file']->extSetAttribute('class', $multiple_class . 'file-select');
 
-    $file['file_location'] = $thread_src_web_path . $post_data['post_number'] . '/' .
-            rawurlencode($full_filename);
-            $file['display_filename'] = $file['filename'];
+    $file['file_location'] = $thread_src_web_path . $post_data['post_number'] . '/' . rawurlencode($full_filename);
+    $file['display_filename'] = $file['filename'];
 
-            if (strlen($file['filename']) > 32)
-            {
-                $file['display_filename'] = substr($file['filename'], 0, 25) . '(...)';
-            }
+    if (strlen($file['filename']) > 32)
+    {
+        $file['display_filename'] = substr($file['filename'], 0, 25) . '(...)';
+    }
 
-            $file_nodes['file-link']->extSetAttribute('href', $file['file_location'], 'none');
-            $file_nodes['file-link']->setContent($file['display_filename'] . '.' . $file['extension']);
+    $file_nodes['file-link']->extSetAttribute('href', $file['file_location'], 'none');
+    $file_nodes['file-link']->setContent($file['display_filename'] . '.' . $file['extension']);
 
-            $file['img_dim'] = !empty($file['display_width']) && !empty($file['display_height']);
-            $file['filesize'] = round(((int) $file['filesize'] / 1024), 2);
-            $filesize_display = ' (' . $file['filesize'] . ' KB)';
+    $file['img_dim'] = !empty($file['display_width']) && !empty($file['display_height']);
+    $file['filesize'] = round(((int) $file['filesize'] / 1024), 2);
+    $filesize_display = ' (' . $file['filesize'] . ' KB)';
 
-            if ($file['img_dim'])
-            {
-                $filesize_display = $file['display_width'] . ' x ' . $file['display_height'] . $filesize_display;
-            }
+    if ($file['img_dim'])
+    {
+        $filesize_display = $file['display_width'] . ' x ' . $file['display_height'] . $filesize_display;
+    }
 
-            $file_nodes['filesize-display']->setContent($filesize_display);
-            $file_nodes['show-file-meta']->extSetAttribute('data-content-id', $file_content_id->getIDString());
-            $file_nodes['show-file-meta']->changeId('show-file-meta-' . $file_content_id->getIDString());
-            $file_nodes['file-meta']->changeId('file-meta-' . $file_content_id->getIDString());
+    $file_nodes['filesize-display']->setContent($filesize_display);
+    $file_nodes['show-file-meta']->extSetAttribute('data-content-id', $file_content_id->getIDString());
+    $file_nodes['show-file-meta']->changeId('show-file-meta-' . $file_content_id->getIDString());
+    $file_nodes['file-meta']->changeId('file-meta-' . $file_content_id->getIDString());
 
-            if (!empty($file['source']))
-            {
-                $output_filter->cleanAndEncode($file['source']);
-                $file_nodes['file-source']->setContent('Source: ' . $file['source']);
-            }
-            else
-            {
-                $file_nodes['file-source']->remove();
-            }
+    if (!empty($file['source']))
+    {
+        $output_filter->cleanAndEncode($file['source']);
+        $file_nodes['file-source']->setContent('Source: ' . $file['source']);
+    }
+    else
+    {
+        $file_nodes['file-source']->remove();
+    }
 
-            if (!empty($file['license']))
-            {
-                $output_filter->cleanAndEncode($file['license']);
-                $file_nodes['file-license']->setContent('License: ' . $file['license']);
-            }
-            else
-            {
-                $file_nodes['file-license']->remove();
-            }
+    if (!empty($file['license']))
+    {
+        $output_filter->cleanAndEncode($file['license']);
+        $file_nodes['file-license']->setContent('License: ' . $file['license']);
+    }
+    else
+    {
+        $file_nodes['file-license']->remove();
+    }
 
-            // TODO: Find a way to streamline this
-            if (!empty($file['md5']))
-            {
-                $file_nodes['file-md5']->setContent('MD5: ' . bin2hex($file['md5']));
-            }
-            else
-            {
-                $file_nodes['file-md5']->remove();
-            }
+    // TODO: Find a way to streamline this
+    if (!empty($file['md5']))
+    {
+        $file_nodes['file-md5']->setContent('MD5: ' . bin2hex($file['md5']));
+    }
+    else
+    {
+        $file_nodes['file-md5']->remove();
+    }
 
-            if (!empty($file['sha1']))
-            {
-                $file_nodes['file-sha1']->setContent('SHA1: ' . bin2hex($file['sha1']));
-            }
-            else
-            {
-                $file_nodes['file-sha1']->remove();
-            }
+    if (!empty($file['sha1']))
+    {
+        $file_nodes['file-sha1']->setContent('SHA1: ' . bin2hex($file['sha1']));
+    }
+    else
+    {
+        $file_nodes['file-sha1']->remove();
+    }
 
-            if (!empty($file['sha256']))
-            {
-                $file_nodes['file-sha256']->setContent('SHA256: ' . bin2hex($file['sha256']));
-            }
-            else
-            {
-                $file_nodes['file-sha256']->remove();
-            }
+    if (!empty($file['sha256']))
+    {
+        $file_nodes['file-sha256']->setContent('SHA256: ' . bin2hex($file['sha256']));
+    }
+    else
+    {
+        $file_nodes['file-sha256']->remove();
+    }
 
-            if (!empty($file['sha512']))
-            {
-                $file_nodes['file-sha512']->setContent('SHA512: ' . bin2hex($file['sha512']));
-            }
-            else
-            {
-                $file_nodes['file-sha512']->remove();
-            }
+    if (!empty($file['sha512']))
+    {
+        $file_nodes['file-sha512']->setContent('SHA512: ' . bin2hex($file['sha512']));
+    }
+    else
+    {
+        $file_nodes['file-sha512']->remove();
+    }
 
-            if ($domain->setting('use_preview'))
+    if ($domain->setting('use_preview'))
+    {
+        if ($file['format'] == 'webm' || $file['format'] == 'mpeg4')
+        {
+            $file_nodes['video-preview']->extSetAttribute('width', $domain->setting('max_width'));
+            $file_nodes['video-preview-source']->extSetAttribute('src', $file['file_location']);
+            $file_nodes['video-preview-source']->extSetAttribute('type', $file['mime']);
+            $file_nodes['file-location']->remove();
+        }
+        else
+        {
+            $full_preview_name = $file['preview_name'] . '.' . $file['preview_extension'];
+            $file['has_preview'] = false;
+            $file_nodes['video-preview']->remove();
+
+            $file_nodes['file-location']->extSetAttribute('href', $file['file_location'], 'none');
+
+            if (!empty($file['preview_name']))
             {
-                if ($file['format'] == 'webm' || $file['format'] == 'mpeg4')
+                $file['has_preview'] = true;
+                $file['preview_location'] = $thread_preview_web_path . $post_data['post_number'] . '/' .
+                        rawurlencode($full_preview_name);
+
+                if ($filecount > 1)
                 {
-                    $file_nodes['video-preview']->extSetAttribute('width', $domain->setting('max_width'));
-                    $file_nodes['video-preview-source']->extSetAttribute('src', $file['file_location']);
-                    $file_nodes['video-preview-source']->extSetAttribute('type', $file['mime']);
-                    $file_nodes['file-location']->remove();
-                }
-                else
-                {
-                    $full_preview_name = $file['preview_name'] . '.' . $file['preview_extension'];
-                    $file['has_preview'] = false;
-                    $file_nodes['video-preview']->remove();
-
-                    $file_nodes['file-location']->extSetAttribute('href', $file['file_location'], 'none');
-
-                    if (!empty($file['preview_name']))
+                    if ($file['preview_width'] > $domain->setting('max_multi_width') ||
+                            $file['preview_height'] > $domain->setting('max_multi_height'))
                     {
-                        $file['has_preview'] = true;
-                        $file['preview_location'] = $thread_preview_web_path . $post_data['post_number'] . '/' .
-                                rawurlencode($full_preview_name);
-
-                                if ($filecount > 1)
-                                {
-                                    if ($file['preview_width'] > $domain->setting('max_multi_width') ||
-                                            $file['preview_height'] > $domain->setting('max_multi_height'))
-                                    {
-                                        $ratio = min(($domain->setting('max_multi_height') / $file['preview_height']),
-                                                ($domain->setting('max_multi_width') / $file['preview_width']));
-                                        $file['preview_width'] = intval($ratio * $file['preview_width']);
-                                        $file['preview_height'] = intval($ratio * $file['preview_height']);
-                                    }
-                                }
-                    }
-                    else if ($domain->setting('use_file_icon'))
-                    {
-                        $front_end_data = new \Nelliel\FrontEndData(nel_database());
-                        $icon_set = $front_end_data->filetypeIconSet($domain->setting('filetype_icon_set_id'));
-                        $icons_web_path = '//' . $base_domain_path . '/' . ICON_SETS_WEB_PATH . $icon_set['directory'] .
-                        '/';
-                        $icons_file_path = ICON_SETS_FILE_PATH . $icon_set['directory'] . '/';
-                        $format_icon = utf8_strtolower($file['format']) . '.png';
-                        $type_icon = utf8_strtolower($file['type']) . '.png';
-                        if (file_exists($icons_file_path . utf8_strtolower($file['type']) . '/' . $format_icon))
-                        {
-                            $file['has_preview'] = true;
-                            $file['preview_location'] = $icons_web_path . utf8_strtolower($file['type']) . '/' .
-                                    $format_icon;
-                                    $file['preview_width'] = ($domain->setting('max_width') < 128) ? $domain->setting(
-                                            'max_width') : '128';
-                                    $file['preview_height'] = ($domain->setting('max_height') < 128) ? $domain->setting(
-                                            'max_height') : '128';
-                        }
-                        else if (file_exists($icons_file_path . 'generic/' . $type_icon))
-                        {
-                            $file['has_preview'] = true;
-                            $file['preview_location'] = $icons_web_path . '/generic/' . $type_icon;
-                            $file['preview_width'] = ($domain->setting('max_width') < 128) ? $domain->setting(
-                                    'max_width') : '128';
-                            $file['preview_height'] = ($domain->setting('max_height') < 128) ? $domain->setting(
-                                    'max_height') : '128';
-                        }
-                    }
-
-                    if ($file['has_preview'])
-                    {
-                        $file_nodes['file-preview']->extSetAttribute('src', $file['preview_location'], 'none');
-                        $file_nodes['file-preview']->extSetAttribute('width', $file['preview_width']);
-                        $file_nodes['file-preview']->extSetAttribute('height', $file['preview_height']);
-                        $file_nodes['file-preview']->extSetAttribute('alt', $file['alt_text']);
-                        $file_nodes['file-preview']->extSetAttribute('class',
-                                $post_type_class . $multiple_class . 'post-preview');
-                        $file_nodes['file-preview']->extSetAttribute('data-other-dims',
-                                'w' . $file['display_width'] . 'h' . $file['display_height']);
-                        $file_nodes['file-preview']->extSetAttribute('data-other-loc', $file['file_location'], 'none');
-                    }
-                    else
-                    {
-                        $file_nodes['file-location']->remove();
+                        $ratio = min(($domain->setting('max_multi_height') / $file['preview_height']),
+                                ($domain->setting('max_multi_width') / $file['preview_width']));
+                        $file['preview_width'] = intval($ratio * $file['preview_width']);
+                        $file['preview_height'] = intval($ratio * $file['preview_height']);
                     }
                 }
+            }
+            else if ($domain->setting('use_file_icon'))
+            {
+                $front_end_data = new \Nelliel\FrontEndData(nel_database());
+                $icon_set = $front_end_data->filetypeIconSet($domain->setting('filetype_icon_set_id'));
+                $icons_web_path = '//' . $base_domain_path . '/' . ICON_SETS_WEB_PATH . $icon_set['directory'] . '/';
+                $icons_file_path = ICON_SETS_FILE_PATH . $icon_set['directory'] . '/';
+                $format_icon = utf8_strtolower($file['format']) . '.png';
+                $type_icon = utf8_strtolower($file['type']) . '.png';
+                if (file_exists($icons_file_path . utf8_strtolower($file['type']) . '/' . $format_icon))
+                {
+                    $file['has_preview'] = true;
+                    $file['preview_location'] = $icons_web_path . utf8_strtolower($file['type']) . '/' . $format_icon;
+                    $file['preview_width'] = ($domain->setting('max_width') < 128) ? $domain->setting('max_width') : '128';
+                    $file['preview_height'] = ($domain->setting('max_height') < 128) ? $domain->setting('max_height') : '128';
+                }
+                else if (file_exists($icons_file_path . 'generic/' . $type_icon))
+                {
+                    $file['has_preview'] = true;
+                    $file['preview_location'] = $icons_web_path . '/generic/' . $type_icon;
+                    $file['preview_width'] = ($domain->setting('max_width') < 128) ? $domain->setting('max_width') : '128';
+                    $file['preview_height'] = ($domain->setting('max_height') < 128) ? $domain->setting('max_height') : '128';
+                }
+            }
+
+            if ($file['has_preview'])
+            {
+                $file_nodes['file-preview']->extSetAttribute('src', $file['preview_location'], 'none');
+                $file_nodes['file-preview']->extSetAttribute('width', $file['preview_width']);
+                $file_nodes['file-preview']->extSetAttribute('height', $file['preview_height']);
+                $file_nodes['file-preview']->extSetAttribute('alt', $file['alt_text']);
+                $file_nodes['file-preview']->extSetAttribute('class',
+                        $post_type_class . $multiple_class . 'post-preview');
+                $file_nodes['file-preview']->extSetAttribute('data-other-dims',
+                        'w' . $file['display_width'] . 'h' . $file['display_height']);
+                $file_nodes['file-preview']->extSetAttribute('data-other-loc', $file['file_location'], 'none');
             }
             else
             {
                 $file_nodes['file-location']->remove();
             }
+        }
+    }
+    else
+    {
+        $file_nodes['file-location']->remove();
+    }
 
-            $imported = $new_post_dom->importNode($temp_file_node, true);
-            $post_files_container->appendChild($imported);
+    $imported = $new_post_dom->importNode($temp_file_node, true);
+    $post_files_container->appendChild($imported);
 }
 
 function nel_render_thread_form_bottom($domain, $dom)

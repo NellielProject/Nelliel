@@ -242,19 +242,19 @@ form {
 }
 
 .op-files-container {
-
+	float: left;
 }
 
 .op-multiple-files-container {
-
+	float: left;
 }
 
 .reply-files-container {
-
+	float: left;
 }
 
 .reply-multiple-files-container {
-
+	float: left;
 }
 
 .op-fileinfo {
