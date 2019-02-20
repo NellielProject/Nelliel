@@ -50,15 +50,15 @@ class ContentID
 
     public function isThread()
     {
-        return !$this->isPost() && !$this->isFile() && $this->thread_id > 0;
+        return !$this->isPost() && !$this->isContent() && $this->thread_id > 0;
     }
 
     public function isPost()
     {
-        return !$this->isFile() && $this->post_id > 0;
+        return !$this->isContent() && $this->post_id > 0;
     }
 
-    public function isFile()
+    public function isContent()
     {
         return $this->order_id > 0;
     }

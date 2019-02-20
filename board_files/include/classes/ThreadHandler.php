@@ -47,7 +47,7 @@ class ThreadHandler
                     $post = new \Nelliel\Content\ContentPost($this->database, $content_id, $this->domain);
                     $post->remove();
                 }
-                else if ($content_id->isFile())
+                else if ($content_id->isContent())
                 {
                     $file = new \Nelliel\Content\ContentFile($this->database, $content_id, $this->domain);
                     $file->remove();

@@ -119,7 +119,7 @@ class AdminThreads extends AdminHandler
             $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $this->domain, true);
             $post->remove();
         }
-        else if ($content_id->isFile())
+        else if ($content_id->isContent())
         {
             $file = new \Nelliel\Content\ContentFile(nel_database(), $content_id, $this->domain, true);
             $file->remove();

@@ -72,7 +72,7 @@ function nel_render_reports_panel($user, \Nelliel\Domain $domain)
             $content_link .= '#t' . $content_id->thread_id . 'p' . $content_id->post_id;
             $report_nodes['link-file-url']->remove();
         }
-        else if ($content_id->isFile())
+        else if ($content_id->isContent())
         {
             $prepared = $database->prepare(
                     'SELECT "filename" FROM "' . $current_domain->reference('content_table') .
