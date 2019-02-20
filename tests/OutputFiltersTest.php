@@ -33,6 +33,6 @@ class OutputFiltersTest extends PHPUnit_Framework_TestCase
         $filter = new \Nelliel\OutputFilter();
         $newlines_string = "line1\nline2\nline3";
         $text_array = $filter->newlinesToArray($newlines_string);
-        $this->assertTrue(count($text_array) === 3);
+        $this->assertCount(3, $text_array);
     }
 }
