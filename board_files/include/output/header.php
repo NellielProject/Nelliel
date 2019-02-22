@@ -30,17 +30,17 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
     }
 
     $title_element = $head_element->getElementsByTagName('title')->item(0);
-    $title_content = $domain->setting('board_title');
+    $title_content = $domain->setting('board_name');
 
     if(!$index_render)
     {
         if (!isset($treeline[0]['subject']) || nel_true_empty($treeline[0]['subject']))
         {
-            $title_content = $domain->setting('board_title') . ' > Thread #' . $treeline[0]['post_number'];
+            $title_content = $domain->setting('board_name') . ' > Thread #' . $treeline[0]['post_number'];
         }
         else
         {
-            $title_content = $domain->setting('board_title') . ' > ' . $treeline[0]['subject'];
+            $title_content = $domain->setting('board_name') . ' > ' . $treeline[0]['subject'];
         }
     }
 
@@ -91,15 +91,26 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
         $board_banner->remove();
     }
 
-    $board_title = $dom->getElementById('top-board-title');
+    $board_name = $dom->getElementById('top-board-name');
 
-    if ($domain->setting('show_board_title'))
+    if ($domain->setting('show_board_name'))
     {
-        $board_title->setContent($domain->setting('board_title'));
+        $board_name->setContent($domain->setting('board_name'));
     }
     else
     {
-        $board_title->remove();
+        $board_name->remove();
+    }
+
+    $board_slogan = $dom->getElementById('top-board-slogan');
+
+    if ($domain->setting('show_board_slogan'))
+    {
+        $board_slogan->setContent($domain->setting('board_slogan'));
+    }
+    else
+    {
+        $board_slogan->remove();
     }
 
     $top_nav_menu = $dom->getElementById('top-nav-menu');
@@ -155,7 +166,7 @@ function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $ext
             $session->inModmode($domain) . '\');};');
     $dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $domain->id() . '"));');
     $dom->getElementById('top-board-banner')->remove();
-    $dom->getElementById('top-board-title')->remove();
+    $dom->getElementById('top-board-name')->remove();
 
     $favicon = $dom->getElementById('favicon-link');
     $favicon->extSetAttribute('href', $site_domain->setting('site_favicon'));

@@ -70,11 +70,20 @@ form {
     clear: both;
 }
 
-.board-title {
+.board-name {
 	color: #6000CC;
     text-align: center;
     font-size: 2.0rem;
     clear: both;
+    margin: 0;
+}
+
+.board-slogan {
+	color: #6000CC;
+    text-align: center;
+    font-size: 1.0rem;
+    clear: both;
+    margin: 0;
 }
 
 .board-navigation {

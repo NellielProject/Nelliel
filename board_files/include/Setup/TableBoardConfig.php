@@ -59,7 +59,8 @@ class TableBoardConfig extends TableHandler
     {
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'allow_tripkeys', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'force_anonymous', '0', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'show_board_title', '1', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'show_board_name', '1', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'show_board_slogan', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'show_board_favicon', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'show_board_banner', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_preview', '1', 0, 0]);
@@ -75,7 +76,9 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_honeypot', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'only_thread_duplicates', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'only_op_duplicates', '1', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'board_title', 'Nelliel-powered image board', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'board_name', 'Nelliel-powered image board', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'board_slogan', '', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'board_description', '', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'board_favicon', '', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'board_banner', '', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'language', 'en-US', 0, 0]);
