@@ -84,7 +84,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
                 $prepared = $database->prepare($query);
                 $gen_data['thread'] = $database->executePreparedFetch($prepared, [$current_thread_id],
                         PDO::FETCH_ASSOC);
-                $json_thread->prepareData($gen_data['thread'], true);
+                $json_thread->storeData($json_thread->prepareData($gen_data['thread']), 'thread');
                 $post_count = $gen_data['thread']['post_count'];
                 $abbreviate = $post_count > $domain->setting('abbreviate_thread');
                 $query = 'SELECT * FROM "' . $domain->reference('posts_table') .
@@ -99,7 +99,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
             $gen_data['abbreviate'] = $abbreviate;
             $gen_data['post'] = $treeline[$post_counter];
             $json_post = new \Nelliel\API\JSON\JSONPost($domain, $file_handler);
-            $json_post->prepareData($gen_data['post'], true);
+            $json_post->storeData($json_post->prepareData($gen_data['post']), 'post');
 
             if ($gen_data['post']['has_file'] == 1)
             {
@@ -140,11 +140,11 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
                 }
             }
 
-            $json_thread->addPostData($json_post->retrieveData(true));
+            $json_thread->addPostData($json_post->retrieveData());
 
             if (empty($treeline[$post_counter + 1]))
             {
-                $json_index->addThreadData($json_thread->retrieveData(true));
+                $json_index->addThreadData($json_thread->retrieveData());
                 $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? $domain->setting('threads_per_page') : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
                 nel_render_insert_hr($dom);
@@ -230,7 +230,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
         {
             $file_handler->writeFile($domain->reference('board_directory') . '/' . $index_filename,
                     $domain->renderInstance()->outputRenderSet(), FILE_PERM, true);
-            $json_index->prepareData($gen_data['index'], true);
+            $json_index->storeData($json_index->prepareData($gen_data['index']), 'index');
             $json_index->writeStoredData($domain->reference('board_directory') . '/', sprintf('index-%d', $page + 1));
         }
 

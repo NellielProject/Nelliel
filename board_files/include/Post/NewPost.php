@@ -88,12 +88,12 @@ class NewPost
                 nel_derp(7, _gettext('Post contains no content or file. Dumbass.'), $error_data);
             }
 
-            if ($this->domain->setting('require_image_always'))
+            if ($this->domain->setting('require_content_always'))
             {
                 nel_derp(8, _gettext('Image or file required when making a new post.'), $error_data);
             }
 
-            if ($this->domain->setting('require_image_start') && $post->content_data['response_to'] == 0)
+            if ($this->domain->setting('require_content_start') && $post->content_data['response_to'] == 0)
             {
                 nel_derp(9, _gettext('Image or file required to make new thread.'), $error_data);
             }
@@ -212,22 +212,22 @@ class NewPost
 
         if ($post_data['parent_thread'] == 0)
         {
-            $thread_delay = $time - $this->domain->setting('thread_delay');
+            $thread_cooldown = $time - $this->domain->setting('thread_cooldown');
             $prepared = $this->database->prepare(
                     'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "post_time" > ? AND "ip_address" = ?');
-            $prepared->bindValue(1, $thread_delay, PDO::PARAM_STR);
+            $prepared->bindValue(1, $thread_cooldown, PDO::PARAM_STR);
             $prepared->bindValue(2, @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
             $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
         }
         else
         {
-            $reply_delay = $time - $this->domain->setting('reply_delay');
+            $reply_cooldown = $time - $this->domain->setting('reply_cooldown');
             $prepared = $this->database->prepare(
                     'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? AND "post_time" > ? AND "ip_address" = ?');
             $prepared->bindValue(1, $post_data['parent_thread'], PDO::PARAM_INT);
-            $prepared->bindValue(2, $reply_delay, PDO::PARAM_STR);
+            $prepared->bindValue(2, $reply_cooldown, PDO::PARAM_STR);
             $prepared->bindValue(3, @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
             $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
         }

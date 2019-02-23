@@ -77,7 +77,36 @@ class Regen
         nel_render_catalog($catalog_domain, true);
     }
 
-    public function allPages(Domain $domain)
+    public function boardList(Domain $domain)
+    {
+        $database = nel_database();
+        $board_json = new \Nelliel\API\JSON\JSONBoard($domain, new FileHandler());
+        $board_list_json = new \Nelliel\API\JSON\JSONBoardList($domain, new FileHandler());
+        $board_ids = $database->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+
+        foreach($board_ids as $id)
+        {
+            $board_domain = new DomainBoard($id, new CacheHandler(), $database);
+            $board_config = $database->executeFetchAll('SELECT "config_name", "setting" FROM "' . $board_domain->reference('config_table') . '"', PDO::FETCH_ASSOC);
+            $board_data = ['board_id' => $id];
+
+            foreach($board_config as $config)
+            {
+                $board_data[$config['config_name']] = $config['setting'];
+            }
+
+            $board_list_json->addBoardData($board_json->prepareData($board_data));
+        }
+
+        $board_list_json->writeStoredData(BASE_PATH, 'boards');
+    }
+
+    public function allSitePages(Domain $domain)
+    {
+        $this->boardList($domain);
+    }
+
+    public function allBoardPages(Domain $domain)
     {
         $database = nel_database();
         $result = $database->query(

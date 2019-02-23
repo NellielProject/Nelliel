@@ -13,13 +13,37 @@ abstract class JSONOutput
     protected $file_handler;
     protected $domain;
 
-    public abstract function prepareData(array $data, bool $store = false);
+    public abstract function prepareData(array $data);
 
-    public abstract function storeData(array $data);
+    public function storeData(array $data, string $sub_section = null)
+    {
+        if(is_null($sub_section))
+        {
+            $this->data_array = $data;
+        }
+        else
+        {
+            $this->data_array[$sub_section] = $data;
+        }
+    }
 
-    public abstract function retrieveData(bool $all_data = false);
+    public function retrieveData(string $sub_section = null)
+    {
+        if(is_null($sub_section))
+        {
+            return $this->data_array;
+        }
+        else
+        {
+            return $this->data_array[$sub_section];
+        }
+    }
 
-    public abstract function writeStoredData($path, $filename);
+    public function writeStoredData($path, $filename)
+    {
+        $json_data = json_encode($this->data_array);
+        $this->file_handler->writeFile($path . $filename . JSON_EXT, $json_data);
+    }
 
     protected function addIfNotEmpty(&$data, $key, $value, $type)
     {

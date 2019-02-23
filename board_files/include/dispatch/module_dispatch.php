@@ -272,7 +272,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     nel_derp(410, _gettext('You are not allowed to regenerate board pages.'));
                 }
 
-                $regen->allPages($domain);
+                $regen->allBoardPages($domain);
                 $archive = new \Nelliel\ArchiveAndPrune(nel_database(), $domain, new \Nelliel\FileHandler());
                 $archive->updateThreads();
             }

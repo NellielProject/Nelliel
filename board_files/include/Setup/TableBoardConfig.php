@@ -68,8 +68,8 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_file_icon', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_png_preview', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'animated_gif_preview', '0', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'require_image_start', '1', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'require_image_always', '0', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'require_content_start', '1', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'require_content_always', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'allow_multifile', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'allow_op_multifile', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_fgsfds', '1', 0, 0]);
@@ -82,8 +82,8 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'board_favicon', '', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'board_banner', '', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'language', 'en-US', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'thread_delay', '120', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'reply_delay', '60', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'thread_cooldown', '120', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'reply_cooldown', '60', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'abbreviate_thread', '5', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_post_files', '3', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_files_row', '3', 0, 0]);

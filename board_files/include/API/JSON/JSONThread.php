@@ -20,7 +20,7 @@ class JSONThread extends JSONOutput
         $this->data_array['thread'] = array();
     }
 
-    public function prepareData(array $data, bool $store = false)
+    public function prepareData(array $data)
     {
         $thread_array = array();
         $thread_array['thread_id'] = nel_cast_to_datatype($data['thread_id'], 'integer');
@@ -37,36 +37,7 @@ class JSONThread extends JSONOutput
         $thread_array['locked'] = nel_cast_to_datatype($data['locked'], 'boolean');
         $this->addIfNotEmpty($thread_array, 'slug', $data['slug'], 'string');
         $thread_array = nel_plugins()->processHook('nel-json-prepare-thread', [$data], $thread_array);
-
-        if ($store)
-        {
-            $this->data_array['thread'] = $thread_array;
-        }
-
         return $thread_array;
-    }
-
-    public function storeData(array $data)
-    {
-        $this->data_array['thread'] = $data;
-    }
-
-    public function retrieveData(bool $all_data = false)
-    {
-        if($all_data)
-        {
-            return $this->data_array;
-        }
-        else
-        {
-            return $this->data_array['thread'];
-        }
-    }
-
-    public function writeStoredData($path, $filename)
-    {
-        $json_data = json_encode($this->data_array);
-        $this->file_handler->writeFile($path . $filename . JSON_EXT, $json_data);
     }
 
     public function addPostData(array $post_data)

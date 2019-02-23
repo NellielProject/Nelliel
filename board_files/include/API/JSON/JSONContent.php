@@ -20,7 +20,7 @@ class JSONContent extends JSONOutput
         $this->data_array['content'] = array();
     }
 
-    public function prepareData(array $data, bool $store = false)
+    public function prepareData(array $data)
     {
         $content_array = array();
         $this->addIfNotEmpty($content_array, 'parent_thread', $data['parent_thread'], 'integer');
@@ -49,34 +49,6 @@ class JSONContent extends JSONOutput
         $this->addIfNotEmpty($content_array, 'exif', $data['exif'], 'string');
         $this->addIfNotEmpty($content_array, 'meta', $data['meta'], 'string');
         $content_array = nel_plugins()->processHook('nel-json-prepare-content', [$data], $content_array);
-
-        if ($store)
-        {
-            $this->data_array['content'] = $content_array;
-        }
-
         return $content_array;
-    }
-
-    public function storeData(array $data)
-    {
-        $this->data_array['content'] = $data;
-    }
-
-    public function retrieveData(bool $all_data = false)
-    {
-        if($all_data)
-        {
-            return $this->data_array;
-        }
-        else
-        {
-            return $this->data_array['content'];
-        }
-    }
-
-    public function writeStoredData($path, $filename)
-    {
-        ;
     }
 }

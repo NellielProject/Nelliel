@@ -1,10 +1,10 @@
 	<form id="board-settings-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
-				<td></td>
 				<td>
 					<span class="bold" data-i18n="gettext">General Settings</span>
 				</td>
+				<td></td>
 			</tr>
 			<tr>
 				<td>
@@ -294,39 +294,39 @@
 				</td>
 			</tr>
 			<tr>
-				<td></td>
 				<td>
 					<hr>
 				</td>
+				<td></td>
 			</tr>
 			<tr>
-				<td></td>
 				<td>
 					<span class="bold" data-i18n="gettext">Posting Parameters</span>
 				</td>
+				<td></td>
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="require_image_start_lock" value="0">
-					<input type="checkbox" name="require_image_start_lock" id="require_image_start_lock" value="1">
-					<label for="require_image_start_lock" data-i18n="gettext">(Lock)</label>
+					<input type="hidden" name="require_content_start_lock" value="0">
+					<input type="checkbox" name="require_content_start_lock" id="require_content_start_lock" value="1">
+					<label for="require_content_start_lock" data-i18n="gettext">(Lock)</label>
 				</td>
 				<td>
-					<input type="hidden" name="require_image_start" value="0">
-					<input type="checkbox" name="require_image_start" id="require_image_start" value="1">
-					<label for="require_image_start" data-i18n="gettext">Require image or file to start new thread</label>
+					<input type="hidden" name="require_content_start" value="0">
+					<input type="checkbox" name="require_content_start" id="require_content_start" value="1">
+					<label for="require_content_start" data-i18n="gettext">Require an image, file or embed to start new thread</label>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="require_image_always_lock" value="0">
-					<input type="checkbox" name="require_image_always_lock" id="require_image_always_lock" value="1">
-					<label for="require_image_always_lock" data-i18n="gettext">(Lock)</label>
+					<input type="hidden" name="require_content_always_lock" value="0">
+					<input type="checkbox" name="require_content_always_lock" id="require_content_always_lock" value="1">
+					<label for="require_content_always_lock" data-i18n="gettext">(Lock)</label>
 				</td>
 				<td>
-					<input type="hidden" name="require_image_always" value="0">
-					<input type="checkbox" name="require_image_always" id="require_image_always" value="1">
-					<label for="require_image_always" data-i18n="gettext">Always require an image or file</label>
+					<input type="hidden" name="require_content_always" value="0">
+					<input type="checkbox" name="require_content_always" id="require_content_always" value="1">
+					<label for="require_content_always" data-i18n="gettext">Always require an image, file or embed</label>
 				</td>
 			</tr>
 			<tr>
@@ -441,28 +441,28 @@
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="thread_delay_lock" value="0">
-					<input type="checkbox" name="thread_delay_lock" id="thread_delay_lock" value="1">
-					<label for="thread_delay_lock" data-i18n="gettext">(Lock)</label>
+					<input type="hidden" name="thread_cooldown_lock" value="0">
+					<input type="checkbox" name="thread_cooldown_lock" id="thread_cooldown_lock" value="1">
+					<label for="thread_cooldown_lock" data-i18n="gettext">(Lock)</label>
 				</td>
 				<td>
-					<label for="thread_delay" data-i18n="gettext">Delay between new threads (seconds)</label>
+					<label for="thread_cooldown" data-i18n="gettext">Delay between new threads (seconds)</label>
 				</td>
 				<td>
-					<input type="text" name="thread_delay" id="thread_delay" size="8" value="">
+					<input type="text" name="thread_cooldown" id="thread_cooldown" size="8" value="">
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input type="hidden" name="reply_delay_lock" value="0">
-					<input type="checkbox" name="reply_delay_lock" id="reply_delay_lock" value="1">
-					<label for="reply_delay_lock" data-i18n="gettext">(Lock)</label>
+					<input type="hidden" name="reply_cooldown_lock" value="0">
+					<input type="checkbox" name="reply_cooldown_lock" id="reply_cooldown_lock" value="1">
+					<label for="reply_cooldown_lock" data-i18n="gettext">(Lock)</label>
 				</td>
 				<td>
-					<label for="reply_delay" data-i18n="gettext">Delay between new posts (seconds)</label>
+					<label for="reply_cooldown" data-i18n="gettext">Delay between new posts (seconds)</label>
 				</td>
 				<td>
-					<input type="text" name="reply_delay" id="reply_delay" size="8" value="">
+					<input type="text" name="reply_cooldown" id="reply_cooldown" size="8" value="">
 				</td>
 			</tr>
 			<tr>
@@ -636,16 +636,16 @@
 				</td>
 			</tr>
 			<tr>
-				<td></td>
 				<td>
 					<hr>
 				</td>
+				<td></td>
 			</tr>
 			<tr>
-				<td></td>
 				<td>
 					<span class="bold" data-i18n="gettext">Content Handling and Rendering</span>
 				</td>
+				<td></td>
 			</tr>
 			<tr>
 				<td>

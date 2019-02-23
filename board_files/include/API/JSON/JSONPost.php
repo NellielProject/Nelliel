@@ -7,8 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use \Nelliel\Domain;
-use \Nelliel\FileHandler;
+use Nelliel\Domain;
+use Nelliel\FileHandler;
 
 class JSONPost extends JSONOutput
 {
@@ -20,7 +20,7 @@ class JSONPost extends JSONOutput
         $this->data_array['post'] = array();
     }
 
-    public function prepareData(array $data, bool $store = false)
+    public function prepareData(array $data)
     {
         $authorization = new \Nelliel\Auth\Authorization(nel_database());
         $post_array = array();
@@ -44,35 +44,7 @@ class JSONPost extends JSONOutput
         $post_array['sage'] = nel_cast_to_datatype($data['sage'], 'boolean');
         $this->addIfNotEmpty($post_array, 'mod_comment', $data['mod_comment'], 'string');
         $post_array = nel_plugins()->processHook('nel-json-prepare-post', [$data], $post_array);
-
-        if ($store)
-        {
-            $this->data_array['post'] = $post_array;
-        }
-
         return $post_array;
-    }
-
-    public function storeData(array $data)
-    {
-        $this->data_array = $data;
-    }
-
-    public function retrieveData(bool $all_data = false)
-    {
-        if($all_data)
-        {
-            return $this->data_array;
-        }
-        else
-        {
-            return $this->data_array['thread'];
-        }
-    }
-
-    public function writeStoredData($path, $filename)
-    {
-        ;
     }
 
     public function addContentData(array $content_data)
