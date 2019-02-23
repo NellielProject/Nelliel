@@ -86,7 +86,8 @@ class AdminBoards extends AdminHandler
             $regen->boardCache($domain);
         }
 
-        $regen->allPages($domain);
+        $regen->allBoardPages($domain);
+        $regen->boardList(new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database));
     }
 
     public function editor($user)
@@ -106,6 +107,11 @@ class AdminBoards extends AdminHandler
 
         $board_id = $_GET['board_id'];
         $domain = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), $this->database);
+
+        if(!$domain->boardExists())
+        {
+            nel_derp(109, _gettext('Board does not appear to exist.'));
+        }
 
         if ($this->database->tableExists($domain->reference('config_table')))
         {
@@ -143,12 +149,15 @@ class AdminBoards extends AdminHandler
         }
 
         $file_handler = new \Nelliel\FileHandler();
+
         $file_handler->eraserGun($domain->reference('board_path'));
         $prepared = $this->database->prepare('DELETE FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . CITES_TABLE . '" WHERE "source_board" = ? OR "target_board" = ?');
         $this->database->executePrepared($prepared, [$board_id, $board_id]);
+        $regen = new \Nelliel\Regen();
+        $regen->boardList(new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database));
     }
 
     public function lock($user)

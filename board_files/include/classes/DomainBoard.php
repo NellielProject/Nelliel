@@ -29,6 +29,14 @@ class DomainBoard extends Domain
         $this->database = $database;
     }
 
+    public function boardExists()
+    {
+        $prepared = $this->database->prepare('SELECT 1 FROM "nelliel_board_data" WHERE "board_id" = ?');
+        $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);
+
+        return !empty($board_data);
+    }
+
     protected function loadSettings()
     {
         $settings = $this->cache_handler->loadArrayFromCache($this->domain_id . '/domain_settings.php',
@@ -52,6 +60,7 @@ class DomainBoard extends Domain
     {
         $prepared = $this->database->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
         $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_ASSOC);
+        var_dump($board_data);
         $new_reference = array();
         $board_path = BASE_PATH . $board_data['board_id'] . '/';
         $new_reference['board_directory'] = $board_data['board_id'];
