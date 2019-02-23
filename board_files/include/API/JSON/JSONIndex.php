@@ -17,6 +17,7 @@ class JSONIndex extends JSONOutput
     {
         $this->domain = $domain;
         $this->file_handler = $file_handler;
+        $this->setVersion();
         $this->data_array['index'] = array();
     }
 

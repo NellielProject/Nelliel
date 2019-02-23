@@ -9,11 +9,20 @@ if (!defined('NELLIEL_VERSION'))
 
 abstract class JSONOutput
 {
+    protected $api_version = 0;
     protected $data_array = array();
     protected $file_handler;
     protected $domain;
 
     public abstract function prepareData(array $data);
+
+    protected function setVersion()
+    {
+        if(!isset($this->data_array['version']['api_version']))
+        {
+            $this->data_array['version'] = ['api_version' => $this->api_version];
+        }
+    }
 
     public function storeData(array $data, string $sub_section = null)
     {
@@ -41,6 +50,7 @@ abstract class JSONOutput
 
     public function writeStoredData($path, $filename)
     {
+        $this->setVersion();
         $json_data = json_encode($this->data_array);
         $this->file_handler->writeFile($path . $filename . JSON_EXT, $json_data);
     }

@@ -17,6 +17,7 @@ class JSONContent extends JSONOutput
     {
         $this->domain = $domain;
         $this->file_handler = $file_handler;
+        $this->setVersion();
         $this->data_array['content'] = array();
     }
 
