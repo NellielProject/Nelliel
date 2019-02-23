@@ -99,6 +99,7 @@ class FilesUpload
             ++ $file_count;
         }
 
+        $this->processed_files = nel_plugins()->processHook('nel-post-files-processed', [$this->domain, $this->uploaded_files], $this->processed_files);
         return $this->processed_files;
     }
 
@@ -149,6 +150,8 @@ class FilesUpload
         {
             nel_derp(17, _gettext('The uploaded file just ain\'t right. That\'s all I know.'), $error_data);
         }
+
+        $this->processed_files = nel_plugins()->processHook('nel-post-check-file-errors', [$file, $error_data]);
     }
 
     public function doesFileExist($response_to, $file)

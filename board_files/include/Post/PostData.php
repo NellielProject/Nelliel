@@ -56,6 +56,8 @@ class PostData
             $post->content_data['poster_name'] = _gettext('Anonymous');
             $post->content_data['email'] = '';
         }
+
+        $post = nel_plugins()->processHook('nel-post-data-processed', [$this->domain], $post);
     }
 
     public function checkEntry($post_item, $type)
@@ -136,6 +138,8 @@ class PostData
             $trip = base64_encode(pack("H*", $trip));
             $post->content_data['secure_tripcode'] = substr($trip, 2, 10);
         }
+
+        $post = nel_plugins()->processHook('nel-post-tripcodes', [$this->domain, $name_pieces], $post);
     }
 
     public function tripcodeCharsetConvert($text, $to, $from)

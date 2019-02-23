@@ -2,7 +2,7 @@
 Documentation for the official hooks currently in Nelliel.
 
 ## Arguments and Returnables
-All hooks will provide one or more arguments when called. The first argument will always be the returnable; the returnable may contain data or it may be an unused placeholder with the value of `null`. If a function or method returns a value, it must be the same type as the returnable otherwise it will be ignored.
+All hooks will provide one or more arguments when called. The first argument will always be the returnable; the returnable may contain data or it may be an unused placeholder with the value of `null`. If a function or method returns a value, it must be the same type as the returnable otherwise it will be ignored. Return values are not mandatory; if nothing is returned from a function or method, the original returnable value will be used.
 
 ## Hook List
 ### nel-inb4-central-dispatch
@@ -40,6 +40,24 @@ Called at the end of the module dispatch.
 |:---:|:-------------|:-------|:---------|:----------|
 |1    |`$inputs`     |`array` |Yes       |Input data.|
 |2    |`$domain`     |`object`|No        |Domain object.|
+
+### nel-json-prepare-board-list
+Called when board list data has been prepared for the JSON API.  
+**Arguments**
+
+|Order|Argument           |Type   |Returnable|Description|                               
+|:---:|:------------------|:------|:---------|:----------|
+|1    |`$board_list_array`|`array`|Yes       |Processed board list data that will be JSON-encoded.|
+|2    |`$data`            |`array`|No        |Raw board list data.|
+
+### nel-json-prepare-board
+Called when board data has been prepared for the JSON API.  
+**Arguments**
+
+|Order|Argument      |Type   |Returnable|Description|                               
+|:---:|:-------------|:------|:---------|:----------|
+|1    |`$board_array`|`array`|Yes       |Processed board data that will be JSON-encoded.|
+|2    |`$data`       |`array`|No        |Raw board data.|
 
 ### nel-json-prepare-index
 Called when index data has been prepared for the JSON API.  
@@ -101,3 +119,53 @@ Called when verifying a ReCAPTCHA answer.
 |:---:|:------------|:-------|:---------|:----------|
 |1    |`$returnable`|`null`  |Yes       |Unused.|
 |2    |`$response`  |`string`|No        |The ReCAPTCHA answer.|
+
+### nel-post-data-processed
+Called after post data has been processed.
+**Arguments**
+
+|Order|Argument     |Type    |Returnable|Description|                               
+|:---:|:------------|:-------|:---------|:----------|
+|1    |`$post`      |`object`|Yes       |The post object.|
+|2    |`$domain`    |`object`|No        |Domain object for the board the post is being submitted to.|
+
+### nel-post-tripcodes
+Called after tripcodes have been processed.
+**Arguments**
+
+|Order|Argument      |Type    |Returnable|Description|                               
+|:---:|:-------------|:-------|:---------|:----------|
+|1    |`$post`       |`object`|Yes       |The post object.|
+|2    |`$domain`     |`object`|No        |Domain object for the board the post is being submitted to.|
+|3    |`$name_pieces`|`array` |No        |Original name field split into pieces.|
+
+### nel-post-files-processed
+Called after uploaded files are processed.
+**Arguments**
+
+|Order|Argument          |Type    |Returnable|Description|                               
+|:---:|:-----------------|:-------|:---------|:----------|
+|1    |`$processed_files`|`array` |Yes       |Array of file objects after processing.|
+|2    |`$domain`         |`object`|No        |Domain object for the board the files are being submitted to.|
+|3    |`$uploaded_files` |`array` |No        |Array of file objects before processing.|
+
+### nel-post-check-file-errors
+Called when an uploaded file is checked for errors.
+**Arguments**
+
+|Order|Argument          |Type    |Returnable|Description|                               
+|:---:|:-----------------|:-------|:---------|:----------|
+|1    |`$returnable`     |`null`  |Yes       |Unused.|
+|2    |`$domain`         |`object`|No        |Domain object for the board the files are being submitted to.|
+|3    |`$error_data`     |`array` |No        |Array of data sent to error handler.|
+
+### nel-derp-happened
+Called when an error occurs.
+**Arguments**
+
+|Order|Argument          |Type     |Returnable|Description|                               
+|:---:|:-----------------|:--------|:---------|:----------|
+|1    |`$diagnostics`    |`array`  |Yes       |Array of diagnostic data.|
+|2    |`$error_id`       |`integer`|No        |ID of the error.|
+|3    |`$error_message`  |`string` |No        |Error message.|
+|4    |`$error_data`     |`array`  |No        |Array of data sent to error handler.|

@@ -6,13 +6,14 @@ if (!defined('NELLIEL_VERSION'))
 
 require_once INCLUDE_PATH . 'output/derp.php';
 
-function nel_derp($error_id, $error_message, $error_data = array())
+function nel_derp(int $error_id, string $error_message, array $error_data = array())
 {
     $backtrace = debug_backtrace();
     $diagnostic = array();
     $domain_id = (isset($error_data['board_id'])) ? $error_data['board_id'] : '';
     $diagnostic['error_id'] = (!empty($error_id)) ? $error_id : 0;
     $diagnostic['error_message'] = (!empty($error_message)) ? $error_message : "I just don't know what went wrong!";
+    $diagnostic = nel_plugins()->processHook('nel-derp-happened', [$error_id, $error_message, $error_data], $diagnostic);
 
     if (!empty($error_data))
     {
@@ -28,7 +29,7 @@ function nel_derp($error_id, $error_message, $error_data = array())
         }
     }
 
-    if(!defined('SETUP_GOOD'))
+    if (!defined('SETUP_GOOD'))
     {
         nel_render_simple_derp($diagnostic);
     }

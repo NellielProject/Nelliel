@@ -23,8 +23,9 @@ class JSONBoardList extends JSONOutput
 
     public function prepareData(array $data)
     {
-        $boards_array = $data;
-        return $boards_array;
+        $board_list_array = $data;
+        $board_list_array = nel_plugins()->processHook('nel-json-prepare-board-list', [$data], $board_list_array);
+        return $board_list_array;
     }
 
     public function addBoardData(array $board_data)
