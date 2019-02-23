@@ -38,6 +38,12 @@ function nel_render_catalog(\Nelliel\Domain $domain, $write)
         $prepared = $database->prepare(
                 'SELECT * FROM "' . $domain->reference('posts_table') . '" WHERE "parent_thread" = ? AND "op" = 1');
         $first_post = $database->executePreparedFetch($prepared, [$thread['thread_id']], PDO::FETCH_ASSOC);
+
+        if(empty($first_post))
+        {
+            continue;
+        }
+
         $post_content_id = new \Nelliel\ContentId('cid_' . $thread['thread_id'] . '_' . $first_post['post_number']);
         $thread_page_web_path = $pages_web_path . $thread['thread_id'] . '/thread-' . $thread['thread_id'] . '.html';
         $catalog_entry_nodes['open-link']->extSetAttribute('href', $thread_page_web_path);

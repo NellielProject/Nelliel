@@ -96,6 +96,14 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
                 $post_counter = 0;
             }
 
+            if(empty($treeline[$post_counter]))
+            {
+                $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? $domain->setting('threads_per_page') : ++ $sub_page_thread_counter;
+                ++ $thread_counter;
+                $post_counter = -1;
+                continue;
+            }
+
             $gen_data['abbreviate'] = $abbreviate;
             $gen_data['post'] = $treeline[$post_counter];
             $json_post = new \Nelliel\API\JSON\JSONPost($domain, $file_handler);

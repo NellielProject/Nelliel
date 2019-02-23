@@ -2,17 +2,19 @@
 
 namespace Nelliel\Content;
 
-use PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
 
+use Nelliel\ContentID;
+use Nelliel\Domain;
+use PDO;
+
 class ContentPost extends ContentHandler
 {
 
-    function __construct($database, $content_id, $domain, $db_load = false)
+    function __construct($database, ContentID $content_id, Domain $domain, bool $db_load = false)
     {
         $this->database = $database;
         $this->content_id = $content_id;
@@ -29,6 +31,7 @@ class ContentPost extends ContentHandler
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
+        var_dump($this->content_id);
         $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id], PDO::FETCH_ASSOC);
 
         if (empty($result))
@@ -124,7 +127,7 @@ class ContentPost extends ContentHandler
                 $this->content_id->post_id, DIRECTORY_PERM);
     }
 
-    public function remove($perm_override = false)
+    public function remove(bool $perm_override = false)
     {
         if (!$perm_override && !$this->verifyModifyPerms())
         {
@@ -151,7 +154,16 @@ class ContentPost extends ContentHandler
         }
 
         $thread = new ContentThread($this->database, $this->content_id, $this->domain);
-        $thread->updateCounts();
+
+        if($thread->postCount() <= 0)
+        {
+            $thread->remove(true);
+        }
+        else
+        {
+            $thread->updateCounts();
+        }
+
         return true;
     }
 
@@ -224,7 +236,8 @@ class ContentPost extends ContentHandler
 
         if (!$flag)
         {
-            if (!nel_verify_salted_hash($_POST['update_sekrit'], $this->content_data['post_password']))
+            if (!isset($this->content_data['post_password']) ||
+                    !nel_verify_salted_hash($_POST['update_sekrit'], $this->content_data['post_password']))
             {
                 nel_derp(50, _gettext('Password is wrong or you are not allowed to delete that.'));
             }
@@ -270,8 +283,8 @@ class ContentPost extends ContentHandler
             $prepared = $this->database->prepare(
                     'UPDATE "' . $this->domain->reference('content_table') .
                     '" SET "parent_thread" = ? WHERE "post_ref" = ?');
-            $this->database->executePrepared($prepared,
-                    [$new_thread->content_id->thread_id, $this->content_id->post_id]);
+            $this->database->executePrepared($prepared, [$new_thread->content_id->thread_id,
+                $this->content_id->post_id]);
         }
 
         $this->loadFromDatabase();

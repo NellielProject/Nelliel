@@ -77,13 +77,13 @@ Contains information about a thread.
 |Attribute Key         |Type     |Possible Values      |Optional|Description        |                               
 |:---------------------|:--------|:--------------------|:-------|:------------------|
 |`thread_id`           |`integer`|1-2147483647         |No      |ID of the thread.|
-|`first_post`          |`integer`|1-2147483647         |Yes     |First post in the thread. Omitted only if thread has no posts.|
-|`last_post`           |`integer`|1-2147483647         |Yes     |Last post in the thread. Omitted only if thread has no posts.|
+|`first_post`          |`integer`|1-2147483647         |No      |First post in the thread.|
+|`last_post`           |`integer`|1-2147483647         |No      |Last post in the thread.|
 |`last_bump_time`      |`integer`|64-bit Unix timestamp|No      |Last thread bump time.|
 |`last_bump_time_milli`|`integer`|0-999                |No      |Last thread bump time milliseconds. Used with `last_bump_time` when high precision is needed.|
 |`last_update`         |`integer`|64-bit Unix timestamp|No      |Last thread update.|
 |`last_update_milli`   |`integer`|0-999                |No      |Last thread update milliseconds. Used with `last_update` when high precision is needed.|
-|`post_count`          |`integer`|0-2147483647         |No      |Total number of posts in the thread. It is possible for a thread to have 0 posts.|
+|`post_count`          |`integer`|1-2147483647         |No      |Total number of posts in the thread.|
 |`total_files`         |`integer`|0-2147483647         |No      |Total files in the thread.|
 |`thread_sage`         |`boolean`|true or false        |No      |Is the thread permasaged.|
 |`sticky`              |`boolean`|true or false        |No      |Is the thread stickied.|
