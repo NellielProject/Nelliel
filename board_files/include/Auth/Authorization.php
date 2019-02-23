@@ -110,7 +110,7 @@ class Authorization
         return true;
     }
 
-    public function roleLevelCheck($role1, $role2, $false_if_equal = false)
+    public function roleLevelCheck($role1, $role2, bool $false_if_equal = false)
     {
         if (!$this->roleExists($role1))
         {

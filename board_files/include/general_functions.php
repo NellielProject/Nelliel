@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_delay = 2)
+function nel_clean_exit(bool $redirect = false, $redirect_board = null, int $redirect_delay = 2)
 {
     $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database());
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
@@ -30,7 +30,7 @@ function nel_clean_exit($redirect = false, $redirect_board = null, $redirect_del
     die();
 }
 
-function nel_redirect($url, $delay, $output = true)
+function nel_redirect(string $url, int $delay, bool $output = true)
 {
     $redirect = '<meta http-equiv="refresh" content="' . $delay . ';URL=' . $url . '">';
 
@@ -44,7 +44,7 @@ function nel_redirect($url, $delay, $output = true)
     }
 }
 
-function nel_get_microtime($convert_int = true)
+function nel_get_microtime(bool $convert_int = true)
 {
     $time = microtime();
     $return_time = ['time' => $time];
@@ -64,7 +64,7 @@ function nel_get_microtime($convert_int = true)
     return $return_time;
 }
 
-function nel_utf8_to_numeric_html_entities(&$input, $non_ascii_only = true)
+function nel_utf8_to_numeric_html_entities(&$input, bool $non_ascii_only = true)
 {
     $regex = ($non_ascii_only) ? '#([^[:ascii:]])#Su' : '#(.)#Su';
 

@@ -19,6 +19,14 @@ abstract class Domain
     protected $render_active;
     protected $template_path;
 
+    protected abstract function loadSettings();
+
+    protected abstract function loadReferences();
+
+    protected abstract function loadSettingsFromDatabase();
+
+    public abstract function regenCache();
+
     public function id()
     {
         return $this->domain_id;
@@ -104,12 +112,4 @@ abstract class Domain
 
         return $this->render_instance;
     }
-
-    protected abstract function loadSettings();
-
-    protected abstract function loadReferences();
-
-    protected abstract function loadSettingsFromDatabase();
-
-    public abstract function regenCache();
 }

@@ -216,7 +216,7 @@ class NellielPDO extends PDO
         return $fetched_result;
     }
 
-    public function executePrepared($prepared, $parameters = null, $close_cursor = true)
+    public function executePrepared($prepared, $parameters = null, bool $close_cursor = true)
     {
         $prepared->execute($parameters);
 
@@ -228,7 +228,7 @@ class NellielPDO extends PDO
         return $prepared;
     }
 
-    public function executePreparedFetch($prepared, $parameters = null, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, $close_cursor = true)
+    public function executePreparedFetch($prepared, $parameters = null, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, bool $close_cursor = true)
     {
         $prepared = $this->executePrepared($prepared, $parameters, false);
 

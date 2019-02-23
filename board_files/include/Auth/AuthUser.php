@@ -2,12 +2,13 @@
 
 namespace Nelliel\Auth;
 
-use PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
+
+use Nelliel\Domain;
+use PDO;
 
 class AuthUser extends AuthHandler
 {
@@ -123,7 +124,7 @@ class AuthUser extends AuthHandler
         $this->database->executePrepared($prepared, [$this->auth_id]);
     }
 
-    public function domainRole($domain, $return_id = false, $escalate = true)
+    public function domainRole(Domain $domain, bool $return_id = false, bool $escalate = true)
     {
         if (!isset($this->user_roles[$domain->scope()]))
         {
@@ -200,7 +201,7 @@ class AuthUser extends AuthHandler
         }
     }
 
-    public function domainPermission($domain, $perm_id, $escalate = true)
+    public function domainPermission(Domain $domain, $perm_id, bool $escalate = true)
     {
         if ($this->isSuperAdmin())
         {

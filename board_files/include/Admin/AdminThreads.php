@@ -180,7 +180,7 @@ class AdminThreads extends AdminHandler
         $this->regenThread($content_id->thread_id, true);
     }
 
-    private function regenThread($thread_id, $regen_index = false)
+    private function regenThread($thread_id, bool $regen_index = false)
     {
         $regen = new \Nelliel\Regen();
         $regen->threads($this->domain, true, [$thread_id]);

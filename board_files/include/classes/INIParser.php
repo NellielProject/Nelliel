@@ -16,7 +16,7 @@ class INIParser
         $this->file_handler = $file_handler;
     }
 
-    public function parseDirectories($path, string $filename = '', $recursion_depth = -1)
+    public function parseDirectories(string $path, string $filename = '', int $recursion_depth = -1)
     {
         $ini_files = $this->file_handler->recursiveFileList($path, $recursion_depth);
         $parsed_ini = array();

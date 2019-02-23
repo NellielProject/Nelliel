@@ -14,7 +14,7 @@ class FileHandler
     {
     }
 
-    public function writeFile($file, $output, $chmod = FILE_PERM, $create_directories = false, $dir_chmod = DIRECTORY_PERM, $temp_move = true)
+    public function writeFile($file, $output, $chmod = FILE_PERM, bool $create_directories = false, $dir_chmod = DIRECTORY_PERM, bool $temp_move = true)
     {
         $file_final = $file;
 
@@ -43,7 +43,7 @@ class FileHandler
         return $result;
     }
 
-    public function writeInternalFile($file, $output, $use_header = true, $temp_move = true)
+    public function writeInternalFile($file, $output, bool $use_header = true, bool $temp_move = true)
     {
         if($use_header)
         {
@@ -53,7 +53,7 @@ class FileHandler
         return $this->writeFile($file, $output, FILE_PERM, true, DIRECTORY_PERM, $temp_move);
     }
 
-    public function createDirectory($directory, $dir_chmod = DIRECTORY_PERM, $recursive = false)
+    public function createDirectory($directory, $dir_chmod = DIRECTORY_PERM, bool $recursive = false)
     {
         clearstatcache();
 
@@ -65,7 +65,7 @@ class FileHandler
         return @mkdir($directory, octdec($dir_chmod), $recursive);
     }
 
-    public function moveFile($file, $destination, $create_directories = false, $dir_chmod = DIRECTORY_PERM)
+    public function moveFile($file, $destination, bool $create_directories = false, $dir_chmod = DIRECTORY_PERM)
     {
         clearstatcache();
 
@@ -82,7 +82,7 @@ class FileHandler
         return false;
     }
 
-    public function moveDirectory($directory, $destination, $create_directories = false, $dir_chmod = DIRECTORY_PERM)
+    public function moveDirectory($directory, $destination, bool $create_directories = false, $dir_chmod = DIRECTORY_PERM)
     {
         clearstatcache();
 
@@ -189,7 +189,7 @@ class FileHandler
         return $filtered;
     }
 
-    public function recursiveFileList($path, $recursion_depth = -1, $include_directories = false, $file_object = true)
+    public function recursiveFileList($path, int $recursion_depth = -1, bool $include_directories = false, bool $file_object = true)
     {
         $file_list = array();
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));

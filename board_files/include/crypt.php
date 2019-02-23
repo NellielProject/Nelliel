@@ -5,7 +5,7 @@
 //
 if (!function_exists('hash_equals'))
 {
-    function hash_equals($known_string, $user_string)
+    function hash_equals(string $known_string, string $user_string)
     {
         if (strlen($known_string) != strlen($user_string))
         {
@@ -26,18 +26,18 @@ if (!function_exists('hash_equals'))
     }
 }
 
-function nel_set_password_algorithm($choice)
+function nel_set_password_algorithm(string $algorithm)
 {
     if(defined('NEL_PASSWORD_ALGORITHM'))
     {
         return;
     }
 
-    if ($choice === 'BCRYPT' && defined('PASSWORD_BCRYPT'))
+    if ($algorithm === 'BCRYPT' && defined('PASSWORD_BCRYPT'))
     {
         define('NEL_PASSWORD_ALGORITHM', PASSWORD_BCRYPT);
     }
-    else if ($choice === 'ARGON2I' && defined('PASSWORD_ARGON2I'))
+    else if ($algorithm === 'ARGON2I' && defined('PASSWORD_ARGON2I'))
     {
         define('NEL_PASSWORD_ALGORITHM', PASSWORD_ARGON2I);
     }
@@ -51,7 +51,7 @@ function nel_set_password_algorithm($choice)
     }
 }
 
-function nel_password_hash($password, $algorithm, $options = array())
+function nel_password_hash(string $password, int $algorithm, array $options = array())
 {
     switch ($algorithm)
     {
@@ -70,12 +70,12 @@ function nel_password_hash($password, $algorithm, $options = array())
     }
 }
 
-function nel_password_verify($password, $hash)
+function nel_password_verify(string $password, string $hash)
 {
     return password_verify($password, $hash);
 }
 
-function nel_password_needs_rehash($hash, $algorithm, $options = array())
+function nel_password_needs_rehash(string $hash, int $algorithm, array $options = array())
 {
     $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database());
 
@@ -87,13 +87,13 @@ function nel_password_needs_rehash($hash, $algorithm, $options = array())
     return password_needs_rehash($password, $algorithm);
 }
 
-function nel_password_info($hash)
+function nel_password_info(string $hash)
 {
     $info = password_get_info($hash);
     return $info;
 }
 
-function nel_salted_hash_info($hash)
+function nel_salted_hash_info(string $hash)
 {
     $available = hash_algos();
     $info = array();
@@ -113,14 +113,14 @@ function nel_salted_hash_info($hash)
     return $info;
 }
 
-function nel_generate_salted_hash($algorithm, $string, $salt = null, $salt_length = 16)
+function nel_generate_salted_hash(string $algorithm, string $string, $salt = null, int $salt_length = 16)
 {
     $salt = (!is_null($salt)) ? $salt : nel_gen_salt($salt_length);
     $hash = hash($algorithm, $salt . $string, false);
     return '$' . $algorithm . '$' . $salt . '$' . $hash;
 }
 
-function nel_verify_salted_hash($string, $hash)
+function nel_verify_salted_hash(string $string, string $hash)
 {
     $info = nel_salted_hash_info($hash);
 
@@ -133,7 +133,7 @@ function nel_verify_salted_hash($string, $hash)
     return hash_equals($hash, $new_hash);
 }
 
-function nel_gen_salt($length, $bcrypt_base64 = false)
+function nel_gen_salt(int $length, bool $bcrypt_base64 = false)
 {
     $salt = random_bytes($length);
     $base_64 = base64_encode($salt);

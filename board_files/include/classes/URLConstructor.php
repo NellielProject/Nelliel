@@ -14,7 +14,7 @@ class URLConstructor
     {
     }
 
-    public function dynamic($base_file, $parameters)
+    public function dynamic(string $base_file, array $parameters)
     {
         $new_url = $base_file . '?';
 
@@ -25,7 +25,7 @@ class URLConstructor
         return $new_url;
     }
 
-    private function appendDynamicParameter(&$url, $parameter_name, $parameter_value, bool $encode = true)
+    private function appendDynamicParameter(&$url, string $parameter_name, $parameter_value, bool $encode = true)
     {
         $new_parameter = '';
 

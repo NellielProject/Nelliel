@@ -2,17 +2,19 @@
 
 namespace Nelliel\Content;
 
-use PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
 
+use Nelliel\ContentID;
+use Nelliel\Domain;
+use PDO;
+
 class ContentFile extends ContentHandler
 {
 
-    function __construct($database, $content_id, $domain, $db_load = false)
+    function __construct($database, ContentID $content_id, Domain $domain, bool $db_load = false)
     {
         $this->database = $database;
         $this->content_id = $content_id;
@@ -118,7 +120,7 @@ class ContentFile extends ContentHandler
                 DIRECTORY_PERM);
     }
 
-    public function remove($perm_override = false)
+    public function remove(bool $perm_override = false)
     {
         if (!$perm_override && !$this->verifyModifyPerms())
         {
@@ -163,7 +165,7 @@ class ContentFile extends ContentHandler
         $file_handler->eraserGun($this->domain->reference('src_path'),
                 $this->content_id->thread_id . '/' . $this->content_id->post_id . '/' . $this->content_data['filename'] .
                 '.' . $this->content_data['extension']);
-                $file_handler->eraserGun($this->domain->reference('preview_path'),
+        $file_handler->eraserGun($this->domain->reference('preview_path'),
                 $this->content_id->thread_id . '/' . $this->content_id->post_id . '/' .
                 $this->content_data['preview_name'] . '.' . $this->content_data['preview_extension']);
     }
