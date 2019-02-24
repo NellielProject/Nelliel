@@ -30,9 +30,15 @@
 					<input data-parse-id="add-sauce" id="add-sauce-1" type="button" value="Add Source" data-command="add-file-meta">&nbsp;
 					<input data-parse-id="add-lol_drama" id="add-lol_drama-1" type="button" value="Add License" data-command="add-file-meta">&nbsp;
 					<input data-parse-id="add-alt_text" id="add-alt_text-1" type="button" value="Add Alt Description" data-command="add-file-meta">
+					<br>
+					<span data-parse-id="form-spoiler">
+						<input data-parse-id="spoiler-hidden" type="hidden" name="new_post[file_info][up_file_1][spoiler]" value="0">
+						<input data-parse-id="spoiler-checkbox" type="checkbox" name="new_post[file_info][up_file_1][spoiler]" value="1">
+						<span data-i18n="gettext">Spoiler</span>
+					</span>
 				</span>
 				<label data-parse-id="form-sauce" id="form-sauce-1" class="posting-form-row hidden">
-					<span class="posting-form-label" data-i18n="gettext">Source</span>
+					<span class="posting-form-label" data-i18n="gettext">Source</span>s
 					<input data-parse-id="sauce" class="posting-form-input" type="text" name="new_post[file_info][up_file_1][sauce]" maxlength="255">
 				</label>
 				<label data-parse-id="form-lol_drama" id="form-lol_drama-1" class="posting-form-row hidden">

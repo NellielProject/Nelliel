@@ -67,6 +67,11 @@ function nel_render_posting_form(\Nelliel\Domain $domain, $response_to, $dotdot 
     $posting_form_nodes['lol_drama']->extSetAttribute('maxlength', $domain->setting('max_license_length'));
     $posting_form_nodes['alt_text']->extSetAttribute('maxlength', '255');
 
+    if (!$domain->setting('enable_spoilers'))
+    {
+        $posting_form_nodes['form-spoiler']->remove();
+    }
+
     if ($domain->setting('allow_multifile') && $domain->setting('max_post_files') > 1)
     {
         for ($i = 2, $j = 3; $i <= $domain->setting('max_post_files'); ++ $i, ++ $j)
@@ -101,6 +106,18 @@ function nel_render_posting_form(\Nelliel\Domain $domain, $response_to, $dotdot 
             $temp_alt_text_block_nodes = $temp_alt_text_block->getElementsByAttributeName('data-parse-id', true);
             $temp_alt_text_block_nodes['alt_text']->extSetAttribute('name',
                     'new_post[file_info][up_file_' . $i . '][alt_text]');
+
+            if ($domain->setting('enable_spoilers'))
+            {
+                $temp_spoiler_block = $posting_form_nodes['form-spoiler']->cloneNode(true);
+                $temp_spoiler_block->changeId('form-spoiler-' . $i);
+                $temp_spoiler_block_nodes = $temp_spoiler_block->getElementsByAttributeName('data-parse-id', true);
+                $temp_spoiler_block_nodes['spoiler-hidden']->extSetAttribute('name',
+                        'new_post[file_info][up_file_' . $i . '][spoiler]');
+                $temp_spoiler_block_nodes['spoiler-checkbox']->extSetAttribute('name',
+                        'new_post[file_info][up_file_' . $i . '][spoiler]');
+            }
+
             $insert_before_point = $posting_form_nodes['form-fgsfds'];
             $posting_form_input->insertBefore($temp_file_block, $insert_before_point);
             $posting_form_input->insertBefore($temp_source_block, $insert_before_point);
@@ -133,8 +150,8 @@ function nel_render_posting_form(\Nelliel\Domain $domain, $response_to, $dotdot 
     }
     else
     {
-        $posting_form_nodes['recaptcha-sitekey']->extSetAttribute('data-sitekey',
-                $domain->setting('recaptcha_site_key'));
+        $posting_form_nodes['recaptcha-sitekey']->extSetAttribute('data-sitekey', $domain->setting(
+                'recaptcha_site_key'));
     }
 
     if ($domain->setting('use_honeypot'))

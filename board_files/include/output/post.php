@@ -340,7 +340,7 @@ function nel_render_post($domain, $gen_data, $dom)
 
         foreach ($gen_data['files'] as $file)
         {
-            if($row_counter >= $domain->setting('max_files_row'))
+            if ($row_counter >= $domain->setting('max_files_row'))
             {
                 $newline_div = $new_post_dom->createElement('div');
                 $newline_div->extSetAttribute('class', 'clear');
@@ -349,8 +349,9 @@ function nel_render_post($domain, $gen_data, $dom)
             }
 
             nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_container, $post_type_class,
-                    $multiple_class, $thread_src_web_path, $thread_preview_web_path, $preview_web_path, $filecount);
-            ++$row_counter;
+                    $multiple_class, $thread_src_web_path, $thread_preview_web_path, $preview_web_path, $filecount,
+                    $base_domain_path);
+            ++ $row_counter;
         }
 
         $new_post_dom->getElementById('fileinfo-cid_0_0_0')->remove();
@@ -434,7 +435,7 @@ function nel_render_comment($new_post_dom, $output_filter, $post_type_class, $po
 }
 
 function nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_container, $post_type_class,
-        $multiple_class, $thread_src_web_path, $thread_preview_web_path, $preview_web_path, $filecount)
+        $multiple_class, $thread_src_web_path, $thread_preview_web_path, $preview_web_path, $filecount, $base_domain_path)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $session = new \Nelliel\Session($authorization);
@@ -460,6 +461,17 @@ function nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_
     else
     {
         $file_nodes['modmode-options']->remove();
+    }
+
+    if ($filecount > 1)
+    {
+        $max_width = $domain->setting('max_multi_width');
+        $max_height = $domain->setting('max_multi_height');
+    }
+    else
+    {
+        $max_width = $domain->setting('max_width');
+        $max_height = $domain->setting('max_height');
     }
 
     $file_nodes['select-file']->extSetAttribute('name', $file_content_id->getIDString());
@@ -570,40 +582,43 @@ function nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_
                 $file['preview_location'] = $thread_preview_web_path . $post_data['post_number'] . '/' .
                         rawurlencode($full_preview_name);
 
-                if ($filecount > 1)
+                if ($file['preview_width'] > $max_width || $file['preview_height'] > $max_height)
                 {
-                    if ($file['preview_width'] > $domain->setting('max_multi_width') ||
-                            $file['preview_height'] > $domain->setting('max_multi_height'))
-                    {
-                        $ratio = min(($domain->setting('max_multi_height') / $file['preview_height']),
-                                ($domain->setting('max_multi_width') / $file['preview_width']));
-                        $file['preview_width'] = intval($ratio * $file['preview_width']);
-                        $file['preview_height'] = intval($ratio * $file['preview_height']);
-                    }
+                    $ratio = min(($max_height / $file['preview_height']), ($max_width / $file['preview_width']));
+                    $file['preview_width'] = intval($ratio * $file['preview_width']);
+                    $file['preview_height'] = intval($ratio * $file['preview_height']);
                 }
             }
             else if ($domain->setting('use_file_icon'))
             {
                 $front_end_data = new \Nelliel\FrontEndData(nel_database());
                 $icon_set = $front_end_data->filetypeIconSet($domain->setting('filetype_icon_set_id'));
-                $icons_web_path = '//' . $base_domain_path . '/' . ICON_SETS_WEB_PATH . $icon_set['directory'] . '/';
+                $icons_web_path = '//' . $base_domain_path . ICON_SETS_WEB_PATH . $icon_set['directory'] . '/';
                 $icons_file_path = ICON_SETS_FILE_PATH . $icon_set['directory'] . '/';
                 $format_icon = utf8_strtolower($file['format']) . '.png';
                 $type_icon = utf8_strtolower($file['type']) . '.png';
+
                 if (file_exists($icons_file_path . utf8_strtolower($file['type']) . '/' . $format_icon))
                 {
                     $file['has_preview'] = true;
                     $file['preview_location'] = $icons_web_path . utf8_strtolower($file['type']) . '/' . $format_icon;
-                    $file['preview_width'] = ($domain->setting('max_width') < 128) ? $domain->setting('max_width') : '128';
-                    $file['preview_height'] = ($domain->setting('max_height') < 128) ? $domain->setting('max_height') : '128';
+                    $file['preview_width'] = ($max_width < 128) ? $max_width : '128';
+                    $file['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }
                 else if (file_exists($icons_file_path . 'generic/' . $type_icon))
                 {
                     $file['has_preview'] = true;
                     $file['preview_location'] = $icons_web_path . '/generic/' . $type_icon;
-                    $file['preview_width'] = ($domain->setting('max_width') < 128) ? $domain->setting('max_width') : '128';
-                    $file['preview_height'] = ($domain->setting('max_height') < 128) ? $domain->setting('max_height') : '128';
+                    $file['preview_width'] = ($max_width < 128) ? $max_width : '128';
+                    $file['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }
+            }
+
+            if ($file['spoiler'])
+            {
+                $file['preview_location'] = '//' . $base_domain_path . IMAGES_WEB_PATH . 'covers/spoiler_alert.png';
+                $file['preview_width'] = ($max_width < 128) ? $max_width : '128';
+                $file['preview_height'] = ($max_height < 128) ? $max_height : '128';
             }
 
             if ($file['has_preview'])

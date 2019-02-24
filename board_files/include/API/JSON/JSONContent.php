@@ -17,7 +17,6 @@ class JSONContent extends JSONOutput
     {
         $this->domain = $domain;
         $this->file_handler = $file_handler;
-        $this->setVersion();
         $this->data_array['content'] = array();
     }
 
@@ -47,6 +46,7 @@ class JSONContent extends JSONOutput
         $this->addIfNotEmpty($content_array, 'license', $data['license'], 'string');
         $this->addIfNotEmpty($content_array, 'alt_text', $data['alt_text'], 'string');
         $this->addIfNotEmpty($content_array, 'url', $data['url'], 'string');
+        $content_array['spoiler'] = nel_cast_to_datatype($data['spoiler'], 'boolean');
         $this->addIfNotEmpty($content_array, 'exif', $data['exif'], 'string');
         $this->addIfNotEmpty($content_array, 'meta', $data['meta'], 'string');
         $content_array = nel_plugins()->processHook('nel-json-prepare-content', [$data], $content_array);

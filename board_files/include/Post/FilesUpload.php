@@ -3,7 +3,7 @@
 namespace Nelliel\Post;
 
 use PDO;
-use \Nelliel\Domain;
+use Nelliel\Domain;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -53,6 +53,12 @@ class FilesUpload
             $file->content_data['name'] = $file_handler->filterFilename($file_data['name']);
             $form_info = $_POST['new_post']['file_info'][$entry];
             $file->content_data['filesize'] = $file_data['size'];
+
+            if (isset($form_info['spoiler']) && $this->domain->setting('enable_spoilers'))
+            {
+                $file->content_data['spoiler'] = $data_handler->checkEntry($form_info['spoiler'], 'integer');
+            }
+
             $file->content_data['source'] = $data_handler->checkEntry($form_info['sauce'], 'string');
             $file->content_data['license'] = $data_handler->checkEntry($form_info['lol_drama'], 'string');
             $file->content_data['alt_text'] = $data_handler->checkEntry($form_info['alt_text'], 'string');
@@ -99,7 +105,8 @@ class FilesUpload
             ++ $file_count;
         }
 
-        $this->processed_files = nel_plugins()->processHook('nel-post-files-processed', [$this->domain, $this->uploaded_files], $this->processed_files);
+        $this->processed_files = nel_plugins()->processHook('nel-post-files-processed',
+                [$this->domain, $this->uploaded_files], $this->processed_files);
         return $this->processed_files;
     }
 

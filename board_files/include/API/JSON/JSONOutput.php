@@ -57,19 +57,11 @@ abstract class JSONOutput
 
     protected function addIfNotEmpty(&$data, $key, $value, $type)
     {
-        if ($value === null)
+        if (nel_true_empty($value))
         {
             return;
         }
 
-        if ($type === 'string' && $value !== '')
-        {
-            $data[$key] = nel_cast_to_datatype($value, $type);
-        }
-
-        if ($type === 'integer' && $value !== 0)
-        {
-            $data[$key] = nel_cast_to_datatype($value, $type);
-        }
+        $data[$key] = nel_cast_to_datatype($value, $type);
     }
 }

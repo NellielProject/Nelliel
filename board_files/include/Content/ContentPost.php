@@ -31,7 +31,6 @@ class ContentPost extends ContentHandler
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
-        var_dump($this->content_id);
         $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id], PDO::FETCH_ASSOC);
 
         if (empty($result))

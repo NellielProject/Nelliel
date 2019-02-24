@@ -147,5 +147,6 @@ Contains the information about a file or other content.
 |`license`          |`string` |text                    |Yes     |Content license.|
 |`alt_text`         |`string` |text                    |Yes     |Alt text.|
 |`url`              |`string` |text                    |Yes     |URL (mostly for embeds).|
+|`spoiler`          |`boolean`|true or false           |No      |Is marked as a spoiler.|
 |`exif`             |`string` |text                    |Yes     |EXIF data.|
 |`meta`             |`string` |text                    |Yes     |Other metadata.|
