@@ -146,8 +146,17 @@ class TemplateCore
 
     private function html5Fixes($template, $template_contents)
     {
-        $template_contents = preg_replace('#<\/source>#', '', $template_contents);
+        // The following elements were in HTML4 spec and are already handled properly:
+        // area, base, br, col, hr, img, input, link, meta, param
+        // Newer HTML5 void elements are fixed below
         $template_contents = preg_replace('#<\/embed>#', '', $template_contents);
+        $template_contents = preg_replace('#<\/source>#', '', $template_contents);
+        $template_contents = preg_replace('#<\/track>#', '', $template_contents);
+        $template_contents = preg_replace('#<\/wbr>#', '', $template_contents);
+
+        // These are deprecated orunsupported but we include just in case
+        $template_contents = preg_replace('#<\/command>#', '', $template_contents);
+        $template_contents = preg_replace('#<\/keygen>#', '', $template_contents);
 
         return $template_contents;
     }
