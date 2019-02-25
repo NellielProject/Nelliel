@@ -81,8 +81,8 @@ class BanHammer
     public function getBansByIp($ban_ip)
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . BANS_TABLE . '" WHERE "ip_address_start" = :ip_address_start AND "ip_address_end" IS NULL');
-        $prepared->bindValue(':ip_address_start', $ban_ip, PDO::PARAM_LOB);
+                'SELECT * FROM "' . BANS_TABLE . '" WHERE "ip_address_start" = :ip_address_start');
+        $prepared->bindValue(':ip_address_start', @inet_pton($ban_ip), PDO::PARAM_LOB);
         $ban_info = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
 
         if ($ban_info === false)

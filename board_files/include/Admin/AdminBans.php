@@ -76,8 +76,8 @@ class AdminBans extends AdminHandler
 
         $ip = $_GET['ban_ip'] ?? '';
         $type = $_GET['ban_type'] ?? 'GENERAL';
-        $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
-        $this->applyNewBan();
+        //$snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
+        //$this->applyNewBan();
         nel_render_ban_panel_add($user, $this->domain, $ip, $type);
     }
 
