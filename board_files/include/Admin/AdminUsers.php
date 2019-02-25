@@ -127,13 +127,13 @@ class AdminUsers extends AdminHandler
                         $role_domain = substr($key, 11);
                     }
 
-                    $domain = new \Nelliel\DomainBoard($role_domain, new \Nelliel\CacheHandler(), $this->database);
+                    $domain = new \Nelliel\DomainBoard($role_domain, new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
                 }
                 else if(strpos($key, 'scope_role') !== false)
                 {
                     if($key === 'scope_role_general')
                     {
-                        $domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database);
+                        $domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
                     }
                 }
 

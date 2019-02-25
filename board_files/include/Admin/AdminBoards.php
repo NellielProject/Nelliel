@@ -71,7 +71,7 @@ class AdminBoards extends AdminHandler
         }
 
         $board_id = $_POST['new_board_id'];
-        $domain = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), $this->database);
+        $domain = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
         $db_prefix = $domain->id();
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "db_prefix") VALUES (?, ?)');
@@ -87,7 +87,7 @@ class AdminBoards extends AdminHandler
         }
 
         $regen->allBoardPages($domain);
-        $regen->boardList(new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database));
+        $regen->boardList(new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator()));
     }
 
     public function editor($user)
@@ -106,7 +106,7 @@ class AdminBoards extends AdminHandler
         }
 
         $board_id = $_GET['board_id'];
-        $domain = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), $this->database);
+        $domain = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
 
         if(!$domain->boardExists())
         {
@@ -157,7 +157,7 @@ class AdminBoards extends AdminHandler
                 'DELETE FROM "' . CITES_TABLE . '" WHERE "source_board" = ? OR "target_board" = ?');
         $this->database->executePrepared($prepared, [$board_id, $board_id]);
         $regen = new \Nelliel\Regen();
-        $regen->boardList(new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database));
+        $regen->boardList(new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator()));
     }
 
     public function lock($user)

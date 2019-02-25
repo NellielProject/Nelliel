@@ -18,6 +18,7 @@ abstract class Domain
     protected $render_instance;
     protected $render_active;
     protected $template_path;
+    protected $translator;
 
     protected abstract function loadSettings();
 
@@ -111,5 +112,10 @@ abstract class Domain
         }
 
         return $this->render_instance;
+    }
+
+    public function translator()
+    {
+        return $this->translator;
     }
 }

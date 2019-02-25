@@ -10,8 +10,6 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
-require_once INCLUDE_PATH . 'output/management/ban_panel.php';
-
 class AdminBans extends AdminHandler
 {
     private $ban_hammer;

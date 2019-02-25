@@ -2,6 +2,8 @@
 
 namespace Nelliel;
 
+use Nelliel\Language\Translator;
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -39,7 +41,7 @@ class Snacks
 
     public function fileHashIsBanned($file_hash, $hash_type)
     {
-        $site_domain = new DomainSite(new CacheHandler(), $this->database);
+        $site_domain = new DomainSite(new CacheHandler(), $this->database, new Translator());
         $banned_hashes = $site_domain->fileFilters();
 
         if (!isset($banned_hashes[$hash_type]))
@@ -135,7 +137,8 @@ class Snacks
             }
         }
 
-        nel_render_ban_page($domain, $ban_info);
+        $output_ban_page = new \Nelliel\Output\OutputBanPage($domain);
+        $output_ban_page->render(['ban_info' => $ban_info]);
         nel_clean_exit();
     }
 }

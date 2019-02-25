@@ -3,6 +3,7 @@
 namespace Nelliel;
 
 use PDO;
+use Nelliel\Language\Translator;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -18,14 +19,14 @@ class Regen
 
     private function getTemporaryDomainBoard(string $domain_id)
     {
-        $domain = new DomainBoard($domain_id, new CacheHandler(), nel_database());
+        $domain = new DomainBoard($domain_id, new CacheHandler(), nel_database(), new Translator());
         $domain->renderInstance(new RenderCore());
         return $domain;
     }
 
     private function getTemporaryDomainSite()
     {
-        $domain = new DomainSite(new CacheHandler(), nel_database());
+        $domain = new DomainSite(new CacheHandler(), nel_database(), new Translator());
         $domain->renderInstance(new RenderCore());
         return $domain;
     }
@@ -62,7 +63,8 @@ class Regen
         require_once INCLUDE_PATH . 'output/news.php';
         $news_domain = $this->getTemporaryDomainSite();
         $news_domain->renderActive(true);
-        nel_render_news($news_domain);
+        $news = new \Nelliel\Output\OutputNews($news_domain, new FileHandler(), new OutputFilter());
+        $news->render();
     }
 
     public function index(Domain $domain)
@@ -86,7 +88,7 @@ class Regen
 
         foreach($board_ids as $id)
         {
-            $board_domain = new DomainBoard($id, new CacheHandler(), $database);
+            $board_domain = new DomainBoard($id, new CacheHandler(), $database, new Translator());
             $board_config = $database->executeFetchAll('SELECT "config_name", "setting" FROM "' . $board_domain->reference('config_table') . '"', PDO::FETCH_ASSOC);
             $board_data = ['board_id' => $id];
 

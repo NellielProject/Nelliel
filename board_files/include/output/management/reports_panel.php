@@ -42,7 +42,7 @@ function nel_render_reports_panel($user, \Nelliel\Domain $domain)
         if (!isset($domains[$report_info['board_id']]))
         {
             $domains[$report_info['board_id']] = new \Nelliel\DomainBoard($report_info['board_id'],
-                    new \Nelliel\CacheHandler(), $database);
+                    new \Nelliel\CacheHandler(), $database, new \Nelliel\Language\Translator());
         }
 
         $current_domain = $domains[$report_info['board_id']];

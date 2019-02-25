@@ -2,6 +2,8 @@
 
 namespace Nelliel;
 
+use Nelliel\Language\Translator;
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -33,7 +35,7 @@ class CAPTCHA
             return false;
         }
 
-        $site_domain = new DomainSite(new CacheHandler(), $this->database);
+        $site_domain = new DomainSite(new CacheHandler(), $this->database, new Translator());
         $response = $_POST['g-recaptcha-response'];
         nel_plugins()->processHook('nel-verify-recaptcha', [$reponse]);
         $result = file_get_contents(

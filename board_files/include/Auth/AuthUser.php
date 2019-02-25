@@ -218,7 +218,7 @@ class AuthUser extends AuthHandler
 
         if ($escalate) // TODO: Better way to escalate
         {
-            $temp_domain = new \Nelliel\DomainBoard('ALL_BOARDS', new \Nelliel\CacheHandler(), $this->database);
+            $temp_domain = new \Nelliel\DomainBoard('ALL_BOARDS', new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
             $role = $this->domainRole($temp_domain);
 
             if ($role && $role->checkPermission($perm_id))
@@ -226,7 +226,7 @@ class AuthUser extends AuthHandler
                 return true;
             }
 
-            $temp_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database);
+            $temp_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
             $role = $this->domainRole($temp_domain);
 
             if ($role && $role->checkPermission($perm_id))

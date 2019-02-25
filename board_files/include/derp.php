@@ -4,13 +4,20 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'output/derp.php';
-
 function nel_derp(int $error_id, string $error_message, array $error_data = array())
 {
     $backtrace = debug_backtrace();
     $diagnostic = array();
-    $domain_id = (isset($error_data['board_id'])) ? $error_data['board_id'] : '';
+
+    if(isset($error_data['board_id']) && $error_data['board_id'] !== '')
+    {
+        $domain = new \Nelliel\DomainBoard($error_data['board_id'], new \Nelliel\CacheHandler(), nel_database(), new \Nelliel\Language\Translator());
+    }
+    else
+    {
+        $domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database(), new \Nelliel\Language\Translator());
+    }
+
     $diagnostic['error_id'] = (!empty($error_id)) ? $error_id : 0;
     $diagnostic['error_message'] = (!empty($error_message)) ? $error_message : "I just don't know what went wrong!";
     $diagnostic = nel_plugins()->processHook('nel-derp-happened', [$error_id, $error_message, $error_data], $diagnostic);
@@ -29,13 +36,15 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
         }
     }
 
+    $output_derp = new \Nelliel\Output\OutputDerp($domain);
+
     if (!defined('SETUP_GOOD'))
     {
-        nel_render_simple_derp($diagnostic);
+        $output_derp->renderSimple($diagnostic);
     }
     else
     {
-        nel_render_derp($diagnostic, $domain_id);
+        $output_derp->render(['diagnostic' => $diagnostic]);
     }
 
     nel_clean_exit();

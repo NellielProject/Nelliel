@@ -7,6 +7,8 @@ class RenderCore
     private $template_instance;
     private $dom_documents;
     private $render_sets;
+    private $output_filter;
+    private $file_handler;
 
     function __construct()
     {
@@ -14,6 +16,8 @@ class RenderCore
         $this->template_instance = new \NellielTemplates\TemplateCore($this);
         libxml_use_internal_errors(true);
         $this->createRenderSet('default');
+        $this->output_filter = new OutputFilter();
+        $this->file_handler = new FileHandler();
     }
 
     public function getVersion()
@@ -64,7 +68,7 @@ class RenderCore
     {
         $this->dom_documents[spl_object_hash($dom_document)]['template'] = $template_file;
         $source = $this->template_instance->getTemplate($template_file);
-        $dom_document->loadHTML($source);
+        $dom_document->loadHTML($source, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
     }
 
     public function outputHTML($dom_document)

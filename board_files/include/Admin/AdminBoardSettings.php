@@ -146,7 +146,7 @@ class AdminBoardSettings extends AdminHandler
 
         foreach ($board_ids as $board_id)
         {
-            $board_domains[] = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), $this->database);
+            $board_domains[] = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
         }
 
         return $board_domains;

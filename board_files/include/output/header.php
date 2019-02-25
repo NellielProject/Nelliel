@@ -10,7 +10,7 @@ function nel_render_board_header(\Nelliel\Domain $domain, $dotdot = null, $treel
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
-    $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $database);
+    $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $database, new \Nelliel\Language\Translator());
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'header.html');
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
@@ -154,7 +154,7 @@ function nel_render_general_header(\Nelliel\Domain $domain, $dotdot = null, $ext
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
-    $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $database);
+    $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $database, new \Nelliel\Language\Translator());
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'header.html');
     $head_element = $dom->getElementsByTagName('head')->item(0);
@@ -245,7 +245,7 @@ function nel_render_simple_header(\Nelliel\Domain $domain, $dotdot = null)
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
-    $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $database);
+    $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $database, new \Nelliel\Language\Translator());
     $dotdot = (!empty($dotdot)) ? $dotdot : '';
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'simple_header.html');

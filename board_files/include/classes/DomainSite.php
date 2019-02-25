@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Language\Translator;
 use PDO;
 
 class DomainSite extends Domain
@@ -14,12 +15,13 @@ class DomainSite extends Domain
 
     private $file_filters;
 
-    public function __construct(CacheHandler $cache_handler, $database)
+    public function __construct(CacheHandler $cache_handler, $database, Translator $translator)
     {
         $this->domain_id = '';
         $this->scope = 'GENERAL';
         $this->cache_handler = $cache_handler;
         $this->database = $database;
+        $this->translator = $translator;
     }
 
     protected function loadSettings()
