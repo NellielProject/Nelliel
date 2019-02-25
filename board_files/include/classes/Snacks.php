@@ -9,8 +9,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'output/ban_page.php';
-
 class Snacks
 {
     private $database;

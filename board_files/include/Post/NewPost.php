@@ -106,18 +106,29 @@ class NewPost
 
         if (isset($post->content_data['post_password']))
         {
-            $cpass = $post->content_data['post_password'];
+            $poster_password = $post->content_data['post_password'];
             $post->content_data['post_password'] = nel_generate_salted_hash(
                     $site_domain->setting('post_password_algorithm'),
                     $post->content_data['post_password']);
         }
         else
         {
-            $cpass = utf8_substr(rand(), 0, 8);
+            $poster_password = utf8_substr(rand(), 0, 8);
         }
 
         // Cookies OM NOM NOM NOM
-        setrawcookie('pwd-' . $this->domain->id(), $cpass, time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
+        $cookie_password = '';
+
+        if(isset($_COOKIE['pwd-' . $this->domain->id()]))
+        {
+            $cookie_password = $_COOKIE['pwd-' . $this->domain->id()];
+        }
+
+        if(empty($cookie_password) || (isset($post->content_data['post_password']) && $cookie_password !== $poster_password))
+        {
+            setrawcookie('pwd-' . $this->domain->id(), $poster_password, time() + 9001 * 24 * 3600, '/');
+        }
+
         setrawcookie('name-' . $this->domain->id(), $post->content_data['poster_name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
 
         // Go ahead and put post into database
