@@ -4,7 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'output/posting_form.php';
 require_once INCLUDE_PATH . 'output/post.php';
 
 function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $command = null)
@@ -27,6 +26,7 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
             $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $domain->id());
     $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('threads_table') . '" WHERE "thread_id" = ?');
     $thread_data = $database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
+    $output_posting_form = new \Nelliel\Output\OutputPostingForm($domain, $file_handler, new \Nelliel\OutputFilter());
 
     if(!empty($thread_data))
     {
@@ -69,7 +69,7 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
         if ($post_counter === 0)
         {
             nel_render_board_header($domain, $dotdot, $treeline);
-            nel_render_posting_form($domain, $thread_id, $dotdot);
+            $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $thread_id]);
         }
 
         if ($post_counter == $total_posts - 1)

@@ -4,7 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'output/posting_form.php';
 require_once INCLUDE_PATH . 'output/post.php';
 
 function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write, $page = 0)
@@ -28,15 +27,15 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
     $gen_data['posts_ending'] = false;
     $gen_data['index_rendering'] = true;
     $json_index = new \Nelliel\API\JSON\JSONIndex($domain, $file_handler);
+    $output_posting_form = new \Nelliel\Output\OutputPostingForm($domain, $file_handler, new \Nelliel\OutputFilter());
 
     // Special handling when there's no content
     if ($counttree === 0)
     {
         $domain->renderInstance()->startRenderTimer();
         nel_render_board_header($domain, $dotdot, $treeline, true);
-        nel_render_posting_form($domain, $response_to, $dotdot);
+        $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $response_to]);
         nel_render_general_footer($domain, $dotdot, true);
-        ;
 
         if ($write)
         {
@@ -64,7 +63,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
         $dom->getElementById('form-content-action')->extSetAttribute('action',
                 $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $domain->id());
         nel_render_board_header($domain, $dotdot, $treeline, true);
-        nel_render_posting_form($domain, $response_to, $dotdot);
+        $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $response_to]);
         $sub_page_thread_counter = 0;
         $post_counter = -1;
 
