@@ -21,7 +21,6 @@ class TableUserRoles extends TableHandler
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'user_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'role_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'scope' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'domain_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -41,7 +40,6 @@ class TableUserRoles extends TableHandler
             entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             user_id         VARCHAR(255) NOT NULL,
             role_id         VARCHAR(255) NOT NULL,
-            scope     VARCHAR(255) NOT NULL,
             domain_id          VARCHAR(255) NOT NULL
         ) " . $options . ";";
 

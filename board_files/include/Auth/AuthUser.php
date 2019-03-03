@@ -37,7 +37,7 @@ class AuthUser extends AuthHandler
 
         foreach ($result as $row)
         {
-            $this->changeOrAddRole($row['scope'], $row['domain_id'], $row['role_id']);
+            $this->changeOrAddRole($row['domain_id'], $row['role_id']);
         }
 
         return true;
@@ -76,37 +76,30 @@ class AuthUser extends AuthHandler
         $prepared->bindValue(':last_login', $this->authDataOrDefault('last_login', 0), PDO::PARAM_INT);
         $database->executePrepared($prepared);
 
-        foreach ($this->user_roles as $scope => $user_roles)
+        foreach ($this->user_roles as $domain_id => $user_role)
         {
-            foreach ($user_roles as $user_role)
+            $prepared = $database->prepare(
+                    'SELECT "entry" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
+            $result = $database->executePreparedFetch($prepared, [$this->auth_id, $domain_id], PDO::FETCH_COLUMN);
+
+            if ($result)
             {
-
                 $prepared = $database->prepare(
-                        'SELECT "entry" FROM "' . USER_ROLES_TABLE .
-                        '" WHERE "user_id" = ? AND "scope" = ? AND "domain_id" = ?');
-                $result = $database->executePreparedFetch($prepared, [$this->auth_id, $scope,
-                    $user_role['domain_id']], PDO::FETCH_COLUMN);
-
-                if ($result)
-                {
-                    $prepared = $database->prepare(
-                            'UPDATE "' . USER_ROLES_TABLE .
-                            '" SET "user_id" = :user_id, "role_id" = :role_id, "scope" = :scope, "domain_id" = :domain_id WHERE "entry" = :entry');
-                    $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
-                }
-                else
-                {
-                    $prepared = $database->prepare(
-                            'INSERT INTO "' . USER_ROLES_TABLE . '" ("user_id", "role_id", "scope", "domain_id") VALUES
-                    (:user_id, :role_id, :scope, :domain_id)');
-                }
-
-                $prepared->bindValue(':user_id', $this->auth_id, PDO::PARAM_STR);
-                $prepared->bindValue(':role_id', $user_role['role_id'], PDO::PARAM_STR);
-                $prepared->bindValue(':scope', $scope, PDO::PARAM_STR);
-                $prepared->bindValue(':domain_id', $user_role['domain_id'], PDO::PARAM_STR);
-                $database->executePrepared($prepared);
+                        'UPDATE "' . USER_ROLES_TABLE .
+                        '" SET "user_id" = :user_id, "role_id" = :role_id, "domain_id" = :domain_id WHERE "entry" = :entry');
+                $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
             }
+            else
+            {
+                $prepared = $database->prepare(
+                        'INSERT INTO "' . USER_ROLES_TABLE . '" ("user_id", "role_id", "domain_id") VALUES
+                    (:user_id, :role_id, :domain_id)');
+            }
+
+            $prepared->bindValue(':user_id', $this->auth_id, PDO::PARAM_STR);
+            $prepared->bindValue(':role_id', $user_role['role_id'], PDO::PARAM_STR);
+            $prepared->bindValue(':domain_id', $domain_id, PDO::PARAM_STR);
+            $database->executePrepared($prepared);
         }
 
         return true;
@@ -126,79 +119,46 @@ class AuthUser extends AuthHandler
 
     public function domainRole(Domain $domain, bool $return_id = false, bool $escalate = true)
     {
-        if (!isset($this->user_roles[$domain->scope()]))
+        if (!isset($this->user_roles[$domain->id()]))
         {
             return false;
         }
 
-        foreach ($this->user_roles[$domain->scope()] as $user_role)
+        if ($return_id)
         {
-            if ($user_role['domain_id'] === $domain->id())
-            {
-                if ($return_id)
-                {
-                    return $user_role['role_id'];
-                }
-                else
-                {
-                    return $user_role['role'];
-                }
-            }
-
-            if ($escalate && $user_role['board'] === '')
-            {
-                if ($return_id)
-                {
-                    return $user_role['role_id'];
-                }
-                else
-                {
-                    return $user_role['role'];
-                }
-            }
+            return $this->user_roles[$domain->id()]['role_id'];
         }
-
-        return false;
+        else
+        {
+            return $this->user_roles[$domain->id()]['role'];
+        }
     }
 
-    public function changeOrAddRole($scope, $domain_id, $role_id)
+    public function changeOrAddRole($domain_id, $role_id)
     {
-        if (!isset($this->user_roles[$scope]))
+        if (!isset($this->user_roles[$domain_id]))
         {
-            $this->user_roles[$scope] = array();
+            $this->user_roles[$domain_id] = ['role_id' => $role_id, 'domain_id' => $domain_id,
+                'role' => $this->setupAuthRole($role_id)];
         }
-
-        foreach ($this->user_roles[$scope] as $index => $user_role)
+        else
         {
-            if ($user_role['domain_id'] === $domain_id)
-            {
-                $this->user_roles[$scope][$index]['role_id'] = $role_id;
-                $this->user_roles[$scope][$index]['role'] = $this->setupAuthRole($role_id);
-                return;
-            }
+            $this->user_roles[$domain_id]['role_id'] = $role_id;
+            $this->user_roles[$domain_id]['role'] = $this->setupAuthRole($role_id);
         }
-
-        $this->user_roles[$scope][] = ['role_id' => $role_id, 'domain_id' => $domain_id,
-            'role' => $this->setupAuthRole($role_id)];
     }
 
-    public function removeRole($scope, $domain_id, $role_id)
+    public function removeRole($domain_id, $role_id)
     {
-        if (!isset($this->user_roles[$scope]))
+        if (!isset($this->user_roles[$domain_id]))
         {
             return;
         }
 
-        foreach ($this->user_roles[$scope] as $index => $user_role)
-        {
-            if ($user_role['domain_id'] === $domain_id)
-            {
-                $prepared = $this->database->prepare(
-                        'DELETE FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
-                $this->database->executePrepared($prepared, [$this->auth_id, $domain_id]);
-                unset($this->user_roles[$scope][$index]);
-            }
-        }
+        $prepared = $this->database->prepare(
+                'DELETE FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
+        $this->database->executePrepared($prepared, [$this->auth_id, $domain_id]);
+        unset($this->user_roles[$domain_id]);
     }
 
     public function domainPermission(Domain $domain, $perm_id, bool $escalate = true)
@@ -218,7 +178,8 @@ class AuthUser extends AuthHandler
 
         if ($escalate) // TODO: Better way to escalate
         {
-            $temp_domain = new \Nelliel\DomainBoard('ALL_BOARDS', new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
+            $temp_domain = new \Nelliel\DomainBoard('ALL_BOARDS', new \Nelliel\CacheHandler(), $this->database,
+                    new \Nelliel\Language\Translator());
             $role = $this->domainRole($temp_domain);
 
             if ($role && $role->checkPermission($perm_id))
@@ -226,7 +187,8 @@ class AuthUser extends AuthHandler
                 return true;
             }
 
-            $temp_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
+            $temp_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database,
+                    new \Nelliel\Language\Translator());
             $role = $this->domainRole($temp_domain);
 
             if ($role && $role->checkPermission($perm_id))

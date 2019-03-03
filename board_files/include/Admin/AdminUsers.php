@@ -114,36 +114,29 @@ class AdminUsers extends AdminHandler
 
         foreach ($_POST as $key => $value) // TODO: Improve this
         {
-            if (strpos($key, 'board_role') !== false || strpos($key, 'scope_role') !== false)
+            if (strpos($key, 'board_role') !== false || $key === 'site_role')
             {
-                if(strpos($key, 'board_role') !== false || $key === 'scope_role_allboards')
+                if ($key === 'site_role')
                 {
-                    if($key === 'scope_role_allboards')
-                    {
-                        $role_domain = '';
-                    }
-                    else
-                    {
-                        $role_domain = substr($key, 11);
-                    }
-
-                    $domain = new \Nelliel\DomainBoard($role_domain, new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
-                }
-                else if(strpos($key, 'scope_role') !== false)
-                {
-                    if($key === 'scope_role_general')
-                    {
-                        $domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
-                    }
-                }
-
-                if ($value === '')
-                {
-                    $update_user->removeRole($domain->scope(), $domain->id(), $value);
+                    $domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database,
+                            new \Nelliel\Language\Translator());
                 }
                 else
                 {
-                    $update_user->ChangeOrAddRole($domain->scope(), $domain->id(), $value);
+                    $domain = new \Nelliel\DomainBoard(substr($key, 11), new \Nelliel\CacheHandler(), $this->database,
+                            new \Nelliel\Language\Translator());
+                }
+
+                $domain = new \Nelliel\DomainBoard($role_domain, new \Nelliel\CacheHandler(), $this->database,
+                        new \Nelliel\Language\Translator());
+
+                if ($value === '')
+                {
+                    $update_user->removeRole($domain->id(), $value);
+                }
+                else
+                {
+                    $update_user->ChangeOrAddRole($domain->id(), $value);
                 }
 
                 continue;

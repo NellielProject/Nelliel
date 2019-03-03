@@ -96,15 +96,11 @@ function nel_render_users_panel_edit($user, \Nelliel\Domain $domain, $user_id)
     {
         foreach ($user_roles as $user_role)
         {
-            if ($user_role['scope'] == 'GENERAL')
+            if ($user_role['domain_id'] == '')
             {
-                $dom->getElementById('scope-role-general')->extSetAttribute('value', $user_role['role_id']);
+                $dom->getElementById('site-role')->extSetAttribute('value', $user_role['role_id']);
             }
-            else if ($user_role['scope'] == 'ALL_BOARDS')
-            {
-                $dom->getElementById('scope-role-allboards')->extSetAttribute('value', $user_role['role_id']);
-            }
-            else if ($user_role['scope'] == 'BOARD')
+            else
             {
                 $board_roles->parentNode->appendChild($board_roles->cloneNode(true));
                 $new_board->removeAttribute('id');
