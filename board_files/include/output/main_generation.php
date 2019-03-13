@@ -57,6 +57,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
 
     while ($thread_counter < $counttree)
     {
+        $domain->renderInstance()->clearRenderSet();
         $dom = $domain->renderInstance()->newDOMDocument();
         $domain->renderInstance()->loadTemplateFromFile($dom, 'thread.html');
         $domain->renderInstance()->startRenderTimer();
