@@ -15,8 +15,9 @@ function nel_render_styles_panel($user, \Nelliel\Domain $domain)
     $url_constructor = new \Nelliel\URLConstructor();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain, null,
-            array('header' => _gettext('General Management'), 'sub_header' => _gettext('Styles')));
+    $output_header = new \Nelliel\Output\OutputHeader($domain, nel_database());
+    $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Styles')];
+    $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/styles_panel.html');
 

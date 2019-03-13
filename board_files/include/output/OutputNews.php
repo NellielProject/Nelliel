@@ -26,7 +26,9 @@ class OutputNews extends OutputCore
     {
         $this->prepare('news.html');
         $this->domain->renderActive(true);
-        nel_render_general_header($this->domain, null, ['use_site_titles' => true]);
+        $output_header = new OutputHeader($this->domain, nel_database());
+        $extra_data = ['use_site_titles' => true];
+        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
         $this->newsList();
         $this->domain->translator()->translateDom($this->dom, $this->domain->setting('language'));
         $this->render_instance->appendHTMLFromDOM($this->dom);

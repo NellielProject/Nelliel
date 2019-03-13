@@ -6,17 +6,18 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_filetypes_panel($user, \Nelliel\Domain $domain)
 {
-    if (!$user->domainPermission($domain, 'perm_permissions_access'))
+    if (!$user->domainPermission($domain, 'perm_filetypes_access'))
     {
-        nel_derp(450, _gettext('You are not allowed to access the Permissions panel.'));
+        nel_derp(430, _gettext('You are not allowed to access the Filetypes panel.'));
     }
 
     $database = nel_database();
     $url_constructor = new \Nelliel\URLConstructor();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain, null,
-            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Filetypes')));
+    $output_header = new \Nelliel\Output\OutputHeader($domain, nel_database());
+    $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Filetypes')];
+    $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/filetypes_panel.html');
     $filetypes = $database->executeFetchAll(

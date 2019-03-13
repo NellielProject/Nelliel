@@ -12,7 +12,8 @@ function nel_about_nelliel_screen()
     $domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database(), new \Nelliel\Language\Translator());
     $domain->renderInstance(new \Nelliel\RenderCore());
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain);
+    $output_header = new \Nelliel\Output\OutputHeader($domain, nel_database());
+    $output_header->render(['header_type' => 'general', 'dotdot' => '']);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->getTemplateInstance()->setTemplatePath(INCLUDE_PATH . 'wat/');
     $domain->renderInstance()->loadTemplateFromFile($dom, 'about_nelliel.html');

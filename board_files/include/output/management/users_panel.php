@@ -14,8 +14,9 @@ function nel_render_users_panel_main($user, \Nelliel\Domain $domain)
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain, null,
-            array('header' => _gettext('General Management'), 'sub_header' => _gettext('Users')));
+    $output_header = new \Nelliel\Output\OutputHeader($domain, nel_database());
+    $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Users')];
+    $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/users_panel_main.html');
     $user_info_table = $dom->getElementById('user-info-table');
@@ -60,8 +61,9 @@ function nel_render_users_panel_edit($user, \Nelliel\Domain $domain, $user_id)
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain, null,
-            array('header' => _gettext('General Management'), 'sub_header' => _gettext('Edit User')));
+    $output_header = new \Nelliel\Output\OutputHeader($domain, nel_database());
+    $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit User')];
+    $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/users_panel_edit.html');
 

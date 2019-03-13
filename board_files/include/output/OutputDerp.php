@@ -22,7 +22,8 @@ class OutputDerp extends OutputCore
         $this->prepare('derp.html');
         $diagnostic = $parameters['diagnostic'];
         $authorization = new \Nelliel\Auth\Authorization(nel_database());
-        nel_render_general_header($this->domain);
+        $output_header = new \Nelliel\Output\OutputHeader($this->domain, nel_database());
+        $output_header->render(['header_type' => 'general', 'dotdot' => '']);
         $this->dom->getElementById('error-id')->setContent($diagnostic['error_id']);
         $this->dom->getElementById('error-message')->setContent($diagnostic['error_message']);
         $this->dom->getElementById('error-data')->setContent(''); // TODO: This actually have something
@@ -38,8 +39,8 @@ class OutputDerp extends OutputCore
             else
             {
                 $return_link = $url_constructor->dynamic(MAIN_SCRIPT,
-                        ['module' => 'render', 'action' => 'view-index', 'index' => '0', 'board_id' => $this->domain->id(),
-                        'modmode' => 'true']);
+                        ['module' => 'render', 'action' => 'view-index', 'index' => '0',
+                            'board_id' => $this->domain->id(), 'modmode' => 'true']);
             }
         }
         else

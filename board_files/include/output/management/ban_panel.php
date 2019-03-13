@@ -9,8 +9,9 @@ function nel_render_main_ban_panel($user, \Nelliel\Domain $domain)
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain, null,
-            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')));
+    $output_header = new \Nelliel\Output\OutputHeader($domain, nel_database());
+    $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')];
+    $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/bans_panel_main.html');
 
@@ -69,8 +70,9 @@ function nel_render_ban_panel_add($user, \Nelliel\Domain $domain, $ip = '', $typ
 {
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain, null,
-            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')));
+    $output_header = new \Nelliel\Output\OutputHeader($domain, nel_database());
+    $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Add Ban')];
+    $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/bans_panel_add_ban.html');
 
@@ -113,8 +115,9 @@ function nel_render_ban_panel_modify($user, \Nelliel\Domain $domain)
     $ban_hammer = new \Nelliel\BanHammer(nel_database());
     $database = nel_database();
     $domain->renderInstance()->startRenderTimer();
-    nel_render_general_header($domain, null,
-            array('header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')));
+    $output_header = new \Nelliel\Output\OutputHeader($domain, nel_database());
+    $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Modify Ban')];
+    $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/bans_panel_modify_ban.html');
 

@@ -11,7 +11,6 @@ use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
 require_once INCLUDE_PATH . 'output/management/news_panel.php';
-require_once INCLUDE_PATH . 'output/news.php';
 
 class AdminNews extends AdminHandler
 {
