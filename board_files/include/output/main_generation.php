@@ -14,6 +14,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
     $session = new \Nelliel\Session($authorization);
     $file_handler = new \Nelliel\FileHandler();
     $thread_table = $gen_data = array();
+    $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $database, $translator);
     $dotdot = ($write) ? '../' : '';
     $result = $database->query(
             'SELECT "thread_id" FROM "' . $domain->reference('threads_table') .
@@ -33,7 +34,8 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
     if ($counttree === 0)
     {
         $domain->renderInstance()->startRenderTimer();
-        $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot, 'treeline' => $treeline, 'index_render' => true]);
+        $output_header->render(
+                ['header_type' => 'board', 'dotdot' => $dotdot, 'treeline' => $treeline, 'index_render' => true]);
         $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $response_to]);
         nel_render_general_footer($domain, $dotdot, true);
 
@@ -61,7 +63,8 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
         $translator->translateDom($dom, $domain->setting('language'));
         $dom->getElementById('form-content-action')->extSetAttribute('action',
                 $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $domain->id());
-        $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot, 'treeline' => $treeline, 'index_render' => true]);
+        $output_header->render(
+                ['header_type' => 'board', 'dotdot' => $dotdot, 'treeline' => $treeline, 'index_render' => true]);
         $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $response_to]);
         $sub_page_thread_counter = 0;
         $post_counter = -1;
@@ -94,7 +97,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
                 $post_counter = 0;
             }
 
-            if(empty($treeline[$post_counter]))
+            if (empty($treeline[$post_counter]))
             {
                 $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? $domain->setting('threads_per_page') : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
@@ -169,63 +172,30 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
         $page_count = (int) ceil($counttree / $domain->setting('threads_per_page'));
         $pages = array();
         $modmode_base = 'imgboard.php?module=render&action=view-index&modmode=true&index=';
-        $index_filename = 'index' . PAGE_EXT;
-        $index_format = $domain->setting('index_filename_format');
-        $last_page = $page_count - 1;
+        $index_format = $site_domain->setting('index_filename_format');
+
+        // Set up the array of navgation elements
         $nav_pieces = array();
         $nav_pieces['prev']['text'] = _gettext('Previous');
-
-        if ($page === 0)
-        {
-            $nav_pieces[0]['link'] = '';
-        }
-        else
-        {
-            $nav_pieces[0]['link'] = 'index' . PAGE_EXT;
-        }
-
-        $nav_pieces[0]['text'] = '1';
+        $prev_filename = ($page < 2) ? 'index' : $index_format;
+        $nav_pieces['prev']['link'] = ($page !== 0) ? sprintf($prev_filename, ($page)) . PAGE_EXT : '';
 
         for ($i = 1; $i < $page_count; ++ $i)
         {
-            if ($i === $page)
-            {
-                $nav_pieces[$i]['link'] = '';
-            }
-            else
-            {
-                $nav_pieces[$i]['link'] = sprintf($index_format, $i) . PAGE_EXT;
-            }
-
+            $link_filename = ($i === 1) ? 'index' : $index_format;
+            $nav_pieces[$i]['link'] = ($i !== $page + 1) ? sprintf($link_filename, $i) . PAGE_EXT : '';
             $nav_pieces[$i]['text'] = $i;
         }
 
         $nav_pieces['next']['text'] = _gettext('Next');
-        $nav_pieces['prev']['link'] = $nav_pieces[0]['link'];
-
-        if ($page === $last_page)
-        {
-            $nav_pieces[$last_page]['link'] = '';
-            $nav_pieces['next']['link'] = $nav_pieces[$last_page]['link'];
-        }
-        else
-        {
-            $nav_pieces['next']['link'] = $nav_pieces[$page + 1]['link'];
-        }
+        $nav_pieces['next']['link'] = ($page !== $page_count - 2) ? sprintf($index_format, ($page + 2)) . PAGE_EXT : '';
 
         nel_render_index_navigation($domain, $dom, $nav_pieces);
         nel_render_thread_form_bottom($domain, $dom);
         $domain->renderInstance()->appendHTMLFromDOM($dom);
         nel_render_general_footer($domain, $dotdot, true);
 
-        if ($page > 0)
-        {
-            $index_filename = sprintf($index_format, $page + 1) . PAGE_EXT;
-        }
-        else
-        {
-            $index_filename = 'index' . PAGE_EXT;
-        }
+        $index_filename = ($page > 0) ? sprintf($index_format, ($page + 1)) . PAGE_EXT : 'index' . PAGE_EXT;
 
         if (!$write)
         {
