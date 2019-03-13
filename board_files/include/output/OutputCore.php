@@ -11,11 +11,18 @@ abstract class OutputCore
 {
     protected $domain;
     protected $dom;
+    protected $database;
     protected $render_instance;
     protected $file_handler;
     protected $output_filter;
+    protected $header_instance;
 
     public abstract function render(array $parameters = array());
+
+    protected function setupHeaderFooter()
+    {
+        $this->header_instance = new \Nelliel\Output\OutputHeader($this->domain, $this->database);
+    }
 
     protected function prepare(string $template_file)
     {

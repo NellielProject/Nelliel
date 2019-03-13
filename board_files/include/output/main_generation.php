@@ -13,7 +13,6 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session($authorization);
     $file_handler = new \Nelliel\FileHandler();
-    $domain->renderInstance(new \Nelliel\RenderCore());
     $thread_table = $gen_data = array();
     $dotdot = ($write) ? '../' : '';
     $result = $database->query(
@@ -28,12 +27,13 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
     $gen_data['index_rendering'] = true;
     $json_index = new \Nelliel\API\JSON\JSONIndex($domain, $file_handler);
     $output_posting_form = new \Nelliel\Output\OutputPostingForm($domain, $file_handler, new \Nelliel\OutputFilter());
+    $output_header = new \Nelliel\Output\OutputHeader($domain, $database);
 
     // Special handling when there's no content
     if ($counttree === 0)
     {
         $domain->renderInstance()->startRenderTimer();
-        nel_render_board_header($domain, $dotdot, $treeline, true);
+        $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot, 'treeline' => $treeline, 'index_render' => true]);
         $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $response_to]);
         nel_render_general_footer($domain, $dotdot, true);
 
@@ -55,14 +55,13 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
 
     while ($thread_counter < $counttree)
     {
-        $domain->renderInstance(new \Nelliel\RenderCore());
         $dom = $domain->renderInstance()->newDOMDocument();
         $domain->renderInstance()->loadTemplateFromFile($dom, 'thread.html');
         $domain->renderInstance()->startRenderTimer();
         $translator->translateDom($dom, $domain->setting('language'));
         $dom->getElementById('form-content-action')->extSetAttribute('action',
                 $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $domain->id());
-        nel_render_board_header($domain, $dotdot, $treeline, true);
+        $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot, 'treeline' => $treeline, 'index_render' => true]);
         $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $response_to]);
         $sub_page_thread_counter = 0;
         $post_counter = -1;

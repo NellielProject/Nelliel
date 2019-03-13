@@ -22,7 +22,8 @@ class OutputBanPage extends OutputCore
         $this->prepare('ban_page.html');
         $ban_info = $parameters['ban_info'];
         $url_constructor = new \Nelliel\URLConstructor();
-        nel_render_board_header($this->domain);
+        $output_header = new \Nelliel\Output\OutputHeader($this->domain, nel_database());
+        $output_header->render(['header_type' => 'board']);
         $banned_board = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board_id'];
         $ban_page_nodes = $this->dom->getElementsByAttributeName('data-parse-id', true);
         $ban_page_nodes['banned-board']->setContent($banned_board);

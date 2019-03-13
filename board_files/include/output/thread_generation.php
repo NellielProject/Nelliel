@@ -15,7 +15,6 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
     $file_handler = new \Nelliel\FileHandler();
     $gen_data = array('thread' => array());
     $dotdot = ($write) ? '../../../' : '';
-    $domain->renderInstance(new \Nelliel\RenderCore());
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'thread.html');
     $translator->translateDom($dom, $domain->setting('language'));
@@ -54,6 +53,7 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
     $hr_added = false;
     $total_posts = $gen_data['thread']['post_count'];
     $abbreviate = $total_posts > $domain->setting('abbreviate_thread');
+    $output_header = new \Nelliel\Output\OutputHeader($domain, $database);
 
     while ($post_counter < $total_posts)
     {
@@ -68,7 +68,7 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
 
         if ($post_counter === 0)
         {
-            nel_render_board_header($domain, $dotdot, $treeline);
+            $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot, 'treeline' => $treeline]);
             $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $thread_id]);
         }
 

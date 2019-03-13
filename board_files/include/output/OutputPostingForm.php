@@ -26,7 +26,6 @@ class OutputPostingForm extends OutputCore
     {
         $this->prepare('posting_form.html');
         $authorization = new \Nelliel\Auth\Authorization(nel_database());
-        nel_render_general_header($this->domain);
         $this->domain->renderActive(true);
         $session = new \Nelliel\Session($authorization);
         $dotdot = $parameters['dotdot'];

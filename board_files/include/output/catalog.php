@@ -15,7 +15,8 @@ function nel_render_catalog(\Nelliel\Domain $domain, $write)
     $file_handler = new \Nelliel\FileHandler();
     $dotdot = ($write) ? '../' : '';
     $domain->renderInstance()->startRenderTimer();
-    nel_render_board_header($domain, $dotdot);
+    $output_header = new \Nelliel\Output\OutputHeader($domain, $database);
+    $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot]);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'catalog.html');
     $catalog_container = $dom->getElementById('catalog-container');

@@ -1,9 +1,9 @@
 <?php
+
 namespace Nelliel;
 
 class RenderCore
 {
-    private $version;
     private $template_instance;
     private $dom_documents;
     private $render_sets;
@@ -12,7 +12,6 @@ class RenderCore
 
     function __construct()
     {
-        $this->version = '1.0.3';
         $this->template_instance = new \NellielTemplates\TemplateCore($this);
         libxml_use_internal_errors(true);
         $this->createRenderSet('default');
@@ -35,9 +34,14 @@ class RenderCore
         return $dom;
     }
 
+    public function clearRenderSet($render_set = 'default')
+    {
+        $this->render_sets[$render_set]['content'] = '';
+    }
+
     public function createRenderSet($render_set = 'default')
     {
-        if(!isset($this->render_sets[$render_set]))
+        if (!isset($this->render_sets[$render_set]))
         {
             $this->render_sets[$render_set]['content'] = '';
         }
@@ -50,7 +54,7 @@ class RenderCore
 
     public function endRenderTimer($render_set = 'default')
     {
-        if(!isset($this->render_sets[$render_set]['start_time']))
+        if (!isset($this->render_sets[$render_set]['start_time']))
         {
             return 0;
         }
@@ -73,7 +77,8 @@ class RenderCore
 
     public function outputHTML($dom_document)
     {
-        return $this->template_instance->outputHTMLFromDom($dom_document, $this->dom_documents[spl_object_hash($dom_document)]['template']);
+        return $this->template_instance->outputHTMLFromDom($dom_document,
+                $this->dom_documents[spl_object_hash($dom_document)]['template']);
     }
 
     public function appendHTML($html, $render_set = 'default')
@@ -85,7 +90,8 @@ class RenderCore
     public function appendHTMLFromDOM($dom_document, $render_set = 'default')
     {
         $this->createRenderSet($render_set);
-        $this->render_sets[$render_set]['content'] .= $this->outputHTML($dom_document, $this->dom_documents[spl_object_hash($dom_document)]['template']);
+        $this->render_sets[$render_set]['content'] .= $this->outputHTML($dom_document,
+                $this->dom_documents[spl_object_hash($dom_document)]['template']);
     }
 
     public function outputRenderSet($render_set = 'default')
