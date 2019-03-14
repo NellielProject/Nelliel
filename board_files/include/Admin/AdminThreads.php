@@ -15,9 +15,9 @@ require_once INCLUDE_PATH . 'output/management/thread_panel.php';
 class AdminThreads extends AdminHandler
 {
 
-    function __construct($database, Authorization $authorization, Domain $domain)
+    function __construct(Authorization $authorization, Domain $domain)
     {
-        $this->database = $database;
+        $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
     }
@@ -109,19 +109,19 @@ class AdminThreads extends AdminHandler
 
         if ($content_id->isThread())
         {
-            $thread = new \Nelliel\Content\ContentThread(nel_database(), $content_id, $this->domain, true);
+            $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
             $thread->remove();
             $archive = new \Nelliel\ArchiveAndPrune($this->database, $this->domain, new \Nelliel\FileHandler());
             $archive->updateThreads();
         }
         else if ($content_id->isPost())
         {
-            $post = new \Nelliel\Content\ContentPost(nel_database(), $content_id, $this->domain, true);
+            $post = new \Nelliel\Content\ContentPost($content_id, $this->domain, true);
             $post->remove();
         }
         else if ($content_id->isContent())
         {
-            $file = new \Nelliel\Content\ContentFile(nel_database(), $content_id, $this->domain, true);
+            $file = new \Nelliel\Content\ContentFile($content_id, $this->domain, true);
             $file->remove();
         }
 
@@ -139,17 +139,17 @@ class AdminThreads extends AdminHandler
 
         if ($content_id->isPost())
         {
-            $post = new \Nelliel\Content\ContentPost($this->database, $content_id, $this->domain, true);
+            $post = new \Nelliel\Content\ContentPost($content_id, $this->domain, true);
             $post->convertToThread();
             $new_content_id = new \Nelliel\ContentID();
             $new_content_id->thread_id = $content_id->post_id;
             $new_content_id->post_id = $content_id->post_id;
-            $new_thread = new \Nelliel\Content\ContentThread($this->database, $new_content_id, $this->domain);
+            $new_thread = new \Nelliel\Content\ContentThread($new_content_id, $this->domain);
             $new_thread->sticky();
         }
         else
         {
-            $thread = new \Nelliel\Content\ContentThread($this->database, $content_id, $this->domain, true);
+            $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
             $thread->sticky();
         }
 
@@ -159,7 +159,7 @@ class AdminThreads extends AdminHandler
     public function unsticky($user)
     {
         $content_id = new \Nelliel\ContentID($_GET['content-id']);
-        $thread = new \Nelliel\Content\ContentThread($this->database, $content_id, $this->domain, true);
+        $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
         $thread->sticky();
         $this->regenThread($content_id->thread_id, true);
     }
@@ -167,7 +167,7 @@ class AdminThreads extends AdminHandler
     public function lock($user)
     {
         $content_id = new \Nelliel\ContentID($_GET['content-id']);
-        $thread = new \Nelliel\Content\ContentThread($this->database, $content_id, $this->domain, true);
+        $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
         $thread->lock();
         $this->regenThread($content_id->thread_id, true);
     }
@@ -175,7 +175,7 @@ class AdminThreads extends AdminHandler
     public function unlock($user)
     {
         $content_id = new \Nelliel\ContentID($_GET['content-id']);
-        $thread = new \Nelliel\Content\ContentThread($this->database, $content_id, $this->domain, true);
+        $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
         $thread->lock();
         $this->regenThread($content_id->thread_id, true);
     }

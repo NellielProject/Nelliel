@@ -12,21 +12,23 @@ if (!defined('NELLIEL_VERSION'))
 
 class Regen
 {
+    private $database;
 
     function __construct()
     {
+        $this->database = nel_database();
     }
 
     private function getTemporaryDomainBoard(string $domain_id)
     {
-        $domain = new DomainBoard($domain_id, nel_database());
+        $domain = new DomainBoard($domain_id, $this->database);
         $domain->renderInstance(new RenderCore());
         return $domain;
     }
 
     private function getTemporaryDomainSite()
     {
-        $domain = new DomainSite(nel_database());
+        $domain = new DomainSite($this->database);
         $domain->renderInstance(new RenderCore());
         return $domain;
     }
@@ -49,7 +51,7 @@ class Regen
     public function boardCache(Domain $domain)
     {
         $domain->regenCache();
-        $filetypes = new FileTypes(nel_database());
+        $filetypes = new FileTypes($this->database);
         $filetypes->generateSettingsCache($domain->id());
     }
 
@@ -81,15 +83,14 @@ class Regen
 
     public function boardList(Domain $domain)
     {
-        $database = nel_database();
         $board_json = new \Nelliel\API\JSON\JSONBoard($domain, new FileHandler());
         $board_list_json = new \Nelliel\API\JSON\JSONBoardList($domain, new FileHandler());
-        $board_ids = $database->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+        $board_ids = $domain->database()->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
 
         foreach($board_ids as $id)
         {
-            $board_domain = new DomainBoard($id, $database);
-            $board_config = $database->executeFetchAll('SELECT "config_name", "setting" FROM "' . $board_domain->reference('config_table') . '"', PDO::FETCH_ASSOC);
+            $board_domain = new DomainBoard($id, $domain->database());
+            $board_config = $domain->database()->executeFetchAll('SELECT "config_name", "setting" FROM "' . $board_domain->reference('config_table') . '"', PDO::FETCH_ASSOC);
             $board_data = ['board_id' => $id];
 
             foreach($board_config as $config)
@@ -110,8 +111,7 @@ class Regen
 
     public function allBoardPages(Domain $domain)
     {
-        $database = nel_database();
-        $result = $database->query(
+        $result = $domain->database()->query(
                 'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "archive_status" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
         $this->threads($domain, true, $ids);

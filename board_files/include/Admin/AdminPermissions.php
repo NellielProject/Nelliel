@@ -15,9 +15,9 @@ require_once INCLUDE_PATH . 'output/management/permissions_panel.php';
 class AdminPermissions extends AdminHandler
 {
 
-    function __construct($database, Authorization $authorization, Domain $domain)
+    function __construct(Authorization $authorization, Domain $domain)
     {
-        $this->database = $database;
+        $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
     }

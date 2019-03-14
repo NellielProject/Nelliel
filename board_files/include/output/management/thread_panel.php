@@ -11,7 +11,7 @@ function nel_render_thread_panel_main($user, \Nelliel\Domain $domain)
         nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
     }
 
-    $database = nel_database();
+    $database = $domain->database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
     $output_header = new \Nelliel\Output\OutputHeader($domain);
@@ -143,7 +143,7 @@ function nel_render_thread_panel_expand($user, \Nelliel\Domain $domain, $thread_
         nel_derp(350, _gettext('You are not allowed to access the threads panel.'));
     }
 
-    $database = nel_database();
+    $database = $domain->database();
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();

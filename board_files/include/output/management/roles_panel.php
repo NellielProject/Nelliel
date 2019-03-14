@@ -11,7 +11,7 @@ function nel_render_roles_panel_main($user, \Nelliel\Domain $domain)
         nel_derp(310, _gettext('You are not allowed to access the staff panel.'));
     }
 
-    $database = nel_database();
+    $database = $domain->database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
     $output_header = new \Nelliel\Output\OutputHeader($domain);
@@ -58,8 +58,8 @@ function nel_render_roles_panel_edit($user, \Nelliel\Domain $domain, $role_id)
         nel_derp(310, _gettext('You are not allowed to access the roles panel.'));
     }
 
-    $database = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $database = $domain->database();
+    $authorization = new \Nelliel\Auth\Authorization($domain->database());
     $translator = new \Nelliel\Language\Translator();
     $role = $authorization->getRole($role_id);
     $domain->renderInstance()->startRenderTimer();

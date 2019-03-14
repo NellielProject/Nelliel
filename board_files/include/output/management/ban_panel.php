@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_main_ban_panel($user, \Nelliel\Domain $domain)
 {
-    $database = nel_database();
+    $database = $domain->database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
     $output_header = new \Nelliel\Output\OutputHeader($domain);
@@ -112,8 +112,8 @@ function nel_render_ban_panel_add($user, \Nelliel\Domain $domain, $ip = '', $typ
 function nel_render_ban_panel_modify($user, \Nelliel\Domain $domain)
 {
     $translator = new \Nelliel\Language\Translator();
-    $ban_hammer = new \Nelliel\BanHammer(nel_database());
-    $database = nel_database();
+    $ban_hammer = new \Nelliel\BanHammer($domain->database());
+    $database = $domain->database();
     $domain->renderInstance()->startRenderTimer();
     $output_header = new \Nelliel\Output\OutputHeader($domain);
     $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Modify Ban')];

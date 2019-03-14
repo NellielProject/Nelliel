@@ -13,7 +13,7 @@ function nel_render_insert_hr($dom)
 
 function nel_render_index_navigation($domain, $dom, $nav_pieces)
 {
-    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $authorization = new \Nelliel\Auth\Authorization($domain->database());
     $translator = new \Nelliel\Language\Translator();
     $dom_nav = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom_nav, 'index_navigation.html');
@@ -54,11 +54,11 @@ function nel_render_index_navigation($domain, $dom, $nav_pieces)
 
 function nel_render_post($domain, $gen_data, $dom)
 {
-    $database = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $database = $domain->database();
+    $authorization = new \Nelliel\Auth\Authorization($domain->database());
     $session = new \Nelliel\Session();
     $output_filter = new \Nelliel\OutputFilter();
-    $cites = new \Nelliel\Cites(nel_database());
+    $cites = new \Nelliel\Cites($domain->database());
     $response = $gen_data['post']['op'] != 1;
     $post_data = $gen_data['post'];
     $thread_data = $gen_data['thread'];
@@ -437,7 +437,7 @@ function nel_render_comment($new_post_dom, $output_filter, $post_type_class, $po
 function nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_container, $post_type_class,
         $multiple_class, $thread_src_web_path, $thread_preview_web_path, $preview_web_path, $filecount, $base_domain_path)
 {
-    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $authorization = new \Nelliel\Auth\Authorization($domain->database());
     $session = new \Nelliel\Session();
     $file_content_id = new \Nelliel\ContentID();
     $file_content_id->thread_id = $post_data['parent_thread'];
@@ -591,7 +591,7 @@ function nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_
             }
             else if ($domain->setting('use_file_icon'))
             {
-                $front_end_data = new \Nelliel\FrontEndData(nel_database());
+                $front_end_data = new \Nelliel\FrontEndData($domain->database());
                 $icon_set = $front_end_data->filetypeIconSet($domain->setting('filetype_icon_set_id'));
                 $icons_web_path = '//' . $base_domain_path . ICON_SETS_WEB_PATH . $icon_set['directory'] . '/';
                 $icons_file_path = ICON_SETS_FILE_PATH . $icon_set['directory'] . '/';

@@ -11,7 +11,7 @@ function nel_render_site_settings_panel(\Nelliel\Domain $domain, $user)
         nel_derp(360, _gettext('You are not allowed to access the site settings.'));
     }
 
-    $database = nel_database();
+    $database = $domain->database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
     $output_header = new \Nelliel\Output\OutputHeader($domain);

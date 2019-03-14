@@ -14,9 +14,9 @@ use PDO;
 class ContentThread extends ContentHandler
 {
 
-    function __construct($database, ContentID $content_id, Domain $domain, bool $db_load = false)
+    function __construct(ContentID $content_id, Domain $domain, bool $db_load = false)
     {
-        $this->database = $database;
+        $this->database = $domain->database();
         $this->content_id = $content_id;
         $this->domain = $domain;
 
@@ -181,7 +181,7 @@ class ContentThread extends ContentHandler
 
     public function verifyModifyPerms()
     {
-        $post = new ContentPost($this->database, $this->content_id, $this->domain);
+        $post = new ContentPost($this->content_id, $this->domain);
         $post->content_id->post_id = $this->firstPost();
         return $post->verifyModifyPerms();
     }

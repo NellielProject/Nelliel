@@ -38,18 +38,18 @@ class ThreadHandler
             {
                 if ($content_id->isThread())
                 {
-                    $thread = new \Nelliel\Content\ContentThread($this->database, $content_id, $this->domain);
+                    $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain);
                     $thread->remove();
                     $update_archive = true;
                 }
                 else if ($content_id->isPost())
                 {
-                    $post = new \Nelliel\Content\ContentPost($this->database, $content_id, $this->domain);
+                    $post = new \Nelliel\Content\ContentPost($content_id, $this->domain);
                     $post->remove();
                 }
                 else if ($content_id->isContent())
                 {
-                    $file = new \Nelliel\Content\ContentFile($this->database, $content_id, $this->domain);
+                    $file = new \Nelliel\Content\ContentFile($content_id, $this->domain);
                     $file->remove();
                 }
             }

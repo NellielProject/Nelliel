@@ -8,7 +8,7 @@ require_once INCLUDE_PATH . 'output/post.php';
 
 function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $command = null)
 {
-    $database = nel_database();
+    $database = $domain->database();
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session();

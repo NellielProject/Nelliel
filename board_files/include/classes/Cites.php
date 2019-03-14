@@ -8,7 +8,6 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use PDO;
-use Nelliel\Language\Translator;
 
 class Cites
 {

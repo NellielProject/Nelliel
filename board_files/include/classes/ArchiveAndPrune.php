@@ -208,7 +208,7 @@ class ArchiveAndPrune
     {
         foreach ($this->getThreadListForStatus(2) as $thread_id)
         {
-            $thread = new \Nelliel\Content\ContentThread($this->database, new ContentID('cid_' . $thread_id . '_0_0'),
+            $thread = new \Nelliel\Content\ContentThread(new ContentID('cid_' . $thread_id . '_0_0'),
                     $this->domain);
             $thread->remove(true);
         }

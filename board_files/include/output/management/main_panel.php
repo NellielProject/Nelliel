@@ -2,7 +2,7 @@
 
 function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 {
-    $database = nel_database();
+    $database = $domain->database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
     $output_header = new \Nelliel\Output\OutputHeader($domain);
@@ -170,7 +170,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
 
 function nel_render_main_board_panel($domain)
 {
-    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $authorization = new \Nelliel\Auth\Authorization($domain->database());
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
     $output_header = new \Nelliel\Output\OutputHeader($domain);

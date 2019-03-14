@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_catalog(\Nelliel\Domain $domain, $write)
 {
-    $database = nel_database();
+    $database = $domain->database();
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session();
     $output_filter = new \Nelliel\OutputFilter();

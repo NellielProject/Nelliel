@@ -14,9 +14,9 @@ use PDO;
 class ContentFile extends ContentHandler
 {
 
-    function __construct($database, ContentID $content_id, Domain $domain, bool $db_load = false)
+    function __construct(ContentID $content_id, Domain $domain, bool $db_load = false)
     {
-        $this->database = $database;
+        $this->database = $domain->database();
         $this->content_id = $content_id;
         $this->domain = $domain;
 
@@ -135,9 +135,9 @@ class ContentFile extends ContentHandler
 
         $this->removeFromDisk();
         $this->removeFromDatabase();
-        $post = new ContentPost($this->database, $this->content_id, $this->domain);
+        $post = new ContentPost($this->content_id, $this->domain);
         $post->updateCounts();
-        $thread = new ContentThread($this->database, $this->content_id, $this->domain);
+        $thread = new ContentThread($this->content_id, $this->domain);
         $thread->updateCounts();
     }
 
@@ -177,7 +177,7 @@ class ContentFile extends ContentHandler
 
     public function verifyModifyPerms()
     {
-        $post = new ContentPost($this->database, $this->content_id, $this->domain);
+        $post = new ContentPost($this->content_id, $this->domain);
         return $post->verifyModifyPerms();
     }
 }

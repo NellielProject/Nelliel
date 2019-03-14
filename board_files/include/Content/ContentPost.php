@@ -14,9 +14,9 @@ use PDO;
 class ContentPost extends ContentHandler
 {
 
-    function __construct($database, ContentID $content_id, Domain $domain, bool $db_load = false)
+    function __construct(ContentID $content_id, Domain $domain, bool $db_load = false)
     {
-        $this->database = $database;
+        $this->database = $domain->database();
         $this->content_id = $content_id;
         $this->domain = $domain;
 
@@ -148,11 +148,11 @@ class ContentPost extends ContentHandler
 
         foreach ($content_entries as $entry)
         {
-            $content = new ContentFile($this->database, $this->content_id, $this->domain);
+            $content = new ContentFile($this->content_id, $this->domain);
             $content->remove();
         }
 
-        $thread = new ContentThread($this->database, $this->content_id, $this->domain);
+        $thread = new ContentThread($this->content_id, $this->domain);
 
         if($thread->postCount() <= 0)
         {

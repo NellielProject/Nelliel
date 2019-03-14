@@ -16,9 +16,9 @@ class AdminUsers extends AdminHandler
 {
     private $user_id;
 
-    function __construct($database, Authorization $authorization, Domain $domain)
+    function __construct(Authorization $authorization, Domain $domain)
     {
-        $this->database = $database;
+        $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
     }

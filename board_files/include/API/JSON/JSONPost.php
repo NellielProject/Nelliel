@@ -22,7 +22,7 @@ class JSONPost extends JSONOutput
 
     public function prepareData(array $data)
     {
-        $authorization = new \Nelliel\Auth\Authorization(nel_database());
+        $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $post_array = array();
         $post_array['post_number'] = nel_cast_to_datatype($data['post_number'], 'integer');
         $post_array['parent_thread'] = nel_cast_to_datatype($data['parent_thread'], 'integer');

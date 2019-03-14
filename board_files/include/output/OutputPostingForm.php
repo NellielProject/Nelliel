@@ -189,7 +189,7 @@ class OutputPostingForm extends OutputCore
 
     private function postingRules($posting_form)
     {
-        $filetypes = new \Nelliel\FileTypes(nel_database());
+        $filetypes = new \Nelliel\FileTypes($this->domain->database());
         $form_rules_list = $this->dom->getElementById('form-rules-list');
         $rules_nodes = $form_rules_list->getElementsByAttributeName('data-parse-id', true);
         $base_list_item = $this->dom->createElement('li');

@@ -121,18 +121,16 @@ class SQLHelpers
 
     public function createTableQuery($schema, $table_name)
     {
-        $database = nel_database();
-
-        if ($database->tableExists($table_name))
+        if ($this->database->tableExists($table_name))
         {
             return false;
         }
 
-        $result = $database->query($schema);
+        $result = $this->database->query($schema);
 
         if (!$result)
         {
-            $database->tableFail($table_name);
+            $this->database->tableFail($table_name);
         }
 
         return $result;

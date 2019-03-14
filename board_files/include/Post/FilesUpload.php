@@ -40,7 +40,7 @@ class FilesUpload
                 continue;
             }
 
-            $file = new \Nelliel\Content\ContentFile(nel_database(), new \Nelliel\ContentID(), $this->domain);
+            $file = new \Nelliel\Content\ContentFile(new \Nelliel\ContentID(), $this->domain);
             $new_file = array();
             $this->uploaded_files[$entry]['location'] = $file_data['tmp_name'];
             $file->content_data['location'] = $file_data['tmp_name'];
@@ -163,7 +163,7 @@ class FilesUpload
 
     public function doesFileExist($response_to, $file)
     {
-        $database = nel_database();
+        $database = $this->domain->database();
         $snacks = new \Nelliel\Snacks($database, new \Nelliel\BanHammer($database));
         $error_data = ['delete_files' => true, 'bad-filename' => $file->content_data['name'],
             'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
@@ -240,7 +240,7 @@ class FilesUpload
 
     public function checkFiletype($file)
     {
-        $filetypes = new \Nelliel\FileTypes(nel_database());
+        $filetypes = new \Nelliel\FileTypes($this->domain->database());
         $error_data = ['delete_files' => true, 'bad-filename' => $file->content_data['name'],
             'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
         $this->getPathInfo($file);

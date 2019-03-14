@@ -11,7 +11,7 @@ function nel_render_icon_sets_panel($user, \Nelliel\Domain $domain)
         nel_derp(460, _gettext('You are not allowed to access the Icon Sets panel.'));
     }
 
-    $database = nel_database();
+    $database = $domain->database();
     $url_constructor = new \Nelliel\URLConstructor();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();

@@ -11,7 +11,7 @@ function nel_render_users_panel_main($user, \Nelliel\Domain $domain)
         nel_derp(300, _gettext('You are not allowed to access the users panel.'));
     }
 
-    $database = nel_database();
+    $database = $domain->database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
     $output_header = new \Nelliel\Output\OutputHeader($domain);
@@ -57,7 +57,7 @@ function nel_render_users_panel_edit($user, \Nelliel\Domain $domain, $user_id)
         nel_derp(300, _gettext('You are not allowed to access the users panel.'));
     }
 
-    $database = nel_database();
+    $database = $domain->database();
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();

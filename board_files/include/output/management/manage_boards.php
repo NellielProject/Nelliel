@@ -11,7 +11,7 @@ function nel_render_manage_boards_panel(\Nelliel\Domain $domain, $user)
         nel_derp(370, _gettext('You are not allowed to access the board manager panel.'));
     }
 
-    $database = nel_database();
+    $database = $domain->database();
     $translator = new \Nelliel\Language\Translator();
     $url_constructor = new \Nelliel\URLConstructor();
     $domain->renderInstance()->startRenderTimer();

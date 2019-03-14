@@ -11,7 +11,7 @@ function nel_render_filetypes_panel($user, \Nelliel\Domain $domain)
         nel_derp(430, _gettext('You are not allowed to access the Filetypes panel.'));
     }
 
-    $database = nel_database();
+    $database = $domain->database();
     $url_constructor = new \Nelliel\URLConstructor();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();

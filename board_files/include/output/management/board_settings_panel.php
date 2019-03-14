@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_render_board_settings_panel($user, \Nelliel\Domain $domain, $defaults)
 {
-    $database = nel_database();
+    $database = $domain->database();
     $translator = new \Nelliel\Language\Translator();
     $filetypes = new \Nelliel\FileTypes($database);
     $domain->renderInstance()->startRenderTimer();

@@ -114,7 +114,7 @@ class PostData
 
     public function tripcodes($post)
     {
-        $site_domain = new \Nelliel\DomainSite(nel_database());
+        $site_domain = new \Nelliel\DomainSite($this->domain->database());
         $post->content_data['poster_name'] = preg_replace("/#+$/", "", $post->content_data['poster_name']);
         preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post->content_data['poster_name'], $name_pieces);
         $post->content_data['poster_name'] = $name_pieces[1];

@@ -35,8 +35,8 @@ class OutputNews extends OutputCore
 
     private function newsList(int $limit = 0)
     {
-        $database = nel_database();
-        $authorization = new \Nelliel\Auth\Authorization(nel_database());
+        $database = $this->domain->database();
+        $authorization = new \Nelliel\Auth\Authorization($database);
         $news_entries = $database->executeFetchAll('SELECT * FROM "' . NEWS_TABLE . '" ORDER BY "time" ASC',
                 PDO::FETCH_ASSOC);
         $news_page = $this->dom->getElementById('news-page');
