@@ -10,8 +10,6 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
-require_once INCLUDE_PATH . 'output/management/file_filter_panel.php';
-
 class AdminFileFilters extends AdminHandler
 {
 
@@ -41,7 +39,8 @@ class AdminFileFilters extends AdminHandler
 
     public function renderPanel($user)
     {
-        nel_render_file_filter_panel($user, $this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelFileFilters($this->domain);
+        $output_panel->render(['user' => $user]);
     }
 
     public function creator($user)
