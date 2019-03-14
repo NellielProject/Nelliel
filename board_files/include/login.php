@@ -5,7 +5,6 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 require_once INCLUDE_PATH . 'output/management/main_panel.php';
-require_once INCLUDE_PATH . 'output/management/login_page.php';
 
 function nel_verify_login()
 {

@@ -72,9 +72,9 @@ class OutputPanelFileFilters extends OutputCore
 
         $filter_list_nodes['file-filter-row']->remove();
         $this->domain->translator()->translateDom($this->dom);
-        $this->domain->renderInstance()->appendHTMLFromDOM($this->dom);
+        $this->render_instance->appendHTMLFromDOM($this->dom);
         nel_render_general_footer($this->domain);
-        echo $this->domain->renderInstance()->outputRenderSet();
+        echo $this->render_instance->outputRenderSet();
         nel_clean_exit();
     }
 }

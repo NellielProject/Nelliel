@@ -7,8 +7,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Auth\AuthUser;
-
 abstract class OutputCore
 {
     protected $domain;

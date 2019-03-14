@@ -16,7 +16,8 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'login':
             if (empty($_POST))
             {
-                nel_render_login_page($domain);
+                $output_login = new \Nelliel\Output\OutputLoginPage($domain);
+                $output_login->render();
             }
             else
             {
