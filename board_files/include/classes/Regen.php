@@ -62,7 +62,6 @@ class Regen
 
     public function news(Domain $domain)
     {
-        require_once INCLUDE_PATH . 'output/news.php';
         $news_domain = $this->getTemporaryDomainSite();
         $news_domain->renderActive(true);
         $news = new \Nelliel\Output\OutputNews($news_domain);
@@ -72,7 +71,6 @@ class Regen
     public function index(Domain $domain)
     {
         require_once INCLUDE_PATH . 'output/main_generation.php';
-        require_once INCLUDE_PATH . 'output/catalog.php';
         $index_domain = $this->getTemporaryDomainBoard($domain->id());
         $index_domain->renderActive(true);
         nel_main_thread_generator($index_domain, 0, true);
