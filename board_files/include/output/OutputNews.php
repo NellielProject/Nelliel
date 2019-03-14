@@ -8,25 +8,22 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domain;
-use Nelliel\FileHandler;
 use PDO;
-use Nelliel\OutputFilter;
 
 class OutputNews extends OutputCore
 {
 
-    function __construct(Domain $domain, FileHandler $file_handler, OutputFilter $output_filter)
+    function __construct(Domain $domain)
     {
         $this->domain = $domain;
-        $this->file_handler = $file_handler;
-        $this->output_filter = $output_filter;
+        $this->utilitySetup();
     }
 
     public function render(array $parameters = array())
     {
         $this->prepare('news.html');
         $this->domain->renderActive(true);
-        $output_header = new OutputHeader($this->domain, nel_database());
+        $output_header = new OutputHeader($this->domain);
         $extra_data = ['use_site_titles' => true];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
         $this->newsList();

@@ -17,7 +17,7 @@ function nel_render_board_settings_panel($user, \Nelliel\Domain $domain, $defaul
 
     if ($defaults === true)
     {
-        $output_header = new \Nelliel\Output\OutputHeader($domain, nel_database());
+        $output_header = new \Nelliel\Output\OutputHeader($domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Default Board Settings')];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
         $result = $database->query('SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"');
@@ -25,7 +25,7 @@ function nel_render_board_settings_panel($user, \Nelliel\Domain $domain, $defaul
     }
     else
     {
-        $output_header = new \Nelliel\Output\OutputHeader($domain, nel_database());
+        $output_header = new \Nelliel\Output\OutputHeader($domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
         $result = $database->query('SELECT * FROM "' . $domain->reference('config_table') . '"');

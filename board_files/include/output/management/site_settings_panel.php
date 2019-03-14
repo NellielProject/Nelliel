@@ -14,7 +14,7 @@ function nel_render_site_settings_panel(\Nelliel\Domain $domain, $user)
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    $output_header = new \Nelliel\Output\OutputHeader($domain, nel_database());
+    $output_header = new \Nelliel\Output\OutputHeader($domain);
     $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Site Settings')];
     $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
     $dom = $domain->renderInstance()->newDOMDocument();

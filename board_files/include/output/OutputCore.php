@@ -11,17 +11,20 @@ abstract class OutputCore
 {
     protected $domain;
     protected $dom;
-    protected $database;
     protected $render_instance;
     protected $file_handler;
+    protected $cache_handler;
     protected $output_filter;
-    protected $header_instance;
+    protected $url_constructor;
 
     public abstract function render(array $parameters = array());
 
-    protected function setupHeaderFooter()
+    protected function utilitySetup()
     {
-        $this->header_instance = new \Nelliel\Output\OutputHeader($this->domain, $this->database);
+        $this->file_handler = new \Nelliel\FileHandler();
+        $this->cache_handler = new \Nelliel\CacheHandler();
+        $this->output_filter = new \Nelliel\OutputFilter();
+        $this->url_constructor = new \Nelliel\URLConstructor();
     }
 
     protected function prepare(string $template_file)

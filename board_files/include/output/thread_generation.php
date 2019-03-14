@@ -11,7 +11,7 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
-    $session = new \Nelliel\Session($authorization);
+    $session = new \Nelliel\Session();
     $file_handler = new \Nelliel\FileHandler();
     $gen_data = array('thread' => array());
     $dotdot = ($write) ? '../../../' : '';
@@ -25,7 +25,7 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
             $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $domain->id());
     $prepared = $database->prepare('SELECT * FROM "' . $domain->reference('threads_table') . '" WHERE "thread_id" = ?');
     $thread_data = $database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
-    $output_posting_form = new \Nelliel\Output\OutputPostingForm($domain, $file_handler, new \Nelliel\OutputFilter());
+    $output_posting_form = new \Nelliel\Output\OutputPostingForm($domain);
 
     if(!empty($thread_data))
     {
@@ -53,7 +53,7 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
     $hr_added = false;
     $total_posts = $gen_data['thread']['post_count'];
     $abbreviate = $total_posts > $domain->setting('abbreviate_thread');
-    $output_header = new \Nelliel\Output\OutputHeader($domain, $database);
+    $output_header = new \Nelliel\Output\OutputHeader($domain);
 
     while ($post_counter < $total_posts)
     {

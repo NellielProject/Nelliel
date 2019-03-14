@@ -7,15 +7,14 @@ if (!defined('NELLIEL_VERSION'))
 function nel_render_catalog(\Nelliel\Domain $domain, $write)
 {
     $database = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
-    $session = new \Nelliel\Session($authorization);
+    $session = new \Nelliel\Session();
     $output_filter = new \Nelliel\OutputFilter();
     $cites = new \Nelliel\Cites($database);
     $file_handler = new \Nelliel\FileHandler();
     $dotdot = ($write) ? '../' : '';
     $domain->renderInstance()->startRenderTimer();
-    $output_header = new \Nelliel\Output\OutputHeader($domain, $database);
+    $output_header = new \Nelliel\Output\OutputHeader($domain);
     $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot]);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'catalog.html');

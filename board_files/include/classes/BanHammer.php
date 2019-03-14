@@ -140,7 +140,7 @@ class BanHammer
 
     public function removeBan(Domain $domain, $ban_id, bool $snacks = false)
     {
-        $session = new \Nelliel\Session($authorization);
+        $session = new \Nelliel\Session();
         $user = $session->sessionUser();
 
         if (!$snacks)

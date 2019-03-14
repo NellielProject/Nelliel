@@ -89,7 +89,7 @@ class PostData
             return;
         }
 
-        $session = new \Nelliel\Session($this->authorization, true);
+        $session = new \Nelliel\Session(true);
 
         if(!$session->isActive())
         {

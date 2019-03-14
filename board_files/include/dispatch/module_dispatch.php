@@ -20,7 +20,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             }
             else
             {
-                $session = new \Nelliel\Session($authorization);
+                $session = new \Nelliel\Session();
                 $session->login();
                 nel_render_main_panel($domain, $session->sessionUser());
             }
@@ -28,14 +28,14 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             break;
 
         case 'logout':
-            $session = new \Nelliel\Session($authorization, true);
+            $session = new \Nelliel\Session(true);
             $session->logout();
             break;
 
         case 'render':
             $inputs['index'] = $_GET['index'] ?? null;
             $inputs['thread'] = $_GET['thread'] ?? null;
-            $session = new \Nelliel\Session($authorization, true);
+            $session = new \Nelliel\Session(true);
 
             if(!$session->inModmode($domain))
             {
@@ -68,7 +68,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             break;
 
         case 'main-panel':
-            $session = new \Nelliel\Session($authorization, true);
+            $session = new \Nelliel\Session(true);
 
             if ($domain->id() !== '')
             {
@@ -112,7 +112,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             break;
 
         case 'language':
-            $session = new \Nelliel\Session($authorization, true);
+            $session = new \Nelliel\Session(true);
 
             if ($inputs['action'] === 'extract-gettext')
             {
@@ -153,7 +153,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'threads':
             $content_id = new \Nelliel\ContentID($inputs['content_id']);
             $fgsfds = new \Nelliel\FGSFDS();
-            $session = new \Nelliel\Session($authorization);
+            $session = new \Nelliel\Session();
 
             if ($inputs['action'] === 'new-post')
             {
@@ -262,7 +262,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
         case 'regen':
             $regen = new \Nelliel\Regen();
-            $session = new \Nelliel\Session($authorization, true);
+            $session = new \Nelliel\Session(true);
             $user = $session->sessionUser();
 
             if ($inputs['action'] === 'board-all-pages')

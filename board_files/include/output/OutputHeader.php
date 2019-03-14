@@ -12,11 +12,13 @@ use PDO;
 
 class OutputHeader extends OutputCore
 {
+    private $database;
 
-    function __construct(Domain $domain, $database)
+    function __construct(Domain $domain)
     {
         $this->domain = $domain;
-        $this->database = $database;
+        $this->database = $domain->database();
+        $this->utilitySetup();
     }
 
     public function render(array $parameters = array())
@@ -44,9 +46,8 @@ class OutputHeader extends OutputCore
 
     public function general(array $parameters)
     {
-        $authorization = new \Nelliel\Auth\Authorization($this->database);
-        $session = new \Nelliel\Session($authorization);
-        $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
+        $session = new \Nelliel\Session();
+        $site_domain = new \Nelliel\DomainSite($this->cache_handler, $this->database, new \Nelliel\Language\Translator());
         $this->prepare('header.html');
         $dotdot = ($parameters['dotdot']) ?? array();
         $extra_data = ($parameters['extra_data']) ?? array();
@@ -133,9 +134,8 @@ class OutputHeader extends OutputCore
 
     public function board(array $parameters)
     {
-        $authorization = new \Nelliel\Auth\Authorization($this->database);
-        $session = new \Nelliel\Session($authorization);
-        $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
+        $session = new \Nelliel\Session();
+        $site_domain = new \Nelliel\DomainSite($this->cache_handler, $this->database, new \Nelliel\Language\Translator());
         $this->prepare('header.html');
         $dotdot = ($parameters['dotdot']) ?? array();
         $treeline = ($parameters['treeline']) ?? array();
@@ -275,8 +275,7 @@ class OutputHeader extends OutputCore
 
     public function simple(array $parameters)
     {
-        $authorization = new \Nelliel\Auth\Authorization($this->database);
-        $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database, new \Nelliel\Language\Translator());
+        $site_domain = new \Nelliel\DomainSite($this->cache_handler, $this->database, new \Nelliel\Language\Translator());
         $this->prepare('header.html');
         $dotdot = (!empty($dotdot)) ? $dotdot : '';
         $head_element = $this->dom->getElementsByTagName('head')->item(0);

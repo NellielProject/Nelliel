@@ -15,14 +15,14 @@ class OutputBanPage extends OutputCore
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
+        $this->utilitySetup();
     }
 
     public function render(array $parameters = array())
     {
         $this->prepare('ban_page.html');
         $ban_info = $parameters['ban_info'];
-        $url_constructor = new \Nelliel\URLConstructor();
-        $output_header = new \Nelliel\Output\OutputHeader($this->domain, nel_database());
+        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $output_header->render(['header_type' => 'board']);
         $banned_board = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board_id'];
         $ban_page_nodes = $this->dom->getElementsByAttributeName('data-parse-id', true);
@@ -54,7 +54,7 @@ class OutputBanPage extends OutputCore
 
         if ($ban_info['appeal_status'] == 0)
         {
-            $ban_page_nodes['appeal-form']->extSetAttribute('action', $url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'ban-page', 'action' => 'add-appeal']));
+            $ban_page_nodes['appeal-form']->extSetAttribute('action', $this->url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'ban-page', 'action' => 'add-appeal']));
 
             if (!empty($ban_info['board_id']))
             {

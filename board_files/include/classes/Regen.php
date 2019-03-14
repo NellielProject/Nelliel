@@ -63,7 +63,7 @@ class Regen
         require_once INCLUDE_PATH . 'output/news.php';
         $news_domain = $this->getTemporaryDomainSite();
         $news_domain->renderActive(true);
-        $news = new \Nelliel\Output\OutputNews($news_domain, new FileHandler(), new OutputFilter());
+        $news = new \Nelliel\Output\OutputNews($news_domain);
         $news->render();
     }
 

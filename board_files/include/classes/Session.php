@@ -19,9 +19,9 @@ class Session
     private $session_name = 'NellielSession';
     private $authorization;
 
-    function __construct(Authorization $authorization, bool $setup = false)
+    function __construct(bool $setup = false)
     {
-        $this->authorization = $authorization;
+        $this->authorization = new Authorization(nel_database());
 
         if (!self::$initialized)
         {

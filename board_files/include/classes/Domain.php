@@ -27,6 +27,16 @@ abstract class Domain
 
     public abstract function regenCache();
 
+    public function database($new_database = null)
+    {
+        if (!is_null($new_database))
+        {
+            $this->database = $new_database;
+        }
+
+        return $this->database;
+    }
+
     public function id()
     {
         return $this->domain_id;

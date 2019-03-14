@@ -5,7 +5,7 @@ function nel_render_main_panel(\Nelliel\Domain $domain, $user)
     $database = nel_database();
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    $output_header = new \Nelliel\Output\OutputHeader($domain, nel_database());
+    $output_header = new \Nelliel\Output\OutputHeader($domain);
     $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Options')];
     $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
     $dom = $domain->renderInstance()->newDOMDocument();
@@ -173,14 +173,14 @@ function nel_render_main_board_panel($domain)
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $translator = new \Nelliel\Language\Translator();
     $domain->renderInstance()->startRenderTimer();
-    $output_header = new \Nelliel\Output\OutputHeader($domain, nel_database());
+    $output_header = new \Nelliel\Output\OutputHeader($domain);
     $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Options')];
     $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->loadTemplateFromFile($dom, 'management/main_board_panel.html');
     $manage_options = $dom->getElementById('manage-options');
     $settings = $dom->getElementById('module-board-settings');
-    $session = new \Nelliel\Session($authorization, true);
+    $session = new \Nelliel\Session(true);
     $user = $session->sessionUser();
 
     if ($user->domainPermission($domain, 'perm_board_config_access'))

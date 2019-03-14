@@ -9,9 +9,8 @@ require_once INCLUDE_PATH . 'output/post.php';
 function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write, $page = 0)
 {
     $database = nel_database();
-    $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
-    $session = new \Nelliel\Session($authorization);
+    $session = new \Nelliel\Session();
     $file_handler = new \Nelliel\FileHandler();
     $thread_table = $gen_data = array();
     $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $database, $translator);
@@ -27,8 +26,8 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
     $gen_data['posts_ending'] = false;
     $gen_data['index_rendering'] = true;
     $json_index = new \Nelliel\API\JSON\JSONIndex($domain, $file_handler);
-    $output_posting_form = new \Nelliel\Output\OutputPostingForm($domain, $file_handler, new \Nelliel\OutputFilter());
-    $output_header = new \Nelliel\Output\OutputHeader($domain, $database);
+    $output_posting_form = new \Nelliel\Output\OutputPostingForm($domain);
+    $output_header = new \Nelliel\Output\OutputHeader($domain);
 
     // Special handling when there's no content
     if ($counttree === 0)

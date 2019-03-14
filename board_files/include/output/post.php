@@ -56,7 +56,7 @@ function nel_render_post($domain, $gen_data, $dom)
 {
     $database = nel_database();
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $session = new \Nelliel\Session($authorization);
+    $session = new \Nelliel\Session();
     $output_filter = new \Nelliel\OutputFilter();
     $cites = new \Nelliel\Cites(nel_database());
     $response = $gen_data['post']['op'] != 1;
@@ -438,7 +438,7 @@ function nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_
         $multiple_class, $thread_src_web_path, $thread_preview_web_path, $preview_web_path, $filecount, $base_domain_path)
 {
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $session = new \Nelliel\Session($authorization);
+    $session = new \Nelliel\Session();
     $file_content_id = new \Nelliel\ContentID();
     $file_content_id->thread_id = $post_data['parent_thread'];
     $file_content_id->post_id = $post_data['post_number'];
@@ -650,8 +650,7 @@ function nel_render_file($domain, $file, $post_data, $new_post_dom, $post_files_
 
 function nel_render_thread_form_bottom($domain, $dom)
 {
-    $authorization = new \Nelliel\Auth\Authorization(nel_database());
-    $session = new \Nelliel\Session($authorization);
+    $session = new \Nelliel\Session();
     $footer_form_element = $dom->getElementById('footer-form');
     $form_td_list = $footer_form_element->doXPathQuery(".//input");
     $dom->getElementById('board_id_field_footer')->extSetAttribute('value', $domain->id());

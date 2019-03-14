@@ -26,7 +26,7 @@ class AdminBans extends AdminHandler
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Session($this->authorization, true);
+        $session = new \Nelliel\Session(true);
         $user = $session->sessionUser();
 
         if ($inputs['action'] === 'modify')

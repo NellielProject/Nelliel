@@ -8,29 +8,24 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domain;
-use Nelliel\FileHandler;
 use PDO;
-use Nelliel\OutputFilter;
 
 class OutputPostingForm extends OutputCore
 {
 
-    function __construct(Domain $domain, FileHandler $file_handler, OutputFilter $output_filter)
+    function __construct(Domain $domain)
     {
         $this->domain = $domain;
-        $this->file_handler = $file_handler;
-        $this->output_filter = $output_filter;
+        $this->utilitySetup();
     }
 
     public function render(array $parameters = array())
     {
         $this->prepare('posting_form.html');
-        $authorization = new \Nelliel\Auth\Authorization(nel_database());
         $this->domain->renderActive(true);
-        $session = new \Nelliel\Session($authorization);
+        $session = new \Nelliel\Session();
         $dotdot = $parameters['dotdot'];
         $response_to = $parameters['response_to'];
-        $url_constructor = new \Nelliel\URLConstructor();
         $posting_form = $this->dom->getElementById('posting-form');
         $posting_form->extSetAttribute('action',
                 $dotdot . MAIN_SCRIPT . '?module=threads&action=new-post&board_id=' . $this->domain->id());
@@ -41,7 +36,7 @@ class OutputPostingForm extends OutputCore
         {
             if ($session->inModmode($this->domain) && !$this->domain->renderActive())
             {
-                $return_url = $url_constructor->dynamic(MAIN_SCRIPT,
+                $return_url = $this->url_constructor->dynamic(MAIN_SCRIPT,
                         ['module' => 'render', 'action' => 'view-index', 'index' => '0', 'board_id' => $this->domain->id(),
                         'modmode' => 'true']);
             }
@@ -188,8 +183,6 @@ class OutputPostingForm extends OutputCore
         }
 
         $this->postingRules($posting_form);
-        //$rules = $this->dom->importNode(nel_render_rules_list($this->domain), true);
-        //$posting_form->appendChild($rules);
         $this->domain->translator()->translateDom($this->dom, $this->domain->setting('language'));
         $this->domain->renderInstance()->appendHTMLFromDOM($this->dom);
     }
