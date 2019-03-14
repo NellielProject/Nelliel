@@ -118,17 +118,14 @@ class AdminUsers extends AdminHandler
             {
                 if ($key === 'site_role')
                 {
-                    $domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $this->database,
-                            new \Nelliel\Language\Translator());
+                    $domain = new \Nelliel\DomainSite($this->database);
                 }
                 else
                 {
-                    $domain = new \Nelliel\DomainBoard(substr($key, 11), new \Nelliel\CacheHandler(), $this->database,
-                            new \Nelliel\Language\Translator());
+                    $domain = new \Nelliel\DomainBoard(substr($key, 11), $this->database);
                 }
 
-                $domain = new \Nelliel\DomainBoard($role_domain, new \Nelliel\CacheHandler(), $this->database,
-                        new \Nelliel\Language\Translator());
+                $domain = new \Nelliel\DomainBoard($role_domain, $this->database);
 
                 if ($value === '')
                 {

@@ -19,14 +19,14 @@ class Regen
 
     private function getTemporaryDomainBoard(string $domain_id)
     {
-        $domain = new DomainBoard($domain_id, new CacheHandler(), nel_database(), new Translator());
+        $domain = new DomainBoard($domain_id, nel_database());
         $domain->renderInstance(new RenderCore());
         return $domain;
     }
 
     private function getTemporaryDomainSite()
     {
-        $domain = new DomainSite(new CacheHandler(), nel_database(), new Translator());
+        $domain = new DomainSite(nel_database());
         $domain->renderInstance(new RenderCore());
         return $domain;
     }
@@ -88,7 +88,7 @@ class Regen
 
         foreach($board_ids as $id)
         {
-            $board_domain = new DomainBoard($id, new CacheHandler(), $database, new Translator());
+            $board_domain = new DomainBoard($id, $database);
             $board_config = $database->executeFetchAll('SELECT "config_name", "setting" FROM "' . $board_domain->reference('config_table') . '"', PDO::FETCH_ASSOC);
             $board_data = ['board_id' => $id];
 

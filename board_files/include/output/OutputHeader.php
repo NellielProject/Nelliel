@@ -47,7 +47,7 @@ class OutputHeader extends OutputCore
     public function general(array $parameters)
     {
         $session = new \Nelliel\Session();
-        $site_domain = new \Nelliel\DomainSite($this->cache_handler, $this->database, new \Nelliel\Language\Translator());
+        $site_domain = new \Nelliel\DomainSite($this->database);
         $this->prepare('header.html');
         $dotdot = ($parameters['dotdot']) ?? array();
         $extra_data = ($parameters['extra_data']) ?? array();
@@ -135,7 +135,7 @@ class OutputHeader extends OutputCore
     public function board(array $parameters)
     {
         $session = new \Nelliel\Session();
-        $site_domain = new \Nelliel\DomainSite($this->cache_handler, $this->database, new \Nelliel\Language\Translator());
+        $site_domain = new \Nelliel\DomainSite($this->database);
         $this->prepare('header.html');
         $dotdot = ($parameters['dotdot']) ?? array();
         $treeline = ($parameters['treeline']) ?? array();
@@ -275,7 +275,7 @@ class OutputHeader extends OutputCore
 
     public function simple(array $parameters)
     {
-        $site_domain = new \Nelliel\DomainSite($this->cache_handler, $this->database, new \Nelliel\Language\Translator());
+        $site_domain = new \Nelliel\DomainSite($this->database);
         $this->prepare('header.html');
         $dotdot = (!empty($dotdot)) ? $dotdot : '';
         $head_element = $this->dom->getElementsByTagName('head')->item(0);

@@ -14,6 +14,7 @@ abstract class Domain
     protected $domain_references;
     protected $cache_handler;
     protected $database;
+    protected $file_handler;
     protected $render_instance;
     protected $render_active;
     protected $template_path;
@@ -26,6 +27,13 @@ abstract class Domain
     protected abstract function loadSettingsFromDatabase();
 
     public abstract function regenCache();
+
+    protected function utilitySetup()
+    {
+        $this->file_handler = new \Nelliel\FileHandler();
+        $this->cache_handler = new \Nelliel\CacheHandler();
+        $this->translator = new \Nelliel\Language\Translator();
+    }
 
     public function database($new_database = null)
     {

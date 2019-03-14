@@ -37,11 +37,11 @@ function nel_central_dispatch()
 
     if($inputs['board_id'] === '')
     {
-        $domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database(), new \Nelliel\Language\Translator());
+        $domain = new \Nelliel\DomainSite(nel_database());
     }
     else
     {
-        $domain = new \Nelliel\DomainBoard($inputs['board_id'], new \Nelliel\CacheHandler(), nel_database(), new \Nelliel\Language\Translator());
+        $domain = new \Nelliel\DomainBoard($inputs['board_id'], nel_database());
     }
 
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));

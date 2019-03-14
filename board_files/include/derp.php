@@ -11,11 +11,11 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
 
     if(isset($error_data['board_id']) && $error_data['board_id'] !== '')
     {
-        $domain = new \Nelliel\DomainBoard($error_data['board_id'], new \Nelliel\CacheHandler(), nel_database(), new \Nelliel\Language\Translator());
+        $domain = new \Nelliel\DomainBoard($error_data['board_id'], nel_database());
     }
     else
     {
-        $domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database(), new \Nelliel\Language\Translator());
+        $domain = new \Nelliel\DomainSite(nel_database());
     }
 
     $diagnostic['error_id'] = (!empty($error_id)) ? $error_id : 0;

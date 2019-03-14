@@ -31,7 +31,7 @@ class Setup
         $this->createCoreTables();
         $this->createCoreDirectories();
         $regen = new \Nelliel\Regen();
-        $regen->siteCache(new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), nel_database(), new \Nelliel\Language\Translator()));
+        $regen->siteCache(new \Nelliel\DomainSite(nel_database()));
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->writeInternalFile(BASE_PATH . 'install_done.php', '', true, false);
         echo _gettext(
@@ -162,7 +162,7 @@ class Setup
     {
         $database = nel_database();
         $sql_helpers = new SQLHelpers($database);
-        $domain = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), nel_database(), new \Nelliel\Language\Translator());
+        $domain = new \Nelliel\DomainBoard($board_id, nel_database());
         $references = $domain->reference();
         $threads_table = new TableThreads($database, $sql_helpers);
         $threads_table->tableName($domain->reference('threads_table'));
@@ -188,7 +188,7 @@ class Setup
     public function createBoardDirectories($board_id)
     {
         $file_handler = new \Nelliel\FileHandler();
-        $domain = new \Nelliel\DomainBoard($board_id, new \Nelliel\CacheHandler(), nel_database(), new \Nelliel\Language\Translator());
+        $domain = new \Nelliel\DomainBoard($board_id, nel_database());
         $references = $domain->reference();
         $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM, true);
         $file_handler->createDirectory($references['preview_path'], DIRECTORY_PERM, true);

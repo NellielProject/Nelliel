@@ -13,7 +13,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
     $session = new \Nelliel\Session();
     $file_handler = new \Nelliel\FileHandler();
     $thread_table = $gen_data = array();
-    $site_domain = new \Nelliel\DomainSite(new \Nelliel\CacheHandler(), $database, $translator);
+    $site_domain = new \Nelliel\DomainSite($database);
     $dotdot = ($write) ? '../' : '';
     $result = $database->query(
             'SELECT "thread_id" FROM "' . $domain->reference('threads_table') .

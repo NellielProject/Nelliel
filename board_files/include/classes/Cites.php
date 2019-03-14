@@ -127,7 +127,7 @@ class Cites
         }
         else if (preg_match('#^>>>\/(.+)\/([0-9]+)$#', $text_input, $matches) === 1)
         {
-            $target_domain = new DomainBoard($matches[1], new CacheHandler(), $this->database, new Translator());
+            $target_domain = new DomainBoard($matches[1], $this->database);
             $cite_data = $this->getCiteData($domain->id(), $source_content_id->post_id, $domain->id(), $matches[2]);
 
             if (empty($cite_data))
@@ -152,7 +152,7 @@ class Cites
         if (!empty($cite_data))
         {
             $base_domain = BASE_DOMAIN . BASE_WEB_PATH;
-            $target_domain = new DomainBoard($cite_data['target_board'], new CacheHandler(), $this->database, new Translator());
+            $target_domain = new DomainBoard($cite_data['target_board'], $this->database);
             $p_anchor = '#t' . $cite_data['target_thread'] . 'p' . $cite_data['target_post'];
             $url = '//' . $base_domain . $cite_data['target_board'] . '/' . $target_domain->reference('page_dir') . '/' .
                     $cite_data['target_thread'] . '/thread-' . $cite_data['target_thread'] . '.html' . $p_anchor;

@@ -7,18 +7,16 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Language\Translator;
 use PDO;
 
 class DomainBoard extends Domain
 {
 
-    public function __construct(string $domain_id, CacheHandler $cache_handler, $database, Translator $translator)
+    public function __construct(string $domain_id, $database)
     {
         $this->domain_id = $domain_id;
-        $this->cache_handler = $cache_handler;
         $this->database = $database;
-        $this->translator = $translator;
+        $this->utilitySetup();
     }
 
     public function boardExists()
