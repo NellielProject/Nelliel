@@ -11,8 +11,6 @@ use PDO;
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
-require_once INCLUDE_PATH . 'output/management/board_settings_panel.php';
-
 class AdminBoardSettings extends AdminHandler
 {
     private $defaults = false;
@@ -50,7 +48,8 @@ class AdminBoardSettings extends AdminHandler
             nel_derp(332, _gettext('You are not allowed to access the default board settings panel.'));
         }
 
-        nel_render_board_settings_panel($user, $this->domain, $this->defaults);
+        $output_panel = new \Nelliel\Output\OutputPanelBoardSettings($this->domain);
+        $output_panel->render(['user' => $user, 'defaults' => $this->defaults]);
     }
 
     public function creator($user)

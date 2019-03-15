@@ -149,7 +149,7 @@ class OutputCatalog extends OutputCore
 
         $catalog_container_nodes['catalog-entry']->remove();
         $this->domain->translator()->translateDom($this->dom, $this->domain->setting('language'));
-        $this->domain->renderInstance()->appendHTMLFromDOM($this->sdom);
+        $this->domain->renderInstance()->appendHTMLFromDOM($this->dom);
         nel_render_general_footer($this->domain, null, false);
 
         if($write)

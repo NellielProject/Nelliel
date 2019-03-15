@@ -21,7 +21,7 @@ class AdminBans extends AdminHandler
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
-        $this->ban_hammer = new \Nelliel\BanHammer($database);
+        $this->ban_hammer = new \Nelliel\BanHammer($this->database);
     }
 
     public function actionDispatch($inputs)

@@ -76,7 +76,7 @@ class Regen
         nel_main_thread_generator($index_domain, 0, true);
         $catalog_domain = $this->getTemporaryDomainBoard($domain->id());
         $catalog_domain->renderActive(true);
-        $output_catalog =  new \Nelliel\Output\OutputCatalog($domain);
+        $output_catalog = new \Nelliel\Output\OutputCatalog($catalog_domain);
         $output_catalog->render(['write' => true]);
     }
 
