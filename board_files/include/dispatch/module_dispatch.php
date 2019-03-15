@@ -23,7 +23,8 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             {
                 $session = new \Nelliel\Session();
                 $session->login();
-                nel_render_main_panel($domain, $session->sessionUser());
+                $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain);
+                $output_main_panel->render(['user' => $session->sessionUser()]);
             }
 
             break;
@@ -73,11 +74,13 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             if ($domain->id() !== '')
             {
-                nel_render_main_board_panel($domain);
+                $output_board_panel = new \Nelliel\Output\OutputPanelBoard($domain);
+                $output_board_panel->render(['user' => $session->sessionUser()]);
             }
             else
             {
-                nel_render_main_panel($domain, $session->sessionUser());
+                $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain);
+                $output_main_panel->render(['user' => $session->sessionUser()]);
             }
 
             break;
@@ -121,7 +124,8 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 $language->extractLanguageStrings($domain, $session->sessionUser(), LANGUAGES_FILE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
             }
 
-            nel_render_main_panel($domain, $session->sessionUser());
+            $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain);
+            $output_main_panel->render(['user' => $session->sessionUser()]);
             break;
 
         case 'reports':
@@ -296,7 +300,8 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 $regen->siteCache($domain);
             }
 
-            nel_render_main_board_panel($domain);
+            $output_board_panel = new \Nelliel\Output\OutputPanelBoard($domain);
+            $output_board_panel->render(['user' => $session->sessionUser()]);
             break;
 
         case 'templates':

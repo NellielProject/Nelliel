@@ -4,8 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'output/management/main_panel.php';
-
 function nel_verify_login()
 {
     $database = nel_database();
