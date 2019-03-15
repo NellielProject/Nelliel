@@ -10,8 +10,6 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
-require_once INCLUDE_PATH . 'output/management/styles_panel.php';
-
 class AdminStyles extends AdminHandler
 {
 
@@ -47,7 +45,8 @@ class AdminStyles extends AdminHandler
 
     public function renderPanel($user)
     {
-        nel_render_styles_panel($user, $this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelStyles($this->domain);
+        $output_panel->render(['user' => $user]);
     }
 
     public function creator($user)

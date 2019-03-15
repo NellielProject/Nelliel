@@ -10,8 +10,6 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
-require_once INCLUDE_PATH . 'output/management/icon_sets_panel.php';
-
 class AdminIconSets extends AdminHandler
 {
 
@@ -47,7 +45,8 @@ class AdminIconSets extends AdminHandler
 
     public function renderPanel($user)
     {
-        nel_render_icon_sets_panel($user, $this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelIconSets($this->domain);
+        $output_panel->render(['user' => $user]);
     }
 
     public function creator($user)

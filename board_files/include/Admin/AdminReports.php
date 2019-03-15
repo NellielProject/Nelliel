@@ -10,8 +10,6 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
-require_once INCLUDE_PATH . 'output/management/reports_panel.php';
-
 class AdminReports extends AdminHandler
 {
     private $defaults = false;
@@ -42,7 +40,8 @@ class AdminReports extends AdminHandler
 
     public function renderPanel($user)
     {
-        nel_render_reports_panel($user, $this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelReports($this->domain);
+        $output_panel->render(['user' => $user]);
     }
 
     public function creator($user)

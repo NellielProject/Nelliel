@@ -11,8 +11,6 @@ use PDO;
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
-require_once INCLUDE_PATH . 'output/management/filetypes_panel.php';
-
 class AdminFiletypes extends AdminHandler
 {
 
@@ -44,7 +42,8 @@ class AdminFiletypes extends AdminHandler
 
     public function renderPanel($user)
     {
-        nel_render_filetypes_panel($user, $this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelFiletypes($this->domain);
+        $output_panel->render(['user' => $user]);
     }
 
     public function creator($user)
