@@ -10,8 +10,6 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
-require_once INCLUDE_PATH . 'output/management/thread_panel.php';
-
 class AdminThreads extends AdminHandler
 {
 
@@ -72,11 +70,13 @@ class AdminThreads extends AdminHandler
         if (isset($_GET['action']) && $_GET['action'] === 'expand-thread')
         {
             $content_id = new \Nelliel\ContentID($_GET['content-id']);
-            nel_render_thread_panel_expand($user, $this->domain, $content_id->thread_id);
+            $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain);
+            $output_panel->render(['section' => 'expanded_thread', 'user' => $user, 'thread_id' => $content_id->thread_id]);
         }
         else
         {
-            nel_render_thread_panel_main($user, $this->domain);
+            $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain);
+            $output_panel->render(['section' => 'panel', 'user' => $user]);
         }
     }
 

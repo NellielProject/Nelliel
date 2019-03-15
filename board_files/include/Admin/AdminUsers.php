@@ -10,8 +10,6 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
-require_once INCLUDE_PATH . 'output/management/users_panel.php';
-
 class AdminUsers extends AdminHandler
 {
     private $user_id;
@@ -60,7 +58,8 @@ class AdminUsers extends AdminHandler
 
     public function renderPanel($user)
     {
-        nel_render_users_panel_main($user, $this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
+        $output_panel->render(['section' => 'panel', 'user' => $user]);
     }
 
     public function creator($user)
@@ -70,7 +69,8 @@ class AdminUsers extends AdminHandler
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
 
-        nel_render_users_panel_edit($user, $this->domain, $this->user_id);
+        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id]);
     }
 
     public function add($user)
@@ -82,7 +82,8 @@ class AdminUsers extends AdminHandler
 
         $this->user_id = $_POST['user_id'];
         $this->update($user);
-        nel_render_users_panel_edit($user, $this->domain, $this->user_id);
+        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id]);
     }
 
     public function editor($user)
@@ -92,7 +93,8 @@ class AdminUsers extends AdminHandler
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
 
-        nel_render_users_panel_edit($user, $this->domain, $this->user_id);
+        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id]);
     }
 
     public function update($user)
@@ -153,7 +155,8 @@ class AdminUsers extends AdminHandler
         }
 
         $this->authorization->saveUsers();
-        nel_render_users_panel_edit($user, $this->domain, $this->user_id);
+        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id]);
     }
 
     public function remove($user)

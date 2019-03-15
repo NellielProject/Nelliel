@@ -10,8 +10,6 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
-require_once INCLUDE_PATH . 'output/management/ban_panel.php';
-
 class AdminBans extends AdminHandler
 {
     private $ban_hammer;
@@ -59,24 +57,16 @@ class AdminBans extends AdminHandler
 
     public function renderPanel($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_ban_access'))
-        {
-            nel_derp(341, _gettext('You are not allowed to access the bans panel.'));
-        }
-
-        nel_render_main_ban_panel($user, $this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain);
+        $output_panel->render(['section' => 'panel', 'user' => $user]);
     }
 
     public function creator($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
-        {
-            nel_derp(321, _gettext('You are not allowed to modify bans.'));
-        }
-
         $ip = $_GET['ban_ip'] ?? '';
         $type = $_GET['ban_type'] ?? 'GENERAL';
-        nel_render_ban_panel_add($user, $this->domain, $ip, $type);
+        $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain);
+        $output_panel->render(['section' => 'add', 'user' => $user, 'ip' => $ip, 'type' => $type]);
     }
 
     public function add($user)
@@ -109,12 +99,8 @@ class AdminBans extends AdminHandler
 
     public function editor($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
-        {
-            nel_derp(321, _gettext('You are not allowed to modify bans.'));
-        }
-
-        nel_render_ban_panel_modify($user, $this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain);
+        $output_panel->render(['section' => 'modify', 'user' => $user]);
     }
 
     public function update($user)

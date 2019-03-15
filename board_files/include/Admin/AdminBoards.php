@@ -10,8 +10,6 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
-require_once INCLUDE_PATH . 'output/management/manage_boards.php';
-
 class AdminBoards extends AdminHandler
 {
     function __construct(Authorization $authorization, Domain $domain)
@@ -38,8 +36,7 @@ class AdminBoards extends AdminHandler
             }
             else
             {
-                $this->createInterstitial();
-                nel_clean_exit();
+                $this->createInterstitial($user);
             }
         }
         else if ($inputs['action'] === 'lock')
@@ -56,7 +53,8 @@ class AdminBoards extends AdminHandler
 
     public function renderPanel($user)
     {
-        nel_render_manage_boards_panel($this->domain, $user);
+        $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain);
+        $output_panel->render(['section' => 'panel', 'user' => $user]);
     }
 
     public function creator($user)
@@ -184,7 +182,7 @@ class AdminBoards extends AdminHandler
         $this->database->executePrepared($prepared, [$board_id]);
     }
 
-    public function createInterstitial()
+    public function createInterstitial($user)
     {
         $message = _gettext(
                 'Are you certain you want to delete the board? Everything will be gone and this cannot be undone!');
@@ -193,6 +191,7 @@ class AdminBoards extends AdminHandler
                 ['module' => 'manage-boards', 'action' => 'remove', 'action-confirmed' => 'true',
                     'board_id' => $_GET['board_id']]);
         $continue_link['text'] = _gettext('Confirm and delete the board.');
-        nel_render_board_removal_interstitial($this->domain, $message, $continue_link);
+        $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain);
+        $output_panel->render(['section' => 'remove_interstitial', 'user' => $user, 'message' => $message, 'continue_link' => $continue_link]);
     }
 }

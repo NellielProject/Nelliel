@@ -10,8 +10,6 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
-require_once INCLUDE_PATH . 'output/management/roles_panel.php';
-
 class AdminRoles extends AdminHandler
 {
     private $role_id;
@@ -60,7 +58,8 @@ class AdminRoles extends AdminHandler
 
     public function renderPanel($user)
     {
-        nel_render_roles_panel_main($user, $this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
+        $output_panel->render(['section' => 'panel', 'user' => $user]);
     }
 
     public function creator($user)
@@ -70,7 +69,8 @@ class AdminRoles extends AdminHandler
             nel_derp(311, _gettext('You are not allowed to modify roles.'));
         }
 
-        nel_render_roles_panel_edit($user, $this->domain, $this->role_id);
+        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id]);
     }
 
     public function add($user)
@@ -82,7 +82,8 @@ class AdminRoles extends AdminHandler
 
         $this->role_id = $_POST['role_id'];
         $this->update($user);
-        nel_render_roles_panel_edit($user, $this->domain, $this->role_id);
+        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id]);
     }
 
     public function editor($user)
@@ -92,7 +93,8 @@ class AdminRoles extends AdminHandler
             nel_derp(311, _gettext('You are not allowed to modify roles.'));
         }
 
-        nel_render_roles_panel_edit($user, $this->domain, $this->role_id);
+        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id]);
     }
 
     public function update($user)
@@ -123,7 +125,8 @@ class AdminRoles extends AdminHandler
         }
 
         $this->authorization->saveRoles();
-        nel_render_roles_panel_edit($user, $this->domain, $this->role_id);
+        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id]);
     }
 
     public function remove($user)
