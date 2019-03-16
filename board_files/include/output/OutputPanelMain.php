@@ -24,7 +24,7 @@ class OutputPanelMain extends OutputCore
     public function render(array $parameters = array())
     {
         $user = $parameters['user'];
-        $this->prepare('management/main_panel.html');
+        $this->prepare('management/panels/main_panel.html');
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Options')];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);

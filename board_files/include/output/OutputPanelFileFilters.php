@@ -30,7 +30,7 @@ class OutputPanelFileFilters extends OutputCore
             nel_derp(341, _gettext('You are not allowed to access the File Filters panel.'));
         }
 
-        $this->prepare('management/file_filter_panel.html');
+        $this->prepare('management/panels/file_filter_panel.html');
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('File Filters')];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);

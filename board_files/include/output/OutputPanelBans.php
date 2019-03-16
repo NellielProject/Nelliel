@@ -54,7 +54,7 @@ class OutputPanelBans extends OutputCore
     public function renderPanel(array $parameters)
     {
         $user = $parameters['user'];
-        $this->prepare('management/bans_panel_main.html');
+        $this->prepare('management/panels/bans_panel_main.html');
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
@@ -120,7 +120,7 @@ class OutputPanelBans extends OutputCore
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
-        $this->prepare('management/bans_panel_add_ban.html');
+        $this->prepare('management/panels/bans_panel_add_ban.html');
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Add Ban')];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
@@ -171,7 +171,7 @@ class OutputPanelBans extends OutputCore
         }
 
         $ban_hammer = new \Nelliel\BanHammer($this->domain->database());
-        $this->prepare('management/bans_panel_modify_ban.html');
+        $this->prepare('management/panels/bans_panel_modify_ban.html');
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Modify Ban')];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);

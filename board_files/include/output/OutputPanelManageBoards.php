@@ -49,7 +49,7 @@ class OutputPanelManageBoards extends OutputCore
             nel_derp(370, _gettext('You are not allowed to access the board manager panel.'));
         }
 
-        $this->prepare('management/manage_boards_panel_main.html');
+        $this->prepare('management/panels/manage_boards_panel_main.html');
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);

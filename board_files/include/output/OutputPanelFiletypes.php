@@ -30,7 +30,7 @@ class OutputPanelFiletypes extends OutputCore
             nel_derp(430, _gettext('You are not allowed to access the Filetypes panel.'));
         }
 
-        $this->prepare('management/filetypes_panel.html');
+        $this->prepare('management/panels/filetypes_panel.html');
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Filetypes')];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);

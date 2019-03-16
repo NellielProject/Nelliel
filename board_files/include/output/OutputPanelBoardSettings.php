@@ -26,7 +26,7 @@ class OutputPanelBoardSettings extends OutputCore
         $user = $parameters['user'];
         $defaults = $parameters['defaults'];
 
-        $this->prepare('management/board_settings_panel.html');
+        $this->prepare('management/panels/board_settings_panel.html');
         $filetypes = new \Nelliel\FileTypes($this->database);
         $settings_form = $this->dom->getElementById('board-settings-form');
         $settings_form_nodes = $settings_form->getElementsByAttributeName('data-parse-id', true);

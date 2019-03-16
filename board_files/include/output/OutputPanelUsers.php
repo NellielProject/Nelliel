@@ -50,7 +50,7 @@ class OutputPanelUsers extends OutputCore
     private function renderPanel(array $parameters)
     {
         $user = $parameters['user'];
-        $this->prepare('management/users_panel_main.html');
+        $this->prepare('management/panels/users_panel_main.html');
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Users')];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
@@ -89,7 +89,7 @@ class OutputPanelUsers extends OutputCore
     {
         $user = $parameters['user'];
         $user_id = $parameters['user_id'];
-        $this->prepare('management/users_panel_edit.html');
+        $this->prepare('management/panels/users_panel_edit.html');
         $authorization = new \Nelliel\Auth\Authorization($this->database);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit User')];

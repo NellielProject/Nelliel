@@ -50,7 +50,7 @@ class OutputPanelThreads extends OutputCore
     private function renderPanel(array $parameters)
     {
         $user = $parameters['user'];
-        $this->prepare('management/thread_panel.html');
+        $this->prepare('management/panels/thread_panel.html');
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Threads')];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
@@ -175,7 +175,7 @@ class OutputPanelThreads extends OutputCore
     {
         $user = $parameters['user'];
         $thread_id = $parameters['thread_id'];
-        $this->prepare('management/thread_panel_expand.html');
+        $this->prepare('management/panels/thread_panel_expand.html');
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Expanded Thread')];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);

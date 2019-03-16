@@ -50,7 +50,7 @@ class OutputPanelRoles extends OutputCore
     private function renderPanel(array $parameters)
     {
         $user = $parameters['user'];
-        $this->prepare('management/roles_panel_main.html');
+        $this->prepare('management/panels/roles_panel_main.html');
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Roles')];
         $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
@@ -89,7 +89,7 @@ class OutputPanelRoles extends OutputCore
     {
         $user = $parameters['user'];
         $role_id = $parameters['role_id'];
-        $this->prepare('management/roles_panel_edit.html');
+        $this->prepare('management/panels/roles_panel_edit.html');
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $role = $authorization->getRole($role_id);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
