@@ -10,6 +10,8 @@ define('LIBRARY_PATH', FILES_PATH . 'libraries/'); // Libraries path
 require_once INCLUDE_PATH . 'autoload.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
+require_once LIBRARY_PATH . 'Mustache/src/Mustache/Autoloader.php';
+Mustache_Autoloader::register();
 
 $gettext = new \SmallPHPGettext\SmallPHPGettext();
 $gettext->registerFunctions();
