@@ -132,26 +132,30 @@ class OutputHeader extends OutputCore
     {
         $session = new \Nelliel\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
-        $this->prepare('header.html');
+        $final_output = '';
+
+        // Temp
+        $this->render_instance = $this->domain->renderInstance();
+
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), [
+            'extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('header2');
         $dotdot = ($parameters['dotdot']) ?? array();
         $treeline = ($parameters['treeline']) ?? array();
         $index_render = ($parameters['index_render']) ?? false;
-        $head_element = $this->dom->getElementsByTagName('head')->item(0);
-        $this->buildStyles($dotdot);
-        $this->dom->getElementById('js-main-file')->extSetAttribute('src', $dotdot . SCRIPTS_WEB_PATH . 'nel.js');
-        $this->dom->getElementById('js-onload')->setContent(
-                'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $this->domain->id() . '\', \'' .
-                $session->inModmode($this->domain) . '\');};');
-        $this->dom->getElementById('js-style-set')->setContent('setStyle(nelliel.core.getCookie("style-' . $this->domain->id() . '"));');
+        $render_input = array();
+        $render_input['main_js_file'] = $dotdot . SCRIPTS_WEB_PATH . 'nel.js';
+        $render_input['js_onload'] = 'window.onload = function () {nelliel.setup.doImportantStuff(\'' .
+                $this->domain->id() . '\', \'' . $session->inModmode($this->domain) . '\');};';
+        $render_input['js_set_style'] = 'setStyle(nelliel.core.getCookie("style-' . $this->domain->id() . '"));';
 
         if ($this->domain->setting('use_honeypot'))
         {
-            $honeypot_css = '#form-user-info-1{display: none !important;}#form-user-info-2{display: none !important;}#form-user-info-3{position: absolute; top: 3px; left: -9001px;}';
-            $style_element = $this->dom->createElement('style', $honeypot_css);
-            $this->dom->getElementsByTagName('head')->item(0)->appendChild($style_element);
+            $render_input['honeypot_css'] = '#form-user-info-1{display: none !important;}#form-user-info-2{display: none !important;}#form-user-info-3{position: absolute; top: 3px; left: -9001px;}';
+            $render_input['use_honeypot'] = true;
         }
 
-        $title_element = $head_element->getElementsByTagName('title')->item(0);
         $title_content = $this->domain->setting('board_name');
 
         if(!$index_render && !empty($treeline))
@@ -166,107 +170,98 @@ class OutputHeader extends OutputCore
             }
         }
 
-        $title_element->setContent($title_content);
-        $board_navigation = $this->dom->getElementById("board-navigation");
-        $board_navigation->appendChild($this->dom->createTextNode('[ '));
+        $render_input['page_title'] = $title_content;
+
         $board_data = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
-        $end = end($board_data);
+        $render_input['multiple_boards'] = count($board_data) > 1;
 
         foreach ($board_data as $data)
         {
-            $board_link = $this->dom->createElement('a');
-            $board_link->extSetAttribute('class', 'board-navigation-link');
-            $board_link->extSetAttribute('href', $dotdot . $data['board_id']);
-            $board_link->extSetAttribute('title', $this->domain->setting('board_name'));
-            $board_link->setContent($data['board_id']);
-            $board_navigation->appendChild($board_link);
+            $board_info = array();
+            $board_info['board_url'] = $dotdot . $data['board_id'];
+            $board_info['board_title'] = $this->domain->setting('board_name');
+            $board_info['board_id'] = $data['board_id'];
+            $render_input['board_navigation'][] = $board_info;
+        }
 
-            if ($data !== $end)
+        $render_input['is_site_header'] = false;
+        $render_input['is_board_header'] = true;
+        $render_input['favicon_url'] = $site_domain->setting('site_favicon');
+        $render_input['page_title'] = 'Nelliel Imageboard';
+
+        if (($session->isActive() || $session->inModmode($this->domain)) && !$this->domain->renderActive())
+        {
+            $render_input['session_active'] = true;
+
+            if (isset($extra_data['header']))
             {
-                $board_navigation->appendChild($this->dom->createTextNode(' / '));
+                $render_input['manage_header'] = $extra_data['header'];
             }
-        }
 
-        $board_navigation->appendChild($this->dom->createTextNode(' ]'));
-        $board_banner = $this->dom->getElementById('top-board-banner');
-        $favicon = $this->dom->getElementById('favicon-link');
+            if ($session->inModmode($this->domain) && !$this->domain->renderActive())
+            {
+                $render_input['manage_header'] = _gettext('Mod Mode');
+            }
 
-        if ($this->domain->setting('show_board_favicon'))
-        {
-            $favicon->extSetAttribute('href', $this->domain->setting('board_favicon'));
-        }
-        else
-        {
-            $favicon->extSetAttribute('href', $site_domain->setting('site_favicon'));
-        }
+            if ($this->domain->id() !== '')
+            {
+                $render_input['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
+            }
 
-        $top_site_name = $this->dom->getElementById('top-site-name')->remove();
-        $top_site_slogan = $this->dom->getElementById('top-site-slogan')->remove();
-        $top_site_banner = $this->dom->getElementById('top-site-banner')->remove();
+            if (isset($extra_data['sub_header']))
+            {
+                $render_input['manage_sub_header'] = $extra_data['sub_header'];
+            }
 
-        if ($this->domain->setting('show_board_banner'))
-        {
-            $board_banner->extSetAttribute('src', $this->domain->setting('board_banner'));
+            $render_input['logout_url'] = $dotdot . MAIN_SCRIPT . '?module=logout';
         }
         else
         {
-            $board_banner->remove();
+            $render_input['session_active'] = false;
         }
-
-        $board_name = $this->dom->getElementById('top-board-name');
-
-        if ($this->domain->setting('show_board_name'))
-        {
-            $board_name->setContent($this->domain->setting('board_name'));
-        }
-        else
-        {
-            $board_name->remove();
-        }
-
-        $board_slogan = $this->dom->getElementById('top-board-slogan');
-
-        if ($this->domain->setting('show_board_slogan'))
-        {
-            $board_slogan->setContent($this->domain->setting('board_slogan'));
-        }
-        else
-        {
-            $board_slogan->remove();
-        }
-
-        $top_nav_menu = $this->dom->getElementById('top-nav-menu');
-        $top_nav_menu_nodes = $top_nav_menu->getElementsByAttributeName('data-parse-id', true);
-        $top_nav_menu_nodes['home']->extSetAttribute('href', $site_domain->setting('home_page'));
-        $top_nav_menu_nodes['news']->extSetAttribute('href', $dotdot . 'news.html');
 
         if ($session->isActive() && !$this->domain->renderActive())
         {
-            $top_nav_menu_nodes['manage']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=main-panel');
+            $render_input['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=main-panel';
         }
         else
         {
-            $top_nav_menu_nodes['manage']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=login');
+            $render_input['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=login';
         }
 
-        $top_nav_menu_nodes['about-nelliel']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?about_nelliel');
-
-        $this->dom->getElementById('manage-board-header')->remove();
-        $this->dom->getElementById('manage-sub-header')->remove();
-
-        if ($session->inModmode($this->domain) && !$this->domain->renderActive())
+        if ($this->domain->setting('show_board_favicon'))
         {
-            $this->dom->getElementById('manage-header-text')->setContent(_gettext('Mod Mode'));
-            $top_nav_menu_nodes['logout']->extSetAttribute('href', $dotdot . MAIN_SCRIPT . '?module=logout');
+            $render_input['favicon_url'] = $this->domain->setting('board_favicon');
         }
         else
         {
-            $top_nav_menu_nodes['logout']->parentNode->remove();
-            $this->dom->getElementById('manage-header')->remove();
+            $render_input['favicon_url'] = $site_domain->setting('site_favicon');
         }
 
-        $this->domain->translator()->translateDom($this->dom, $this->domain->setting('language'));
-        $this->domain->renderInstance()->appendHTMLFromDOM($this->dom);
+        if ($this->domain->setting('show_board_banner'))
+        {
+            $render_input['board_banner'] = $this->domain->setting('board_banner');
+        }
+
+        if ($this->domain->setting('show_board_name'))
+        {
+            $render_input['board_name'] = $this->domain->setting('board_name');
+        }
+
+        if ($this->domain->setting('show_board_slogan'))
+        {
+            $render_input['board_slogan'] = $this->domain->setting('board_slogan');
+        }
+
+        $render_input['home_url'] = $site_domain->setting('home_page');
+        $render_input['news_url'] = $dotdot . 'news.html';
+        $render_input['about_nelliel_url'] = $dotdot . MAIN_SCRIPT . '?about_nelliel';
+        $render_input['styles'] = $this->buildStyles($dotdot);
+
+        // Temp
+        $this->domain->renderInstance()->appendHTML($render_instance->render('header2', $render_input));
+
+                //return $render_instance->render('header2', $render_input);
     }
 
     public function simple(array $parameters)

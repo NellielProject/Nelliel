@@ -11,10 +11,18 @@
 	<link rel="{{ stylesheet }}" data-parse-id="style-board"  type="text/css" href="{{ stylesheet_url }}" data-id="{{ style_id }}" title="{{ style_name }}">
 	{{/ styles }}
 	<link id="favicon-link" rel="icon" href="{{ favicon_url }}">
-	<title></title>
+	<title>{{ page_title }}</title>
+	{{# use_honeypot }}
+	<style>{{ honeypot_css }}</style>
+	{{/ use_honeypot }}
 </head>
 <body>
-	<nav id="board-navigation" class="board-navigation"></nav>
+	<nav id="board-navigation" class="board-navigation">
+		{{# board_navigation }}
+		<span>[ <a href="{{ board_url }}" class="board-navigation-link" title="{{ board_name }}">{{ board_id }}</a> ]</span>
+		{{# multiple_boards }}<span> / </span>{{/ multiple_boards }}
+		{{/ board_navigation }}
+	</nav>
 	<nav id="top-styles" class="top-styles">
 		<span>Style:</span>
 		<select id="top-styles-menu" data-command="change-style">
@@ -38,9 +46,9 @@
 	<div class="site-banner"><img src="{{ site_banner_url }}" id="top-site-banner"></div>
 	{{/ is_site_header }}
 	{{# is_board_header }}
-	<h1 class="board-name" id="top-board-name"></h1>
-	<h2 class="board-slogan" id="top-board-slogan"></h2>
-	<div class="board-banner"><img src="" id="top-board-banner"></div>
+	<h1 class="board-name" id="top-board-name">{{ board_name }}</h1>
+	<h2 class="board-slogan" id="top-board-slogan">{{ board_slogan }}</h2>
+	<div class="board-banner"><img src="{{ board_banner_url }}" id="top-board-banner"></div>
 	{{/ is_board_header }}
 	<hr class="clear">
 	{{# session_active }}
