@@ -30,88 +30,65 @@ class OutputPanelStyles extends OutputCore
             nel_derp(440, _gettext('You are not allowed to access the styles panel.'));
         }
 
-        $this->prepare('management/panels/styles_panel.html');
+        $final_output = '';
+
+        // Temp
+        $this->render_instance = $this->domain->renderInstance();
+        $this->render_instance->startRenderTimer();
+
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Styles')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-
-        $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
-        $style_inis = $ini_parser->parseDirectories(STYLES_WEB_PATH, 'style_info.ini');
+        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('management/panels/styles_panel');
         $styles = $this->database->executeFetchAll(
                 'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
         $installed_ids = array();
-        $installed_style_list = $this->dom->getElementById('installed-style-list');
-        $installed_style_list_nodes = $installed_style_list->getElementsByAttributeName('data-parse-id', true);
         $bgclass = 'row1';
 
         foreach ($styles as $style)
         {
+            $style_data = array();
             $style_info = json_decode($style['info'], true);
+            $style_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $installed_ids[] = $style['id'];
-            $style_row = $this->dom->copyNode($installed_style_list_nodes['style-row'], $installed_style_list,
-                    'append');
-            $style_row->extSetAttribute('class', $bgclass);
-            $style_row_nodes = $style_row->getElementsByAttributeName('data-parse-id', true);
-            $style_row_nodes['id']->setContent($style['id']);
-            $style_row_nodes['style_type']->setContent(strtoupper($style_info['style_type']));
-            $style_row_nodes['name']->setContent($style_info['name']);
-            $style_row_nodes['directory']->setContent($style_info['directory']);
-
-            if ($style['is_default'] == 1)
-            {
-                $style_row_nodes['default-link']->remove();
-                $style_row_nodes['remove-link']->remove();
-                $style_row_nodes['action-1']->setContent(_gettext('Default Style'));
-            }
-            else
-            {
-                $default_link = $this->url_constructor->dynamic(MAIN_SCRIPT,
-                        ['module' => 'styles', 'action' => 'make-default', 'style-id' => $style['id'],
+            $style_data['id'] = $style['id'];
+            $style_data['style_type'] = strtoupper($style_info['style_type']);
+            $style_data['name'] = $style_info['name'];
+            $style_data['directory'] = $style_info['directory'];
+            $style_data['is_default'] = $style['is_default'] == 1;
+            $style_data['default_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                    ['module' => 'styles', 'action' => 'make-default', 'style-id' => $style['id'],
                         'style-type' => $style_info['style_type']]);
-                        $style_row_nodes['default-link']->extSetAttribute('href', $default_link);
-                        $remove_link = $this->url_constructor->dynamic(MAIN_SCRIPT,
-                                ['module' => 'styles', 'action' => 'remove', 'style-id' => $style['id'],
-                                'set-type' => $style_info['style_type']]);
-                                $style_row_nodes['remove-link']->extSetAttribute('href', $remove_link);
-            }
+            $style_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                    ['module' => 'styles', 'action' => 'remove', 'style-id' => $style['id'],
+                        'set-type' => $style_info['style_type']]);
+
+            $render_input['installed_list'][] = $style_data;
         }
 
-        $installed_style_list_nodes['style-row']->remove();
-
-        $available_style_list = $this->dom->getElementById('available-style-list');
-        $available_style_list_nodes = $available_style_list->getElementsByAttributeName('data-parse-id', true);
+        $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
+        $style_inis = $ini_parser->parseDirectories(STYLES_WEB_PATH, 'style_info.ini');
         $bgclass = 'row1';
 
         foreach ($style_inis as $style)
         {
+            $style_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $style_row = $this->dom->copyNode($available_style_list_nodes['style-row'], $available_style_list,
-                    'append');
-            $style_row->extSetAttribute('class', $bgclass);
-            $style_row_nodes = $style_row->getElementsByAttributeName('data-parse-id', true);
-            $style_row_nodes['id']->setContent($style['id']);
-            $style_row_nodes['style_type']->setContent(strtoupper($style['style_type']));
-            $style_row_nodes['name']->setContent($style['name']);
-            $style_row_nodes['directory']->setContent($style['directory']);
-
-            if (in_array($style['id'], $installed_ids))
-            {
-                $style_row_nodes['install-link']->remove();
-                $style_row_nodes['action-1']->setContent(_gettext('Style Installed'));
-            }
-            else
-            {
-                $install_link = $this->url_constructor->dynamic(MAIN_SCRIPT,
-                        ['module' => 'styles', 'action' => 'add', 'style-id' => $style['id'],
+            $style_data['id'] = $style['id'];
+            $style_data['style_type'] = strtoupper($style['style_type']);
+            $style_data['name'] = $style['name'];
+            $style_data['directory'] = $style['directory'];
+            $style_data['is_installed'] = in_array($style['id'], $installed_ids);
+            $style_data['install_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                    ['module' => 'styles', 'action' => 'add', 'style-id' => $style['id'],
                         'style-type' => $style['style_type']]);
-                        $style_row_nodes['install-link']->extSetAttribute('href', $install_link);
-            }
+            $render_input['available_list'][] = $style_data;
         }
 
-        $available_style_list_nodes['style-row']->remove();
-        $this->domain->translator()->translateDom($this->dom);
-        $this->render_instance->appendHTMLFromDOM($this->dom);
+        $this->render_instance->appendHTML($render_instance->render('management/panels/styles_panel', $render_input));
         nel_render_general_footer($this->domain);
         echo $this->render_instance->outputRenderSet();
         nel_clean_exit();
