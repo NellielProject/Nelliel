@@ -30,34 +30,36 @@ class OutputPanelNews extends OutputCore
             nel_derp(470, _gettext('You are not allowed to access the news panel.'));
         }
 
-        $this->prepare('management/panels/news_panel.html');
+        $final_output = '';
+
+        // Temp
+        $this->render_instance = $this->domain->renderInstance();
+        $this->render_instance->startRenderTimer();
+
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('News')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('management/panels/news_panel');
         $news_entries = $this->database->executeFetchAll('SELECT * FROM "' . NEWS_TABLE . '" ORDER BY "time" ASC',
                 PDO::FETCH_ASSOC);
-        $news_entry_list = $this->dom->getElementById('news-entry-list');
-        $news_entry_list_nodes = $news_entry_list->getElementsByAttributeName('data-parse-id', true);
         $bgclass = 'row1';
-        $form_action = $this->url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'news', 'action' => 'add']);
-        $this->dom->getElementById('add-news-form')->extSetAttribute('action', $form_action);
+        $render_input['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'news', 'action' => 'add']);
 
         foreach ($news_entries as $news_entry)
         {
+            $entry_info = array();
+            $entry_info['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $news_entry_row = $this->dom->copyNode($news_entry_list_nodes['news-entry-row'], $news_entry_list, 'append');
-            $news_entry_row->extSetAttribute('class', $bgclass);
-            $news_entry_row_nodes = $news_entry_row->getElementsByAttributeName('data-parse-id', true);
-            $news_entry_row_nodes['headline']->setContent($news_entry['headline']);
-            $news_entry_row_nodes['time']->setContent(date('Y/m/d (D) H:i:s', $news_entry['time']));
-            $remove_link = $this->url_constructor->dynamic(MAIN_SCRIPT,
+            $entry_info['headline'] = $news_entry['headline'];
+            $entry_info['time'] = date('Y/m/d (D) H:i:s', $news_entry['time']);
+            $entry_info['remove_link'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'news', 'action' => 'remove', 'entry' => $news_entry['entry']]);
-            $news_entry_row_nodes['news-remove-link']->extSetAttribute('href', $remove_link);
+            $render_input['news_entry'][] = $entry_info;
         }
 
-        $news_entry_list_nodes['news-entry-row']->remove();
-        $this->domain->translator()->translateDom($this->dom);
-        $this->render_instance->appendHTMLFromDOM($this->dom);
+        $this->render_instance->appendHTML($render_instance->render('management/panels/news_panel', $render_input));
         nel_render_general_footer($this->domain);
         echo $this->render_instance->outputRenderSet();
         nel_clean_exit();

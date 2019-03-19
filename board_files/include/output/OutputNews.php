@@ -21,14 +21,21 @@ class OutputNews extends OutputCore
 
     public function render(array $parameters = array())
     {
-        $this->prepare('news.html');
+        $final_output = '';
+
+        // Temp
         $this->domain->renderActive(true);
-        $output_header = new OutputHeader($this->domain);
+        $this->render_instance = $this->domain->renderInstance();
+        $this->render_instance->startRenderTimer();
+
+        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['use_site_titles' => true];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-        $this->newsList();
-        $this->domain->translator()->translateDom($this->dom, $this->domain->setting('language'));
-        $this->render_instance->appendHTMLFromDOM($this->dom);
+        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('news');
+        $render_input['news_entries'] = $this->newsList();
+        $this->render_instance->appendHTML($render_instance->render('news', $render_input));
         nel_render_general_footer($this->domain);
         $this->file_handler->writeFile(BASE_PATH . 'news.html', $this->render_instance->outputRenderSet());
     }
@@ -39,9 +46,8 @@ class OutputNews extends OutputCore
         $authorization = new \Nelliel\Auth\Authorization($database);
         $news_entries = $database->executeFetchAll('SELECT * FROM "' . NEWS_TABLE . '" ORDER BY "time" ASC',
                 PDO::FETCH_ASSOC);
-        $news_page = $this->dom->getElementById('news-page');
-        $news_page_nodes = $news_page->getElementsByAttributeName('data-parse-id', true);
         $limit_counter = 0;
+        $entry_list = array();
 
         foreach ($news_entries as $news_entry)
         {
@@ -50,22 +56,22 @@ class OutputNews extends OutputCore
                 break;
             }
 
-            $news_entry_div = $this->dom->copyNode($news_page_nodes['news-entry'], $news_page, 'append');
-            $news_entry_nodes = $news_entry_div->getElementsByAttributeName('data-parse-id', true);
+            $news_info = array();
+            $news_info['headline'] = $news_entry['headline'];
             $poster_name = $authorization->getUser($news_entry['poster_id'])->auth_data['display_name'];
-            $news_entry_nodes['headline']->setContent($news_entry['headline']);
-            $news_entry_nodes['poster']->setContent(' by ' . $poster_name);
-            $news_entry_nodes['time']->setContent(' - ' . date('Y/m/d (D) H:i:s', $news_entry['time']));
+            $news_info['poster'] = ' by ' . $poster_name;
+            $news_info['time'] = ' - ' . date('Y/m/d (D) H:i:s', $news_entry['time']);
+            $news_info['news_lines'] = array();
 
             foreach ($this->output_filter->newlinesToArray($news_entry['text']) as $line)
             {
-                $news_entry_nodes['text']->appendChild($this->dom->createTextNode($line));
-                $news_entry_nodes['text']->appendChild($this->dom->createElement('br'));
+                $news_info['news_lines'][]['news_line'] = $line;
             }
 
+            $entry_list[] = $news_info;
             ++$limit_counter;
         }
 
-        $news_page_nodes['news-entry']->remove();
+        return $entry_list;
     }
 }

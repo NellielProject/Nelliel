@@ -1,4 +1,4 @@
-	<form id="add-news-form" accept-charset="utf-8" action="" method="post">
+	<form id="add-news-form" accept-charset="utf-8" action="{{ form_action }}" method="post">
 		<div class="display-table">
 			<div class="display-row">
 				<label for="headline" class="display-cell" data-i18n="gettext">Headline</label>
@@ -20,11 +20,13 @@
 			<th data-i18n="gettext">Date</th>
 			<th data-i18n="gettext">Actions</th>
 		</tr>
-		<tr data-parse-id="news-entry-row" class="row1">
-			<td data-parse-id="headline"></td>
-			<td data-parse-id="time"></td>
+		{{# news_entry }}
+		<tr data-parse-id="news-entry-row" class="{{ bgclass }}">
+			<td data-parse-id="headline">{{ headline }}</td>
+			<td data-parse-id="time">{{ time }}</td>
 			<td>
-				<a class="display-cell" data-parse-id="news-remove-link" href="" data-i18n="gettext">Remove</a>
+				<a class="display-cell" data-parse-id="news-remove-link" href="{{ remove_link }}" data-i18n="gettext">Remove</a>
 			</td>
 		</tr>
+		{{/ news_entry }}
 	</table>

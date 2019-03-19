@@ -301,10 +301,11 @@ class OutputHeader extends OutputCore
         $styles = $this->database->executeFetchAll(
                 'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
                 PDO::FETCH_ASSOC);
-        $style_data = array();
+        $style_set = array();
 
         foreach ($styles as $style)
         {
+            $style_data = array();
             $info = json_decode($style['info'], true);
             $style_data['stylesheet'] = ($style['is_default']) ? 'stylesheet' : 'alternate stylesheet';
             $style_data['style_id'] = $style['id'];
