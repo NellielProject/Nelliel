@@ -30,40 +30,39 @@ class OutputPanelSiteSettings extends OutputCore
             nel_derp(360, _gettext('You are not allowed to access the site settings.'));
         }
 
-        $this->prepare('management/panels/site_settings_panel.html');
+        $final_output = '';
+
+        // Temp
+        $this->render_instance = $this->domain->renderInstance();
+        $this->render_instance->startRenderTimer();
+
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Site Settings')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-        $this->dom->getElementById('site-settings-form')->extSetAttribute('action',
-                MAIN_SCRIPT . '?module=site-settings&action=update');
+        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('management/panels/site_settings_panel');
+        $render_input['form_action'] = MAIN_SCRIPT . '?module=site-settings&action=update';
         $result = $this->database->query('SELECT * FROM "' . SITE_CONFIG_TABLE . '"');
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
         unset($result);
 
         foreach ($rows as $config_line)
         {
-            $config_element = $this->dom->getElementById($config_line['config_name']);
-
-            if (is_null($config_element))
-            {
-                continue;
-            }
-
             if ($config_line['data_type'] === 'boolean')
             {
                 if ($config_line['setting'] == 1)
                 {
-                    $config_element->extSetAttribute('checked', 'true');
+                    $render_input[$config_line['config_name']] = 'checked';
                 }
             }
             else
             {
-                $config_element->extSetAttribute('value', $config_line['setting']);
+                $render_input[$config_line['config_name']] = $config_line['setting'];
             }
         }
 
-        $this->domain->translator()->translateDom($this->dom);
-        $this->render_instance->appendHTMLFromDOM($this->dom);
+        $this->render_instance->appendHTML($render_instance->render('management/panels/site_settings_panel', $render_input));
         nel_render_general_footer($this->domain);
         echo $this->render_instance->outputRenderSet();
         nel_clean_exit();

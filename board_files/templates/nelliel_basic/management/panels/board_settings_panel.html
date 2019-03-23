@@ -1,955 +1,1267 @@
-	<form id="board-settings-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
+	<form id="board-settings-form" accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<td>
 					<span class="bold" data-i18n="gettext">General Settings</span>
 				</td>
+				{{# defaults }}
 				<td></td>
+				{{/ defaults }}
 			</tr>
+			{{# board_name }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="board_name_lock" value="0">
-					<input type="checkbox" name="board_name_lock" id="board_name_lock" value="1">
+					<input type="checkbox" name="board_name_lock" value="1" {{ locked }}>
 					<label for="board_name_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="board_name" data-i18n="gettext">Board Name</label>
 				</td>
 				<td>
-					<input type="text" name="board_name" id="board_name" size="30" value="">
+					<input type="text" name="board_name" size="30" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ board_name }}
+			{{# show_board_name }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="show_board_name_lock" value="0">
-					<input type="checkbox" name="show_board_name_lock" id="show_board_name_lock" value="1">
+					<input type="checkbox" name="show_board_name_lock" value="1" {{ locked }}>
 					<label for="show_board_name_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="show_board_name" value="0">
-					<input type="checkbox" name="show_board_name" id="show_board_name" value="1">
+					<input type="checkbox" name="show_board_name" value="1" {{ value }} {{ disabled }}>
 					<label for="show_board_name" data-i18n="gettext">Show board name at top</label>
 				</td>
 			</tr>
+			{{/ show_board_name }}
+			{{# board_slogan }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="board_slogan_lock" value="0">
-					<input type="checkbox" name="board_slogan_lock" id="board_slogan_lock" value="1">
+					<input type="checkbox" name="board_slogan_lock" value="1" {{ locked }}>
 					<label for="board_slogan_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="board_slogan" data-i18n="gettext">Board Slogan</label>
 				</td>
 				<td>
-					<input type="text" name="board_slogan" id="board_slogan" size="30" value="">
+					<input type="text" name="board_slogan" size="30" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ board_slogan }}
+			{{# show_board_slogan }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="show_board_slogan_lock" value="0">
-					<input type="checkbox" name="show_board_slogan_lock" id="show_board_slogan_lock" value="1">
+					<input type="checkbox" name="show_board_slogan_lock" value="1" {{ locked }}>
 					<label for="show_board_slogan_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="show_board_slogan" value="0">
-					<input type="checkbox" name="show_board_slogan" id="show_board_slogan" value="1">
+					<input type="checkbox" name="show_board_slogan" value="1" {{ value }} {{ disabled }}>
 					<label for="show_board_slogan" data-i18n="gettext">Show board slogan at top</label>
 				</td>
 			</tr>
+			{{/ show_board_slogan }}
+			{{# board_favicon }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="board_favicon_lock" value="0">
-					<input type="checkbox" name="board_favicon_lock" id="board_favicon_lock" value="1">
+					<input type="checkbox" name="board_favicon_lock" value="1" {{ locked }}>
 					<label for="board_favicon_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="board_favicon" data-i18n="gettext">Favicon</label>
 				</td>
 				<td>
-					<input type="text" name="board_favicon" id="board_favicon" size="30" value="">
+					<input type="text" name="board_favicon" size="30" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ board_favicon }}
+			{{# show_board_favicon }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="show_board_favicon_lock" value="0">
-					<input type="checkbox" name="show_board_favicon_lock" id="show_board_favicon_lock" value="1">
+					<input type="checkbox" name="show_board_favicon_lock" value="1" {{ locked }}>
 					<label for="show_board_favicon_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="show_board_favicon" value="0">
-					<input type="checkbox" name="show_board_favicon" id="show_board_favicon" value="1">
+					<input type="checkbox" name="show_board_favicon" value="1" {{ value }} {{ disabled }}>
 					<label for="show_board_favicon" data-i18n="gettext">Show Favicon</label>
 				</td>
 			</tr>
+			{{/ show_board_favicon }}
+			{{# board_banner }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="board_banner_lock" value="0">
-					<input type="checkbox" name="board_banner_lock" id="board_banner_lock" value="1">
+					<input type="checkbox" name="board_banner_lock" value="1" {{ locked }}>
 					<label for="board_banner_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="board_banner" data-i18n="gettext">Board banner (image)</label>
 				</td>
 				<td>
-					<input type="text" name="board_banner" id="board_banner" size="30" value="">
+					<input type="text" name="board_banner" size="30" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ board_banner }}
+			{{# show_board_banner }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="show_board_banner_lock" value="0">
-					<input type="checkbox" name="show_board_banner_lock" id="show_board_banner_lock" value="1">
+					<input type="checkbox" name="show_board_banner_lock" value="1" {{ locked }}>
 					<label for="show_board_banner_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="show_board_banner" value="0">
-					<input type="checkbox" name="show_board_banner" id="show_board_banner" value="1">
+					<input type="checkbox" name="show_board_banner" value="1" {{ value }} {{ disabled }}>
 					<label for="show_board_banner" data-i18n="gettext">Show board banner</label>
 				</td>
 			</tr>
+			{{/ show_board_banner }}
+			{{# language }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="language_lock" value="0">
-					<input type="checkbox" name="language_lock" id="language_lock" value="1">
+					<input type="checkbox" name="language_lock" value="1" {{ locked }}>
 					<label for="language_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="language" data-i18n="gettext">Set language for the board</label>
 				</td>
 				<td>
-					<input type="text" name="language" id="language" size="10" value="">
+					<input type="text" name="language" size="10" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ language }}
+			{{# date_format }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="date_format_lock" value="0">
-					<input type="checkbox" name="date_format_lock" id="date_format_lock" value="1">
+					<input type="checkbox" name="date_format_lock" value="1" {{ locked }}>
 					<label for="date_format_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="date_format" data-i18n="gettext">Format for post time (uses PHP date() function)</label>
 				</td>
 				<td>
-					<input type="text" name="date_format" id="date_format" size="20" value="">
+					<input type="text" name="date_format" size="20" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ date_format }}
+			{{# abbreviate_thread }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="abbreviate_thread_lock" value="0">
-					<input type="checkbox" name="abbreviate_thread_lock" id="abbreviate_thread_lock" value="1">
+					<input type="checkbox" name="abbreviate_thread_lock" value="1" {{ locked }}>
 					<label for="abbreviate_thread_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="abbreviate_thread" data-i18n="gettext">How many posts in a thread before abbreviating it on the main page</label>
 				</td>
 				<td>
-					<input type="text" name="abbreviate_thread" id="abbreviate_thread" size="8" value="">
+					<input type="text" name="abbreviate_thread" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ abbreviate_thread }}
+			{{# threads_per_page }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="threads_per_page_lock" value="0">
-					<input type="checkbox" name="threads_per_page_lock" id="threads_per_page_lock" value="1">
+					<input type="checkbox" name="threads_per_page_lock" value="1" {{ locked }}>
 					<label for="threads_per_page_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="threads_per_page" data-i18n="gettext">Threads per page</label>
 				</td>
 				<td>
-					<input type="text" name="threads_per_page" id="threads_per_page" size="8" value="">
+					<input type="text" name="threads_per_page" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ threads_per_page }}
+			{{# page_limit }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="page_limit_lock" value="0">
-					<input type="checkbox" name="page_limit_lock" id="page_limit_lock" value="1">
+					<input type="checkbox" name="page_limit_lock" id="page_limit_lock" value="1" {{ locked }}>
 					<label for="page_limit_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="page_limit" data-i18n="gettext">Maximum number of pages</label>
 				</td>
 				<td>
-					<input type="text" name="page_limit" id="page_limit" size="8" value="">
+					<input type="text" name="page_limit" id="page_limit" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ page_limit }}
+			{{# page_buffer }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="page_buffer_lock" value="0">
-					<input type="checkbox" name="page_buffer_lock" id="page_buffer_lock" value="1">
+					<input type="checkbox" name="page_buffer_lock" value="1" {{ locked }}>
 					<label for="page_buffer_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="page_buffer" data-i18n="gettext">Page buffer before archiving or pruning</label>
 				</td>
 				<td>
-					<input type="text" name="page_buffer" id="page_buffer" size="8" value="">
+					<input type="text" name="page_buffer" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ page_buffer }}
+			{{# max_posts }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_posts_lock" value="0">
-					<input type="checkbox" name="max_posts_lock" id="max_posts_lock" value="1">
+					<input type="checkbox" name="max_posts_lock" value="1" {{ locked }}>
 					<label for="max_posts_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_posts" data-i18n="gettext">Maximum posts per thread</label>
 				</td>
 				<td>
-					<input type="text" name="max_posts" id="max_posts" size="8" value="">
+					<input type="text" name="max_posts" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_posts }}
+			{{# max_bumps }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_bumps_lock" value="0">
-					<input type="checkbox" name="max_bumps_lock" id="max_bumps_lock" value="1">
+					<input type="checkbox" name="max_bumps_lock" value="1" {{ locked }}>
 					<label for="max_bumps_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_bumps" data-i18n="gettext">Maximum thread bumps</label>
 				</td>
 				<td>
-					<input type="text" name="max_bumps" id="max_bumps" size="8" value="">
+					<input type="text" name="max_bumps" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_bumps }}
+			{{# old_threads }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="old_threads_lock" value="0">
-					<input type="checkbox" name="old_threads_lock" id="old_threads_lock" value="1">
+					<input type="checkbox" name="old_threads_lock" value="1" {{ locked }}>
 					<label for="old_threads_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<span data-i18n="gettext" data-i18n="gettext">How to handle old threads:</span>
 				</td>
 			</tr>
 			<tr>
+				{{# defaults }}
 				<td id="old_threads_blank_lock"></td>
+				{{/ defaults }}
 				<td>
-					<input type="radio" name="old_threads" id="old_threads_ARCHIVE" value="ARCHIVE"> 
+					<input type="radio" name="old_threads" value="ARCHIVE" {{ old_threads_ARCHIVE }}> 
 					<label for="old_threads_ARCHIVE" data-i18n="gettext">Archive</label><br>
-					<input type="radio" name="old_threads" id="old_threads_PRUNE" value="PRUNE"> 
+					<input type="radio" name="old_threads" value="PRUNE" {{ old_threads_PRUNE }}> 
 					<label for="old_threads_PRUNE" data-i18n="gettext">Prune</label><br>
-					<input type="radio" name="old_threads" id="old_threads_NOTHING" value="NOTHING"> 
+					<input type="radio" name="old_threads" value="NOTHING" {{ old_threads_NOTHING }}> 
 					<label for="old_threads_NOTHING" data-i18n="gettext">Nothing</label>
 				</td>
 			</tr>
+			{{/ old_threads }}
+			{{# template_id }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="template_id_lock" value="0">
-					<input type="checkbox" name="template_id_lock" id="template_id_lock" value="1">
+					<input type="checkbox" name="template_id_lock" id="template_id_lock" value="1" {{ locked }}>
 					<label for="template_id_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="template_id" data-i18n="gettext">ID of template for board to use</label>
 				</td>
 				<td>
-					<input type="text" name="template_id" id="template_id" size="30" value="">
+					<input type="text" name="template_id" id="template_id" size="30" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ template_id }}
+			{{# filetype_icon_set_id }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="filetype_icon_set_id_lock" value="0">
-					<input type="checkbox" name="filetype_icon_set_id_lock" id="filetype_icon_set_id_lock" value="1">
+					<input type="checkbox" name="filetype_icon_set_id_lock" id="filetype_icon_set_id_lock" value="1" {{ locked }}>
 					<label for="filetype_icon_set_id_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="filetype_icon_set_id" data-i18n="gettext">ID of icon set to use with filetypes</label>
 				</td>
 				<td>
-					<input type="text" name="filetype_icon_set_id" id="filetype_icon_set_id" size="30" value="">
+					<input type="text" name="filetype_icon_set_id" id="filetype_icon_set_id" size="30" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ filetype_icon_set_id }}
+			{{# display_render_timer }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="display_render_timer_lock" value="0">
-					<input type="checkbox" name="display_render_timer_lock" id="display_render_timer_lock" value="1">
+					<input type="checkbox" name="display_render_timer_lock" id="display_render_timer_lock" value="1" {{ locked }}>
 					<label for="display_render_timer_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="display_render_timer" value="0">
-					<input type="checkbox" name="display_render_timer" id="display_render_timer" value="1">
+					<input type="checkbox" name="display_render_timer" id="display_render_timer" value="1" {{ value }} {{ disabled }}>
 					<label for="display_render_timer" data-i18n="gettext">Display the rendering timer</label>
 				</td>
 			</tr>
+			{{/ display_render_timer }}
+			{{# enable_dynamic_pages }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="enable_dynamic_pages_lock" value="0">
-					<input type="checkbox" name="enable_dynamic_pages_lock" id="enable_dynamic_pages_lock" value="1">
+					<input type="checkbox" name="enable_dynamic_pages_lock" id="enable_dynamic_pages_lock" value="1" {{ locked }}>
 					<label for="enable_dynamic_pages_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="enable_dynamic_pages" value="0">
-					<input type="checkbox" name="enable_dynamic_pages" id="enable_dynamic_pages" value="1">
+					<input type="checkbox" name="enable_dynamic_pages" id="enable_dynamic_pages" value="1" {{ value }} {{ disabled }}>
 					<label for="enable_dynamic_pages" data-i18n="gettext">Allow visitors to use dynamic page rendering</label>
 				</td>
 			</tr>
+			{{/ enable_dynamic_pages }}
+			{{# generate_catalog }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="generate_catalog_lock" value="0">
-					<input type="checkbox" name="generate_catalog_lock" id="generate_catalog_lock" value="1">
+					<input type="checkbox" name="generate_catalog_lock" id="generate_catalog_lock" value="1" {{ locked }}>
 					<label for="generate_catalog_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="generate_catalog" value="0">
-					<input type="checkbox" name="generate_catalog" id="generate_catalog" value="1">
+					<input type="checkbox" name="generate_catalog" id="generate_catalog" value="1" {{ value }} {{ disabled }}>
 					<label for="generate_catalog" data-i18n="gettext">Generate catalog page for this board</label>
 				</td>
 			</tr>
+			{{/ generate_catalog }}
 			<tr>
 				<td>
 					<hr>
 				</td>
+				{{# defaults }}
 				<td></td>
+				{{/ defaults }}
 			</tr>
 			<tr>
 				<td>
 					<span class="bold" data-i18n="gettext">Posting Parameters</span>
 				</td>
+				{{# defaults }}
 				<td></td>
+				{{/ defaults }}
 			</tr>
+			{{# require_content_start }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="require_content_start_lock" value="0">
-					<input type="checkbox" name="require_content_start_lock" id="require_content_start_lock" value="1">
+					<input type="checkbox" name="require_content_start_lock" id="require_content_start_lock" value="1" {{ locked }}>
 					<label for="require_content_start_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="require_content_start" value="0">
-					<input type="checkbox" name="require_content_start" id="require_content_start" value="1">
+					<input type="checkbox" name="require_content_start" id="require_content_start" value="1" {{ value }} {{ disabled }}}>
 					<label for="require_content_start" data-i18n="gettext">Require an image, file or embed to start new thread</label>
 				</td>
 			</tr>
+			{{/ require_content_start }}
+			{{# require_content_always }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="require_content_always_lock" value="0">
-					<input type="checkbox" name="require_content_always_lock" id="require_content_always_lock" value="1">
+					<input type="checkbox" name="require_content_always_lock" id="require_content_always_lock" value="1" {{ locked }}>
 					<label for="require_content_always_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="require_content_always" value="0">
-					<input type="checkbox" name="require_content_always" id="require_content_always" value="1">
+					<input type="checkbox" name="require_content_always" id="require_content_always" value="1" {{ value }} {{ disabled }}>
 					<label for="require_content_always" data-i18n="gettext">Always require an image, file or embed</label>
 				</td>
 			</tr>
+			{{/ require_content_always }}
+			{{# only_thread_duplicates }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="only_thread_duplicates_lock" value="0">
-					<input type="checkbox" name="only_thread_duplicates_lock" id="only_thread_duplicates_lock" value="1">
+					<input type="checkbox" name="only_thread_duplicates_lock" id="only_thread_duplicates_lock" value="1" {{ locked }}>
 					<label for="only_thread_duplicates_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="only_thread_duplicates" value="0">
-					<input type="checkbox" name="only_thread_duplicates" id="only_thread_duplicates" value="1">
+					<input type="checkbox" name="only_thread_duplicates" id="only_thread_duplicates" value="1" {{ value }} {{ disabled }}>
 					<label for="only_thread_duplicates" data-i18n="gettext">Only check for duplicates in current thread when replying</label>
 				</td>
 			</tr>
+			{{/ only_thread_duplicates }}
+			{{# only_op_duplicates }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="only_op_duplicates_lock" value="0">
-					<input type="checkbox" name="only_op_duplicates_lock" id="only_op_duplicates_lock" value="1">
+					<input type="checkbox" name="only_op_duplicates_lock" id="only_op_duplicates_lock" value="1" {{ locked }}>
 					<label for="only_op_duplicates_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="only_op_duplicates" value="0">
-					<input type="checkbox" name="only_op_duplicates" id="only_op_duplicates" value="1">
+					<input type="checkbox" name="only_op_duplicates" id="only_op_duplicates" value="1" {{ value }} {{ disabled }}>
 					<label for="only_op_duplicates" data-i18n="gettext">Only check for duplicates in other op posts when creating new thread</label>
 				</td>
 			</tr>
+			{{/ only_op_duplicates }}
+			{{# force_anonymous }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="force_anonymous_lock" value="0">
-					<input type="checkbox" name="mforce_anonymous_lock" id="force_anonymous_lock" value="1">
+					<input type="checkbox" name="mforce_anonymous_lock" id="force_anonymous_lock" value="1" {{ locked }}>
 					<label for="force_anonymous_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="force_anonymous" value="0">
-					<input type="checkbox" name="force_anonymous" id="force_anonymous" value="1">
+					<input type="checkbox" name="force_anonymous" id="force_anonymous" value="1" {{ value }} {{ disabled }}>
 					<label for="force_anonymous" data-i18n="gettext">Force Anonymous posting</label>
 				</td>
 			</tr>
+			{{/ force_anonymous }}
+			{{# allow_tripkeys }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="allow_tripkeys_lock" value="0">
-					<input type="checkbox" name="allow_tripkeys_lock" id="allow_tripkeys_lock" value="1">
+					<input type="checkbox" name="allow_tripkeys_lock" id="allow_tripkeys_lock" value="1" {{ locked }}>
 					<label for="allow_tripkeys_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="allow_tripkeys" value="0">
-					<input type="checkbox" name="allow_tripkeys" id="allow_tripkeys" value="1">
+					<input type="checkbox" name="allow_tripkeys" id="allow_tripkeys" value="1" {{ value }} {{ disabled }}>
 					<label for="allow_tripkeys" data-i18n="gettext">Allow use of tripcodes</label>
 				</td>
 			</tr>
+			{{/ allow_tripkeys }}
+			{{# allow_multifile }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="allow_multifile_lock" value="0">
-					<input type="checkbox" name="allow_multifile_lock" id="allow_multifile_lock" value="1">
+					<input type="checkbox" name="allow_multifile_lock" id="allow_multifile_lock" value="1" {{ locked }}>
 					<label for="allow_multifile_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="allow_multifile" value="0">
-					<input type="checkbox" name="allow_multifile" id="allow_multifile" value="1">
+					<input type="checkbox" name="allow_multifile" id="allow_multifile" value="1" {{ value }} {{ disabled }}>
 					<label for="allow_multifile" data-i18n="gettext">Allow mutiple files per post</label>
 				</td>
 			</tr>
+			{{/ allow_multifile }}
+			{{# allow_op_multifile }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="allow_op_multifile_lock" value="0">
-					<input type="checkbox" name="allow_op_multifile_lock" id="allow_op_multifile_lock" value="1">
+					<input type="checkbox" name="allow_op_multifile_lock" id="allow_op_multifile_lock" value="1" {{ locked }}>
 					<label for="allow_op_multifile_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="allow_op_multifile" value="0">
-					<input type="checkbox" name="allow_op_multifile" id="allow_op_multifile" value="1">
+					<input type="checkbox" name="allow_op_multifile" id="allow_op_multifile" value="1" {{ value }} {{ disabled }}>
 					<label for="allow_op_multifile" data-i18n="gettext">Allow first post in thread to have multiple files</label>
 				</td>
 			</tr>
+			{{/ allow_op_multifile }}
+			{{# use_fgsfds }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="use_fgsfds_lock" value="0">
-					<input type="checkbox" name="use_fgsfds_lock" id="use_fgsfds_lock" value="1">
+					<input type="checkbox" name="use_fgsfds_lock" id="use_fgsfds_lock" value="1" {{ locked }}>
 					<label for="use_fgsfds_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="use_fgsfds" value="0">
-					<input type="checkbox" name="use_fgsfds" id="use_fgsfds" value="1">
+					<input type="checkbox" name="use_fgsfds" id="use_fgsfds" value="1" {{ value }} {{ disabled }}>
 					<label for="use_fgsfds" data-i18n="gettext">Use FGSFDS field for commands (noko, sage, etc)</label>
 				</td>
 			</tr>
+			{{/ use_fgsfds }}
+			{{# fgsfds_name }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="fgsfds_name_lock" value="0">
-					<input type="checkbox" name="fgsfds_name_lock" id="fgsfds_name_lock" value="1">
+					<input type="checkbox" name="fgsfds_name_lock" id="fgsfds_name_lock" value="1" {{ locked }}>
 					<label for="fgsfds_name_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="fgsfds_name" data-i18n="gettext">Name of the FGSFDS field</label>
 				</td>
 				<td>
-					<input type="text" name="fgsfds_name" id="fgsfds_name" size="8" value="">
+					<input type="text" name="fgsfds_name" id="fgsfds_name" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ fgsfds_name }}
+			{{# max_post_files }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_post_files_lock" value="0">
-					<input type="checkbox" name="max_post_files_lock" id="max_post_files_lock" value="1">
+					<input type="checkbox" name="max_post_files_lock" id="max_post_files_lock" value="1" {{ locked }}>
 					<label for="max_post_files_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_post_files" data-i18n="gettext">Maximum number of files per post</label>
 				</td>
 				<td>
-					<input type="text" name="max_post_files" id="max_post_files" size="8" value="">
+					<input type="text" name="max_post_files" id="max_post_files" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_post_files }}
+			{{# thread_cooldown }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="thread_cooldown_lock" value="0">
-					<input type="checkbox" name="thread_cooldown_lock" id="thread_cooldown_lock" value="1">
+					<input type="checkbox" name="thread_cooldown_lock" id="thread_cooldown_lock" value="1" {{ locked }}>
 					<label for="thread_cooldown_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="thread_cooldown" data-i18n="gettext">Delay between new threads (seconds)</label>
 				</td>
 				<td>
-					<input type="text" name="thread_cooldown" id="thread_cooldown" size="8" value="">
+					<input type="text" name="thread_cooldown" id="thread_cooldown" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ thread_cooldown }}
+			{{# reply_cooldown }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="reply_cooldown_lock" value="0">
-					<input type="checkbox" name="reply_cooldown_lock" id="reply_cooldown_lock" value="1">
+					<input type="checkbox" name="reply_cooldown_lock" id="reply_cooldown_lock" value="1" {{ locked }}>
 					<label for="reply_cooldown_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="reply_cooldown" data-i18n="gettext">Delay between new posts (seconds)</label>
 				</td>
 				<td>
-					<input type="text" name="reply_cooldown" id="reply_cooldown" size="8" value="">
+					<input type="text" name="reply_cooldown" id="reply_cooldown" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ reply_cooldown }}
+			{{# max_name_length }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_name_length_lock" value="0">
-					<input type="checkbox" name="max_name_length_lock" id="max_name_length_lock" value="1">
+					<input type="checkbox" name="max_name_length_lock" id="max_name_length_lock" value="1" {{ locked }}>
 					<label for="max_name_length_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_name_length" data-i18n="gettext">Maximum length of name (255 or less)</label>
 				</td>
 				<td>
-					<input type="text" name="max_name_length" id="max_name_length" size="8" value="">
+					<input type="text" name="max_name_length" id="max_name_length" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_name_length }}
+			{{# max_email_length }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_email_length_lock" value="0">
-					<input type="checkbox" name="max_email_length_lock" id="max_email_length_lock" value="1">
+					<input type="checkbox" name="max_email_length_lock" id="max_email_length_lock" value="1" {{ locked }}>
 					<label for="max_email_length_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_email_length" data-i18n="gettext">Maximum length of e-mail (255 or less)</label>
 				</td>
 				<td>
-					<input type="text" name="max_email_length" id="max_email_length" size="8" value="">
+					<input type="text" name="max_email_length" id="max_email_length" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_email_length }}
+			{{# max_subject_length }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_subject_length_lock" value="0">
-					<input type="checkbox" name="max_subject_length_lock" id="max_subject_length_lock" value="1">
+					<input type="checkbox" name="max_subject_length_lock" id="max_subject_length_lock" value="1" {{ locked }}>
 					<label for="max_subject_length_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_subject_length" data-i18n="gettext">Maximum length of subject (255 or less)</label>
 				</td>
 				<td>
-					<input type="text" name="max_subject_length" id="max_subject_length" size="8" value="">
+					<input type="text" name="max_subject_length" id="max_subject_length" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_subject_length }}
+			{{# max_comment_length }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_comment_length_lock" value="0">
-					<input type="checkbox" name="max_comment_length_lock" id="max_comment_length_lock" value="1">
+					<input type="checkbox" name="max_comment_length_lock" id="max_comment_length_lock" value="1" {{ locked }}>
 					<label for="max_comment_length_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_comment_length" data-i18n="gettext">Maximum length of comment (# of characters)</label>
 				</td>
 				<td>
-					<input type="text" name="max_comment_length" id="max_comment_length" size="8" value="">
+					<input type="text" name="max_comment_length" id="max_comment_length" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_comment_length }}
+			{{# max_comment_lines }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_comment_lines_lock" value="0">
-					<input type="checkbox" name="max_comment_lines_lock" id="max_comment_lines_lock" value="1">
+					<input type="checkbox" name="max_comment_lines_lock" id="max_comment_lines_lock" value="1" {{ locked }}>
 					<label for="max_comment_lines_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_comment_lines" data-i18n="gettext">Maximum number of lines in comment</label>
 				</td>
 				<td>
-					<input type="text" name="max_comment_lines" id="max_comment_lines" size="8" value="">
+					<input type="text" name="max_comment_lines" id="max_comment_lines" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_comment_lines }}
+			{{# comment_display_lines }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="comment_display_lines_lock" value="0">
-					<input type="checkbox" name="comment_display_lines_lock" id="comment_display_lines_lock" value="1">
+					<input type="checkbox" name="comment_display_lines_lock" id="comment_display_lines_lock" value="1" {{ locked }}>
 					<label for="comment_display_lines_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="comment_display_lines" data-i18n="gettext">How many lines of comment to display</label>
 				</td>
 				<td>
-					<input type="text" name="comment_display_lines" id="comment_display_lines" size="8" value="">
+					<input type="text" name="comment_display_lines" id="comment_display_lines" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ comment_display_lines }}
+			{{# max_source_length }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_source_length_lock" value="0">
-					<input type="checkbox" name="max_source_length_lock" id="max_source_length_lock" value="1">
+					<input type="checkbox" name="max_source_length_lock" id="max_source_length_lock" value="1" {{ locked }}>
 					<label for="max_source_length_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_source_length" data-i18n="gettext">Maximum length of source field (255 or less)</label>
 				</td>
 				<td>
-					<input type="text" name="max_source_length" id="max_source_length" size="8" value="">
+					<input type="text" name="max_source_length" id="max_source_length" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_source_length }}
+			{{# max_license_length }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_license_length_lock" value="0">
-					<input type="checkbox" name="max_license_length_lock" id="max_license_length_lock" value="1">
+					<input type="checkbox" name="max_license_length_lock" id="max_license_length_lock" value="1" {{ locked }}>
 					<label for="max_license_length_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_license_length" data-i18n="gettext">Maximum length of license field (255 or less)</label>
 				</td>
 				<td>
-					<input type="text" name="max_license_length" id="max_license_length" size="8" value="">
+					<input type="text" name="max_license_length" id="max_license_length" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_license_length }}
+			{{# max_filesize_length }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_filesize_lock" value="0">
-					<input type="checkbox" name="max_filesize_lock" id="max_filesize_lock" value="1">
+					<input type="checkbox" name="max_filesize_lock" id="max_filesize_lock" value="1" {{ locked }}>
 					<label for="max_filesize_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_filesize" data-i18n="gettext">Max file size (KB)</label>
 				</td>
 				<td>
-					<input type="text" name="max_filesize" id="max_filesize" size="8" value="">
+					<input type="text" name="max_filesize" id="max_filesize" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_filesize_length }}
+			{{# enable_spoilers }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="enable_spoilers_lock" value="0">
-					<input type="checkbox" name="enable_spoilers_lock" id="enable_spoilers_lock" value="1">
+					<input type="checkbox" name="enable_spoilers_lock" id="enable_spoilers_lock" value="1" {{ locked }}>
 					<label for="enable_spoilers_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="enable_spoilers" value="0">
-					<input type="checkbox" name="enable_spoilers" id="enable_spoilers" value="1">
+					<input type="checkbox" name="enable_spoilers" id="enable_spoilers" value="1" {{ value }} {{ disabled }}>
 					<label for="enable_spoilers" data-i18n="gettext">Enable spoilers for content.</label>
 				</td>
 			</tr>
+			{{/ enable_spoilers }}
+			{{# use_captcha }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="use_captcha_lock" value="0">
-					<input type="checkbox" name="use_captcha_lock" id="use_captcha_lock" value="1">
+					<input type="checkbox" name="use_captcha_lock" id="use_captcha_lock" value="1" {{ locked }}>
 					<label for="use_captcha_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="use_captcha" value="0">
-					<input type="checkbox" name="use_captcha" id="use_captcha" value="1">
+					<input type="checkbox" name="use_captcha" id="use_captcha" value="1" {{ value }} {{ disabled }}>
 					<label for="use_captcha" data-i18n="gettext">Use a CAPTCHA for new posts and threads. Requires a CAPTCHA plugin to work</label>
 				</td>
 			</tr>
+			{{/ use_captcha }}
+			{{# use_recaptcha }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="use_recaptcha_lock" value="0">
-					<input type="checkbox" name="use_recaptcha_lock" id="use_recaptcha_lock" value="1">
+					<input type="checkbox" name="use_recaptcha_lock" id="use_recaptcha_lock" value="1" {{ locked }}>
 					<label for="use_recaptcha_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="use_recaptcha" value="0">
-					<input type="checkbox" name="use_recaptcha" id="use_recaptcha" value="1">
+					<input type="checkbox" name="use_recaptcha" id="use_recaptcha" value="1" {{ value }} {{ disabled }}>
 					<label for="use_recaptcha" data-i18n="gettext">Use ReCAPTCHA for new posts and threads.</label>
 				</td>
 			</tr>
+			{{/ use_recaptcha }}
+			{{# recaptcha_type }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="recaptcha_type_lock" value="0">
-					<input type="checkbox" name="recaptcha_type_lock" id="recaptcha_type_lock" value="1">
+					<input type="checkbox" name="recaptcha_type_lock" id="recaptcha_type_lock" value="1" {{ locked }}>
 					<label for="recaptcha_type_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<span data-i18n="gettext" data-i18n="gettext">ReCAPTCHA type:</span>
 				</td>
 			</tr>
 			<tr>
+				{{# defaults }}
 				<td id="recaptcha_type_blank_lock"></td>
+				{{/ defaults }}
 				<td>
 					<input type="radio" name="recaptcha_type" id="recaptcha_type_CHECKBOX" value="CHECKBOX"> 
 					<label for="recaptcha_type_CHECKBOX" data-i18n="gettext">Checkbox</label><br>
 				</td>
 			</tr>
+			{{/ recaptcha_type }}
+			{{# use_honeypot }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="use_honeypot_lock" value="0">
-					<input type="checkbox" name="use_honeypot_lock" id="use_honeypot_lock" value="1">
+					<input type="checkbox" name="use_honeypot_lock" id="use_honeypot_lock" value="1" {{ locked }}>
 					<label for="use_honeypot_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="use_honeypot" value="0">
-					<input type="checkbox" name="use_honeypot" id="use_honeypot" value="1">
+					<input type="checkbox" name="use_honeypot" id="use_honeypot" value="1" {{ value }} {{ disabled }}>
 					<label for="use_honeypot" data-i18n="gettext">Use honeypot to block spambots.</label>
 				</td>
 			</tr>
+			{{/ use_honeypot }}
 			<tr>
 				<td>
 					<hr>
 				</td>
+				{{# defaults }}
 				<td></td>
+				{{/ defaults }}
 			</tr>
 			<tr>
 				<td>
 					<span class="bold" data-i18n="gettext">Content Handling and Rendering</span>
 				</td>
+				{{# defaults }}
 				<td></td>
+				{{/ defaults }}
 			</tr>
+			{{# timestamp_filename }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="timestamp_filename_lock" value="0">
-					<input type="checkbox" name="timestamp_filename_lock" id="timestamp_filename_lock" value="1">
+					<input type="checkbox" name="timestamp_filename_lock" id="timestamp_filename_lock" value="1" {{ locked }}>
 					<label for="timestamp_filename_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="timestamp_filename" value="0">
-					<input type="checkbox" name="timestamp_filename" id="timestamp_filename" value="1">
+					<input type="checkbox" name="timestamp_filename" id="timestamp_filename" value="1" {{ value }} {{ disabled }}>
 					<label for="timestamp_filename" data-i18n="gettext">Use a timestamp for filenames (old Futallaby style) instead of the original name</label>
 				</td>
 			</tr>
+			{{/ timestamp_filename }}
+			{{# use_preview }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="use_preview_lock" value="0">
-					<input type="checkbox" name="use_preview_lock" id="use_preview_lock" value="1">
+					<input type="checkbox" name="use_preview_lock" id="use_preview_lock" value="1" {{ locked }}>
 					<label for="use_preview_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="use_preview" value="0">
-					<input type="checkbox" name="use_preview" id="use_preview" value="1">
+					<input type="checkbox" name="use_preview" id="use_preview" value="1" {{ value }} {{ disabled }}>
 					<label for="use_preview" data-i18n="gettext">Use previews</label>
 				</td>
 			</tr>
+			{{/ use_preview }}
+			{{# use_magick }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="use_magick_lock" value="0">
-					<input type="checkbox" name="use_magick_lock" id="use_magick_lock" value="1">
+					<input type="checkbox" name="use_magick_lock" id="use_magick_lock" value="1" {{ locked }}>
 					<label for="use_magick_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="use_magick" value="0">
-					<input type="checkbox" name="use_magick" id="use_magick" value="1">
+					<input type="checkbox" name="use_magick" id="use_magick" value="1" {{ value }} {{ disabled }}>
 					<label for="use_magick" data-i18n="gettext">Use ImageMagick when available</label>
 				</td>
 			</tr>
+			{{/ use_magick }}
+			{{# use_file_icon }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="use_file_icon_lock" value="0">
-					<input type="checkbox" name="use_file_icon_lock" id="use_file_icon_lock" value="1">
+					<input type="checkbox" name="use_file_icon_lock" id="use_file_icon_lock" value="1" {{ locked }}>
 					<label for="use_file_icon_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="use_file_icon" value="0">
-					<input type="checkbox" name="use_file_icon" id="use_file_icon" value="1">
+					<input type="checkbox" name="use_file_icon" id="use_file_icon" value="1" {{ value }} {{ disabled }}>
 					<label for="use_file_icon" data-i18n="gettext">Use filetype icon for non-images</label>
 				</td>
 			</tr>
+			{{/ use_file_icon }}
+			{{# use_png_preview }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="use_png_preview_lock" value="0">
-					<input type="checkbox" name="use_png_preview_lock" id="use_png_preview_lock" value="1">
+					<input type="checkbox" name="use_png_preview_lock" id="use_png_preview_lock" value="1" {{ locked }}>
 					<label for="use_png_preview_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="use_png_preview" value="0">
-					<input type="checkbox" name="use_png_preview" id="use_png_preview" value="1">
+					<input type="checkbox" name="use_png_preview" id="use_png_preview" value="1" {{ value }} {{ disabled }}>
 					<label for="use_png_preview" data-i18n="gettext">Use PNG for previews instead of JPEG</label>
 				</td>
 			</tr>
+			{{/ use_png_preview }}
+			{{# animated_gif_preview }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="animated_gif_preview_lock" value="0">
-					<input type="checkbox" name="animated_gif_preview_lock" id="animated_gif_preview_lock" value="1">
+					<input type="checkbox" name="animated_gif_preview_lock" id="animated_gif_preview_lock" value="1" {{ locked }}>
 					<label for="animated_gif_preview_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="animated_gif_preview" value="0">
-					<input type="checkbox" name="animated_gif_preview" id="animated_gif_preview" value="1">
+					<input type="checkbox" name="animated_gif_preview" id="animated_gif_preview" value="1" {{ value }} {{ disabled }}>
 					<label for="animated_gif_preview" data-i18n="gettext">Create animated GIF preview</label>
 				</td>
 			</tr>
+			{{/ animated_gif_preview }}
+			{{# file_sha256 }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="file_sha256_lock" value="0">
-					<input type="checkbox" name="file_sha256_lock" id="file_sha256_lock" value="1">
+					<input type="checkbox" name="file_sha256_lock" id="file_sha256_lock" value="1" {{ locked }}>
 					<label for="file_sha256_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="file_sha256" value="0">
-					<input type="checkbox" name="file_sha256" id="file_sha256" value="1">
+					<input type="checkbox" name="file_sha256" id="file_sha256" value="1" {{ value }} {{ disabled }}>
 					<label for="file_sha256" data-i18n="gettext">Generate a SHA256 hash for uploaded files</label>
 				</td>
 			</tr>
+			{{/ file_sha256 }}
+			{{# file_sha512 }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="file_sha512_lock" value="0">
-					<input type="checkbox" name="file_sha512_lock" id="file_sha512_lock" value="1">
+					<input type="checkbox" name="file_sha512_lock" id="file_sha512_lock" value="1" {{ locked }}>
 					<label for="file_sha512_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="file_sha512" value="0">
-					<input type="checkbox" name="file_sha512" id="file_sha512" value="1">
+					<input type="checkbox" name="file_sha512" id="file_sha512" value="1" {{ value }} {{ disabled }}>
 					<label for="file_sha512" data-i18n="gettext">Generate a SHA512 hash for uploaded files</label>
 				</td>
 			</tr>
+			{{/ file_sha512 }}
+			{{# max_files_row }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_files_row_lock" value="0">
-					<input type="checkbox" name="max_files_row_lock" id="max_files_row_lock" value="1">
+					<input type="checkbox" name="max_files_row_lock" id="max_files_row_lock" value="1" {{ locked }}>
 					<label for="max_files_row_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_files_row" data-i18n="gettext">Number of files to display in each row of post</label>
 				</td>
 				<td>
-					<input type="text" name="max_files_row" id="max_files_row" size="8" value="">
+					<input type="text" name="max_files_row" id="max_files_row" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_files_row }}
+			{{# jpeg_quality }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="jpeg_quality_lock" value="0">
-					<input type="checkbox" name="jpeg_quality_lock" id="jpeg_quality_lock" value="1">
+					<input type="checkbox" name="jpeg_quality_lock" id="jpeg_quality_lock" value="1" {{ locked }}>
 					<label for="jpeg_quality_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="jpeg_quality" data-i18n="gettext">JPEG preview quality (0 - 100)</label>
 				</td>
 				<td>
-					<input type="text" name="jpeg_quality" id="jpeg_quality" size="8" value="">
+					<input type="text" name="jpeg_quality" id="jpeg_quality" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ jpeg_quality }}
+			{{# png_compression }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="png_compression_lock" value="0">
-					<input type="checkbox" name="png_compression_lock" id="png_compression_lock" value="1">
+					<input type="checkbox" name="png_compression_lock" id="png_compression_lock" value="1" {{ locked }}>
 					<label for="png_compression_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="png_compression" data-i18n="gettext">PNG compression level (0 - 9)</label>
 				</td>
 				<td>
-					<input type="text" name="png_compression" id="png_compression" size="8" value="">
+					<input type="text" name="png_compression" id="png_compression" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ png_compression }}
+			{{# max_width }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_width_lock" value="0">
-					<input type="checkbox" name="max_width_lock" id="max_width_lock" value="1">
+					<input type="checkbox" name="max_width_lock" id="max_width_lock" value="1" {{ locked }}>
 					<label for="max_width_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_width" data-i18n="gettext">Maximum preview width</label>
 				</td>
 				<td>
-					<input type="text" name="max_width" id="max_width" size="8" value="">
+					<input type="text" name="max_width" id="max_width" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_width }}
+			{{# max_height }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_height_lock" value="0">
-					<input type="checkbox" name="max_height_lock" id="max_height_lock" value="1">
+					<input type="checkbox" name="max_height_lock" id="max_height_lock" value="1" {{ locked }}>
 					<label for="max_height_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_height" data-i18n="gettext">Maximum preview height</label>
 				</td>
 				<td>
-					<input type="text" name="max_height" id="max_height" size="8" value="">
+					<input type="text" name="max_height" id="max_height" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_height }}
+			{{# max_multi_width }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_multi_width_lock" value="0">
-					<input type="checkbox" name="max_multi_width_lock" id="max_multi_width_lock" value="1">
+					<input type="checkbox" name="max_multi_width_lock" id="max_multi_width_lock" value="1" {{ locked }}>
 					<label for="max_multi_width_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_multi_width" data-i18n="gettext">Maximum preview width when post has multiple content</label>
 				</td>
 				<td>
-					<input type="text" name="max_multi_width" id="max_multi_width" size="8" value="">
+					<input type="text" name="max_multi_width" id="max_multi_width" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_multi_width }}
+			{{# max_multi_height }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_multi_height_lock" value="0">
-					<input type="checkbox" name="max_multi_height_lock" id="max_multi_height_lock" value="1">
+					<input type="checkbox" name="max_multi_height_lock" id="max_multi_height_lock" value="1" {{ locked }}>
 					<label for="max_multi_height_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_multi_height" data-i18n="gettext">Maximum preview height when post has multiple content</label>
 				</td>
 				<td>
-					<input type="text" name="max_multi_height" id="max_multi_height" size="8" value="">
+					<input type="text" name="max_multi_height" id="max_multi_height" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_multi_height }}
+			{{# max_catalog_width }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_catalog_width_lock" value="0">
-					<input type="checkbox" name="max_catalog_width_lock" id="max_catalog_width_lock" value="1">
+					<input type="checkbox" name="max_catalog_width_lock" id="max_catalog_width_lock" value="1" {{ locked }}>
 					<label for="max_catalog_width_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_catalog_width" data-i18n="gettext">Maximum preview width for catalog entries</label>
 				</td>
 				<td>
-					<input type="text" name="max_catalog_width" id="max_catalog_width" size="8" value="">
+					<input type="text" name="max_catalog_width" id="max_catalog_width" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_catalog_width }}
+			{{# max_catalog_height }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="max_catalog_height_lock" value="0">
-					<input type="checkbox" name="max_catalog_height_lock" id="max_catalog_height_lock" value="1">
+					<input type="checkbox" name="max_catalog_height_lock" id="max_catalog_height_lock" value="1" {{ locked }}>
 					<label for="max_catalog_height_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="max_catalog_height" data-i18n="gettext">Maximum preview height for catalog entries</label>
 				</td>
 				<td>
-					<input type="text" name="max_catalog_height" id="max_catalog_height" size="8" value="">
+					<input type="text" name="max_catalog_height" id="max_catalog_height" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ max_catalog_height }}
+			{{# indent_marker }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="indent_marker_lock" value="0">
-					<input type="checkbox" name="indent_marker_lock" id="indent_marker_lock" value="1">
+					<input type="checkbox" name="indent_marker_lock" id="indent_marker_lock" value="1" {{ locked }}>
 					<label for="indent_marker_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="indent_marker" data-i18n="gettext">Set the indent marker next to replies</label>
 				</td>
 				<td>
-					<input type="text" name="indent_marker" id="indent_marker" size="8" value="">
+					<input type="text" name="indent_marker" id="indent_marker" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ indent_marker }}
+			{{# tripkey_marker }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="tripkey_marker_lock" value="0">
-					<input type="checkbox" name="tripkey_marker_lock" id="tripkey_marker_lock" value="1">
+					<input type="checkbox" name="tripkey_marker_lock" id="tripkey_marker_lock" value="1" {{ locked }}>
 					<label for="tripkey_marker_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="tripkey_marker" data-i18n="gettext">Tripcode marker</label>
 				</td>
 				<td>
-					<input type="text" name="tripkey_marker" id="tripkey_marker" size="8" value="">
+					<input type="text" name="tripkey_marker" id="tripkey_marker" size="8" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ tripkey_marker }}
+			{{# no_comment_text }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="no_comment_text_lock" value="0">
-					<input type="checkbox" name="no_comment_text_lock" id="no_comment_text_lock" value="1">
+					<input type="checkbox" name="no_comment_text_lock" id="no_comment_text_lock" value="1" {{ locked }}>
 					<label for="no_comment_text_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<label for="no_comment_text" data-i18n="gettext">Text when there is no comment</label>
 				</td>
 				<td>
-					<input type="text" name="no_comment_text" id="no_comment_text" size="30" value="">
+					<input type="text" name="no_comment_text" id="no_comment_text" size="30" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
+			{{/ no_comment_text }}
+			{{# display_post_backlinks }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="display_post_backlinks_lock" value="0">
-					<input type="checkbox" name="display_post_backlinks_lock" id="display_post_backlinks_lock" value="1">
+					<input type="checkbox" name="display_post_backlinks_lock" id="display_post_backlinks_lock" value="1" {{ locked }}>
 					<label for="display_post_backlinks_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="display_post_backlinks" value="0">
-					<input type="checkbox" name="display_post_backlinks" id="display_post_backlinks" value="1">
+					<input type="checkbox" name="display_post_backlinks" id="display_post_backlinks" value="1" {{ value }} {{ disabled }}>
 					<label for="display_post_backlinks" data-i18n="gettext">Display backlinks for a post that has been referenced</label>
 				</td>
 			</tr>
+			{{/ display_post_backlinks }}
+			{{# display_poster_id }}
 			<tr>
+				{{# defaults }}
 				<td>
 					<input type="hidden" name="display_poster_id_lock" value="0">
-					<input type="checkbox" name="display_poster_id_lock" id="display_poster_id_lock" value="1">
+					<input type="checkbox" name="display_poster_id_lock" id="display_poster_id_lock" value="1" {{ locked }}>
 					<label for="display_poster_id_lock" data-i18n="gettext">(Lock)</label>
 				</td>
+				{{/ defaults }}
 				<td>
 					<input type="hidden" name="display_poster_id" value="0">
-					<input type="checkbox" name="display_poster_id" id="display_poster_id" value="1">
+					<input type="checkbox" name="display_poster_id" id="display_poster_id" value="1" {{ value }} {{ disabled }}>
 					<label for="display_poster_id" data-i18n="gettext">Display ID for posters in a thread</label>
 				</td>
 			</tr>
+			{{/ display_poster_id }}
 		</table>
 		<hr>
+		{{# categories }}
 		<table data-parse-id="filetype-category-table" class="text-left">
 			<tr>
-				<th data-parse-id="category-header">
-				</th>
+				<th data-parse-id="category-header">{{ label }}</th>
 			</tr>
-			<tr data-parse-id="filetype-entry-row">
-				<td data-parse-id="filetype-entry">
-					<input data-parse-id="entry-hidden-checkbox" type="hidden" name="" value="0">
-					<input data-parse-id="entry-checkbox" type="checkbox" name="" value="1">
-					<label data-parse-id="entry-label"></label>
+			{{# category_select }}
+			<tr>
+				<td>
+					<input type="hidden" name="{{ name }}" value="0">
+					<input type="checkbox" name="{{ name }}" value="1" {{ value }}>
+					<label>{{ label }}</label>
 				</td>
 			</tr>
+			{{/ category_select }}
+			{{# entry_rows }}
+			<tr data-parse-id="filetype-entry-row">
+				{{# entry }}
+				<td>
+					<input type="hidden" name="{{ format }}" value="0">
+					<input type="checkbox" name="{{ format }}" value="1" {{ value }}>
+					<label >{{ label }}</label>
+				</td>
+				{{/ entry }}
+			</tr>
+			{{/ entry_rows }}
 		</table>
+		{{/ categories }}
 		<div id="bottom-submit">
 			<input type="submit" value="Update Settings" data-i18n="gettext" data-i18n-attributes="value">
 		</div>

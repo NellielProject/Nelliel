@@ -26,31 +26,35 @@ class OutputPanelBoardSettings extends OutputCore
         $user = $parameters['user'];
         $defaults = $parameters['defaults'];
 
-        $this->prepare('management/panels/board_settings_panel.html');
+        $final_output = '';
+
+        // Temp
+        $this->render_instance = $this->domain->renderInstance();
+        $this->render_instance->startRenderTimer();
+
         $filetypes = new \Nelliel\FileTypes($this->database);
-        $settings_form = $this->dom->getElementById('board-settings-form');
-        $settings_form_nodes = $settings_form->getElementsByAttributeName('data-parse-id', true);
 
         if ($defaults === true)
         {
-            $output_header = new \Nelliel\Output\OutputHeader($this->domain);
-            $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Default Board Settings')];
-            $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-            $result = $this->database->query('SELECT * FROM "' . BOARD_DEFAULTS_TABLE . '"');
-            $settings_form->extSetAttribute('action', MAIN_SCRIPT . '?module=default-board-settings&action=update');
+            $table_name = BOARD_DEFAULTS_TABLE;
+            $extra_data = ['header' => _gettext('Board Management'),
+                'sub_header' => _gettext('Default Board Settings')];
+            $render_input['form_action'] = MAIN_SCRIPT . '?module=board-defaults&action=update';
         }
         else
         {
-            $output_header = new \Nelliel\Output\OutputHeader($this->domain);
+            $table_name = $this->domain->reference('config_table');
             $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')];
-            $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-            $result = $this->database->query('SELECT * FROM "' . $this->domain->reference('config_table') . '"');
-            $settings_form->extSetAttribute('action',
-                    MAIN_SCRIPT . '?module=board-settings&action=update&board_id=' . $this->domain->id());
+            $render_input['form_action'] = MAIN_SCRIPT . '?module=board-settings&action=update&board_id=' .
+                    $this->domain->id();
         }
 
-        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-        unset($result);
+        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
+        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), [
+            'extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('management/panels/board_settings_panel');
 
         $all_filetypes = $filetypes->getFiletypeData();
         $all_categories = $filetypes->getFiletypeCategories();
@@ -60,136 +64,103 @@ class OutputPanelBoardSettings extends OutputCore
 
         foreach ($all_categories as $category)
         {
-            $filetype_category = $this->dom->copyNode($settings_form_nodes['filetype-category-table'], $settings_form, 'append');
-            $category_nodes['category-' . $category['type']] = $filetype_category;
-            $filetype_category_nodes = $filetype_category->getElementsByAttributeName('data-parse-id', true);
-            $filetype_category_nodes['category-header']->setContent($category['label']);
-            $filetype_category->changeId('category-' . $category['type']);
-            $filetype_category_nodes['entry-label']->setContent('Allow ' . $category['type']);
-            $filetype_entries_nodes[$category['type']] = $filetype_category_nodes['filetype-entry']->getElementsByAttributeName(
-                    'data-parse-id', true);
-            $filetype_entries_nodes[$category['type']]['entry-hidden-checkbox']->extSetAttribute('name', $category['type']);
-            $filetype_entries_nodes[$category['type']]['entry-checkbox']->extSetAttribute('name', $category['type']);
-            $category_row_count[$category['type']] = 0;
-        }
+            $category_data = array();
+            $category_data['label'] = $category['label'];
+            $category_data['category_select']['label'] = 'Allow ' . $category['type'];
+            $category_data['category_select']['name'] = $category['type'];
+            $prepared = $this->database->prepare(
+                    'SELECT "setting" FROM "' . $table_name .
+                    '" WHERE "config_type" = \'filetype_enable\' AND "config_name" = ?');
+            $enabled = $this->database->executePreparedFetch($prepared, [$category['type']], PDO::FETCH_COLUMN);
+            $category_data['category_select']['value'] = ($enabled == 1) ? 'checked' : '';
+            $entry_count = 0;
+            $filetype_set = array();
 
-        $current_entry_row = null;
-
-        foreach ($all_filetypes as $filetype)
-        {
-            if ($filetype['extension'] == $filetype['parent_extension'])
+            foreach ($all_filetypes as $filetype)
             {
-                if ($category_row_count[$filetype['type']] >= 3)
+                if ($filetype['type'] != $category['type'])
                 {
-                    $category_row_count[$filetype['type']] = 0;
+                    continue;
                 }
 
-                if ($category_row_count[$filetype['type']] === 0)
+                if ($filetype['extension'] == $filetype['parent_extension'])
                 {
-                    $parent_category = $category_nodes['category-' . $filetype['type']];
-                    $current_entry_row = $this->dom->copyNode($settings_form_nodes['filetype-entry-row'], $parent_category,
-                            'append');
-                    $current_entry_row->getElementsByAttributeName('data-parse-id', true)['filetype-entry']->remove();
+                    $filetype_set[$filetype['parent_extension']]['format'] = $filetype['format'];
+                    $filetype_set[$filetype['parent_extension']]['label'] = $filetype['label'] . ' - .' .
+                            $filetype['extension'];
+                    $prepared = $this->database->prepare(
+                            'SELECT "setting" FROM "' . $table_name .
+                            '" WHERE "config_type" = \'filetype_enable\' AND "config_name" = ?');
+                    $enabled = $this->database->executePreparedFetch($prepared, [$filetype['format']],
+                            PDO::FETCH_COLUMN);
+                    $filetype_set[$filetype['parent_extension']]['value'] = ($enabled == 1) ? 'checked' : '';
+                }
+                else
+                {
+                    $filetype_set[$filetype['parent_extension']]['label'] .= ', .' . $filetype['extension'];
+                }
+            }
+
+            $entry_row['entry'] = array();
+
+            foreach ($filetype_set as $data)
+            {
+                if (count($entry_row['entry']) >= 4)
+                {
+                    $category_data['entry_rows'][] = $entry_row;
+                    $entry_row['entry'] = array();
                 }
 
-                $current_entry = $this->dom->copyNode($settings_form_nodes['filetype-entry'], $current_entry_row, 'append');
-                $current_entry_nodes = $current_entry->getElementsByAttributeName('data-parse-id', true);
-                $current_entry_nodes['entry-label']->addContent($filetype['label'] . ' - .' . $filetype['extension'],
-                        'before');
-                $filetype_entries_nodes[$filetype['format']] = $current_entry_nodes;
-                $current_entry_nodes['entry-hidden-checkbox']->extSetAttribute('name', $filetype['format']);
-                $current_entry_nodes['entry-checkbox']->extSetAttribute('name', $filetype['format']);
-                $category_row_count[$filetype['type']] ++;
+                $entry_row['entry'][] = $data;
             }
-            else
-            {
-                $filetype_entries_nodes[$filetype['format']]['entry-label']->addContent(', .' . $filetype['extension'],
-                        'after');
-            }
+
+            $category_data['entry_rows'][] = $entry_row;
+            $render_input['categories'][] = $category_data;
         }
 
         $user_lock_override = $user->domainPermission($this->domain, 'perm_board_config_lock_override');
+        $render_input['defaults'] = $defaults;
+        $result = $this->database->query('SELECT * FROM "' . $table_name . '"');
+        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($rows as $config_line)
         {
+            $config_data = array('display' => true);
+
             if ($config_line['data_type'] == 'boolean')
             {
                 if ($config_line['setting'] == 1)
                 {
-                    if ($config_line['config_type'] == 'filetype_enable')
-                    {
-                        $filetype_entries_nodes[$config_line['config_name']]['entry-checkbox']->extSetAttribute('checked',
-                                'true');
-                    }
-                    else
-                    {
-                        $config_element = $this->dom->getElementById($config_line['config_name']);
-
-                        if (!is_null($config_element))
-                        {
-                            $config_element->extSetAttribute('checked', 'true');
-                        }
-                    }
+                    $config_data['value'] = 'checked';
                 }
             }
             else
             {
                 if ($config_line['select_type'] == 1)
                 {
-                    $config_element = $this->dom->getElementById($config_line['config_name'] . '_' . $config_line['setting']);
-                    $config_element->extSetAttribute('checked', 'true');
+                    $config_data[$config_line['config_name'] . '_' . $config_line['setting']] = 'checked';
                 }
                 else
                 {
-                    $config_element = $this->dom->getElementById($config_line['config_name']);
-
-                    if (!is_null($config_element))
-                    {
-                        $config_element->extSetAttribute('value', $config_line['setting']);
-                    }
+                    $config_data['value'] = $config_line['setting'];
                 }
             }
 
-            if (!$defaults)
+            if ($config_line['edit_lock'] == 1)
             {
-                if ($config_line['edit_lock'] == 1 && !$user_lock_override)
+                $config_data['locked'] = 'checked';
+
+                if (!$user_lock_override)
                 {
-                    $config_element->extSetAttribute('disabled', 'true');
+                    $config_data['disabled'] = 'disabled';
                 }
             }
 
-            $config_element_lock = $this->dom->getElementById($config_line['config_name'] . '_lock');
-
-            if (!is_null($config_element_lock))
-            {
-                if ($defaults)
-                {
-                    if ($config_line['edit_lock'] == 1)
-                    {
-                        $config_element_lock->extSetAttribute('checked', 'true');
-                    }
-                }
-                else
-                {
-                    if ($config_line['select_type'] == 1)
-                    {
-                        $blank_lock_element = $this->dom->getElementById($config_line['config_name'] . '_blank_lock');
-
-                        if (!is_null($blank_lock_element))
-                        {
-                            $blank_lock_element->remove();
-                        }
-                    }
-
-                    $config_element_lock->parentNode->remove();
-                }
-            }
+            $render_input[$config_line['config_name']] = $config_data;
         }
 
-        $settings_form->appendChild($this->dom->getElementById('bottom-submit'));
-        $settings_form_nodes['filetype-category-table']->remove();
-        $this->domain->translator()->translateDom($this->dom);
-        $this->render_instance->appendHTMLFromDOM($this->dom);
+        $this->render_instance->appendHTML(
+                $render_instance->render('management/panels/board_settings_panel', $render_input));
         nel_render_general_footer($this->domain);
         echo $this->render_instance->outputRenderSet();
         nel_clean_exit();
