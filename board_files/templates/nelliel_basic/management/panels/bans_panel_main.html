@@ -12,29 +12,35 @@
 			<th data-i18n="gettext">Modify</th>
 			<th data-i18n="gettext">Remove</th>
 		</tr>
+		{{# ban_list }}
 		<tr id="ban-info-row" class="row1">
-			<td data-parse-id="ban-id"></td>
-			<td data-parse-id="ban-type"></td>
-			<td data-parse-id="ip-address-start"></td>
-			<td data-parse-id="board-id"></td>
-			<td data-parse-id="ban-reason"></td>
-			<td data-parse-id="ban-expiration"></td>
-			<td data-parse-id="ban-appeal"></td>
-			<td data-parse-id="ban-appeal-response"></td>
-			<td data-parse-id="ban-appeal-status"></td>
+			<td>{{ ban_id }}</td>
+			<td>{{ type }}</td>
+			<td>{{ ip_address_start }}</td>
+			<td>{{ board_id }}</td>
+			<td>{{ reason }}</td>
+			<td>{{expiration }}</td>
+			<td>{{ appeal }}</td>
+			<td>{{ appeal_response }}</td>
+			<td>{{ appeal_status }}</td>
 			<td>
-				<a data-parse-id="link-modify-ban" href="" data-i18n="gettext">Modify Ban</a>
+				{{# can_modify }}
+				<a href="{{ modify_url }}" data-i18n="gettext">Modify Ban</a>
+				{{/ can_modify }}
 			</td>
 			<td>
-				<a data-parse-id="link-remove-ban" href="" data-i18n="gettext">Remove Ban</a>
+				{{# can_modify }}
+				<a href="{{ remove_url }}" data-i18n="gettext">Remove Ban</a>
+				{{/ can_modify }}
 			</td>
 		</tr>
+		{{/ ban_list }}
 	</table>
 	<hr>
 	<table>
 		<tr>
 			<td>
-				<a id="link-new-ban" href="" data-i18n="gettext">Add New Ban</a>
+				<a href="{{ new_ban_url }}" data-i18n="gettext">Add New Ban</a>
 			</td>
 		</tr>
 	</table>

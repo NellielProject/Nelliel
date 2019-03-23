@@ -1,9 +1,9 @@
-	<form id="add-ban-form" accept-charset="utf-8" action="imgboard.php" method="post" enctype="multipart/form-data">
+	<form id="add-ban-form" accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<td data-i18n="gettext">IP to ban:</td>
 				<td>
-					<input data-parse-id="ban-ip" type="text" name="ban_ip" size="24" maxlength="50" value="">
+					<input type="text" name="ban_ip" size="24" maxlength="50" value="{{ ban_ip }}">
 				</td>
 			</tr>
 			<tr>
@@ -11,7 +11,7 @@
 					<span data-i18n="gettext">Apply ban to this board:</span>
 				</td>
 				<td>
-					<input id="ban-board-field"  type="text" name="ban_board" size="24" maxlength="255" value="">
+					<input id="ban-board-field"  type="text" name="ban_board" size="24" maxlength="255" value="{{ ban_board }}">
 				</td>
 			</tr>
 			<tr id="ban-all-boards-row">
@@ -45,16 +45,18 @@
 					<textarea name="ban_reason" cols="32" rows="3"></textarea>
 				</td>
 			</tr>
+			{{# is_post_ban }}
 			<tr id="ban-mod-comment">
 				<td data-i18n="gettext">Attach comment to post (optional):</td>
 				<td>
 					<textarea name="mod_post_comment" cols="32" rows="3"></textarea>
 				</td>
 			</tr>
+			{{/ is_post_ban }}
 			<tr>
 				<td>
-					<input id="ban-type" type="text" name="ban_type" value="">
-					<input type="submit" value="Set Ban"  data-i18n="gettext" data-i18n-attributes="value">
+					<input id="ban-type" type="text" name="ban_type" value="{{ ban_type }}">
+					<input type="submit" value="Set Ban" data-i18n="gettext" data-i18n-attributes="value">
 				</td>
 			</tr>
 		</table>
