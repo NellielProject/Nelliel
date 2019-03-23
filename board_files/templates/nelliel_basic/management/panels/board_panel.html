@@ -1,17 +1,33 @@
 	<div id="manage-options">
-		<div id="module-board-settings"><a data-parse-id="board-settings-link" href="" title="" data-i18n="gettext">Board Settings</a></div>
-		<div id="module-bans"><a data-parse-id="bans-link" href="" title="" data-i18n="gettext">Ban Controls</a></div>
-		<div id="module-threads"><a data-parse-id="threads-link" href="" title="" data-i18n="gettext">Thread Management</a></div>
-		<div id="module-reports"><a data-parse-id="reports-link" href="" title="" data-i18n="gettext">Reports</a></div>
-		<div id="module-file-filters"><a data-parse-id="file-filters-link" href="" title="" data-i18n="gettext">File Filters</a></div>
-		<div id="module-modmode"><a data-parse-id="modmode-link" href="" title="" data-i18n="gettext">Moderator Mode</a></div>
+		{{# module_board_settings }}
+		<div id="module-board-settings"><a href="{{ board_settings_url }}" data-i18n="gettext">Board Settings</a></div>
+		{{/ module_board_settings }}
+		{{# module_bans }}
+		<div id="module-bans"><a href="{{ bans_url }}" data-i18n="gettext">Ban Controls</a></div>
+		{{/ module_bans }}
+		{{# module_threads }}
+		<div id="module-threads"><a href="{{ threads_url }}" data-i18n="gettext">Thread Management</a></div>
+		{{/ module_threads }}
+		{{# module_reports }}
+		<div id="module-reports"><a href="{{ reports_url }}" data-i18n="gettext">Reports</a></div>
+		{{/ module_reports }}
+		{{# module_file_filters }}
+		<div id="module-file-filters"><a href="{{ file_filters_url }}" data-i18n="gettext">File Filters</a></div>
+		{{/ module_file_filters }}
+		{{# module_modmode }}
+		<div id="module-modmode"><a href="{{ modmode_url }}" data-i18n="gettext">Moderator Mode</a></div>
+		{{/ module_modmode }}
 	</div>
 	<hr>
+	{{# regen_board_pages }}
 	<div>
-		<a id="regen-all-pages" href="" data-i18n="gettext">Regenerate Board Pages</a>
+		<a id="regen-all-pages" href="{{ regen_pages_url }}" data-i18n="gettext">Regenerate Board Pages</a>
 		<span data-i18n="gettext">Regenerates all posts and threads for the board. May cause heavy server load.</span>
 	</div>
+	{{/ regen_board_pages }}
+	{{# regen_board_caches }}
 	<div>
-		<a id="regen-all-caches" href="" data-i18n="gettext">Regenerate Board Caches</a>
+		<a id="regen-all-caches" href="{{ regen_caches_url }}" data-i18n="gettext">Regenerate Board Caches</a>
 		<span data-i18n="gettext">Regenerates all internal cache files for the board.</span>
 	</div>
+	{{/ regen_board_caches }}

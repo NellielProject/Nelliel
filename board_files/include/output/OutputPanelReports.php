@@ -30,10 +30,18 @@ class OutputPanelReports extends OutputCore
             nel_derp(380, _gettext('You are not allowed to access the reports panel.'));
         }
 
-        $this->prepare('management/panels/reports_panel.html');
+        $final_output = '';
+
+        // Temp
+        $this->render_instance = $this->domain->renderInstance();
+        $this->render_instance->startRenderTimer();
+
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Reports')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('management/panels/reports_panel');
 
         if ($this->domain->id() !== '')
         {
@@ -47,8 +55,6 @@ class OutputPanelReports extends OutputCore
                     PDO::FETCH_ASSOC);
         }
 
-        $report_info_table = $this->dom->getElementById('report-info-table');
-        $report_info_row = $this->dom->getElementById('report-info-row');
         $bgclass = 'row1';
         $domains = array();
 
@@ -59,68 +65,63 @@ class OutputPanelReports extends OutputCore
                 $domains[$report_info['board_id']] = new \Nelliel\DomainBoard($report_info['board_id'], $this->database);
             }
 
-            $current_domain = $domains[$report_info['board_id']];
+            $report_data = array();
+            $report_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $temp_report_info_row = $report_info_row->cloneNode(true);
-            $temp_report_info_row->extSetAttribute('class', $bgclass);
-            $report_nodes = $temp_report_info_row->getElementsByAttributeName('data-parse-id', true);
+            $current_domain = $domains[$report_info['board_id']];
             $content_id = new \Nelliel\ContentID($report_info['content_id']);
             $base_domain = BASE_DOMAIN . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
             $board_web_path = '//' . $base_domain . '/' . rawurlencode($current_domain->reference('board_directory')) . '/';
-            $content_link = '';
+            $content_url = '';
 
             if ($content_id->isThread())
             {
-                $content_link = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                $content_url = $this->url_constructor->dynamic(MAIN_SCRIPT,
                         ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
                         'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                         'modmode' => 'true']);
-                        $report_nodes['link-file-url']->remove();
+                $report_data['is_content'] = false;
             }
             else if ($content_id->isPost())
             {
-                $content_link = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                $content_url = $this->url_constructor->dynamic(MAIN_SCRIPT,
                         ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
                         'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                         'modmode' => 'true']);
-                        $content_link .= '#t' . $content_id->thread_id . 'p' . $content_id->post_id;
-                        $report_nodes['link-file-url']->remove();
+                        $content_url .= '#t' . $content_id->thread_id . 'p' . $content_id->post_id;
+                $report_data['is_content'] = false;
             }
             else if ($content_id->isContent())
             {
+                $report_data['is_content'] = false;
                 $prepared = $this->database->prepare(
                         'SELECT "filename" FROM "' . $current_domain->reference('content_table') .
                         '" WHERE "parent_thread" = ? AND post_ref = ? AND "content_order" = ?');
                 $filename = $this->database->executePreparedFetch($prepared,
                         [$content_id->thread_id, $content_id->post_id, $content_id->order_id], PDO::FETCH_COLUMN);
                 $src_web_path = $board_web_path . rawurlencode($current_domain->reference('src_dir')) . '/';
-                $file_link = $src_web_path . $content_id->thread_id . '/' . $content_id->post_id . '/' .
+                $report_data['file_url'] = $src_web_path . $content_id->thread_id . '/' . $content_id->post_id . '/' .
                         rawurlencode($filename);
-                        $report_nodes['link-file-url']->extSetAttribute('href', $file_link);
 
-                        $content_link = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                        $content_url = $this->url_constructor->dynamic(MAIN_SCRIPT,
                                 ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
                                 'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                                 'modmode' => 'true']);
-                                $content_link .= '#t' . $content_id->thread_id . 'p' . $content_id->post_id;
+                        $content_url .= '#t' . $content_id->thread_id . 'p' . $content_id->post_id;
             }
 
-            $report_nodes['report-id']->setContent($report_info['report_id']);
-            $report_nodes['board-id']->setContent($report_info['board_id']);
-            $report_nodes['link-content-url']->setContent($report_info['content_id']);
-            $report_nodes['link-content-url']->extSetAttribute('href', $content_link);
-            $report_nodes['report-reason']->setContent($report_info['reason']);
-            $report_nodes['reporter-ip']->setContent(@inet_ntop($report_info['reporter_ip']));
-            $report_nodes['link-report-dismiss']->extSetAttribute('href',
-                    MAIN_SCRIPT . '?module=reports&board_id=' . $report_info['board_id'] . '&action=dismiss&report_id=' .
-                    $report_info['report_id']);
-            $report_info_table->appendChild($temp_report_info_row);
+            $report_data['report_id'] = $report_info['report_id'];
+            $report_data['board_id'] = $report_info['board_id'];
+            $report_data['content_url'] = $content_url;
+            $report_data['content_id'] = $report_info['content_id'];
+            $report_data['reason'] = $report_info['reason'];
+            $report_data['reporter_ip'] = $report_info['reporter_ip'];
+            $report_data['dismiss_url'] = MAIN_SCRIPT . '?module=reports&board_id=' . $report_info['board_id'] . '&action=dismiss&report_id=' .
+                    $report_info['report_id'];
+            $render_input['reports_list'][] = $report_data;
         }
 
-        $report_info_row->remove();
-
-        $this->domain->translator()->translateDom($this->dom);
-        $this->render_instance->appendHTMLFromDOM($this->dom);
+        $this->render_instance->appendHTML($render_instance->render('management/panels/reports_panel', $render_input));
         nel_render_general_footer($this->domain);
         echo $this->render_instance->outputRenderSet();
         nel_clean_exit();

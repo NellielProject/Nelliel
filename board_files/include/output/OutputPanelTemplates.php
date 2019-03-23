@@ -30,85 +30,62 @@ class OutputPanelTemplates extends OutputCore
             nel_derp(341, _gettext('You are not allowed to access the templates panel.'));
         }
 
-        $this->prepare('management/panels/templates_panel.html');
+        $final_output = '';
+
+        // Temp
+        $this->render_instance = $this->domain->renderInstance();
+        $this->render_instance->startRenderTimer();
+
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Templates')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-        $ini_parser = new \Nelliel\INIParser($this->file_handler);
-        $template_inis = $ini_parser->parseDirectories(TEMPLATES_FILE_PATH, 'template_info.ini');
-
+        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('management/panels/templates_panel');
         $templates = $this->database->executeFetchAll(
                 'SELECT * FROM "' . TEMPLATES_TABLE . '" ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
         $installed_ids = array();
-        $installed_template_list = $this->dom->getElementById('installed-template-list');
-        $installed_template_list_nodes = $installed_template_list->getElementsByAttributeName('data-parse-id', true);
         $bgclass = 'row1';
 
         foreach ($templates as $template)
         {
+            $template_data = array();
             $template_info = json_decode($template['info'], true);
+            $template_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $installed_ids[] = $template['id'];
-            $template_row = $this->dom->copyNode($installed_template_list_nodes['template-row'], $installed_template_list,
-                    'append');
-            $template_row->extSetAttribute('class', $bgclass);
-            $template_row_nodes = $template_row->getElementsByAttributeName('data-parse-id', true);
-            $template_row_nodes['id']->setContent($template['id']);
-            $template_row_nodes['name']->setContent($template_info['name']);
-            $template_row_nodes['directory']->setContent($template_info['directory']);
-            $template_row_nodes['output']->setContent($template_info['output_type']);
-
-            if ($template['is_default'] == 1)
-            {
-                $template_row_nodes['default-link']->remove();
-                $template_row_nodes['remove-link']->remove();
-                $template_row_nodes['action-1']->setContent(_gettext('Default Template'));
-            }
-            else
-            {
-                $default_link = $this->url_constructor->dynamic(MAIN_SCRIPT,
-                        ['module' => 'templates', 'action' => 'make-default', 'template-id' => $template['id']]);
-                $template_row_nodes['template-default-link']->extSetAttribute('href', $default_link);
-                $remove_link = $this->url_constructor->dynamic(MAIN_SCRIPT,
-                        ['module' => 'templates', 'action' => 'remove', 'template-id' => $template['id']]);
-                $template_row_nodes['remove-link']->extSetAttribute('href', $remove_link);
-            }
+            $template_data['id'] = $template['id'];
+            $template_data['name'] = $template_info['name'];
+            $template_data['directory'] = $template_info['directory'];
+            $template_data['output'] = $template_info['output_type'];
+            $template_data['is_default'] = $template['is_default'] == 1;
+            $template_data['default_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                    ['module' => 'templates', 'action' => 'make-default', 'template-id' => $template['id']]);
+            $template_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                    ['module' => 'templates', 'action' => 'remove', 'template-id' => $template['id']]);
+            $render_input['installed_list'][] = $template_data;
         }
 
-        $installed_template_list_nodes['template-row']->remove();
-
-        $available_template_list = $this->dom->getElementById('available-template-list');
-        $available_template_list_nodes = $available_template_list->getElementsByAttributeName('data-parse-id', true);
+        $ini_parser = new \Nelliel\INIParser($this->file_handler);
+        $template_inis = $ini_parser->parseDirectories(TEMPLATES_FILE_PATH, 'template_info.ini');
         $bgclass = 'row1';
 
         foreach ($template_inis as $template)
         {
+            $template_data = array();
+            $template_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $template_row = $this->dom->copyNode($available_template_list_nodes['template-row'], $available_template_list,
-                    'append');
-            $template_row->extSetAttribute('class', $bgclass);
-            $template_row_nodes = $template_row->getElementsByAttributeName('data-parse-id', true);
-            $template_row_nodes['id']->setContent($template['id']);
-            $template_row_nodes['name']->setContent($template['name']);
-            $template_row_nodes['directory']->setContent($template_info['directory']);
-            $template_row_nodes['output']->setContent($template['output_type']);
-
-            if (in_array($template['id'], $installed_ids))
-            {
-                $template_row_nodes['install-link']->remove();
-                $template_row_nodes['action-1']->setContent(_gettext('Template Installed'));
-            }
-            else
-            {
-                $remove_link = $this->url_constructor->dynamic(MAIN_SCRIPT,
+            $template_data['id'] = $template['id'];
+            $template_data['name'] = $template['name'];
+            $template_data['directory'] = $template_info['directory'];
+            $template_data['output'] = $template['output_type'];
+            $template_data['is_installed'] = in_array($template['id'], $installed_ids);
+            $template_data['install_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                         ['module' => 'templates', 'action' => 'add', 'template-id' => $template['id']]);
-                $template_row_nodes['install-link']->extSetAttribute('href', $remove_link);
-            }
+            $render_input['available_list'][] = $template_data;
         }
 
-        $available_template_list_nodes['template-row']->remove();
-        $this->domain->translator()->translateDom($this->dom);
-        $this->render_instance->appendHTMLFromDOM($this->dom);
+        $this->render_instance->appendHTML($render_instance->render('management/panels/templates_panel', $render_input));
         nel_render_general_footer($this->domain);
         echo $this->render_instance->outputRenderSet();
         nel_clean_exit();

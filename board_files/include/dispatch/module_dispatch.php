@@ -110,7 +110,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $file_filters_admin->actionDispatch($inputs);
             break;
 
-        case 'default-board-settings':
+        case 'board-defaults':
             $board_settings_admin = new \Nelliel\Admin\AdminBoardSettings($authorization, $domain);
             $board_settings_admin->actionDispatch($inputs);
             break;

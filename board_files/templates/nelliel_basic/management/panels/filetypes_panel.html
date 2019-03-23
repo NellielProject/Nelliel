@@ -1,4 +1,4 @@
-	<form id="add-filetype-form" accept-charset="utf-8" action="" method="post">
+	<form id="add-filetype-form" accept-charset="utf-8" action="{{ form_action }}" method="post">
 		<div class="display-table">
 			<div class="display-row">
 				<label for="extension" class="display-cell" data-i18n="gettext">Extension</label>
@@ -45,16 +45,18 @@
 			<th data-i18n="gettext">Label</th>
 			<th data-i18n="gettext">Remove</th>
 		</tr>
-		<tr data-parse-id="filetype-row" class="row1">
-			<td data-parse-id="extension"></td>
-			<td data-parse-id="parent-extension"></td>
-			<td data-parse-id="type"></td>
-			<td data-parse-id="format"></td>
-			<td data-parse-id="mime"></td>
-			<td data-parse-id="regex"></td>
-			<td data-parse-id="label"></td>
+		{{# filetype_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ extension }}</td>
+			<td>{{ parent_extension }}</td>
+			<td>{{ type }}</td>
+			<td>{{ format }}</td>
+			<td>{{ mime }}</td>
+			<td>{{ regex }}</td>
+			<td>{{ label }}</td>
 			<td>
-				<a class="display-cell" data-parse-id="filetype-remove-link" href="" data-i18n="gettext">Remove Filetype</a>
+				<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Filetype</a>
 			</td>
 		</tr>
+		{{/ filetype_list }}
 	</table>

@@ -30,35 +30,36 @@ class OutputPanelPermissions extends OutputCore
             nel_derp(450, _gettext('You are not allowed to access the Permissions panel.'));
         }
 
-        $this->prepare('management/panels/permissions_panel.html');
+        $final_output = '';
+
+        // Temp
+        $this->render_instance = $this->domain->renderInstance();
+        $this->render_instance->startRenderTimer();
+
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Permissions')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('management/panels/permissions_panel');
         $permissions = $this->database->executeFetchAll('SELECT * FROM "' . PERMISSIONS_TABLE . '" ORDER BY "entry" ASC',
                 PDO::FETCH_ASSOC);
-        $form_action = $this->url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'permissions', 'action' => 'add']);
-        $this->dom->getElementById('add-permission-form')->extSetAttribute('action', $form_action);
-
-        $permission_list = $this->dom->getElementById('permission-list');
-        $permission_list_nodes = $permission_list->getElementsByAttributeName('data-parse-id', true);
+        $render_input['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'permissions', 'action' => 'add']);
         $bgclass = 'row1';
 
         foreach ($permissions as $permission)
         {
+            $permission_data = array();
+            $permission_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $permission_row = $this->dom->copyNode($permission_list_nodes['permission-row'], $permission_list, 'append');
-            $permission_row_nodes = $permission_row->getElementsByAttributeName('data-parse-id', true);
-            $permission_row->extSetAttribute('class', $bgclass);
-            $permission_row_nodes['permission']->setContent($permission['permission']);
-            $permission_row_nodes['description']->setContent($permission['description']);
-            $remove_link = $this->url_constructor->dynamic(MAIN_SCRIPT,
+            $permission_data['permission'] = $permission['permission'];
+            $permission_data['description'] = $permission['description'];
+            $permission_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'permissions', 'action' => 'remove', 'permission' => $permission['permission']]);
-            $permission_row_nodes['permission-remove-link']->extSetAttribute('href', $remove_link);
+            $render_input['permission_list'][] = $permission_data;
         }
 
-        $permission_list_nodes['permission-row']->remove();
-        $this->domain->translator()->translateDom($this->dom);
-        $this->render_instance->appendHTMLFromDOM($this->dom);
+        $this->render_instance->appendHTML($render_instance->render('management/panels/permissions_panel', $render_input));
         nel_render_general_footer($this->domain);
         echo $this->render_instance->outputRenderSet();
         nel_clean_exit();

@@ -23,164 +23,62 @@ class OutputPanelMain extends OutputCore
 
     public function render(array $parameters = array())
     {
-        $user = $parameters['user'];
-        $this->prepare('management/panels/main_panel.html');
+        $session = new \Nelliel\Session(true);
+        $user = $session->sessionUser();
+        $final_output = '';
+
+        // Temp
+        $this->render_instance = $this->domain->renderInstance();
+        $this->render_instance->startRenderTimer();
+
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Options')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-        $board_entry = $this->dom->getElementById('board-entry');
-        $insert_before = $board_entry->parentNode->lastChild;
+        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('management/panels/main_panel');
         $boards = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
 
         if ($boards !== false)
         {
             foreach ($boards as $board)
             {
-                $entry = $board_entry->cloneNode(true);
-                $board_entry->parentNode->insertBefore($entry, $insert_before);
-                $entry->removeAttribute('id');
-                $entry_elements = $entry->getElementsByAttributeName('data-parse-id', true);
-                $entry_elements['board-link']->extSetAttribute('href',
-                        MAIN_SCRIPT . '?module=main-panel&board_id=' . $board['board_id']);
-                $entry_elements['board-link']->extSetAttribute('title', $board['board_id']);
-                $entry_elements['board-link']->setContent('/' . $board['board_id'] . '/');
+                $board_data['board_url'] = MAIN_SCRIPT . '?module=main-panel&board_id=' . $board['board_id'];
+                $board_data['board_id'] = '/' . $board['board_id'] . '/';
+                $render_input['board_list'][] = $board_data;
             }
         }
 
-        $board_entry->remove();
-        $manage_options = $this->dom->getElementById('manage-options');
-        $manage_options_nodes = $manage_options->getElementsByAttributeName('data-parse-id', true);
+        $render_input['module_manage_boards'] = $user->domainPermission($this->domain, 'perm_manage_boards_access');
+        $render_input['manage_boards_url'] = MAIN_SCRIPT . '?module=manage-boards';
+        $render_input['module_users'] = $user->domainPermission($this->domain, 'perm_user_access');
+        $render_input['users_url'] = MAIN_SCRIPT . '?module=users';
+        $render_input['module_roles'] = $user->domainPermission($this->domain, 'perm_role_access');
+        $render_input['roles_url'] = MAIN_SCRIPT . '?module=roles';
+        $render_input['module_site_settings'] = $user->domainPermission($this->domain, 'perm_site_config_access');
+        $render_input['site_settings_url'] = MAIN_SCRIPT . '?module=site-settings';
+        $render_input['module_file_filters'] = $user->domainPermission($this->domain, 'perm_file_filters_access');
+        $render_input['file_filters_url'] = MAIN_SCRIPT . '?module=file-filters';
+        $render_input['module_board_defaults'] = $user->domainPermission($this->domain, 'perm_board_defaults_access');
+        $render_input['board_defaults_url'] = MAIN_SCRIPT . '?module=board-defaults';
+        $render_input['module_reports'] = $user->domainPermission($this->domain, 'perm_reports_access');
+        $render_input['reports_url'] = MAIN_SCRIPT . '?module=reports';
+        $render_input['module_templates'] = $user->domainPermission($this->domain, 'perm_templates_access');
+        $render_input['templates_url'] = MAIN_SCRIPT . '?module=templates';
+        $render_input['module_filetypes'] = $user->domainPermission($this->domain, 'perm_filetypes_access');
+        $render_input['filetypes_url'] = MAIN_SCRIPT . '?module=filetypes';
+        $render_input['module_styles'] = $user->domainPermission($this->domain, 'perm_styles_access');
+        $render_input['styles_url'] = MAIN_SCRIPT . '?module=styles';
+        $render_input['module_permissions'] = $user->domainPermission($this->domain, 'perm_permissions_access');
+        $render_input['permissions_url'] = MAIN_SCRIPT . '?module=permissions';
+        $render_input['module_icon_sets'] = $user->domainPermission($this->domain, 'perm_icon_sets_access');
+        $render_input['icon_sets_url'] = MAIN_SCRIPT . '?module=icon-sets';
+        $render_input['module_news'] = $user->domainPermission($this->domain, 'perm_news_access');
+        $render_input['news_url'] = MAIN_SCRIPT . '?module=news';
+        $render_input['module_extract_gettext'] = $user->domainPermission($this->domain, 'perm_extract_gettext');
+        $render_input['extract_gettext_url'] = MAIN_SCRIPT . '?module=language&action=extract-gettext';
 
-        if ($user->domainPermission($this->domain, 'perm_manage_boards_access'))
-        {
-            $manage_options_nodes['module-link-manage-boards']->extSetAttribute('href', MAIN_SCRIPT . '?module=manage-boards');
-        }
-        else
-        {
-            $manage_options_nodes['module-link-manage-boards']->remove();
-        }
-
-        if ($user->domainPermission($this->domain, 'perm_user_access'))
-        {
-            $manage_options_nodes['module-link-users']->extSetAttribute('href', MAIN_SCRIPT . '?module=users');
-        }
-        else
-        {
-            $manage_options_nodes['module-link-users']->remove();
-        }
-
-        if ($user->domainPermission($this->domain, 'perm_role_access'))
-        {
-            $manage_options_nodes['module-link-roles']->extSetAttribute('href', MAIN_SCRIPT . '?module=roles');
-        }
-        else
-        {
-            $manage_options_nodes['module-link-roles']->remove();
-        }
-
-        if ($user->domainPermission($this->domain, 'perm_site_config_access'))
-        {
-            $manage_options_nodes['module-link-site-settings']->extSetAttribute('href', MAIN_SCRIPT . '?module=site-settings');
-        }
-        else
-        {
-            $manage_options_nodes['module-link-site-settings']->remove();
-        }
-
-        if ($user->domainPermission($this->domain, 'perm_file_filters_access'))
-        {
-            $manage_options_nodes['module-link-file-filters']->extSetAttribute('href', MAIN_SCRIPT . '?module=file-filters');
-        }
-        else
-        {
-            $manage_options_nodes['module-link-file-filters']->remove();
-        }
-
-        if ($user->domainPermission($this->domain, 'perm_board_defaults_access'))
-        {
-            $manage_options_nodes['module-link-board-defaults']->extSetAttribute('href',
-                    MAIN_SCRIPT . '?module=default-board-settings');
-        }
-        else
-        {
-            $manage_options_nodes['module-link-board-defaults']->remove();
-        }
-
-        if ($user->domainPermission($this->domain, 'perm_reports_access'))
-        {
-            $manage_options_nodes['module-link-reports']->extSetAttribute('href', MAIN_SCRIPT . '?module=reports');
-        }
-        else
-        {
-            $manage_options_nodes['module-link-reports']->remove();
-        }
-
-        if ($user->domainPermission($this->domain, 'perm_templates_access'))
-        {
-            $manage_options_nodes['module-link-templates']->extSetAttribute('href', MAIN_SCRIPT . '?module=templates');
-        }
-        else
-        {
-            $manage_options_nodes['module-link-templates']->remove();
-        }
-
-        if ($user->domainPermission($this->domain, 'perm_filetypes_access'))
-        {
-            $manage_options_nodes['module-link-filetypes']->extSetAttribute('href', MAIN_SCRIPT . '?module=filetypes');
-        }
-        else
-        {
-            $manage_options_nodes['module-link-filetypes']->remove();
-        }
-
-        if ($user->domainPermission($this->domain, 'perm_styles_access'))
-        {
-            $manage_options_nodes['module-link-styles']->extSetAttribute('href', MAIN_SCRIPT . '?module=styles');
-        }
-        else
-        {
-            $manage_options_nodes['module-link-styles']->remove();
-        }
-
-        if ($user->domainPermission($this->domain, 'perm_permissions_access'))
-        {
-            $manage_options_nodes['module-link-permissions']->extSetAttribute('href', MAIN_SCRIPT . '?module=permissions');
-        }
-        else
-        {
-            $manage_options_nodes['module-link-permissions']->remove();
-        }
-
-        if ($user->domainPermission($this->domain, 'perm_icon_sets_access'))
-        {
-            $manage_options_nodes['module-link-icon-sets']->extSetAttribute('href', MAIN_SCRIPT . '?module=icon-sets');
-        }
-        else
-        {
-            $manage_options_nodes['module-link-icon-sets']->remove();
-        }
-
-        if ($user->domainPermission($this->domain, 'perm_news_access'))
-        {
-            $manage_options_nodes['module-link-news']->extSetAttribute('href', MAIN_SCRIPT . '?module=news');
-        }
-        else
-        {
-            $manage_options_nodes['module-link-news']->remove();
-        }
-
-        if ($user->domainPermission($this->domain, 'perm_extract_gettext'))
-        {
-            $manage_options_nodes['module-extract-gettext']->extSetAttribute('href',
-                    MAIN_SCRIPT . '?module=language&action=extract-gettext');
-        }
-        else
-        {
-            $manage_options_nodes['module-extract-gettext']->remove();
-        }
-
-        $this->domain->translator()->translateDom($this->dom);
-        $this->render_instance->appendHTMLFromDOM($this->dom);
+        $this->render_instance->appendHTML($render_instance->render('management/panels/main_panel', $render_input));
         nel_render_general_footer($this->domain);
         echo $this->render_instance->outputRenderSet();
         nel_clean_exit();

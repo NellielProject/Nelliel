@@ -37,10 +37,6 @@ class OutputHeader extends OutputCore
             case 'board':
                 $output = $this->board($parameters);
                 break;
-
-            case 'simple':
-                $output = $this->simple($parameters);
-                break;
         }
 
         return $output;
@@ -57,7 +53,7 @@ class OutputHeader extends OutputCore
 
         $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
         $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('header2');
+        $template_loader->load('header');
         $dotdot = ($parameters['dotdot']) ?? array();
         $extra_data = ($parameters['extra_data']) ?? array();
         $render_input = array();
@@ -79,7 +75,12 @@ class OutputHeader extends OutputCore
         }
 
         $render_input['is_board_header'] = false;
-        $render_input['favicon_url'] = $site_domain->setting('site_favicon');
+
+        if ($site_domain->setting('show_site_favicon'))
+        {
+            $render_input['favicon_url'] = $site_domain->setting('site_favicon');
+        }
+
         $render_input['page_title'] = 'Nelliel Imageboard';
 
         if (($session->isActive() || $session->inModmode($this->domain)) && !$this->domain->renderActive())
@@ -123,7 +124,7 @@ class OutputHeader extends OutputCore
         $render_input['styles'] = $this->buildStyles($dotdot);
 
         // Temp
-        $this->domain->renderInstance()->appendHTML($render_instance->render('header2', $render_input));
+        $this->domain->renderInstance()->appendHTML($render_instance->render('header', $render_input));
 
         //return $render_instance->render('header2', $render_input);
     }
@@ -140,7 +141,7 @@ class OutputHeader extends OutputCore
         $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), [
             'extension' => '.html']);
         $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('header2');
+        $template_loader->load('header');
         $dotdot = ($parameters['dotdot']) ?? array();
         $treeline = ($parameters['treeline']) ?? array();
         $index_render = ($parameters['index_render']) ?? false;
@@ -259,41 +260,9 @@ class OutputHeader extends OutputCore
         $render_input['styles'] = $this->buildStyles($dotdot);
 
         // Temp
-        $this->domain->renderInstance()->appendHTML($render_instance->render('header2', $render_input));
+        $this->domain->renderInstance()->appendHTML($render_instance->render('header', $render_input));
 
                 //return $render_instance->render('header2', $render_input);
-    }
-
-    public function simple(array $parameters)
-    {
-        $site_domain = new \Nelliel\DomainSite($this->database);
-        $this->prepare('header.html');
-        $dotdot = (!empty($dotdot)) ? $dotdot : '';
-        $head_element = $this->dom->getElementsByTagName('head')->item(0);
-        $this->dom->getElementById('js-main-file')->extSetAttribute('src', $dotdot . SCRIPTS_WEB_PATH . 'nel.js');
-        $style_data = $this->database->executeFetch(
-                'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' AND "is_default" = 1', PDO::FETCH_ASSOC);
-        $style_info = json_decode($style_data['info'], true);
-        $style_link = $this->dom->createElement('link');
-        $style_link->extSetAttribute('rel', 'stylesheet');
-        $style_link->extSetAttribute('type', 'text/css');
-        $style_link->extSetAttribute('href',
-                $dotdot . STYLES_WEB_PATH . $style_info['directory'] . '/' . $style_info['main_file']);
-        $head_element->appendChild($style_link);
-
-        $favicon = $this->dom->getElementById('favicon-link');
-
-        if ($site_domain->setting('show_site_favicon'))
-        {
-            $favicon->extSetAttribute('href', $site_domain->setting('site_favicon'));
-        }
-        else
-        {
-            $favicon->remove();
-        }
-
-        $this->domain->translator()->translateDom($this->dom, $this->domain->setting('language'));
-        $this->domain->renderInstance()->appendHTMLFromDOM($this->dom);
     }
 
     public function buildStyles(string $dotdot)

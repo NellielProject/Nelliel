@@ -1,4 +1,4 @@
-	<form id="add-file-filter-form" accept-charset="utf-8" action="" method="post">
+	<form id="add-file-filter-form" accept-charset="utf-8" action="{{ form_action }}" method="post">
 		<div class="display-table">
 			<div class="display-row">
 				<label for="hash-type" class="display-cell" data-i18n="gettext">Hash type (md5, sha1, sha256, sha512)</label>
@@ -31,14 +31,16 @@
 			<th data-i18n="gettext">Board ID</th>
 			<th data-i18n="gettext">Remove</th>
 		</tr>
-		<tr data-parse-id="file-filter-row" class="row1">
-			<td data-parse-id="filter-id"></td>
-			<td data-parse-id="hash-type"></td>
-			<td data-parse-id="file-hash"></td>
-			<td data-parse-id="file-notes"></td>
-			<td data-parse-id="board-id"></td>
+		{{# file_filter_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ filter_id }}</td>
+			<td>{{ hash_type }}</td>
+			<td>{{ file_hash }}</td>
+			<td>{{ file_notes }}</td>
+			<td>{{ board_id }}</td>
 			<td>
-				<a class="display-cell" data-parse-id="filter-remove-link" href="" data-i18n="gettext">Remove Filter</a>
+				<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Filter</a>
 			</td>
 		</tr>
+		{{/ file_filter_list }}
 	</table>

@@ -21,11 +21,11 @@
 			<th data-i18n="gettext">Actions</th>
 		</tr>
 		{{# news_entry }}
-		<tr data-parse-id="news-entry-row" class="{{ bgclass }}">
-			<td data-parse-id="headline">{{ headline }}</td>
-			<td data-parse-id="time">{{ time }}</td>
+		<tr class="{{ bgclass }}">
+			<td>{{ headline }}</td>
+			<td>{{ time }}</td>
 			<td>
-				<a class="display-cell" data-parse-id="news-remove-link" href="{{ remove_link }}" data-i18n="gettext">Remove</a>
+				<a class="display-cell" href="{{ remove_link }}" data-i18n="gettext">Remove</a>
 			</td>
 		</tr>
 		{{/ news_entry }}
