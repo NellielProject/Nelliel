@@ -24,7 +24,7 @@ class BanHammer
         $ban_input['ban_id'] = $_POST['ban_id'] ?? null;
         $ban_input['board'] = $_POST['ban_board'] ?? null;
         $ban_input['all_boards'] = (isset($_POST['ban_all_boards']) && $_POST['ban_all_boards'] > 0) ? 1 : 0;
-        $ban_input['type'] = $_POST['ban_type'] ?? null;
+        $ban_input['type'] = $_POST['ban_type'] ?? 'GENERAL';
         $ban_input['creator'] = $_SESSION['username'] ?? null;
         $ban_input['ip_address_start'] = $_POST['ban_ip'] ?? null;
         $ban_input['years'] = $_POST['ban_time_years'] ?? 0;
@@ -128,7 +128,8 @@ class BanHammer
         $prepared->bindParam(':board_id', $ban_input['board'], PDO::PARAM_STR);
         $prepared->bindParam(':all_boards', $ban_input['all_boards'], PDO::PARAM_INT);
         $prepared->bindParam(':type', $ban_input['type'], PDO::PARAM_STR);
-        $prepared->bindParam(':ip_address_start', @inet_pton($ban_input['ip_address_start']), PDO::PARAM_LOB);
+        $encoded_ip = @inet_pton($ban_input['ip_address_start']);
+        $prepared->bindParam(':ip_address_start', $encoded_ip, PDO::PARAM_LOB);
         $prepared->bindParam(':reason', $ban_input['reason'], PDO::PARAM_STR);
         $prepared->bindParam(':length', $ban_input['length'], PDO::PARAM_INT);
         $prepared->bindValue(':start_time', $ban_input['start_time'], PDO::PARAM_INT);
