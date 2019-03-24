@@ -37,7 +37,7 @@ class BanHammer
         $ban_input['reason'] = $_POST['ban_reason'] ?? null;
         $ban_input['appeal'] = $_POST['ban_appeal'] ?? null;
         $ban_input['appeal_response'] = $_POST['ban_appeal_response'] ?? null;
-        $ban_input['appeal_status'] = $_POST['ban_appeal_status'] ?? null;
+        $ban_input['appeal_status'] = $_POST['ban_appeal_status'] ?? 0;
         $ban_input['length'] = $this->combineTimeToSeconds($ban_input);
         return $ban_input;
     }

@@ -20,14 +20,21 @@ class OutputBanPage extends OutputCore
 
     public function render(array $parameters = array())
     {
-        $this->prepare('ban_page.html');
         $ban_info = $parameters['ban_info'];
+        $final_output = '';
+
+        // Temp
+        $this->render_instance = $this->domain->renderInstance();
+        $this->render_instance->startRenderTimer();
+
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
-        $output_header->render(['header_type' => 'board']);
-        $banned_board = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board_id'];
-        $ban_page_nodes = $this->dom->getElementsByAttributeName('data-parse-id', true);
-        $ban_page_nodes['banned-board']->setContent($banned_board);
-        $ban_page_nodes['banned-time']->setContent(date("F jS, Y H:i e", $ban_info['start_time']));
+        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '']);
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('ban_page');
+
+        $render_input['ban_board'] = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board_id'];
+        $render_input['ban_time'] = date("F jS, Y H:i e", $ban_info['start_time']);
         $ban_expire = $ban_info['length'] + $ban_info['start_time'];
         $dt = new \DateTime();
         $dt->add(new \DateInterval('PT' . ($ban_expire - time()) . 'S'));
@@ -47,57 +54,44 @@ class OutputBanPage extends OutputCore
             $duration .= $interval->format('%i minutes');
         }
 
-        $ban_page_nodes['banned-length']->setContent($duration);
-        $ban_page_nodes['banned-expire']->setContent(date("F jS, Y H:i e", $ban_expire));
-        $ban_page_nodes['banned-reason']->setContent($ban_info['reason']);
-        $ban_page_nodes['banned-ip']->setContent($_SERVER['REMOTE_ADDR']);
+        $render_input['ban_length'] = $duration;
+        $render_input['ban_expiration'] = date("F jS, Y H:i e", $ban_expire);
+        $render_input['ban_reason'] = $ban_info['reason'];
+        $render_input['ban_ip'] = $_SERVER['REMOTE_ADDR'];
+        $render_input['appealed'] = $ban_info['appeal_status'] != 0;
+        $render_input['reviewed'] = $ban_info['appeal_status'] == 1;
+        $render_input['responded'] = $ban_info['appeal_status'] > 1;
 
         if ($ban_info['appeal_status'] == 0)
         {
-            $ban_page_nodes['appeal-form']->extSetAttribute('action', $this->url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'ban-page', 'action' => 'add-appeal']));
+            $render_input['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'ban-page', 'action' => 'add-appeal']);
 
             if (!empty($ban_info['board_id']))
             {
-                $ban_page_nodes['appeal-form']->modifyAttribute('action', '&board-id=' . $ban_info['board_id'], 'after');
+                $render_input['form_action'] .= '&board_id=' . $ban_info['board_id'];
             }
         }
-        else
-        {
-            $ban_page_nodes['appeal-form']->remove();
-        }
 
-        if ($ban_info['appeal_status'] != 1)
-        {
-            $ban_page_nodes['appeal-pending']->remove();
-        }
-
-        if ($ban_info['appeal_status'] != 2 && $ban_info['appeal_status'] != 3)
-        {
-            $ban_page_nodes['appeal-response']->remove();
-        }
-        else
+        if ($ban_info['appeal_status'] == 2 || $ban_info['appeal_status'] == 3)
         {
             if ($ban_info['appeal_status'] == 2)
             {
-                $ban_page_nodes['appeal-what-done']->setContent(
-                        _gettext('You appeal has been reviewed and denied. You cannot appeal again.'));
+                $render_input['what_done'] = _gettext('You appeal has been reviewed and denied. You cannot appeal again.');
             }
 
             if ($ban_info['appeal_status'] == 3)
             {
-                $ban_page_nodes['appeal-what-done']->setContent(
-                        _gettext('Your appeal has been reviewed and the ban has been altered.'));
+                $render_input['what_done'] = _gettext('Your appeal has been reviewed and the ban has been altered.');
             }
 
             if ($ban_info['appeal_response'] != '')
             {
-                $ban_page_nodes['appeal-response-text']->setContent($ban_info['appeal_response']);
+                $render_input['appeal_response'] = $ban_info['appeal_response'];
             }
         }
 
-        $this->domain->translator()->translateDom($this->dom, $this->domain->setting('language'));
-        $this->domain->renderInstance()->appendHTMLFromDOM($this->dom);
-        nel_render_general_footer($this->domain, null, true);
-        echo $this->domain->renderInstance()->outputRenderSet();
+        $this->render_instance->appendHTML($render_instance->render('ban_page', $render_input));
+        nel_render_general_footer($this->domain);
+        echo $this->render_instance->outputRenderSet();
     }
 }

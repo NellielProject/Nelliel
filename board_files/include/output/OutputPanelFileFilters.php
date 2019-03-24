@@ -67,7 +67,7 @@ class OutputPanelFileFilters extends OutputCore
             $filter_data['hash_type'] = $filter['hash_type'];
             $filter_data['file_hash'] = bin2hex($filter['file_hash']);
             $filter_data['file_notes'] = $filter['file_notes'];
-            $filter_data['board-id'] = $filter['board_id'];
+            $filter_data['board_id'] = $filter['board_id'];
             $filter_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'file-filters', 'action' => 'remove', 'filter-id' => $filter['entry']]);
             $render_input['filter_list'][] = $filter_data;

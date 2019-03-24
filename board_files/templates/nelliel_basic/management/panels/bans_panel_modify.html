@@ -71,13 +71,20 @@
 			<tr id="ban-appeal-response-row">
 				<td data-i18n="gettext">Appeal Response</td>
 				<td>
-					<textarea id="ban-appeal-response"name="ban_appeal_response" cols="32" rows="3">{{ appeal_response }}</textarea>
+					<textarea id="ban-appeal-response" name="ban_appeal_response" cols="32" rows="3">{{ appeal_response }}</textarea>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input id="ban-appealed-field" type="checkbox" name="ban_appeal_status" value="1" {{ appeal_status }}>
-					<span data-i18n="gettext">Mark appeal as reviewed.</span>
+					<input id="unappealed" type="radio" name="ban_appeal_status" value="0" {{ status_unappealed }}> 
+					<label for="unappealed" data-i18n="gettext">Mark as no appeal filed.</label><br>
+					<input id="appealed" type="radio" name="ban_appeal_status" value="1" {{ status_appealed }}> 
+					<label for="appealed" data-i18n="gettext">Mark as appeal filed but not reviewed.</label><br>
+					<input id="appeal-denied" type="radio" name="ban_appeal_status" value="2" {{ status_denied }}> 
+					<label for="appeal-denied" data-i18n="gettext">Mark as appeal denied.</label><br>
+					<input id="ban-modified" type="radio" name="ban_appeal_status" value="3" {{ status_modified }}> 
+					<label for="ban-modified" data-i18n="gettext">Mark as appeal accepted, ban modified.</label><br>
+
 				</td>
 			</tr>
 			<tr>

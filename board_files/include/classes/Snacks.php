@@ -74,7 +74,7 @@ class Snacks
         $this->database->executePrepared($prepared, [$bawww, $ban_info['ban_id']]);
     }
 
-    public function applyBan(Domain $domain)
+    public function applyBan(Domain $domain, array $inputs)
     {
         if($domain->id() === '')
         {

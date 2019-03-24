@@ -196,7 +196,26 @@ class OutputPanelBans extends OutputCore
         $render_input['creator'] = $ban_info['creator'];
         $render_input['appeal'] = $ban_info['appeal'];
         $render_input['appeal_response'] = $ban_info['appeal_response'];
-        $render_input['appeal_status'] = ($ban_info['appeal_status'] > 1) ? 'checked' : '';
+
+        if($ban_info['appeal_status'] == 0)
+        {
+            $render_input['status_unappealed'] = 'checked';
+        }
+
+        if($ban_info['appeal_status'] == 1)
+        {
+            $render_input['status_appealed'] = 'checked';
+        }
+
+        if($ban_info['appeal_status'] == 2)
+        {
+            $render_input['status_modified'] = 'checked';
+        }
+
+        if($ban_info['appeal_status'] == 3)
+        {
+            $render_input['status_denied'] = 'checked';
+        }
 
         $this->render_instance->appendHTML($render_instance->render('management/panels/bans_panel_modify', $render_input));
         nel_render_general_footer($this->domain);
