@@ -1,4 +1,4 @@
-	<table id="user-info-table" class="data-table">
+	<table class="data-table">
 		<tr class="manage-header">
 			<th data-i18n="gettext">User ID</th>
 			<th data-i18n="gettext">Display Name</th>
@@ -6,18 +6,20 @@
 			<th data-i18n="gettext">Super Admin</th>
 			<th data-i18n="gettext">Actions</th>
 		</tr>
-		<tr data-parse-id="user-info-row" class="row1">
-			<td data-parse-id="user-id"></td>
-			<td data-parse-id="display-name"></td>
-			<td data-parse-id="active"></td>
-			<td data-parse-id="super-admin"></td>
-			<td data-parse-id="actions">
-				<span>[<a data-parse-id="user-edit-link" href="" data-i18n="gettext">Edit</a>]</span>
-				<span>[<a data-parse-id="user-remove-link" href="" data-i18n="gettext">Remove</a>]</span>
+		{{# users_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ user_id }}</td>
+			<td>{{ display_name }}</td>
+			<td>{{ active }}</td>
+			<td>{{ super_admin }}</td>
+			<td>
+				<span>[<a href="{{ edit_url }}" data-i18n="gettext">Edit</a>]</span>
+				<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>
 			</td>
 		</tr>
+		{{/ users_list }}
 	</table>
 	<hr>
-	<div id="new-user">
-		<a id="new-user-link" href="" data-i18n="gettext">New User</a>
+	<div>
+		<a href="{{ new_user_url }}" data-i18n="gettext">New User</a>
 	</div>

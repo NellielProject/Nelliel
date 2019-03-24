@@ -1236,9 +1236,9 @@
 		</table>
 		<hr>
 		{{# categories }}
-		<table data-parse-id="filetype-category-table" class="text-left">
+		<table class="text-left">
 			<tr>
-				<th data-parse-id="category-header">{{ label }}</th>
+				<th >{{ label }}</th>
 			</tr>
 			{{# category_select }}
 			<tr>
@@ -1250,7 +1250,7 @@
 			</tr>
 			{{/ category_select }}
 			{{# entry_rows }}
-			<tr data-parse-id="filetype-entry-row">
+			<tr>
 				{{# entry }}
 				<td>
 					<input type="hidden" name="{{ format }}" value="0">

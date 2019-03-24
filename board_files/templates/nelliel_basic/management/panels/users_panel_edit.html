@@ -1,8 +1,8 @@
-	<form id="user-edit-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
+	<form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 		<div class="display-table">
 			<label class="display-row">
 				<span class="display-cell" data-i18n="gettext">User ID</span>
-				<input id="user-id-field" class="display-cell" type="text" name="user_id" id="bname" size="30" value="">
+				<input id="user-id-field" class="display-cell" type="text" name="user_id" id="bname" size="30" value="{{ user_id }}">
 			</label>
 			<label class="display-row">
 				<span class="display-cell" data-i18n="gettext">New password (leave blank to keep current password)</span>
@@ -10,16 +10,16 @@
 			</label>
 			<label class="display-row">
 				<span class="display-cell" data-i18n="gettext">User display name</span>
-				<input id="display-name" class="display-cell" type="text" name="display_name" size="30" value="">
+				<input id="display-name" class="display-cell" type="text" name="display_name" size="30" value="{{ display_nae }}">
 			</label>
 			<label class="display-row">
 				<input type="hidden" name="active" value="0">
-				<input id="user-active" type="checkbox" name="active" value="1">
+				<input id="user-active" type="checkbox" name="active" value="1" {{ active }}>
 				<span data-i18n="gettext">User is active</span>
 			</label>
 			<label class="display-row">
 				<input type="hidden" name="super_admin" value="0">
-				<input id="super-admin" type="checkbox" name="super_admin" value="1">
+				<input id="super-admin" type="checkbox" name="super_admin" value="1" {{ super_admin }}>
 				<span data-i18n="gettext">User is Super Admin</span>
 			</label>
 		</div>
@@ -30,12 +30,14 @@
 			</div>
 			<label class="display-row">
 				<span class="display-cell" data-i18n="gettext">Site Role</span>
-				<input id="site-role" class="display-cell" type="text" name="site_role" size="30" value="">
+				<input class="display-cell" type="text" name="site_role" size="30" value="{{ site_role_id }}">
 			</label>
-			<label class="display-row" id="board-roles">
-				<span class="display-cell" data-parse-id="board-role-id-label"></span>
-				<input data-parse-id="board-role-id" class="display-cell" type="text" name="board_role_" size="30" value="">
+			{{# board_roles }}
+			<label class="display-row">
+				<span class="display-cell">{{ board_id }}</span>
+				<input class="display-cell" type="text" name="board_role_{{ board_id }}" size="30" value="{{ role_id }}">
 			</label>
+			{{/ board_roles }}
 		</div>
 		<div>
 			<input type="submit" value="Update User" data-i18n="gettext" data-i18n-attributes="value">

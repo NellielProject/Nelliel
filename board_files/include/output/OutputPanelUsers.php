@@ -50,36 +50,37 @@ class OutputPanelUsers extends OutputCore
     private function renderPanel(array $parameters)
     {
         $user = $parameters['user'];
-        $this->prepare('management/panels/users_panel_main.html');
+        $final_output = '';
+
+        // Temp
+        $this->render_instance = $this->domain->renderInstance();
+        $this->render_instance->startRenderTimer();
+
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Users')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-        $user_info_table = $this->dom->getElementById('user-info-table');
-        $user_info_table_nodes = $user_info_table->getElementsByAttributeName('data-parse-id', true);
+        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('management/panels/users_panel_main');
         $users = $this->database->executeFetchAll('SELECT * FROM "' . USERS_TABLE . '"', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
         foreach ($users as $user_info)
         {
+            $user_data = array();
+            $user_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $user_row = $this->dom->copyNode($user_info_table_nodes['user-info-row'], $user_info_table, 'append');
-            $user_row->extSetAttribute('class', $bgclass);
-            $user_row_nodes = $user_row->getElementsByAttributeName('data-parse-id', true);
-            $user_row_nodes['user-id']->setContent($user_info['user_id']);
-            $user_row_nodes['display-name']->setContent($user_info['display_name']);
-            $user_row_nodes['active']->setContent($user_info['active']);
-            $user_row_nodes['super-admin']->setContent($user_info['super_admin']);
-            $user_row_nodes['user-edit-link']->extSetAttribute('href',
-                    MAIN_SCRIPT . '?module=users&action=edit&user-id=' . $user_info['user_id']);
-            $user_row_nodes['user-remove-link']->extSetAttribute('href',
-                    MAIN_SCRIPT . '?module=users&action=remove&user-id=' . $user_info['user_id']);
+            $user_data['user_id'] = $user_info['user_id'];
+            $user_data['display_name'] = $user_info['display_name'];
+            $user_data['active'] = $user_info['active'];
+            $user_data['super_admin'] = $user_info['super_admin'];
+            $user_data['edit_url'] = MAIN_SCRIPT . '?module=users&action=edit&user-id=' . $user_info['user_id'];
+            $render_input['users_list'][] = $user_data;
         }
 
-        $user_info_table_nodes['user-info-row']->remove();
-        $this->dom->getElementById('new-user-link')->extSetAttribute('href', MAIN_SCRIPT . '?module=users&action=new');
+        $render_input['new_user_url'] = MAIN_SCRIPT . '?module=users&action=new';
 
-        $this->domain->translator()->translateDom($this->dom);
-        $this->render_instance->appendHTMLFromDOM($this->dom);
+        $this->render_instance->appendHTML($render_instance->render('management/panels/users_panel_main', $render_input));
         nel_render_general_footer($this->domain);
         echo $this->render_instance->outputRenderSet();
         nel_clean_exit();
@@ -89,63 +90,60 @@ class OutputPanelUsers extends OutputCore
     {
         $user = $parameters['user'];
         $user_id = $parameters['user_id'];
-        $this->prepare('management/panels/users_panel_edit.html');
-        $authorization = new \Nelliel\Auth\Authorization($this->database);
+        $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
+        $final_output = '';
+
+        // Temp
+        $this->render_instance = $this->domain->renderInstance();
+        $this->render_instance->startRenderTimer();
+
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit User')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('management/panels/users_panel_edit');
 
         if (is_null($user_id))
         {
-            $this->dom->getElementById('user-edit-form')->extSetAttribute('action', MAIN_SCRIPT . '?module=users&action=add');
+            $render_input['form_action'] = MAIN_SCRIPT . '?module=users&action=add';
         }
         else
         {
             $edit_user = $authorization->getUser($user_id);
-            $this->dom->getElementById('user-id-field')->extSetAttribute('value', $edit_user->auth_data['user_id']);
-            $this->dom->getElementById('display-name')->extSetAttribute('value', $edit_user->auth_data['display_name']);
-            $this->dom->getElementById('user-edit-form')->extSetAttribute('action',
-                    MAIN_SCRIPT . '?module=users&action=update&user-id=' . $user_id);
-
-            if ($edit_user->active())
-            {
-                $this->dom->getElementById('user-active')->extSetAttribute('checked', 'true');
-            }
-
-            if ($edit_user->isSuperAdmin())
-            {
-                $this->dom->getElementById('super-admin')->extSetAttribute('checked', 'true');
-            }
+            $render_input['user_id'] = $edit_user->auth_data['user_id'];
+            $render_input['display_name'] = $edit_user->auth_data['display_name'];
+            $render_input['form_action'] = MAIN_SCRIPT . '?module=users&action=update&user-id=' . $user_id;
+            $render_input['active'] = ($edit_user->active()) ? 'checked' : '';
+            $render_input['super_admin'] = ($edit_user->isSuperAdmin()) ? 'checked' : '';
         }
 
-        $board_roles = $this->dom->getElementById('board-roles');
-        $prepared = $this->database->prepare('SELECT * FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
-        $user_roles = $this->database->executePreparedFetchAll($prepared, array($user_id), PDO::FETCH_ASSOC);
+        $prepared = $this->database->prepare('SELECT "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
+        $site_role = $this->database->executePreparedFetch($prepared, array($user_id, ''), PDO::FETCH_COLUMN);
 
-        if ($user_roles !== false)
+        if(!empty($site_role))
         {
-            foreach ($user_roles as $user_role)
-            {
-                if ($user_role['domain_id'] == '')
-                {
-                    $this->dom->getElementById('site-role')->extSetAttribute('value', $user_role['role_id']);
-                }
-                else
-                {
-                    $board_roles->parentNode->appendChild($board_roles->cloneNode(true));
-                    $new_board->removeAttribute('id');
-                    $new_board_nodes = $new_board->getElementsByAttributeName('data-parse-id', true);
-                    $new_board_nodes['board-role-label']->setContent($user_role['domain']);
-                    $new_board_nodes['board-role']->extSetAttribute('name', 'board_role_' . $user_role['domain']);
-                    $new_board_nodes['board-role']->extSetAttribute('value', $user_role['domain']);
-                }
-            }
+            $render_input['site_role_id'] = $site_role;
         }
 
-        $board_roles->remove();
+        $board_list = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
 
-        $this->domain->translator()->translateDom($this->dom);
-        $this->render_instance->appendHTMLFromDOM($this->dom);
+        foreach($board_list as $board)
+        {
+            $board_role_data = array();
+            $board_role_data['board_id'] = $board['board_id'];
+            $prepared = $this->database->prepare('SELECT "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
+            $role_id = $this->database->executePreparedFetch($prepared, array($user_id, $board['board_id']), PDO::FETCH_COLUMN);
+
+            if(!empty($role_id))
+            {
+                $board_role_data['role_id'] = $user_role['role_id'];
+            }
+
+            $render_input['board_roles'][] = $board_role_data;
+        }
+
+        $this->render_instance->appendHTML($render_instance->render('management/panels/users_panel_edit', $render_input));
         nel_render_general_footer($this->domain);
         echo $this->render_instance->outputRenderSet();
         nel_clean_exit();

@@ -6,18 +6,20 @@
 			<th data-i18n="gettext">Capcode Text</th>
 			<th data-i18n="gettext">Actions</th>
 		</tr>
-		<tr data-parse-id="role-info-row" class="row1">
-			<td data-parse-id="role-id"></td>
-			<td data-parse-id="level"></td>
-			<td data-parse-id="title"></td>
-			<td data-parse-id="capcode-text"></td>
-			<td data-parse-id="actions">
-				<span>[<a data-parse-id="role-edit-link" href="" data-i18n="gettext">Edit</a>]</span>
-				<span>[<a data-parse-id="role-remove-link" href="" data-i18n="gettext">Remove</a>]</span>
+		{{# roles_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ role_id }}</td>
+			<td>{{ role_level }}</td>
+			<td>{{ role_title }}</td>
+			<td>{{ capcode_text }}</td>
+			<td>
+				<span>[<a href="{{ edit_url }}" data-i18n="gettext">Edit</a>]</span>
+				<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>
 			</td>
 		</tr>
+		{{/ roles_list }}
 	</table>
 	<hr>
-	<div id="new-role">
-		<a id="new-role-link" href="" data-i18n="gettext">New Role</a>
+	<div>
+		<a href="{{ new_role_url }}" data-i18n="gettext">New Role</a>
 	</div>
