@@ -21,7 +21,8 @@ function nel_about_nelliel_screen()
     $dom->getElementById('version')->setContent('Version: ' . NELLIEL_VERSION);
     $dom->getElementById('disclaimer-image')->extSetAttribute('src', IMAGES_WEB_PATH . 'wat/luna_canterlot_disclaimer.png');
     $domain->renderInstance()->appendHTMLFromDOM($dom);
-    nel_render_general_footer($domain);
+    $output_footer = new \Nelliel\Output\OutputFooter($domain);
+    $output_footer->render(['dotdot' => '', 'styles' => false]);
     echo $domain->renderInstance()->outputRenderSet();
     nel_clean_exit();
 }

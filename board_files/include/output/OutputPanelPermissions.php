@@ -30,15 +30,13 @@ class OutputPanelPermissions extends OutputCore
             nel_derp(450, _gettext('You are not allowed to access the Permissions panel.'));
         }
 
-        $final_output = '';
-
         // Temp
         $this->render_instance = $this->domain->renderInstance();
         $this->render_instance->startRenderTimer();
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Permissions')];
-        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
         $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
         $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
         $template_loader->load('management/panels/permissions_panel');
@@ -60,7 +58,8 @@ class OutputPanelPermissions extends OutputCore
         }
 
         $this->render_instance->appendHTML($render_instance->render('management/panels/permissions_panel', $render_input));
-        nel_render_general_footer($this->domain);
+        $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
+        $output_footer->render(['dotdot' => '', 'styles' => false]);
         echo $this->render_instance->outputRenderSet();
         nel_clean_exit();
     }

@@ -63,7 +63,6 @@ define('SETUP_GOOD', true);
 ignore_user_abort(true);
 
 require_once CONFIG_FILE_PATH . 'generated.php';
-require_once INCLUDE_PATH . 'output/footer.php';
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 
 nel_central_dispatch();

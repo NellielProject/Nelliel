@@ -50,7 +50,6 @@ class OutputPanelUsers extends OutputCore
     private function renderPanel(array $parameters)
     {
         $user = $parameters['user'];
-        $final_output = '';
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
@@ -58,7 +57,7 @@ class OutputPanelUsers extends OutputCore
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Users')];
-        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
         $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
         $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
         $template_loader->load('management/panels/users_panel_main');
@@ -81,7 +80,8 @@ class OutputPanelUsers extends OutputCore
         $render_input['new_user_url'] = MAIN_SCRIPT . '?module=users&action=new';
 
         $this->render_instance->appendHTML($render_instance->render('management/panels/users_panel_main', $render_input));
-        nel_render_general_footer($this->domain);
+        $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
+        $output_footer->render(['dotdot' => '', 'styles' => false]);
         echo $this->render_instance->outputRenderSet();
         nel_clean_exit();
     }
@@ -91,7 +91,6 @@ class OutputPanelUsers extends OutputCore
         $user = $parameters['user'];
         $user_id = $parameters['user_id'];
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
-        $final_output = '';
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
@@ -99,7 +98,7 @@ class OutputPanelUsers extends OutputCore
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit User')];
-        $final_output .= $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
         $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
         $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
         $template_loader->load('management/panels/users_panel_edit');
@@ -144,7 +143,8 @@ class OutputPanelUsers extends OutputCore
         }
 
         $this->render_instance->appendHTML($render_instance->render('management/panels/users_panel_edit', $render_input));
-        nel_render_general_footer($this->domain);
+        $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
+        $output_footer->render(['dotdot' => '', 'styles' => false]);
         echo $this->render_instance->outputRenderSet();
         nel_clean_exit();
     }

@@ -100,6 +100,66 @@ class Cites
                     $cite_data['target_board'], $cite_data['target_thread'], $cite_data['target_post']]);
     }
 
+    public function createPostLinkURL(Domain $domain, ContentID $source_content_id, string $text_input)
+    {
+        $cite_data = array();
+
+        if (preg_match('#^>>([0-9]+)$#', $text_input, $matches) === 1)
+        {
+            $cite_data = $this->getCiteData($domain->id(), $source_content_id->post_id, $domain->id(), $matches[1]);
+
+            if (empty($cite_data))
+            {
+                $prepared = $this->database->prepare(
+                        'SELECT "parent_thread" FROM "' . $domain->reference('posts_table') . '" WHERE "post_number" = ?');
+                $parent_thread = $this->database->executePreparedFetch($prepared, [$matches[1]], PDO::FETCH_COLUMN);
+
+                if (!empty($parent_thread))
+                {
+                    $cite_data = ['source_board' => $domain->id(), 'source_thread' => $source_content_id->thread_id,
+                    'source_post' => $source_content_id->post_id, 'target_board' => $domain->id(),
+                    'target_thread' => $parent_thread, 'target_post' => $matches[1]];
+                    $this->addCite($cite_data);
+                }
+            }
+        }
+        else if (preg_match('#^>>>\/(.+)\/([0-9]+)$#', $text_input, $matches) === 1)
+        {
+            $target_domain = new DomainBoard($matches[1], $this->database);
+            $cite_data = $this->getCiteData($domain->id(), $source_content_id->post_id, $domain->id(), $matches[2]);
+
+            if (empty($cite_data))
+            {
+                $prepared = $this->database->prepare(
+                        'SELECT "parent_thread" FROM "' . $target_domain->reference('posts_table') .
+                        '" WHERE "post_number" = ?');
+                $parent_thread = $this->database->executePreparedFetch($prepared, [$matches[2]], PDO::FETCH_COLUMN);
+
+                if (!empty($parent_thread))
+                {
+                    $cite_data = ['source_board' => $domain->id(), 'source_thread' => $source_content_id->thread_id,
+                    'source_post' => $source_content_id->post_id, 'target_board' => $matches[1],
+                    'target_thread' => $parent_thread, 'target_post' => $matches[2]];
+                    $this->addCite($cite_data);
+                }
+            }
+        }
+
+        $url = '';
+
+        if (!empty($cite_data))
+        {
+            $base_domain = BASE_DOMAIN . BASE_WEB_PATH;
+            $target_domain = new DomainBoard($cite_data['target_board'], $this->database);
+            $p_anchor = '#t' . $cite_data['target_thread'] . 'p' . $cite_data['target_post'];
+            $url = '//' . $base_domain . $cite_data['target_board'] . '/' . $target_domain->reference('page_dir') . '/' .
+                    $cite_data['target_thread'] . '/thread-' . $cite_data['target_thread'] . '.html' . $p_anchor;
+        }
+
+        return $url;
+    }
+
+    // TODO: Retire this when mustache is done
     public function createPostLinkElement(Domain $domain, $dom_element, ContentID $source_content_id, string $text_input,
             $css_class = 'post-link')
     {

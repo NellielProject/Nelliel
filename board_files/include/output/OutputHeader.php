@@ -46,7 +46,6 @@ class OutputHeader extends OutputCore
     {
         $session = new \Nelliel\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
-        $final_output = '';
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
@@ -133,7 +132,6 @@ class OutputHeader extends OutputCore
     {
         $session = new \Nelliel\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
-        $final_output = '';
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();

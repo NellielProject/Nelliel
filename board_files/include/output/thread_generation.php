@@ -96,7 +96,8 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
             $render_temp = clone $domain->renderInstance();
             nel_render_insert_hr($dom);
             $hr_added = true;
-            nel_render_general_footer($domain, $dotdot, true);
+            $output_footer = new \Nelliel\Output\OutputFooter($domain);
+            $output_footer->render(['dotdot' => $dotdot, 'styles' => true]);
             $file_handler->writeFile(
                     $domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-0-100.html',
                     $render_temp->outputRenderSet(), FILE_PERM, true);
@@ -158,7 +159,8 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
     $domain->renderInstance()->appendHTMLFromDOM($dom);
     $domain->renderInstance()->appendHTMLFromDOM($collapse_dom, 'collapse');
     $domain->renderInstance()->appendHTMLFromDOM($expand_dom, 'expand');
-    nel_render_general_footer($domain, $dotdot, true);
+    $output_footer = new \Nelliel\Output\OutputFooter($domain);
+    $output_footer->render(['dotdot' => $dotdot, 'styles' => true]);
 
     if ($write)
     {

@@ -36,7 +36,8 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
         $output_header->render(
                 ['header_type' => 'board', 'dotdot' => $dotdot, 'treeline' => $treeline, 'index_render' => true]);
         $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $response_to]);
-        nel_render_general_footer($domain, $dotdot, true);
+        $output_footer = new \Nelliel\Output\OutputFooter($domain);
+        $output_footer->render(['dotdot' => $dotdot, 'styles' => true]);
 
         if ($write)
         {
@@ -193,7 +194,8 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
         nel_render_index_navigation($domain, $dom, $nav_pieces);
         nel_render_thread_form_bottom($domain, $dom);
         $domain->renderInstance()->appendHTMLFromDOM($dom);
-        nel_render_general_footer($domain, $dotdot, true);
+        $output_footer = new \Nelliel\Output\OutputFooter($domain);
+        $output_footer->render(['dotdot' => $dotdot, 'styles' => true]);
 
         $index_filename = ($page > 0) ? sprintf($index_format, ($page + 1)) . PAGE_EXT : 'index' . PAGE_EXT;
 

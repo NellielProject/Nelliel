@@ -49,8 +49,13 @@ class OutputFilter
         return $text_array;
     }
 
-    public function postQuote($target_element, $text_input)
+    public function postQuote($target_element, $text_input, $return_text = false)
     {
+        if($return_text)
+        {
+            return '<span class="post-quote">' . $text_input . '</span>';
+        }
+
         $segment_node = $target_element->ownerDocument->createElement('span', $text_input);
         $segment_node->extSetAttribute('class', 'post-quote');
         return $segment_node;
