@@ -4,10 +4,11 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'output/post.php';
-
 function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $command = null)
 {
+    // Temp
+    $output_post = new \Nelliel\Output\OutputPost($domain);
+
     $database = $domain->database();
     $authorization = new \Nelliel\Auth\Authorization($database);
     $translator = new \Nelliel\Language\Translator();
@@ -94,7 +95,7 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
         if ($post_counter === 99)
         {
             $render_temp = clone $domain->renderInstance();
-            nel_render_insert_hr($dom);
+            $output_post->insert_hr($dom);
             $hr_added = true;
             $output_footer = new \Nelliel\Output\OutputFooter($domain);
             $output_footer->render(['dotdot' => $dotdot, 'styles' => true]);
@@ -106,7 +107,7 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
 
         if ($gen_data['post']['op'] == 1)
         {
-            $new_post_node = nel_render_post($domain, $gen_data, $dom);
+            $new_post_node = $output_post->render(['domain' => $domain, 'gen_data' => $gen_data, 'dom' => $dom]);
             $expand_div = $dom->getElementById('thread-expand-cid_0_0_0');
             $expand_div->changeId(
                     'thread-expand-' . \Nelliel\ContentID::createIDString($gen_data['thread']['thread_id']));
@@ -127,7 +128,7 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
         }
         else
         {
-            $new_post_node = nel_render_post($domain, $gen_data, $dom);
+            $new_post_node = $output_post->render(['domain' => $domain, 'gen_data' => $gen_data, 'dom' => $dom]);
 
             if ($abbreviate && $post_counter > $total_posts - $domain->setting('abbreviate_thread'))
             {
@@ -152,10 +153,10 @@ function nel_thread_generator(\Nelliel\Domain $domain, $write, $thread_id, $comm
 
     if (!$hr_added)
     {
-        nel_render_insert_hr($dom);
+        $output_post->insert_hr($dom);
     }
 
-    nel_render_thread_form_bottom($domain, $dom);
+    $output_post->renderThreadFormBottom($domain, $dom);
     $domain->renderInstance()->appendHTMLFromDOM($dom);
     $domain->renderInstance()->appendHTMLFromDOM($collapse_dom, 'collapse');
     $domain->renderInstance()->appendHTMLFromDOM($expand_dom, 'expand');

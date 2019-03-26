@@ -4,10 +4,11 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'output/post.php';
-
 function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write, $page = 0)
 {
+    // Temp
+    $output_post = new \Nelliel\Output\OutputPost($domain);
+
     $database = $domain->database();
     $translator = new \Nelliel\Language\Translator();
     $session = new \Nelliel\Session();
@@ -125,7 +126,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
                 }
             }
 
-            $new_post_element = nel_render_post($domain, $gen_data, $dom);
+            $new_post_element = $output_post->render(['domain' => $domain, 'gen_data' => $gen_data, 'dom' => $dom]);
             $imported = $dom->importNode($new_post_element, true);
             $post_append_target->appendChild($imported);
 
@@ -157,7 +158,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
                 $json_index->addThreadData($json_thread->retrieveData());
                 $sub_page_thread_counter = ($thread_counter == $counttree - 1) ? $domain->setting('threads_per_page') : ++ $sub_page_thread_counter;
                 ++ $thread_counter;
-                nel_render_insert_hr($dom);
+                $output_post->insert_hr($dom);
                 $post_counter = -1;
             }
             else
@@ -181,7 +182,7 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
         $prev_filename = ($page < 2) ? 'index' : $index_format;
         $nav_pieces['prev']['link'] = ($page !== 0) ? sprintf($prev_filename, ($page)) . PAGE_EXT : '';
 
-        for ($i = 1; $i < $page_count; ++ $i)
+        for ($i = 1; $i <= $page_count; ++ $i)
         {
             $link_filename = ($i === 1) ? 'index' : $index_format;
             $nav_pieces[$i]['link'] = ($i !== $page + 1) ? sprintf($link_filename, $i) . PAGE_EXT : '';
@@ -189,10 +190,10 @@ function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write
         }
 
         $nav_pieces['next']['text'] = _gettext('Next');
-        $nav_pieces['next']['link'] = ($page !== $page_count - 2) ? sprintf($index_format, ($page + 2)) . PAGE_EXT : '';
+        $nav_pieces['next']['link'] = ($page !== $page_count - 1) ? sprintf($index_format, ($page + 2)) . PAGE_EXT : '';
 
-        nel_render_index_navigation($domain, $dom, $nav_pieces);
-        nel_render_thread_form_bottom($domain, $dom);
+        $output_post->indexNavigation($domain, $dom, $nav_pieces);
+        $output_post->renderThreadFormBottom($domain, $dom);
         $domain->renderInstance()->appendHTMLFromDOM($dom);
         $output_footer = new \Nelliel\Output\OutputFooter($domain);
         $output_footer->render(['dotdot' => $dotdot, 'styles' => true]);
