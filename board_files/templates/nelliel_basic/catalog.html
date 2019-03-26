@@ -1,10 +1,10 @@
 					<div id="catalog-container">
 						<h2 class="catalog-title">{{ catalog_title }}</h2>
 						{{# catalog_entries }}
-						<div data-parse-id="catalog-entry" class="catalog-entry">
+						<div class="catalog-entry">
 							<div class="catalog-open-link">
 
-								<a data-parse-id="open-link" href="{{ open_url }}">
+								<a href="{{ open_url }}">
 								{{# has_preview }}
 									<img src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}">
 								{{/ has_preview }}

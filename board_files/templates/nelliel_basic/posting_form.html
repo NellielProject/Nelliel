@@ -1,92 +1,110 @@
+		{{# is_response }}
 		<div id="post-form-return-link">
-			[<a id="return-url" href="" data-i18n="gettext">Return</a>]
+			[<a id="return-url" href="{{{ return_url }}}" data-i18n="gettext">Return</a>]
 		</div>
+		{{/ is_response }}
 
-		<form id="posting-form" class="display-table posting-form" accept-charset="utf-8" name="postingform" action="" method="post" enctype="multipart/form-data">
-			<input id="posting-form-responseto" type="hidden" name="new_post[post_info][response_to]" value="">
+		<form id="posting-form" class="display-table posting-form" accept-charset="utf-8" name="postingform" action="{{ form_action }}" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="new_post[post_info][response_to]" value="{{ response_to }}">
 			<div id="posting-form-input">
-				<label data-parse-id="form-not-anonymous" class="posting-form-row">
+				{{^ force_anonymous }}
+				<label class="posting-form-row">
 					<span class="posting-form-label" data-i18n="gettext">Name</span>
-					<input id="not-anonymous" type="text" class="posting-form-input" name="new_post[post_info][not_anonymous]" size="30" maxlength="255">
+					<input type="text" class="posting-form-input" name="new_post[post_info][not_anonymous]" size="30" maxlength="{{ not_anonymous_maxlength }}}">
 				</label>
-				<label data-parse-id="form-spam-target" class="posting-form-row">
+				<label class="posting-form-row">
 					<span class="posting-form-label" data-i18n="gettext">E-mail</span>
-					<input id="spam-target" class="posting-form-input" type="url" name="new_post[post_info][spam_target]" size="30" maxlength="255">
+					<input class="posting-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength="{{{ spam_target_maxlength }}}">
 				</label>
-				<label data-parse-id="form-verb" class="posting-form-row">
+				{{/ force_anonymous }}
+				<label class="posting-form-row">
 					<span class="posting-form-label" data-i18n="gettext">Subject</span>
-					<input id="verb" class="posting-form-input" type="text" name="new_post[post_info][verb]" size="30" maxlength="255">
+					<input id="verb" class="posting-form-input" type="text" name="new_post[post_info][verb]" size="30" maxlength="{{{ verb_maxlength }}}">
 				</label>
-				<label data-parse-id="form-wordswordswords" class="posting-form-row">
+				<label class="posting-form-row">
 					<span class="posting-form-label" data-i18n="gettext">Comment</span>
 					<textarea id="wordswordswords" class="posting-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6"></textarea>
 				</label>
-				<span data-parse-id="form-file" class="posting-form-row">
-					<label data-parse-id="label-for-file" class="posting-form-label" for="up-file-1">
-						<span data-i18n="gettext">File</span>&nbsp;<span data-parse-id="file-num">1</span>
+				{{# file_blocks }}
+				<span id="{{{ block_id }}}" class="posting-form-row {{{ hidden }}}">
+					<label class="posting-form-label" for="{{{ up_file_id }}}">
+						<span data-i18n="gettext">File</span>&nbsp;<span>{{ file_number }}</span>
 					</label>
-					<input data-parse-id="up-file" id="up-file-1" class="posting-form-input" type="file" name="up_file_1" data-command="reveal-file-input">
+					<input id="{{ up_file_id }}" class="posting-form-input" type="file" name="{{ up_file_name }}" data-command="reveal-file-input">
 					<br>
-					<input data-parse-id="add-sauce" id="add-sauce-1" type="button" value="Add Source" data-command="add-file-meta">&nbsp;
-					<input data-parse-id="add-lol_drama" id="add-lol_drama-1" type="button" value="Add License" data-command="add-file-meta">&nbsp;
-					<input data-parse-id="add-alt_text" id="add-alt_text-1" type="button" value="Add Alt Description" data-command="add-file-meta">
+					<input id="{{{ add_sauce }}}" type="button" value="Add Source" data-command="add-file-meta">&nbsp;
+					<input id="{{{ add_lol_drama }}}" type="button" value="Add License" data-command="add-file-meta">&nbsp;
+					<input id="{{{ add_alt_text }}}" type="button" value="Add Alt Description" data-command="add-file-meta">
 					<br>
-					<span data-parse-id="form-spoiler">
-						<input data-parse-id="spoiler-hidden" type="hidden" name="new_post[file_info][up_file_1][spoiler]" value="0">
-						<input data-parse-id="spoiler-checkbox" type="checkbox" name="new_post[file_info][up_file_1][spoiler]" value="1">
+					{{# spoilers_enabled }}
+					<span id="{{{ spoiler_id }}}">
+						<input type="hidden" name="{{{ spoiler_name }}}" value="0">
+						<input type="checkbox" name="{{{ spoiler_name }}}" value="1">
 						<span data-i18n="gettext">Spoiler</span>
 					</span>
+					{{/ spoilers_enabled }}
 				</span>
-				<label data-parse-id="form-sauce" id="form-sauce-1" class="posting-form-row hidden">
-					<span class="posting-form-label" data-i18n="gettext">Source</span>s
-					<input data-parse-id="sauce" class="posting-form-input" type="text" name="new_post[file_info][up_file_1][sauce]" maxlength="255">
+				<label id="{{{ sauce_id }}}" class="posting-form-row hidden">
+					<span class="posting-form-label" data-i18n="gettext">Source</span>
+					<input class="posting-form-input" type="text" name="{{{ source_name }}}" maxlength="{{{ source_maxlength }}}">
 				</label>
-				<label data-parse-id="form-lol_drama" id="form-lol_drama-1" class="posting-form-row hidden">
+				<label id="{{{ lol_drama_id }}}" class="posting-form-row hidden">
 					<span class="posting-form-label" data-i18n="gettext">License</span>
-					<input data-parse-id="lol_drama" class="posting-form-input" type="text" name="new_post[file_info][up_file_1][lol_drama]" maxlength="255">
+					<input class="posting-form-input" type="text" name="{{{ lol_drama_name }}}" maxlength="{{{ lol_drama_maxlength }}}">
 				</label>
-				<label data-parse-id="form-alt_text" id="form-alt_text-1" class="posting-form-row hidden">
+				<label id="{{{ alt_text_id }}}" class="posting-form-row hidden">
 					<span class="posting-form-label" data-i18n="gettext">Alt Text</span>
-					<input data-parse-id="alt_text" class="posting-form-input" type="text" name="new_post[file_info][up_file_1][alt_text]" maxlength="255">
+					<input class="posting-form-input" type="text" name="{{{ alt_text_name }}}" maxlength="{{{ alt_text_maxlength }}}">
 				</label>
-				<label data-parse-id="form-fgsfds" class="posting-form-row">
-					<span data-parse-id="fgsfds-name" class="posting-form-label">FGSFDS</span>
+				{{/ file_blocks }}
+				{{# use_fgsfds }}
+				<label class="posting-form-row">
+					<span class="posting-form-label">{{ fgsfds_name }}</span>
 					<input class="posting-form-input" type="text" name="new_post[post_info][fgsfds]" size="30">
 				</label>
-				<label data-parse-id="form-sekrit" class="posting-form-row">
-					<span data-parse-id="sekrit" class="posting-form-label" data-i18n="gettext">Password</span>
+				{{/ use_fgsfds }}
+				<label class="posting-form-row">
+					<span class="posting-form-label" data-i18n="gettext">Password</span>
 					<input id="posting-form-sekrit" class="posting-form-input" type="password" name="new_post[post_info][sekrit]" size="12" maxlength="16" value="">&nbsp;&nbsp;
 					<span data-i18n="gettext">(Password used for file deletion)</span>
 				</label>
-				<label data-parse-id="posting-form-staff" class="posting-form-row">
+				{{# is_staff }}
+				<label class="posting-form-row">
 					<span class="posting-form-label"></span>
 					<input type="hidden" name="post_as_staff" value="0">
 					<input type="checkbox" name="post_as_staff" value="1" title="Post as staff" data-i18n-attributes="title" checked>
 					<span data-i18n="gettext">Post as staff</span>
 				</label>
-				<div data-parse-id="form-captcha" class="posting-form-row">
+				{{/ is_staff }}
+				{{# use_captcha }}
+				<div class="posting-form-row">
 					<span class="posting-form-label"></span>
 					<div>
-						<img data-parse-id="captcha-image" src="">
+						<img src="{{{ captcha_image }}}">
 					</div>
 					<div data-i18n="gettext">Enter the characters shown in the image above.</div>
 					<div>
 						<input id="posting-form-captcha" class="posting-form-input" type="text" name="new_post[captcha]" size="12" maxlength="16" value="">
 					</div>
 				</div>
-				<div data-parse-id="form-recaptcha" class="posting-form-row">
+				{{/ use_captcha }}
+				{{# use_recaptcha }}
+				<div class="posting-form-row">
 					<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 					<span class="posting-form-label"></span>
-					<div data-parse-id="recaptcha-sitekey" class="g-recaptcha" data-sitekey=""></div>
+					<div class="g-recaptcha" data-sitekey="{{{ recaptcha_sitekey }}}"></div>
 				</div>
+				{{/ use_recaptcha }}
+				{{# use_honeypot }}
 				<label id="form-user-info-1" class="posting-form-row">
 					<span class="posting-form-label" data-i18n="gettext">Do not ever check this!</span>
-					<input data-parse-id="a-signature-box" type="checkbox" name="" value="display" autocomplete="off" tabindex="-1">
+					<input type="checkbox" name="{{{ honeypot_field_name1 }}}" value="display" autocomplete="off" tabindex="-1">
 				</label>
 				<label id="form-user-info-2" class="posting-form-row">
 					<span class="posting-form-label" data-i18n="gettext">Never put anything in this field!</span>
-					<input data-parse-id="a-signature-field" type="text" name="" size="30" autocomplete="off" tabindex="-1">
+					<input data-parse-id="a-signature-field" type="text" name="{{{ honeypot_field_name2 }}}" size="30" autocomplete="off" tabindex="-1">
 				</label>
+				{{/ use_honeypot }}
 				<div id="form-submit-clear" class="posting-form-row">
 					<span class="display-cell"></span>
 					<input type="submit" value="Submit" data-i18n="gettext" data-i18n-attributes="value">&nbsp;&nbsp;&nbsp;&nbsp;
@@ -94,15 +112,21 @@
 				</div>
 				<div id="form-post-mode" class="posting-form-row">
 					<span class="display-cell"></span>
-					<span id="which-post-mode" class="posting-form-input" data-i18n="gettext">Posting mode: New thread</span>
+					<span class="posting-form-input">{{ posting_mode }}</span>
 				</div>
+				{{# use_honeypot }}
 				<label id="form-user-info-3" class="posting-form-row">
 					<span class="posting-form-label" data-i18n="gettext">Never put anything in this field!</span>
-					<input data-parse-id="a-website-field" type="text" placeholder="http://www.mywebsite.com" name="" size="30" autocomplete="off" tabindex="-1">
+					<input type="text" placeholder="http://www.mywebsite.com" name="{{{ honeypot_field_name3 }}}" size="30" autocomplete="off" tabindex="-1">
 				</label>
+				{{/ use_honeypot }}
 			</div>
 			<div id="form-rules-list" class="rules">
-				<ul data-parse-id="rules-list" class="rules-list"></ul>
+				<ul class="rules-list">
+				{{# rules_list }}
+					<li class="rules-item">{{ rules_text }}</li>
+				{{/ rules_list }}
+				</ul>
 			</div>
 		</form>
 	<hr>

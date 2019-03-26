@@ -21,184 +21,113 @@ class OutputPostingForm extends OutputCore
 
     public function render(array $parameters = array())
     {
-        $this->prepare('posting_form.html');
         $this->domain->renderActive(true);
         $session = new \Nelliel\Session();
         $dotdot = $parameters['dotdot'];
         $response_to = $parameters['response_to'];
-        $posting_form = $this->dom->getElementById('posting-form');
-        $posting_form->extSetAttribute('action',
-                $dotdot . MAIN_SCRIPT . '?module=threads&action=new-post&board_id=' . $this->domain->id());
-        $posting_form_input = $this->dom->getElementById('posting-form-input');
-        $posting_form_nodes = $posting_form_input->getElementsByAttributeName('data-parse-id', true);
+        $render_input['is_response'] = $response_to > 0;
+        $render_input['response_to'] = $response_to;
+
+        // Temp
+        $this->render_instance = $this->domain->renderInstance();
+        $this->render_instance->startRenderTimer();
+
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), [
+            'extension' => '.html']);
+        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
+        $template_loader->load('posting_form');
+        $render_input['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&action=new-post&board_id=' .
+                $this->domain->id();
 
         if ($response_to)
         {
             if ($session->inModmode($this->domain) && !$this->domain->renderActive())
             {
                 $return_url = $this->url_constructor->dynamic(MAIN_SCRIPT,
-                        ['module' => 'render', 'action' => 'view-index', 'index' => '0', 'board_id' => $this->domain->id(),
-                        'modmode' => 'true']);
+                        ['module' => 'render', 'action' => 'view-index', 'index' => '0',
+                            'board_id' => $this->domain->id(), 'modmode' => 'true']);
             }
             else
             {
                 $return_url = $dotdot . $this->domain->reference('board_directory') . '/' . MAIN_INDEX . PAGE_EXT;
             }
 
-            $this->dom->getElementById('return-url')->extSetAttribute('href', $return_url);
-        }
-        else
-        {
-            $this->dom->getElementById('post-form-return-link')->remove();
+            $render_input['return_url'] = $return_url;
         }
 
-        $this->dom->getElementById('posting-form-responseto')->extSetAttribute('value', $response_to);
-
-        if (!$session->inModmode($this->domain) || $this->domain->renderActive())
-        {
-            $posting_form_nodes['posting-form-staff']->remove();
-        }
-
-        $this->dom->getElementById('verb')->extSetAttribute('maxlength', $this->domain->setting('max_subject_length'));
-
-        if ($this->domain->setting('force_anonymous'))
-        {
-            $posting_form_nodes['form-not-anonymous']->remove();
-            $posting_form_nodes['form-spam-target']->remove();
-        }
-        else
-        {
-            $this->dom->getElementById('not-anonymous')->extSetAttribute('maxlength', $this->domain->setting('max_name_length'));
-            $this->dom->getElementById('spam-target')->extSetAttribute('maxlength', $this->domain->setting('max_email_length'));
-        }
+        $render_input['is_staff'] = $session->inModmode($this->domain) && !$this->domain->renderActive();
+        $render_input['not_anonymous_maxlength'] = $this->domain->setting('max_name_length');
+        $render_input['spam_target_maxlength'] = $this->domain->setting('max_email_length');
+        $render_input['verb_maxlength'] = $this->domain->setting('max_subject_length');
+        $render_input['force_anonymous'] = $this->domain->setting('force_anonymous');
 
         // File Block
-        $posting_form_nodes['sauce']->extSetAttribute('maxlength', $this->domain->setting('max_source_length'));
-        $posting_form_nodes['lol_drama']->extSetAttribute('maxlength', $this->domain->setting('max_license_length'));
-        $posting_form_nodes['alt_text']->extSetAttribute('maxlength', '255');
-
-        if (!$this->domain->setting('enable_spoilers'))
-        {
-            $posting_form_nodes['form-spoiler']->remove();
-        }
-
-        if ($this->domain->setting('allow_multifile') && $this->domain->setting('max_post_files') > 1)
-        {
-            for ($i = 2, $j = 3; $i <= $this->domain->setting('max_post_files'); ++ $i, ++ $j)
-            {
-                if (!$response_to && !$this->domain->setting('allow_op_multifile'))
-                {
-                    break;
-                }
-
-                $temp_file_block = $posting_form_nodes['form-file']->cloneNode(true);
-                $temp_file_block->modifyAttribute('class', ' hidden', 'after');
-                $temp_file_block->changeId('form-file-' . $i);
-                $temp_file_block_nodes = $temp_file_block->getElementsByAttributeName('data-parse-id', true);
-                $temp_file_block_nodes['label-for-file']->extSetAttribute('for', 'up-file-' . $i);
-                $temp_file_block_nodes['file-num']->setContent($i);
-                $temp_file_block_nodes['up-file']->extSetAttribute('name', 'up_file_' . $i);
-                $temp_file_block_nodes['up-file']->changeId('up-file-' . $i);
-                $temp_file_block_nodes['add-sauce']->changeId('add-sauce-' . $i);
-                $temp_file_block_nodes['add-lol_drama']->changeId('add-lol_drama-' . $i);
-                $temp_file_block_nodes['add-alt_text']->changeId('add-alt_text-' . $i);
-                $temp_source_block = $posting_form_nodes['form-sauce']->cloneNode(true);
-                $temp_source_block->changeId('form-sauce-' . $i);
-                $temp_source_block_nodes = $temp_source_block->getElementsByAttributeName('data-parse-id', true);
-                $temp_source_block_nodes['sauce']->extSetAttribute('name', 'new_post[file_info][up_file_' . $i . '][sauce]');
-                $temp_license_block = $posting_form_nodes['form-lol_drama']->cloneNode(true);
-                $temp_license_block->changeId('form-lol_drama-' . $i);
-                $temp_license_block_nodes = $temp_license_block->getElementsByAttributeName('data-parse-id', true);
-                $temp_license_block_nodes['lol_drama']->extSetAttribute('name',
-                        'new_post[file_info][up_file_' . $i . '][lol_drama]');
-                $temp_alt_text_block = $posting_form_nodes['form-alt_text']->cloneNode(true);
-                $temp_alt_text_block->changeId('form-alt_text-' . $i);
-                $temp_alt_text_block_nodes = $temp_alt_text_block->getElementsByAttributeName('data-parse-id', true);
-                $temp_alt_text_block_nodes['alt_text']->extSetAttribute('name',
-                        'new_post[file_info][up_file_' . $i . '][alt_text]');
-
-                if ($this->domain->setting('enable_spoilers'))
-                {
-                    $temp_spoiler_block = $posting_form_nodes['form-spoiler']->cloneNode(true);
-                    $temp_spoiler_block->changeId('form-spoiler-' . $i);
-                    $temp_spoiler_block_nodes = $temp_spoiler_block->getElementsByAttributeName('data-parse-id', true);
-                    $temp_spoiler_block_nodes['spoiler-hidden']->extSetAttribute('name',
-                            'new_post[file_info][up_file_' . $i . '][spoiler]');
-                    $temp_spoiler_block_nodes['spoiler-checkbox']->extSetAttribute('name',
-                            'new_post[file_info][up_file_' . $i . '][spoiler]');
-                }
-
-                $insert_before_point = $posting_form_nodes['form-fgsfds'];
-                $posting_form_input->insertBefore($temp_file_block, $insert_before_point);
-                $posting_form_input->insertBefore($temp_source_block, $insert_before_point);
-                $posting_form_input->insertBefore($temp_license_block, $insert_before_point);
-                $posting_form_input->insertBefore($temp_alt_text_block, $insert_before_point);
-            }
-        }
-
-        if ($this->domain->setting('use_fgsfds'))
-        {
-            $posting_form_nodes['fgsfds-name']->setContent($this->domain->setting('fgsfds_name'));
-        }
-        else
-        {
-            $posting_form_nodes['form-fgsfds']->remove();
-        }
-
-        if (!$this->domain->setting('use_captcha'))
-        {
-            $posting_form_nodes['form-captcha']->remove();
-        }
-        else
-        {
-            $posting_form_nodes['captcha-image']->extSetAttribute('src', $dotdot . MAIN_SCRIPT . '?get-captcha');
-        }
-
-        if (!$this->domain->setting('use_recaptcha'))
-        {
-            $posting_form_nodes['form-recaptcha']->remove();
-        }
-        else
-        {
-            $posting_form_nodes['recaptcha-sitekey']->extSetAttribute('data-sitekey', $this->domain->setting(
-                    'recaptcha_site_key'));
-        }
-
-        if ($this->domain->setting('use_honeypot'))
-        {
-            $posting_form_nodes['a-signature-box']->extSetAttribute('name', BASE_HONEYPOT_FIELD1 . '_' . $this->domain->id());
-            $posting_form_nodes['a-signature-field']->extSetAttribute('name', BASE_HONEYPOT_FIELD2 . '_' . $this->domain->id());
-            $posting_form_nodes['a-website-field']->extSetAttribute('name', BASE_HONEYPOT_FIELD3 . '_' . $this->domain->id());
-        }
-        else
-        {
-            $this->dom->getElementById('form-user-info-1')->remove();
-            $this->dom->getElementById('form-user-info-2')->remove();
-            $this->dom->getElementById('form-user-info-3')->remove();
-        }
-
         if ($response_to)
         {
-            $this->dom->getElementById('which-post-mode')->setContent('Posting mode: Reply');
+            $max_files = ($this->domain->setting('allow_op_multifile')) ? $this->domain->setting('max_post_files') : 1;
+        }
+        else
+        {
+            $max_files = $this->domain->setting('max_post_files');
         }
 
-        $this->postingRules($posting_form);
-        $this->domain->translator()->translateDom($this->dom, $this->domain->setting('language'));
-        $this->domain->renderInstance()->appendHTMLFromDOM($this->dom);
+        for ($i = 1, $j = 2; $i <= $max_files; ++ $i, ++ $j)
+        {
+            $block_data = array();
+            $block_data['hidden'] = ($i > 1) ? 'hidden' : '';
+            $block_data['block_id'] = 'form-file-' . $i;
+            $block_data['up_file_id'] = 'up-file-' . $i;
+            $block_data['file_number'] = $i;
+            $block_data['up_file_name'] = 'up_file_' . $i;
+            $block_data['add_sauce'] = 'add-sauce-' . $i;
+            $block_data['add_lol_drama'] = 'add-lol_drama-' . $i;
+            $block_data['add_alt_text'] = 'add-alt_text-' . $i;
+            $block_data['sauce_id'] = 'form-sauce-' . $i;
+            $block_data['sauce_name'] = 'new_post[file_info][up_file_' . $i . '][sauce]';
+            $block_data['sauce_maxlength'] = $this->domain->setting('max_source_length');
+            $block_data['lol_drama_id'] = 'form-lol_drama-' . $i;
+            $block_data['lol_drama_name'] = 'new_post[file_info][up_file_' . $i . '][alt_text]';
+            $block_data['lol_drama_maxlength'] = $this->domain->setting('max_license_length');
+            $block_data['alt_text_id'] = 'form-alt_text-' . $i;
+            $block_data['alt_text_name'] = 'new_post[file_info][up_file_' . $i . '][alt_text]';
+            $block_data['alt_text_maxlength'] = '255';
+
+            if ($this->domain->setting('enable_spoilers'))
+            {
+                $block_data['spoilers_enabled'] = true;
+                $block_data['spoiler_id'] = 'form-spoiler-' . $i;
+                $block_data['spoiler_name'] = 'new_post[file_info][up_file_' . $i . '][spoiler]';
+            }
+            else
+            {
+                $block_data['spoilers_enabled'] = false;
+            }
+
+            $render_input['file_blocks'][] = $block_data;
+        }
+
+        $render_input['use_fgsfds'] = $this->domain->setting('use_fgsfds');
+        $render_input['fgsfds_name'] = $this->domain->setting('fgsfds_name');
+        $render_input['use_captcha'] = $this->domain->setting('use_captcha');
+        $render_input['captcha_image'] = $dotdot . MAIN_SCRIPT . '?get-captcha';
+        $render_input['use_recaptcha'] = $this->domain->setting('use_captcha');
+        $render_input['recaptcha_sitekey'] = $this->domain->setting('recaptcha_site_key');
+        $render_input['use_honeypot'] = $this->domain->setting('use_honeypot');
+        $render_input['honeypot_field1'] = BASE_HONEYPOT_FIELD1 . '_' . $this->domain->id();
+        $render_input['honeypot_field2'] = BASE_HONEYPOT_FIELD2 . '_' . $this->domain->id();
+        $render_input['honeypot_field3'] = BASE_HONEYPOT_FIELD3 . '_' . $this->domain->id();
+        $render_input['posting_mode'] = ($response_to) ? _gettext('Posting mode: Reply') : _gettext('Posting mode: New thread');
+        $this->postingRules($render_input);
+        $this->render_instance->appendHTML($render_instance->render('posting_form', $render_input));
     }
 
-    private function postingRules($posting_form)
+    private function postingRules(&$render_input)
     {
         $filetypes = new \Nelliel\FileTypes($this->domain->database());
-        $form_rules_list = $this->dom->getElementById('form-rules-list');
-        $rules_nodes = $form_rules_list->getElementsByAttributeName('data-parse-id', true);
-        $base_list_item = $this->dom->createElement('li');
-        $base_list_item->setAttributeNode($this->dom->createFullAttribute('class', 'rules-item'));
-        $filetype_rules = $this->dom->copyNode($rules_nodes['rules-list'], $form_rules_list, 'append');
 
         foreach ($filetypes->settings($this->domain->id()) as $type => $formats)
         {
-            if(!$filetypes->typeIsEnabled($this->domain->id(), $type))
+            if (!$filetypes->typeIsEnabled($this->domain->id(), $type))
             {
                 continue;
             }
@@ -217,21 +146,11 @@ class OutputPostingForm extends OutputCore
 
             if ($list_set !== '')
             {
-                $current_list_item = $this->dom->copyNode($base_list_item, $filetype_rules, 'append');
-                $current_list_item->setContent(
-                        sprintf(_gettext('Supported %s file types: '), $type) . substr($list_set, 0, -2));
-                $filetype_rules->appendChild($current_list_item);
+                $render_input['rules_list'][]['rules_text'] = sprintf(_gettext('Supported %s file types: '), $type) . substr($list_set, 0, -2);
             }
         }
 
-        $post_limits = $this->dom->copyNode($rules_nodes['rules-list'], $form_rules_list, 'append');
-        $size_limit = $this->dom->copyNode($base_list_item, $post_limits, 'append');
-        $size_limit->setContent(sprintf(_gettext('Maximum file size allowed is %dKB'), $this->domain->setting('max_filesize')));
-        $thumbnail_limit = $this->dom->copyNode($base_list_item, $post_limits, 'append');
-        $thumbnail_limit->setContent(
-                sprintf(_gettext('Images greater than %d x %d pixels will be thumbnailed.'), $this->domain->setting('max_width'),
-                        $this->domain->setting('max_height')));
-        $rules_nodes['rules-list']->remove();
-        $posting_form->appendChild($form_rules_list);
+        $render_input['rules_list'][]['rules_text'] = sprintf(_gettext('Maximum file size allowed is %dKB'), $this->domain->setting('max_filesize'));
+        $render_input['rules_list'][]['rules_text'] = sprintf(_gettext('Images greater than %d x %d pixels will be thumbnailed.'), $this->domain->setting('max_width'), $this->domain->setting('max_height'));
     }
 }
