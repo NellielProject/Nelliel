@@ -34,7 +34,7 @@ class OutputThread extends OutputCore
 
         $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
         $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('thread');
+        $template_loader->load('thread/thread');
         $render_input['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
         $prepared = $this->database->prepare('SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $thread_data = $this->database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
@@ -73,6 +73,7 @@ class OutputThread extends OutputCore
         $thread_render .= $this->render_instance->outputRenderSet();
         $this->render_instance->clearRenderSet();
         $output_post = new \Nelliel\Output\OutputPost($this->domain);
+        $render_input['op_post'] = '';
         $render_input['thread_posts'] = '';
         $render_input['thread_id'] = $thread_content_id;
         $render_input['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
@@ -84,7 +85,16 @@ class OutputThread extends OutputCore
             $json_post = new \Nelliel\API\JSON\JSONPost($this->domain, $this->file_handler);
             $json_instances['post'] = $json_post;
             $parameters = ['thread_data' => $thread_data, 'dotdot' => $dotdot, 'post_data' => $post_data, 'gen_data' => $gen_data, 'json_instances' => $json_instances];
-            $render_input['thread_posts'] .= $output_post->render($parameters);
+
+            if($post_data['op'] == 1)
+            {
+                $render_input['op_post'] = $output_post->render($parameters);
+            }
+            else
+            {
+                $render_input['thread_posts'] .= $output_post->render($parameters);
+            }
+
             $json_thread->addPostData($json_post->retrieveData());
         }
 
