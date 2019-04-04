@@ -52,18 +52,18 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     break;
 
                 case 'view-thread':
-                    require_once INCLUDE_PATH . 'output/thread_generation.php';
-                    nel_thread_generator($domain, false, intval($inputs['thread']), $inputs['action']);
+                    $output_thread = new \Nelliel\Output\OutputThread($domain);
+                    $output_thread->render(['write' => false, 'thread_id' => intval($inputs['thread']), 'command' => $inputs['action']]);
                     break;
 
                 case 'expand-thread':
-                    require_once INCLUDE_PATH . 'output/thread_generation.php';
-                    nel_thread_generator($domain, false, intval($inputs['thread']), $inputs['action']);
+                    $output_thread = new \Nelliel\Output\OutputThread($domain);
+                    $output_thread->render(['write' => false, 'thread_id' => intval($inputs['thread']), 'command' => $inputs['action']]);
                     break;
 
                 case 'collapse-thread':
-                    require_once INCLUDE_PATH . 'output/thread_generation.php';
-                    nel_thread_generator($domain, false, intval($inputs['thread']), $inputs['action']);
+                    $output_thread = new \Nelliel\Output\OutputThread($domain);
+                    $output_thread->render(['write' => false, 'thread_id' => intval($inputs['thread']), 'command' => $inputs['action']]);
                     break;
             }
 

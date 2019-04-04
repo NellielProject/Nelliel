@@ -242,27 +242,27 @@ form {
 }
 
 /* Files */
-.file-select {
+.content-select {
 
 }
 
-.multiple-file-select {
+.multiple-content-select {
 
 }
 
-.op-files-container {
+.op-content-container {
 	float: left;
 }
 
-.op-multiple-files-container {
+.op-multiple-content-container {
 	float: left;
 }
 
-.reply-files-container {
+.reply-content-container {
 	float: left;
 }
 
-.reply-multiple-files-container {
+.reply-multiple-content-container {
 	float: left;
 }
 
@@ -438,7 +438,7 @@ form {
     
 }
 
-.op-post-contents {
+.op-post-comments {
     word-wrap: break-word;
 }
 

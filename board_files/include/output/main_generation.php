@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
 function nel_main_thread_generator(\Nelliel\Domain $domain, $response_to, $write, $page = 0)
 {
     // Temp
-    $output_post = new \Nelliel\Output\OutputPost($domain);
+    $output_post = new \Nelliel\Output\OutputPostOld($domain);
 
     $database = $domain->database();
     $translator = new \Nelliel\Language\Translator();

@@ -113,9 +113,9 @@ class OutputPostingForm extends OutputCore
         $render_input['use_recaptcha'] = $this->domain->setting('use_captcha');
         $render_input['recaptcha_sitekey'] = $this->domain->setting('recaptcha_site_key');
         $render_input['use_honeypot'] = $this->domain->setting('use_honeypot');
-        $render_input['honeypot_field1'] = BASE_HONEYPOT_FIELD1 . '_' . $this->domain->id();
-        $render_input['honeypot_field2'] = BASE_HONEYPOT_FIELD2 . '_' . $this->domain->id();
-        $render_input['honeypot_field3'] = BASE_HONEYPOT_FIELD3 . '_' . $this->domain->id();
+        $render_input['honeypot_field_name1'] = BASE_HONEYPOT_FIELD1 . '_' . $this->domain->id();
+        $render_input['honeypot_field_name2'] = BASE_HONEYPOT_FIELD2 . '_' . $this->domain->id();
+        $render_input['honeypot_field_name3'] = BASE_HONEYPOT_FIELD3 . '_' . $this->domain->id();
         $render_input['posting_mode'] = ($response_to) ? _gettext('Posting mode: Reply') : _gettext('Posting mode: New thread');
         $this->postingRules($render_input);
         $this->render_instance->appendHTML($render_instance->render('posting_form', $render_input));

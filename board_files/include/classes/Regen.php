@@ -3,7 +3,6 @@
 namespace Nelliel;
 
 use PDO;
-use Nelliel\Language\Translator;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -35,7 +34,6 @@ class Regen
 
     public function threads(Domain $domain, bool $write, array $ids)
     {
-        require_once INCLUDE_PATH . 'output/thread_generation.php';
         $threads = count($ids);
         $i = 0;
 
@@ -43,7 +41,8 @@ class Regen
         {
             $temp_domain = $this->getTemporaryDomainBoard($domain->id());
             $temp_domain->renderActive(true);
-            nel_thread_generator($temp_domain, $write, $ids[$i]);
+            $output_thread = new \Nelliel\Output\OutputThread($temp_domain);
+            $output_thread->render(['write' => $write, 'thread_id' => $ids[$i]]);
             ++ $i;
         }
     }
