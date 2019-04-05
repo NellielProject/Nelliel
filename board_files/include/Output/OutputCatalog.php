@@ -18,6 +18,7 @@ class OutputCatalog extends OutputCore
     {
         $this->domain = $domain;
         $this->database = $this->domain->database();
+        $this->selectRenderCore('mustache');
         $this->utilitySetup();
     }
 
@@ -27,17 +28,10 @@ class OutputCatalog extends OutputCore
         $cites = new \Nelliel\Cites($this->database);
         $dotdot = ($write) ? '../' : '';
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startTimer();
-
+        $this->render_core->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot]);
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('catalog');
         $render_input['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->id() . '/';
-
         $base_domain_path = BASE_DOMAIN . BASE_WEB_PATH;
         $board_web_path = '//' . $base_domain_path . rawurlencode($this->domain->reference('board_directory')) . '/';
         $pages_web_path = $board_web_path . rawurlencode($this->domain->reference('page_dir')) . '/';
@@ -142,17 +136,18 @@ class OutputCatalog extends OutputCore
             $render_input['catalog_entries'][] = $thread_data;
         }
 
-        $this->render_instance->appendToOutput($render_instance->render('catalog', $render_input));
+        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('catalog', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $output_footer->render(['dotdot' => '', 'styles' => false]);
+        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
 
         if($write)
         {
-            $this->file_handler->writeFile(BASE_PATH . $this->domain->reference('board_directory') . '/catalog.html', $this->render_instance->getOutput());
+            $file = $this->domain->reference('board_path') . 'catalog.html';
+            $this->file_handler->writeFile($file, $this->render_core->getOutput());
         }
         else
         {
-            echo $this->render_instance->getOutput();
+            echo $this->render_core->getOutput();
             nel_clean_exit();
         }
     }

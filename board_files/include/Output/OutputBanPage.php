@@ -15,6 +15,7 @@ class OutputBanPage extends OutputCore
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
+        $this->selectRenderCore('mustache');
         $this->utilitySetup();
     }
 
@@ -22,16 +23,9 @@ class OutputBanPage extends OutputCore
     {
         $ban_info = $parameters['ban_info'];
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startTimer();
-
+        $this->render_core->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
-        $output_header->render(['header_type' => 'general', 'dotdot' => '']);
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('ban_page');
-
+        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '']));
         $render_input['ban_board'] = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board_id'];
         $render_input['ban_time'] = date("F jS, Y H:i e", $ban_info['start_time']);
         $ban_expire = $ban_info['length'] + $ban_info['start_time'];
@@ -89,9 +83,10 @@ class OutputBanPage extends OutputCore
             }
         }
 
-        $this->render_instance->appendToOutput($render_instance->render('ban_page', $render_input));
+        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('ban_page', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->getOutput();
+        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
+        echo $this->render_core->getOutput();
+        nel_clean_exit();
     }
 }

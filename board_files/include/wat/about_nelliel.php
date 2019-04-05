@@ -13,7 +13,7 @@ function nel_about_nelliel_screen()
     $domain->renderInstance(new \Nelliel\RenderCoreDOM());
     $domain->renderInstance()->startTimer();
     $output_header = new \Nelliel\Output\OutputHeader($domain);
-    $output_header->render(['header_type' => 'general', 'dotdot' => '']);
+    $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '']));
     $dom = $domain->renderInstance()->newDOMDocument();
     $domain->renderInstance()->getTemplateInstance()->templatePath(INCLUDE_PATH . 'wat/');
     $template = $render->loadTemplateFromFile('about_nelliel.html');
@@ -23,7 +23,7 @@ function nel_about_nelliel_screen()
     $dom->getElementById('disclaimer-image')->extSetAttribute('src', IMAGES_WEB_PATH . 'wat/luna_canterlot_disclaimer.png');
     $domain->renderInstance()->appendHTMLFromDOM($dom);
     $output_footer = new \Nelliel\Output\OutputFooter($domain);
-    $output_footer->render(['dotdot' => '', 'styles' => false]);
+    $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
     echo $domain->renderInstance()->getOutput();
     nel_clean_exit();
 }

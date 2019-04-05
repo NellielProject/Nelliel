@@ -17,7 +17,8 @@ class OutputPanelThreads extends OutputCore
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
-        $this->database = $domain->database();
+        $this->database = $this->domain->database();
+        $this->selectRenderCore('mustache');
         $this->utilitySetup();
     }
 
@@ -53,7 +54,7 @@ class OutputPanelThreads extends OutputCore
         $this->prepare('management/panels/thread_panel.html');
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Threads')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
         $thread_data = $this->database->executeFetchAll(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') . '" ORDER BY "sticky" DESC, "last_update" DESC',
                 PDO::FETCH_ASSOC);
@@ -165,10 +166,10 @@ class OutputPanelThreads extends OutputCore
         $thread_row->remove();
 
         $this->domain->translator()->translateDom($this->dom);
-        $this->render_instance->appendHTMLFromDOM($this->dom);
+        $this->render_core->appendHTMLFromDOM($this->dom);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->getOutput();
+        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
+        echo $this->render_core->getOutput();
         nel_clean_exit();
     }
 
@@ -179,7 +180,7 @@ class OutputPanelThreads extends OutputCore
         $this->prepare('management/panels/thread_panel_expand.html');
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Expanded Thread')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
+        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
         $this->dom->getElementById('thread-list-form')->extSetAttribute('action',
                 MAIN_SCRIPT . '?module=threads&action=update&board_id=' . $this->domain->id());
         $prepared = $this->database->prepare(
@@ -247,10 +248,10 @@ class OutputPanelThreads extends OutputCore
         $post_row->remove();
 
         $this->domain->translator()->translateDom($this->dom);
-        $this->render_instance->appendHTMLFromDOM($this->dom);
+        $this->render_core->appendHTMLFromDOM($this->dom);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->getOutput();
+        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
+        echo $this->render_core->getOutput();
         nel_clean_exit();
     }
 }

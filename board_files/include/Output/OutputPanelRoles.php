@@ -17,13 +17,14 @@ class OutputPanelRoles extends OutputCore
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
-        $this->database = $domain->database();
+        $this->database = $this->domain->database();
+        $this->selectRenderCore('mustache');
         $this->utilitySetup();
     }
 
     public function render(array $parameters = array())
     {
-        if(!isset($parameters['section']))
+        if (!isset($parameters['section']))
         {
             return;
         }
@@ -51,16 +52,11 @@ class OutputPanelRoles extends OutputCore
     {
         $user = $parameters['user'];
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startTimer();
-
+        $this->render_core->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Roles')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('management/panels/roles_panel_main');
+        $this->render_core->appendToOutput(
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
         $roles = $this->database->executeFetchAll('SELECT * FROM "' . ROLES_TABLE . '"', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
@@ -80,10 +76,11 @@ class OutputPanelRoles extends OutputCore
 
         $render_input['new_role_url'] = MAIN_SCRIPT . '?module=roles&action=new';
 
-        $this->render_instance->appendToOutput($render_instance->render('management/panels/roles_panel_main', $render_input));
+        $this->render_core->appendToOutput(
+                $this->render_core->renderFromTemplateFile('management/panels/roles_panel_main', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->getOutput();
+        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
+        echo $this->render_core->getOutput();
         nel_clean_exit();
     }
 
@@ -94,16 +91,11 @@ class OutputPanelRoles extends OutputCore
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $role = $authorization->getRole($role_id);
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startTimer();
-
+        $this->render_core->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit Role')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('management/panels/roles_panel_edit');
+        $this->render_core->appendToOutput(
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
 
         if (is_null($role_id))
         {
@@ -122,8 +114,8 @@ class OutputPanelRoles extends OutputCore
             $render_input['capcode_text'] = $role->auth_data['capcode_text'];
         }
 
-        $permissions_list = $this->database->executeFetchAll('SELECT * FROM "' . PERMISSIONS_TABLE . '" ORDER BY "entry" ASC',
-                PDO::FETCH_ASSOC);
+        $permissions_list = $this->database->executeFetchAll(
+                'SELECT * FROM "' . PERMISSIONS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
 
         foreach ($permissions_list as $permission)
         {
@@ -141,10 +133,11 @@ class OutputPanelRoles extends OutputCore
             $permission_data['label'] = '(' . $permission['permission'] . ') - ' . $permission['description'];
         }
 
-        $this->render_instance->appendToOutput($render_instance->render('management/panels/roles_panel_edit', $render_input));
+        $this->render_core->appendToOutput(
+                $this->render_core->renderFromTemplateFile('management/panels/roles_panel_edit', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->getOutput();
+        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
+        echo $this->render_core->getOutput();
         nel_clean_exit();
     }
 }

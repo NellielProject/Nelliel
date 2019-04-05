@@ -13,11 +13,13 @@ use PDO;
 
 class OutputPost extends OutputCore
 {
+    private $database;
 
     function __construct(Domain $domain)
     {
-        $this->database = $domain->database();
         $this->domain = $domain;
+        $this->database = $this->domain->database();
+        $this->selectRenderCore('mustache');
         $this->utilitySetup();
     }
 
@@ -30,14 +32,7 @@ class OutputPost extends OutputCore
         $json_post = $parameters['json_instances']['post'];
         $post_data = $parameters['post_data'] ?? $this->getPostFromDatabase($post_id);
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startTimer();
-
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(),
-                ['extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('thread/post');
+        $this->render_core->startTimer();
         $json_post->storeData($json_post->prepareData($post_data), 'post');
         $response = $post_data['op'] != 1;
         $thread_content_id = new ContentID(ContentID::createIDString($post_data['parent_thread']));
@@ -118,11 +113,7 @@ class OutputPost extends OutputCore
         }
 
         $render_input['post_comments'] = $this->postComments($post_data, $post_content_id, $gen_data, $web_paths);
-        $render = $render_instance->render('thread/post', $render_input);
-        return $render;
-
-        //$this->render_instance->appendHTML($render_instance->render('thread/post', $render_input));
-        //echo $this->render_instance->getOutput();
+        return $this->render_core->renderFromTemplateFile('thread/post', $render_input);
     }
 
     public function getPostFromDatabase($post_id)

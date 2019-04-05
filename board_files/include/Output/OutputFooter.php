@@ -18,21 +18,16 @@ class OutputFooter extends OutputCore
     {
         $this->domain = $domain;
         $this->database = $domain->database();
+        $this->selectRenderCore('mustache');
         $this->utilitySetup();
     }
 
     public function render(array $parameters = array())
     {
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('footer');
         $dotdot = ($parameters['dotdot']) ?? array();
-        $styles = ($parameters['generate_styles']) ?? false;
+        $generate_styles = ($parameters['generate_styles']) ?? false;
 
-        if ($styles)
+        if ($generate_styles)
         {
             $render_input['styles'] = $this->buildStyles($dotdot);
             $render_input['show_styles'] = true;
@@ -43,11 +38,12 @@ class OutputFooter extends OutputCore
 
         if($this->domain->setting('display_render_timer'))
         {
-            $time = round($this->domain->renderInstance()->endTimer(), 4);
+            $time = round($this->render_core->endTimer(), 4);
             $render_input['render_timer'] = sprintf(_gettext('This page was created in %s seconds.'), $time);
         }
 
-        $this->domain->renderInstance()->appendToOutput($render_instance->render('footer', $render_input));
+        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('footer', $render_input));
+        return $this->render_core->getOutput();
     }
 
     public function buildStyles(string $dotdot)

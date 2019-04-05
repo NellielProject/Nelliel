@@ -11,7 +11,7 @@ abstract class OutputCore
 {
     protected $domain;
     protected $dom;
-    protected $render_instance;
+    protected $render_core;
     protected $file_handler;
     protected $cache_handler;
     protected $output_filter;
@@ -29,10 +29,26 @@ abstract class OutputCore
 
     protected function prepare(string $template_file)
     {
-        $this->render_instance = $this->domain->renderInstance();
-        $this->dom = $this->render_instance->newDOMDocument();
+        $this->render_core = $this->domain->renderInstance();
+        $this->dom = $this->render_core->newDOMDocument();
         $template = $render->loadTemplateFromFile($template_file);
         $render->loadDOMFromTemplate($this->dom, $template);
-        $this->render_instance->startTimer();
+        $this->render_core->startTimer();
+    }
+
+    protected function selectRenderCore(string $core_id)
+    {
+        if($core_id === 'mustache')
+        {
+            $this->render_core = new \Nelliel\RenderCoreMustache($this->domain);
+        }
+        else if($core_id === 'DOM')
+        {
+            $this->render_core = new \Nelliel\RenderCoreDOM();
+        }
+        else
+        {
+
+        }
     }
 }

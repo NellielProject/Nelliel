@@ -17,13 +17,14 @@ class OutputPanelUsers extends OutputCore
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
-        $this->database = $domain->database();
+        $this->database = $this->domain->database();
+        $this->selectRenderCore('mustache');
         $this->utilitySetup();
     }
 
     public function render(array $parameters = array())
     {
-        if(!isset($parameters['section']))
+        if (!isset($parameters['section']))
         {
             return;
         }
@@ -51,16 +52,11 @@ class OutputPanelUsers extends OutputCore
     {
         $user = $parameters['user'];
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startTimer();
-
+        $this->render_core->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Users')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('management/panels/users_panel_main');
+        $this->render_core->appendToOutput(
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
         $users = $this->database->executeFetchAll('SELECT * FROM "' . USERS_TABLE . '"', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
@@ -79,10 +75,11 @@ class OutputPanelUsers extends OutputCore
 
         $render_input['new_user_url'] = MAIN_SCRIPT . '?module=users&action=new';
 
-        $this->render_instance->appendToOutput($render_instance->render('management/panels/users_panel_main', $render_input));
+        $this->render_core->appendToOutput(
+                $this->render_core->renderFromTemplateFile('management/panels/users_panel_main', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->getOutput();
+        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
+        echo $this->render_core->getOutput();
         nel_clean_exit();
     }
 
@@ -92,16 +89,11 @@ class OutputPanelUsers extends OutputCore
         $user_id = $parameters['user_id'];
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startTimer();
-
+        $this->render_core->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit User')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('management/panels/users_panel_edit');
+        $this->render_core->appendToOutput(
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
 
         if (is_null($user_id))
         {
@@ -117,24 +109,27 @@ class OutputPanelUsers extends OutputCore
             $render_input['super_admin'] = ($edit_user->isSuperAdmin()) ? 'checked' : '';
         }
 
-        $prepared = $this->database->prepare('SELECT "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
+        $prepared = $this->database->prepare(
+                'SELECT "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
         $site_role = $this->database->executePreparedFetch($prepared, array($user_id, ''), PDO::FETCH_COLUMN);
 
-        if(!empty($site_role))
+        if (!empty($site_role))
         {
             $render_input['site_role_id'] = $site_role;
         }
 
         $board_list = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
 
-        foreach($board_list as $board)
+        foreach ($board_list as $board)
         {
             $board_role_data = array();
             $board_role_data['board_id'] = $board['board_id'];
-            $prepared = $this->database->prepare('SELECT "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
-            $role_id = $this->database->executePreparedFetch($prepared, array($user_id, $board['board_id']), PDO::FETCH_COLUMN);
+            $prepared = $this->database->prepare(
+                    'SELECT "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
+            $role_id = $this->database->executePreparedFetch($prepared, array($user_id, $board['board_id']),
+                    PDO::FETCH_COLUMN);
 
-            if(!empty($role_id))
+            if (!empty($role_id))
             {
                 $board_role_data['role_id'] = $user_role['role_id'];
             }
@@ -142,10 +137,11 @@ class OutputPanelUsers extends OutputCore
             $render_input['board_roles'][] = $board_role_data;
         }
 
-        $this->render_instance->appendToOutput($render_instance->render('management/panels/users_panel_edit', $render_input));
+        $this->render_core->appendToOutput(
+                $this->render_core->renderFromTemplateFile('management/panels/users_panel_edit', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->getOutput();
+        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
+        echo $this->render_core->getOutput();
         nel_clean_exit();
     }
 }

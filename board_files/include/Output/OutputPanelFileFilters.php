@@ -16,8 +16,9 @@ class OutputPanelFileFilters extends OutputCore
 
     function __construct(Domain $domain)
     {
-        $this->database = $domain->database();
         $this->domain = $domain;
+        $this->database = $this->domain->database();
+        $this->selectRenderCore('mustache');
         $this->utilitySetup();
     }
 
@@ -30,16 +31,11 @@ class OutputPanelFileFilters extends OutputCore
             nel_derp(341, _gettext('You are not allowed to access the File Filters panel.'));
         }
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startTimer();
-
+        $this->render_core->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('File Filters')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('management/panels/file_filters_panel');
+        $this->render_core->appendToOutput(
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
 
         if ($this->domain->id() !== '')
         {
@@ -49,11 +45,12 @@ class OutputPanelFileFilters extends OutputCore
         }
         else
         {
-            $filters = $this->database->executeFetchAll('SELECT * FROM "' . FILE_FILTERS_TABLE . '" ORDER BY "entry" DESC',
-                    PDO::FETCH_ASSOC);
+            $filters = $this->database->executeFetchAll(
+                    'SELECT * FROM "' . FILE_FILTERS_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
         }
 
-        $render_input['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'file-filters', 'action' => 'add']);
+        $render_input['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                ['module' => 'file-filters', 'action' => 'add']);
         $bgclass = 'row1';
 
         foreach ($filters as $filter)
@@ -71,10 +68,11 @@ class OutputPanelFileFilters extends OutputCore
             $render_input['filter_list'][] = $filter_data;
         }
 
-        $this->render_instance->appendToOutput($render_instance->render('management/panels/file_filters_panel', $render_input));
+        $this->render_core->appendToOutput(
+                $this->render_core->renderFromTemplateFile('management/panels/file_filters_panel', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->getOutput();
+        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
+        echo $this->render_core->getOutput();
         nel_clean_exit();
     }
 }

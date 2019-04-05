@@ -29,9 +29,19 @@ abstract class RenderCore
         $this->output_sets[$output_id]['content'] = '';
     }
 
+    public function outputExists(string $output_id)
+    {
+        return isset($this->output_sets[$output_id]);
+    }
+
     public function createOutput(string $output_id = 'default')
     {
-        if (!isset($this->output_sets[$output_id]))
+        if (!$this->outputExists($output_id))
+        {
+            $this->output_sets[$output_id] = array();
+        }
+
+        if (!isset($this->output_sets[$output_id]['content']))
         {
             $this->output_sets[$output_id]['content'] = '';
         }
@@ -45,7 +55,12 @@ abstract class RenderCore
 
     public function getOutput(string $output_id = 'default')
     {
-        return $this->output_sets[$output_id]['content'];
+        if ($this->outputExists($output_id))
+        {
+            return $this->output_sets[$output_id]['content'];
+        }
+
+        return '';
     }
 
     public function startTimer(string $output_id = 'default')

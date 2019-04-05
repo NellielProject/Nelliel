@@ -15,7 +15,7 @@ abstract class Domain
     protected $cache_handler;
     protected $database;
     protected $file_handler;
-    protected $render_instance;
+    protected $render_core;
     protected $render_active;
     protected $template_path;
     protected $translator;
@@ -107,23 +107,23 @@ abstract class Domain
 
     public function renderInstance($new_instance = null)
     {
-        if (is_null($new_instance) && empty($this->render_instance))
+        if (is_null($new_instance) && empty($this->render_core))
         {
-            $this->render_instance = new RenderCoreDOM();
+            $this->render_core = new RenderCoreDOM();
             $front_end_data = new FrontEndData($this->database);
             $this->templatePath(TEMPLATES_FILE_PATH . $front_end_data->template($this->setting('template_id'))['directory']);
-            $this->render_instance->getTemplateInstance()->templatePath($this->template_path);
+            $this->render_core->getTemplateInstance()->templatePath($this->template_path);
         }
 
         if (!is_null($new_instance))
         {
-            $this->render_instance = $new_instance;
+            $this->render_core = $new_instance;
             $front_end_data = new FrontEndData($this->database);
             $this->templatePath(TEMPLATES_FILE_PATH . $front_end_data->template($this->setting('template_id'))['directory']);
-            $this->render_instance->getTemplateInstance()->templatePath($this->template_path);
+            $this->render_core->getTemplateInstance()->templatePath($this->template_path);
         }
 
-        return $this->render_instance;
+        return $this->render_core;
     }
 
     public function translator()

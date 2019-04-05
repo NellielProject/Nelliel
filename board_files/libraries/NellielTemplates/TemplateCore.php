@@ -77,7 +77,7 @@ class TemplateCore
     {
         $output = $dom->saveHTML();
 
-        if(!is_null($template))
+        if (!is_null($template))
         {
             $output = $this->fixOutputHTML($template, $output);
             $output = $this->html5Fixes($template, $output);

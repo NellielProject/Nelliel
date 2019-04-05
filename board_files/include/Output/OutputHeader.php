@@ -18,6 +18,7 @@ class OutputHeader extends OutputCore
     {
         $this->domain = $domain;
         $this->database = $domain->database();
+        $this->selectRenderCore('mustache');
         $this->utilitySetup();
     }
 
@@ -47,12 +48,6 @@ class OutputHeader extends OutputCore
         $session = new \Nelliel\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('header');
         $dotdot = ($parameters['dotdot']) ?? array();
         $extra_data = ($parameters['extra_data']) ?? array();
         $render_input = array();
@@ -122,10 +117,8 @@ class OutputHeader extends OutputCore
         $render_input['about_nelliel_url'] = $dotdot . MAIN_SCRIPT . '?about_nelliel';
         $render_input['styles'] = $this->buildStyles($dotdot);
 
-        // Temp
-        $this->domain->renderInstance()->appendToOutput($render_instance->render('header', $render_input));
-
-        //return $render_instance->render('header2', $render_input);
+        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('header', $render_input));
+        return $this->render_core->getOutput();
     }
 
     public function board(array $parameters)
@@ -133,13 +126,6 @@ class OutputHeader extends OutputCore
         $session = new \Nelliel\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), [
-            'extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('header');
         $dotdot = ($parameters['dotdot']) ?? array();
         $treeline = ($parameters['treeline']) ?? array();
         $index_render = ($parameters['index_render']) ?? false;
@@ -257,10 +243,8 @@ class OutputHeader extends OutputCore
         $render_input['about_nelliel_url'] = $dotdot . MAIN_SCRIPT . '?about_nelliel';
         $render_input['styles'] = $this->buildStyles($dotdot);
 
-        // Temp
-        $this->domain->renderInstance()->appendToOutput($render_instance->render('header', $render_input));
-
-                //return $render_instance->render('header2', $render_input);
+        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('header', $render_input));
+        return $this->render_core->getOutput();
     }
 
     public function buildStyles(string $dotdot)

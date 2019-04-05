@@ -16,8 +16,9 @@ class OutputFile extends OutputCore
 
     function __construct(Domain $domain)
     {
-        $this->database = $domain->database();
         $this->domain = $domain;
+        $this->database = $this->domain->database();
+        $this->selectRenderCore('mustache');
         $this->utilitySetup();
     }
 
@@ -33,15 +34,6 @@ class OutputFile extends OutputCore
         $dotdot = $parameters['dotdot'] ?? '';
         $json_post = $parameters['json_instances']['post'];
         $json_content = $parameters['json_instances']['content'];
-
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startTimer();
-
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), [
-            'extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('thread/post');
         $json_post->addContentData($json_content->prepareData($file));
 
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
@@ -198,10 +190,6 @@ class OutputFile extends OutputCore
         }
 
         return $file_data;
-        //$this->render_instance->appendHTML($render_instance->render('thread/post', $render_input));
-        //$output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        //$output_footer->render(['dotdot' => '', 'styles' => false]);
-        //echo $this->render_instance->getOutput();
     }
 
     public function getFileFromDatabase($post_id)

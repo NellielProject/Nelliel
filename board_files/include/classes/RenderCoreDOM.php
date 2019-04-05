@@ -17,7 +17,6 @@ class RenderCoreDOM extends RenderCore
         $this->template_instance = new \NellielTemplates\TemplateCore($this);
         $this->template_loaders['file'] = $this->template_instance;
         libxml_use_internal_errors(true);
-        $this->createOutput('default');
         $this->output_filter = new OutputFilter();
         $this->file_handler = new FileHandler();
     }

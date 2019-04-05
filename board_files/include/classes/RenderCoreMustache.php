@@ -34,6 +34,6 @@ class RenderCoreMustache extends RenderCore
 
     public function renderFromTemplateFile(string $file, array $render_data)
     {
-        $this->mustache_engine->render($file, $render_data);
+        return $this->mustache_engine->render($file, $render_data);
     }
 }

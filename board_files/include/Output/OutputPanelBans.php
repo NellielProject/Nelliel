@@ -17,7 +17,8 @@ class OutputPanelBans extends OutputCore
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
-        $this->database = $domain->database();
+        $this->database = $this->domain->database();
+        $this->selectRenderCore('mustache');
         $this->utilitySetup();
     }
 
@@ -55,16 +56,10 @@ class OutputPanelBans extends OutputCore
     {
         $user = $parameters['user'];
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startTimer();
-
+        $this->render_core->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('management/panels/bans_panel_main');
+        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
         $render_input['can_modify'] = $user->domainPermission($this->domain, 'perm_ban_modify');
 
         if ($this->domain->id() !== '')
@@ -103,10 +98,10 @@ class OutputPanelBans extends OutputCore
 
         $render_input['new_ban_url'] = MAIN_SCRIPT . '?module=board&module=bans&action=new&board_id=' . $this->domain->id();
 
-        $this->render_instance->appendToOutput($render_instance->render('management/panels/bans_panel_main', $render_input));
+        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('management/panels/bans_panel_main', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->getOutput();
+        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
+        echo $this->render_core->getOutput();
         nel_clean_exit();
     }
 
@@ -119,16 +114,10 @@ class OutputPanelBans extends OutputCore
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startTimer();
-
+        $this->render_core->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Add Ban')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('management/panels/bans_panel_add');
+        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
         $render_input['ban_board'] = (!empty($this->domain->id())) ? $this->domain->id() : '';
         $ip = $parameters['ip'];
         $type = $parameters['type'];
@@ -147,10 +136,10 @@ class OutputPanelBans extends OutputCore
         $render_input['ban_ip'] = $ip;
         $render_input['ban_type'] = $type;
 
-        $this->render_instance->appendToOutput($render_instance->render('management/panels/bans_panel_add', $render_input));
+        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('management/panels/bans_panel_add', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->getOutput();
+        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
+        echo $this->render_core->getOutput();
         nel_clean_exit();
     }
 
@@ -163,16 +152,10 @@ class OutputPanelBans extends OutputCore
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startTimer();
-
+        $this->render_core->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Modify Ban')];
-        $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]);
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('management/panels/bans_panel_modify');
+        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
         $render_input['form_action'] = MAIN_SCRIPT . '?module=board&module=bans&action=update&board_id=' . $this->domain->id();
         $ban_id = $_GET['ban_id'];
         $ban_hammer = new \Nelliel\BanHammer($this->database);
@@ -214,10 +197,10 @@ class OutputPanelBans extends OutputCore
             $render_input['status_denied'] = 'checked';
         }
 
-        $this->render_instance->appendToOutput($render_instance->render('management/panels/bans_panel_modify', $render_input));
+        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('management/panels/bans_panel_modify', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->getOutput();
+        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
+        echo $this->render_core->getOutput();
         nel_clean_exit();
     }
 }

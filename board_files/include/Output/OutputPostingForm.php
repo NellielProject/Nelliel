@@ -8,14 +8,16 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domain;
-use PDO;
 
 class OutputPostingForm extends OutputCore
 {
+    private $database;
 
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
+        $this->database = $this->domain->database();
+        $this->selectRenderCore('mustache');
         $this->utilitySetup();
     }
 
@@ -28,14 +30,7 @@ class OutputPostingForm extends OutputCore
         $render_input['is_response'] = $response_to > 0;
         $render_input['response_to'] = $response_to;
 
-        // Temp
-        $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startTimer();
-
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), [
-            'extension' => '.html']);
-        $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
-        $template_loader->load('posting_form');
+        $this->render_core->startTimer();
         $render_input['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&action=new-post&board_id=' .
                 $this->domain->id();
 
@@ -118,7 +113,7 @@ class OutputPostingForm extends OutputCore
         $render_input['honeypot_field_name3'] = BASE_HONEYPOT_FIELD3 . '_' . $this->domain->id();
         $render_input['posting_mode'] = ($response_to) ? _gettext('Posting mode: Reply') : _gettext('Posting mode: New thread');
         $this->postingRules($render_input);
-        $this->render_instance->appendToOutput($render_instance->render('posting_form', $render_input));
+        return $this->render_core->renderFromTemplateFile('posting_form', $render_input);
     }
 
     private function postingRules(&$render_input)
