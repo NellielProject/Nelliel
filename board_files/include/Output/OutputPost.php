@@ -13,7 +13,6 @@ use PDO;
 
 class OutputPost extends OutputCore
 {
-    private $database;
 
     function __construct(Domain $domain)
     {

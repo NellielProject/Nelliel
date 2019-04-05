@@ -12,7 +12,6 @@ use PDO;
 
 class OutputPanelBoardSettings extends OutputCore
 {
-    private $database;
 
     function __construct(Domain $domain)
     {

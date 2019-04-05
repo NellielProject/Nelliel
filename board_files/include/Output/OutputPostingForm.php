@@ -11,7 +11,6 @@ use Nelliel\Domain;
 
 class OutputPostingForm extends OutputCore
 {
-    private $database;
 
     function __construct(Domain $domain)
     {

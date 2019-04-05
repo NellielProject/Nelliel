@@ -12,8 +12,6 @@ use PDO;
 
 class OutputPanelSiteSettings extends OutputCore
 {
-    private $database;
-
     function __construct(Domain $domain)
     {
         $this->domain = $domain;

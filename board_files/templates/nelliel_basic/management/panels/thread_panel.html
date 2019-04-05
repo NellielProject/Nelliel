@@ -1,6 +1,6 @@
-		<table id="thread-list" class="data-table">
+		<table class="data-table">
 			<tr class="manage-header">
-				<th id="expand-thread-" data-i18n="gettext">Expand</th>
+				<th data-i18n="gettext">Expand</th>
 				<th data-i18n="gettext">First Post</th>
 				<th data-i18n="gettext">Last Updated</th>
 				<th data-i18n="gettext">Subject</th>
@@ -10,33 +10,25 @@
 				<th data-i18n="gettext">Total Files</th>
 				<th data-i18n="gettext">Actions</th>
 			</tr>
-			<tr id="thread-row-" class="row1">
+			{{# threads }}
+			<tr class="{{ bgclass }}">
 				<td>
-					<span>[<a id="expand-link-" href=""></a>]</span>
+					<span>[<a href="{{ expand_url }}" data-i18n="gettext">Expand Thread</a>]</span>
 				</td>
-				<td id="thread-post-number-"></td>
+				<td>{{ thread_id }}</td>
+				<td>{{ last_update }}</td>
 				<td>
-					<span id="thread-last-update-"></span>
+					<a href="{{ thread_url }}" rel="external">{{ subject }}</a>
 				</td>
+				<td>{{ op_name }}</td>
+				<td>{{ op_ip }}</td>
+				<td>{{ post_count }}</td>
+				<td>{{ total_files }}</td>
 				<td>
-					<a id="thread-subject-link-" href="" rel="external"></a>
-				</td>
-				<td>
-					<span id="thread-op-name-"></span>
-				</td>
-				<td>
-					<span id="thread-op-ip-"></span>
-				</td>
-				<td>
-					<span id="thread-post-count-"></span>
-				</td>
-				<td>
-					<span id="thread-total-files-"></span>
-				</td>
-				<td>
-					<span>[<a id="sticky-link-" href=""></a>]&nbsp;</span>
-					<span>[<a id="lock-link-" href=""></a>]&nbsp;</span>
-					<span>[<a id="delete-link-" href=""></a>]</span>
+					<span>[<a href="{{ sticky_url }}">{{ sticky_text }}</a>]&nbsp;</span>
+					<span>[<a href="{{ lock_url }}">{{ lock_text }}</a>]&nbsp;</span>
+					<span>[<a href="{{ delete_url }}">{{ delete_text }}</a>]</span>
 				</td>
 			</tr>
+			{{/ threads }}
 		</table>

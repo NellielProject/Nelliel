@@ -10,6 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 abstract class OutputCore
 {
     protected $domain;
+    protected $database;
     protected $dom;
     protected $render_core;
     protected $file_handler;
@@ -48,7 +49,7 @@ abstract class OutputCore
         }
         else
         {
-
+            ;
         }
     }
 }

@@ -12,7 +12,6 @@ use PDO;
 
 class OutputCatalog extends OutputCore
 {
-    private $sdatabase;
 
     function __construct(Domain $domain)
     {
