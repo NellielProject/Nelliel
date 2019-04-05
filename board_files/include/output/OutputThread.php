@@ -59,18 +59,19 @@ class OutputThread extends OutputCore
         $json_content = new \Nelliel\API\JSON\JSONContent($this->domain, $this->file_handler);
         $json_instances = ['thread' => $json_thread, 'content' => $json_content];
         $post_counter = 0;
-        $gen_data['posts_ending'] = false;
         $gen_data['index_rendering'] = false;
         $gen_data['abbreviate'] = false;
-        $hr_added = false;
         $total_posts = $thread_data['post_count'];
-        $render_input['abbreviate'] = $total_posts > $this->domain->setting('abbreviate_thread');
+        $render_input['abbreviate'] = false;
+        $header_render = '';
         $thread_render = '';
+        $expand_render = '';
+        $collapse_render = '';
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot]);
         $output_posting_form = new \Nelliel\Output\OutputPostingForm($this->domain);
         $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $thread_id]);
-        $thread_render .= $this->render_instance->outputRenderSet();
+        $header_render .= $this->render_instance->outputRenderSet();
         $this->render_instance->clearRenderSet();
         $output_post = new \Nelliel\Output\OutputPost($this->domain);
         $render_input['op_post'] = '';
@@ -79,40 +80,50 @@ class OutputThread extends OutputCore
         $render_input['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
         $render_input['thread_corral_id'] = 'thread-' . $thread_content_id;
         $render_input['board_id'] = $this->domain->id();
+        $collapse_start = $total_posts - ($this->domain->setting('abbreviate_thread') - 1);
 
         foreach($treeline as $post_data)
         {
             $json_post = new \Nelliel\API\JSON\JSONPost($this->domain, $this->file_handler);
             $json_instances['post'] = $json_post;
             $parameters = ['thread_data' => $thread_data, 'dotdot' => $dotdot, 'post_data' => $post_data, 'gen_data' => $gen_data, 'json_instances' => $json_instances];
+            $post_render = $output_post->render($parameters);
 
             if($post_data['op'] == 1)
             {
-                $render_input['op_post'] = $output_post->render($parameters);
+                $render_input['op_post'] = $post_render;
             }
             else
             {
-                $render_input['thread_posts'] .= $output_post->render($parameters);
+                $expand_render .= $post_render;
+                $render_input['thread_posts'] .= $post_render;
+
+                if($post_counter >= $collapse_start)
+                {
+                    $collapse_render .= $post_render;
+                }
             }
 
             $json_thread->addPostData($json_post->retrieveData());
+            $post_counter++;
         }
 
+        $thread_render .= $header_render;
         $thread_render .= $render_instance->render('thread/thread', $render_input);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $output_footer->render(['dotdot' => $dotdot, 'styles' => true]);
+        $output_footer->render(['dotdot' => $dotdot, 'generate_styles' => true]);
         $thread_render .= $this->render_instance->outputRenderSet();
 
         if ($write)
         {
             $this->file_handler->writeFile($this->domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '.html',
                     $thread_render, FILE_PERM, true);
-            /*$file_handler->writeFile(
-                    $domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-expand.html',
-                    $domain->renderInstance()->outputRenderSet('expand'), FILE_PERM, true);*/
-            /*$file_handler->writeFile(
-                    $domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-collapse.html',
-                    $domain->renderInstance()->outputRenderSet('collapse'), FILE_PERM, true);*/
+            $this->file_handler->writeFile(
+                    $this->domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-expand.html',
+                    $expand_render, FILE_PERM, true);
+            $this->file_handler->writeFile(
+                    $this->domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-collapse.html',
+                    $collapse_render, FILE_PERM, true);
             $json_thread->writeStoredData($this->domain->reference('page_path') . $thread_id . '/',
                     sprintf('thread-%d', $thread_id));
         }
@@ -125,11 +136,11 @@ class OutputThread extends OutputCore
                     break;
 
                 case 'expand-thread':
-                    //echo $domain->renderInstance()->outputRenderSet('expand');
+                    echo $expand_render;
                     break;
 
                 case 'collapse-thread':
-                    //echo $domain->renderInstance()->outputRenderSet('collapse');
+                    echo $collapse_render;
                     break;
 
                 default:

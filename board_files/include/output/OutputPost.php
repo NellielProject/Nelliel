@@ -34,8 +34,8 @@ class OutputPost extends OutputCore
         $this->render_instance = $this->domain->renderInstance();
         $this->render_instance->startRenderTimer();
 
-        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), [
-            'extension' => '.html']);
+        $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(),
+                ['extension' => '.html']);
         $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
         $template_loader->load('thread/post');
         $json_post->storeData($json_post->prepareData($post_data), 'post');
@@ -50,7 +50,8 @@ class OutputPost extends OutputCore
         $web_paths['pages'] = $web_paths['board'] . rawurlencode($this->domain->reference('page_dir')) . '/';
         $web_paths['thread_page'] = $web_paths['pages'] . $thread_content_id->thread_id . '/thread-' .
                 $thread_content_id->thread_id . '.html';
-        $web_paths['thread_src'] = $web_paths['board'] . rawurlencode($this->domain->reference('src_dir')) . '/';
+        $web_paths['thread_src'] = $web_paths['board'] . rawurlencode($this->domain->reference('src_dir')) . '/' .
+                $thread_content_id->thread_id . '/';
         $web_paths['thread_preview'] = $web_paths['board'] . rawurlencode($this->domain->reference('preview_dir')) . '/' .
                 $thread_content_id->thread_id . '/';
         $render_input['post_corral_id'] = 'post-id-' . $post_content_id->getIDString();
@@ -203,6 +204,7 @@ class OutputPost extends OutputCore
         {
             $thread_headers['hide_thread_id'] = 'hide-thread-' . $thread_content_id->getIDString();
             $thread_headers['thread_content_id'] = $thread_content_id->getIDString();
+            $thread_headers['post_content_id'] = $post_content_id->getIDString();
             $thread_headers['sticky'] = $thread_data['sticky'];
             $thread_headers['locked'] = $thread_data['locked'];
 
@@ -210,13 +212,13 @@ class OutputPost extends OutputCore
             {
                 $thread_headers['index_render'] = true;
 
-                if (!$response && $gen_data['abbreviated'])
+                if (!$response && $gen_data['abbreviate'])
                 {
-                    $thread_headers['abbreviated'] = true;
+                    $thread_headers['abbreviate'] = true;
                 }
             }
 
-            $thread_headers['reply_to_link'] = $thread_page_web_path;
+            $thread_headers['reply_to_url'] = $web_paths['thread_page'];
 
             if ($in_modmode)
             {
@@ -311,6 +313,7 @@ class OutputPost extends OutputCore
 
                 if (!empty($link_url))
                 {
+                    $backlink_data['backlink_url'] = $link_url;
                     $post_headers['backlinks'][] = $backlink_data;
                 }
             }
@@ -346,30 +349,33 @@ class OutputPost extends OutputCore
 
             foreach ($this->output_filter->newlinesToArray($post_data['comment']) as $line)
             {
+                $final_line = '';
+
                 if ($gen_data['index_rendering'] && $line_count == $this->domain->setting('comment_display_lines'))
                 {
-                    $comment_data['post_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->thread_id . 'p' . $post_content_id->post_id;
-                            break;
+                    $comment_data['post_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->thread_id . 'p' .
+                            $post_content_id->post_id;
+                    break;
                 }
 
-                $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, null, PREG_SPLIT_DELIM_CAPTURE);
+                $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
                 foreach ($segments as $segment)
                 {
                     $link_url = $cites->createPostLinkURL($this->domain, $post_content_id, $segment);
-                    $line = $segment;
 
                     if (!empty($link_url))
                     {
                         if (preg_match('#^\s*>#', $segment) === 1)
                         {
-                            $line = $link_url;
+                            $segment = '<a href="' . $link_url . '" class="post-link" data-command="show-linked-post">' . $segment . '</a>';
                         }
                     }
 
-                    $comment_data['comment_lines'][]['line'] = $line;
+                    $final_line .= $segment;
                 }
 
+                $comment_data['comment_lines'][]['line'] = $final_line;
                 ++ $line_count;
             }
         }

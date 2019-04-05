@@ -4,8 +4,8 @@ nelliel.ui.hideShowThread = function(element, command) {
     }
 
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
-    var post_files = document.getElementById("files-" + content_id.id_string);
-    var post_contents = document.getElementById("post-contents-" + content_id.id_string);
+    var post_files = document.getElementById("content-" + content_id.id_string);
+    var post_contents = document.getElementById("post-comments-" + content_id.id_string);
     var post_header_options = document.getElementById("post-header-options-" + content_id.id_string);
     var thread_container = document.getElementById("thread-expand-" + "cid_" + content_id.thread_id + "_0_0");
 
@@ -30,8 +30,8 @@ nelliel.ui.hideShowPost = function(element, command) {
     }
 
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
-    var post_files = document.getElementById("files-" + content_id.id_string);
-    var post_contents = document.getElementById("post-contents-" + content_id.id_string);
+    var post_files = document.getElementById("content-" + content_id.id_string);
+    var post_contents = document.getElementById("post-comments-" + content_id.id_string);
 
 
     if (command == "hide-post") {

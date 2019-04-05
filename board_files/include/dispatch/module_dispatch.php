@@ -47,8 +47,8 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             switch ($inputs['action'])
             {
                 case 'view-index':
-                    require_once INCLUDE_PATH . 'output/main_generation.php';
-                    nel_main_thread_generator($domain, 0, false, intval($inputs['index']));
+                    $output_thread = new \Nelliel\Output\OutputIndex($domain);
+                    $output_thread->render(['write' => false, 'thread_id' => 0]);
                     break;
 
                 case 'view-thread':

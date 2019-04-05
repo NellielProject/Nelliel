@@ -69,12 +69,10 @@ class Regen
 
     public function index(Domain $domain)
     {
-        require_once INCLUDE_PATH . 'output/main_generation.php';
         $index_domain = $this->getTemporaryDomainBoard($domain->id());
         $index_domain->renderActive(true);
         $output_thread = new \Nelliel\Output\OutputIndex($index_domain);
         $output_thread->render(['write' => true, 'thread_id' => 0]);
-        //nel_main_thread_generator($index_domain, 0, true);
         $catalog_domain = $this->getTemporaryDomainBoard($domain->id());
         $catalog_domain->renderActive(true);
         $output_catalog = new \Nelliel\Output\OutputCatalog($catalog_domain);

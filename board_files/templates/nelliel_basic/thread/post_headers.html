@@ -13,12 +13,14 @@
 						{{# thread_headers }}
 						<div class="thread-header-options">
 							<input class="thread-select" type="checkbox" name="{{ thread_content_id }}" value="action">
+							{{^ index_render }}
 							<span data-i18n="gettext">Select thread</span>
+							{{/ index_render }}
 							{{# index_render }}
-							<span>[<a id="{{ hide_thread_id }}" href="#" data-command="hide-thread" data-content-id="{{ thread_content_id }}" data-alt-visual="Show Thread" data-i18n-attributes="data-alt-visual" data-i18n="gettext">Hide Thread</a>]</span>
-								{{# abbreviated }}
+							<span>[<a id="{{ hide_thread_id }}" href="#" data-command="hide-thread" data-content-id="{{ post_content_id }}" data-alt-visual="Show Thread" data-i18n-attributes="data-alt-visual" data-i18n="gettext">Hide Thread</a>]</span>
+								{{# abbreviate }}
 							<span>[<a href="#" data-command="expand-thread{{ render }}" data-content-id="{{ thread_content_id }}" data-alt-visual="Collapse Thread" data-i18n-attributes="data-alt-visual" data-i18n="gettext">Expand Thread</a>]</span>
-								{{/ abbreviated }}
+								{{/ abbreviate }}
 							<span>[<a href="{{ reply_to_url }}" data-i18n="gettext">Reply</a>]</span>
 							{{/ index_render }}
 							{{# sticky }}
@@ -47,10 +49,10 @@
 							<span class="capcode">{{ capcode }}</span>
 							<span class="{{ post_time_class }}">{{ post_time }}</span>
 							<span class="poster-id">{{ poster_id }}</span>
-							<span>No.</span>&nbsp;
+							<span data-i18n="gettext">No.</span>
 							<a href="{{ post_number_url }}" class="{{ post_number_class }}">{{ post_number }}</a>
 							{{# backlinks }}
-							<a href="{{ backlink_url }}" class="post-link" data-command="show-linked-post">{{ backlink_text }}</a>
+							<a href="{{ backlink_url }}" class="post-backlink" data-command="show-linked-post">{{ backlink_text }}</a>
 							{{/ backlinks }}
 						</div>
 						{{/ post_headers }}

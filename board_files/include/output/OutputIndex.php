@@ -44,6 +44,7 @@ class OutputIndex extends OutputCore
 
         if (empty($thread_list))
         {
+            $render_input['catalog_url'] = 'catalog.html';
             $this->domain->renderInstance()->startRenderTimer();
             $output_header->render(
                     ['header_type' => 'board', 'dotdot' => $dotdot, 'treeline' => $treeline, 'index_render' => true]);
@@ -67,10 +68,8 @@ class OutputIndex extends OutputCore
         }
 
         $post_counter = 0;
-        $gen_data['posts_ending'] = false;
         $gen_data['index_rendering'] = true;
         $json_index = new \Nelliel\API\JSON\JSONIndex($this->domain, $this->file_handler);
-        $hr_added = false;
         $index_render = '';
         $header_render = '';
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
@@ -79,6 +78,8 @@ class OutputIndex extends OutputCore
         $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => 0]);
         $header_render .= $this->render_instance->outputRenderSet();
         $this->render_instance->clearRenderSet();
+        $render_input['catalog_url'] = 'catalog.html';
+        $render_input['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
         $index_format = $site_domain->setting('index_filename_format');
         $page = 1;
         $page_count = (int) ceil($thread_count / $this->domain->setting('threads_per_page'));
@@ -86,6 +87,7 @@ class OutputIndex extends OutputCore
 
         foreach ($thread_list as $thread_data)
         {
+            $thread_input = array();
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
@@ -94,18 +96,19 @@ class OutputIndex extends OutputCore
             $output_post = new \Nelliel\Output\OutputPost($this->domain);
             $json_thread = new \Nelliel\API\JSON\JSONThread($this->domain, $this->file_handler);
             $thread_content_id = \Nelliel\ContentID::createIDString($thread_data['thread_id']);
-            $render_input['op_post'] = '';
-            $render_input['thread_posts'] = '';
-            $render_input['thread_id'] = $thread_content_id;
-            $render_input['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
-            $render_input['thread_corral_id'] = 'thread-' . $thread_content_id;
-            $render_input['board_id'] = $this->domain->id();
-            $gen_data['abbreviated'] = $thread_data['post_count'] > $this->domain->setting('abbreviate_thread');
-            $render_input['abbreviate'] = $gen_data['abbreviated'];
+            $thread_input['op_post'] = '';
+            $thread_input['thread_posts'] = '';
+            $thread_input['thread_id'] = $thread_content_id;
+            $thread_input['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
+            $thread_input['thread_corral_id'] = 'thread-' . $thread_content_id;
+            $thread_input['omitted_count'] = $thread_data['post_count'] - $this->domain->setting('abbreviate_thread');
+            $gen_data['abbreviate'] = $thread_data['post_count'] > $this->domain->setting('abbreviate_thread');
+            $thread_input['abbreviate'] = $gen_data['abbreviate'];
+            $abbreviate_start = $thread_data['post_count'] - ($this->domain->setting('abbreviate_thread') - 1);
+            $post_counter = 0;
 
             foreach ($treeline as $post_data)
             {
-                $thread_input['thread_posts'] = '';
                 $json_post = new \Nelliel\API\JSON\JSONPost($this->domain, $this->file_handler);
                 $json_instances['post'] = $json_post;
                 $parameters = ['thread_data' => $thread_data, 'dotdot' => $dotdot, 'post_data' => $post_data,
@@ -114,13 +117,18 @@ class OutputIndex extends OutputCore
                 if ($post_data['op'] == 1)
                 {
                     $thread_input['op_post'] = $output_post->render($parameters);
+                    $json_thread->addPostData($json_post->retrieveData());
                 }
                 else
                 {
-                    $thread_input['thread_posts'] .= $output_post->render($parameters);
+                    if($post_counter >= $abbreviate_start)
+                    {
+                        $thread_input['thread_posts'] .= $output_post->render($parameters);
+                        $json_thread->addPostData($json_post->retrieveData());
+                    }
                 }
 
-                $json_thread->addPostData($json_post->retrieveData());
+                $post_counter++;
             }
 
             $render_input['threads'][] = $thread_input;
@@ -128,7 +136,7 @@ class OutputIndex extends OutputCore
 
             if ($threads_on_page >= $this->domain->setting('threads_per_page'))
             {
-                $render_input['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
+                $json_index->addThreadData($json_thread->retrieveData());
 
                 // Set up the array of navigation elements
                 $nav_elements = array();
@@ -150,9 +158,9 @@ class OutputIndex extends OutputCore
                 }
 
                 $next = array();
-                $next['linked'] = ($page != $page_count - 1);
+                $next['linked'] = ($page != $page_count);
                 $next['link_text'] = _gettext('Next');
-                $next['index_url'] = ($page != $page_count - 1) ? sprintf($index_format, ($page + 1)) . PAGE_EXT : '';
+                $next['index_url'] = ($page != $page_count) ? sprintf($index_format, ($page + 1)) . PAGE_EXT : '';
                 $nav_elements[] = $next;
                 $render_input['nav_elements'] = $nav_elements;
 
@@ -180,7 +188,7 @@ class OutputIndex extends OutputCore
 
                 $threads_on_page = 0;
                 $index_render = '';
-                $render_input = array();
+                $render_input['threads'] = array();
                 $page++;
             }
         }
