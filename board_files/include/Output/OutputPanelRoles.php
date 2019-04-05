@@ -53,7 +53,7 @@ class OutputPanelRoles extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Roles')];
@@ -80,10 +80,10 @@ class OutputPanelRoles extends OutputCore
 
         $render_input['new_role_url'] = MAIN_SCRIPT . '?module=roles&action=new';
 
-        $this->render_instance->appendHTML($render_instance->render('management/panels/roles_panel_main', $render_input));
+        $this->render_instance->appendToOutput($render_instance->render('management/panels/roles_panel_main', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->outputRenderSet();
+        echo $this->render_instance->getOutput();
         nel_clean_exit();
     }
 
@@ -96,7 +96,7 @@ class OutputPanelRoles extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit Role')];
@@ -141,10 +141,10 @@ class OutputPanelRoles extends OutputCore
             $permission_data['label'] = '(' . $permission['permission'] . ') - ' . $permission['description'];
         }
 
-        $this->render_instance->appendHTML($render_instance->render('management/panels/roles_panel_edit', $render_input));
+        $this->render_instance->appendToOutput($render_instance->render('management/panels/roles_panel_edit', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->outputRenderSet();
+        echo $this->render_instance->getOutput();
         nel_clean_exit();
     }
 }

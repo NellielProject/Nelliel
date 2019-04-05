@@ -36,7 +36,7 @@ class OutputFile extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), [
             'extension' => '.html']);
@@ -201,7 +201,7 @@ class OutputFile extends OutputCore
         //$this->render_instance->appendHTML($render_instance->render('thread/post', $render_input));
         //$output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         //$output_footer->render(['dotdot' => '', 'styles' => false]);
-        //echo $this->render_instance->outputRenderSet();
+        //echo $this->render_instance->getOutput();
     }
 
     public function getFileFromDatabase($post_id)

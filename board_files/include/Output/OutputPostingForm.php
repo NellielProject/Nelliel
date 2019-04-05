@@ -30,7 +30,7 @@ class OutputPostingForm extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), [
             'extension' => '.html']);
@@ -118,7 +118,7 @@ class OutputPostingForm extends OutputCore
         $render_input['honeypot_field_name3'] = BASE_HONEYPOT_FIELD3 . '_' . $this->domain->id();
         $render_input['posting_mode'] = ($response_to) ? _gettext('Posting mode: Reply') : _gettext('Posting mode: New thread');
         $this->postingRules($render_input);
-        $this->render_instance->appendHTML($render_instance->render('posting_form', $render_input));
+        $this->render_instance->appendToOutput($render_instance->render('posting_form', $render_input));
     }
 
     private function postingRules(&$render_input)

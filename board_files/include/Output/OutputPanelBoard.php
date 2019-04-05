@@ -23,7 +23,7 @@ class OutputPanelBoard extends OutputCore
     {
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Options')];
@@ -52,10 +52,10 @@ class OutputPanelBoard extends OutputCore
         $render_input['regen_board_caches'] = $user->domainPermission($this->domain, 'perm_regen_cache');
         $render_input['regen_caches_url'] = MAIN_SCRIPT . '?module=regen&action=board-all-caches&board_id=' .
                 $this->domain->id();
-        $this->render_instance->appendHTML($render_instance->render('management/panels/board_panel', $render_input));
+                $this->render_instance->appendToOutput($render_instance->render('management/panels/board_panel', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->outputRenderSet();
+        echo $this->render_instance->getOutput();
         nel_clean_exit();
     }
 }

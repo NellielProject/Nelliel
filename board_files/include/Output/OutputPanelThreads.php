@@ -168,7 +168,7 @@ class OutputPanelThreads extends OutputCore
         $this->render_instance->appendHTMLFromDOM($this->dom);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->outputRenderSet();
+        echo $this->render_instance->getOutput();
         nel_clean_exit();
     }
 
@@ -250,7 +250,7 @@ class OutputPanelThreads extends OutputCore
         $this->render_instance->appendHTMLFromDOM($this->dom);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->outputRenderSet();
+        echo $this->render_instance->getOutput();
         nel_clean_exit();
     }
 }

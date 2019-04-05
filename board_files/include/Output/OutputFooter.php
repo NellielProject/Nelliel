@@ -43,11 +43,11 @@ class OutputFooter extends OutputCore
 
         if($this->domain->setting('display_render_timer'))
         {
-            $time = round($this->domain->renderInstance()->endRenderTimer(), 4);
+            $time = round($this->domain->renderInstance()->endTimer(), 4);
             $render_input['render_timer'] = sprintf(_gettext('This page was created in %s seconds.'), $time);
         }
 
-        $this->domain->renderInstance()->appendHTML($render_instance->render('footer', $render_input));
+        $this->domain->renderInstance()->appendToOutput($render_instance->render('footer', $render_input));
     }
 
     public function buildStyles(string $dotdot)

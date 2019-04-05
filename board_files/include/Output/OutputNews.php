@@ -24,7 +24,7 @@ class OutputNews extends OutputCore
         // Temp
         $this->domain->renderActive(true);
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['use_site_titles' => true];
@@ -33,10 +33,10 @@ class OutputNews extends OutputCore
         $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
         $template_loader->load('news');
         $render_input['news_entries'] = $this->newsList();
-        $this->render_instance->appendHTML($render_instance->render('news', $render_input));
+        $this->render_instance->appendToOutput($render_instance->render('news', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        $this->file_handler->writeFile(BASE_PATH . 'news.html', $this->render_instance->outputRenderSet());
+        $this->file_handler->writeFile(BASE_PATH . 'news.html', $this->render_instance->getOutput());
     }
 
     private function newsList(int $limit = 0)

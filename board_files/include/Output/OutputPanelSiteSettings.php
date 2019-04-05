@@ -32,7 +32,7 @@ class OutputPanelSiteSettings extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Site Settings')];
@@ -60,10 +60,10 @@ class OutputPanelSiteSettings extends OutputCore
             }
         }
 
-        $this->render_instance->appendHTML($render_instance->render('management/panels/site_settings_panel', $render_input));
+        $this->render_instance->appendToOutput($render_instance->render('management/panels/site_settings_panel', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->outputRenderSet();
+        echo $this->render_instance->getOutput();
         nel_clean_exit();
     }
 }

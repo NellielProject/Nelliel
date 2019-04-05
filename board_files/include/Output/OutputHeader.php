@@ -123,7 +123,7 @@ class OutputHeader extends OutputCore
         $render_input['styles'] = $this->buildStyles($dotdot);
 
         // Temp
-        $this->domain->renderInstance()->appendHTML($render_instance->render('header', $render_input));
+        $this->domain->renderInstance()->appendToOutput($render_instance->render('header', $render_input));
 
         //return $render_instance->render('header2', $render_input);
     }
@@ -258,7 +258,7 @@ class OutputHeader extends OutputCore
         $render_input['styles'] = $this->buildStyles($dotdot);
 
         // Temp
-        $this->domain->renderInstance()->appendHTML($render_instance->render('header', $render_input));
+        $this->domain->renderInstance()->appendToOutput($render_instance->render('header', $render_input));
 
                 //return $render_instance->render('header2', $render_input);
     }

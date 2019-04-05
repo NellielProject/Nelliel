@@ -32,7 +32,7 @@ class OutputPost extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(),
                 ['extension' => '.html']);
@@ -122,7 +122,7 @@ class OutputPost extends OutputCore
         return $render;
 
         //$this->render_instance->appendHTML($render_instance->render('thread/post', $render_input));
-        //echo $this->render_instance->outputRenderSet();
+        //echo $this->render_instance->getOutput();
     }
 
     public function getPostFromDatabase($post_id)

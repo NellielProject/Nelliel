@@ -13,7 +13,7 @@ class TemplateCore
         $this->render_instance = $render_instance;
     }
 
-    public function setTemplatePath($path)
+    public function templatePath($path)
     {
         if (substr($path, -1) !== '/')
         {

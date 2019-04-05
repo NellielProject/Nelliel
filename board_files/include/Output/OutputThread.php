@@ -30,7 +30,7 @@ class OutputThread extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
         $render_instance = new \Mustache_Engine(['loader' => $template_loader]);
@@ -71,8 +71,8 @@ class OutputThread extends OutputCore
         $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot]);
         $output_posting_form = new \Nelliel\Output\OutputPostingForm($this->domain);
         $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $thread_id]);
-        $header_render .= $this->render_instance->outputRenderSet();
-        $this->render_instance->clearRenderSet();
+        $header_render .= $this->render_instance->getOutput();
+        $this->render_instance->clearOutput();
         $output_post = new \Nelliel\Output\OutputPost($this->domain);
         $render_input['op_post'] = '';
         $render_input['thread_posts'] = '';
@@ -112,7 +112,7 @@ class OutputThread extends OutputCore
         $thread_render .= $render_instance->render('thread/thread', $render_input);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => $dotdot, 'generate_styles' => true]);
-        $thread_render .= $this->render_instance->outputRenderSet();
+        $thread_render .= $this->render_instance->getOutput();
 
         if ($write)
         {

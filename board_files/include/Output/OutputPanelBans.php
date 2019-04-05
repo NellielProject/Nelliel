@@ -57,7 +57,7 @@ class OutputPanelBans extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')];
@@ -103,10 +103,10 @@ class OutputPanelBans extends OutputCore
 
         $render_input['new_ban_url'] = MAIN_SCRIPT . '?module=board&module=bans&action=new&board_id=' . $this->domain->id();
 
-        $this->render_instance->appendHTML($render_instance->render('management/panels/bans_panel_main', $render_input));
+        $this->render_instance->appendToOutput($render_instance->render('management/panels/bans_panel_main', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->outputRenderSet();
+        echo $this->render_instance->getOutput();
         nel_clean_exit();
     }
 
@@ -121,7 +121,7 @@ class OutputPanelBans extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Add Ban')];
@@ -147,10 +147,10 @@ class OutputPanelBans extends OutputCore
         $render_input['ban_ip'] = $ip;
         $render_input['ban_type'] = $type;
 
-        $this->render_instance->appendHTML($render_instance->render('management/panels/bans_panel_add', $render_input));
+        $this->render_instance->appendToOutput($render_instance->render('management/panels/bans_panel_add', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->outputRenderSet();
+        echo $this->render_instance->getOutput();
         nel_clean_exit();
     }
 
@@ -165,7 +165,7 @@ class OutputPanelBans extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Modify Ban')];
@@ -214,10 +214,10 @@ class OutputPanelBans extends OutputCore
             $render_input['status_denied'] = 'checked';
         }
 
-        $this->render_instance->appendHTML($render_instance->render('management/panels/bans_panel_modify', $render_input));
+        $this->render_instance->appendToOutput($render_instance->render('management/panels/bans_panel_modify', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->outputRenderSet();
+        echo $this->render_instance->getOutput();
         nel_clean_exit();
     }
 }

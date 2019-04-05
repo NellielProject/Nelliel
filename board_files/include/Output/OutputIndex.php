@@ -29,7 +29,7 @@ class OutputIndex extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $template_loader = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(),
                 ['extension' => '.html']);
@@ -45,7 +45,7 @@ class OutputIndex extends OutputCore
         if (empty($thread_list))
         {
             $render_input['catalog_url'] = 'catalog.html';
-            $this->domain->renderInstance()->startRenderTimer();
+            $this->domain->renderInstance()->startTimer();
             $output_header->render(
                     ['header_type' => 'board', 'dotdot' => $dotdot, 'treeline' => $treeline, 'index_render' => true]);
             $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $response_to]);
@@ -55,13 +55,13 @@ class OutputIndex extends OutputCore
             if ($write)
             {
                 $file_handler->writeFile($this->domain->reference('board_directory') . '/' . MAIN_INDEX . PAGE_EXT,
-                        $this->domain->renderInstance()->outputRenderSet(), FILE_PERM);
+                        $this->domain->renderInstance()->getOutput(), FILE_PERM);
                 $json_index->writeStoredData($this->domain->reference('board_directory') . '/',
                         sprintf('index-%d', $page + 1));
             }
             else
             {
-                echo $this->domain->renderInstance()->outputRenderSet();
+                echo $this->domain->renderInstance()->getOutput();
             }
 
             return;
@@ -76,8 +76,8 @@ class OutputIndex extends OutputCore
         $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot]);
         $output_posting_form = new \Nelliel\Output\OutputPostingForm($this->domain);
         $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => 0]);
-        $header_render .= $this->render_instance->outputRenderSet();
-        $this->render_instance->clearRenderSet();
+        $header_render .= $this->render_instance->getOutput();
+        $this->render_instance->clearOutput();
         $render_input['catalog_url'] = 'catalog.html';
         $render_input['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
         $index_format = $site_domain->setting('index_filename_format');
@@ -167,9 +167,9 @@ class OutputIndex extends OutputCore
                 $index_render .= $header_render;
                 $index_render .= $render_instance->render('index', $render_input);
                 $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-                $this->domain->renderInstance()->clearRenderSet();
+                $this->domain->renderInstance()->clearOutput();
                 $output_footer->render(['dotdot' => $dotdot, 'styles' => true]);
-                $index_render .= $this->render_instance->outputRenderSet();
+                $index_render .= $this->render_instance->getOutput();
                 $index_filename = ($page == 1) ? 'index' . PAGE_EXT : sprintf($index_format, ($page)) . PAGE_EXT;
 
                 if ($write)

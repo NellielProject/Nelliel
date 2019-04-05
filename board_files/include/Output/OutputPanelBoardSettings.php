@@ -28,7 +28,7 @@ class OutputPanelBoardSettings extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $filetypes = new \Nelliel\FileTypes($this->database);
 
@@ -157,11 +157,11 @@ class OutputPanelBoardSettings extends OutputCore
             $render_input[$config_line['config_name']] = $config_data;
         }
 
-        $this->render_instance->appendHTML(
+        $this->render_instance->appendToOutput(
                 $render_instance->render('management/panels/board_settings_panel', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->outputRenderSet();
+        echo $this->render_instance->getOutput();
         nel_clean_exit();
     }
 }

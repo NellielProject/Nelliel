@@ -51,7 +51,7 @@ class OutputPanelManageBoards extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')];
@@ -93,10 +93,10 @@ class OutputPanelManageBoards extends OutputCore
             $render_input['board_list'][] = $board_data;
         }
 
-        $this->render_instance->appendHTML($render_instance->render('management/panels/manage_boards_panel', $render_input));
+        $this->render_instance->appendToOutput($render_instance->render('management/panels/manage_boards_panel', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->outputRenderSet();
+        echo $this->render_instance->getOutput();
         nel_clean_exit();
     }
 
@@ -104,7 +104,7 @@ class OutputPanelManageBoards extends OutputCore
     {
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Confirm Board Deletion')];
@@ -116,10 +116,10 @@ class OutputPanelManageBoards extends OutputCore
         $render_input['continue_link_text'] = $parameters['continue_link']['text'];
         $render_input['continue_url'] = $parameters['continue_link']['href'];
 
-        $this->render_instance->appendHTML($render_instance->render('management/interstitials/board_removal', $render_input));
+        $this->render_instance->appendToOutput($render_instance->render('management/interstitials/board_removal', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->outputRenderSet();
+        echo $this->render_instance->getOutput();
         nel_clean_exit();
     }
 }

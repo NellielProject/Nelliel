@@ -22,7 +22,7 @@ class OutputDerp extends OutputCore
     {
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $output_header->render(['header_type' => 'general', 'dotdot' => '']);
@@ -64,11 +64,11 @@ class OutputDerp extends OutputCore
         $render_input['return_link'] = $return_link;
 
         // Temp
-        $this->render_instance->appendHTML($render_instance->render('derp', $render_input));
+        $this->render_instance->appendToOutput($render_instance->render('derp', $render_input));
 
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
-        echo $this->render_instance->outputRenderSet();
+        echo $this->render_instance->getOutput();
     }
 
     public function renderSimple(array $diagnostic)

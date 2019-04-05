@@ -21,14 +21,14 @@ class Regen
     private function getTemporaryDomainBoard(string $domain_id)
     {
         $domain = new DomainBoard($domain_id, $this->database);
-        $domain->renderInstance(new RenderCore());
+        $domain->renderInstance(new RenderCoreDOM());
         return $domain;
     }
 
     private function getTemporaryDomainSite()
     {
         $domain = new DomainSite($this->database);
-        $domain->renderInstance(new RenderCore());
+        $domain->renderInstance(new RenderCoreDOM());
         return $domain;
     }
 

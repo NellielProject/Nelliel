@@ -31,7 +31,8 @@ abstract class OutputCore
     {
         $this->render_instance = $this->domain->renderInstance();
         $this->dom = $this->render_instance->newDOMDocument();
-        $this->render_instance->loadTemplateFromFile($this->dom, $template_file);
-        $this->render_instance->startRenderTimer();
+        $template = $render->loadTemplateFromFile($template_file);
+        $render->loadDOMFromTemplate($this->dom, $template);
+        $this->render_instance->startTimer();
     }
 }

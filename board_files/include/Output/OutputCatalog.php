@@ -29,7 +29,7 @@ class OutputCatalog extends OutputCore
 
         // Temp
         $this->render_instance = $this->domain->renderInstance();
-        $this->render_instance->startRenderTimer();
+        $this->render_instance->startTimer();
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot]);
@@ -142,17 +142,17 @@ class OutputCatalog extends OutputCore
             $render_input['catalog_entries'][] = $thread_data;
         }
 
-        $this->render_instance->appendHTML($render_instance->render('catalog', $render_input));
+        $this->render_instance->appendToOutput($render_instance->render('catalog', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $output_footer->render(['dotdot' => '', 'styles' => false]);
 
         if($write)
         {
-            $this->file_handler->writeFile(BASE_PATH . $this->domain->reference('board_directory') . '/catalog.html', $this->render_instance->outputRenderSet());
+            $this->file_handler->writeFile(BASE_PATH . $this->domain->reference('board_directory') . '/catalog.html', $this->render_instance->getOutput());
         }
         else
         {
-            echo $this->render_instance->outputRenderSet();
+            echo $this->render_instance->getOutput();
             nel_clean_exit();
         }
     }

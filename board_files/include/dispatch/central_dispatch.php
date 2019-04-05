@@ -47,7 +47,7 @@ function nel_central_dispatch()
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
     $snacks->applyBan($domain, $inputs);
     $snacks->checkHoneypot($domain);
-    $domain->renderInstance(new \Nelliel\RenderCore());
+    $domain->renderInstance(new \Nelliel\RenderCoreDOM());
 
     require_once INCLUDE_PATH . 'dispatch/module_dispatch.php';
     $inputs = nel_module_dispatch($inputs, $domain);
