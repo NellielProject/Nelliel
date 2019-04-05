@@ -14,6 +14,7 @@ abstract class Domain
     protected $domain_references;
     protected $cache_handler;
     protected $database;
+    protected $front_end_data;
     protected $file_handler;
     protected $render_core;
     protected $render_active;
@@ -30,6 +31,7 @@ abstract class Domain
 
     protected function utilitySetup()
     {
+        $this->front_end_data = new FrontEndData($this->database);
         $this->file_handler = new \Nelliel\FileHandler();
         $this->cache_handler = new \Nelliel\CacheHandler();
         $this->translator = new \Nelliel\Language\Translator();
@@ -85,16 +87,6 @@ abstract class Domain
         return $this->domain_references[$reference];
     }
 
-    public function renderActive($status = null)
-    {
-        if (!is_null($status))
-        {
-            $this->render_active = $status;
-        }
-
-        return $this->render_active;
-    }
-
     public function templatePath($new_path = null)
     {
         if(!is_null($new_path))
@@ -103,27 +95,6 @@ abstract class Domain
         }
 
         return $this->template_path;
-    }
-
-    public function renderInstance($new_instance = null)
-    {
-        if (is_null($new_instance) && empty($this->render_core))
-        {
-            $this->render_core = new RenderCoreDOM();
-            $front_end_data = new FrontEndData($this->database);
-            $this->templatePath(TEMPLATES_FILE_PATH . $front_end_data->template($this->setting('template_id'))['directory']);
-            $this->render_core->getTemplateInstance()->templatePath($this->template_path);
-        }
-
-        if (!is_null($new_instance))
-        {
-            $this->render_core = $new_instance;
-            $front_end_data = new FrontEndData($this->database);
-            $this->templatePath(TEMPLATES_FILE_PATH . $front_end_data->template($this->setting('template_id'))['directory']);
-            $this->render_core->getTemplateInstance()->templatePath($this->template_path);
-        }
-
-        return $this->render_core;
     }
 
     public function translator()

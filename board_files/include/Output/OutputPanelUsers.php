@@ -55,7 +55,7 @@ class OutputPanelUsers extends OutputCore
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Users')];
         $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
         $users = $this->database->executeFetchAll('SELECT * FROM "' . USERS_TABLE . '"', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
@@ -92,7 +92,7 @@ class OutputPanelUsers extends OutputCore
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit User')];
         $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
 
         if (is_null($user_id))
         {

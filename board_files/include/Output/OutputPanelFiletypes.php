@@ -35,7 +35,7 @@ class OutputPanelFiletypes extends OutputCore
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Filetypes')];
         $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
         $filetypes = $this->database->executeFetchAll(
                 'SELECT * FROM "' . FILETYPES_TABLE . '" WHERE "extension" <> \'\' ORDER BY "entry" ASC',
                 PDO::FETCH_ASSOC);

@@ -11,7 +11,6 @@ abstract class OutputCore
 {
     protected $domain;
     protected $database;
-    protected $dom;
     protected $render_core;
     protected $file_handler;
     protected $cache_handler;
@@ -26,15 +25,6 @@ abstract class OutputCore
         $this->cache_handler = new \Nelliel\CacheHandler();
         $this->output_filter = new \Nelliel\OutputFilter();
         $this->url_constructor = new \Nelliel\URLConstructor();
-    }
-
-    protected function prepare(string $template_file)
-    {
-        $this->render_core = $this->domain->renderInstance();
-        $this->dom = $this->render_core->newDOMDocument();
-        $template = $render->loadTemplateFromFile($template_file);
-        $render->loadDOMFromTemplate($this->dom, $template);
-        $this->render_core->startTimer();
     }
 
     protected function selectRenderCore(string $core_id)

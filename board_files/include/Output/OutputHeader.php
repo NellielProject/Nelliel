@@ -46,9 +46,9 @@ class OutputHeader extends OutputCore
     {
         $session = new \Nelliel\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
-
         $dotdot = ($parameters['dotdot']) ?? array();
         $extra_data = ($parameters['extra_data']) ?? array();
+        $manage_render = ($parameters['manage_render']) ?? false;
         $render_input = array();
         $render_input['main_js_file'] = $dotdot . SCRIPTS_WEB_PATH . 'nel.js';
         $render_input['js_onload'] = 'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $this->domain->id() . '\', \'' .
@@ -76,9 +76,10 @@ class OutputHeader extends OutputCore
 
         $render_input['page_title'] = 'Nelliel Imageboard';
 
-        if (($session->isActive() || $session->inModmode($this->domain)) && !$this->domain->renderActive())
+        if ($manage_render || $session->inModmode($this->domain))
         {
             $render_input['session_active'] = true;
+            $render_input['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=main-panel';
 
             if (isset($extra_data['header']))
             {
@@ -100,14 +101,6 @@ class OutputHeader extends OutputCore
         else
         {
             $render_input['session_active'] = false;
-        }
-
-        if ($session->isActive() && !$this->domain->renderActive())
-        {
-            $render_input['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=main-panel';
-        }
-        else
-        {
             $render_input['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=login';
         }
 
@@ -124,7 +117,6 @@ class OutputHeader extends OutputCore
     {
         $session = new \Nelliel\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
-
         $dotdot = ($parameters['dotdot']) ?? array();
         $treeline = ($parameters['treeline']) ?? array();
         $index_render = ($parameters['index_render']) ?? false;
@@ -173,18 +165,15 @@ class OutputHeader extends OutputCore
         $render_input['favicon_url'] = $site_domain->setting('site_favicon');
         $render_input['page_title'] = 'Nelliel Imageboard';
 
-        if (($session->isActive() || $session->inModmode($this->domain)) && !$this->domain->renderActive())
+        if ($session->inModmode($this->domain))
         {
             $render_input['session_active'] = true;
+            $render_input['manage_header'] = _gettext('Mod Mode');
+            $render_input['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=main-panel';
 
             if (isset($extra_data['header']))
             {
                 $render_input['manage_header'] = $extra_data['header'];
-            }
-
-            if ($session->inModmode($this->domain) && !$this->domain->renderActive())
-            {
-                $render_input['manage_header'] = _gettext('Mod Mode');
             }
 
             if ($this->domain->id() !== '')
@@ -202,14 +191,6 @@ class OutputHeader extends OutputCore
         else
         {
             $render_input['session_active'] = false;
-        }
-
-        if ($session->isActive() && !$this->domain->renderActive())
-        {
-            $render_input['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=main-panel';
-        }
-        else
-        {
             $render_input['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=login';
         }
 

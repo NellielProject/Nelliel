@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use \Nelliel\Domain;
+use Nelliel\Domain;
 
 function nel_module_dispatch(array $inputs, Domain $domain)
 {
@@ -39,11 +39,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $inputs['thread'] = $_GET['thread'] ?? null;
             $session = new \Nelliel\Session(true);
 
-            if(!$session->inModmode($domain))
-            {
-                $domain->renderActive(true);
-            }
-
             switch ($inputs['action'])
             {
                 case 'view-index':
@@ -53,17 +48,23 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 case 'view-thread':
                     $output_thread = new \Nelliel\Output\OutputThread($domain);
-                    $output_thread->render(['write' => false, 'thread_id' => intval($inputs['thread']), 'command' => $inputs['action']]);
+                    $output_thread->render(
+                            ['write' => false, 'thread_id' => intval($inputs['thread']),
+                                'command' => $inputs['action']]);
                     break;
 
                 case 'expand-thread':
                     $output_thread = new \Nelliel\Output\OutputThread($domain);
-                    $output_thread->render(['write' => false, 'thread_id' => intval($inputs['thread']), 'command' => $inputs['action']]);
+                    $output_thread->render(
+                            ['write' => false, 'thread_id' => intval($inputs['thread']),
+                                'command' => $inputs['action']]);
                     break;
 
                 case 'collapse-thread':
                     $output_thread = new \Nelliel\Output\OutputThread($domain);
-                    $output_thread->render(['write' => false, 'thread_id' => intval($inputs['thread']), 'command' => $inputs['action']]);
+                    $output_thread->render(
+                            ['write' => false, 'thread_id' => intval($inputs['thread']),
+                                'command' => $inputs['action']]);
                     break;
             }
 
@@ -121,7 +122,8 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             if ($inputs['action'] === 'extract-gettext')
             {
                 $language = new \Nelliel\Language\Language(new \SmallPHPGettext\SmallPHPGettext());
-                $language->extractLanguageStrings($domain, $session->sessionUser(), LANGUAGES_FILE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
+                $language->extractLanguageStrings($domain, $session->sessionUser(),
+                        LANGUAGES_FILE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
             }
 
             $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain);
@@ -167,7 +169,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 if ($fgsfds->getCommand('noko') !== false)
                 {
-                    if ($session->isActive() && $session->inModmode($domain))
+                    if ($session->inModmode($domain))
                     {
                         $url_constructor = new \Nelliel\URLConstructor();
                         $url = $url_constructor->dynamic(MAIN_SCRIPT,
@@ -187,7 +189,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 }
                 else
                 {
-                    if ($session->isActive() && $session->inModmode($domain))
+                    if ($session->inModmode($domain))
                     {
                         $url_constructor = new \Nelliel\URLConstructor();
                         $url = $url_constructor->dynamic(MAIN_SCRIPT,
@@ -231,7 +233,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     $reports_admin = new \Nelliel\Admin\AdminReports($authorization, $domain);
                     $reports_admin->actionDispatch($inputs);
 
-                    if ($session->isActive() && $session->inModmode($domain))
+                    if ($session->inModmode($domain))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . MAIN_SCRIPT .
                                 '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';
@@ -248,7 +250,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     $thread_handler = new \Nelliel\ThreadHandler($domain->database(), $domain);
                     $thread_handler->processContentDeletes();
 
-                    if ($session->isActive() && $session->inModmode($domain))
+                    if ($session->inModmode($domain))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . MAIN_SCRIPT .
                                 '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';

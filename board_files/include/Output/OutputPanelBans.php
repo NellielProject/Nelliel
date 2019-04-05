@@ -58,7 +58,7 @@ class OutputPanelBans extends OutputCore
         $this->render_core->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')];
-        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
+        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
         $render_input['can_modify'] = $user->domainPermission($this->domain, 'perm_ban_modify');
 
         if ($this->domain->id() !== '')
@@ -116,7 +116,7 @@ class OutputPanelBans extends OutputCore
         $this->render_core->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Add Ban')];
-        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
+        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
         $render_input['ban_board'] = (!empty($this->domain->id())) ? $this->domain->id() : '';
         $ip = $parameters['ip'];
         $type = $parameters['type'];
@@ -154,7 +154,7 @@ class OutputPanelBans extends OutputCore
         $this->render_core->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Modify Ban')];
-        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
+        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
         $render_input['form_action'] = MAIN_SCRIPT . '?module=board&module=bans&action=update&board_id=' . $this->domain->id();
         $ban_id = $_GET['ban_id'];
         $ban_hammer = new \Nelliel\BanHammer($this->database);

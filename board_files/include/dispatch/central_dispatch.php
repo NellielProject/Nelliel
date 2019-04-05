@@ -18,8 +18,8 @@ function nel_central_dispatch()
 
     if (isset($_GET['about_nelliel']))
     {
-        require_once INCLUDE_PATH . 'wat/about_nelliel.php';
-        nel_about_nelliel_screen();
+        $about_page = new \Nelliel\Output\OutputAboutPage(new \Nelliel\DomainSite(nel_database()));
+        $about_page->render();
     }
 
     if (isset($_GET['blank']) || isset($_GET['tpilb']))
@@ -47,7 +47,6 @@ function nel_central_dispatch()
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
     $snacks->applyBan($domain, $inputs);
     $snacks->checkHoneypot($domain);
-    $domain->renderInstance(new \Nelliel\RenderCoreDOM());
 
     require_once INCLUDE_PATH . 'dispatch/module_dispatch.php';
     $inputs = nel_module_dispatch($inputs, $domain);

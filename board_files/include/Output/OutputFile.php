@@ -42,7 +42,6 @@ class OutputFile extends OutputCore
         $file_content_id->thread_id = $post_data['parent_thread'];
         $file_content_id->post_id = $post_data['post_number'];
         $file_content_id->order_id = $file['content_order'];
-        $in_modmode = $session->inModmode($this->domain) && !$this->domain->renderActive();
         $full_filename = $file['filename'] . '.' . $file['extension'];
         $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['content_order'];
         $file_data['file_info_id'] = 'fileinfo-' . $file_content_id->getIDString();
@@ -51,7 +50,7 @@ class OutputFile extends OutputCore
         $file_data['file_select_class'] = $multiple_class . 'content-select';
         $file_data['file_preview_class'] = $post_type_class . $multiple_class . 'post-preview';
 
-        if ($in_modmode)
+        if ($session->inModmode($this->domain))
         {
             $file_data['in_modmode'] = true;
             $file_data['delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
@@ -196,8 +195,8 @@ class OutputFile extends OutputCore
     {
         $query = 'SELECT * FROM "' . $domain->reference('content_table') .
                 '" WHERE "post_ref" = ? ORDER BY "content_order" ASC';
-        $prepared = $database->prepare($query);
-        $file_data = $database->executePreparedFetchAll($prepared, [$post_id], PDO::FETCH_ASSOC);
+        $prepared = $this->database->prepare($query);
+        $file_data = $this->database->executePreparedFetchAll($prepared, [$post_id], PDO::FETCH_ASSOC);
 
         if (empty($file_data))
         {

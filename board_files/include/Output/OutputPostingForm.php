@@ -22,7 +22,6 @@ class OutputPostingForm extends OutputCore
 
     public function render(array $parameters = array())
     {
-        $this->domain->renderActive(true);
         $session = new \Nelliel\Session();
         $dotdot = $parameters['dotdot'];
         $response_to = $parameters['response_to'];
@@ -35,7 +34,7 @@ class OutputPostingForm extends OutputCore
 
         if ($response_to)
         {
-            if ($session->inModmode($this->domain) && !$this->domain->renderActive())
+            if ($session->inModmode($this->domain))
             {
                 $return_url = $this->url_constructor->dynamic(MAIN_SCRIPT,
                         ['module' => 'render', 'action' => 'view-index', 'index' => '0',
@@ -49,7 +48,7 @@ class OutputPostingForm extends OutputCore
             $render_input['return_url'] = $return_url;
         }
 
-        $render_input['is_staff'] = $session->inModmode($this->domain) && !$this->domain->renderActive();
+        $render_input['is_staff'] = $session->inModmode($this->domain);
         $render_input['not_anonymous_maxlength'] = $this->domain->setting('max_name_length');
         $render_input['spam_target_maxlength'] = $this->domain->setting('max_email_length');
         $render_input['verb_maxlength'] = $this->domain->setting('max_subject_length');

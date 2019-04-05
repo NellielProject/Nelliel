@@ -18,20 +18,6 @@ class Regen
         $this->database = nel_database();
     }
 
-    private function getTemporaryDomainBoard(string $domain_id)
-    {
-        $domain = new DomainBoard($domain_id, $this->database);
-        $domain->renderInstance(new RenderCoreDOM());
-        return $domain;
-    }
-
-    private function getTemporaryDomainSite()
-    {
-        $domain = new DomainSite($this->database);
-        $domain->renderInstance(new RenderCoreDOM());
-        return $domain;
-    }
-
     public function threads(Domain $domain, bool $write, array $ids)
     {
         $threads = count($ids);
@@ -39,9 +25,7 @@ class Regen
 
         while ($i < $threads)
         {
-            $temp_domain = $this->getTemporaryDomainBoard($domain->id());
-            $temp_domain->renderActive(true);
-            $output_thread = new \Nelliel\Output\OutputThread($temp_domain);
+            $output_thread = new \Nelliel\Output\OutputThread($domain);
             $output_thread->render(['write' => $write, 'thread_id' => $ids[$i]]);
             ++ $i;
         }
@@ -61,21 +45,15 @@ class Regen
 
     public function news(Domain $domain)
     {
-        $news_domain = $this->getTemporaryDomainSite();
-        $news_domain->renderActive(true);
-        $news = new \Nelliel\Output\OutputNews($news_domain);
+        $news = new \Nelliel\Output\OutputNews($domain);
         $news->render();
     }
 
     public function index(Domain $domain)
     {
-        $index_domain = $this->getTemporaryDomainBoard($domain->id());
-        $index_domain->renderActive(true);
-        $output_thread = new \Nelliel\Output\OutputIndex($index_domain);
+        $output_thread = new \Nelliel\Output\OutputIndex($domain);
         $output_thread->render(['write' => true, 'thread_id' => 0]);
-        $catalog_domain = $this->getTemporaryDomainBoard($domain->id());
-        $catalog_domain->renderActive(true);
-        $output_catalog = new \Nelliel\Output\OutputCatalog($catalog_domain);
+        $output_catalog = new \Nelliel\Output\OutputCatalog($domain);
         $output_catalog->render(['write' => true]);
     }
 

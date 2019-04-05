@@ -46,7 +46,7 @@ class OutputPanelBoardSettings extends OutputCore
 
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
 
         $all_filetypes = $filetypes->getFiletypeData();
         $all_categories = $filetypes->getFiletypeCategories();

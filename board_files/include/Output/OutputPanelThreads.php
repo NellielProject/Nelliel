@@ -52,7 +52,7 @@ class OutputPanelThreads extends OutputCore
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Threads')];
         $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
         $thread_data = $this->database->executeFetchAll(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') .
                 '" ORDER BY "sticky" DESC, "last_update" DESC', PDO::FETCH_ASSOC);
@@ -127,7 +127,7 @@ class OutputPanelThreads extends OutputCore
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Expanded Thread')];
         $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "parent_thread" = ? ORDER BY "post_time" DESC');

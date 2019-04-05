@@ -53,7 +53,7 @@ class OutputPanelManageBoards extends OutputCore
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')];
         $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
         $render_input['form_action'] = MAIN_SCRIPT . '?module=manage-boards&action=add';
         $board_data = $this->database->executeFetchAll(
                 'SELECT * FROM "' . BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC', PDO::FETCH_ASSOC);
@@ -103,7 +103,7 @@ class OutputPanelManageBoards extends OutputCore
         $extra_data = ['header' => _gettext('General Management'),
             'sub_header' => _gettext('Confirm Board Deletion')];
         $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
         $render_input['message'] = $parameters['message'];
         $render_input['continue_link_text'] = $parameters['continue_link']['text'];
         $render_input['continue_url'] = $parameters['continue_link']['href'];

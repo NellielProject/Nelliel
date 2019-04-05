@@ -65,8 +65,6 @@ class AdminThreads extends AdminHandler
 
     public function renderPanel($user)
     {
-        $this->domain->renderInstance();
-
         if (isset($_GET['action']) && $_GET['action'] === 'expand-thread')
         {
             $content_id = new \Nelliel\ContentID($_GET['content-id']);

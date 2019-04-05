@@ -57,7 +57,7 @@ class OutputIndex extends OutputCore
             }
             else
             {
-                echo $this->domain->renderInstance()->getOutput();
+                echo $this->render_core->getOutput();
             }
 
             return;

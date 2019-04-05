@@ -135,7 +135,6 @@ class OutputPost extends OutputCore
         $authorization = new \Nelliel\Auth\Authorization($this->database);
         $session = new \Nelliel\Session();
         $cites = new \Nelliel\Cites($this->domain->database());
-        $in_modmode = $session->inModmode($this->domain) && !$this->domain->renderActive();
         $header_data['response'] = $response;
         $header_data = array();
         $modmode_headers = array();
@@ -152,7 +151,7 @@ class OutputPost extends OutputCore
         $preview_web_path = $board_web_path . rawurlencode($this->domain->reference('preview_dir')) . '/';
         $thread_preview_web_path = $preview_web_path . $thread_content_id->thread_id . '/';
 
-        if ($in_modmode)
+        if ($session->inModmode($this->domain))
         {
 
             $modmode_headers['ip_address'] = @inet_ntop($post_data['ip_address']);
@@ -210,7 +209,7 @@ class OutputPost extends OutputCore
 
             $thread_headers['reply_to_url'] = $web_paths['thread_page'];
 
-            if ($in_modmode)
+            if ($session->inModmode($this->domain))
             {
                 $thread_headers['render'] = '-render';
                 $thread_headers['reply_to_url'] = MAIN_SCRIPT . '?module=render&action=view-thread&content-id=' .

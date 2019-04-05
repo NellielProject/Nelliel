@@ -25,7 +25,7 @@ class OutputPanelBoard extends OutputCore
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Options')];
         $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
+                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
         $session = new \Nelliel\Session(true);
         $user = $session->sessionUser();
         $render_input['module_board_settings'] = $user->domainPermission($this->domain, 'perm_board_config_access');

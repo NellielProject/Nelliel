@@ -71,4 +71,12 @@ class RenderCoreDOM extends RenderCore
         $this->createOutput($output_id);
         $this->output_sets[$output_id]['content'] .= $this->renderFromDOM($dom_document, $template_id);
     }
+
+    public function prepareForRender($template_file)
+    {
+        $new_dom = $this->newDOMDocument();
+        $this->dom_documents[spl_object_hash($new_dom)] = $new_dom;
+        $template = $render->loadTemplateFromFile($template_file);
+        $render->loadDOMFromTemplate($new_dom, $template);
+    }
 }
