@@ -49,7 +49,7 @@ class OutputPanelManageBoards extends OutputCore
             nel_derp(370, _gettext('You are not allowed to access the board manager panel.'));
         }
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')];
         $this->render_core->appendToOutput(
@@ -98,7 +98,7 @@ class OutputPanelManageBoards extends OutputCore
 
     public function removeInterstitial(array $parameters)
     {
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'),
             'sub_header' => _gettext('Confirm Board Deletion')];

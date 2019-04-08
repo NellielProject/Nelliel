@@ -21,7 +21,7 @@ class OutputPanelBoard extends OutputCore
 
     public function render(array $parameters = array())
     {
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Options')];
         $this->render_core->appendToOutput(

@@ -26,7 +26,7 @@ class OutputPanelMain extends OutputCore
         $session = new \Nelliel\Session(true);
         $user = $session->sessionUser();
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Options')];
         $this->render_core->appendToOutput(

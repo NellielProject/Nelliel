@@ -20,6 +20,8 @@ abstract class Domain
     protected $render_active;
     protected $template_path;
     protected $translator;
+    protected $locale;
+    protected $language;
 
     protected abstract function loadSettings();
 
@@ -34,10 +36,11 @@ abstract class Domain
         $this->front_end_data = new FrontEndData($this->database);
         $this->file_handler = new \Nelliel\FileHandler();
         $this->cache_handler = new \Nelliel\CacheHandler();
-        $this->translator = new \Nelliel\Language\Translator();
+        $this->translator = new \Nelliel\Language\Translator($this);
+        $this->language = new \Nelliel\Language\Language();
     }
 
-    public function database($new_database = null)
+    public function database(NellielPDO $new_database = null)
     {
         if (!is_null($new_database))
         {
@@ -100,5 +103,40 @@ abstract class Domain
     public function translator()
     {
         return $this->translator;
+    }
+
+    public function locale(string $locale = null)
+    {
+        if(!isset($this->locale) && is_null($locale))
+        {
+            $locale = $this->setting('locale');
+
+            if(nel_true_empty($locale))
+            {
+                $locale = DEFAULT_LOCALE;
+            }
+
+            $this->updateLocale($locale);
+        }
+
+        if(!is_null($locale))
+        {
+            $this->updateLocale($locale);
+        }
+
+        return $this->locale;
+    }
+
+    private function updateLocale(string $locale)
+    {
+        $this->locale = $locale;
+        $this->language->accessGettext()->locale($this->locale);
+        $this->language->accessGettext()->textdomain('nelliel');
+
+        if(!$this->language->accessGettext()->translationLoaded('nelliel', LC_MESSAGES))
+        {
+            $this->language->loadLanguage($locale, 'nelliel', LC_MESSAGES);
+
+        }
     }
 }

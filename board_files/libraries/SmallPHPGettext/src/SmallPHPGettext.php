@@ -4,163 +4,238 @@ namespace SmallPHPGettext;
 
 class SmallPHPGettext
 {
-    private $charset = 'UTF-8';
-    private $default_category = 'LC_MESSAGES';
-    private $default_domain = 'messages';
-    private $default_context = 'default';
-    private $categories = array();
+    private $domain_codesets = array();
+    private $default_codeset = 'UTF-8';
+    private $default_context;
+    private $default_plural_rule = '$plurals=2;$plural=$n!=1';
+    private $locale = 'en_US';
+    private $default_category = 6; // LC_MESSAGES
+    private $domain = 'messages';
+    private $domain_directories = array();
+    private $translations = array();
     private $version;
+    private $helpers;
 
     function __construct()
     {
-        $this->categories[$this->default_category] = array();
-        $this->categories[$this->default_category][$this->default_domain] = array();
-        $this->version = '1.0.3';
+        $this->helpers = new Helpers();
+        $this->domain_directories[$this->domain] = '';
+        $this->domain_codesets[$this->domain] = $this->default_codeset;
+        $category_str = $this->helpers->categoryToString($this->default_category);
+        $this->translations[$category_str] = array();
+        $this->translations[$category_str][$this->domain] = array();
+        $this->version = '2.0';
     }
 
     public function registerFunctions()
     {
-        include_once __DIR__ . '/gettext_functions.php';
+        include_once 'gettext_functions.php';
         access_small_php_gettext($this);
     }
 
-    public function gettext($msgid)
+    public function gettext(string $msgid)
     {
-        return $this->singularMessage($msgid, 'default', $this->default_domain, $this->default_category);
+        return $this->singularMessage($msgid, $this->domain, $this->default_category, null);
     }
 
-    public function ngettext($msgid1, $msgid2, $n)
+    public function ngettext(string $msgid1, string $msgid2, int $n)
     {
-        return $this->pluralMessage($msgid1, $msgid2, $n, 'default', $this->default_domain, $this->default_category);
+        return $this->pluralMessage($msgid1, $msgid2, $n, $this->domain, $this->default_category, null);
     }
 
-    public function pgettext($context, $msgid)
+    public function pgettext(string $context, string $msgid)
     {
-        return $this->singularMessage($msgid, $context, $this->default_domain, $this->default_category);
+        return $this->singularMessage($msgid, $this->domain, $this->default_category, $context);
     }
 
-    public function npgettext($context, $msgid1, $msgid2, $n)
+    public function npgettext(string $context, string $msgid1, string $msgid2, int $n)
     {
-        return $this->pluralMessage($msgid1, $msgid2, $n, $context, $this->default_domain, $this->default_category);
+        return $this->pluralMessage($msgid1, $msgid2, $n, $this->domain, $this->default_category, $context);
     }
 
-    public function dgettext($domain, $msgid)
+    public function dgettext(string $domain, string $msgid)
     {
-        return $this->singularMessage($msgid, 'default', $domain, $this->default_category);
+        return $this->singularMessage($msgid, $domain, $this->default_category, null);
     }
 
-    public function dngettext($domain, $msgid1, $msgid2, $n)
+    public function dngettext(string $domain, string $msgid1, string $msgid2, int $n)
     {
-        return $this->pluralMessage($msgid1, $msgid2, $n, 'default', $domain, $this->default_category);
+        return $this->pluralMessage($msgid1, $msgid2, $n, $domain, $this->default_category, null);
     }
 
-    public function dcgettext($domain, $msgid, $category)
+    public function dcgettext(string $domain, string $msgid, int $category)
     {
-        return $this->singularMessage($msgid, 'default', $domain, $category);
+        return $this->singularMessage($msgid, $domain, $category, null);
     }
 
-    public function dcngettext($domain, $msgid1, $msgid2, $n, $category)
+    public function dcngettext(string $domain, string $msgid1, string $msgid2, int $n, int $category)
     {
-        return $this->pluralMessage($msgid1, $msgid2, $n, 'default', $domain, $category);
+        return $this->pluralMessage($msgid1, $msgid2, $n, $domain, $category, null);
     }
 
-    public function addDomainFromArray($domain, $category = null)
+    public function addTranslationsFromArray(array $translations, int $category)
     {
-        $category = (!empty($category)) ? $category : $this->default_category;
-        $this->categories[$category][$domain['name']] = $domain;
+        $category_str = $this->helpers->categoryToString($category);
+        $this->translations[$category_str][$translations['domain']] = $translations;
+        return isset($this->translations[$category_str][$translations['domain']]);
     }
 
-    public function addDomainFromFile($file, $category = null)
+    public function addTranslationsFromFile(string $file, int $category)
     {
         $po = new ParsePo();
-        $domain = $po->parseFile($file);
-        $this->addDomainFromArray($domain, $category);
+        $translations = $po->parseFile($file);
+        return $this->addTranslationsFromArray($translations, $category);
     }
 
-    public function getDomainBoard($domain, $category = null)
+    public function translationLoaded(string $domain, int $category)
     {
-        $category = (!empty($category)) ? $category : $this->default_category;
-        return (isset($this->categories[$category][$domain])) ? $this->categories[$category][$domain] : null;
+        $category_str = $this->helpers->categoryToString($category);
+        return isset($this->translations[$category_str][$domain]) && !empty($this->translations[$category_str][$domain]);
     }
 
-    public function getDefaultDomainBoard()
+    public function getTranslations(string $domain, int $category)
     {
-        return $this->default_domain;
+        $category_str = $this->helpers->categoryToString($category);
+        return (isset($this->translations[$category_str][$domain])) ? $this->translations[$category_str][$domain] : null;
     }
 
-    public function setDefaultDomainBoard($domain)
+    public function textdomain(string $domain = null)
     {
-        $this->default_domain = $domain;
-    }
-
-    public function getDefaultCategory()
-    {
-        return $this->default_category;
-    }
-
-    public function setDefaultCategory($category)
-    {
-        $this->default_category = $category;
-    }
-
-    public function getDefaultContext()
-    {
-        return $this->default_context;
-    }
-
-    public function setDefaultContext($context)
-    {
-        $this->default_context = $context;
-    }
-
-    private function singularMessage($msgid, $context, $domain, $category)
-    {
-        $message = '';
-        $context = (!empty($context)) ? $context : $this->default_context;
-        $domain = (!empty($domain)) ? $domain : $this->default_domain;
-        $category = (!empty($category)) ? $category : $this->default_category;
-
-        if (isset($this->categories[$category]))
+        if (!is_null($domain))
         {
-            $category = $this->categories[$category];
+            $this->domain = $domain;
+        }
 
-            if (isset($category[$domain]['contexts'][$context][$msgid]['msgstr']))
+        return $this->domain;
+    }
+
+    public function bindtextdomain(string $domain, string $directory = null)
+    {
+        if (!is_null($directory))
+        {
+            $this->domain_directories[$domain] = $directory;
+        }
+
+        if (isset($this->domain_directories[$domain]))
+        {
+            return realpath($this->domain_directories[$domain]);
+        }
+
+        return $directory;
+    }
+
+    public function bind_textdomain_codeset(string $domain, string $codeset = null)
+    {
+        if (!is_null($codeset))
+        {
+            $this->domain_codesets[$domain] = $codeset;
+        }
+
+        return $this->domain_codesets[$domain];
+    }
+
+    public function locale(string $locale = null)
+    {
+        if (!is_null($locale))
+        {
+            $this->locale = $locale;
+        }
+
+        return $this->locale;
+    }
+
+    private function domainLoaded(string $domain, int $category, bool $load = true)
+    {
+        $category_str = $this->helpers->categoryToString($category);
+
+        if (isset($this->translations[$category_str][$domain]))
+        {
+            return true;
+        }
+        else
+        {
+            if ($domain != $this->domain)
             {
-                $message = $category[$domain]['contexts'][$context][$msgid]['msgstr'];
+                $this->textdomain($domain);
+            }
+
+            if ($load)
+            {
+                if (isset($this->domain_directories[$domain]) && file_exists($this->domain_directories[$domain]))
+                {
+                    $file = $this->domain_directories[$domain] . '/' . $this->locale . '/' . $category_str . '/' .
+                            $domain . '.po';
+                    return $this->addTranslationsFromFile($file, $category);
+                }
+            }
+
+            return false;
+        }
+    }
+
+    private function singularMessage(string $msgid, string $domain, int $category, string $context = null)
+    {
+        $po_msgid = $this->helpers->stringToPo($msgid);
+        $category_str = $this->helpers->categoryToString($category);
+        $valid = $this->domainLoaded($domain, $category, true);
+        $message = '';
+
+        if ($valid)
+        {
+            if (!is_null($context))
+            {
+                $message = $this->translations[$category_str][$domain]['translations'][$po_msgid]['contexts'][$context]['msgstr'] ?? '';
+            }
+            else
+            {
+                $message = $this->translations[$category_str][$domain]['translations'][$po_msgid]['msgstr'] ?? '';
             }
         }
 
-        return (!empty($message)) ? $message : $msgid;
+        if ($message !== '')
+        {
+            return $this->helpers->poToString($message);
+        }
+        else
+        {
+            return $msgid;
+        }
     }
 
-    private function pluralMessage($msgid1, $msgid2, $n, $context, $domain, $category)
+    private function pluralMessage(string $msgid1, string $msgid2, int $n, string $domain, int $category,
+            string $context = null)
     {
+        $po_msgid1 = $this->helpers->stringToPo($msgid1);
+        $category_str = $this->helpers->categoryToString($category);
+        $valid = $this->domainLoaded($domain, $category, true);
         $message = '';
-        $context = (!empty($context)) ? $context : $this->default_context;
-        $domain = (!empty($domain)) ? $domain : $this->default_domain;
-        $category = (!empty($category)) ? $category : $this->default_category;
 
-        if (isset($this->categories[$category]))
+        if ($valid)
         {
-            $category = $this->categories[$category];
-
-            if (isset($category[$domain]['contexts'][$context][$msgid1]))
+            if (!is_null($context))
             {
-                $translation = $category[$domain]['contexts'][$context][$msgid1];
-                $plural_rule = $category[$domain]['plural_rule'];
-                eval($plural_rule);
-
-                if ($plural === 0)
-                {
-                    $message = (isset($translation['plurals'][$plural])) ? $translation['plurals'][$plural] : $msgid1;
-                    return (!empty($message)) ? $message : $msgid1;
-                }
-                else
-                {
-                    $message = (isset($translation['plurals'][$plural])) ? $translation['plurals'][$plural] : $msgid2;
-                    return (!empty($message)) ? $message : $msgid2;
-                }
+                $translation = $this->translations[$category_str][$domain]['translations'][$po_msgid1]['contexts'][$context] ?? null;
             }
+            else
+            {
+                $translation = $this->translations[$category_str][$domain]['translations'][$po_msgid1] ?? null;
+            }
+
+            if (!is_null($translation))
+            {
+                $plural_rule = $this->translations[$category_str][$domain]['plural_rule'] ?? $this->default_plural_rule;
+                eval($plural_rule);
+                $message = $translation['plurals'][$plural] ?? '';
+            }
+        }
+
+        if ($message !== '')
+        {
+            return $this->helpers->poToString($message);
+        }
+        else
+        {
+            return ($n === 1) ? $msgid1 : $msgid2;
         }
     }
 }

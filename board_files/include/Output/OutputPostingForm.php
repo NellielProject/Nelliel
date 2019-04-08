@@ -28,7 +28,7 @@ class OutputPostingForm extends OutputCore
         $render_input['is_response'] = $response_to > 0;
         $render_input['response_to'] = $response_to;
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $render_input['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&action=new-post&board_id=' .
                 $this->domain->id();
 
@@ -79,7 +79,7 @@ class OutputPostingForm extends OutputCore
             $block_data['sauce_name'] = 'new_post[file_info][up_file_' . $i . '][sauce]';
             $block_data['sauce_maxlength'] = $this->domain->setting('max_source_length');
             $block_data['lol_drama_id'] = 'form-lol_drama-' . $i;
-            $block_data['lol_drama_name'] = 'new_post[file_info][up_file_' . $i . '][alt_text]';
+            $block_data['lol_drama_name'] = 'new_post[file_info][up_file_' . $i . '][lol_drama]';
             $block_data['lol_drama_maxlength'] = $this->domain->setting('max_license_length');
             $block_data['alt_text_id'] = 'form-alt_text-' . $i;
             $block_data['alt_text_name'] = 'new_post[file_info][up_file_' . $i . '][alt_text]';

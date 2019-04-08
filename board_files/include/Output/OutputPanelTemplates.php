@@ -30,7 +30,7 @@ class OutputPanelTemplates extends OutputCore
             nel_derp(341, _gettext('You are not allowed to access the templates panel.'));
         }
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Templates')];
         $this->render_core->appendToOutput(

@@ -140,23 +140,23 @@
 				</td>
 			</tr>
 			{{/ show_board_banner }}
-			{{# language }}
+			{{# locale }}
 			<tr>
 				{{# defaults }}
 				<td>
-					<input type="hidden" name="language_lock" value="0">
-					<input type="checkbox" name="language_lock" value="1" {{ locked }}>
-					<label for="language_lock" data-i18n="gettext">(Lock)</label>
+					<input type="hidden" name="locale_lock" value="0">
+					<input type="checkbox" name="locale_lock" value="1" {{ locked }}>
+					<label for="locale_lock" data-i18n="gettext">(Lock)</label>
 				</td>
 				{{/ defaults }}
 				<td>
-					<label for="language" data-i18n="gettext">Set language for the board</label>
+					<label for="locale" data-i18n="gettext">Locale for the board (use ISO language + country code)</label>
 				</td>
 				<td>
-					<input type="text" name="language" size="10" value="{{ value }}" {{ disabled }}>
+					<input type="text" name="locale" size="10" value="{{ value }}" {{ disabled }}>
 				</td>
 			</tr>
-			{{/ language }}
+			{{/ locale }}
 			{{# date_format }}
 			<tr>
 				{{# defaults }}

@@ -59,13 +59,22 @@ class CacheHandler
 
     public function writeCacheFile($path, string $filename, $content, string $header = '', string $footer = '', $file_perm = FILE_PERM)
     {
+        $file_handler = new FileHandler();
+
         if (!is_writable(CACHE_FILE_PATH))
         {
-            return; // TODO: Work out so this can be a proper error
+            if(!file_exists(CACHE_FILE_PATH))
+            {
+                $file_handler->createDirectory(CACHE_FILE_PATH);
+            }
+            else
+            {
+                return; // TODO: Work out so this can be a proper error
+            }
         }
 
         $header = (!empty($header)) ? $header : $this->default_header;
-        $file_handler = new FileHandler();
+
         $file_handler->writeFile($path . $filename, $header . $content . $footer, $file_perm, true);
     }
 }

@@ -2,8 +2,6 @@
 
 namespace Nelliel;
 
-use Nelliel\Language\Translator;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");

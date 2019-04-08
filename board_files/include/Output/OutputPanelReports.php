@@ -30,7 +30,7 @@ class OutputPanelReports extends OutputCore
             nel_derp(380, _gettext('You are not allowed to access the reports panel.'));
         }
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Reports')];
         $this->render_core->appendToOutput(

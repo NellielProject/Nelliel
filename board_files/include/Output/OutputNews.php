@@ -22,7 +22,7 @@ class OutputNews extends OutputCore
 
     public function render(array $parameters = array())
     {
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['use_site_titles' => true];
         $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));

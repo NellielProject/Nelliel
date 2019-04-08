@@ -28,8 +28,6 @@ class OutputThread extends OutputCore
         $dotdot = ($write) ? '../../../' : '';
         $command = ($parameters['command']) ?? 'view-thread';
         $thread_content_id = \Nelliel\ContentID::createIDString($thread_id);
-
-        $this->render_core->startTimer();
         $render_input['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');

@@ -55,7 +55,7 @@ class OutputPanelBans extends OutputCore
     {
         $user = $parameters['user'];
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')];
         $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
@@ -113,7 +113,7 @@ class OutputPanelBans extends OutputCore
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Add Ban')];
         $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
@@ -151,7 +151,7 @@ class OutputPanelBans extends OutputCore
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Modify Ban')];
         $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));

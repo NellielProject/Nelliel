@@ -28,7 +28,7 @@ class OutputIndex extends OutputCore
         $dotdot = ($write) ? '../' : '';
         $site_domain = new \Nelliel\DomainSite($this->database);
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $result = $this->database->query(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') .
                 '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC');

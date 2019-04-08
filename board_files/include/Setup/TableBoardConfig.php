@@ -81,7 +81,7 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'board_description', '', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'board_favicon', '', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'board_banner', '', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'language', 'en-US', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'locale', 'en_US', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'thread_cooldown', '120', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'reply_cooldown', '60', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'abbreviate_thread', '5', 0, 0]);

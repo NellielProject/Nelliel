@@ -27,7 +27,7 @@ class OutputCatalog extends OutputCore
         $cites = new \Nelliel\Cites($this->database);
         $dotdot = ($write) ? '../' : '';
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot]);
         $render_input['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->id() . '/';

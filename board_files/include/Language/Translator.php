@@ -7,13 +7,33 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domain;
+
 class Translator
 {
-    function __construct()
+    private $domain;
+
+    function __construct(Domain $domain)
     {
+        $this->domain = $domain;
     }
 
-    public function translateDom($dom, $language = 'en_US')
+    public function translateHTML(string $html, bool $return_dom)
+    {
+        $dom_render_core = new \Nelliel\RenderCoreDOM();
+        $dom_document = $dom_render_core->newDOMDocument();
+        $dom_render_core->loadDOMFromTemplate($dom_document, $html);
+        $this->translateDOM($dom_document);
+
+        if($return_dom)
+        {
+            return $dom_document;
+        }
+
+        return $dom_document->saveHTML();
+    }
+
+    public function translateDOM($dom)
     {
         $content_node_list = $dom->getElementsByAttributeName('data-i18n');
         $attribute_node_list = $dom->getElementsByAttributeName('data-i18n-attributes');

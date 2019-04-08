@@ -16,6 +16,7 @@ abstract class OutputCore
     protected $cache_handler;
     protected $output_filter;
     protected $url_constructor;
+    protected $timer_start;
 
     public abstract function render(array $parameters = array());
 
@@ -41,5 +42,28 @@ abstract class OutputCore
         {
             ;
         }
+    }
+
+    public function startTimer()
+    {
+        $start = microtime(true);
+        $this->timer_start = $start;
+        return $start;
+    }
+
+    public function endTimer()
+    {
+        if (!isset($this->timer_start))
+        {
+            return 0;
+        }
+
+        $end_time = microtime(true);
+        return $end_time - $this->timer_start;
+    }
+
+    public function translate()
+    {
+
     }
 }

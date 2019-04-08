@@ -18,8 +18,8 @@ function nel_central_dispatch()
 
     if (isset($_GET['about_nelliel']))
     {
-        $about_page = new \Nelliel\Output\OutputAboutPage(new \Nelliel\DomainSite(nel_database()));
-        $about_page->render();
+        require_once INCLUDE_PATH . 'wat/about_nelliel.php';
+        nel_about_page(new \Nelliel\DomainSite(nel_database()));
     }
 
     if (isset($_GET['blank']) || isset($_GET['tpilb']))

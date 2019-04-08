@@ -164,7 +164,7 @@ class FileHandler
         $filtered = preg_replace('#[[:cntrl:]]#u', '', $filename); // Filter out the ASCII control characters
         $filtered = preg_replace('#[^\PC\s\p{Cn}]#u', '', $filename); // Filter out invisible Unicode characters
 
-        // https://msdn.microsoft.com/en-us/library/aa365247(VS.85).aspx
+        // https://msdn.microsoft.com/en_US/library/aa365247(VS.85).aspx
         $filtered = preg_replace('#[<>:"\/\\|\?\*]#u', '_', $filtered); // Reserved characters for Windows
         $filtered = preg_replace('#(com[1-9]|lpt[1-9]|con|prn|aux|nul)\.?[a-zA-Z0-9]*#ui', '', $filtered); // Reserved names for Windows
         $cleared = false;

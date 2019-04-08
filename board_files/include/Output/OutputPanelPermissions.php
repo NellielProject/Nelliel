@@ -30,7 +30,7 @@ class OutputPanelPermissions extends OutputCore
             nel_derp(450, _gettext('You are not allowed to access the Permissions panel.'));
         }
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Permissions')];
         $this->render_core->appendToOutput(

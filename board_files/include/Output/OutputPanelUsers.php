@@ -51,7 +51,7 @@ class OutputPanelUsers extends OutputCore
     {
         $user = $parameters['user'];
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Users')];
         $this->render_core->appendToOutput(
@@ -88,7 +88,7 @@ class OutputPanelUsers extends OutputCore
         $user_id = $parameters['user_id'];
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit User')];
         $this->render_core->appendToOutput(

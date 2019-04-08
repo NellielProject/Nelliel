@@ -23,10 +23,9 @@ class OutputPanelBoardSettings extends OutputCore
 
     public function render(array $parameters = array())
     {
+        $this->startTimer();
         $user = $parameters['user'];
         $defaults = $parameters['defaults'];
-
-        $this->render_core->startTimer();
         $filetypes = new \Nelliel\FileTypes($this->database);
 
         if ($defaults === true)
@@ -47,13 +46,13 @@ class OutputPanelBoardSettings extends OutputCore
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $this->render_core->appendToOutput(
                 $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
-
         $all_filetypes = $filetypes->getFiletypeData();
         $all_categories = $filetypes->getFiletypeCategories();
         $category_nodes = array();
         $filetype_entries_nodes = array();
         $category_row_count = array();
 
+        // TODO: Needs optimizing
         foreach ($all_categories as $category)
         {
             $category_data = array();
@@ -155,6 +154,7 @@ class OutputPanelBoardSettings extends OutputCore
                 $this->render_core->renderFromTemplateFile('management/panels/board_settings_panel', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
+        echo round($this->endTimer(), 8);
         echo $this->render_core->getOutput();
         nel_clean_exit();
     }

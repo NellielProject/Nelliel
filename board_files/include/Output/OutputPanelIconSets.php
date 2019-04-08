@@ -30,7 +30,7 @@ class OutputPanelIconSets extends OutputCore
             nel_derp(460, _gettext('You are not allowed to access the Icon Sets panel.'));
         }
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Icon Sets')];
         $this->render_core->appendToOutput(
@@ -86,7 +86,7 @@ class OutputPanelIconSets extends OutputCore
                 $this->render_core->renderFromTemplateFile('management/panels/icon_sets_panel', $render_input));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
-        echo $this->render_core->getOutput();
+        echo $this->domain->translator()->translateHTML($this->render_core->getOutput());
         nel_clean_exit();
     }
 }

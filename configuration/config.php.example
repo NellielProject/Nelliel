@@ -22,7 +22,7 @@ $base_config['defaultadmin_pass'] = '';
 
 // The fallback default value for locale.
 // If a locale is specified elsewhere but no language file exists for it, Nelliel will use this value instead.
-// Locale should follow the standard format using ISO-639 and ISO-3166 codes.
+// Locale should follow the standard format using ISO-639 language and ISO-3166 country codes.
 // e.g. 'en_US' for 'English (United Sates)', 'en_GB' for 'English (United Kingdom)'
 // The available locales and their translations can be found in the directory 'board_files/language/locale'
 $base_config['default_locale'] = 'en_US';

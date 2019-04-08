@@ -51,7 +51,7 @@ class OutputPanelRoles extends OutputCore
     {
         $user = $parameters['user'];
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Roles')];
         $this->render_core->appendToOutput(
@@ -90,7 +90,7 @@ class OutputPanelRoles extends OutputCore
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $role = $authorization->getRole($role_id);
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit Role')];
         $this->render_core->appendToOutput(

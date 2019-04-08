@@ -21,7 +21,7 @@ class OutputLoginPage extends OutputCore
 
     public function render(array $parameters = array())
     {
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '']));
         $render_input['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'login', 'action' => 'login']);

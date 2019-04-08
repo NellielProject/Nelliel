@@ -19,6 +19,7 @@ class DomainSite extends Domain
         $this->domain_id = '';
         $this->database = $database;
         $this->utilitySetup();
+        $this->locale();
         $this->templatePath(TEMPLATES_FILE_PATH . $this->front_end_data->template($this->setting('template_id'))['directory']);
     }
 

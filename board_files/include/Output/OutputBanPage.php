@@ -23,7 +23,7 @@ class OutputBanPage extends OutputCore
     {
         $ban_info = $parameters['ban_info'];
 
-        $this->render_core->startTimer();
+        $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '']));
         $render_input['ban_board'] = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board_id'];

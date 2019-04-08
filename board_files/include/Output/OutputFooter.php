@@ -25,6 +25,7 @@ class OutputFooter extends OutputCore
     {
         $dotdot = ($parameters['dotdot']) ?? array();
         $generate_styles = ($parameters['generate_styles']) ?? false;
+        $show_timer = ($parameters['show_timer']) ?? true;
 
         if ($generate_styles)
         {
@@ -35,10 +36,10 @@ class OutputFooter extends OutputCore
         $render_input['nelliel_vertsion'] = NELLIEL_VERSION;
         $render_input['js_ui_url'] = $dotdot . SCRIPTS_WEB_PATH . 'ui.js';
 
-        if($this->domain->setting('display_render_timer'))
+        if($this->domain->setting('display_render_timer') && $show_timer)
         {
-            $time = round($this->render_core->endTimer(), 4);
-            $render_input['render_timer'] = sprintf(_gettext('This page was created in %s seconds.'), $time);
+            //$time = round((microtime(true) - $timer_start), 4);
+            //$render_input['render_timer'] = sprintf(_gettext('This page was created in %s seconds.'), $time);
         }
 
         $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('footer', $render_input));

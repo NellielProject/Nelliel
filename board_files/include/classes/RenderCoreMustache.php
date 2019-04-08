@@ -17,8 +17,21 @@ class RenderCoreMustache extends RenderCore
         $this->domain = $domain;
         $this->output_filter = new OutputFilter();
         $this->file_handler = new FileHandler();
-        $this->template_loaders['file'] = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(), ['extension' => '.html']);
-        $this->mustache_engine = new \Mustache_Engine(['loader' => $this->template_loaders['file'], 'partials_loader' => $this->template_loaders['file']]);
+        $this->template_loaders['file'] = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(),
+                ['extension' => '.html']);
+
+        //if (USE_MUSTACHE_CACHE)
+        //{
+            $this->mustache_engine = new \Mustache_Engine(
+                    ['loader' => $this->template_loaders['file'],
+                        'partials_loader' => $this->template_loaders['file'], 'cache' => CACHE_FILE_PATH . 'mustache']);
+        /*}
+        else
+        {
+            $this->mustache_engine = new \Mustache_Engine(
+                    ['loader' => $this->template_loaders['file'],
+                        'partials_loader' => $this->template_loaders['file']]);
+        }*/
     }
 
     public function renderEngine()

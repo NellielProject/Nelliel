@@ -7,37 +7,56 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domain;
+use Nelliel\Auth\AuthUser;
+
 class Language
 {
-    private $gettext;
+    private static $gettext;
+    private static $gettext_helpers;
 
-    function __construct($gettext)
+    function __construct($gettext_instance = null)
     {
-        $this->gettext = $gettext;
+        if (!is_null($gettext_instance))
+        {
+            self::$gettext = $gettext_instance;
+        }
+
+        if (is_null(self::$gettext))
+        {
+            $gettext = new \SmallPHPGettext\SmallPHPGettext();
+            self::$gettext = $gettext;
+            $gettext->bindtextdomain('nelliel', DEFAULT_TEXTDOMAIN_BIND);
+            $gettext->registerFunctions();
+        }
+
+        if (is_null(self::$gettext_helpers))
+        {
+            self::$gettext_helpers = new \SmallPHPGettext\Helpers();
+        }
     }
 
-    public function loadLanguage($file = null)
+    public function loadLanguage(string $locale, string $domain, int $category)
     {
-        if (empty($file))
-        {
-            $file = LOCALE_FILE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po';
-        }
-
-        if (!file_exists($file))
-        {
-            $file = LOCALE_FILE_PATH . 'en_US/LC_MESSAGES/nelliel.po';
-        }
-
+        $category_string = self::$gettext_helpers->categoryToString($category);
+        $file = self::$gettext->bindtextdomain($domain) . '/' . $locale . '/' . $category_string . '/' . $domain . '.po';
+        $file_id = $locale . '/' . $category_string . '/' . $domain . '.po';
+        $cache_file = 'language/' . $locale . '/' . $category_string . '/' . $domain . '_po.php';
+        $cache_handler = new \Nelliel\CacheHandler();
         $language_array = array();
         $loaded = false;
-        $file_id = $hash = md5_file($file);
-        $cache_handler = new \Nelliel\CacheHandler();
+        $hash = '';
 
-        if ($cache_handler->checkHash($file, $hash) && USE_INTERNAL_CACHE)
+        if (file_exists($file))
         {
-            if (file_exists(CACHE_FILE_PATH . 'language/' . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel_po.php'))
+            $hash = md5_file($file);
+        }
+
+        if (USE_INTERNAL_CACHE && $cache_handler->checkHash($file_id, $hash))
+        {
+            if (file_exists(CACHE_FILE_PATH . $cache_file))
             {
-                include CACHE_FILE_PATH . 'language/' . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel_po.php';
+                include CACHE_FILE_PATH . $cache_file;
                 $loaded = true;
             }
         }
@@ -45,20 +64,23 @@ class Language
         if (!$loaded)
         {
             $po_parser = new \SmallPHPGettext\ParsePo();
-            $language_array = $po_parser->parseFile($file);
+            $language_array = $po_parser->parseFile($file, $domain);
 
             if (USE_INTERNAL_CACHE)
             {
-                $cache_handler->updateHash($file, $hash);
-                $cache_handler->writeCacheFile(CACHE_FILE_PATH . 'language/' . DEFAULT_LOCALE . '/LC_MESSAGES/', 'nelliel_po.php', '$language_array = ' .
-                    var_export($language_array, true) . ';');
+                $cache_handler->updateHash($file_id, $hash);
+                $cache_handler->writeCacheFile(CACHE_FILE_PATH, $cache_file,
+                        '$language_array = ' . var_export($language_array, true) . ';');
             }
+
+            $loaded = true;
         }
 
-        $this->gettext->addDomainFromArray($language_array);
+        self::$gettext->addTranslationsFromArray($language_array, $category);
     }
 
-    public function extractLanguageStrings($domain, $user, $file)
+    public function extractLanguageStrings(Domain $domain, AuthUser $user, string $default_textdomain,
+            int $default_category)
     {
         if (!$user->domainPermission($domain, 'perm_extract_gettext'))
         {
@@ -67,6 +89,22 @@ class Language
 
         $extractor = new \Nelliel\Language\LanguageExtractor();
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->writeFile($file, $extractor->assemblePoString());
+        $extracted = $extractor->assemblePoString($default_textdomain, $default_category);
+
+        foreach ($extracted as $category_str => $domain_output)
+        {
+            foreach ($domain_output as $out_domain => $output)
+            {
+                $directory = LANGUAGES_FILE_PATH . 'extracted/' . date('Y-m-d_H-i-s') . '/' . $category_str;
+                $file_handler->createDirectory($directory, DIRECTORY_PERM, true);
+                $file = $directory . '/' . $out_domain . '.pot';
+                $file_handler->writeFile($file, $output);
+            }
+        }
+    }
+
+    public function accessGettext()
+    {
+        return self::$gettext;
     }
 }

@@ -79,14 +79,14 @@ class OutputFile extends OutputCore
         if (!empty($file['source']))
         {
             $source_data['metadata_class'] = 'file-source';
-            $source_data['metadata'] = _gettext('Source: ') . $output_filter->cleanAndEncode($file['source']);
+            $source_data['metadata'] = _gettext('Source: ') . $this->output_filter->cleanAndEncode($file['source']);
             $file_data['file_metadata'][] = $source_data;
         }
 
         if (!empty($file['license']))
         {
             $license_data['metadata_class'] = 'file-license';
-            $license_data['metadata'] = _gettext('License: ') . $output_filter->cleanAndEncode($file['license']);
+            $license_data['metadata'] = _gettext('License: ') . $this->output_filter->cleanAndEncode($file['license']);
             $file_data['file_metadata'][] = $license_data;
         }
 

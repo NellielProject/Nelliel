@@ -62,22 +62,4 @@ abstract class RenderCore
 
         return '';
     }
-
-    public function startTimer(string $output_id = 'default')
-    {
-        $start = microtime(true);
-        $this->output_sets[$output_id]['start_time'] = $start;
-        return $start;
-    }
-
-    public function endTimer(string $output_id = 'default')
-    {
-        if (!isset($this->output_sets[$output_id]['start_time']))
-        {
-            return 0;
-        }
-
-        $this->output_sets[$output_id]['end_time'] = microtime(true);
-        return $this->output_sets[$output_id]['end_time'] - $this->output_sets[$output_id]['start_time'];
-    }
 }
