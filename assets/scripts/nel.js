@@ -17,6 +17,7 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     nelliel.setup.localStorageInitCheck();
     dataBin.hidden_threads = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_threads_id, true);
     dataBin.hidden_posts = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_posts_id, true);
+    dataBin.collapsedThreads = [];
 
     if(board_id === "") {
         setStyle(nelliel.core.getCookie("base-style"));
