@@ -16,6 +16,7 @@ class RenderCoreDOM extends RenderCore
     {
         $this->template_instance = new \NellielTemplates\TemplateCore($this);
         $this->template_loaders['file'] = $this->template_instance;
+        $this->template_loaders['string'] = $this->template_instance;
         libxml_use_internal_errors(true);
         $this->output_filter = new OutputFilter();
         $this->file_handler = new FileHandler();
@@ -25,7 +26,7 @@ class RenderCoreDOM extends RenderCore
     {
         $dom = new \phpDOMExtend\ExtendedDOMDocument();
         $this->dom_documents[spl_object_hash($dom)]['template'] = null;
-        $dom->preserveWhiteSpace = false;
+        $dom->preserveWhiteSpace = true;
         $dom->formatOutput = true;
         $dom->strictErrorChecking = false;
         $dom->validateOnParse = true;
@@ -49,7 +50,15 @@ class RenderCoreDOM extends RenderCore
 
     public function loadTemplateFromFile(string $file)
     {
-        return $this->template_loaders['file']->getTemplate($file);
+        $this->template_loaders['file']->loadTemplateFromFile($file);
+        return $this->template_instance->getTemplate($file, true);
+    }
+
+    public function loadTemplateFromString(string $template, string $contents)
+    {
+
+        $this->template_loaders['string']->loadTemplateFromString($template, $contents);
+        return $this->template_instance->getTemplate($template, true);
     }
 
     public function loadDOMFromTemplate($dom_document, string $template)

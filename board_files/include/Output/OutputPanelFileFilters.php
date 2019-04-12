@@ -21,9 +21,9 @@ class OutputPanelFileFilters extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array(), bool $data_only = false)
+    public function render(array $parameters, bool $data_only)
     {
-        $render_data = array();
+        $this->render_data = array();
         $user = $parameters['user'];
 
         if (!$user->domainPermission($this->domain, 'perm_file_filters_access'))
@@ -34,11 +34,11 @@ class OutputPanelFileFilters extends OutputCore
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
-        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
+        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
-        $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('File Filters')];
-        $render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'dotdot' => $dotdot, 'extra_data' => $extra_data], true);
+        $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('File Filters')];
+        $this->render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
 
         if ($this->domain->id() !== '')
         {
@@ -52,7 +52,7 @@ class OutputPanelFileFilters extends OutputCore
                     'SELECT * FROM "' . FILE_FILTERS_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
         }
 
-        $render_data['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+        $this->render_data['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                 ['module' => 'file-filters', 'action' => 'add']);
         $bgclass = 'row1';
 
@@ -68,14 +68,14 @@ class OutputPanelFileFilters extends OutputCore
             $filter_data['board_id'] = $filter['board_id'];
             $filter_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'file-filters', 'action' => 'remove', 'filter-id' => $filter['entry']]);
-            $render_data['filter_list'][] = $filter_data;
+            $this->render_data['filter_list'][] = $filter_data;
         }
 
-        $render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/file_filters_panel',
-                $render_data);
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/file_filters_panel',
+                $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
-        $output = $this->output($render_data, 'page', true);
+        $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output('page', $data_only, true);
         echo $output;
         return $output;
     }

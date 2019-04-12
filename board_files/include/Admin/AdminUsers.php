@@ -61,7 +61,7 @@ class AdminUsers extends AdminHandler
     public function renderPanel($user)
     {
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
-        $output_panel->render(['section' => 'panel', 'user' => $user]);
+        $output_panel->render(['section' => 'panel', 'user' => $user], false);
     }
 
     public function creator($user)
@@ -72,7 +72,7 @@ class AdminUsers extends AdminHandler
         }
 
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id]);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id], false);
     }
 
     public function add($user)
@@ -85,7 +85,7 @@ class AdminUsers extends AdminHandler
         $this->user_id = $_POST['user_id'];
         $this->update($user);
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id]);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id], false);
     }
 
     public function editor($user)
@@ -96,7 +96,7 @@ class AdminUsers extends AdminHandler
         }
 
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id]);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id], false);
     }
 
     public function update($user)
@@ -158,7 +158,7 @@ class AdminUsers extends AdminHandler
 
         $this->authorization->saveUsers();
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id]);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id], false);
     }
 
     public function remove($user)

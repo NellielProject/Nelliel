@@ -54,7 +54,7 @@ class AdminBoards extends AdminHandler
     public function renderPanel($user)
     {
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain);
-        $output_panel->render(['section' => 'panel', 'user' => $user]);
+        $output_panel->render(['section' => 'panel', 'user' => $user], false);
     }
 
     public function creator($user)
@@ -192,6 +192,6 @@ class AdminBoards extends AdminHandler
                     'board_id' => $_GET['board_id']]);
         $continue_link['text'] = _gettext('Confirm and delete the board.');
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain);
-        $output_panel->render(['section' => 'remove_interstitial', 'user' => $user, 'message' => $message, 'continue_link' => $continue_link]);
+        $output_panel->render(['section' => 'remove_interstitial', 'user' => $user, 'message' => $message, 'continue_link' => $continue_link], false);
     }
 }

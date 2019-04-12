@@ -56,7 +56,7 @@ class AdminBans extends AdminHandler
     public function renderPanel($user)
     {
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain);
-        $output_panel->render(['section' => 'panel', 'user' => $user]);
+        $output_panel->render(['section' => 'panel', 'user' => $user], false);
     }
 
     public function creator($user)
@@ -64,7 +64,7 @@ class AdminBans extends AdminHandler
         $ip = $_GET['ban_ip'] ?? '';
         $type = $_GET['ban_type'] ?? 'GENERAL';
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain);
-        $output_panel->render(['section' => 'add', 'user' => $user, 'ip' => $ip, 'type' => $type]);
+        $output_panel->render(['section' => 'add', 'user' => $user, 'ip' => $ip, 'type' => $type], false);
     }
 
     public function add($user)
@@ -98,7 +98,7 @@ class AdminBans extends AdminHandler
     public function editor($user)
     {
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain);
-        $output_panel->render(['section' => 'modify', 'user' => $user]);
+        $output_panel->render(['section' => 'modify', 'user' => $user], false);
     }
 
     public function update($user)

@@ -16,13 +16,15 @@ class Translator
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
+        $this->dom_render_core = new \Nelliel\RenderCoreDOM();
     }
 
     public function translateHTML(string $html, bool $return_dom = false)
     {
-        $dom_render_core = new \Nelliel\RenderCoreDOM();
-        $dom_document = $dom_render_core->newDOMDocument();
-        $dom_render_core->loadDOMFromTemplate($dom_document, $html);
+        $dom_document = $this->dom_render_core->newDOMDocument();
+        $template_id = md5(random_bytes(8));
+        $template_contents = $this->dom_render_core->loadTemplateFromString($template_id, $html);
+        $this->dom_render_core->loadDOMFromTemplate($dom_document, $template_contents);
         $this->translateDOM($dom_document);
 
         if($return_dom)
@@ -30,7 +32,8 @@ class Translator
             return $dom_document;
         }
 
-        return $dom_document->saveHTML();
+
+        return $this->dom_render_core->renderFromDOM($dom_document, $template_id);
     }
 
     public function translateDOM($dom)

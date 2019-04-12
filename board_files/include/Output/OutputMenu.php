@@ -21,7 +21,7 @@ class OutputMenu extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array(), bool $data_only = false)
+    public function render(array $parameters, bool $data_only)
     {
         if (!isset($parameters['menu']))
         {
@@ -31,22 +31,22 @@ class OutputMenu extends OutputCore
         switch ($parameters['menu'])
         {
             case 'boards':
-                $output = $this->boards($parameters);
+                $output = $this->boards($parameters, $data_only);
                 break;
 
             case 'styles':
-                $output = $this->styles($parameters);
+                $output = $this->styles($parameters, $data_only);
                 break;
 
             case 'site_navigation':
-                $output = $this->siteNavigation($parameters);
+                $output = $this->siteNavigation($parameters, $data_only);
                 break;
         }
 
         return $output;
     }
 
-    private function boards(array $parameters)
+    private function boards(array $parameters, bool $data_only)
     {
         $render_data = array();
         $dotdot = ($parameters['dotdot']) ?? '';
@@ -65,7 +65,7 @@ class OutputMenu extends OutputCore
         return $render_data;
     }
 
-    private function styles(array $parameters)
+    private function styles(array $parameters, bool $data_only)
     {
         $render_data = array();
         $dotdot = ($parameters['dotdot']) ?? '';
@@ -87,7 +87,7 @@ class OutputMenu extends OutputCore
         return $render_data;
     }
 
-    private function siteNavigation(array $parameters)
+    private function siteNavigation(array $parameters, bool $data_only)
     {
         $render_data = array();
         $session = new \Nelliel\Session();

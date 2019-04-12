@@ -35,6 +35,7 @@ class TemplateCore
     public function loadTemplateFromString($template, $contents)
     {
         $this->templates[$template]['contents'] = $contents;
+        $this->checkHTMLFixes($template);
     }
 
     public function loadTemplateFromFile($template_file)
@@ -48,28 +49,24 @@ class TemplateCore
         {
             $this->templates[$template_file]['contents'] = file_get_contents($this->template_path . $template_file);
         }
+
+        $this->checkHTMLFixes($template);
     }
 
-    public function getTemplate($template, $raw = false)
+    public function getTemplate($template, $do_fixes)
     {
         if (!isset($this->templates[$template]))
         {
             $this->initTemplateData($template);
         }
 
-        if ($this->templates[$template]['contents'] === '')
+        if ($do_fixes)
         {
-            $this->loadTemplateFromFile($template);
-            $this->checkHTMLFixes($template);
-        }
-
-        if ($raw)
-        {
-            return $this->templates[$template]['contents'];
+            return $this->fixInputHTML($template);
         }
         else
         {
-            return $this->fixInputHTML($template);
+            return $this->templates[$template]['contents'];
         }
     }
 

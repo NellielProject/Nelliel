@@ -20,17 +20,22 @@ class OutputNews extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters, bool $data_only)
     {
+        $this->render_data = array();
         $this->startTimer();
+        $dotdot = ($parameters['dotdot']) ?? '';
+        $output_head = new OutputHead($this->domain);
+        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
-        $extra_data = ['use_site_titles' => true];
-        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
-        $render_data['news_entries'] = $this->newsList();
-        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('news', $render_data));
+        $this->render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot, 'use_site_titles' => true], true);
+        $this->render_data['news_entries'] = $this->newsList();
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('news', $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
-        $this->file_handler->writeFile(BASE_PATH . 'news.html', $this->render_core->getOutput());
+        $this->render_data['footer'] = $output_footer->render(['dotdot' => '', 'show_styles' => false], true);
+        $output = $this->output('page', $data_only, true);
+        $this->file_handler->writeFile(BASE_PATH . 'news.html', $output);
     }
 
     private function newsList(int $limit = 0)
@@ -44,7 +49,7 @@ class OutputNews extends OutputCore
 
         foreach ($news_entries as $news_entry)
         {
-            if($limit !== 0 && $limit_counter >= $limit)
+            if ($limit !== 0 && $limit_counter >= $limit)
             {
                 break;
             }
@@ -62,7 +67,7 @@ class OutputNews extends OutputCore
             }
 
             $entry_list[] = $news_info;
-            ++$limit_counter;
+            ++ $limit_counter;
         }
 
         return $entry_list;

@@ -21,22 +21,22 @@ class OutputFooter extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array(), bool $data_only = false)
+    public function render(array $parameters, bool $data_only)
     {
-        $render_data = array();
+        $this->render_data = array();
         $dotdot = ($parameters['dotdot']) ?? array();
         $show_timer = ($parameters['show_timer']) ?? true;
-        $render_data['show_styles'] = ($parameters['show_styles']) ?? true;
+        $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
         $output_menu = new OutputMenu($this->domain);
 
-        if ($render_data['show_styles'])
+        if ($this->render_data['show_styles'])
         {
-            $render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot]);
+            $this->render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot], true);
         }
 
-        $render_data['nelliel_version'] = NELLIEL_VERSION;
-        $render_data['js_ui_url'] = $dotdot . SCRIPTS_WEB_PATH . 'ui.js';
-        $output = $this->output($render_data, 'footer', false, $data_only);
+        $this->render_data['nelliel_version'] = NELLIEL_VERSION;
+        $this->render_data['js_ui_url'] = $dotdot . SCRIPTS_WEB_PATH . 'ui.js';
+        $output = $this->output('footer', $data_only, true);
         return $output;
     }
 

@@ -17,14 +17,14 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             if (empty($_POST))
             {
                 $output_login = new \Nelliel\Output\OutputLoginPage($domain);
-                $output_login->render(['dotdot' => '']);
+                $output_login->render(['dotdot' => ''], false);
             }
             else
             {
                 $session = new \Nelliel\Session();
                 $session->login();
                 $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain);
-                $output_main_panel->render(['user' => $session->sessionUser()]);
+                $output_main_panel->render(['user' => $session->sessionUser()], false);
             }
 
             break;
@@ -43,28 +43,28 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             {
                 case 'view-index':
                     $output_thread = new \Nelliel\Output\OutputIndex($domain);
-                    $output_thread->render(['write' => false, 'thread_id' => 0]);
+                    $output_thread->render(['write' => false, 'thread_id' => 0], false);
                     break;
 
                 case 'view-thread':
                     $output_thread = new \Nelliel\Output\OutputThread($domain);
                     $output_thread->render(
                             ['write' => false, 'thread_id' => intval($inputs['thread']),
-                                'command' => $inputs['action']]);
+                            'command' => $inputs['action']], false);
                     break;
 
                 case 'expand-thread':
                     $output_thread = new \Nelliel\Output\OutputThread($domain);
                     $output_thread->render(
                             ['write' => false, 'thread_id' => intval($inputs['thread']),
-                                'command' => $inputs['action']]);
+                            'command' => $inputs['action']], false);
                     break;
 
                 case 'collapse-thread':
                     $output_thread = new \Nelliel\Output\OutputThread($domain);
                     $output_thread->render(
                             ['write' => false, 'thread_id' => intval($inputs['thread']),
-                                'command' => $inputs['action']]);
+                            'command' => $inputs['action']], false);
                     break;
             }
 
@@ -76,12 +76,12 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             if ($domain->id() !== '')
             {
                 $output_board_panel = new \Nelliel\Output\OutputPanelBoard($domain);
-                $output_board_panel->render(['user' => $session->sessionUser()]);
+                $output_board_panel->render(['user' => $session->sessionUser()], false);
             }
             else
             {
                 $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain);
-                $output_main_panel->render(['user' => $session->sessionUser()]);
+                $output_main_panel->render(['user' => $session->sessionUser()], false);
             }
 
             break;
@@ -126,7 +126,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             }
 
             $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain);
-            $output_main_panel->render(['user' => $session->sessionUser()]);
+            $output_main_panel->render(['user' => $session->sessionUser()], false);
             break;
 
         case 'reports':
@@ -302,7 +302,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             }
 
             $output_board_panel = new \Nelliel\Output\OutputPanelBoard($domain);
-            $output_board_panel->render(['user' => $session->sessionUser()]);
+            $output_board_panel->render(['user' => $session->sessionUser()], false);
             break;
 
         case 'templates':

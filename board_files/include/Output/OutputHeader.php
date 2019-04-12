@@ -21,7 +21,7 @@ class OutputHeader extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array(), bool $data_only = false)
+    public function render(array $parameters, bool $data_only)
     {
         if (!isset($parameters['header_type']))
         {
@@ -44,133 +44,135 @@ class OutputHeader extends OutputCore
 
     private function general(array $parameters, bool $data_only)
     {
-        $render_data = array();
+        $this->render_data = array();
         $session = new \Nelliel\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
         $dotdot = $parameters['dotdot'] ?? '';
-        $extra_data = $parameters['extra_data'] ?? array();
-        $render_data['show_styles'] = $parameters['show_styles'] ?? true;
-        $render_data['session_active'] = $session->isActive();
+        $manage_headers = $parameters['manage_headers'] ?? array();
+        $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
+        $this->render_data['session_active'] = $session->isActive();
         $output_head = new OutputHead($this->domain);
-        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
+        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_menu = new OutputMenu($this->domain);
-        $render_data['show_manage_headers'] = $session->inModmode($this->domain);
+        $this->render_data['show_manage_headers'] = $session->isActive() && !empty($manage_headers);
 
-        if ($render_data['show_styles'])
+        if ($this->render_data['show_styles'])
         {
-            $render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot]);
+            $this->render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot], true);
         }
 
-        $render_data['site_navigation'] = $output_menu->render(['menu' => 'site_navigation', 'dotdot' => $dotdot]);
+        $this->render_data['site_navigation'] = $output_menu->render(
+                ['menu' => 'site_navigation', 'dotdot' => $dotdot], true);
 
-        if (isset($extra_data['use_site_titles']) && $extra_data['use_site_titles'])
+        if (isset($parameters['use_site_titles']) && $parameters['use_site_titles'])
         {
-            $render_data['is_site_header'] = true;
-            $render_data['site_name'] = $site_domain->setting('site_name');
-            $render_data['site_slogan'] = $site_domain->setting('site_slogan');
-            $render_data['site_banner_url'] = $site_domain->setting('site_banner');
+            $this->render_data['is_site_header'] = true;
+            $this->render_data['site_name'] = $site_domain->setting('site_name');
+            $this->render_data['site_slogan'] = $site_domain->setting('site_slogan');
+            $this->render_data['site_banner_url'] = $site_domain->setting('site_banner');
         }
         else
         {
-            $render_data['is_site_header'] = false;
+            $this->render_data['is_site_header'] = false;
         }
 
-        $render_data['is_board_header'] = false;
+        $this->render_data['is_board_header'] = false;
 
         if ($site_domain->setting('show_site_favicon'))
         {
-            $render_data['favicon_url'] = $site_domain->setting('site_favicon');
+            $this->render_data['favicon_url'] = $site_domain->setting('site_favicon');
         }
 
-        $render_data['page_title'] = $site_domain->setting('board_name');
+        $this->render_data['page_title'] = $site_domain->setting('board_name');
 
-        if ($render_data['show_manage_headers'])
+        if (!empty($manage_headers))
         {
-            $render_data['manage_header'] = $extra_data['header'] ?? '';
-            $render_data['manage_sub_header'] = $extra_data['sub_header'] ?? '';
+            $this->render_data['manage_header'] = $manage_headers['header'] ?? '';
+            $this->render_data['manage_sub_header'] = $manage_headers['sub_header'] ?? '';
 
             if ($this->domain->id() !== '')
             {
-                $render_data['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
+                $this->render_data['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
             }
         }
 
-        $output = $this->output($render_data, 'header', false, $data_only);
+        $output = $this->output('header', $data_only, true);
         return $output;
     }
 
     private function board(array $parameters, bool $data_only)
     {
-        $render_data = array();
+        $this->render_data = array();
         $session = new \Nelliel\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
         $dotdot = $parameters['dotdot'] ?? '';
-        $extra_data = $parameters['extra_data'] ?? array();
+        $manage_headers = $parameters['manage_headers'] ?? array();
         $treeline = $parameters['treeline'] ?? array();
         $index_render = $parameters['index_render'] ?? false;
-        $render_data['show_styles'] = $parameters['show_styles'] ?? true;
-        $render_data['session_active'] = $session->isActive();
+        $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
+        $this->render_data['session_active'] = $session->isActive();
         $output_head = new OutputHead($this->domain);
-        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
+        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_menu = new OutputMenu($this->domain);
-        $render_data['show_manage_headers'] = $session->inModmode($this->domain);
+        $this->render_data['show_manage_headers'] = $session->isActive() && !empty($manage_headers);
 
-        if ($render_data['show_styles'])
+        if ($this->render_data['show_styles'])
         {
-            $render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot], true);
+            $this->render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot], true);
         }
 
-        $render_data['site_navigation'] = $output_menu->render(['menu' => 'site_navigation', 'dotdot' => $dotdot],
-                true);
+        $this->render_data['site_navigation'] = $output_menu->render(
+                ['menu' => 'site_navigation', 'dotdot' => $dotdot], true);
 
-        $render_data['board_name'] = ($this->domain->setting('show_board_name')) ? $this->domain->setting('board_name') : '';
-        $render_data['board_slogan'] = ($this->domain->setting('show_board_slogan')) ? $this->domain->setting(
+        $this->render_data['board_name'] = ($this->domain->setting('show_board_name')) ? $this->domain->setting(
+                'board_name') : '';
+        $this->render_data['board_slogan'] = ($this->domain->setting('show_board_slogan')) ? $this->domain->setting(
                 'board_slogan') : '';
-        $render_data['board_banner_url'] = ($this->domain->setting('show_board_banner')) ? $this->domain->setting(
+        $this->render_data['board_banner_url'] = ($this->domain->setting('show_board_banner')) ? $this->domain->setting(
                 'board_banner') : '';
 
-        $render_data['is_site_header'] = false;
-        $render_data['is_board_header'] = true;
+        $this->render_data['is_site_header'] = false;
+        $this->render_data['is_board_header'] = true;
 
         if ($this->domain->setting('show_board_favicon'))
         {
-            $render_data['favicon_url'] = $this->domain->setting('board_favicon');
+            $this->render_data['favicon_url'] = $this->domain->setting('board_favicon');
         }
         else
         {
-            $render_data['favicon_url'] = $site_domain->setting('site_favicon');
+            $this->render_data['favicon_url'] = $site_domain->setting('site_favicon');
         }
 
         if (!$index_render && !empty($treeline))
         {
             if (!isset($treeline[0]['subject']) || nel_true_empty($treeline[0]['subject']))
             {
-                $render_data['page_title'] = $this->domain->setting('board_name') . ' > Thread #' .
+                $this->render_data['page_title'] = $this->domain->setting('board_name') . ' > Thread #' .
                         $treeline[0]['post_number'];
             }
             else
             {
-                $render_data['page_title'] = $this->domain->setting('board_name') . ' > ' . $treeline[0]['subject'];
+                $this->render_data['page_title'] = $this->domain->setting('board_name') . ' > ' . $treeline[0]['subject'];
             }
         }
         else
         {
-            $render_data['page_title'] = $this->domain->setting('board_name');
+            $this->render_data['page_title'] = $this->domain->setting('board_name');
         }
 
-        if ($render_data['show_manage_headers'])
+        if ($this->render_data['show_manage_headers'])
         {
-            $render_data['manage_header'] = $extra_data['header'] ?? '';
-            $render_data['manage_sub_header'] = $extra_data['sub_header'] ?? '';
+            $this->render_data['manage_header'] = $manage_headers['header'] ?? '';
+            $this->render_data['manage_sub_header'] = $manage_headers['sub_header'] ?? '';
 
             if ($this->domain->id() !== '')
             {
-                $render_data['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
+                $this->render_data['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
             }
         }
 
-        $render_data['boards_menu'] = $output_menu->render(['menu' => 'boards'], true);
-        $output = $this->output($render_data, 'header', false, $data_only);
+        $this->render_data['boards_menu'] = $output_menu->render(['menu' => 'boards'], true);
+        $output = $this->output('header', $data_only, true);
         return $output;
     }
 }

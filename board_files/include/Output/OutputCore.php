@@ -9,9 +9,11 @@ if (!defined('NELLIEL_VERSION'))
 
 abstract class OutputCore
 {
+    protected $dom;
     protected $domain;
     protected $database;
     protected $render_core;
+    protected $render_data = array();
     protected $file_handler;
     protected $cache_handler;
     protected $output_filter;
@@ -19,7 +21,7 @@ abstract class OutputCore
     protected $timer_start;
     protected $core_id;
 
-    public abstract function render(array $parameters = array(), bool $data_only = false);
+    public abstract function render(array $parameters, bool $data_only);
 
     protected function utilitySetup()
     {
@@ -65,9 +67,11 @@ abstract class OutputCore
         return round($end_time - $this->timer_start, 4);
     }
 
-    protected function output(array $render_data, string $template, bool $translate = false, bool $data_only = false, $dom = null)
+    protected function output(string $template, bool $data_only, bool $translate, array $render_data = array(), $dom = null)
     {
         $output = null;
+        $render_data = (empty($render_data)) ? $this->render_data : $render_data;
+        $dom = (is_null($dom)) ? $this->dom : $dom;
 
         if ($this->core_id === 'mustache')
         {

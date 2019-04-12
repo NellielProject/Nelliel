@@ -23,21 +23,34 @@ class OutputThread extends OutputCore
 
     public function render(array $parameters = array(), bool $data_only = false)
     {
-        $render_data = array();
+        $this->render_data = array();
         $this->startTimer();
+        $session = new \Nelliel\Session();
         $write = ($parameters['write']) ?? false;
         $thread_id = ($parameters['thread_id']) ?? 0;
         $dotdot = ($write) ? '../../../' : '';
         $command = ($parameters['command']) ?? 'view-thread';
         $thread_content_id = \Nelliel\ContentID::createIDString($thread_id);
-        $render_data['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
+        $this->render_data['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $thread_data = $this->database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
         $output_head = new OutputHead($this->domain);
-        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
+        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
-        $render_data['header'] = $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot], true);
+
+        if ($session->isActive() && !$write)
+        {
+            $manage_headers['header'] = _gettext('Moderator Mode');
+            $manage_headers['sub_header'] = _gettext('View Thread');
+            $this->render_data['header'] = $output_header->render(
+                    ['header_type' => 'board', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
+        }
+        else
+        {
+            $this->render_data['header'] = $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot],
+                    true);
+        }
 
         if (empty($thread_data))
         {
@@ -62,16 +75,16 @@ class OutputThread extends OutputCore
         $gen_data['index_rendering'] = false;
         $gen_data['abbreviate'] = false;
         $total_posts = $thread_data['post_count'];
-        $render_data['abbreviate'] = false;
+        $this->render_data['abbreviate'] = false;
         $output_posting_form = new \Nelliel\Output\OutputPostingForm($this->domain);
-        $render_data['body'] = $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $thread_id]);
+        $this->render_data['body'] = $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $thread_id], false);
         $output_post = new \Nelliel\Output\OutputPost($this->domain);
-        $render_data['op_post'] = '';
-        $render_data['thread_posts'] = '';
-        $render_data['thread_id'] = $thread_content_id;
-        $render_data['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
-        $render_data['thread_corral_id'] = 'thread-' . $thread_content_id;
-        $render_data['board_id'] = $this->domain->id();
+        $this->render_data['op_post'] = '';
+        $this->render_data['thread_posts'] = '';
+        $this->render_data['thread_id'] = $thread_content_id;
+        $this->render_data['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
+        $this->render_data['thread_corral_id'] = 'thread-' . $thread_content_id;
+        $this->render_data['board_id'] = $this->domain->id();
         $collapse_start = $total_posts - ($this->domain->setting('abbreviate_thread') - 1);
 
         foreach ($treeline as $post_data)
@@ -80,16 +93,16 @@ class OutputThread extends OutputCore
             $json_instances['post'] = $json_post;
             $parameters = ['thread_data' => $thread_data, 'dotdot' => $dotdot, 'post_data' => $post_data,
                 'gen_data' => $gen_data, 'json_instances' => $json_instances];
-            $post_render = $output_post->render($parameters);
+            $post_render = $output_post->render($parameters, false);
 
             if ($post_data['op'] == 1)
             {
-                $render_data['op_post'] = $post_render;
+                $this->render_data['op_post'] = $post_render;
             }
             else
             {
                 $this->render_core->appendToOutput($post_render, 'expand');
-                $render_data['thread_posts'] .= $post_render;
+                $this->render_data['thread_posts'] .= $post_render;
 
                 if ($post_counter >= $collapse_start)
                 {
@@ -101,10 +114,10 @@ class OutputThread extends OutputCore
             $post_counter ++;
         }
 
-        $render_data['body'] .= $this->render_core->renderFromTemplateFile('thread/thread', $render_data);
+        $this->render_data['body'] .= $this->render_core->renderFromTemplateFile('thread/thread', $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot], true);
-        $output = $this->output($render_data, 'page');
+        $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot], true);
+        $output = $this->output('page', $data_only, true);
 
         if ($write)
         {

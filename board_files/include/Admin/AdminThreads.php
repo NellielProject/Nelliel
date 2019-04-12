@@ -69,12 +69,12 @@ class AdminThreads extends AdminHandler
         {
             $content_id = new \Nelliel\ContentID($_GET['content-id']);
             $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain);
-            $output_panel->render(['section' => 'expanded_thread', 'user' => $user, 'thread_id' => $content_id->thread_id]);
+            $output_panel->render(['section' => 'expanded_thread', 'user' => $user, 'thread_id' => $content_id->thread_id], false);
         }
         else
         {
             $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain);
-            $output_panel->render(['section' => 'panel', 'user' => $user]);
+            $output_panel->render(['section' => 'panel', 'user' => $user], false);
         }
     }
 

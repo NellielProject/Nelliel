@@ -50,7 +50,7 @@ class Snacks
 
     public function banAppeal($board_id, $ban_info)
     {
-        $bawww = $_POST['ban_appeal'];
+        $bawww = $_POST['bawww'];
 
         if (empty($bawww))
         {

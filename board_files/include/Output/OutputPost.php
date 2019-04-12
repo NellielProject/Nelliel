@@ -22,9 +22,9 @@ class OutputPost extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array(), bool $data_only = false)
+    public function render(array $parameters, bool $data_only)
     {
-        $render_data = array();
+        $this->render_data = array();
         $thread_data = $parameters['thread_data'] ?? array();
         $gen_data = $parameters['gen_data'] ?? array();
         $post_id = $parameters['post_id'] ?? 0;
@@ -49,31 +49,31 @@ class OutputPost extends OutputCore
                 $thread_content_id->thread_id . '/';
         $web_paths['thread_preview'] = $web_paths['board'] . rawurlencode($this->domain->reference('preview_dir')) . '/' .
                 $thread_content_id->thread_id . '/';
-        $render_data['post_corral_id'] = 'post-id-' . $post_content_id->getIDString();
-        $render_data['post_container_id'] = 'post-container-' . $post_content_id->getIDString();
-        $render_data['header_id'] = 'header-' . $post_content_id->getIDString();
-        $render_data['content_container_id'] = 'content-' . $post_content_id->getIDString();
-        $render_data['comments_id'] = 'post-comments-' . $post_content_id->getIDString();
+        $this->render_data['post_corral_id'] = 'post-id-' . $post_content_id->getIDString();
+        $this->render_data['post_container_id'] = 'post-container-' . $post_content_id->getIDString();
+        $this->render_data['header_id'] = 'header-' . $post_content_id->getIDString();
+        $this->render_data['content_container_id'] = 'content-' . $post_content_id->getIDString();
+        $this->render_data['comments_id'] = 'post-comments-' . $post_content_id->getIDString();
 
         if ($response)
         {
-            $render_data['indents_marker'] = $this->domain->setting('indent_marker');
-            $render_data['post_container_class'] = 'reply-post';
-            $render_data['header_class'] = 'reply-post-header';
-            $render_data['content_container_class'] = 'reply-content-container';
-            $render_data['comments_class'] = 'reply-post-comments';
+            $this->render_data['indents_marker'] = $this->domain->setting('indent_marker');
+            $this->render_data['post_container_class'] = 'reply-post';
+            $this->render_data['header_class'] = 'reply-post-header';
+            $this->render_data['content_container_class'] = 'reply-content-container';
+            $this->render_data['comments_class'] = 'reply-post-comments';
         }
         else
         {
-            $render_data['indents_marker'] = '';
-            $render_data['post_container_class'] = 'op-post';
-            $render_data['header_class'] = 'op-post-header';
-            $render_data['content_container_class'] = 'op-content-container';
-            $render_data['comments_class'] = 'op-post-comments';
+            $this->render_data['indents_marker'] = '';
+            $this->render_data['post_container_class'] = 'op-post';
+            $this->render_data['header_class'] = 'op-post-header';
+            $this->render_data['content_container_class'] = 'op-content-container';
+            $this->render_data['comments_class'] = 'op-post-comments';
         }
 
-        $render_data['post_anchor_id'] = 't' . $post_content_id->thread_id . 'p' . $post_content_id->post_id;
-        $render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
+        $this->render_data['post_anchor_id'] = 't' . $post_content_id->thread_id . 'p' . $post_content_id->post_id;
+        $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
                 $post_content_id, $web_paths, $gen_data);
 
         // TODO: Change to has_content
@@ -86,14 +86,13 @@ class OutputPost extends OutputCore
                     PDO::FETCH_ASSOC);
             $output_file_info = new \Nelliel\Output\OutputFile($this->domain);
             $content_count = count($file_list);
-            $render_data['wut'] = 'WUT';
             $content_row = array();
 
             foreach ($file_list as $file)
             {
                 if (count($content_row) >= $this->domain->setting('max_files_row'))
                 {
-                    $render_data['content_rows'][]['row'] = $content_row;
+                    $this->render_data['content_rows'][]['row'] = $content_row;
                     $content_row = array();
                 }
 
@@ -102,18 +101,19 @@ class OutputPost extends OutputCore
                 $file_data = $output_file_info->render(
                         ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
                             'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances'],
-                            'dotdot' => $dotdot]);
+                            'dotdot' => $dotdot], true);
                 $content_row[] = $file_data;
             }
 
             if (!empty($content_row))
             {
-                $render_data['content_rows'][]['row'] = $content_row;
+                $this->render_data['content_rows'][]['row'] = $content_row;
             }
         }
 
-        $render_data['post_comments'] = $this->postComments($post_data, $post_content_id, $gen_data, $web_paths);
-        return $this->render_core->renderFromTemplateFile('thread/post', $render_data);
+        $this->render_data['post_comments'] = $this->postComments($post_data, $post_content_id, $gen_data, $web_paths);
+        $output = $this->output('thread/post', $data_only, true);
+        return $output;
     }
 
     public function getPostFromDatabase($post_id)
@@ -155,7 +155,8 @@ class OutputPost extends OutputCore
         if ($session->inModmode($this->domain))
         {
 
-            $modmode_headers['ip_address'] = @inet_ntop($post_data['ip_address']);
+            $ip = @inet_ntop($post_data['ip_address']);
+            $modmode_headers['ip_address'] = $ip;
 
             // TODO: Change display according to user perms
             if ($response)

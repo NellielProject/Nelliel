@@ -22,8 +22,9 @@ class OutputFile extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array(), bool $data_only = false)
+    public function render(array $parameters, bool $data_only)
     {
+        $this->render_data = array();
         $content_order = $parameters['content_order'] ?? 0;
         $post_data = $parameters['post_data'] ?? array();
         $file = $parameters['file_data'] ?? $this->getFileFromDatabase($post_data['post_number'], $content_order);
@@ -44,27 +45,27 @@ class OutputFile extends OutputCore
         $file_content_id->order_id = $file['content_order'];
         $full_filename = $file['filename'] . '.' . $file['extension'];
         $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['content_order'];
-        $file_data['file_info_id'] = 'fileinfo-' . $file_content_id->getIDString();
-        $file_data['file_content_id'] = $file_content_id->getIDString();
-        $file_data['file_info_class'] = $post_type_class . $multiple_class . 'fileinfo';
-        $file_data['file_select_class'] = $multiple_class . 'content-select';
-        $file_data['file_preview_class'] = $post_type_class . $multiple_class . 'post-preview';
+        $this->render_data['file_info_id'] = 'fileinfo-' . $file_content_id->getIDString();
+        $this->render_data['file_content_id'] = $file_content_id->getIDString();
+        $this->render_data['file_info_class'] = $post_type_class . $multiple_class . 'fileinfo';
+        $this->render_data['file_select_class'] = $multiple_class . 'content-select';
+        $this->render_data['file_preview_class'] = $post_type_class . $multiple_class . 'post-preview';
 
         if ($session->inModmode($this->domain))
         {
-            $file_data['in_modmode'] = true;
-            $file_data['delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
+            $this->render_data['in_modmode'] = true;
+            $this->render_data['delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
                     '&action=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true';
         }
 
-        $file_data['display_filesize'] = ' (' . round(((int) $file['filesize'] / 1024), 2) . ' KB)';
+        $this->render_data['display_filesize'] = ' (' . round(((int) $file['filesize'] / 1024), 2) . ' KB)';
 
         if (!empty($file['display_width']) && !empty($file['display_height']))
         {
-            $file_data['display_image_dimensions'] = $file['display_width'] . ' x ' . $file['display_height'];
+            $this->render_data['display_image_dimensions'] = $file['display_width'] . ' x ' . $file['display_height'];
         }
 
-        $file_data['file_url'] = $web_paths['thread_src'] . $post_data['post_number'] . '/' . rawurlencode($full_filename);
+        $this->render_data['file_url'] = $web_paths['thread_src'] . $post_data['post_number'] . '/' . rawurlencode($full_filename);
         $display_filename = $file['filename'];
 
         if (strlen($file['filename']) > 32)
@@ -72,50 +73,50 @@ class OutputFile extends OutputCore
             $display_filename = substr($file['filename'], 0, 25) . '(...)';
         }
 
-        $file_data['display_filename'] = $display_filename . '.' . $file['extension'];
-        $file_data['show_file_meta_id'] = 'show-file-meta-' . $file_content_id->getIDString();
-        $file_data['file_meta_id'] = 'file-meta-' . $file_content_id->getIDString();
+        $this->render_data['display_filename'] = $display_filename . '.' . $file['extension'];
+        $this->render_data['show_file_meta_id'] = 'show-file-meta-' . $file_content_id->getIDString();
+        $this->render_data['file_meta_id'] = 'file-meta-' . $file_content_id->getIDString();
 
         if (!empty($file['source']))
         {
             $source_data['metadata_class'] = 'file-source';
             $source_data['metadata'] = _gettext('Source: ') . $this->output_filter->cleanAndEncode($file['source']);
-            $file_data['file_metadata'][] = $source_data;
+            $this->render_data['file_metadata'][] = $source_data;
         }
 
         if (!empty($file['license']))
         {
             $license_data['metadata_class'] = 'file-license';
             $license_data['metadata'] = _gettext('License: ') . $this->output_filter->cleanAndEncode($file['license']);
-            $file_data['file_metadata'][] = $license_data;
+            $this->render_data['file_metadata'][] = $license_data;
         }
 
         if (!empty($file['md5']))
         {
             $md5_data['metadata_class'] = 'file-hash';
             $md5_data['metadata'] = 'MD5: ' . bin2hex($file['md5']);
-            $file_data['file_metadata'][] = $md5_data;
+            $this->render_data['file_metadata'][] = $md5_data;
         }
 
         if (!empty($file['sha1']))
         {
             $sha1_data['metadata_class'] = 'file-hash';
             $sha1_data['metadata'] = 'SHA1: ' . bin2hex($file['sha1']);
-            $file_data['file_metadata'][] = $sha1_data;
+            $this->render_data['file_metadata'][] = $sha1_data;
         }
 
         if (!empty($file['sha256']))
         {
             $sha256_data['metadata_class'] = 'file-hash';
             $sha256_data['metadata'] = 'SHA256: ' . bin2hex($file['sha256']);
-            $file_data['file_metadata'][] = $sha256_data;
+            $this->render_data['file_metadata'][] = $sha256_data;
         }
 
         if (!empty($file['sha512']))
         {
             $sha512_data['metadata_class'] = 'file-hash';
             $sha512_data['metadata'] = 'SHA512: ' . bin2hex($file['sha512']);
-            $file_data['file_metadata'][] = $sha512_data;
+            $this->render_data['file_metadata'][] = $sha512_data;
         }
 
         if ($this->domain->setting('use_preview'))
@@ -126,31 +127,31 @@ class OutputFile extends OutputCore
 
             if ($file['format'] == 'webm' || $file['format'] == 'mpeg4')
             {
-                $file_data['video_preview'] = true;
-                $file_data['preview_width'] = $max_width;
-                $file_data['mime_type'] = $file['mime'];
-                $file_data['video_url'] = $file['file_location'];
+                $this->render_data['video_preview'] = true;
+                $this->render_data['preview_width'] = $max_width;
+                $this->render_data['mime_type'] = $file['mime'];
+                $this->render_data['video_url'] = $file['file_location'];
             }
             else
             {
-                $file_data['image_preview'] = true;
+                $this->render_data['image_preview'] = true;
 
                 if (!empty($file['preview_name']))
                 {
                     $full_preview_name = $file['preview_name'] . '.' . $file['preview_extension'];
-                    $file_data['preview_url'] = $web_paths['thread_preview'] . $post_data['post_number'] . '/' .
+                    $this->render_data['preview_url'] = $web_paths['thread_preview'] . $post_data['post_number'] . '/' .
                             rawurlencode($full_preview_name);
 
                     if ($file['preview_width'] > $max_width || $file['preview_height'] > $max_height)
                     {
                         $ratio = min(($max_height / $file['preview_height']), ($max_width / $file['preview_width']));
-                        $file_data['preview_width'] = intval($ratio * $file['preview_width']);
-                        $file_data['preview_height'] = intval($ratio * $file['preview_height']);
+                        $this->render_data['preview_width'] = intval($ratio * $file['preview_width']);
+                        $this->render_data['preview_height'] = intval($ratio * $file['preview_height']);
                     }
                     else
                     {
-                        $file_data['preview_width'] = $file['preview_width'];
-                        $file_data['preview_height'] = $file['preview_height'];
+                        $this->render_data['preview_width'] = $file['preview_width'];
+                        $this->render_data['preview_height'] = $file['preview_height'];
                     }
                 }
                 else if ($this->domain->setting('use_file_icon'))
@@ -162,33 +163,34 @@ class OutputFile extends OutputCore
                     $format_icon = utf8_strtolower($file['format']) . '.png';
                     $type_icon = utf8_strtolower($file['type']) . '.png';
 
-                    $file_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
-                    $file_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
+                    $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
+                    $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
 
                     if (file_exists($icons_file_path . utf8_strtolower($file['type']) . '/' . $format_icon))
                     {
-                        $file_data['preview_url'] = $icons_web_path . utf8_strtolower($file['type']) . '/' . $format_icon;
+                        $this->render_data['preview_url'] = $icons_web_path . utf8_strtolower($file['type']) . '/' . $format_icon;
                     }
                     else if (file_exists($icons_file_path . 'generic/' . $type_icon))
                     {
-                        $file_data['preview_url'] = $icons_web_path . '/generic/' . $type_icon;
+                        $this->render_data['preview_url'] = $icons_web_path . '/generic/' . $type_icon;
                     }
                 }
 
                 if ($file['spoiler'])
                 {
-                    $file_data['preview_url'] = '//' . $web_paths['base_domain'] . IMAGES_WEB_PATH . 'covers/spoiler_alert.png';
-                    $file_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
-                    $file_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
+                    $this->render_data['preview_url'] = '//' . $web_paths['base_domain'] . IMAGES_WEB_PATH . 'covers/spoiler_alert.png';
+                    $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
+                    $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }
 
-                $file_data['other_dims'] = 'w' . $file['display_width'] . 'h' . $file['display_height'];
-                $file_data['other_loc'] = $file_data['file_url'];
-                $file_data['alt_text'] = $file['alt_text'];
+                $this->render_data['other_dims'] = 'w' . $file['display_width'] . 'h' . $file['display_height'];
+                $this->render_data['other_loc'] = $this->render_data['file_url'];
+                $this->render_data['alt_text'] = $file['alt_text'];
             }
         }
 
-        return $file_data;
+        $output = $this->output('thread/file_info', $data_only, true);
+        return $output;
     }
 
     public function getFileFromDatabase($post_id)

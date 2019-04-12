@@ -21,7 +21,7 @@ class OutputPanelManageBoards extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array(), bool $data_only = false)
+    public function render(array $parameters, bool $data_only)
     {
         if (!isset($parameters['section']))
         {
@@ -31,20 +31,20 @@ class OutputPanelManageBoards extends OutputCore
         switch ($parameters['section'])
         {
             case 'panel':
-                $output = $this->panel($parameters);
+                $output = $this->panel($parameters, $data_only);
                 break;
 
             case 'remove_interstitial':
-                $output = $this->removeInterstitial($parameters);
+                $output = $this->removeInterstitial($parameters, $data_only);
                 break;
         }
 
         return $output;
     }
 
-    public function panel(array $parameters)
+    private function panel(array $parameters, bool $data_only)
     {
-        $render_data = array();
+        $this->render_data = array();
         $user = $parameters['user'];
 
         if (!$user->domainPermission($this->domain, 'perm_manage_boards_access'))
@@ -55,12 +55,12 @@ class OutputPanelManageBoards extends OutputCore
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
-        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
+        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
-        $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')];
-        $render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'dotdot' => $dotdot, 'extra_data' => $extra_data], true);
-        $render_data['form_action'] = MAIN_SCRIPT . '?module=manage-boards&action=add';
+        $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')];
+        $this->render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
+        $this->render_data['form_action'] = MAIN_SCRIPT . '?module=manage-boards&action=add';
         $board_data = $this->database->executeFetchAll(
                 'SELECT * FROM "' . BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
@@ -76,53 +76,53 @@ class OutputPanelManageBoards extends OutputCore
 
             if ($board_info['locked'] == 0)
             {
-                $render_data['lock_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                $this->render_data['lock_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                         ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'lock']);
-                $render_data['status'] = _gettext('Active');
-                $render_data['lock_text'] = _gettext('Lock Board');
+                $this->render_data['status'] = _gettext('Active');
+                $this->render_data['lock_text'] = _gettext('Lock Board');
             }
             else
             {
-                $render_data['lock_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                $this->render_data['lock_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                         ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'unlock']);
-                $render_data['status'] = _gettext('Locked');
-                $render_data['lock_text'] = _gettext('Unlock Board');
+                $this->render_data['status'] = _gettext('Locked');
+                $this->render_data['lock_text'] = _gettext('Unlock Board');
             }
 
             $board_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'remove']);
-            $render_data['board_list'][] = $board_data;
+            $this->render_data['board_list'][] = $board_data;
         }
 
-        $render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/manage_boards_panel',
-                $render_data);
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/manage_boards_panel',
+                $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
-        $output = $this->output($render_data, 'page', true);
+        $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output('page', $data_only, true);
         echo $output;
         return $output;
     }
 
-    public function removeInterstitial(array $parameters)
+    private function removeInterstitial(array $parameters, bool $data_only)
     {
-        $render_data = array();
+        $this->render_data = array();
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
-        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
+        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
-        $extra_data = ['header' => _gettext('General Management'),
+        $manage_headers = ['header' => _gettext('General Management'),
             'sub_header' => _gettext('Confirm Board Deletion')];
-        $render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'dotdot' => $dotdot, 'extra_data' => $extra_data], true);
-        $render_data['message'] = $parameters['message'];
-        $render_data['continue_link_text'] = $parameters['continue_link']['text'];
-        $render_data['continue_url'] = $parameters['continue_link']['href'];
-        $render_data['body'] = $this->render_core->renderFromTemplateFile('management/interstials/board_removal',
-                $render_data);
+        $this->render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
+        $this->render_data['message'] = $parameters['message'];
+        $this->render_data['continue_link_text'] = $parameters['continue_link']['text'];
+        $this->render_data['continue_url'] = $parameters['continue_link']['href'];
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/interstials/board_removal',
+                $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
-        $output = $this->output($render_data, 'page', true);
+        $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output('page', $data_only, true);
         echo $output;
         return $output;
     }

@@ -1,13 +1,13 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 	<table>
 		<tr>
-			<td><span data-i18n="gettext">Ban set on:</span> <span id="ban-time-display">{{ start_time_formatted }}</span></td>
+			<td><span data-i18n="gettext">Ban set on:</span> <span>{{ start_time_formatted }}</span></td>
 		</tr>
 		<tr>
-			<td><span data-i18n="gettext">Ban expires on:</span> <span id="ban-expiration-display">{{ ban_expiration }}</span></td>
+			<td><span data-i18n="gettext">Ban expires on:</span> <span>{{ ban_expiration }}</span></td>
 		</tr>
 		<tr>
-			<td><span data-i18n="gettext">Ban type:</span> <span id="ban-type-display">{{ ban_type }}</span></td>
+			<td><span data-i18n="gettext">Ban type:</span> <span>{{ ban_type }}</span></td>
 		</tr>
 		<tr>
 			<td data-i18n="gettext">Banned IP:</td>
@@ -66,7 +66,7 @@
 		</tr>
 		<tr>
 			<td data-i18n="gettext">Appeal</td>
-			<td id="ban-appeal-display">{{ appeal }}</td>
+			<td>{{ appeal }}</td>
 		</tr>
 		<tr>
 			<td data-i18n="gettext">Appeal Response</td>
