@@ -19,6 +19,7 @@ abstract class OutputCore
     protected $output_filter;
     protected $url_constructor;
     protected $timer_start;
+    protected $timer_stored;
     protected $core_id;
 
     public abstract function render(array $parameters, bool $data_only);
@@ -49,14 +50,14 @@ abstract class OutputCore
         }
     }
 
-    protected function startTimer()
+    protected function startTimer($time_offset = 0)
     {
         $start = microtime(true);
-        $this->timer_start = $start;
+        $this->timer_start = $start - $time_offset;
         return $start;
     }
 
-    protected function endTimer()
+    protected function endTimer($rounded = true)
     {
         if (!isset($this->timer_start))
         {
@@ -64,7 +65,16 @@ abstract class OutputCore
         }
 
         $end_time = microtime(true);
-        return round($end_time - $this->timer_start, 4);
+
+        if($rounded)
+        {
+            return round($end_time - $this->timer_start, 4);
+        }
+        else
+        {
+            return $end_time - $this->timer_start;
+        }
+
     }
 
     protected function output(string $template, bool $data_only, bool $translate, array $render_data = array(), $dom = null)

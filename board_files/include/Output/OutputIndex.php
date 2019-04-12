@@ -43,8 +43,8 @@ class OutputIndex extends OutputCore
         }
         else
         {
-            $this->render_data['header'] = $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot],
-                    true);
+            $this->render_data['header'] = $output_header->render(
+                    ['header_type' => 'board', 'dotdot' => $dotdot, 'ignore_session' => true], true);
         }
 
         $result = $this->database->query(
@@ -54,7 +54,7 @@ class OutputIndex extends OutputCore
         $thread_count = count($thread_list);
         $gen_data['index']['thread_count'] = $thread_count;
         $output_posting_form = new \Nelliel\Output\OutputPostingForm($this->domain);
-        $this->render_data['body'] = $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => 0], false);
+        $this->render_data['posting_form'] = $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => 0], false);
 
         if (empty($thread_list))
         {
@@ -86,9 +86,11 @@ class OutputIndex extends OutputCore
         $page = 1;
         $page_count = (int) ceil($thread_count / $this->domain->setting('threads_per_page'));
         $threads_on_page = 0;
+        $timer_offset = $this->endTimer(false);
 
         foreach ($thread_list as $thread_data)
         {
+            $this->startTimer($timer_offset);
             $thread_input = array();
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . $this->domain->reference('posts_table') .
@@ -108,6 +110,7 @@ class OutputIndex extends OutputCore
             $gen_data['abbreviate'] = $thread_data['post_count'] > $this->domain->setting('abbreviate_thread');
             $thread_input['abbreviate'] = $gen_data['abbreviate'];
             $abbreviate_start = $thread_data['post_count'] - ($this->domain->setting('abbreviate_thread') - 1);
+            $this->render_data['body'] = $this->render_data['posting_form'];
             $post_counter = 0;
 
             foreach ($treeline as $post_data)
@@ -190,6 +193,7 @@ class OutputIndex extends OutputCore
 
                 $threads_on_page = 0;
                 $this->render_core->clearOutput();
+                $this->render_data['body'] = array();
                 $this->render_data['threads'] = array();
                 $page ++;
             }

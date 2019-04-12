@@ -48,8 +48,8 @@ class OutputThread extends OutputCore
         }
         else
         {
-            $this->render_data['header'] = $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot],
-                    true);
+            $this->render_data['header'] = $output_header->render(
+                    ['header_type' => 'board', 'dotdot' => $dotdot, 'ignore_session' => true], true);
         }
 
         if (empty($thread_data))
@@ -77,7 +77,8 @@ class OutputThread extends OutputCore
         $total_posts = $thread_data['post_count'];
         $this->render_data['abbreviate'] = false;
         $output_posting_form = new \Nelliel\Output\OutputPostingForm($this->domain);
-        $this->render_data['body'] = $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $thread_id], false);
+        $this->render_data['body'] = $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => $thread_id],
+                false);
         $output_post = new \Nelliel\Output\OutputPost($this->domain);
         $this->render_data['op_post'] = '';
         $this->render_data['thread_posts'] = '';
@@ -124,12 +125,6 @@ class OutputThread extends OutputCore
             $this->file_handler->writeFile(
                     $this->domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '.html', $output,
                     FILE_PERM, true);
-            $this->file_handler->writeFile(
-                    $this->domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-expand.html',
-                    $this->render_core->getOutput('expand'), FILE_PERM, true);
-            $this->file_handler->writeFile(
-                    $this->domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '-collapse.html',
-                    $this->render_core->getOutput('collapse'), FILE_PERM, true);
             $json_thread->writeStoredData($this->domain->reference('page_path') . $thread_id . '/',
                     sprintf('thread-%d', $thread_id));
         }

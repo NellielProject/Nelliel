@@ -111,14 +111,15 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
 
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     var target_element = document.getElementById("thread-expand-" + content_id.id_string);
-
+    var split_command = command.split("-");
+    
     if (!target_element) {
         return;
     }
 
     if (dynamic) {
-        var url = "imgboard.php?module=render&action=" + command + "&board_id=" + dataBin.board_id + "&thread=" + content_id.thread_id;
-        
+        var url = "imgboard.php?module=render&action=view-thread&content-id=" + content_id.id_string + "&board_id=" + dataBin.board_id + "&thread=" + content_id.thread_id;
+
         if(dataBin.is_modmode) {
             url = url + "&modmode=true";
         }

@@ -93,8 +93,9 @@ class OutputMenu extends OutputCore
         $session = new \Nelliel\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
         $dotdot = ($parameters['dotdot']) ?? '';
+        $ignore_session = $parameters['ignore_session'] ?? false;
 
-        if ($session->isActive())
+        if ($session->isActive() && !$ignore_session)
         {
             $render_data['session_active'] = true;
             $render_data['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=main-panel';

@@ -50,7 +50,8 @@ class OutputHeader extends OutputCore
         $dotdot = $parameters['dotdot'] ?? '';
         $manage_headers = $parameters['manage_headers'] ?? array();
         $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
-        $this->render_data['session_active'] = $session->isActive();
+        $ignore_session = $parameters['ignore_session'] ?? false;
+        $this->render_data['session_active'] = $session->isActive() && !$ignore_session;
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_menu = new OutputMenu($this->domain);
@@ -58,11 +59,12 @@ class OutputHeader extends OutputCore
 
         if ($this->render_data['show_styles'])
         {
-            $this->render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot], true);
+            $this->render_data['styles'] = $output_menu->render(
+                    ['menu' => 'styles', 'dotdot' => $dotdot, 'ignore_session' => $ignore_session], true);
         }
 
         $this->render_data['site_navigation'] = $output_menu->render(
-                ['menu' => 'site_navigation', 'dotdot' => $dotdot], true);
+                ['menu' => 'site_navigation', 'dotdot' => $dotdot, 'ignore_session' => $ignore_session], true);
 
         if (isset($parameters['use_site_titles']) && $parameters['use_site_titles'])
         {
@@ -109,8 +111,9 @@ class OutputHeader extends OutputCore
         $manage_headers = $parameters['manage_headers'] ?? array();
         $treeline = $parameters['treeline'] ?? array();
         $index_render = $parameters['index_render'] ?? false;
+        $ignore_session = $parameters['ignore_session'] ?? false;
         $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
-        $this->render_data['session_active'] = $session->isActive();
+        $this->render_data['session_active'] = $session->isActive() && !$ignore_session;
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_menu = new OutputMenu($this->domain);
@@ -118,11 +121,12 @@ class OutputHeader extends OutputCore
 
         if ($this->render_data['show_styles'])
         {
-            $this->render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot], true);
+            $this->render_data['styles'] = $output_menu->render(
+                    ['menu' => 'styles', 'dotdot' => $dotdot, 'ignore_session' => $ignore_session], true);
         }
 
         $this->render_data['site_navigation'] = $output_menu->render(
-                ['menu' => 'site_navigation', 'dotdot' => $dotdot], true);
+                ['menu' => 'site_navigation', 'dotdot' => $dotdot, 'ignore_session' => $ignore_session], true);
 
         $this->render_data['board_name'] = ($this->domain->setting('show_board_name')) ? $this->domain->setting(
                 'board_name') : '';

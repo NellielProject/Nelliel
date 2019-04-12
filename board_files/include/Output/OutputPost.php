@@ -133,13 +133,13 @@ class OutputPost extends OutputCore
     private function postHeaders(bool $response, array $thread_data, array $post_data, ContentID $thread_content_id,
             ContentID $post_content_id, array $web_paths, array $gen_data)
     {
+        $header_data = array();
+        $modmode_headers = array();
+        $thread_headers = array();
         $authorization = new \Nelliel\Auth\Authorization($this->database);
         $session = new \Nelliel\Session();
         $cites = new \Nelliel\Cites($this->domain->database());
         $header_data['response'] = $response;
-        $header_data = array();
-        $modmode_headers = array();
-        $thread_headers = array();
 
         // TODO: Convert to passed $web_paths values
         $base_domain_path = BASE_DOMAIN . BASE_WEB_PATH;
@@ -184,7 +184,7 @@ class OutputPost extends OutputCore
                     rawurlencode($ip) . '&modmode=true';
             $modmode_headers['delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
                     '&action=delete&content-id=' . $temp_content_id->getIDString() . '&modmode=true';
-            $modmode_headerss['ban_delete_irl'] = '?module=threads-admin&board_id=' . $this->domain->id() .
+            $modmode_headers['ban_delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
                     '&action=ban-delete&content-id=' . $temp_content_id->getIDString() . '&ban_type=POST&ban_ip=' .
                     rawurlencode($ip) . '&modmode=true';
             $header_data['modmode_headers'] = $modmode_headers;
