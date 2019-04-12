@@ -20,16 +20,16 @@ class OutputPostingForm extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters = array(), bool $data_only = false)
     {
         $session = new \Nelliel\Session();
         $dotdot = $parameters['dotdot'];
         $response_to = $parameters['response_to'];
-        $render_input['is_response'] = $response_to > 0;
-        $render_input['response_to'] = $response_to;
+        $render_data['is_response'] = $response_to > 0;
+        $render_data['response_to'] = $response_to;
 
         $this->startTimer();
-        $render_input['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&action=new-post&board_id=' .
+        $render_data['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&action=new-post&board_id=' .
                 $this->domain->id();
 
         if ($response_to)
@@ -45,14 +45,14 @@ class OutputPostingForm extends OutputCore
                 $return_url = $dotdot . $this->domain->reference('board_directory') . '/' . MAIN_INDEX . PAGE_EXT;
             }
 
-            $render_input['return_url'] = $return_url;
+            $render_data['return_url'] = $return_url;
         }
 
-        $render_input['is_staff'] = $session->inModmode($this->domain);
-        $render_input['not_anonymous_maxlength'] = $this->domain->setting('max_name_length');
-        $render_input['spam_target_maxlength'] = $this->domain->setting('max_email_length');
-        $render_input['verb_maxlength'] = $this->domain->setting('max_subject_length');
-        $render_input['force_anonymous'] = $this->domain->setting('force_anonymous');
+        $render_data['is_staff'] = $session->inModmode($this->domain);
+        $render_data['not_anonymous_maxlength'] = $this->domain->setting('max_name_length');
+        $render_data['spam_target_maxlength'] = $this->domain->setting('max_email_length');
+        $render_data['verb_maxlength'] = $this->domain->setting('max_subject_length');
+        $render_data['force_anonymous'] = $this->domain->setting('force_anonymous');
 
         // File Block
         if ($response_to)
@@ -96,25 +96,26 @@ class OutputPostingForm extends OutputCore
                 $block_data['spoilers_enabled'] = false;
             }
 
-            $render_input['file_blocks'][] = $block_data;
+            $render_data['file_blocks'][] = $block_data;
         }
 
-        $render_input['use_fgsfds'] = $this->domain->setting('use_fgsfds');
-        $render_input['fgsfds_name'] = $this->domain->setting('fgsfds_name');
-        $render_input['use_captcha'] = $this->domain->setting('use_captcha');
-        $render_input['captcha_image'] = $dotdot . MAIN_SCRIPT . '?get-captcha';
-        $render_input['use_recaptcha'] = $this->domain->setting('use_captcha');
-        $render_input['recaptcha_sitekey'] = $this->domain->setting('recaptcha_site_key');
-        $render_input['use_honeypot'] = $this->domain->setting('use_honeypot');
-        $render_input['honeypot_field_name1'] = BASE_HONEYPOT_FIELD1 . '_' . $this->domain->id();
-        $render_input['honeypot_field_name2'] = BASE_HONEYPOT_FIELD2 . '_' . $this->domain->id();
-        $render_input['honeypot_field_name3'] = BASE_HONEYPOT_FIELD3 . '_' . $this->domain->id();
-        $render_input['posting_mode'] = ($response_to) ? _gettext('Posting mode: Reply') : _gettext('Posting mode: New thread');
-        $this->postingRules($render_input);
-        return $this->render_core->renderFromTemplateFile('posting_form', $render_input);
+        $render_data['use_fgsfds'] = $this->domain->setting('use_fgsfds');
+        $render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
+        $render_data['use_captcha'] = $this->domain->setting('use_captcha');
+        $render_data['captcha_image'] = $dotdot . MAIN_SCRIPT . '?get-captcha';
+        $render_data['use_recaptcha'] = $this->domain->setting('use_captcha');
+        $render_data['recaptcha_sitekey'] = $this->domain->setting('recaptcha_site_key');
+        $render_data['use_honeypot'] = $this->domain->setting('use_honeypot');
+        $render_data['honeypot_field_name1'] = BASE_HONEYPOT_FIELD1 . '_' . $this->domain->id();
+        $render_data['honeypot_field_name2'] = BASE_HONEYPOT_FIELD2 . '_' . $this->domain->id();
+        $render_data['honeypot_field_name3'] = BASE_HONEYPOT_FIELD3 . '_' . $this->domain->id();
+        $render_data['posting_mode'] = ($response_to) ? _gettext('Posting mode: Reply') : _gettext(
+                'Posting mode: New thread');
+        $this->postingRules($render_data);
+        return $this->render_core->renderFromTemplateFile('posting_form', $render_data);
     }
 
-    private function postingRules(&$render_input)
+    private function postingRules(&$render_data)
     {
         $filetypes = new \Nelliel\FileTypes($this->domain->database());
 
@@ -139,11 +140,15 @@ class OutputPostingForm extends OutputCore
 
             if ($list_set !== '')
             {
-                $render_input['rules_list'][]['rules_text'] = sprintf(_gettext('Supported %s file types: '), $type) . substr($list_set, 0, -2);
+                $render_data['rules_list'][]['rules_text'] = sprintf(_gettext('Supported %s file types: '), $type) .
+                        substr($list_set, 0, -2);
             }
         }
 
-        $render_input['rules_list'][]['rules_text'] = sprintf(_gettext('Maximum file size allowed is %dKB'), $this->domain->setting('max_filesize'));
-        $render_input['rules_list'][]['rules_text'] = sprintf(_gettext('Images greater than %d x %d pixels will be thumbnailed.'), $this->domain->setting('max_width'), $this->domain->setting('max_height'));
+        $render_data['rules_list'][]['rules_text'] = sprintf(_gettext('Maximum file size allowed is %dKB'),
+                $this->domain->setting('max_filesize'));
+        $render_data['rules_list'][]['rules_text'] = sprintf(
+                _gettext('Images greater than %d x %d pixels will be thumbnailed.'), $this->domain->setting('max_width'),
+                $this->domain->setting('max_height'));
     }
 }

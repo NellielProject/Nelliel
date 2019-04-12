@@ -17,8 +17,9 @@ abstract class OutputCore
     protected $output_filter;
     protected $url_constructor;
     protected $timer_start;
+    protected $core_id;
 
-    public abstract function render(array $parameters = array());
+    public abstract function render(array $parameters = array(), bool $data_only = false);
 
     protected function utilitySetup()
     {
@@ -30,11 +31,13 @@ abstract class OutputCore
 
     protected function selectRenderCore(string $core_id)
     {
-        if($core_id === 'mustache')
+        $this->core_id = $core_id;
+
+        if ($core_id === 'mustache')
         {
             $this->render_core = new \Nelliel\RenderCoreMustache($this->domain);
         }
-        else if($core_id === 'DOM')
+        else if ($core_id === 'DOM')
         {
             $this->render_core = new \Nelliel\RenderCoreDOM();
         }
@@ -44,14 +47,14 @@ abstract class OutputCore
         }
     }
 
-    public function startTimer()
+    protected function startTimer()
     {
         $start = microtime(true);
         $this->timer_start = $start;
         return $start;
     }
 
-    public function endTimer()
+    protected function endTimer()
     {
         if (!isset($this->timer_start))
         {
@@ -59,11 +62,38 @@ abstract class OutputCore
         }
 
         $end_time = microtime(true);
-        return $end_time - $this->timer_start;
+        return round($end_time - $this->timer_start, 4);
     }
 
-    public function translate()
+    protected function output(array $render_data, string $template, bool $translate = false, bool $data_only = false, $dom = null)
     {
+        $output = null;
 
+        if ($this->core_id === 'mustache')
+        {
+            if ($data_only)
+            {
+                $output = $render_data;
+            }
+            else
+            {
+                if($this->domain->setting('display_render_timer') && isset($this->timer_start))
+                {
+                    $render_data['show_stats']['render_timer'] = function ()
+                    {
+                        return 'Page rendered in ' . $this->endTimer() . ' seconds.';
+                    };
+                }
+
+                $output = $this->render_core->renderFromTemplateFile($template, $render_data);
+
+                if ($translate)
+                {
+                    $output = $this->domain->translator()->translateHTML($output);
+                }
+            }
+        }
+
+        return $output;
     }
 }

@@ -52,8 +52,10 @@ class AdminUsers extends AdminHandler
         {
             $this->remove($user);
         }
-
-        $this->renderPanel($user);
+        else
+        {
+            $this->renderPanel($user);
+        }
     }
 
     public function renderPanel($user)

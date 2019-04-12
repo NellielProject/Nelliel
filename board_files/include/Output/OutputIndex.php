@@ -21,53 +21,53 @@ class OutputIndex extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters = array(), bool $data_only = false)
     {
+        $render_data = array();
+        $this->startTimer();
         $write = ($parameters['write']) ?? false;
         $thread_id = ($parameters['thread_id']) ?? 0;
         $dotdot = ($write) ? '../' : '';
         $site_domain = new \Nelliel\DomainSite($this->database);
-
-        $this->startTimer();
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
+        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
+        $render_data['header'] = $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot], true);
         $result = $this->database->query(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') .
                 '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC');
         $thread_list = $result->fetchAll(PDO::FETCH_ASSOC);
         $thread_count = count($thread_list);
         $gen_data['index']['thread_count'] = $thread_count;
-        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
-        $this->render_core->appendToOutput($output_header->render(['header_type' => 'board', 'dotdot' => $dotdot]),
-                'header');
         $output_posting_form = new \Nelliel\Output\OutputPostingForm($this->domain);
-        $this->render_core->appendToOutput($output_posting_form->render(['dotdot' => $dotdot, 'response_to' => 0]),
-                'header');
+        $render_data['body'] = $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => 0]);
 
         if (empty($thread_list))
         {
-            $render_input['catalog_url'] = 'catalog.html';
+            $render_data['catalog_url'] = 'catalog.html';
             $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-            $this->render_core->appendToOutput(
-                    $output_footer->render(['dotdot' => $dotdot, 'generate_styles' => true]));
+            $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => true], true);
+            $output = $this->output($render_data, 'page', true);
 
             if ($write)
             {
                 $this->file_handler->writeFile($this->domain->reference('board_path') . MAIN_INDEX . PAGE_EXT,
-                        $this->render_core->getOutput(), FILE_PERM);
+                        $output, FILE_PERM);
                 $json_index->writeStoredData($this->domain->reference('board_path'), sprintf('index-%d', $page + 1));
             }
             else
             {
-                echo $this->render_core->getOutput();
+                echo $output;
             }
 
-            return;
+            return $output;
         }
 
         $post_counter = 0;
         $gen_data['index_rendering'] = true;
         $json_index = new \Nelliel\API\JSON\JSONIndex($this->domain, $this->file_handler);
-        $render_input['catalog_url'] = 'catalog.html';
-        $render_input['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
+        $render_data['catalog_url'] = 'catalog.html';
+        $render_data['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
         $index_format = $site_domain->setting('index_filename_format');
         $page = 1;
         $page_count = (int) ceil($thread_count / $this->domain->setting('threads_per_page'));
@@ -120,7 +120,7 @@ class OutputIndex extends OutputCore
                 $post_counter ++;
             }
 
-            $render_input['threads'][] = $thread_input;
+            $render_data['threads'][] = $thread_input;
             $threads_on_page ++;
 
             if ($threads_on_page >= $this->domain->setting('threads_per_page'))
@@ -151,31 +151,31 @@ class OutputIndex extends OutputCore
                 $next['link_text'] = _gettext('Next');
                 $next['index_url'] = ($page != $page_count) ? sprintf($index_format, ($page + 1)) . PAGE_EXT : '';
                 $nav_elements[] = $next;
-                $render_input['nav_elements'] = $nav_elements;
+                $render_data['nav_elements'] = $nav_elements;
 
                 $this->render_core->appendToOutput($this->render_core->getOutput('header'));
-                $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('index', $render_input));
+                $render_data['body'] .= $this->render_core->renderFromTemplateFile('index', $render_data);
                 $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-                $this->render_core->appendToOutput(
-                        $output_footer->render(['dotdot' => $dotdot, 'generate_styles' => true]));
+                $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => true], true);
+                $output = $this->output($render_data, 'page');
                 $index_filename = ($page == 1) ? 'index' . PAGE_EXT : sprintf($index_format, ($page)) . PAGE_EXT;
 
                 if ($write)
                 {
                     $this->file_handler->writeFile($this->domain->reference('board_path') . $index_filename,
-                            $this->render_core->getOutput(), FILE_PERM, true);
+                            $output, FILE_PERM, true);
                     $json_index->storeData($json_index->prepareData($gen_data['index']), 'index');
                     $json_index->writeStoredData($this->domain->reference('board_path'), sprintf('index-%d', $page));
                 }
                 else
                 {
-                    $this->render_core->getOutput();
-                    nel_clean_exit();
+                    echo $output;
+                    return $output;
                 }
 
                 $threads_on_page = 0;
                 $this->render_core->clearOutput();
-                $render_input['threads'] = array();
+                $render_data['threads'] = array();
                 $page ++;
             }
         }

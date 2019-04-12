@@ -21,8 +21,9 @@ class OutputPanelTemplates extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters = array(), bool $data_only = false)
     {
+        $render_data = array();
         $user = $parameters['user'];
 
         if (!$user->domainPermission($this->domain, 'perm_templates_access'))
@@ -31,10 +32,13 @@ class OutputPanelTemplates extends OutputCore
         }
 
         $this->startTimer();
+        $dotdot = $parameters['dotdot'] ?? '';
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Templates')];
-        $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
+        $render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot, 'extra_data' => $extra_data], true);
         $templates = $this->database->executeFetchAll(
                 'SELECT * FROM "' . TEMPLATES_TABLE . '" ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
         $installed_ids = array();
@@ -56,7 +60,7 @@ class OutputPanelTemplates extends OutputCore
                     ['module' => 'templates', 'action' => 'make-default', 'template-id' => $template['id']]);
             $template_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'templates', 'action' => 'remove', 'template-id' => $template['id']]);
-            $render_input['installed_list'][] = $template_data;
+            $render_data['installed_list'][] = $template_data;
         }
 
         $ini_parser = new \Nelliel\INIParser($this->file_handler);
@@ -75,14 +79,15 @@ class OutputPanelTemplates extends OutputCore
             $template_data['is_installed'] = in_array($template['id'], $installed_ids);
             $template_data['install_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'templates', 'action' => 'add', 'template-id' => $template['id']]);
-            $render_input['available_list'][] = $template_data;
+            $render_data['available_list'][] = $template_data;
         }
 
-        $this->render_core->appendToOutput(
-                $this->render_core->renderFromTemplateFile('management/panels/templates_panel', $render_input));
+        $render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/templates_panel',
+                $render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
-        echo $this->render_core->getOutput();
-        nel_clean_exit();
+        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output($render_data, 'page', true);
+        echo $output;
+        return $output;
     }
 }

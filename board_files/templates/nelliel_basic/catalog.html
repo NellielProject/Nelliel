@@ -1,41 +1,40 @@
-					<div id="catalog-container">
-						<h2 class="catalog-title">{{ catalog_title }}</h2>
-						{{# catalog_entries }}
-						<div class="catalog-entry">
-							<div class="catalog-open-link">
-
-								<a href="{{ open_url }}">
-								{{# has_preview }}
-									<img src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}">
-								{{/ has_preview }}
-								{{^ has_preview }}
-									{{ open_text }}
-								{{/ has_preview }}
-								</a>
-							</div>
-							<div class="catalog-thread-info">
-								<span>R: </span>
-								<span>{{ reply_count }}</span>
-								<span> / F: </span>
-								<span>{{ file_count }}</span>
-								<span> / P: </span>
-								<span>{{ index_page }}</span>
-								{{# is_sticky }}
-								<span>&#128204;</span>
-								{{/ is_sticky }}
-								{{# is_locked }}
-								<span>&#128274;</span>
-								{{/ is_locked }}
-							</div>
-							<div class="catalog-subject">{{ first_post_subject }}</div>
-							<p class="reply-post-text">
-								<span class="reply-post-comment">
-								{{# comment_lines }}
-									{{{ line }}}<br>
-								{{/ comment_lines }}
-								</span>
-								<span class="mod-comment">{{ mod_comment }}</span>
-							</p>
-						</div>
-						{{/ catalog_entries }}
-					</div>
+<div>
+	<h2 class="catalog-title">{{ catalog_title }}</h2>
+	{{# catalog_entries }}
+	<div class="catalog-entry">
+		<div class="catalog-open-link">
+			<a href="{{ open_url }}">
+		{{# has_preview }}
+			<img src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}">
+		{{/ has_preview }}
+		{{^ has_preview }}
+			{{ open_text }}
+		{{/ has_preview }}
+			</a>
+		</div>
+		<div class="catalog-thread-info">
+			<span>R: </span>
+			<span>{{ reply_count }}</span>
+			<span> / F: </span>
+			<span>{{ file_count }}</span>
+			<span> / P: </span>
+			<span>{{ index_page }}</span>
+		{{# is_sticky }}
+			<span>&#128204;</span>
+		{{/ is_sticky }}
+		{{# is_locked }}
+			<span>&#128274;</span>
+		{{/ is_locked }}
+		</div>
+		<div class="catalog-subject">{{ first_post_subject }}</div>
+		<p class="reply-post-text">
+			<span class="reply-post-comment">
+		{{# comment_lines }}
+			{{{ line }}}<br>
+		{{/ comment_lines }}
+			</span>
+			<span class="mod-comment">{{ mod_comment }}</span>
+		</p>
+	</div>
+	{{/ catalog_entries }}
+</div>

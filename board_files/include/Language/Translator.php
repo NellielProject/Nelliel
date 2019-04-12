@@ -18,7 +18,7 @@ class Translator
         $this->domain = $domain;
     }
 
-    public function translateHTML(string $html, bool $return_dom)
+    public function translateHTML(string $html, bool $return_dom = false)
     {
         $dom_render_core = new \Nelliel\RenderCoreDOM();
         $dom_document = $dom_render_core->newDOMDocument();

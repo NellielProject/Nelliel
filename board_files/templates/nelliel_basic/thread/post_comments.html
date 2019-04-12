@@ -1,9 +1,9 @@
-						<p class="{{ post_contents_class }}">
-						{{# comment_lines }}
-							<span class="{{ post_comment_class }}">{{{ line }}}</span><br>
-						{{/ comment_lines }}
-							<span class="{{ mod_comment_class }}">{{ mod_comment }}</span>
-						{{# index_render }}
-							<span data-i18n="gettext">This is a long comment.</span>&nbsp;<a href="{{ post_url }}" data-i18n="gettext">Click here for the full text</a>
-						{{/ index_render }}
-						</p>
+<p class="{{ post_contents_class }}">
+{{# comment_lines }}
+	<span class="{{ post_comment_class }}">{{{ line }}}</span><br>
+{{/ comment_lines }}
+	<span class="{{ mod_comment_class }}">{{ mod_comment }}</span>
+{{# index_render }}
+	<span data-i18n="gettext">This is a long comment.</span>&nbsp;<a href="{{ post_url }}" data-i18n="gettext">Click here for the full text</a>
+{{/ index_render }}
+</p>

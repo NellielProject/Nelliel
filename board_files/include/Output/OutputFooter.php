@@ -21,29 +21,23 @@ class OutputFooter extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters = array(), bool $data_only = false)
     {
+        $render_data = array();
         $dotdot = ($parameters['dotdot']) ?? array();
-        $generate_styles = ($parameters['generate_styles']) ?? false;
         $show_timer = ($parameters['show_timer']) ?? true;
+        $render_data['show_styles'] = ($parameters['show_styles']) ?? true;
+        $output_menu = new OutputMenu($this->domain);
 
-        if ($generate_styles)
+        if ($render_data['show_styles'])
         {
-            $render_input['styles'] = $this->buildStyles($dotdot);
-            $render_input['show_styles'] = true;
+            $render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot]);
         }
 
-        $render_input['nelliel_vertsion'] = NELLIEL_VERSION;
-        $render_input['js_ui_url'] = $dotdot . SCRIPTS_WEB_PATH . 'ui.js';
-
-        if($this->domain->setting('display_render_timer') && $show_timer)
-        {
-            //$time = round((microtime(true) - $timer_start), 4);
-            //$render_input['render_timer'] = sprintf(_gettext('This page was created in %s seconds.'), $time);
-        }
-
-        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('footer', $render_input));
-        return $this->render_core->getOutput();
+        $render_data['nelliel_version'] = NELLIEL_VERSION;
+        $render_data['js_ui_url'] = $dotdot . SCRIPTS_WEB_PATH . 'ui.js';
+        $output = $this->output($render_data, 'footer', false, $data_only);
+        return $output;
     }
 
     public function buildStyles(string $dotdot)

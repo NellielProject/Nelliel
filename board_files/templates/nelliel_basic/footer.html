@@ -1,22 +1,14 @@
-	{{# show_styles }}
-	<nav id="bottom-styles" class="bottom-styles">
-		<span>Style:</span>
-		<select id="bottom-styles-menu" data-command="change-style">
-		{{# styles }}
-			<option value="{{ style_id }}">{{ style_name }}</option>
-		{{/ styles }}
-		</select>
+{{# show_styles }}
+	{{> menu/styles }}
+{{/ show_styles }}
+
+<footer class="footer" role="contentinfo">
+	<!--Do not remove these links-->
+	<nav>-
+		<a href="http://www.2chan.net/script/" rel="external" target="_blank" title="futaba">futaba</a> +
+		<a href="https://www.1chan.net/futallaby/" rel="external" target="_blank">futallaby</a> +
+		<a href="http://www.nelliel.com" rel="external" title="Nelliel Imageboard" target="_blank">Nelliel <span>{{ nelliel_version }}</span></a> -
 	</nav>
-	{{/ show_styles }}
-	<footer class="footer">
-		<!--Do not remove these links-->
-		<nav>-
-			<a href="http://www.2chan.net/script/" rel="external" target="_blank" title="futaba">futaba</a> +
-			<a href="https://www.1chan.net/futallaby/" rel="external" target="_blank">futallaby</a> +
-			<a href="http://www.nelliel.com" rel="external" title="Nelliel Imageboard" target="_blank">Nelliel <span>{{ nelliel_version }}</span></a> -
-		</nav>
-		<div>{{ render_timer }}</div>
-		<script src="{{ js_ui_url }}"></script>
-	</footer>
-</body>
-</html>
+	<div>{{ render_timer }}</div>
+	<script src="{{ js_ui_url }}"></script>
+</footer>

@@ -1,23 +1,23 @@
-			<div id="{{ post_corral_id }}" class="post-corral">
-				<a id="{{ post_anchor_id }}"></a>
-				<div class="indents">{{ indents_marker }}</div>
-				<div id="{{ post_container_id }}" class="{{ post_container_class }}">
-					<div id="{{ header_id }}" class="{{ header_class }}">
-					{{# headers }}
-						{{> thread/post_headers }}
-					{{/ headers }}
-					</div>
-					<div id="{{ content_container_id }}" class="{{ content_container_class }}">
-					{{# content_rows }}
-						{{# row }}
-							{{> thread/file_info }}
-						{{/ row }}
-					{{/ content_rows }}
-					</div>
-					<div id="{{ comments_id }}" class="{{ comments_class }}">
-					{{# post_comments }}
-						{{> thread/post_comments }}
-					{{/ post_comments }}
-					</div>
-				</div>
-			</div>
+<div id="{{ post_corral_id }}" class="post-corral">
+	<a id="{{ post_anchor_id }}"></a>
+	<div class="indents">{{ indents_marker }}</div>
+	<div id="{{ post_container_id }}" class="{{ post_container_class }}">
+		<div id="{{ header_id }}" class="{{ header_class }}">
+		{{# headers }}
+			{{> thread/post_headers }}
+		{{/ headers }}
+		</div>
+		<div id="{{ content_container_id }}" class="{{ content_container_class }}">
+		{{# content_rows }}
+			{{# row }}
+				{{> thread/file_info }}
+			{{/ row }}
+		{{/ content_rows }}
+		</div>
+		<div id="{{ comments_id }}" class="{{ comments_class }}">
+		{{# post_comments }}
+			{{> thread/post_comments }}
+		{{/ post_comments }}
+		</div>
+	</div>
+</div>

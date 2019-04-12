@@ -21,9 +21,9 @@ class OutputPanelBans extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters = array(), bool $data_only = false)
     {
-        if(!isset($parameters['section']))
+        if (!isset($parameters['section']))
         {
             return;
         }
@@ -38,28 +38,34 @@ class OutputPanelBans extends OutputCore
         switch ($parameters['section'])
         {
             case 'panel':
-                $this->renderPanel($parameters);
+                $output = $this->renderPanel($parameters, $data_only);
                 break;
 
             case 'add':
-                $this->renderAdd($parameters);
+                $output = $this->renderAdd($parameters, $data_only);
                 break;
 
             case 'modify':
-                $this->renderModify($parameters);
+                $output = $this->renderModify($parameters, $data_only);
                 break;
         }
+
+        return $output;
     }
 
-    public function renderPanel(array $parameters)
+    private function renderPanel(array $parameters, bool $data_only)
     {
-        $user = $parameters['user'];
-
+        $render_data = array();
         $this->startTimer();
+        $dotdot = $parameters['dotdot'] ?? '';
+        $user = $parameters['user'];
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')];
-        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
-        $render_input['can_modify'] = $user->domainPermission($this->domain, 'perm_ban_modify');
+        $render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot, 'extra_data' => $extra_data], true);
+        $render_data['can_modify'] = $user->domainPermission($this->domain, 'perm_ban_modify');
 
         if ($this->domain->id() !== '')
         {
@@ -69,7 +75,8 @@ class OutputPanelBans extends OutputCore
         }
         else
         {
-            $ban_list = $this->database->executeFetchAll('SELECT * FROM "' . BANS_TABLE . '" ORDER BY "ban_id" DESC', PDO::FETCH_ASSOC);
+            $ban_list = $this->database->executeFetchAll('SELECT * FROM "' . BANS_TABLE . '" ORDER BY "ban_id" DESC',
+                    PDO::FETCH_ASSOC);
         }
 
         $bgclass = 'row1';
@@ -88,24 +95,27 @@ class OutputPanelBans extends OutputCore
             $ban_data['appeal'] = $ban_info['appeal'];
             $ban_data['appeal_response'] = $ban_info['appeal_response'];
             $ban_data['appeal_status'] = $ban_info['appeal_status'];
-            $ban_data['modify_url'] = MAIN_SCRIPT . '?module=board&module=bans&action=modify&ban_id=' . $ban_info['ban_id'] . '&board_id=' .
-                    $this->domain->id();
-            $ban_data['remove_url'] = MAIN_SCRIPT . '?module=board&module=bans&action=remove&ban_id=' . $ban_info['ban_id'] . '&board_id=' .
-                    $this->domain->id();
-            $render_input['ban_list'][] = $ban_data;
+            $ban_data['modify_url'] = MAIN_SCRIPT . '?module=board&module=bans&action=modify&ban_id=' .
+                    $ban_info['ban_id'] . '&board_id=' . $this->domain->id();
+            $ban_data['remove_url'] = MAIN_SCRIPT . '?module=board&module=bans&action=remove&ban_id=' .
+                    $ban_info['ban_id'] . '&board_id=' . $this->domain->id();
+            $render_data['ban_list'][] = $ban_data;
         }
 
-        $render_input['new_ban_url'] = MAIN_SCRIPT . '?module=board&module=bans&action=new&board_id=' . $this->domain->id();
-
-        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('management/panels/bans_panel_main', $render_input));
+        $render_data['new_ban_url'] = MAIN_SCRIPT . '?module=board&module=bans&action=new&board_id=' .
+                $this->domain->id();
+        $render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/bans_panel_main',
+                $render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
-        echo $this->render_core->getOutput();
-        nel_clean_exit();
+        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output($render_data, 'page', true);
+        echo $output;
+        return $output;
     }
 
-    public function renderAdd(array $parameters)
+    private function renderAdd(array $parameters, bool $data_only)
     {
+        $render_data = array();
         $user = $parameters['user'];
 
         if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
@@ -114,16 +124,20 @@ class OutputPanelBans extends OutputCore
         }
 
         $this->startTimer();
+        $dotdot = $parameters['dotdot'] ?? '';
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Add Ban')];
-        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
-        $render_input['ban_board'] = (!empty($this->domain->id())) ? $this->domain->id() : '';
+        $render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot, 'extra_data' => $extra_data], true);
+        $render_data['ban_board'] = (!empty($this->domain->id())) ? $this->domain->id() : '';
         $ip = $parameters['ip'];
         $type = $parameters['type'];
 
         if ($type === 'POST' && isset($_GET['post-id']))
         {
-            $render_input['is_post_ban'] = true;
+            $render_data['is_post_ban'] = true;
             $post_param = '&post-id=' . $_GET['post-id'];
         }
         else
@@ -131,19 +145,22 @@ class OutputPanelBans extends OutputCore
             $post_param = '';
         }
 
-        $render_input['form_action'] = MAIN_SCRIPT . '?module=board&module=bans&action=add&board_id=' . $this->domain->id() . $post_param;
-        $render_input['ban_ip'] = $ip;
-        $render_input['ban_type'] = $type;
-
-        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('management/panels/bans_panel_add', $render_input));
+        $render_data['form_action'] = MAIN_SCRIPT . '?module=board&module=bans&action=add&board_id=' .
+                $this->domain->id() . $post_param;
+        $render_data['ban_ip'] = $ip;
+        $render_data['ban_type'] = $type;
+        $render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/bans_panel_add',
+                $render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
-        echo $this->render_core->getOutput();
-        nel_clean_exit();
+        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output($render_data, 'page', true);
+        echo $output;
+        return $output;
     }
 
-    public function renderModify(array $parameters)
+    private function renderModify(array $parameters, bool $data_only)
     {
+        $render_data = array();
         $user = $parameters['user'];
 
         if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
@@ -152,54 +169,61 @@ class OutputPanelBans extends OutputCore
         }
 
         $this->startTimer();
+        $dotdot = $parameters['dotdot'] ?? '';
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Modify Ban')];
-        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
-        $render_input['form_action'] = MAIN_SCRIPT . '?module=board&module=bans&action=update&board_id=' . $this->domain->id();
+        $render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot, 'extra_data' => $extra_data], true);
+        $render_data['form_action'] = MAIN_SCRIPT . '?module=board&module=bans&action=update&board_id=' .
+                $this->domain->id();
         $ban_id = $_GET['ban_id'];
         $ban_hammer = new \Nelliel\BanHammer($this->database);
         $ban_info = $ban_hammer->getBanById($ban_id, true);
-        $render_input['ban_id'] = $ban_info['ban_id'];
-        $render_input['ip_address_start'] = inet_ntop($ban_info['ip_address_start']);
-        $render_input['board_id'] = $ban_info['board_id'];
-        $render_input['type'] = $ban_info['type'];
-        $render_input['start_time_formatted'] = date("D F jS Y  H:i:s", $ban_info['start_time']);
-        $render_input['expiration'] = date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']);
-        $render_input['years'] = $ban_info['years'];
-        $render_input['days'] = $ban_info['days'];
-        $render_input['hours'] = $ban_info['hours'];
-        $render_input['minutes'] = $ban_info['minutes'];
-        $render_input['all_boards'] = ($ban_info['all_boards'] > 0) ? 'checked' : '';
-        $render_input['start_time'] = $ban_info['start_time'];
-        $render_input['reason'] = $ban_info['reason'];
-        $render_input['creator'] = $ban_info['creator'];
-        $render_input['appeal'] = $ban_info['appeal'];
-        $render_input['appeal_response'] = $ban_info['appeal_response'];
+        $render_data['ban_id'] = $ban_info['ban_id'];
+        $render_data['ip_address_start'] = inet_ntop($ban_info['ip_address_start']);
+        $render_data['board_id'] = $ban_info['board_id'];
+        $render_data['type'] = $ban_info['type'];
+        $render_data['start_time_formatted'] = date("D F jS Y  H:i:s", $ban_info['start_time']);
+        $render_data['expiration'] = date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']);
+        $render_data['years'] = $ban_info['years'];
+        $render_data['days'] = $ban_info['days'];
+        $render_data['hours'] = $ban_info['hours'];
+        $render_data['minutes'] = $ban_info['minutes'];
+        $render_data['all_boards'] = ($ban_info['all_boards'] > 0) ? 'checked' : '';
+        $render_data['start_time'] = $ban_info['start_time'];
+        $render_data['reason'] = $ban_info['reason'];
+        $render_data['creator'] = $ban_info['creator'];
+        $render_data['appeal'] = $ban_info['appeal'];
+        $render_data['appeal_response'] = $ban_info['appeal_response'];
 
-        if($ban_info['appeal_status'] == 0)
+        if ($ban_info['appeal_status'] == 0)
         {
-            $render_input['status_unappealed'] = 'checked';
+            $render_data['status_unappealed'] = 'checked';
         }
 
-        if($ban_info['appeal_status'] == 1)
+        if ($ban_info['appeal_status'] == 1)
         {
-            $render_input['status_appealed'] = 'checked';
+            $render_data['status_appealed'] = 'checked';
         }
 
-        if($ban_info['appeal_status'] == 2)
+        if ($ban_info['appeal_status'] == 2)
         {
-            $render_input['status_modified'] = 'checked';
+            $render_data['status_modified'] = 'checked';
         }
 
-        if($ban_info['appeal_status'] == 3)
+        if ($ban_info['appeal_status'] == 3)
         {
-            $render_input['status_denied'] = 'checked';
+            $render_data['status_denied'] = 'checked';
         }
 
-        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('management/panels/bans_panel_modify', $render_input));
+        $render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/bans_panel_modify',
+                $render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
-        echo $this->render_core->getOutput();
-        nel_clean_exit();
+        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output($render_data, 'page', true);
+        echo $output;
+        return $output;
     }
 }

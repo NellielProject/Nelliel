@@ -12,6 +12,7 @@ use PDO;
 
 class OutputPanelSiteSettings extends OutputCore
 {
+
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
@@ -20,8 +21,9 @@ class OutputPanelSiteSettings extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters = array(), bool $data_only = false)
     {
+        $render_data = array();
         $user = $parameters['user'];
 
         if (!$user->domainPermission($this->domain, 'perm_site_config_access'))
@@ -30,11 +32,14 @@ class OutputPanelSiteSettings extends OutputCore
         }
 
         $this->startTimer();
+        $dotdot = $parameters['dotdot'] ?? '';
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Site Settings')];
-        $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
-        $render_input['form_action'] = MAIN_SCRIPT . '?module=site-settings&action=update';
+        $render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot, 'extra_data' => $extra_data], true);
+        $render_data['form_action'] = MAIN_SCRIPT . '?module=site-settings&action=update';
         $result = $this->database->query('SELECT * FROM "' . SITE_CONFIG_TABLE . '"');
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
         unset($result);
@@ -45,20 +50,21 @@ class OutputPanelSiteSettings extends OutputCore
             {
                 if ($config_line['setting'] == 1)
                 {
-                    $render_input[$config_line['config_name']] = 'checked';
+                    $render_data[$config_line['config_name']] = 'checked';
                 }
             }
             else
             {
-                $render_input[$config_line['config_name']] = $config_line['setting'];
+                $render_data[$config_line['config_name']] = $config_line['setting'];
             }
         }
 
-        $this->render_core->appendToOutput(
-                $this->render_core->renderFromTemplateFile('management/panels/site_settings_panel', $render_input));
+        $render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/site_settings_panel',
+                $render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
-        echo $this->render_core->getOutput();
-        nel_clean_exit();
+        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output($render_data, 'page', true);
+        echo $output;
+        return $output;
     }
 }

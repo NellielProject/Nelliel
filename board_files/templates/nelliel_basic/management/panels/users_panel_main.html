@@ -1,25 +1,25 @@
-	<table class="data-table">
-		<tr class="manage-header">
-			<th data-i18n="gettext">User ID</th>
-			<th data-i18n="gettext">Display Name</th>
-			<th data-i18n="gettext">Active</th>
-			<th data-i18n="gettext">Super Admin</th>
-			<th data-i18n="gettext">Actions</th>
-		</tr>
-		{{# users_list }}
-		<tr class="{{ bgclass }}">
-			<td>{{ user_id }}</td>
-			<td>{{ display_name }}</td>
-			<td>{{ active }}</td>
-			<td>{{ super_admin }}</td>
-			<td>
-				<span>[<a href="{{ edit_url }}" data-i18n="gettext">Edit</a>]</span>
-				<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>
-			</td>
-		</tr>
-		{{/ users_list }}
-	</table>
-	<hr>
-	<div>
-		<a href="{{ new_user_url }}" data-i18n="gettext">New User</a>
-	</div>
+<table class="data-table">
+	<tr class="manage-header">
+		<th data-i18n="gettext">User ID</th>
+		<th data-i18n="gettext">Display Name</th>
+		<th data-i18n="gettext">Active</th>
+		<th data-i18n="gettext">Super Admin</th>
+		<th data-i18n="gettext">Actions</th>
+	</tr>
+	{{# users_list }}
+	<tr class="{{ bgclass }}">
+		<td>{{ user_id }}</td>
+		<td>{{ display_name }}</td>
+		<td>{{ active }}</td>
+		<td>{{ super_admin }}</td>
+		<td>
+			<span>[<a href="{{ edit_url }}" data-i18n="gettext">Edit</a>]</span>
+			<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>
+		</td>
+	</tr>
+	{{/ users_list }}
+</table>
+<hr>
+<div>
+	<a href="{{ new_user_url }}" data-i18n="gettext">New User</a>
+</div>

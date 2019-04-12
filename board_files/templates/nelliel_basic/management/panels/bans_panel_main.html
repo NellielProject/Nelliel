@@ -1,46 +1,46 @@
-	<table id="ban-info-table" class="data-table">
-		<tr class="manage-header">
-			<th data-i18n="gettext">Ban ID</th>
-			<th data-i18n="gettext">Type</th>
-			<th data-i18n="gettext">Host</th>
-			<th data-i18n="gettext">Board</th>
-			<th data-i18n="gettext">Reason</th>
-			<th data-i18n="gettext">Expiration</th>
-			<th data-i18n="gettext">Appeal</th>
-			<th data-i18n="gettext">Appeal Response</th>
-			<th data-i18n="gettext">Status</th>
-			<th data-i18n="gettext">Modify</th>
-			<th data-i18n="gettext">Remove</th>
-		</tr>
-		{{# ban_list }}
-		<tr id="ban-info-row" class="row1">
-			<td>{{ ban_id }}</td>
-			<td>{{ type }}</td>
-			<td>{{ ip_address_start }}</td>
-			<td>{{ board_id }}</td>
-			<td>{{ reason }}</td>
-			<td>{{expiration }}</td>
-			<td>{{ appeal }}</td>
-			<td>{{ appeal_response }}</td>
-			<td>{{ appeal_status }}</td>
-			<td>
-				{{# can_modify }}
-				<a href="{{ modify_url }}" data-i18n="gettext">Modify Ban</a>
-				{{/ can_modify }}
-			</td>
-			<td>
-				{{# can_modify }}
-				<a href="{{ remove_url }}" data-i18n="gettext">Remove Ban</a>
-				{{/ can_modify }}
-			</td>
-		</tr>
-		{{/ ban_list }}
-	</table>
-	<hr>
-	<table>
-		<tr>
-			<td>
-				<a href="{{ new_ban_url }}" data-i18n="gettext">Add New Ban</a>
-			</td>
-		</tr>
-	</table>
+<table class="data-table">
+	<tr class="manage-header">
+		<th data-i18n="gettext">Ban ID</th>
+		<th data-i18n="gettext">Type</th>
+		<th data-i18n="gettext">Host</th>
+		<th data-i18n="gettext">Board</th>
+		<th data-i18n="gettext">Reason</th>
+		<th data-i18n="gettext">Expiration</th>
+		<th data-i18n="gettext">Appeal</th>
+		<th data-i18n="gettext">Appeal Response</th>
+		<th data-i18n="gettext">Status</th>
+		<th data-i18n="gettext">Modify</th>
+		<th data-i18n="gettext">Remove</th>
+	</tr>
+	{{# ban_list }}
+	<tr class="row1">
+		<td>{{ ban_id }}</td>
+		<td>{{ type }}</td>
+		<td>{{ ip_address_start }}</td>
+		<td>{{ board_id }}</td>
+		<td>{{ reason }}</td>
+		<td>{{expiration }}</td>
+		<td>{{ appeal }}</td>
+		<td>{{ appeal_response }}</td>
+		<td>{{ appeal_status }}</td>
+		<td>
+			{{# can_modify }}
+			<a href="{{ modify_url }}" data-i18n="gettext">Modify Ban</a>
+			{{/ can_modify }}
+		</td>
+		<td>
+			{{# can_modify }}
+			<a href="{{ remove_url }}" data-i18n="gettext">Remove Ban</a>
+			{{/ can_modify }}
+		</td>
+	</tr>
+	{{/ ban_list }}
+</table>
+<hr>
+<table>
+	<tr>
+		<td>
+			<a href="{{ new_ban_url }}" data-i18n="gettext">Add New Ban</a>
+		</td>
+	</tr>
+</table>

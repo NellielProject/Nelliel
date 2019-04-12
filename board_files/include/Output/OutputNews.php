@@ -26,8 +26,8 @@ class OutputNews extends OutputCore
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['use_site_titles' => true];
         $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '', 'extra_data' => $extra_data]));
-        $render_input['news_entries'] = $this->newsList();
-        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('news', $render_input));
+        $render_data['news_entries'] = $this->newsList();
+        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('news', $render_data));
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
         $this->file_handler->writeFile(BASE_PATH . 'news.html', $this->render_core->getOutput());

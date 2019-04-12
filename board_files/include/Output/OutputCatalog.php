@@ -21,16 +21,21 @@ class OutputCatalog extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters = array(), bool $data_only = false)
     {
+        $render_data = array();
         $write = ($parameters['write']) ?? false;
         $cites = new \Nelliel\Cites($this->database);
         $dotdot = ($write) ? '../' : '';
-
+        $this->startTimer();
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
+        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
+        $render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot], true);
         $this->startTimer();
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot]);
-        $render_input['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->id() . '/';
+        $render_data['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->id() . '/';
         $base_domain_path = BASE_DOMAIN . BASE_WEB_PATH;
         $board_web_path = '//' . $base_domain_path . rawurlencode($this->domain->reference('board_directory')) . '/';
         $pages_web_path = $board_web_path . rawurlencode($this->domain->reference('page_dir')) . '/';
@@ -44,10 +49,11 @@ class OutputCatalog extends OutputCore
         {
             $thread_data = array();
             $prepared = $this->database->prepare(
-                    'SELECT * FROM "' . $this->domain->reference('posts_table') . '" WHERE "parent_thread" = ? AND "op" = 1');
+                    'SELECT * FROM "' . $this->domain->reference('posts_table') .
+                    '" WHERE "parent_thread" = ? AND "op" = 1');
             $first_post = $this->database->executePreparedFetch($prepared, [$thread['thread_id']], PDO::FETCH_ASSOC);
 
-            if(empty($first_post))
+            if (empty($first_post))
             {
                 continue;
             }
@@ -76,7 +82,8 @@ class OutputCatalog extends OutputCore
                     {
                         if (preg_match('#^\s*>#', $segment) === 1)
                         {
-                            $line_final .= $this->output_filter->postQuote($catalog_entry_nodes['post-comment'], $segment, true);
+                            $line_final .= $this->output_filter->postQuote($catalog_entry_nodes['post-comment'],
+                                    $segment, true);
                         }
                         else
                         {
@@ -85,7 +92,8 @@ class OutputCatalog extends OutputCore
                     }
                     else
                     {
-                        $link_element = '<a href="' . $link_url . '" class="post-link" data-command="show-linked-post">' . $segment . '</a>';
+                        $link_element = '<a href="' . $link_url . '" class="post-link" data-command="show-linked-post">' .
+                                $segment . '</a>';
                         $line_final .= $link_element;
                     }
                 }
@@ -104,7 +112,8 @@ class OutputCatalog extends OutputCore
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . $this->domain->reference('content_table') .
                     '" WHERE "post_ref" = ? AND "content_order" = 1');
-            $first_file = $this->database->executePreparedFetch($prepared, [$first_post['post_number']], PDO::FETCH_ASSOC);
+            $first_file = $this->database->executePreparedFetch($prepared, [$first_post['post_number']],
+                    PDO::FETCH_ASSOC);
 
             if (!empty($first_file) && !empty($first_file['preview_name']))
             {
@@ -112,7 +121,8 @@ class OutputCatalog extends OutputCore
                 $width = $first_file['preview_width'];
                 $height = $first_file['preview_height'];
 
-                if ($width > $this->domain->setting('max_catalog_width') || $height > $this->domain->setting('max_catalog_height'))
+                if ($width > $this->domain->setting('max_catalog_width') ||
+                        $height > $this->domain->setting('max_catalog_height'))
                 {
                     $ratio = min(($this->domain->setting('max_catalog_height') / $height),
                             ($this->domain->setting('max_catalog_width') / $width));
@@ -122,8 +132,10 @@ class OutputCatalog extends OutputCore
 
                 $thread_data['preview_width'] = $width;
                 $thread_data['preview_height'] = $height;
-                $thread_preview_web_path = $preview_web_path . $thread['thread_id'] . '/' . $first_post['post_number'] . '/';
-                $thread_data['preview_url'] = $thread_preview_web_path . $first_file['preview_name'] . '.' . $first_file['preview_extension'];
+                $thread_preview_web_path = $preview_web_path . $thread['thread_id'] . '/' . $first_post['post_number'] .
+                        '/';
+                $thread_data['preview_url'] = $thread_preview_web_path . $first_file['preview_name'] . '.' .
+                        $first_file['preview_extension'];
             }
             else
             {
@@ -131,23 +143,25 @@ class OutputCatalog extends OutputCore
                 $thread_data['open_text'] = _gettext('Open thread');
             }
 
-            ++$thread_count;
-            $render_input['catalog_entries'][] = $thread_data;
+            ++ $thread_count;
+            $render_data['catalog_entries'][] = $thread_data;
         }
 
-        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('catalog', $render_input));
+        $render_data['body'] = $this->render_core->renderFromTemplateFile('catalog', $render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
+        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output($render_data, 'page');
 
-        if($write)
+        if ($write)
         {
             $file = $this->domain->reference('board_path') . 'catalog.html';
-            $this->file_handler->writeFile($file, $this->render_core->getOutput());
+            $this->file_handler->writeFile($file, $output);
         }
         else
         {
-            echo $this->render_core->getOutput();
-            nel_clean_exit();
+            echo $output;
         }
+
+        return $output;
     }
 }

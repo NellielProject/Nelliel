@@ -21,31 +21,47 @@ class OutputPanelBoardSettings extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters = array(), bool $data_only = false)
     {
-        $this->startTimer();
+        $render_data = array();
+        $session = new \Nelliel\Session(true);
         $user = $parameters['user'];
-        $defaults = $parameters['defaults'];
+        $defaults = $parameters['defaults'] ?? false;
+        $dotdot = $parameters['dotdot'] ?? '';
+        $this->startTimer();
         $filetypes = new \Nelliel\FileTypes($this->database);
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
+        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
 
-        if ($defaults === true)
+        if ($defaults)
+        {
+            $extra_data = ['header' => _gettext('General Management'),
+                'sub_header' => _gettext('Board Default Settings')];
+        }
+        else
+        {
+            $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')];
+        }
+
+        $render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot, 'extra_data' => $extra_data], true);
+
+        if ($defaults)
         {
             $table_name = BOARD_DEFAULTS_TABLE;
             $extra_data = ['header' => _gettext('Board Management'),
                 'sub_header' => _gettext('Default Board Settings')];
-            $render_input['form_action'] = MAIN_SCRIPT . '?module=board-defaults&action=update';
+            $render_data['form_action'] = MAIN_SCRIPT . '?module=board-defaults&action=update';
         }
         else
         {
             $table_name = $this->domain->reference('config_table');
             $extra_data = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')];
-            $render_input['form_action'] = MAIN_SCRIPT . '?module=board-settings&action=update&board_id=' .
+            $render_data['form_action'] = MAIN_SCRIPT . '?module=board-settings&action=update&board_id=' .
                     $this->domain->id();
         }
 
-        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
-        $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
         $all_filetypes = $filetypes->getFiletypeData();
         $all_categories = $filetypes->getFiletypeCategories();
         $category_nodes = array();
@@ -106,11 +122,11 @@ class OutputPanelBoardSettings extends OutputCore
             }
 
             $category_data['entry_rows'][] = $entry_row;
-            $render_input['categories'][] = $category_data;
+            $render_data['categories'][] = $category_data;
         }
 
         $user_lock_override = $user->domainPermission($this->domain, 'perm_board_config_lock_override');
-        $render_input['defaults'] = $defaults;
+        $render_data['defaults'] = $defaults;
         $result = $this->database->query('SELECT * FROM "' . $table_name . '"');
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
 
@@ -147,15 +163,15 @@ class OutputPanelBoardSettings extends OutputCore
                 }
             }
 
-            $render_input[$config_line['config_name']] = $config_data;
+            $render_data[$config_line['config_name']] = $config_data;
         }
 
-        $this->render_core->appendToOutput(
-                $this->render_core->renderFromTemplateFile('management/panels/board_settings_panel', $render_input));
+        $render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/board_settings_panel',
+                $render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
-        echo round($this->endTimer(), 8);
-        echo $this->render_core->getOutput();
-        nel_clean_exit();
+        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output($render_data, 'page', true);
+        echo $output;
+        return $output;
     }
 }

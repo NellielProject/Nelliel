@@ -22,7 +22,7 @@ class OutputFile extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters = array(), bool $data_only = false)
     {
         $content_order = $parameters['content_order'] ?? 0;
         $post_data = $parameters['post_data'] ?? array();

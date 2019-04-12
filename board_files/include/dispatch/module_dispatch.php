@@ -17,7 +17,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             if (empty($_POST))
             {
                 $output_login = new \Nelliel\Output\OutputLoginPage($domain);
-                $output_login->render();
+                $output_login->render(['dotdot' => '']);
             }
             else
             {

@@ -21,7 +21,7 @@ class OutputPanelRoles extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters = array(), bool $data_only = false)
     {
         if (!isset($parameters['section']))
         {
@@ -38,24 +38,29 @@ class OutputPanelRoles extends OutputCore
         switch ($parameters['section'])
         {
             case 'panel':
-                $this->renderPanel($parameters);
+                $output = $this->renderPanel($parameters, $data_only);
                 break;
 
             case 'edit':
-                $this->renderEdit($parameters);
+                $output = $this->renderEdit($parameters, $data_only);
                 break;
         }
+
+        return $output;
     }
 
-    private function renderPanel(array $parameters)
+    private function renderPanel(array $parameters, bool $data_only)
     {
+        $render_data = array();
         $user = $parameters['user'];
-
         $this->startTimer();
+        $dotdot = $parameters['dotdot'] ?? '';
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Roles')];
-        $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
+        $render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot, 'extra_data' => $extra_data], true);
         $roles = $this->database->executeFetchAll('SELECT * FROM "' . ROLES_TABLE . '"', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
@@ -70,47 +75,51 @@ class OutputPanelRoles extends OutputCore
             $role_data['capcode_text'] = $role['capcode_text'];
             $role_data['edit_url'] = MAIN_SCRIPT . '?module=roles&action=edit&role-id=' . $role['role_id'];
             $role_row_nodes['remove_url'] = MAIN_SCRIPT . '?module=roles&action=remove&role-id=' . $role['role_id'];
-            $render_input['roles_list'][] = $role_data;
+            $render_data['roles_list'][] = $role_data;
         }
 
-        $render_input['new_role_url'] = MAIN_SCRIPT . '?module=roles&action=new';
+        $render_data['new_role_url'] = MAIN_SCRIPT . '?module=roles&action=new';
 
-        $this->render_core->appendToOutput(
-                $this->render_core->renderFromTemplateFile('management/panels/roles_panel_main', $render_input));
+        $render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/roles_panel_main',
+                $render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
-        echo $this->render_core->getOutput();
-        nel_clean_exit();
+        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output($render_data, 'page', true);
+        echo $output;
+        return $output;
     }
 
-    private function renderEdit(array $parameters)
+    private function renderEdit(array $parameters, bool $data_only)
     {
+        $render_data = array();
         $user = $parameters['user'];
         $role_id = $parameters['role_id'];
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $role = $authorization->getRole($role_id);
-
         $this->startTimer();
+        $dotdot = $parameters['dotdot'] ?? '';
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit Role')];
-        $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
+        $render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot, 'extra_data' => $extra_data], true);
 
         if (is_null($role_id))
         {
-            $render_input['form_action'] = MAIN_SCRIPT . '?module=roles&action=add';
+            $render_data['form_action'] = MAIN_SCRIPT . '?module=roles&action=add';
         }
         else
         {
-            $render_input['form_action'] = MAIN_SCRIPT . '?module=roles&action=update&role-id=' . $role_id;
+            $render_data['form_action'] = MAIN_SCRIPT . '?module=roles&action=update&role-id=' . $role_id;
         }
 
         if (!is_null($role_id))
         {
-            $render_input['role_id'] = $role->auth_data['role_id'];
-            $render_input['role_level'] = $role->auth_data['role_level'];
-            $render_input['role_title'] = $role->auth_data['role_title'];
-            $render_input['capcode_text'] = $role->auth_data['capcode_text'];
+            $render_data['role_id'] = $role->auth_data['role_id'];
+            $render_data['role_level'] = $role->auth_data['role_level'];
+            $render_data['role_title'] = $role->auth_data['role_title'];
+            $render_data['capcode_text'] = $role->auth_data['capcode_text'];
         }
 
         $permissions_list = $this->database->executeFetchAll(
@@ -132,11 +141,12 @@ class OutputPanelRoles extends OutputCore
             $permission_data['label'] = '(' . $permission['permission'] . ') - ' . $permission['description'];
         }
 
-        $this->render_core->appendToOutput(
-                $this->render_core->renderFromTemplateFile('management/panels/roles_panel_edit', $render_input));
+        $render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/roles_panel_edit',
+                $render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
-        echo $this->render_core->getOutput();
-        nel_clean_exit();
+        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output($render_data, 'page', true);
+        echo $output;
+        return $output;
     }
 }

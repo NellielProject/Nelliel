@@ -25,6 +25,7 @@ class RenderCoreDOM extends RenderCore
     {
         $dom = new \phpDOMExtend\ExtendedDOMDocument();
         $this->dom_documents[spl_object_hash($dom)]['template'] = null;
+        $dom->preserveWhiteSpace = false;
         $dom->formatOutput = true;
         $dom->strictErrorChecking = false;
         $dom->validateOnParse = true;

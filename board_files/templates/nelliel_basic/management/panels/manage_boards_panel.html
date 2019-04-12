@@ -1,36 +1,36 @@
-	<table id="board-info-table" class="data-table">
-		<tr class="manage-header">
-			<th data-i18n="gettext">Board ID</th>
-			<th data-i18n="gettext">Board Directory</th>
-			<th data-i18n="gettext">DB Prefix</th>
-			<th data-i18n="gettext">Status</th>
-			<th data-i18n="gettext">Lock/Unlock</th>
-			<th data-i18n="gettext">Remove</th>
-		</tr>
-		{{# board_list }}
-		<tr id="board-info-row" class="{{ bgclass }}">
-			<td>{{ id }}</td>
-			<td>{{ directory }}</td>
-			<td>{{ db_prefix }}</td>
-			<td>{{ status }}</td>
-			<td>
-				<a href="{{ lock_url }}">{{ lock_text }}</a>
-			</td>
-			<td>
-				<a href="{{ remove_url }}">!!DANGER!! Remove Board</a>
-			</td>
-		</tr>
-		{{/ board_list }}
-	</table>
-	<hr>
-	<form id="create-board-form" action="{{ form_action }}" method="post" enctype="multipart/form-data">
-		<div class="display-table">
-			<div class="display-row">
-				<label for="board-id" class="display-cell" data-i18n="gettext">Board ID (this will also be the directory)</label>
-				<input id="board-id" class="display-cell" type="text" name="new_board_id" size="30" value="">
-			</div>
-			<div class="display-row">
-				<input type="submit" value="Create Board" data-i18n-attributes="value" data-i18n="gettext">
-			</div>
+<table class="data-table">
+	<tr class="manage-header">
+		<th data-i18n="gettext">Board ID</th>
+		<th data-i18n="gettext">Board Directory</th>
+		<th data-i18n="gettext">DB Prefix</th>
+		<th data-i18n="gettext">Status</th>
+		<th data-i18n="gettext">Lock/Unlock</th>
+		<th data-i18n="gettext">Remove</th>
+	</tr>
+	{{# board_list }}
+	<tr class="{{ bgclass }}">
+		<td>{{ id }}</td>
+		<td>{{ directory }}</td>
+		<td>{{ db_prefix }}</td>
+		<td>{{ status }}</td>
+		<td>
+			<a href="{{ lock_url }}">{{ lock_text }}</a>
+		</td>
+		<td>
+			<a href="{{ remove_url }}">!!DANGER!! Remove Board</a>
+		</td>
+	</tr>
+	{{/ board_list }}
+</table>
+<hr>
+<form action="{{ form_action }}" method="post" enctype="multipart/form-data">
+	<div class="display-table">
+		<div class="display-row">
+			<label for="board-id" class="display-cell" data-i18n="gettext">Board ID (this will also be the directory)</label>
+			<input id="board-id" class="display-cell" type="text" name="new_board_id" size="30" value="">
 		</div>
-	</form>
+		<div class="display-row">
+			<input type="submit" value="Create Board" data-i18n-attributes="value" data-i18n="gettext">
+		</div>
+	</div>
+</form>

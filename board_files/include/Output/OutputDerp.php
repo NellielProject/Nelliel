@@ -19,16 +19,20 @@ class OutputDerp extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters = array(), bool $data_only = false)
     {
+        $render_data = array();
         $this->startTimer();
+        $dotdot = $parameters['dotdot'] ?? '';
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
-        $this->render_core->appendToOutput($output_header->render(['header_type' => 'general', 'dotdot' => '']));
+        $render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot], true);
         $diagnostic = $parameters['diagnostic'];
-        $render_input = array();
-        $render_input['error_id'] = $diagnostic['error_id'];
-        $render_input['error_message'] = $diagnostic['error_message'];
-        $render_input['error_data'] = '';
+        $render_data['error_id'] = $diagnostic['error_id'];
+        $render_data['error_message'] = $diagnostic['error_message'];
+        $render_data['error_data'] = '';
         $session = new \Nelliel\Session();
 
         if ($session->inModmode($this->domain))
@@ -56,13 +60,14 @@ class OutputDerp extends OutputCore
             }
         }
 
-        $render_input['return_link'] = $return_link;
-
-        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('derp', $render_input));
+        $render_data['return_link'] = $return_link;
+        $render_data['body'] = $this->render_core->renderFromTemplateFile('derp',
+                $render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
-        echo $this->render_core->getOutput();
-        nel_clean_exit();
+        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output($render_data, 'page', true);
+        echo $output;
+        return $output;
     }
 
     public function renderSimple(array $diagnostic)

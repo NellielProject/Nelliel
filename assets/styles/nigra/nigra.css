@@ -41,13 +41,18 @@ form {
     padding: 4px;
 }
 
-/* Header */
-.top-styles {
+/* Menu */
+.styles {
     float: left;
     padding-top: 6px;
     padding-bottom: 6px;
 }
 
+.styles-menu {
+
+}
+
+/* Header */
 .site-banner {
     text-align: center;
     clear: both;
@@ -94,7 +99,7 @@ form {
 
 }
 
-.top-nav-menu {
+.site-nav-menu {
     float: right;
     padding-top: 6px;
     padding-bottom: 6px;
@@ -106,12 +111,6 @@ form {
     text-align: center;
     font-size: 0.8rem;
     padding-top: 5px;
-}
-
-.bottom-styles {
-    float: left;
-    padding-top: 6px;
-    padding-bottom: 6px;
 }
 
 .footer-form {
@@ -625,4 +624,10 @@ form {
 
 .display-cell {
     display: table-cell;
+}
+
+.render_stats {
+	margin: 3px;
+	text-align: center;
+	font-size: 0.85rem;
 }

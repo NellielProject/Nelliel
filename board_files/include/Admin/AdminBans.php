@@ -51,8 +51,6 @@ class AdminBans extends AdminHandler
         {
             $this->renderPanel($user);
         }
-
-        $this->applyNewBan();
     }
 
     public function renderPanel($user)
@@ -129,7 +127,7 @@ class AdminBans extends AdminHandler
         }
 
         $ban_input = $this->ban_hammer->postToArray();
-        $this->ban_hammer->removeBan($this->domain->id(), $_GET['ban_id']);
+        $this->ban_hammer->removeBan($this->domain, $_GET['ban_id']);
         $this->renderPanel($user);
     }
 }

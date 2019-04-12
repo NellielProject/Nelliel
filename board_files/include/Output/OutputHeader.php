@@ -21,9 +21,9 @@ class OutputHeader extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters = array(), bool $data_only = false)
     {
-        if(!isset($parameters['header_type']))
+        if (!isset($parameters['header_type']))
         {
             return;
         }
@@ -31,220 +31,146 @@ class OutputHeader extends OutputCore
         switch ($parameters['header_type'])
         {
             case 'general':
-                $output = $this->general($parameters);
+                $output = $this->general($parameters, $data_only);
                 break;
 
             case 'board':
-                $output = $this->board($parameters);
+                $output = $this->board($parameters, $data_only);
                 break;
         }
 
         return $output;
     }
 
-    public function general(array $parameters)
+    private function general(array $parameters, bool $data_only)
     {
+        $render_data = array();
         $session = new \Nelliel\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
-        $dotdot = ($parameters['dotdot']) ?? array();
-        $extra_data = ($parameters['extra_data']) ?? array();
-        $manage_render = ($parameters['manage_render']) ?? false;
-        $render_input = array();
-        $render_input['main_js_file'] = $dotdot . SCRIPTS_WEB_PATH . 'nel.js';
-        $render_input['js_onload'] = 'window.onload = function () {nelliel.setup.doImportantStuff(\'' . $this->domain->id() . '\', \'' .
-                $session->inModmode($this->domain) . '\');};';
-        $render_input['js_set_style'] = 'setStyle(nelliel.core.getCookie("style-' . $this->domain->id() . '"));';
+        $dotdot = $parameters['dotdot'] ?? '';
+        $extra_data = $parameters['extra_data'] ?? array();
+        $render_data['show_styles'] = $parameters['show_styles'] ?? true;
+        $render_data['session_active'] = $session->isActive();
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
+        $output_menu = new OutputMenu($this->domain);
+        $render_data['show_manage_headers'] = $session->inModmode($this->domain);
 
-        if(isset($extra_data['use_site_titles']) && $extra_data['use_site_titles'])
+        if ($render_data['show_styles'])
         {
-            $render_input['is_site_header'] = true;
-            $render_input['site_name'] = $site_domain->setting('site_name');
-            $render_input['site_slogan'] = $site_domain->setting('site_slogan');
-            $render_input['site_banner_url'] = $site_domain->setting('site_banner');
+            $render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot]);
+        }
+
+        $render_data['site_navigation'] = $output_menu->render(['menu' => 'site_navigation', 'dotdot' => $dotdot]);
+
+        if (isset($extra_data['use_site_titles']) && $extra_data['use_site_titles'])
+        {
+            $render_data['is_site_header'] = true;
+            $render_data['site_name'] = $site_domain->setting('site_name');
+            $render_data['site_slogan'] = $site_domain->setting('site_slogan');
+            $render_data['site_banner_url'] = $site_domain->setting('site_banner');
         }
         else
         {
-            $render_input['is_site_header'] = false;
+            $render_data['is_site_header'] = false;
         }
 
-        $render_input['is_board_header'] = false;
+        $render_data['is_board_header'] = false;
 
         if ($site_domain->setting('show_site_favicon'))
         {
-            $render_input['favicon_url'] = $site_domain->setting('site_favicon');
+            $render_data['favicon_url'] = $site_domain->setting('site_favicon');
         }
 
-        $render_input['page_title'] = 'Nelliel Imageboard';
+        $render_data['page_title'] = $site_domain->setting('board_name');
 
-        if ($manage_render || $session->inModmode($this->domain))
+        if ($render_data['show_manage_headers'])
         {
-            $render_input['session_active'] = true;
-            $render_input['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=main-panel';
-
-            if (isset($extra_data['header']))
-            {
-                $render_input['manage_header'] = $extra_data['header'];
-            }
+            $render_data['manage_header'] = $extra_data['header'] ?? '';
+            $render_data['manage_sub_header'] = $extra_data['sub_header'] ?? '';
 
             if ($this->domain->id() !== '')
             {
-                $render_input['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
+                $render_data['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
             }
-
-            if (isset($extra_data['sub_header']))
-            {
-                $render_input['manage_sub_header'] = $extra_data['sub_header'];
-            }
-
-            $render_input['logout_url'] = $dotdot . MAIN_SCRIPT . '?module=logout';
-        }
-        else
-        {
-            $render_input['session_active'] = false;
-            $render_input['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=login';
         }
 
-        $render_input['home_url'] = $site_domain->setting('home_page');
-        $render_input['news_url'] = $dotdot . 'news.html';
-        $render_input['about_nelliel_url'] = $dotdot . MAIN_SCRIPT . '?about_nelliel';
-        $render_input['styles'] = $this->buildStyles($dotdot);
-
-        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('header', $render_input));
-        return $this->render_core->getOutput();
+        $output = $this->output($render_data, 'header', false, $data_only);
+        return $output;
     }
 
-    public function board(array $parameters)
+    private function board(array $parameters, bool $data_only)
     {
+        $render_data = array();
         $session = new \Nelliel\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
-        $dotdot = ($parameters['dotdot']) ?? array();
-        $treeline = ($parameters['treeline']) ?? array();
-        $index_render = ($parameters['index_render']) ?? false;
-        $render_input = array();
-        $render_input['main_js_file'] = $dotdot . SCRIPTS_WEB_PATH . 'nel.js';
-        $render_input['js_onload'] = 'window.onload = function () {nelliel.setup.doImportantStuff(\'' .
-                $this->domain->id() . '\', \'' . $session->inModmode($this->domain) . '\');};';
-        $render_input['js_set_style'] = 'setStyle(nelliel.core.getCookie("style-' . $this->domain->id() . '"));';
+        $dotdot = $parameters['dotdot'] ?? '';
+        $extra_data = $parameters['extra_data'] ?? array();
+        $treeline = $parameters['treeline'] ?? array();
+        $index_render = $parameters['index_render'] ?? false;
+        $render_data['show_styles'] = $parameters['show_styles'] ?? true;
+        $render_data['session_active'] = $session->isActive();
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
+        $output_menu = new OutputMenu($this->domain);
+        $render_data['show_manage_headers'] = $session->inModmode($this->domain);
 
-        if ($this->domain->setting('use_honeypot'))
+        if ($render_data['show_styles'])
         {
-            $render_input['honeypot_css'] = '#form-user-info-1{display: none !important;}#form-user-info-2{display: none !important;}#form-user-info-3{position: absolute; top: 3px; left: -9001px;}';
-            $render_input['use_honeypot'] = true;
+            $render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot], true);
         }
 
-        $title_content = $this->domain->setting('board_name');
+        $render_data['site_navigation'] = $output_menu->render(['menu' => 'site_navigation', 'dotdot' => $dotdot],
+                true);
 
-        if(!$index_render && !empty($treeline))
-        {
-            if (!isset($treeline[0]['subject']) || nel_true_empty($treeline[0]['subject']))
-            {
-                $title_content = $this->domain->setting('board_name') . ' > Thread #' . $treeline[0]['post_number'];
-            }
-            else
-            {
-                $title_content = $this->domain->setting('board_name') . ' > ' . $treeline[0]['subject'];
-            }
-        }
+        $render_data['board_name'] = ($this->domain->setting('show_board_name')) ? $this->domain->setting('board_name') : '';
+        $render_data['board_slogan'] = ($this->domain->setting('show_board_slogan')) ? $this->domain->setting(
+                'board_slogan') : '';
+        $render_data['board_banner_url'] = ($this->domain->setting('show_board_banner')) ? $this->domain->setting(
+                'board_banner') : '';
 
-        $render_input['page_title'] = $title_content;
-
-        $board_data = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
-        $render_input['multiple_boards'] = count($board_data) > 1;
-
-        foreach ($board_data as $data)
-        {
-            $board_info = array();
-            $board_info['board_url'] = $dotdot . $data['board_id'];
-            $board_info['board_title'] = $this->domain->setting('board_name');
-            $board_info['board_id'] = $data['board_id'];
-            $render_input['board_navigation'][] = $board_info;
-        }
-
-        $render_input['is_site_header'] = false;
-        $render_input['is_board_header'] = true;
-        $render_input['favicon_url'] = $site_domain->setting('site_favicon');
-        $render_input['page_title'] = 'Nelliel Imageboard';
-
-        if ($session->inModmode($this->domain))
-        {
-            $render_input['session_active'] = true;
-            $render_input['manage_header'] = _gettext('Mod Mode');
-            $render_input['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=main-panel';
-
-            if (isset($extra_data['header']))
-            {
-                $render_input['manage_header'] = $extra_data['header'];
-            }
-
-            if ($this->domain->id() !== '')
-            {
-                $render_input['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
-            }
-
-            if (isset($extra_data['sub_header']))
-            {
-                $render_input['manage_sub_header'] = $extra_data['sub_header'];
-            }
-
-            $render_input['logout_url'] = $dotdot . MAIN_SCRIPT . '?module=logout';
-        }
-        else
-        {
-            $render_input['session_active'] = false;
-            $render_input['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=login';
-        }
+        $render_data['is_site_header'] = false;
+        $render_data['is_board_header'] = true;
 
         if ($this->domain->setting('show_board_favicon'))
         {
-            $render_input['favicon_url'] = $this->domain->setting('board_favicon');
+            $render_data['favicon_url'] = $this->domain->setting('board_favicon');
         }
         else
         {
-            $render_input['favicon_url'] = $site_domain->setting('site_favicon');
+            $render_data['favicon_url'] = $site_domain->setting('site_favicon');
         }
 
-        if ($this->domain->setting('show_board_banner'))
+        if (!$index_render && !empty($treeline))
         {
-            $render_input['board_banner'] = $this->domain->setting('board_banner');
+            if (!isset($treeline[0]['subject']) || nel_true_empty($treeline[0]['subject']))
+            {
+                $render_data['page_title'] = $this->domain->setting('board_name') . ' > Thread #' .
+                        $treeline[0]['post_number'];
+            }
+            else
+            {
+                $render_data['page_title'] = $this->domain->setting('board_name') . ' > ' . $treeline[0]['subject'];
+            }
         }
-
-        if ($this->domain->setting('show_board_name'))
+        else
         {
-            $render_input['board_name'] = $this->domain->setting('board_name');
+            $render_data['page_title'] = $this->domain->setting('board_name');
         }
 
-        if ($this->domain->setting('show_board_slogan'))
+        if ($render_data['show_manage_headers'])
         {
-            $render_input['board_slogan'] = $this->domain->setting('board_slogan');
+            $render_data['manage_header'] = $extra_data['header'] ?? '';
+            $render_data['manage_sub_header'] = $extra_data['sub_header'] ?? '';
+
+            if ($this->domain->id() !== '')
+            {
+                $render_data['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
+            }
         }
 
-        $render_input['home_url'] = $site_domain->setting('home_page');
-        $render_input['news_url'] = $dotdot . 'news.html';
-        $render_input['about_nelliel_url'] = $dotdot . MAIN_SCRIPT . '?about_nelliel';
-        $render_input['styles'] = $this->buildStyles($dotdot);
-
-        $this->render_core->appendToOutput($this->render_core->renderFromTemplateFile('header', $render_input));
-        return $this->render_core->getOutput();
-    }
-
-    public function buildStyles(string $dotdot)
-    {
-        $styles = $this->database->executeFetchAll(
-                'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
-                PDO::FETCH_ASSOC);
-        $style_set = array();
-
-        foreach ($styles as $style)
-        {
-            $style_data = array();
-            $info = json_decode($style['info'], true);
-            $style_data['stylesheet'] = ($style['is_default']) ? 'stylesheet' : 'alternate stylesheet';
-            $style_data['style_id'] = $style['id'];
-            $style_data['stylesheet_url'] = $dotdot . STYLES_WEB_PATH . $info['directory'] . '/' . $info['main_file'];
-            $style_data['style_name'] = $info['name'];
-            $style_set[] = $style_data;
-        }
-
-        return $style_set;
+        $render_data['boards_menu'] = $output_menu->render(['menu' => 'boards'], true);
+        $output = $this->output($render_data, 'header', false, $data_only);
+        return $output;
     }
 }

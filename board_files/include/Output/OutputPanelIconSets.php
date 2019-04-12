@@ -21,8 +21,9 @@ class OutputPanelIconSets extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters = array())
+    public function render(array $parameters = array(), bool $data_only = false)
     {
+        $render_data = array();
         $user = $parameters['user'];
 
         if (!$user->domainPermission($this->domain, 'perm_icon_sets_access'))
@@ -31,10 +32,13 @@ class OutputPanelIconSets extends OutputCore
         }
 
         $this->startTimer();
+        $dotdot = $parameters['dotdot'] ?? '';
+        $output_head = new OutputHead($this->domain);
+        $render_data['head'] = $output_head->render(['dotdot' => $dotdot]);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
         $extra_data = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Icon Sets')];
-        $this->render_core->appendToOutput(
-                $output_header->render(['header_type' => 'general', 'dotdot' => '', 'manage_render' => true, 'extra_data' => $extra_data]));
+        $render_data['header'] = $output_header->render(
+                ['header_type' => 'general', 'dotdot' => $dotdot, 'extra_data' => $extra_data], true);
         $icon_sets = $this->database->executeFetchAll(
                 'SELECT * FROM "' . ASSETS_TABLE .
                 '" WHERE "type" = \'icon-set\' ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
@@ -60,7 +64,7 @@ class OutputPanelIconSets extends OutputCore
                     ['module' => 'icon-sets', 'action' => 'remove', 'icon-set-id' => $icon_set['id'],
                         'set-type' => $icon_set_info['set_type']]);
 
-            $render_input['installed_list'][] = $set_data;
+            $render_data['installed_list'][] = $set_data;
         }
 
         $ini_parser = new \Nelliel\INIParser($this->file_handler);
@@ -80,13 +84,15 @@ class OutputPanelIconSets extends OutputCore
             $set_data['install_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'icon-sets', 'action' => 'add', 'icon-set-id' => $icon_set['id'],
                         'set-type' => $icon_set['set_type']]);
+            $render_data['available_list'][] = $set_data;
         }
 
-        $this->render_core->appendToOutput(
-                $this->render_core->renderFromTemplateFile('management/panels/icon_sets_panel', $render_input));
+        $render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/icon_sets_panel',
+                $render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
-        $this->render_core->appendToOutput($output_footer->render(['dotdot' => '', 'generate_styles' => false]));
-        echo $this->domain->translator()->translateHTML($this->render_core->getOutput());
-        nel_clean_exit();
+        $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $output = $this->output($render_data, 'page', true);
+        echo $output;
+        return $output;
     }
 }
