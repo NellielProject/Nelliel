@@ -1,11 +1,11 @@
 {{# is_response }}
-<div id="post-form-return-link">
-	[<a id="return-url" href="{{{ return_url }}}" data-i18n="gettext">Return</a>]
+<div>
+	[<a href="{{{ return_url }}}" data-i18n="gettext">Return</a>]
 </div>
 {{/ is_response }}
 <form id="posting-form" class="display-table posting-form" accept-charset="utf-8" name="postingform" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="new_post[post_info][response_to]" value="{{ response_to }}">
-	<div id="posting-form-input">
+	<div>
 		{{^ force_anonymous }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-i18n="gettext">Name</span>
@@ -18,11 +18,11 @@
 		{{/ force_anonymous }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-i18n="gettext">Subject</span>
-			<input id="verb" class="posting-form-input" type="text" name="new_post[post_info][verb]" size="30" maxlength="{{{ verb_maxlength }}}">
+			<input class="posting-form-input" type="text" name="new_post[post_info][verb]" size="30" maxlength="{{{ verb_maxlength }}}">
 		</label>
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-i18n="gettext">Comment</span>
-			<textarea id="wordswordswords" class="posting-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6"></textarea>
+			<textarea class="posting-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6"></textarea>
 		</label>
 		{{# file_blocks }}
 		<span id="{{{ block_id }}}" class="posting-form-row {{{ hidden }}}">
@@ -83,7 +83,7 @@
 			</div>
 			<div data-i18n="gettext">Enter the characters shown in the image above.</div>
 			<div>
-				<input id="posting-form-captcha" class="posting-form-input" type="text" name="new_post[captcha]" size="12" maxlength="16" value="">
+				<input class="posting-form-input" type="text" name="new_post[captcha]" size="12" maxlength="16" value="">
 			</div>
 		</div>
 		{{/ use_captcha }}
@@ -104,12 +104,12 @@
 			<input type="text" name="{{{ honeypot_field_name2 }}}" size="30" autocomplete="off" tabindex="-1">
 		</label>
 		{{/ use_honeypot }}
-		<div id="form-submit-clear" class="posting-form-row">
+		<div class="posting-form-row">
 			<span class="display-cell"></span>
 			<input type="submit" value="Submit" data-i18n="gettext" data-i18n-attributes="value">&nbsp;&nbsp;&nbsp;&nbsp;
 			<input type="reset" value="Clear form" data-i18n="gettext" data-i18n-attributes="value">
 		</div>
-		<div id="form-post-mode" class="posting-form-row">
+		<div class="posting-form-row">
 			<span class="display-cell"></span>
 			<span class="posting-form-input">{{ posting_mode }}</span>
 		</div>
@@ -120,7 +120,7 @@
 		</label>
 		{{/ use_honeypot }}
 	</div>
-	<div id="form-rules-list" class="rules">
+	<div class="rules">
 		<ul class="rules-list">
 		{{# rules_list }}
 			<li class="rules-item">{{ rules_text }}</li>

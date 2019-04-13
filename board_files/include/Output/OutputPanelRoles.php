@@ -139,6 +139,7 @@ class OutputPanelRoles extends OutputCore
 
             $permission_data['permission'] = $permission['permission'];
             $permission_data['label'] = '(' . $permission['permission'] . ') - ' . $permission['description'];
+            $this->render_data['permissions_list'][] = $permission_data;
         }
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/roles_panel_edit',

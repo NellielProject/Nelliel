@@ -4,68 +4,68 @@
 		<b>Basic settings</b>
 	</div>
 	<div class="display-row">
-		<label class="display-cell" for="home_page" data-i18n="gettext">Site home page. Can be absolute or relative URL</label>
-		<input class="display-cell" type="text" name="home_page" id="home_page" size="50" value="{{ home_page }}">
+		<label for="home_page" class="display-cell" data-i18n="gettext">Site home page. Can be absolute or relative URL</label>
+		<input id="home_page" class="display-cell" type="text" name="home_page" size="50" value="{{ home_page }}">
 	</div>
 	<div class="display-row">
-		<label class="display-cell" for="index_filename_format" data-i18n="gettext">Formatting template for thread filename (sprintf)</label>
-		<input class="display-cell" type="text" name="index_filename_format" id="index_filename_format" size="30" value="{{ index_filename_format }}">
+		<label for="index_filename_format" class="display-cell" data-i18n="gettext">Formatting template for thread filename (sprintf)</label>
+		<input id="index_filename_format" class="display-cell" type="text" name="index_filename_format" size="30" value="{{ index_filename_format }}">
 	</div>
 	<div class="display-row">
-		<label class="display-cell" for="thread_filename_format" data-i18n="gettext">Formatting template for index filename (sprintf)</label>
-		<input class="display-cell" type="text" name="thread_filename_format" id="thread_filename_format" size="30" value="{{ thread_filename_format }}">
+		<label for="thread_filename_format" class="display-cell" data-i18n="gettext">Formatting template for index filename (sprintf)</label>
+		<input id="thread_filename_format" class="display-cell" type="text" name="thread_filename_format" size="30" value="{{ thread_filename_format }}">
 	</div>
 	<div class="display-row">
 		<b>Hashing and Passwords</b>
 	</div>
 	<div class="display-row">
-		<label class="display-cell" for="post_password_algorithm" data-i18n="gettext">Hash algorithm for post passwords</label>
-		<input class="display-cell" type="text" name="post_password_algorithm" id="post_password_algorithm" size="20" value="{{ post_password_algorithm }}">
+		<label for="post_password_algorithm" class="display-cell" data-i18n="gettext">Hash algorithm for post passwords</label>
+		<input id="post_password_algorithm" class="display-cell" type="text" name="post_password_algorithm" size="20" value="{{ post_password_algorithm }}">
 	</div>
 	<div class="display-row">
-		<label class="display-cell" for="secure_tripcode_algorithm" data-i18n="gettext">Hash algorithm for secure tripcodes</label>
-		<input class="display-cell" type="text" name="secure_tripcode_algorithm" id="secure_tripcode_algorithm" size="20" value="{{ secure_tripcode_algorithm }}">
+		<label for="secure_tripcode_algorithm" class="display-cell" data-i18n="gettext">Hash algorithm for secure tripcodes</label>
+		<input id="secure_tripcode_algorithm" class="display-cell" type="text" name="secure_tripcode_algorithm" size="20" value="{{ secure_tripcode_algorithm }}">
 	</div>
 	<div class="display-row">
 		<input type="hidden" name="do_password_rehash" value="0">
-		<input type="checkbox" name="do_password_rehash" id="do_password_rehash" value="1" {{ do_password_rehash }}>
+		<input id="do_password_rehash" type="checkbox" name="do_password_rehash" value="1" {{ do_password_rehash }}>
 		<label for="do_password_rehash" data-i18n="gettext">Check if staff passwords need rehashing</label>
 	</div>
 	<div class="display-row">
-		<label class="display-cell" for="template_id" data-i18n="gettext">ID of default template for site</label>
-		<input class="display-cell" type="text" name="template_id" id="template_id" size="30" value="{{ template_id }}">
+		<label for="template_id" class="display-cell" data-i18n="gettext">ID of default template for site</label>
+		<input id="template_id" class="display-cell" type="text" name="template_id" size="30" value="{{ template_id }}">
 	</div>
 	<div class="display-row">
-		<label class="display-cell" for="locale" data-i18n="gettext">Locale for site (use ISO language + country code); boards can set their own</label>
-		<input class="display-cell" type="text" name="locale" id="locale" size="30" value="{{ locale }}">
+		<label for="locale" class="display-cell" data-i18n="gettext">Locale for site (use ISO language + country code); boards can set their own</label>
+		<input id="locale" class="display-cell" type="text" name="locale" size="30" value="{{ locale }}">
 	</div>
 	<div class="display-row">
-		<label class="display-cell" for="recaptcha_site_key" data-i18n="gettext">ReCAPTCHA site key</label>
-		<input class="display-cell" type="text" name="recaptcha_site_key" id="recaptcha_site_key" size="45" value="{{ recaptcha_site_key }}">
+		<label for="recaptcha_site_key" class="display-cell" data-i18n="gettext">ReCAPTCHA site key</label>
+		<input id="recaptcha_site_key" class="display-cell" type="text" name="recaptcha_site_key" size="45" value="{{ recaptcha_site_key }}">
 	</div>
 	<div class="display-row">
-		<label class="display-cell" for="recaptcha_sekrit_key" data-i18n="gettext">ReCAPTCHA secret key</label>
-		<input class="display-cell" type="text" name="recaptcha_sekrit_key" id="recaptcha_sekrit_key" size="45" value="{{ recaptcha_sekrit_key }}">
+		<label for="recaptcha_sekrit_key" class="display-cell" data-i18n="gettext">ReCAPTCHA secret key</label>
+		<input id="recaptcha_sekrit_key" class="display-cell" type="text" name="recaptcha_sekrit_key" size="45" value="{{ recaptcha_sekrit_key }}">
 	</div>
 	<div class="display-row">
-		<label class="display-cell" for="site_name" data-i18n="gettext">Site name</label>
-		<input class="display-cell" type="text" name="site_name" id="site_name" size="30" value="{{ site_name }}">
+		<label for="site_name" class="display-cell" data-i18n="gettext">Site name</label>
+		<input id="site_name" class="display-cell" type="text" name="site_name" size="30" value="{{ site_name }}">
 	</div>
 	<div class="display-row">
-		<label class="display-cell" for="site_slogan" data-i18n="gettext">Site slogan</label>
-		<input class="display-cell" type="text" name="site_slogan" id="site_slogan" size="30" value="{{ site_slogan }}">
+		<label for="site_slogan" class="display-cell" data-i18n="gettext">Site slogan</label>
+		<input id="site_slogan" class="display-cell" type="text" name="site_slogan" size="30" value="{{ site_slogan }}">
 	</div>
 	<div class="display-row">
-		<label class="display-cell" for="site_favicon" data-i18n="gettext">Site favicon</label>
-		<input class="display-cell" type="text" name="site_favicon" id="site_favicon" size="45" value="{{ site_favicon }}">
+		<label for="site_favicon" class="display-cell" data-i18n="gettext">Site favicon</label>
+		<input id="site_favicon" class="display-cell" type="text" name="site_favicon" size="45" value="{{ site_favicon }}">
 	</div>
 	<div class="display-row">
-		<label class="display-cell" for="site_banner" data-i18n="gettext">Site banner</label>
-		<input class="display-cell" type="text" name="site_banner" id="site_banner" size="45" value="{{ site_banner }}">
+		<label for="site_banner" class="display-cell" data-i18n="gettext">Site banner</label>
+		<input id="site_banner" class="display-cell" type="text" name="site_banner" size="45" value="{{ site_banner }}">
 	</div>
 	<div class="display-row">
 		<input type="hidden" name="display_render_timer" value="0">
-		<input type="checkbox" name="display_render_timer" id="display_render_timer" value="1" {{ display_render_timer }}>
+		<input id="display_render_timer" type="checkbox" name="display_render_timer" value="1" {{ display_render_timer }}>
 		<label for="display_render_timer" data-i18n="gettext">Display rendering timer</label>
 	</div>
 	<div class="display-row">

@@ -1,12 +1,12 @@
-<form id="add-news-form" accept-charset="utf-8" action="{{ form_action }}" method="post">
+<form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
 			<label for="headline" class="display-cell" data-i18n="gettext">Headline</label>
 			<input id="headline" class="display-cell" type="text" name="headline" size="30">
 		</div>
 		<div class="display-row">
-			<label for="news-text" class="display-cell" data-i18n="gettext">News text</label>
-			<textarea id="news-text" class="display-cell" name="news-text" cols="80" rows="6"></textarea>
+			<label for="news_text" class="display-cell" data-i18n="gettext">News text</label>
+			<textarea id="news_text" class="display-cell" name="news_text" cols="80" rows="6"></textarea>
 		</div>
 		<div class="display-row">
 			<input type="submit" value="Post News" data-i18n="gettext" data-i18n-attributes="value">
@@ -14,7 +14,7 @@
 	</div>
 </form>
 <hr>
-<table id="news-entry-list" class="data-table">
+<table class="data-table">
 	<tr class="manage-header">
 		<th data-i18n="gettext">Headline</th>
 		<th data-i18n="gettext">Date</th>

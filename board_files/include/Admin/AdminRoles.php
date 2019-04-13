@@ -52,8 +52,10 @@ class AdminRoles extends AdminHandler
         {
             $this->remove($user);
         }
-
-        $this->renderPanel($user);
+        else
+        {
+            $this->renderPanel($user);
+        }
     }
 
     public function renderPanel($user)
@@ -132,5 +134,6 @@ class AdminRoles extends AdminHandler
     public function remove($user)
     {
         $this->authorization->removeRole($this->role_id);
+        $this->renderPanel($user);
     }
 }

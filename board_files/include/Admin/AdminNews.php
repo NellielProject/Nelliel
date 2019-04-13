@@ -59,7 +59,7 @@ class AdminNews extends AdminHandler
         $news_info['poster_id'] = $user->auth_id;
         $news_info['headline'] = $_POST['headline'] ?? null;
         $news_info['time'] = time();
-        $news_info['text'] = $_POST['headline'] ?? null;
+        $news_info['text'] = $_POST['news_text'] ?? null;
         $query = 'INSERT INTO "' . NEWS_TABLE . '" ("poster_id", "headline", "time", "text") VALUES (?, ?, ?, ?)';
         $prepared = $this->database->prepare($query);
         $this->database->executePrepared($prepared,
