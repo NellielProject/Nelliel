@@ -53,6 +53,7 @@ class OutputMenu extends OutputCore
     private function boards(array $parameters, bool $data_only)
     {
         $render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $dotdot = ($parameters['dotdot']) ?? '';
         $board_data = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
         $render_data['multiple_boards'] = count($board_data) > 1;
@@ -61,7 +62,7 @@ class OutputMenu extends OutputCore
         {
             $board_info = array();
             $board_info['board_url'] = $dotdot . $data['board_id'];
-            $board_info['board_title'] = $this->domain->setting('board_name');
+            $board_info['name'] = $this->domain->setting('name');
             $board_info['board_id'] = $data['board_id'];
             $render_data['boards'][] = $board_info;
         }
@@ -72,6 +73,7 @@ class OutputMenu extends OutputCore
     private function styles(array $parameters, bool $data_only)
     {
         $render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $dotdot = ($parameters['dotdot']) ?? '';
         $styles = $this->database->executeFetchAll(
                 'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
@@ -94,6 +96,7 @@ class OutputMenu extends OutputCore
     private function siteNavigation(array $parameters, bool $data_only)
     {
         $render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $session = new \Nelliel\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
         $dotdot = ($parameters['dotdot']) ?? '';

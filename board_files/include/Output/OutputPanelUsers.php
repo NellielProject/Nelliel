@@ -52,6 +52,7 @@ class OutputPanelUsers extends OutputCore
     private function renderPanel(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
@@ -91,6 +92,7 @@ class OutputPanelUsers extends OutputCore
     private function renderEdit(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
         $user_id = $parameters['user_id'];
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());

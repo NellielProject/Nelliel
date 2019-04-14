@@ -22,6 +22,7 @@ class OutputDerp extends OutputCore
     public function render(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
@@ -34,7 +35,7 @@ class OutputDerp extends OutputCore
         $this->render_data['error_message'] = $diagnostic['error_message'];
         $this->render_data['error_data'] = '';
         $session = new \Nelliel\Session();
-
+        
         if ($session->inModmode($this->domain))
         {
             if ($this->domain->id() === '')
@@ -59,7 +60,7 @@ class OutputDerp extends OutputCore
                 $return_url = BASE_WEB_PATH . $this->domain->reference('board_directory');
             }
         }
-
+        
         $this->render_data['return_url'] = $return_url;
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('derp', $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);

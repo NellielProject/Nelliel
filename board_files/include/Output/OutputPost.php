@@ -25,6 +25,7 @@ class OutputPost extends OutputCore
     public function render(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $thread_data = $parameters['thread_data'] ?? array();
         $gen_data = $parameters['gen_data'] ?? array();
         $post_id = $parameters['post_id'] ?? 0;

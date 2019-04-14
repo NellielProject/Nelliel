@@ -9,7 +9,9 @@
 {{# stylesheets }}
 	<link rel="{{ stylesheet|e.attr }}" data-style-type="style-board"  type="text/css" href="{{ stylesheet_url|e.attr }}" data-id="{{ style_id|e.attr }}" title="{{ style_name|e.attr }}">
 {{/ stylesheets }}
+{{# show_favicon }}
 	<link rel="icon" href="{{ favicon_url|e.attr }}">
+{{/ show_favicon }}
 	<title>{{ page_title }}</title>
 {{# use_honeypot }}
 	<style>{{ honeypot_css }}</style>

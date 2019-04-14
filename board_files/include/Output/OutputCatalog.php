@@ -24,6 +24,7 @@ class OutputCatalog extends OutputCore
     public function render(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $write = ($parameters['write']) ?? false;
         $cites = new \Nelliel\Cites($this->database);
         $dotdot = ($write) ? '../' : '';

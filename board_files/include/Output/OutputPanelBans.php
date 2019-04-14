@@ -56,6 +56,7 @@ class OutputPanelBans extends OutputCore
     private function renderPanel(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $user = $parameters['user'];
@@ -118,6 +119,7 @@ class OutputPanelBans extends OutputCore
     private function renderAdd(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
         
         if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
@@ -163,6 +165,7 @@ class OutputPanelBans extends OutputCore
     private function renderModify(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
         
         if (!$user->domainPermission($this->domain, 'perm_ban_modify'))

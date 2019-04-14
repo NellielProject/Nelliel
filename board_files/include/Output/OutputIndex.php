@@ -24,6 +24,7 @@ class OutputIndex extends OutputCore
     public function render(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
         $session = new \Nelliel\Session();
         $write = ($parameters['write']) ?? false;
@@ -111,7 +112,6 @@ class OutputIndex extends OutputCore
             $gen_data['abbreviate'] = $thread_data['post_count'] > $this->domain->setting('abbreviate_thread');
             $thread_input['abbreviate'] = $gen_data['abbreviate'];
             $abbreviate_start = $thread_data['post_count'] - ($this->domain->setting('abbreviate_thread') - 1);
-            $this->render_data['body'] = $this->render_data['posting_form'];
             $post_counter = 0;
 
             foreach ($treeline as $post_data)
@@ -168,7 +168,6 @@ class OutputIndex extends OutputCore
                 }
 
                 $threads_on_page = 0;
-                $this->render_data['body'] = array();
                 $this->render_data['threads'] = array();
                 $page ++;
             }

@@ -24,13 +24,14 @@ class OutputPanelNews extends OutputCore
     public function render(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
-
+        
         if (!$user->domainPermission($this->domain, 'perm_news_access'))
         {
             nel_derp(470, _gettext('You are not allowed to access the news panel.'));
         }
-
+        
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
@@ -44,7 +45,7 @@ class OutputPanelNews extends OutputCore
         $bgclass = 'row1';
         $this->render_data['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                 ['module' => 'news', 'action' => 'add']);
-
+        
         foreach ($news_entries as $news_entry)
         {
             $entry_info = array();
@@ -56,7 +57,7 @@ class OutputPanelNews extends OutputCore
                     ['module' => 'news', 'action' => 'remove', 'entry' => $news_entry['entry']]);
             $this->render_data['news_entry'][] = $entry_info;
         }
-
+        
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/news_panel',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);

@@ -52,6 +52,7 @@ class OutputPanelThreads extends OutputCore
     private function renderPanel(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
@@ -131,6 +132,7 @@ class OutputPanelThreads extends OutputCore
     private function renderExpandedThread(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $thread_id = $parameters['thread_id'] ?? 0;
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);

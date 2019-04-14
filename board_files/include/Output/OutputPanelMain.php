@@ -23,19 +23,20 @@ class OutputPanelMain extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
+        $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $session = new \Nelliel\Session(true);
         $user = $session->sessionUser();
         $dotdot = ($parameters['dotdot']) ?? '';
         $this->startTimer();
-        $this->render_data = array();
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
-        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
+        $output_header = new OutputHeader($this->domain);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Main Panel')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $boards = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
-        
+
         if ($boards !== false)
         {
             foreach ($boards as $board)
@@ -45,7 +46,7 @@ class OutputPanelMain extends OutputCore
                 $this->render_data['board_list'][] = $board_data;
             }
         }
-        
+
         $this->render_data['module_manage_boards'] = $user->domainPermission($this->domain, 'perm_manage_boards_access');
         $this->render_data['manage_boards_url'] = MAIN_SCRIPT . '?module=manage-boards';
         $this->render_data['module_users'] = $user->domainPermission($this->domain, 'perm_user_access');
@@ -77,7 +78,7 @@ class OutputPanelMain extends OutputCore
         $this->render_data['extract_gettext_url'] = MAIN_SCRIPT . '?module=language&action=extract-gettext';
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/main_panel',
                 $this->render_data);
-        $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
+        $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
         echo $output;

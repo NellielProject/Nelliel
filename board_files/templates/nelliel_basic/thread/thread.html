@@ -1,5 +1,5 @@
 {{% FILTERS }}
-<form id="form-content-action" class="content-page" accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post">
+<form class="content-page" accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post">
 	<div id="{{ thread_corral_id |e.attr}}" class="thread-corral">
 	{{# op_post }}
 		{{> thread/post }}

@@ -45,6 +45,7 @@ class OutputPanelManageBoards extends OutputCore
     private function panel(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
         
         if (!$user->domainPermission($this->domain, 'perm_manage_boards_access'))
@@ -106,6 +107,7 @@ class OutputPanelManageBoards extends OutputCore
     private function removeInterstitial(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);

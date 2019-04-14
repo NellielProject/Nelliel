@@ -24,7 +24,9 @@ class OutputHead extends OutputCore
     public function render(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $session = new \Nelliel\Session();
+        $site_domain = new \Nelliel\DomainSite($this->database);
         $dotdot = ($parameters['dotdot']) ?? '';
         $this->render_data['main_js_file'] = $dotdot . SCRIPTS_WEB_PATH . 'nel.js';
         $this->render_data['js_onload'] = 'window.onload = function () {nelliel.setup.doImportantStuff(\'' .
@@ -34,7 +36,7 @@ class OutputHead extends OutputCore
                 'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
                 PDO::FETCH_ASSOC);
         $style_set = array();
-        
+
         foreach ($styles as $style)
         {
             $style_data = array();
@@ -45,13 +47,32 @@ class OutputHead extends OutputCore
             $style_data['style_name'] = $info['name'];
             $this->render_data['stylesheets'][] = $style_data;
         }
-        
+
         if ($this->domain->setting('use_honeypot'))
         {
             $this->render_data['honeypot_css'] = '#form-user-info-1{display: none !important;}#form-user-info-2{display: none !important;}#form-user-info-3{position: absolute; top: 3px; left: -9001px;}';
             $this->render_data['use_honeypot'] = true;
         }
-        
+
+        $this->render_data['show_favicon'] = false;
+
+        if ($this->domain->setting('show_favicon'))
+        {
+            if (!empty($this->domain->setting('favicon')))
+            {
+                $this->render_data['favicon_url'] = $this->domain->setting('favicon');
+                $this->render_data['show_favicon'] = true;
+            }
+            else
+            {
+                if ($site_domain->setting('show_favicon') && !empty($site_domain->setting('favicon')))
+                {
+                    $this->render_data['favicon_url'] = $site_domain->setting('favicon');
+                    $this->render_data['show_favicon'] = true;
+                }
+            }
+        }
+
         $this->render_data['page_title'] = $parameters['page_title'] ?? 'Nelliel Imageboard';
         return $this->output('head', $data_only, true);
     }

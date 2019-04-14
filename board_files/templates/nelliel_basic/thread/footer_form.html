@@ -1,17 +1,19 @@
 {{% FILTERS }}
-<div id="footer-form" class="footer-form">
+<div class="footer-form">
 	<input type="hidden" name="action" value="update">
 	<input type="hidden" name="board_id" value="{{ board_id|e.attr }}">
 	<div>
-		<label for="update-sekrit" data-i18n="gettext">Password:</label>&nbsp;<input type="password" name="update_sekrit" id="update-sekrit" size="20" value="">
+		<label for="update_sekrit" data-i18n="gettext">Password:</label>
+		<input id="update_sekrit" type="password" name="update_sekrit" size="20" value="">
 	</div>
 	<div>
 		<input type="submit" name="form_submit_delete" value="Delete" data-i18n="gettext" data-i18n-attributes="value">
 	</div>
 	<div>
-		<label for="report-reason-bottom" data-i18n="gettext">Report Reason:</label>&nbsp;<input type="text" name="report_reason" id="report-reason-bottom" size="20" value="">
+		<label for="report_reason" data-i18n="gettext">Report Reason:</label>
+		<input id="report_reason" type="text" name="report_reason" size="20" value="">
 	</div>
 	<div>
-		<input id="report-button-bottom" type="submit" name="form_submit_report" value="Report" data-i18n="gettext" data-i18n-attributes="value">
+		<input type="submit" name="form_submit_report" value="Report" data-i18n="gettext" data-i18n-attributes="value">
 	</div>	
 </div>

@@ -22,6 +22,7 @@ class OutputBanPage extends OutputCore
     public function render(array $parameters, bool $data_only)
     {
         $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $ban_info = $parameters['ban_info'];
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
