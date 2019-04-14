@@ -1,4 +1,5 @@
-<form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
+{{% FILTERS }}
+<form accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post" enctype="multipart/form-data">
 	<table>
 		<tr>
 			<td><span data-i18n="gettext">Ban set on:</span> <span>{{ start_time_formatted }}</span></td>
@@ -12,25 +13,25 @@
 		<tr>
 			<td data-i18n="gettext">Banned IP:</td>
 			<td>
-				<input id="ban-ip-field" type="text" name="ban_ip" size="30" maxlength="45" value="{{ ip_address_start }}"></input>
+				<input id="ban-ip-field" type="text" name="ban_ip" size="30" maxlength="45" value="{{ ip_address_start|e.attr }}"></input>
 			</td>
 		</tr>
 		<tr>
 			<td data-i18n="gettext">Ban length:</td>
 			<td>
 				<span data-i18n="gettext">Years:</span>
-				<input id="ban-time-years" type="text" name="ban_time_years" size="6" maxlength="12" value="{{ years }}">&nbsp;&nbsp;&nbsp;
+				<input id="ban-time-years" type="text" name="ban_time_years" size="6" maxlength="12" value="{{ years|e.attr }}">&nbsp;&nbsp;&nbsp;
 				<span data-i18n="gettext">Days:</span>
-				<input id="ban-time-days" type="text" name="ban_time_days" size="6" maxlength="12" value="{{ days }}">&nbsp;&nbsp;&nbsp;
+				<input id="ban-time-days" type="text" name="ban_time_days" size="6" maxlength="12" value="{{ days|e.attr }}">&nbsp;&nbsp;&nbsp;
 			</td>
 		</tr>
 		<tr>
 			<td></td>
 			<td>
 				<span data-i18n="gettext">Hours:</span>
-				<input id="ban-time-hours"  type="text" name="ban_time_hours" size="6" maxlength="12" value="{{ hours }}">&nbsp;&nbsp;&nbsp;
+				<input id="ban-time-hours"  type="text" name="ban_time_hours" size="6" maxlength="12" value="{{ hours|e.attr }}">&nbsp;&nbsp;&nbsp;
 				<span data-i18n="gettext">Minutes:</span>
-				<input id="ban-time-minutes"  type="text" name="ban_time_minutes" size="6" maxlength="12" value="{{ minutes }}">&nbsp;&nbsp;&nbsp;
+				<input id="ban-time-minutes"  type="text" name="ban_time_minutes" size="6" maxlength="12" value="{{ minutes|e.attr }}">&nbsp;&nbsp;&nbsp;
 			</td>
 		</tr>
 		<tr>
@@ -38,7 +39,7 @@
 				<span data-i18n="gettext">Apply ban to this board:</span>
 			</td>
 			<td>
-				<input id="ban-board-field"  type="text" name="ban_board" size="24" maxlength="255" value="{{ board_id }}">
+				<input id="ban-board-field"  type="text" name="ban_board" size="24" maxlength="255" value="{{ board_id|e.attr }}">
 			</td>
 		</tr>
 		<tr>
@@ -54,8 +55,8 @@
 		</tr>
 		<tr>
 			<td>
-				<input id="ban-id-field" type="hidden" name="ban_id" value="{{ ban_id }}">
-				<input id="ban-start-field" type="hidden" name="ban_start_time" value="{{ start_time }}">
+				<input id="ban-id-field" type="hidden" name="ban_id" value="{{ ban_id|e.attr }}">
+				<input id="ban-start-field" type="hidden" name="ban_start_time" value="{{ start_time|e.attr }}">
 			</td>
 		</tr>
 		<tr>

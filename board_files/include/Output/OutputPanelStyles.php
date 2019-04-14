@@ -25,12 +25,12 @@ class OutputPanelStyles extends OutputCore
     {
         $this->render_data = array();
         $user = $parameters['user'];
-
+        
         if (!$user->domainPermission($this->domain, 'perm_styles_access'))
         {
             nel_derp(440, _gettext('You are not allowed to access the styles panel.'));
         }
-
+        
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
@@ -44,7 +44,7 @@ class OutputPanelStyles extends OutputCore
                 PDO::FETCH_ASSOC);
         $installed_ids = array();
         $bgclass = 'row1';
-
+        
         foreach ($styles as $style)
         {
             $style_data = array();
@@ -63,14 +63,14 @@ class OutputPanelStyles extends OutputCore
             $style_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'styles', 'action' => 'remove', 'style-id' => $style['id'],
                         'set-type' => $style_info['style_type']]);
-
+            
             $this->render_data['installed_list'][] = $style_data;
         }
-
+        
         $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
         $style_inis = $ini_parser->parseDirectories(STYLES_WEB_PATH, 'style_info.ini');
         $bgclass = 'row1';
-
+        
         foreach ($style_inis as $style)
         {
             $style_data['bgclass'] = $bgclass;
@@ -85,12 +85,12 @@ class OutputPanelStyles extends OutputCore
                         'style-type' => $style['style_type']]);
             $this->render_data['available_list'][] = $style_data;
         }
-
+        
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/styles_panel',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
-        $output = $this->output('page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;
     }

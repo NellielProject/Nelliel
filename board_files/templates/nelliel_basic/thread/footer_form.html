@@ -1,6 +1,7 @@
+{{% FILTERS }}
 <div id="footer-form" class="footer-form">
 	<input type="hidden" name="action" value="update">
-	<input type="hidden" name="board_id" value="{{ board_id }}">
+	<input type="hidden" name="board_id" value="{{ board_id|e.attr }}">
 	<div>
 		<label for="update-sekrit" data-i18n="gettext">Password:</label>&nbsp;<input type="password" name="update_sekrit" id="update-sekrit" size="20" value="">
 	</div>

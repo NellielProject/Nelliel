@@ -1,3 +1,4 @@
+{{% FILTERS }}
 <table class="data-table">
 	<tr class="manage-header">
 		<th data-i18n="gettext">Role ID</th>
@@ -7,19 +8,19 @@
 		<th data-i18n="gettext">Actions</th>
 	</tr>
 	{{# roles_list }}
-	<tr class="{{ bgclass }}">
+	<tr class="{{ bgclass|e.attr }}">
 		<td>{{ role_id }}</td>
 		<td>{{ role_level }}</td>
 		<td>{{ role_title }}</td>
 		<td>{{ capcode_text }}</td>
 		<td>
-			<span>[<a href="{{ edit_url }}" data-i18n="gettext">Edit</a>]</span>
-			<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>
+			<span>[<a href="{{ edit_url|e.attr }}" data-i18n="gettext">Edit</a>]</span>
+			<span>[<a href="{{ remove_url|e.attr }}" data-i18n="gettext">Remove</a>]</span>
 		</td>
 	</tr>
 	{{/ roles_list }}
 </table>
 <hr>
 <div>
-	<a href="{{ new_role_url }}" data-i18n="gettext">New Role</a>
+	<a href="{{ new_role_url|e.attr }}" data-i18n="gettext">New Role</a>
 </div>

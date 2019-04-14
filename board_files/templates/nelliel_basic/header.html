@@ -1,3 +1,4 @@
+{{% FILTERS }}
 {{# boards_menu }}
 	{{> menu/boards }}
 {{/ boards_menu }}
@@ -11,12 +12,12 @@
 {{# is_site_header }}
 <div class="site-name">{{ site_name }}</div>
 <div class="site-slogan">{{ site_slogan }}</div>
-<div class="site-banner"><img src="{{ site_banner_url }}"></div>
+<div class="site-banner"><img src="{{ site_banner_url|e.attr }}"></div>
 {{/ is_site_header }}
 {{# is_board_header }}
 <h1 class="board-name">{{ board_name }}</h1>
 <h2 class="board-slogan">{{ board_slogan }}</h2>
-<div class="board-banner"><img src="{{ board_banner_url }}"></div>
+<div class="board-banner"><img src="{{ board_banner_url|e.attr }}"></div>
 {{/ is_board_header }}
 <hr class="clear">
 {{# show_manage_headers }}

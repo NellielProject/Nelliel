@@ -1,3 +1,4 @@
+{{% FILTERS }}
 <table class="data-table">
 	<tr class="manage-header">
 		<th data-i18n="gettext">Board ID</th>
@@ -8,22 +9,22 @@
 		<th data-i18n="gettext">Remove</th>
 	</tr>
 	{{# board_list }}
-	<tr class="{{ bgclass }}">
+	<tr class="{{ bgclass|e.attr }}">
 		<td>{{ id }}</td>
 		<td>{{ directory }}</td>
 		<td>{{ db_prefix }}</td>
 		<td>{{ status }}</td>
 		<td>
-			<a href="{{ lock_url }}">{{ lock_text }}</a>
+			<a href="{{ lock_url|e.attr }}">{{ lock_text }}</a>
 		</td>
 		<td>
-			<a href="{{ remove_url }}">!!DANGER!! Remove Board</a>
+			<a href="{{ remove_url|e.attr }}">!!DANGER!! Remove Board</a>
 		</td>
 	</tr>
 	{{/ board_list }}
 </table>
 <hr>
-<form action="{{ form_action }}" method="post" enctype="multipart/form-data">
+<form action="{{ form_action|e.attr }}" method="post" enctype="multipart/form-data">
 	<div class="display-table">
 		<div class="display-row">
 			<label for="new_board_id" class="display-cell" data-i18n="gettext">Board ID (this will also be the directory)</label>

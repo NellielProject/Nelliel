@@ -25,12 +25,12 @@ class OutputPanelReports extends OutputCore
     {
         $this->render_data = array();
         $user = $parameters['user'];
-
+        
         if (!$user->domainPermission($this->domain, 'perm_reports_access'))
         {
             nel_derp(380, _gettext('You are not allowed to access the reports panel.'));
         }
-
+        
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
@@ -39,7 +39,7 @@ class OutputPanelReports extends OutputCore
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Reports')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-
+        
         if ($this->domain->id() !== '')
         {
             $prepared = $this->database->prepare(
@@ -52,17 +52,17 @@ class OutputPanelReports extends OutputCore
             $report_list = $this->database->executeFetchAll(
                     'SELECT * FROM "' . REPORTS_TABLE . '" ORDER BY "report_id" DESC', PDO::FETCH_ASSOC);
         }
-
+        
         $bgclass = 'row1';
         $domains = array();
-
+        
         foreach ($report_list as $report_info)
         {
             if (!isset($domains[$report_info['board_id']]))
             {
                 $domains[$report_info['board_id']] = new \Nelliel\DomainBoard($report_info['board_id'], $this->database);
             }
-
+            
             $report_data = array();
             $report_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
@@ -72,7 +72,7 @@ class OutputPanelReports extends OutputCore
             $board_web_path = '//' . $base_domain . '/' . rawurlencode($current_domain->reference('board_directory')) .
                     '/';
             $content_url = '';
-
+            
             if ($content_id->isThread())
             {
                 $content_url = $this->url_constructor->dynamic(MAIN_SCRIPT,
@@ -100,15 +100,15 @@ class OutputPanelReports extends OutputCore
                         [$content_id->thread_id, $content_id->post_id, $content_id->order_id], PDO::FETCH_COLUMN);
                 $src_web_path = $board_web_path . rawurlencode($current_domain->reference('src_dir')) . '/';
                 $report_data['file_url'] = $src_web_path . $content_id->thread_id . '/' . $content_id->post_id . '/' .
-                        rawurlencode($filename);
-
+                        $filename;
+                
                 $content_url = $this->url_constructor->dynamic(MAIN_SCRIPT,
                         ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
                             'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                             'modmode' => 'true']);
                 $content_url .= '#t' . $content_id->thread_id . 'p' . $content_id->post_id;
             }
-
+            
             $report_data['report_id'] = $report_info['report_id'];
             $report_data['board_id'] = $report_info['board_id'];
             $report_data['content_url'] = $content_url;
@@ -119,12 +119,12 @@ class OutputPanelReports extends OutputCore
                     '&action=dismiss&report_id=' . $report_info['report_id'];
             $this->render_data['reports_list'][] = $report_data;
         }
-
+        
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/reports_panel',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
-        $output = $this->output('page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;
     }

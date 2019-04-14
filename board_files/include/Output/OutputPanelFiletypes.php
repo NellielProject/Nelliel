@@ -25,12 +25,12 @@ class OutputPanelFiletypes extends OutputCore
     {
         $this->render_data = array();
         $user = $parameters['user'];
-
+        
         if (!$user->domainPermission($this->domain, 'perm_filetypes_access'))
         {
             nel_derp(430, _gettext('You are not allowed to access the Filetypes panel.'));
         }
-
+        
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
@@ -45,7 +45,7 @@ class OutputPanelFiletypes extends OutputCore
         $form_action = $this->url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'filetypes', 'action' => 'add']);
         $this->render_data['form_action'] = $form_action;
         $bgclass = 'row1';
-
+        
         foreach ($filetypes as $filetype)
         {
             $filetype_data = array();
@@ -62,12 +62,12 @@ class OutputPanelFiletypes extends OutputCore
                     ['module' => 'filetypes', 'action' => 'remove', 'filetype-id' => $filetype['entry']]);
             $this->render_data['filetype_list'][] = $filetype_data;
         }
-
+        
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/filetypes_panel',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
-        $output = $this->output('page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;
     }

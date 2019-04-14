@@ -35,7 +35,7 @@ abstract class OutputCore
     protected function selectRenderCore(string $core_id)
     {
         $this->core_id = $core_id;
-
+        
         if ($core_id === 'mustache')
         {
             $this->render_core = new \Nelliel\RenderCoreMustache($this->domain);
@@ -50,31 +50,30 @@ abstract class OutputCore
         }
     }
 
-    protected function startTimer($time_offset = 0)
+    protected function startTimer(int $time_offset = 0)
     {
         $start = microtime(true);
         $this->timer_start = $start - $time_offset;
         return $start;
     }
 
-    protected function endTimer($rounded = true)
+    protected function endTimer(bool $rounded = true, int $precision = 4)
     {
         if (!isset($this->timer_start))
         {
             return 0;
         }
-
+        
         $end_time = microtime(true);
-
-        if($rounded)
+        
+        if ($rounded)
         {
-            return round($end_time - $this->timer_start, 4);
+            return number_format($end_time - $this->timer_start, $precision);
         }
         else
         {
             return $end_time - $this->timer_start;
         }
-
     }
 
     protected function output(string $template, bool $data_only, bool $translate, array $render_data = array(), $dom = null)
@@ -82,7 +81,7 @@ abstract class OutputCore
         $output = null;
         $render_data = (empty($render_data)) ? $this->render_data : $render_data;
         $dom = (is_null($dom)) ? $this->dom : $dom;
-
+        
         if ($this->core_id === 'mustache')
         {
             if ($data_only)
@@ -91,23 +90,23 @@ abstract class OutputCore
             }
             else
             {
-                if($this->domain->setting('display_render_timer') && isset($this->timer_start))
+                if ($this->domain->setting('display_render_timer') && isset($this->timer_start))
                 {
                     $render_data['show_stats']['render_timer'] = function ()
                     {
                         return 'Page rendered in ' . $this->endTimer() . ' seconds.';
                     };
                 }
-
+                
                 $output = $this->render_core->renderFromTemplateFile($template, $render_data);
-
+                
                 if ($translate)
                 {
                     $output = $this->domain->translator()->translateHTML($output);
                 }
             }
         }
-
+        
         return $output;
     }
 }

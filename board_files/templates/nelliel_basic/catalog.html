@@ -1,11 +1,12 @@
+{{% FILTERS }}
 <div>
 	<h2 class="catalog-title">{{ catalog_title }}</h2>
 	{{# catalog_entries }}
 	<div class="catalog-entry">
 		<div class="catalog-open-link">
-			<a href="{{ open_url }}">
+			<a href="{{ open_url|e.attr }}">
 		{{# has_preview }}
-			<img src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}">
+			<img src="{{ preview_url|e.attr }}" width="{{ preview_width|e.attr }}" height="{{ preview_height|e.attr }}">
 		{{/ has_preview }}
 		{{^ has_preview }}
 			{{ open_text }}
@@ -30,7 +31,7 @@
 		<p class="reply-post-text">
 			<span class="reply-post-comment">
 		{{# comment_lines }}
-			{{{ line }}}<br>
+			{{& line }}<br>
 		{{/ comment_lines }}
 			</span>
 			<span class="mod-comment">{{ mod_comment }}</span>

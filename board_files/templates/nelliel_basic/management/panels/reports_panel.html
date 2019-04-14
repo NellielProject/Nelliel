@@ -1,3 +1,4 @@
+{{% FILTERS }}
 <table class="data-table">
 	<tr class="manage-header">
 		<th data-i18n="gettext">Report ID</th>
@@ -8,19 +9,19 @@
 		<th data-i18n="gettext">Dismiss Report</th>
 	</tr>
 	{{# reports_list }}
-	<tr class="row1">
+	<tr class="{{ bgclass|e.attr }}">
 		<td>{{ report_id }}</td>
 		<td>{{ board_id }}</td>
 		<td>
-			<a href="{{ content_url }}">{{ content_id }}</a>
+			<a href="{{ content_url|e.attr }}">{{ content_id }}</a>
 			{{# is_content }}
-			<a href="{{ file_url }}" data-i18n="gettext"> [File Link]</a>
+			<a href="{{ file_url|e.attr }}" data-i18n="gettext"> [File Link]</a>
 			{{/ is_content }}
 		</td>
 		<td>{{ reason }}</td>
 		<td>{{ reporter_ip }}</td>
 		<td>
-			<a href="{{ dismiss_url }}" data-i18n="gettext">Dismiss Report</a>
+			<a href="{{ dismiss_url|e.attr }}" data-i18n="gettext">Dismiss Report</a>
 		</td>
 	</tr>
 	{{/ reports_list }}

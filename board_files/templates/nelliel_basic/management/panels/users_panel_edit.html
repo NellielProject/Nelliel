@@ -1,8 +1,9 @@
-<form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
+{{% FILTERS }}
+<form accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post" enctype="multipart/form-data">
 	<div class="display-table">
 		<div class="display-row">
 			<label for="user_id" class="display-cell" data-i18n="gettext">User ID</label>
-			<input id="user_id" class="display-cell" type="text" name="user_id" id="bname" size="30" value="{{ user_id }}">
+			<input id="user_id" class="display-cell" type="text" name="user_id" id="bname" size="30" value="{{ user_id|e.attr }}">
 		</div>
 		<div class="display-row">
 			<label for="user_password" class="display-cell" data-i18n="gettext">New password (leave blank to keep current password)</label>
@@ -10,7 +11,7 @@
 		</div>
 		<div class="display-row">
 			<label for="display_name" class="display-cell" data-i18n="gettext">User display name</label>
-			<input id="display_name" class="display-cell" type="text" name="display_name" size="30" value="{{ display_nae }}">
+			<input id="display_name" class="display-cell" type="text" name="display_name" size="30" value="{{ display_name|e.attr }}">
 		</div>
 		<div class="display-row">
 			<input type="hidden" name="active" value="0">
@@ -30,12 +31,12 @@
 		</div>
 		<div class="display-row">
 			<label for="site_role" class="display-cell" data-i18n="gettext">Site Role</label>
-			<input id="site_role" class="display-cell" type="text" name="site_role" size="30" value="{{ site_role_id }}">
+			<input id="site_role" class="display-cell" type="text" name="site_role" size="30" value="{{ site_role_id|e.attr }}">
 		</div>
 		{{# board_roles }}
 		<div class="display-row">
 			<label for="board_role_{{ board_id }}" class="display-cell">{{ board_id }}</label>
-			<input id="board_role_{{ board_id }}" class="display-cell" type="text" name="board_role_{{ board_id }}" size="30" value="{{ role_id }}">
+			<input id="board_role_{{ board_id }}" class="display-cell" type="text" name="board_role_{{ board_id }}" size="30" value="{{ role_id|e.attr }}">
 		</div>
 		{{/ board_roles }}
 	</div>

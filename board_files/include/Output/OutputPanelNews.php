@@ -52,7 +52,7 @@ class OutputPanelNews extends OutputCore
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $entry_info['headline'] = $news_entry['headline'];
             $entry_info['time'] = date('Y/m/d (D) H:i:s', $news_entry['time']);
-            $entry_info['remove_link'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+            $entry_info['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'news', 'action' => 'remove', 'entry' => $news_entry['entry']]);
             $this->render_data['news_entry'][] = $entry_info;
         }
@@ -61,7 +61,7 @@ class OutputPanelNews extends OutputCore
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
-        $output = $this->output('page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;
     }

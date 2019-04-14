@@ -54,14 +54,15 @@ class OutputIndex extends OutputCore
         $thread_count = count($thread_list);
         $gen_data['index']['thread_count'] = $thread_count;
         $output_posting_form = new \Nelliel\Output\OutputPostingForm($this->domain);
-        $this->render_data['posting_form'] = $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => 0], false);
+        $this->render_data['posting_form'] = $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => 0],
+                true);
 
         if (empty($thread_list))
         {
             $this->render_data['catalog_url'] = 'catalog.html';
             $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
             $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => true], true);
-            $output = $this->output('page', $data_only, true);
+            $output = $this->output('/index/index_page', $data_only, true);
 
             if ($write)
             {
@@ -122,14 +123,14 @@ class OutputIndex extends OutputCore
 
                 if ($post_data['op'] == 1)
                 {
-                    $thread_input['op_post'] = $output_post->render($parameters, false);
+                    $thread_input['op_post'] = $output_post->render($parameters, true);
                     $json_thread->addPostData($json_post->retrieveData());
                 }
                 else
                 {
                     if ($post_counter >= $abbreviate_start)
                     {
-                        $thread_input['thread_posts'] .= $output_post->render($parameters, false);
+                        $thread_input['thread_posts'][] = $output_post->render($parameters, true);
                         $json_thread->addPostData($json_post->retrieveData());
                     }
                 }
@@ -143,39 +144,14 @@ class OutputIndex extends OutputCore
             if ($threads_on_page >= $this->domain->setting('threads_per_page'))
             {
                 $json_index->addThreadData($json_thread->retrieveData());
-
-                // Set up the array of navigation elements
-                $nav_elements = array();
-                $previous = array();
-                $previous['link_text'] = _gettext('Previous');
-                $prev_filename = ($page - 1 == 1) ? 'index' : $index_format;
-                $previous['linked'] = ($page != 1);
-                $previous['index_url'] = ($page != 1) ? sprintf($prev_filename, ($page - 1)) . PAGE_EXT : '';
-                $nav_elements[] = $previous;
-
-                for ($i = 1; $i <= $page_count; $i ++)
-                {
-                    $index_entry = array();
-                    $link_filename = ($i === 1) ? 'index' : $index_format;
-                    $index_entry['linked'] = ($i != $page);
-                    $index_entry['index_url'] = ($i != $page) ? sprintf($link_filename, $i) . PAGE_EXT : '';
-                    $index_entry['link_text'] = $i;
-                    $nav_elements[] = $index_entry;
-                }
-
-                $next = array();
-                $next['linked'] = ($page != $page_count);
-                $next['link_text'] = _gettext('Next');
-                $next['index_url'] = ($page != $page_count) ? sprintf($index_format, ($page + 1)) . PAGE_EXT : '';
-                $nav_elements[] = $next;
-                $this->render_data['nav_elements'] = $nav_elements;
-
-                $this->render_core->appendToOutput($this->render_core->getOutput('header'));
-                $this->render_data['body'] .= $this->render_core->renderFromTemplateFile('index', $this->render_data);
+                $output_menu = new OutputMenu($this->domain);
+                $this->render_data['nav_elements'] = $output_menu->render(
+                        ['menu' => 'index_navigation', 'page' => $page, 'index_format' => $index_format,
+                            'page_count' => $page_count], true);
                 $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
                 $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => true],
                         true);
-                $output = $this->output('page', $data_only, true);
+                $output = $this->output('index/index_page', $data_only, true);
                 $index_filename = ($page == 1) ? 'index' . PAGE_EXT : sprintf($index_format, ($page)) . PAGE_EXT;
 
                 if ($write)
@@ -192,7 +168,6 @@ class OutputIndex extends OutputCore
                 }
 
                 $threads_on_page = 0;
-                $this->render_core->clearOutput();
                 $this->render_data['body'] = array();
                 $this->render_data['threads'] = array();
                 $page ++;

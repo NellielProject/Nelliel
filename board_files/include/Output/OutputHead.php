@@ -34,7 +34,7 @@ class OutputHead extends OutputCore
                 'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
                 PDO::FETCH_ASSOC);
         $style_set = array();
-
+        
         foreach ($styles as $style)
         {
             $style_data = array();
@@ -45,13 +45,13 @@ class OutputHead extends OutputCore
             $style_data['style_name'] = $info['name'];
             $this->render_data['stylesheets'][] = $style_data;
         }
-
+        
         if ($this->domain->setting('use_honeypot'))
         {
             $this->render_data['honeypot_css'] = '#form-user-info-1{display: none !important;}#form-user-info-2{display: none !important;}#form-user-info-3{position: absolute; top: 3px; left: -9001px;}';
             $this->render_data['use_honeypot'] = true;
         }
-
+        
         $this->render_data['page_title'] = $parameters['page_title'] ?? 'Nelliel Imageboard';
         return $this->output('head', $data_only, true);
     }

@@ -1,7 +1,7 @@
+{{% FILTERS }}
 {{# show_styles }}
 	{{> menu/styles }}
 {{/ show_styles }}
-
 <footer class="footer" role="contentinfo">
 	<!--Do not remove these links-->
 	<nav>-
@@ -9,6 +9,5 @@
 		<a href="https://www.1chan.net/futallaby/" rel="external" target="_blank">futallaby</a> +
 		<a href="http://www.nelliel.com" rel="external" title="Nelliel Imageboard" target="_blank">Nelliel <span>{{ nelliel_version }}</span></a> -
 	</nav>
-	<div>{{ render_timer }}</div>
-	<script src="{{ js_ui_url }}"></script>
+	<script src="{{ js_ui_url|e.attr }}"></script>
 </footer>

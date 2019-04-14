@@ -35,7 +35,7 @@ class OutputPanelMain extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $boards = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
-
+        
         if ($boards !== false)
         {
             foreach ($boards as $board)
@@ -45,7 +45,7 @@ class OutputPanelMain extends OutputCore
                 $this->render_data['board_list'][] = $board_data;
             }
         }
-
+        
         $this->render_data['module_manage_boards'] = $user->domainPermission($this->domain, 'perm_manage_boards_access');
         $this->render_data['manage_boards_url'] = MAIN_SCRIPT . '?module=manage-boards';
         $this->render_data['module_users'] = $user->domainPermission($this->domain, 'perm_user_access');
@@ -79,7 +79,7 @@ class OutputPanelMain extends OutputCore
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
-        $output = $this->output('page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;
     }

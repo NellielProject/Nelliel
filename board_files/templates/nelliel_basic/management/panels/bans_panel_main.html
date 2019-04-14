@@ -1,3 +1,4 @@
+{{% FILTERS }}
 <table class="data-table">
 	<tr class="manage-header">
 		<th data-i18n="gettext">Ban ID</th>
@@ -25,12 +26,12 @@
 		<td>{{ appeal_status }}</td>
 		<td>
 			{{# can_modify }}
-			<a href="{{ modify_url }}" data-i18n="gettext">Modify Ban</a>
+			<a href="{{ modify_url|e.attr }}" data-i18n="gettext">Modify Ban</a>
 			{{/ can_modify }}
 		</td>
 		<td>
 			{{# can_modify }}
-			<a href="{{ remove_url }}" data-i18n="gettext">Remove Ban</a>
+			<a href="{{ remove_url|e.attr }}" data-i18n="gettext">Remove Ban</a>
 			{{/ can_modify }}
 		</td>
 	</tr>
@@ -40,7 +41,7 @@
 <table>
 	<tr>
 		<td>
-			<a href="{{ new_ban_url }}" data-i18n="gettext">Add New Ban</a>
+			<a href="{{ new_ban_url|e.attr }}" data-i18n="gettext">Add New Ban</a>
 		</td>
 	</tr>
 </table>

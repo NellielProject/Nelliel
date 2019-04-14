@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="{{ page_language }}">
 {{# head }}
-	{{> head }}
+{{> head }}
 {{/ head }}
 <body>
 {{# header }}
 	{{> header }}
 {{/ header }}
-	{{{ body }}}
+{{# posting_form }}
+	{{> thread/posting_form }}
+{{/ posting_form }}
+	{{> index/index }}
 {{# footer }}
 	{{> footer }}
 {{/ footer }}

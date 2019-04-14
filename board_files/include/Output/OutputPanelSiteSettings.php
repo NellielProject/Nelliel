@@ -25,12 +25,12 @@ class OutputPanelSiteSettings extends OutputCore
     {
         $this->render_data = array();
         $user = $parameters['user'];
-
+        
         if (!$user->domainPermission($this->domain, 'perm_site_config_access'))
         {
             nel_derp(360, _gettext('You are not allowed to access the site settings.'));
         }
-
+        
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
@@ -43,7 +43,7 @@ class OutputPanelSiteSettings extends OutputCore
         $result = $this->database->query('SELECT * FROM "' . SITE_CONFIG_TABLE . '"');
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
         unset($result);
-
+        
         foreach ($rows as $config_line)
         {
             if ($config_line['data_type'] === 'boolean')
@@ -58,12 +58,12 @@ class OutputPanelSiteSettings extends OutputCore
                 $this->render_data[$config_line['config_name']] = $config_line['setting'];
             }
         }
-
+        
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/site_settings_panel',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
-        $output = $this->output('page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;
     }

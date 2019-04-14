@@ -1,0 +1,22 @@
+{{% FILTERS }}
+<!DOCTYPE html>
+<html lang="{{ page_language|e.attr }}">
+{{# head }}
+{{> head }}
+{{/ head }}
+<body>
+{{# header }}
+	{{> header }}
+{{/ header }}
+{{# posting_form }}
+	{{> thread/posting_form }}
+{{/ posting_form }}
+	{{> thread/thread }}
+{{# footer }}
+	{{> footer }}
+{{/ footer }}
+{{# show_stats }}
+	<div class="render_stats">{{ render_timer }}</div>
+{{/ show_stats }}
+</body>
+</html>

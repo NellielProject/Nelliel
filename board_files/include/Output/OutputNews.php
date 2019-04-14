@@ -34,7 +34,7 @@ class OutputNews extends OutputCore
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('news', $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => '', 'show_styles' => false], true);
-        $output = $this->output('page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true);
         $this->file_handler->writeFile(BASE_PATH . 'news.html', $output);
     }
 
@@ -46,30 +46,30 @@ class OutputNews extends OutputCore
                 PDO::FETCH_ASSOC);
         $limit_counter = 0;
         $entry_list = array();
-
+        
         foreach ($news_entries as $news_entry)
         {
             if ($limit !== 0 && $limit_counter >= $limit)
             {
                 break;
             }
-
+            
             $news_info = array();
             $news_info['headline'] = $news_entry['headline'];
             $poster_name = $authorization->getUser($news_entry['poster_id'])->auth_data['display_name'];
             $news_info['poster'] = ' by ' . $poster_name;
             $news_info['time'] = ' - ' . date('Y/m/d (D) H:i:s', $news_entry['time']);
             $news_info['news_lines'] = array();
-
+            
             foreach ($this->output_filter->newlinesToArray($news_entry['text']) as $line)
             {
                 $news_info['news_lines'][]['news_line'] = $line;
             }
-
+            
             $entry_list[] = $news_info;
             ++ $limit_counter;
         }
-
+        
         return $entry_list;
     }
 }

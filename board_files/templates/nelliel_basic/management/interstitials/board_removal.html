@@ -1,6 +1,7 @@
+{{% FILTERS }}
 <div class="text-center" style="padding: 1em;">
 	<div>{{ message }}</div>
 	<div style="padding: 1em;">
-		<a href="{{ continue_url}}">{{ continue_link_text }}</a>
+		<a href="{{ continue_url|e.attr }}">{{ continue_link_text }}</a>
 	</div>
 </div>

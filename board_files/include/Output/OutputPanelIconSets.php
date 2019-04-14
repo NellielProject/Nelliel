@@ -25,12 +25,12 @@ class OutputPanelIconSets extends OutputCore
     {
         $this->render_data = array();
         $user = $parameters['user'];
-
+        
         if (!$user->domainPermission($this->domain, 'perm_icon_sets_access'))
         {
             nel_derp(460, _gettext('You are not allowed to access the Icon Sets panel.'));
         }
-
+        
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
@@ -44,7 +44,7 @@ class OutputPanelIconSets extends OutputCore
                 '" WHERE "type" = \'icon-set\' ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
         $installed_ids = array();
         $bgclass = 'row1';
-
+        
         foreach ($icon_sets as $icon_set)
         {
             $set_data = array();
@@ -63,14 +63,14 @@ class OutputPanelIconSets extends OutputCore
             $set_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'icon-sets', 'action' => 'remove', 'icon-set-id' => $icon_set['id'],
                         'set-type' => $icon_set_info['set_type']]);
-
+            
             $this->render_data['installed_list'][] = $set_data;
         }
-
+        
         $ini_parser = new \Nelliel\INIParser($this->file_handler);
         $icon_set_inis = $ini_parser->parseDirectories(ICON_SETS_WEB_PATH, 'icon_set_info.ini');
         $bgclass = 'row1';
-
+        
         foreach ($icon_set_inis as $icon_set)
         {
             $set_data = array();
@@ -86,12 +86,12 @@ class OutputPanelIconSets extends OutputCore
                         'set-type' => $icon_set['set_type']]);
             $this->render_data['available_list'][] = $set_data;
         }
-
+        
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/icon_sets_panel',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
-        $output = $this->output('page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;
     }

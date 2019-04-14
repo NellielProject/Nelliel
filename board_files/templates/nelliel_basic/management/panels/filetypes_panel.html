@@ -1,4 +1,5 @@
-<form accept-charset="utf-8" action="{{ form_action }}" method="post">
+{{% FILTERS }}
+<form accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
 			<label for="extension" class="display-cell" data-i18n="gettext">Extension</label>
@@ -46,7 +47,7 @@
 		<th data-i18n="gettext">Remove</th>
 	</tr>
 	{{# filetype_list }}
-	<tr class="{{ bgclass }}">
+	<tr class="{{ bgclass|e.attr }}">
 		<td>{{ extension }}</td>
 		<td>{{ parent_extension }}</td>
 		<td>{{ type }}</td>
@@ -55,7 +56,7 @@
 		<td>{{ regex }}</td>
 		<td>{{ label }}</td>
 		<td>
-			<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Filetype</a>
+			<a class="display-cell" href="{{ remove_url|e.attr }}" data-i18n="gettext">Remove Filetype</a>
 		</td>
 	</tr>
 	{{/ filetype_list }}

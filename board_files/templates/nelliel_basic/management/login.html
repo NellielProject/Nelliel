@@ -1,5 +1,5 @@
-
-<form accept-charset="utf-8" action="{{ form_action }}" method="post">
+{{% FILTERS }}
+<form accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post">
 	<div>
 		<span data-i18n="gettext">Username: </span><input type="text" name="username" size="16">
 	</div>

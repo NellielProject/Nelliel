@@ -1,3 +1,4 @@
+{{% FILTERS }}
 <div class="manage-section-header" data-i18n="gettext">Installed Icon Sets</div>
 <table class="data-table">
 	<tr class="manage-header">
@@ -16,7 +17,7 @@
 		<td>{{ directory }}</td>
 		<td>
 			{{^ is_default }}
-			<a class="display-cell" href="{{ default_url }}" data-i18n="gettext">Make Default</a>
+			<a class="display-cell" href="{{ default_url|e.attr }}" data-i18n="gettext">Make Default</a>
 			{{/ is_default }}
 			{{# is_default }}
 			<span data-i18n="gettext">Default Icon Set</span>
@@ -24,7 +25,7 @@
 		</td>
 		<td>
 			{{^ is_default }}
-			<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Icon Set</a>
+			<a class="display-cell" href="{{ remove_url|e.attr }}" data-i18n="gettext">Remove Icon Set</a>
 			{{/ is_default }}
 		</td>
 	</tr>
@@ -48,7 +49,7 @@
 		<td>{{ directory }}</td>
 		<td>
 			{{^ is_installed }}
-			<a class="display-cell" href="{{ install_url }}" data-i18n="gettext">Install Icon Set</a>
+			<a class="display-cell" href="{{ install_url|e.attr }}" data-i18n="gettext">Install Icon Set</a>
 			{{/ is_installed }}
 			{{# is_installed }}
 			<span data-i18n="gettext">Icon Set Installed</span>

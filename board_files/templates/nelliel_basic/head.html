@@ -1,15 +1,15 @@
-
+{{% FILTERS }}
 <head>
 	<meta http-equiv="content-type"  content="text/html;charset=utf-8">
 	<meta name="robots" content="noarchive">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<script src="{{ main_js_file }}"></script>
-	<script>{{& js_onload }}</script>
-	<script>{{& js_set_style }}</script>
+	<script src="{{ main_js_file|e.attr }}"></script>
+	<script>{{ js_onload|e.attr }}</script>
+	<script>{{ js_set_style|e.attr }}</script>
 {{# stylesheets }}
-	<link rel="{{ stylesheet }}" data-style-type="style-board"  type="text/css" href="{{ stylesheet_url }}" data-id="{{ style_id }}" title="{{ style_name }}">
+	<link rel="{{ stylesheet|e.attr }}" data-style-type="style-board"  type="text/css" href="{{ stylesheet_url|e.attr }}" data-id="{{ style_id|e.attr }}" title="{{ style_name|e.attr }}">
 {{/ stylesheets }}
-	<link rel="icon" href="{{ favicon_url }}">
+	<link rel="icon" href="{{ favicon_url|e.attr }}">
 	<title>{{ page_title }}</title>
 {{# use_honeypot }}
 	<style>{{ honeypot_css }}</style>

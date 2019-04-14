@@ -1,0 +1,20 @@
+<form id="form-content-action" class="content-page" accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post">
+	{{# threads }}
+	<div id="{{ thread_corral_id|attr }}" class="thread-corral">
+	{{# op_post }}
+		{{> thread/post }}
+	{{/ op_post }}
+		<div id="{{ thread_expand_id|attr }}">
+		{{# abbreviate }}
+			<span class="omitted-posts">{{ omitted_count }}<span data-i18n="gettext">  posts omitted. Click Reply or Expand Thread to view.</span><br></span>
+		{{/ abbreviate }}
+		{{# thread_posts }}
+			{{> thread/post }}
+		{{/ thread_posts }}
+		</div>
+	</div>
+	<hr class="clear">
+	{{/ threads }}
+	{{> menu/index_navigation }}
+	{{> thread/footer_form }}
+</form>

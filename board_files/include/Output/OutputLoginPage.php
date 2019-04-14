@@ -34,7 +34,7 @@ class OutputLoginPage extends OutputCore
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/login', $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
-        $output = $this->output('page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;
     }
