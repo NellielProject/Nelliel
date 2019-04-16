@@ -34,7 +34,7 @@ class OutputPanelBoardSettings extends OutputCore
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_header = new \Nelliel\Output\OutputHeader($this->domain);
-        
+
         if ($defaults)
         {
             $manage_headers = ['header' => _gettext('General Management'),
@@ -44,10 +44,10 @@ class OutputPanelBoardSettings extends OutputCore
         {
             $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')];
         }
-        
+
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        
+
         if ($defaults)
         {
             $table_name = BOARD_DEFAULTS_TABLE;
@@ -62,19 +62,18 @@ class OutputPanelBoardSettings extends OutputCore
             $this->render_data['form_action'] = MAIN_SCRIPT . '?module=board-settings&action=update&board_id=' .
                     $this->domain->id();
         }
-        
+
         $all_filetypes = $filetypes->getFiletypeData();
         $all_categories = $filetypes->getFiletypeCategories();
         $category_nodes = array();
         $filetype_entries_nodes = array();
         $category_row_count = array();
-        
+
         // TODO: Needs optimizing
         foreach ($all_categories as $category)
         {
             $category_data = array();
-            $category_data['label'] = $category['label'];
-            $category_data['category_select']['label'] = 'Allow ' . $category['type'];
+            $category_data['label'] = _gettext($category['label']);
             $category_data['category_select']['name'] = $category['type'];
             $prepared = $this->database->prepare(
                     'SELECT "setting" FROM "' . $table_name .
@@ -83,18 +82,18 @@ class OutputPanelBoardSettings extends OutputCore
             $category_data['category_select']['value'] = ($enabled == 1) ? 'checked' : '';
             $entry_count = 0;
             $filetype_set = array();
-            
+
             foreach ($all_filetypes as $filetype)
             {
                 if ($filetype['type'] != $category['type'])
                 {
                     continue;
                 }
-                
+
                 if ($filetype['extension'] == $filetype['parent_extension'])
                 {
                     $filetype_set[$filetype['parent_extension']]['format'] = $filetype['format'];
-                    $filetype_set[$filetype['parent_extension']]['label'] = $filetype['label'] . ' - .' .
+                    $filetype_set[$filetype['parent_extension']]['label'] = _gettext($filetype['label']) . ' - .' .
                             $filetype['extension'];
                     $prepared = $this->database->prepare(
                             'SELECT "setting" FROM "' . $table_name .
@@ -108,9 +107,9 @@ class OutputPanelBoardSettings extends OutputCore
                     $filetype_set[$filetype['parent_extension']]['label'] .= ', .' . $filetype['extension'];
                 }
             }
-            
+
             $entry_row['entry'] = array();
-            
+
             foreach ($filetype_set as $data)
             {
                 if (count($entry_row['entry']) >= 4)
@@ -118,23 +117,23 @@ class OutputPanelBoardSettings extends OutputCore
                     $category_data['entry_rows'][] = $entry_row;
                     $entry_row['entry'] = array();
                 }
-                
+
                 $entry_row['entry'][] = $data;
             }
-            
+
             $category_data['entry_rows'][] = $entry_row;
             $this->render_data['categories'][] = $category_data;
         }
-        
+
         $user_lock_override = $user->domainPermission($this->domain, 'perm_board_config_lock_override');
         $this->render_data['defaults'] = $defaults;
         $result = $this->database->query('SELECT * FROM "' . $table_name . '"');
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-        
+
         foreach ($rows as $config_line)
         {
             $config_data = array('display' => true);
-            
+
             if ($config_line['data_type'] == 'boolean')
             {
                 if ($config_line['setting'] == 1)
@@ -153,20 +152,20 @@ class OutputPanelBoardSettings extends OutputCore
                     $config_data['value'] = $config_line['setting'];
                 }
             }
-            
+
             if ($config_line['edit_lock'] == 1)
             {
                 $config_data['locked'] = 'checked';
-                
+
                 if (!$user_lock_override)
                 {
                     $config_data['disabled'] = 'disabled';
                 }
             }
-            
+
             $this->render_data[$config_line['config_name']] = $config_data;
         }
-        
+
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile(
                 'management/panels/board_settings_panel', $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);

@@ -26,12 +26,12 @@ class OutputPanelPermissions extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
-        
+
         if (!$user->domainPermission($this->domain, 'perm_permissions_access'))
         {
             nel_derp(450, _gettext('You are not allowed to access the Permissions panel.'));
         }
-        
+
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
@@ -45,19 +45,19 @@ class OutputPanelPermissions extends OutputCore
         $this->render_data['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                 ['module' => 'permissions', 'action' => 'add']);
         $bgclass = 'row1';
-        
+
         foreach ($permissions as $permission)
         {
             $permission_data = array();
             $permission_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $permission_data['permission'] = $permission['permission'];
-            $permission_data['description'] = $permission['description'];
+            $permission_data['description'] = _gettext($permission['description']);
             $permission_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'permissions', 'action' => 'remove', 'permission' => $permission['permission']]);
             $this->render_data['permission_list'][] = $permission_data;
         }
-        
+
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/permissions_panel',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);

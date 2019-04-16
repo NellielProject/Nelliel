@@ -87,7 +87,7 @@ class Language
             nel_derp(390, _gettext('You are not allowed to extract the gettext strings.'));
         }
 
-        $extractor = new \Nelliel\Language\LanguageExtractor();
+        $extractor = new \Nelliel\Language\LanguageExtractor($domain);
         $file_handler = new \Nelliel\FileHandler();
         $extracted = $extractor->assemblePoString($default_textdomain, $default_category);
 

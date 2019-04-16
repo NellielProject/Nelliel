@@ -7,13 +7,18 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domain;
+use PDO;
+
 class LanguageExtractor
 {
+    private $domain;
     private $language;
     private $gettext_helpers;
 
-    function __construct()
+    function __construct(Domain $domain)
     {
+        $this->domain = $domain;
         $this->language = new Language();
         $this->gettext_helpers = new \SmallPHPGettext\Helpers();
     }
@@ -24,6 +29,7 @@ class LanguageExtractor
         $strings = array();
         $strings = $this->parseHTMLFiles($strings, $default_category);
         $strings = $this->parseSiteFiles($strings, $default_category);
+        $strings = $this->parseDatabaseEntries($strings, $default_category);
 
         foreach ($strings as $category => $entries)
         {
@@ -350,6 +356,39 @@ class LanguageExtractor
                         $strings[$default_category][$msgid]['comments'][$location] = '#:';
                     }
                 }
+            }
+        }
+
+        return $strings;
+    }
+
+    private function parseDatabaseEntries(array $strings, string $default_category)
+    {
+        $database = $this->domain->database();
+        $filetype_labels = $database->executeFetchAll('SELECT "label" FROM "' . FILETYPES_TABLE . '"', PDO::FETCH_COLUMN);
+
+        foreach ($filetype_labels as $label)
+        {
+            if ($label !== '' && !is_null($label))
+            {
+                $msgid = $label;
+                $strings[$default_category][$msgid]['msgid'] = $label;
+                $strings[$default_category][$msgid]['comments']['(Database) Table: ' . FILETYPES_TABLE .
+                        ' | Column: label'] = '#:';
+            }
+        }
+
+        $permission_description = $database->executeFetchAll('SELECT "description" FROM "' . PERMISSIONS_TABLE . '"',
+                PDO::FETCH_COLUMN);
+
+        foreach ($permission_description as $description)
+        {
+            if ($description !== '' && !is_null($description))
+            {
+                $msgid = $description;
+                $strings[$default_category][$msgid]['msgid'] = $description;
+                $strings[$default_category][$msgid]['comments']['(Database) Table: ' . PERMISSIONS_TABLE .
+                        ' | Column: description'] = '#:';
             }
         }
 

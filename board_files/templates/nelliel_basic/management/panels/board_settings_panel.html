@@ -1234,15 +1234,13 @@
 	<hr>
 	{{# categories }}
 	<div class="display-table text-left">
-		<div class="display-row">
-			<span class="display-cell">{{ label }}</span>
-		</div>
 		{{# category_select }}
 		<div class="display-row">
 			<span class="display-cell">
+				<br>
 				<input type="hidden" name="{{ name }}" value="0">
 				<input id="{{ name }}" type="checkbox" name="{{ name }}" value="1" {{ value }}>
-				<label for="{{ name }}">{{ label }}</label>
+				<label for="{{ name }}" class="bold">{{ label }}</label>
 			</span>
 		</div>
 		{{/ category_select }}
