@@ -27,25 +27,25 @@ class OutputPanelRoles extends OutputCore
         {
             return;
         }
-        
+
         $user = $parameters['user'];
-        
+
         if (!$user->domainPermission($this->domain, 'perm_roles_access'))
         {
             nel_derp(341, _gettext('You are not allowed to access the bans panel.'));
         }
-        
+
         switch ($parameters['section'])
         {
             case 'panel':
                 $output = $this->renderPanel($parameters, $data_only);
                 break;
-            
+
             case 'edit':
                 $output = $this->renderEdit($parameters, $data_only);
                 break;
         }
-        
+
         return $output;
     }
 
@@ -64,7 +64,7 @@ class OutputPanelRoles extends OutputCore
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $roles = $this->database->executeFetchAll('SELECT * FROM "' . ROLES_TABLE . '"', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
-        
+
         foreach ($roles as $role)
         {
             $role_data = array();
@@ -78,9 +78,9 @@ class OutputPanelRoles extends OutputCore
             $role_row_nodes['remove_url'] = MAIN_SCRIPT . '?module=roles&action=remove&role-id=' . $role['role_id'];
             $this->render_data['roles_list'][] = $role_data;
         }
-        
+
         $this->render_data['new_role_url'] = MAIN_SCRIPT . '?module=roles&action=new';
-        
+
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/roles_panel_main',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
@@ -106,7 +106,7 @@ class OutputPanelRoles extends OutputCore
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit Role')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        
+
         if (is_null($role_id))
         {
             $this->render_data['form_action'] = MAIN_SCRIPT . '?module=roles&action=add';
@@ -115,7 +115,7 @@ class OutputPanelRoles extends OutputCore
         {
             $this->render_data['form_action'] = MAIN_SCRIPT . '?module=roles&action=update&role-id=' . $role_id;
         }
-        
+
         if (!is_null($role_id))
         {
             $this->render_data['role_id'] = $role->auth_data['role_id'];
@@ -123,14 +123,14 @@ class OutputPanelRoles extends OutputCore
             $this->render_data['role_title'] = $role->auth_data['role_title'];
             $this->render_data['capcode_text'] = $role->auth_data['capcode_text'];
         }
-        
+
         $permissions_list = $this->database->executeFetchAll(
                 'SELECT * FROM "' . PERMISSIONS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
-        
+
         foreach ($permissions_list as $permission)
         {
             $permission_data = array();
-            
+
             if (!is_null($role_id))
             {
                 if ($role->checkPermission($permission['permission']))
@@ -138,12 +138,12 @@ class OutputPanelRoles extends OutputCore
                     $permission_data['checked'] = 'checked';
                 }
             }
-            
+
             $permission_data['permission'] = $permission['permission'];
             $permission_data['label'] = '(' . $permission['permission'] . ') - ' . $permission['description'];
             $this->render_data['permissions_list'][] = $permission_data;
         }
-        
+
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/roles_panel_edit',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);

@@ -29,12 +29,12 @@ class OutputFooter extends OutputCore
         $show_timer = ($parameters['show_timer']) ?? true;
         $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
         $output_menu = new OutputMenu($this->domain);
-        
+
         if ($this->render_data['show_styles'])
         {
             $this->render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot], true);
         }
-        
+
         $this->render_data['nelliel_version'] = NELLIEL_VERSION;
         $this->render_data['js_ui_url'] = $dotdot . SCRIPTS_WEB_PATH . 'ui.js';
         $output = $this->output('footer', $data_only, true);
@@ -47,7 +47,7 @@ class OutputFooter extends OutputCore
                 'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
                 PDO::FETCH_ASSOC);
         $style_set = array();
-        
+
         foreach ($styles as $style)
         {
             $style_data = array();
@@ -58,7 +58,7 @@ class OutputFooter extends OutputCore
             $style_data['style_name'] = $info['name'];
             $style_set[] = $style_data;
         }
-        
+
         return $style_set;
     }
 }

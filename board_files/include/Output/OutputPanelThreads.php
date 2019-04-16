@@ -27,25 +27,25 @@ class OutputPanelThreads extends OutputCore
         {
             return;
         }
-        
+
         $user = $parameters['user'];
-        
+
         if (!$user->domainPermission($this->domain, 'perm_threads_access'))
         {
             nel_derp(341, _gettext('You are not allowed to access the bans panel.'));
         }
-        
+
         switch ($parameters['section'])
         {
             case 'panel':
                 $output = $this->renderPanel($parameters, $data_only);
                 break;
-            
+
             case 'expanded_thread':
                 $output = $this->renderExpandedThread($parameters, $data_only);
                 break;
         }
-        
+
         return $output;
     }
 
@@ -64,7 +64,7 @@ class OutputPanelThreads extends OutputCore
                 'SELECT * FROM "' . $this->domain->reference('threads_table') .
                 '" ORDER BY "sticky" DESC, "last_update" DESC', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
-        
+
         foreach ($thread_data as $thread)
         {
             $thread_info = array();
@@ -79,7 +79,7 @@ class OutputPanelThreads extends OutputCore
             $thread_info['expand_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
                     '&action=expand-thread&content-id=' . $base_content_id;
             $thread_info['thread_id'] = $thread['thread_id'];
-            
+
             if ($thread['sticky'] == 1)
             {
                 $thread_info['sticky_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
@@ -92,7 +92,7 @@ class OutputPanelThreads extends OutputCore
                         '&action=sticky&content-id=' . $base_content_id;
                 $thread_info['sticky_text'] = _gettext('Sticky Thread');
             }
-            
+
             if ($thread['locked'] == 1)
             {
                 $thread_info['lock_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
@@ -105,7 +105,7 @@ class OutputPanelThreads extends OutputCore
                         '&action=lock&content-id=' . $base_content_id;
                 $thread_info['lock_text'] = _gettext('Lock Thread');
             }
-            
+
             $thread_info['delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
                     '&action=delete&content-id=' . $base_content_id;
             $thread_info['delete_text'] = _gettext('Delete Thread');
@@ -119,7 +119,7 @@ class OutputPanelThreads extends OutputCore
             $thread_info['total_files'] = $thread['total_files'];
             $this->render_data['threads'][] = $thread_info;
         }
-        
+
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/thread_panel',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
@@ -146,7 +146,7 @@ class OutputPanelThreads extends OutputCore
                 '" WHERE "parent_thread" = ? ORDER BY "post_time" DESC');
         $post_data = $this->database->executePreparedFetchAll($prepared, [$thread_id], PDO::FETCH_ASSOC);
         $bgclass = 'row1';
-        
+
         foreach ($post_data as $post)
         {
             $post_info = array();
@@ -171,7 +171,7 @@ class OutputPanelThreads extends OutputCore
             $post_info['comment'] = $post['comment'];
             $this->render_data['posts'][] = $post_info;
         }
-        
+
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/thread_panel_expand',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);

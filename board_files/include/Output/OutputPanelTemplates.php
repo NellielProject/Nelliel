@@ -26,12 +26,12 @@ class OutputPanelTemplates extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
-        
+
         if (!$user->domainPermission($this->domain, 'perm_templates_access'))
         {
             nel_derp(341, _gettext('You are not allowed to access the templates panel.'));
         }
-        
+
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
@@ -44,7 +44,7 @@ class OutputPanelTemplates extends OutputCore
                 'SELECT * FROM "' . TEMPLATES_TABLE . '" ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
         $installed_ids = array();
         $bgclass = 'row1';
-        
+
         foreach ($templates as $template)
         {
             $template_data = array();
@@ -63,11 +63,11 @@ class OutputPanelTemplates extends OutputCore
                     ['module' => 'templates', 'action' => 'remove', 'template-id' => $template['id']]);
             $this->render_data['installed_list'][] = $template_data;
         }
-        
+
         $ini_parser = new \Nelliel\INIParser($this->file_handler);
         $template_inis = $ini_parser->parseDirectories(TEMPLATES_FILE_PATH, 'template_info.ini');
         $bgclass = 'row1';
-        
+
         foreach ($template_inis as $template)
         {
             $template_data = array();
@@ -82,7 +82,7 @@ class OutputPanelTemplates extends OutputCore
                     ['module' => 'templates', 'action' => 'add', 'template-id' => $template['id']]);
             $this->render_data['available_list'][] = $template_data;
         }
-        
+
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/templates_panel',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);

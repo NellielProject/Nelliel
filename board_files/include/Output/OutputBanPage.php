@@ -38,7 +38,7 @@ class OutputBanPage extends OutputCore
         $dt->add(new \DateInterval('PT' . ($ban_expire - time()) . 'S'));
         $interval = $dt->diff(new \DateTime());
         $duration = '';
-        
+
         if ($interval->d > 0)
         {
             $duration .= $interval->format('%a days %h hours');
@@ -51,7 +51,7 @@ class OutputBanPage extends OutputCore
         {
             $duration .= $interval->format('%i minutes');
         }
-        
+
         $this->render_data['ban_length'] = $duration;
         $this->render_data['ban_expiration'] = date("F jS, Y H:i e", $ban_expire);
         $this->render_data['ban_reason'] = $ban_info['reason'];
@@ -59,18 +59,18 @@ class OutputBanPage extends OutputCore
         $this->render_data['appealed'] = $ban_info['appeal_status'] != 0;
         $this->render_data['reviewed'] = $ban_info['appeal_status'] == 1;
         $this->render_data['responded'] = $ban_info['appeal_status'] > 1;
-        
+
         if ($ban_info['appeal_status'] == 0)
         {
             $this->render_data['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'ban-page', 'action' => 'add-appeal']);
-            
+
             if (!empty($ban_info['board_id']))
             {
                 $this->render_data['form_action'] .= '&board_id=' . $ban_info['board_id'];
             }
         }
-        
+
         if ($ban_info['appeal_status'] == 2 || $ban_info['appeal_status'] == 3)
         {
             if ($ban_info['appeal_status'] == 2)
@@ -78,19 +78,19 @@ class OutputBanPage extends OutputCore
                 $this->render_data['what_done'] = _gettext(
                         'You appeal has been reviewed and denied. You cannot appeal again.');
             }
-            
+
             if ($ban_info['appeal_status'] == 3)
             {
                 $this->render_data['what_done'] = _gettext(
                         'Your appeal has been reviewed and the ban has been altered.');
             }
-            
+
             if ($ban_info['appeal_response'] != '')
             {
                 $this->render_data['appeal_response'] = $ban_info['appeal_response'];
             }
         }
-        
+
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('ban_page', $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

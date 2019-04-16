@@ -32,14 +32,12 @@ class OutputPost extends OutputCore
         $dotdot = $parameters['dotdot'] ?? '';
         $json_post = $parameters['json_instances']['post'];
         $post_data = $parameters['post_data'] ?? $this->getPostFromDatabase($post_id);
-
         $this->startTimer();
         $json_post->storeData($json_post->prepareData($post_data), 'post');
         $response = $post_data['op'] != 1;
         $thread_content_id = new ContentID(ContentID::createIDString($post_data['parent_thread']));
         $post_content_id = new ContentID(
                 ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
-
         $web_paths['base_domain'] = BASE_DOMAIN . BASE_WEB_PATH;
         $web_paths['board'] = '//' . $web_paths['base_domain'] .
                 rawurlencode($this->domain->reference('board_directory')) . '/';

@@ -124,12 +124,9 @@ class OutputHeader extends OutputCore
         $this->render_data['site_navigation'] = $output_menu->render(
                 ['menu' => 'site_navigation', 'dotdot' => $dotdot, 'ignore_session' => $ignore_session], true);
 
-        $this->render_data['name'] = ($this->domain->setting('show_name')) ? $this->domain->setting(
-                'name') : '';
-        $this->render_data['slogan'] = ($this->domain->setting('show_slogan')) ? $this->domain->setting(
-                'slogan') : '';
-        $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting(
-                'banner') : '';
+        $this->render_data['name'] = ($this->domain->setting('show_name')) ? $this->domain->setting('name') : '';
+        $this->render_data['slogan'] = ($this->domain->setting('show_slogan')) ? $this->domain->setting('slogan') : '';
+        $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting('banner') : '';
         $this->render_data['is_site_header'] = false;
         $this->render_data['is_board_header'] = true;
 

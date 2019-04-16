@@ -26,12 +26,12 @@ class OutputPanelFileFilters extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
-        
+
         if (!$user->domainPermission($this->domain, 'perm_file_filters_access'))
         {
             nel_derp(341, _gettext('You are not allowed to access the File Filters panel.'));
         }
-        
+
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
@@ -40,7 +40,7 @@ class OutputPanelFileFilters extends OutputCore
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('File Filters')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        
+
         if ($this->domain->id() !== '')
         {
             $prepared = $this->database->prepare(
@@ -52,11 +52,11 @@ class OutputPanelFileFilters extends OutputCore
             $filters = $this->database->executeFetchAll(
                     'SELECT * FROM "' . FILE_FILTERS_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
         }
-        
+
         $this->render_data['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                 ['module' => 'file-filters', 'action' => 'add']);
         $bgclass = 'row1';
-        
+
         foreach ($filters as $filter)
         {
             $filter_data = array();
@@ -71,7 +71,7 @@ class OutputPanelFileFilters extends OutputCore
                     ['module' => 'file-filters', 'action' => 'remove', 'filter-id' => $filter['entry']]);
             $this->render_data['filter_list'][] = $filter_data;
         }
-        
+
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/file_filters_panel',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);

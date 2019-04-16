@@ -27,25 +27,25 @@ class OutputPanelUsers extends OutputCore
         {
             return;
         }
-        
+
         $user = $parameters['user'];
-        
+
         if (!$user->domainPermission($this->domain, 'perm_user_access'))
         {
             nel_derp(300, _gettext('You are not allowed to access the users panel.'));
         }
-        
+
         switch ($parameters['section'])
         {
             case 'panel':
                 $output = $this->renderPanel($parameters, $data_only);
                 break;
-            
+
             case 'edit':
                 $output = $this->renderEdit($parameters, $data_only);
                 break;
         }
-        
+
         return $output;
     }
 
@@ -64,7 +64,7 @@ class OutputPanelUsers extends OutputCore
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $users = $this->database->executeFetchAll('SELECT * FROM "' . USERS_TABLE . '"', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
-        
+
         foreach ($users as $user_info)
         {
             $user_data = array();
@@ -78,7 +78,7 @@ class OutputPanelUsers extends OutputCore
             $user_data['remove_url'] = MAIN_SCRIPT . '?module=users&action=remove&user-id=' . $user_info['user_id'];
             $this->render_data['users_list'][] = $user_data;
         }
-        
+
         $this->render_data['new_user_url'] = MAIN_SCRIPT . '?module=users&action=new';
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/users_panel_main',
                 $this->render_data);
@@ -104,7 +104,7 @@ class OutputPanelUsers extends OutputCore
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit User')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        
+
         if (is_null($user_id))
         {
             $this->render_data['form_action'] = MAIN_SCRIPT . '?module=users&action=add';
@@ -118,18 +118,18 @@ class OutputPanelUsers extends OutputCore
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';
             $this->render_data['super_admin'] = ($edit_user->isSuperAdmin()) ? 'checked' : '';
         }
-        
+
         $prepared = $this->database->prepare(
                 'SELECT "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
         $site_role = $this->database->executePreparedFetch($prepared, array($user_id, ''), PDO::FETCH_COLUMN);
-        
+
         if (!empty($site_role))
         {
             $this->render_data['site_role_id'] = $site_role;
         }
-        
+
         $board_list = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
-        
+
         foreach ($board_list as $board)
         {
             $board_role_data = array();
@@ -138,15 +138,15 @@ class OutputPanelUsers extends OutputCore
                     'SELECT "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
             $role_id = $this->database->executePreparedFetch($prepared, array($user_id, $board['board_id']),
                     PDO::FETCH_COLUMN);
-            
+
             if (!empty($role_id))
             {
                 $board_role_data['role_id'] = $user_role['role_id'];
             }
-            
+
             $this->render_data['board_roles'][] = $board_role_data;
         }
-        
+
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/users_panel_edit',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);

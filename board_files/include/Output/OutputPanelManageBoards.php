@@ -27,18 +27,18 @@ class OutputPanelManageBoards extends OutputCore
         {
             return;
         }
-        
+
         switch ($parameters['section'])
         {
             case 'panel':
                 $output = $this->panel($parameters, $data_only);
                 break;
-            
+
             case 'remove_interstitial':
                 $output = $this->removeInterstitial($parameters, $data_only);
                 break;
         }
-        
+
         return $output;
     }
 
@@ -47,12 +47,12 @@ class OutputPanelManageBoards extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
-        
+
         if (!$user->domainPermission($this->domain, 'perm_manage_boards_access'))
         {
             nel_derp(370, _gettext('You are not allowed to access the board manager panel.'));
         }
-        
+
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
@@ -65,7 +65,7 @@ class OutputPanelManageBoards extends OutputCore
         $board_data = $this->database->executeFetchAll(
                 'SELECT * FROM "' . BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
-        
+
         foreach ($board_data as $board_info)
         {
             $board_data = array();
@@ -74,7 +74,7 @@ class OutputPanelManageBoards extends OutputCore
             $board_data['id'] = $board_info['board_id'];
             $board_data['directory'] = $board_info['board_id'];
             $board_data['db_prefix'] = $board_info['db_prefix'];
-            
+
             if ($board_info['locked'] == 0)
             {
                 $this->render_data['lock_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
@@ -89,12 +89,12 @@ class OutputPanelManageBoards extends OutputCore
                 $this->render_data['status'] = _gettext('Locked');
                 $this->render_data['lock_text'] = _gettext('Unlock Board');
             }
-            
+
             $board_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'remove']);
             $this->render_data['board_list'][] = $board_data;
         }
-        
+
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/manage_boards_panel',
                 $this->render_data);
         $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
