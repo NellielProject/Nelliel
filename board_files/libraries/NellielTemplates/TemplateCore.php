@@ -38,16 +38,16 @@ class TemplateCore
         $this->checkHTMLFixes($template);
     }
 
-    public function loadTemplateFromFile($template_file)
+    public function loadTemplateFromFile($template)
     {
-        if (!isset($this->templates[$template_file]))
+        if (!isset($this->templates[$template]))
         {
-            $this->initTemplateData($template_file);
+            $this->initTemplateData($template);
         }
 
-        if (file_exists($this->template_path . $template_file))
+        if (file_exists($this->template_path . $template))
         {
-            $this->templates[$template_file]['contents'] = file_get_contents($this->template_path . $template_file);
+            $this->templates[$template]['contents'] = file_get_contents($this->template_path . $template);
         }
 
         $this->checkHTMLFixes($template);

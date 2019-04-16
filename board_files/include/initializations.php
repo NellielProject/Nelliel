@@ -96,6 +96,7 @@ define('RUN_SETUP_CHECK', (bool)$base_config['run_setup_check']);
 define('DIRECTORY_PERM', $base_config['directory_perm']);
 define('FILE_PERM', $base_config['file_perm']);
 define('USE_INTERNAL_CACHE', $base_config['use_internal_cache']);
+define('USE_MUSTACHE_CACHE', $base_config['use_mustache_cache']);
 define('DEFAULT_LOCALE', $base_config['default_locale']);
 define('ENABLE_PLUGINS', $base_config['enable_plugins']);
 define('SECURE_SESSION_ONLY', $base_config['secure_session_only']);

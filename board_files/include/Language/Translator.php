@@ -27,11 +27,10 @@ class Translator
         $this->dom_render_core->loadDOMFromTemplate($dom_document, $template_contents);
         $this->translateDOM($dom_document);
 
-        if($return_dom)
+        if ($return_dom)
         {
             return $dom_document;
         }
-
 
         return $this->dom_render_core->renderFromDOM($dom_document, $template_id);
     }
@@ -43,12 +42,13 @@ class Translator
 
         foreach ($attribute_node_list as $node)
         {
-            if ($node->getAttribute('data-i18n') === 'gettext')
+            $split_attribute = explode('|', $node->getAttribute('data-i18n-attributes'), 2);
+
+            if ($split_attribute[0] === 'gettext')
             {
                 $this->gettextAttribute($node);
+                $node->removeAttribute('data-i18n-attributes');
             }
-
-            $node->removeAttribute('data-i18n-attributes');
         }
 
         foreach ($content_node_list as $node)
@@ -56,15 +56,15 @@ class Translator
             if ($node->getAttribute('data-i18n') === 'gettext')
             {
                 $this->gettextContent($node);
+                $node->removeAttribute('data-i18n');
             }
-
-            $node->removeAttribute('data-i18n');
         }
     }
 
     private function gettextAttribute($node)
     {
-        $attribute_list = explode(',', $node->getAttribute('data-i18n-attributes'));
+        $split_attribute = explode('|', $node->getAttribute('data-i18n-attributes'), 2);
+        $attribute_list = explode(',', $split_attribute[1]);
         $new_text = '';
 
         foreach ($attribute_list as $attribute_name)
@@ -72,17 +72,15 @@ class Translator
             $attribute_name = trim($attribute_name);
             $attribute_value = $node->getAttribute($attribute_name);
             $new_text = _gettext($attribute_value);
-            $attribute_node = $node->ownerDocument->createAttribute($attribute_name);
-            $attribute_node->value = $new_text;
+            $attribute_node = $node->ownerDocument->createFullAttribute($attribute_name, $new_text, 'none');
+            //$attribute_node->value = $new_text;
             $node->setAttributeNode($attribute_node);
         }
     }
 
     private function gettextContent($node)
     {
-        $new_text = '';
         $text = $node->getContent();
-        $new_text = _gettext($text);
-        $node->setContent($new_text);
+        $node->setContent(_gettext($text));
     }
 }

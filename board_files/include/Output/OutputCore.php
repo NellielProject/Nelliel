@@ -35,7 +35,7 @@ abstract class OutputCore
     protected function selectRenderCore(string $core_id)
     {
         $this->core_id = $core_id;
-        
+
         if ($core_id === 'mustache')
         {
             $this->render_core = new \Nelliel\RenderCoreMustache($this->domain);
@@ -63,9 +63,9 @@ abstract class OutputCore
         {
             return 0;
         }
-        
+
         $end_time = microtime(true);
-        
+
         if ($rounded)
         {
             return number_format($end_time - $this->timer_start, $precision);
@@ -81,7 +81,7 @@ abstract class OutputCore
         $output = null;
         $render_data = (empty($render_data)) ? $this->render_data : $render_data;
         $dom = (is_null($dom)) ? $this->dom : $dom;
-        
+
         if ($this->core_id === 'mustache')
         {
             if ($data_only)
@@ -97,16 +97,16 @@ abstract class OutputCore
                         return 'Page rendered in ' . $this->endTimer() . ' seconds.';
                     };
                 }
-                
+
                 $output = $this->render_core->renderFromTemplateFile($template, $render_data);
-                
+
                 if ($translate)
                 {
                     $output = $this->domain->translator()->translateHTML($output);
                 }
             }
         }
-        
+
         return $output;
     }
 }

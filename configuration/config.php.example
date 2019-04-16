@@ -149,6 +149,9 @@ $base_config['enable_plugins'] = true;
 // Once SSL set up for the site, it is recommended you set this to true.
 $base_config['secure_session_only'] = false;
 
+// Enable/disable template caching for Mustache.
+$base_config['use_mustache_cache'] = true;
+
 
 //
 // === Crypt Settings ===

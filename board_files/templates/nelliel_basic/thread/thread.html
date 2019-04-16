@@ -1,10 +1,10 @@
 {{% FILTERS }}
-<form class="content-page" accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post">
-	<div id="{{ thread_corral_id |e.attr}}" class="thread-corral">
+<form class="content-page" accept-charset="utf-8" action="{{ form_action }}" method="post">
+	<div id="{{ thread_corral_id }}" class="thread-corral">
 	{{# op_post }}
 		{{> thread/post }}
 	{{/ op_post }}
-		<div id="{{ thread_expand_id|e.attr }}">
+		<div id="{{ thread_expand_id }}">
 		{{# thread_posts }}
 			{{> thread/post }}
 		{{/ thread_posts }}

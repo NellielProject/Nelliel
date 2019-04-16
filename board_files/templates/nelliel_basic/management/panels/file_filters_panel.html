@@ -1,5 +1,5 @@
 {{% FILTERS }}
-<form accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post">
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" aria-label="Add file filter" data-i18n-attributes="gettext|aria-label">
 	<div class="display-table">
 		<div class="display-row">
 			<label for="hash_type" class="display-cell" data-i18n="gettext">Hash type (md5, sha1, sha256, sha512)</label>
@@ -18,7 +18,7 @@
 			<input id="board_id" class="display-cell" type="text" name="board_id" size="30">
 		</div>
 		<div class="display-row">
-			<input type="submit" value="Add Filter" data-i18n="gettext" data-i18n-attributes="value">
+			<input type="submit" value="Add Filter" data-i18n-attributes="gettext|value">
 		</div>
 	</div>
 </form>
@@ -33,14 +33,14 @@
 		<th data-i18n="gettext">Remove</th>
 	</tr>
 	{{# file_filter_list }}
-	<tr class="{{ bgclass|e.attr }}">
+	<tr class="{{ bgclass }}">
 		<td>{{ filter_id }}</td>
 		<td>{{ hash_type }}</td>
 		<td>{{ file_hash }}</td>
 		<td>{{ file_notes }}</td>
 		<td>{{ board_id }}</td>
 		<td>
-			<a class="display-cell" href="{{ remove_url|e.attr }}" data-i18n="gettext">Remove Filter</a>
+			<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Filter</a>
 		</td>
 	</tr>
 	{{/ file_filter_list }}

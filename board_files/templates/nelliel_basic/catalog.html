@@ -4,9 +4,9 @@
 	{{# catalog_entries }}
 	<div class="catalog-entry">
 		<div class="catalog-open-link">
-			<a href="{{ open_url|e.attr }}">
+			<a href="{{ open_url }}">
 		{{# has_preview }}
-			<img src="{{ preview_url|e.attr }}" width="{{ preview_width|e.attr }}" height="{{ preview_height|e.attr }}">
+			<img src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}">
 		{{/ has_preview }}
 		{{^ has_preview }}
 			{{ open_text }}

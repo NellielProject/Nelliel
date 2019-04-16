@@ -21,26 +21,42 @@ class RenderCoreMustache extends RenderCore
         $this->escaper = new \phpDOMExtend\DOMEscaper();
         $this->template_loaders['file'] = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(),
                 ['extension' => '.html']);
-        //if (USE_MUSTACHE_CACHE)
-        //{
-        $this->mustache_engine = new \Mustache_Engine(
-                ['loader' => $this->template_loaders['file'], 'partials_loader' => $this->template_loaders['file'],
-                    'cache' => CACHE_FILE_PATH . 'mustache']);
-        /*}
-         else
-         {
-         $this->mustache_engine = new \Mustache_Engine(
-         ['loader' => $this->template_loaders['file'],
-         'partials_loader' => $this->template_loaders['file']]);
-         }*/
 
-        $this->mustache_engine->addHelper('e', [
-        'html' => function($value) {return $this->escapeString($value, 'html');},
-        'attr' => function($value) {return $this->escapeString($value, 'attr');},
-        'url' => function($value) {return $this->escapeString($value, 'url');},
-        'js' => function($value) {return $this->escapeString($value, 'js');},
-        'css' => function($value) {return $this->escapeString($value, 'css');},
-        ]);
+        if (USE_MUSTACHE_CACHE)
+        {
+            $this->mustache_engine = new \Mustache_Engine(
+                    ['loader' => $this->template_loaders['file'],
+                        'partials_loader' => $this->template_loaders['file'], 'cache' => CACHE_FILE_PATH . 'mustache']);
+        }
+        else
+        {
+            $this->mustache_engine = new \Mustache_Engine(
+                    ['loader' => $this->template_loaders['file'],
+                        'partials_loader' => $this->template_loaders['file']]);
+        }
+
+        $this->mustache_engine->addHelper('esc',
+                [
+                    'html' => function ($value)
+                    {
+                        return $this->escapeString($value, 'html');
+                    },
+                    'attr' => function ($value)
+                    {
+                        return $this->escapeString($value, 'attr');
+                    },
+                    'url' => function ($value)
+                    {
+                        return $this->escapeString($value, 'url');
+                    },
+                    'js' => function ($value)
+                    {
+                        return $this->escapeString($value, 'js');
+                    },
+                    'css' => function ($value)
+                    {
+                        return $this->escapeString($value, 'css');
+                    }]);
     }
 
     public function renderEngine()
@@ -61,9 +77,6 @@ class RenderCoreMustache extends RenderCore
 
     public function escapeString(string $string = null, string $type)
     {
-
-        $split = explode('|', $string);
-        $escape_param = end($split);
         $this->escaper->doEscaping($string, $type);
         return $string;
     }

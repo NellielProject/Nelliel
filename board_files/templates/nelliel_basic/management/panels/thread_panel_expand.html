@@ -12,7 +12,7 @@
 		<th data-i18n="gettext">Actions</th>
 	</tr>
 	{{# posts }}
-	<tr class="{{ bgclass|e.attr }}">
+	<tr class="{{ bgclass }}">
 		<td>{{ post_number }}</td>
 		<td>{{ parent_thread }}</td>
 		<td>{{ post_time }}</td>
@@ -20,12 +20,12 @@
 		<td>{{ poster_name }}</td>
 		<td>{{ email }}</td>
 		<td>
-			<a href="{{ thread_url|e.attr }}" rel="external">{{ subject }}</a>
+			<a href="{{ thread_url }}" rel="external">{{ subject }}</a>
 		</td>
 		<td>{{ comment }}</td>
 		<td>
-			<span>[<a href="{{ sticky_url|e.attr }}">{{ sticky_text }}</a>]&nbsp;</span>
-			<span>[<a href="{{ delete_url|e.attr }}">{{ delete_text }}</a>]</span>
+			<span>[<a href="{{ sticky_url }}">{{ sticky_text }}</a>]&nbsp;</span>
+			<span>[<a href="{{ delete_url }}">{{ delete_text }}</a>]</span>
 		</td>
 	</tr>
 	{{/ posts }}

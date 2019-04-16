@@ -8,29 +8,31 @@
 {{# site_navigation }}
 	{{> menu/site_navigation }}
 {{/ site_navigation }}
-{{# is_site_header }}
-<div class="site-name">{{ name }}</div>
-<div class="site-slogan">{{ slogan }}</div>
-<div class="site-banner"><img src="{{ banner_url|e.attr }}"></div>
-{{/ is_site_header }}
-{{# is_board_header }}
-<h1 class="board-name">{{ name }}</h1>
-{{# slogan }}
-<h2 class="board-slogan">{{ slogan }}</h2>
-{{/ slogan }}
-{{# banner_url }}
-<div class="board-banner"><img src="{{ banner_url|e.attr }}"></div>
-{{/ banner_url }}
-{{/ is_board_header }}
-<hr class="clear">
-{{# show_manage_headers }}
-<div class="manage-header">
-	<span>{{ manage_header }}</span>
-</div>
-<div class="manage-board-header">
-	<span>{{ manage_board_header }}</span>
-</div>
-<div class="manage-sub-header">
-	<span>{{ manage_sub_header }}</span>
-</div>
-{{/ show_manage_headers }}
+<header role="banner">
+	{{# is_site_header }}
+	<h1 class="site-name">{{ name }}</h1>
+	<h2 class="site-slogan">{{ slogan }}</h2>
+	<div class="site-banner"><img src="{{ banner_url }}"></div>
+	{{/ is_site_header }}
+	{{# is_board_header }}
+	<h1 class="board-name">{{ name }}</h1>
+	{{# slogan }}
+	<h2 class="board-slogan">{{ slogan }}</h2>
+	{{/ slogan }}
+	{{# banner_url }}
+	<div class="board-banner"><img src="{{ banner_url }}"></div>
+	{{/ banner_url }}
+	{{/ is_board_header }}
+	<hr class="clear">
+	{{# show_manage_headers }}
+	<div class="manage-header">
+		<span>{{ manage_header }}</span>
+	</div>
+	<div class="manage-board-header">
+		<span>{{ manage_board_header }}</span>
+	</div>
+	<div class="manage-sub-header">
+		<span>{{ manage_sub_header }}</span>
+	</div>
+	{{/ show_manage_headers }}
+</header>

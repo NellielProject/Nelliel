@@ -8,10 +8,10 @@
 	<p>Your current IP is: <span class="bold">{{ ban_ip }}</span></p>
 </div>
 {{^ appealed }}
-<form accept-charset="utf-8" name="postingform" action="{{ form_action|e.attr }}" method="post" enctype="multipart/form-data">
+<form accept-charset="utf-8" name="postingform" action="{{ form_action }}" method="post" enctype="multipart/form-data" aria-label="Appeal this ban" data-i18n-attributes="gettext|aria-label">
 	<p data-i18n="gettext">If you wish, you may appeal this ban. Enter your reason why you should get unbanned in the box below. A staff member will (probably) review it.</p>
 	<textarea name="bawww" cols="30" rows="6"></textarea>
-	<input class="display-block" type="submit" value="Submit Appeal" data-i18n-attributes="value">
+	<input class="display-block" type="submit" value="Submit Appeal" data-i18n-attributes="gettext|value">
 </form>
 {{/ appealed }}
 {{# appealed }}

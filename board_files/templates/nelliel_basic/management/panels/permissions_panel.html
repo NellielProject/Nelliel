@@ -1,5 +1,5 @@
 {{% FILTERS }}
-<form accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post">
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" aria-label="Add permission" data-i18n-attributes="gettext|aria-label">
 	<div class="display-table">
 		<div class="display-row">
 			<label for="permission" class="display-cell" data-i18n="gettext">Permission</label>
@@ -10,7 +10,7 @@
 			<input id="description" class="display-cell" type="text" name="description" size="30">
 		</div>
 		<div class="display-row">
-			<input type="submit" value="Add Permission" data-i18n="gettext" data-i18n-attributes="value">
+			<input type="submit" value="Add Permission" data-i18n-attributes="gettext|value">
 		</div>
 	</div>
 </form>
@@ -22,11 +22,11 @@
 		<th data-i18n="gettext">Remove</th>
 	</tr>
 	{{# permission_list }}
-	<tr class="{{ bgclass|e.attr }}">
+	<tr class="{{ bgclass }}">
 		<td>{{ permission }}</td>
 		<td>{{ description }}</td>
 		<td>
-			<a class="display-cell" href="{{ remove_url|e.attr }}" data-i18n="gettext">Remove Permission</a>
+			<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Permission</a>
 		</td>
 	</tr>
 	{{/ permission_list }}

@@ -317,9 +317,11 @@ class LanguageExtractor
 
             foreach ($attribute_node_list as $node)
             {
-                if ($node->getAttribute('data-i18n') === 'gettext')
+                $split_attribute = explode('|', $node->getAttribute('data-i18n-attributes'), 2);
+
+                if ($split_attribute[0] === 'gettext')
                 {
-                    $attribute_list = explode(',', $node->getAttribute('data-i18n-attributes'));
+                    $attribute_list = explode(',', $split_attribute[1]);
 
                     foreach ($attribute_list as $attribute_name)
                     {

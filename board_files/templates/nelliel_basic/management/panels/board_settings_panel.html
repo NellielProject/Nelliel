@@ -1,5 +1,5 @@
 {{% FILTERS }}
-<form accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post" enctype="multipart/form-data">
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data" aria-label="Board settings" data-i18n-attributes="gettext|aria-label">
 	<div class="display-table">
 		<div class="display-row">
 			<span class="display-cell">
@@ -22,7 +22,7 @@
 				<label for="name" data-i18n="gettext">Board Name</label>
 			</span>
 			<span class="display-cell">
-				<input id="name" type="text" name="name" size="30" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="name" type="text" name="name" size="30" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ name }}
@@ -55,7 +55,7 @@
 				<label for="slogan" data-i18n="gettext">Board Slogan</label>
 			</span>
 			<span class="display-cell">
-				<input id="slogan" type="text" name="slogan" size="30" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="slogan" type="text" name="slogan" size="30" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ slogan }}
@@ -88,7 +88,7 @@
 				<label for="favicon" data-i18n="gettext">Favicon</label>
 			</span>
 			<span class="display-cell">
-				<input id="favicon" type="text" name="favicon" size="30" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="favicon" type="text" name="favicon" size="30" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ favicon }}
@@ -121,7 +121,7 @@
 				<label for="banner" data-i18n="gettext">Board banner (image)</label>
 			</span>
 			<span class="display-cell">
-				<input id="banner" type="text" name="banner" size="30" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="banner" type="text" name="banner" size="30" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ banner }}
@@ -154,7 +154,7 @@
 				<label for="locale" data-i18n="gettext">Locale for the board (use ISO language + country code)</label>
 			</span>
 			<span class="display-cell">
-				<input id="locale" type="text" name="locale" size="10" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="locale" type="text" name="locale" size="10" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ locale }}
@@ -171,7 +171,7 @@
 				<label for="date_format" data-i18n="gettext">Format for post time (uses PHP date() function)</label>
 			</span>
 			<span class="display-cell">
-				<input id="date_format" type="text" name="date_format" size="20" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="date_format" type="text" name="date_format" size="20" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ date_format }}
@@ -188,7 +188,7 @@
 				<label for="abbreviate_thread" data-i18n="gettext">How many posts in a thread before abbreviating it on the main page</label>
 			</span>
 			<span class="display-cell">
-				<input id="abbreviate_thread" type="text" name="abbreviate_thread" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="abbreviate_thread" type="text" name="abbreviate_thread" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ abbreviate_thread }}
@@ -205,7 +205,7 @@
 				<label for="threads_per_page" data-i18n="gettext">Threads per page</label>
 			</span>
 			<span class="display-cell">
-				<input id="threads_per_page" type="text" name="threads_per_page" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="threads_per_page" type="text" name="threads_per_page" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ threads_per_page }}
@@ -222,7 +222,7 @@
 				<label for="page_limit" data-i18n="gettext">Maximum number of pages</label>
 			</span>
 			<span class="display-cell">
-				<input id="page_limit" type="text" name="page_limit" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="page_limit" type="text" name="page_limit" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ page_limit }}
@@ -239,7 +239,7 @@
 				<label for="page_buffer" data-i18n="gettext">Page buffer before archiving or pruning</label>
 			</span>
 			<span class="display-cell">
-				<input id="page_buffer" type="text" name="page_buffer" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="page_buffer" type="text" name="page_buffer" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ page_buffer }}
@@ -256,7 +256,7 @@
 				<label for="max_posts" data-i18n="gettext">Maximum posts per thread</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_posts" type="text" name="max_posts" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_posts" type="text" name="max_posts" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_posts }}
@@ -273,7 +273,7 @@
 				<label for="max_bumps" data-i18n="gettext">Maximum thread bumps</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_bumps" type="text" name="max_bumps" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_bumps" type="text" name="max_bumps" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_bumps }}
@@ -317,7 +317,7 @@
 				<label for="template_id" data-i18n="gettext">ID of template for board to use</label>
 			</span>
 			<span class="display-cell">
-				<input id="template_id" type="text" name="template_id" size="30" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="template_id" type="text" name="template_id" size="30" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ template_id }}
@@ -334,7 +334,7 @@
 				<label for="filetype_icon_set_id" data-i18n="gettext">ID of icon set to use with filetypes</label>
 			</span>
 			<span class="display-cell">
-				<input id="filetype_icon_set_id" type="text" name="filetype_icon_set_id" size="30" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="filetype_icon_set_id" type="text" name="filetype_icon_set_id" size="30" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ filetype_icon_set_id }}
@@ -557,7 +557,7 @@
 				<label for="fgsfds_name" data-i18n="gettext">Name of the FGSFDS field</label>
 			</span>
 			<span class="display-cell">
-				<input id="fgsfds_name" type="text" name="fgsfds_name" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="fgsfds_name" type="text" name="fgsfds_name" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ fgsfds_name }}
@@ -574,7 +574,7 @@
 				<label for="max_post_files" data-i18n="gettext">Maximum number of files per post</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_post_files" type="text" name="max_post_files" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_post_files" type="text" name="max_post_files" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_post_files }}
@@ -591,7 +591,7 @@
 				<label for="thread_cooldown" data-i18n="gettext">Delay between new threads (seconds)</label>
 			</span>
 			<span class="display-cell">
-				<input id="thread_cooldown" type="text" name="thread_cooldown" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="thread_cooldown" type="text" name="thread_cooldown" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ thread_cooldown }}
@@ -608,7 +608,7 @@
 				<label for="reply_cooldown" data-i18n="gettext">Delay between new posts (seconds)</label>
 			</span>
 			<span class="display-cell">
-				<input id="reply_cooldown" type="text" name="reply_cooldown" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="reply_cooldown" type="text" name="reply_cooldown" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ reply_cooldown }}
@@ -625,7 +625,7 @@
 				<label for="max_name_length" data-i18n="gettext">Maximum length of name (255 or less)</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_name_length" type="text" name="max_name_length" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_name_length" type="text" name="max_name_length" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_name_length }}
@@ -642,7 +642,7 @@
 				<label for="max_email_length" data-i18n="gettext">Maximum length of e-mail (255 or less)</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_email_length" type="text" name="max_email_length" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_email_length" type="text" name="max_email_length" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_email_length }}
@@ -659,7 +659,7 @@
 				<label for="max_subject_length" data-i18n="gettext">Maximum length of subject (255 or less)</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_subject_length" type="text" name="max_subject_length" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_subject_length" type="text" name="max_subject_length" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_subject_length }}
@@ -676,7 +676,7 @@
 				<label for="max_comment_length" data-i18n="gettext">Maximum length of comment (# of characters)</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_comment_length" type="text" name="max_comment_length" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_comment_length" type="text" name="max_comment_length" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_comment_length }}
@@ -693,7 +693,7 @@
 				<label for="max_comment_lines" data-i18n="gettext">Maximum number of lines in comment</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_comment_lines" type="text" name="max_comment_lines" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_comment_lines" type="text" name="max_comment_lines" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_comment_lines }}
@@ -710,7 +710,7 @@
 				<label for="comment_display_lines" data-i18n="gettext">How many lines of comment to display</label>
 			</span>
 			<span class="display-cell">
-				<input id="comment_display_lines" type="text" name="comment_display_lines" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="comment_display_lines" type="text" name="comment_display_lines" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ comment_display_lines }}
@@ -727,7 +727,7 @@
 				<label for="max_source_length" data-i18n="gettext">Maximum length of source field (255 or less)</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_source_length" type="text" name="max_source_length" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_source_length" type="text" name="max_source_length" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_source_length }}
@@ -744,7 +744,7 @@
 				<label for="max_license_length" data-i18n="gettext">Maximum length of license field (255 or less)</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_license_length" type="text" name="max_license_length" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_license_length" type="text" name="max_license_length" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_license_length }}
@@ -761,7 +761,7 @@
 				<label for="max_filesize" data-i18n="gettext">Max file size (KB)</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_filesize" type="text" name="max_filesize" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_filesize" type="text" name="max_filesize" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_filesize_length }}
@@ -1007,7 +1007,7 @@
 				<label for="max_files_row" data-i18n="gettext">Number of files to display in each row of post</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_files_row" type="text" name="max_files_row" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_files_row" type="text" name="max_files_row" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_files_row }}
@@ -1024,7 +1024,7 @@
 				<label for="jpeg_quality" data-i18n="gettext">JPEG preview quality (0 - 100)</label>
 			</span>
 			<span class="display-cell">
-				<input id="jpeg_quality" type="text" name="jpeg_quality" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="jpeg_quality" type="text" name="jpeg_quality" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ jpeg_quality }}
@@ -1041,7 +1041,7 @@
 				<label for="png_compression" data-i18n="gettext">PNG compression level (0 - 9)</label>
 			</span>
 			<span class="display-cell">
-				<input id="png_compression" type="text" name="png_compression" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="png_compression" type="text" name="png_compression" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ png_compression }}
@@ -1058,7 +1058,7 @@
 				<label for="max_width" data-i18n="gettext">Maximum preview width</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_width" type="text" name="max_width" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_width" type="text" name="max_width" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_width }}
@@ -1075,7 +1075,7 @@
 				<label for="max_height" data-i18n="gettext">Maximum preview height</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_height" type="text" name="max_height" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_height" type="text" name="max_height" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_height }}
@@ -1092,7 +1092,7 @@
 				<label for="max_multi_width" data-i18n="gettext">Maximum preview width when post has multiple content</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_multi_width" type="text" name="max_multi_width" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_multi_width" type="text" name="max_multi_width" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_multi_width }}
@@ -1109,7 +1109,7 @@
 				<label for="max_multi_height" data-i18n="gettext">Maximum preview height when post has multiple content</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_multi_height" type="text" name="max_multi_height" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_multi_height" type="text" name="max_multi_height" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_multi_height }}
@@ -1126,7 +1126,7 @@
 				<label for="max_catalog_width" data-i18n="gettext">Maximum preview width for catalog entries</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_catalog_width" type="text" name="max_catalog_width" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_catalog_width" type="text" name="max_catalog_width" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_catalog_width }}
@@ -1143,7 +1143,7 @@
 				<label for="max_catalog_height" data-i18n="gettext">Maximum preview height for catalog entries</label>
 			</span>
 			<span class="display-cell">
-				<input id="max_catalog_height" type="text" name="max_catalog_height" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="max_catalog_height" type="text" name="max_catalog_height" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_catalog_height }}
@@ -1160,7 +1160,7 @@
 				<label for="indent_marker" data-i18n="gettext">Set the indent marker next to replies</label>
 			</span>
 			<span class="display-cell">
-				<input id="indent_marker" type="text" name="indent_marker" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="indent_marker" type="text" name="indent_marker" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ indent_marker }}
@@ -1177,7 +1177,7 @@
 				<label for="tripkey_marker" data-i18n="gettext">Tripcode marker</label>
 			</span>
 			<span class="display-cell">
-				<input id="tripkey_marker" type="text" name="tripkey_marker" size="8" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="tripkey_marker" type="text" name="tripkey_marker" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ tripkey_marker }}
@@ -1194,7 +1194,7 @@
 				<label for="no_comment_text" data-i18n="gettext">Text when there is no comment</label>
 			</span>
 			<span class="display-cell">
-				<input id="no_comment_text" type="text" name="no_comment_text" size="30" value="{{ value|e.attr }}" {{ disabled }}>
+				<input id="no_comment_text" type="text" name="no_comment_text" size="30" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ no_comment_text }}
@@ -1240,9 +1240,9 @@
 		{{# category_select }}
 		<div class="display-row">
 			<span class="display-cell">
-				<input type="hidden" name="{{ name|e.attr }}" value="0">
-				<input id="{{ name|e.attr }}" type="checkbox" name="{{ name|e.attr }}" value="1" {{ value }}>
-				<label for="{{ name|e.attr }}">{{ label }}</label>
+				<input type="hidden" name="{{ name }}" value="0">
+				<input id="{{ name }}" type="checkbox" name="{{ name }}" value="1" {{ value }}>
+				<label for="{{ name }}">{{ label }}</label>
 			</span>
 		</div>
 		{{/ category_select }}
@@ -1250,16 +1250,16 @@
 		<div class="display-row">
 			{{# entry }}
 			<span class="display-cell">
-				<input type="hidden" name="{{ format|e.attr }}" value="0">
-				<input id="{{ format|e.attr }}" type="checkbox" name="{{ format|e.attr }}" value="1" {{ value }}>
-				<label for="{{ format|e.attr }}">{{ label }}</label>
+				<input type="hidden" name="{{ format }}" value="0">
+				<input id="{{ format }}" type="checkbox" name="{{ format }}" value="1" {{ value }}>
+				<label for="{{ format }}">{{ label }}</label>
 			</span>
 			{{/ entry }}
 		</div>
 		{{/ entry_rows }}
 	</div>
 	{{/ categories }}
-	<div id="bottom-submit">
-		<input type="submit" value="Update Settings" data-i18n="gettext" data-i18n-attributes="value">
+	<div>
+		<input type="submit" value="Update Settings" data-i18n-attributes="gettext|value">
 	</div>
 </form>

@@ -1,17 +1,17 @@
 {{% FILTERS }}
-<form accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post" enctype="multipart/form-data">
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data" aria-label="Edit role" data-i18n-attributes="gettext|aria-label">
 	<div class="display-table">
 		<div class="display-row">
 			<label for="role_id" class="display-cell" data-i18n="gettext">Role ID</label>
-			<input id="role_id" class="display-cell" type="text" name="role_id" size="30" value="{{ role_id|e.attr }}">
+			<input id="role_id" class="display-cell" type="text" name="role_id" size="30" value="{{ role_id }}">
 		</div>
 		<div class="display-row">
 			<label for="role_level" class="display-cell" data-i18n="gettext">Role Level</label>
-			<input id="role_level" class="display-cell" type="text" name="role_level" size="8" value="{{ role_level|e.attr }}">
+			<input id="role_level" class="display-cell" type="text" name="role_level" size="8" value="{{ role_level }}">
 		</div>
 		<div class="display-row">
 			<label for="role_title" class="display-cell" data-i18n="gettext">Role Title</label>
-			<input id="role_title" class="display-cell" type="text" name="role_title" size="30" value="{{ role_title|e.attr }}">
+			<input id="role_title" class="display-cell" type="text" name="role_title" size="30" value="{{ role_title }}">
 		</div>
 		<div class="display-row">
 			<label for="capcode_text" class="display-cell" data-i18n="gettext">Capcode Text (may contain HTML)</label>
@@ -20,13 +20,13 @@
 		<hr>
 		{{# permissions_list }}
 		<div class="display-row">
-			<input type="hidden" name="{{ permission|e.attr }}" value="0">
-			<input id="{{ permission|e.attr }}" type="checkbox" name="{{ permission|e.attr }}" value="1" {{ checked }}>
-			<label for="{{ permission|e.attr }}">{{ label }}</label>
+			<input type="hidden" name="{{ permission }}" value="0">
+			<input id="{{ permission }}" type="checkbox" name="{{ permission }}" value="1" {{ checked }}>
+			<label for="{{ permission }}">{{ label }}</label>
 		</div>
 		{{/ permissions_list }}
 	</div>
 	<div>
-		<input type="submit" value="Update role" data-i18n="gettext" data-i18n-attributes="value">
+		<input type="submit" value="Update Role" data-i18n-attributes="gettext|value">
 	</div>
 </form>

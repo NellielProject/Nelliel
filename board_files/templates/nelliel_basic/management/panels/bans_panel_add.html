@@ -1,12 +1,12 @@
 {{% FILTERS }}
-<form accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post" enctype="multipart/form-data">
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data" aria-label="Add ban" data-i18n-attributes="gettext|aria-label">
 	<div class="display-table">
 		<div class="display-row">
 			<span class="display-cell">
 				<label for="ban_ip" data-i18n="gettext">IP to ban:</label>
 			</span>
 			<span class="display-cell">
-				<input id="ban_ip" type="text" name="ban_ip" size="24" maxlength="50" value="{{ ban_ip|e.attr }}">
+				<input id="ban_ip" type="text" name="ban_ip" size="24" maxlength="50" value="{{ ban_ip }}">
 			</span>
 		</div>
 		<div class="display-row">
@@ -14,7 +14,7 @@
 				<label for="ban_board" data-i18n="gettext">Apply ban to this board:</label>
 			</span>
 			<span class="display-cell">
-				<input id="ban_board"  type="text" name="ban_board" size="24" maxlength="255" value="{{ ban_board|e.attr }}">
+				<input id="ban_board"  type="text" name="ban_board" size="24" maxlength="255" value="{{ ban_board }}">
 			</span>
 		</div>
 		<div class="display-row">
@@ -62,8 +62,8 @@
 		{{/ is_post_ban }}
 		<div class="display-row">
 			<span class="display-cell">
-				<input id="ban_type" type="text" name="ban_type" value="{{ ban_type|e.attr }}">
-				<input type="submit" value="Set Ban" data-i18n="gettext" data-i18n-attributes="value">
+				<input id="ban_type" type="text" name="ban_type" value="{{ ban_type }}">
+				<input type="submit" value="Add Ban" data-i18n-attributes="gettext|value">
 			</span>
 		</div>
 	</div>

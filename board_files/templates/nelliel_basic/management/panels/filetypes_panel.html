@@ -1,5 +1,5 @@
 {{% FILTERS }}
-<form accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post">
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" aria-label="Add filetype" data-i18n-attributes="gettext|aria-label">
 	<div class="display-table">
 		<div class="display-row">
 			<label for="extension" class="display-cell" data-i18n="gettext">Extension</label>
@@ -30,7 +30,7 @@
 			<input id="label" class="display-cell" type="text" name="label" size="30">
 		</div>
 		<div class="display-row">
-			<input type="submit" value="Add Filetype" data-i18n="gettext" data-i18n-attributes="value">
+			<input type="submit" value="Add Filetype" data-i18n-attributes="gettext|value">
 		</div>
 	</div>
 </form>
@@ -47,7 +47,7 @@
 		<th data-i18n="gettext">Remove</th>
 	</tr>
 	{{# filetype_list }}
-	<tr class="{{ bgclass|e.attr }}">
+	<tr class="{{ bgclass }}">
 		<td>{{ extension }}</td>
 		<td>{{ parent_extension }}</td>
 		<td>{{ type }}</td>
@@ -56,7 +56,7 @@
 		<td>{{ regex }}</td>
 		<td>{{ label }}</td>
 		<td>
-			<a class="display-cell" href="{{ remove_url|e.attr }}" data-i18n="gettext">Remove Filetype</a>
+			<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Filetype</a>
 		</td>
 	</tr>
 	{{/ filetype_list }}

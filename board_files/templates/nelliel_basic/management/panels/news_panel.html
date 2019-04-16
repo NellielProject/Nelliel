@@ -1,5 +1,5 @@
 {{% FILTERS }}
-<form accept-charset="utf-8" action="{{ form_action|e.attr }}" method="post">
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" aria-label="Add news post" data-i18n-attributes="gettext|aria-label">
 	<div class="display-table">
 		<div class="display-row">
 			<label for="headline" class="display-cell" data-i18n="gettext">Headline</label>
@@ -10,7 +10,7 @@
 			<textarea id="news_text" class="display-cell" name="news_text" cols="80" rows="6"></textarea>
 		</div>
 		<div class="display-row">
-			<input type="submit" value="Post News" data-i18n="gettext" data-i18n-attributes="value">
+			<input type="submit" value="Post News" data-i18n-attributes="gettext|value">
 		</div>
 	</div>
 </form>
@@ -22,11 +22,11 @@
 		<th data-i18n="gettext">Actions</th>
 	</tr>
 	{{# news_entry }}
-	<tr class="{{ bgclass|e.attr }}">
+	<tr class="{{ bgclass }}">
 		<td>{{ headline }}</td>
 		<td>{{ time }}</td>
 		<td>
-			<a class="display-cell" href="{{ remove_url|e.attr }}" data-i18n="gettext">Remove</a>
+			<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove</a>
 		</td>
 	</tr>
 	{{/ news_entry }}
