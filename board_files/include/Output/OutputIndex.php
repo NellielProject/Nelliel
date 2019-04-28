@@ -54,6 +54,7 @@ class OutputIndex extends OutputCore
                 '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC');
         $thread_list = $result->fetchAll(PDO::FETCH_ASSOC);
         $thread_count = count($thread_list);
+        $threads_done = 0;
         $gen_data['index']['thread_count'] = $thread_count;
         $output_posting_form = new OutputPostingForm($this->domain);
         $this->render_data['posting_form'] = $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => 0],
@@ -102,8 +103,7 @@ class OutputIndex extends OutputCore
             $output_post = new OutputPost($this->domain);
             $json_thread = new \Nelliel\API\JSON\JSONThread($this->domain, $this->file_handler);
             $thread_content_id = \Nelliel\ContentID::createIDString($thread_data['thread_id']);
-            $thread_input['op_post'] = '';
-            $thread_input['thread_posts'] = '';
+            $thread_input = array();
             $thread_input['thread_id'] = $thread_content_id;
             $thread_input['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
             $thread_input['thread_corral_id'] = 'thread-' . $thread_content_id;
@@ -139,8 +139,9 @@ class OutputIndex extends OutputCore
 
             $this->render_data['threads'][] = $thread_input;
             $threads_on_page ++;
+            $threads_done++;
 
-            if ($threads_on_page >= $this->domain->setting('threads_per_page'))
+            if ($threads_on_page >= $this->domain->setting('threads_per_page') || $threads_done == $thread_count)
             {
                 $json_index->addThreadData($json_thread->retrieveData());
                 $output_menu = new OutputMenu($this->domain);

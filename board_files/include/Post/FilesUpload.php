@@ -29,7 +29,29 @@ class FilesUpload
         $response_to = $post->content_data['response_to'];
         $data_handler = new PostData($this->domain, $this->authorization);
         $file_handler = new \Nelliel\FileHandler();
-        $post_data = $file_count = 1;
+        $file_count = count($this->uploaded_files);
+        $error_data = ['delete_files' => true, 'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
+
+        if($file_count > 1)
+        {
+            if ($file_count > $this->domain->setting('max_post_files'))
+            {
+                nel_derp(25,
+                        sprintf(_gettext('You are trying to upload too many files in one post. Limit is %d'),
+                                $this->domain->setting('max_post_files')), $error_data);
+            }
+
+            if (!$this->domain->setting('allow_multifile'))
+            {
+                nel_derp(26, _gettext('You cannot upload multiple files.'), $error_data);
+            }
+
+            if (!$this->domain->setting('allow_op_multifile'))
+            {
+                nel_derp(27, _gettext('The OP post cannot have multiple files.'), $error_data);
+            }
+        }
+
         $filenames = array();
         $file_duplicate = 1;
 

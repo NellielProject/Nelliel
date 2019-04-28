@@ -55,17 +55,24 @@ class OutputPostingForm extends OutputCore
         $this->render_data['spam_target_maxlength'] = $this->domain->setting('max_email_length');
         $this->render_data['verb_maxlength'] = $this->domain->setting('max_subject_length');
         $this->render_data['force_anonymous'] = $this->domain->setting('force_anonymous');
+        $max_files = 1;
+
+        if ($this->domain->setting('allow_multifile'))
+        {
+            if ($response_to)
+            {
+                $max_files = $this->domain->setting('max_post_files');
+            }
+            else
+            {
+                if ($this->domain->setting('allow_op_multifile'))
+                {
+                    $max_files = $this->domain->setting('max_post_files');
+                }
+            }
+        }
 
         // File Block
-        if ($response_to)
-        {
-            $max_files = ($this->domain->setting('allow_op_multifile')) ? $this->domain->setting('max_post_files') : 1;
-        }
-        else
-        {
-            $max_files = $this->domain->setting('max_post_files');
-        }
-
         for ($i = 1, $j = 2; $i <= $max_files; ++ $i, ++ $j)
         {
             $block_data = array();
