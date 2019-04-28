@@ -57,6 +57,7 @@ define('LANGUAGES_FILE_PATH', FILES_PATH . 'languages/');
 define('LOCALE_FILE_PATH', LANGUAGES_FILE_PATH . 'locale/');
 define('STYLES_FILE_PATH', BASE_PATH . ASSETS_DIR . '/' . STYLES_DIR . '/');
 define('ICON_SETS_FILE_PATH', BASE_PATH . ASSETS_DIR . '/' . ICON_SETS_DIR . '/');
+define('WAT_FILE_PATH', INCLUDE_PATH . 'wat/');
 
 define('SCRIPTS_WEB_PATH', ASSETS_DIR . '/' . SCRIPTS_DIR . '/');
 define('IMAGES_WEB_PATH', ASSETS_DIR . '/' . IMAGES_DIR . '/');
