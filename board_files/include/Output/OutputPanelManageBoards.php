@@ -120,7 +120,7 @@ class OutputPanelManageBoards extends OutputCore
         $this->render_data['message'] = $parameters['message'];
         $this->render_data['continue_link_text'] = $parameters['continue_link']['text'];
         $this->render_data['continue_url'] = $parameters['continue_link']['href'];
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/interstials/board_removal',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/interstitials/board_removal',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

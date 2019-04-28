@@ -9,9 +9,11 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
+use PDO;
 
 class AdminBoards extends AdminHandler
 {
+
     function __construct(Authorization $authorization, Domain $domain)
     {
         $this->database = $domain->database();
@@ -47,8 +49,10 @@ class AdminBoards extends AdminHandler
         {
             $this->unlock($user);
         }
-
-        $this->renderPanel($user);
+        else
+        {
+            $this->renderPanel($user);
+        }
     }
 
     public function renderPanel($user)
@@ -71,6 +75,14 @@ class AdminBoards extends AdminHandler
         $board_id = $_POST['new_board_id'];
         $domain = new \Nelliel\DomainBoard($board_id, $this->database);
         $db_prefix = $domain->id();
+        $prepared = $this->database->prepare('SELECT 1 FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$board_id], PDO::FETCH_COLUMN);
+
+        if ($result == 1)
+        {
+            nel_derp(240, _gettext('There is already a board with the ID ' . $board_id . '.'));
+        }
+
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "db_prefix") VALUES (?, ?)');
         $this->database->executePrepared($prepared, [$domain->id(), $db_prefix]);
@@ -86,6 +98,7 @@ class AdminBoards extends AdminHandler
 
         $regen->allBoardPages($domain);
         $regen->boardList(new \Nelliel\DomainSite($this->database));
+        $this->renderPanel($user);
     }
 
     public function editor($user)
@@ -106,7 +119,7 @@ class AdminBoards extends AdminHandler
         $board_id = $_GET['board_id'];
         $domain = new \Nelliel\DomainBoard($board_id, $this->database);
 
-        if(!$domain->boardExists())
+        if (!$domain->boardExists())
         {
             nel_derp(109, _gettext('Board does not appear to exist.'));
         }
@@ -156,6 +169,7 @@ class AdminBoards extends AdminHandler
         $this->database->executePrepared($prepared, [$board_id, $board_id]);
         $regen = new \Nelliel\Regen();
         $regen->boardList(new \Nelliel\DomainSite($this->database));
+        $this->renderPanel($user);
     }
 
     public function lock($user)
@@ -168,6 +182,7 @@ class AdminBoards extends AdminHandler
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare('UPDATE "' . BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
+        $this->renderPanel($user);
     }
 
     public function unlock($user)
@@ -180,6 +195,7 @@ class AdminBoards extends AdminHandler
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare('UPDATE "' . BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
+        $this->renderPanel($user);
     }
 
     public function createInterstitial($user)
@@ -192,6 +208,8 @@ class AdminBoards extends AdminHandler
                     'board_id' => $_GET['board_id']]);
         $continue_link['text'] = _gettext('Confirm and delete the board.');
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain);
-        $output_panel->render(['section' => 'remove_interstitial', 'user' => $user, 'message' => $message, 'continue_link' => $continue_link], false);
+        $output_panel->render(
+                ['section' => 'remove_interstitial', 'user' => $user, 'message' => $message,
+                    'continue_link' => $continue_link], false);
     }
 }

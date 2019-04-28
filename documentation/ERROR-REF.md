@@ -57,6 +57,8 @@ Error 230: User does not exist. (Admin/AdminUsers.php)
 Error 231: Role does not exist. (Admin/AdminRoles.php)  
 Error 232: Cannot make Super Admin. (Admin/AdminRoles.php)  
 
+Error 240: Board already exists. (Admin/AdminBoards.php)  
+
 Error 300: perm_user_access (Admin/AdminStaff.php)  
 Error 301: perm_user_modify (Admin/AdminStaff.php)  
 

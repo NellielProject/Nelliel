@@ -31,6 +31,7 @@ class OutputIndex extends OutputCore
         $thread_id = ($parameters['thread_id']) ?? 0;
         $dotdot = ($write) ? '../' : '';
         $site_domain = new \Nelliel\DomainSite($this->database);
+        $json_index = new \Nelliel\API\JSON\JSONIndex($this->domain, $this->file_handler);
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_header = new OutputHeader($this->domain);
@@ -69,7 +70,7 @@ class OutputIndex extends OutputCore
             {
                 $this->file_handler->writeFile($this->domain->reference('board_path') . MAIN_INDEX . PAGE_EXT, $output,
                         FILE_PERM);
-                $json_index->writeStoredData($this->domain->reference('board_path'), sprintf('index-%d', $page + 1));
+                $json_index->writeStoredData($this->domain->reference('board_path'), 'index-1');
             }
             else
             {
@@ -80,7 +81,6 @@ class OutputIndex extends OutputCore
         }
 
         $gen_data['index_rendering'] = true;
-        $json_index = new \Nelliel\API\JSON\JSONIndex($this->domain, $this->file_handler);
         $this->render_data['catalog_url'] = 'catalog.html';
         $this->render_data['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
         $index_format = $site_domain->setting('index_filename_format');
