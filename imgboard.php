@@ -1,5 +1,5 @@
 <?php
-define('NELLIEL_VERSION', 'v0.9.18'); // Version
+define('NELLIEL_VERSION', 'v0.9.19'); // Version
 define('NELLIEL_COPYRIGHT', '2010-2019 Nelliel Project'); // Copyright line
 define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('BASE_PATH', realpath('./') . '/'); // Base path for script

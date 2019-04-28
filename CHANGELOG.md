@@ -1,4 +1,48 @@
 # Nelliel Changelog
+## v0.9.19 (2019/04/28)
+### Breaking
+ - Output
+ - Database
+ - Language
+
+### Added
+ - Board catalog
+ - Tests for ContentID
+ - Board slogan
+ - Spoiler option
+ - Mustache.php library
+ - Database entries now extracted for gettext as well
+ - Per-thread post number displayed
+
+### Changed
+ - Overhaul of user/role/permissions handling
+ - Overhaul of language handling
+ - Improve table handler classes and install process
+ - Various renamings
+ - JSON API improvements
+ - More plugin hooks and update example plugin
+ - More type declarations in code
+ - Convert output to `Output` classes
+ - Simplified various constructors and dependencies
+ - Database accessible from `Domain` instead of constantly passing it
+ - Restructure template files
+ - NellielTemplates library updated
+ - Primary template rendering is now done with Mustache
+ - Improve expand/collapse thread
+ - Render core cleanup
+ - Update several database column names
+ - Update about page
+ - Various cleanup work
+
+### Fixed
+ - `rowExists` handles null values better
+ - Multifile layout
+ - Prevent wiping out everything if board being deleted doesn't exist
+ - Ban issue
+ - Index nav finally both correct and sane
+ - Fix bugs in `BanHammer`
+ - DOM translation and escapng
+
 ## v0.9.18 (2019/02/10)
 ### Breaking
  - Database
