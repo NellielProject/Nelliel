@@ -41,13 +41,18 @@ form {
     padding: 4px;
 }
 
-/* Header */
-.top-styles {
+/* Menu */
+.styles {
     float: left;
     padding-top: 6px;
     padding-bottom: 6px;
 }
 
+.styles-menu {
+
+}
+
+/* Header */
 .site-banner {
     text-align: center;
     clear: both;
@@ -94,7 +99,7 @@ form {
 
 }
 
-.top-nav-menu {
+.site-nav-menu {
     float: right;
     padding-top: 6px;
     padding-bottom: 6px;
@@ -106,12 +111,6 @@ form {
     text-align: center;
     font-size: 0.8rem;
     padding-top: 5px;
-}
-
-.bottom-styles {
-    float: left;
-    padding-top: 6px;
-    padding-bottom: 6px;
 }
 
 .footer-form {
@@ -241,27 +240,27 @@ form {
 }
 
 /* Files */
-.file-select {
+.content-select {
 
 }
 
-.multiple-file-select {
+.multiple-content-select {
 
 }
 
-.op-files-container {
+.op-content-container {
 	float: left;
 }
 
-.op-multiple-files-container {
+.op-multiple-content-container {
 	float: left;
 }
 
-.reply-files-container {
+.reply-content-container {
 	float: left;
 }
 
-.reply-multiple-files-container {
+.reply-multiple-content-container {
 	float: left;
 }
 
@@ -436,7 +435,7 @@ form {
     
 }
 
-.op-post-contents {
+.op-post-comments {
     word-wrap: break-word;
 }
 
@@ -622,4 +621,10 @@ form {
 
 .display-cell {
     display: table-cell;
+}
+
+.render_stats {
+	margin: 3px;
+	text-align: center;
+	font-size: 0.85rem;
 }

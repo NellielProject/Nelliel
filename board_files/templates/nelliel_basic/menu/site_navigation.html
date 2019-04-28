@@ -1,0 +1,10 @@
+{{% FILTERS }}
+<nav class="site-nav-menu" role="navigation" aria-label="Site navigation" data-i18n-attributes="gettext|aria-label">
+	{{# session_active }}
+	<span>[<a href="{{ logout_url }}" data-i18n="gettext">Logout</a>]</span>
+	{{/ session_active }}
+	<span>[<a href="{{ home_url }}" data-i18n="gettext" target="_top">Home</a>]</span>
+	<span>[<a href="{{ manage_url }}" data-i18n="gettext">Manage</a>]</span>
+	<span>[<a href="{{ news_url }}" data-i18n="gettext">News</a>]</span>
+	<span>[<a href="{{ about_nelliel_url }}" data-i18n="gettext">About Nelliel</a>]</span>
+</nav>

@@ -13,14 +13,18 @@ class TemplateCore
         $this->render_instance = $render_instance;
     }
 
-    public function setTemplatePath($path)
+    public function templatePath($new_path = null)
     {
-        if (substr($path, -1) !== '/')
+        if (!is_null($new_path))
         {
-            $path .= '/';
+            if (substr(new_path, -1) !== '/')
+            {
+                $new_path .= '/';
+            }
         }
 
-        $this->template_path = $path;
+        $this->template_path = $new_path;
+        return $this->template_path;
     }
 
     private function initTemplateData($template)
@@ -31,41 +35,38 @@ class TemplateCore
     public function loadTemplateFromString($template, $contents)
     {
         $this->templates[$template]['contents'] = $contents;
+        $this->checkHTMLFixes($template);
     }
 
-    public function loadTemplateFromFile($template_file)
-    {
-        if (!isset($this->templates[$template_file]))
-        {
-            $this->initTemplateData($template_file);
-        }
-
-        if (file_exists($this->template_path . $template_file))
-        {
-            $this->templates[$template_file]['contents'] = file_get_contents($this->template_path . $template_file);
-        }
-    }
-
-    public function getTemplate($template, $raw = false)
+    public function loadTemplateFromFile($template)
     {
         if (!isset($this->templates[$template]))
         {
             $this->initTemplateData($template);
         }
 
-        if ($this->templates[$template]['contents'] === '')
+        if (file_exists($this->template_path . $template))
         {
-            $this->loadTemplateFromFile($template);
-            $this->checkHTMLFixes($template);
+            $this->templates[$template]['contents'] = file_get_contents($this->template_path . $template);
         }
 
-        if ($raw)
+        $this->checkHTMLFixes($template);
+    }
+
+    public function getTemplate($template, $do_fixes)
+    {
+        if (!isset($this->templates[$template]))
         {
-            return $this->templates[$template]['contents'];
+            $this->initTemplateData($template);
+        }
+
+        if ($do_fixes)
+        {
+            return $this->fixInputHTML($template);
         }
         else
         {
-            return $this->fixInputHTML($template);
+            return $this->templates[$template]['contents'];
         }
     }
 
@@ -73,7 +74,7 @@ class TemplateCore
     {
         $output = $dom->saveHTML();
 
-        if(!is_null($template))
+        if (!is_null($template))
         {
             $output = $this->fixOutputHTML($template, $output);
             $output = $this->html5Fixes($template, $output);

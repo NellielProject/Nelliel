@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="{{ page_language }}">
+{{# head }}
+{{> head }}
+{{/ head }}
+<body>
+{{# header }}
+	{{> header }}
+{{/ header }}
+{{# posting_form }}
+	{{> thread/posting_form }}
+{{/ posting_form }}
+	{{> index/index }}
+{{# footer }}
+	{{> footer }}
+{{/ footer }}
+{{# show_stats }}
+	<div class="render_stats">{{ render_timer }}</div>
+{{/ show_stats }}
+</body>
+</html>

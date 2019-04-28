@@ -31,7 +31,7 @@ class JSONThread extends JSONOutput
         $thread_array['last_update'] = nel_cast_to_datatype($data['last_update'], 'integer');
         $thread_array['last_update_milli'] = nel_cast_to_datatype($data['last_update_milli'], 'integer');
         $thread_array['post_count'] = nel_cast_to_datatype($data['post_count'], 'integer');
-        $thread_array['total_files'] = nel_cast_to_datatype($data['total_files'], 'integer');
+        $thread_array['content_count'] = nel_cast_to_datatype($data['content_count'], 'integer');
         $thread_array['thread_sage'] = nel_cast_to_datatype($data['thread_sage'], 'boolean');
         $thread_array['sticky'] = nel_cast_to_datatype($data['sticky'], 'boolean');
         $thread_array['locked'] = nel_cast_to_datatype($data['locked'], 'boolean');

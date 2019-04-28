@@ -1,27 +1,32 @@
 <?php
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
 
-//
-// The content this function presents must remain intact and be accessible to users
-//
-function nel_about_nelliel_screen()
+// This about page must be present and accessible in all installations and distributions of Nelliel!
+// If a fork makes alterations such as adding or removing libraries the page can be updated accordingly.
+// However the page itself cannot be removed!
+
+use Nelliel\DomainSite;
+
+function nel_about_page(DomainSite $domain)
 {
-    $domain = new \Nelliel\DomainSite(nel_database());
-    $domain->renderInstance(new \Nelliel\RenderCore());
-    $domain->renderInstance()->startRenderTimer();
+    $render_engine = new Mustache_Engine();
+    $render_data = array();
+    $dotdot = '';
+    $render_data['page_language'] = str_replace('_', '-', $domain->locale());
+    $output_head = new \Nelliel\Output\OutputHead($domain);
+    $render_data['head'] = $output_head->render(['dotdot' => $dotdot], false);
     $output_header = new \Nelliel\Output\OutputHeader($domain);
-    $output_header->render(['header_type' => 'general', 'dotdot' => '']);
-    $dom = $domain->renderInstance()->newDOMDocument();
-    $domain->renderInstance()->getTemplateInstance()->setTemplatePath(INCLUDE_PATH . 'wat/');
-    $domain->renderInstance()->loadTemplateFromFile($dom, 'about_nelliel.html');
-    $domain->renderInstance()->getTemplateInstance()->setTemplatePath($domain->templatePath());
-    $dom->getElementById('version')->setContent('Version: ' . NELLIEL_VERSION);
-    $dom->getElementById('disclaimer-image')->extSetAttribute('src', IMAGES_WEB_PATH . 'wat/luna_canterlot_disclaimer.png');
-    $domain->renderInstance()->appendHTMLFromDOM($dom);
-    nel_render_general_footer($domain);
-    echo $domain->renderInstance()->outputRenderSet();
+    $render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot],
+            false);
+    $render_data['nelliel_version'] = _gettext('Version: ') . NELLIEL_VERSION;
+    $render_data['disclaimer_image_url'] = IMAGES_WEB_PATH . 'wat/luna_canterlot_disclaimer.png';
+    $render_data['disclaimer_alt_text'] = 'Luna Canterlot Voice';
+    $output_footer = new \Nelliel\Output\OutputFooter($domain);
+    $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], false);
+    echo $render_engine->render(file_get_contents(WAT_FILE_PATH . 'about_nelliel.html'), $render_data);
     nel_clean_exit();
 }

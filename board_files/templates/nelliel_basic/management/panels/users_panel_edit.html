@@ -1,43 +1,46 @@
-	<form id="user-edit-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
-		<div class="display-table">
-			<label class="display-row">
-				<span class="display-cell" data-i18n="gettext">User ID</span>
-				<input id="user-id-field" class="display-cell" type="text" name="user_id" id="bname" size="30" value="">
-			</label>
-			<label class="display-row">
-				<span class="display-cell" data-i18n="gettext">New password (leave blank to keep current password)</span>
-				<input id="bpass" class="display-cell" type="text" name="user_password" size="30">
-			</label>
-			<label class="display-row">
-				<span class="display-cell" data-i18n="gettext">User display name</span>
-				<input id="display-name" class="display-cell" type="text" name="display_name" size="30" value="">
-			</label>
-			<label class="display-row">
-				<input type="hidden" name="active" value="0">
-				<input id="user-active" type="checkbox" name="active" value="1">
-				<span data-i18n="gettext">User is active</span>
-			</label>
-			<label class="display-row">
-				<input type="hidden" name="super_admin" value="0">
-				<input id="super-admin" type="checkbox" name="super_admin" value="1">
-				<span data-i18n="gettext">User is Super Admin</span>
-			</label>
+{{% FILTERS }}
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data" aria-label="Edit user" data-i18n-attributes="gettext|aria-label">
+	<div class="display-table">
+		<div class="display-row">
+			<label for="user_id" class="display-cell" data-i18n="gettext">User ID</label>
+			<input id="user_id" class="display-cell" type="text" name="user_id" id="bname" size="30" value="{{ user_id }}">
 		</div>
-		<hr>
-		<div class="display-table">
-			<div class="display-row">
-				<span>User Roles</span>
-			</div>
-			<label class="display-row">
-				<span class="display-cell" data-i18n="gettext">Site Role</span>
-				<input id="site-role" class="display-cell" type="text" name="site_role" size="30" value="">
-			</label>
-			<label class="display-row" id="board-roles">
-				<span class="display-cell" data-parse-id="board-role-id-label"></span>
-				<input data-parse-id="board-role-id" class="display-cell" type="text" name="board_role_" size="30" value="">
-			</label>
+		<div class="display-row">
+			<label for="user_password" class="display-cell" data-i18n="gettext">New password (leave blank to keep current password)</label>
+			<input id="user_password" class="display-cell" type="text" name="user_password" size="30">
 		</div>
-		<div>
-			<input type="submit" value="Update User" data-i18n="gettext" data-i18n-attributes="value">
+		<div class="display-row">
+			<label for="display_name" class="display-cell" data-i18n="gettext">User display name</label>
+			<input id="display_name" class="display-cell" type="text" name="display_name" size="30" value="{{ display_name }}">
 		</div>
-	</form>
+		<div class="display-row">
+			<input type="hidden" name="active" value="0">
+			<input id="user_active" type="checkbox" name="active" value="1" {{ active }}>
+			<label for="user_active" data-i18n="gettext">User is active</label>
+		</div>
+		<div class="display-row">
+			<input type="hidden" name="super_admin" value="0">
+			<input id="super_admin" type="checkbox" name="super_admin" value="1" {{ super_admin }}>
+			<label for="super_admin" data-i18n="gettext">User is Super Admin</label>
+		</div>
+	</div>
+	<hr>
+	<div class="display-table">
+		<div class="display-row">
+			<span>User Roles</span>
+		</div>
+		<div class="display-row">
+			<label for="site_role" class="display-cell" data-i18n="gettext">Site Role</label>
+			<input id="site_role" class="display-cell" type="text" name="site_role" size="30" value="{{ site_role_id }}">
+		</div>
+		{{# board_roles }}
+		<div class="display-row">
+			<label for="board_role_{{ board_id }}" class="display-cell">{{ board_id }}</label>
+			<input id="board_role_{{ board_id }}" class="display-cell" type="text" name="board_role_{{ board_id }}" size="30" value="{{ role_id }}">
+		</div>
+		{{/ board_roles }}
+	</div>
+	<div>
+		<input type="submit" value="Update User" data-i18n-attributes="gettext|value">
+	</div>
+</form>

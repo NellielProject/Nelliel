@@ -1,6 +1,6 @@
 <?php
 define('NELLIEL_VERSION', 'v0.9.18'); // Version
-define('NELLIEL_COPYRIGHT', '2010-2018 Nelliel Project'); // Copyright line
+define('NELLIEL_COPYRIGHT', '2010-2019 Nelliel Project'); // Copyright line
 define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('BASE_PATH', realpath('./') . '/'); // Base path for script
 define('FILES_PATH', BASE_PATH . 'board_files/'); // Base board files path
@@ -10,12 +10,10 @@ define('LIBRARY_PATH', FILES_PATH . 'libraries/'); // Libraries path
 require_once INCLUDE_PATH . 'autoload.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
-
-$gettext = new \SmallPHPGettext\SmallPHPGettext();
-$gettext->registerFunctions();
-$language = new \Nelliel\Language\Language($gettext);
-$language->loadLanguage(LOCALE_FILE_PATH . DEFAULT_LOCALE . '/LC_MESSAGES/nelliel.po');
-unset($gettext);
+require_once LIBRARY_PATH . 'Mustache/src/Mustache/Autoloader.php';
+Mustache_Autoloader::register();
+$language = new \Nelliel\Language\Language();
+$language->loadLanguage(DEFAULT_LOCALE, 'nelliel', LC_MESSAGES);
 unset($language);
 
 require_once INCLUDE_PATH . 'derp.php';
@@ -61,7 +59,6 @@ define('SETUP_GOOD', true);
 ignore_user_abort(true);
 
 require_once CONFIG_FILE_PATH . 'generated.php';
-require_once INCLUDE_PATH . 'output/footer.php';
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 
 nel_central_dispatch();

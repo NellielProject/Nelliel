@@ -1,11 +1,12 @@
-	<form accept-charset="utf-8" action="" method="post" id="login-form">
-		<div>
-			<span data-i18n="gettext">Username: </span><input type="text" name="username" size="16">
-		</div>
-		<div>
-			<span data-i18n="gettext">Password: </span><input type="password" name="super_sekrit" size="16">
-		</div>
-		<div>
-			<input type="submit" value="Submit" data-i18n-attributes="value" data-i18n="gettext">
-		</div>
-	</form>
+{{% FILTERS }}
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" aria-label="Staff login" data-i18n-attributes="gettext|aria-label">
+	<div>
+		<span data-i18n="gettext">Username: </span><input type="text" name="username" size="16">
+	</div>
+	<div>
+		<span data-i18n="gettext">Password: </span><input type="password" name="super_sekrit" size="16">
+	</div>
+	<div>
+		<input type="submit" value="Submit" data-i18n-attributes="gettext|value">
+	</div>
+</form>

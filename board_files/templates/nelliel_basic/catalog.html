@@ -1,25 +1,42 @@
-					<div id="catalog-container">
-						<h2 id="catalog-title" class="catalog-title"></h2>
-						<div data-parse-id="catalog-entry" class="catalog-entry">
-							<div class="catalog-open-link">
-								<a data-parse-id="open-link" href="">
-									<img data-parse-id="file-preview" src="" width="" height="">
-								</a>
-							</div>
-							<div class="catalog-thread-info">
-								<span>R: </span>
-								<span data-parse-id="reply-count"></span>
-								<span> / F: </span>
-								<span data-parse-id="file-count"></span>
-								<span> / P: </span>
-								<span data-parse-id="index-page"></span>
-								<span data-parse-id="sticky-icon" title="Sticky" data-i18n-attributes="title">&#128204;</span>
-								<span data-parse-id="locked-icon" title="Locked" data-i18n-attributes="title">&#128274;</span>
-							</div>
-							<div data-parse-id="subject" class="catalog-subject"></div>
-							<p class="reply-post-text">
-								<span data-parse-id="post-comment" class="reply-post-comment"></span>
-								<span data-parse-id="mod-comment" class="mod-comment"></span>
-							</p>
-						</div>
-					</div>
+{{% FILTERS }}
+<div>
+	<h2 class="catalog-title">{{ catalog_title }}</h2>
+	{{# catalog_entries }}
+	<div class="catalog-entry">
+		<div class="catalog-open-link">
+			<a href="{{ open_url }}">
+		{{# has_preview }}
+			<img src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}">
+		{{/ has_preview }}
+		{{^ has_preview }}
+			{{ open_text }}
+		{{/ has_preview }}
+			</a>
+		</div>
+		<div class="catalog-thread-info">
+			<span>R: </span>
+			<span>{{ reply_count }}</span>
+			<span> / F: </span>
+			<span>{{ content_count }}</span>
+			<span> / P: </span>
+			<span>{{ index_page }}</span>
+		{{# is_sticky }}
+			<span>&#128204;</span>
+		{{/ is_sticky }}
+		{{# is_locked }}
+			<span>&#128274;</span>
+		{{/ is_locked }}
+		</div>
+		<div class="catalog-subject">{{ first_post_subject }}</div>
+		<p class="reply-post-text">
+			<span class="reply-post-comment">
+		{{# comment_lines }}
+			<span class="{{ post_comment_class }}">{{# line }}
+		{{# link }}<a href="{{ link_url }}" class="post-link" data-command="show-linked-post">{{ link_text }}</a>{{/ link }}{{ text }}{{/ line }}</span><br>
+		{{/ comment_lines }}
+			</span>
+			<span class="mod-comment">{{ mod_comment }}</span>
+		</p>
+	</div>
+	{{/ catalog_entries }}
+</div>

@@ -2,8 +2,6 @@
 
 namespace Nelliel;
 
-use Nelliel\Language\Translator;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -52,7 +50,7 @@ class Snacks
 
     public function banAppeal($board_id, $ban_info)
     {
-        $bawww = $_POST['ban_appeal'];
+        $bawww = $_POST['bawww'];
 
         if (empty($bawww))
         {
@@ -74,7 +72,7 @@ class Snacks
         $this->database->executePrepared($prepared, [$bawww, $ban_info['ban_id']]);
     }
 
-    public function applyBan(Domain $domain)
+    public function applyBan(Domain $domain, array $inputs)
     {
         if($domain->id() === '')
         {

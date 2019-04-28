@@ -44,7 +44,7 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
     }
     else
     {
-        $output_derp->render(['diagnostic' => $diagnostic]);
+        echo $output_derp->render(['diagnostic' => $diagnostic], false);
     }
 
     nel_clean_exit();

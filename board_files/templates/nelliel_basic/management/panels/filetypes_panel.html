@@ -1,60 +1,63 @@
-	<form id="add-filetype-form" accept-charset="utf-8" action="" method="post">
-		<div class="display-table">
-			<div class="display-row">
-				<label for="extension" class="display-cell" data-i18n="gettext">Extension</label>
-				<input id="extension" class="display-cell" type="text" name="extension" size="30">
-			</div>
-			<div class="display-row">
-				<label for="parent_extension" class="display-cell" data-i18n="gettext">Parent Extension</label>
-				<input id="parentextension" class="display-cell" type="text" name="parent_extension" size="30">
-			</div>
-			<div class="display-row">
-				<label for="type" class="display-cell" data-i18n="gettext">Type</label>
-				<input id="type" class="display-cell" type="text" name="type" size="30">
-			</div>
-			<div class="display-row">
-				<label for="format" class="display-cell" data-i18n="gettext">Format</label>
-				<input id="format" class="display-cell" type="text" name="format" size="30">
-			</div>
-			<div class="display-row">
-				<label for="mime" class="display-cell" data-i18n="gettext">Mime type</label>
-				<input id="mime" class="display-cell" type="text" name="mime" size="30">
-			</div>
-			<div class="display-row">
-				<label for="regex" class="display-cell" data-i18n="gettext">Identification regex</label>
-				<input id="regex" class="display-cell" type="text" name="regex" size="30">
-			</div>
-			<div class="display-row">
-				<label for="label" class="display-cell" data-i18n="gettext">Label</label>
-				<input id="label" class="display-cell" type="text" name="label" size="30">
-			</div>
-			<div class="display-row">
-				<input type="submit" value="Add Filetype" data-i18n="gettext" data-i18n-attributes="value">
-			</div>
+{{% FILTERS }}
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" aria-label="Add filetype" data-i18n-attributes="gettext|aria-label">
+	<div class="display-table">
+		<div class="display-row">
+			<label for="extension" class="display-cell" data-i18n="gettext">Extension</label>
+			<input id="extension" class="display-cell" type="text" name="extension" size="30">
 		</div>
-	</form>
-	<hr>
-	<table id="filetype-list" class="data-table">
-		<tr class="manage-header">
-			<th data-i18n="gettext">Extension</th>
-			<th data-i18n="gettext">Parent Extension</th>
-			<th data-i18n="gettext">Type</th>
-			<th data-i18n="gettext">Format</th>
-			<th data-i18n="gettext">Mime</th>
-			<th data-i18n="gettext">Regex</th>
-			<th data-i18n="gettext">Label</th>
-			<th data-i18n="gettext">Remove</th>
-		</tr>
-		<tr data-parse-id="filetype-row" class="row1">
-			<td data-parse-id="extension"></td>
-			<td data-parse-id="parent-extension"></td>
-			<td data-parse-id="type"></td>
-			<td data-parse-id="format"></td>
-			<td data-parse-id="mime"></td>
-			<td data-parse-id="regex"></td>
-			<td data-parse-id="label"></td>
-			<td>
-				<a class="display-cell" data-parse-id="filetype-remove-link" href="" data-i18n="gettext">Remove Filetype</a>
-			</td>
-		</tr>
-	</table>
+		<div class="display-row">
+			<label for="parent_extension" class="display-cell" data-i18n="gettext">Parent Extension</label>
+			<input id="parent_extension" class="display-cell" type="text" name="parent_extension" size="30">
+		</div>
+		<div class="display-row">
+			<label for="type" class="display-cell" data-i18n="gettext">Type</label>
+			<input id="type" class="display-cell" type="text" name="type" size="30">
+		</div>
+		<div class="display-row">
+			<label for="format" class="display-cell" data-i18n="gettext">Format</label>
+			<input id="format" class="display-cell" type="text" name="format" size="30">
+		</div>
+		<div class="display-row">
+			<label for="mime" class="display-cell" data-i18n="gettext">Mime type</label>
+			<input id="mime" class="display-cell" type="text" name="mime" size="30">
+		</div>
+		<div class="display-row">
+			<label for="regex" class="display-cell" data-i18n="gettext">Identification regex</label>
+			<input id="regex" class="display-cell" type="text" name="regex" size="30">
+		</div>
+		<div class="display-row">
+			<label for="label" class="display-cell" data-i18n="gettext">Label</label>
+			<input id="label" class="display-cell" type="text" name="label" size="30">
+		</div>
+		<div class="display-row">
+			<input type="submit" value="Add Filetype" data-i18n-attributes="gettext|value">
+		</div>
+	</div>
+</form>
+<hr>
+<table class="data-table">
+	<tr class="manage-header">
+		<th data-i18n="gettext">Extension</th>
+		<th data-i18n="gettext">Parent Extension</th>
+		<th data-i18n="gettext">Type</th>
+		<th data-i18n="gettext">Format</th>
+		<th data-i18n="gettext">Mime</th>
+		<th data-i18n="gettext">Regex</th>
+		<th data-i18n="gettext">Label</th>
+		<th data-i18n="gettext">Remove</th>
+	</tr>
+	{{# filetype_list }}
+	<tr class="{{ bgclass }}">
+		<td>{{ extension }}</td>
+		<td>{{ parent_extension }}</td>
+		<td>{{ type }}</td>
+		<td>{{ format }}</td>
+		<td>{{ mime }}</td>
+		<td>{{ regex }}</td>
+		<td>{{ label }}</td>
+		<td>
+			<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Filetype</a>
+		</td>
+	</tr>
+	{{/ filetype_list }}
+</table>

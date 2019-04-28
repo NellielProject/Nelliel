@@ -46,7 +46,7 @@ class AdminStyles extends AdminHandler
     public function renderPanel($user)
     {
         $output_panel = new \Nelliel\Output\OutputPanelStyles($this->domain);
-        $output_panel->render(['user' => $user]);
+        $output_panel->render(['user' => $user], false);
     }
 
     public function creator($user)

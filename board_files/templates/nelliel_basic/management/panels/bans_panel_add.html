@@ -1,0 +1,70 @@
+{{% FILTERS }}
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data" aria-label="Add ban" data-i18n-attributes="gettext|aria-label">
+	<div class="display-table">
+		<div class="display-row">
+			<span class="display-cell">
+				<label for="ban_ip" data-i18n="gettext">IP to ban:</label>
+			</span>
+			<span class="display-cell">
+				<input id="ban_ip" type="text" name="ban_ip" size="24" maxlength="50" value="{{ ban_ip }}">
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
+				<label for="ban_board" data-i18n="gettext">Apply ban to this board:</label>
+			</span>
+			<span class="display-cell">
+				<input id="ban_board"  type="text" name="ban_board" size="24" maxlength="255" value="{{ ban_board }}">
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
+				<input type="hidden" name="ban_all_boards" value="0">
+				<input id="ban_all_boards" type="checkbox" name="ban_all_boards" value="1">
+				<label for="ban_all_boards" data-i18n="gettext">Ban from all boards. This overrides any specific boards.</label>
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell" data-i18n="gettext">Ban length:</span>
+			<span class="display-cell">
+				<label for="ban_time_years" data-i18n="gettext">Years:</label>
+				<input id="ban_time_years" type="text" name="ban_time_years" size="6" maxlength="12" value="0">&nbsp;&nbsp;&nbsp;
+				<label for="ban_time_days" data-i18n="gettext">Days:</label>
+				<input id="ban_time_days" type="text" name="ban_time_days" size="6" maxlength="12" value="0">&nbsp;&nbsp;&nbsp;
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell"></span>
+			<span class="display-cell">
+				<label for="ban_time_hours" data-i18n="gettext">Hours:</label>
+				<input id="ban_time_hours"  type="text" name="ban_time_hours" size="6" maxlength="12" value="0">&nbsp;&nbsp;&nbsp;
+				<label for="ban_time_minutes" data-i18n="gettext">Minutes:</label>
+				<input id="ban_time_minutes"  type="text" name="ban_time_minutes" size="6" maxlength="12" value="0">&nbsp;&nbsp;&nbsp;
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
+				<label for="ban_reason" data-i18n="gettext">Ban reason (optional):</label>
+			</span>
+			<span class="display-cell">
+				<textarea id="ban_reason" name="ban_reason" cols="32" rows="3"></textarea>
+			</span>
+		</div>
+		{{# is_post_ban }}
+		<div class="display-row">
+			<span class="display-cell">
+				<label for="mod_post_comment" data-i18n="gettext">Attach comment to post (optional):</label>
+			</span>
+			<span class="display-cell">
+				<textarea id="mod_post_comment" name="mod_post_comment" cols="32" rows="3"></textarea>
+			</span>
+		</div>
+		{{/ is_post_ban }}
+		<div class="display-row">
+			<span class="display-cell">
+				<input id="ban_type" type="text" name="ban_type" value="{{ ban_type }}">
+				<input type="submit" value="Add Ban" data-i18n-attributes="gettext|value">
+			</span>
+		</div>
+	</div>
+</form>

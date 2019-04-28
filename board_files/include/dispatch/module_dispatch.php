@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use \Nelliel\Domain;
+use Nelliel\Domain;
 
 function nel_module_dispatch(array $inputs, Domain $domain)
 {
@@ -17,14 +17,14 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             if (empty($_POST))
             {
                 $output_login = new \Nelliel\Output\OutputLoginPage($domain);
-                $output_login->render();
+                $output_login->render(['dotdot' => ''], false);
             }
             else
             {
                 $session = new \Nelliel\Session();
                 $session->login();
                 $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain);
-                $output_main_panel->render(['user' => $session->sessionUser()]);
+                $output_main_panel->render(['user' => $session->sessionUser()], false);
             }
 
             break;
@@ -39,31 +39,32 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $inputs['thread'] = $_GET['thread'] ?? null;
             $session = new \Nelliel\Session(true);
 
-            if(!$session->inModmode($domain))
-            {
-                $domain->renderActive(true);
-            }
-
             switch ($inputs['action'])
             {
                 case 'view-index':
-                    require_once INCLUDE_PATH . 'output/main_generation.php';
-                    nel_main_thread_generator($domain, 0, false, intval($inputs['index']));
+                    $output_thread = new \Nelliel\Output\OutputIndex($domain);
+                    $output_thread->render(['write' => false, 'thread_id' => 0], false);
                     break;
 
                 case 'view-thread':
-                    require_once INCLUDE_PATH . 'output/thread_generation.php';
-                    nel_thread_generator($domain, false, intval($inputs['thread']), $inputs['action']);
+                    $output_thread = new \Nelliel\Output\OutputThread($domain);
+                    $output_thread->render(
+                            ['write' => false, 'thread_id' => intval($inputs['thread']),
+                            'command' => $inputs['action']], false);
                     break;
 
                 case 'expand-thread':
-                    require_once INCLUDE_PATH . 'output/thread_generation.php';
-                    nel_thread_generator($domain, false, intval($inputs['thread']), $inputs['action']);
+                    $output_thread = new \Nelliel\Output\OutputThread($domain);
+                    $output_thread->render(
+                            ['write' => false, 'thread_id' => intval($inputs['thread']),
+                            'command' => $inputs['action']], false);
                     break;
 
                 case 'collapse-thread':
-                    require_once INCLUDE_PATH . 'output/thread_generation.php';
-                    nel_thread_generator($domain, false, intval($inputs['thread']), $inputs['action']);
+                    $output_thread = new \Nelliel\Output\OutputThread($domain);
+                    $output_thread->render(
+                            ['write' => false, 'thread_id' => intval($inputs['thread']),
+                            'command' => $inputs['action']], false);
                     break;
             }
 
@@ -75,12 +76,12 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             if ($domain->id() !== '')
             {
                 $output_board_panel = new \Nelliel\Output\OutputPanelBoard($domain);
-                $output_board_panel->render(['user' => $session->sessionUser()]);
+                $output_board_panel->render(['user' => $session->sessionUser()], false);
             }
             else
             {
                 $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain);
-                $output_main_panel->render(['user' => $session->sessionUser()]);
+                $output_main_panel->render(['user' => $session->sessionUser()], false);
             }
 
             break;
@@ -110,7 +111,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $file_filters_admin->actionDispatch($inputs);
             break;
 
-        case 'default-board-settings':
+        case 'board-defaults':
             $board_settings_admin = new \Nelliel\Admin\AdminBoardSettings($authorization, $domain);
             $board_settings_admin->actionDispatch($inputs);
             break;
@@ -120,12 +121,12 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             if ($inputs['action'] === 'extract-gettext')
             {
-                $language = new \Nelliel\Language\Language(new \SmallPHPGettext\SmallPHPGettext());
-                $language->extractLanguageStrings($domain, $session->sessionUser(), LANGUAGES_FILE_PATH . 'extracted/extraction' . date('Y-m-d_H-i-s') . '.pot');
+                $language = new \Nelliel\Language\Language();
+                $language->extractLanguageStrings($domain, $session->sessionUser(), 'nelliel', LC_MESSAGES);
             }
 
             $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain);
-            $output_main_panel->render(['user' => $session->sessionUser()]);
+            $output_main_panel->render(['user' => $session->sessionUser()], false);
             break;
 
         case 'reports':
@@ -167,7 +168,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 if ($fgsfds->getCommand('noko') !== false)
                 {
-                    if ($session->isActive() && $session->inModmode($domain))
+                    if ($session->inModmode($domain))
                     {
                         $url_constructor = new \Nelliel\URLConstructor();
                         $url = $url_constructor->dynamic(MAIN_SCRIPT,
@@ -187,7 +188,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 }
                 else
                 {
-                    if ($session->isActive() && $session->inModmode($domain))
+                    if ($session->inModmode($domain))
                     {
                         $url_constructor = new \Nelliel\URLConstructor();
                         $url = $url_constructor->dynamic(MAIN_SCRIPT,
@@ -231,7 +232,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     $reports_admin = new \Nelliel\Admin\AdminReports($authorization, $domain);
                     $reports_admin->actionDispatch($inputs);
 
-                    if ($session->isActive() && $session->inModmode($domain))
+                    if ($session->inModmode($domain))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . MAIN_SCRIPT .
                                 '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';
@@ -248,7 +249,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     $thread_handler = new \Nelliel\ThreadHandler($domain->database(), $domain);
                     $thread_handler->processContentDeletes();
 
-                    if ($session->isActive() && $session->inModmode($domain))
+                    if ($session->inModmode($domain))
                     {
                         echo '<meta http-equiv="refresh" content="1;URL=' . MAIN_SCRIPT .
                                 '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';
@@ -301,7 +302,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             }
 
             $output_board_panel = new \Nelliel\Output\OutputPanelBoard($domain);
-            $output_board_panel->render(['user' => $session->sessionUser()]);
+            $output_board_panel->render(['user' => $session->sessionUser()], false);
             break;
 
         case 'templates':

@@ -52,14 +52,16 @@ class AdminRoles extends AdminHandler
         {
             $this->remove($user);
         }
-
-        $this->renderPanel($user);
+        else
+        {
+            $this->renderPanel($user);
+        }
     }
 
     public function renderPanel($user)
     {
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
-        $output_panel->render(['section' => 'panel', 'user' => $user]);
+        $output_panel->render(['section' => 'panel', 'user' => $user], false);
     }
 
     public function creator($user)
@@ -70,7 +72,7 @@ class AdminRoles extends AdminHandler
         }
 
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id]);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id], false);
     }
 
     public function add($user)
@@ -83,7 +85,7 @@ class AdminRoles extends AdminHandler
         $this->role_id = $_POST['role_id'];
         $this->update($user);
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id]);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id], false);
     }
 
     public function editor($user)
@@ -94,7 +96,7 @@ class AdminRoles extends AdminHandler
         }
 
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id]);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id], false);
     }
 
     public function update($user)
@@ -126,11 +128,12 @@ class AdminRoles extends AdminHandler
 
         $this->authorization->saveRoles();
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id]);
+        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id], false);
     }
 
     public function remove($user)
     {
         $this->authorization->removeRole($this->role_id);
+        $this->renderPanel($user);
     }
 }

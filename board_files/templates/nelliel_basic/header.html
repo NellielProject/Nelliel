@@ -1,41 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta http-equiv="content-type"  content="text/html;charset=utf-8">
-	<meta name="robots" content="noarchive">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<script id="js-main-file" src="assets/scripts/nel.js"></script>
-	<script id="js-onload"></script>
-	<script id="js-style-set"></script>
-	<link id="favicon-link" rel="icon" href="">
-	<title></title>
-</head>
-<body>
-	<nav id="board-navigation" class="board-navigation"></nav>
-	<nav id="top-styles" class="top-styles">
-		<span>Style:</span>
-		<select id="top-styles-menu" data-command="change-style"></select>
-	</nav>
-	<nav id="top-nav-menu" class="top-nav-menu" >
-		<span>[<a data-parse-id="logout" href="" data-i18n="gettext">Logout</a>]</span>
-		<span>[<a data-parse-id="home" href="" data-i18n="gettext" target="_top">Home</a>]</span>
-		<span>[<a data-parse-id="manage" href="" data-i18n="gettext">Manage</a>]</span>
-		<span>[<a data-parse-id="news" href="" data-i18n="gettext">News</a>]</span>
-		<span>[<a data-parse-id="about-nelliel" href="" data-i18n="gettext">About Nelliel</a>]</span>
-	</nav>
-	<div id="top-site-name" class="site-name"></div>
-	<div id="top-site-slogan" class="site-slogan"></div>
-	<div class="site-banner"><img src="" id="top-site-banner"></div>
-	<h1 class="board-name" id="top-board-name"></h1>
-	<h2 class="board-slogan" id="top-board-slogan"></h2>
-	<div class="board-banner"><img src="" id="top-board-banner"></div>
+{{% FILTERS }}
+{{# boards_menu }}
+	{{> menu/boards }}
+{{/ boards_menu }}
+{{# show_styles }}
+	{{> menu/styles }}
+{{/ show_styles }}
+{{# site_navigation }}
+	{{> menu/site_navigation }}
+{{/ site_navigation }}
+<header role="banner">
+	{{# is_site_header }}
+	<h1 class="site-name">{{ name }}</h1>
+	<h2 class="site-slogan">{{ slogan }}</h2>
+	<div class="site-banner"><img src="{{ banner_url }}"></div>
+	{{/ is_site_header }}
+	{{# is_board_header }}
+	<h1 class="board-name">{{ name }}</h1>
+	{{# slogan }}
+	<h2 class="board-slogan">{{ slogan }}</h2>
+	{{/ slogan }}
+	{{# banner_url }}
+	<div class="board-banner"><img src="{{ banner_url }}"></div>
+	{{/ banner_url }}
+	{{/ is_board_header }}
 	<hr class="clear">
-	<div id="manage-header" class="manage-header">
-		<span id="manage-header-text"></span>
+	{{# show_manage_headers }}
+	<div class="manage-header">
+		<span>{{ manage_header }}</span>
 	</div>
-	<div id="manage-board-header" class="manage-board-header">
-		<span id="manage-board-header-data"></span>
+	<div class="manage-board-header">
+		<span>{{ manage_board_header }}</span>
 	</div>
-	<div id="manage-sub-header" class="manage-sub-header">
-		<span id="manage-sub-header-text"></span>
+	<div class="manage-sub-header">
+		<span>{{ manage_sub_header }}</span>
 	</div>
+	{{/ show_manage_headers }}
+</header>

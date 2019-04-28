@@ -1,43 +1,60 @@
-	<div class="manage-section-header" data-i18n="gettext">Installed Icon Sets</div>
-	<table id="installed-style-list" class="data-table">
-		<tr class="manage-header">
-			<th data-i18n="gettext">Style ID</th>
-			<th data-i18n="gettext">Type</th>
-			<th data-i18n="gettext">Name</th>
-			<th data-i18n="gettext">Directory</th>
-			<th data-i18n="gettext">Make Default</th>
-			<th data-i18n="gettext">Remove</th>
-		</tr>
-		<tr data-parse-id="style-row" class="row1">
-			<td data-parse-id="id"></td>
-			<td data-parse-id="style_type"></td>
-			<td data-parse-id="name"></td>
-			<td data-parse-id="directory"></td>
-			<td data-parse-id="action-1">
-				<a class="display-cell" data-parse-id="default-link" href="" data-i18n="gettext">Make Default</a>
-			</td>
-			<td data-parse-id="style-action-2">
-				<a class="display-cell" data-parse-id="remove-link" href="" data-i18n="gettext">Remove Style</a>
-			</td>
-		</tr>
-	</table>
-	<hr>
-	<div class="manage-section-header" data-i18n="gettext">Available Styles</div>
-	<table id="available-style-list" class="data-table">
-		<tr class="manage-header">
-			<th data-i18n="gettext">Style ID</th>
-			<th data-i18n="gettext">Type</th>
-			<th data-i18n="gettext">Name</th>
-			<th data-i18n="gettext">Directory</th>
-			<th data-i18n="gettext">Remove</th>
-		</tr>
-		<tr data-parse-id="style-row" class="row1">
-			<td data-parse-id="id"></td>
-			<td data-parse-id="style_type"></td>
-			<td data-parse-id="name"></td>
-			<td data-parse-id="directory"></td>
-			<td data-parse-id="action-1">
-				<a class="display-cell" data-parse-id="install-link" href="" data-i18n="gettext">Install Style</a>
-			</td>
-		</tr>
-	</table>
+{{% FILTERS }}
+<div class="manage-section-header" data-i18n="gettext">Installed Icon Sets</div>
+<table class="data-table">
+	<tr class="manage-header">
+		<th data-i18n="gettext">Style ID</th>
+		<th data-i18n="gettext">Type</th>
+		<th data-i18n="gettext">Name</th>
+		<th data-i18n="gettext">Directory</th>
+		<th data-i18n="gettext">Make Default</th>
+		<th data-i18n="gettext">Remove</th>
+	</tr>
+	{{# installed_list }}
+	<tr class="{{ bgclass }}">
+		<td>{{ id }}</td>
+		<td>{{ style_type }}</td>
+		<td>{{ name }}</td>
+		<td>{{ directory }}</td>
+		<td>
+			{{^ is_default }}
+			<a class="display-cell" href="{{ default_url }}" data-i18n="gettext">Make Default</a>
+			{{/ is_default }}
+			{{# is_default }}
+			<span data-i18n="gettext">Default Style</span>
+			{{/ is_default }}
+		</td>
+		<td>
+			{{^ is_default }}
+			<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Style</a>
+			{{/ is_default }}
+		</td>
+	</tr>
+	{{/ installed_list }}
+</table>
+<hr>
+<div class="manage-section-header" data-i18n="gettext">Available Styles</div>
+<table class="data-table">
+	<tr class="manage-header">
+		<th data-i18n="gettext">Style ID</th>
+		<th data-i18n="gettext">Type</th>
+		<th data-i18n="gettext">Name</th>
+		<th data-i18n="gettext">Directory</th>
+		<th data-i18n="gettext">Install</th>
+	</tr>
+	{{# available_list }}
+	<tr class="{{ bgclass }}">
+		<td>{{ id }}</td>
+		<td>{{ style_type }}</td>
+		<td>{{ name }}</td>
+		<td>{{ directory }}</td>
+		<td>
+			{{^ is_installed }}
+			<a class="display-cell" href="{{ install_url }}" data-i18n="gettext">Install Style</a>
+			{{/ is_installed }}
+			{{# is_installed }}
+			<span data-i18n="gettext">Style Installed</span>
+			{{/ is_installed }}
+		</td>
+	</tr>
+	{{/ available_list }}
+</table>

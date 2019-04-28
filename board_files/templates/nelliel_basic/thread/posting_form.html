@@ -1,0 +1,132 @@
+{{% FILTERS }}
+{{# is_response }}
+<div>
+	[<a href="{{ return_url }}" data-i18n="gettext">Return</a>]
+</div>
+{{/ is_response }}
+<form id="posting-form" class="display-table posting-form" accept-charset="utf-8" name="postingform" action="{{ form_action }}" method="post" enctype="multipart/form-data" aria-label="New post or thread" data-i18n-attributes="gettext|aria-label">
+	<input type="hidden" name="new_post[post_info][response_to]" value="{{ response_to }}">
+	<div>
+		{{^ force_anonymous }}
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Name</span>
+			<input type="text" class="posting-form-input" name="new_post[post_info][not_anonymous]" size="30" maxlength="{{ not_anonymous_maxlength }}">
+		</label>
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">E-mail</span>
+			<input class="posting-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength="{{ spam_target_maxlength }}">
+		</label>
+		{{/ force_anonymous }}
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Subject</span>
+			<input class="posting-form-input" type="text" name="new_post[post_info][verb]" size="30" maxlength="{{ verb_maxlength }}">
+		</label>
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Comment</span>
+			<textarea class="posting-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6"></textarea>
+		</label>
+		{{# file_blocks }}
+		<span id="{{ block_id }}" class="posting-form-row {{ hidden }}">
+			<label class="posting-form-label" for="{{ up_file_id }}">
+				<span data-i18n="gettext">File</span>&nbsp;<span>{{ file_number }}</span>
+			</label>
+			<input id="{{ up_file_id }}" class="posting-form-input" type="file" name="{{ up_file_name }}" data-command="reveal-file-input">
+			<br>
+			<input id="{{ add_sauce }}" type="button" value="Add Source" data-command="add-file-meta">&nbsp;
+			<input id="{{ add_lol_drama }}" type="button" value="Add License" data-command="add-file-meta">&nbsp;
+			<input id="{{ add_alt_text }}" type="button" value="Add Alt Description" data-command="add-file-meta">
+			<br>
+			{{# spoilers_enabled }}
+			<span id="{{ spoiler_id }}">
+				<input type="hidden" name="{{ spoiler_name }}" value="0">
+				<input type="checkbox" name="{{ spoiler_name }}" value="1">
+				<span data-i18n="gettext">Spoiler</span>
+			</span>
+			{{/ spoilers_enabled }}
+		</span>
+		<label id="{{ sauce_id }}" class="posting-form-row hidden">
+			<span class="posting-form-label" data-i18n="gettext">Source</span>
+			<input class="posting-form-input" type="text" name="{{ sauce_name }}" maxlength="{{ sauce_maxlength }}">
+		</label>
+		<label id="{{ lol_drama_id }}" class="posting-form-row hidden">
+			<span class="posting-form-label" data-i18n="gettext">License</span>
+			<input class="posting-form-input" type="text" name="{{ lol_drama_name }}" maxlength="{{ lol_drama_maxlength }}">
+		</label>
+		<label id="{{ alt_text_id }}" class="posting-form-row hidden">
+			<span class="posting-form-label" data-i18n="gettext">Alt Text</span>
+			<input class="posting-form-input" type="text" name="{{ alt_text_name }}" maxlength="{{ alt_text_maxlength }}">
+		</label>
+		{{/ file_blocks }}
+		{{# use_fgsfds }}
+		<label class="posting-form-row">
+			<span class="posting-form-label">{{ fgsfds_name }}</span>
+			<input class="posting-form-input" type="text" name="new_post[post_info][fgsfds]" size="30">
+		</label>
+		{{/ use_fgsfds }}
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Password</span>
+			<input id="posting-form-sekrit" class="posting-form-input" type="password" name="new_post[post_info][sekrit]" size="12" maxlength="16" value="">&nbsp;&nbsp;
+			<span data-i18n="gettext">(Password used for file deletion)</span>
+		</label>
+		{{# is_staff }}
+		<label class="posting-form-row">
+			<span class="posting-form-label"></span>
+			<input type="hidden" name="post_as_staff" value="0">
+			<input type="checkbox" name="post_as_staff" value="1" title="Post as staff" data-i18n-attributes="gettext|title" checked>
+			<span data-i18n="gettext">Post as staff</span>
+		</label>
+		{{/ is_staff }}
+		{{# use_captcha }}
+		<div class="posting-form-row">
+			<span class="posting-form-label"></span>
+			<div>
+				<img src="{{ captcha_image }}">
+			</div>
+			<div data-i18n="gettext">Enter the characters shown in the image above.</div>
+			<div>
+				<input class="posting-form-input" type="text" name="new_post[captcha]" size="12" maxlength="16" value="">
+			</div>
+		</div>
+		{{/ use_captcha }}
+		{{# use_recaptcha }}
+		<div class="posting-form-row">
+			<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+			<span class="posting-form-label"></span>
+			<div class="g-recaptcha" data-sitekey="{{ recaptcha_sitekey }}"></div>
+		</div>
+		{{/ use_recaptcha }}
+		{{# use_honeypot }}
+		<label id="form-user-info-1" class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Do not ever check this!</span>
+			<input type="checkbox" name="{{ honeypot_field_name1 }}" value="display" autocomplete="off" tabindex="-1">
+		</label>
+		<label id="form-user-info-2" class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Never put anything in this field!</span>
+			<input type="text" name="{{ honeypot_field_name2 }}" size="30" autocomplete="off" tabindex="-1">
+		</label>
+		{{/ use_honeypot }}
+		<div class="posting-form-row">
+			<span class="display-cell"></span>
+			<input type="submit" value="Submit" data-i18n-attributes="gettext|value">&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="reset" value="Clear form" data-i18n-attributes="gettext|value">
+		</div>
+		<div class="posting-form-row">
+			<span class="display-cell"></span>
+			<span class="posting-form-input">{{ posting_mode }}</span>
+		</div>
+		{{# use_honeypot }}
+		<label id="form-user-info-3" class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Never put anything in this field!</span>
+			<input type="text" placeholder="http://www.mywebsite.com" name="{{ honeypot_field_name3 }}" size="30" autocomplete="off" tabindex="-1">
+		</label>
+		{{/ use_honeypot }}
+	</div>
+	<div class="rules">
+		<ul class="rules-list">
+		{{# rules_list }}
+			<li class="rules-item">{{ rules_text }}</li>
+		{{/ rules_list }}
+		</ul>
+	</div>
+</form>
+<hr class="clear">

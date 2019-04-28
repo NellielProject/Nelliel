@@ -59,7 +59,7 @@ class ContentThread extends ContentHandler
             $prepared = $database->prepare(
                     'UPDATE "' . $this->domain->reference('threads_table') . '" SET "first_post" = :first_post,
                     "last_post" = :last_post, "last_bump_time" = :last_bump_time, "last_bump_time_milli" = :last_bump_time_milli,
-                    "total_files" = :total_files, "last_update" = :last_update, "last_update_milli" = :last_update_milli, "post_count" = :post_count,
+                    "content_count" = :content_count, "last_update" = :last_update, "last_update_milli" = :last_update_milli, "post_count" = :post_count,
                     "thread_sage" = :thread_sage, "sticky" = :sticky, "archive_status" = :archive_status,
                     "locked" = :locked WHERE "thread_id" = :thread_id');
         }
@@ -67,9 +67,9 @@ class ContentThread extends ContentHandler
         {
             $prepared = $database->prepare(
                     'INSERT INTO "' . $this->domain->reference('threads_table') . '" ("thread_id", "first_post", "last_post",
-                    "last_bump_time", "last_bump_time_milli", "total_files", "last_update", "last_update_milli",
+                    "last_bump_time", "last_bump_time_milli", "content_count", "last_update", "last_update_milli",
                     "post_count", "thread_sage", "sticky", "archive_status", "locked") VALUES
-                    (:thread_id, :first_post, :last_post, :last_bump_time, :last_bump_time_milli, :total_files,
+                    (:thread_id, :first_post, :last_post, :last_bump_time, :last_bump_time_milli, :content_count,
                     :last_update, :last_update_milli, :post_count, :thread_sage, :sticky, :archive_status, :locked)');
         }
 
@@ -79,7 +79,7 @@ class ContentThread extends ContentHandler
         $prepared->bindValue(':last_bump_time', $this->contentDataOrDefault('last_bump_time', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_bump_time_milli', $this->contentDataOrDefault('last_bump_time_milli', 0),
                 PDO::PARAM_INT);
-        $prepared->bindValue(':total_files', $this->contentDataOrDefault('total_files', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':content_count', $this->contentDataOrDefault('content_count', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_update', $this->contentDataOrDefault('last_update', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_update_milli', $this->contentDataOrDefault('last_update_milli', 0), PDO::PARAM_INT);
         $prepared->bindValue(':post_count', $this->contentDataOrDefault('post_count', 0), PDO::PARAM_INT);
@@ -164,12 +164,12 @@ class ContentThread extends ContentHandler
         $prepared = $this->database->prepare(
                 'SELECT COUNT("entry") FROM "' . $this->domain->reference('content_table') .
                 '" WHERE "parent_thread" = ?');
-        $file_count = $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id],
+        $content_count = $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id],
                 PDO::FETCH_COLUMN);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->domain->reference('threads_table') . '" SET "total_files" = ? WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, [$file_count, $this->content_id->thread_id]);
+                'UPDATE "' . $this->domain->reference('threads_table') . '" SET "content_count" = ? WHERE "thread_id" = ?');
+        $this->database->executePrepared($prepared, [$content_count, $this->content_id->thread_id]);
 
         $first_post = $this->firstPost();
         $last_post = $this->lastPost();

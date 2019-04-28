@@ -14,11 +14,14 @@ abstract class Domain
     protected $domain_references;
     protected $cache_handler;
     protected $database;
+    protected $front_end_data;
     protected $file_handler;
-    protected $render_instance;
+    protected $render_core;
     protected $render_active;
     protected $template_path;
     protected $translator;
+    protected $locale;
+    protected $language;
 
     protected abstract function loadSettings();
 
@@ -30,12 +33,14 @@ abstract class Domain
 
     protected function utilitySetup()
     {
+        $this->front_end_data = new FrontEndData($this->database);
         $this->file_handler = new \Nelliel\FileHandler();
         $this->cache_handler = new \Nelliel\CacheHandler();
-        $this->translator = new \Nelliel\Language\Translator();
+        $this->translator = new \Nelliel\Language\Translator($this);
+        $this->language = new \Nelliel\Language\Language();
     }
 
-    public function database($new_database = null)
+    public function database(NellielPDO $new_database = null)
     {
         if (!is_null($new_database))
         {
@@ -85,16 +90,6 @@ abstract class Domain
         return $this->domain_references[$reference];
     }
 
-    public function renderActive($status = null)
-    {
-        if (!is_null($status))
-        {
-            $this->render_active = $status;
-        }
-
-        return $this->render_active;
-    }
-
     public function templatePath($new_path = null)
     {
         if(!is_null($new_path))
@@ -105,29 +100,43 @@ abstract class Domain
         return $this->template_path;
     }
 
-    public function renderInstance($new_instance = null)
-    {
-        if (is_null($new_instance) && empty($this->render_instance))
-        {
-            $this->render_instance = new RenderCore();
-            $front_end_data = new FrontEndData($this->database);
-            $this->templatePath(TEMPLATES_FILE_PATH . $front_end_data->template($this->setting('template_id'))['directory']);
-            $this->render_instance->getTemplateInstance()->setTemplatePath($this->template_path);
-        }
-
-        if (!is_null($new_instance))
-        {
-            $this->render_instance = $new_instance;
-            $front_end_data = new FrontEndData($this->database);
-            $this->templatePath(TEMPLATES_FILE_PATH . $front_end_data->template($this->setting('template_id'))['directory']);
-            $this->render_instance->getTemplateInstance()->setTemplatePath($this->template_path);
-        }
-
-        return $this->render_instance;
-    }
-
     public function translator()
     {
         return $this->translator;
+    }
+
+    public function locale(string $locale = null)
+    {
+        if(!isset($this->locale) && is_null($locale))
+        {
+            $locale = $this->setting('locale');
+
+            if(nel_true_empty($locale))
+            {
+                $locale = DEFAULT_LOCALE;
+            }
+
+            $this->updateLocale($locale);
+        }
+
+        if(!is_null($locale))
+        {
+            $this->updateLocale($locale);
+        }
+
+        return $this->locale;
+    }
+
+    private function updateLocale(string $locale)
+    {
+        $this->locale = $locale;
+        $this->language->accessGettext()->locale($this->locale);
+        $this->language->accessGettext()->textdomain('nelliel');
+
+        if(!$this->language->accessGettext()->translationLoaded('nelliel', LC_MESSAGES))
+        {
+            $this->language->loadLanguage($locale, 'nelliel', LC_MESSAGES);
+
+        }
     }
 }

@@ -17,6 +17,7 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     nelliel.setup.localStorageInitCheck();
     dataBin.hidden_threads = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_threads_id, true);
     dataBin.hidden_posts = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_posts_id, true);
+    dataBin.collapsedThreads = [];
 
     if(board_id === "") {
         setStyle(nelliel.core.getCookie("base-style"));
@@ -53,8 +54,12 @@ nelliel.setup.setupListeners = function() {
         nelliel.setup.addListenerIfElementExists(post_elements[i], "mouseout", nelliel.events.processMouseOut);
     }
 
-    nelliel.setup.addListenerIfElementExists(document.getElementById("top-styles-menu"), "change", nelliel.events.processPostClicks);
-    nelliel.setup.addListenerIfElementExists(document.getElementById("bottom-styles-menu"), "change", nelliel.events.processPostClicks);
+    var style_menus = document.getElementsByClassName("styles-menu");
+    
+    for (i = 0; i < style_menus.length; i++) {
+        nelliel.setup.addListenerIfElementExists(style_menus.item(i), "change", nelliel.events.processPostClicks);
+      } 
+
     nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "click", nelliel.events.processPostClicks);
     nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "change", nelliel.events.processChanges);
     window.addEventListener("hashchange", nelliel.hashHandler);
@@ -241,21 +246,16 @@ function setStyle(style, update_cookie = false) {
     for (i = 0; i < allstyles.length; i++) {
         allstyles[i].disabled = true;
 
-        if (allstyles[i].getAttribute("data-parse-id") == "style-board") {
+        if (allstyles[i].getAttribute("data-style-type") == "style-board") {
             if (allstyles[i].getAttribute("data-id") == style) {
                 allstyles[i].disabled = false;
             }
         }
     }
+
+    var style_menus = document.getElementsByClassName("styles-menu");
     
-    var top_element = document.getElementById("top-styles-menu");
-    var bottom_element = document.getElementById("bottom-styles-menu");
-    
-    if(top_element !== null) {
-        top_element.value = style;
-    }
-    
-    if(bottom_element !== null) {
-        bottom_element.value = style;
-    }
+    for (i = 0; i < style_menus.length; i++) {
+        style_menus.item(i).value = style;
+      } 
 }

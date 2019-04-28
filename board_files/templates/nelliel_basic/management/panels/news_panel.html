@@ -1,30 +1,33 @@
-	<form id="add-news-form" accept-charset="utf-8" action="" method="post">
-		<div class="display-table">
-			<div class="display-row">
-				<label for="headline" class="display-cell" data-i18n="gettext">Headline</label>
-				<input id="headline" class="display-cell" type="text" name="headline" size="30">
-			</div>
-			<div class="display-row">
-				<label for="news-text" class="display-cell" data-i18n="gettext">News text</label>
-				<textarea id="news-text" class="display-cell" name="news-text" cols="80" rows="6"></textarea>
-			</div>
-			<div class="display-row">
-				<input type="submit" value="Post News" data-i18n="gettext" data-i18n-attributes="value">
-			</div>
+{{% FILTERS }}
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" aria-label="Add news post" data-i18n-attributes="gettext|aria-label">
+	<div class="display-table">
+		<div class="display-row">
+			<label for="headline" class="display-cell" data-i18n="gettext">Headline</label>
+			<input id="headline" class="display-cell" type="text" name="headline" size="30">
 		</div>
-	</form>
-	<hr>
-	<table id="news-entry-list" class="data-table">
-		<tr class="manage-header">
-			<th data-i18n="gettext">Headline</th>
-			<th data-i18n="gettext">Date</th>
-			<th data-i18n="gettext">Actions</th>
-		</tr>
-		<tr data-parse-id="news-entry-row" class="row1">
-			<td data-parse-id="headline"></td>
-			<td data-parse-id="time"></td>
-			<td>
-				<a class="display-cell" data-parse-id="news-remove-link" href="" data-i18n="gettext">Remove</a>
-			</td>
-		</tr>
-	</table>
+		<div class="display-row">
+			<label for="news_text" class="display-cell" data-i18n="gettext">News text</label>
+			<textarea id="news_text" class="display-cell" name="news_text" cols="80" rows="6"></textarea>
+		</div>
+		<div class="display-row">
+			<input type="submit" value="Post News" data-i18n-attributes="gettext|value">
+		</div>
+	</div>
+</form>
+<hr>
+<table class="data-table">
+	<tr class="manage-header">
+		<th data-i18n="gettext">Headline</th>
+		<th data-i18n="gettext">Date</th>
+		<th data-i18n="gettext">Actions</th>
+	</tr>
+	{{# news_entry }}
+	<tr class="{{ bgclass }}">
+		<td>{{ headline }}</td>
+		<td>{{ time }}</td>
+		<td>
+			<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove</a>
+		</td>
+	</tr>
+	{{/ news_entry }}
+</table>

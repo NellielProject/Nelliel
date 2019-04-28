@@ -81,7 +81,7 @@ class NewPost
         $post->content_data['sage'] = $fgsfds->getCommandData('sage', 'value');
         $files = $file_upload->processFiles($post);
         $spoon = !empty($files);
-        $post->content_data['file_count'] = count($files);
+        $post->content_data['content_count'] = count($files);
 
         if (!$spoon)
         {
@@ -135,7 +135,7 @@ class NewPost
 
         // Go ahead and put post into database
         $post->content_data['op'] = ($post->content_data['parent_thread'] == 0) ? 1 : 0;
-        $post->content_data['has_file'] = ($post->content_data['file_count'] > 0) ? 1 : 0;
+        $post->content_data['has_content'] = ($post->content_data['content_count'] > 0) ? 1 : 0;
         $post->reserveDatabaseRow($time['time'], $time['milli']);
         $thread = new \Nelliel\Content\ContentThread(new \Nelliel\ContentID(), $this->domain);
 
@@ -146,7 +146,7 @@ class NewPost
             $thread->content_data['last_post'] = $post->content_id->post_id;
             $thread->content_data['last_bump_time'] = $time['time'];
             $thread->content_data['last_bump_time_milli'] = $time['milli'];
-            $thread->content_data['total_files'] = $post->content_data['file_count'];
+            $thread->content_data['content_count'] = $post->content_data['content_count'];
             $thread->content_data['last_update'] = $time['time'];
             $thread->content_data['last_update_milli'] = $time['milli'];
             $thread->content_data['post_count'] = 1;
@@ -157,8 +157,8 @@ class NewPost
         {
             $thread->content_id->thread_id = $post->content_data['parent_thread'];
             $thread->loadFromDatabase();
-            $thread->content_data['total_files'] = $thread->content_data['total_files'] +
-                    $post->content_data['file_count'];
+            $thread->content_data['content_count'] = $thread->content_data['content_count'] +
+                    $post->content_data['content_count'];
             $thread->content_data['last_update'] = $time['time'];
             $thread->content_data['last_update_milli'] = $time['milli'];
             $thread->content_data['post_count'] = $thread->content_data['post_count'] + 1;

@@ -57,6 +57,7 @@ define('LANGUAGES_FILE_PATH', FILES_PATH . 'languages/');
 define('LOCALE_FILE_PATH', LANGUAGES_FILE_PATH . 'locale/');
 define('STYLES_FILE_PATH', BASE_PATH . ASSETS_DIR . '/' . STYLES_DIR . '/');
 define('ICON_SETS_FILE_PATH', BASE_PATH . ASSETS_DIR . '/' . ICON_SETS_DIR . '/');
+define('WAT_FILE_PATH', INCLUDE_PATH . 'wat/');
 
 define('SCRIPTS_WEB_PATH', ASSETS_DIR . '/' . SCRIPTS_DIR . '/');
 define('IMAGES_WEB_PATH', ASSETS_DIR . '/' . IMAGES_DIR . '/');
@@ -68,6 +69,8 @@ define('SQLITE_DB_DEFAULT_PATH', FILES_PATH);
 define('BASE_HONEYPOT_FIELD1', 'display_signature'); // Honeypot field name
 define('BASE_HONEYPOT_FIELD2', 'signature'); // Honeypot field name
 define('BASE_HONEYPOT_FIELD3', 'website'); // Honeypot field name
+
+define('DEFAULT_TEXTDOMAIN_BIND', LANGUAGES_FILE_PATH . 'locale');
 
 // Set default values here in case the config is missing something
 $base_config['defaultadmin'] = '';
@@ -94,6 +97,7 @@ define('RUN_SETUP_CHECK', (bool)$base_config['run_setup_check']);
 define('DIRECTORY_PERM', $base_config['directory_perm']);
 define('FILE_PERM', $base_config['file_perm']);
 define('USE_INTERNAL_CACHE', $base_config['use_internal_cache']);
+define('USE_MUSTACHE_CACHE', $base_config['use_mustache_cache']);
 define('DEFAULT_LOCALE', $base_config['default_locale']);
 define('ENABLE_PLUGINS', $base_config['enable_plugins']);
 define('SECURE_SESSION_ONLY', $base_config['secure_session_only']);

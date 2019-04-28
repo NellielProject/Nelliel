@@ -1,45 +1,32 @@
-	<form id="thread-list-form" accept-charset="utf-8" action="" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="action" value="update">
-		<input id="board_id_field" type="hidden" name="board_id" value="">
-		<table id="post-list" class="data-table">
-			<tr class="manage-header">
-				<th data-i18n="gettext">Post Number</th>
-				<th data-i18n="gettext">Thread</th>
-				<th data-i18n="gettext">Time</th>
-				<th data-i18n="gettext">IP</th>
-				<th data-i18n="gettext">Name</th>
-				<th data-i18n="gettext">Email</th>
-				<th data-i18n="gettext">Subject</th>
-				<th data-i18n="gettext">Comment</th>
-				<th data-i18n="gettext">Actions</th>
-			</tr>
-			<tr id="post-row-" class="row1">
-				<td id="post-post-number-"></td>
-				<td>
-					<span id="post-thread-"></span>
-				</td>
-				<td>
-					<span id="post-time-"></span>
-				</td>
-				<td>
-					<span id="post-ip-"></span>
-				</td>
-				<td>
-					<span id="post-name-"></span>
-				</td>
-				<td>
-					<span id="post-email-"></span>
-				</td>
-				<td>
-					<a id="post-subject-link-" href="" rel="external"></a>
-				</td>
-				<td>
-					<span id="post-comment-"></span>
-				</td>
-				<td>
-					<span>[<a id="sticky-link-" href=""></a>]&nbsp;</span>
-					<span>[<a id="delete-link-" href=""></a>]</span>
-				</td>
-			</tr>
-		</table>
-	</form>
+{{% FILTERS }}
+<table class="data-table">
+	<tr class="manage-header">
+		<th data-i18n="gettext">Post Number</th>
+		<th data-i18n="gettext">Thread</th>
+		<th data-i18n="gettext">Time</th>
+		<th data-i18n="gettext">IP</th>
+		<th data-i18n="gettext">Name</th>
+		<th data-i18n="gettext">Email</th>
+		<th data-i18n="gettext">Subject</th>
+		<th data-i18n="gettext">Comment</th>
+		<th data-i18n="gettext">Actions</th>
+	</tr>
+	{{# posts }}
+	<tr class="{{ bgclass }}">
+		<td>{{ post_number }}</td>
+		<td>{{ parent_thread }}</td>
+		<td>{{ post_time }}</td>
+		<td>{{ poster_ip }}</td>
+		<td>{{ poster_name }}</td>
+		<td>{{ email }}</td>
+		<td>
+			<a href="{{ thread_url }}" rel="external">{{ subject }}</a>
+		</td>
+		<td>{{ comment }}</td>
+		<td>
+			<span>[<a href="{{ sticky_url }}">{{ sticky_text }}</a>]&nbsp;</span>
+			<span>[<a href="{{ delete_url }}">{{ delete_text }}</a>]</span>
+		</td>
+	</tr>
+	{{/ posts }}
+</table>

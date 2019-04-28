@@ -1,10 +1,15 @@
-		<div id="news-page" class="news-page">
-			<div data-parse-id="news-entry" class="news-entry">
-				<div class="news-headline-bar">
-					<span data-parse-id="headline" class="news-headline"></span>
-					<span data-parse-id="poster" class="news-poster"></span>
-					<span data-parse-id="time" class="news-time"></span>
-				</div>
-				<div data-parse-id="text" class="news-text"></div>
-			</div>
+{{% FILTERS }}
+<div class="news-page">
+	{{# news_entries }}
+	<div class="news-entry">
+		<div class="news-headline-bar">
+			<span class="news-headline">{{ headline }}</span>
+			<span class="news-poster">{{ poster }}</span>
+			<span class="news-time">{{ time }}</span>
 		</div>
+		{{# news_lines }}
+		<div class="news-text">{{{ news_line }}}</div>
+		{{/ news_lines }}
+	</div>
+	{{/ news_entries }}
+</div>
