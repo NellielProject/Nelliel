@@ -9,14 +9,7 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
     $backtrace = debug_backtrace();
     $diagnostic = array();
 
-    if(isset($error_data['board_id']) && $error_data['board_id'] !== '')
-    {
-        $domain = new \Nelliel\DomainBoard($error_data['board_id'], nel_database());
-    }
-    else
-    {
-        $domain = new \Nelliel\DomainSite(nel_database());
-    }
+
 
     $diagnostic['error_id'] = (!empty($error_id)) ? $error_id : 0;
     $diagnostic['error_message'] = (!empty($error_message)) ? $error_message : "I just don't know what went wrong!";
@@ -36,16 +29,27 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
         }
     }
 
-    $output_derp = new \Nelliel\Output\OutputDerp($domain);
-
     if (!defined('SETUP_GOOD'))
     {
-        $output_derp->renderSimple($diagnostic);
+        echo _gettext('oh god how did this get in here');
+        echo '<br>';
+        echo _gettext('Error ID: ') . $diagnostic['error_id'];
+        echo '<br>';
+        echo _gettext('Error Message: ') . $diagnostic['error_message'];
+        die();
+    }
+
+    if(isset($error_data['board_id']) && $error_data['board_id'] !== '')
+    {
+        $domain = new \Nelliel\DomainBoard($error_data['board_id'], nel_database());
     }
     else
     {
-        echo $output_derp->render(['diagnostic' => $diagnostic], false);
+        $domain = new \Nelliel\DomainSite(nel_database());
     }
+
+    $output_derp = new \Nelliel\Output\OutputDerp($domain);
+    echo $output_derp->render(['diagnostic' => $diagnostic], false);
 
     nel_clean_exit();
 }

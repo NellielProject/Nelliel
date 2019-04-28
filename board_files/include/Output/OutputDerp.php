@@ -68,14 +68,4 @@ class OutputDerp extends OutputCore
         $output = $this->output('basic_page', $data_only, true);
         return $output;
     }
-
-    public function renderSimple(array $diagnostic)
-    {
-        echo _gettext('oh god how did this get in here');
-        echo '<br>';
-        echo _gettext('Error ID: ') . $diagnostic['error_id'];
-        echo '<br>';
-        echo _gettext('Error Message: ') . $diagnostic['error_message'];
-        die();
-    }
 }
