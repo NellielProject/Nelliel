@@ -79,7 +79,6 @@ class OutputIndex extends OutputCore
             return $output;
         }
 
-        $post_counter = 0;
         $gen_data['index_rendering'] = true;
         $json_index = new \Nelliel\API\JSON\JSONIndex($this->domain, $this->file_handler);
         $this->render_data['catalog_url'] = 'catalog.html';
@@ -112,14 +111,14 @@ class OutputIndex extends OutputCore
             $gen_data['abbreviate'] = $thread_data['post_count'] > $this->domain->setting('abbreviate_thread');
             $thread_input['abbreviate'] = $gen_data['abbreviate'];
             $abbreviate_start = $thread_data['post_count'] - ($this->domain->setting('abbreviate_thread') - 1);
-            $post_counter = 0;
+            $post_counter = 1;
 
             foreach ($treeline as $post_data)
             {
                 $json_post = new \Nelliel\API\JSON\JSONPost($this->domain, $this->file_handler);
                 $json_instances['post'] = $json_post;
                 $parameters = ['thread_data' => $thread_data, 'dotdot' => $dotdot, 'post_data' => $post_data,
-                    'gen_data' => $gen_data, 'json_instances' => $json_instances];
+                    'gen_data' => $gen_data, 'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
 
                 if ($post_data['op'] == 1)
                 {
@@ -128,7 +127,7 @@ class OutputIndex extends OutputCore
                 }
                 else
                 {
-                    if ($post_counter >= $abbreviate_start)
+                    if ($post_counter > $abbreviate_start)
                     {
                         $thread_input['thread_posts'][] = $output_post->render($parameters, true);
                         $json_thread->addPostData($json_post->retrieveData());

@@ -32,6 +32,7 @@ class OutputPost extends OutputCore
         $dotdot = $parameters['dotdot'] ?? '';
         $json_post = $parameters['json_instances']['post'];
         $post_data = $parameters['post_data'] ?? $this->getPostFromDatabase($post_id);
+        $in_thread_number = $parameters['in_thread_number'] ?? 0;
         $this->startTimer();
         $json_post->storeData($json_post->prepareData($post_data), 'post');
         $response = $post_data['op'] != 1;
@@ -73,7 +74,7 @@ class OutputPost extends OutputCore
 
         $this->render_data['post_anchor_id'] = 't' . $post_content_id->thread_id . 'p' . $post_content_id->post_id;
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
-                $post_content_id, $web_paths, $gen_data);
+                $post_content_id, $web_paths, $gen_data, $in_thread_number);
 
         if ($post_data['has_content'] == 1)
         {
@@ -129,7 +130,7 @@ class OutputPost extends OutputCore
     }
 
     private function postHeaders(bool $response, array $thread_data, array $post_data, ContentID $thread_content_id,
-            ContentID $post_content_id, array $web_paths, array $gen_data)
+            ContentID $post_content_id, array $web_paths, array $gen_data, int $in_thread_number)
     {
         $header_data = array();
         $modmode_headers = array();
@@ -220,6 +221,7 @@ class OutputPost extends OutputCore
             $header_data['thread_headers'] = $thread_headers;
         }
 
+        $post_headers['in_thread_number'] = $in_thread_number;
         $post_headers['post_content_id'] = $post_content_id->getIDString();
         $post_headers['hide_post_id'] = 'hide-post-' . $post_content_id->getIDString();
         $post_headers['post_header_info_id'] = 'post-header-info-' . $post_content_id->getIDString();

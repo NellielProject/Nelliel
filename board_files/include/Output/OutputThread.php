@@ -72,7 +72,7 @@ class OutputThread extends OutputCore
         $json_thread->storeData($json_thread->prepareData($thread_data), 'thread');
         $json_content = new \Nelliel\API\JSON\JSONContent($this->domain, $this->file_handler);
         $json_instances = ['thread' => $json_thread, 'content' => $json_content];
-        $post_counter = 0;
+        $post_counter = 1;
         $gen_data['index_rendering'] = false;
         $gen_data['abbreviate'] = false;
         $total_posts = $thread_data['post_count'];
@@ -94,7 +94,7 @@ class OutputThread extends OutputCore
             $json_post = new \Nelliel\API\JSON\JSONPost($this->domain, $this->file_handler);
             $json_instances['post'] = $json_post;
             $parameters = ['thread_data' => $thread_data, 'dotdot' => $dotdot, 'post_data' => $post_data,
-                'gen_data' => $gen_data, 'json_instances' => $json_instances];
+                'gen_data' => $gen_data, 'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
             $post_render = $output_post->render($parameters, true);
 
             if ($post_data['op'] == 1)
@@ -103,13 +103,7 @@ class OutputThread extends OutputCore
             }
             else
             {
-                //$this->render_core->appendToOutput($post_render, 'expand');
                 $this->render_data['thread_posts'][] = $post_render;
-
-                if ($post_counter >= $collapse_start)
-                {
-                    //$this->render_core->appendToOutput($post_render, 'collapse');
-                }
             }
 
             $json_thread->addPostData($json_post->retrieveData());
@@ -134,14 +128,6 @@ class OutputThread extends OutputCore
             {
                 case 'view-thread':
                     echo $output;
-                    break;
-
-                case 'expand-thread':
-                    echo $this->render_core->getOutput('expand');
-                    break;
-
-                case 'collapse-thread':
-                    echo $this->render_core->getOutput('collapse');
                     break;
 
                 default:
