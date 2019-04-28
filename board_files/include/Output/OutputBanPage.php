@@ -28,7 +28,7 @@ class OutputBanPage extends OutputCore
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
-        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
+        $output_header = new OutputHeader($this->domain);
         $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot],
                 true);
         $this->render_data['ban_board'] = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board_id'];
@@ -92,7 +92,7 @@ class OutputBanPage extends OutputCore
         }
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('ban_page', $this->render_data);
-        $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
+        $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
         echo $output;

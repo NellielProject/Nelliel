@@ -38,7 +38,7 @@ class OutputThread extends OutputCore
         $thread_data = $this->database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
-        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
+        $output_header = new OutputHeader($this->domain);
 
         if ($session->isActive() && !$write)
         {
@@ -77,10 +77,10 @@ class OutputThread extends OutputCore
         $gen_data['abbreviate'] = false;
         $total_posts = $thread_data['post_count'];
         $this->render_data['abbreviate'] = false;
-        $output_posting_form = new \Nelliel\Output\OutputPostingForm($this->domain);
+        $output_posting_form = new OutputPostingForm($this->domain);
         $this->render_data['posting_form'] = $output_posting_form->render(
                 ['dotdot' => $dotdot, 'response_to' => $thread_id], true);
-        $output_post = new \Nelliel\Output\OutputPost($this->domain);
+        $output_post = new OutputPost($this->domain);
         $this->render_data['op_post'] = '';
         $this->render_data['thread_posts'] = '';
         $this->render_data['thread_id'] = $thread_content_id;
@@ -116,7 +116,7 @@ class OutputThread extends OutputCore
             $post_counter ++;
         }
 
-        $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
+        $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot], true);
         $output = $this->output('thread/thread_page', $data_only, true);
 

@@ -33,7 +33,7 @@ class OutputIndex extends OutputCore
         $site_domain = new \Nelliel\DomainSite($this->database);
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
-        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
+        $output_header = new OutputHeader($this->domain);
 
         if ($session->isActive() && !$write)
         {
@@ -54,14 +54,14 @@ class OutputIndex extends OutputCore
         $thread_list = $result->fetchAll(PDO::FETCH_ASSOC);
         $thread_count = count($thread_list);
         $gen_data['index']['thread_count'] = $thread_count;
-        $output_posting_form = new \Nelliel\Output\OutputPostingForm($this->domain);
+        $output_posting_form = new OutputPostingForm($this->domain);
         $this->render_data['posting_form'] = $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => 0],
                 true);
 
         if (empty($thread_list))
         {
             $this->render_data['catalog_url'] = 'catalog.html';
-            $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
+            $output_footer = new OutputFooter($this->domain);
             $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => true], true);
             $output = $this->output('/index/index_page', $data_only, true);
 
@@ -100,7 +100,7 @@ class OutputIndex extends OutputCore
             $treeline = $this->database->executePreparedFetchAll($prepared, [$thread_data['thread_id']],
                     PDO::FETCH_ASSOC);
 
-            $output_post = new \Nelliel\Output\OutputPost($this->domain);
+            $output_post = new OutputPost($this->domain);
             $json_thread = new \Nelliel\API\JSON\JSONThread($this->domain, $this->file_handler);
             $thread_content_id = \Nelliel\ContentID::createIDString($thread_data['thread_id']);
             $thread_input['op_post'] = '';
@@ -148,7 +148,7 @@ class OutputIndex extends OutputCore
                 $this->render_data['nav_elements'] = $output_menu->render(
                         ['menu' => 'index_navigation', 'page' => $page, 'index_format' => $index_format,
                             'page_count' => $page_count], true);
-                $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
+                $output_footer = new OutputFooter($this->domain);
                 $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => true],
                         true);
                 $output = $this->output('index/index_page', $data_only, true);

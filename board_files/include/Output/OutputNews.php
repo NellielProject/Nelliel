@@ -28,12 +28,12 @@ class OutputNews extends OutputCore
         $dotdot = ($parameters['dotdot']) ?? '';
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
-        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
+        $output_header = new OutputHeader($this->domain);
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'use_site_titles' => true], true);
         $this->render_data['news_entries'] = $this->newsList();
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('news', $this->render_data);
-        $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
+        $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => '', 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
         $this->file_handler->writeFile(BASE_PATH . 'news.html', $output);

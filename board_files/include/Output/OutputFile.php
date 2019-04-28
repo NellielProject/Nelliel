@@ -30,7 +30,7 @@ class OutputFile extends OutputCore
         $file = $parameters['file_data'] ?? $this->getFileFromDatabase($post_data['post_number'], $content_order);
         $web_paths = $parameters['web_paths'] ?? array();
         $post_type_class = $post_data['op'] == 1 ? 'op-' : 'reply-';
-        $multiple = $post_data['file_count'] > 1;
+        $multiple = $post_data['content_count'] > 1;
         $multiple_class = $multiple ? 'multiple-' : '';
         $dotdot = $parameters['dotdot'] ?? '';
         $json_post = $parameters['json_instances']['post'];

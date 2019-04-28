@@ -84,7 +84,7 @@ Contains information about a thread.
 |`last_update`         |`integer`|64-bit Unix timestamp|No      |Last thread update.|
 |`last_update_milli`   |`integer`|0-999                |No      |Last thread update milliseconds. Used with `last_update` when high precision is needed.|
 |`post_count`          |`integer`|1-2147483647         |No      |Total number of posts in the thread.|
-|`total_files`         |`integer`|0-2147483647         |No      |Total files in the thread.|
+|`content_count`       |`integer`|0-2147483647         |No      |Total content in the thread.|
 |`thread_sage`         |`boolean`|true or false        |No      |Is the thread permasaged.|
 |`sticky`              |`boolean`|true or false        |No      |Is the thread stickied.|
 |`locked`              |`boolean`|true or false        |No      |Is the thread locked.|
@@ -111,8 +111,8 @@ Contains information about a post.
 |`post_time`       |`integer`|64-bit Unix timestamp|No      |Time the post was made.|
 |`post_time_milli` |`integer`|0-999                |No      |Post time milliseconds. Used with `post_time` when high precision is needed.|
 |`timestamp`       |`integer`|text                 |No      |Formatted version of `post_time`|
-|`has_file`        |`boolean`|true or false        |No      |If the post has a file.|
-|`file_count`      |`integer`|0-32767              |No      |File count for the post.|
+|`has_content`     |`boolean`|true or false        |No      |If the post has content.|
+|`content_count`   |`integer`|0-32767              |No      |Content count for the post.|
 |`op`              |`boolean`|true or false        |No      |Is the post OP (first in thread).|
 |`sage`            |`boolean`|true or false        |No      |Is the post saged.|
 |`mod_comment`     |`string` |text                 |Yes     |Comment added by staff.|

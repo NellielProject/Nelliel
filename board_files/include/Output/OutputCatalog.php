@@ -31,7 +31,7 @@ class OutputCatalog extends OutputCore
         $this->startTimer();
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
-        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
+        $output_header = new OutputHeader($this->domain);
         $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot],
                 true);
         $this->render_data['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->id() . '/';
@@ -99,7 +99,7 @@ class OutputCatalog extends OutputCore
 
             $thread_data['mod-comment'] = $first_post['mod_comment'];
             $thread_data['reply_count'] = $thread['post_count'] - 1;
-            $thread_data['file_count'] = $thread['total_files'];
+            $thread_data['content_count'] = $thread['content_count'];
             $index_page = ceil($thread_count / $this->domain->setting('threads_per_page'));
             $thread_data['index_page'] = $index_page;
             $thread_data['is_sticky'] = $thread['sticky'] == 1;
@@ -143,7 +143,7 @@ class OutputCatalog extends OutputCore
         }
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('catalog', $this->render_data);
-        $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
+        $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
 

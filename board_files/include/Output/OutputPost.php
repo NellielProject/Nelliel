@@ -75,15 +75,14 @@ class OutputPost extends OutputCore
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
                 $post_content_id, $web_paths, $gen_data);
 
-        // TODO: Change to has_content
-        if ($post_data['has_file'] == 1)
+        if ($post_data['has_content'] == 1)
         {
             $query = 'SELECT * FROM "' . $this->domain->reference('content_table') .
                     '" WHERE "post_ref" = ? ORDER BY "content_order" ASC';
             $prepared = $this->database->prepare($query);
             $file_list = $this->database->executePreparedFetchAll($prepared, [$post_data['post_number']],
                     PDO::FETCH_ASSOC);
-            $output_file_info = new \Nelliel\Output\OutputFile($this->domain);
+            $output_file_info = new OutputFile($this->domain);
             $content_count = count($file_list);
             $content_row = array();
 

@@ -121,7 +121,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             if ($inputs['action'] === 'extract-gettext')
             {
-                $language = new \Nelliel\Language\Language(new \SmallPHPGettext\SmallPHPGettext());
+                $language = new \Nelliel\Language\Language();
                 $language->extractLanguageStrings($domain, $session->sessionUser(), 'nelliel', LC_MESSAGES);
             }
 

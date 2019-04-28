@@ -56,7 +56,7 @@ class OutputPanelThreads extends OutputCore
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
-        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
+        $output_header = new OutputHeader($this->domain);
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Threads')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
@@ -116,13 +116,13 @@ class OutputPanelThreads extends OutputCore
             $thread_info['op_name'] = $op_post['poster_name'];
             $thread_info['op_ip'] = @inet_ntop($op_post['ip_address']);
             $thread_info['post_count'] = $thread['post_count'];
-            $thread_info['total_files'] = $thread['total_files'];
+            $thread_info['content_count'] = $thread['content_count'];
             $this->render_data['threads'][] = $thread_info;
         }
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/thread_panel',
                 $this->render_data);
-        $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
+        $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
         echo $output;
@@ -137,7 +137,7 @@ class OutputPanelThreads extends OutputCore
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
-        $output_header = new \Nelliel\Output\OutputHeader($this->domain);
+        $output_header = new OutputHeader($this->domain);
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Expanded Thread')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
@@ -174,7 +174,7 @@ class OutputPanelThreads extends OutputCore
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/thread_panel_expand',
                 $this->render_data);
-        $output_footer = new \Nelliel\Output\OutputFooter($this->domain);
+        $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
         echo $output;
