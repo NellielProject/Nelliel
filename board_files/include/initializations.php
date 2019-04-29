@@ -76,7 +76,6 @@ define('DEFAULT_TEXTDOMAIN_BIND', LANGUAGES_FILE_PATH . 'locale');
 $base_config['defaultadmin'] = '';
 $base_config['defaultadmin_pass'] = '';
 $base_config['tripcode_pepper'] = 'sodiumz';
-$base_config['run_setup_check'] = true;
 $base_config['directory_perm'] = '0775';
 $base_config['file_perm'] = '0664';
 $base_config['use_internal_cache'] = true;
@@ -93,7 +92,6 @@ require_once CONFIG_FILE_PATH . 'config.php';
 
 define('DEFAULTADMIN', $base_config['defaultadmin']);
 define('DEFAULTADMIN_PASS', $base_config['defaultadmin_pass']);
-define('RUN_SETUP_CHECK', (bool)$base_config['run_setup_check']);
 define('DIRECTORY_PERM', $base_config['directory_perm']);
 define('FILE_PERM', $base_config['file_perm']);
 define('USE_INTERNAL_CACHE', $base_config['use_internal_cache']);

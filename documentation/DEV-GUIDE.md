@@ -2,7 +2,7 @@
 
 A guide to the development standards of Nelliel. Any contributions to the core codebase or official plugins must follow these guidelines. Pull requests not adhering to the guidelines must be fixed before acceptance.
  
-Developers of mods, plugins or other unofficial contributions are not required to follow this guide.
+Developers of plugins or other unofficial contributions are not required to follow this guide.
 
 ## Coding Style and Formatting
 Nelliel follows the [PSR-1](http://www.php-fig.org/psr/psr-1/) and [PSR-4](http://www.php-fig.org/psr/psr-4/) standards.
@@ -19,10 +19,10 @@ In addition:
  - Procedural is not evil. OOP is not the Holy Grail. Use what makes sense for a given situation.
  - Function names should be prefixed with `nel_`
  - Classes should be within the `Nelliel` namespace.
- - If a class instance or mutable variable needs to be accessible in a global scope it should be encapsulated inside a function.
+ - If a class instance or mutable variable needs to be accessible in a global scope it must be encapsulated inside a function.
  
 ## SQL and Queries
-All schemas should comply with ANSI standards. In cases where a data type is not fully cross-compatible or has a differing name (e.g. the BINARY equivalent in PostgreSQL is BYTEA), an equivalent may be used for the specific RDBMS schema; however the behavior should be indistinguishable.
+All schemas should comply with ANSI standards. In cases where a data type is not fully cross-compatible or has a differing name (e.g. the BINARY equivalent in PostgreSQL is BYTEA), an equivalent may be used for the specific RDBMS schema so long as the behavior is indistinguishable.
 
 Query requirements:
  - Queries must be done through PDO or a PDO-extending class such as NellielPDO.
@@ -34,7 +34,7 @@ Query requirements:
  - Database NULL should be treated as unknown value.
  
 ## Targets and Version Support
-Any stable core functions and features contributed to Nelliel must be fully functional with the minimum versions listed below in addition to all later versions of the software. These minimum requirements will change over time due to certain circumstances including (but not limited to):
+Any core functions and features contributed to Nelliel must be fully functional with the minimum versions listed below in addition to all later versions of the software. These minimum requirements will change over time due to certain circumstances including (but not limited to):
  - Usage of the minimum version becomes negligible.
  - A necessary feature or function cannot be reasonably implemented.
  - Forward compatibility becomes impractical.
@@ -45,7 +45,7 @@ At present Nelliel has a target version of **PHP 7.0**.
 ### Database Support
 Minimum supported RDBMS versions:
  - MySQL 5.6
- - MariaDB 10.0
+ - MariaDB 10
  - PostgreSQL 9.4
  - SQLite 3.16
 
@@ -54,6 +54,8 @@ These are the minimum browser versions Nelliel must be compatible with:
  - Safari 11
  - Chrome 64
  - Firefox 56
+ 
+ Retaining compatibility with older browsers when feasible is encouraged but not mandatory.
 
 ## Versioning
 Upon the initial 1.0 Release, Nelliel versioning will follow Major.Minor.Patch under these definitions:
@@ -65,7 +67,7 @@ When the version changes, the constant `NELLIEL_VERSION` in file `imgboard.php` 
 
 ## Error Codes
 Nelliel returns a numeric error id along with an error message. This keeps the better user experience without making it difficult to track exactly where in the code things went wrong (especially when other translations are involved). These are the designated ranges:
- - 0: Unknown or nonspecific error. Very rare.
+ - 0: Unknown or nonspecific error.
  - 1-99: Content-related errors (upload problems, duplicate files, etc.).
  - 100-199: General system and input errors.
  - 200-299: Management-related system and input errors.

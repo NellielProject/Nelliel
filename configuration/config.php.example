@@ -27,6 +27,9 @@ $base_config['defaultadmin_pass'] = '';
 // The available locales and their translations can be found in the directory 'board_files/language/locale'
 $base_config['default_locale'] = 'en_US';
 
+// Forces Nelliel to only allow sessions over a secure connection.
+// Once SSL set up for the site, it is recommended you set this to true.
+$base_config['secure_session_only'] = false;
 
 //
 // === Database Access Settings ===
@@ -129,10 +132,6 @@ $db_config['sqlite_encoding'] = 'UTF-8';
 
 // In most cases you won't need to mess with this stuff.
 
-// Each time the script is run, this goes through the setup sequence and checks that everything is in place.
-// Once initial setup and testing is finished this isn't really necessary and can be set to false.
-$base_config['run_setup_check'] = true;
-
 // Default file and directory permissions. Format must be in the proper octal format.
 $base_config['directory_perm'] = '0775';
 $base_config['file_perm'] = '0664';
@@ -145,13 +144,8 @@ $base_config['use_internal_cache'] = true;
 // Enable or disable plugins
 $base_config['enable_plugins'] = true;
 
-// Forces Nelliel to only use sessions over a secure connection.
-// Once SSL set up for the site, it is recommended you set this to true.
-$base_config['secure_session_only'] = false;
-
 // Enable/disable template caching for Mustache.
 $base_config['use_mustache_cache'] = true;
-
 
 //
 // === Crypt Settings ===

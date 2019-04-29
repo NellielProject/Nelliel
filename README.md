@@ -2,7 +2,7 @@
 ## About
 A relatively lightweight, expandable and highly configurable imageboard written in PHP. Nelliel was originally a modified version of [Futallaby](https://www.1chan.net/futallaby/) made to host Nigrachan. The software had good potential and was split off to independent development. The codebase has since been fully rewritten and expanded, with continuing refinements. It does not try to do everything imaginable but instead provides a solid core that is readily expandable for users with additional needs.
 
-**At present Nelliel should be considered beta software. Use with caution. It is still incomplete and will have breaking changes.**
+**At present Nelliel is in a beta stage of development. Use with caution. It is still incomplete and probably has a lot of bugs.**
 
 ## Minimum Requirements
 These are only the confirmed bare minimum requirements for Nelliel to function. Earlier versions may work but are likely to be unstable and will not receive any support. **It is strongly recommended to use the latest software versions available.**
