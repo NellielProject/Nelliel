@@ -81,8 +81,8 @@ class OutputThread extends OutputCore
         $this->render_data['posting_form'] = $output_posting_form->render(
                 ['dotdot' => $dotdot, 'response_to' => $thread_id], true);
         $output_post = new OutputPost($this->domain);
-        $this->render_data['op_post'] = '';
-        $this->render_data['thread_posts'] = '';
+        $this->render_data['op_post'] = array();
+        $this->render_data['thread_posts'] = array();
         $this->render_data['thread_id'] = $thread_content_id;
         $this->render_data['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
         $this->render_data['thread_corral_id'] = 'thread-' . $thread_content_id;

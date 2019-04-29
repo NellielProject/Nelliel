@@ -134,7 +134,7 @@ class Snacks
         }
 
         $output_ban_page = new \Nelliel\Output\OutputBanPage($domain);
-        $output_ban_page->render(['ban_info' => $ban_info]);
+        $output_ban_page->render(['ban_info' => $ban_info], false);
         nel_clean_exit();
     }
 }
