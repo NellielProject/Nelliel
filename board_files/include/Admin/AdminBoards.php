@@ -73,8 +73,6 @@ class AdminBoards extends AdminHandler
         }
 
         $board_id = $_POST['new_board_id'];
-        $domain = new \Nelliel\DomainBoard($board_id, $this->database);
-        $db_prefix = $domain->id();
         $prepared = $this->database->prepare('SELECT 1 FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$board_id], PDO::FETCH_COLUMN);
 
@@ -83,12 +81,14 @@ class AdminBoards extends AdminHandler
             nel_derp(240, _gettext('There is already a board with the ID ' . $board_id . '.'));
         }
 
+        $db_prefix = '_' . $board_id;
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "db_prefix") VALUES (?, ?)');
-        $this->database->executePrepared($prepared, [$domain->id(), $db_prefix]);
+        $this->database->executePrepared($prepared, [$board_id, $db_prefix]);
         $setup = new \Nelliel\Setup\Setup();
-        $setup->createBoardTables($domain->id());
-        $setup->createBoardDirectories($domain->id());
+        $setup->createBoardTables($board_id);
+        $setup->createBoardDirectories($board_id);
+        $domain = new \Nelliel\DomainBoard($board_id, $this->database);
         $regen = new \Nelliel\Regen();
 
         if (USE_INTERNAL_CACHE)

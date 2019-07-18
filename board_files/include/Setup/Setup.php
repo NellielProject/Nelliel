@@ -162,6 +162,13 @@ class Setup
     {
         $database = nel_database();
         $sql_helpers = new SQLHelpers($database);
+
+        // Domain and such doesn't function without config table
+        $config_table = new TableBoardConfig($database, $sql_helpers);
+        $config_table->tableName('_' . $board_id . '_config');
+        $config_table->setup();
+        $config_table->copyFrom(BOARD_DEFAULTS_TABLE);
+
         $domain = new \Nelliel\DomainBoard($board_id, nel_database());
         $references = $domain->reference();
         $threads_table = new TableThreads($database, $sql_helpers);
@@ -179,10 +186,6 @@ class Setup
         $content_table->createTable(['posts_table' => $domain->reference('posts_table')]);
         $content_table->tableName($domain->reference('archive_content_table'));
         $content_table->createTable(['posts_table' => $domain->reference('archive_posts_table')]);
-        $content_table = new TableBoardConfig($database, $sql_helpers);
-        $content_table->tableName($domain->reference('config_table'));
-        $content_table->setup();
-        $content_table->copyFrom(BOARD_DEFAULTS_TABLE);
     }
 
     public function createBoardDirectories($board_id)
