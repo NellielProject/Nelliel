@@ -1,45 +1,46 @@
 # Nelliel Plugin API Hook Guide
 Documentation for the official hooks currently in Nelliel.
 
-## Arguments and Returnables
-All hooks will provide one or more arguments when called. The first argument will always be the returnable; the returnable may contain data or it may be an unused placeholder with the value of `null`. If a function or method returns a value, it must be the same type as the returnable otherwise it will be ignored. Return values are not mandatory; if nothing is returned from a function or method, the original returnable value will be used.
-
 ## Hook List
 ### nel-inb4-central-dispatch
 Called when starting the central dispatch.  
 **Arguments**
 
-|Order|Argument     |Type  |Returnable|Description|                               
-|:---:|:------------|:-----|:---------|:----------|
-|1    |`$returnable`|`null`|Yes       |Unused.|
+|Order|Argument  |Type    |Returnable|Description|                               
+|:---:|:---------|:-------|:---------|:----------|
+|1    |`$return` |`null`  |Yes       |Unused.|
+
+Return type: void  
 
 ### nel-in-after-central-dispatch
 Called at the end of the central dispatch.  
 **Arguments**
 
-|Order|Argument      |Type    |Returnable|Description|                               
-|:---:|:-------------|:-------|:---------|:----------|
-|1    |`$returnable` |`null`  |Yes       |Unused.|
-|2    |`$inputs`     |`array` |No        |Input data.|
-|3    |`$domain`     |`object`|No        |Domain object.|
+|Order|Argument  |Type    |Returnable|Description|                               
+|:---:|:---------|:-------|:---------|:----------|
+|1    |`$return` |`null`  |Yes       |Unused.|
+|2    |`$inputs` |`array` |No        |Input data.|
+|3    |`$domain` |`object`|No        |Domain object.|
+
+Return type: void  
 
 ### nel-inb4-module-dispatch
 Called at the beginning of the module dispatch.  
 **Arguments**
 
-|Order|Argument      |Type    |Returnable|Description|                               
-|:---:|:-------------|:-------|:---------|:----------|
-|1    |`$inputs`     |`array` |Yes       |Input data.|
-|2    |`$domain`     |`object`|No        |Domain object.|
+|Order|Argument  |Type    |Returnable|Description|                               
+|:---:|:---------|:-------|:---------|:----------|
+|1    |`$inputs` |`array` |Yes       |Input data.|
+|2    |`$domain` |`object`|No        |Domain object.|
 
 ### nel-in-after-module-dispatch
 Called at the end of the module dispatch.  
 **Arguments**
 
-|Order|Argument      |Type    |Returnable|Description|                               
-|:---:|:-------------|:-------|:---------|:----------|
-|1    |`$inputs`     |`array` |Yes       |Input data.|
-|2    |`$domain`     |`object`|No        |Domain object.|
+|Order|Argument  |Type    |Returnable|Description|                               
+|:---:|:---------|:-------|:---------|:----------|
+|1    |`$inputs` |`array` |Yes       |Input data.|
+|2    |`$domain` |`object`|No        |Domain object.|
 
 ### nel-json-prepare-board-list
 Called when board list data has been prepared for the JSON API.  
@@ -99,35 +100,35 @@ Called when content data has been prepared for the JSON API.
 Called when getting output for a CAPTCHA.  
 **Arguments**  
 
-|Order|Argument     |Type  |Returnable|Description|                               
-|:---:|:------------|:-----|:---------|:----------|
-|1    |`$returnable`|`null`|Yes       |Unused.|
+|Order|Argument  |Type    |Returnable|Description|                               
+|:---:|:---------|:-------|:---------|:----------|
+|1    |`$return` |`null`  |Yes       |Unused.|
 
 ### nel-verify-captcha
 Called when verifying a CAPTCHA answer.  
 **Arguments**
 
-|Order|Argument     |Type  |Returnable|Description|                               
-|:---:|:------------|:-----|:---------|:----------|
-|1    |`$returnable`|`null`|Yes       |Unused.|
+|Order|Argument  |Type    |Returnable|Description|                               
+|:---:|:---------|:-------|:---------|:----------|
+|1    |`$return` |`null`|Yes       |Unused.|
 
 ### nel-verify-recaptcha
 Called when verifying a ReCAPTCHA answer.  
 **Arguments**
 
-|Order|Argument     |Type    |Returnable|Description|                               
-|:---:|:------------|:-------|:---------|:----------|
-|1    |`$returnable`|`null`  |Yes       |Unused.|
-|2    |`$response`  |`string`|No        |The ReCAPTCHA answer.|
+|Order|Argument   |Type    |Returnable|Description|                               
+|:---:|:----------|:-------|:---------|:----------|
+|1    |`$return`  |`null`  |Yes       |Unused.|
+|2    |`$response`|`string`|No        |The ReCAPTCHA answer.|
 
 ### nel-post-data-processed
 Called after post data has been processed.
 **Arguments**
 
-|Order|Argument     |Type    |Returnable|Description|                               
-|:---:|:------------|:-------|:---------|:----------|
-|1    |`$post`      |`object`|Yes       |The post object.|
-|2    |`$domain`    |`object`|No        |Domain object for the board the post is being submitted to.|
+|Order|Argument  |Type    |Returnable|Description|                               
+|:---:|:---------|:-------|:---------|:----------|
+|1    |`$post`   |`object`|Yes       |The post object.|
+|2    |`$domain` |`object`|No        |Domain object for the board the post is being submitted to.|
 
 ### nel-post-tripcodes
 Called after tripcodes have been processed.
@@ -153,19 +154,19 @@ Called after uploaded files are processed.
 Called when an uploaded file is checked for errors.
 **Arguments**
 
-|Order|Argument          |Type    |Returnable|Description|                               
-|:---:|:-----------------|:-------|:---------|:----------|
-|1    |`$returnable`     |`null`  |Yes       |Unused.|
-|2    |`$domain`         |`object`|No        |Domain object for the board the files are being submitted to.|
-|3    |`$error_data`     |`array` |No        |Array of data sent to error handler.|
+|Order|Argument     |Type    |Returnable|Description|                               
+|:---:|:------------|:-------|:---------|:----------|
+|1    |`$return`    |`null`  |Yes       |Unused.|
+|2    |`$domain`    |`object`|No        |Domain object for the board the files are being submitted to.|
+|3    |`$error_data`|`array` |No        |Array of data sent to error handler.|
 
 ### nel-derp-happened
 Called when an error occurs.
 **Arguments**
 
-|Order|Argument          |Type     |Returnable|Description|                               
-|:---:|:-----------------|:--------|:---------|:----------|
-|1    |`$diagnostics`    |`array`  |Yes       |Array of diagnostic data.|
-|2    |`$error_id`       |`integer`|No        |ID of the error.|
-|3    |`$error_message`  |`string` |No        |Error message.|
-|4    |`$error_data`     |`array`  |No        |Array of data sent to error handler.|
+|Order|Argument        |Type     |Returnable|Description|                               
+|:---:|:---------------|:--------|:---------|:----------|
+|1    |`$diagnostics`  |`array`  |Yes       |Array of diagnostic data.|
+|2    |`$error_id`     |`integer`|No        |ID of the error.|
+|3    |`$error_message`|`string` |No        |Error message.|
+|4    |`$error_data`   |`array`  |No        |Array of data sent to error handler.|

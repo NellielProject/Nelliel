@@ -20,4 +20,9 @@ class Plugin
         $this->directory = new \SplFileInfo($directory);
         $this->ini = $ini;
     }
+
+    public function getIniValue(string $value_id)
+    {
+        return $ini[$value_id] ?? null;
+    }
 }

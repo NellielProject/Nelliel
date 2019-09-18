@@ -13,6 +13,7 @@ class PluginAPI
     private static $hooks = array();
     private static $plugins = array();
     private static $parsed_ini_files = array();
+    private static $loaded_plugins = array();
 
     function __construct()
     {
@@ -33,11 +34,18 @@ class PluginAPI
         if(array_key_exists($initializer_file, self::$parsed_ini_files))
         {
             $plugin_id = $this->generateID();
-            self::$plugins[$plugin_id] = new Plugin($plugin_id, $plugin_directory, self::$parsed_ini_files[$initializer_file]);
+            $new_plugin = new Plugin($plugin_id, $plugin_directory, self::$parsed_ini_files[$initializer_file]);
+            self::$loaded_plugins[$new_plugin->getIniValue('id_string')];
+            self::$plugins[$plugin_id] = $new_plugin;
             return $plugin_id;
         }
 
         return false;
+    }
+
+    public function pluginLoaded(string $id_string)
+    {
+        return isset(self::$loaded_plugins[$id_string]);
     }
 
     private function verifyOrCreateHook(string $hook_name, bool $new = true)
