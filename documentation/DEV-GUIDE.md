@@ -10,7 +10,7 @@ Nelliel follows the [PSR-1](http://www.php-fig.org/psr/psr-1/) and [PSR-4](http:
 In addition:
  - Ideal line length is 80 characters or less; soft limit is 120 characters.
  - Code follows Allman style (braces go on next line).
- - 4-space indentation for code; tabs are used for indentation of HTML.
+ - 4-space indentation for code; tabs are used for indentation of HTML, XML or other markup language.
  - Single quotes `' '` should be used for strings when practical.
  - No `?>` closing tags.
  - Constants should be ALL CAPS.
@@ -39,6 +39,8 @@ Any core functions and features contributed to Nelliel must be fully functional 
  - A necessary feature or function cannot be reasonably implemented.
  - Forward compatibility becomes impractical.
 
+When minimum requirements are changed, the Minor version number must be incremented. The version prior to the changes must also be copied into a legacy branch.
+
 ### PHP Support
 At present Nelliel has a target version of **PHP 7.0**.
 
@@ -53,14 +55,14 @@ Minimum supported RDBMS versions:
 These are the minimum browser versions Nelliel must be compatible with:
  - Safari 11
  - Chrome 64
- - Firefox 56
+ - Firefox 60
  
- Retaining compatibility with older browsers when feasible is encouraged but not mandatory.
+ Retaining compatibility with older browsers is encouraged when reasonably possible.
 
 ## Versioning
 Upon the initial 1.0 Release, Nelliel versioning will follow Major.Minor.Patch under these definitions:
- - Major: Major breaking changes or project-wide reconstruction.
- - Minor: Minor breaking changes, significant new features or changes introduced.
+ - Major: Major breaking changes or project-wide reworks.
+ - Minor: Minor breaking changes, requirements update, significant new features or changes introduced.
  - Patch: Bug fixes, code tweaks, refinements, minor new features.
 
 When the version changes, the constant `NELLIEL_VERSION` in file `imgboard.php` must be updated. A git tag should be created upon Major or Minor changes, or when a formal release is created.
