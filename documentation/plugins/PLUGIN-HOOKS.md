@@ -18,9 +18,8 @@ Called at the end of the central dispatch.
 
 |Order|Argument  |Type    |Returnable|Description|                               
 |:---:|:---------|:-------|:---------|:----------|
-|1    |`$return` |`null`  |Yes       |Unused.|
-|2    |`$inputs` |`array` |No        |Input data.|
-|3    |`$domain` |`object`|No        |Domain object.|
+|1    |`$inputs` |`array` |Yes       |Input data.|
+|2    |`$domain` |`object`|No        |Domain object.|
 
 Return type: void  
 

@@ -23,6 +23,6 @@ class Plugin
 
     public function getIniValue(string $value_id)
     {
-        return $ini[$value_id] ?? null;
+        return $this->ini[$value_id] ?? null;
     }
 }

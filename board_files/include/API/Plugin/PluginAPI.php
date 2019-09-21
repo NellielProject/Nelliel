@@ -35,7 +35,7 @@ class PluginAPI
         {
             $plugin_id = $this->generateID();
             $new_plugin = new Plugin($plugin_id, $plugin_directory, self::$parsed_ini_files[$initializer_file]);
-            self::$loaded_plugins[$new_plugin->getIniValue('id_string')];
+            self::$loaded_plugins[$new_plugin->getIniValue('id_string')] = true;
             self::$plugins[$plugin_id] = $new_plugin;
             return $plugin_id;
         }
@@ -141,7 +141,7 @@ class PluginAPI
                 $parsed_ini = parse_ini_file($file->getPathname(), true);
                 $plugin_base_path = $file->getPathInfo()->getRealPath();
                 $initializer_file = $plugin_base_path . '/' . $parsed_ini['initializer'];
-                self::$parsed_ini_files[$initializer_file]['ini'] = $parsed_ini;
+                self::$parsed_ini_files[$initializer_file] = $parsed_ini;
                 include_once $initializer_file;
             }
         }
