@@ -95,6 +95,12 @@ class OutputThread extends OutputCore
             $json_instances['post'] = $json_post;
             $parameters = ['thread_data' => $thread_data, 'dotdot' => $dotdot, 'post_data' => $post_data,
                 'gen_data' => $gen_data, 'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
+
+            if ($session->isActive() && $write)
+            {
+                $parameters['ignore_session'] = true;
+            }
+
             $post_render = $output_post->render($parameters, true);
 
             if ($post_data['op'] == 1)

@@ -33,6 +33,7 @@ class OutputPost extends OutputCore
         $json_post = $parameters['json_instances']['post'];
         $post_data = $parameters['post_data'] ?? $this->getPostFromDatabase($post_id);
         $in_thread_number = $parameters['in_thread_number'] ?? 0;
+        $ignore_session = $parameters['ignore_session'] ?? false;
         $this->startTimer();
         $json_post->storeData($json_post->prepareData($post_data), 'post');
         $response = $post_data['op'] != 1;
@@ -74,7 +75,7 @@ class OutputPost extends OutputCore
 
         $this->render_data['post_anchor_id'] = 't' . $post_content_id->thread_id . 'p' . $post_content_id->post_id;
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
-                $post_content_id, $web_paths, $gen_data, $in_thread_number);
+                $post_content_id, $web_paths, $gen_data, $in_thread_number, $ignore_session);
 
         if ($post_data['has_content'] == 1)
         {
@@ -130,7 +131,7 @@ class OutputPost extends OutputCore
     }
 
     private function postHeaders(bool $response, array $thread_data, array $post_data, ContentID $thread_content_id,
-            ContentID $post_content_id, array $web_paths, array $gen_data, int $in_thread_number)
+            ContentID $post_content_id, array $web_paths, array $gen_data, int $in_thread_number, bool $ignore_session)
     {
         $header_data = array();
         $modmode_headers = array();
@@ -151,7 +152,7 @@ class OutputPost extends OutputCore
         $preview_web_path = $board_web_path . rawurlencode($this->domain->reference('preview_dir')) . '/';
         $thread_preview_web_path = $preview_web_path . $thread_content_id->thread_id . '/';
 
-        if ($session->inModmode($this->domain))
+        if ($session->inModmode($this->domain) && !$ignore_session)
         {
 
             $ip = @inet_ntop($post_data['ip_address']);
@@ -172,7 +173,7 @@ class OutputPost extends OutputCore
                         $lock_action . '&content-id=' . $thread_content_id->getIDString() . '&modmode=true';
                 $temp_content_id = $thread_content_id;
                 $sticky = ($thread_data['sticky'] == 1);
-                $modmode_headers['sticky_text'] = ($locked) ? _gettext('Unsticky Thread') : _gettext('Sticky Thread');
+                $modmode_headers['sticky_text'] = ($sticky) ? _gettext('Unsticky Thread') : _gettext('Sticky Thread');
                 $sticky_action = ($sticky) ? 'unsticky' : 'sticky';
                 $modmode_headers['sticky_url'] = '?module=threads-admin&board_id=' . $this->domain->id() . '&action=' .
                         $sticky_action . '&content-id=' . $thread_content_id->getIDString() . '&modmode=true';
@@ -210,7 +211,7 @@ class OutputPost extends OutputCore
 
             $thread_headers['reply_to_url'] = $web_paths['thread_page'];
 
-            if ($session->inModmode($this->domain))
+            if ($session->inModmode($this->domain) && !$ignore_session)
             {
                 $thread_headers['render'] = '-render';
                 $thread_headers['reply_to_url'] = MAIN_SCRIPT . '?module=render&action=view-thread&content-id=' .

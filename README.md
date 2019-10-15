@@ -27,7 +27,7 @@ These are optional things that Nelliel or one of its libraries can utilize for e
 See [INSTALL.md](INSTALL.md) for installation instructions.
 
 ## Plugin API
-Nelliel currently has a basic API for making plugins in the works. This will eventually allow extension of the software without having to worry about mods that can be easily broken during updates or having to mess with core code. Details about using the API available in [PLUGIN-DEV.md](documentation/PLUGIN-DEV.md).
+Nelliel currently has a basic API for making plugins in the works. This will eventually allow extension of the software without having to worry about mods that can be easily broken during updates or having to mess with core code. Details about using the API available in [PLUGIN-DEV.md](documentation/plugins/PLUGIN-DEV.md).
 
 ## License
 Nelliel is released under the [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause). This can be viewed in [LICENSE.txt](LICENSE.txt) or the imageboard's About Nelliel page.

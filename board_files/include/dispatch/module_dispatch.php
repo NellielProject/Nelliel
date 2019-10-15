@@ -42,8 +42,8 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             switch ($inputs['action'])
             {
                 case 'view-index':
-                    $output_thread = new \Nelliel\Output\OutputIndex($domain);
-                    $output_thread->render(['write' => false, 'thread_id' => 0], false);
+                    $output_index = new \Nelliel\Output\OutputIndex($domain);
+                    $output_index->render(['write' => false, 'thread_id' => 0], false);
                     break;
 
                 case 'view-thread':

@@ -84,7 +84,7 @@ class OutputPanelThreads extends OutputCore
             {
                 $thread_info['sticky_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
                         '&action=unsticky&content-id=' . $base_content_id;
-                $thread_info = _gettext('Unsticky Thread');
+                $thread_info['sticky_text'] = _gettext('Unsticky Thread');
             }
             else
             {

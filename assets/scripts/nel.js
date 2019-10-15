@@ -200,7 +200,10 @@ nelliel.core.hashHandler = function () {
     
     if (hash_match !== null) {
         var content_id = nelliel.core.contentID('cid_' + hash_match[1] + '_' + hash_match[2] + '_0');
-        nelliel.ui.highlightPost(content_id);
+        
+        if (hash_match[2] > 1) {
+            nelliel.ui.highlightPost(content_id);
+        }
     }
 }
 

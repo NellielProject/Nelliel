@@ -120,6 +120,11 @@ class OutputIndex extends OutputCore
                 $parameters = ['thread_data' => $thread_data, 'dotdot' => $dotdot, 'post_data' => $post_data,
                     'gen_data' => $gen_data, 'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
 
+                if ($session->isActive() && $write)
+                {
+                    $parameters['ignore_session'] = true;
+                }
+
                 if ($post_data['op'] == 1)
                 {
                     $thread_input['op_post'] = $output_post->render($parameters, true);
