@@ -1,14 +1,11 @@
 <?php
+use \PHPUnit\Framework\TestCase;
+
 require_once 'nelliel_version.php';
 require_once __DIR__ . '/../board_files/include/classes/ContentID.php';
 
-class ContentIDTest extends PHPUnit_Framework_TestCase
+class ContentIDTest extends TestCase
 {
-
-    function __construct()
-    {
-    }
-
     public function testIsContentID()
     {
         $this->assertTrue(\Nelliel\ContentID::isContentID('cid_1_2_3'));

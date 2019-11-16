@@ -39,3 +39,4 @@ function nel_autoload_core($class, $prefix, $base_directory)
 require_once LIBRARY_PATH . 'phpDOMExtend/autoload.php';
 require_once LIBRARY_PATH . 'NellielTemplates/autoload.php';
 require_once LIBRARY_PATH . 'SmallPHPGettext/autoload.php';
+require_once LIBRARY_PATH . 'Mustache/src/Mustache/Autoloader.php';

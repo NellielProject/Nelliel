@@ -44,6 +44,7 @@ define('REPORTS_TABLE', 'nelliel_reports');
 define('ROLE_PERMISSIONS_TABLE', 'nelliel_role_permissions');
 define('ROLES_TABLE', 'nelliel_roles');
 define('SITE_CONFIG_TABLE', 'nelliel_site_config');
+define('STAFF_LOGS_TABLE', 'nelliel_staff_logs');
 define('TEMPLATES_TABLE', 'nelliel_templates');
 define('USER_ROLES_TABLE', 'nelliel_user_roles');
 define('USERS_TABLE', 'nelliel_users');
@@ -82,6 +83,7 @@ $base_config['use_internal_cache'] = true;
 $base_config['default_locale'] = 'en_US';
 $base_config['enable_plugins'] = true;
 $base_config['secure_session_only'] = false;
+$db_config = array();
 $crypt_config['password_algorithm'] = 'BCRYPT';
 $crypt_config['password_bcrypt_cost'] = 12;
 $crypt_config['argon2_memory_cost'] = 1024;
@@ -133,11 +135,12 @@ $setup->checkGenerated();
 
 if(file_exists(CONFIG_FILE_PATH . 'generated.php'))
 {
+    $generated = array();
     include_once CONFIG_FILE_PATH . 'generated.php';
     define('TRIPCODE_PEPPER', $generated['tripcode_pepper']);
+    unset($generated);
 }
 
-unset($generated);
 unset($base_config);
 unset($db_config);
 unset($crypt_config);

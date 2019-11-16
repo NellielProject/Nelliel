@@ -1,14 +1,11 @@
 <?php
+use \PHPUnit\Framework\TestCase;
+
 require_once 'nelliel_version.php';
 require_once __DIR__ . '/../board_files/include/classes/OutputFilter.php';
 
-class OutputFiltersTest extends PHPUnit_Framework_TestCase
+class OutputFiltersTest extends TestCase
 {
-
-    function __construct()
-    {
-    }
-
     public function testCleanAndEncode()
     {
         $filter = new \Nelliel\OutputFilter();
