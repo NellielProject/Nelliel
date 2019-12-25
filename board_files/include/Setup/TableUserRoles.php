@@ -38,9 +38,9 @@ class TableUserRoles extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            user_id         VARCHAR(255) NOT NULL,
-            role_id         VARCHAR(255) NOT NULL,
-            domain_id          VARCHAR(255) NOT NULL
+            user_id     VARCHAR(255) NOT NULL,
+            role_id     VARCHAR(255) NOT NULL,
+            domain_id   VARCHAR(255) NOT NULL
         ) " . $options . ";";
 
         return $this->sql_helpers->createTableQuery($schema, $this->table_name);

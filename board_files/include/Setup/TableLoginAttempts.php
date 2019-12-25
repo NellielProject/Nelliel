@@ -34,8 +34,8 @@ class TableLoginAttempts extends TableHandler
         $options = $this->sql_helpers->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            ip_address          " . $this->sql_helpers->sqlAlternatives('VARBINARY', '16') . " NOT NULL UNIQUE,
-            last_attempt        BIGINT NOT NULL
+            ip_address      " . $this->sql_helpers->sqlAlternatives('VARBINARY', '16') . " NOT NULL UNIQUE,
+            last_attempt    BIGINT NOT NULL
         ) " . $options . ";";
 
         return $this->sql_helpers->createTableQuery($schema, $this->table_name);

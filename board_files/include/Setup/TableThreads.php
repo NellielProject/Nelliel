@@ -46,20 +46,20 @@ class TableThreads extends TableHandler
         $options = $this->sql_helpers->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            thread_id                   INTEGER NOT NULL PRIMARY KEY,
-            first_post                  INTEGER DEFAULT NULL,
-            last_post                   INTEGER DEFAULT NULL,
-            last_bump_time              BIGINT DEFAULT NULL,
-            last_bump_time_milli        SMALLINT DEFAULT NULL,
-            last_update                 BIGINT NOT NULL,
-            last_update_milli           SMALLINT NOT NULL,
-            post_count                  INTEGER NOT NULL DEFAULT 0,
-            content_count               INTEGER NOT NULL DEFAULT 0,
-            thread_sage                 SMALLINT NOT NULL DEFAULT 0,
-            sticky                      SMALLINT NOT NULL DEFAULT 0,
-            archive_status              SMALLINT NOT NULL DEFAULT 0,
-            locked                      SMALLINT NOT NULL DEFAULT 0,
-            slug                        VARCHAR(255) DEFAULT NULL
+            thread_id               INTEGER NOT NULL PRIMARY KEY,
+            first_post              INTEGER DEFAULT NULL,
+            last_post               INTEGER DEFAULT NULL,
+            last_bump_time          BIGINT DEFAULT NULL,
+            last_bump_time_milli    SMALLINT DEFAULT NULL,
+            last_update             BIGINT NOT NULL,
+            last_update_milli       SMALLINT NOT NULL,
+            post_count              INTEGER NOT NULL DEFAULT 0,
+            content_count           INTEGER NOT NULL DEFAULT 0,
+            thread_sage             SMALLINT NOT NULL DEFAULT 0,
+            sticky                  SMALLINT NOT NULL DEFAULT 0,
+            archive_status          SMALLINT NOT NULL DEFAULT 0,
+            locked                  SMALLINT NOT NULL DEFAULT 0,
+            slug                    VARCHAR(255) DEFAULT NULL
         ) " . $options . ";";
 
         return $this->sql_helpers->createTableQuery($schema, $this->table_name);

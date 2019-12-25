@@ -39,10 +39,10 @@ class TableVersions extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            item_id                 VARCHAR(255) NOT NULL,
-            item_type               VARCHAR(255) NOT NULL,
-            structure_version       SMALLINT NOT NULL DEFAULT 0,
-            data_version            SMALLINT NOT NULL DEFAULT 0
+            item_id             VARCHAR(255) NOT NULL,
+            item_type           VARCHAR(255) NOT NULL,
+            structure_version   SMALLINT NOT NULL DEFAULT 0,
+            data_version        SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
         return $this->sql_helpers->createTableQuery($schema, $this->table_name);
@@ -54,6 +54,7 @@ class TableVersions extends TableHandler
         $this->insertDefaultRow([BANS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([BOARD_DATA_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([BOARD_DEFAULTS_TABLE, "table", '1', '1']);
+        $this->insertDefaultRow([BOARD_LOGS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([CAPTCHA_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([FILE_FILTERS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([FILETYPES_TABLE, "table", '1', '1']);
@@ -64,6 +65,8 @@ class TableVersions extends TableHandler
         $this->insertDefaultRow([ROLE_PERMISSIONS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([ROLES_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([SITE_CONFIG_TABLE, "table", '1', '1']);
+        $this->insertDefaultRow([STAFF_LOGS_TABLE, "table", '1', '1']);
+        $this->insertDefaultRow([SYSTEM_LOGS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([TEMPLATES_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([USER_ROLES_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([USERS_TABLE, "table", '1', '1']);

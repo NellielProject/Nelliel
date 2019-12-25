@@ -36,10 +36,10 @@ class TableBoardData extends TableHandler
         $options = $this->sql_helpers->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            board_id            VARCHAR(255) NOT NULL,
-            db_prefix           VARCHAR(255) NOT NULL,
-            locked              SMALLINT NOT NULL DEFAULT 0
+            entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            board_id    VARCHAR(255) NOT NULL,
+            db_prefix   VARCHAR(255) NOT NULL,
+            locked      SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
         return $this->sql_helpers->createTableQuery($schema, $this->table_name);

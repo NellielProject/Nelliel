@@ -41,7 +41,7 @@ class TableBoardConfig extends TableHandler
         $options = $this->sql_helpers->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry                   " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             config_type         VARCHAR(255) DEFAULT NULL,
             config_owner        VARCHAR(255) NOT NULL,
             config_category     VARCHAR(255) DEFAULT NULL,

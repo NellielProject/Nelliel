@@ -116,6 +116,9 @@ class Setup
         $bans_table->setup();
         $board_data_table = new TableBoardData($database, $sql_helpers);
         $board_data_table->setup();
+        $board_logs_table = new TableLogs($database, $sql_helpers);
+        $board_logs_table->tableName(BOARD_LOGS_TABLE);
+        $board_logs_table->setup();
         $captcha_table = new TableCaptcha($database, $sql_helpers);
         $captcha_table->setup();
         $cites_table = new TableCites($database, $sql_helpers);
@@ -142,6 +145,12 @@ class Setup
         $roles_table->setup();
         $site_config_table = new TableSiteConfig($database, $sql_helpers);
         $site_config_table->setup();
+        $staff_logs_table = new TableLogs($database, $sql_helpers);
+        $staff_logs_table->tableName(STAFF_LOGS_TABLE);
+        $staff_logs_table->setup();
+        $system_logs_table = new TableLogs($database, $sql_helpers);
+        $system_logs_table->tableName(SYSTEM_LOGS_TABLE);
+        $system_logs_table->setup();
         $templates_table = new TableTemplates($database, $sql_helpers);
         $templates_table->setup();
         $user_roles_table = new TableUserRoles($database, $sql_helpers);

@@ -18,6 +18,13 @@ spl_autoload_register(function ($class)
     nel_autoload_core($class, $prefix, $base_directory);
 });
 
+spl_autoload_register(function ($class)
+{
+    $prefix = 'Psr\\Log\\';
+    $base_directory = LIBRARY_PATH . 'PSRLog/Psr/Log/';
+    nel_autoload_core($class, $prefix, $base_directory);
+});
+
 function nel_autoload_core($class, $prefix, $base_directory)
 {
     $len = strlen($prefix);

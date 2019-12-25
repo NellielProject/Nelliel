@@ -45,19 +45,19 @@ class TableBans extends TableHandler
         $options = $this->sql_helpers->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            ban_id                  " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            board_id                VARCHAR(255) DEFAULT NULL,
-            all_boards              SMALLINT NOT NULL DEFAULT 0,
-            type                    VARCHAR(255) NOT NULL,
-            creator                 VARCHAR(255) NOT NULL,
-            ip_address_start        " . $this->sql_helpers->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            ip_address_end          " . $this->sql_helpers->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            reason                  TEXT DEFAULT NULL,
-            length                  BIGINT NOT NULL,
-            start_time              BIGINT NOT NULL,
-            appeal                  TEXT DEFAULT NULL,
-            appeal_response         TEXT DEFAULT NULL,
-            appeal_status           SMALLINT NOT NULL DEFAULT 0
+            ban_id              " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            board_id            VARCHAR(255) DEFAULT NULL,
+            all_boards          SMALLINT NOT NULL DEFAULT 0,
+            type                VARCHAR(255) NOT NULL,
+            creator             VARCHAR(255) NOT NULL,
+            ip_address_start    " . $this->sql_helpers->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
+            ip_address_end      " . $this->sql_helpers->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
+            reason              TEXT DEFAULT NULL,
+            length              BIGINT NOT NULL,
+            start_time          BIGINT NOT NULL,
+            appeal              TEXT DEFAULT NULL,
+            appeal_response     TEXT DEFAULT NULL,
+            appeal_status       SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
         return $this->sql_helpers->createTableQuery($schema, $this->table_name);
