@@ -20,9 +20,7 @@ require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'accessors.php';
 
-$plugins_api = new \Nelliel\API\Plugin\PluginAPI();
-$plugins_api->loadPlugins();
-unset($plugins_api);
+nel_plugins()->loadPlugins();
 
 // Example plugin hooks
 nel_plugins()->processHook('nel-plugin-example', array(5));

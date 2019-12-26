@@ -56,13 +56,13 @@ function nel_password_hash(string $password, int $algorithm, array $options = ar
     switch ($algorithm)
     {
         case 1:
-            $options['cost'] = isset($options['cost']) ? $options['cost'] : NEL_PASSWORD_BCRYPT_COST;
+            $options['cost'] = isset($options['cost']) ?? NEL_PASSWORD_BCRYPT_COST;
             return password_hash($password, $algorithm, $options);
 
         case 2:
-            $options['memory_cost'] = isset($options['memory_cost']) ? $options['memory_cost'] : NEL_PASSWORD_ARGON2_MEMORY_COST;
-            $options['time_cost'] = isset($options['time_cost']) ? $options['time_cost'] : NEL_PASSWORD_ARGON2_TIME_COST;
-            $options['threads'] = isset($options['threads']) ? $options['threads'] : NEL_PASSWORD_ARGON2_THREADS;
+            $options['memory_cost'] = $options['memory_cost'] ?? NEL_PASSWORD_ARGON2_MEMORY_COST;
+            $options['time_cost'] = $options['time_cost'] ?? NEL_PASSWORD_ARGON2_TIME_COST;
+            $options['threads'] = $options['threads'] ?? NEL_PASSWORD_ARGON2_THREADS;
             return password_hash($password, $algorithm, $options);
 
         default:

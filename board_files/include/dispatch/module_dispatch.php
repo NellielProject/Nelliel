@@ -335,6 +335,12 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $news_admin->actionDispatch($inputs);
             break;
 
+        case 'logs':
+            $session = new \Nelliel\Session(true);
+            $output_logs_panel = new \Nelliel\Output\OutputPanelLogs($domain);
+            $output_logs_panel->render(['user' => $session->sessionUser()], false);
+            break;
+
         default:
             break;
     }

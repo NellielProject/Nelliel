@@ -73,20 +73,23 @@ class NellielLogger implements LoggerInterface
         }
 
         $data['area'] = 0;
-        $data['event_id'] = isset($context['event_id']) ?? 'UNKNOWN';
-        $data['originator_id'] = isset($context['originator_id']) ?? 'UNKNOWN';
-        $data['ip_address'] = isset($context['ip_address']) ?? null;
+        $data['event_id'] = $context['event_id'] ?? 'UNKNOWN';
+        $data['originator'] = $context['originator'] ?? 'UNKNOWN';
+        $data['ip_address'] = $context['ip_address'] ?? null;
         $data['time'] = time();
         $data['message'] = $message;
+        $this->dbInsert($context['table'], $data);
+    }
 
+    protected function dbInsert(string $table, array $data) {
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . $context['table'] .
-                '" ("area", "level", "event_id", "originator_id", "ip_address", "time", "message")
-								VALUES (:area, :level, :event_id, :originator_id, :ip_address, :time, :message)');
+                'INSERT INTO "' . $table .
+                '" ("area", "level", "event_id", "originator", "ip_address", "time", "message")
+								VALUES (:area, :level, :event_id, :originator, :ip_address, :time, :message)');
         $prepared->bindParam(':area', $data['area'], PDO::PARAM_STR);
         $prepared->bindParam(':level', $data['level'], PDO::PARAM_INT);
         $prepared->bindParam(':event_id', $data['event_id'], PDO::PARAM_STR);
-        $prepared->bindParam(':originator_id', $data['originator_id'], PDO::PARAM_STR);
+        $prepared->bindParam(':originator', $data['originator'], PDO::PARAM_STR);
         $encoded_ip = @inet_pton($data['ip_address']);
         $prepared->bindParam(':ip_address', $encoded_ip, PDO::PARAM_LOB);
         $prepared->bindParam(':time', $data['time'], PDO::PARAM_INT);

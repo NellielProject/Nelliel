@@ -1,0 +1,23 @@
+{{% FILTERS }}
+<table class="data-table">
+	<tr class="manage-header">
+		<th data-i18n="gettext">Area</th>
+		<th data-i18n="gettext">Level</th>
+		<th data-i18n="gettext">Event ID</th>
+		<th data-i18n="gettext">Originator</th>
+		<th data-i18n="gettext">IP Address</th>
+		<th data-i18n="gettext">Time</th>
+		<th data-i18n="gettext">Message</th>
+	</tr>
+	{{# log_entry_list }}
+	<tr class="{{ bgclass }}">
+		<td>{{ area }}</td>
+		<td>{{ level }}</td>
+		<td>{{ event_id }}</td>
+		<td>{{ originator }}</td>
+		<td>{{ ip_address }}</td>
+		<td>{{ time }}</td>
+		<td>{{ message }}</td>
+	</tr>
+	{{/ log_entry_list }}
+</table>
