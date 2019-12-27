@@ -30,8 +30,10 @@ class Setup
         $this->checkGenerated();
         $this->createCoreTables();
         $this->createCoreDirectories();
+        $site_domain = new \Nelliel\DomainSite(nel_database());
         $regen = new \Nelliel\Regen();
-        $regen->siteCache(new \Nelliel\DomainSite(nel_database()));
+        $regen->siteCache($site_domain);
+        $regen->news($site_domain);
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->writeInternalFile(BASE_PATH . 'install_done.php', '', true, false);
         echo _gettext(
@@ -84,7 +86,7 @@ class Setup
     {
         if (!is_writable(CONFIG_FILE_PATH))
         {
-            nel_derp(106, _gettext('Board files directory is missing or not writable. Admin should check this out.'));
+            nel_derp(106, _gettext('Configuration directory is missing or not writable. Admin should check this out.'));
         }
     }
 
