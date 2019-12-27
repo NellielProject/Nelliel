@@ -29,10 +29,10 @@ class FilesUpload
         $response_to = $post->content_data['response_to'];
         $data_handler = new PostData($this->domain, $this->authorization);
         $file_handler = new \Nelliel\FileHandler();
-        $file_count = count($this->uploaded_files);
         $error_data = ['delete_files' => true, 'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
+        $file_count = $this->countFiles($this->uploaded_files);
 
-        if($file_count > 1)
+        if ($file_count > 1)
         {
             if ($file_count > $this->domain->setting('max_post_files'))
             {
@@ -288,5 +288,20 @@ class FilesUpload
         $file->content_data['type'] = $type_data['type'];
         $file->content_data['format'] = $type_data['format'];
         $file->content_data['mime'] = $type_data['mime'];
+    }
+
+    public function countFiles(array $files)
+    {
+        $count = 0;
+
+        foreach ($files as $file)
+        {
+            if (!empty($file['name']) && $file['size'] > 0)
+            {
+                $count ++;
+            }
+        }
+
+        return $count;
     }
 }
