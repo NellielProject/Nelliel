@@ -26,6 +26,7 @@ class OutputPanelLogs extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
+        $log_type = $parameters['log_type'] ?? '';
 
         if (!$user->domainPermission($this->domain, 'perm_file_filters_access'))
         {
@@ -41,9 +42,27 @@ class OutputPanelLogs extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
 
-        $query = '(SELECT * FROM "' . BOARD_LOGS_TABLE . '")
+        switch ($log_type)
+        {
+            case 'board':
+                $query = '(SELECT * FROM "' . BOARD_LOGS_TABLE . '") ORDER BY "time", "entry"';
+                break;
+
+            case 'staff':
+                $query = '(SELECT * FROM "' . STAFF_LOGS_TABLE . '") ORDER BY "time", "entry"';
+                break;
+
+            case 'system':
+                $query = '(SELECT * FROM "' . SYSTEM_LOGS_TABLE . '") ORDER BY "time", "entry"';
+                break;
+
+            default:
+                $query = '(SELECT * FROM "' . BOARD_LOGS_TABLE . '")
                    UNION (SELECT * FROM "' . STAFF_LOGS_TABLE . '")
                    UNION (SELECT * FROM "' . SYSTEM_LOGS_TABLE . '") ORDER BY "time", "entry"';
+                break;
+        }
+
         $logs = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
 
         $this->render_data['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
@@ -66,6 +85,10 @@ class OutputPanelLogs extends OutputCore
             $this->render_data['log_entry_list'][] = $log_data;
         }
 
+        $this->render_data['board_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=board';
+        $this->render_data['staff_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=staff';
+        $this->render_data['system_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=system';
+        $this->render_data['all_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=all';
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/logs_panel',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);

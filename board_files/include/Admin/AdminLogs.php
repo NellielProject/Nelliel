@@ -37,7 +37,8 @@ class AdminLogs extends AdminHandler
     public function renderPanel($user)
     {
         $output_panel = new \Nelliel\Output\OutputPanelLogs($this->domain);
-        $output_panel->render(['user' => $user], false);
+        $log_type = $_GET['log-type'] ?? '';
+        $output_panel->render(['user' => $user, 'log_type' => $log_type], false);
     }
 
     public function creator($user)

@@ -336,9 +336,8 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             break;
 
         case 'logs':
-            $session = new \Nelliel\Session(true);
-            $output_logs_panel = new \Nelliel\Output\OutputPanelLogs($domain);
-            $output_logs_panel->render(['user' => $session->sessionUser()], false);
+            $logs_admin = new \Nelliel\Admin\AdminLogs($authorization, $domain);
+            $logs_admin->actionDispatch($inputs);
             break;
 
         default:
