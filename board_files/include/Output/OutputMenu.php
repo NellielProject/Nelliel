@@ -122,32 +122,14 @@ class OutputMenu extends OutputCore
 
     private function indexNavigation(array $parameters, bool $data_only)
     {
-        $page = $parameters['page'] ?? 0;
-        $index_format = $parameters['index_format'] ?? 'index-%d';
+        $page_format = $parameters['index_format'] ?? 'index-%d';
         $page_count = $parameters['page_count'] ?? 0;
-        $nav_elements = array();
-        $previous = array();
-        $previous['link_text'] = _gettext('Previous');
-        $prev_filename = ($page - 1 == 1) ? 'index' : $index_format;
-        $previous['linked'] = ($page != 1);
-        $previous['index_url'] = ($page != 1) ? sprintf($prev_filename, ($page - 1)) . PAGE_EXT : '';
-        $nav_elements[] = $previous;
-
-        for ($i = 1; $i <= $page_count; $i ++)
-        {
-            $index_entry = array();
-            $link_filename = ($i === 1) ? 'index' : $index_format;
-            $index_entry['linked'] = ($i != $page);
-            $index_entry['index_url'] = ($i != $page) ? sprintf($link_filename, $i) . PAGE_EXT : '';
-            $index_entry['link_text'] = $i;
-            $nav_elements[] = $index_entry;
-        }
-
-        $next = array();
-        $next['linked'] = ($page != $page_count);
-        $next['link_text'] = _gettext('Next');
-        $next['index_url'] = ($page != $page_count) ? sprintf($index_format, ($page + 1)) . PAGE_EXT : '';
-        $nav_elements[] = $next;
-        return $nav_elements;
+        $page = $parameters['page'] ?? 0;
+        $pagination_object = new \Nelliel\Pagination();
+        $pagination_object->setPrevious(_gettext('Previous'));
+        $pagination_object->setNext(_gettext('Next'));
+        $pagination_object->setPage('%d', $page_format);
+        $pagination_object->setFirst('%d', 'index');
+        return $pagination_object->generateNumerical(1, $page_count, $page);
     }
 }
