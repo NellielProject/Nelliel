@@ -66,12 +66,12 @@ class Pagination
             if ($i === $start)
             {
                 $entry['text'] = sprintf($this->first_text, $i);
-                $entry['url'] = sprintf($this->first_url_format, $i) . PAGE_EXT;
+                $entry['url'] = sprintf($this->first_url_format, $i);
             }
             else
             {
                 $entry['text'] = sprintf($this->page_text, $i);
-                $entry['url'] = sprintf($this->page_url_format, $i) . PAGE_EXT;
+                $entry['url'] = sprintf($this->page_url_format, $i);
             }
 
             $entry['linked'] = true;
@@ -94,7 +94,7 @@ class Pagination
                 if ($is_current)
                 {
                     $previous = ($current - 1 >= $start) ? $current - 1 : $start;
-                    $entry['url'] = sprintf($this->page_url_format, $previous) . PAGE_EXT;
+                    $entry['url'] = sprintf($this->page_url_format, $previous);
                 }
 
                 array_unshift($pagination, $entry);
@@ -107,7 +107,7 @@ class Pagination
                 if ($is_current && $link_current)
                 {
                     $next = ($i + 1 <= $end) ? $i + 1 : $end;
-                    $entry['url'] = sprintf($this->page_url_format, $next) . PAGE_EXT;
+                    $entry['url'] = sprintf($this->page_url_format, $next);
                 }
 
                 $pagination[] = $entry;

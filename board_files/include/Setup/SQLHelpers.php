@@ -183,4 +183,23 @@ class SQLHelpers
         $result = $this->database->executePrepared($prepared);
         return $result;
     }
+
+    public function limitOffset(int $limit, int $offset)
+    {
+        if (SQLTYPE === 'MYSQL' || SQLTYPE === 'SQLITE' || SQLTYPE === 'MARIADB')
+        {
+            return 'LIMIT ' . $limit . ' OFFSET ' . $offset;
+        }
+        else if (SQLTYPE === 'POSTGRESQL')
+        {
+            if ($datatype === "BINARY")
+            {
+                return 'BINARY(' . $length . ')';
+            }
+            else if ($datatype === "VARBINARY")
+            {
+                return 'VARBINARY(' . $length . ')';
+            }
+        }
+    }
 }

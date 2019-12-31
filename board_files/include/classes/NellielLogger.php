@@ -19,62 +19,62 @@ class NellielLogger implements LoggerInterface
         $this->database = $database;
     }
 
-    public function emergency(string $message, array $context = array())
+    public function emergency($message, array $context = array())
     {
         $this->log(0, $message, $context);
     }
 
-    public function alert(string $message, array $context = array())
+    public function alert($message, array $context = array())
     {
         $this->log(1, $message, $context);
     }
 
-    public function critical(string $message, array $context = array())
+    public function critical($message, array $context = array())
     {
         $this->log(2, $message, $context);
     }
 
-    public function error(string $message, array $context = array())
+    public function error($message, array $context = array())
     {
         $this->log(3, $message, $context);
     }
 
-    public function warning(string $message, array $context = array())
+    public function warning($message, array $context = array())
     {
         $this->log(4, $message, $context);
     }
 
-    public function notice(string $message, array $context = array())
+    public function notice($message, array $context = array())
     {
         $this->log(5, $message, $context);
     }
 
-    public function info(string $message, array $context = array())
+    public function info($message, array $context = array())
     {
         $this->log(6, $message, $context);
     }
 
-    public function debug(string $message, array $context = array())
+    public function debug($message, array $context = array())
     {
         $this->log(7, $message, $context);
     }
 
-    public function log($level, string $message, array $context = array())
+    public function log($level, $message, array $context = array())
     {
         $data = array();
 
         if (!is_int($level))
         {
-            ; // Handle non-int levels
+            $data['level'] = 7;
         }
         else
         {
             $data['level'] = $level;
         }
 
-        $data['area'] = 0;
+        $data['area'] = $context['area'] ?? 'UNKNOWN';
         $data['event_id'] = $context['event_id'] ?? 'UNKNOWN';
-        $data['originator'] = $context['originator'] ?? 'UNKNOWN';
+        $data['originator'] = $context['originator'] ?? '';
         $data['ip_address'] = $context['ip_address'] ?? null;
         $data['time'] = time();
         $data['message'] = $message;

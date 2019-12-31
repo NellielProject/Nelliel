@@ -122,14 +122,14 @@ class OutputMenu extends OutputCore
 
     private function indexNavigation(array $parameters, bool $data_only)
     {
-        $page_format = $parameters['index_format'] ?? 'index-%d';
-        $page_count = $parameters['page_count'] ?? 0;
-        $page = $parameters['page'] ?? 0;
+        $page_format = $parameters['index_format'] ?? 'index-%d' . PAGE_EXT;
+        $page_count = $parameters['page_count'] ?? 1;
+        $page = $parameters['page'] ?? 1;
         $pagination_object = new \Nelliel\Pagination();
         $pagination_object->setPrevious(_gettext('Previous'));
         $pagination_object->setNext(_gettext('Next'));
         $pagination_object->setPage('%d', $page_format);
-        $pagination_object->setFirst('%d', 'index');
+        $pagination_object->setFirst('%d', 'index' . PAGE_EXT);
         return $pagination_object->generateNumerical(1, $page_count, $page);
     }
 }

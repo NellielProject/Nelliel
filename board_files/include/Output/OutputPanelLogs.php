@@ -27,6 +27,9 @@ class OutputPanelLogs extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
         $log_type = $parameters['log_type'] ?? '';
+        $page = $parameters['page'] ?? 0;
+        $entries = $parameters['entries'] ?? 20;
+        $row_offset = $page * $entries;
 
         if (!$user->domainPermission($this->domain, 'perm_file_filters_access'))
         {
@@ -45,29 +48,30 @@ class OutputPanelLogs extends OutputCore
         switch ($log_type)
         {
             case 'board':
-                $query = '(SELECT * FROM "' . BOARD_LOGS_TABLE . '") ORDER BY "time", "entry"';
+                $query = '(SELECT * FROM "' . BOARD_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
 
             case 'staff':
-                $query = '(SELECT * FROM "' . STAFF_LOGS_TABLE . '") ORDER BY "time", "entry"';
+                $query = '(SELECT * FROM "' . STAFF_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
 
             case 'system':
-                $query = '(SELECT * FROM "' . SYSTEM_LOGS_TABLE . '") ORDER BY "time", "entry"';
+                $query = '(SELECT * FROM "' . SYSTEM_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
 
             default:
                 $query = '(SELECT * FROM "' . BOARD_LOGS_TABLE . '")
                    UNION (SELECT * FROM "' . STAFF_LOGS_TABLE . '")
-                   UNION (SELECT * FROM "' . SYSTEM_LOGS_TABLE . '") ORDER BY "time", "entry"';
+                   UNION (SELECT * FROM "' . SYSTEM_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
         }
 
-        $logs = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
-
+        $prepared = $this->database->prepare($query);
+        $logs = $this->database->executePreparedFetchAll($prepared, [$entries, $row_offset], PDO::FETCH_ASSOC);
         $this->render_data['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                 ['module' => 'file-filters', 'action' => 'add']);
         $bgclass = 'row1';
+        $this->render_data['log_entry_list'] = array();
 
         foreach ($logs as $log)
         {
@@ -79,12 +83,20 @@ class OutputPanelLogs extends OutputCore
             $log_data['level'] = intval($log['level']);
             $log_data['event_id'] = $log['event_id'];
             $log_data['originator'] = $log['originator'];
-            $log_data['ip_address'] = $log['ip_address'];
+            $log_data['ip_address'] = @inet_ntop($log['ip_address']);
             $log_data['time'] = $log['time'];
             $log_data['message'] = $log['message'];
             $this->render_data['log_entry_list'][] = $log_data;
         }
 
+        $page_format = MAIN_SCRIPT . '?module=logs&page=%d';
+        $page_count = $parameters['page_count'] ?? 5;
+        $page = $parameters['page'] ?? 1;
+        $pagination_object = new \Nelliel\Pagination();
+        $pagination_object->setPrevious(_gettext('<<'));
+        $pagination_object->setNext(_gettext('>>'));
+        $pagination_object->setPage('%d', $page_format);
+        $this->render_data['pagination'] = $pagination_object->generateNumerical(1, $page_count, $page);
         $this->render_data['board_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=board';
         $this->render_data['staff_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=staff';
         $this->render_data['system_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=system';
