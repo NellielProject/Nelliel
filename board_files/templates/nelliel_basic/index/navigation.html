@@ -1,7 +1,5 @@
 {{% FILTERS }}
 <div role="navigation" aria-label="Board navigation" data-i18n-attributes="gettext|aria-label">
-{{# nav_elements }}
-	<span>[{{# linked }}<a href="{{ url }}">{{ text }}</a>{{/ linked }}{{^ linked }}{{ text }}{{/ linked }}]</span>
-{{/ nav_elements }}
+	{{> basic_pagination }}
 	<span> [<a href="{{ catalog_url }}" data-i18n="gettext">Catalog</a>]</span>
 </div>

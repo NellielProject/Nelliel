@@ -149,10 +149,7 @@ class OutputIndex extends OutputCore
             if ($threads_on_page >= $this->domain->setting('threads_per_page') || $threads_done == $thread_count)
             {
                 $json_index->addThreadData($json_thread->retrieveData());
-                $output_menu = new OutputMenu($this->domain);
-                $this->render_data['nav_elements'] = $output_menu->render(
-                        ['menu' => 'index_navigation', 'page' => $page, 'index_format' => $index_format,
-                            'page_count' => $page_count], true);
+                $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
                 $output_footer = new OutputFooter($this->domain);
                 $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => true],
                         true);
@@ -177,5 +174,16 @@ class OutputIndex extends OutputCore
                 $page ++;
             }
         }
+    }
+
+
+    private function indexNavigation(int $page, int $page_count, $page_format)
+    {
+        $pagination_object = new \Nelliel\Pagination();
+        $pagination_object->setPrevious(_gettext('Previous'));
+        $pagination_object->setNext(_gettext('Next'));
+        $pagination_object->setPage('%d', $page_format);
+        $pagination_object->setFirst('%d', 'index' . PAGE_EXT);
+        return $pagination_object->generateNumerical(1, $page_count, $page);
     }
 }

@@ -41,10 +41,6 @@ class OutputMenu extends OutputCore
             case 'site_navigation':
                 $output = $this->siteNavigation($parameters, $data_only);
                 break;
-
-            case 'index_navigation':
-                $output = $this->indexNavigation($parameters, $data_only);
-                break;
         }
 
         return $output;
@@ -118,18 +114,5 @@ class OutputMenu extends OutputCore
         $render_data['news_url'] = $dotdot . 'news.html';
         $render_data['about_nelliel_url'] = $dotdot . MAIN_SCRIPT . '?about_nelliel';
         return $render_data;
-    }
-
-    private function indexNavigation(array $parameters, bool $data_only)
-    {
-        $page_format = $parameters['index_format'] ?? 'index-%d' . PAGE_EXT;
-        $page_count = $parameters['page_count'] ?? 1;
-        $page = $parameters['page'] ?? 1;
-        $pagination_object = new \Nelliel\Pagination();
-        $pagination_object->setPrevious(_gettext('Previous'));
-        $pagination_object->setNext(_gettext('Next'));
-        $pagination_object->setPage('%d', $page_format);
-        $pagination_object->setFirst('%d', 'index' . PAGE_EXT);
-        return $pagination_object->generateNumerical(1, $page_count, $page);
     }
 }
