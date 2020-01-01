@@ -15,7 +15,6 @@ class TableCites extends TableHandler
     function __construct($database, $sql_helpers)
     {
         $this->database = $database;
-        $this->sql_helpers = $sql_helpers;
         $this->table_name = CITES_TABLE;
         $this->columns_data = [
             'source_board' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
@@ -45,7 +44,7 @@ class TableCites extends TableHandler
             target_post     INTEGER DEFAULT NULL
         ) " . $options . ";";
 
-        return $this->sql_helpers->createTableQuery($schema, $this->table_name);
+        return $this->createTableQuery($schema, $this->table_name);
     }
 
     public function insertDefaults()

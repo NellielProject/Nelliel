@@ -15,7 +15,6 @@ class TableBans extends TableHandler
     function __construct($database, $sql_helpers)
     {
         $this->database = $database;
-        $this->sql_helpers = $sql_helpers;
         $this->table_name = BANS_TABLE;
         $this->columns_data = [
             'ban_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
@@ -60,7 +59,7 @@ class TableBans extends TableHandler
             appeal_status       SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
-        return $this->sql_helpers->createTableQuery($schema, $this->table_name);
+        return $this->createTableQuery($schema, $this->table_name);
     }
 
     public function insertDefaults()

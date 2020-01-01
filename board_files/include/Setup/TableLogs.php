@@ -15,7 +15,6 @@ class TableLogs extends TableHandler
     function __construct($database, $sql_helpers)
     {
         $this->database = $database;
-        $this->sql_helpers = $sql_helpers;
         $this->table_name = '_logs';
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
@@ -50,7 +49,7 @@ class TableLogs extends TableHandler
             message         TEXT DEFAULT NULL
         ) " . $options . ";";
 
-        return $this->sql_helpers->createTableQuery($schema, $this->table_name);
+        return $this->createTableQuery($schema, $this->table_name);
     }
 
     public function insertDefaults()

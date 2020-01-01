@@ -22,7 +22,7 @@ In addition:
  - If a class instance or mutable variable needs to be accessible in a global scope it must be encapsulated inside a function.
  
 ## SQL and Queries
-All schemas should comply with ANSI standards as much as possible. If a query cannot be done in a universal manner, a helper method may be added to SQLHelpers.
+All schemas should comply with ANSI standards as much as possible. If a query cannot be done in a universal manner, a helper method may be added to SQLCompatibility.
 
 In cases where a data type is not fully cross-compatible or has a differing name (e.g. the BINARY equivalent in PostgreSQL is BYTEA), an equivalent may be used for the specific RDBMS schema so long as the behavior is indistinguishable.
 

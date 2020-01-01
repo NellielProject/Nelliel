@@ -8,6 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use PDO;
+use \Nelliel\SQLCompatibility;
 
 class Setup
 {
@@ -111,7 +112,7 @@ class Setup
     public function createCoreTables()
     {
         $database = nel_database();
-        $sql_helpers = new SQLHelpers($database);
+        $sql_helpers = new SQLCompatibility($database);
         $assets_table = new TableAssets($database, $sql_helpers);
         $assets_table->setup();
         $bans_table = new TableBans($database, $sql_helpers);
@@ -172,7 +173,7 @@ class Setup
     public function createBoardTables($board_id)
     {
         $database = nel_database();
-        $sql_helpers = new SQLHelpers($database);
+        $sql_helpers = new SQLCompatibility($database);
 
         // Domain and such doesn't function without config table
         $config_table = new TableBoardConfig($database, $sql_helpers);

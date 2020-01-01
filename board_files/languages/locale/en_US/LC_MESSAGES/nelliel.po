@@ -1958,7 +1958,7 @@ msgid "InnoDB engine is required for MySQL or MariaDB support. However the engin
 "not available for some reason."
 msgstr ""
 
-#: board_files/include/Setup/SQLHelpers.php:144
+#: board_files/include/Setup/SQLCompatibility.php:144
 #, php-format
 msgid "Creation of %s failed! Check database settings and config.php then retry "
 "installation."

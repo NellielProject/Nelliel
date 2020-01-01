@@ -15,7 +15,6 @@ class TableThreads extends TableHandler
     function __construct($database, $sql_helpers)
     {
         $this->database = $database;
-        $this->sql_helpers = $sql_helpers;
         $this->table_name = '_threads';
         $this->columns_data = [
             'thread_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
@@ -62,7 +61,7 @@ class TableThreads extends TableHandler
             slug                    VARCHAR(255) DEFAULT NULL
         ) " . $options . ";";
 
-        return $this->sql_helpers->createTableQuery($schema, $this->table_name);
+        return $this->createTableQuery($schema, $this->table_name);
     }
 
     public function insertDefaults()

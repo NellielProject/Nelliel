@@ -15,7 +15,6 @@ class TableCaptcha extends TableHandler
     function __construct($database, $sql_helpers)
     {
         $this->database = $database;
-        $this->sql_helpers = $sql_helpers;
         $this->table_name = CAPTCHA_TABLE;
         $this->columns_data = [
             'cookie_key' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
@@ -42,7 +41,7 @@ class TableCaptcha extends TableHandler
             time_created    BIGINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
-        return $this->sql_helpers->createTableQuery($schema, $this->table_name);
+        return $this->createTableQuery($schema, $this->table_name);
     }
 
     public function insertDefaults()

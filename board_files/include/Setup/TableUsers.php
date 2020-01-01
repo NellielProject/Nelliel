@@ -15,7 +15,6 @@ class TableUsers extends TableHandler
     function __construct($database, $sql_helpers)
     {
         $this->database = $database;
-        $this->sql_helpers = $sql_helpers;
         $this->table_name = USERS_TABLE;
         $this->columns_data = [
         'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
@@ -49,7 +48,7 @@ class TableUsers extends TableHandler
             last_login      BIGINT DEFAULT NULL
         ) " . $options . ";";
 
-        return $this->sql_helpers->createTableQuery($schema, $this->table_name);
+        return $this->createTableQuery($schema, $this->table_name);
     }
 
     public function insertDefaults()

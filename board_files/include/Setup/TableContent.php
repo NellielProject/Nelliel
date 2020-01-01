@@ -15,7 +15,6 @@ class TableContent extends TableHandler
     function __construct($database, $sql_helpers)
     {
         $this->database = $database;
-        $this->sql_helpers = $sql_helpers;
         $this->table_name = '_content';
         $this->increment_column = 'entry';
         $this->columns_data = [
@@ -95,7 +94,7 @@ class TableContent extends TableHandler
             ON DELETE CASCADE
         ) " . $options . ";";
 
-        return $this->sql_helpers->createTableQuery($schema, $this->table_name);
+        return $this->createTableQuery($schema, $this->table_name);
     }
 
     public function insertDefaults()

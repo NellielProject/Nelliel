@@ -39,7 +39,7 @@ abstract class TableHandler
                 $check_pdo_types[] = $info['pdo_type'];
             }
 
-            ++$index;
+            ++ $index;
         }
 
         if ($this->database->rowExists($this->table_name, $check_columns, $check_values, $check_pdo_types))
@@ -62,10 +62,10 @@ abstract class TableHandler
             $insert_values[] = $values[$index];
             $insert_columns[] = $column_name;
             $insert_pdo_types[] = $info['pdo_type'];
-            ++$index;
+            ++ $index;
         }
 
-        $this->sql_helpers->compileExecuteInsert($this->table_name, $insert_columns, $insert_values, $insert_pdo_types);
+        $this->compileExecuteInsert($this->table_name, $insert_columns, $insert_values, $insert_pdo_types);
     }
 
     public function verifyStructure()
@@ -123,5 +123,63 @@ abstract class TableHandler
     public function schemaVersion()
     {
         return $this->schema_version;
+    }
+
+    public function createTableQuery($schema, $table_name)
+    {
+        if ($this->database->tableExists($table_name))
+        {
+            return false;
+        }
+
+        $result = $this->database->query($schema);
+
+        if (!$result)
+        {
+            nel_derp(103,
+                    sprintf(
+                            _gettext(
+                                    'Creation of %s failed! Check database settings and config.php then retry installation.'),
+                            $table_name));
+        }
+
+        return $result;
+    }
+
+    public function compileExecuteInsert(string $table_name, array $columns, array $values, array $pdo_types = null)
+    {
+        $query = 'INSERT INTO "' . $table_name . '" (';
+
+        foreach ($columns as $column)
+        {
+            $query .= '"' . $column . '", ';
+        }
+
+        $query = substr($query, 0, -2) . ') VALUES (';
+
+        foreach ($columns as $column)
+        {
+            $query .= ':' . $column . ', ';
+        }
+
+        $query = substr($query, 0, -2) . ')';
+
+        $prepared = $this->database->prepare($query);
+        $count = count($columns);
+
+        for ($i = 0; $i < $count; $i ++)
+        {
+            if (!is_null($pdo_types))
+            {
+                $prepared->bindValue(':' . $columns[$i], $values[$i], $pdo_types[$i]);
+            }
+            else
+            {
+                $prepared->bindValue(':' . $columns[$i], $values[$i]);
+            }
+        }
+
+        $result = $this->database->executePrepared($prepared);
+        return $result;
     }
 }

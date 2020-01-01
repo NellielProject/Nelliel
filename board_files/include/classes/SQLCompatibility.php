@@ -1,13 +1,13 @@
 <?php
 
-namespace Nelliel\Setup;
+namespace Nelliel;
 
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
 
-class SQLHelpers
+class SQLCompatibility
 {
     private $database;
 
@@ -119,87 +119,11 @@ class SQLHelpers
         return $options . ';';
     }
 
-    public function createTableQuery($schema, $table_name)
+    public function limitOffset($limit, $offset)
     {
-        if ($this->database->tableExists($table_name))
-        {
-            return false;
-        }
-
-        $result = $this->database->query($schema);
-
-        if (!$result)
-        {
-            $this->database->tableFail($table_name);
-        }
-
-        return $result;
-    }
-
-
-    public function tableFail($table)
-    {
-        nel_derp(103,
-                sprintf(
-                        _gettext(
-                                'Creation of %s failed! Check database settings and config.php then retry installation.'),
-                        $table));
-    }
-
-
-    public function compileExecuteInsert(string $table_name, array $columns, array $values, array $pdo_types = null)
-    {
-        $query = 'INSERT INTO "' . $table_name . '" (';
-
-        foreach($columns as $column)
-        {
-            $query .= '"' . $column . '", ';
-        }
-
-        $query = substr($query, 0, -2) . ') VALUES (';
-
-        foreach($columns as $column)
-        {
-            $query .= ':' . $column . ', ';
-        }
-
-        $query = substr($query, 0, -2) . ')';
-
-        $prepared = $this->database->prepare($query);
-        $count = count($columns);
-
-        for ($i = 0; $i < $count; $i ++)
-        {
-            if (!is_null($pdo_types))
-            {
-                $prepared->bindValue(':' . $columns[$i], $values[$i], $pdo_types[$i]);
-            }
-            else
-            {
-                $prepared->bindValue(':' . $columns[$i], $values[$i]);
-            }
-        }
-
-        $result = $this->database->executePrepared($prepared);
-        return $result;
-    }
-
-    public function limitOffset(int $limit, int $offset)
-    {
-        if (SQLTYPE === 'MYSQL' || SQLTYPE === 'SQLITE' || SQLTYPE === 'MARIADB')
+        if (SQLTYPE === 'MYSQL' || SQLTYPE === 'SQLITE' || SQLTYPE === 'MARIADB' || SQLTYPE === 'POSTGRESQL')
         {
             return 'LIMIT ' . $limit . ' OFFSET ' . $offset;
-        }
-        else if (SQLTYPE === 'POSTGRESQL')
-        {
-            if ($datatype === "BINARY")
-            {
-                return 'BINARY(' . $length . ')';
-            }
-            else if ($datatype === "VARBINARY")
-            {
-                return 'VARBINARY(' . $length . ')';
-            }
         }
     }
 }
