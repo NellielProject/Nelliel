@@ -79,7 +79,6 @@ class OutputPanelLogs extends OutputCore
             $log_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $log_data['entry'] = $log['entry'];
-            $log_data['area'] = $log['area'];
             $log_data['level'] = intval($log['level']);
             $log_data['event_id'] = $log['event_id'];
             $log_data['originator'] = $log['originator'];

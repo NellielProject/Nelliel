@@ -18,7 +18,6 @@ class TableLogs extends TableHandler
         $this->table_name = '_logs';
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'area' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'level' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'event_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'originator' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
@@ -40,7 +39,6 @@ class TableLogs extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            area            VARCHAR(255) NOT NULL,
             level           INTEGER NOT NULL,
             event_id        VARCHAR(255) NOT NULL,
             originator      VARCHAR(255) NOT NULL,

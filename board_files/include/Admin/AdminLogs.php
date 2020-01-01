@@ -30,17 +30,6 @@ class AdminLogs extends AdminHandler
         {
             $this->remove($user);
         }
-        else if ($inputs['action'] === 'generate')
-        {
-            $logger = new \Nelliel\NellielLogger($this->database);
-
-            for($i = 0; $i < 10000; $i++)
-            {
-                $message = 'TEST DATA for example a user did a fucking thing entry #' . $i;
-                $logger->info($message, ['table' => SYSTEM_LOGS_TABLE, 'area' => 'SYSTEM', 'event_id' => 'TEST_DATA', 'originator' => 'TESTING', 'ip_address' => $_SERVER['REMOTE_ADDR']]);
-            }
-
-        }
 
         $this->renderPanel($user);
     }
