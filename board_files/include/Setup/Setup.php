@@ -112,55 +112,55 @@ class Setup
     public function createCoreTables()
     {
         $database = nel_database();
-        $sql_helpers = new SQLCompatibility($database);
-        $assets_table = new TableAssets($database, $sql_helpers);
+        $sql_compatibility = new SQLCompatibility($database);
+        $assets_table = new TableAssets($database, $sql_compatibility);
         $assets_table->setup();
-        $bans_table = new TableBans($database, $sql_helpers);
+        $bans_table = new TableBans($database, $sql_compatibility);
         $bans_table->setup();
-        $board_data_table = new TableBoardData($database, $sql_helpers);
+        $board_data_table = new TableBoardData($database, $sql_compatibility);
         $board_data_table->setup();
-        $board_logs_table = new TableLogs($database, $sql_helpers);
+        $board_logs_table = new TableLogs($database, $sql_compatibility);
         $board_logs_table->tableName(BOARD_LOGS_TABLE);
         $board_logs_table->setup();
-        $captcha_table = new TableCaptcha($database, $sql_helpers);
+        $captcha_table = new TableCaptcha($database, $sql_compatibility);
         $captcha_table->setup();
-        $cites_table = new TableCites($database, $sql_helpers);
+        $cites_table = new TableCites($database, $sql_compatibility);
         $cites_table->setup();
-        $board_defaults_table = new TableBoardConfig($database, $sql_helpers);
+        $board_defaults_table = new TableBoardConfig($database, $sql_compatibility);
         $board_defaults_table->tableName(BOARD_DEFAULTS_TABLE);
         $board_defaults_table->setup();
         $board_defaults_table->insertDefaults();
-        $file_filters_table = new TableFileFilters($database, $sql_helpers);
+        $file_filters_table = new TableFileFilters($database, $sql_compatibility);
         $file_filters_table->setup();
-        $filetypes_table = new TableFiletypes($database, $sql_helpers);
+        $filetypes_table = new TableFiletypes($database, $sql_compatibility);
         $filetypes_table->setup();
-        $login_attempts_table = new TableLoginAttempts($database, $sql_helpers);
+        $login_attempts_table = new TableLoginAttempts($database, $sql_compatibility);
         $login_attempts_table->setup();
-        $news_table = new TableNews($database, $sql_helpers);
+        $news_table = new TableNews($database, $sql_compatibility);
         $news_table->setup();
-        $permissions_table = new TablePermissions($database, $sql_helpers);
+        $permissions_table = new TablePermissions($database, $sql_compatibility);
         $permissions_table->setup();
-        $reports_table = new TableReports($database, $sql_helpers);
+        $reports_table = new TableReports($database, $sql_compatibility);
         $reports_table->setup();
-        $role_permissions_table = new TableRolePermissions($database, $sql_helpers);
+        $role_permissions_table = new TableRolePermissions($database, $sql_compatibility);
         $role_permissions_table->setup();
-        $roles_table = new TableRoles($database, $sql_helpers);
+        $roles_table = new TableRoles($database, $sql_compatibility);
         $roles_table->setup();
-        $site_config_table = new TableSiteConfig($database, $sql_helpers);
+        $site_config_table = new TableSiteConfig($database, $sql_compatibility);
         $site_config_table->setup();
-        $staff_logs_table = new TableLogs($database, $sql_helpers);
+        $staff_logs_table = new TableLogs($database, $sql_compatibility);
         $staff_logs_table->tableName(STAFF_LOGS_TABLE);
         $staff_logs_table->setup();
-        $system_logs_table = new TableLogs($database, $sql_helpers);
+        $system_logs_table = new TableLogs($database, $sql_compatibility);
         $system_logs_table->tableName(SYSTEM_LOGS_TABLE);
         $system_logs_table->setup();
-        $templates_table = new TableTemplates($database, $sql_helpers);
+        $templates_table = new TableTemplates($database, $sql_compatibility);
         $templates_table->setup();
-        $user_roles_table = new TableUserRoles($database, $sql_helpers);
+        $user_roles_table = new TableUserRoles($database, $sql_compatibility);
         $user_roles_table->setup();
-        $users_table = new TableUsers($database, $sql_helpers);
+        $users_table = new TableUsers($database, $sql_compatibility);
         $users_table->setup();
-        $versions_table = new TableVersions($database, $sql_helpers);
+        $versions_table = new TableVersions($database, $sql_compatibility);
         $versions_table->setup();
     }
 
@@ -173,27 +173,27 @@ class Setup
     public function createBoardTables($board_id)
     {
         $database = nel_database();
-        $sql_helpers = new SQLCompatibility($database);
+        $sql_compatibility = new SQLCompatibility($database);
 
         // Domain and such doesn't function without config table
-        $config_table = new TableBoardConfig($database, $sql_helpers);
+        $config_table = new TableBoardConfig($database, $sql_compatibility);
         $config_table->tableName('_' . $board_id . '_config');
         $config_table->setup();
         $config_table->copyFrom(BOARD_DEFAULTS_TABLE);
 
         $domain = new \Nelliel\DomainBoard($board_id, nel_database());
         $references = $domain->reference();
-        $threads_table = new TableThreads($database, $sql_helpers);
+        $threads_table = new TableThreads($database, $sql_compatibility);
         $threads_table->tableName($domain->reference('threads_table'));
         $threads_table->createTable();
         $threads_table->tableName($domain->reference('archive_threads_table'));
         $threads_table->createTable();
-        $posts_table = new TablePosts($database, $sql_helpers);
+        $posts_table = new TablePosts($database, $sql_compatibility);
         $posts_table->tableName($domain->reference('posts_table'));
         $posts_table->createTable(['threads_table' => $domain->reference('threads_table')]);
         $posts_table->tableName($domain->reference('archive_posts_table'));
         $posts_table->createTable(['threads_table' => $domain->reference('archive_threads_table')]);
-        $content_table = new TableContent($database, $sql_helpers);
+        $content_table = new TableContent($database, $sql_compatibility);
         $content_table->tableName($domain->reference('content_table'));
         $content_table->createTable(['posts_table' => $domain->reference('posts_table')]);
         $content_table->tableName($domain->reference('archive_content_table'));

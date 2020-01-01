@@ -12,9 +12,10 @@ use PDO;
 class TableBans extends TableHandler
 {
 
-    function __construct($database, $sql_helpers)
+    function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
+        $this->sql_compatibility = $sql_compatibility;
         $this->table_name = BANS_TABLE;
         $this->columns_data = [
             'ban_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
@@ -40,8 +41,8 @@ class TableBans extends TableHandler
 
     public function createTable(array $other_tables = null)
     {
-        $auto_inc = $this->sql_helpers->autoincrementColumn('INTEGER');
-        $options = $this->sql_helpers->tableOptions();
+        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
+        $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             ban_id              " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
@@ -49,8 +50,8 @@ class TableBans extends TableHandler
             all_boards          SMALLINT NOT NULL DEFAULT 0,
             type                VARCHAR(255) NOT NULL,
             creator             VARCHAR(255) NOT NULL,
-            ip_address_start    " . $this->sql_helpers->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            ip_address_end      " . $this->sql_helpers->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
+            ip_address_start    " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
+            ip_address_end      " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
             reason              TEXT DEFAULT NULL,
             length              BIGINT NOT NULL,
             start_time          BIGINT NOT NULL,

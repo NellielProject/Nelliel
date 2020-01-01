@@ -12,9 +12,10 @@ use PDO;
 class TableThreads extends TableHandler
 {
 
-    function __construct($database, $sql_helpers)
+    function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
+        $this->sql_compatibility = $sql_compatibility;
         $this->table_name = '_threads';
         $this->columns_data = [
             'thread_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
@@ -41,8 +42,8 @@ class TableThreads extends TableHandler
 
     public function createTable(array $other_tables = null)
     {
-        $auto_inc = $this->sql_helpers->autoincrementColumn('INTEGER');
-        $options = $this->sql_helpers->tableOptions();
+        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
+        $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             thread_id               INTEGER NOT NULL PRIMARY KEY,

@@ -12,9 +12,10 @@ use PDO;
 class TableLogs extends TableHandler
 {
 
-    function __construct($database, $sql_helpers)
+    function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
+        $this->sql_compatibility = $sql_compatibility;
         $this->table_name = '_logs';
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
@@ -34,15 +35,15 @@ class TableLogs extends TableHandler
 
     public function createTable(array $other_tables = null)
     {
-        $auto_inc = $this->sql_helpers->autoincrementColumn('INTEGER');
-        $options = $this->sql_helpers->tableOptions();
+        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
+        $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             level           INTEGER NOT NULL,
             event_id        VARCHAR(255) NOT NULL,
             originator      VARCHAR(255) NOT NULL,
-            ip_address      " . $this->sql_helpers->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
+            ip_address      " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
             time            INTEGER NOT NULL,
             message         TEXT DEFAULT NULL
         ) " . $options . ";";

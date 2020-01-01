@@ -12,9 +12,10 @@ use PDO;
 class TableCites extends TableHandler
 {
 
-    function __construct($database, $sql_helpers)
+    function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
+        $this->sql_compatibility = $sql_compatibility;
         $this->table_name = CITES_TABLE;
         $this->columns_data = [
             'source_board' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
@@ -33,7 +34,7 @@ class TableCites extends TableHandler
 
     public function createTable(array $other_tables = null)
     {
-        $options = $this->sql_helpers->tableOptions();
+        $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             source_board    VARCHAR(255) NOT NULL,

@@ -12,7 +12,7 @@ use PDO;
 abstract class TableHandler
 {
     protected $database;
-    protected $sql_helpers;
+    protected $sql_compatibility;
     protected $table_name;
     protected $columns_data;
     protected $schema_version;

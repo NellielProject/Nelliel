@@ -12,9 +12,10 @@ use PDO;
 class TableContent extends TableHandler
 {
 
-    function __construct($database, $sql_helpers)
+    function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
+        $this->sql_compatibility = $sql_compatibility;
         $this->table_name = '_content';
         $this->increment_column = 'entry';
         $this->columns_data = [
@@ -56,8 +57,8 @@ class TableContent extends TableHandler
 
     public function createTable(array $other_tables = null)
     {
-        $auto_inc = $this->sql_helpers->autoincrementColumn('INTEGER');
-        $options = $this->sql_helpers->tableOptions();
+        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
+        $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
@@ -76,10 +77,10 @@ class TableContent extends TableHandler
             preview_width       SMALLINT DEFAULT NULL,
             preview_height      SMALLINT DEFAULT NULL,
             filesize            INTEGER DEFAULT NULL,
-            md5                 " . $this->sql_helpers->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            sha1                " . $this->sql_helpers->sqlAlternatives('VARBINARY', '20') . " DEFAULT NULL,
-            sha256              " . $this->sql_helpers->sqlAlternatives('VARBINARY', '32') . " DEFAULT NULL,
-            sha512              " . $this->sql_helpers->sqlAlternatives('VARBINARY', '64') . " DEFAULT NULL,
+            md5                 " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
+            sha1                " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '20') . " DEFAULT NULL,
+            sha256              " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '32') . " DEFAULT NULL,
+            sha512              " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " DEFAULT NULL,
             source              VARCHAR(255) DEFAULT NULL,
             license             VARCHAR(255) DEFAULT NULL,
             alt_text            VARCHAR(255) DEFAULT NULL,

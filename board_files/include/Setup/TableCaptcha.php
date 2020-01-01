@@ -12,9 +12,10 @@ use PDO;
 class TableCaptcha extends TableHandler
 {
 
-    function __construct($database, $sql_helpers)
+    function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
+        $this->sql_compatibility = $sql_compatibility;
         $this->table_name = CAPTCHA_TABLE;
         $this->columns_data = [
             'cookie_key' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
@@ -31,8 +32,8 @@ class TableCaptcha extends TableHandler
 
     public function createTable(array $other_tables = null)
     {
-        $auto_inc = $this->sql_helpers->autoincrementColumn('INTEGER');
-        $options = $this->sql_helpers->tableOptions();
+        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
+        $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             cookie_key      VARCHAR(128) NOT NULL PRIMARY KEY,
