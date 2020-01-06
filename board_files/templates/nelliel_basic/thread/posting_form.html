@@ -78,20 +78,18 @@
 		{{/ is_staff }}
 		{{# use_captcha }}
 		<div class="posting-form-row">
-			<span class="posting-form-label"></span>
-			<div>
-				<img src="{{ captcha_image }}">
-			</div>
+			<span class="posting-form-label" data-i18n="gettext">CAPTCHA</span>
+			<img src="{{ captcha_gen_url }}" width="{{ captcha_width }}" height="{{ captcha_height }}"></img>
 			<div data-i18n="gettext">Enter the characters shown in the image above.</div>
 			<div>
-				<input class="posting-form-input" type="text" name="new_post[captcha]" size="12" maxlength="16" value="">
+				<input class="posting-form-input" type="text" name="new_post[captcha_answer]" size="16" value="">
 			</div>
 		</div>
 		{{/ use_captcha }}
 		{{# use_recaptcha }}
 		<div class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">reCAPTCHA</span>
 			<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-			<span class="posting-form-label"></span>
 			<div class="g-recaptcha" data-sitekey="{{ recaptcha_sitekey }}"></div>
 		</div>
 		{{/ use_recaptcha }}

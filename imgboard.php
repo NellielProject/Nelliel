@@ -28,13 +28,6 @@ $out = nel_plugins()->processHook('nel-plugin-example-return', array('string'), 
 unset($out);
 
 require_once INCLUDE_PATH . 'general_functions.php';
-
-// Check if we're just returning a CAPTCHA image
-if(isset($_GET['get-captcha']))
-{
-    nel_get_captcha();
-}
-
 require_once INCLUDE_PATH . 'crypt.php';
 nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 

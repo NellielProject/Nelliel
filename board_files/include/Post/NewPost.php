@@ -29,20 +29,29 @@ class NewPost
 
         if ($this->domain->setting('use_captcha') || $this->domain->setting('use_recaptcha'))
         {
-            $captcha = new \Nelliel\CAPTCHA($database, $domain);
-            $captcha_result = false;
+            $captcha = new \Nelliel\CAPTCHA($this->domain);
 
             if ($this->domain->setting('use_captcha'))
             {
-                $captcha_result = $captcha->verifyCaptcha();
+                $captcha_key = $_COOKIE['captcha-key'];
+                $captcha_answer = $_POST['new_post']['captcha_answer'];
+                $captcha_result = $captcha->verify($captcha_key, $captcha_answer);
+            }
+            else
+            {
+                $captcha_result = true;
             }
 
             if ($this->domain->setting('use_recaptcha'))
             {
-                $captcha_result = $captcha->verifyReCaptcha();
+                $recaptcha_result = $captcha->verifyReCaptcha();
+            }
+            else
+            {
+                $recaptcha_result = true;
             }
 
-            if (!$captcha_result)
+            if (!$captcha_result || !$recaptcha_result)
             {
                 nel_derp(24, _gettext('CAPTCHA test failed or you appear to be a spambot.'), $error_data);
             }

@@ -95,7 +95,7 @@ Called when content data has been prepared for the JSON API.
 |1    |`$content_array`|`array`|Yes       |Processed content data that will be JSON-encoded.|
 |2    |`$data`         |`array`|No        |Raw content data.|
 
-### nel-get-captcha
+### nel-generate-captcha
 Called when getting output for a CAPTCHA.  
 **Arguments**  
 

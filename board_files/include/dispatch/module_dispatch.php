@@ -13,6 +13,16 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
     switch ($inputs['module'])
     {
+        case 'captcha':
+            $captcha = new \Nelliel\CAPTCHA($domain);
+
+            switch ($inputs['action'])
+            {
+                case 'generate':
+                    $captcha->generate();
+                    break;
+            }
+
         case 'login':
             if (empty($_POST))
             {
@@ -49,22 +59,22 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 case 'view-thread':
                     $output_thread = new \Nelliel\Output\OutputThread($domain);
                     $output_thread->render(
-                            ['write' => false, 'thread_id' => intval($inputs['thread']),
-                            'command' => $inputs['action']], false);
+                            ['write' => false, 'thread_id' => intval($inputs['thread']), 'command' => $inputs['action']],
+                            false);
                     break;
 
                 case 'expand-thread':
                     $output_thread = new \Nelliel\Output\OutputThread($domain);
                     $output_thread->render(
-                            ['write' => false, 'thread_id' => intval($inputs['thread']),
-                            'command' => $inputs['action']], false);
+                            ['write' => false, 'thread_id' => intval($inputs['thread']), 'command' => $inputs['action']],
+                            false);
                     break;
 
                 case 'collapse-thread':
                     $output_thread = new \Nelliel\Output\OutputThread($domain);
                     $output_thread->render(
-                            ['write' => false, 'thread_id' => intval($inputs['thread']),
-                            'command' => $inputs['action']], false);
+                            ['write' => false, 'thread_id' => intval($inputs['thread']), 'command' => $inputs['action']],
+                            false);
                     break;
             }
 

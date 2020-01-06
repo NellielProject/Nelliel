@@ -113,10 +113,3 @@ function nel_true_empty($variable)
 {
     return is_null($variable) || $variable === '' || $variable === array();
 }
-
-function nel_get_captcha()
-{
-    $captcha_instance = new \Nelliel\CAPTCHA(nel_database());
-    $captcha_instance->getCaptcha();
-    die();
-}

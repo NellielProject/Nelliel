@@ -48,7 +48,7 @@ class TableFiletypes extends TableHandler
             type                VARCHAR(255) DEFAULT NULL,
             format              VARCHAR(255) DEFAULT NULL,
             mime                VARCHAR(255) DEFAULT NULL,
-            id_regex            VARCHAR(512) DEFAULT NULL,
+            id_regex            TEXT DEFAULT NULL,
             label               VARCHAR(255) DEFAULT NULL,
             type_def            SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
