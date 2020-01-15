@@ -33,7 +33,7 @@ class NewPost
 
             if ($this->domain->setting('use_captcha'))
             {
-                $captcha_key = $_COOKIE['captcha-key'];
+                $captcha_key = $_COOKIE['captcha-key-' . $this->domain->id()] ?? '';
                 $captcha_answer = $_POST['new_post']['captcha_answer'];
                 $captcha_result = $captcha->verify($captcha_key, $captcha_answer);
             }

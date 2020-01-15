@@ -24,15 +24,20 @@ class CAPTCHA
     {
         // Pretty basic CAPTCHA
         // We'll leave making a better one to someone who really knows the stuff
+        $this->cleanup();
+        $throttled = $this->throttle();
 
-        $generated = nel_plugins()->processHook('nel-captcha-generate', [$this->domain]);
+        if ($throttled)
+        {
+            die();
+        }
+
+        $generated = nel_plugins()->processHook('nel-captcha-generate', [$this->domain], false);
 
         if ($generated)
         {
             return;
         }
-
-        $this->cleanup();
 
         $captcha_text = '';
         $character_set = 'bcdfghjkmnpqrstvwxyz23456789';
@@ -45,6 +50,31 @@ class CAPTCHA
             $captcha_text .= $set_array[$index];
         }
 
+        $captcha_image = $this->render($captcha_text);
+        $captcha_key = substr(sha1(random_bytes(16)), -12);
+        setrawcookie('captcha-key-' . $this->domain->id(), $captcha_key, 0, '/');
+        header("Content-Type: image/png");
+        imagepng($captcha_image);
+
+        $captcha_data = array();
+        $captcha_data['key'] = $captcha_key;
+        $captcha_data['text'] = $captcha_text;
+        $captcha_data['domain_id'] = $this->domain->id();
+        $captcha_data['time_created'] = time();
+        $captcha_data['ip_address'] = $_SERVER['REMOTE_ADDR'];
+        $this->store($captcha_data);
+    }
+
+    public function render(string $captcha_text)
+    {
+        $captcha_image = nel_plugins()->processHook('nel-captcha-render', [$this->domain]);
+
+        if (!is_null($captcha_image))
+        {
+            return $captcha_image;
+        }
+
+        $character_count = utf8_strlen($captcha_text);
         $font_file = BASE_PATH . ASSETS_DIR . '/fonts/Halogen.ttf';
         $image_width = 250;
         $image_height = 80;
@@ -52,9 +82,9 @@ class CAPTCHA
         $text_box = imageftbbox($font_size, 0, $font_file, $captcha_text);
         $x_margin = $image_width - $text_box[4];
         $y_margin = $image_height - $text_box[5];
-        $character_spacing = ($x_margin / ($characters_limit + 2));
-        $captcha_image = imagecreatetruecolor($image_width, $image_height);
+        $character_spacing = ($x_margin / ($character_count + 2));
 
+        $captcha_image = imagecreatetruecolor($image_width, $image_height);
         $background_color = imagecolorallocate($captcha_image, 230, 230, 230);
         imagefill($captcha_image, 0, 0, $background_color);
 
@@ -71,7 +101,7 @@ class CAPTCHA
             imageline($captcha_image, 0, rand(0, $image_height), $image_width, rand(0, $image_height), $line_color);
         }
 
-        $x = $x_margin - ($character_spacing * $characters_limit);
+        $x = $x_margin - ($character_spacing * $character_count);
         $y = $y_margin / 2;
 
         $text_colors = array();
@@ -80,9 +110,10 @@ class CAPTCHA
         $text_colors[] = imagecolorallocate($captcha_image, 140, 100, 125);
         $text_colors_size = count($text_colors);
 
-        foreach ($selected_indexes as $index)
+        $characters_array = utf8_split($captcha_text);
+
+        foreach ($characters_array as $character)
         {
-            $character = $set_array[$index];
             $box = imageftbbox($font_size, 0, $font_file, $character);
             $size = $font_size - rand(0, intval($font_size * 0.35));
             $angle = rand(0, 50) - 25;
@@ -91,45 +122,45 @@ class CAPTCHA
             $x += $box[4] + $character_spacing;
         }
 
-        $captcha_key = substr(sha1(random_bytes(16)), -12);
-        setrawcookie('captcha-key', $captcha_key, time() + 3600, '/');
-        header("Content-Type: image/png");
-        imagepng($captcha_image);
+        return $captcha_image;
+    }
 
-        $captcha_data = array();
-        $captcha_data['key'] = $captcha_key;
-        $captcha_data['text'] = $captcha_text;
-        $captcha_data['case_sensitive'] = 0;
-        $captcha_data['time_created'] = time();
-        $captcha_data['ip_address'] = $_SERVER['REMOTE_ADDR'];
-        $this->store($captcha_data);
+    public function throttle()
+    {
+        $ip_address = $_SERVER['REMOTE_ADDR'];
+        $time = time() - 60; // 1 minute period to check
+        $prepared = $this->database->prepare(
+                'SELECT COUNT(*) FROM "' . CAPTCHA_TABLE . '" WHERE "ip_address" = ? AND "time_created" > ?');
+        $result = $this->database->executePreparedFetch($prepared, [$ip_address, $time], PDO::FETCH_COLUMN);
+        return $result >= $this->domain->setting('captcha_throttle');
     }
 
     public function store(array $captcha_data)
     {
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . CAPTCHA_TABLE .
-                '" ("key", "text", "case_sensitive", "time_created", "ip_address")
-								VALUES (:key, :text, :case_sensitive, :time_created, :ip_address)');
+                '" ("key", "text", "domain_id", "time_created", "ip_address")
+								VALUES (:key, :text, :domain_id, :time_created, :ip_address)');
         $prepared->bindParam(':key', $captcha_data['key'], PDO::PARAM_STR);
         $prepared->bindParam(':text', $captcha_data['text'], PDO::PARAM_STR);
-        $prepared->bindParam(':case_sensitive', $captcha_data['case_sensitive'], PDO::PARAM_INT);
-        $prepared->bindParam(':time_created', $captcha_data['time_created'], PDO::PARAM_STR);
+        $prepared->bindParam(':domain_id', $captcha_data['domain_id'], PDO::PARAM_STR);
+        $prepared->bindParam(':time_created', $captcha_data['time_created'], PDO::PARAM_INT);
         $prepared->bindParam(':ip_address', $captcha_data['ip_address'], PDO::PARAM_LOB);
         $this->database->executePrepared($prepared);
     }
 
     public function verify(string $key, string $answer)
     {
-        $verified = nel_plugins()->processHook('nel-captcha-verify', [$this->domain]);
+        $verified = nel_plugins()->processHook('nel-captcha-verify', [$this->domain], false);
 
         if ($verified)
         {
             return true;
         }
 
-        $prepared = $this->database->prepare('SELECT * FROM "' . CAPTCHA_TABLE . '" WHERE "key" = ? AND "text" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [$key, $answer], PDO::FETCH_ASSOC);
+        $expiration = time() - $this->domain->setting('captcha_timeout');
+        $prepared = $this->database->prepare('SELECT * FROM "' . CAPTCHA_TABLE . '" WHERE "key" = ? AND "text" = ? AND "time_created" > ?');
+        $result = $this->database->executePreparedFetch($prepared, [$key, $answer, $expiration], PDO::FETCH_ASSOC);
 
         if ($result === false)
         {
@@ -143,14 +174,14 @@ class CAPTCHA
 
     public function cleanup()
     {
-        $done = nel_plugins()->processHook('nel-captcha-cleanup', [$this->domain]);
+        $done = nel_plugins()->processHook('nel-captcha-cleanup', [$this->domain], false);
 
         if ($done)
         {
             return;
         }
 
-        $expiration = time() - 3600;
+        $expiration = time() - $this->domain->setting('captcha_timeout');
         $prepared = $this->database->prepare('DELETE FROM "' . CAPTCHA_TABLE . '" WHERE "time_created" < ?');
         $this->database->executePrepared($prepared, [$expiration]);
     }

@@ -119,6 +119,8 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'filetype_icon_set_id', 'filetype-nelliel-basic', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'timestamp_filename', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_captcha', '0', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'captcha_timeout', '1800', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'captcha_throttle', '12', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_recaptcha', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'recaptcha_type', 'CHECKBOX', 1, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'poster_id_length', '6', 0, 0]);

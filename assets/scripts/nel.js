@@ -72,11 +72,11 @@ nelliel.setup.addListenerIfElementExists = function(element, event, event_handle
 }
 
 nelliel.setup.fillForms = function(board) {
-    var P = nelliel.core.getCookie("pwd-" + board);
-    var N = nelliel.core.getCookie("name-" + board);
-    document.getElementById("posting-form-sekrit").value = P;
-    document.getElementById("update-sekrit").value = P;
-    document.getElementById("not-anonymous").value = N;
+    var pwd = nelliel.core.getCookie("pwd-" + board);
+    var name = nelliel.core.getCookie("name-" + board);
+    document.getElementById("posting-form-sekrit").value = pwd;
+    document.getElementById("update-sekrit").value = pwd;
+    document.getElementById("not-anonymous").value = name;
 }
 
 nelliel.events.processPostClicks = function(event) {
@@ -106,6 +106,8 @@ nelliel.events.processPostClicks = function(event) {
             nelliel.ui.hideShowPost(event.target, command);
         } else if (command === "hide-thread" || command === "show-thread" ) {
             nelliel.ui.hideShowThread(event.target, command);
+        } else if (command === "reload-captcha" ) {
+            reloadCAPTCHA(event.target, command);
         }
 
         if (event.target.hasAttribute("href") && event.target.getAttribute("href").match(/^#$/) !== null) {
@@ -261,4 +263,10 @@ function setStyle(style, update_cookie = false) {
     for (i = 0; i < style_menus.length; i++) {
         style_menus.item(i).value = style;
       } 
+}
+
+function reloadCAPTCHA(event, command) {
+    var captcha_image = document.getElementById("captcha-image");
+    var new_image_url = captcha_image.getAttribute("src").replace(/&time=[0-9]*/, "&time=" + Date.now());
+    captcha_image.setAttribute("src", new_image_url);
 }

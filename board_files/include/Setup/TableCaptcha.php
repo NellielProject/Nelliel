@@ -20,7 +20,7 @@ class TableCaptcha extends TableHandler
         $this->columns_data = [
             'cookie_key' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'captcha_text' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'case_sensitive' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'domain_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'time_created' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
@@ -39,7 +39,7 @@ class TableCaptcha extends TableHandler
         CREATE TABLE " . $this->table_name . " (
             key             VARCHAR(255) NOT NULL PRIMARY KEY,
             text            VARCHAR(255) NOT NULL,
-            case_sensitive  SMALLINT NOT NULL DEFAULT 0,
+            domain_id       VARCHAR(255) NOT NULL,
             time_created    INTEGER NOT NULL,
             ip_address      " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL
         ) " . $options . ";";

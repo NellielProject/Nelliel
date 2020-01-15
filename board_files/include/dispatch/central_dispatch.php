@@ -30,12 +30,13 @@ function nel_central_dispatch()
 
     $inputs = array();
     $inputs['module'] = $_GET['module'] ?? '';
+    $inputs['domain_id'] = $_GET['domain_id'] ?? '';
     $inputs['board_id'] = $_GET['board_id'] ?? '';
     $inputs['action'] = $_GET['action'] ?? '';
     $inputs['content_id'] = $_GET['content-id'] ?? '';
     $inputs['modmode'] = $_GET['modmode'] ?? false;
 
-    if($inputs['board_id'] === '')
+    if($inputs['board_id'] === '' || $inputs['domain_id'])
     {
         $domain = new \Nelliel\DomainSite(nel_database());
     }
