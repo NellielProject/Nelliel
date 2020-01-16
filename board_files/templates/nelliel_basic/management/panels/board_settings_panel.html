@@ -797,40 +797,6 @@
 			</span>
 		</div>
 		{{/ use_captcha }}
-		{{# captcha_throttle }}
-		<div class="display-row">
-			{{# defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="captcha_throttle_lock" value="0">
-				<input id="captcha_throttle_lock" type="checkbox" name="captcha_throttle_lock" value="1" {{ locked }}>
-				<label for="captcha_throttle_lock" data-i18n="gettext">(Lock)</label>
-			</span>
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="captcha_throttle" data-i18n="gettext">Maximum CAPTCHAs one IP can request in a minute.</label>
-			</span>
-			<span class="display-cell">
-				<input id="captcha_throttle" type="text" name="captcha_throttle" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
-		{{/ captcha_throttle }}
-		{{# captcha_timeout }}
-		<div class="display-row">
-			{{# defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="captcha_timeout_lock" value="0">
-				<input id="captcha_timeout_lock" type="checkbox" name="captcha_timeout_lock" value="1" {{ locked }}>
-				<label for="captcha_timeout_lock" data-i18n="gettext">(Lock)</label>
-			</span>
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="captcha_timeout" data-i18n="gettext">Time (in seconds) before CAPTCHA image becomes invalid.</label>
-			</span>
-			<span class="display-cell">
-				<input id="captcha_timeout" type="text" name="captcha_timeout" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
-		{{/ captcha_timeout }}
 		{{# use_recaptcha }}
 		<div class="display-row">
 			{{# defaults }}
@@ -843,33 +809,10 @@
 			<span class="display-cell">
 				<input type="hidden" name="use_recaptcha" value="0">
 				<input id="use_recaptcha" type="checkbox" name="use_recaptcha" value="1" {{ value }} {{ disabled }}>
-				<label for="use_recaptcha" data-i18n="gettext">Use ReCAPTCHA for new posts and threads.</label>
+				<label for="use_recaptcha" data-i18n="gettext">Use reCAPTCHA for new posts and threads.</label>
 			</span>
 		</div>
 		{{/ use_recaptcha }}
-		{{# recaptcha_type }}
-		<div class="display-row">
-			{{# defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="recaptcha_type_lock" value="0">
-				<input id="recaptcha_type_lock" type="checkbox" name="recaptcha_type_lock" value="1" {{ locked }}>
-				<label for="recaptcha_type_lock" data-i18n="gettext">(Lock)</label>
-			</span>
-			{{/ defaults }}
-			<span class="display-cell">
-				<span data-i18n="gettext">ReCAPTCHA type:</span>
-			</span>
-		</div>
-		<div class="display-row">
-			{{# defaults }}
-			<span></span>
-			{{/ defaults }}
-			<span class="display-cell">
-				<input id="recaptcha_type_CHECKBOX" type="radio" name="recaptcha_type" value="CHECKBOX" {{ recaptcha_type_CHECKBOX }}> 
-				<label for="recaptcha_type_CHECKBOX" data-i18n="gettext">Checkbox</label><br>
-			</span>
-		</div>
-		{{/ recaptcha_type }}
 		{{# use_honeypot }}
 		<div class="display-row">
 			{{# defaults }}

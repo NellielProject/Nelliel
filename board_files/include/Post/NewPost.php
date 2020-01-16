@@ -44,7 +44,7 @@ class NewPost
 
             if ($this->domain->setting('use_recaptcha'))
             {
-                $recaptcha_result = $captcha->verifyReCaptcha();
+                $recaptcha_result = $captcha->verifyReCAPTCHA();
             }
             else
             {

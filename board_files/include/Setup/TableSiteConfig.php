@@ -66,10 +66,16 @@ class TableSiteConfig extends TableHandler
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'locale', 'en_US', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'recaptcha_site_key', '', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'recaptcha_sekrit_key', '', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'recaptcha_type', 'CHECKBOX', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'name', '', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'slogan', '', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'favicon', '', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'banner', '', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'display_render_timer', '1', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'captcha_timeout', '1800', 0, 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'captcha_throttle', '12', 0, 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'captcha_width', '250', 0, 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'captcha_height', '80', 0, 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'captcha_character_count', '5', 0, 0]);
     }
 }

@@ -56,7 +56,14 @@ class OutputPanelSiteSettings extends OutputCore
             }
             else
             {
-                $this->render_data[$config_line['config_name']] = $config_line['setting'];
+                if ($config_line['select_type'] == 1)
+                {
+                    $this->render_data[$config_line['config_name'] . '_' . $config_line['setting']] = 'checked';
+                }
+                else
+                {
+                    $this->render_data[$config_line['config_name']] = $config_line['setting'];
+                }
             }
         }
 

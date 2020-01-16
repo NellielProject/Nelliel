@@ -41,12 +41,21 @@
 		<input id="locale" class="display-cell" type="text" name="locale" size="30" value="{{ locale }}">
 	</div>
 	<div class="display-row">
-		<label for="recaptcha_site_key" class="display-cell" data-i18n="gettext">ReCAPTCHA site key</label>
+		<label for="recaptcha_site_key" class="display-cell" data-i18n="gettext">reCAPTCHA site key</label>
 		<input id="recaptcha_site_key" class="display-cell" type="text" name="recaptcha_site_key" size="45" value="{{ recaptcha_site_key }}">
 	</div>
 	<div class="display-row">
-		<label for="recaptcha_sekrit_key" class="display-cell" data-i18n="gettext">ReCAPTCHA secret key</label>
+		<label for="recaptcha_sekrit_key" class="display-cell" data-i18n="gettext">reCAPTCHA secret key</label>
 		<input id="recaptcha_sekrit_key" class="display-cell" type="text" name="recaptcha_sekrit_key" size="45" value="{{ recaptcha_sekrit_key }}">
+	</div>
+	<div class="display-row">
+		<span>reCAPTCHA type:</span>
+	</div>
+	<div class="display-row">
+		<span class="display-cell">
+			<input id="recaptcha_type_CHECKBOX" type="radio" name="recaptcha_type" value="CHECKBOX" {{ recaptcha_type_CHECKBOX }}> 
+			<label for="recaptcha_type_CHECKBOX" data-i18n="gettext">Checkbox</label><br>
+		</span>
 	</div>
 	<div class="display-row">
 		<label for="name" class="display-cell" data-i18n="gettext">Site name</label>
@@ -68,6 +77,26 @@
 		<input type="hidden" name="display_render_timer" value="0">
 		<input id="display_render_timer" type="checkbox" name="display_render_timer" value="1" {{ display_render_timer }}>
 		<label for="display_render_timer" data-i18n="gettext">Display rendering timer</label>
+	</div>
+	<div class="display-row">
+		<label for="captcha_timeout" class="display-cell" data-i18n="gettext">Time (in seconds) before a CAPTCHA becomes invalid.</label>
+		<input id="captcha_timeout" class="display-cell" type="text" name="captcha_timeout" size="15" value="{{ captcha_timeout }}">
+	</div>
+	<div class="display-row">
+		<label for="captcha_throttle" class="display-cell" data-i18n="gettext">How many CAPTCHAs can be requested by an IP in one minute.</label>
+		<input id="captcha_throttle" class="display-cell" type="text" name="captcha_throttle" size="15" value="{{ captcha_throttle }}">
+	</div>
+	<div class="display-row">
+		<label for="captcha_width" class="display-cell" data-i18n="gettext">Width of CAPTCHA image.</label>
+		<input id="captcha_width" class="display-cell" type="text" name="captcha_width" size="15" value="{{ captcha_width }}">
+	</div>
+	<div class="display-row">
+		<label for="captcha_height" class="display-cell" data-i18n="gettext">Height of CAPTCHA image.</label>
+		<input id="captcha_height" class="display-cell" type="text" name="captcha_height" size="15" value="{{ captcha_height }}">
+	</div>
+	<div class="display-row">
+		<label for="captcha_character_count" class="display-cell" data-i18n="gettext">How many characters to use in CAPTCHA.</label>
+		<input id="captcha_character_count" class="display-cell" type="text" name="captcha_character_count" size="15" value="{{ captcha_character_count }}">
 	</div>
 	<div class="display-row">
 		<input type="submit" value="Update Settings" data-i18n-attributes="gettext|value">

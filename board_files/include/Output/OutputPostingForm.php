@@ -112,8 +112,6 @@ class OutputPostingForm extends OutputCore
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_captcha'] = $this->domain->setting('use_captcha');
         $this->render_data['captcha_gen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=generate&board_id=' . $this->domain->id() . '&time=' . time();
-        $this->render_data['captcha_width'] = 250;
-        $this->render_data['captcha_height'] = 80;
         $this->render_data['use_recaptcha'] = $this->domain->setting('use_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->domain->setting('recaptcha_site_key');
         $this->render_data['use_honeypot'] = $this->domain->setting('use_honeypot');

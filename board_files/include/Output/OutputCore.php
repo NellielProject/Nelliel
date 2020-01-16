@@ -11,6 +11,7 @@ abstract class OutputCore
 {
     protected $dom;
     protected $domain;
+    protected $site_domain;
     protected $database;
     protected $render_core;
     protected $render_data = array();
@@ -26,6 +27,7 @@ abstract class OutputCore
 
     protected function utilitySetup()
     {
+        $this->site_domain = new \Nelliel\DomainSite(nel_database());
         $this->file_handler = new \Nelliel\FileHandler();
         $this->cache_handler = new \Nelliel\CacheHandler();
         $this->output_filter = new \Nelliel\OutputFilter();

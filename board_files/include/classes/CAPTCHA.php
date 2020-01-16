@@ -12,12 +12,14 @@ use PDO;
 class CAPTCHA
 {
     protected $domain;
+    protected $site_domain;
     protected $database;
 
     public function __construct(Domain $domain)
     {
         $this->domain = $domain;
         $this->database = $domain->database();
+        $this->site_domain = new DomainSite($this->database);
     }
 
     public function generate()
@@ -42,7 +44,7 @@ class CAPTCHA
         $captcha_text = '';
         $character_set = 'bcdfghjkmnpqrstvwxyz23456789';
         $set_array = utf8_split($character_set);
-        $characters_limit = 5;
+        $characters_limit = $this->site_domain->setting('captcha_character_count');
         $selected_indexes = array_rand($set_array, $characters_limit);
 
         foreach ($selected_indexes as $index)
@@ -76,8 +78,8 @@ class CAPTCHA
 
         $character_count = utf8_strlen($captcha_text);
         $font_file = BASE_PATH . ASSETS_DIR . '/fonts/Halogen.ttf';
-        $image_width = 250;
-        $image_height = 80;
+        $image_width = $this->site_domain->setting('captcha_width');
+        $image_height = $this->site_domain->setting('captcha_height');
         $font_size = $image_height * 0.5;
         $text_box = imageftbbox($font_size, 0, $font_file, $captcha_text);
         $x_margin = $image_width - $text_box[4];
@@ -132,7 +134,7 @@ class CAPTCHA
         $prepared = $this->database->prepare(
                 'SELECT COUNT(*) FROM "' . CAPTCHA_TABLE . '" WHERE "ip_address" = ? AND "time_created" > ?');
         $result = $this->database->executePreparedFetch($prepared, [$ip_address, $time], PDO::FETCH_COLUMN);
-        return $result >= $this->domain->setting('captcha_throttle');
+        return $result >= $this->site_domain->setting('captcha_throttle');
     }
 
     public function store(array $captcha_data)
@@ -158,8 +160,9 @@ class CAPTCHA
             return true;
         }
 
-        $expiration = time() - $this->domain->setting('captcha_timeout');
-        $prepared = $this->database->prepare('SELECT * FROM "' . CAPTCHA_TABLE . '" WHERE "key" = ? AND "text" = ? AND "time_created" > ?');
+        $expiration = time() - $this->site_domain->setting('captcha_timeout');
+        $prepared = $this->database->prepare(
+                'SELECT * FROM "' . CAPTCHA_TABLE . '" WHERE "key" = ? AND "text" = ? AND "time_created" > ?');
         $result = $this->database->executePreparedFetch($prepared, [$key, $answer, $expiration], PDO::FETCH_ASSOC);
 
         if ($result === false)
@@ -181,12 +184,12 @@ class CAPTCHA
             return;
         }
 
-        $expiration = time() - $this->domain->setting('captcha_timeout');
+        $expiration = time() - $this->site_domain->setting('captcha_timeout');
         $prepared = $this->database->prepare('DELETE FROM "' . CAPTCHA_TABLE . '" WHERE "time_created" < ?');
         $this->database->executePrepared($prepared, [$expiration]);
     }
 
-    public function verifyReCaptcha()
+    public function verifyReCAPTCHA()
     {
         $verified = nel_plugins()->processHook('nel-verify-recaptcha', [$this->domain]);
 
@@ -200,11 +203,10 @@ class CAPTCHA
             return false;
         }
 
-        $site_domain = new DomainSite($this->database);
         $response = $_POST['g-recaptcha-response'];
         $result = file_get_contents(
-                'https://www.google.com/recaptcha/api/siteverify?secret=' . $site_domain->setting(
-                        'recaptcha_sekrit_key') . '&response=' . $response);
+                'https://www.google.com/recaptcha/api/siteverify?secret=' .
+                $this->site_domain->setting('recaptcha_sekrit_key') . '&response=' . $response);
         $verification = json_decode($result);
         return $verification->success;
     }
