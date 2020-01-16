@@ -18,9 +18,9 @@
 	<span data-i18n="gettext">Select thread</span>
 	{{/ index_render }}
 	{{# index_render }}
-	<span>[<a id="{{ hide_thread_id }}" href="#" data-command="hide-thread" data-content-id="{{ post_content_id }}" data-alt-visual="Show Thread" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Hide Thread</a>]</span>
+	<span class="hidden" data-jsonly="">[<a id="{{ hide_thread_id }}" href="#" data-command="hide-thread" data-content-id="{{ post_content_id }}" data-alt-visual="Show Thread" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Hide Thread</a>]</span>
 		{{# abbreviate }}
-	<span>[<a href="#" data-command="expand-thread{{ render }}" data-content-id="{{ thread_content_id }}" data-alt-visual="Collapse Thread" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Expand Thread</a>]</span>
+	<span class="hidden" data-jsonly="">[<a href="#" data-command="expand-thread{{ render }}" data-content-id="{{ thread_content_id }}" data-alt-visual="Collapse Thread" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Expand Thread</a>]</span>
 		{{/ abbreviate }}
 	<span>[<a href="{{ reply_to_url }}" data-i18n="gettext">Reply</a>]</span>
 	{{/ index_render }}
@@ -35,8 +35,8 @@
 {{# post_headers }}
 <div id="{{ post_header_options_id }}" class="{{ header_options_class }}">
 	<input class="{{ post_select_class }}" type="checkbox" name="{{ post_content_id }}" value="action">
-	<span>[<a id="{{ hide_post_id }}" href="#" data-command="hide-post" data-content-id="{{ post_content_id }}" data-alt-visual="Show Post" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Hide Post</a>]</span>
-	<span class="{{ post_link_class }}">[<a href="#" data-i18n="gettext" data-command="link-post" data-content-id="{{ post_content_id }}">Link</a>]</span>
+	<span class="hidden" data-jsonly="">[<a id="{{ hide_post_id }}" href="#" data-command="hide-post" data-content-id="{{ post_content_id }}" data-alt-visual="Show Post" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Hide Post</a>]</span>
+	<span class="{{ post_link_class }} hidden" data-jsonly="">[<a href="#" data-i18n="gettext" data-command="link-post" data-content-id="{{ post_content_id }}">Link</a>]</span>
 </div>
 <div id="{{ post_header_info_id }}" class="{{ header_options_class }}">
 	<span class="{{ subject_class }}">{{ subject }}</span>

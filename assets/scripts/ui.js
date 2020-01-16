@@ -252,7 +252,8 @@ nelliel.ui.linkPost = function(element) {
     }
 
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
-    document.postingform.wordswordswords.value = document.postingform.wordswordswords.value + '>>' + content_id.post_id + '\n';
+    var wordswordswords = document.getElementById("wordswordswords");
+    wordswordswords.value = wordswordswords.value + '>>' + content_id.post_id + '\n';
 }
 
 nelliel.ui.toggleHidden = function(element) {

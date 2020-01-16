@@ -33,6 +33,8 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
         nelliel.setup.fillForms(board_id);
         nelliel.ui.applyHidePostThread();
     }
+    
+    nelliel.core.unhideJSonly();
 }
 
 nelliel.setup.localStorageInitCheck = function() {
@@ -76,7 +78,7 @@ nelliel.setup.fillForms = function(board) {
     var name = nelliel.core.getCookie("name-" + board);
     document.getElementById("posting-form-sekrit").value = pwd;
     document.getElementById("update-sekrit").value = pwd;
-    document.getElementById("not-anonymous").value = name;
+    /*document.getElementById("not-anonymous").value = name;*/
 }
 
 nelliel.events.processPostClicks = function(event) {
@@ -209,7 +211,7 @@ nelliel.core.hashHandler = function () {
     }
 }
 
-nelliel.core.getElementsByAttributeName = function (attribute_name, element) {
+function getElementsByAttributeName(attribute_name, element) {
     return element.querySelectorAll("[" + attribute_name + "]");
 }
 
@@ -221,6 +223,15 @@ nelliel.core.contentID = function (id_string) {
     content_id.post_id = segments[2];
     content_id.content_order = segments[3];
     return content_id;
+}
+
+nelliel.core.unhideJSonly = function () {
+    var elements = getElementsByAttributeName("data-jsonly", document);
+    var element_count = elements.length;
+    
+    for (i = 0; i < element_count; i++) {
+        nelliel.ui.toggleHidden(elements[i]);
+    }
 }
 
 function addNewFileMeta(element, command) {
