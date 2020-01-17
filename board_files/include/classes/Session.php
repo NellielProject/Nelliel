@@ -65,8 +65,6 @@ class Session
             nel_derp(224, _gettext('Session requires a secure connection.'));
         }
 
-        $this->startSession();
-
         if (!$login)
         {
             if (empty($_SESSION))
@@ -99,7 +97,6 @@ class Session
     {
         if (nel_verify_login())
         {
-            $this->startSession();
             $this->setup(true);
         }
         else
@@ -108,6 +105,7 @@ class Session
             nel_derp(222, _gettext('Login has not been validated or was incorrectly flagged. Cannot start session.'));
         }
 
+        session_regenerate_id();
         $this->setCookie();
     }
 

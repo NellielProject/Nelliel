@@ -56,7 +56,7 @@ function nel_password_hash(string $password, int $algorithm, array $options = ar
     switch ($algorithm)
     {
         case 1:
-            $options['cost'] = isset($options['cost']) ?? NEL_PASSWORD_BCRYPT_COST;
+            $options['cost'] = $options['cost'] ?? NEL_PASSWORD_BCRYPT_COST;
             return password_hash($password, $algorithm, $options);
 
         case 2:

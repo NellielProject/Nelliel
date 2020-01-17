@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -15,7 +16,17 @@ function nel_verify_login()
 
     if (isset($_POST['username']) && $_POST['username'] !== '' && $authorization->userExists($_POST['username']))
     {
+        if(!empty($_SESSION['username']) && $_SESSION['username'] !== $_POST['username'])
+        {
+            return false;
+        }
+
         $user = $authorization->getUser($_POST['username']);
+
+        if(empty($user->auth_data['user_password']))
+        {
+            return false;
+        }
 
         if (isset($_POST['super_sekrit']) &&
                 nel_password_verify($_POST['super_sekrit'], $user->auth_data['user_password']))

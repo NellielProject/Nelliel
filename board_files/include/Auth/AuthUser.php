@@ -45,7 +45,7 @@ class AuthUser extends AuthHandler
 
     public function writeToDatabase($temp_database = null)
     {
-        if (empty($this->auth_data))
+        if (empty($this->auth_id))
         {
             return false;
         }
@@ -117,6 +117,11 @@ class AuthUser extends AuthHandler
         $this->database->executePrepared($prepared, [$this->auth_id]);
     }
 
+    public function updatePassword(string $new_password)
+    {
+        $this->auth_data['user_password'] = nel_password_hash($new_password, NEL_PASSWORD_ALGORITHM);
+    }
+
     public function domainRole(Domain $domain, bool $return_id = false, bool $escalate = true)
     {
         if (!isset($this->user_roles[$domain->id()]))
@@ -178,14 +183,6 @@ class AuthUser extends AuthHandler
 
         if ($escalate) // TODO: Better way to escalate
         {
-            $temp_domain = new \Nelliel\DomainBoard('ALL_BOARDS', $this->database);
-            $role = $this->domainRole($temp_domain);
-
-            if ($role && $role->checkPermission($perm_id))
-            {
-                return true;
-            }
-
             $temp_domain = new \Nelliel\DomainSite($this->database);
             $role = $this->domainRole($temp_domain);
 

@@ -129,7 +129,7 @@ class AdminUsers extends AdminHandler
                     $domain = new \Nelliel\DomainBoard(substr($key, 11), $this->database);
                 }
 
-                $domain = new \Nelliel\DomainBoard($role_domain, $this->database);
+                //$domain = new \Nelliel\DomainBoard($role_domain, $this->database);
 
                 if ($value === '')
                 {
