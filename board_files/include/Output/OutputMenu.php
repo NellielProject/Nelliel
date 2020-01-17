@@ -97,21 +97,12 @@ class OutputMenu extends OutputCore
         $site_domain = new \Nelliel\DomainSite($this->database);
         $dotdot = ($parameters['dotdot']) ?? '';
         $ignore_session = $parameters['ignore_session'] ?? false;
-
-        if ($session->isActive() && !$ignore_session)
-        {
-            $render_data['session_active'] = true;
-            $render_data['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=main-panel';
-            $render_data['logout_url'] = $dotdot . MAIN_SCRIPT . '?module=logout';
-        }
-        else
-        {
-            $render_data['session_active'] = false;
-            $render_data['manage_url'] = $dotdot . MAIN_SCRIPT . '?module=login';
-        }
-
+        $render_data['session_active'] = $session->isActive() && !$ignore_session;
+        $render_data['logout_url'] = $dotdot . MAIN_SCRIPT . '?module=logout';
+        $render_data['main_panel_url'] = $dotdot . MAIN_SCRIPT . '?module=main-panel';
         $render_data['home_url'] = $site_domain->setting('home_page');
         $render_data['news_url'] = $dotdot . 'news.html';
+        $render_data['account_url'] = $dotdot . MAIN_SCRIPT . '?module=login';
         $render_data['about_nelliel_url'] = $dotdot . MAIN_SCRIPT . '?about_nelliel';
         return $render_data;
     }
