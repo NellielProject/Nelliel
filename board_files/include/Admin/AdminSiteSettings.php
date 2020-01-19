@@ -22,7 +22,7 @@ class AdminSiteSettings extends AdminHandler
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Session(true);
+        $session = new \Nelliel\Account\Session();
         $user = $session->sessionUser();
 
         if($inputs['action'] === 'update')

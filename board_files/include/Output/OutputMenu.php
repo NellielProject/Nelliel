@@ -93,16 +93,16 @@ class OutputMenu extends OutputCore
     {
         $render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $session = new \Nelliel\Session();
+        $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
         $dotdot = ($parameters['dotdot']) ?? '';
         $ignore_session = $parameters['ignore_session'] ?? false;
         $render_data['session_active'] = $session->isActive() && !$ignore_session;
-        $render_data['logout_url'] = $dotdot . MAIN_SCRIPT . '?module=logout';
+        $render_data['logout_url'] = $dotdot . MAIN_SCRIPT . '?module=account&action=logout';
         $render_data['main_panel_url'] = $dotdot . MAIN_SCRIPT . '?module=main-panel';
         $render_data['home_url'] = $site_domain->setting('home_page');
         $render_data['news_url'] = $dotdot . 'news.html';
-        $render_data['account_url'] = $dotdot . MAIN_SCRIPT . '?module=login';
+        $render_data['account_url'] = $dotdot . MAIN_SCRIPT . '?module=account&action=login';
         $render_data['about_nelliel_url'] = $dotdot . MAIN_SCRIPT . '?about_nelliel';
         return $render_data;
     }

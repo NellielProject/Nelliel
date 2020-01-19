@@ -25,7 +25,7 @@ class BanHammer
         $ban_input['board'] = $_POST['ban_board'] ?? null;
         $ban_input['all_boards'] = (isset($_POST['ban_all_boards']) && $_POST['ban_all_boards'] > 0) ? 1 : 0;
         $ban_input['type'] = $_POST['ban_type'] ?? 'GENERAL';
-        $ban_input['creator'] = $_SESSION['username'] ?? null;
+        $ban_input['creator'] = $_SESSION['user_id'] ?? null;
         $ban_input['ip_address_start'] = $_POST['ban_ip'] ?? null;
         $ban_input['years'] = $_POST['ban_time_years'] ?? 0;
         $ban_input['months'] = $_POST['ban_time_months'] ?? 0;
@@ -141,7 +141,7 @@ class BanHammer
 
     public function removeBan(Domain $domain, $ban_id, bool $snacks = false)
     {
-        $session = new \Nelliel\Session();
+        $session = new \Nelliel\Account\Session();
         $user = $session->sessionUser();
 
         if (!$snacks)

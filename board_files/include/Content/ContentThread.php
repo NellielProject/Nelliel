@@ -188,7 +188,7 @@ class ContentThread extends ContentHandler
 
     public function sticky()
     {
-        $session = new \Nelliel\Session(true);
+        $session = new \Nelliel\Account\Session();
         $user = $session->sessionUser();
 
         if (!$user->domainPermission($this->domain, 'perm_post_sticky'))
@@ -208,7 +208,7 @@ class ContentThread extends ContentHandler
 
     public function lock()
     {
-        $session = new \Nelliel\Session(true);
+        $session = new \Nelliel\Account\Session();
         $user = $session->sessionUser();
 
         if (!$user->domainPermission($this->domain, 'perm_post_lock'))

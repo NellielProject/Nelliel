@@ -24,7 +24,7 @@ class OutputPostingForm extends OutputCore
     {
         $render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $session = new \Nelliel\Session();
+        $session = new \Nelliel\Account\Session();
         $dotdot = $parameters['dotdot'];
         $response_to = $parameters['response_to'];
         $this->render_data['is_response'] = $response_to > 0;

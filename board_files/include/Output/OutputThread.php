@@ -26,7 +26,7 @@ class OutputThread extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
-        $session = new \Nelliel\Session();
+        $session = new \Nelliel\Account\Session();
         $write = ($parameters['write']) ?? false;
         $thread_id = ($parameters['thread_id']) ?? 0;
         $dotdot = ($write) ? '../../../' : '';

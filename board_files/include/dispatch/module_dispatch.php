@@ -23,39 +23,44 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     break;
             }
 
-        case 'login':
-            $session = new \Nelliel\Session();
-
-            if (empty($_POST))
+        case 'account':
+            switch ($inputs['action'])
             {
-                $output_login = new \Nelliel\Output\OutputLoginPage($domain);
-                $output_login->render(['dotdot' => ''], false);
-            }
-            else
-            {
-                $session->login();
-                $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain);
-                $output_main_panel->render(['user' => $session->sessionUser()], false);
-            }
+                case 'login':
+                    $session = new \Nelliel\Account\Session();
 
-            break;
+                    if (empty($_POST))
+                    {
+                        $output_login = new \Nelliel\Output\OutputLoginPage($domain);
+                        $output_login->render(['dotdot' => ''], false);
+                    }
+                    else
+                    {
+                        $session->login();
+                        $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain);
+                        $output_main_panel->render(['user' => $session->sessionUser()], false);
+                    }
 
-        case 'logout':
-            $session = new \Nelliel\Session(true);
-            $session->logout();
-            break;
+                    break;
 
-        case 'register':
-            require_once INCLUDE_PATH . 'register.php';
+                case 'logout':
+                    $session = new \Nelliel\Account\Session();
+                    $session->logout();
+                    break;
 
-            if (empty($_POST))
-            {
-                $output_login = new \Nelliel\Output\OutputRegisterPage($domain);
-                $output_login->render(['dotdot' => ''], false);
-            }
-            else
-            {
-                nel_register_account();
+                case 'register':
+                    if (empty($_POST))
+                    {
+                        $output_login = new \Nelliel\Output\OutputRegisterPage($domain);
+                        $output_login->render(['dotdot' => ''], false);
+                    }
+                    else
+                    {
+                        $register = new \Nelliel\Account\Register($authorization, $domain->database());
+                        $register->new();
+                    }
+
+                    break;
             }
 
             break;
@@ -63,7 +68,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'render':
             $inputs['index'] = $_GET['index'] ?? null;
             $inputs['thread'] = $_GET['thread'] ?? null;
-            $session = new \Nelliel\Session(true);
+            $session = new \Nelliel\Account\Session();
 
             switch ($inputs['action'])
             {
@@ -97,7 +102,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             break;
 
         case 'main-panel':
-            $session = new \Nelliel\Session(true);
+            $session = new \Nelliel\Account\Session();
 
             if ($domain->id() !== '')
             {
@@ -143,7 +148,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             break;
 
         case 'language':
-            $session = new \Nelliel\Session(true);
+            $session = new \Nelliel\Account\Session();
 
             if ($inputs['action'] === 'extract-gettext')
             {
@@ -185,7 +190,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'threads':
             $content_id = new \Nelliel\ContentID($inputs['content_id']);
             $fgsfds = new \Nelliel\FGSFDS();
-            $session = new \Nelliel\Session();
+            $session = new \Nelliel\Account\Session();
 
             if ($inputs['action'] === 'new-post')
             {
@@ -294,7 +299,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
         case 'regen':
             $regen = new \Nelliel\Regen();
-            $session = new \Nelliel\Session(true);
+            $session = new \Nelliel\Account\Session();
             $user = $session->sessionUser();
 
             if ($inputs['action'] === 'board-all-pages')

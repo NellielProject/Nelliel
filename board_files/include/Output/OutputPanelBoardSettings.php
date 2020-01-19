@@ -25,7 +25,7 @@ class OutputPanelBoardSettings extends OutputCore
     {
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $session = new \Nelliel\Session(true);
+        $session = new \Nelliel\Account\Session();
         $user = $parameters['user'];
         $defaults = $parameters['defaults'] ?? false;
         $dotdot = $parameters['dotdot'] ?? '';

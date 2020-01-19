@@ -23,7 +23,7 @@ class AdminUsers extends AdminHandler
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Session(true);
+        $session = new \Nelliel\Account\Session();
         $user = $session->sessionUser();
         $this->user_id = $_GET['user-id'] ?? null;
 

@@ -4,8 +4,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-require_once INCLUDE_PATH . 'login.php';
-
 function nel_central_dispatch()
 {
     nel_plugins()->processHook('nel-inb4-central-dispatch', array());

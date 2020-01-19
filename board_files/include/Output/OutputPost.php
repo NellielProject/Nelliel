@@ -137,7 +137,7 @@ class OutputPost extends OutputCore
         $modmode_headers = array();
         $thread_headers = array();
         $authorization = new \Nelliel\Auth\Authorization($this->database);
-        $session = new \Nelliel\Session();
+        $session = new \Nelliel\Account\Session();
         $cites = new \Nelliel\Cites($this->domain->database());
         $header_data['response'] = $response;
 
