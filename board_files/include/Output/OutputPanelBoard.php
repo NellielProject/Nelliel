@@ -37,6 +37,7 @@ class OutputPanelBoard extends OutputCore
         $this->render_data['board_settings_url'] = MAIN_SCRIPT . '?module=board-settings&board_id=' . $this->domain->id();
         $this->render_data['module_bans'] = $user->domainPermission($this->domain, 'perm_manage_bans');
         $this->render_data['bans_url'] = MAIN_SCRIPT . '?module=bans&board_id=' . $this->domain->id();
+        $this->render_data['module_threads'] = true;
         $this->render_data['threads_url'] = MAIN_SCRIPT . '?module=threads-admin&board_id=' . $this->domain->id();
         $this->render_data['module_modmode'] = $user->domainPermission($this->domain, 'perm_mod_mode');
         $this->render_data['modmode_url'] = MAIN_SCRIPT . '?module=render&action=view-index&index=0&board_id=' .
