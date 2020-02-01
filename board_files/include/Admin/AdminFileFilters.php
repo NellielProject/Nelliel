@@ -49,7 +49,7 @@ class AdminFileFilters extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_file_filters_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_file_filters'))
         {
             nel_derp(341, _gettext('You are not allowed to modify file filters.'));
         }
@@ -81,7 +81,7 @@ class AdminFileFilters extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_file_filters_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_file_filters'))
         {
             nel_derp(341, _gettext('You are not allowed to modify file filters.'));
         }

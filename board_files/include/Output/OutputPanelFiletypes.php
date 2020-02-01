@@ -27,7 +27,7 @@ class OutputPanelFiletypes extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_filetypes_access'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_filetypes'))
         {
             nel_derp(430, _gettext('You are not allowed to access the Filetypes panel.'));
         }

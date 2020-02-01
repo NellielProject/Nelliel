@@ -50,10 +50,11 @@ class TableRoles extends TableHandler
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow(['SUPER_ADMIN', 9001, 'Super Administrator', '## God Mode ##']);
-        $this->insertDefaultRow(['SITE_ADMIN', 1000, 'Site Administrator', '## Site Administrator ##']);
-        $this->insertDefaultRow(['BOARD_ADMIN', 100, 'Board Administrator', '## Board Administrator ##']);
-        $this->insertDefaultRow(['MOD', 50, 'Moderator', '## Moderator ##']);
-        $this->insertDefaultRow(['JANITOR', 10, 'Janitor', '## Janitor ##']);
+        $this->insertDefaultRow(['SITE_OWNER', 100, 'Site Owner', '## Site Owner ##']);
+        $this->insertDefaultRow(['SITE_ADMIN', 80, 'Site Administrator', '## Site Administrator ##']);
+        $this->insertDefaultRow(['BOARD_OWNER', 60, 'Board Owner', '## Board Owner ##']);
+        $this->insertDefaultRow(['MOD', 40, 'Moderator', '## Moderator ##']);
+        $this->insertDefaultRow(['JANITOR', 20, 'Janitor', '']);
+        $this->insertDefaultRow(['BASIC_USER', 0, 'Basic', '']);
     }
 }

@@ -75,6 +75,8 @@ define('BASE_HONEYPOT_FIELD3', 'website'); // Honeypot field name
 
 define('DEFAULT_TEXTDOMAIN_BIND', LANGUAGES_FILE_PATH . 'locale');
 
+define('OVER_9000', 9001);
+
 // Set default values here in case the config is missing something
 $base_config['defaultadmin'] = '';
 $base_config['defaultadmin_pass'] = '';

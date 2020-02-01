@@ -30,7 +30,7 @@ class OutputPanelBans extends OutputCore
 
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_ban_access'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_bans'))
         {
             nel_derp(341, _gettext('You are not allowed to access the bans panel.'));
         }
@@ -66,7 +66,7 @@ class OutputPanelBans extends OutputCore
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        $this->render_data['can_modify'] = $user->domainPermission($this->domain, 'perm_ban_modify');
+        $this->render_data['can_modify'] = $user->domainPermission($this->domain, 'perm_manage_bans');
 
         if ($this->domain->id() !== '')
         {
@@ -122,7 +122,7 @@ class OutputPanelBans extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_bans'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
@@ -168,7 +168,7 @@ class OutputPanelBans extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_bans'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }

@@ -33,18 +33,17 @@ class OutputPanelBoard extends OutputCore
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Main Panel')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        $this->render_data['module_board_settings'] = $user->domainPermission($this->domain, 'perm_board_config_access');
+        $this->render_data['module_board_settings'] = $user->domainPermission($this->domain, 'perm_board_config');
         $this->render_data['board_settings_url'] = MAIN_SCRIPT . '?module=board-settings&board_id=' . $this->domain->id();
-        $this->render_data['module_bans'] = $user->domainPermission($this->domain, 'perm_ban_access');
+        $this->render_data['module_bans'] = $user->domainPermission($this->domain, 'perm_manage_bans');
         $this->render_data['bans_url'] = MAIN_SCRIPT . '?module=bans&board_id=' . $this->domain->id();
-        $this->render_data['module_threads'] = $user->domainPermission($this->domain, 'perm_threads_access');
         $this->render_data['threads_url'] = MAIN_SCRIPT . '?module=threads-admin&board_id=' . $this->domain->id();
-        $this->render_data['module_modmode'] = $user->domainPermission($this->domain, 'perm_modmode_access');
+        $this->render_data['module_modmode'] = $user->domainPermission($this->domain, 'perm_mod_mode');
         $this->render_data['modmode_url'] = MAIN_SCRIPT . '?module=render&action=view-index&index=0&board_id=' .
                 $this->domain->id() . '&modmode=true';
-        $this->render_data['module_reports'] = $user->domainPermission($this->domain, 'perm_reports_access');
+        $this->render_data['module_reports'] = $user->domainPermission($this->domain, 'perm_manage_reports');
         $this->render_data['reports_url'] = MAIN_SCRIPT . '?module=reports&board_id=' . $this->domain->id();
-        $this->render_data['module_file_filters'] = $user->domainPermission($this->domain, 'perm_file_filters_access');
+        $this->render_data['module_file_filters'] = $user->domainPermission($this->domain, 'perm_manage_file_filters');
         $this->render_data['file_filters_url'] = MAIN_SCRIPT . '?module=file-filters&board_id=' . $this->domain->id();
         $this->render_data['regen_board_pages'] = $user->domainPermission($this->domain, 'perm_regen_pages');
         $this->render_data['regen_pages_url'] = MAIN_SCRIPT . '?module=regen&action=board-all-pages&board_id=' .

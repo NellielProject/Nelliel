@@ -55,7 +55,7 @@ class AdminTemplates extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_templates_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_templates'))
         {
             nel_derp(421, _gettext('You are not allowed to modify templates.'));
         }
@@ -88,7 +88,7 @@ class AdminTemplates extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_templates_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_templates'))
         {
             nel_derp(421, _gettext('You are not allowed to modify templates.'));
         }
@@ -102,7 +102,7 @@ class AdminTemplates extends AdminHandler
 
     public function makeDefault($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_templates_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_templates'))
         {
             nel_derp(421, _gettext('You are not allowed to modify templates.'));
         }

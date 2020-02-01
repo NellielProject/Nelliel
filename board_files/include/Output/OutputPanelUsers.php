@@ -30,7 +30,7 @@ class OutputPanelUsers extends OutputCore
 
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_user_access'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_users'))
         {
             nel_derp(300, _gettext('You are not allowed to access the users panel.'));
         }
@@ -141,7 +141,7 @@ class OutputPanelUsers extends OutputCore
 
             if (!empty($role_id))
             {
-                $board_role_data['role_id'] = $user_role['role_id'];
+                $board_role_data['role_id'] = $role_id;
             }
 
             $this->render_data['board_roles'][] = $board_role_data;

@@ -226,7 +226,7 @@ class ContentPost extends ContentHandler
         {
             if ($session->isActive())
             {
-                if ($user->domainPermission($this->domain, 'perm_post_delete'))
+                if ($user->domainPermission($this->domain, 'perm_board_modify_posts'))
                 {
                     $flag = true;
                 }

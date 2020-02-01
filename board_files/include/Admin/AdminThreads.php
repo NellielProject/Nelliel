@@ -92,7 +92,7 @@ class AdminThreads extends AdminHandler
 
     public function update($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_threads_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_board_modify_posts'))
         {
             nel_derp(351, _gettext('You are not allowed to modify threads or posts.'));
         }
@@ -128,7 +128,7 @@ class AdminThreads extends AdminHandler
 
     public function sticky($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_post_sticky'))
+        if (!$user->domainPermission($this->domain, 'perm_board_sticky_posts'))
         {
             nel_derp(351, _gettext('You are not allowed to modify threads or posts.'));
         }

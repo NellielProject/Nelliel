@@ -66,7 +66,7 @@ class AdminRoles extends AdminHandler
 
     public function creator($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_role_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_roles'))
         {
             nel_derp(311, _gettext('You are not allowed to modify roles.'));
         }
@@ -77,7 +77,7 @@ class AdminRoles extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_role_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_roles'))
         {
             nel_derp(311, _gettext('You are not allowed to modify roles.'));
         }
@@ -90,7 +90,7 @@ class AdminRoles extends AdminHandler
 
     public function editor($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_role_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_roles'))
         {
             nel_derp(311, _gettext('You are not allowed to modify roles.'));
         }
@@ -101,7 +101,7 @@ class AdminRoles extends AdminHandler
 
     public function update($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_role_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_roles'))
         {
             nel_derp(312, _gettext('You are not allowed to modify roles.'));
         }

@@ -27,7 +27,7 @@ class OutputPanelPermissions extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_permissions_access'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_permissions'))
         {
             nel_derp(450, _gettext('You are not allowed to access the Permissions panel.'));
         }

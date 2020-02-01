@@ -27,7 +27,7 @@ class OutputPanelIconSets extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_icon_sets_access'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_icon_sets'))
         {
             nel_derp(460, _gettext('You are not allowed to access the Icon Sets panel.'));
         }

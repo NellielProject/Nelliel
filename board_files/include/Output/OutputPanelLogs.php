@@ -31,7 +31,7 @@ class OutputPanelLogs extends OutputCore
         $entries = $parameters['entries'] ?? 20;
         $row_offset = $page * $entries;
 
-        if (!$user->domainPermission($this->domain, 'perm_file_filters_access'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_file_filters'))
         {
             nel_derp(341, _gettext('You are not allowed to access the File Filters panel.'));
         }

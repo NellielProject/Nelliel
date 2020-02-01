@@ -51,7 +51,7 @@ class AdminPermissions extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_permissions_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_permissions'))
         {
             nel_derp(451, _gettext('You are not allowed to modify permissions.'));
         }
@@ -74,7 +74,7 @@ class AdminPermissions extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_permissions_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_permissions'))
         {
             nel_derp(451, _gettext('You are not allowed to modify permissions.'));
         }

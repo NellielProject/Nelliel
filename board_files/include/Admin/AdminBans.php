@@ -69,7 +69,7 @@ class AdminBans extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_bans'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
@@ -103,14 +103,14 @@ class AdminBans extends AdminHandler
 
     public function update($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_bans'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
         $ban_input = $this->ban_hammer->postToArray();
 
-        if ($ban_input['all_boards'] === 1 && !$user->domainPermission($this->domain, 'perm_ban_modify'))
+        if ($ban_input['all_boards'] === 1 && !$user->domainPermission($this->domain, 'perm_manage_bans'))
         {
             nel_derp(322, _gettext('You are not allowed to ban from all boards.'));
         }
@@ -121,7 +121,7 @@ class AdminBans extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_ban_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_bans'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }

@@ -38,12 +38,12 @@ class AdminBoardSettings extends AdminHandler
 
     public function renderPanel($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_board_config_access'))
+        if (!$user->domainPermission($this->domain, 'perm_board_config'))
         {
             nel_derp(330, _gettext('You are not allowed to access the board settings panel.'));
         }
 
-        if ($this->defaults && !$user->domainPermission($this->domain, 'perm_board_defaults_access'))
+        if ($this->defaults && !$user->domainPermission($this->domain, 'perm_board_defaults'))
         {
             nel_derp(332, _gettext('You are not allowed to access the default board settings panel.'));
         }
@@ -66,12 +66,12 @@ class AdminBoardSettings extends AdminHandler
 
     public function update($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_board_config_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_board_config'))
         {
             nel_derp(331, _gettext('You are not allowed to modify the board settings.'));
         }
 
-        if ($this->defaults && !$user->domainPermission($this->domain, 'perm_board_defaults_modify'))
+        if ($this->defaults && !$user->domainPermission($this->domain, 'perm_board_defaults'))
         {
             nel_derp(333, _gettext('You are not allowed to modify the default board settings.'));
         }

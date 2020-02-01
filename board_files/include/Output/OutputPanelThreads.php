@@ -28,13 +28,6 @@ class OutputPanelThreads extends OutputCore
             return;
         }
 
-        $user = $parameters['user'];
-
-        if (!$user->domainPermission($this->domain, 'perm_threads_access'))
-        {
-            nel_derp(341, _gettext('You are not allowed to access the bans panel.'));
-        }
-
         switch ($parameters['section'])
         {
             case 'panel':

@@ -66,7 +66,7 @@ class AdminUsers extends AdminHandler
 
     public function creator($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_user_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_users'))
         {
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
@@ -77,7 +77,7 @@ class AdminUsers extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_user_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_users'))
         {
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
@@ -90,7 +90,7 @@ class AdminUsers extends AdminHandler
 
     public function editor($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_user_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_users'))
         {
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
@@ -101,7 +101,7 @@ class AdminUsers extends AdminHandler
 
     public function update($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_user_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_users'))
         {
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }

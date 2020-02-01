@@ -37,7 +37,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     else
                     {
                         $session->login();
-                        $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain);
+                        $output_main_panel = new \Nelliel\Output\OutputPanelAccount($domain);
                         $output_main_panel->render(['user' => $session->sessionUser()], false);
                     }
 

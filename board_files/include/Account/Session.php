@@ -154,6 +154,6 @@ class Session
             return false;
         }
 
-        return self::$in_modmode && self::$user->domainPermission($domain, 'perm_modmode_access');
+        return self::$in_modmode && self::$user->domainPermission($domain, 'perm_mod_mode');
     }
 }

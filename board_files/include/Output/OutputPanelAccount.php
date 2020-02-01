@@ -10,7 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Domain;
 use PDO;
 
-class OutputPanelMain extends OutputCore
+class OutputPanelAccount extends OutputCore
 {
 
     function __construct(Domain $domain)
@@ -35,14 +35,30 @@ class OutputPanelMain extends OutputCore
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Main Panel')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        $boards = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
+        $prepared = $this->database->prepare('SELECT "domain_id", "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
+        $board_list = $this->database->executePreparedFetchAll($prepared, [$user->auth_id], PDO::FETCH_ASSOC);
 
-        if ($boards !== false)
+        $roles_list = array();
+        $roles = $this->database->executeFetchAll('SELECT "role_id", "role_title" FROM "' . ROLES_TABLE . '"', PDO::FETCH_ASSOC);
+
+        foreach($roles as $role)
         {
-            foreach ($boards as $board)
+            $roles_list[$role['role_id']]['role_title'] = $role['role_title'];
+        }
+
+        if ($board_list !== false)
+        {
+            foreach ($board_list as $board)
             {
-                $board_data['board_url'] = MAIN_SCRIPT . '?module=main-panel&board_id=' . $board['board_id'];
-                $board_data['board_id'] = '/' . $board['board_id'] . '/';
+
+                if ($board['domain_id'] === '')
+                {
+                    continue;
+                }
+
+                $board_data['board_url'] = MAIN_SCRIPT . '?module=main-panel&board_id=' . $board['domain_id'];
+                $board_data['board_id'] = '/' . $board['domain_id'] . '/';
+                $board_data['board_role'] = $roles_list[$board['role_id']]['role_title'];
                 $this->render_data['board_list'][] = $board_data;
             }
         }
@@ -76,7 +92,7 @@ class OutputPanelMain extends OutputCore
         $this->render_data['news_url'] = MAIN_SCRIPT . '?module=news';
         $this->render_data['module_extract_gettext'] = $user->domainPermission($this->domain, 'perm_extract_gettext');
         $this->render_data['extract_gettext_url'] = MAIN_SCRIPT . '?module=language&action=extract-gettext';
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/main_panel',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/account_main',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

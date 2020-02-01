@@ -56,7 +56,7 @@ class AdminSiteSettings extends AdminHandler
 
     public function update($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_site_config_modify'))
+        if (!$user->domainPermission($this->domain, 'perm_site_config'))
         {
             nel_derp(361, _gettext('You are not allowed to modify the site settings.'));
         }

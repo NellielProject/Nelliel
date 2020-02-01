@@ -93,7 +93,7 @@ class AdminReports extends AdminHandler
 
     public function dismiss($user, $report_id)
     {
-        if (!$user->domainPermission($this->domain, 'perm_reports_dismiss'))
+        if (!$user->domainPermission($this->domain, 'perm_manage_reports'))
         {
             nel_derp(381, _gettext('You are not allowed to dismiss reports.'));
         }
