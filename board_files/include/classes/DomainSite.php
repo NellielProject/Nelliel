@@ -61,6 +61,11 @@ class DomainSite extends Domain
         return $settings;
     }
 
+    public function globalVariation()
+    {
+        return false;
+    }
+
     public function regenCache()
     {
         if (USE_INTERNAL_CACHE)

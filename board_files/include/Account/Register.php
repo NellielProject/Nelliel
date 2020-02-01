@@ -50,7 +50,7 @@ class Register
 
         $new_user = $this->authorization->newUser($register_user_id, $register_password);
         $new_user->updatePassword($register_password);
-        $new_user->changeOrAddRole('', 'BASIC');
+        $new_user->modifyRole('', 'BASIC');
         $new_user->auth_data['active'] = 1;
         $new_user->auth_data['display_name'] = $register_user_id;
         $this->authorization->saveUsers();

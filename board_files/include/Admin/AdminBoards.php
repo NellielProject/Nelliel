@@ -67,7 +67,7 @@ class AdminBoards extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_board_create'))
+        if (!$user->checkPermission($this->domain, 'perm_board_create'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
@@ -111,7 +111,7 @@ class AdminBoards extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_board_delete'))
+        if (!$user->checkPermission($this->domain, 'perm_board_delete'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
@@ -174,7 +174,7 @@ class AdminBoards extends AdminHandler
 
     public function lock($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_board_lock'))
+        if (!$user->checkPermission($this->domain, 'perm_board_lock'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
@@ -187,7 +187,7 @@ class AdminBoards extends AdminHandler
 
     public function unlock($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_board_lock'))
+        if (!$user->checkPermission($this->domain, 'perm_board_lock'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }

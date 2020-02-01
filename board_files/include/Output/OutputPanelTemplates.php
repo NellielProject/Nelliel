@@ -27,7 +27,7 @@ class OutputPanelTemplates extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_manage_templates'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_templates'))
         {
             nel_derp(341, _gettext('You are not allowed to access the templates panel.'));
         }

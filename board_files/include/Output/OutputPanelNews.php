@@ -27,7 +27,7 @@ class OutputPanelNews extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_manage_news'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_news'))
         {
             nel_derp(470, _gettext('You are not allowed to access the news panel.'));
         }

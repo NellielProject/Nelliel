@@ -30,7 +30,7 @@ class OutputPanelUsers extends OutputCore
 
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_manage_users'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_users'))
         {
             nel_derp(300, _gettext('You are not allowed to access the users panel.'));
         }

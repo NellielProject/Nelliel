@@ -38,12 +38,12 @@ class AdminBoardSettings extends AdminHandler
 
     public function renderPanel($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_board_config'))
+        if (!$user->checkPermission($this->domain, 'perm_board_config'))
         {
             nel_derp(330, _gettext('You are not allowed to access the board settings panel.'));
         }
 
-        if ($this->defaults && !$user->domainPermission($this->domain, 'perm_board_defaults'))
+        if ($this->defaults && !$user->checkPermission($this->domain, 'perm_board_defaults'))
         {
             nel_derp(332, _gettext('You are not allowed to access the default board settings panel.'));
         }
@@ -66,18 +66,18 @@ class AdminBoardSettings extends AdminHandler
 
     public function update($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_board_config'))
+        if (!$user->checkPermission($this->domain, 'perm_board_config'))
         {
             nel_derp(331, _gettext('You are not allowed to modify the board settings.'));
         }
 
-        if ($this->defaults && !$user->domainPermission($this->domain, 'perm_board_defaults'))
+        if ($this->defaults && !$user->checkPermission($this->domain, 'perm_board_defaults'))
         {
             nel_derp(333, _gettext('You are not allowed to modify the default board settings.'));
         }
 
         $config_table = ($this->defaults) ? BOARD_DEFAULTS_TABLE : $this->domain->reference('config_table');
-        $lock_override = $user->domainPermission($this->domain, 'perm_board_config_lock_override');
+        $lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');
 
         while ($item = each($_POST))
         {

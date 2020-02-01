@@ -19,6 +19,7 @@ class DomainBoard extends Domain
         $this->utilitySetup();
         $this->locale();
         $this->templatePath(TEMPLATES_FILE_PATH . $this->front_end_data->template($this->setting('template_id'))['directory']);
+        $this->global_variation = new DomainAllBoards($this->database);
     }
 
     public function boardExists()
@@ -98,6 +99,11 @@ class DomainBoard extends Domain
         }
 
         return $settings;
+    }
+
+    public function globalVariation()
+    {
+        return new DomainAllBoards($this->database);
     }
 
     public function regenCache()

@@ -37,7 +37,7 @@ class AuthUser extends AuthHandler
 
         foreach ($result as $row)
         {
-            $this->changeOrAddRole($row['domain_id'], $row['role_id']);
+            $this->modifyRole($row['domain_id'], $row['role_id']);
         }
 
         return true;
@@ -122,7 +122,7 @@ class AuthUser extends AuthHandler
         $this->auth_data['user_password'] = nel_password_hash($new_password, NEL_PASSWORD_ALGORITHM);
     }
 
-    public function domainRole(Domain $domain, bool $return_id = false, bool $escalate = true)
+    public function checkRole(Domain $domain, bool $return_id = false, bool $escalate = true)
     {
         if (!isset($this->user_roles[$domain->id()]))
         {
@@ -139,7 +139,7 @@ class AuthUser extends AuthHandler
         }
     }
 
-    public function changeOrAddRole($domain_id, $role_id)
+    public function modifyRole($domain_id, $role_id)
     {
         if (!isset($this->user_roles[$domain_id]))
         {
@@ -166,25 +166,28 @@ class AuthUser extends AuthHandler
         unset($this->user_roles[$domain_id]);
     }
 
-    public function domainPermission(Domain $domain, $perm_id, bool $escalate = true)
+    public function checkPermission(Domain $domain, $perm_id)
     {
+        // Super Admin can do all the things
         if ($this->isSuperAdmin())
         {
             return true;
         }
 
         $role_perm = false;
-        $role = $this->domainRole($domain);
+        $role = $this->checkRole($domain);
 
         if ($role && $role->checkPermission($perm_id))
         {
             return true;
         }
 
-        if ($escalate) // TODO: Better way to escalate
+        // Check if there is a global variation which may have permission set
+        $global_domain = $domain->globalVariation();
+
+        if(!is_null($global_domain))
         {
-            $temp_domain = new \Nelliel\DomainSite($this->database);
-            $role = $this->domainRole($temp_domain);
+            $role = $this->checkRole($global_domain);
 
             if ($role && $role->checkPermission($perm_id))
             {

@@ -30,7 +30,7 @@ class OutputPanelRoles extends OutputCore
 
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_roles_access'))
+        if (!$user->checkPermission($this->domain, 'perm_roles_access'))
         {
             nel_derp(341, _gettext('You are not allowed to access the bans panel.'));
         }

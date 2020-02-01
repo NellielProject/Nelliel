@@ -125,7 +125,7 @@ class OutputPanelBoardSettings extends OutputCore
             $this->render_data['categories'][] = $category_data;
         }
 
-        $user_lock_override = $user->domainPermission($this->domain, 'perm_board_config_lock_override');
+        $user_lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');
         $this->render_data['defaults'] = $defaults;
         $result = $this->database->query('SELECT * FROM "' . $table_name . '"');
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);

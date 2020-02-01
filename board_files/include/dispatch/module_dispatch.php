@@ -304,7 +304,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             if ($inputs['action'] === 'board-all-pages')
             {
-                if (!$user->domainPermission($domain, 'perm_regen_pages'))
+                if (!$user->checkPermission($domain, 'perm_regen_pages'))
                 {
                     nel_derp(410, _gettext('You are not allowed to regenerate board pages.'));
                 }
@@ -315,7 +315,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             }
             else if ($inputs['action'] === 'board-all-caches')
             {
-                if (!$user->domainPermission($domain, 'perm_regen_cache'))
+                if (!$user->checkPermission($domain, 'perm_regen_cache'))
                 {
                     nel_derp(411, _gettext('You are not allowed to regenerate board caches.'));
                 }
@@ -324,7 +324,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             }
             else if ($inputs['action'] === 'site-all-caches')
             {
-                if (!$user->domainPermission($domain, 'perm_regen_caches'))
+                if (!$user->checkPermission($domain, 'perm_regen_caches'))
                 {
                     nel_derp(412, _gettext('You are not allowed to regenerate site caches.'));
                 }

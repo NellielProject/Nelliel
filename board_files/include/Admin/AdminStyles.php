@@ -55,7 +55,7 @@ class AdminStyles extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_manage_styles'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_styles'))
         {
             nel_derp(431, _gettext('You are not allowed to modify styles.'));
         }
@@ -87,7 +87,7 @@ class AdminStyles extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_manage_styles'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_styles'))
         {
             nel_derp(431, _gettext('You are not allowed to modify styles.'));
         }
@@ -100,7 +100,7 @@ class AdminStyles extends AdminHandler
 
     public function makeDefault($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_manage_styles'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_styles'))
         {
             nel_derp(431, _gettext('You are not allowed to modify styles.'));
         }

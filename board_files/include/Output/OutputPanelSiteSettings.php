@@ -27,7 +27,7 @@ class OutputPanelSiteSettings extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_site_config'))
+        if (!$user->checkPermission($this->domain, 'perm_site_config'))
         {
             nel_derp(360, _gettext('You are not allowed to access the site settings.'));
         }

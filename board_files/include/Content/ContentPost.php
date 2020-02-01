@@ -219,14 +219,14 @@ class ContentPost extends ContentHandler
         if (!empty($this->content_data['mod_post_id']) && $session->isActive())
         {
             $mod_post_user = $authorization->getUser($this->content_data['mod_post_id']);
-            $flag = $authorization->roleLevelCheck($user->domainRole($this->domain),
-                    $mod_post_user->domainRole($this->domain));
+            $flag = $authorization->roleLevelCheck($user->checkRole($this->domain),
+                    $mod_post_user->checkRole($this->domain));
         }
         else
         {
             if ($session->isActive())
             {
-                if ($user->domainPermission($this->domain, 'perm_board_modify_posts'))
+                if ($user->checkPermission($this->domain, 'perm_board_modify_posts'))
                 {
                     $flag = true;
                 }

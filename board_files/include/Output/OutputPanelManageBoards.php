@@ -48,7 +48,7 @@ class OutputPanelManageBoards extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_manage_boards'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_boards'))
         {
             nel_derp(370, _gettext('You are not allowed to access the board manager panel.'));
         }

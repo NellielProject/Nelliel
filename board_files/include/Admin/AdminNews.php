@@ -50,7 +50,7 @@ class AdminNews extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_manage_news'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_news'))
         {
             nel_derp(471, _gettext('You are not allowed to modify news.'));
         }
@@ -77,7 +77,7 @@ class AdminNews extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_manage_news'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_news'))
         {
             nel_derp(471, _gettext('You are not allowed to modify news.'));
         }

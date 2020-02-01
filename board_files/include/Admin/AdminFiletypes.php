@@ -52,7 +52,7 @@ class AdminFiletypes extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_manage_filetypes'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
             nel_derp(431, _gettext('You are not allowed to modify filetypes.'));
         }
@@ -92,7 +92,7 @@ class AdminFiletypes extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_manage_filetypes'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
             nel_derp(431, _gettext('You are not allowed to modify filetypes.'));
         }

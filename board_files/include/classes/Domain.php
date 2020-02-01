@@ -22,6 +22,7 @@ abstract class Domain
     protected $translator;
     protected $locale;
     protected $language;
+    protected $global_variation = null;
 
     protected abstract function loadSettings();
 
@@ -138,5 +139,10 @@ abstract class Domain
             $this->language->loadLanguage($locale, 'nelliel', LC_MESSAGES);
 
         }
+    }
+
+    public function globalVariation()
+    {
+        return $this->global_variation;
     }
 }

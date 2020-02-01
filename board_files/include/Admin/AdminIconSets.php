@@ -55,7 +55,7 @@ class AdminIconSets extends AdminHandler
 
     public function add($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_manage_icon_sets'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
             nel_derp(461, _gettext('You are not allowed to modify icon setss.'));
         }
@@ -88,7 +88,7 @@ class AdminIconSets extends AdminHandler
 
     public function remove($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_manage_icon_sets'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
             nel_derp(461, _gettext('You are not allowed to modify icon sets.'));
         }
@@ -101,7 +101,7 @@ class AdminIconSets extends AdminHandler
 
     public function makeDefault($user)
     {
-        if (!$user->domainPermission($this->domain, 'perm_manage_icon_sets'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
             nel_derp(461, _gettext('You are not allowed to modify icon sets.'));
         }

@@ -27,7 +27,7 @@ class OutputPanelStyles extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
-        if (!$user->domainPermission($this->domain, 'perm_manage_styles'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_styles'))
         {
             nel_derp(440, _gettext('You are not allowed to access the styles panel.'));
         }
