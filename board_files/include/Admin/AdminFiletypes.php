@@ -19,40 +19,38 @@ class AdminFiletypes extends AdminHandler
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
+        $this->validateUser();
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Account\Session();
-        $user = $session->sessionUser();
-
         if ($inputs['action'] === 'add')
         {
-            $this->add($user);
+            $this->add();
         }
         else if ($inputs['action'] == 'remove')
         {
-            $this->remove($user);
+            $this->remove();
         }
         else
         {
-            $this->renderPanel($user);
+            $this->renderPanel();
         }
     }
 
-    public function renderPanel($user)
+    public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelFiletypes($this->domain);
-        $output_panel->render(['user' => $user], false);
+        $output_panel->render(['user' => $this->session_user], false);
     }
 
-    public function creator($user)
+    public function creator()
     {
     }
 
-    public function add($user)
+    public function add()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_filetypes'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
             nel_derp(431, _gettext('You are not allowed to modify filetypes.'));
         }
@@ -79,20 +77,20 @@ class AdminFiletypes extends AdminHandler
                     ['filetype_enable', 'nelliel', $type, 'boolean', $format, '0', 0, 0]);
         }
 
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function editor($user)
+    public function editor()
     {
     }
 
-    public function update($user)
+    public function update()
     {
     }
 
-    public function remove($user)
+    public function remove()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_filetypes'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
             nel_derp(431, _gettext('You are not allowed to modify filetypes.'));
         }
@@ -111,7 +109,7 @@ class AdminFiletypes extends AdminHandler
             $this->database->executePrepared($prepared, [$filetype_info['format']]);
         }
 
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
     private function getBoardDomains()

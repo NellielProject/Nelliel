@@ -18,44 +18,42 @@ class AdminIconSets extends AdminHandler
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
+        $this->validateUser();
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Account\Session();
-        $user = $session->sessionUser();
-
         if ($inputs['action'] === 'add')
         {
-            $this->add($user);
+            $this->add();
         }
         else if ($inputs['action'] == 'remove')
         {
-            $this->remove($user);
+            $this->remove();
         }
         else if ($inputs['action'] == 'make-default')
         {
-            $this->makeDefault($user);
+            $this->makeDefault();
         }
         else
         {
-            $this->renderPanel($user);
+            $this->renderPanel();
         }
     }
 
-    public function renderPanel($user)
+    public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelIconSets($this->domain);
-        $output_panel->render(['user' => $user], false);
+        $output_panel->render(['user' => $this->session_user], false);
     }
 
-    public function creator($user)
+    public function creator()
     {
     }
 
-    public function add($user)
+    public function add()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_icon_sets'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
             nel_derp(461, _gettext('You are not allowed to modify icon setss.'));
         }
@@ -75,20 +73,20 @@ class AdminIconSets extends AdminHandler
                 'INSERT INTO "' . ASSETS_TABLE .
                 '" ("id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$icon_set_id, 'icon-set', 0, $info]);
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function editor($user)
+    public function editor()
     {
     }
 
-    public function update($user)
+    public function update()
     {
     }
 
-    public function remove($user)
+    public function remove()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_icon_sets'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
             nel_derp(461, _gettext('You are not allowed to modify icon sets.'));
         }
@@ -96,12 +94,12 @@ class AdminIconSets extends AdminHandler
         $icon_set_id = $_GET['icon-set-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . ASSETS_TABLE . '" WHERE "id" = ? AND "type" = ?');
         $this->database->executePrepared($prepared, [$icon_set_id, 'icon-set']);
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function makeDefault($user)
+    public function makeDefault()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_icon_sets'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
             nel_derp(461, _gettext('You are not allowed to modify icon sets.'));
         }
@@ -111,6 +109,6 @@ class AdminIconSets extends AdminHandler
         $this->database->exec('UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 0 WHERE "type" = \'icon-set\'');
         $prepared = $this->database->prepare('UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 1 WHERE "id" = ? AND "type" = \'icon-set\'');
         $this->database->executePrepared($prepared, [$icon_set_id]);
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 }

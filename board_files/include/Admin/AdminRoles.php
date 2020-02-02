@@ -19,12 +19,11 @@ class AdminRoles extends AdminHandler
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
+        $this->validateUser();
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Account\Session();
-        $user = $session->sessionUser();
         $this->role_id = $_GET['role-id'] ?? null;
 
         if (!is_null($this->role_id) && !$this->authorization->roleExists($this->role_id))
@@ -34,74 +33,74 @@ class AdminRoles extends AdminHandler
 
         if ($inputs['action'] === 'new')
         {
-            $this->creator($user);
+            $this->creator();
         }
         else if ($inputs['action'] === 'add')
         {
-            $this->add($user);
+            $this->add();
         }
         else if ($inputs['action'] === 'edit')
         {
-            $this->editor($user);
+            $this->editor();
         }
         else if ($inputs['action'] === 'update')
         {
-            $this->update($user);
+            $this->update();
         }
         else if ($inputs['action'] === 'remove')
         {
-            $this->remove($user);
+            $this->remove();
         }
         else
         {
-            $this->renderPanel($user);
+            $this->renderPanel();
         }
     }
 
-    public function renderPanel($user)
+    public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
-        $output_panel->render(['section' => 'panel', 'user' => $user], false);
+        $output_panel->render(['section' => 'panel', 'user' => $this->session_user], false);
     }
 
-    public function creator($user)
+    public function creator()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_roles'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
         {
             nel_derp(311, _gettext('You are not allowed to modify roles.'));
         }
 
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id], false);
+        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
     }
 
-    public function add($user)
+    public function add()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_roles'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
         {
             nel_derp(311, _gettext('You are not allowed to modify roles.'));
         }
 
         $this->role_id = $_POST['role_id'];
-        $this->update($user);
+        $this->update();
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id], false);
+        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
     }
 
-    public function editor($user)
+    public function editor()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_roles'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
         {
             nel_derp(311, _gettext('You are not allowed to modify roles.'));
         }
 
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id], false);
+        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
     }
 
-    public function update($user)
+    public function update()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_roles'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
         {
             nel_derp(312, _gettext('You are not allowed to modify roles.'));
         }
@@ -118,7 +117,7 @@ class AdminRoles extends AdminHandler
                 continue;
             }
 
-            if($key === 'super_admin' && !$user->isSuperAdmin())
+            if($key === 'super_admin' && !$this->session_user->isSuperAdmin())
             {
                 nel_derp(232, _gettext('You cannot create or modify Super Admin users.'));
             }
@@ -128,12 +127,12 @@ class AdminRoles extends AdminHandler
 
         $this->authorization->saveRoles();
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'role_id' => $this->role_id], false);
+        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
     }
 
-    public function remove($user)
+    public function remove()
     {
         $this->authorization->removeRole($this->role_id);
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 }

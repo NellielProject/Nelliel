@@ -19,36 +19,34 @@ class AdminReports extends AdminHandler
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
+        $this->validateUser();
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Account\Session();
-        $user = $session->sessionUser();
-
         if ($inputs['action'] === 'dismiss')
         {
-            $this->dismiss($user, $_GET['report_id']);
+            $this->dismiss($_GET['report_id']);
         }
         else if (isset($_POST['form_submit_report']))
         {
-            $this->add($user);
+            $this->add();
         }
 
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function renderPanel($user)
+    public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelReports($this->domain);
-        $output_panel->render(['user' => $user], false);
+        $output_panel->render(['user' => $this->session_user], false);
     }
 
-    public function creator($user)
+    public function creator()
     {
     }
 
-    public function add($user)
+    public function add()
     {
         $report_data = array();
         $report_data['reason'] = $_POST['report_reason'] ?? null;
@@ -79,21 +77,21 @@ class AdminReports extends AdminHandler
         }
     }
 
-    public function editor($user)
+    public function editor()
     {
     }
 
-    public function update($user)
+    public function update()
     {
     }
 
-    public function remove($user)
+    public function remove()
     {
     }
 
-    public function dismiss($user, $report_id)
+    public function dismiss($report_id)
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_reports'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_reports'))
         {
             nel_derp(381, _gettext('You are not allowed to dismiss reports.'));
         }

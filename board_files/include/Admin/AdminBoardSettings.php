@@ -21,63 +21,61 @@ class AdminBoardSettings extends AdminHandler
         $this->authorization = $authorization;
         $this->domain = $domain;
         $this->defaults = ($this->domain->id() === '_site_') ? true : false;
+        $this->validateUser();
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Account\Session();
-        $user = $session->sessionUser();
-
         if ($inputs['action'] === 'update')
         {
-            $this->update($user);
+            $this->update();
         }
 
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function renderPanel($user)
+    public function renderPanel()
     {
-        if (!$user->checkPermission($this->domain, 'perm_board_config'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_board_config'))
         {
             nel_derp(330, _gettext('You are not allowed to access the board settings panel.'));
         }
 
-        if ($this->defaults && !$user->checkPermission($this->domain, 'perm_board_defaults'))
+        if ($this->defaults && !$this->session_user->checkPermission($this->domain, 'perm_board_defaults'))
         {
             nel_derp(332, _gettext('You are not allowed to access the default board settings panel.'));
         }
 
         $output_panel = new \Nelliel\Output\OutputPanelBoardSettings($this->domain);
-        $output_panel->render(['user' => $user, 'defaults' => $this->defaults], false);
+        $output_panel->render(['user' => $this->session_user, 'defaults' => $this->defaults], false);
     }
 
-    public function creator($user)
+    public function creator()
     {
     }
 
-    public function add($user)
+    public function add()
     {
     }
 
-    public function editor($user)
+    public function editor()
     {
     }
 
-    public function update($user)
+    public function update()
     {
-        if (!$user->checkPermission($this->domain, 'perm_board_config'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_board_config'))
         {
             nel_derp(331, _gettext('You are not allowed to modify the board settings.'));
         }
 
-        if ($this->defaults && !$user->checkPermission($this->domain, 'perm_board_defaults'))
+        if ($this->defaults && !$this->session_user->checkPermission($this->domain, 'perm_board_defaults'))
         {
             nel_derp(333, _gettext('You are not allowed to modify the default board settings.'));
         }
 
         $config_table = ($this->defaults) ? BOARD_DEFAULTS_TABLE : $this->domain->reference('config_table');
-        $lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');
+        $lock_override = $this->session_user->checkPermission($this->domain, 'perm_board_config_lock_override');
 
         while ($item = each($_POST))
         {
@@ -110,7 +108,7 @@ class AdminBoardSettings extends AdminHandler
         }
     }
 
-    public function remove($user)
+    public function remove()
     {
     }
 

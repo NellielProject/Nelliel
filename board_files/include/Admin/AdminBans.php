@@ -20,56 +20,54 @@ class AdminBans extends AdminHandler
         $this->authorization = $authorization;
         $this->domain = $domain;
         $this->ban_hammer = new \Nelliel\BanHammer($this->database);
+        $this->validateUser();
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Account\Session();
-        $user = $session->sessionUser();
-
         if ($inputs['action'] === 'modify')
         {
-            $this->editor($user);
+            $this->editor();
         }
         else if ($inputs['action'] === 'new' || $inputs['action'] === 'ban-delete')
         {
-            $this->creator($user);
+            $this->creator();
         }
         else if ($inputs['action'] === 'add')
         {
-            $this->add($user);
+            $this->add();
         }
         else if ($inputs['action'] === 'remove')
         {
-            $this->remove($user);
+            $this->remove();
         }
         else if ($inputs['action'] === 'update')
         {
-            $this->update($user);
+            $this->update();
         }
         else
         {
-            $this->renderPanel($user);
+            $this->renderPanel();
         }
     }
 
-    public function renderPanel($user)
+    public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain);
-        $output_panel->render(['section' => 'panel', 'user' => $user], false);
+        $output_panel->render(['section' => 'panel', 'user' => $this->session_user], false);
     }
 
-    public function creator($user)
+    public function creator()
     {
         $ip = $_GET['ban_ip'] ?? '';
         $type = $_GET['ban_type'] ?? 'GENERAL';
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain);
-        $output_panel->render(['section' => 'add', 'user' => $user, 'ip' => $ip, 'type' => $type], false);
+        $output_panel->render(['section' => 'add', 'user' => $this->session_user, 'ip' => $ip, 'type' => $type], false);
     }
 
-    public function add($user)
+    public function add()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_bans'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
@@ -92,42 +90,42 @@ class AdminBans extends AdminHandler
             }
         }
 
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function editor($user)
+    public function editor()
     {
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain);
-        $output_panel->render(['section' => 'modify', 'user' => $user], false);
+        $output_panel->render(['section' => 'modify', 'user' => $this->session_user], false);
     }
 
-    public function update($user)
+    public function update()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_bans'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
         $ban_input = $this->ban_hammer->postToArray();
 
-        if ($ban_input['all_boards'] === 1 && !$user->checkPermission($this->domain, 'perm_manage_bans'))
+        if ($ban_input['all_boards'] === 1 && !$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
             nel_derp(322, _gettext('You are not allowed to ban from all boards.'));
         }
 
         $this->ban_hammer->modifyBan($ban_input);
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function remove($user)
+    public function remove()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_bans'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
             nel_derp(321, _gettext('You are not allowed to modify bans.'));
         }
 
         $ban_input = $this->ban_hammer->postToArray();
         $this->ban_hammer->removeBan($this->domain, $_GET['ban_id']);
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 }

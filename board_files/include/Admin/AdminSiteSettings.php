@@ -18,45 +18,43 @@ class AdminSiteSettings extends AdminHandler
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
+        $this->validateUser();
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Account\Session();
-        $user = $session->sessionUser();
-
         if($inputs['action'] === 'update')
         {
-            $this->update($user);
-            $this->renderPanel($user);
+            $this->update();
+            $this->renderPanel();
         }
         else
         {
-            $this->renderPanel($user);
+            $this->renderPanel();
         }
     }
 
-    public function renderPanel($user)
+    public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelSiteSettings($this->domain);
-        $output_panel->render(['user' => $user], false);
+        $output_panel->render(['user' => $this->session_user], false);
     }
 
-    public function creator($user)
+    public function creator()
     {
     }
 
-    public function add($user)
+    public function add()
     {
     }
 
-    public function editor($user)
+    public function editor()
     {
     }
 
-    public function update($user)
+    public function update()
     {
-        if (!$user->checkPermission($this->domain, 'perm_site_config'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_site_config'))
         {
             nel_derp(361, _gettext('You are not allowed to modify the site settings.'));
         }
@@ -71,7 +69,7 @@ class AdminSiteSettings extends AdminHandler
         $regen->siteCache($this->domain);
     }
 
-    public function remove($user)
+    public function remove()
     {
     }
 }

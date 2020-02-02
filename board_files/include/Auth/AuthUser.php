@@ -184,7 +184,7 @@ class AuthUser extends AuthHandler
         // Check if there is a global variation which may have permission set
         $global_domain = $domain->globalVariation();
 
-        if(!is_null($global_domain))
+        if($global_domain)
         {
             $role = $this->checkRole($global_domain);
 
@@ -206,7 +206,7 @@ class AuthUser extends AuthHandler
 
     public function active()
     {
-        return boolval($this->auth_data['active']);
+        return boolval($this->auth_data['active'] || $this->isSuperAdmin());
     }
 
     public function isSuperAdmin()

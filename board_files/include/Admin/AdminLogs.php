@@ -19,45 +19,43 @@ class AdminLogs extends AdminHandler
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
+        $this->validateUser();
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Account\Session();
-        $user = $session->sessionUser();
-
         if ($inputs['action'] === 'remove')
         {
-            $this->remove($user);
+            $this->remove();
         }
 
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function renderPanel($user)
+    public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelLogs($this->domain);
         $log_type = $_GET['log-type'] ?? '';
-        $output_panel->render(['user' => $user, 'log_type' => $log_type], false);
+        $output_panel->render(['user' => $this->session_user, 'log_type' => $log_type], false);
     }
 
-    public function creator($user)
+    public function creator()
     {
     }
 
-    public function add($user)
+    public function add()
     {
     }
 
-    public function editor($user)
+    public function editor()
     {
     }
 
-    public function update($user)
+    public function update()
     {
     }
 
-    public function remove($user)
+    public function remove()
     {
     }
 }

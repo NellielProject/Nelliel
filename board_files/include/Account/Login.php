@@ -42,6 +42,16 @@ class Login
             nel_derp(201, _gettext('No password provided.'));
         }
 
+        if(!empty(SUPER_ADMIN) && !empty(SUPER_ADMIN_PASS))
+        {
+            if($form_user_id === SUPER_ADMIN && $form_password === SUPER_ADMIN_PASS)
+            {
+                $login_data['user_id'] = SUPER_ADMIN;
+                $login_data['login_time'] = $attempt_time;
+                return $login_data;
+            }
+        }
+
         $user = $this->authorization->getUser($form_user_id);
         $valid_user = false;
         $valid_password = false;

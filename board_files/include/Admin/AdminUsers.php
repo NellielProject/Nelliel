@@ -19,12 +19,11 @@ class AdminUsers extends AdminHandler
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
+        $this->validateUser();
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Account\Session();
-        $user = $session->sessionUser();
         $this->user_id = $_GET['user-id'] ?? null;
 
         if (!is_null($this->user_id) && !$this->authorization->userExists($this->user_id))
@@ -34,74 +33,74 @@ class AdminUsers extends AdminHandler
 
         if ($inputs['action'] === 'new')
         {
-            $this->creator($user);
+            $this->creator();
         }
         else if ($inputs['action'] === 'add')
         {
-            $this->add($user);
+            $this->add();
         }
         else if ($inputs['action'] === 'edit')
         {
-            $this->editor($user);
+            $this->editor();
         }
         else if ($inputs['action'] === 'update')
         {
-            $this->update($user);
+            $this->update();
         }
         else if ($inputs['action'] === 'remove')
         {
-            $this->remove($user);
+            $this->remove();
         }
         else
         {
-            $this->renderPanel($user);
+            $this->renderPanel();
         }
     }
 
-    public function renderPanel($user)
+    public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
-        $output_panel->render(['section' => 'panel', 'user' => $user], false);
+        $output_panel->render(['section' => 'panel', 'user' => $this->session_user], false);
     }
 
-    public function creator($user)
+    public function creator()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_users'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
         {
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
 
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id], false);
+        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
     }
 
-    public function add($user)
+    public function add()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_users'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
         {
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
 
         $this->user_id = $_POST['user_id'];
-        $this->update($user);
+        $this->update();
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id], false);
+        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
     }
 
-    public function editor($user)
+    public function editor()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_users'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
         {
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
 
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id], false);
+        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
     }
 
-    public function update($user)
+    public function update()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_users'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
         {
             nel_derp(301, _gettext('You are not allowed to modify users.'));
         }
@@ -158,10 +157,10 @@ class AdminUsers extends AdminHandler
 
         $this->authorization->saveUsers();
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $user, 'user_id' => $this->user_id], false);
+        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
     }
 
-    public function remove($user)
+    public function remove()
     {
         $this->authorization->removeUser($this->user_id);
     }

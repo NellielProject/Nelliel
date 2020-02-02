@@ -14,11 +14,11 @@ if (!defined('NELLIEL_VERSION'))
 // === General Settings ===
 //
 
-// If on a new install or no users are found, Nelliel will use 'defaultadmin' and 'defaultadmin_pass' to create an admin account.
-// Once created the default admin can be used for the rest of setup, managing staff, etc.
-// Once the default admin account is created, set both of these back to ''.
-$base_config['defaultadmin'] = '';
-$base_config['defaultadmin_pass'] = '';
+// When super_admin and super_admin_pass are filled in, a Super Administrator will be available using those credentials.
+// Super Admin has no permission checks or limits. This is used only for setting up the site owner account at install and possible debugging.
+// When the super admin is not in use, the settings should be returned to '' for security.
+$base_config['super_admin'] = '';
+$base_config['super_admin_pass'] = '';
 
 // The fallback default value for locale.
 // If a locale is specified elsewhere but no language file exists for it, Nelliel will use this value instead.

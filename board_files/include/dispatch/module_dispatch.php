@@ -37,6 +37,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     else
                     {
                         $session->login();
+                        $session->loggedInOrError();
                         $output_main_panel = new \Nelliel\Output\OutputPanelAccount($domain);
                         $output_main_panel->render(['user' => $session->sessionUser()], false);
                     }
@@ -103,6 +104,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
         case 'main-panel':
             $session = new \Nelliel\Account\Session();
+            $session->loggedInOrError();
 
             if ($domain->id() !== '_site_')
             {
@@ -149,6 +151,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
         case 'language':
             $session = new \Nelliel\Account\Session();
+            $session->loggedInOrError();
 
             if ($inputs['action'] === 'extract-gettext')
             {
@@ -300,6 +303,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'regen':
             $regen = new \Nelliel\Regen();
             $session = new \Nelliel\Account\Session();
+            $session->loggedInOrError();
             $user = $session->sessionUser();
 
             if ($inputs['action'] === 'board-all-pages')

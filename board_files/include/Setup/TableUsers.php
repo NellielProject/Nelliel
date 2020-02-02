@@ -17,15 +17,14 @@ class TableUsers extends TableHandler
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = USERS_TABLE;
-        $this->columns_data = [
-        'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-        'user_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-        'display_name' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-        'user_password' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-        'active' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-        'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-        'super_admin' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-        'last_login' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
+        $this->columns_data = ['entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
+            'user_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'display_name' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'user_password' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'active' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'super_admin' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'last_login' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -41,7 +40,8 @@ class TableUsers extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] .
+                " NOT NULL,
             user_id         VARCHAR(255) NOT NULL,
             display_name    VARCHAR(255) DEFAULT NULL,
             user_password   VARCHAR(255) DEFAULT NULL,
@@ -56,19 +56,5 @@ class TableUsers extends TableHandler
 
     public function insertDefaults()
     {
-        if (DEFAULTADMIN === '' || DEFAULTADMIN_PASS === '')
-        {
-            return;
-        }
-
-        $prepared = $this->database->prepare('SELECT 1 FROM "' . $this->table_name . '" WHERE "user_id" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [DEFAULTADMIN], PDO::FETCH_COLUMN);
-
-        if($result !== false)
-        {
-            return;
-        }
-
-        $this->insertDefaultRow([DEFAULTADMIN, 'Super Admin', nel_password_hash(DEFAULTADMIN_PASS, NEL_PASSWORD_ALGORITHM), 1, 1, null]);
     }
 }

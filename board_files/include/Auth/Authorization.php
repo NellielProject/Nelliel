@@ -49,6 +49,12 @@ class Authorization
             return self::$users[$user_id];
         }
 
+        if($user_id === SUPER_ADMIN)
+        {
+            self::$users[$user_id]->auth_data['super_admin'] = true;
+            return self::$users[$user_id];
+        }
+
         return false;
     }
 

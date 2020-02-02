@@ -18,44 +18,42 @@ class AdminTemplates extends AdminHandler
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
+        $this->validateUser();
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Account\Session();
-        $user = $session->sessionUser();
-
         if ($inputs['action'] === 'add')
         {
-            $this->add($user);
+            $this->add();
         }
         else if ($inputs['action'] == 'remove')
         {
-            $this->remove($user);
+            $this->remove();
         }
         else if ($inputs['action'] == 'make-default')
         {
-            $this->makeDefault($user);
+            $this->makeDefault();
         }
         else
         {
-            $this->renderPanel($user);
+            $this->renderPanel();
         }
     }
 
-    public function renderPanel($user)
+    public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelTemplates($this->domain);
-        $output_panel->render(['user' => $user], false);
+        $output_panel->render(['user' => $this->session_user], false);
     }
 
-    public function creator($user)
+    public function creator()
     {
     }
 
-    public function add($user)
+    public function add()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_templates'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
         {
             nel_derp(421, _gettext('You are not allowed to modify templates.'));
         }
@@ -75,20 +73,20 @@ class AdminTemplates extends AdminHandler
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . TEMPLATES_TABLE . '" ("id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$template_id, 'template', 0, $info]);
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function editor($user)
+    public function editor()
     {
     }
 
-    public function update($user)
+    public function update()
     {
     }
 
-    public function remove($user)
+    public function remove()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_templates'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
         {
             nel_derp(421, _gettext('You are not allowed to modify templates.'));
         }
@@ -97,12 +95,12 @@ class AdminTemplates extends AdminHandler
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . TEMPLATES_TABLE . '" WHERE "id" = ? AND "type" = \'template\'');
         $this->database->executePrepared($prepared, [$template_id]);
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function makeDefault($user)
+    public function makeDefault()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_templates'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
         {
             nel_derp(421, _gettext('You are not allowed to modify templates.'));
         }
@@ -111,6 +109,6 @@ class AdminTemplates extends AdminHandler
         $this->database->exec('UPDATE "' . TEMPLATES_TABLE . '" SET "is_default" = 0');
         $prepared = $this->database->prepare('UPDATE "' . TEMPLATES_TABLE . '" SET "is_default" = 1 WHERE "id" = ?');
         $this->database->executePrepared($prepared, [$template_id]);
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 }

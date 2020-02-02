@@ -18,38 +18,36 @@ class AdminFileFilters extends AdminHandler
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
+        $this->validateUser();
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Account\Session();
-        $user = $session->sessionUser();
-
         if ($inputs['action'] === 'add')
         {
-            $this->add($user);
+            $this->add();
         }
         else if ($inputs['action'] == 'remove')
         {
-            $this->remove($user);
+            $this->remove();
         }
 
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function renderPanel($user)
+    public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelFileFilters($this->domain);
-        $output_panel->render(['user' => $user], false);
+        $output_panel->render(['user' => $this->session_user], false);
     }
 
-    public function creator($user)
+    public function creator()
     {
     }
 
-    public function add($user)
+    public function add()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_file_filters'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
         {
             nel_derp(341, _gettext('You are not allowed to modify file filters.'));
         }
@@ -68,20 +66,20 @@ class AdminFileFilters extends AdminHandler
             $this->database->executePrepared($prepared, [$type, pack("H*", $hash), $notes, $board_id]);
         }
 
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function editor($user)
+    public function editor()
     {
     }
 
-    public function update($user)
+    public function update()
     {
     }
 
-    public function remove($user)
+    public function remove()
     {
-        if (!$user->checkPermission($this->domain, 'perm_manage_file_filters'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
         {
             nel_derp(341, _gettext('You are not allowed to modify file filters.'));
         }
@@ -89,6 +87,6 @@ class AdminFileFilters extends AdminHandler
         $filter_id = $_GET['filter-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . FILE_FILTERS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 }

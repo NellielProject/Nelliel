@@ -19,55 +19,53 @@ class AdminBoards extends AdminHandler
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
+        $this->validateUser();
     }
 
     public function actionDispatch($inputs)
     {
-        $session = new \Nelliel\Account\Session();
-        $user = $session->sessionUser();
-
         if ($inputs['action'] === 'add')
         {
-            $this->add($user);
+            $this->add();
         }
         else if ($inputs['action'] === 'remove')
         {
             if (isset($_GET['action-confirmed']) && $_GET['action-confirmed'] === 'true')
             {
-                $this->remove($user);
+                $this->remove();
             }
             else
             {
-                $this->createInterstitial($user);
+                $this->createInterstitial();
             }
         }
         else if ($inputs['action'] === 'lock')
         {
-            $this->lock($user);
+            $this->lock();
         }
         else if ($inputs['action'] === 'unlock')
         {
-            $this->unlock($user);
+            $this->unlock();
         }
         else
         {
-            $this->renderPanel($user);
+            $this->renderPanel();
         }
     }
 
-    public function renderPanel($user)
+    public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain);
-        $output_panel->render(['section' => 'panel', 'user' => $user], false);
+        $output_panel->render(['section' => 'panel', 'user' => $this->session_user], false);
     }
 
-    public function creator($user)
+    public function creator()
     {
     }
 
-    public function add($user)
+    public function add()
     {
-        if (!$user->checkPermission($this->domain, 'perm_board_create'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_board_create'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
@@ -98,20 +96,20 @@ class AdminBoards extends AdminHandler
 
         $regen->allBoardPages($domain);
         $regen->boardList(new \Nelliel\DomainSite($this->database));
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function editor($user)
+    public function editor()
     {
     }
 
-    public function update($user)
+    public function update()
     {
     }
 
-    public function remove($user)
+    public function remove()
     {
-        if (!$user->checkPermission($this->domain, 'perm_board_delete'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_board_delete'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
@@ -169,12 +167,12 @@ class AdminBoards extends AdminHandler
         $this->database->executePrepared($prepared, [$board_id, $board_id]);
         $regen = new \Nelliel\Regen();
         $regen->boardList(new \Nelliel\DomainSite($this->database));
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function lock($user)
+    public function lock()
     {
-        if (!$user->checkPermission($this->domain, 'perm_board_lock'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_board_lock'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
@@ -182,12 +180,12 @@ class AdminBoards extends AdminHandler
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare('UPDATE "' . BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function unlock($user)
+    public function unlock()
     {
-        if (!$user->checkPermission($this->domain, 'perm_board_lock'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_board_lock'))
         {
             nel_derp(371, _gettext('You are not allowed to modify boards.'));
         }
@@ -195,10 +193,10 @@ class AdminBoards extends AdminHandler
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare('UPDATE "' . BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $this->renderPanel($user);
+        $this->renderPanel();
     }
 
-    public function createInterstitial($user)
+    public function createInterstitial()
     {
         $message = _gettext(
                 'Are you certain you want to delete the board? Everything will be gone and this cannot be undone!');
@@ -209,7 +207,7 @@ class AdminBoards extends AdminHandler
         $continue_link['text'] = _gettext('Confirm and delete the board.');
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain);
         $output_panel->render(
-                ['section' => 'remove_interstitial', 'user' => $user, 'message' => $message,
+                ['section' => 'remove_interstitial', 'user' => $this->session_user, 'message' => $message,
                     'continue_link' => $continue_link], false);
     }
 }

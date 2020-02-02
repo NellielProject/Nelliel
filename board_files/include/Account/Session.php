@@ -66,21 +66,22 @@ class Session
             nel_derp(220, _gettext('Session requires a secure connection.'));
         }
 
-        if (empty($_SESSION))
-        {
-            self::$session_active = true;
-            return;
-        }
+        $empty_session = empty($_SESSION);
 
-        if ($this->isOld())
+        if (!$empty_session && $this->isOld())
         {
             $this->terminate();
             nel_derp(221, _gettext('Session has expired.'));
         }
 
+        if($empty_session)
+        {
+            return;
+        }
+
         $user = $this->authorization->getUser($_SESSION['user_id']);
 
-        if (!$user->active())
+        if (!$user || !$user->active())
         {
             nel_derp(222, _gettext('Not an active user.'));
         }
@@ -155,5 +156,13 @@ class Session
         }
 
         return self::$in_modmode && self::$user->checkPermission($domain, 'perm_mod_mode');
+    }
+
+    public function loggedInOrError()
+    {
+        if(is_null(self::$user))
+        {
+            nel_derp(0, _gettext('You must be logged in for this action.'));
+        }
     }
 }
