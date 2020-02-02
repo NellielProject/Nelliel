@@ -42,25 +42,23 @@ class Login
             nel_derp(201, _gettext('No password provided.'));
         }
 
-        if(!empty(SUPER_ADMIN) && !empty(SUPER_ADMIN_PASS))
+        if (!empty(SUPER_ADMIN) && $form_user_id === SUPER_ADMIN && !empty(SUPER_ADMIN_PASS) &&
+                $form_password === SUPER_ADMIN_PASS)
         {
-            if($form_user_id === SUPER_ADMIN && $form_password === SUPER_ADMIN_PASS)
-            {
-                $login_data['user_id'] = SUPER_ADMIN;
-                $login_data['login_time'] = $attempt_time;
-                return $login_data;
-            }
+            $login_data['user_id'] = SUPER_ADMIN;
+            $login_data['login_time'] = $attempt_time;
+            return $login_data;
         }
 
         $user = $this->authorization->getUser($form_user_id);
         $valid_user = false;
         $valid_password = false;
 
-        if($user)
+        if ($user)
         {
             $valid_password = nel_password_verify($form_password, $user->auth_data['user_password']);
 
-            if(empty($session_user_id))
+            if (empty($session_user_id))
             {
                 $valid_user = true;
             }
@@ -70,7 +68,7 @@ class Login
             }
         }
 
-        if(!$valid_user || !$valid_password)
+        if (!$valid_user || !$valid_password)
         {
             $this->updateAttempts($attempt_time);
             nel_derp(202, _gettext('User ID or password is incorrect.'));
