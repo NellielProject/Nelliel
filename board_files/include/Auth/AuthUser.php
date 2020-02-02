@@ -206,7 +206,7 @@ class AuthUser extends AuthHandler
 
     public function active()
     {
-        return boolval($this->auth_data['active'] || $this->isSuperAdmin());
+        return boolval($this->getInfo('active') || $this->isSuperAdmin());
     }
 
     public function isSuperAdmin()

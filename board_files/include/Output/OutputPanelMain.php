@@ -68,6 +68,8 @@ class OutputPanelMain extends OutputCore
         $this->render_data['filetypes_url'] = MAIN_SCRIPT . '?module=filetypes';
         $this->render_data['module_styles'] = $user->checkPermission($this->domain, 'perm_manage_styles');
         $this->render_data['styles_url'] = MAIN_SCRIPT . '?module=styles';
+        $this->render_data['module_permissions'] = $user->checkPermission($this->domain, 'perm_manage_permissions');
+        $this->render_data['permissions_url'] = MAIN_SCRIPT . '?module=permissions';
         $this->render_data['module_icon_sets'] = $user->checkPermission($this->domain, 'perm_manage_icon_sets');
         $this->render_data['icon_sets_url'] = MAIN_SCRIPT . '?module=icon-sets';
         $this->render_data['module_news'] = $user->checkPermission($this->domain, 'perm_manage_news');

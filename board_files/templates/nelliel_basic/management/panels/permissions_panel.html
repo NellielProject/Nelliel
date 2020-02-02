@@ -1,0 +1,33 @@
+{{% FILTERS }}
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" aria-label="Add permission" data-i18n-attributes="gettext|aria-label">
+	<div class="display-table">
+		<div class="display-row">
+			<label for="permission" class="display-cell" data-i18n="gettext">Permission</label>
+			<input id="permission" class="display-cell" type="text" name="permission" size="30">
+		</div>
+		<div class="display-row">
+			<label for="description" class="display-cell" data-i18n="gettext">Short description</label>
+			<input id="description" class="display-cell" type="text" name="description" size="30">
+		</div>
+		<div class="display-row">
+			<input type="submit" value="Add Permission" data-i18n-attributes="gettext|value">
+		</div>
+	</div>
+</form>
+<hr>
+<table class="data-table">
+	<tr class="manage-header">
+		<th data-i18n="gettext">Permission</th>
+		<th data-i18n="gettext">Description</th>
+		<th data-i18n="gettext">Remove</th>
+	</tr>
+	{{# permission_list }}
+	<tr class="{{ bgclass }}">
+		<td>{{ permission }}</td>
+		<td>{{ description }}</td>
+		<td>
+			<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Permission</a>
+		</td>
+	</tr>
+	{{/ permission_list }}
+</table>

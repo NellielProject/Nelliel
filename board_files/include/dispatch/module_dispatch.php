@@ -355,6 +355,11 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $styles_admin->actionDispatch($inputs);
             break;
 
+        case 'permissions':
+            $permissions_admin = new \Nelliel\Admin\AdminPermissions($authorization, $domain);
+            $permissions_admin->actionDispatch($inputs);
+            break;
+
         case 'icon-sets':
             $icon_sets_admin = new \Nelliel\Admin\AdminIconSets($authorization, $domain);
             $icon_sets_admin->actionDispatch($inputs);
