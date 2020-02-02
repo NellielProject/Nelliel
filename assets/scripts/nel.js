@@ -76,8 +76,12 @@ nelliel.setup.addListenerIfElementExists = function(element, event, event_handle
 nelliel.setup.fillForms = function(board) {
     var pwd = nelliel.core.getCookie("pwd-" + board);
     var name = nelliel.core.getCookie("name-" + board);
-    document.getElementById("posting-form-sekrit").value = pwd;
-    document.getElementById("update-sekrit").value = pwd;
+    
+    if(pwd !== null) {
+        document.getElementById("posting-form-sekrit").value = pwd;
+        document.getElementById("update-sekrit").value = pwd;
+    }
+
     /*document.getElementById("not-anonymous").value = name;*/
 }
 
