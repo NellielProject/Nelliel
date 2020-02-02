@@ -328,7 +328,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             }
             else if ($inputs['action'] === 'site-all-caches')
             {
-                if (!$user->checkPermission($domain, 'perm_regen_caches'))
+                if (!$user->checkPermission($domain, 'perm_regen_cache'))
                 {
                     nel_derp(412, _gettext('You are not allowed to regenerate site caches.'));
                 }

@@ -67,7 +67,7 @@ class AdminBoards extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_board_create'))
         {
-            nel_derp(371, _gettext('You are not allowed to modify boards.'));
+            nel_derp(371, _gettext('You are not allowed to create boards.'));
         }
 
         $board_id = $_POST['new_board_id'];
@@ -111,7 +111,7 @@ class AdminBoards extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_board_delete'))
         {
-            nel_derp(371, _gettext('You are not allowed to modify boards.'));
+            nel_derp(372, _gettext('You are not allowed to delete boards.'));
         }
 
         $board_id = $_GET['board_id'];
@@ -174,7 +174,7 @@ class AdminBoards extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_board_lock'))
         {
-            nel_derp(371, _gettext('You are not allowed to modify boards.'));
+            nel_derp(373, _gettext('You are not allowed to lock this board.'));
         }
 
         $board_id = $_GET['board_id'];
@@ -187,7 +187,7 @@ class AdminBoards extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_board_lock'))
         {
-            nel_derp(371, _gettext('You are not allowed to modify boards.'));
+            nel_derp(374, _gettext('You are not allowed to unlock this board.'));
         }
 
         $board_id = $_GET['board_id'];

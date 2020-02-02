@@ -30,9 +30,9 @@ class OutputPanelRoles extends OutputCore
 
         $user = $parameters['user'];
 
-        if (!$user->checkPermission($this->domain, 'perm_roles_access'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_roles'))
         {
-            nel_derp(341, _gettext('You are not allowed to access the bans panel.'));
+            nel_derp(310, _gettext('You are not allowed to manage roles.'));
         }
 
         switch ($parameters['section'])
@@ -53,7 +53,6 @@ class OutputPanelRoles extends OutputCore
     {
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $user = $parameters['user'];
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
@@ -94,7 +93,6 @@ class OutputPanelRoles extends OutputCore
     {
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $user = $parameters['user'];
         $role_id = $parameters['role_id'];
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $role = $authorization->getRole($role_id);

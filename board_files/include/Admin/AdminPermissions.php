@@ -51,7 +51,7 @@ class AdminPermissions extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_permissions_modify'))
         {
-            nel_derp(451, _gettext('You are not allowed to modify permissions.'));
+            nel_derp(451, _gettext('You are not allowed to add permissions.'));
         }
 
         $permission = $_POST['permission'];
@@ -74,7 +74,7 @@ class AdminPermissions extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_permissions_modify'))
         {
-            nel_derp(451, _gettext('You are not allowed to modify permissions.'));
+            nel_derp(452, _gettext('You are not allowed to remove permissions.'));
         }
 
         $permission = $_GET['permission'];

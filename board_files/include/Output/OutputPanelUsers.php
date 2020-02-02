@@ -32,7 +32,7 @@ class OutputPanelUsers extends OutputCore
 
         if (!$user->checkPermission($this->domain, 'perm_manage_users'))
         {
-            nel_derp(300, _gettext('You are not allowed to access the users panel.'));
+            nel_derp(300, _gettext('You are not allowed to manage users.'));
         }
 
         switch ($parameters['section'])
@@ -53,7 +53,6 @@ class OutputPanelUsers extends OutputCore
     {
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $user = $parameters['user'];
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);
@@ -93,7 +92,6 @@ class OutputPanelUsers extends OutputCore
     {
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $user = $parameters['user'];
         $user_id = $parameters['user_id'];
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $this->startTimer();

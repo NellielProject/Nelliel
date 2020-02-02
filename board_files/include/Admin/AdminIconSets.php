@@ -55,8 +55,9 @@ class AdminIconSets extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
-            nel_derp(461, _gettext('You are not allowed to modify icon setss.'));
+            nel_derp(461, _gettext('You are not allowed to install icon sets.'));
         }
+
         $icon_set_id = $_GET['icon-set-id'];
         $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
         $icon_set_inis = $ini_parser->parseDirectories(ICON_SETS_FILE_PATH, 'icon_set_info.ini');
@@ -88,7 +89,7 @@ class AdminIconSets extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
-            nel_derp(461, _gettext('You are not allowed to modify icon sets.'));
+            nel_derp(462, _gettext('You are not allowed to uninstall icon sets.'));
         }
 
         $icon_set_id = $_GET['icon-set-id'];
@@ -101,7 +102,7 @@ class AdminIconSets extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
-            nel_derp(461, _gettext('You are not allowed to modify icon sets.'));
+            nel_derp(463, _gettext('You are not allowed to set the default icon set.'));
         }
 
         $icon_set_id = $_GET['icon-set-id'];

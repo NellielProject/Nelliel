@@ -69,7 +69,7 @@ class AdminBans extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
-            nel_derp(321, _gettext('You are not allowed to modify bans.'));
+            nel_derp(321, _gettext('You are not allowed to issue bans.'));
         }
 
         $ban_input = $this->ban_hammer->postToArray();
@@ -103,14 +103,14 @@ class AdminBans extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
-            nel_derp(321, _gettext('You are not allowed to modify bans.'));
+            nel_derp(322, _gettext('You are not allowed to modify bans.'));
         }
 
         $ban_input = $this->ban_hammer->postToArray();
 
         if ($ban_input['all_boards'] === 1 && !$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
-            nel_derp(322, _gettext('You are not allowed to ban from all boards.'));
+            nel_derp(323, _gettext('You are not allowed to ban from all boards.'));
         }
 
         $this->ban_hammer->modifyBan($ban_input);
@@ -121,7 +121,7 @@ class AdminBans extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
-            nel_derp(321, _gettext('You are not allowed to modify bans.'));
+            nel_derp(324, _gettext('You are not allowed to modify bans.'));
         }
 
         $ban_input = $this->ban_hammer->postToArray();

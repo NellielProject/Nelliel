@@ -65,11 +65,6 @@ class AdminUsers extends AdminHandler
 
     public function creator()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
-        {
-            nel_derp(301, _gettext('You are not allowed to modify users.'));
-        }
-
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
     }
@@ -78,7 +73,7 @@ class AdminUsers extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
         {
-            nel_derp(301, _gettext('You are not allowed to modify users.'));
+            nel_derp(301, _gettext('You are not allowed to add users.'));
         }
 
         $this->user_id = $_POST['user_id'];
@@ -89,11 +84,6 @@ class AdminUsers extends AdminHandler
 
     public function editor()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
-        {
-            nel_derp(301, _gettext('You are not allowed to modify users.'));
-        }
-
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
     }
@@ -102,7 +92,7 @@ class AdminUsers extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
         {
-            nel_derp(301, _gettext('You are not allowed to modify users.'));
+            nel_derp(302, _gettext('You are not allowed to modify users.'));
         }
 
         if (!$this->authorization->userExists($this->user_id))
@@ -162,6 +152,11 @@ class AdminUsers extends AdminHandler
 
     public function remove()
     {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
+        {
+            nel_derp(303, _gettext('You are not allowed to remove users.'));
+        }
+
         $this->authorization->removeUser($this->user_id);
     }
 }

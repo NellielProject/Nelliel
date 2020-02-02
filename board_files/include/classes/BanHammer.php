@@ -146,9 +146,9 @@ class BanHammer
 
         if (!$snacks)
         {
-            if (!$user->checkPermission($domain, 'perm_manage_bans') && !$snacks)
+            if (!$user->checkPermission($domain, 'perm_manage_bans'))
             {
-                nel_derp(321, _gettext('You are not allowed to modify bans.'));
+                nel_derp(324, _gettext('You are not allowed to remove bans.'));
             }
         }
 

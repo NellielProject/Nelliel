@@ -23,10 +23,15 @@ class OutputPanelBoardSettings extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
+        $user = $parameters['user'];
+
+        if (!$user->checkPermission($this->domain, 'perm_board_config'))
+        {
+            nel_derp(330, _gettext('You are not allowed to access the board settings.'));
+        }
+
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $session = new \Nelliel\Account\Session();
-        $user = $parameters['user'];
         $defaults = $parameters['defaults'] ?? false;
         $dotdot = $parameters['dotdot'] ?? '';
         $this->startTimer();

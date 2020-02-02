@@ -23,15 +23,15 @@ class OutputPanelReports extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
         if (!$user->checkPermission($this->domain, 'perm_manage_reports'))
         {
-            nel_derp(380, _gettext('You are not allowed to access the reports panel.'));
+            nel_derp(380, _gettext('You are not allowed to manage reports.'));
         }
 
+        $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);

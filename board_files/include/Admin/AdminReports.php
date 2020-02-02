@@ -26,7 +26,7 @@ class AdminReports extends AdminHandler
     {
         if ($inputs['action'] === 'dismiss')
         {
-            $this->dismiss($_GET['report_id']);
+            $this->remove();
         }
         else if (isset($_POST['form_submit_report']))
         {
@@ -87,10 +87,8 @@ class AdminReports extends AdminHandler
 
     public function remove()
     {
-    }
+        $report_id = $_GET['report_id'];
 
-    public function dismiss($report_id)
-    {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_reports'))
         {
             nel_derp(381, _gettext('You are not allowed to dismiss reports.'));

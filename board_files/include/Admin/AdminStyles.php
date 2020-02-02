@@ -55,8 +55,9 @@ class AdminStyles extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_styles'))
         {
-            nel_derp(431, _gettext('You are not allowed to modify styles.'));
+            nel_derp(431, _gettext('You are not allowed to install styles.'));
         }
+
         $style_id = $_GET['style-id'];
         $ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
         $style_inis = $ini_parser->parseDirectories(STYLES_FILE_PATH, 'style_info.ini');
@@ -87,7 +88,7 @@ class AdminStyles extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_styles'))
         {
-            nel_derp(431, _gettext('You are not allowed to modify styles.'));
+            nel_derp(432, _gettext('You are not allowed to uninstall styles.'));
         }
 
         $style_id = $_GET['style-id'];
@@ -100,7 +101,7 @@ class AdminStyles extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_styles'))
         {
-            nel_derp(431, _gettext('You are not allowed to modify styles.'));
+            nel_derp(433, _gettext('You are not allowed to set the default style.'));
         }
 
         $style_id = $_GET['style-id'];

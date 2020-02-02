@@ -23,15 +23,15 @@ class OutputPanelFileFilters extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
         if (!$user->checkPermission($this->domain, 'perm_manage_file_filters'))
         {
-            nel_derp(341, _gettext('You are not allowed to access the File Filters panel.'));
+            nel_derp(340, _gettext('You are not allowed to manage the file filters.'));
         }
 
+        $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);

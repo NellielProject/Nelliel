@@ -23,15 +23,15 @@ class OutputPanelTemplates extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
         if (!$user->checkPermission($this->domain, 'perm_manage_templates'))
         {
-            nel_derp(341, _gettext('You are not allowed to access the templates panel.'));
+            nel_derp(420, _gettext('You are not allowed to manage templates.'));
         }
 
+        $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);

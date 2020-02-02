@@ -36,16 +36,6 @@ class AdminBoardSettings extends AdminHandler
 
     public function renderPanel()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_board_config'))
-        {
-            nel_derp(330, _gettext('You are not allowed to access the board settings panel.'));
-        }
-
-        if ($this->defaults && !$this->session_user->checkPermission($this->domain, 'perm_board_defaults'))
-        {
-            nel_derp(332, _gettext('You are not allowed to access the default board settings panel.'));
-        }
-
         $output_panel = new \Nelliel\Output\OutputPanelBoardSettings($this->domain);
         $output_panel->render(['user' => $this->session_user, 'defaults' => $this->defaults], false);
     }
@@ -71,7 +61,7 @@ class AdminBoardSettings extends AdminHandler
 
         if ($this->defaults && !$this->session_user->checkPermission($this->domain, 'perm_board_defaults'))
         {
-            nel_derp(333, _gettext('You are not allowed to modify the default board settings.'));
+            nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
         }
 
         $config_table = ($this->defaults) ? BOARD_DEFAULTS_TABLE : $this->domain->reference('config_table');

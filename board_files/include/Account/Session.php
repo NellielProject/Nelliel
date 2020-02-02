@@ -162,7 +162,7 @@ class Session
     {
         if(is_null(self::$user))
         {
-            nel_derp(0, _gettext('You must be logged in for this action.'));
+            nel_derp(224, _gettext('You must be logged in for this action.'));
         }
     }
 }

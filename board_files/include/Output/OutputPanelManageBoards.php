@@ -28,6 +28,13 @@ class OutputPanelManageBoards extends OutputCore
             return;
         }
 
+        $user = $parameters['user'];
+
+        if (!$user->checkPermission($this->domain, 'perm_manage_boards'))
+        {
+            nel_derp(370, _gettext('You are not allowed to manage boards.'));
+        }
+
         switch ($parameters['section'])
         {
             case 'panel':
@@ -46,13 +53,6 @@ class OutputPanelManageBoards extends OutputCore
     {
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $user = $parameters['user'];
-
-        if (!$user->checkPermission($this->domain, 'perm_manage_boards'))
-        {
-            nel_derp(370, _gettext('You are not allowed to access the board manager panel.'));
-        }
-
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);

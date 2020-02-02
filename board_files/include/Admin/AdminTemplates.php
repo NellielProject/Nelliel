@@ -55,7 +55,7 @@ class AdminTemplates extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
         {
-            nel_derp(421, _gettext('You are not allowed to modify templates.'));
+            nel_derp(421, _gettext('You are not allowed to install templates.'));
         }
 
         $template_id = $_GET['template-id'];
@@ -88,7 +88,7 @@ class AdminTemplates extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
         {
-            nel_derp(421, _gettext('You are not allowed to modify templates.'));
+            nel_derp(422, _gettext('You are not allowed to uninstall templates.'));
         }
 
         $template_id = $_GET['template-id'];
@@ -102,7 +102,7 @@ class AdminTemplates extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
         {
-            nel_derp(421, _gettext('You are not allowed to modify templates.'));
+            nel_derp(423, _gettext('You are not allowed to set the default template.'));
         }
 
         $template_id = $_GET['template-id'];

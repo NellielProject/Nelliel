@@ -23,15 +23,15 @@ class OutputPanelIconSets extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $user = $parameters['user'];
 
         if (!$user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
-            nel_derp(460, _gettext('You are not allowed to access the Icon Sets panel.'));
+            nel_derp(460, _gettext('You are not allowed to manage icon sets.'));
         }
 
+        $this->render_data = array();
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain);

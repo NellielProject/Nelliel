@@ -90,11 +90,6 @@ class AdminThreads extends AdminHandler
 
     public function update()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_board_modify_posts'))
-        {
-            nel_derp(351, _gettext('You are not allowed to modify threads or posts.'));
-        }
-
         $thread_handler = new \Nelliel\ThreadHandler($this->database, $this->domain->id());
         $thread_handler->processContentDeletes();
     }
@@ -128,7 +123,7 @@ class AdminThreads extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_board_sticky_posts'))
         {
-            nel_derp(351, _gettext('You are not allowed to modify threads or posts.'));
+            nel_derp(351, _gettext('You are not allowed to sticky threads.'));
         }
 
         $content_id = new \Nelliel\ContentID($_GET['content-id']);
@@ -154,6 +149,11 @@ class AdminThreads extends AdminHandler
 
     public function unsticky()
     {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_board_sticky_posts'))
+        {
+            nel_derp(352, _gettext('You are not allowed to unsticky threads.'));
+        }
+
         $content_id = new \Nelliel\ContentID($_GET['content-id']);
         $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
         $thread->sticky();
@@ -162,6 +162,11 @@ class AdminThreads extends AdminHandler
 
     public function lock()
     {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_board_lock_posts'))
+        {
+            nel_derp(353, _gettext('You are not allowed to lock threads.'));
+        }
+
         $content_id = new \Nelliel\ContentID($_GET['content-id']);
         $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
         $thread->lock();
@@ -170,6 +175,11 @@ class AdminThreads extends AdminHandler
 
     public function unlock()
     {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_board_lock_posts'))
+        {
+            nel_derp(354, _gettext('You are not allowed to unlock threads.'));
+        }
+
         $content_id = new \Nelliel\ContentID($_GET['content-id']);
         $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
         $thread->lock();

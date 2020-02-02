@@ -49,7 +49,7 @@ class AdminFileFilters extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
         {
-            nel_derp(341, _gettext('You are not allowed to modify file filters.'));
+            nel_derp(341, _gettext('You are not allowed to add file filters.'));
         }
 
         $type = $_POST['hash_type'];
@@ -81,7 +81,7 @@ class AdminFileFilters extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
         {
-            nel_derp(341, _gettext('You are not allowed to modify file filters.'));
+            nel_derp(342, _gettext('You are not allowed to remove file filters.'));
         }
 
         $filter_id = $_GET['filter-id'];

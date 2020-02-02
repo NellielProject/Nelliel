@@ -65,11 +65,6 @@ class AdminRoles extends AdminHandler
 
     public function creator()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
-        {
-            nel_derp(311, _gettext('You are not allowed to modify roles.'));
-        }
-
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
     }
@@ -78,7 +73,7 @@ class AdminRoles extends AdminHandler
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
         {
-            nel_derp(311, _gettext('You are not allowed to modify roles.'));
+            nel_derp(311, _gettext('You are not allowed to add roles.'));
         }
 
         $this->role_id = $_POST['role_id'];
@@ -89,11 +84,6 @@ class AdminRoles extends AdminHandler
 
     public function editor()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
-        {
-            nel_derp(311, _gettext('You are not allowed to modify roles.'));
-        }
-
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
     }
@@ -132,6 +122,11 @@ class AdminRoles extends AdminHandler
 
     public function remove()
     {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
+        {
+            nel_derp(313, _gettext('You are not allowed to remove roles.'));
+        }
+
         $this->authorization->removeRole($this->role_id);
         $this->renderPanel();
     }
