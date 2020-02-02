@@ -36,7 +36,7 @@ class OutputPanelAccount extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $prepared = $this->database->prepare('SELECT "domain_id", "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
-        $board_list = $this->database->executePreparedFetchAll($prepared, [$user->auth_id], PDO::FETCH_ASSOC);
+        $board_list = $this->database->executePreparedFetchAll($prepared, [$user->id()], PDO::FETCH_ASSOC);
 
         $roles_list = array();
         $roles = $this->database->executeFetchAll('SELECT "role_id", "role_title" FROM "' . ROLES_TABLE . '"', PDO::FETCH_ASSOC);

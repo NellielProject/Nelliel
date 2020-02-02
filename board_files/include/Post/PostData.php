@@ -108,7 +108,7 @@ class PostData
         if($role !== false)
         {
             $post->content_data['poster_name'] = $user->auth_data['display_name'];
-            $post->content_data['mod_post_id'] = $role->auth_id;
+            $post->content_data['mod_post_id'] = $role->id();
         }
     }
 

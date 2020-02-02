@@ -23,7 +23,7 @@ class AuthRole extends AuthHandler
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('SELECT * FROM "' . ROLES_TABLE . '" WHERE "role_id" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->auth_id], PDO::FETCH_ASSOC, true);
+        $result = $database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
 
         if (empty($result))
         {
@@ -31,7 +31,7 @@ class AuthRole extends AuthHandler
         }
 
         $this->auth_data = $result;
-        $this->permissions = new AuthPermissions($database, $this->auth_id);
+        $this->permissions = new AuthPermissions($database, $this->id());
         $this->permissions->loadFromDatabase();
         return true;
     }
@@ -45,7 +45,7 @@ class AuthRole extends AuthHandler
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('SELECT "entry" FROM "' . ROLES_TABLE . '" WHERE "role_id" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->auth_id], PDO::FETCH_COLUMN);
+        $result = $database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_COLUMN);
 
         if ($result)
         {
@@ -61,7 +61,7 @@ class AuthRole extends AuthHandler
                     (:role_id, :role_level, :role_title, :capcode_text)');
         }
 
-        $prepared->bindValue(':role_id', $this->authDataOrDefault('role_id', $this->auth_id), PDO::PARAM_STR);
+        $prepared->bindValue(':role_id', $this->authDataOrDefault('role_id', $this->id()), PDO::PARAM_STR);
         $prepared->bindValue(':role_level', $this->authDataOrDefault('role_level', 0), PDO::PARAM_INT);
         $prepared->bindValue(':role_title', $this->authDataOrDefault('role_title', null), PDO::PARAM_STR);
         $prepared->bindValue(':capcode_text', $this->authDataOrDefault('capcode_text', null), PDO::PARAM_STR);
@@ -72,7 +72,7 @@ class AuthRole extends AuthHandler
 
     public function setupNew()
     {
-        $this->permissions = new AuthPermissions($this->database, $this->auth_id);
+        $this->permissions = new AuthPermissions($this->database, $this->id());
         $this->permissions->setupNew();
     }
 
@@ -81,17 +81,17 @@ class AuthRole extends AuthHandler
         $authorization = new \Nelliel\Auth\Authorization($this->database);
         $prepared = $this->database->prepare(
                 'SELECT "user_id", "board" FROM "' . USER_ROLES_TABLE . '" WHERE "role_id" = ?');
-        $user_roles = $this->database->executePreparedFetchAll($prepared, [$this->auth_id], PDO::FETCH_ASSOC);
+        $user_roles = $this->database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
         foreach($user_roles as $user_role)
         {
-            $authorization->getUser($user_role['user_id'])->removeRole($user_role['domain'], $this->auth_id);
+            $authorization->getUser($user_role['user_id'])->removeRole($user_role['domain'], $this->id());
         }
 
         $prepared = $this->database->prepare('DELETE FROM "' . ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ?');
-        $this->database->executePrepared($prepared, [$this->auth_id]);
+        $this->database->executePrepared($prepared, [$this->id()]);
         $prepared = $this->database->prepare('DELETE FROM "' . ROLES_TABLE . '" WHERE "role_id" = ?');
-        $this->database->executePrepared($prepared, [$this->auth_id]);
+        $this->database->executePrepared($prepared, [$this->id()]);
     }
 
     public function checkPermission($permission_id)

@@ -15,12 +15,7 @@ abstract class AuthHandler
 
     public function authDataOrDefault($data_name, $default)
     {
-        if (isset($this->auth_data[$data_name]))
-        {
-            return $this->auth_data[$data_name];
-        }
-
-        return $default;
+        return $this->auth_data[$data_name] ?? $default;
     }
 
     public abstract function loadFromDatabase($temp_database = null);
@@ -30,5 +25,15 @@ abstract class AuthHandler
     public abstract function setupNew();
 
     public abstract function remove();
+
+    public function getInfo(string $info_id)
+    {
+        return $this->auth_data[$info_id] ?? null;
+    }
+
+    public function id()
+    {
+        return $this->auth_id;
+    }
 }
 

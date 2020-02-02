@@ -22,7 +22,7 @@ class AuthPermissions extends AuthHandler
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('SELECT * FROM "' . ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ?');
-        $result = $database->executePreparedFetchAll($prepared, [$this->auth_id], PDO::FETCH_ASSOC, true);
+        $result = $database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
 
         if (empty($result))
         {
@@ -50,7 +50,7 @@ class AuthPermissions extends AuthHandler
         {
             $prepared = $database->prepare(
                     'SELECT "entry" FROM "' . ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ? AND "perm_id" = ?');
-            $result = $database->executePreparedFetch($prepared, [$this->auth_id, $perm], PDO::FETCH_COLUMN);
+            $result = $database->executePreparedFetch($prepared, [$this->id(), $perm], PDO::FETCH_COLUMN);
 
             if ($result)
             {
@@ -66,7 +66,7 @@ class AuthPermissions extends AuthHandler
                     (:role_id, :perm_id, :perm_setting)');
             }
 
-            $prepared->bindValue(':role_id', $this->authDataOrDefault('role_id', $this->auth_id), PDO::PARAM_STR);
+            $prepared->bindValue(':role_id', $this->authDataOrDefault('role_id', $this->id()), PDO::PARAM_STR);
             $prepared->bindValue(':perm_id', $perm, PDO::PARAM_STR);
             $prepared->bindValue(':perm_setting', intval($setting), PDO::PARAM_INT);
             $database->executePrepared($prepared);

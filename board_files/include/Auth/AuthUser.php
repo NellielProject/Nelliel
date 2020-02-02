@@ -24,7 +24,7 @@ class AuthUser extends AuthHandler
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('SELECT * FROM "' . USERS_TABLE . '" WHERE "user_id" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->auth_id], PDO::FETCH_ASSOC, true);
+        $result = $database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
 
         if (empty($result))
         {
@@ -33,7 +33,7 @@ class AuthUser extends AuthHandler
 
         $this->auth_data = $result;
         $prepared = $database->prepare('SELECT * FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
-        $result = $database->executePreparedFetchAll($prepared, [$this->auth_id], PDO::FETCH_ASSOC, true);
+        $result = $database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
 
         foreach ($result as $row)
         {
@@ -45,14 +45,14 @@ class AuthUser extends AuthHandler
 
     public function writeToDatabase($temp_database = null)
     {
-        if (empty($this->auth_id))
+        if (empty($this->id()))
         {
             return false;
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('SELECT "entry" FROM "' . USERS_TABLE . '" WHERE "user_id" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->auth_id], PDO::FETCH_COLUMN);
+        $result = $database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_COLUMN);
 
         if ($result)
         {
@@ -68,7 +68,7 @@ class AuthUser extends AuthHandler
                     (:user_id, :display_name, :user_password, :active, :super_admin, :last_login)');
         }
 
-        $prepared->bindValue(':user_id', $this->authDataOrDefault('user_id', $this->auth_id), PDO::PARAM_STR);
+        $prepared->bindValue(':user_id', $this->authDataOrDefault('user_id', $this->id()), PDO::PARAM_STR);
         $prepared->bindValue(':display_name', $this->authDataOrDefault('display_name', null), PDO::PARAM_STR);
         $prepared->bindValue(':user_password', $this->authDataOrDefault('user_password', null), PDO::PARAM_STR);
         $prepared->bindValue(':active', $this->authDataOrDefault('active', 0), PDO::PARAM_INT);
@@ -80,7 +80,7 @@ class AuthUser extends AuthHandler
         {
             $prepared = $database->prepare(
                     'SELECT "entry" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
-            $result = $database->executePreparedFetch($prepared, [$this->auth_id, $domain_id], PDO::FETCH_COLUMN);
+            $result = $database->executePreparedFetch($prepared, [$this->id(), $domain_id], PDO::FETCH_COLUMN);
 
             if ($result)
             {
@@ -96,7 +96,7 @@ class AuthUser extends AuthHandler
                     (:user_id, :role_id, :domain_id)');
             }
 
-            $prepared->bindValue(':user_id', $this->auth_id, PDO::PARAM_STR);
+            $prepared->bindValue(':user_id', $this->id(), PDO::PARAM_STR);
             $prepared->bindValue(':role_id', $user_role['role_id'], PDO::PARAM_STR);
             $prepared->bindValue(':domain_id', $domain_id, PDO::PARAM_STR);
             $database->executePrepared($prepared);
@@ -112,9 +112,9 @@ class AuthUser extends AuthHandler
     public function remove()
     {
         $prepared = $this->database->prepare('DELETE FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
-        $this->database->executePrepared($prepared, [$this->auth_id]);
+        $this->database->executePrepared($prepared, [$this->id()]);
         $prepared = $this->database->prepare('DELETE FROM "' . USERS_TABLE . '" WHERE "user_id" = ?');
-        $this->database->executePrepared($prepared, [$this->auth_id]);
+        $this->database->executePrepared($prepared, [$this->id()]);
     }
 
     public function updatePassword(string $new_password)
@@ -122,7 +122,7 @@ class AuthUser extends AuthHandler
         $this->auth_data['user_password'] = nel_password_hash($new_password, NEL_PASSWORD_ALGORITHM);
     }
 
-    public function checkRole(Domain $domain, bool $return_id = false, bool $escalate = true)
+    public function checkRole(Domain $domain, bool $return_id = false)
     {
         if (!isset($this->user_roles[$domain->id()]))
         {
@@ -162,7 +162,7 @@ class AuthUser extends AuthHandler
 
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
-        $this->database->executePrepared($prepared, [$this->auth_id, $domain_id]);
+        $this->database->executePrepared($prepared, [$this->id(), $domain_id]);
         unset($this->user_roles[$domain_id]);
     }
 
@@ -174,7 +174,6 @@ class AuthUser extends AuthHandler
             return true;
         }
 
-        $role_perm = false;
         $role = $this->checkRole($domain);
 
         if ($role && $role->checkPermission($perm_id))

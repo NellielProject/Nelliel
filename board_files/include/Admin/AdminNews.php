@@ -56,7 +56,7 @@ class AdminNews extends AdminHandler
         }
 
         $news_info = array();
-        $news_info['poster_id'] = $user->auth_id;
+        $news_info['poster_id'] = $user->id();
         $news_info['headline'] = $_POST['headline'] ?? null;
         $news_info['time'] = time();
         $news_info['text'] = $_POST['news_text'] ?? null;
