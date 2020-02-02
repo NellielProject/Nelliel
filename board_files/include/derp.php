@@ -39,7 +39,7 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
         die();
     }
 
-    if(isset($error_data['board_id']) && $error_data['board_id'] !== '')
+    if(isset($error_data['board_id']) && $error_data['board_id'] !== '_site_')
     {
         $domain = new \Nelliel\DomainBoard($error_data['board_id'], nel_database());
     }

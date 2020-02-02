@@ -38,7 +38,7 @@ class OutputDerp extends OutputCore
 
         if ($session->inModmode($this->domain))
         {
-            if ($this->domain->id() === '')
+            if ($this->domain->id() === '_site_')
             {
                 ; // TODO: Figure out this one
             }
@@ -51,7 +51,7 @@ class OutputDerp extends OutputCore
         }
         else
         {
-            if ($this->domain->id() === '')
+            if ($this->domain->id() === '_site_')
             {
                 $return_url = BASE_WEB_PATH . $this->domain->setting('home_page');
             }

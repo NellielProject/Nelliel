@@ -104,7 +104,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'main-panel':
             $session = new \Nelliel\Account\Session();
 
-            if ($domain->id() !== '')
+            if ($domain->id() !== '_site_')
             {
                 $output_board_panel = new \Nelliel\Output\OutputPanelBoard($domain);
                 $output_board_panel->render(['user' => $session->sessionUser()], false);

@@ -14,7 +14,7 @@ class DomainAllBoards extends Domain
 
     public function __construct($database)
     {
-        $this->domain_id = '_all_boards';
+        $this->domain_id = '__all_boards_';
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();

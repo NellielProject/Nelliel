@@ -148,7 +148,7 @@ class OutputPostingForm extends OutputCore
                 $list_set .= utf8_strtoupper($name) . ', ';
             }
 
-            if ($list_set !== '')
+            if ($list_set !== '_site_')
             {
                 $this->render_data['rules_list'][]['rules_text'] = sprintf(_gettext('Supported %s file types: '), $type) .
                         substr($list_set, 0, -2);

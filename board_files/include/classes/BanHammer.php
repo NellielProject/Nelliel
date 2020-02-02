@@ -23,7 +23,7 @@ class BanHammer
         $ban_input = array();
         $ban_input['ban_id'] = $_POST['ban_id'] ?? null;
         $ban_input['board'] = $_POST['ban_board'] ?? null;
-        $ban_input['all_boards'] = (isset($_POST['ban_all_boards']) && $_POST['ban_all_boards'] > 0) ? 1 : 0;
+        $ban_input['all_boards'] = (isset($_POST['ban_all_boards_']) && $_POST['ban_all_boards_'] > 0) ? 1 : 0;
         $ban_input['type'] = $_POST['ban_type'] ?? 'GENERAL';
         $ban_input['creator'] = $_SESSION['user_id'] ?? null;
         $ban_input['ip_address_start'] = $_POST['ban_ip'] ?? null;

@@ -41,7 +41,7 @@ class OutputPanelFileFilters extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
 
-        if ($this->domain->id() !== '')
+        if ($this->domain->id() !== '_site_')
         {
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . FILE_FILTERS_TABLE . '" WHERE "board_id" = ? ORDER BY "entry" DESC');

@@ -68,7 +68,7 @@ class OutputPanelBans extends OutputCore
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $this->render_data['can_modify'] = $user->checkPermission($this->domain, 'perm_manage_bans');
 
-        if ($this->domain->id() !== '')
+        if ($this->domain->id() !== '_site_')
         {
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . BANS_TABLE . '" WHERE "board_id" = ? ORDER BY "ban_id" DESC');

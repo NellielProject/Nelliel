@@ -87,7 +87,7 @@ class OutputHeader extends OutputCore
             $this->render_data['manage_header'] = $manage_headers['header'] ?? '';
             $this->render_data['manage_sub_header'] = $manage_headers['sub_header'] ?? '';
 
-            if ($this->domain->id() !== '')
+            if ($this->domain->id() !== '_site_')
             {
                 $this->render_data['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
             }
@@ -152,7 +152,7 @@ class OutputHeader extends OutputCore
             $this->render_data['manage_header'] = $manage_headers['header'] ?? '';
             $this->render_data['manage_sub_header'] = $manage_headers['sub_header'] ?? '';
 
-            if ($this->domain->id() !== '')
+            if ($this->domain->id() !== '_site_')
             {
                 $this->render_data['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
             }

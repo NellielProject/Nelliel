@@ -20,7 +20,7 @@ class AdminBoardSettings extends AdminHandler
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
-        $this->defaults = ($this->domain->id() === '') ? true : false;
+        $this->defaults = ($this->domain->id() === '_site_') ? true : false;
     }
 
     public function actionDispatch($inputs)

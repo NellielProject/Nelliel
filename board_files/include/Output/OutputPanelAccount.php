@@ -51,7 +51,7 @@ class OutputPanelAccount extends OutputCore
             foreach ($board_list as $board)
             {
 
-                if ($board['domain_id'] === '')
+                if ($board['domain_id'] === '_site_')
                 {
                     continue;
                 }

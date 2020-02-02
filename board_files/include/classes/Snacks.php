@@ -74,7 +74,7 @@ class Snacks
 
     public function applyBan(Domain $domain, array $inputs)
     {
-        if($domain->id() === '')
+        if($domain->id() === '_site_')
         {
             return;
         }

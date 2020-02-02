@@ -16,7 +16,7 @@ class DomainSite extends Domain
 
     public function __construct($database)
     {
-        $this->domain_id = '';
+        $this->domain_id = '_site_';
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();
