@@ -4,7 +4,6 @@
 		<th data-i18n="gettext">User ID</th>
 		<th data-i18n="gettext">Display Name</th>
 		<th data-i18n="gettext">Active</th>
-		<th data-i18n="gettext">Super Admin</th>
 		<th data-i18n="gettext">Actions</th>
 	</tr>
 	{{# users_list }}
@@ -12,7 +11,6 @@
 		<td>{{ user_id }}</td>
 		<td>{{ display_name }}</td>
 		<td>{{ active }}</td>
-		<td>{{ super_admin }}</td>
 		<td>
 			<span>[<a href="{{ edit_url }}" data-i18n="gettext">Edit</a>]</span>
 			<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>

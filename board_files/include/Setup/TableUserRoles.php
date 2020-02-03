@@ -21,9 +21,7 @@ class TableUserRoles extends TableHandler
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'user_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'role_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'domain_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'level' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'level_global' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
+            'domain_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -42,9 +40,7 @@ class TableUserRoles extends TableHandler
             entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             user_id         VARCHAR(255) NOT NULL,
             role_id         VARCHAR(255) NOT NULL,
-            domain_id       VARCHAR(255) DEFAULT NULL,
-            level           VARCHAR(255) NOT NULL,
-            level_global    SMALLINT NOT NULL DEFAULT 0
+            domain_id       VARCHAR(255) DEFAULT NULL
         ) " . $options . ";";
 
         return $this->createTableQuery($schema, $this->table_name);

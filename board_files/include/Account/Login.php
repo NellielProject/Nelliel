@@ -42,7 +42,7 @@ class Login
             nel_derp(201, _gettext('No password provided.'));
         }
 
-        if (!empty(SUPER_ADMIN) && $form_user_id === SUPER_ADMIN && !empty(SUPER_ADMIN_PASS) &&
+        if (!empty(SUPER_ADMIN) && utf8_strtolower($form_user_id) === utf8_strtolower(SUPER_ADMIN) && !empty(SUPER_ADMIN_PASS) &&
                 $form_password === SUPER_ADMIN_PASS)
         {
             $login_data['user_id'] = SUPER_ADMIN;

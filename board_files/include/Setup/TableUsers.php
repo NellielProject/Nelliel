@@ -23,7 +23,6 @@ class TableUsers extends TableHandler
             'user_password' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'active' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'super_admin' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'last_login' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -47,7 +46,6 @@ class TableUsers extends TableHandler
             user_password   VARCHAR(255) DEFAULT NULL,
             active          SMALLINT NOT NULL DEFAULT 0,
             locked          SMALLINT NOT NULL DEFAULT 0,
-            super_admin     SMALLINT NOT NULL DEFAULT 0,
             last_login      BIGINT DEFAULT NULL
         ) " . $options . ";";
 

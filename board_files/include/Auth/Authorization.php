@@ -20,9 +20,10 @@ class Authorization
 
     public function newUser($user_id)
     {
-        self::$users[$user_id] = new AuthUser($this->database, $user_id);
-        self::$users[$user_id]->setupNew();
-        return self::$users[$user_id];
+        $user_id_lower = utf8_strtolower($user_id);
+        self::$users[$user_id_lower] = new AuthUser($this->database, $user_id);
+        self::$users[$user_id_lower]->setupNew();
+        return self::$users[$user_id_lower];
     }
 
     public function userExists($user_id)
@@ -37,22 +38,24 @@ class Authorization
 
     public function getUser($user_id)
     {
-        if (isset(self::$users[$user_id]))
+        $user_id_lower = utf8_strtolower($user_id);
+
+        if (isset(self::$users[$user_id_lower]))
         {
-            return self::$users[$user_id];
+            return self::$users[$user_id_lower];
         }
 
-        self::$users[$user_id] = new AuthUser($this->database, $user_id);
+        self::$users[$user_id_lower] = new AuthUser($this->database, $user_id);
 
-        if (self::$users[$user_id]->loadFromDatabase())
+        if (self::$users[$user_id_lower]->loadFromDatabase())
         {
-            return self::$users[$user_id];
+            return self::$users[$user_id_lower];
         }
 
-        if(!empty(SUPER_ADMIN) && $user_id === SUPER_ADMIN)
+        if(!empty(SUPER_ADMIN) && $user_id_lower === utf8_strtolower(SUPER_ADMIN))
         {
-            self::$users[$user_id]->auth_data['super_admin'] = true;
-            return self::$users[$user_id];
+            self::$users[$user_id_lower]->auth_data['super_admin'] = true;
+            return self::$users[$user_id_lower];
         }
 
         return false;
@@ -60,13 +63,15 @@ class Authorization
 
     public function removeUser($user_id)
     {
-        if (!isset(self::$users[$user_id]))
+        $user_id_lower = utf8_strtolower($user_id);
+
+        if (!isset(self::$users[$user_id_lower]))
         {
             return false;
         }
 
-        self::$users[$user_id]->remove();
-        unset(self::$users[$user_id]);
+        self::$users[$user_id_lower]->remove();
+        unset(self::$users[$user_id_lower]);
         return true;
     }
 

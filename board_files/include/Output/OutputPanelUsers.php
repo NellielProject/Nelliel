@@ -72,7 +72,6 @@ class OutputPanelUsers extends OutputCore
             $user_data['user_id'] = $user_info['user_id'];
             $user_data['display_name'] = $user_info['display_name'];
             $user_data['active'] = $user_info['active'];
-            $user_data['super_admin'] = $user_info['super_admin'];
             $user_data['edit_url'] = MAIN_SCRIPT . '?module=users&action=edit&user-id=' . $user_info['user_id'];
             $user_data['remove_url'] = MAIN_SCRIPT . '?module=users&action=remove&user-id=' . $user_info['user_id'];
             $this->render_data['users_list'][] = $user_data;
@@ -114,7 +113,6 @@ class OutputPanelUsers extends OutputCore
             $this->render_data['display_name'] = $edit_user->auth_data['display_name'];
             $this->render_data['form_action'] = MAIN_SCRIPT . '?module=users&action=update&user-id=' . $user_id;
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';
-            $this->render_data['super_admin'] = ($edit_user->isSuperAdmin()) ? 'checked' : '';
         }
 
         $prepared = $this->database->prepare(

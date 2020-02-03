@@ -107,11 +107,6 @@ class AdminRoles extends AdminHandler
                 continue;
             }
 
-            if($key === 'super_admin' && !$this->session_user->isSuperAdmin())
-            {
-                nel_derp(232, _gettext('You cannot create or modify Super Admin users.'));
-            }
-
             $role->auth_data[$key] = $value;
         }
 

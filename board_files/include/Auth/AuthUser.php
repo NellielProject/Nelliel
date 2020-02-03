@@ -58,21 +58,20 @@ class AuthUser extends AuthHandler
         {
             $prepared = $database->prepare(
                     'UPDATE "' . USERS_TABLE .
-                    '" SET "user_id" = :user_id, "display_name" = :display_name, "user_password" = :user_password, "active" = :active, "super_admin" = :super_admin, "last_login" = :last_login WHERE "entry" = :entry');
+                    '" SET "user_id" = :user_id, "display_name" = :display_name, "user_password" = :user_password, "active" = :active, "last_login" = :last_login WHERE "entry" = :entry');
             $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
         }
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . USERS_TABLE . '" ("user_id", "display_name", "user_password", "active", "super_admin", "last_login") VALUES
-                    (:user_id, :display_name, :user_password, :active, :super_admin, :last_login)');
+                    'INSERT INTO "' . USERS_TABLE . '" ("user_id", "display_name", "user_password", "active", "last_login") VALUES
+                    (:user_id, :display_name, :user_password, :active, :last_login)');
         }
 
         $prepared->bindValue(':user_id', $this->authDataOrDefault('user_id', $this->id()), PDO::PARAM_STR);
         $prepared->bindValue(':display_name', $this->authDataOrDefault('display_name', null), PDO::PARAM_STR);
         $prepared->bindValue(':user_password', $this->authDataOrDefault('user_password', null), PDO::PARAM_STR);
         $prepared->bindValue(':active', $this->authDataOrDefault('active', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':super_admin', $this->authDataOrDefault('super_admin', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_login', $this->authDataOrDefault('last_login', 0), PDO::PARAM_INT);
         $database->executePrepared($prepared);
 

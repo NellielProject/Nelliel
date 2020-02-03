@@ -78,8 +78,6 @@ class AdminUsers extends AdminHandler
 
         $this->user_id = $_POST['user_id'];
         $this->update();
-        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
-        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
     }
 
     public function editor()
@@ -117,8 +115,6 @@ class AdminUsers extends AdminHandler
                 {
                     $domain = new \Nelliel\DomainBoard(substr($key, 11), $this->database);
                 }
-
-                //$domain = new \Nelliel\DomainBoard($role_domain, $this->database);
 
                 if ($value === '')
                 {
