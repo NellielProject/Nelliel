@@ -78,20 +78,6 @@ class OutputFile extends OutputCore
         $this->render_data['show_file_meta_id'] = 'show-file-meta-' . $file_content_id->getIDString();
         $this->render_data['file_meta_id'] = 'file-meta-' . $file_content_id->getIDString();
 
-        if (!empty($file['source']))
-        {
-            $source_data['metadata_class'] = 'file-source';
-            $source_data['metadata'] = _gettext('Source: ') . $this->output_filter->cleanAndEncode($file['source']);
-            $this->render_data['file_metadata'][] = $source_data;
-        }
-
-        if (!empty($file['license']))
-        {
-            $license_data['metadata_class'] = 'file-license';
-            $license_data['metadata'] = _gettext('License: ') . $this->output_filter->cleanAndEncode($file['license']);
-            $this->render_data['file_metadata'][] = $license_data;
-        }
-
         if (!empty($file['md5']))
         {
             $md5_data['metadata_class'] = 'file-hash';
@@ -189,7 +175,6 @@ class OutputFile extends OutputCore
 
                 $this->render_data['other_dims'] = 'w' . $file['display_width'] . 'h' . $file['display_height'];
                 $this->render_data['other_loc'] = $this->render_data['file_url'];
-                $this->render_data['alt_text'] = $file['alt_text'];
             }
         }
 

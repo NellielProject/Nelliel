@@ -32,10 +32,6 @@
 			</label>
 			<input id="{{ up_file_id }}" class="posting-form-input" type="file" name="{{ up_file_name }}" data-command="reveal-file-input">
 			<br>
-			<input id="{{ add_sauce }}" type="button" value="Add Source" data-command="add-file-meta">&nbsp;
-			<input id="{{ add_lol_drama }}" type="button" value="Add License" data-command="add-file-meta">&nbsp;
-			<input id="{{ add_alt_text }}" type="button" value="Add Alt Description" data-command="add-file-meta">
-			<br>
 			{{# spoilers_enabled }}
 			<span id="{{ spoiler_id }}">
 				<input type="hidden" name="{{ spoiler_name }}" value="0">
@@ -44,18 +40,6 @@
 			</span>
 			{{/ spoilers_enabled }}
 		</span>
-		<label id="{{ sauce_id }}" class="posting-form-row hidden">
-			<span class="posting-form-label" data-i18n="gettext">Source</span>
-			<input class="posting-form-input" type="text" name="{{ sauce_name }}" maxlength="{{ sauce_maxlength }}">
-		</label>
-		<label id="{{ lol_drama_id }}" class="posting-form-row hidden">
-			<span class="posting-form-label" data-i18n="gettext">License</span>
-			<input class="posting-form-input" type="text" name="{{ lol_drama_name }}" maxlength="{{ lol_drama_maxlength }}">
-		</label>
-		<label id="{{ alt_text_id }}" class="posting-form-row hidden">
-			<span class="posting-form-label" data-i18n="gettext">Alt Text</span>
-			<input class="posting-form-input" type="text" name="{{ alt_text_name }}" maxlength="{{ alt_text_maxlength }}">
-		</label>
 		{{/ file_blocks }}
 		{{# use_fgsfds }}
 		<label class="posting-form-row">

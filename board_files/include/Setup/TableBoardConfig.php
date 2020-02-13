@@ -100,8 +100,6 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_comment_length', '5000', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_comment_lines', '60', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'comment_display_lines', '15', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_source_length', '255', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_license_length', '255', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'threads_per_page', '10', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'page_limit', '10', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'page_buffer', '0', 0, 0]);

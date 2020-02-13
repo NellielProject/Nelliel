@@ -81,18 +81,6 @@ class OutputPostingForm extends OutputCore
             $block_data['up_file_id'] = 'up-file-' . $i;
             $block_data['file_number'] = $i;
             $block_data['up_file_name'] = 'up_file_' . $i;
-            $block_data['add_sauce'] = 'add-sauce-' . $i;
-            $block_data['add_lol_drama'] = 'add-lol_drama-' . $i;
-            $block_data['add_alt_text'] = 'add-alt_text-' . $i;
-            $block_data['sauce_id'] = 'form-sauce-' . $i;
-            $block_data['sauce_name'] = 'new_post[file_info][up_file_' . $i . '][sauce]';
-            $block_data['sauce_maxlength'] = $this->domain->setting('max_source_length');
-            $block_data['lol_drama_id'] = 'form-lol_drama-' . $i;
-            $block_data['lol_drama_name'] = 'new_post[file_info][up_file_' . $i . '][lol_drama]';
-            $block_data['lol_drama_maxlength'] = $this->domain->setting('max_license_length');
-            $block_data['alt_text_id'] = 'form-alt_text-' . $i;
-            $block_data['alt_text_name'] = 'new_post[file_info][up_file_' . $i . '][alt_text]';
-            $block_data['alt_text_maxlength'] = '255';
 
             if ($this->domain->setting('enable_spoilers'))
             {

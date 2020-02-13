@@ -42,9 +42,6 @@ class JSONContent extends JSONOutput
         $this->addIfNotEmpty($content_array, 'sha1', bin2hex($data['sha1']), 'string');
         $this->addIfNotEmpty($content_array, 'sha256', bin2hex($data['sha256']), 'string');
         $this->addIfNotEmpty($content_array, 'sha512', bin2hex($data['sha512']), 'string');
-        $this->addIfNotEmpty($content_array, 'source', $data['source'], 'string');
-        $this->addIfNotEmpty($content_array, 'license', $data['license'], 'string');
-        $this->addIfNotEmpty($content_array, 'alt_text', $data['alt_text'], 'string');
         $this->addIfNotEmpty($content_array, 'url', $data['url'], 'string');
         $content_array['spoiler'] = nel_cast_to_datatype($data['spoiler'], 'boolean');
         $this->addIfNotEmpty($content_array, 'exif', $data['exif'], 'string');

@@ -81,10 +81,6 @@ class FilesUpload
                 $file->content_data['spoiler'] = $data_handler->checkEntry($form_info['spoiler'], 'integer');
             }
 
-            $file->content_data['source'] = $data_handler->checkEntry($form_info['sauce'], 'string');
-            $file->content_data['license'] = $data_handler->checkEntry($form_info['lol_drama'], 'string');
-            $file->content_data['alt_text'] = $data_handler->checkEntry($form_info['alt_text'], 'string');
-
             if (strlen($file->content_data['fullname'] >= 255))
             {
                 $file->content_data['filename'] = substr($file->content_data['filename'], 0, 254);

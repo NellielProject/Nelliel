@@ -65,8 +65,7 @@ class ContentFile extends ContentHandler
                     "filename" = :filename, "extension" = :extension,
                     "display_width" = :display_width, "display_height" = :display_height, "preview_name" = :preview_name,
                     "preview_extension" = :preview_extension, "preview_width" = :preview_width, "preview_height" = :preview_height,
-                    "filesize" = :filesize, "md5" = :md5, "sha1" = :sha1, "sha256" = :sha256, "sha512" = :sha512,
-                    "source" = :source, "license" = :license, "alt_text" = :alt_text, "spoiler" = :spoiler, "exif" = :exif
+                    "filesize" = :filesize, "md5" = :md5, "sha1" = :sha1, "sha256" = :sha256, "sha512" = :sha512, "spoiler" = :spoiler, "exif" = :exif
                     WHERE "post_number" = :post_number');
             $prepared->bindValue(':post_number', $this->content_id->post_id, PDO::PARAM_INT);
         }
@@ -75,10 +74,9 @@ class ContentFile extends ContentHandler
             $prepared = $database->prepare(
                     'INSERT INTO "' . $this->domain->reference('content_table') . '" ("parent_thread", "post_ref", "content_order", "type", "format", "mime",
                     "filename", "extension", "display_width", "display_height", "preview_name", "preview_extension", "preview_width", "preview_height",
-                    "filesize", "md5", "sha1", "sha256", "sha512", "source", "license", "alt_text", "spoiler", "exif") VALUES
+                    "filesize", "md5", "sha1", "sha256", "sha512", "spoiler", "exif") VALUES
                     (:parent_thread, :post_ref, :content_order, :type, :format, :mime, :filename, :extension, :display_width, :display_height,
-                    :preview_name, :preview_extension, :preview_width, :preview_height, :filesize, :md5, :sha1, :sha256, :sha512,
-                    :source, :license, :alt_text, :spoiler, :exif)');
+                    :preview_name, :preview_extension, :preview_width, :preview_height, :filesize, :md5, :sha1, :sha256, :sha512, :spoiler, :exif)');
         }
 
         $prepared->bindValue(':parent_thread', $this->contentDataOrDefault('parent_thread', 0), PDO::PARAM_INT);
@@ -101,9 +99,6 @@ class ContentFile extends ContentHandler
         $prepared->bindValue(':sha1', $this->contentDataOrDefault('sha1', null), PDO::PARAM_LOB);
         $prepared->bindValue(':sha256', $this->contentDataOrDefault('sha256', null), PDO::PARAM_LOB);
         $prepared->bindValue(':sha512', $this->contentDataOrDefault('sha512', null), PDO::PARAM_LOB);
-        $prepared->bindValue(':source', $this->contentDataOrDefault('source', null), PDO::PARAM_STR);
-        $prepared->bindValue(':license', $this->contentDataOrDefault('license', null), PDO::PARAM_STR);
-        $prepared->bindValue(':alt_text', $this->contentDataOrDefault('alt_text', null), PDO::PARAM_STR);
         $prepared->bindValue(':spoiler', $this->contentDataOrDefault('spoiler', 0), PDO::PARAM_INT);
         $prepared->bindValue(':exif', $this->contentDataOrDefault('exif', null), PDO::PARAM_STR);
         $database->executePrepared($prepared);

@@ -144,8 +144,6 @@ Contains the information about a file or other content.
 |`sha1`             |`string` |40-character hex string |Yes     |SHA1 hash of content.|
 |`sha256`           |`string` |64-character hex string |Yes     |SHA256 hash of content.|
 |`sha512`           |`string` |128-character hex string|Yes     |SHA512 hash of content.|
-|`license`          |`string` |text                    |Yes     |Content license.|
-|`alt_text`         |`string` |text                    |Yes     |Alt text.|
 |`url`              |`string` |text                    |Yes     |URL (mostly for embeds).|
 |`spoiler`          |`boolean`|true or false           |No      |Is marked as a spoiler.|
 |`exif`             |`string` |text                    |Yes     |EXIF data.|
