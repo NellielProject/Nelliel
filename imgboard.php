@@ -3,9 +3,9 @@ define('NELLIEL_VERSION', 'v0.9.19'); // Version
 define('NELLIEL_COPYRIGHT', '2010-2019 Nelliel Project'); // Copyright line
 define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('BASE_PATH', realpath('./') . '/'); // Base path for script
-define('FILES_PATH', BASE_PATH . 'board_files/'); // Base board files path
-define('INCLUDE_PATH', FILES_PATH . 'include/'); // Base include files path
-define('LIBRARY_PATH', FILES_PATH . 'libraries/'); // Libraries path
+define('NELLIEL_CORE_PATH', BASE_PATH . 'nelliel_core/'); // Base board files path
+define('INCLUDE_PATH', NELLIEL_CORE_PATH . 'include/'); // Base include files path
+define('LIBRARY_PATH', NELLIEL_CORE_PATH . 'libraries/'); // Libraries path
 
 require_once INCLUDE_PATH . 'autoload.php';
 require_once INCLUDE_PATH . 'initializations.php';
@@ -49,7 +49,7 @@ unset ($setup);
 define('SETUP_GOOD', true);
 ignore_user_abort(true);
 
-require_once CONFIG_FILE_PATH . 'generated.php';
+require_once GENERATED_FILE_PATH . 'generated.php';
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 
 nel_central_dispatch();

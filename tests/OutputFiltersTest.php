@@ -2,7 +2,7 @@
 use \PHPUnit\Framework\TestCase;
 
 require_once 'nelliel_version.php';
-require_once __DIR__ . '/../board_files/include/classes/OutputFilter.php';
+require_once __DIR__ . '/../nelliel_core/include/classes/OutputFilter.php';
 
 class OutputFiltersTest extends TestCase
 {
