@@ -37,7 +37,6 @@ define('ASSETS_TABLE', 'nelliel_assets');
 define('BANS_TABLE', 'nelliel_bans');
 define('BOARD_DATA_TABLE', 'nelliel_board_data');
 define('BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults');
-define('BOARD_LOGS_TABLE', 'nelliel_board_logs');
 define('CAPTCHA_TABLE', 'nelliel_captcha');
 define('CITES_TABLE', 'nelliel_cites');
 define('FILE_FILTERS_TABLE', 'nelliel_file_filters');

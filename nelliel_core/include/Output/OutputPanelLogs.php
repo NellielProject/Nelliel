@@ -47,10 +47,6 @@ class OutputPanelLogs extends OutputCore
 
         switch ($log_type)
         {
-            case 'board':
-                $query = '(SELECT * FROM "' . BOARD_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
-                break;
-
             case 'staff':
                 $query = '(SELECT * FROM "' . STAFF_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
@@ -60,8 +56,7 @@ class OutputPanelLogs extends OutputCore
                 break;
 
             default:
-                $query = '(SELECT * FROM "' . BOARD_LOGS_TABLE . '")
-                   UNION (SELECT * FROM "' . STAFF_LOGS_TABLE . '")
+                $query = '(SELECT * FROM "' . STAFF_LOGS_TABLE . '")
                    UNION (SELECT * FROM "' . SYSTEM_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
         }
@@ -96,7 +91,6 @@ class OutputPanelLogs extends OutputCore
         $pagination_object->setNext(_gettext('>>'));
         $pagination_object->setPage('%d', $page_format);
         $this->render_data['pagination'] = $pagination_object->generateNumerical(1, $page_count, $page);
-        $this->render_data['board_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=board';
         $this->render_data['staff_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=staff';
         $this->render_data['system_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=system';
         $this->render_data['all_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=all';

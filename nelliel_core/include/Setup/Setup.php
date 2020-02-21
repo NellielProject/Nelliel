@@ -119,9 +119,6 @@ class Setup
         $bans_table->setup();
         $board_data_table = new TableBoardData($database, $sql_compatibility);
         $board_data_table->setup();
-        $board_logs_table = new TableLogs($database, $sql_compatibility);
-        $board_logs_table->tableName(BOARD_LOGS_TABLE);
-        $board_logs_table->setup();
         $captcha_table = new TableCaptcha($database, $sql_compatibility);
         $captcha_table->setup();
         $cites_table = new TableCites($database, $sql_compatibility);

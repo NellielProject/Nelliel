@@ -72,6 +72,7 @@ class NellielLogger implements LoggerInterface
             $data['level'] = $level;
         }
 
+        $data['domain_id'] = $context['domain'] ?? null;
         $data['event_id'] = $context['event_id'] ?? 'UNKNOWN';
         $data['originator'] = $context['originator'] ?? '';
         $data['ip_address'] = $context['ip_address'] ?? null;
@@ -83,9 +84,10 @@ class NellielLogger implements LoggerInterface
     protected function dbInsert(string $table, array $data) {
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . $table .
-                '" ("level", "event_id", "originator", "ip_address", "time", "message")
-								VALUES (:level, :event_id, :originator, :ip_address, :time, :message)');
+                '" ("level", "domain_id",  "event_id", "originator", "ip_address", "time", "message")
+								VALUES (:level, :domain_id, :event_id, :originator, :ip_address, :time, :message)');
         $prepared->bindParam(':level', $data['level'], PDO::PARAM_INT);
+        $prepared->bindParam(':domain_id', $data['domain_id'], PDO::PARAM_STR);
         $prepared->bindParam(':event_id', $data['event_id'], PDO::PARAM_STR);
         $prepared->bindParam(':originator', $data['originator'], PDO::PARAM_STR);
         $encoded_ip = @inet_pton($data['ip_address']);

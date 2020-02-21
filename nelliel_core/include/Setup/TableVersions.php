@@ -54,7 +54,6 @@ class TableVersions extends TableHandler
         $this->insertDefaultRow([BANS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([BOARD_DATA_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([BOARD_DEFAULTS_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([BOARD_LOGS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([CAPTCHA_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([FILE_FILTERS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([FILETYPES_TABLE, "table", '1', '1']);
