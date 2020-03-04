@@ -14,7 +14,8 @@ class FileHandler
     {
     }
 
-    public function writeFile($file, $output, $chmod = FILE_PERM, bool $create_directories = false, $dir_chmod = DIRECTORY_PERM, bool $temp_move = true)
+    public function writeFile($file, $output, $chmod = FILE_PERM, bool $create_directories = false,
+            $dir_chmod = DIRECTORY_PERM, bool $temp_move = true)
     {
         $file_final = $file;
 
@@ -28,24 +29,31 @@ class FileHandler
             $file = uniqid();
         }
 
-        $result = file_put_contents($file, $output, LOCK_EX);
+        $success = file_put_contents($file, $output, LOCK_EX);
 
-        if ($result !== false)
+        if ($success !== false)
         {
             if ($temp_move)
             {
-                $this->moveFile($file, $file_final);
+                $success = $this->moveFile($file, $file_final);
             }
 
-            chmod($file_final, octdec($chmod));
+            if ($success)
+            {
+                $success = chmod($file_final, octdec($chmod));
+            }
+            else
+            {
+                unlink($file);
+            }
         }
 
-        return $result;
+        return $success;
     }
 
     public function writeInternalFile($file, $output, bool $use_header = true, bool $temp_move = true)
     {
-        if($use_header)
+        if ($use_header)
         {
             $output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} ' . $output;
         }
@@ -57,12 +65,42 @@ class FileHandler
     {
         clearstatcache();
 
-        if (is_dir($directory))
+        if (file_exists($directory))
         {
             return false;
         }
 
-        return @mkdir($directory, octdec($dir_chmod), $recursive);
+        $directories = explode('/', $directory);
+        $current_path = '';
+        $success = false;
+
+        if (!$recursive)
+        {
+            $success = @mkdir($current_path, null, false);
+            $success = chmod($current_path, octdec($dir_chmod));
+        }
+        else
+        {
+            foreach ($directories as $directory)
+            {
+                if (!empty($directory))
+                {
+                    $current_path = $current_path . '/' . $directory;
+                }
+
+                if (file_exists($current_path))
+                {
+                    continue;
+                }
+                else
+                {
+                    $success = @mkdir($current_path, null, false);
+                    $success = chmod($current_path, octdec($dir_chmod));
+                }
+            }
+        }
+
+        return $success;
     }
 
     public function moveFile($file, $destination, bool $create_directories = false, $dir_chmod = DIRECTORY_PERM)
@@ -82,7 +120,8 @@ class FileHandler
         return false;
     }
 
-    public function moveDirectory($directory, $destination, bool $create_directories = false, $dir_chmod = DIRECTORY_PERM)
+    public function moveDirectory($directory, $destination, bool $create_directories = false,
+            $dir_chmod = DIRECTORY_PERM)
     {
         clearstatcache();
 
@@ -189,7 +228,8 @@ class FileHandler
         return $filtered;
     }
 
-    public function recursiveFileList($path, int $recursion_depth = -1, bool $include_directories = false, bool $file_object = true)
+    public function recursiveFileList($path, int $recursion_depth = -1, bool $include_directories = false,
+            bool $file_object = true)
     {
         $file_list = array();
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
@@ -213,5 +253,13 @@ class FileHandler
         }
 
         return $file_list;
+    }
+
+    public function umaskOffset($perm)
+    {
+        var_dump(umask());
+        var_dump(octdec($perm) + umask());
+        var_dump($perm + umask());
+        return octdec($perm) + umask();
     }
 }

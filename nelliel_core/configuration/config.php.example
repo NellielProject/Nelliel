@@ -132,15 +132,15 @@ $db_config['sqlite_encoding'] = 'UTF-8';
 // In most cases you won't need to mess with this stuff.
 
 // Default file and directory permissions. Format must be in the proper octal format.
-$base_config['directory_perm'] = '0775';
-$base_config['file_perm'] = '0664';
+$base_config['directory_perm'] = '0755';
+$base_config['file_perm'] = '0644';
 
 // Enable/disable internal caching.
 // When enabled Nelliel will use its internal caching system. This speeds things up considerably.
 // The only time this should need to be disabled is for testing or troubleshooting.
 $base_config['use_internal_cache'] = true;
 
-// Enable or disable plugins
+// Enable/disable plugins
 $base_config['enable_plugins'] = true;
 
 // Enable/disable template caching for Mustache.
