@@ -17,34 +17,34 @@ class FileHandler
     public function writeFile($file, $output, $chmod = FILE_PERM, bool $create_directories = false,
             $dir_chmod = DIRECTORY_PERM, bool $temp_move = true)
     {
-        $file_final = $file;
+        $success = false;
 
         if ($create_directories)
         {
-            $this->createDirectory(dirname($file), $dir_chmod, true);
+            $success = $this->createDirectory(dirname($file), $dir_chmod, true);
         }
 
         if ($temp_move)
         {
-            $file = uniqid();
+            $temp_file = uniqid();
         }
 
-        $success = file_put_contents($file, $output, LOCK_EX);
+        $success = file_put_contents($temp_file, $output, LOCK_EX);
 
         if ($success !== false)
         {
             if ($temp_move)
             {
-                $success = $this->moveFile($file, $file_final);
+                $success = $this->moveFile($temp_file, $file);
             }
 
             if ($success)
             {
-                $success = chmod($file_final, octdec($chmod));
+                $success = chmod($file, octdec($chmod));
             }
             else
             {
-                unlink($file);
+                unlink($temp_file);
             }
         }
 
@@ -61,7 +61,7 @@ class FileHandler
         return $this->writeFile($file, $output, FILE_PERM, true, DIRECTORY_PERM, $temp_move);
     }
 
-    public function createDirectory($directory, $dir_chmod = DIRECTORY_PERM, bool $recursive = false)
+    public function createDirectory($directory, $chmod = DIRECTORY_PERM, bool $recursive = false)
     {
         clearstatcache();
 
@@ -70,23 +70,26 @@ class FileHandler
             return false;
         }
 
-        $directories = explode('/', $directory);
-        $current_path = '';
         $success = false;
 
         if (!$recursive)
         {
-            $success = @mkdir($current_path, null, false);
-            $success = chmod($current_path, octdec($dir_chmod));
+            $success = @mkdir($directory, null, false);
+            $success = chmod($directory, octdec($chmod));
         }
         else
         {
+            $directories = explode('/', $directory);
+            $current_path = '';
+
             foreach ($directories as $directory)
             {
-                if (!empty($directory))
+                if (empty($directory))
                 {
-                    $current_path = $current_path . '/' . $directory;
+                    continue;
                 }
+
+                $current_path = $current_path . '/' . $directory;
 
                 if (file_exists($current_path))
                 {
@@ -95,7 +98,7 @@ class FileHandler
                 else
                 {
                     $success = @mkdir($current_path, null, false);
-                    $success = chmod($current_path, octdec($dir_chmod));
+                    $success = chmod($current_path, octdec($chmod));
                 }
             }
         }
@@ -103,21 +106,23 @@ class FileHandler
         return $success;
     }
 
-    public function moveFile($file, $destination, bool $create_directories = false, $dir_chmod = DIRECTORY_PERM)
+    public function moveFile($file, $destination, bool $create_directories = false, $chmod = DIRECTORY_PERM)
     {
         clearstatcache();
+        $success = false;
 
         if ($create_directories)
         {
-            $this->createDirectory(dirname($destination), $dir_chmod, true);
+            $success = $this->createDirectory(dirname($destination), $chmod, true);
         }
 
-        if (file_exists($file))
+        if (!$success || !file_exists($file))
         {
-            return rename($file, $destination);
+            return false;
         }
 
-        return false;
+        $success = rename($file, $destination);
+        return $success;
     }
 
     public function moveDirectory($directory, $destination, bool $create_directories = false,
