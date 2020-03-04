@@ -22,7 +22,8 @@ class TableCaptcha extends TableHandler
             'captcha_text' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'domain_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'time_created' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false]];
+            'ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
+            'hashed_ip' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -41,7 +42,8 @@ class TableCaptcha extends TableHandler
             text            VARCHAR(255) NOT NULL,
             domain_id       VARCHAR(255) NOT NULL,
             time_created    INTEGER NOT NULL,
-            ip_address      " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL
+            ip_address      " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
+            hashed_ip       VARCHAR(255) NOT NULL
         ) " . $options . ";";
 
         return $this->createTableQuery($schema, $this->table_name);

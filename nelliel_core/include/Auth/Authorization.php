@@ -52,12 +52,6 @@ class Authorization
             return self::$users[$user_id_lower];
         }
 
-        if(!empty(SUPER_ADMIN) && $user_id_lower === utf8_strtolower(SUPER_ADMIN))
-        {
-            self::$users[$user_id_lower]->auth_data['super_admin'] = true;
-            return self::$users[$user_id_lower];
-        }
-
         return false;
     }
 
@@ -73,6 +67,11 @@ class Authorization
         self::$users[$user_id_lower]->remove();
         unset(self::$users[$user_id_lower]);
         return true;
+    }
+
+    public function isSuperAdmin($user_id)
+    {
+        return !empty(SUPER_ADMIN) && utf8_strtolower(SUPER_ADMIN) === utf8_strtolower($user_id);
     }
 
     public function newRole($role_id)

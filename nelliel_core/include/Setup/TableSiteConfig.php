@@ -62,7 +62,7 @@ class TableSiteConfig extends TableHandler
         $this->insertDefaultRow(['core_setting', 'nelliel', 'crypt', 'boolean', 'do_password_rehash', '0', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'output', 'string', 'index_filename_format', 'index-%d', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'output', 'string', 'thread_filename_format', 'thread-%d', 0]);
-        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'template_id', 'nelliel-template-basic', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'template_id', 'template-nelliel-basic', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'locale', 'en_US', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'recaptcha_site_key', '', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'recaptcha_sekrit_key', '', 0]);

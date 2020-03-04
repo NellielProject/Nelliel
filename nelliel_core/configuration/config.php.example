@@ -112,7 +112,7 @@ $db_config['postgresql_encoding'] = 'UTF-8';
 // Configuration for SQLite
 //
 
-// WARNING: The database path must be a location outside of web-accessible directories!
+// WARNING: The database path MUST be a location outside of web-accessible directories!
 // Otherwise someone could just download the whole thing.
 // If this is not possible on your host, do not use SQLite for your database!
 
@@ -120,7 +120,7 @@ $db_config['postgresql_encoding'] = 'UTF-8';
 $db_config['sqlite_db_name'] = 'nelliel.sqlite';
 
 // Path where the database is to be located
-$db_config['sqlite_db_path'] = '';
+$db_config['sqlite_db_path'] = '../../../';
 
 // The character encoding to use. Should be fine as-is
 $db_config['sqlite_encoding'] = 'UTF-8';

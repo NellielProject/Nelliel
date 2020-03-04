@@ -42,10 +42,10 @@ class Login
             nel_derp(201, _gettext('No password provided.'));
         }
 
-        if (!empty(SUPER_ADMIN) && utf8_strtolower($form_user_id) === utf8_strtolower(SUPER_ADMIN) && !empty(SUPER_ADMIN_PASS) &&
+        if ($this->authorization->isSuperAdmin($form_user_id) && !empty(SUPER_ADMIN_PASS) &&
                 $form_password === SUPER_ADMIN_PASS)
         {
-            $login_data['user_id'] = SUPER_ADMIN;
+            $login_data['user_id'] = $form_user_id;
             $login_data['login_time'] = $attempt_time;
             return $login_data;
         }

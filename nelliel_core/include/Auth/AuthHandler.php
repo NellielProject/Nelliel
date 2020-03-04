@@ -12,6 +12,7 @@ abstract class AuthHandler
     public $database;
     public $auth_data = array();
     public $auth_id;
+    public $authorization;
 
     public function authDataOrDefault($data_name, $default)
     {

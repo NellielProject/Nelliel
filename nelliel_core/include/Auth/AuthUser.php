@@ -18,10 +18,16 @@ class AuthUser extends AuthHandler
     {
         $this->database = $database;
         $this->auth_id = $user_id;
+        $this->authorization = new Authorization($this->database);
     }
 
     public function loadFromDatabase($temp_database = null)
     {
+        if($this->isSuperAdmin())
+        {
+            return true;
+        }
+
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('SELECT * FROM "' . USERS_TABLE . '" WHERE "user_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
@@ -45,7 +51,7 @@ class AuthUser extends AuthHandler
 
     public function writeToDatabase($temp_database = null)
     {
-        if (empty($this->id()))
+        if (empty($this->id()) || $this->isSuperAdmin())
         {
             return false;
         }
@@ -210,6 +216,6 @@ class AuthUser extends AuthHandler
 
     public function isSuperAdmin()
     {
-        return boolval($this->auth_data['super_admin']);
+        return $this->authorization->isSuperAdmin($this->auth_id);
     }
 }
