@@ -30,7 +30,7 @@ class FilesUpload
         $data_handler = new PostData($this->domain, $this->authorization);
         $file_handler = new \Nelliel\FileHandler();
         $error_data = ['delete_files' => true, 'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
-        $file_count = $this->countFiles($this->uploaded_files);
+        $file_count = count($this->uploaded_files['upload_files']['name']);
 
         if ($file_count > 1)
         {
@@ -55,8 +55,15 @@ class FilesUpload
         $filenames = array();
         $file_duplicate = 1;
 
-        foreach ($this->uploaded_files as $entry => $file_data)
+        for ($i = 0; $i < $file_count; $i ++)
         {
+            $file_data = array();
+            $file_data['name'] = $this->uploaded_files['upload_files']['name'][$i];
+            $file_data['type'] = $this->uploaded_files['upload_files']['type'][$i];
+            $file_data['tmp_name'] = $this->uploaded_files['upload_files']['tmp_name'][$i];
+            $file_data['error'] = $this->uploaded_files['upload_files']['error'][$i];
+            $file_data['size'] = $this->uploaded_files['upload_files']['size'][$i];
+
             if (empty($file_data['name']))
             {
                 continue;
@@ -64,7 +71,6 @@ class FilesUpload
 
             $file = new \Nelliel\Content\ContentFile(new \Nelliel\ContentID(), $this->domain);
             $new_file = array();
-            $this->uploaded_files[$entry]['location'] = $file_data['tmp_name'];
             $file->content_data['location'] = $file_data['tmp_name'];
             $file->content_data['name'] = $file_data['name'];
             $file_data['location'] = $file_data['tmp_name'];
@@ -73,12 +79,12 @@ class FilesUpload
             $this->checkFiletype($file);
             $this->getPathInfo($file);
             $file->content_data['name'] = $file_handler->filterFilename($file_data['name']);
-            $form_info = $_POST['new_post']['file_info'][$entry];
+            $spoiler = $_POST['spoiler'];
             $file->content_data['filesize'] = $file_data['size'];
 
-            if (isset($form_info['spoiler']) && $this->domain->setting('enable_spoilers'))
+            if (isset($spoiler) && $this->domain->setting('enable_spoilers'))
             {
-                $file->content_data['spoiler'] = $data_handler->checkEntry($form_info['spoiler'], 'integer');
+                $file->content_data['spoiler'] = $data_handler->checkEntry($spoiler, 'integer');
             }
 
             if (strlen($file->content_data['fullname'] >= 255))
@@ -119,8 +125,6 @@ class FilesUpload
             {
                 break;
             }
-
-            ++ $file_count;
         }
 
         $this->processed_files = nel_plugins()->processHook('nel-post-files-processed',
@@ -284,20 +288,5 @@ class FilesUpload
         $file->content_data['type'] = $type_data['type'];
         $file->content_data['format'] = $type_data['format'];
         $file->content_data['mime'] = $type_data['mime'];
-    }
-
-    public function countFiles(array $files)
-    {
-        $count = 0;
-
-        foreach ($files as $file)
-        {
-            if (!empty($file['name']) && $file['size'] > 0)
-            {
-                $count ++;
-            }
-        }
-
-        return $count;
     }
 }

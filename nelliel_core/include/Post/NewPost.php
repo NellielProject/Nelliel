@@ -208,8 +208,7 @@ class NewPost
                 $file->content_data['post_ref'] = $post->content_id->post_id;
                 $file->content_id->order_id = $order;
                 $file->content_data['content_order'] = $order;
-                $file_handler->moveFile($file->content_data['location'], $src_path . $file->content_data['fullname'],
-                        true, DIRECTORY_PERM);
+                $file_handler->moveFile($file->content_data['location'], $src_path . $file->content_data['fullname'], false);
                 chmod($src_path . $file->content_data['fullname'], octdec(FILE_PERM));
                 $file->writeToDatabase();
                 ++ $order;

@@ -55,51 +55,32 @@ class OutputPostingForm extends OutputCore
         $this->render_data['spam_target_maxlength'] = $this->domain->setting('max_email_length');
         $this->render_data['verb_maxlength'] = $this->domain->setting('max_subject_length');
         $this->render_data['force_anonymous'] = $this->domain->setting('force_anonymous');
-        $max_files = 1;
+        $uploads_data = array();
+        $uploads_data['allow_multiple'] = false;
 
         if ($this->domain->setting('allow_multifile'))
         {
             if ($response_to)
             {
-                $max_files = $this->domain->setting('max_post_files');
+                $uploads_data['allow_multiple'] = $this->domain->setting('max_post_files');
             }
             else
             {
                 if ($this->domain->setting('allow_op_multifile'))
                 {
-                    $max_files = $this->domain->setting('max_post_files');
+                    $uploads_data['allow_multiple'] = $this->domain->setting('max_post_files');
                 }
             }
         }
 
-        // File Block
-        for ($i = 1, $j = 2; $i <= $max_files; ++ $i, ++ $j)
-        {
-            $block_data = array();
-            $block_data['hidden'] = ($i > 1) ? 'hidden' : '';
-            $block_data['block_id'] = 'form-file-' . $i;
-            $block_data['up_file_id'] = 'up-file-' . $i;
-            $block_data['file_number'] = $i;
-            $block_data['up_file_name'] = 'up_file_' . $i;
-
-            if ($this->domain->setting('enable_spoilers'))
-            {
-                $block_data['spoilers_enabled'] = true;
-                $block_data['spoiler_id'] = 'form-spoiler-' . $i;
-                $block_data['spoiler_name'] = 'new_post[file_info][up_file_' . $i . '][spoiler]';
-            }
-            else
-            {
-                $block_data['spoilers_enabled'] = false;
-            }
-
-            $this->render_data['file_blocks'][] = $block_data;
-        }
+        $uploads_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
+        $this->render_data['file_uploads'] = $uploads_data;
 
         $this->render_data['use_fgsfds'] = $this->domain->setting('use_fgsfds');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_captcha'] = $this->domain->setting('use_captcha');
-        $this->render_data['captcha_gen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=generate&board_id=' . $this->domain->id() . '&time=' . time();
+        $this->render_data['captcha_gen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=generate&board_id=' .
+                $this->domain->id() . '&time=' . time();
         $this->render_data['use_recaptcha'] = $this->domain->setting('use_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->domain->setting('recaptcha_site_key');
         $this->render_data['use_honeypot'] = $this->domain->setting('use_honeypot');

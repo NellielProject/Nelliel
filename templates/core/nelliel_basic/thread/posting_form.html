@@ -25,22 +25,22 @@
 			<span class="posting-form-label" data-i18n="gettext">Comment</span>
 			<textarea id="wordswordswords" class="posting-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6"></textarea>
 		</label>
-		{{# file_blocks }}
-		<span id="{{ block_id }}" class="posting-form-row {{ hidden }}">
-			<label class="posting-form-label" for="{{ up_file_id }}">
+		{{# file_uploads }}
+		<span class="posting-form-row">
+			<label class="posting-form-label" for="form-file-upload">
 				<span data-i18n="gettext">File</span>&nbsp;<span>{{ file_number }}</span>
 			</label>
-			<input id="{{ up_file_id }}" class="posting-form-input" type="file" name="{{ up_file_name }}" data-command="reveal-file-input">
+			<input id="form-file-upload" class="posting-form-input" type="file" name="upload_files[]" {{# allow_multiple }}multiple=""{{/ allow_multiple }}>
 			<br>
 			{{# spoilers_enabled }}
-			<span id="{{ spoiler_id }}">
-				<input type="hidden" name="{{ spoiler_name }}" value="0">
-				<input type="checkbox" name="{{ spoiler_name }}" value="1">
+			<span id="form-spoiler">
+				<input type="hidden" name="form_spoiler" value="0">
+				<input type="checkbox" name="form_spoiler" value="1">
 				<span data-i18n="gettext">Spoiler</span>
 			</span>
 			{{/ spoilers_enabled }}
 		</span>
-		{{/ file_blocks }}
+		{{/ file_uploads }}
 		{{# use_fgsfds }}
 		<label class="posting-form-row">
 			<span class="posting-form-label">{{ fgsfds_name }}</span>

@@ -114,9 +114,14 @@ class FileHandler
         if ($create_directories)
         {
             $success = $this->createDirectory(dirname($destination), $chmod, true);
+
+            if(!$success)
+            {
+                return false;
+            }
         }
 
-        if (!$success || !file_exists($file))
+        if (!file_exists($file))
         {
             return false;
         }
