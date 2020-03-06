@@ -78,7 +78,8 @@ class TableContent extends TableHandler
             sha256              " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '32') . " DEFAULT NULL,
             sha512              " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " DEFAULT NULL,
             embed_url           VARCHAR(2048) DEFAULT NULL,
-            spoiler             SMALLINT DEFAULT NULL,
+            spoiler             SMALLINT NOT NULL DEFAULT 0,
+            deleted             SMALLINT NOT NULL DEFAULT 0,
             exif                TEXT DEFAULT NULL,
             meta                TEXT DEFAULT NULL,
             CONSTRAINT fk_post_ref_" . $other_tables['posts_table'] . "_post_number

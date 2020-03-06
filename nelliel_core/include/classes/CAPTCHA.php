@@ -53,7 +53,7 @@ class CAPTCHA
         }
 
         $captcha_image = $this->render($captcha_text);
-        $captcha_key = substr(sha1(random_bytes(16)), -12);
+        $captcha_key = substr(sha1(random_bytes(16)), -16);
         setrawcookie('captcha-key-' . $this->domain->id(), $captcha_key, 0, '/');
         header("Content-Type: image/png");
         imagepng($captcha_image);

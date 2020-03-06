@@ -56,7 +56,10 @@ class Login
 
         if ($user)
         {
-            $valid_password = nel_password_verify($form_password, $user->auth_data['user_password']);
+            if (isset($user->auth_data['user_password']))
+            {
+                $valid_password = nel_password_verify($form_password, $user->auth_data['user_password']);
+            }
 
             if (empty($session_user_id))
             {
@@ -108,9 +111,11 @@ class Login
         }
         else
         {
+            $key = sha1($_SERVER['REMOTE_ADDR'] . random_bytes(16));
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . LOGIN_ATTEMPTS_TABLE .
-                    '" (ip_address, last_attempt) VALUES (:ip_address, :last_attempt)');
+                    '" (key, ip_address, last_attempt) VALUES (:key, :ip_address, :last_attempt)');
+            $prepared->bindValue(':key', $key, PDO::PARAM_STR);
             $prepared->bindValue(':ip_address', @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
             $prepared->bindValue(':last_attempt', $attempt_time, PDO::PARAM_INT);
             $this->database->executePrepared($prepared, null, true);
