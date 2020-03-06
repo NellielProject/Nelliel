@@ -18,15 +18,20 @@ class FileHandler
             $dir_chmod = DIRECTORY_PERM, bool $temp_move = true)
     {
         $success = false;
+        $file_directory = dirname($file);
 
         if ($create_directories)
         {
-            $success = $this->createDirectory(dirname($file), $dir_chmod, true);
+            $success = $this->createDirectory($file_directory, $dir_chmod, true);
         }
 
         if ($temp_move)
         {
-            $temp_file = uniqid();
+            $temp_file = $file_directory . '/' . uniqid();
+        }
+        else
+        {
+            $temp_file = $file;
         }
 
         $success = file_put_contents($temp_file, $output, LOCK_EX);

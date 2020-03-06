@@ -160,6 +160,9 @@ if(file_exists(GENERATED_FILE_PATH . 'generated.php'))
     $generated = array();
     include_once GENERATED_FILE_PATH . 'generated.php';
     define('TRIPCODE_PEPPER', $generated['tripcode_pepper']);
+    define('IP_PEPPER', $generated['ip_pepper']);
+    define('POSTER_ID_PEPPER', $generated['poster_id_pepper']);
+    define('POST_PASSWORD_PEPPER', $generated['post_password_pepper']);
     unset($generated);
 }
 

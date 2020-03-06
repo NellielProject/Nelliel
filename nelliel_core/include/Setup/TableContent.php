@@ -39,7 +39,7 @@ class TableContent extends TableHandler
             'sha1' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
             'sha256' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
             'sha512' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
-            'external_url' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'embed_url' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'spoiler' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'exif' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'meta' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
@@ -77,7 +77,7 @@ class TableContent extends TableHandler
             sha1                " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '20') . " DEFAULT NULL,
             sha256              " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '32') . " DEFAULT NULL,
             sha512              " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " DEFAULT NULL,
-            external_url        VARCHAR(2048) DEFAULT NULL,
+            embed_url           VARCHAR(2048) DEFAULT NULL,
             spoiler             SMALLINT DEFAULT NULL,
             exif                TEXT DEFAULT NULL,
             meta                TEXT DEFAULT NULL,

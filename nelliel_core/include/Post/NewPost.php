@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use \Nelliel\Domain;
+use Nelliel\Domain;
 
 class NewPost
 {
@@ -120,7 +120,7 @@ class NewPost
             $poster_password = $post->content_data['post_password'];
             $post->content_data['post_password'] = nel_generate_salted_hash(
                     $site_domain->setting('post_password_algorithm'),
-                    $post->content_data['post_password']);
+                    POST_PASSWORD_PEPPER . $post->content_data['post_password']);
         }
         else
         {
@@ -130,12 +130,13 @@ class NewPost
         // Cookies OM NOM NOM NOM
         $cookie_password = '';
 
-        if(isset($_COOKIE['pwd-' . $this->domain->id()]))
+        if (isset($_COOKIE['pwd-' . $this->domain->id()]))
         {
             $cookie_password = $_COOKIE['pwd-' . $this->domain->id()];
         }
 
-        if(empty($cookie_password) || (isset($post->content_data['post_password']) && $cookie_password !== $poster_password))
+        if (empty($cookie_password) ||
+                (isset($post->content_data['post_password']) && $cookie_password !== $poster_password))
         {
             setrawcookie('pwd-' . $this->domain->id(), $poster_password, time() + 9001 * 24 * 3600, '/');
         }
@@ -208,7 +209,8 @@ class NewPost
                 $file->content_data['post_ref'] = $post->content_id->post_id;
                 $file->content_id->order_id = $order;
                 $file->content_data['content_order'] = $order;
-                $file_handler->moveFile($file->content_data['location'], $src_path . $file->content_data['fullname'], false);
+                $file_handler->moveFile($file->content_data['location'], $src_path . $file->content_data['fullname'],
+                        false);
                 chmod($src_path . $file->content_data['fullname'], octdec(FILE_PERM));
                 $file->writeToDatabase();
                 ++ $order;

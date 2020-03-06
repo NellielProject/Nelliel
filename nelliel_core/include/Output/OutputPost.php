@@ -264,7 +264,8 @@ class OutputPost extends OutputCore
         if ($this->domain->setting('display_poster_id'))
         {
             $raw_poster_id = hash('sha256',
-                    @inet_ntop($post_data['ip_address']) . $thread_data['thread_id'] . TRIPCODE_PEPPER);
+                    POSTER_ID_PEPPER . @inet_ntop($post_data['ip_address']) . $this->domain->id() .
+                    $thread_data['thread_id']);
             $poster_id = substr($raw_poster_id, 0, $this->domain->setting('poster_id_length'));
             $post_headers['poster_id'] = 'ID: ' . $poster_id;
         }

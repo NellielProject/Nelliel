@@ -40,7 +40,7 @@ class Setup
         echo _gettext(
                 "Install has finished with no apparent problems! When you're ready to continue, follow this link: ");
         echo '<a href="' . BASE_WEB_PATH . '">' . _gettext('Default home page') . '</a>';
-        nel_clean_exit();
+        die();
     }
 
     public function checkInstallDone()
@@ -48,10 +48,13 @@ class Setup
         return file_exists(GENERATED_FILE_PATH . 'install_done.php');
     }
 
-    public function generateConfigValues($current_values = null)
+    public function generateConfigValues()
     {
-        $generated = $generated ?? array();
-        $generated['tripcode_pepper'] = $generated['tripcode_pepper'] ?? base64_encode(random_bytes(32));
+        $generated = array();
+        $generated['tripcode_pepper'] = base64_encode(random_bytes(32));
+        $generated['ip_pepper'] = base64_encode(random_bytes(32));
+        $generated['poster_id_pepper'] = base64_encode(random_bytes(32));
+        $generated['post_password_pepper'] = base64_encode(random_bytes(32));
         return $generated;
     }
 
