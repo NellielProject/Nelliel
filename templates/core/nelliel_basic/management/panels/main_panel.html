@@ -1,7 +1,8 @@
 {{% FILTERS }}
+<div><span>Boards you own or moderate:</span></div>
 <div>
 	{{# board_list }}
-	<div><a href="{{ board_url }}">{{ board_id }}</a></div>
+	<div><a href="{{ board_url }}">{{ board_id }}</a> - <span>Role:</span>&nbsp;<span>{{ board_role }}</span></div>
 	{{/ board_list }}
 </div>
 <hr>

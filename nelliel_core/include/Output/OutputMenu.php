@@ -102,7 +102,7 @@ class OutputMenu extends OutputCore
         $render_data['main_panel_url'] = $dotdot . MAIN_SCRIPT . '?module=main-panel';
         $render_data['home_url'] = $site_domain->setting('home_page');
         $render_data['news_url'] = $dotdot . 'news.html';
-        $render_data['account_url'] = $dotdot . MAIN_SCRIPT . '?module=account&action=login';
+        $render_data['account_url'] = $dotdot . MAIN_SCRIPT . '?module=account';
         $render_data['about_nelliel_url'] = $dotdot . MAIN_SCRIPT . '?about_nelliel';
         return $render_data;
     }

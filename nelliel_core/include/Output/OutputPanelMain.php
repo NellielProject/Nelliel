@@ -35,14 +35,54 @@ class OutputPanelMain extends OutputCore
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Main Panel')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
+        $prepared = $this->database->prepare(
+                'SELECT "domain_id", "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
+        $user_roles = $this->database->executePreparedFetchAll($prepared, [$user->id()], PDO::FETCH_ASSOC);
         $boards = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
+
+        $roles_list = array();
+        $roles = $this->database->executeFetchAll('SELECT "role_id", "role_title" FROM "' . ROLES_TABLE . '"',
+                PDO::FETCH_ASSOC);
+
+        foreach ($roles as $role)
+        {
+            $roles_list[$role['role_id']]['role_title'] = $role['role_title'];
+        }
+
+        $user_roles_list = array();
+
+        foreach ($user_roles as $user_role)
+        {
+            $user_roles_list[$user_role['domain_id']]['role_id'] = $user_role['role_id'];
+            $user_roles_list[$user_role['domain_id']]['role_title'] = $roles_list[$board['role_id']]['role_title'];
+        }
 
         if ($boards !== false)
         {
             foreach ($boards as $board)
             {
+                if ($board['board_id'] === '_site_')
+                {
+                    continue;
+                }
+
+                if (!isset($user_roles_list[$board['board_id']]) && !$user->isSuperAdmin())
+                {
+                    continue;
+                }
+
                 $board_data['board_url'] = MAIN_SCRIPT . '?module=main-panel&board_id=' . $board['board_id'];
                 $board_data['board_id'] = '/' . $board['board_id'] . '/';
+
+                if ($user->isSuperAdmin())
+                {
+                    $board_data['board_role'] = 'Super Admin';
+                }
+                else
+                {
+                    $board_data['board_role'] = $user_roles_list[$board['board_id']]['role_title'];
+                }
+
                 $this->render_data['board_list'][] = $board_data;
             }
         }
@@ -57,8 +97,7 @@ class OutputPanelMain extends OutputCore
         $this->render_data['site_settings_url'] = MAIN_SCRIPT . '?module=site-settings';
         $this->render_data['module_file_filters'] = $user->checkPermission($this->domain, 'perm_manage_file_filters');
         $this->render_data['file_filters_url'] = MAIN_SCRIPT . '?module=file-filters';
-        $this->render_data['module_board_defaults'] = $user->checkPermission($this->domain,
-                'perm_board_defaults');
+        $this->render_data['module_board_defaults'] = $user->checkPermission($this->domain, 'perm_board_defaults');
         $this->render_data['board_defaults_url'] = MAIN_SCRIPT . '?module=board-defaults';
         $this->render_data['module_reports'] = $user->checkPermission($this->domain, 'perm_manage_reports');
         $this->render_data['reports_url'] = MAIN_SCRIPT . '?module=reports';
@@ -68,8 +107,6 @@ class OutputPanelMain extends OutputCore
         $this->render_data['filetypes_url'] = MAIN_SCRIPT . '?module=filetypes';
         $this->render_data['module_styles'] = $user->checkPermission($this->domain, 'perm_manage_styles');
         $this->render_data['styles_url'] = MAIN_SCRIPT . '?module=styles';
-        $this->render_data['module_permissions'] = $user->checkPermission($this->domain, 'perm_manage_permissions');
-        $this->render_data['permissions_url'] = MAIN_SCRIPT . '?module=permissions';
         $this->render_data['module_icon_sets'] = $user->checkPermission($this->domain, 'perm_manage_icon_sets');
         $this->render_data['icon_sets_url'] = MAIN_SCRIPT . '?module=icon-sets';
         $this->render_data['module_news'] = $user->checkPermission($this->domain, 'perm_manage_news');

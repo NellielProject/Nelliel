@@ -27,8 +27,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             switch ($inputs['action'])
             {
                 case 'login':
-                    $session = new \Nelliel\Account\Session();
-
                     if (empty($_POST))
                     {
                         $output_login = new \Nelliel\Output\OutputLoginPage($domain);
@@ -36,10 +34,11 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     }
                     else
                     {
+                        $session = new \Nelliel\Account\Session();
                         $session->login();
                         $session->loggedInOrError();
-                        $output_main_panel = new \Nelliel\Output\OutputPanelAccount($domain);
-                        $output_main_panel->render(['user' => $session->sessionUser()], false);
+                        $output_account = new \Nelliel\Output\OutputAccount($domain);
+                        $output_account->render(['user' => $session->sessionUser()], false);
                     }
 
                     break;
@@ -62,6 +61,23 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     }
 
                     break;
+
+                default:
+                    if (empty($_POST))
+                    {
+                        $session = new \Nelliel\Account\Session();
+
+                        if ($session->isActive())
+                        {
+                            $output_account = new \Nelliel\Output\OutputAccount($domain);
+                            $output_account->render(['user' => $session->sessionUser()], false);
+                        }
+                        else
+                        {
+                            $output_login = new \Nelliel\Output\OutputLoginPage($domain);
+                            $output_login->render(['dotdot' => ''], false);
+                        }
+                    }
             }
 
             break;
