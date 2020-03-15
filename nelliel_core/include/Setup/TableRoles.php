@@ -22,7 +22,7 @@ class TableRoles extends TableHandler
             'role_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
             'role_level' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'role_title' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'capcode_text' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'capcode' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -42,7 +42,7 @@ class TableRoles extends TableHandler
             role_id         VARCHAR(255) NOT NULL,
             role_level      SMALLINT NOT NULL DEFAULT 0,
             role_title      VARCHAR(255) DEFAULT NULL,
-            capcode_text    TEXT DEFAULT NULL
+            capcode    TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $this->createTableQuery($schema, $this->table_name);

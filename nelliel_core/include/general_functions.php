@@ -21,8 +21,7 @@ function nel_clean_exit(bool $redirect = false, $redirect_board = null, int $red
         else
         {
             $domain = new \Nelliel\DomainBoard($redirect_board, nel_database());
-            $url = $domain->reference('board_directory') . '/' . MAIN_INDEX .
-                    PAGE_EXT;
+            $url = $domain->reference('board_directory') . '/' . MAIN_INDEX . PAGE_EXT;
             nel_redirect($url, $redirect_delay);
         }
     }
@@ -68,11 +67,10 @@ function nel_utf8_to_numeric_html_entities(&$input, bool $non_ascii_only = true)
 {
     $regex = ($non_ascii_only) ? '#([^[:ascii:]])#Su' : '#(.)#Su';
 
-    $input = preg_replace_callback($regex,
-            function ($matches)
-            {
-                return '&#' . utf8_ord($matches[0]) . ';';
-            }, $input);
+    $input = preg_replace_callback($regex, function ($matches)
+    {
+        return '&#' . utf8_ord($matches[0]) . ';';
+    }, $input);
 }
 
 function nel_numeric_html_entities_to_utf8(&$input)
@@ -84,14 +82,20 @@ function nel_numeric_html_entities_to_utf8(&$input)
             }, $input);
 }
 
-function nel_cast_to_datatype($value, $datatype)
+function nel_cast_to_datatype($value, $datatype, $null_empty = true)
 {
-    if(is_null($value))
+    if (nel_true_empty($value))
     {
-        return $value;
+        if ($null_empty)
+        {
+            return null;
+        }
+        else
+        {
+            return $value;
+        }
     }
-
-    if ($datatype === 'bool' || $datatype === 'boolean')
+    else if ($datatype === 'bool' || $datatype === 'boolean')
     {
         return (bool) $value;
     }

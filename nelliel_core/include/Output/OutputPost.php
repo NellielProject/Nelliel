@@ -273,10 +273,10 @@ class OutputPost extends OutputCore
         $tripcode = (!empty($post_data['tripcode'])) ? $this->domain->setting('tripkey_marker') . $post_data['tripcode'] : '';
         $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $this->domain->setting('tripkey_marker') .
                 $this->domain->setting('tripkey_marker') . $post_data['secure_tripcode'] : '';
-        $capcode_text = ($post_data['mod_post_id']) ? $authorization->getRole($post_data['mod_post_id'])->auth_data['capcode_text'] : '';
+        $capcode = ($post_data['mod_post_id']) ? $authorization->getRole($post_data['mod_post_id'])->auth_data['capcode'] : '';
         $trip_line = $tripcode . $secure_tripcode;
         $post_headers['tripline'] = $trip_line;
-        $post_headers['capcode'] = $capcode_text;
+        $post_headers['capcode'] = $capcode;
         $post_headers['post_time'] = date($this->domain->setting('date_format'), $post_data['post_time']);
         $post_headers['post_number'] = $post_data['post_number'];
         $post_headers['post_number_url'] = $thread_page_web_path . '#t' . $post_content_id->thread_id . 'p' .

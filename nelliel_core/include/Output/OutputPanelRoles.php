@@ -72,7 +72,7 @@ class OutputPanelRoles extends OutputCore
             $role_data['role_id'] = $role['role_id'];
             $role_data['role_level'] = $role['role_level'];
             $role_data['role_title'] = $role['role_title'];
-            $role_data['capcode_text'] = $role['capcode_text'];
+            $role_data['capcode'] = $role['capcode'];
             $role_data['edit_url'] = MAIN_SCRIPT . '?module=roles&action=edit&role-id=' . $role['role_id'];
             $role_row_nodes['remove_url'] = MAIN_SCRIPT . '?module=roles&action=remove&role-id=' . $role['role_id'];
             $this->render_data['roles_list'][] = $role_data;
@@ -119,7 +119,7 @@ class OutputPanelRoles extends OutputCore
             $this->render_data['role_id'] = $role->auth_data['role_id'];
             $this->render_data['role_level'] = $role->auth_data['role_level'];
             $this->render_data['role_title'] = $role->auth_data['role_title'];
-            $this->render_data['capcode_text'] = $role->auth_data['capcode_text'];
+            $this->render_data['capcode'] = $role->auth_data['capcode'];
         }
 
         $permissions_list = $this->database->executeFetchAll(

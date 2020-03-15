@@ -54,14 +54,4 @@ abstract class JSONOutput
         $json_data = json_encode($this->data_array);
         $this->file_handler->writeFile($path . $filename . JSON_EXT, $json_data);
     }
-
-    protected function addIfNotEmpty(&$data, $key, $value, $type)
-    {
-        if (nel_true_empty($value))
-        {
-            return;
-        }
-
-        $data[$key] = nel_cast_to_datatype($value, $type);
-    }
 }

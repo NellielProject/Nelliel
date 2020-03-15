@@ -95,7 +95,7 @@ class DomainBoard extends Domain
 
         foreach ($config_list as $config)
         {
-            $config['setting'] = nel_cast_to_datatype($config['setting'], $config['data_type']);
+            $config['setting'] = nel_cast_to_datatype($config['setting'], $config['data_type'], false);
             $settings[$config['config_name']] = $config['setting'];
         }
 
