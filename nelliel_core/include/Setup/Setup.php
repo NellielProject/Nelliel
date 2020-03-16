@@ -34,7 +34,7 @@ class Setup
         $site_domain = new \Nelliel\DomainSite(nel_database());
         $regen = new \Nelliel\Regen();
         $regen->siteCache($site_domain);
-        $regen->news($site_domain);
+        //$regen->news($site_domain);
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->writeInternalFile(GENERATED_FILE_PATH . 'install_done.php', '', true, false);
         echo _gettext(

@@ -1,9 +1,7 @@
 # Nelliel JSON API
-Nelliel's JSON API provides a read-only representation of resources such as threads and indexes. This documentation covers the base API outputs and should apply to all Nelliel installs. Additional output may be included by plugins or other mods a specific site is running.
+Nelliel's JSON API provides a read-only representation of resources such as threads and indexes. This documentation covers the base API outputs and should apply to all Nelliel installs. Additional output may be included by plugins.
 
-NOTE: This API is **not** directly compatible with the 4chan or vichan APIs.
-
-**NOTE: The base API is currently unfinished and should not be used except for testing.**
+NOTE: This API is **not** directly compatible with other imageboard APIs.
 
 **API Version:** 0 (in development)
 

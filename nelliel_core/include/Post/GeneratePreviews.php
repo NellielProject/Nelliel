@@ -92,7 +92,7 @@ class GeneratePreviews
 
         if (function_exists('exec'))
         {
-            exec("convert -version 2>/dev/null", $out, $rescode);
+            exec("/usr/local/bin/convert -version 2>&1", $out, $rescode);
 
             if ($rescode === 0)
             {
@@ -106,12 +106,12 @@ class GeneratePreviews
     public function imagickPreview($file, $preview_path)
     {
         $image = new \Imagick($file->content_data['location']);
-        $iterations = $image->getImageIterations();
-        $image = $image->coalesceimages();
+        $iterations = $image->getNumberImages();
 
-        if ($file->content_data['format'] === 'gif' && $iterations > 0 && $this->domain->setting('animated_gif_preview'))
+        if ($file->content_data['format'] === 'gif' && $iterations > 1 && $this->domain->setting('animated_gif_preview'))
         {
             $file->content_data['preview_extension'] = 'gif';
+            $image = $image->coalesceimages();
 
             if ($file->content_data['display_width'] <= $this->domain->setting('max_width') &&
                     $file->content_data['display_height'] <= $this->domain->setting('max_height'))
