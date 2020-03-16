@@ -272,9 +272,6 @@ class FileHandler
 
     public function umaskOffset($perm)
     {
-        var_dump(umask());
-        var_dump(octdec($perm) + umask());
-        var_dump($perm + umask());
         return octdec($perm) + umask();
     }
 }
