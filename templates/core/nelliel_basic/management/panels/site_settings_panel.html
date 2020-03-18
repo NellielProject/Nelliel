@@ -99,6 +99,21 @@
 		<input id="captcha_character_count" class="display-cell" type="text" name="captcha_character_count" size="15" value="{{ captcha_character_count }}">
 	</div>
 	<div class="display-row">
+		<span class="display-cell">
+			<span data-i18n="gettext">Preferred graphics handler:</span>
+		</span>
+	</div>
+	<div class="display-row">
+		<span class="display-cell">
+			<input id="graphics_handler_GD" type="radio" name="graphics_handler" value="GD" {{ graphics_handler_GD }}> 
+			<label for="graphics_handler_GD" data-i18n="gettext">GD</label><br>
+			<input id="graphics_handler_ImageMagick" type="radio" name="graphics_handler" value="ImageMagick" {{ graphics_handler_ImageMagick }}> 
+			<label for="graphics_handler_ImageMagick" data-i18n="gettext">ImageMagick</label><br>
+			<input id="graphics_handler_GraphicsMagick" type="radio" name="graphics_handler" value="GraphicsMagick" {{ graphics_handler_GraphicsMagick }}> 
+			<label for="graphics_handler_GraphicsMagick" data-i18n="gettext">GraphicsMagick</label>
+		</span>
+	</div>
+	<div class="display-row">
 		<input type="submit" value="Update Settings" data-i18n-attributes="gettext|value">
 	</div>
 </div>

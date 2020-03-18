@@ -77,5 +77,6 @@ class TableSiteConfig extends TableHandler
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'captcha_width', '250', 0, 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'captcha_height', '80', 0, 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'captcha_character_count', '5', 0, 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'graphics_handler', 'GD', 1, 0]);
     }
 }

@@ -82,7 +82,7 @@ class OutputPostingForm extends OutputCore
         $this->render_data['captcha_gen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=generate&board_id=' .
                 $this->domain->id() . '&time=' . time();
         $this->render_data['use_recaptcha'] = $this->domain->setting('use_recaptcha');
-        $this->render_data['recaptcha_sitekey'] = $this->domain->setting('recaptcha_site_key');
+        $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['use_honeypot'] = $this->domain->setting('use_honeypot');
         $this->render_data['honeypot_field_name1'] = BASE_HONEYPOT_FIELD1 . '_' . $this->domain->id();
         $this->render_data['honeypot_field_name2'] = BASE_HONEYPOT_FIELD2 . '_' . $this->domain->id();

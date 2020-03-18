@@ -875,22 +875,6 @@
 			</span>
 		</div>
 		{{/ use_preview }}
-		{{# use_magick }}
-		<div class="display-row">
-			{{# defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="use_magick_lock" value="0">
-				<input id="use_magick_lock" type="checkbox" name="use_magick_lock" value="1" {{ locked }}>
-				<label for="use_magick_lock" data-i18n="gettext">(Lock)</label>
-			</span>
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="use_magick" value="0">
-				<input id="use_magick" type="checkbox" name="use_magick" value="1" {{ value }} {{ disabled }}>
-				<label for="use_magick" data-i18n="gettext">Use ImageMagick when available</label>
-			</span>
-		</div>
-		{{/ use_magick }}
 		{{# use_file_icon }}
 		<div class="display-row">
 			{{# defaults }}
@@ -935,7 +919,7 @@
 			<span class="display-cell">
 				<input type="hidden" name="animated_gif_preview" value="0">
 				<input id="animated_gif_preview" type="checkbox" name="animated_gif_preview" value="1" {{ value }} {{ disabled }}>
-				<label for="animated_gif_preview" data-i18n="gettext">Create animated GIF preview</label>
+				<label for="animated_gif_preview" data-i18n="gettext">Used animated previews (requires extra libraries)</label>
 			</span>
 		</div>
 		{{/ animated_gif_preview }}
@@ -998,7 +982,7 @@
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<label for="jpeg_quality" data-i18n="gettext">JPEG preview quality (0 - 100)</label>
+				<label for="jpeg_quality" data-i18n="gettext">JPEG quality (0 - 100)</label>
 			</span>
 			<span class="display-cell">
 				<input id="jpeg_quality" type="text" name="jpeg_quality" size="8" value="{{ value }}" {{ disabled }}>

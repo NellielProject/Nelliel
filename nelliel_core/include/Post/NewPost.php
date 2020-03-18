@@ -188,17 +188,21 @@ class NewPost
         $fgsfds->modifyCommandData('noko', 'topic', $thread->content_id->thread_id);
         $src_path = $this->domain->reference('src_path') . $thread->content_id->thread_id . '/' .
                 $post->content_id->post_id . '/';
-        $preview_path = $this->domain->reference('preview_path') . $thread->content_id->thread_id . '/' .
-                $post->content_id->post_id . '/';
 
-        // Make previews and do final file processing
-        $gen_previews = new GeneratePreviews($this->domain);
-        $files = $gen_previews->generate($files, $preview_path);
         clearstatcache();
 
-        // Add file data and move uploads to final location if applicable
+        // Add preview, file data and move uploads to final location if applicable
         if ($spoon)
         {
+            // Make previews and do final file processing
+            if ($this->domain->setting('use_preview'))
+            {
+                $preview_path = $this->domain->reference('preview_path') . $thread->content_id->thread_id . '/' .
+                        $post->content_id->post_id . '/';
+                $gen_previews = new Previews($this->domain);
+                $files = $gen_previews->generate($files, $preview_path);
+            }
+
             $order = 1;
 
             foreach ($files as $file)

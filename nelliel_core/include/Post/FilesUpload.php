@@ -77,9 +77,20 @@ class FilesUpload
             $this->checkForErrors($file_data);
             $this->doesFileExist($response_to, $file);
             $this->checkFiletype($file);
+
+            $file->content_data['display_width'] = null;
+            $file->content_data['display_height'] = null;
+
+            if($file->content_data['type'] === 'graphics' || $file->content_data['format'] === 'swf')
+            {
+                $dim = getimagesize($file->content_data['location']);
+                $file->content_data['display_width'] = $dim[0];
+                $file->content_data['display_height'] = $dim[1];
+            }
+
             $this->getPathInfo($file);
             $file->content_data['name'] = $file_handler->filterFilename($file_data['name']);
-            $spoiler = $_POST['spoiler'];
+            $spoiler = $_POST['form_spoiler'];
             $file->content_data['filesize'] = $file_data['size'];
 
             if (isset($spoiler) && $this->domain->setting('enable_spoilers'))

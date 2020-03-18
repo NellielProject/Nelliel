@@ -22,6 +22,11 @@ class PostData
 
     public function processPostData($post)
     {
+        if(!isset($_POST['new_post']))
+        {
+            die("no new post data?");
+        }
+
         $post->content_data['parent_thread'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer');
 
         if($post->content_data['parent_thread'] != 0)
