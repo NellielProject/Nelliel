@@ -197,7 +197,7 @@ class Previews
 
                 do
                 {
-                    $image->scaleImage($file->content_data['preview_width'], $file->content_data['preview_height']);
+                    $image->resizeImage($file->content_data['preview_width'], $file->content_data['preview_height'], $filter, 1.0);
                 }
                 while ($image->nextImage());
             }
@@ -272,7 +272,7 @@ class Previews
 
                 foreach ($image as $frame)
                 {
-                    $frame->scaleImage($file->content_data['preview_width'], $file->content_data['preview_height']);
+                    $frame->resizeImage($file->content_data['preview_width'], $file->content_data['preview_height'], $filter, 1.0);
                 }
             }
 
