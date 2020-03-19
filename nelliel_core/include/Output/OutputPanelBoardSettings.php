@@ -148,13 +148,20 @@ class OutputPanelBoardSettings extends OutputCore
             }
             else
             {
-                if ($config_line['select_type'] == 1)
+                // 0 is field or checkbox; 1 is radio button; 2 is menu
+                switch ($config_line['select_type'])
                 {
-                    $config_data[$config_line['config_name'] . '_' . $config_line['setting']] = 'checked';
-                }
-                else
-                {
-                    $config_data['value'] = $config_line['setting'];
+                    case 0:
+                        $config_data['value'] = $config_line['setting'];
+                        break;
+
+                    case 1:
+                        $config_data[$config_line['config_name'] . '_' . $config_line['setting']] = 'checked';
+                        break;
+
+                    case 2:
+                        $config_data[$config_line['config_name'] . '_' . $config_line['setting']] = 'selected';
+                        break;
                 }
             }
 
