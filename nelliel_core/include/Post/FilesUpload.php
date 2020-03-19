@@ -120,13 +120,37 @@ class FilesUpload
                 }
             }
 
-            // Timestamp filename option
-            if ($this->domain->setting('timestamp_filename'))
+            switch ($this->domain->setting('preferred_filename'))
             {
-                $file->content_data['filename'] = $post->content_data['post_time'] .
-                        $post->content_data['post_time_milli'];
-                $file->content_data['fullname'] = $file->content_data['filename'] . '.' .
-                        $file->content_data['extension'];
+                case 'original':
+                    ;
+                    break;
+
+                case 'timestamp':
+                    $file->content_data['filename'] = $post->content_data['post_time'] .
+                    $post->content_data['post_time_milli'];
+                    $file->content_data['fullname'] = $file->content_data['filename'] . '.' .
+                            $file->content_data['extension'];
+                    break;
+
+                case 'sha1':
+                    $file->content_data['filename'] = bin2hex($file->content_data['sha1']);
+                    $file->content_data['fullname'] = bin2hex($file->content_data['sha1']) . '.' .
+                            $file->content_data['extension'];
+                    break;
+
+                case 'md5':
+                    $file->content_data['filename'] = bin2hex($file->content_data['md5']);
+                    $file->content_data['fullname'] = bin2hex($file->content_data['md5']) . '.' .
+                            $file->content_data['extension'];
+                    break;
+
+                default:
+                    $file->content_data['filename'] = $post->content_data['post_time'] .
+                    $post->content_data['post_time_milli'];
+                    $file->content_data['fullname'] = $file->content_data['filename'] . '.' .
+                            $file->content_data['extension'];
+                    break;
             }
 
             array_push($filenames, $file->content_data['fullname']);

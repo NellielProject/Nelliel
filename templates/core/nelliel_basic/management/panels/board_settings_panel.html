@@ -843,22 +843,35 @@
 			<span class="display-cell"></span>
 			{{/ defaults }}
 		</div>
-		{{# timestamp_filename }}
+		{{# preferred_filename }}
 		<div class="display-row">
 			{{# defaults }}
 			<span class="display-cell">
-				<input type="hidden" name="timestamp_filename_lock" value="0">
-				<input id="timestamp_filename_lock" type="checkbox" name="timestamp_filename_lock" value="1" {{ locked }}>
-				<label for="timestamp_filename_lock" data-i18n="gettext">(Lock)</label>
+				<input type="hidden" name="preferred_filename_lock" value="0">
+				<input id="preferred_filename_lock" type="checkbox" name="preferred_filename_lock" value="1" {{ locked }}>
+				<label for="preferred_filename_lock" data-i18n="gettext">(Lock)</label>
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<input type="hidden" name="timestamp_filename" value="0">
-				<input id="timestamp_filename" type="checkbox" name="timestamp_filename" value="1" {{ value }} {{ disabled }}>
-				<label for="timestamp_filename" data-i18n="gettext">Use a timestamp for filenames (old Futallaby style) instead of the original name</label>
+				<span data-i18n="gettext">Preferred filename for uploads:</span>
 			</span>
 		</div>
-		{{/ timestamp_filename }}
+		<div class="display-row">
+			{{# defaults }}
+			<span></span>
+			{{/ defaults }}
+			<span class="display-cell">
+				<input id="preferred_filename_original" type="radio" name="preferred_filename" value="original" {{ preferred_filename_original }}> 
+				<label for="preferred_filename_original" data-i18n="gettext">Original filename</label><br>
+				<input id="preferred_filename_timestamp" type="radio" name="preferred_filename" value="timestamp" {{ preferred_filename_timestamp }}> 
+				<label for="preferred_filename_timestamp" data-i18n="gettext">Unix timestamp</label><br>
+				<input id="preferred_filename_sha1" type="radio" name="preferred_filename" value="sha1" {{ preferred_filename_sha1 }}> 
+				<label for="preferred_filename_sha1" data-i18n="gettext">SHA1 hash</label><br>
+				<input id="preferred_filename_md5" type="radio" name="preferred_filename" value="md5" {{ preferred_filename_md5 }}> 
+				<label for="preferred_filename_md5" data-i18n="gettext">MD5 hash</label>
+			</span>
+		</div>
+		{{/ preferred_filename }}
 		{{# use_preview }}
 		<div class="display-row">
 			{{# defaults }}
