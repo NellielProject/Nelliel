@@ -152,10 +152,24 @@ define('NEL_PASSWORD_ARGON2_MEMORY_COST', $crypt_config['password_argon2_memory_
 define('NEL_PASSWORD_ARGON2_TIME_COST', $crypt_config['password_argon2_time_cost']);
 define('NEL_PASSWORD_ARGON2_THREADS', $crypt_config['password_argon2_threads']);
 
-$setup = new \Nelliel\Setup\Setup();
-$setup->checkGenerated();
+$language = new \Nelliel\Language\Language();
+$language->loadLanguage(DEFAULT_LOCALE, 'nelliel', LC_MESSAGES);
+unset($language);
+Mustache_Autoloader::register();
 
-if(file_exists(GENERATED_FILE_PATH . 'generated.php'))
+$setup = new \Nelliel\Setup\Setup();
+
+if(isset($_GET['install']))
+{
+    $setup->install();
+}
+
+if(!$setup->checkInstallDone())
+{
+    nel_derp(107, _gettext('Installation has not been done yet or is not complete.'));
+}
+
+if($setup->checkGenerated(true))
 {
     $generated = array();
     include_once GENERATED_FILE_PATH . 'generated.php';
@@ -166,6 +180,9 @@ if(file_exists(GENERATED_FILE_PATH . 'generated.php'))
     unset($generated);
 }
 
+unset ($setup);
 unset($base_config);
 unset($db_config);
 unset($crypt_config);
+
+define('SETUP_GOOD', true);

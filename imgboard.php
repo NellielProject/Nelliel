@@ -10,12 +10,6 @@ define('LIBRARY_PATH', NELLIEL_CORE_PATH . 'libraries/'); // Libraries path
 require_once INCLUDE_PATH . 'autoload.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
-
-Mustache_Autoloader::register();
-$language = new \Nelliel\Language\Language();
-$language->loadLanguage(DEFAULT_LOCALE, 'nelliel', LC_MESSAGES);
-unset($language);
-
 require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'accessors.php';
@@ -29,27 +23,12 @@ unset($out);
 
 require_once INCLUDE_PATH . 'general_functions.php';
 require_once INCLUDE_PATH . 'crypt.php';
+
 nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
-$setup = new \Nelliel\Setup\Setup();
-
-if(isset($_GET['install']))
-{
-    $setup->install();
-}
-
-if(!$setup->checkInstallDone())
-{
-    nel_derp(107, _gettext('Installation has not been done yet or is not complete.'));
-}
-
-unset ($setup);
-
 // IT'S GO TIME!
-define('SETUP_GOOD', true);
 ignore_user_abort(true);
 
-require_once GENERATED_FILE_PATH . 'generated.php';
 require_once INCLUDE_PATH . 'dispatch/central_dispatch.php';
 
 nel_central_dispatch();

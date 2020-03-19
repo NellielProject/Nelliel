@@ -21,14 +21,23 @@ class Setup
     {
         if ($this->checkInstallDone())
         {
-            nel_derp(108, _gettext('Installation has already been completed!'));
+            nel_derp(108, _gettext('install_done.php is present. Installation has already been completed!'));
         }
 
         $this->checkDBEngine();
         $this->mainDirWritable();
-        $this->boardFilesDirWritable();
+        $this->coreDirWritable();
         $this->configDirWritable();
-        $this->checkGenerated();
+
+        if($this->checkGenerated(true))
+        {
+            echo _gettext('File generated.php created.'), '<br>';
+        }
+        else
+        {
+            echo _gettext('File generated.php already present.'), '<br>';
+        }
+
         $this->createCoreTables();
         $this->createCoreDirectories();
         $site_domain = new \Nelliel\DomainSite(nel_database());
@@ -38,7 +47,7 @@ class Setup
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->writeInternalFile(GENERATED_FILE_PATH . 'install_done.php', '', true, false);
         echo _gettext(
-                "Install has finished with no apparent problems! When you're ready to continue, follow this link: ");
+                "Install has finished with no apparent problems! When you're ready to continue, follow this link: "), '<br>';
         echo '<a href="' . BASE_WEB_PATH . '">' . _gettext('Default home page') . '</a>';
         die();
     }
@@ -48,7 +57,7 @@ class Setup
         return file_exists(GENERATED_FILE_PATH . 'install_done.php');
     }
 
-    public function generateConfigValues()
+    public function generateValues()
     {
         $generated = array();
         $generated['tripcode_pepper'] = base64_encode(random_bytes(32));
@@ -58,40 +67,21 @@ class Setup
         return $generated;
     }
 
-    public function checkGenerated()
+    public function checkGenerated(bool $generate)
     {
         if (!file_exists(GENERATED_FILE_PATH . 'generated.php'))
         {
-            $file_handler = new \Nelliel\FileHandler();
-            $generated = $this->generateConfigValues();
-            $prepend = "\n" . '// DO NOT EDIT THESE VALUES OR REMOVE THIS FILE UNLESS YOU HAVE A DAMN GOOD REASON';
-            $file_handler->writeInternalFile(GENERATED_FILE_PATH . 'generated.php',
-                    $prepend . "\n" . '$generated = ' . var_export($generated, true) . ';', true, false);
+            if($generate)
+            {
+                $file_handler = new \Nelliel\FileHandler();
+                $generated = $this->generateValues();
+                $prepend = "\n" . '// DO NOT EDIT THESE VALUES OR REMOVE THIS FILE UNLESS YOU HAVE A DAMN GOOD REASON';
+                $file_handler->writeInternalFile(GENERATED_FILE_PATH . 'generated.php',
+                        $prepend . "\n" . '$generated = ' . var_export($generated, true) . ';', true, false);
+            }
         }
-    }
 
-    public function boardFilesDirWritable()
-    {
-        if (!is_writable(NELLIEL_CORE_PATH))
-        {
-            nel_derp(104, _gettext('Board files directory is missing or not writable. Admin should check this out.'));
-        }
-    }
-
-    public function mainDirWritable()
-    {
-        if (!is_writable(BASE_PATH))
-        {
-            nel_derp(105, _gettext('Nelliel main directory is not writable. Admin should check this out.'));
-        }
-    }
-
-    public function configDirWritable()
-    {
-        if (!is_writable(CONFIG_FILE_PATH))
-        {
-            nel_derp(106, _gettext('Configuration directory is missing or not writable. Admin should check this out.'));
-        }
+        return file_exists(GENERATED_FILE_PATH . 'generated.php');
     }
 
     public function checkDBEngine()
@@ -102,14 +92,46 @@ class Setup
                     _gettext(
                             'InnoDB engine is required for MySQL or MariaDB support. However the engine is not available for some reason.'));
         }
+        else
+        {
+            echo _gettext('DB engine ok.'), '<br>';
+        }
     }
 
-    public function checkCore($board_id)
+    public function coreDirWritable()
     {
-        $this->checkGenerated();
-        $this->checkDBEngine();
-        $this->createCoreTables();
-        $this->createCoreDirectories();
+        if (!is_writable(NELLIEL_CORE_PATH))
+        {
+            nel_derp(104, _gettext('The core directory not writable.'));
+        }
+        else
+        {
+            echo _gettext('The core directory is writable.'), '<br>';
+        }
+    }
+
+    public function mainDirWritable()
+    {
+        if (!is_writable(BASE_PATH))
+        {
+            nel_derp(105, _gettext('Nelliel main directory is not writable.'));
+        }
+        else
+        {
+            echo _gettext('Main directory is writable.'), '<br>';
+        }
+    }
+
+    public function configDirWritable()
+    {
+        if (!is_writable(CONFIG_FILE_PATH))
+        {
+            nel_derp(106, _gettext('Configuration directory is missing or not writable. Admin should check this out.'));
+        }
+        else
+        {
+            echo _gettext('The configutation directory is writable.'), '<br>';
+        }
     }
 
     public function createCoreTables()
@@ -162,6 +184,7 @@ class Setup
         $users_table->setup();
         $versions_table = new TableVersions($database, $sql_compatibility);
         $versions_table->setup();
+        echo _gettext('Core database tables created.'), '<br>';
     }
 
     public function createCoreDirectories()
@@ -169,6 +192,7 @@ class Setup
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->createDirectory(CACHE_FILE_PATH, DIRECTORY_PERM, true);
         $file_handler->createDirectory(GENERATED_FILE_PATH, DIRECTORY_PERM, true);
+        echo _gettext('Core directories created.'), '<br>';
     }
 
     public function createBoardTables($board_id)
