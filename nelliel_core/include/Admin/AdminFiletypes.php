@@ -22,20 +22,23 @@ class AdminFiletypes extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
-        if ($inputs['action'] === 'add')
+        if ($action === 'add')
         {
             $this->add();
         }
-        else if ($inputs['action'] == 'remove')
+        else if ($action == 'remove')
         {
             $this->remove();
         }
-        else
+
+        if ($return)
         {
-            $this->renderPanel();
+            return;
         }
+
+        $this->renderPanel();
     }
 
     public function renderPanel()
@@ -76,8 +79,6 @@ class AdminFiletypes extends AdminHandler
             $this->database->executePrepared($prepared,
                     ['filetype_enable', 'nelliel', $type, 'boolean', $format, '0', 0, 0]);
         }
-
-        $this->renderPanel();
     }
 
     public function editor()
@@ -108,8 +109,6 @@ class AdminFiletypes extends AdminHandler
                     'DELETE FROM "' . $board_domain->reference('config_table') . '" WHERE "config_type" = \'filetype_enable\' AND "config_name" = ?');
             $this->database->executePrepared($prepared, [$filetype_info['format']]);
         }
-
-        $this->renderPanel();
     }
 
     private function getBoardDomains()

@@ -21,20 +21,23 @@ class AdminPermissions extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
-        if ($inputs['action'] === 'add')
+        if ($action === 'add')
         {
             $this->add();
         }
-        else if ($inputs['action'] == 'remove')
+        else if ($action == 'remove')
         {
             $this->remove();
         }
-        else
+
+        if ($return)
         {
-            $this->renderPanel();
+            return;
         }
+
+        $this->renderPanel();
     }
 
     public function renderPanel()

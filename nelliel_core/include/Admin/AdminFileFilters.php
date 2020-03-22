@@ -21,15 +21,20 @@ class AdminFileFilters extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
-        if ($inputs['action'] === 'add')
+        if ($action === 'add')
         {
             $this->add();
         }
-        else if ($inputs['action'] == 'remove')
+        else if ($action == 'remove')
         {
             $this->remove();
+        }
+
+        if ($return)
+        {
+            return;
         }
 
         $this->renderPanel();
@@ -65,8 +70,6 @@ class AdminFileFilters extends AdminHandler
                     '" ("hash_type", "file_hash", "file_notes", "board_id") VALUES (?, ?, ?, ?)');
             $this->database->executePrepared($prepared, [$type, pack("H*", $hash), $notes, $board_id]);
         }
-
-        $this->renderPanel();
     }
 
     public function editor()
@@ -87,6 +90,5 @@ class AdminFileFilters extends AdminHandler
         $filter_id = $_GET['filter-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . FILE_FILTERS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
-        $this->renderPanel();
     }
 }

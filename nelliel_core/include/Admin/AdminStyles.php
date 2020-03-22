@@ -21,24 +21,27 @@ class AdminStyles extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
-        if ($inputs['action'] === 'add')
+        if ($action === 'add')
         {
             $this->add();
         }
-        else if ($inputs['action'] == 'remove')
+        else if ($action == 'remove')
         {
             $this->remove();
         }
-        else if ($inputs['action'] == 'make-default')
+        else if ($action == 'make-default')
         {
             $this->makeDefault();
         }
-        else
+
+        if ($return)
         {
-            $this->renderPanel();
+            return;
         }
+
+        $this->renderPanel();
     }
 
     public function renderPanel()
@@ -73,7 +76,6 @@ class AdminStyles extends AdminHandler
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . ASSETS_TABLE . '" ("id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$style_id, 'style', 0, $info]);
-        $this->renderPanel();
     }
 
     public function editor()
@@ -94,7 +96,6 @@ class AdminStyles extends AdminHandler
         $style_id = $_GET['style-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . ASSETS_TABLE . '" WHERE "id" = ? AND "type" = \'style\'');
         $this->database->executePrepared($prepared, [$style_id]);
-        $this->renderPanel();
     }
 
     public function makeDefault()
@@ -109,6 +110,5 @@ class AdminStyles extends AdminHandler
         $prepared = $this->database->prepare(
                 'UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 1 WHERE "id" = ? AND "type" = \'style\'');
         $this->database->executePrepared($prepared, [$style_id]);
-        $this->renderPanel();
     }
 }

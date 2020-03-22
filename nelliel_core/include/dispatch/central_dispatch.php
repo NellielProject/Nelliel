@@ -33,6 +33,8 @@ function nel_central_dispatch()
     $inputs['action'] = $_GET['action'] ?? '';
     $inputs['content_id'] = $_GET['content-id'] ?? '';
     $inputs['modmode'] = $_GET['modmode'] ?? false;
+    $inputs['actions'] = explode('~', $_GET['action']);
+    $inputs['return'] = $_GET['return'] ?? null;
 
     if($inputs['board_id'] === '' || $inputs['domain_id'])
     {

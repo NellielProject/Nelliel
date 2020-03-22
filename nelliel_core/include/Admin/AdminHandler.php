@@ -14,7 +14,7 @@ abstract class AdminHandler
     protected $domain;
     protected $session_user;
 
-    public abstract function actionDispatch($inputs);
+    public abstract function actionDispatch(string $action, bool $return);
 
     public abstract function renderPanel();
 

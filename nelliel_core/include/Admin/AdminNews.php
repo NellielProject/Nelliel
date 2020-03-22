@@ -22,15 +22,20 @@ class AdminNews extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
-        if ($inputs['action'] === 'add')
+        if ($action === 'add')
         {
             $this->add();
         }
-        else if ($inputs['action'] === 'remove')
+        else if ($action === 'remove')
         {
             $this->remove();
+        }
+
+        if ($return)
+        {
+            return;
         }
 
         $this->renderPanel();

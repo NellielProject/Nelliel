@@ -23,32 +23,35 @@ class AdminBans extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
-        if ($inputs['action'] === 'modify')
+        if ($action === 'modify')
         {
             $this->editor();
         }
-        else if ($inputs['action'] === 'new' || $inputs['action'] === 'ban-delete')
+        else if ($action === 'new')
         {
             $this->creator();
         }
-        else if ($inputs['action'] === 'add')
+        else if ($action === 'add')
         {
             $this->add();
         }
-        else if ($inputs['action'] === 'remove')
+        else if ($action === 'remove')
         {
             $this->remove();
         }
-        else if ($inputs['action'] === 'update')
+        else if ($action === 'update')
         {
             $this->update();
         }
-        else
+
+        if ($return)
         {
-            $this->renderPanel();
+            return;
         }
+
+        $this->renderPanel();
     }
 
     public function renderPanel()
@@ -89,8 +92,6 @@ class AdminBans extends AdminHandler
                 $regen->index($this->domain);
             }
         }
-
-        $this->renderPanel();
     }
 
     public function editor()
@@ -114,7 +115,6 @@ class AdminBans extends AdminHandler
         }
 
         $this->ban_hammer->modifyBan($ban_input);
-        $this->renderPanel();
     }
 
     public function remove()
@@ -126,6 +126,5 @@ class AdminBans extends AdminHandler
 
         $ban_input = $this->ban_hammer->postToArray();
         $this->ban_hammer->removeBan($this->domain, $_GET['ban_id']);
-        $this->renderPanel();
     }
 }

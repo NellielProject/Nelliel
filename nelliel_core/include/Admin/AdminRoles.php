@@ -22,7 +22,7 @@ class AdminRoles extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
         $this->role_id = $_GET['role-id'] ?? null;
 
@@ -31,30 +31,33 @@ class AdminRoles extends AdminHandler
             nel_derp(231, _gettext('The specified role does not exist.'));
         }
 
-        if ($inputs['action'] === 'new')
+        if ($action === 'new')
         {
             $this->creator();
         }
-        else if ($inputs['action'] === 'add')
+        else if ($action === 'add')
         {
             $this->add();
         }
-        else if ($inputs['action'] === 'edit')
+        else if ($action === 'edit')
         {
             $this->editor();
         }
-        else if ($inputs['action'] === 'update')
+        else if ($action === 'update')
         {
             $this->update();
         }
-        else if ($inputs['action'] === 'remove')
+        else if ($action === 'remove')
         {
             $this->remove();
         }
-        else
+
+        if ($return)
         {
-            $this->renderPanel();
+            return;
         }
+
+        $this->renderPanel();
     }
 
     public function renderPanel()
@@ -123,6 +126,5 @@ class AdminRoles extends AdminHandler
         }
 
         $this->authorization->removeRole($this->role_id);
-        $this->renderPanel();
     }
 }

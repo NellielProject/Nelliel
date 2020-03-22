@@ -21,24 +21,27 @@ class AdminTemplates extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
-        if ($inputs['action'] === 'add')
+        if ($action === 'add')
         {
             $this->add();
         }
-        else if ($inputs['action'] == 'remove')
+        else if ($action == 'remove')
         {
             $this->remove();
         }
-        else if ($inputs['action'] == 'make-default')
+        else if ($action == 'make-default')
         {
             $this->makeDefault();
         }
-        else
+
+        if ($return)
         {
-            $this->renderPanel();
+            return;
         }
+
+        $this->renderPanel();
     }
 
     public function renderPanel()
@@ -77,8 +80,6 @@ class AdminTemplates extends AdminHandler
                     'INSERT INTO "' . TEMPLATES_TABLE . '" ("id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
             $this->database->executePrepared($prepared, [$template_id, 'template', 0, $info]);
         }
-
-        $this->renderPanel();
     }
 
     public function editor()
@@ -100,7 +101,6 @@ class AdminTemplates extends AdminHandler
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . TEMPLATES_TABLE . '" WHERE "id" = ? AND "type" = \'template\'');
         $this->database->executePrepared($prepared, [$template_id]);
-        $this->renderPanel();
     }
 
     public function makeDefault()
@@ -114,6 +114,5 @@ class AdminTemplates extends AdminHandler
         $this->database->exec('UPDATE "' . TEMPLATES_TABLE . '" SET "is_default" = 0');
         $prepared = $this->database->prepare('UPDATE "' . TEMPLATES_TABLE . '" SET "is_default" = 1 WHERE "id" = ?');
         $this->database->executePrepared($prepared, [$template_id]);
-        $this->renderPanel();
     }
 }

@@ -21,24 +21,27 @@ class AdminIconSets extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
-        if ($inputs['action'] === 'add')
+        if ($action === 'add')
         {
             $this->add();
         }
-        else if ($inputs['action'] == 'remove')
+        else if ($action == 'remove')
         {
             $this->remove();
         }
-        else if ($inputs['action'] == 'make-default')
+        else if ($action == 'make-default')
         {
             $this->makeDefault();
         }
-        else
+
+        if ($return)
         {
-            $this->renderPanel();
+            return;
         }
+
+        $this->renderPanel();
     }
 
     public function renderPanel()
@@ -73,7 +76,6 @@ class AdminIconSets extends AdminHandler
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . ASSETS_TABLE . '" ("id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$icon_set_id, 'icon-set', 0, $info]);
-        $this->renderPanel();
     }
 
     public function editor()
@@ -94,7 +96,6 @@ class AdminIconSets extends AdminHandler
         $icon_set_id = $_GET['icon-set-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . ASSETS_TABLE . '" WHERE "id" = ? AND "type" = ?');
         $this->database->executePrepared($prepared, [$icon_set_id, 'icon-set']);
-        $this->renderPanel();
     }
 
     public function makeDefault()
@@ -110,6 +111,5 @@ class AdminIconSets extends AdminHandler
         $prepared = $this->database->prepare(
                 'UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 1 WHERE "id" = ? AND "type" = \'icon-set\'');
         $this->database->executePrepared($prepared, [$icon_set_id]);
-        $this->renderPanel();
     }
 }

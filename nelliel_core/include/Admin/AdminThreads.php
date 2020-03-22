@@ -21,40 +21,40 @@ class AdminThreads extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
-        if ($inputs['action'] === 'update')
+        if ($action === 'update')
         {
             $this->update();
         }
-        else if ($inputs['action'] === 'sticky')
+        else if ($action === 'sticky')
         {
             $this->sticky();
         }
-        else if ($inputs['action'] === 'unsticky')
+        else if ($action === 'unsticky')
         {
             $this->unsticky();
         }
-        else if ($inputs['action'] === 'lock')
+        else if ($action === 'lock')
         {
             $this->lock();
         }
-        else if ($inputs['action'] === 'unlock')
+        else if ($action === 'unlock')
         {
             $this->unlock();
         }
-        else if ($inputs['action'] === 'delete')
+        else if ($action === 'delete')
         {
             $this->remove();
         }
-        else if ($inputs['action'] === 'ban-delete')
-        {
-            $this->remove();
-            return;
-        }
-        else if ($inputs['action'] === 'expand')
+        else if ($action === 'expand') // TODO: Figure this out better
         {
             $this->renderPanel();
+            return;
+        }
+
+        if ($return)
+        {
             return;
         }
 

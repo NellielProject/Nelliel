@@ -22,15 +22,20 @@ class AdminReports extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
-        if ($inputs['action'] === 'dismiss')
+        if ($action === 'dismiss')
         {
             $this->remove();
         }
         else if (isset($_POST['form_submit_report']))
         {
             $this->add();
+        }
+
+        if ($return)
+        {
+            return;
         }
 
         $this->renderPanel();

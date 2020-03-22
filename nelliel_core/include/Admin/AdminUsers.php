@@ -22,7 +22,7 @@ class AdminUsers extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
         $this->user_id = $_GET['user-id'] ?? null;
 
@@ -31,30 +31,33 @@ class AdminUsers extends AdminHandler
             nel_derp(230, _gettext('The specified user does not exist.'));
         }
 
-        if ($inputs['action'] === 'new')
+        if ($action === 'new')
         {
             $this->creator();
         }
-        else if ($inputs['action'] === 'add')
+        else if ($action === 'add')
         {
             $this->add();
         }
-        else if ($inputs['action'] === 'edit')
+        else if ($action === 'edit')
         {
             $this->editor();
         }
-        else if ($inputs['action'] === 'update')
+        else if ($action === 'update')
         {
             $this->update();
         }
-        else if ($inputs['action'] === 'remove')
+        else if ($action === 'remove')
         {
             $this->remove();
         }
-        else
+
+        if ($return)
         {
-            $this->renderPanel();
+            return;
         }
+
+        $this->renderPanel();
     }
 
     public function renderPanel()

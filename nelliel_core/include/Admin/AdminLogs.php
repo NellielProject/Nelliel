@@ -22,11 +22,16 @@ class AdminLogs extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
-        if ($inputs['action'] === 'remove')
+        if ($action === 'remove')
         {
             $this->remove();
+        }
+
+        if ($return)
+        {
+            return;
         }
 
         $this->renderPanel();

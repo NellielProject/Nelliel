@@ -22,13 +22,13 @@ class AdminBoards extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch($inputs)
+    public function actionDispatch(string $action, bool $return)
     {
-        if ($inputs['action'] === 'add')
+        if ($action === 'add')
         {
             $this->add();
         }
-        else if ($inputs['action'] === 'remove')
+        else if ($action === 'remove')
         {
             if (isset($_GET['action-confirmed']) && $_GET['action-confirmed'] === 'true')
             {
@@ -39,18 +39,21 @@ class AdminBoards extends AdminHandler
                 $this->createInterstitial();
             }
         }
-        else if ($inputs['action'] === 'lock')
+        else if ($action === 'lock')
         {
             $this->lock();
         }
-        else if ($inputs['action'] === 'unlock')
+        else if ($action === 'unlock')
         {
             $this->unlock();
         }
-        else
+
+        if ($return)
         {
-            $this->renderPanel();
+            return;
         }
+
+        $this->renderPanel();
     }
 
     public function renderPanel()
@@ -96,7 +99,6 @@ class AdminBoards extends AdminHandler
 
         $regen->allBoardPages($domain);
         $regen->boardList(new \Nelliel\DomainSite($this->database));
-        $this->renderPanel();
     }
 
     public function editor()
@@ -167,7 +169,6 @@ class AdminBoards extends AdminHandler
         $this->database->executePrepared($prepared, [$board_id, $board_id]);
         $regen = new \Nelliel\Regen();
         $regen->boardList(new \Nelliel\DomainSite($this->database));
-        $this->renderPanel();
     }
 
     public function lock()
@@ -180,7 +181,6 @@ class AdminBoards extends AdminHandler
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare('UPDATE "' . BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $this->renderPanel();
     }
 
     public function unlock()
@@ -193,7 +193,6 @@ class AdminBoards extends AdminHandler
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare('UPDATE "' . BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $this->renderPanel();
     }
 
     public function createInterstitial()
