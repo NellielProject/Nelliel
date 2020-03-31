@@ -16,13 +16,13 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'captcha':
             $captcha = new \Nelliel\CAPTCHA($domain);
 
-            if (in_array('generate', $inputs['actions']))
+            if ($inputs['action'] === 'generate')
             {
                 $captcha->generate();
             }
 
         case 'account':
-            if (in_array('login', $inputs['actions']))
+            if ($inputs['action'] === 'login')
             {
                 if (empty($_POST))
                 {
@@ -38,12 +38,12 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     $output_account->render(['user' => $session->sessionUser()], false);
                 }
             }
-            else if (in_array('logout', $inputs['actions']))
+            else if ($inputs['action'] === 'login')
             {
                 $session = new \Nelliel\Account\Session();
                 $session->logout();
             }
-            else if (in_array('register', $inputs['actions']))
+            else if ($inputs['action'] === 'register')
             {
                 if (empty($_POST))
                 {
@@ -82,25 +82,25 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $inputs['thread'] = $_GET['thread'] ?? null;
             $session = new \Nelliel\Account\Session();
 
-            if (in_array('view-index', $inputs['actions']))
+            if ($inputs['action'] === 'view-index')
             {
                 $output_index = new \Nelliel\Output\OutputIndex($domain);
                 $output_index->render(['write' => false, 'thread_id' => 0], false);
             }
-            else if (in_array('view-thread', $inputs['actions']))
+            else if ($inputs['action'] === 'view-thread')
             {
                 $output_thread = new \Nelliel\Output\OutputThread($domain);
                 $output_thread->render(
                         ['write' => false, 'thread_id' => intval($inputs['thread']), 'command' => 'view-thread'], false);
             }
-            else if (in_array('expand-thread', $inputs['actions']))
+            else if ($inputs['action'] === 'expand-thread')
             {
                 $output_thread = new \Nelliel\Output\OutputThread($domain);
                 $output_thread->render(
                         ['write' => false, 'thread_id' => intval($inputs['thread']), 'command' => 'expand-thread'],
                         false);
             }
-            else if (in_array('collapse-thread', $inputs['actions']))
+            else if ($inputs['action'] === 'collapse-thread')
             {
                 $output_thread = new \Nelliel\Output\OutputThread($domain);
                 $output_thread->render(
@@ -129,39 +129,39 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
         case 'users':
             $users_admin = new \Nelliel\Admin\AdminUsers($authorization, $domain);
-            $users_admin->actionDispatch($inputs['actions'][0], false);
+            $users_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'roles':
             $roles_admin = new \Nelliel\Admin\AdminRoles($authorization, $domain);
-            $roles_admin->actionDispatch($inputs['actions'][0], false);
+            $roles_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'site-settings':
             $site_settings_admin = new \Nelliel\Admin\AdminSiteSettings($authorization, $domain);
-            $site_settings_admin->actionDispatch($inputs['actions'][0], false);
+            $site_settings_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'manage-boards':
             $create_board_admin = new \Nelliel\Admin\AdminBoards($authorization, $domain);
-            $create_board_admin->actionDispatch($inputs['actions'][0], false);
+            $create_board_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'file-filters':
             $file_filters_admin = new \Nelliel\Admin\AdminFileFilters($authorization, $domain);
-            $file_filters_admin->actionDispatch($inputs['actions'][0], false);
+            $file_filters_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'board-defaults':
             $board_settings_admin = new \Nelliel\Admin\AdminBoardSettings($authorization, $domain);
-            $board_settings_admin->actionDispatch($inputs['actions'][0], false);
+            $board_settings_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'language':
             $session = new \Nelliel\Account\Session();
             $session->loggedInOrError();
 
-            if (in_array('extract-gettext', $inputs['actions']))
+            if ($inputs['action'] === 'extract-gettext')
             {
                 $language = new \Nelliel\Language\Language();
                 $language->extractLanguageStrings($domain, $session->sessionUser(), 'nelliel', LC_MESSAGES);
@@ -173,32 +173,22 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
         case 'reports':
             $reports_admin = new \Nelliel\Admin\AdminReports($authorization, $domain);
-            $reports_admin->actionDispatch($inputs['actions'][0], false);
+            $reports_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'board-settings':
             $board_settings_admin = new \Nelliel\Admin\AdminBoardSettings($authorization, $domain);
-            $board_settings_admin->actionDispatch($inputs['actions'][0], false);
+            $board_settings_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'bans':
             $bans_admin = new \Nelliel\Admin\AdminBans($authorization, $domain);
-            $bans_admin->actionDispatch($inputs['actions'][0], false);
+            $bans_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'threads-admin':
-            if (in_array('delete', $inputs['actions']))
-            {
-                $threads_admin = new \Nelliel\Admin\AdminThreads($authorization, $domain);
-                $threads_admin->actionDispatch('delete', true);
-            }
-
-            if (in_array('ban', $inputs['actions']))
-            {
-                $bans_admin = new \Nelliel\Admin\AdminBans($authorization, $domain);
-                $bans_admin->actionDispatch('new', true);
-            }
-
+            $threads_admin = new \Nelliel\Admin\AdminThreads($authorization, $domain);
+            $threads_admin->actionDispatch($inputs['action'], true);
             break;
 
         case 'threads':
@@ -206,7 +196,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $fgsfds = new \Nelliel\FGSFDS();
             $session = new \Nelliel\Account\Session();
 
-            if (in_array('new-post', $inputs['actions']))
+            if ($inputs['action'] === 'new-post')
             {
                 $new_post = new \Nelliel\Post\NewPost($domain);
                 $new_post->processPost();
@@ -252,25 +242,25 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 nel_clean_exit(false);
             }
 
-            if (in_array('delete-post', $inputs['actions']))
+            if ($inputs['action'] === 'delete-post')
             {
                 $post = new \Nelliel\Content\ContentPost($content_id, $domain, true);
                 $post->remove();
             }
 
-            if (in_array('delete-thread', $inputs['actions']))
+            if ($inputs['action'] === 'delete-thread')
             {
                 $thread = new \Nelliel\Content\ContentThread($content_id, $domain, true);
                 $thread->remove();
             }
 
-            if (in_array('delete-file', $inputs['actions']))
+            if ($inputs['action'] === 'delete-file')
             {
                 $file = new \Nelliel\Content\ContentFile($content_id, $domain, true);
                 $file->remove();
             }
 
-            if (in_array('ban-file', $inputs['actions']))
+            if ($inputs['action'] === 'ban-file')
             {
                 ; // TODO: Add file hash
             }
@@ -278,7 +268,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             if (isset($_POST['form_submit_report']))
             {
                 $reports_admin = new \Nelliel\Admin\AdminReports($authorization, $domain);
-                $reports_admin->actionDispatch($inputs['actions'][0], true);
+                $reports_admin->actionDispatch($inputs['action'], true);
 
                 if ($session->inModmode($domain))
                 {
@@ -319,7 +309,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $session->loggedInOrError();
             $user = $session->sessionUser();
 
-            if (in_array('board-all-pages', $inputs['actions']))
+            if ($inputs['action'] === 'board-all-pages')
             {
                 if (!$user->checkPermission($domain, 'perm_regen_pages'))
                 {
@@ -331,7 +321,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 $archive->updateThreads();
             }
 
-            if (in_array('board-all-caches', $inputs['actions']))
+            if ($inputs['action'] === 'board-all-caches')
             {
                 if (!$user->checkPermission($domain, 'perm_regen_cache'))
                 {
@@ -341,7 +331,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 $regen->boardCache($domain);
             }
 
-            if (in_array('site-all-caches', $inputs['actions']))
+            if ($inputs['action'] === 'site-all-caches')
             {
                 if (!$user->checkPermission($domain, 'perm_regen_cache'))
                 {
@@ -357,37 +347,37 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
         case 'templates':
             $templates_admin = new \Nelliel\Admin\AdminTemplates($authorization, $domain);
-            $templates_admin->actionDispatch($inputs['actions'][0], false);
+            $templates_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'filetypes':
             $filetypes_admin = new \Nelliel\Admin\AdminFiletypes($authorization, $domain);
-            $filetypes_admin->actionDispatch($inputs['actions'][0], false);
+            $filetypes_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'styles':
             $styles_admin = new \Nelliel\Admin\AdminStyles($authorization, $domain);
-            $styles_admin->actionDispatch($inputs['actions'][0], false);
+            $styles_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'permissions':
             $permissions_admin = new \Nelliel\Admin\AdminPermissions($authorization, $domain);
-            $permissions_admin->actionDispatch($inputs['actions'][0], false);
+            $permissions_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'icon-sets':
             $icon_sets_admin = new \Nelliel\Admin\AdminIconSets($authorization, $domain);
-            $icon_sets_admin->actionDispatch($inputs['actions'][0], false);
+            $icon_sets_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'news':
             $news_admin = new \Nelliel\Admin\AdminNews($authorization, $domain);
-            $news_admin->actionDispatch($inputs['actions'][0], false);
+            $news_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'logs':
             $logs_admin = new \Nelliel\Admin\AdminLogs($authorization, $domain);
-            $logs_admin->actionDispatch($inputs['actions'][0], false);
+            $logs_admin->actionDispatch($inputs['action'], false);
             break;
 
         default:
