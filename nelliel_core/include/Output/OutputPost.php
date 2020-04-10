@@ -357,7 +357,7 @@ class OutputPost extends OutputCore
 
                 foreach ($segments as $segment)
                 {
-                    $link_url = $cites->createPostLinkURL($this->domain, $post_content_id, $segment);
+                    $link_url = $cites->createPostLinkURL($this->domain, $post_content_id, $segment, true);
 
                     if (!empty($link_url))
                     {
