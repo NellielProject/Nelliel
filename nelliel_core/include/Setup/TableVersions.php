@@ -19,10 +19,10 @@ class TableVersions extends TableHandler
         $this->table_name = VERSIONS_TABLE;
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'item_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'item_type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'structure_version' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'data_version' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
+            'id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'original' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'current' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -38,11 +38,11 @@ class TableVersions extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            item_id             VARCHAR(255) NOT NULL,
-            item_type           VARCHAR(255) NOT NULL,
-            structure_version   SMALLINT NOT NULL DEFAULT 0,
-            data_version        SMALLINT NOT NULL DEFAULT 0
+            entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            id          VARCHAR(255) NOT NULL,
+            type        VARCHAR(255) NOT NULL,
+            original    SMALLINT NOT NULL DEFAULT 0,
+            current     SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
         return $this->createTableQuery($schema, $this->table_name);
@@ -60,7 +60,7 @@ class TableVersions extends TableHandler
         $this->insertDefaultRow([LOGIN_ATTEMPTS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([NEWS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([PERMISSIONS_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([REPORTS_TABLE, "table", '1', '1']);
+        //$this->insertDefaultRow([REPORTS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([ROLE_PERMISSIONS_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([ROLES_TABLE, "table", '1', '1']);
         $this->insertDefaultRow([SITE_CONFIG_TABLE, "table", '1', '1']);

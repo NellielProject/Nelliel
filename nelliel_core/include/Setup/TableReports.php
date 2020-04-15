@@ -30,6 +30,7 @@ class TableReports extends TableHandler
     public function setup()
     {
         $this->createTable();
+        $this->updateVersionsTable();
         $this->insertDefaults();
     }
 

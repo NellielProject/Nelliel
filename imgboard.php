@@ -11,7 +11,6 @@ require_once INCLUDE_PATH . 'autoload.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
 require_once INCLUDE_PATH . 'derp.php';
-require_once INCLUDE_PATH . 'database.php';
 require_once INCLUDE_PATH . 'accessors.php';
 
 nel_plugins()->loadPlugins();
@@ -21,7 +20,6 @@ nel_plugins()->processHook('nel-plugin-example', array(5));
 $out = nel_plugins()->processHook('nel-plugin-example-return', array('string'), 5);
 unset($out);
 
-require_once INCLUDE_PATH . 'general_functions.php';
 require_once INCLUDE_PATH . 'crypt.php';
 
 nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);

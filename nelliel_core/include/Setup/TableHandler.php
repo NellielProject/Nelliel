@@ -15,13 +15,32 @@ abstract class TableHandler
     protected $sql_compatibility;
     protected $table_name;
     protected $columns_data;
-    protected $schema_version;
+    protected $schema_version = 1;
 
     public abstract function setup();
 
     public abstract function createTable(array $other_tables = null);
 
     public abstract function insertDefaults();
+
+    protected function updateVersionsTable()
+    {
+        if ($this->database->rowExists(VERSIONS_TABLE, ['id'], [$this->table_name]))
+        {
+            $prepared = $this->database->prepare(
+                    'UPDATE "' . VERSIONS_TABLE . '" SET "current" = ? WHERE "id" = ? AND "type" = ?');
+            $this->database->executePrepared($prepared, [$this->schema_version, $this->table_name, 'table']);
+        }
+        else
+        {
+            $prepared = $this->database->prepare(
+                    'INSERT INTO "' . VERSIONS_TABLE .
+                    '" ("id", "type", "original", "current") VALUES
+                    (?, ?, ?, ?)');
+            $this->database->executePrepared($prepared,
+                    [$this->table_name, 'table', $this->schema_version, $this->schema_version]);
+        }
+    }
 
     protected function insertDefaultRow(array $values)
     {

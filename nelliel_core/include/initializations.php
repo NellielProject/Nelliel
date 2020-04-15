@@ -157,6 +157,8 @@ $language->loadLanguage(DEFAULT_LOCALE, 'nelliel', LC_MESSAGES);
 unset($language);
 Mustache_Autoloader::register();
 
+require_once INCLUDE_PATH . 'database.php';
+require_once INCLUDE_PATH . 'general_functions.php';
 $setup = new \Nelliel\Setup\Setup();
 
 if(isset($_GET['install']))

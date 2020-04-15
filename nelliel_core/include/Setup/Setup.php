@@ -138,6 +138,8 @@ class Setup
     {
         $database = nel_database();
         $sql_compatibility = new SQLCompatibility($database);
+        $versions_table = new TableVersions($database, $sql_compatibility);
+        $versions_table->setup();
         $assets_table = new TableAssets($database, $sql_compatibility);
         $assets_table->setup();
         $bans_table = new TableBans($database, $sql_compatibility);
@@ -182,8 +184,6 @@ class Setup
         $user_roles_table->setup();
         $users_table = new TableUsers($database, $sql_compatibility);
         $users_table->setup();
-        $versions_table = new TableVersions($database, $sql_compatibility);
-        $versions_table->setup();
         echo _gettext('Core database tables created.'), '<br>';
     }
 
