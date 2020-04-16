@@ -26,12 +26,7 @@ class TableNews extends TableHandler
         $this->schema_version = 1;
     }
 
-    public function setup()
-    {
-        $this->createTable();
-    }
-
-    public function createTable(array $other_tables = null)
+    public function buildSchema(array $other_tables = null)
     {
         $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
         $options = $this->sql_compatibility->tableOptions();
@@ -44,7 +39,7 @@ class TableNews extends TableHandler
             text            TEXT DEFAULT NULL
         ) " . $options . ";";
 
-        return $this->createTableQuery($schema, $this->table_name);
+        return $schema;
     }
 
     public function insertDefaults()

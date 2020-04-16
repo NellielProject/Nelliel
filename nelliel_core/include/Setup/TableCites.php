@@ -27,12 +27,7 @@ class TableCites extends TableHandler
         $this->schema_version = 1;
     }
 
-    public function setup()
-    {
-        $this->createTable();
-    }
-
-    public function createTable(array $other_tables = null)
+    public function buildSchema(array $other_tables = null)
     {
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
@@ -45,7 +40,7 @@ class TableCites extends TableHandler
             target_post     INTEGER DEFAULT NULL
         ) " . $options . ";";
 
-        return $this->createTableQuery($schema, $this->table_name);
+        return $schema;
     }
 
     public function insertDefaults()

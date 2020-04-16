@@ -41,12 +41,7 @@ class TablePosts extends TableHandler
         $this->schema_version = 1;
     }
 
-    public function setup()
-    {
-        ;
-    }
-
-    public function createTable(array $other_tables = null)
+    public function buildSchema(array $other_tables = null)
     {
         $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
         $options = $this->sql_compatibility->tableOptions();
@@ -78,7 +73,7 @@ class TablePosts extends TableHandler
             ON DELETE CASCADE
         ) " . $options . ";";
 
-        return $this->createTableQuery($schema, $this->table_name);
+        return $schema;
     }
 
     public function insertDefaults()

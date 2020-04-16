@@ -25,13 +25,7 @@ class TableRolePermissions extends TableHandler
         $this->schema_version = 1;
     }
 
-    public function setup()
-    {
-        $this->createTable();
-        $this->insertDefaults();
-    }
-
-    public function createTable(array $other_tables = null)
+    public function buildSchema(array $other_tables = null)
     {
         $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
         $options = $this->sql_compatibility->tableOptions();
@@ -43,7 +37,7 @@ class TableRolePermissions extends TableHandler
             perm_setting    SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
-        return $this->createTableQuery($schema, $this->table_name);
+        return $schema;
     }
 
     public function insertDefaults()

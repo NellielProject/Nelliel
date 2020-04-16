@@ -14,14 +14,24 @@ abstract class TableHandler
     protected $database;
     protected $sql_compatibility;
     protected $table_name;
-    protected $columns_data;
+    protected $columns_data = array();
     protected $schema_version = 1;
 
-    public abstract function setup();
-
-    public abstract function createTable(array $other_tables = null);
+    public abstract function buildSchema(array $other_tables = null);
 
     public abstract function insertDefaults();
+
+    public function createTable(array $other_tables = null)
+    {
+        $schema = $this->buildSchema($other_tables);
+        $created = $this->createTableQuery($schema, $this->table_name);
+
+        if ($created)
+        {
+            $this->updateVersionsTable();
+            $this->insertDefaults();
+        }
+    }
 
     protected function updateVersionsTable()
     {
@@ -34,8 +44,7 @@ abstract class TableHandler
         else
         {
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . VERSIONS_TABLE .
-                    '" ("id", "type", "original", "current") VALUES
+                    'INSERT INTO "' . VERSIONS_TABLE . '" ("id", "type", "original", "current") VALUES
                     (?, ?, ?, ?)');
             $this->database->executePrepared($prepared,
                     [$this->table_name, 'table', $this->schema_version, $this->schema_version]);
