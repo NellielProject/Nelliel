@@ -21,7 +21,7 @@ class Setup
     {
         if ($this->checkInstallDone())
         {
-            nel_derp(108, _gettext('install_done.php is present. Installation has already been completed!'));
+            nel_derp(108, _gettext('Installation has already been completed!'));
         }
 
         $this->checkDBEngine();
@@ -29,13 +29,16 @@ class Setup
         $this->coreDirWritable();
         $this->configDirWritable();
 
-        if($this->checkGenerated(true))
+        $file_handler = new \Nelliel\FileHandler();
+        $generate_files = new \Nelliel\Setup\GenerateFiles($file_handler);
+
+        if($generate_files->peppers(false))
         {
-            echo _gettext('File generated.php created.'), '<br>';
+            echo _gettext('Peppers file has been created.'), '<br>';
         }
         else
         {
-            echo _gettext('File generated.php already present.'), '<br>';
+            echo _gettext('Peppers file already present.'), '<br>';
         }
 
         $this->createCoreTables();
@@ -44,8 +47,7 @@ class Setup
         $regen = new \Nelliel\Regen();
         $regen->siteCache($site_domain);
         //$regen->news($site_domain);
-        $file_handler = new \Nelliel\FileHandler();
-        $file_handler->writeInternalFile(GENERATED_FILE_PATH . 'install_done.php', '', true, false);
+        $generate_files->installDone(false);
         echo _gettext(
                 "Install has finished with no apparent problems! When you're ready to continue, follow this link: "), '<br>';
         echo '<a href="' . BASE_WEB_PATH . '">' . _gettext('Default home page') . '</a>';
@@ -55,33 +57,6 @@ class Setup
     public function checkInstallDone()
     {
         return file_exists(GENERATED_FILE_PATH . 'install_done.php');
-    }
-
-    public function generateValues()
-    {
-        $generated = array();
-        $generated['tripcode_pepper'] = base64_encode(random_bytes(32));
-        $generated['ip_pepper'] = base64_encode(random_bytes(32));
-        $generated['poster_id_pepper'] = base64_encode(random_bytes(32));
-        $generated['post_password_pepper'] = base64_encode(random_bytes(32));
-        return $generated;
-    }
-
-    public function checkGenerated(bool $generate)
-    {
-        if (!file_exists(GENERATED_FILE_PATH . 'generated.php'))
-        {
-            if($generate)
-            {
-                $file_handler = new \Nelliel\FileHandler();
-                $generated = $this->generateValues();
-                $prepend = "\n" . '// DO NOT EDIT THESE VALUES OR REMOVE THIS FILE UNLESS YOU HAVE A DAMN GOOD REASON';
-                $file_handler->writeInternalFile(GENERATED_FILE_PATH . 'generated.php',
-                        $prepend . "\n" . '$generated = ' . var_export($generated, true) . ';', true, false);
-            }
-        }
-
-        return file_exists(GENERATED_FILE_PATH . 'generated.php');
     }
 
     public function checkDBEngine()

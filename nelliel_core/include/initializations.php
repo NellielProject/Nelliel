@@ -171,15 +171,15 @@ if(!$setup->checkInstallDone())
     nel_derp(107, _gettext('Installation has not been done yet or is not complete.'));
 }
 
-if($setup->checkGenerated(true))
+if(file_exists(GENERATED_FILE_PATH . 'peppers.php'))
 {
-    $generated = array();
-    include_once GENERATED_FILE_PATH . 'generated.php';
-    define('TRIPCODE_PEPPER', $generated['tripcode_pepper']);
-    define('IP_PEPPER', $generated['ip_pepper']);
-    define('POSTER_ID_PEPPER', $generated['poster_id_pepper']);
-    define('POST_PASSWORD_PEPPER', $generated['post_password_pepper']);
-    unset($generated);
+    $peppers = array();
+    include_once GENERATED_FILE_PATH . 'peppers.php';
+    define('TRIPCODE_PEPPER', $peppers['tripcode_pepper']);
+    define('IP_PEPPER', $peppers['ip_pepper']);
+    define('POSTER_ID_PEPPER', $peppers['poster_id_pepper']);
+    define('POST_PASSWORD_PEPPER', $peppers['post_password_pepper']);
+    unset($peppers);
 }
 
 unset ($setup);
