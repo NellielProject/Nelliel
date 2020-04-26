@@ -38,7 +38,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     $output_account->render(['user' => $session->sessionUser()], false);
                 }
             }
-            else if ($inputs['action'] === 'login')
+            else if ($inputs['action'] === 'logout')
             {
                 $session = new \Nelliel\Account\Session();
                 $session->logout();
