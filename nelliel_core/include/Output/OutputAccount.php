@@ -38,7 +38,7 @@ class OutputAccount extends OutputCore
 
         $this->render_data['user_id'] = $user->id();
 
-        if (!$user->isSuperAdmin())
+        if (!$user->isSiteOwner())
         {
             $this->render_data['normal_user'] = true;
             $this->render_data['display_name'] = $user->auth_data['display_name'];

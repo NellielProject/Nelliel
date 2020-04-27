@@ -23,11 +23,6 @@ class AuthUser extends AuthHandler
 
     public function loadFromDatabase($temp_database = null)
     {
-        if($this->isSuperAdmin())
-        {
-            return true;
-        }
-
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('SELECT * FROM "' . USERS_TABLE . '" WHERE "user_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
@@ -51,7 +46,7 @@ class AuthUser extends AuthHandler
 
     public function writeToDatabase($temp_database = null)
     {
-        if (empty($this->id()) || $this->isSuperAdmin())
+        if (empty($this->id()))
         {
             return false;
         }
@@ -64,20 +59,21 @@ class AuthUser extends AuthHandler
         {
             $prepared = $database->prepare(
                     'UPDATE "' . USERS_TABLE .
-                    '" SET "user_id" = :user_id, "display_name" = :display_name, "user_password" = :user_password, "active" = :active, "last_login" = :last_login WHERE "entry" = :entry');
+                    '" SET "user_id" = :user_id, "display_name" = :display_name, "user_password" = :user_password, "active" = :active, "owner" = :owner, "last_login" = :last_login WHERE "entry" = :entry');
             $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
         }
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . USERS_TABLE . '" ("user_id", "display_name", "user_password", "active", "last_login") VALUES
-                    (:user_id, :display_name, :user_password, :active, :last_login)');
+                    'INSERT INTO "' . USERS_TABLE . '" ("user_id", "display_name", "user_password", "active", "owner", "last_login") VALUES
+                    (:user_id, :display_name, :user_password, :active, :owner, :last_login)');
         }
 
         $prepared->bindValue(':user_id', $this->authDataOrDefault('user_id', $this->id()), PDO::PARAM_STR);
         $prepared->bindValue(':display_name', $this->authDataOrDefault('display_name', null), PDO::PARAM_STR);
         $prepared->bindValue(':user_password', $this->authDataOrDefault('user_password', null), PDO::PARAM_STR);
         $prepared->bindValue(':active', $this->authDataOrDefault('active', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':owner', $this->authDataOrDefault('owner', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_login', $this->authDataOrDefault('last_login', 0), PDO::PARAM_INT);
         $database->executePrepared($prepared);
 
@@ -173,8 +169,8 @@ class AuthUser extends AuthHandler
 
     public function checkPermission(Domain $domain, $perm_id)
     {
-        // Super Admin can do all the things
-        if ($this->isSuperAdmin())
+        // Site Owner can do all the things
+        if ($this->isSiteOwner())
         {
             return true;
         }
@@ -211,11 +207,11 @@ class AuthUser extends AuthHandler
 
     public function active()
     {
-        return boolval($this->getInfo('active') || $this->isSuperAdmin());
+        return boolval($this->getInfo('active') || $this->isSiteOwner());
     }
 
-    public function isSuperAdmin()
+    public function isSiteOwner()
     {
-        return $this->authorization->isSuperAdmin($this->auth_id);
+        return $this->authorization->isSiteOwner($this->auth_id);
     }
 }

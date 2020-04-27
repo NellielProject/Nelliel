@@ -72,8 +72,13 @@ class OutputPanelUsers extends OutputCore
             $user_data['user_id'] = $user_info['user_id'];
             $user_data['display_name'] = $user_info['display_name'];
             $user_data['active'] = $user_info['active'];
-            $user_data['edit_url'] = MAIN_SCRIPT . '?module=users&action=edit&user-id=' . $user_info['user_id'];
-            $user_data['remove_url'] = MAIN_SCRIPT . '?module=users&action=remove&user-id=' . $user_info['user_id'];
+
+            if ($user_info['owner'] == 0)
+            {
+                $user_data['edit_url'] = MAIN_SCRIPT . '?module=users&action=edit&user-id=' . $user_info['user_id'];
+                $user_data['remove_url'] = MAIN_SCRIPT . '?module=users&action=remove&user-id=' . $user_info['user_id'];
+            }
+
             $this->render_data['users_list'][] = $user_data;
         }
 
@@ -115,32 +120,40 @@ class OutputPanelUsers extends OutputCore
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';
         }
 
-        $prepared = $this->database->prepare(
-                'SELECT "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
-        $site_role = $this->database->executePreparedFetch($prepared, array($user_id, ''), PDO::FETCH_COLUMN);
-
-        if (!empty($site_role))
+        if ($edit_user->isSiteOwner())
         {
-            $this->render_data['site_role_id'] = $site_role;
+            $this->render_data['is_site_owner'] = true;
         }
-
-        $board_list = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
-
-        foreach ($board_list as $board)
+        else
         {
-            $board_role_data = array();
-            $board_role_data['board_id'] = $board['board_id'];
+            $this->render_data['is_site_owner'] = false;
             $prepared = $this->database->prepare(
                     'SELECT "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
-            $role_id = $this->database->executePreparedFetch($prepared, array($user_id, $board['board_id']),
-                    PDO::FETCH_COLUMN);
+            $site_role = $this->database->executePreparedFetch($prepared, array($user_id, ''), PDO::FETCH_COLUMN);
 
-            if (!empty($role_id))
+            if (!empty($site_role))
             {
-                $board_role_data['role_id'] = $role_id;
+                $this->render_data['site_role_id'] = $site_role;
             }
 
-            $this->render_data['board_roles'][] = $board_role_data;
+            $board_list = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
+
+            foreach ($board_list as $board)
+            {
+                $board_role_data = array();
+                $board_role_data['board_id'] = $board['board_id'];
+                $prepared = $this->database->prepare(
+                        'SELECT "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
+                $role_id = $this->database->executePreparedFetch($prepared, array($user_id, $board['board_id']),
+                        PDO::FETCH_COLUMN);
+
+                if (!empty($role_id))
+                {
+                    $board_role_data['role_id'] = $role_id;
+                }
+
+                $this->render_data['board_roles'][] = $board_role_data;
+            }
         }
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/users_panel_edit',

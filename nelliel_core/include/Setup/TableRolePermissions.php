@@ -42,37 +42,6 @@ class TableRolePermissions extends TableHandler
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_site_config', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_manage_permissions', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_manage_templates', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_manage_styles', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_manage_icon_sets', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_manage_users', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_manage_roles', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_manage_filetypes', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_extract_gettext', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_defaults', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_config_lock_override', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_manage_news', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_manage_file_filters', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_regen_cache', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_regen_pages', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_assign_role', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_create', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_delete', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_transfer', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_lock', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_config', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_manage_bans', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_sticky_posts', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_lock_posts', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_post_in_locked', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_post_as_staff', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_mod_comment', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_modify_posts', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_manage_reports', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_mod_mode', 1]);
-        $this->insertDefaultRow(['SITE_OWNER', 'perm_board_delete_posts', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_site_config', 0]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_permissions', 0]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_templates', 0]);

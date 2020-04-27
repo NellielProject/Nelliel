@@ -8,7 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use PDO;
-use \Nelliel\SQLCompatibility;
+use Nelliel\SQLCompatibility;
 
 class Setup
 {
@@ -19,6 +19,8 @@ class Setup
 
     public function install()
     {
+        echo '<!DOCTYPE html><html><body>';
+
         if ($this->checkInstallDone())
         {
             nel_derp(108, _gettext('Installation has already been completed!'));
@@ -31,8 +33,9 @@ class Setup
 
         $file_handler = new \Nelliel\FileHandler();
         $generate_files = new \Nelliel\Setup\GenerateFiles($file_handler);
+        $install_id = base64_encode(random_bytes(33));
 
-        if($generate_files->peppers(false))
+        if ($generate_files->peppers(false))
         {
             echo _gettext('Peppers file has been created.'), '<br>';
         }
@@ -48,10 +51,49 @@ class Setup
         $regen->siteCache($site_domain);
         //$regen->news($site_domain);
         $generate_files->installDone(false);
-        echo _gettext(
-                "Install has finished with no apparent problems! When you're ready to continue, follow this link: "), '<br>';
-        echo '<a href="' . BASE_WEB_PATH . '">' . _gettext('Default home page') . '</a>';
-        die();
+
+
+        if ($this->ownerCreated())
+        {
+            echo _gettext('Site owner account already created.'), '<br>';
+            echo _gettext(
+                    'Install has finished with no apparent problems! When you\'re ready to continue, follow this link to the login page: '), '<br>';
+            echo '<a href="' . BASE_WEB_PATH . 'imgboard.php?module=account&amp;action=login">' . _gettext('Login page') . '</a>';
+            echo '</body></html>';
+            die();
+        }
+        else
+        {
+            echo '<p>';
+            echo _gettext(
+                    'No problems so far! To complete setup, a site owner account needs to be created. This account will have all permissions and cannot be deleted.');
+            echo '</p>';
+            echo '<form accept-charset="utf-8" action="imgboard.php?module=account&amp;action=register&amp;create_owner=' . rawurlencode($install_id) . '" method="post">';
+            echo '
+<div>
+    <span data-i18n="gettext">User ID: </span><input type="text" name="register_user_id" size="25" maxlength="255">
+</div>';
+            echo '
+<div>
+    <span data-i18n="gettext">Password: </span><input type="password" name="register_super_sekrit" size="25" maxlength="255">
+</div>';
+            echo '
+<div>
+    <span data-i18n="gettext">Confirm password: </span><input type="password" name="register_super_sekrit_confirm" size="25" maxlength="255">
+</div>';
+            echo '
+<div>
+    <input type="submit" value="Submit" data-i18n-attributes="gettext|value">
+</div>';
+            echo '</form></body></html>';
+            $generate_files->ownerCreate($install_id, false);
+            die();
+        }
+    }
+
+    public function ownerCreated()
+    {
+        return file_exists(GENERATED_FILE_PATH . 'create_owner.php');
     }
 
     public function checkInstallDone()

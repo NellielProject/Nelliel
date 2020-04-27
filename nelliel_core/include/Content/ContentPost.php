@@ -57,7 +57,8 @@ class ContentPost extends ContentHandler
         if ($result)
         {
             $prepared = $database->prepare(
-                    'UPDATE "' . $this->domain->reference('posts_table') . '" SET "parent_thread" = :parent_thread,
+                    'UPDATE "' . $this->domain->reference('posts_table') .
+                    '" SET "parent_thread" = :parent_thread,
                     "poster_name" = :poster_name, "reply_to" = :reply_to, "post_password" = :post_password,
                     "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "email" = :email,
                     "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address,
@@ -69,7 +70,8 @@ class ContentPost extends ContentHandler
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . $this->domain->reference('posts_table') . '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "email",
+                    'INSERT INTO "' . $this->domain->reference('posts_table') .
+                    '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "email",
                     "subject", "comment", "ip_address", "post_time", "post_time_milli", "has_content", "content_count", "op", "sage", "mod_post_id", "mod_comment") VALUES
                     (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :email, :subject, :comment, :ip_address, :post_time, :post_time_milli, :has_content, :content_count,
                     :op, :sage, :mod_post_id, :mod_comment)');
@@ -154,7 +156,7 @@ class ContentPost extends ContentHandler
 
         $thread = new ContentThread($this->content_id, $this->domain);
 
-        if($thread->postCount() <= 0)
+        if ($thread->postCount() <= 0)
         {
             $thread->remove(true);
         }
@@ -200,7 +202,8 @@ class ContentPost extends ContentHandler
                 PDO::FETCH_COLUMN, true);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->domain->reference('posts_table') . '" SET "content_count" = ? WHERE "post_number" = ?');
+                'UPDATE "' . $this->domain->reference('posts_table') .
+                '" SET "content_count" = ? WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$content_count, $this->content_id->post_id]);
     }
 
@@ -216,17 +219,17 @@ class ContentPost extends ContentHandler
 
         $flag = false;
 
-        if (!empty($this->content_data['mod_post_id']) && $session->isActive())
+        if ($session->isActive())
         {
-            $mod_post_user = $authorization->getUser($this->content_data['mod_post_id']);
-            $flag = $authorization->roleLevelCheck($user->checkRole($this->domain),
-                    $mod_post_user->checkRole($this->domain));
-        }
-        else
-        {
-            if ($session->isActive())
+            if ($user->checkPermission($this->domain, 'perm_board_modify_posts') || $user->isSiteOwner())
             {
-                if ($user->checkPermission($this->domain, 'perm_board_modify_posts'))
+                if (!empty($this->content_data['mod_post_id']))
+                {
+                    $mod_post_user = $authorization->getUser($this->content_data['mod_post_id']);
+                    $flag = $authorization->roleLevelCheck($user->checkRole($this->domain),
+                            $mod_post_user->checkRole($this->domain));
+                }
+                else
                 {
                     $flag = true;
                 }
@@ -236,7 +239,8 @@ class ContentPost extends ContentHandler
         if (!$flag)
         {
             if (!isset($this->content_data['post_password']) ||
-                    !nel_verify_salted_hash(POST_PASSWORD_PEPPER . $_POST['update_sekrit'], $this->content_data['post_password']))
+                    !nel_verify_salted_hash(POST_PASSWORD_PEPPER . $_POST['update_sekrit'],
+                            $this->content_data['post_password']))
             {
                 nel_derp(50, _gettext('Password is wrong or you are not allowed to delete that.'));
             }
@@ -282,8 +286,7 @@ class ContentPost extends ContentHandler
             $prepared = $this->database->prepare(
                     'UPDATE "' . $this->domain->reference('content_table') .
                     '" SET "parent_thread" = ? WHERE "post_ref" = ?');
-            $this->database->executePrepared($prepared, [$new_thread->content_id->thread_id,
-                $this->content_id->post_id]);
+            $this->database->executePrepared($prepared, [$new_thread->content_id->thread_id, $this->content_id->post_id]);
         }
 
         $this->loadFromDatabase();

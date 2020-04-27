@@ -23,6 +23,7 @@ class TableUsers extends TableHandler
             'user_password' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'active' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'owner' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'last_login' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -33,13 +34,13 @@ class TableUsers extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] .
-                " NOT NULL,
+            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             user_id         VARCHAR(255) NOT NULL,
             display_name    VARCHAR(255) DEFAULT NULL,
             user_password   VARCHAR(255) DEFAULT NULL,
             active          SMALLINT NOT NULL DEFAULT 0,
             locked          SMALLINT NOT NULL DEFAULT 0,
+            owner           SMALLINT NOT NULL DEFAULT 0,
             last_login      BIGINT DEFAULT NULL
         ) " . $options . ";";
 

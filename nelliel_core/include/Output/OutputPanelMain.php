@@ -36,7 +36,7 @@ class OutputPanelMain extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $prepared = $this->database->prepare(
-                'SELECT "domain_id", "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
+                'SELECT * FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
         $user_roles = $this->database->executePreparedFetchAll($prepared, [$user->id()], PDO::FETCH_ASSOC);
         $boards = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
 
@@ -54,7 +54,11 @@ class OutputPanelMain extends OutputCore
         foreach ($user_roles as $user_role)
         {
             $user_roles_list[$user_role['domain_id']]['role_id'] = $user_role['role_id'];
-            $user_roles_list[$user_role['domain_id']]['role_title'] = $roles_list[$board['role_id']]['role_title'];
+
+            if(isset($roles_list[$user_role['role_id']]))
+            {
+                $user_roles_list[$user_role['domain_id']]['role_title'] = $roles_list[$user_role['role_id']]['role_title'];
+            }
         }
 
         if ($boards !== false)
@@ -66,7 +70,7 @@ class OutputPanelMain extends OutputCore
                     continue;
                 }
 
-                if (!isset($user_roles_list[$board['board_id']]) && !$user->isSuperAdmin())
+                if (!isset($user_roles_list[$board['board_id']]) && !$user->isSiteOwner())
                 {
                     continue;
                 }
@@ -74,9 +78,9 @@ class OutputPanelMain extends OutputCore
                 $board_data['board_url'] = MAIN_SCRIPT . '?module=main-panel&board_id=' . $board['board_id'];
                 $board_data['board_id'] = '/' . $board['board_id'] . '/';
 
-                if ($user->isSuperAdmin())
+                if ($user->isSiteOwner())
                 {
-                    $board_data['board_role'] = 'Super Admin';
+                    $board_data['board_role'] = 'Site Owner';
                 }
                 else
                 {

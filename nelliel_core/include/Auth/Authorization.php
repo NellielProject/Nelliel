@@ -69,9 +69,10 @@ class Authorization
         return true;
     }
 
-    public function isSuperAdmin($user_id)
+    public function isSiteOwner($user_id)
     {
-        return !empty(SUPER_ADMIN) && utf8_strtolower(SUPER_ADMIN) === utf8_strtolower($user_id);
+        $user_id_lower = utf8_strtolower($user_id);
+        return self::$users[$user_id_lower]->auth_data['owner'] == 1;
     }
 
     public function newRole($role_id)

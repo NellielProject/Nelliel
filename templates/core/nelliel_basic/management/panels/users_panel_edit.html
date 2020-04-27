@@ -13,13 +13,16 @@
 			<label for="display_name" class="display-cell" data-i18n="gettext">User display name</label>
 			<input id="display_name" class="display-cell" type="text" name="display_name" size="30" value="{{ display_name }}">
 		</div>
+		{{^ is_site_owner }}
 		<div class="display-row">
 			<input type="hidden" name="active" value="0">
 			<input id="user_active" type="checkbox" name="active" value="1" {{ active }}>
 			<label for="user_active" data-i18n="gettext">User is active</label>
 		</div>
+		{{/ is_site_owner }}
 	</div>
 	<hr>
+	{{^ is_site_owner }}
 	<div class="display-table">
 		<div class="display-row">
 			<span>User Roles</span>
@@ -35,6 +38,7 @@
 		</div>
 		{{/ board_roles }}
 	</div>
+	{{/ is_site_owner }}
 	<div>
 		<input type="submit" value="Update User" data-i18n-attributes="gettext|value">
 	</div>

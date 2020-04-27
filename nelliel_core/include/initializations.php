@@ -114,8 +114,6 @@ $crypt_config['argon2_threads'] = 2;
 
 require_once CONFIG_FILE_PATH . 'config.php';
 
-define('SUPER_ADMIN', $base_config['super_admin']);
-define('SUPER_ADMIN_PASS', $base_config['super_admin_pass']);
 define('DIRECTORY_PERM', $base_config['directory_perm']);
 define('FILE_PERM', $base_config['file_perm']);
 define('USE_INTERNAL_CACHE', $base_config['use_internal_cache']);

@@ -14,12 +14,6 @@ if (!defined('NELLIEL_VERSION'))
 // === General Settings ===
 //
 
-// When super_admin and super_admin_pass are filled in, a Super Administrator will be available using those credentials.
-// Super Admin has no permission checks or limits. This is used only for setting up the site owner account at install and possible debugging.
-// When the super admin is not in use, the settings should be returned to '' for security.
-$base_config['super_admin'] = '';
-$base_config['super_admin_pass'] = '';
-
 // The fallback default value for locale.
 // If a locale is specified elsewhere but no language file exists for it, Nelliel will use this value instead.
 // Locale should follow the standard format using ISO-639 language and ISO-3166 country codes.

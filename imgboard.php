@@ -8,9 +8,9 @@ define('INCLUDE_PATH', NELLIEL_CORE_PATH . 'include/'); // Base include files pa
 define('LIBRARY_PATH', NELLIEL_CORE_PATH . 'libraries/'); // Libraries path
 
 require_once INCLUDE_PATH . 'autoload.php';
+require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'initializations.php';
 require_once LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
-require_once INCLUDE_PATH . 'derp.php';
 require_once INCLUDE_PATH . 'accessors.php';
 
 nel_plugins()->loadPlugins();
