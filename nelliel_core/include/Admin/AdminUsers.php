@@ -34,6 +34,7 @@ class AdminUsers extends AdminHandler
         if ($action === 'new')
         {
             $this->creator();
+            $return = true;
         }
         else if ($action === 'add')
         {
@@ -42,6 +43,7 @@ class AdminUsers extends AdminHandler
         else if ($action === 'edit')
         {
             $this->editor();
+            $return = true;
         }
         else if ($action === 'update')
         {

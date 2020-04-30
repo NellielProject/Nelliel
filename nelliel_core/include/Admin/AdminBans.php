@@ -28,10 +28,12 @@ class AdminBans extends AdminHandler
         if ($action === 'modify')
         {
             $this->editor();
+            $return = true;
         }
         else if ($action === 'new')
         {
             $this->creator();
+            $return = true;
         }
         else if ($action === 'add')
         {
