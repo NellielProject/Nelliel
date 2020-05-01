@@ -59,8 +59,8 @@ class CAPTCHA
         imagepng($captcha_image);
 
         $captcha_data = array();
-        $captcha_data['key'] = $captcha_key;
-        $captcha_data['text'] = $captcha_text;
+        $captcha_data['captcha_key'] = $captcha_key;
+        $captcha_data['captcha_text'] = $captcha_text;
         $captcha_data['domain_id'] = $this->domain->id();
         $captcha_data['time_created'] = time();
         $captcha_data['ip_address'] = $_SERVER['REMOTE_ADDR'];
@@ -141,10 +141,10 @@ class CAPTCHA
     {
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . CAPTCHA_TABLE .
-                '" ("key", "text", "domain_id", "time_created", "ip_address")
+                '" ("captcha_key", "captcha_text", "domain_id", "time_created", "ip_address")
 								VALUES (:key, :text, :domain_id, :time_created, :ip_address)');
-        $prepared->bindParam(':key', $captcha_data['key'], PDO::PARAM_STR);
-        $prepared->bindParam(':text', $captcha_data['text'], PDO::PARAM_STR);
+        $prepared->bindParam(':captcha_key', $captcha_data['captcha_key'], PDO::PARAM_STR);
+        $prepared->bindParam(':captcha_text', $captcha_data['captcha_text'], PDO::PARAM_STR);
         $prepared->bindParam(':domain_id', $captcha_data['domain_id'], PDO::PARAM_STR);
         $prepared->bindParam(':time_created', $captcha_data['time_created'], PDO::PARAM_INT);
         $prepared->bindParam(':ip_address', $captcha_data['ip_address'], PDO::PARAM_LOB);
@@ -162,7 +162,7 @@ class CAPTCHA
 
         $expiration = time() - $this->site_domain->setting('captcha_timeout');
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . CAPTCHA_TABLE . '" WHERE "key" = ? AND "text" = ? AND "time_created" > ?');
+                'SELECT * FROM "' . CAPTCHA_TABLE . '" WHERE "captcha_key" = ? AND "captcha_text" = ? AND "time_created" > ?');
         $result = $this->database->executePreparedFetch($prepared, [$key, $answer, $expiration], PDO::FETCH_ASSOC);
 
         if ($result === false)
@@ -170,7 +170,7 @@ class CAPTCHA
             return false;
         }
 
-        $prepared = $this->database->prepare('DELETE FROM "' . CAPTCHA_TABLE . '" WHERE "key" = ? AND "text" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . CAPTCHA_TABLE . '" WHERE "captcha_key" = ? AND "captcha_text" = ?');
         $this->database->executePreparedFetch($prepared, [$key, $answer], PDO::FETCH_ASSOC);
         return true;
     }

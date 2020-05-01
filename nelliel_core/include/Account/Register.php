@@ -33,8 +33,6 @@ class Register
         if ($creating_owner)
         {
             include GENERATED_FILE_PATH . 'create_owner.php';
-            var_dump($install_id);
-            var_dump($_GET['create_owner']);
 
             if($install_id != $_GET['create_owner'])
             {

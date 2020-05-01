@@ -18,7 +18,7 @@ class TableLoginAttempts extends TableHandler
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = LOGIN_ATTEMPTS_TABLE;
         $this->columns_data = [
-            'key' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'attempt_key' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
             'hashed_ip' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'last_attempt' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
@@ -31,7 +31,7 @@ class TableLoginAttempts extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            key             VARCHAR(255) NOT NULL PRIMARY KEY,
+            attempt_key     VARCHAR(255) NOT NULL PRIMARY KEY,
             ip_address      " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
             hashed_ip       VARCHAR(255) DEFAULT NULL,
             last_attempt    BIGINT NOT NULL

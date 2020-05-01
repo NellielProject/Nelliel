@@ -103,11 +103,11 @@ class Login
         }
         else
         {
-            $key = sha1($_SERVER['REMOTE_ADDR'] . random_bytes(16));
+            $attempt_key = sha1($_SERVER['REMOTE_ADDR'] . random_bytes(16));
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . LOGIN_ATTEMPTS_TABLE .
-                    '" (key, ip_address, last_attempt) VALUES (:key, :ip_address, :last_attempt)');
-            $prepared->bindValue(':key', $key, PDO::PARAM_STR);
+                    '" (attempt_key, ip_address, last_attempt) VALUES (:attempt_key, :ip_address, :last_attempt)');
+            $prepared->bindValue(':attempt_key', $attempt_key, PDO::PARAM_STR);
             $prepared->bindValue(':ip_address', @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
             $prepared->bindValue(':last_attempt', $attempt_time, PDO::PARAM_INT);
             $this->database->executePrepared($prepared, null, true);
