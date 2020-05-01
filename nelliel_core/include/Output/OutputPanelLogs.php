@@ -84,7 +84,7 @@ class OutputPanelLogs extends OutputCore
         }
 
         $page_format = MAIN_SCRIPT . '?module=logs&page=%d';
-        $page_count = $parameters['page_count'] ?? 5;
+        $page_count = $parameters['page_count'] ?? 1;
         $page = $parameters['page'] ?? 1;
         $pagination_object = new \Nelliel\Pagination();
         $pagination_object->setPrevious(_gettext('<<'));

@@ -184,6 +184,7 @@ class OutputIndex extends OutputCore
         $pagination_object->setNext(_gettext('Next'));
         $pagination_object->setPage('%d', $page_format);
         $pagination_object->setFirst('%d', 'index' . PAGE_EXT);
+        $pagination_object->setLast('%d', $page_format);
         return $pagination_object->generateNumerical(1, $page_count, $page);
     }
 }

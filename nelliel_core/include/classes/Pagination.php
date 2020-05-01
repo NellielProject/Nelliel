@@ -17,6 +17,8 @@ class Pagination
     private $page_url_format;
     private $first_text;
     private $first_url_format;
+    private $last_text;
+    private $last_url_format;
 
     function __construct()
     {
@@ -28,6 +30,8 @@ class Pagination
         $this->page_url_format = '';
         $this->first_text = '%d';
         $this->first_url_format = '';
+        $this->last_text = '%d';
+        $this->last_url_format = '';
     }
 
     public function setPrevious(string $text = null, string $url_format = null)
@@ -54,66 +58,56 @@ class Pagination
         $this->first_url_format = ($url_format) ?? $this->first_url_format;
     }
 
+    public function setLast(string $text = null, string $url_format = null)
+    {
+        $this->last_text = ($text) ?? $this->last_text;
+        $this->last_url_format = ($url_format) ?? $this->last_url_format;
+    }
+
     public function generateNumerical(int $start, int $end, int $current, bool $link_current = false)
     {
         $pagination = array();
+        $previous = ($current - 1 >= $start) ? $current - 1 : $current;
+        $pagination[] = $this->numericalEntry($start, $end, $current, $link_current, $this->previous_text, $previous);
 
         for ($i = $start; $i <= $end; $i ++)
         {
-            $is_current = $i === $current;
-            $entry = array();
+            $pagination[] = $this->numericalEntry($start, $end, $current, $link_current, sprintf($this->page_text, $i), $i);
+        }
 
+        $next = ($current + 1 <= $end) ? $current + 1 : $current;
+        $pagination[] = $this->numericalEntry($start, $end, $current, $link_current, $this->next_text, $next);
+        return $pagination;
+    }
+
+    private function numericalEntry(int $start, int $end, int $current, bool $link_current, string $text, int $i)
+    {
+        $entry = array();
+        $entry['text'] = $text;
+
+        if ($i === $current && !$link_current)
+        {
+            $entry['url'] = '';
+            $entry['linked'] = false;
+        }
+        else
+        {
             if ($i === $start)
             {
-                $entry['text'] = sprintf($this->first_text, $i);
                 $entry['url'] = sprintf($this->first_url_format, $i);
+            }
+            else if ($i === $end)
+            {
+                $entry['url'] = sprintf($this->last_url_format, $i);
             }
             else
             {
-                $entry['text'] = sprintf($this->page_text, $i);
                 $entry['url'] = sprintf($this->page_url_format, $i);
             }
 
             $entry['linked'] = true;
-
-            if ($is_current)
-            {
-                if (!$link_current)
-                {
-                    $entry['url'] = '';
-                    $entry['linked'] = false;
-                }
-            }
-
-            $pagination[] = $entry;
-
-            if ($i === $start)
-            {
-                $entry['text'] = sprintf($this->previous_text, $this->previous_url_format);
-
-                if ($is_current)
-                {
-                    $previous = ($current - 1 >= $start) ? $current - 1 : $start;
-                    $entry['url'] = sprintf($this->page_url_format, $previous);
-                }
-
-                array_unshift($pagination, $entry);
-            }
-
-            if ($i === $end)
-            {
-                $entry['text'] = sprintf($this->next_text, $this->next_url_format);
-
-                if ($is_current && $link_current)
-                {
-                    $next = ($i + 1 <= $end) ? $i + 1 : $end;
-                    $entry['url'] = sprintf($this->page_url_format, $next);
-                }
-
-                $pagination[] = $entry;
-            }
         }
 
-        return $pagination;
+        return $entry;
     }
 }
