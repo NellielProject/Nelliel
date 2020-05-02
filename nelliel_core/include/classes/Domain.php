@@ -145,4 +145,9 @@ abstract class Domain
     {
         return $this->global_variation;
     }
+
+    public function getFrontEndData()
+    {
+        return $this->front_end_data;
+    }
 }

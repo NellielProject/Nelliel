@@ -26,7 +26,9 @@
 		<td>
 			{{^ is_default }}
 			<span>[<a class="display-cell" href="{{ default_url }}" data-i18n="gettext">Make Default</a>]</span>
+			{{^ is_core }}
 			<span>[<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Uninstall</a>]</span>
+			{{/ is_core }}
 			{{/ is_default }}
 		</td>
 	</tr>

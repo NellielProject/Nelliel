@@ -28,7 +28,7 @@ class FrontEndData
         $this->database = $database;
         $this->ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
         $this->core_icon_set_ids = ['filetype-nelliel-basic'];
-        $this->core_style_ids = ['style-nelliel', 'style-nelliel-b', 'style-futaba', 'style-burichan'];
+        $this->core_style_ids = ['style-nelliel', 'style-nelliel-b', 'style-futaba', 'style-burichan', 'style-nigra'];
         $this->core_template_ids = ['template-nelliel-basic'];
     }
 

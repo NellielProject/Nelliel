@@ -80,6 +80,8 @@ class OutputPanelTemplates extends OutputCore
             $template_data['is_installed'] = in_array($template['id'], $installed_ids);
             $template_data['install_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'templates', 'action' => 'add', 'template-id' => $template['id']]);
+            $template_data['is_core'] = $this->domain->getFrontEndData()->templateIsCore($template['id']);
+
             $this->render_data['available_list'][] = $template_data;
         }
 
