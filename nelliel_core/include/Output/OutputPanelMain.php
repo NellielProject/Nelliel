@@ -97,6 +97,8 @@ class OutputPanelMain extends OutputCore
         $this->render_data['users_url'] = MAIN_SCRIPT . '?module=users';
         $this->render_data['module_roles'] = $user->checkPermission($this->domain, 'perm_manage_roles');
         $this->render_data['roles_url'] = MAIN_SCRIPT . '?module=roles';
+        $this->render_data['module_permissions'] = $user->checkPermission($this->domain, 'perm_manage_permissions');
+        $this->render_data['permissions_url'] = MAIN_SCRIPT . '?module=permissions';
         $this->render_data['module_site_settings'] = $user->checkPermission($this->domain, 'perm_site_config');
         $this->render_data['site_settings_url'] = MAIN_SCRIPT . '?module=site-settings';
         $this->render_data['module_file_filters'] = $user->checkPermission($this->domain, 'perm_manage_file_filters');
