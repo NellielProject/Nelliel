@@ -129,12 +129,12 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
         case 'users':
             $users_admin = new \Nelliel\Admin\AdminUsers($authorization, $domain);
-            $users_admin->actionDispatch($inputs['action'], true);
+            $users_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'roles':
             $roles_admin = new \Nelliel\Admin\AdminRoles($authorization, $domain);
-            $roles_admin->actionDispatch($inputs['action'], true);
+            $roles_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'site-settings':
