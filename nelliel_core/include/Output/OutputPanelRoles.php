@@ -61,7 +61,7 @@ class OutputPanelRoles extends OutputCore
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Roles')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        $roles = $this->database->executeFetchAll('SELECT * FROM "' . ROLES_TABLE . '"', PDO::FETCH_ASSOC);
+        $roles = $this->database->executeFetchAll('SELECT * FROM "' . ROLES_TABLE . '" ORDER BY "role_level" DESC', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
         foreach ($roles as $role)

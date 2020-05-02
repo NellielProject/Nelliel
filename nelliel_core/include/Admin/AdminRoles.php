@@ -48,6 +48,7 @@ class AdminRoles extends AdminHandler
         else if ($action === 'update')
         {
             $this->update();
+            $return = true;
         }
         else if ($action === 'remove')
         {

@@ -46,7 +46,7 @@ class TableRoles extends TableHandler
     {
         $this->insertDefaultRow(['SITE_ADMIN', 80, 'Site Administrator', '## Site Administrator ##']);
         $this->insertDefaultRow(['BOARD_OWNER', 60, 'Board Owner', '## Board Owner ##']);
-        $this->insertDefaultRow(['MOD', 40, 'Moderator', '## Moderator ##']);
+        $this->insertDefaultRow(['MODERATOR', 40, 'Moderator', '## Moderator ##']);
         $this->insertDefaultRow(['JANITOR', 20, 'Janitor', '']);
         $this->insertDefaultRow(['BASIC_USER', 0, 'Basic', '']);
     }
