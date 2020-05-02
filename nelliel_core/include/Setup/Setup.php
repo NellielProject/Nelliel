@@ -66,7 +66,7 @@ class Setup
         {
             echo '<p>';
             echo _gettext(
-                    'No problems so far! To complete setup, a site owner account needs to be created. This account will have all permissions and cannot be deleted.');
+                    'No problems so far! To complete setup, a site owner account needs to be created. This account will have all permissions by default. It is also necessary to use the site settings control panel.');
             echo '</p>';
             echo '<form accept-charset="utf-8" action="imgboard.php?module=account&amp;action=register&amp;create_owner=' . rawurlencode($install_id) . '" method="post">';
             echo '

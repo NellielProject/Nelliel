@@ -44,9 +44,9 @@ class TableRolePermissions extends TableHandler
     {
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_site_config', 0]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_permissions', 0]);
-        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_templates', 0]);
-        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_styles', 0]);
-        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_icon_sets', 0]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_templates', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_styles', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_icon_sets', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_users', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_roles', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_filetypes', 1]);
