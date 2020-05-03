@@ -84,5 +84,9 @@ class Register
         {
             unlink(GENERATED_FILE_PATH . 'create_owner.php');
         }
+
+        $domain = new \Nelliel\DomainSite($this->database);
+        $output_register = new \Nelliel\Output\OutputRegisterPage($domain);
+        $output_register->render(['dotdot' => '', 'section' => 'registration-done'], false);
     }
 }

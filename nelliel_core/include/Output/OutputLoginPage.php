@@ -34,7 +34,7 @@ class OutputLoginPage extends OutputCore
                 ['module' => 'account', 'action' => 'login']);
         $this->render_data['register_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                 ['module' => 'account', 'action' => 'register']);
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/login', $this->render_data);
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('account/login', $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

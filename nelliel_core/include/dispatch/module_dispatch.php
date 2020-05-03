@@ -48,7 +48,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 if (empty($_POST))
                 {
                     $output_login = new \Nelliel\Output\OutputRegisterPage($domain);
-                    $output_login->render(['dotdot' => ''], false);
+                    $output_login->render(['dotdot' => '', 'section' => 'register'], false);
                 }
                 else
                 {
