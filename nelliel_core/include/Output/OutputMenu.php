@@ -50,14 +50,14 @@ class OutputMenu extends OutputCore
     {
         $render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $dotdot = ($parameters['dotdot']) ?? '';
+        $dotdot = $parameters['dotdot'] ?? '';
         $board_data = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
         $render_data['multiple_boards'] = count($board_data) > 1;
 
         foreach ($board_data as $data)
         {
             $board_info = array();
-            $board_info['board_url'] = $dotdot . $data['board_id'];
+            $board_info['board_url'] = $dotdot . $data['board_uri'];
             $board_info['name'] = $this->domain->setting('name');
             $board_info['board_id'] = $data['board_id'];
             $render_data['boards'][] = $board_info;
@@ -70,7 +70,7 @@ class OutputMenu extends OutputCore
     {
         $render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $dotdot = ($parameters['dotdot']) ?? '';
+        $dotdot = $parameters['dotdot'] ?? '';
         $styles = $this->database->executeFetchAll(
                 'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
                 PDO::FETCH_ASSOC);
@@ -95,7 +95,7 @@ class OutputMenu extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
-        $dotdot = ($parameters['dotdot']) ?? '';
+        $dotdot = $parameters['dotdot'] ?? '';
         $ignore_session = $parameters['ignore_session'] ?? false;
         $render_data['session_active'] = $session->isActive() && !$ignore_session;
         $render_data['logout_url'] = $dotdot . MAIN_SCRIPT . '?module=account&action=logout';

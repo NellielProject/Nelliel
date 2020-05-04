@@ -158,7 +158,7 @@ class OutputHeader extends OutputCore
             }
         }
 
-        $this->render_data['boards_menu'] = $output_menu->render(['menu' => 'boards'], true);
+        $this->render_data['boards_menu'] = $output_menu->render(['menu' => 'boards', 'dotdot' => $dotdot], true);
         $output = $this->output('header', $data_only, true);
         return $output;
     }
