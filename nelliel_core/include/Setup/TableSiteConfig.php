@@ -60,7 +60,7 @@ class TableSiteConfig extends TableHandler
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'locale', 'en_US', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'recaptcha_site_key', '', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'recaptcha_sekrit_key', '', 0]);
-        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'recaptcha_type', 'CHECKBOX', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'recaptcha_type', 'CHECKBOX', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'name', '', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'slogan', '', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'favicon', '', 0]);
@@ -72,5 +72,13 @@ class TableSiteConfig extends TableHandler
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'captcha_height', '80', 0, 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'captcha_character_count', '5', 0, 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'graphics_handler', 'GD', 1, 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'overboard_active', '0', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'overboard_uri', '', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'overboard_update_interval', 30, 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'overboard_sfw_active', '0', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'overboard_sfw_uri', '', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'overboard_sfw_update_interval', 30, 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'user_board_creation', '0', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'max_boards_per_user', '1', 0, 0]);
     }
 }

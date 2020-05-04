@@ -211,14 +211,14 @@ class Setup
         echo _gettext('Core directories created.'), '<br>';
     }
 
-    public function createBoardTables($board_id)
+    public function createBoardTables(string $board_id, string $db_prefix)
     {
         $database = nel_database();
         $sql_compatibility = new SQLCompatibility($database);
 
         // Domain and such doesn't function without config table
         $config_table = new TableBoardConfig($database, $sql_compatibility);
-        $config_table->tableName('_' . $board_id . '_config');
+        $config_table->tableName($db_prefix . '_config');
         $config_table->createTable();
         $config_table->copyFrom(BOARD_DEFAULTS_TABLE);
 
@@ -241,7 +241,7 @@ class Setup
         $content_table->createTable(['posts_table' => $domain->reference('archive_posts_table')]);
     }
 
-    public function createBoardDirectories($board_id)
+    public function createBoardDirectories(string $board_id)
     {
         $file_handler = new \Nelliel\FileHandler();
         $domain = new \Nelliel\DomainBoard($board_id, nel_database());

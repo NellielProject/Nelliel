@@ -44,25 +44,5 @@ class TableVersions extends TableHandler
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow([ASSETS_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([BANS_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([BOARD_DATA_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([BOARD_DEFAULTS_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([CAPTCHA_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([FILE_FILTERS_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([FILETYPES_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([LOGIN_ATTEMPTS_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([NEWS_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([PERMISSIONS_TABLE, "table", '1', '1']);
-        //$this->insertDefaultRow([REPORTS_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([ROLE_PERMISSIONS_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([ROLES_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([SITE_CONFIG_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([STAFF_LOGS_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([SYSTEM_LOGS_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([TEMPLATES_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([USER_ROLES_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([USERS_TABLE, "table", '1', '1']);
-        $this->insertDefaultRow([VERSIONS_TABLE, "table", '1', '1']);
     }
 }

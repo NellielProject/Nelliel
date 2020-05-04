@@ -2,7 +2,7 @@
 <table class="data-table">
 	<tr class="manage-header">
 		<th data-i18n="gettext">Board ID</th>
-		<th data-i18n="gettext">Board Directory</th>
+		<th data-i18n="gettext">Board URI</th>
 		<th data-i18n="gettext">DB Prefix</th>
 		<th data-i18n="gettext">Status</th>
 		<th data-i18n="gettext">Lock/Unlock</th>
@@ -11,7 +11,7 @@
 	{{# board_list }}
 	<tr class="{{ bgclass }}">
 		<td>{{ id }}</td>
-		<td>{{ directory }}</td>
+		<td>{{ uri }}</td>
 		<td>{{ db_prefix }}</td>
 		<td>{{ status }}</td>
 		<td>
@@ -27,8 +27,12 @@
 <form action="{{ form_action }}" method="post" enctype="multipart/form-data" aria-label="Create board" data-i18n-attributes="gettext|aria-label">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="new_board_id" class="display-cell" data-i18n="gettext">Board ID (this will also be the directory)</label>
+			<label for="new_board_id" class="display-cell" data-i18n="gettext">Board ID</label>
 			<input id="new_board_id" class="display-cell" type="text" name="new_board_id" size="30" value="">
+		</div>
+		<div class="display-row">
+			<label for="new_board_uri" class="display-cell" data-i18n="gettext">Board URI (this will be the directory, e.g. b would be at /b/)</label>
+			<input id="new_board_uri" class="display-cell" type="text" name="new_board_uri" size="30" value="">
 		</div>
 		<div class="display-row">
 			<input type="submit" value="Create Board" data-i18n-attributes="gettext|value">

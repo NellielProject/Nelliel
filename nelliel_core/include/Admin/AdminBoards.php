@@ -74,6 +74,7 @@ class AdminBoards extends AdminHandler
         }
 
         $board_id = $_POST['new_board_id'];
+        $board_uri = $_POST['new_board_uri'];
         $prepared = $this->database->prepare('SELECT 1 FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$board_id], PDO::FETCH_COLUMN);
 
@@ -82,12 +83,20 @@ class AdminBoards extends AdminHandler
             nel_derp(240, _gettext('There is already a board with the ID ' . $board_id . '.'));
         }
 
+        $prepared = $this->database->prepare('SELECT 1 FROM "' . BOARD_DATA_TABLE . '" WHERE "board_uri" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$board_uri], PDO::FETCH_COLUMN);
+
+        if ($result == 1)
+        {
+            nel_derp(241, _gettext('There is already a board with that URI ' . $board_uri . '.'));
+        }
+
         $db_prefix = '_' . $board_id;
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "db_prefix") VALUES (?, ?)');
-        $this->database->executePrepared($prepared, [$board_id, $db_prefix]);
+                'INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "db_prefix", "board_uri") VALUES (?, ?, ?)');
+        $this->database->executePrepared($prepared, [$board_id, $db_prefix, $board_uri]);
         $setup = new \Nelliel\Setup\Setup();
-        $setup->createBoardTables($board_id);
+        $setup->createBoardTables($board_id, $db_prefix);
         $setup->createBoardDirectories($board_id);
         $domain = new \Nelliel\DomainBoard($board_id, $this->database);
         $regen = new \Nelliel\Regen();
@@ -160,7 +169,6 @@ class AdminBoards extends AdminHandler
         }
 
         $file_handler = new \Nelliel\FileHandler();
-
         $file_handler->eraserGun($domain->reference('board_path'));
         $prepared = $this->database->prepare('DELETE FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);

@@ -55,8 +55,8 @@ class DomainBoard extends Domain
         $prepared = $this->database->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
         $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_ASSOC);
         $new_reference = array();
-        $board_path = BASE_PATH . $board_data['board_id'] . '/';
-        $new_reference['board_directory'] = $board_data['board_id'];
+        $board_path = BASE_PATH . $board_data['board_uri'] . '/';
+        $new_reference['board_directory'] = $board_data['board_uri'];
         $new_reference['db_prefix'] = $board_data['db_prefix'];
         $new_reference['locked'] = (bool) $board_data['locked'];
         $new_reference['src_dir'] = 'src';

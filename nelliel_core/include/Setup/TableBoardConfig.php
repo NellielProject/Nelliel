@@ -109,7 +109,8 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'enable_dynamic_pages', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'template_id', 'template-nelliel-basic', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'filetype_icon_set_id', 'filetype-nelliel-basic', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'preferred_filename', 'original', 1, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'preferred_filename', 'original', 1, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'display_original_name', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_captcha', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_recaptcha', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'poster_id_length', '6', 0, 0]);
@@ -121,6 +122,7 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_catalog_width', '128', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_catalog_height', '128', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'enable_spoilers', '1', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'safety_level', 'SFW', 0, 0]);
         $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'graphics', '1', 0, 0]);
         $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'jpeg', '1', 0, 0]);
         $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'gif', '1', 0, 0]);
