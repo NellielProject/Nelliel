@@ -5,7 +5,7 @@ A guide to the development standards of Nelliel. Any contributions to the core c
 Developers of plugins or other unofficial contributions are not required to follow this guide.
 
 ## Coding Style and Formatting
-Nelliel follows the [PSR-1](http://www.php-fig.org/psr/psr-1/) and [PSR-4](http://www.php-fig.org/psr/psr-4/) standards.
+Nelliel follows the [PSR-1](https://www.php-fig.org/psr/psr-1/), [PSR-3](https://www.php-fig.org/psr/psr-3/) and [PSR-4](https://www.php-fig.org/psr/psr-4/) standards.
 
 In addition:
  - Ideal line length is 80 characters or less; soft limit is 120 characters.
@@ -22,7 +22,7 @@ In addition:
  - If a class instance or mutable variable needs to be accessible in a global scope it must be encapsulated inside a function.
  
 ## SQL and Queries
-All schemas should comply with ANSI standards as much as possible. If a query cannot be done in a universal manner, a helper method may be added to SQLCompatibility.
+All schemas should comply with ANSI standards as much as possible. If a query cannot be done in a universal manner, a helper method may be added to the `SQLCompatibility` class.
 
 In cases where a data type is not fully cross-compatible or has a differing name (e.g. the BINARY equivalent in PostgreSQL is BYTEA), an equivalent may be used for the specific RDBMS schema so long as the behavior is indistinguishable.
 
@@ -41,29 +41,29 @@ Any core functions and features contributed to Nelliel must be fully functional 
  - A necessary feature or function cannot be reasonably implemented.
  - Forward compatibility becomes impractical.
 
-When minimum requirements are changed, the Minor version number must be incremented. The version prior to the changes must also be copied into a legacy branch.
+When minimum requirements are changed, the Minor version number must be incremented.
 
 ### PHP Support
-At present Nelliel has a target version of **PHP 7.0**.
+At present Nelliel has a target version of **PHP 7.1**.
 
 ### Database Support
 Minimum supported RDBMS versions:
  - MySQL 5.6
  - MariaDB 10
- - PostgreSQL 9.4
+ - PostgreSQL 9.5
  - SQLite 3.16
 
 ### Browser Support
 These are the minimum browser versions Nelliel must be compatible with:
  - Safari 11
- - Chrome 64
- - Firefox 60
+ - Chrome 72
+ - Firefox 68
  
  Retaining compatibility with older browsers is encouraged when reasonably possible.
 
 ## Versioning
 Upon the initial 1.0 Release, Nelliel versioning will follow Major.Minor.Patch under these definitions:
- - Major: Major breaking changes or project-wide reworks.
+ - Major: Major breaking changes or project-wide rework.
  - Minor: Minor breaking changes, requirements update, significant new features or changes introduced.
  - Patch: Bug fixes, code tweaks, refinements, minor new features.
 

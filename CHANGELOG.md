@@ -1,4 +1,35 @@
 # Nelliel Changelog
+## v0.9.20 (2020/05/04)
+### Breaking
+ - Database
+ - Minimum requirements update; now locked for release
+ - Actually a lot of stuff
+
+### Added
+ - Make some use of Composer
+ - Logger
+ - Pagination class
+ - Working (though simplistic) native CAPTCHA
+ - Registration and general user accounts
+ - GraphicsMagick/Gmagick support
+
+### Changed
+ - Plugin API work
+ - Documentation
+ - SQLHelper is now SQLCompatibility
+ - Template adjustments
+ - Most functions requiring javascript now are hidden when javascript is disabled
+ - UI work
+ - Permissions panel available again
+ - Improved installation process
+ - Better GIF processing
+ 
+### Fixed
+ - So many things
+ 
+### Removed
+ - Super Admin stuff
+
 ## v0.9.19 (2019/04/28)
 ### Breaking
  - Output

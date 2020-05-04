@@ -55,6 +55,7 @@ Error 210: No user ID. (Account/Register.php)
 Error 211: No password. (Account/Register.php)  
 Error 212: User already exists. (Account/Register.php)  
 Error 213: Passwords do not match. (Account/Register.php)  
+Error 214: Install ID odesn't match. (Account/Register.php)  
 
 Error 220: Secure session only. (Account/Session.php)  
 Error 221: Expired session. (Account/Session.php)  
@@ -63,9 +64,10 @@ Error 223: Login not validated. (Account/Session.php)
 Error 224: Must be logged in. (Account/Session.php)  
 
 Error 230: User does not exist. (Admin/AdminUsers.php)  
-Error 231: Role does not exist. (Admin/AdminRoles.php)  s
+Error 231: Role does not exist. (Admin/AdminRoles.php)  
 
-Error 240: Board already exists. (Admin/AdminBoards.php)  
+Error 240: Board ID already exists. (Admin/AdminBoards.php)  
+Error 241: Board URI already exists. (Admin/AdminBoards.php)  
 
 Error 300: perm_manage_users (access) (Output/OutputPanelUsers.php)  
 Error 301: perm_manage_users (add) (Admin/AdminStaff.php)  
