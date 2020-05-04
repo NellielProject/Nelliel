@@ -19,7 +19,7 @@ class TableTemplates extends TableHandler
         $this->table_name = TEMPLATES_TABLE;
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'template_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
             'is_default' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'info' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
@@ -32,7 +32,7 @@ class TableTemplates extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            id              VARCHAR(255) NOT NULL,
+            template_id     VARCHAR(255) NOT NULL,
             is_default      SMALLINT NOT NULL DEFAULT 0,
             info            TEXT NOT NULL
         ) " . $options . ";";
