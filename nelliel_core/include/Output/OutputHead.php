@@ -44,8 +44,8 @@ class OutputHead extends OutputCore
             $style_data = array();
             $info = json_decode($style['info'], true);
             $style_data['stylesheet'] = ($style['is_default']) ? 'stylesheet' : 'alternate stylesheet';
-            $style_data['style_id'] = $style['id'];
-            $web_path = ($front_end_data->styleIsCore($style['id'])) ? CORE_STYLES_WEB_PATH : CUSTOM_STYLES_WEB_PATH;
+            $style_data['style_id'] = $style['asset_id'];
+            $web_path = ($front_end_data->styleIsCore($style['asset_id'])) ? CORE_STYLES_WEB_PATH : CUSTOM_STYLES_WEB_PATH;
             $style_data['stylesheet_url'] = $dotdot . $web_path . $info['directory'] . '/' . $info['main_file'];
             $style_data['style_name'] = $info['name'];
             $this->render_data['stylesheets'][] = $style_data;

@@ -52,19 +52,19 @@ class OutputPanelStyles extends OutputCore
             $style_info = json_decode($style['info'], true);
             $style_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $installed_ids[] = $style['id'];
-            $style_data['id'] = $style['id'];
+            $installed_ids[] = $style['asset_id'];
+            $style_data['id'] = $style['asset_id'];
             $style_data['style_type'] = strtoupper($style_info['style_type']);
             $style_data['name'] = $style_info['name'];
             $style_data['directory'] = $style_info['directory'];
             $style_data['is_default'] = $style['is_default'] == 1;
             $style_data['default_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
-                    ['module' => 'styles', 'action' => 'make-default', 'style-id' => $style['id'],
+                    ['module' => 'styles', 'action' => 'make-default', 'style-id' => $style['asset_id'],
                         'style-type' => $style_info['style_type']]);
             $style_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
-                    ['module' => 'styles', 'action' => 'remove', 'style-id' => $style['id'],
+                    ['module' => 'styles', 'action' => 'remove', 'style-id' => $style['asset_id'],
                         'set-type' => $style_info['style_type']]);
-            $style_data['is_core'] = $this->domain->getFrontEndData()->styleIsCore($style['id']);
+            $style_data['is_core'] = $this->domain->getFrontEndData()->styleIsCore($style['asset_id']);
 
             $this->render_data['installed_list'][] = $style_data;
         }

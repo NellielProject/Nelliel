@@ -74,7 +74,7 @@ class AdminIconSets extends AdminHandler
         }
 
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . ASSETS_TABLE . '" ("id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
+                'INSERT INTO "' . ASSETS_TABLE . '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$icon_set_id, 'icon-set', 0, $info]);
     }
 
@@ -94,7 +94,7 @@ class AdminIconSets extends AdminHandler
         }
 
         $icon_set_id = $_GET['icon-set-id'];
-        $prepared = $this->database->prepare('DELETE FROM "' . ASSETS_TABLE . '" WHERE "id" = ? AND "type" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . ASSETS_TABLE . '" WHERE "asset_id" = ? AND "type" = ?');
         $this->database->executePrepared($prepared, [$icon_set_id, 'icon-set']);
     }
 
@@ -109,7 +109,7 @@ class AdminIconSets extends AdminHandler
         $set_type = $_GET['set-type'];
         $this->database->exec('UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 0 WHERE "type" = \'icon-set\'');
         $prepared = $this->database->prepare(
-                'UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 1 WHERE "id" = ? AND "type" = \'icon-set\'');
+                'UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'icon-set\'');
         $this->database->executePrepared($prepared, [$icon_set_id]);
     }
 }

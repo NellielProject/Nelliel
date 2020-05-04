@@ -43,4 +43,8 @@ class DomainAllBoards extends Domain
     public function regenCache()
     {
     }
+
+    public function deleteCache()
+    {
+    }
 }

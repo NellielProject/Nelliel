@@ -32,6 +32,8 @@ abstract class Domain
 
     public abstract function regenCache();
 
+    public abstract function deleteCache();
+
     protected function utilitySetup()
     {
         $this->front_end_data = new FrontEndData($this->database);

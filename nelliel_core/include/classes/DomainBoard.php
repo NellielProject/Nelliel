@@ -116,4 +116,12 @@ class DomainBoard extends Domain
                     '$domain_settings = ' . var_export($settings, true) . ';');
         }
     }
+
+    public function deleteCache()
+    {
+        if (USE_INTERNAL_CACHE)
+        {
+            $this->file_handler->eraserGun(CACHE_FILE_PATH . $this->domain_id);
+        }
+    }
 }

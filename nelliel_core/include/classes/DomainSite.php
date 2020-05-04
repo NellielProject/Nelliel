@@ -77,6 +77,14 @@ class DomainSite extends Domain
         }
     }
 
+    public function deleteCache()
+    {
+        if (USE_INTERNAL_CACHE)
+        {
+            $this->file_handler->eraserGun(CACHE_FILE_PATH, 'site_settings.php');
+        }
+    }
+
     public function fileFilters()
     {
         if (empty($this->file_filters))

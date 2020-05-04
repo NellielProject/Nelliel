@@ -136,40 +136,55 @@ class AdminBoards extends AdminHandler
         if ($this->database->tableExists($domain->reference('config_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('config_table'));
+            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $this->database->executePrepared($prepared, [$domain->reference('config_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('content_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('content_table'));
+            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $this->database->executePrepared($prepared, [$domain->reference('content_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('posts_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('posts_table'));
+            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $this->database->executePrepared($prepared, [$domain->reference('posts_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('threads_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('threads_table'));
+            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $this->database->executePrepared($prepared, [$domain->reference('threads_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('archive_content_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('archive_content_table'));
+            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $this->database->executePrepared($prepared, [$domain->reference('archive_content_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('archive_posts_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('archive_posts_table'));
+            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $this->database->executePrepared($prepared, [$domain->reference('archive_posts_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('archive_threads_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('archive_threads_table'));
+            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $this->database->executePrepared($prepared, [$domain->reference('archive_threads_table')]);
         }
 
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->eraserGun($domain->reference('board_path'));
+        $domain->deleteCache();
         $prepared = $this->database->prepare('DELETE FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $prepared = $this->database->prepare(
