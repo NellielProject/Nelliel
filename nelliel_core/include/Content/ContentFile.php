@@ -13,14 +13,32 @@ use PDO;
 
 class ContentFile extends ContentHandler
 {
+    protected $content_table;
+    protected $src_path;
+    protected $preview_path;
+    protected $archived;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $db_load = false)
+    function __construct(ContentID $content_id, Domain $domain, bool $archived = false, bool $db_load = false)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
         $this->domain = $domain;
+        $this->archived = $archived;
 
-        if($db_load)
+        if ($archived)
+        {
+            $this->content_table = $this->domain->reference('archive_content_table');
+            $this->src_path = $this->domain->reference('archive_src_path');
+            $this->preview_path = $this->domain->reference('archive_preview_path');
+        }
+        else
+        {
+            $this->content_table = $this->domain->reference('content_table');
+            $this->src_path = $this->domain->reference('src_path');
+            $this->preview_path = $this->domain->reference('preview_path');
+        }
+
+        if ($db_load)
         {
             $this->loadFromDatabase();
         }
@@ -30,9 +48,9 @@ class ContentFile extends ContentHandler
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'SELECT * FROM "' . $this->domain->reference('content_table') . '" WHERE "post_ref" = ? AND "content_order" = ?');
-        $result = $database->executePreparedFetch($prepared,
-                [$this->content_id->post_id, $this->content_id->order_id], PDO::FETCH_ASSOC);
+                'SELECT * FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
+        $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id, $this->content_id->order_id],
+                PDO::FETCH_ASSOC);
 
         if (empty($result))
         {
@@ -52,14 +70,15 @@ class ContentFile extends ContentHandler
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'SELECT "entry" FROM "' . $this->domain->reference('content_table') . '" WHERE "post_ref" = ? AND "content_order" = ?');
-        $result = $database->executePreparedFetch($prepared,
-                [$this->content_id->post_id, $this->content_id->order_id], PDO::FETCH_COLUMN);
+                'SELECT "entry" FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
+        $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id, $this->content_id->order_id],
+                PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $database->prepare(
-                    'UPDATE "' . $this->domain->reference('content_table') . '" SET "parent_thread" = :parent_thread,
+                    'UPDATE "' . $this->content_table .
+                    '" SET "parent_thread" = :parent_thread,
                     "post_ref" = :post_ref, "content_order" = :content_order,
                     "type" = :type, "format" = :format, "mime" = :mime,
                     "filename" = :filename, "extension" = :extension,
@@ -72,7 +91,8 @@ class ContentFile extends ContentHandler
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . $this->domain->reference('content_table') . '" ("parent_thread", "post_ref", "content_order", "type", "format", "mime",
+                    'INSERT INTO "' . $this->content_table .
+                    '" ("parent_thread", "post_ref", "content_order", "type", "format", "mime",
                     "filename", "extension", "display_width", "display_height", "preview_name", "preview_extension", "preview_width", "preview_height",
                     "filesize", "md5", "sha1", "sha256", "sha512", "spoiler", "exif") VALUES
                     (:parent_thread, :post_ref, :content_order, :type, :format, :mime, :filename, :extension, :display_width, :display_height,
@@ -109,11 +129,9 @@ class ContentFile extends ContentHandler
     {
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->createDirectory(
-                $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
-                DIRECTORY_PERM);
+                $this->src_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
         $file_handler->createDirectory(
-                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
-                DIRECTORY_PERM);
+                $this->preview_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
     }
 
     public function remove(bool $perm_override = false)
@@ -123,16 +141,16 @@ class ContentFile extends ContentHandler
             return false;
         }
 
-        if(!$perm_override && $this->domain->reference('locked'))
+        if (!$perm_override && $this->domain->reference('locked'))
         {
             nel_derp(51, _gettext('Cannot remove file. Board is locked.'));
         }
 
         $this->removeFromDisk();
         $this->removeFromDatabase();
-        $post = new ContentPost($this->content_id, $this->domain);
+        $post = new ContentPost($this->content_id, $this->domain, $this->archived);
         $post->updateCounts();
-        $thread = new ContentThread($this->content_id, $this->domain);
+        $thread = new ContentThread($this->content_id, $this->domain, $this->archived);
         $thread->updateCounts();
     }
 
@@ -145,7 +163,7 @@ class ContentFile extends ContentHandler
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'DELETE FROM "' . $this->domain->reference('content_table') . '" WHERE "post_ref" = ? AND "content_order" = ?');
+                'DELETE FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
         $database->executePrepared($prepared, [$this->content_id->post_id, $this->content_id->order_id]);
         return true;
     }
@@ -158,10 +176,10 @@ class ContentFile extends ContentHandler
         }
 
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->eraserGun($this->domain->reference('src_path'),
+        $file_handler->eraserGun($this->src_path,
                 $this->content_id->thread_id . '/' . $this->content_id->post_id . '/' . $this->content_data['filename'] .
                 '.' . $this->content_data['extension']);
-        $file_handler->eraserGun($this->domain->reference('preview_path'),
+        $file_handler->eraserGun($this->preview_path,
                 $this->content_id->thread_id . '/' . $this->content_id->post_id . '/' .
                 $this->content_data['preview_name'] . '.' . $this->content_data['preview_extension']);
     }
@@ -174,5 +192,10 @@ class ContentFile extends ContentHandler
     {
         $post = new ContentPost($this->content_id, $this->domain);
         return $post->verifyModifyPerms();
+    }
+
+    public function isArchived()
+    {
+        return $this->archived;
     }
 }

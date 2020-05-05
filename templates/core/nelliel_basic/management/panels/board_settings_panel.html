@@ -236,7 +236,7 @@
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<label for="page_buffer" data-i18n="gettext">Page buffer before archiving or pruning</label>
+				<label for="page_buffer" data-i18n="gettext">Prune oldest archived threads</label>
 			</span>
 			<span class="display-cell">
 				<input id="page_buffer" type="text" name="page_buffer" size="8" value="{{ value }}" {{ disabled }}>
@@ -304,6 +304,39 @@
 			</span>
 		</div>
 		{{/ old_threads }}
+		{{# max_archive_threads }}
+		<div class="display-row">
+			{{# defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="max_archive_threads_lock" value="0">
+				<input id="max_archive_threads_lock" type="checkbox" name="max_archive_threads_lock" value="1" {{ locked }}>
+				<label for="max_archive_threads_lock" data-i18n="gettext">(Lock)</label>
+			</span>
+			{{/ defaults }}
+			<span class="display-cell">
+				<label for="max_archive_threads" data-i18n="gettext">Maximum number of threads kept in archive</label>
+			</span>
+			<span class="display-cell">
+				<input id="max_archive_threads" type="text" name="max_archive_threads" size="8" value="{{ value }}" {{ disabled }}>
+			</span>
+		</div>
+		{{/ max_archive_threads }}
+		{{# do_archive_pruning }}
+		<div class="display-row">
+			{{# defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="do_archive_pruning_lock" value="0">
+				<input id="do_archive_pruning_lock" type="checkbox" name="do_archive_pruning_lock" value="1" {{ locked }}>
+				<label for="do_archive_pruning_lock" data-i18n="gettext">(Lock)</label>
+			</span>
+			{{/ defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="do_archive_pruning" value="0">
+				<input id="do_archive_pruning" type="checkbox" name="do_archive_pruning" value="1" {{ value }} {{ disabled }}>
+				<label for="do_archive_pruning" data-i18n="gettext">Prune oldest archive threads when over limit</label>
+			</span>
+		</div>
+		{{/ do_archive_pruning }}
 		{{# template_id }}
 		<div class="display-row">
 			{{# defaults }}

@@ -39,6 +39,11 @@ class ArchiveAndPrune
         {
             $this->moveThreadsToArchive();
             $this->moveThreadsFromArchive();
+
+            if ($this->domain->setting('do_archive_pruning'))
+            {
+                $this->pruneArchiveThreads();
+            }
         }
         else if ($this->domain->setting('old_threads') === 'PRUNE')
         {
@@ -76,6 +81,19 @@ class ArchiveAndPrune
         return $thread_list;
     }
 
+    public function getArchiveThreadListForStatus($status)
+    {
+        $prepared = $this->database->prepare(
+                'SELECT "thread_id" FROM "' . $this->domain->reference('archive_threads_table') . '" WHERE "archive_status" = ?');
+        $thread_list = $this->database->executePreparedFetchAll($prepared, [$status], PDO::FETCH_COLUMN);
+        return $thread_list;
+    }
+
+    // Archie statuses:
+    // 0: Thread normal status, displays in index
+    // 1: Thread should be in buffer
+    // 2: Thread should be in archive
+    // 3: Thread should be pruned from archive
     public function updateAllArchiveStatus()
     {
         if ($this->domain->setting('old_threads') === 'NOTHING')
@@ -84,6 +102,8 @@ class ArchiveAndPrune
         }
 
         $line = 1;
+        $end_archive = $this->domain->setting('max_archive_threads');
+        $archive_prune = $this->domain->setting('do_archive_pruning');
 
         foreach ($this->getFullThreadList() as $thread)
         {
@@ -95,9 +115,25 @@ class ArchiveAndPrune
             {
                 $this->changeArchiveStatus($thread['thread_id'], 1, $this->domain->reference('threads_table'));
             }
-            else if ($line > $this->end_buffer && $thread['archive_status'] != 2)
+            else if ($line > $this->end_buffer)
             {
-                $this->changeArchiveStatus($thread['thread_id'], 2, $this->domain->reference('threads_table'));
+                if(!$archive_prune)
+                {
+                    if ($thread['archive_status'] != 2)
+                    {
+                        $this->changeArchiveStatus($thread['thread_id'], 2, $this->domain->reference('threads_table'));
+                    }
+                }
+                else if ($end_archive > 0 && $thread['archive_status'] != 2)
+                {
+                    $this->changeArchiveStatus($thread['thread_id'], 2, $this->domain->reference('threads_table'));
+                }
+                else if ($end_archive <= 0 && $thread['archive_status'] != 3)
+                {
+                    $this->changeArchiveStatus($thread['thread_id'], 3, $this->domain->reference('threads_table'));
+                }
+
+                -- $end_archive;
             }
 
             ++ $line;
@@ -113,9 +149,25 @@ class ArchiveAndPrune
             {
                 $this->changeArchiveStatus($thread['thread_id'], 1, $this->domain->reference('archive_threads_table'));
             }
-            else if ($line > $this->end_buffer && $thread['archive_status'] != 2)
+            else if ($line > $this->end_buffer)
             {
-                $this->changeArchiveStatus($thread['thread_id'], 2, $this->domain->reference('archive_threads_table'));
+                if(!$archive_prune)
+                {
+                    if ($thread['archive_status'] != 2)
+                    {
+                        $this->changeArchiveStatus($thread['thread_id'], 2, $this->domain->reference('archive_threads_table'));
+                    }
+                }
+                else if ($end_archive > 0 && $thread['archive_status'] != 2)
+                {
+                    $this->changeArchiveStatus($thread['thread_id'], 2, $this->domain->reference('archive_threads_table'));
+                }
+                else if ($end_archive <= 0 && $thread['archive_status'] != 3)
+                {
+                    $this->changeArchiveStatus($thread['thread_id'], 3, $this->domain->reference('archive_threads_table'));
+                }
+
+                -- $end_archive;
             }
 
             ++ $line;
@@ -141,8 +193,9 @@ class ArchiveAndPrune
                 $this->domain->reference('archive_src_path') . $thread_id);
         $this->file_handler->moveFile($this->domain->reference('preview_path') . $thread_id,
                 $this->domain->reference('archive_preview_path') . $thread_id);
-        $this->file_handler->moveFile($this->domain->reference('page_path') . $thread_id,
-                $this->domain->reference('archive_page_path') . $thread_id);
+        /*$this->file_handler->moveFile($this->domain->reference('page_path') . $thread_id,
+         $this->domain->reference('archive_page_path') . $thread_id);*/
+        // We really don't need to keep the generated page
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id"= ?');
         $this->database->executePrepared($prepared, [$thread_id]);
@@ -167,8 +220,8 @@ class ArchiveAndPrune
                 $this->domain->reference('src_path') . $thread_id);
         $this->file_handler->moveFile($this->domain->reference('archive_preview_path') . $thread_id,
                 $this->domain->reference('preview_path') . $thread_id);
-        $this->file_handler->moveFile($this->domain->reference('archive_page_path') . $thread_id,
-                $this->domain->reference('page_path') . $thread_id);
+        /*$this->file_handler->moveFile($this->domain->reference('archive_page_path') . $thread_id,
+         $this->domain->reference('page_path') . $thread_id);*/
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . $this->domain->reference('archive_threads_table') . '" WHERE "thread_id"= ?');
         $this->database->executePrepared($prepared, [$thread_id]);
@@ -208,8 +261,16 @@ class ArchiveAndPrune
     {
         foreach ($this->getThreadListForStatus(2) as $thread_id)
         {
-            $thread = new \Nelliel\Content\ContentThread(new ContentID('cid_' . $thread_id . '_0_0'),
-                    $this->domain);
+            $thread = new \Nelliel\Content\ContentThread(new ContentID('cid_' . $thread_id . '_0_0'), $this->domain);
+            $thread->remove(true);
+        }
+    }
+
+    public function pruneArchiveThreads()
+    {
+        foreach ($this->getArchiveThreadListForStatus(3) as $thread_id)
+        {
+            $thread = new \Nelliel\Content\ContentThread(new ContentID('cid_' . $thread_id . '_0_0'), $this->domain, true);
             $thread->remove(true);
         }
     }

@@ -84,7 +84,7 @@ class OutputIndex extends OutputCore
         $gen_data['index_rendering'] = true;
         $this->render_data['catalog_url'] = 'catalog.html';
         $this->render_data['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
-        $index_format = $site_domain->setting('index_filename_format') . PAGE_EXT;
+        $index_format = $site_domain->setting('index_filename_format');
         $page = 1;
         $page_count = (int) ceil($thread_count / $this->domain->setting('threads_per_page'));
         $threads_on_page = 0;

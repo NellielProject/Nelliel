@@ -13,12 +13,33 @@ use PDO;
 
 class ContentPost extends ContentHandler
 {
+    protected $posts_table;
+    protected $content_table;
+    protected $src_path;
+    protected $preview_path;
+    protected $archived;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $db_load = false)
+    function __construct(ContentID $content_id, Domain $domain, bool $archived = false, bool $db_load = false)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
         $this->domain = $domain;
+        $this->archived = $archived;
+
+        if ($archived)
+        {
+            $this->posts_table = $this->domain->reference('archive_posts_table');
+            $this->content_table = $this->domain->reference('archive_content_table');
+            $this->src_path = $this->domain->reference('archive_src_path');
+            $this->preview_path = $this->domain->reference('archive_preview_path');
+        }
+        else
+        {
+            $this->posts_table = $this->domain->reference('posts_table');
+            $this->content_table = $this->domain->reference('content_table');
+            $this->src_path = $this->domain->reference('src_path');
+            $this->preview_path = $this->domain->reference('preview_path');
+        }
 
         if ($db_load)
         {
@@ -29,8 +50,7 @@ class ContentPost extends ContentHandler
     public function loadFromDatabase($temp_database = null)
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare(
-                'SELECT * FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
+        $prepared = $database->prepare('SELECT * FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id], PDO::FETCH_ASSOC);
 
         if (empty($result))
@@ -50,14 +70,13 @@ class ContentPost extends ContentHandler
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
+        $prepared = $database->prepare('SELECT "post_number" FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $database->prepare(
-                    'UPDATE "' . $this->domain->reference('posts_table') .
+                    'UPDATE "' . $this->posts_table .
                     '" SET "parent_thread" = :parent_thread,
                     "poster_name" = :poster_name, "reply_to" = :reply_to, "post_password" = :post_password,
                     "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "email" = :email,
@@ -70,7 +89,7 @@ class ContentPost extends ContentHandler
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . $this->domain->reference('posts_table') .
+                    'INSERT INTO "' . $this->posts_table .
                     '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "email",
                     "subject", "comment", "ip_address", "post_time", "post_time_milli", "has_content", "content_count", "op", "sage", "mod_post_id", "mod_comment") VALUES
                     (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :email, :subject, :comment, :ip_address, :post_time, :post_time_milli, :has_content, :content_count,
@@ -105,12 +124,10 @@ class ContentPost extends ContentHandler
     {
         $parent_thread = $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'INSERT INTO "' . $this->domain->reference('posts_table') .
-                '" ("post_time", "post_time_milli") VALUES (?, ?)');
+                'INSERT INTO "' . $this->posts_table . '" ("post_time", "post_time_milli") VALUES (?, ?)');
         $database->executePrepared($prepared, [$post_time, $post_time_milli]);
         $prepared = $database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "post_time" = ? AND post_time_milli = ?');
+                'SELECT "post_number" FROM "' . $this->posts_table . '" WHERE "post_time" = ? AND post_time_milli = ?');
         $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli], PDO::FETCH_COLUMN, true);
         $this->content_id->thread_id = ($this->content_id->thread_id == 0) ? $result : $this->content_id->thread_id;
         $this->content_data['parent_thread'] = ($this->content_data['parent_thread'] == 0) ? $result : $this->content_data['parent_thread'];
@@ -121,11 +138,9 @@ class ContentPost extends ContentHandler
     {
         $file_handler = new \Nelliel\FileHandler();
         $file_handler->createDirectory(
-                $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
-                DIRECTORY_PERM);
+                $this->src_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
         $file_handler->createDirectory(
-                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' .
-                $this->content_id->post_id, DIRECTORY_PERM);
+                $this->preview_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
     }
 
     public function remove(bool $perm_override = false)
@@ -143,18 +158,18 @@ class ContentPost extends ContentHandler
         $this->removeFromDatabase();
         $this->removeFromDisk();
 
-        $query = 'SELECT "entry" FROM "' . $this->domain->reference('content_table') . '" WHERE "post_ref" = ?';
+        $query = 'SELECT "entry" FROM "' . $this->content_table . '" WHERE "post_ref" = ?';
         $prepared = $this->database->prepare($query);
         $content_entries = $this->database->executePreparedFetchAll($prepared, [$this->content_id->post_id],
                 PDO::FETCH_COLUMN);
 
         foreach ($content_entries as $entry)
         {
-            $content = new ContentFile($this->content_id, $this->domain);
+            $content = new ContentFile($this->content_id, $this->domain, $this->archived);
             $content->remove();
         }
 
-        $thread = new ContentThread($this->content_id, $this->domain);
+        $thread = new ContentThread($this->content_id, $this->domain, $this->archived);
 
         if ($thread->postCount() <= 0)
         {
@@ -176,8 +191,7 @@ class ContentPost extends ContentHandler
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare(
-                'DELETE FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
+        $prepared = $database->prepare('DELETE FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
         $database->executePrepared($prepared, [$this->content_id->post_id]);
         $prepared = $database->prepare('DELETE FROM "' . CITES_TABLE . '" WHERE "source_post" = ? OR "target_post" = ?');
         $database->executePrepared($prepared, [$this->content_id->post_id, $this->content_id->post_id]);
@@ -187,23 +201,19 @@ class ContentPost extends ContentHandler
     protected function removeFromDisk()
     {
         $file_handler = new \Nelliel\FileHandler();
-        $file_handler->eraserGun(
-                $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id);
-        $file_handler->eraserGun(
-                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' .
-                $this->content_id->post_id);
+        $file_handler->eraserGun($this->src_path . $this->content_id->thread_id . '/' . $this->content_id->post_id);
+        $file_handler->eraserGun($this->preview_path . $this->content_id->thread_id . '/' . $this->content_id->post_id);
     }
 
     public function updateCounts()
     {
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->domain->reference('content_table') . '" WHERE "post_ref" = ?');
+                'SELECT COUNT("entry") FROM "' . $this->content_table . '" WHERE "post_ref" = ?');
         $content_count = $this->database->executePreparedFetch($prepared, [$this->content_id->post_id],
                 PDO::FETCH_COLUMN, true);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->domain->reference('posts_table') .
-                '" SET "content_count" = ? WHERE "post_number" = ?');
+                'UPDATE "' . $this->posts_table . '" SET "content_count" = ? WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$content_count, $this->content_id->post_id]);
     }
 
@@ -267,25 +277,19 @@ class ContentPost extends ContentHandler
         $new_thread->loadFromDatabase();
         $file_handler = new \Nelliel\FileHandler();
         $new_thread->createDirectories();
+        $file_handler->moveDirectory($this->src_path . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                $this->src_path . '/' . $new_thread->content_id->thread_id . '/' . $this->content_id->post_id, true);
         $file_handler->moveDirectory(
-                $this->domain->reference('src_path') . $this->content_id->thread_id . '/' . $this->content_id->post_id,
-                $this->domain->reference('src_path') . '/' . $new_thread->content_id->thread_id . '/' .
-                $this->content_id->post_id, true);
-        $file_handler->moveDirectory(
-                $this->domain->reference('preview_path') . $this->content_id->thread_id . '/' .
-                $this->content_id->post_id,
-                $this->domain->reference('preview_path') . '/' . $new_thread->content_id->thread_id . '/' .
-                $this->content_id->post_id, true);
+                $this->preview_path . $this->content_id->thread_id . '/' . $this->content_id->post_id,
+                $this->preview_path . '/' . $new_thread->content_id->thread_id . '/' . $this->content_id->post_id, true);
 
-        $prepared = $this->database->prepare(
-                'SELECT entry FROM "' . $this->domain->reference('content_table') . '" WHERE "post_ref" = ?');
+        $prepared = $this->database->prepare('SELECT entry FROM "' . $this->content_table . '" WHERE "post_ref" = ?');
         $files = $this->database->executePreparedFetchAll($prepared, [$this->content_id->post_id], PDO::FETCH_ASSOC);
 
         foreach ($files as $file)
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $this->domain->reference('content_table') .
-                    '" SET "parent_thread" = ? WHERE "post_ref" = ?');
+                    'UPDATE "' . $this->content_table . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
             $this->database->executePrepared($prepared, [$new_thread->content_id->thread_id, $this->content_id->post_id]);
         }
 
@@ -295,5 +299,10 @@ class ContentPost extends ContentHandler
         $this->content_data['op'] = 1;
         $this->writeToDatabase();
         $new_thread->updateCounts();
+    }
+
+    public function isArchived()
+    {
+        return $this->archived;
     }
 }
