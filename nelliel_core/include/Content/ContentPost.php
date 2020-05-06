@@ -231,7 +231,7 @@ class ContentPost extends ContentHandler
 
         if ($session->isActive())
         {
-            if ($user->checkPermission($this->domain, 'perm_board_modify_posts') || $user->isSiteOwner())
+            if ($user->checkPermission($this->domain, 'perm_board_modify_posts'))
             {
                 if (!empty($this->content_data['mod_post_id']))
                 {

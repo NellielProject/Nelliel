@@ -35,20 +35,10 @@ class OutputAccount extends OutputCore
         $manage_headers = ['header' => _gettext('User Account'), 'sub_header' => _gettext('Main')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-
         $this->render_data['user_id'] = $user->id();
-
-        if (!$user->isSiteOwner())
-        {
-            $this->render_data['normal_user'] = true;
-            $this->render_data['display_name'] = $user->auth_data['display_name'];
-            $this->render_data['last_login'] = $user->auth_data['last_login'];
-        }
-        else
-        {
-            $this->render_data['normal_user'] = false;
-        }
-
+        $this->render_data['normal_user'] = true;
+        $this->render_data['display_name'] = $user->auth_data['display_name'];
+        $this->render_data['last_login'] = $user->auth_data['last_login'];
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('account/account_main',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);

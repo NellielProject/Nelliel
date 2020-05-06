@@ -120,7 +120,7 @@ class OutputPanelUsers extends OutputCore
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';
         }
 
-        if (is_null($user_id) || $edit_user->isSiteOwner())
+        if ($edit_user->isSiteOwner())
         {
             $this->render_data['is_site_owner'] = true;
         }
