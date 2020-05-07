@@ -86,7 +86,17 @@
 		<div class="display-row">
 		<input type="hidden" name="use_login_recaptcha" value="0">
 		<input id="use_login_recaptcha" type="checkbox" name="use_login_recaptcha" value="1" {{ use_login_recaptcha }}>
-		<label for="use_login_recaptcha" data-i18n="gettext">Use a ReCAPTCHA for login</label>
+		<label for="use_login_recaptcha" data-i18n="gettext">Use a reCAPTCHA for login</label>
+	</div>
+	<div class="display-row">
+		<input type="hidden" name="use_register_captcha" value="0">
+		<input id="use_register_captcha" type="checkbox" name="use_register_captcha" value="1" {{ use_register_captcha }}>
+		<label for="use_register_captcha" data-i18n="gettext">Use a CAPTCHA for registering</label>
+	</div>
+		<div class="display-row">
+		<input type="hidden" name="use_register_recaptcha" value="0">
+		<input id="use_register_recaptcha" type="checkbox" name="use_register_recaptcha" value="1" {{ use_register_recaptcha }}>
+		<label for="use_register_recaptcha" data-i18n="gettext">Use a reCAPTCHA for registering</label>
 	</div>
 	<div class="display-row">
 		<label for="captcha_timeout" class="display-cell" data-i18n="gettext">Time (in seconds) before a CAPTCHA becomes invalid.</label>

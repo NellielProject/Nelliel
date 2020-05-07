@@ -48,22 +48,32 @@ nelliel.setup.localStorageInitCheck = function() {
 }
 
 nelliel.setup.setupListeners = function() {
-    var post_elements = document.getElementsByClassName('thread-corral');
+    var jsevents_elements = document.querySelectorAll("[data-jsevents]");
+    var elements_length = jsevents_elements.length;
 
-    for (var i = 0; i < post_elements.length; i++) {
-        nelliel.setup.addListenerIfElementExists(post_elements[i], "click", nelliel.events.processPostClicks);
-        nelliel.setup.addListenerIfElementExists(post_elements[i], "mouseover", nelliel.events.processMouseOver);
-        nelliel.setup.addListenerIfElementExists(post_elements[i], "mouseout", nelliel.events.processMouseOut);
+    for (var i = 0; i < elements_length; i++) {
+        var events_list = jsevents_elements[i].getAttribute("data-jsevents").split("|");
+        var list_length = events_list.length;
+
+        for (var j = 0; j < list_length; j++) {
+            if (events_list[j].includes("click")) {
+                nelliel.setup.addListenerIfElementExists(jsevents_elements[i], "click", nelliel.events.processPostClicks);
+            }
+            
+            if (events_list[j].includes("mouseover")) {
+                nelliel.setup.addListenerIfElementExists(jsevents_elements[i], "mouseover", nelliel.events.processMouseOver);
+            }
+            
+            if (events_list[j].includes("mouseout")) {
+                nelliel.setup.addListenerIfElementExists(jsevents_elements[i], "mouseout", nelliel.events.processMouseOut);
+            }
+            
+            if (events_list[j].includes("change")) {
+                nelliel.setup.addListenerIfElementExists(jsevents_elements[i], "change", nelliel.events.processChanges);
+            }
+        }
     }
 
-    var style_menus = document.getElementsByClassName("styles-menu");
-    
-    for (i = 0; i < style_menus.length; i++) {
-        nelliel.setup.addListenerIfElementExists(style_menus.item(i), "change", nelliel.events.processPostClicks);
-      } 
-
-    nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "click", nelliel.events.processPostClicks);
-    nelliel.setup.addListenerIfElementExists(document.getElementById("posting-form"), "change", nelliel.events.processChanges);
     window.addEventListener("hashchange", nelliel.hashHandler);
 }
 
@@ -97,8 +107,6 @@ nelliel.events.processPostClicks = function(event) {
             nelliel.ui.expandCollapseThread(event.target, command);
         } else if (command === "expand-thread-render" || command === "collapse-thread-render") {
             nelliel.ui.expandCollapseThread(event.target, command, true);
-        } else if (command === "change-style") {
-            setStyle(event.target.value, true);
         } else if (command === "link-post") {
             nelliel.ui.linkPost(event.target);
         } else if (command === "show-file-meta" || command === "hide-file-meta") {
@@ -148,6 +156,8 @@ nelliel.events.processChanges = function(event) {
 
         if (command === "reveal-file-input") {
             nelliel.posting_form.showNextFileInput(event.target);
+        } else if (command === "change-style") {
+            setStyle(event.target.value, true);
         }
     }
 }
@@ -215,10 +225,6 @@ nelliel.core.hashHandler = function () {
     }
 }
 
-function getElementsByAttributeName(attribute_name, element) {
-    return element.querySelectorAll("[" + attribute_name + "]");
-}
-
 nelliel.core.contentID = function (id_string) {
     var content_id = {};
     var segments = id_string.split('_');
@@ -230,7 +236,7 @@ nelliel.core.contentID = function (id_string) {
 }
 
 nelliel.core.unhideJSonly = function () {
-    var elements = getElementsByAttributeName("data-jsonly", document);
+    var elements = document.querySelectorAll("[data-jsonly]");
     var element_count = elements.length;
     
     for (i = 0; i < element_count; i++) {

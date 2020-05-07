@@ -15,15 +15,31 @@ class Login
 {
     private $authorization;
     private $database;
+    private $domain;
 
-    function __construct(Authorization $authorization, NellielPDO $database)
+    function __construct(Authorization $authorization, $domain)
     {
         $this->authorization = $authorization;
-        $this->database = $database;
+        $this->domain = $domain;
+        $this->database = $domain->database();
     }
 
     public function validate()
     {
+        $captcha = new \Nelliel\CAPTCHA($this->domain);
+
+        if ($this->domain->setting('use_login_captcha'))
+        {
+            $captcha_key = $_COOKIE['captcha-key'] ?? '';
+            $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
+            $captcha_result = $captcha->verify($captcha_key, $captcha_answer);
+        }
+
+        if ($this->domain->setting('use_login_recaptcha'))
+        {
+            $captcha->verifyReCAPTCHA();
+        }
+
         $login_data = array();
         $attempt_time = time();
         $form_user_id = (isset($_POST['user_id'])) ? strval($_POST['user_id']) : '';

@@ -24,7 +24,7 @@ class OutputPostingForm extends OutputCore
     {
         $render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $session = new \Nelliel\Account\Session();
+        $session = new \Nelliel\Account\Session($this->domain);
         $dotdot = $parameters['dotdot'];
         $response_to = $parameters['response_to'];
         $this->render_data['is_response'] = $response_to > 0;
@@ -80,9 +80,10 @@ class OutputPostingForm extends OutputCore
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_post_captcha'] = $this->domain->setting('use_post_captcha');
         $this->render_data['captcha_gen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=get';
-        $this->render_data['captcha_regen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=regenerate';
+        $this->render_data['captcha_regen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=generate&no-display';
         $this->render_data['use_post_recaptcha'] = $this->domain->setting('use_post_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
+        $this->render_data['captcha_label'] = true;
         $this->render_data['use_honeypot'] = $this->domain->setting('use_honeypot');
         $this->render_data['honeypot_field_name1'] = BASE_HONEYPOT_FIELD1 . '_' . $this->domain->id();
         $this->render_data['honeypot_field_name2'] = BASE_HONEYPOT_FIELD2 . '_' . $this->domain->id();

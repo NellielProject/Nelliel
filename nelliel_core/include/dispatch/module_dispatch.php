@@ -18,12 +18,14 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             if ($inputs['action'] === 'get')
             {
+                $captcha->get();
+            }
+            else if ($inputs['action'] === 'generate')
+            {
                 $captcha->generate();
             }
-            else if($inputs['action'] === 'regenerate')
-            {
-                $captcha->generate(true);
-            }
+
+            break;
 
         case 'account':
             if ($inputs['action'] === 'login')
@@ -35,7 +37,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 }
                 else
                 {
-                    $session = new \Nelliel\Account\Session();
+                    $session = new \Nelliel\Account\Session($domain);
                     $session->login();
                     $session->loggedInOrError();
                     $output_account = new \Nelliel\Output\OutputAccount($domain);
@@ -44,7 +46,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             }
             else if ($inputs['action'] === 'logout')
             {
-                $session = new \Nelliel\Account\Session();
+                $session = new \Nelliel\Account\Session($domain);
                 $session->logout();
             }
             else if ($inputs['action'] === 'register')
@@ -56,7 +58,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 }
                 else
                 {
-                    $register = new \Nelliel\Account\Register($authorization, $domain->database());
+                    $register = new \Nelliel\Account\Register($authorization, $domain);
                     $register->new();
                 }
             }
@@ -64,7 +66,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             {
                 if (empty($_POST))
                 {
-                    $session = new \Nelliel\Account\Session();
+                    $session = new \Nelliel\Account\Session($domain);
 
                     if ($session->isActive())
                     {
@@ -84,7 +86,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'render':
             $inputs['index'] = $_GET['index'] ?? null;
             $inputs['thread'] = $_GET['thread'] ?? null;
-            $session = new \Nelliel\Account\Session();
+            $session = new \Nelliel\Account\Session($domain);
 
             if ($inputs['action'] === 'view-index')
             {
@@ -115,7 +117,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             break;
 
         case 'main-panel':
-            $session = new \Nelliel\Account\Session();
+            $session = new \Nelliel\Account\Session($domain);
             $session->loggedInOrError();
 
             if ($domain->id() !== '_site_')
@@ -162,7 +164,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             break;
 
         case 'language':
-            $session = new \Nelliel\Account\Session();
+            $session = new \Nelliel\Account\Session($domain);
             $session->loggedInOrError();
 
             if ($inputs['action'] === 'extract-gettext')
@@ -198,7 +200,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'threads':
             $content_id = new \Nelliel\ContentID($inputs['content_id']);
             $fgsfds = new \Nelliel\FGSFDS();
-            $session = new \Nelliel\Account\Session();
+            $session = new \Nelliel\Account\Session($domain);
 
             if ($inputs['action'] === 'new-post')
             {
@@ -271,8 +273,8 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             if (isset($_POST['form_submit_report']))
             {
-                $reports_admin = new \Nelliel\Admin\AdminReports($authorization, $domain);
-                $reports_admin->actionDispatch($inputs['action'], true);
+                $report = new \Nelliel\Report($domain);
+                $report->submit();
 
                 if ($session->inModmode($domain))
                 {
@@ -309,7 +311,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
         case 'regen':
             $regen = new \Nelliel\Regen();
-            $session = new \Nelliel\Account\Session();
+            $session = new \Nelliel\Account\Session($domain);
             $session->loggedInOrError();
             $user = $session->sessionUser();
 

@@ -93,7 +93,7 @@ class OutputMenu extends OutputCore
     {
         $render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $session = new \Nelliel\Account\Session();
+        $session = new \Nelliel\Account\Session($this->domain);
         $site_domain = new \Nelliel\DomainSite($this->database);
         $dotdot = $parameters['dotdot'] ?? '';
         $ignore_session = $parameters['ignore_session'] ?? false;

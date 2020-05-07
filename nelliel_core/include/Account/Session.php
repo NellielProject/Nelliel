@@ -12,6 +12,7 @@ use Nelliel\Auth\Authorization;
 
 class Session
 {
+    protected $domain;
     protected static $initialized = false;
     protected static $session_active = false;
     protected static $in_modmode = false;
@@ -20,10 +21,11 @@ class Session
     protected $authorization;
     protected $database;
 
-    function __construct()
+    function __construct($domain)
     {
+        $this->domain = $domain;
         $this->authorization = new Authorization(nel_database());
-        $this->database = nel_database();
+        $this->database = $domain->database();
 
         if (!self::$initialized)
         {
@@ -101,7 +103,7 @@ class Session
 
     public function login()
     {
-        $login = new \Nelliel\Account\Login($this->authorization, $this->database);
+        $login = new \Nelliel\Account\Login($this->authorization, $this->domain);
         $login->cleanupAttempts(time());
         $login_data = $login->validate();
 

@@ -4,7 +4,7 @@
 	[<a href="{{ return_url }}" data-i18n="gettext">Return</a>]
 </div>
 {{/ is_response }}
-<form id="posting-form" class="display-table posting-form" accept-charset="utf-8" name="postingform" action="{{ form_action }}" method="post" enctype="multipart/form-data" aria-label="New post or thread" data-i18n-attributes="gettext|aria-label">
+<form id="posting-form" class="display-table posting-form" accept-charset="utf-8" name="postingform" action="{{ form_action }}" method="post" enctype="multipart/form-data" aria-label="New post or thread" data-i18n-attributes="gettext|aria-label" data-jsevents="click|change">
 	<input type="hidden" name="new_post[post_info][response_to]" value="{{ response_to }}">
 	<div>
 		{{^ force_anonymous }}
@@ -61,10 +61,16 @@
 		</label>
 		{{/ is_staff }}
 		{{# use_post_captcha }}
+		<div class="posting-form-row" data-jsevents="click">
+			<span class="posting-form-label" data-i18n="gettext">CAPTCHA</span>
 			{{> pieces/captcha }}
+		</div>
 		{{/ use_post_captcha }}
 		{{# use_post_recaptcha }}
+		<div class="posting-form-row" data-jsevents="click">
+			<span class="posting-form-label" data-i18n="gettext">reCAPTCHA</span>
 			{{> pieces/recaptcha }}
+		</div>
 		{{/ use_post_recaptcha }}
 		{{# use_honeypot }}
 		<label id="form-user-info-1" class="posting-form-row">

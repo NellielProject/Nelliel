@@ -208,7 +208,7 @@ class ContentThread extends ContentHandler
 
     public function sticky()
     {
-        $session = new \Nelliel\Account\Session();
+        $session = new \Nelliel\Account\Session($this->domain);
         $user = $session->sessionUser();
 
         if (!$this->dataIsLoaded(true))
@@ -223,7 +223,7 @@ class ContentThread extends ContentHandler
 
     public function lock()
     {
-        $session = new \Nelliel\Account\Session();
+        $session = new \Nelliel\Account\Session($this->domain);
         $user = $session->sessionUser();
 
         if (!$this->dataIsLoaded(true))

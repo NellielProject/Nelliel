@@ -219,7 +219,7 @@ class ContentPost extends ContentHandler
 
     public function verifyModifyPerms()
     {
-        $session = new \Nelliel\Account\Session();
+        $session = new \Nelliel\Account\Session($this->domain);
         $user = $session->sessionUser();
 
         if (empty($this->content_data))

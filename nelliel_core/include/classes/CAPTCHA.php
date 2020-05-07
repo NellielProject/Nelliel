@@ -11,18 +11,36 @@ use PDO;
 
 class CAPTCHA
 {
-    protected $domain;
-    protected $site_domain;
-    protected $database;
+    private $domain;
+    private $site_domain;
+    private $database;
+    private $file_handler;
 
     public function __construct(Domain $domain)
     {
         $this->domain = $domain;
         $this->database = $domain->database();
         $this->site_domain = new DomainSite($this->database);
+        $this->file_handler = new \Nelliel\FileHandler();
     }
 
-    public function generate(bool $regenerate = false)
+    public function get()
+    {
+        $captcha_key = $_COOKIE['captcha-key'] ?? '';
+
+        if (!empty($captcha_key))
+        {
+            if ($this->keyExists($captcha_key, true))
+            {
+                $this->redirectToImage($captcha_key);
+                return;
+            }
+        }
+
+        $this->generate();
+    }
+
+    public function generate()
     {
         // Pretty basic CAPTCHA
         // We'll leave making a better one to someone who really knows the stuff
@@ -34,21 +52,6 @@ class CAPTCHA
         }
 
         $captcha_text = '';
-
-        if (!$regenerate)
-        {
-            $captcha_key = $_COOKIE['captcha-key'] ?? '';
-
-            if (!empty($captcha_key))
-            {
-                if ($this->keyExists($captcha_key, true))
-                {
-                    $this->redirectToImage($captcha_key);
-                    return;
-                }
-            }
-        }
-
         $this->removeForIP($_SERVER['REMOTE_ADDR']);
         $character_set = 'bcdfghjkmnpqrstvwxyz23456789';
         $set_array = utf8_split($character_set);
@@ -63,8 +66,7 @@ class CAPTCHA
         $captcha_image = $this->render($captcha_text);
         $captcha_key = substr(hash('sha256', (random_bytes(16))), -32);
         setrawcookie('captcha-key', $captcha_key, time() + $this->site_domain->setting('captcha_timeout'), '/');
-        $file_handler = new \Nelliel\FileHandler();
-        $file_handler->createDirectory(CAPTCHA_FILE_PATH, DIRECTORY_PERM, true); // Just to be sure
+        $this->file_handler->createDirectory(CAPTCHA_FILE_PATH, DIRECTORY_PERM, true); // Just to be sure
         imagejpeg($captcha_image, CAPTCHA_FILE_PATH . $captcha_key . '.jpg');
         $captcha_data = array();
         $captcha_data['captcha_key'] = $captcha_key;
@@ -73,7 +75,11 @@ class CAPTCHA
         $captcha_data['time_created'] = time();
         $captcha_data['ip_address'] = $_SERVER['REMOTE_ADDR'];
         $this->store($captcha_data);
-        $this->redirectToImage($captcha_key);
+
+        if(!isset($_GET['no-display']))
+        {
+            $this->redirectToImage($captcha_key);
+        }
     }
 
     public function render(string $captcha_text)
@@ -145,20 +151,18 @@ class CAPTCHA
     {
         $prepared = $this->database->prepare(
                 'SELECT "captcha_key" FROM "' . CAPTCHA_TABLE . '" WHERE "ip_address" = :ip_address');
-        $prepared->bindParam(':ip_address', $ip_address, PDO::PARAM_LOB);
+        $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);
         $result = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
 
         if ($result !== false)
         {
-            $file_handler = new \Nelliel\FileHandler();
-
             foreach ($result as $key)
             {
-                $file_handler->eraserGun(CAPTCHA_WEB_PATH, $key . '.jpg');
+                $this->file_handler->eraserGun(CAPTCHA_WEB_PATH, $key . '.jpg');
             }
 
             $prepared = $this->database->prepare('DELETE FROM "' . CAPTCHA_TABLE . '" WHERE "ip_address" = :ip_address');
-            $prepared->bindParam(':ip_address', $ip_address, PDO::PARAM_LOB);
+            $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);
             $this->database->executePrepared($prepared);
         }
     }
@@ -206,11 +210,11 @@ class CAPTCHA
                 'INSERT INTO "' . CAPTCHA_TABLE .
                 '" ("captcha_key", "captcha_text", "domain_id", "time_created", "ip_address")
 								VALUES (:captcha_key, :captcha_text, :domain_id, :time_created, :ip_address)');
-        $prepared->bindParam(':captcha_key', $captcha_data['captcha_key'], PDO::PARAM_STR);
-        $prepared->bindParam(':captcha_text', $captcha_data['captcha_text'], PDO::PARAM_STR);
-        $prepared->bindParam(':domain_id', $captcha_data['domain_id'], PDO::PARAM_STR);
-        $prepared->bindParam(':time_created', $captcha_data['time_created'], PDO::PARAM_INT);
-        $prepared->bindParam(':ip_address', $captcha_data['ip_address'], PDO::PARAM_LOB);
+        $prepared->bindValue(':captcha_key', $captcha_data['captcha_key'], PDO::PARAM_STR);
+        $prepared->bindValue(':captcha_text', $captcha_data['captcha_text'], PDO::PARAM_STR);
+        $prepared->bindValue(':domain_id', $captcha_data['domain_id'], PDO::PARAM_STR);
+        $prepared->bindValue(':time_created', $captcha_data['time_created'], PDO::PARAM_INT);
+        $prepared->bindValue(':ip_address', @inet_pton($captcha_data['ip_address']), PDO::PARAM_LOB);
         $this->database->executePrepared($prepared);
     }
 
@@ -231,7 +235,7 @@ class CAPTCHA
 
         if ($result === false)
         {
-            return false;
+            nel_derp(24, _gettext('CAPTCHA test failed.'), []);
         }
 
         $this->remove($key);
@@ -242,7 +246,7 @@ class CAPTCHA
     {
         $prepared = $this->database->prepare('DELETE FROM "' . CAPTCHA_TABLE . '" WHERE "captcha_key" = ?');
         $this->database->executePrepared($prepared, [$key]);
-        $file_handler->eraserGun(CAPTCHA_WEB_PATH, $key . '.jpg');
+        $this->file_handler->eraserGun(CAPTCHA_WEB_PATH, $key . '.jpg');
     }
 
     public function cleanupExpired()
@@ -261,11 +265,9 @@ class CAPTCHA
 
         if ($result !== false)
         {
-            $file_handler = new \Nelliel\FileHandler();
-
             foreach ($result as $key)
             {
-                $file_handler->eraserGun(CAPTCHA_WEB_PATH, $key . '.jpg');
+                $this->file_handler->eraserGun(CAPTCHA_WEB_PATH, $key . '.jpg');
             }
 
             $prepared = $this->database->prepare('DELETE FROM "' . CAPTCHA_TABLE . '" WHERE "time_created" < ?');
@@ -282,16 +284,17 @@ class CAPTCHA
             return;
         }
 
-        if (!isset($_POST['g-recaptcha-response']))
-        {
-            return false;
-        }
-
-        $response = $_POST['g-recaptcha-response'];
+        $response = $_POST['g-recaptcha-response'] ?? '';
         $result = file_get_contents(
                 'https://www.google.com/recaptcha/api/siteverify?secret=' .
                 $this->site_domain->setting('recaptcha_sekrit_key') . '&response=' . $response);
         $verification = json_decode($result);
-        return $verification->success;
+
+        if(!$verification->success)
+        {
+            nel_derp(28, _gettext('reCAPTCHA test failed.'), []);
+        }
+
+        return;
     }
 }

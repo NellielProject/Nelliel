@@ -30,7 +30,7 @@ abstract class AdminHandler
 
     public function validateUser()
     {
-        $session = new \Nelliel\Account\Session();
+        $session = new \Nelliel\Account\Session($this->domain);
         $session->loggedInOrError();
         $this->session_user = $session->sessionUser();
     }

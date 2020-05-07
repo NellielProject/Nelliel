@@ -1,7 +1,7 @@
 {{% FILTERS }}
 <div class="styles hidden" data-jsonly="">
 	<span>Style:</span>
-	<select class="styles-menu" data-command="change-style">
+	<select class="styles-menu" data-command="change-style" data-jsevents="change">
 	{{# styles }}
 		<option value="{{ style_id }}">{{ style_name }}</option>
 	{{/ styles }}

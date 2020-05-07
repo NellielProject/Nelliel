@@ -112,13 +112,13 @@ Called when verifying a CAPTCHA answer.
 |1    |`$return` |`null`|Yes       |Unused.|
 
 ### nel-verify-recaptcha
-Called when verifying a ReCAPTCHA answer.  
+Called when verifying a reCAPTCHA answer.  
 **Arguments**
 
 |Order|Argument   |Type    |Returnable|Description|                               
 |:---:|:----------|:-------|:---------|:----------|
 |1    |`$return`  |`null`  |Yes       |Unused.|
-|2    |`$response`|`string`|No        |The ReCAPTCHA answer.|
+|2    |`$response`|`string`|No        |The reCAPTCHA answer.|
 
 ### nel-post-data-processed
 Called after post data has been processed.

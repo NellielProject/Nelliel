@@ -94,7 +94,7 @@ class PostData
             return;
         }
 
-        $session = new \Nelliel\Account\Session();
+        $session = new \Nelliel\Account\Session($this->domain);
 
         if(!$session->isActive())
         {

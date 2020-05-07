@@ -26,35 +26,18 @@ class NewPost
     {
         $site_domain = new \Nelliel\DomainSite($this->database);
         $error_data = ['board_id' => $this->domain->id()];
+        $captcha = new \Nelliel\CAPTCHA($this->domain);
 
-        if ($this->domain->setting('use_post_captcha') || $this->domain->setting('use_post_recaptcha'))
+        if ($this->domain->setting('use_post_captcha'))
         {
-            $captcha = new \Nelliel\CAPTCHA($this->domain);
+            $captcha_key = $_COOKIE['captcha-key'] ?? '';
+            $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
+            $captcha->verify($captcha_key, $captcha_answer);
+        }
 
-            if ($this->domain->setting('use_post_captcha'))
-            {
-                $captcha_key = $_COOKIE['captcha-key'] ?? '';
-                $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
-                $captcha_result = $captcha->verify($captcha_key, $captcha_answer);
-            }
-            else
-            {
-                $captcha_result = true;
-            }
-
-            if ($this->domain->setting('use_post_recaptcha'))
-            {
-                $recaptcha_result = $captcha->verifyReCAPTCHA();
-            }
-            else
-            {
-                $recaptcha_result = true;
-            }
-
-            if (!$captcha_result || !$recaptcha_result)
-            {
-                nel_derp(24, _gettext('CAPTCHA test failed or you appear to be a spambot.'), $error_data);
-            }
+        if ($this->domain->setting('use_post_recaptcha'))
+        {
+            $captcha->verifyReCAPTCHA();
         }
 
         if ($this->domain->reference('locked'))

@@ -26,7 +26,7 @@ class OutputThread extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
-        $session = new \Nelliel\Account\Session();
+        $session = new \Nelliel\Account\Session($this->domain);
         $write = ($parameters['write']) ?? false;
         $thread_id = ($parameters['thread_id']) ?? 0;
         $dotdot = ($write) ? '../../../' : '';
@@ -116,6 +116,11 @@ class OutputThread extends OutputCore
             $post_counter ++;
         }
 
+        $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
+        $this->render_data['captcha_gen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=get';
+        $this->render_data['captcha_regen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=generate&no-display';
+        $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
+        $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot], true);
         $output = $this->output('thread/thread_page', $data_only, true);
