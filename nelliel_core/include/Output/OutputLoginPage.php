@@ -34,6 +34,11 @@ class OutputLoginPage extends OutputCore
                 ['module' => 'account', 'action' => 'login']);
         $this->render_data['register_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                 ['module' => 'account', 'action' => 'register']);
+        $this->render_data['use_login_captcha'] = $this->domain->setting('use_login_captcha');
+        $this->render_data['captcha_gen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=get';
+        $this->render_data['captcha_regen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=regenerate';
+        $this->render_data['use_login_recaptcha'] = $this->domain->setting('use_login_recaptcha');
+        $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('account/login', $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

@@ -814,38 +814,70 @@
 			</span>
 		</div>
 		{{/ enable_spoilers }}
-		{{# use_captcha }}
+		{{# use_post_captcha }}
 		<div class="display-row">
 			{{# defaults }}
 			<span class="display-cell">
-				<input type="hidden" name="use_captcha_lock" value="0">
-				<input id="use_captcha_lock" type="checkbox" name="use_captcha_lock" value="1" {{ locked }}>
-				<label for="use_captcha_lock" data-i18n="gettext">(Lock)</label>
+				<input type="hidden" name="use_post_captcha_lock" value="0">
+				<input id="use_post_captcha_lock" type="checkbox" name="use_post_captcha_lock" value="1" {{ locked }}>
+				<label for="use_post_captcha_lock" data-i18n="gettext">(Lock)</label>
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<input type="hidden" name="use_captcha" value="0">
-				<input id="use_captcha" type="checkbox" name="use_captcha" value="1" {{ value }} {{ disabled }}>
-				<label for="use_captcha" data-i18n="gettext">Use a CAPTCHA for new posts and threads.</label>
+				<input type="hidden" name="use_post_captcha" value="0">
+				<input id="use_post_captcha" type="checkbox" name="use_post_captcha" value="1" {{ value }} {{ disabled }}>
+				<label for="use_post_captcha" data-i18n="gettext">Use a CAPTCHA for new posts and threads.</label>
 			</span>
 		</div>
-		{{/ use_captcha }}
-		{{# use_recaptcha }}
+		{{/ use_post_captcha }}
+		{{# use_post_recaptcha }}
 		<div class="display-row">
 			{{# defaults }}
 			<span class="display-cell">
-				<input type="hidden" name="use_recaptcha_lock" value="0">
-				<input id="use_recaptcha_lock" type="checkbox" name="use_recaptcha_lock" value="1" {{ locked }}>
-				<label for="use_recaptcha_lock" data-i18n="gettext">(Lock)</label>
+				<input type="hidden" name="use_post_recaptcha_lock" value="0">
+				<input id="use_post_recaptcha_lock" type="checkbox" name="use_post_recaptcha_lock" value="1" {{ locked }}>
+				<label for="use_post_recaptcha_lock" data-i18n="gettext">(Lock)</label>
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<input type="hidden" name="use_recaptcha" value="0">
-				<input id="use_recaptcha" type="checkbox" name="use_recaptcha" value="1" {{ value }} {{ disabled }}>
-				<label for="use_recaptcha" data-i18n="gettext">Use reCAPTCHA for new posts and threads.</label>
+				<input type="hidden" name="use_post_recaptcha" value="0">
+				<input id="use_post_recaptcha" type="checkbox" name="use_post_recaptcha" value="1" {{ value }} {{ disabled }}>
+				<label for="use_post_recaptcha" data-i18n="gettext">Use reCAPTCHA for new posts and threads.</label>
 			</span>
 		</div>
-		{{/ use_recaptcha }}
+		{{/ use_post_recaptcha }}
+		{{# use_report_captcha }}
+		<div class="display-row">
+			{{# defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="use_report_captcha_lock" value="0">
+				<input id="use_report_captcha_lock" type="checkbox" name="use_report_captcha_lock" value="1" {{ locked }}>
+				<label for="use_report_captcha_lock" data-i18n="gettext">(Lock)</label>
+			</span>
+			{{/ defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="use_report_captcha" value="0">
+				<input id="use_report_captcha" type="checkbox" name="use_report_captcha" value="1" {{ value }} {{ disabled }}>
+				<label for="use_report_captcha" data-i18n="gettext">Use a CAPTCHA for making reports.</label>
+			</span>
+		</div>
+		{{/ use_report_captcha }}
+		{{# use_report_recaptcha }}
+		<div class="display-row">
+			{{# defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="use_report_recaptcha_lock" value="0">
+				<input id="use_report_recaptcha_lock" type="checkbox" name="use_report_recaptcha_lock" value="1" {{ locked }}>
+				<label for="use_report_recaptcha_lock" data-i18n="gettext">(Lock)</label>
+			</span>
+			{{/ defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="use_report_recaptcha" value="0">
+				<input id="use_report_recaptcha" type="checkbox" name="use_report_recaptcha" value="1" {{ value }} {{ disabled }}>
+				<label for="use_report_recaptcha" data-i18n="gettext">Use reCAPTCHA for making reports.</label>
+			</span>
+		</div>
+		{{/ use_report_recaptcha }}
 		{{# use_honeypot }}
 		<div class="display-row">
 			{{# defaults }}

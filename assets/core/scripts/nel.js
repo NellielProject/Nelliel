@@ -280,8 +280,28 @@ function setStyle(style, update_cookie = false) {
       } 
 }
 
-function reloadCAPTCHA(event, command) {
-    var captcha_image = document.getElementById("captcha-image");
-    var new_image_url = captcha_image.getAttribute("src").replace(/&time=[0-9]*/, "&time=" + Date.now());
-    captcha_image.setAttribute("src", new_image_url);
+function reloadCAPTCHA(event_target, command) {
+    var regen_url = event_target.getAttribute("data-url");
+    var request = new XMLHttpRequest();
+    request.open('GET', regen_url);
+    request.onreadystatechange = function() {
+        if (request.readyState == 4) {
+            var captchas = document.getElementsByClassName("captcha-image", document);
+            var captcha_count = captchas.length;
+
+            for (i = 0; i < captcha_count; i++) {
+                var original_url = captchas[i].getAttribute("src");
+                
+                if (original_url.includes("&time=")) {
+                    var new_image_url = captchas[i].getAttribute("src").replace(/&time=[0-9]*/, "&time=" + Date.now());
+                } else {
+                    var new_image_url = captchas[i].getAttribute("src") + "&time=" + Date.now();
+                }
+
+                captchas[i].setAttribute("src", new_image_url);
+            }
+        }
+    };
+    
+    request.send();
 }

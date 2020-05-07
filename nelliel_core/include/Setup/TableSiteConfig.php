@@ -80,5 +80,7 @@ class TableSiteConfig extends TableHandler
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'overboard_sfw_update_interval', 30, 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'user_board_creation', '0', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'max_boards_per_user', '1', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_login_captcha', '0', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_login_recaptcha', '0', 0, 0]);
     }
 }

@@ -60,24 +60,12 @@
 			<span data-i18n="gettext">Post as staff</span>
 		</label>
 		{{/ is_staff }}
-		{{# use_captcha }}
-		<div class="posting-form-row">
-			<span class="posting-form-label" data-i18n="gettext">CAPTCHA</span>
-			<img id="captcha-image" src="{{ captcha_gen_url }}"></img>
-			<div><input type="button" value="Reload" data-command="reload-captcha"></div>
-			<div data-i18n="gettext">Enter the characters shown in the image above.</div>
-			<div>
-				<input class="posting-form-input" type="text" name="new_post[captcha_answer]" size="16" value="">
-			</div>
-		</div>
-		{{/ use_captcha }}
-		{{# use_recaptcha }}
-		<div class="posting-form-row">
-			<span class="posting-form-label" data-i18n="gettext">reCAPTCHA</span>
-			<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-			<div class="g-recaptcha" data-sitekey="{{ recaptcha_sitekey }}"></div>
-		</div>
-		{{/ use_recaptcha }}
+		{{# use_post_captcha }}
+			{{> pieces/captcha }}
+		{{/ use_post_captcha }}
+		{{# use_post_recaptcha }}
+			{{> pieces/recaptcha }}
+		{{/ use_post_recaptcha }}
 		{{# use_honeypot }}
 		<label id="form-user-info-1" class="posting-form-row">
 			<span class="posting-form-label" data-i18n="gettext">Do not ever check this!</span>

@@ -79,6 +79,16 @@
 		<label for="display_render_timer" data-i18n="gettext">Display rendering timer</label>
 	</div>
 	<div class="display-row">
+		<input type="hidden" name="use_login_captcha" value="0">
+		<input id="use_login_captcha" type="checkbox" name="use_login_captcha" value="1" {{ use_login_captcha }}>
+		<label for="use_login_captcha" data-i18n="gettext">Use a CAPTCHA for login</label>
+	</div>
+		<div class="display-row">
+		<input type="hidden" name="use_login_recaptcha" value="0">
+		<input id="use_login_recaptcha" type="checkbox" name="use_login_recaptcha" value="1" {{ use_login_recaptcha }}>
+		<label for="use_login_recaptcha" data-i18n="gettext">Use a ReCAPTCHA for login</label>
+	</div>
+	<div class="display-row">
 		<label for="captcha_timeout" class="display-cell" data-i18n="gettext">Time (in seconds) before a CAPTCHA becomes invalid.</label>
 		<input id="captcha_timeout" class="display-cell" type="text" name="captcha_timeout" size="15" value="{{ captcha_timeout }}">
 	</div>

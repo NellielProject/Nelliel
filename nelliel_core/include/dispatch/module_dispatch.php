@@ -16,9 +16,13 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'captcha':
             $captcha = new \Nelliel\CAPTCHA($domain);
 
-            if ($inputs['action'] === 'generate')
+            if ($inputs['action'] === 'get')
             {
                 $captcha->generate();
+            }
+            else if($inputs['action'] === 'regenerate')
+            {
+                $captcha->generate(true);
             }
 
         case 'account':

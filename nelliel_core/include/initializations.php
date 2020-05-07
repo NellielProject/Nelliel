@@ -18,6 +18,8 @@ define('SCRIPTS_DIR', 'scripts');
 define('FONTS_DIR', 'fonts');
 define('CORE_DIR', 'core');
 define('CUSTOM_DIR', 'custom');
+define('OUTPUT_DIR', 'nelliel_output');
+define('CAPTCHA_DIR', 'captchas');
 
 if($_SERVER['SERVER_PORT'] != 80 && empty($_SERVER['HTTPS']))
 {
@@ -73,6 +75,8 @@ define('CUSTOM_STYLES_FILE_PATH', ASSETS_CUSTOM_FILE_PATH .STYLES_DIR . '/');
 define('CORE_ICON_SETS_FILE_PATH', ASSETS_CORE_FILE_PATH . ICON_SETS_DIR . '/');
 define('CUSTOM_ICON_SETS_FILE_PATH', ASSETS_CUSTOM_FILE_PATH . ICON_SETS_DIR . '/');
 define('WAT_FILE_PATH', INCLUDE_PATH . 'wat/');
+define('OUTPUT_FILE_PATH', BASE_PATH . 'nelliel_output/');
+define('CAPTCHA_FILE_PATH', OUTPUT_FILE_PATH . CAPTCHA_DIR . '/');
 
 define('ASSETS_CORE_WEB_PATH', ASSETS_DIR . '/' . CORE_DIR . '/');
 define('ASSETS_CUSTOM_WEB_PATH', ASSETS_DIR . '/' . CUSTOM_DIR . '/');
@@ -84,6 +88,8 @@ define('CORE_STYLES_WEB_PATH', ASSETS_CORE_WEB_PATH . STYLES_DIR . '/');
 define('CUSTOM_STYLES_WEB_PATH', ASSETS_CUSTOM_WEB_PATH . STYLES_DIR . '/');
 define('CORE_ICON_SETS_WEB_PATH', ASSETS_CORE_WEB_PATH . ICON_SETS_DIR . '/');
 define('CUSTOM_ICON_SETS_WEB_PATH', ASSETS_CUSTOM_WEB_PATH . ICON_SETS_DIR . '/');
+define('OUTPUT_WEB_PATH', 'nelliel_output/');
+define('CAPTCHA_WEB_PATH', OUTPUT_WEB_PATH . CAPTCHA_DIR . '/');
 define('BASE_WEB_PATH', pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME) . '/');
 define('SQLITE_DB_DEFAULT_PATH', NELLIEL_CORE_PATH);
 

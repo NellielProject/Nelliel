@@ -27,14 +27,14 @@ class NewPost
         $site_domain = new \Nelliel\DomainSite($this->database);
         $error_data = ['board_id' => $this->domain->id()];
 
-        if ($this->domain->setting('use_captcha') || $this->domain->setting('use_recaptcha'))
+        if ($this->domain->setting('use_post_captcha') || $this->domain->setting('use_post_recaptcha'))
         {
             $captcha = new \Nelliel\CAPTCHA($this->domain);
 
-            if ($this->domain->setting('use_captcha'))
+            if ($this->domain->setting('use_post_captcha'))
             {
-                $captcha_key = $_COOKIE['captcha-key-' . $this->domain->id()] ?? '';
-                $captcha_answer = $_POST['new_post']['captcha_answer'];
+                $captcha_key = $_COOKIE['captcha-key'] ?? '';
+                $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
                 $captcha_result = $captcha->verify($captcha_key, $captcha_answer);
             }
             else
@@ -42,7 +42,7 @@ class NewPost
                 $captcha_result = true;
             }
 
-            if ($this->domain->setting('use_recaptcha'))
+            if ($this->domain->setting('use_post_recaptcha'))
             {
                 $recaptcha_result = $captcha->verifyReCAPTCHA();
             }
