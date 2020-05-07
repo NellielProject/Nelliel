@@ -174,12 +174,12 @@ class Setup
         $file_filters_table->createTable();
         $filetypes_table = new TableFiletypes($database, $sql_compatibility);
         $filetypes_table->createTable();
-        $login_attempts_table = new TableLoginAttempts($database, $sql_compatibility);
-        $login_attempts_table->createTable();
         $news_table = new TableNews($database, $sql_compatibility);
         $news_table->createTable();
         $permissions_table = new TablePermissions($database, $sql_compatibility);
         $permissions_table->createTable();
+        $rate_limit_table = new TableRateLimit($database, $sql_compatibility);
+        $rate_limit_table->createTable();
         $reports_table = new TableReports($database, $sql_compatibility);
         $reports_table->createTable();
         $role_permissions_table = new TableRolePermissions($database, $sql_compatibility);

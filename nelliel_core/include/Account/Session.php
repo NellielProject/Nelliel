@@ -104,7 +104,6 @@ class Session
     public function login()
     {
         $login = new \Nelliel\Account\Login($this->authorization, $this->domain);
-        $login->cleanupAttempts(time());
         $login_data = $login->validate();
 
         if(empty($login_data))

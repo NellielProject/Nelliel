@@ -40,8 +40,38 @@ class CAPTCHA
         $this->generate();
     }
 
+    public function rateLimit()
+    {
+        if ($this->site_domain->setting('captcha_rate_limit') == 0)
+        {
+            return;
+        }
+
+        $rate_limit = new \Nelliel\RateLimit($this->database);
+        $ip_address = $_SERVER['REMOTE_ADDR'];
+        $attempt_time = time();
+
+        if ($rate_limit->lastTime($ip_address, 'captcha') > $attempt_time - 60)
+        {
+            if ($rate_limit->attempts($ip_address, 'captcha') < $this->site_domain->setting('captcha_rate_limit'))
+            {
+                $rate_limit->updateAttempts($ip_address, 'captcha');
+            }
+            else
+            {
+                nel_derp(29, _gettext('Requesting new CAPTCHAs too fast. Wait a minute.'));
+            }
+        }
+        else
+        {
+            $rate_limit->clearAttempts($ip_address, 'captcha');
+        }
+    }
+
     public function generate()
     {
+        $this->rateLimit();
+
         // Pretty basic CAPTCHA
         // We'll leave making a better one to someone who really knows the stuff
         $generated = nel_plugins()->processHook('nel-captcha-generate', [$this->domain], false);
@@ -76,7 +106,7 @@ class CAPTCHA
         $captcha_data['ip_address'] = $_SERVER['REMOTE_ADDR'];
         $this->store($captcha_data);
 
-        if(!isset($_GET['no-display']))
+        if (!isset($_GET['no-display']))
         {
             $this->redirectToImage($captcha_key);
         }
@@ -167,16 +197,6 @@ class CAPTCHA
         }
     }
 
-    public function throttle()
-    {
-        $ip_address = $_SERVER['REMOTE_ADDR'];
-        $time = time() - 60; // 1 minute period to check
-        $prepared = $this->database->prepare(
-                'SELECT COUNT(*) FROM "' . CAPTCHA_TABLE . '" WHERE "ip_address" = ? AND "time_created" > ?');
-        $result = $this->database->executePreparedFetch($prepared, [$ip_address, $time], PDO::FETCH_COLUMN);
-        return $result >= $this->site_domain->setting('captcha_throttle');
-    }
-
     public function keyExists(string $key, bool $check_expired)
     {
         $prepared = $this->database->prepare(
@@ -235,7 +255,7 @@ class CAPTCHA
 
         if ($result === false)
         {
-            nel_derp(24, _gettext('CAPTCHA test failed.'), []);
+            nel_derp(24, _gettext('CAPTCHA test failed.'));
         }
 
         $this->remove($key);
@@ -290,9 +310,9 @@ class CAPTCHA
                 $this->site_domain->setting('recaptcha_sekrit_key') . '&response=' . $response);
         $verification = json_decode($result);
 
-        if(!$verification->success)
+        if (!$verification->success)
         {
-            nel_derp(28, _gettext('reCAPTCHA test failed.'), []);
+            nel_derp(28, _gettext('reCAPTCHA test failed.'));
         }
 
         return;

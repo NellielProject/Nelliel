@@ -9,19 +9,19 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableLoginAttempts extends TableHandler
+class TableRateLimit extends TableHandler
 {
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = LOGIN_ATTEMPTS_TABLE;
+        $this->table_name = RATE_LIMIT_TABLE;
         $this->columns_data = [
-            'attempt_key' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'rate_key' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
             'hashed_ip' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'last_attempt' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
+            'records' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -31,10 +31,10 @@ class TableLoginAttempts extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            attempt_key     VARCHAR(255) NOT NULL PRIMARY KEY,
-            ip_address      " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            hashed_ip       VARCHAR(255) DEFAULT NULL,
-            last_attempt    BIGINT NOT NULL
+            rate_key    VARCHAR(255) NOT NULL PRIMARY KEY,
+            ip_address  " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
+            hashed_ip   VARCHAR(255) DEFAULT NULL,
+            record      VARCHAR(255) NOT NULL
         ) " . $options . ";";
 
         return $schema;

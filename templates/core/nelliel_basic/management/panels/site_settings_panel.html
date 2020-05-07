@@ -1,5 +1,5 @@
 {{% FILTERS }}
-<form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data" aria-label="Site settings" data-i18n-attributes="gettext|aria-label">
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 <div class="display-table">
 	<div class="display-row">
 		<b>Basic settings</b>
@@ -99,24 +99,28 @@
 		<label for="use_register_recaptcha" data-i18n="gettext">Use a reCAPTCHA for registering</label>
 	</div>
 	<div class="display-row">
-		<label for="captcha_timeout" class="display-cell" data-i18n="gettext">Time (in seconds) before a CAPTCHA becomes invalid.</label>
+		<label for="captcha_timeout" class="display-cell" data-i18n="gettext">Time (in seconds) before a CAPTCHA becomes invalid</label>
 		<input id="captcha_timeout" class="display-cell" type="text" name="captcha_timeout" size="15" value="{{ captcha_timeout }}">
 	</div>
 	<div class="display-row">
-		<label for="captcha_throttle" class="display-cell" data-i18n="gettext">How many CAPTCHAs can be requested by an IP in one minute.</label>
-		<input id="captcha_throttle" class="display-cell" type="text" name="captcha_throttle" size="15" value="{{ captcha_throttle }}">
+		<label for="captcha_rate_limit" class="display-cell" data-i18n="gettext">How many CAPTCHAs can be requested by an IP in one minute (0 to disable check)</label>
+		<input id="captcha_rate_limit" class="display-cell" type="text" name="captcha_rate_limit" size="15" value="{{ captcha_rate_limit }}">
 	</div>
 	<div class="display-row">
-		<label for="captcha_width" class="display-cell" data-i18n="gettext">Width of CAPTCHA image.</label>
+		<label for="captcha_width" class="display-cell" data-i18n="gettext">Width of CAPTCHA image</label>
 		<input id="captcha_width" class="display-cell" type="text" name="captcha_width" size="15" value="{{ captcha_width }}">
 	</div>
 	<div class="display-row">
-		<label for="captcha_height" class="display-cell" data-i18n="gettext">Height of CAPTCHA image.</label>
+		<label for="captcha_height" class="display-cell" data-i18n="gettext">Height of CAPTCHA image</label>
 		<input id="captcha_height" class="display-cell" type="text" name="captcha_height" size="15" value="{{ captcha_height }}">
 	</div>
 	<div class="display-row">
-		<label for="captcha_character_count" class="display-cell" data-i18n="gettext">How many characters to use in CAPTCHA.</label>
+		<label for="captcha_character_count" class="display-cell" data-i18n="gettext">How many characters to use in CAPTCHA</label>
 		<input id="captcha_character_count" class="display-cell" type="text" name="captcha_character_count" size="15" value="{{ captcha_character_count }}">
+	</div>
+		<div class="display-row">
+		<label for="login_delay" class="display-cell" data-i18n="gettext">Delay between login attempts (seconds)</label>
+		<input id="login_delay" class="display-cell" type="text" name="login_delay" size="15" value="{{ login_delay }}">
 	</div>
 	<div class="display-row">
 		<span class="display-cell">
