@@ -36,14 +36,14 @@ class OutputNews extends OutputCore
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => '', 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
-        $this->file_handler->writeFile(BASE_PATH . 'news.html', $output);
+        $this->file_handler->writeFile(NEL_BASE_PATH . 'news.html', $output);
     }
 
     private function newsList(int $limit = 0)
     {
         $database = $this->domain->database();
         $authorization = new \Nelliel\Auth\Authorization($database);
-        $news_entries = $database->executeFetchAll('SELECT * FROM "' . NEWS_TABLE . '" ORDER BY "time" ASC',
+        $news_entries = $database->executeFetchAll('SELECT * FROM "' . NEL_NEWS_TABLE . '" ORDER BY "time" ASC',
                 PDO::FETCH_ASSOC);
         $limit_counter = 0;
         $entry_list = array();

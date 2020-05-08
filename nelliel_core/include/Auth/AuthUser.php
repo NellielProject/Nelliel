@@ -25,7 +25,7 @@ class AuthUser extends AuthHandler
     public function loadFromDatabase($temp_database = null)
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT * FROM "' . USERS_TABLE . '" WHERE "user_id" = ?');
+        $prepared = $database->prepare('SELECT * FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
 
         if (empty($result))
@@ -34,7 +34,7 @@ class AuthUser extends AuthHandler
         }
 
         $this->auth_data = $result;
-        $prepared = $database->prepare('SELECT * FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
+        $prepared = $database->prepare('SELECT * FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ?');
         $result = $database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
 
         foreach ($result as $row)
@@ -53,20 +53,20 @@ class AuthUser extends AuthHandler
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT "entry" FROM "' . USERS_TABLE . '" WHERE "user_id" = ?');
+        $prepared = $database->prepare('SELECT "entry" FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $database->prepare(
-                    'UPDATE "' . USERS_TABLE .
+                    'UPDATE "' . NEL_USERS_TABLE .
                     '" SET "user_id" = :user_id, "display_name" = :display_name, "user_password" = :user_password, "active" = :active, "owner" = :owner, "last_login" = :last_login WHERE "entry" = :entry');
             $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
         }
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . USERS_TABLE . '" ("user_id", "display_name", "user_password", "active", "owner", "last_login") VALUES
+                    'INSERT INTO "' . NEL_USERS_TABLE . '" ("user_id", "display_name", "user_password", "active", "owner", "last_login") VALUES
                     (:user_id, :display_name, :user_password, :active, :owner, :last_login)');
         }
 
@@ -81,20 +81,20 @@ class AuthUser extends AuthHandler
         foreach ($this->user_roles as $domain_id => $user_role)
         {
             $prepared = $database->prepare(
-                    'SELECT "entry" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
+                    'SELECT "entry" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
             $result = $database->executePreparedFetch($prepared, [$this->id(), $domain_id], PDO::FETCH_COLUMN);
 
             if ($result)
             {
                 $prepared = $database->prepare(
-                        'UPDATE "' . USER_ROLES_TABLE .
+                        'UPDATE "' . NEL_USER_ROLES_TABLE .
                         '" SET "user_id" = :user_id, "role_id" = :role_id, "domain_id" = :domain_id WHERE "entry" = :entry');
                 $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
             }
             else
             {
                 $prepared = $database->prepare(
-                        'INSERT INTO "' . USER_ROLES_TABLE . '" ("user_id", "role_id", "domain_id") VALUES
+                        'INSERT INTO "' . NEL_USER_ROLES_TABLE . '" ("user_id", "role_id", "domain_id") VALUES
                     (:user_id, :role_id, :domain_id)');
             }
 
@@ -113,9 +113,9 @@ class AuthUser extends AuthHandler
 
     public function remove()
     {
-        $prepared = $this->database->prepare('DELETE FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
-        $prepared = $this->database->prepare('DELETE FROM "' . USERS_TABLE . '" WHERE "user_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
@@ -163,7 +163,7 @@ class AuthUser extends AuthHandler
         }
 
         $prepared = $this->database->prepare(
-                'DELETE FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
+                'DELETE FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
         $this->database->executePrepared($prepared, [$this->id(), $domain_id]);
         unset($this->user_roles[$domain_id]);
     }

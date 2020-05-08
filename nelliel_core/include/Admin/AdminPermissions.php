@@ -60,7 +60,7 @@ class AdminPermissions extends AdminHandler
         $permission = $_POST['permission'];
         $description = $_POST['description'];
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . PERMISSIONS_TABLE . '" ("permission", "description") VALUES (?, ?)');
+                'INSERT INTO "' . NEL_PERMISSIONS_TABLE . '" ("permission", "description") VALUES (?, ?)');
         $this->database->executePrepared($prepared, [$permission, $description]);
         $this->renderPanel($this->session_user);
     }
@@ -81,7 +81,7 @@ class AdminPermissions extends AdminHandler
         }
 
         $permission = $_GET['permission'];
-        $prepared = $this->database->prepare('DELETE FROM "' . PERMISSIONS_TABLE . '" WHERE "permission" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_PERMISSIONS_TABLE . '" WHERE "permission" = ?');
         $this->database->executePrepared($prepared, [$permission]);
         $this->renderPanel($this->session_user);
     }

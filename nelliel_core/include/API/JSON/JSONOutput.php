@@ -52,6 +52,6 @@ abstract class JSONOutput
     {
         $this->setVersion();
         $json_data = json_encode($this->data_array);
-        $this->file_handler->writeFile($path . $filename . JSON_EXT, $json_data);
+        $this->file_handler->writeFile($path . $filename . NEL_JSON_EXT, $json_data);
     }
 }

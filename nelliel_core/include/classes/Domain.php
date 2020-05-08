@@ -118,7 +118,7 @@ abstract class Domain
 
             if(nel_true_empty($locale))
             {
-                $locale = DEFAULT_LOCALE;
+                $locale = NEL_DEFAULT_LOCALE;
             }
 
             $this->updateLocale($locale);

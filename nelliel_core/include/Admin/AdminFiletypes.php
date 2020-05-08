@@ -66,7 +66,7 @@ class AdminFiletypes extends AdminHandler
         $regex = $_POST['regex'];
         $label = $_POST['label'];
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . FILETYPES_TABLE .
+                'INSERT INTO "' . NEL_FILETYPES_TABLE .
                 '" ("extension", "parent_extension", "type", "format", "mime", "id_regex", "label") VALUES (?, ?, ?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
                 [$extension, $parent_extension, $type, $format, $mime, $regex, $label]);
@@ -98,9 +98,9 @@ class AdminFiletypes extends AdminHandler
 
         $filetype_id = $_GET['filetype-id'];
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . FILETYPES_TABLE . '" WHERE "entry" = ?');
+                'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" WHERE "entry" = ?');
         $filetype_info = $this->database->executePreparedFetch($prepared, [$filetype_id], PDO::FETCH_ASSOC);
-        $prepared = $this->database->prepare('DELETE FROM "' . FILETYPES_TABLE . '" WHERE "entry" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_FILETYPES_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filetype_id]);
 
         foreach ($this->getBoardDomains() as $board_domain)
@@ -113,7 +113,7 @@ class AdminFiletypes extends AdminHandler
 
     private function getBoardDomains()
     {
-        $query = 'SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"';
+        $query = 'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"';
         $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
         $board_domains = array();
 

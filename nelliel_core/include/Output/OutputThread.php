@@ -32,7 +32,7 @@ class OutputThread extends OutputCore
         $dotdot = ($write) ? '../../../' : '';
         $command = ($parameters['command']) ?? 'view-thread';
         $thread_content_id = \Nelliel\ContentID::createIDString($thread_id);
-        $this->render_data['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
+        $this->render_data['form_action'] = $dotdot . NEL_MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $thread_data = $this->database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
@@ -117,8 +117,8 @@ class OutputThread extends OutputCore
         }
 
         $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
-        $this->render_data['captcha_gen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=get';
-        $this->render_data['captcha_regen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=generate&no-display';
+        $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=get';
+        $this->render_data['captcha_regen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=generate&no-display';
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $output_footer = new OutputFooter($this->domain);
@@ -129,7 +129,7 @@ class OutputThread extends OutputCore
         {
             $this->file_handler->writeFile(
                     $this->domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '.html', $output,
-                    FILE_PERM, true);
+                    NEL_FILES_PERM, true);
             $json_thread->writeStoredData($this->domain->reference('page_path') . $thread_id . '/',
                     sprintf('thread-%d', $thread_id));
         }

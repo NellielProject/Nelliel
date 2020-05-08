@@ -61,9 +61,9 @@ class OutputPanelManageBoards extends OutputCore
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        $this->render_data['form_action'] = MAIN_SCRIPT . '?module=manage-boards&action=add';
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=manage-boards&action=add';
         $board_data = $this->database->executeFetchAll(
-                'SELECT * FROM "' . BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC', PDO::FETCH_ASSOC);
+                'SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
         foreach ($board_data as $board_info)
@@ -77,20 +77,20 @@ class OutputPanelManageBoards extends OutputCore
 
             if ($board_info['locked'] == 0)
             {
-                $this->render_data['lock_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                $this->render_data['lock_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                         ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'lock']);
                 $this->render_data['status'] = _gettext('Active');
                 $this->render_data['lock_text'] = _gettext('Lock Board');
             }
             else
             {
-                $this->render_data['lock_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                $this->render_data['lock_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                         ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'unlock']);
                 $this->render_data['status'] = _gettext('Locked');
                 $this->render_data['lock_text'] = _gettext('Unlock Board');
             }
 
-            $board_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+            $board_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                     ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'remove']);
             $this->render_data['board_list'][] = $board_data;
         }

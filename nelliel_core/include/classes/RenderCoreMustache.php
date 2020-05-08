@@ -22,11 +22,11 @@ class RenderCoreMustache extends RenderCore
         $this->template_loaders['file'] = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(),
                 ['extension' => '.html']);
 
-        if (USE_MUSTACHE_CACHE)
+        if (NEL_USE_MUSTACHE_CACHE)
         {
             $this->mustache_engine = new \Mustache_Engine(
                     ['loader' => $this->template_loaders['file'],
-                        'partials_loader' => $this->template_loaders['file'], 'cache' => CACHE_FILE_PATH . 'mustache']);
+                        'partials_loader' => $this->template_loaders['file'], 'cache' => NEL_CACHE_FILES_PATH . 'mustache']);
         }
         else
         {

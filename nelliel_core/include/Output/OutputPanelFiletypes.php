@@ -41,9 +41,9 @@ class OutputPanelFiletypes extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $filetypes = $this->database->executeFetchAll(
-                'SELECT * FROM "' . FILETYPES_TABLE . '" WHERE "extension" <> \'\' ORDER BY "entry" ASC',
+                'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" WHERE "extension" <> \'\' ORDER BY "entry" ASC',
                 PDO::FETCH_ASSOC);
-        $form_action = $this->url_constructor->dynamic(MAIN_SCRIPT, ['module' => 'filetypes', 'action' => 'add']);
+        $form_action = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT, ['module' => 'filetypes', 'action' => 'add']);
         $this->render_data['form_action'] = $form_action;
         $bgclass = 'row1';
 
@@ -59,7 +59,7 @@ class OutputPanelFiletypes extends OutputCore
             $filetype_data['mime'] = $filetype['mime'];
             $filetype_data['id_regex'] = $filetype['id_regex'];
             $filetype_data['label'] = $filetype['label'];
-            $filetype_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+            $filetype_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                     ['module' => 'filetypes', 'action' => 'remove', 'filetype-id' => $filetype['entry']]);
             $this->render_data['filetype_list'][] = $filetype_data;
         }

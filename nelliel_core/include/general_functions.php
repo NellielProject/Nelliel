@@ -21,7 +21,7 @@ function nel_clean_exit(bool $redirect = false, $redirect_board = null, int $red
         else
         {
             $domain = new \Nelliel\DomainBoard($redirect_board, nel_database());
-            $url = $domain->reference('board_directory') . '/' . MAIN_INDEX . PAGE_EXT;
+            $url = $domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             nel_redirect($url, $redirect_delay);
         }
     }

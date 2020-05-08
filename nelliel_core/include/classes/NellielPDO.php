@@ -19,7 +19,7 @@ class NellielPDO extends PDO
 
     public function databaseExists(string $database_name)
     {
-        switch (SQLTYPE)
+        switch (NEL_SQLTYPE)
         {
             case 'MYSQL':
                 $prepared = $this->prepare('SELECT 1 FROM "information_schema"."schemata" WHERE "schema_name" = ?');
@@ -49,24 +49,24 @@ class NellielPDO extends PDO
 
     public function tableExists(string $table_name)
     {
-        switch (SQLTYPE)
+        switch (NEL_SQLTYPE)
         {
             case 'MYSQL':
                 $prepared = $this->prepare(
                         'SELECT 1 FROM "information_schema"."tables" WHERE "table_schema" = ? AND "table_name" = ?');
-                $result = $this->executePreparedFetch($prepared, [MYSQL_DB, $table_name], PDO::FETCH_COLUMN);
+                $result = $this->executePreparedFetch($prepared, [NEL_MYSQL_DB, $table_name], PDO::FETCH_COLUMN);
                 break;
 
             case 'MARIADB':
                 $prepared = $this->prepare(
                         'SELECT 1 FROM "information_schema"."tables" WHERE "table_schema" = ? AND "table_name" = ?');
-                $result = $this->executePreparedFetch($prepared, [MARIADB_DB, $table_name], PDO::FETCH_COLUMN);
+                $result = $this->executePreparedFetch($prepared, [NEL_MARIADB_DB, $table_name], PDO::FETCH_COLUMN);
                 break;
 
             case 'POSTGRESQL':
                 $prepared = $this->prepare(
                         'SELECT 1 FROM "information_schema"."tables" WHERE "table_schema" = ? AND "table_name" = ?');
-                $result = $this->executePreparedFetch($prepared, [POSTGRESQL_SCHEMA, $table_name], PDO::FETCH_COLUMN);
+                $result = $this->executePreparedFetch($prepared, [NEL_POSTGRESQL_SCHEMA, $table_name], PDO::FETCH_COLUMN);
                 break;
 
             case 'SQLITE':
@@ -83,26 +83,26 @@ class NellielPDO extends PDO
 
     public function columnExists(string $table_name, string $column_name)
     {
-        switch (SQLTYPE)
+        switch (NEL_SQLTYPE)
         {
             case 'MYSQL':
                 $prepared = $this->prepare(
                         'SELECT 1 FROM "information_schema"."columns" WHERE "table_schema" = ? AND "table_name" = ? AND "column_name" = ?');
-                $result = $this->executePreparedFetch($prepared, [MYSQL_DB, $table_name, $column_name],
+                $result = $this->executePreparedFetch($prepared, [NEL_MYSQL_DB, $table_name, $column_name],
                         PDO::FETCH_COLUMN);
                 break;
 
             case 'MARIADB':
                 $prepared = $this->prepare(
                         'SELECT 1 FROM "information_schema"."columns" WHERE "table_schema" = ? AND "table_name" = ? AND "column_name" = ?');
-                $result = $this->executePreparedFetch($prepared, [MARIADB_DB, $table_name, $column_name],
+                $result = $this->executePreparedFetch($prepared, [NEL_MARIADB_DB, $table_name, $column_name],
                         PDO::FETCH_COLUMN);
                 break;
 
             case 'POSTGRESQL':
                 $prepared = $this->prepare(
                         'SELECT 1 FROM "information_schema"."columns" WHERE "table_schema" = ? AND "table_name" = ? AND "column_name" = ?');
-                $result = $this->executePreparedFetch($prepared, [POSTGRESQL_SCHEMA, $table_name, $column_name],
+                $result = $this->executePreparedFetch($prepared, [NEL_POSTGRESQL_SCHEMA, $table_name, $column_name],
                         PDO::FETCH_COLUMN);
                 break;
 

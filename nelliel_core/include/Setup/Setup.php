@@ -58,7 +58,7 @@ class Setup
             echo _gettext('Site owner account already created.'), '<br>';
             echo _gettext(
                     'Install has finished with no apparent problems! When you\'re ready to continue, follow this link to the login page: '), '<br>';
-            echo '<a href="' . BASE_WEB_PATH . 'imgboard.php?module=account&amp;action=login">' . _gettext('Login page') . '</a>';
+            echo '<a href="' . NEL_BASE_WEB_PATH . 'imgboard.php?module=account&amp;action=login">' . _gettext('Login page') . '</a>';
             echo '</body></html>';
             die();
         }
@@ -93,17 +93,17 @@ class Setup
 
     public function ownerCreated()
     {
-        return file_exists(GENERATED_FILE_PATH . 'create_owner.php');
+        return file_exists(NEL_GENERATED_FILES_PATH . 'create_owner.php');
     }
 
     public function checkInstallDone()
     {
-        return file_exists(GENERATED_FILE_PATH . 'install_done.php');
+        return file_exists(NEL_GENERATED_FILES_PATH . 'install_done.php');
     }
 
     public function checkDBEngine()
     {
-        if ((SQLTYPE === 'MYSQL' || SQLTYPE === 'MARIADB') && !$this->checkForInnoDB())
+        if ((NEL_SQLTYPE === 'MYSQL' || NEL_SQLTYPE === 'MARIADB') && !$this->checkForInnoDB())
         {
             nel_derp(102,
                     _gettext(
@@ -129,7 +129,7 @@ class Setup
 
     public function mainDirWritable()
     {
-        if (!is_writable(BASE_PATH))
+        if (!is_writable(NEL_BASE_PATH))
         {
             nel_derp(105, _gettext('Nelliel main directory is not writable.'));
         }
@@ -141,7 +141,7 @@ class Setup
 
     public function configDirWritable()
     {
-        if (!is_writable(CONFIG_FILE_PATH))
+        if (!is_writable(NEL_CONFIG_FILES_PATH))
         {
             nel_derp(106, _gettext('Configuration directory is missing or not writable. Admin should check this out.'));
         }
@@ -168,7 +168,7 @@ class Setup
         $cites_table = new TableCites($database, $sql_compatibility);
         $cites_table->createTable();
         $board_defaults_table = new TableBoardConfig($database, $sql_compatibility);
-        $board_defaults_table->tableName(BOARD_DEFAULTS_TABLE);
+        $board_defaults_table->tableName(NEL_BOARD_DEFAULTS_TABLE);
         $board_defaults_table->createTable();
         $file_filters_table = new TableFileFilters($database, $sql_compatibility);
         $file_filters_table->createTable();
@@ -189,10 +189,10 @@ class Setup
         $site_config_table = new TableSiteConfig($database, $sql_compatibility);
         $site_config_table->createTable();
         $staff_logs_table = new TableLogs($database, $sql_compatibility);
-        $staff_logs_table->tableName(STAFF_LOGS_TABLE);
+        $staff_logs_table->tableName(NEL_STAFF_LOGS_TABLE);
         $staff_logs_table->createTable();
         $system_logs_table = new TableLogs($database, $sql_compatibility);
-        $system_logs_table->tableName(SYSTEM_LOGS_TABLE);
+        $system_logs_table->tableName(NEL_SYSTEM_LOGS_TABLE);
         $system_logs_table->createTable();
         $templates_table = new TableTemplates($database, $sql_compatibility);
         $templates_table->createTable();
@@ -206,10 +206,10 @@ class Setup
     public function createCoreDirectories()
     {
         $file_handler = new \Nelliel\Utility\FileHandler();
-        $file_handler->createDirectory(CACHE_FILE_PATH, DIRECTORY_PERM, true);
-        $file_handler->createDirectory(GENERATED_FILE_PATH, DIRECTORY_PERM, true);
-        $file_handler->createDirectory(OUTPUT_FILE_PATH, DIRECTORY_PERM, true);
-        $file_handler->createDirectory(CAPTCHA_FILE_PATH, DIRECTORY_PERM, true);
+        $file_handler->createDirectory(NEL_CACHE_FILES_PATH, NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory(NEL_GENERATED_FILES_PATH, NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory(NEL_OUTPUT_FILES_PATH, NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH, NEL_DIRECTORY_PERM, true);
         echo _gettext('Core directories created.'), '<br>';
     }
 
@@ -222,7 +222,7 @@ class Setup
         $config_table = new TableBoardConfig($database, $sql_compatibility);
         $config_table->tableName($db_prefix . '_config');
         $config_table->createTable();
-        $config_table->copyFrom(BOARD_DEFAULTS_TABLE);
+        $config_table->copyFrom(NEL_BOARD_DEFAULTS_TABLE);
 
         $domain = new \Nelliel\DomainBoard($board_id, nel_database());
         $references = $domain->reference();
@@ -248,13 +248,13 @@ class Setup
         $file_handler = new \Nelliel\Utility\FileHandler();
         $domain = new \Nelliel\DomainBoard($board_id, nel_database());
         $references = $domain->reference();
-        $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM, true);
-        $file_handler->createDirectory($references['preview_path'], DIRECTORY_PERM, true);
-        $file_handler->createDirectory($references['page_path'], DIRECTORY_PERM, true);
-        $file_handler->createDirectory($references['archive_path'], DIRECTORY_PERM, true);
-        $file_handler->createDirectory($references['archive_src_path'], DIRECTORY_PERM, true);
-        $file_handler->createDirectory($references['archive_preview_path'], DIRECTORY_PERM, true);
-        $file_handler->createDirectory($references['archive_page_path'], DIRECTORY_PERM, true);
+        $file_handler->createDirectory($references['src_path'], NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($references['preview_path'], NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($references['page_path'], NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($references['archive_path'], NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($references['archive_src_path'], NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($references['archive_preview_path'], NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($references['archive_page_path'], NEL_DIRECTORY_PERM, true);
     }
 
     private function checkForInnoDB()

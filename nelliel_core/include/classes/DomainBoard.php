@@ -18,7 +18,7 @@ class DomainBoard extends Domain
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();
-        $templates_file_path = ($this->front_end_data->templateIsCore($this->setting('template_id'))) ? CORE_TEMPLATES_FILE_PATH : CUSTOM_TEMPLATES_FILE_PATH;
+        $templates_file_path = ($this->front_end_data->templateIsCore($this->setting('template_id'))) ? NEL_CORE_TEMPLATES_FILES_PATH : NEL_CUSTOM_TEMPLATES_FILES_PATH;
         $this->templatePath(
                 $templates_file_path . $this->front_end_data->template($this->setting('template_id'))['directory']);
         $this->global_variation = new DomainAllBoards($this->database);
@@ -33,9 +33,9 @@ class DomainBoard extends Domain
         {
             $settings = $this->loadSettingsFromDatabase();
 
-            if (USE_INTERNAL_CACHE)
+            if (NEL_USE_INTERNAL_CACHE)
             {
-                $this->cache_handler->writeCacheFile(CACHE_FILE_PATH . $this->domain_id . '/', 'domain_settings.php',
+                $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/', 'domain_settings.php',
                         '$domain_settings = ' . var_export($settings, true) . ';');
             }
         }
@@ -48,7 +48,7 @@ class DomainBoard extends Domain
         $prepared = $this->database->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
         $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_ASSOC);
         $new_reference = array();
-        $board_path = BASE_PATH . $board_data['board_uri'] . '/';
+        $board_path = NEL_BASE_PATH . $board_data['board_uri'] . '/';
         $new_reference['board_directory'] = $board_data['board_uri'];
         $new_reference['db_prefix'] = $board_data['db_prefix'];
         $new_reference['locked'] = (bool) $board_data['locked'];
@@ -80,7 +80,7 @@ class DomainBoard extends Domain
     protected function loadSettingsFromDatabase()
     {
         $settings = array();
-        $prepared = $this->database->prepare('SELECT "db_prefix" FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
+        $prepared = $this->database->prepare('SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $db_prefix = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);
         $config_table = $db_prefix . '_config';
         $config_list = $this->database->executeFetchAll(
@@ -97,19 +97,19 @@ class DomainBoard extends Domain
 
     public function regenCache()
     {
-        if (USE_INTERNAL_CACHE)
+        if (NEL_USE_INTERNAL_CACHE)
         {
             $settings = $this->loadSettingsFromDatabase();
-            $this->cache_handler->writeCacheFile(CACHE_FILE_PATH . $this->domain_id . '/', 'domain_settings.php',
+            $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/', 'domain_settings.php',
                     '$domain_settings = ' . var_export($settings, true) . ';');
         }
     }
 
     public function deleteCache()
     {
-        if (USE_INTERNAL_CACHE)
+        if (NEL_USE_INTERNAL_CACHE)
         {
-            $this->file_handler->eraserGun(CACHE_FILE_PATH . $this->domain_id);
+            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . $this->domain_id);
         }
     }
 

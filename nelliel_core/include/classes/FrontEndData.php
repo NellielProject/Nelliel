@@ -35,7 +35,7 @@ class FrontEndData
 
     private function loadStylesData()
     {
-        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\'',
+        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\'',
                 PDO::FETCH_ASSOC);
 
         foreach ($all_data as $data)
@@ -55,7 +55,7 @@ class FrontEndData
 
     private function loadFiletypeIconData()
     {
-        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'icon-set\'',
+        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'icon-set\'',
                 PDO::FETCH_ASSOC);
 
         foreach ($all_data as $data)
@@ -80,7 +80,7 @@ class FrontEndData
 
     private function loadTemplateData()
     {
-        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . TEMPLATES_TABLE . '"', PDO::FETCH_ASSOC);
+        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_TEMPLATES_TABLE . '"', PDO::FETCH_ASSOC);
 
         foreach ($all_data as $data)
         {
@@ -124,8 +124,8 @@ class FrontEndData
 
     public function getStyleInis()
     {
-        $core_style_inis = $this->ini_parser->parseDirectories(CORE_STYLES_FILE_PATH, 'style_info.ini');
-        $custom_style_inis = $this->ini_parser->parseDirectories(CUSTOM_STYLES_FILE_PATH, 'style_info.ini');
+        $core_style_inis = $this->ini_parser->parseDirectories(NEL_CORE_STYLES_FILES_PATH, 'style_info.ini');
+        $custom_style_inis = $this->ini_parser->parseDirectories(NEL_CUSTOM_STYLES_FILES_PATH, 'style_info.ini');
         return array_merge($custom_style_inis, $core_style_inis);
     }
 
@@ -156,8 +156,8 @@ class FrontEndData
 
     public function getTemplateInis()
     {
-        $core_template_inis = $this->ini_parser->parseDirectories(CORE_TEMPLATES_FILE_PATH, 'template_info.ini');
-        $custom_template_inis = $this->ini_parser->parseDirectories(CUSTOM_TEMPLATES_FILE_PATH, 'template_info.ini');
+        $core_template_inis = $this->ini_parser->parseDirectories(NEL_CORE_TEMPLATES_FILES_PATH, 'template_info.ini');
+        $custom_template_inis = $this->ini_parser->parseDirectories(NEL_CUSTOM_TEMPLATES_FILES_PATH, 'template_info.ini');
         return array_merge($custom_template_inis, $core_template_inis);
     }
 
@@ -188,8 +188,8 @@ class FrontEndData
 
     public function getIconSetInis()
     {
-        $core_icon_set_inis = $this->ini_parser->parseDirectories(CORE_ICON_SETS_FILE_PATH, 'icon_set_info.ini');
-        $custom_icon_set_inis = $this->ini_parser->parseDirectories(CUSTOM_ICON_SETS_FILE_PATH, 'icon_set_info.ini');
+        $core_icon_set_inis = $this->ini_parser->parseDirectories(NEL_CORE_ICON_SETS_FILES_PATH, 'icon_set_info.ini');
+        $custom_icon_set_inis = $this->ini_parser->parseDirectories(NEL_CUSTOM_ICON_SETS_FILES_PATH, 'icon_set_info.ini');
         return array_merge($custom_icon_set_inis, $core_icon_set_inis);
     }
 }

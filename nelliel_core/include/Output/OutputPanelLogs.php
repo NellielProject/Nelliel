@@ -48,22 +48,22 @@ class OutputPanelLogs extends OutputCore
         switch ($log_type)
         {
             case 'staff':
-                $query = '(SELECT * FROM "' . STAFF_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
+                $query = '(SELECT * FROM "' . NEL_STAFF_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
 
             case 'system':
-                $query = '(SELECT * FROM "' . SYSTEM_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
+                $query = '(SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
 
             default:
-                $query = '(SELECT * FROM "' . STAFF_LOGS_TABLE . '")
-                   UNION (SELECT * FROM "' . SYSTEM_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
+                $query = '(SELECT * FROM "' . NEL_STAFF_LOGS_TABLE . '")
+                   UNION (SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
         }
 
         $prepared = $this->database->prepare($query);
         $logs = $this->database->executePreparedFetchAll($prepared, [$entries, $row_offset], PDO::FETCH_ASSOC);
-        $this->render_data['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+        $this->render_data['form_action'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                 ['module' => 'file-filters', 'action' => 'add']);
         $bgclass = 'row1';
         $this->render_data['log_entry_list'] = array();
@@ -83,7 +83,7 @@ class OutputPanelLogs extends OutputCore
             $this->render_data['log_entry_list'][] = $log_data;
         }
 
-        $page_format = MAIN_SCRIPT . '?module=logs&page=%d';
+        $page_format = NEL_MAIN_SCRIPT . '?module=logs&page=%d';
         $page_count = $parameters['page_count'] ?? 1;
         $page = $parameters['page'] ?? 1;
         $pagination_object = new \Nelliel\Pagination();
@@ -91,9 +91,9 @@ class OutputPanelLogs extends OutputCore
         $pagination_object->setNext(_gettext('>>'));
         $pagination_object->setPage('%d', $page_format);
         $this->render_data['pagination'] = $pagination_object->generateNumerical(1, $page_count, $page);
-        $this->render_data['staff_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=staff';
-        $this->render_data['system_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=system';
-        $this->render_data['all_logs_url'] = MAIN_SCRIPT . '?module=logs&log-type=all';
+        $this->render_data['staff_logs_url'] = NEL_MAIN_SCRIPT . '?module=logs&log-type=staff';
+        $this->render_data['system_logs_url'] = NEL_MAIN_SCRIPT . '?module=logs&log-type=system';
+        $this->render_data['all_logs_url'] = NEL_MAIN_SCRIPT . '?module=logs&log-type=all';
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/logs_panel',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);

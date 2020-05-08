@@ -51,7 +51,7 @@ class OutputMenu extends OutputCore
         $render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $dotdot = $parameters['dotdot'] ?? '';
-        $board_data = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
+        $board_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
         $render_data['multiple_boards'] = count($board_data) > 1;
 
         foreach ($board_data as $data)
@@ -72,7 +72,7 @@ class OutputMenu extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $dotdot = $parameters['dotdot'] ?? '';
         $styles = $this->database->executeFetchAll(
-                'SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
+                'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
                 PDO::FETCH_ASSOC);
 
         foreach ($styles as $style)
@@ -81,7 +81,7 @@ class OutputMenu extends OutputCore
             $info = json_decode($style['info'], true);
             $style_data['stylesheet'] = ($style['is_default']) ? 'stylesheet' : 'alternate stylesheet';
             $style_data['style_id'] = $style['asset_id'];
-            $style_data['stylesheet_url'] = $dotdot . CUSTOM_STYLES_WEB_PATH . $info['directory'] . '/' . $info['main_file'];
+            $style_data['stylesheet_url'] = $dotdot . NEL_CUSTOM_STYLES_WEB_PATH . $info['directory'] . '/' . $info['main_file'];
             $style_data['style_name'] = $info['name'];
             $render_data[] = $style_data;
         }
@@ -98,12 +98,12 @@ class OutputMenu extends OutputCore
         $dotdot = $parameters['dotdot'] ?? '';
         $ignore_session = $parameters['ignore_session'] ?? false;
         $render_data['session_active'] = $session->isActive() && !$ignore_session;
-        $render_data['logout_url'] = $dotdot . MAIN_SCRIPT . '?module=account&action=logout';
-        $render_data['main_panel_url'] = $dotdot . MAIN_SCRIPT . '?module=main-panel';
+        $render_data['logout_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=account&action=logout';
+        $render_data['main_panel_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=main-panel';
         $render_data['home_url'] = $site_domain->setting('home_page');
         $render_data['news_url'] = $dotdot . 'news.html';
-        $render_data['account_url'] = $dotdot . MAIN_SCRIPT . '?module=account';
-        $render_data['about_nelliel_url'] = $dotdot . MAIN_SCRIPT . '?about_nelliel';
+        $render_data['account_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=account';
+        $render_data['about_nelliel_url'] = $dotdot . NEL_MAIN_SCRIPT . '?about_nelliel';
         return $render_data;
     }
 }

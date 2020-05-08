@@ -23,10 +23,10 @@ function nel_about_page(DomainSite $domain)
     $render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot],
             false);
     $render_data['nelliel_version'] = _gettext('Version: ') . NELLIEL_VERSION;
-    $render_data['disclaimer_image_url'] = CORE_IMAGES_WEB_PATH . 'wat/luna_canterlot_disclaimer.png';
+    $render_data['disclaimer_image_url'] = NEL_CORE_IMAGES_WEB_PATH . 'wat/luna_canterlot_disclaimer.png';
     $render_data['disclaimer_alt_text'] = 'Luna Canterlot Voice';
     $output_footer = new \Nelliel\Output\OutputFooter($domain);
     $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], false);
-    echo $render_engine->render(file_get_contents(WAT_FILE_PATH . 'about_nelliel.html'), $render_data);
+    echo $render_engine->render(file_get_contents(NEL_WAT_FILES_PATH . 'about_nelliel.html'), $render_data);
     nel_clean_exit();
 }

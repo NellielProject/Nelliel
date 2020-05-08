@@ -74,7 +74,7 @@ class AdminStyles extends AdminHandler
         }
 
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . ASSETS_TABLE . '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
+                'INSERT INTO "' . NEL_ASSETS_TABLE . '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$style_id, 'style', 0, $info]);
     }
 
@@ -94,7 +94,7 @@ class AdminStyles extends AdminHandler
         }
 
         $style_id = $_GET['style-id'];
-        $prepared = $this->database->prepare('DELETE FROM "' . ASSETS_TABLE . '" WHERE "asset_id" = ? AND "type" = \'style\'');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_ASSETS_TABLE . '" WHERE "asset_id" = ? AND "type" = \'style\'');
         $this->database->executePrepared($prepared, [$style_id]);
     }
 
@@ -106,9 +106,9 @@ class AdminStyles extends AdminHandler
         }
 
         $style_id = $_GET['style-id'];
-        $this->database->exec('UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 0 WHERE "type" = \'style\'');
+        $this->database->exec('UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 0 WHERE "type" = \'style\'');
         $prepared = $this->database->prepare(
-                'UPDATE "' . ASSETS_TABLE . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'style\'');
+                'UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'style\'');
         $this->database->executePrepared($prepared, [$style_id]);
     }
 }

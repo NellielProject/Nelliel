@@ -138,9 +138,9 @@ class ContentPost extends ContentHandler
     {
         $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->createDirectory(
-                $this->src_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
+                $this->src_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, NEL_DIRECTORY_PERM);
         $file_handler->createDirectory(
-                $this->preview_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
+                $this->preview_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, NEL_DIRECTORY_PERM);
     }
 
     public function remove(bool $perm_override = false)
@@ -193,7 +193,7 @@ class ContentPost extends ContentHandler
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('DELETE FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
         $database->executePrepared($prepared, [$this->content_id->post_id]);
-        $prepared = $database->prepare('DELETE FROM "' . CITES_TABLE . '" WHERE "source_post" = ? OR "target_post" = ?');
+        $prepared = $database->prepare('DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_post" = ? OR "target_post" = ?');
         $database->executePrepared($prepared, [$this->content_id->post_id, $this->content_id->post_id]);
         return true;
     }
@@ -249,7 +249,7 @@ class ContentPost extends ContentHandler
         if (!$flag)
         {
             if (!isset($this->content_data['post_password']) ||
-                    !nel_verify_salted_hash(POST_PASSWORD_PEPPER . $_POST['update_sekrit'],
+                    !nel_verify_salted_hash(NEL_POST_PASSWORD_PEPPER . $_POST['update_sekrit'],
                             $this->content_data['post_password']))
             {
                 nel_derp(50, _gettext('Password is wrong or you are not allowed to delete that.'));

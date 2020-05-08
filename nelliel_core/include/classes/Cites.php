@@ -33,7 +33,7 @@ class Cites
     public function getCiteData($source_board, $source_post, $target_board, $target_post)
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . CITES_TABLE .
+                'SELECT * FROM "' . NEL_CITES_TABLE .
                 '" WHERE "source_board" = ? AND "source_post" = ? AND "target_board" = ? AND "target_post" = ?');
         return $this->database->executePreparedFetch($prepared,
                 [$source_board, $source_post, $target_board, $target_post], PDO::FETCH_ASSOC);
@@ -42,7 +42,7 @@ class Cites
     public function getByTarget($board, $post, bool $get_all = false)
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . CITES_TABLE . '" WHERE "target_board" = ? AND "target_post" = ?');
+                'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "target_board" = ? AND "target_post" = ?');
 
         if ($get_all)
         {
@@ -57,7 +57,7 @@ class Cites
     public function getBySource($board, $post, bool $get_all = false)
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . CITES_TABLE . '" WHERE "source_board" = ? AND "source_post" = ?');
+                'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND "source_post" = ?');
 
         if ($get_all)
         {
@@ -72,7 +72,7 @@ class Cites
     public function citeExists($source_board, $source_post, $target_board, $target_post)
     {
         $prepared = $this->database->prepare(
-                'SELECT 1 FROM "' . CITES_TABLE .
+                'SELECT 1 FROM "' . NEL_CITES_TABLE .
                 '" WHERE "source_board" = ? AND "source_post" = ? AND "target_board" = ? AND "target_post" = ?');
         return !empty(
                 $this->database->executePreparedFetch($prepared,
@@ -91,7 +91,7 @@ class Cites
         }
 
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . CITES_TABLE .
+                'INSERT INTO "' . NEL_CITES_TABLE .
                 '" ("source_board", "source_thread", "source_post", "target_board", "target_thread", "target_post") VALUES (?, ?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
                 [$cite_data['source_board'], $cite_data['source_thread'], $cite_data['source_post'],
@@ -156,7 +156,7 @@ class Cites
 
         if (!empty($cite_data))
         {
-            $base_domain = BASE_DOMAIN . BASE_WEB_PATH;
+            $base_domain = NEL_BASE_DOMAIN . NEL_BASE_WEB_PATH;
             $target_domain = new DomainBoard($cite_data['target_board'], $this->database);
             $p_anchor = '#t' . $cite_data['target_thread'] . 'p' . $cite_data['target_post'];
             $url = '//' . $base_domain . $cite_data['target_board'] . '/' . $target_domain->reference('page_dir') . '/' .

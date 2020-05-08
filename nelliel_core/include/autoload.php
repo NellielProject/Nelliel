@@ -21,7 +21,7 @@ spl_autoload_register(function ($class)
 spl_autoload_register(function ($class)
 {
     $prefix = 'Psr\\Log\\';
-    $base_directory = LIBRARY_PATH . 'PSRLog/Psr/Log/';
+    $base_directory = NEL_LIBRARY_PATH . 'PSRLog/Psr/Log/';
     nel_autoload_core($class, $prefix, $base_directory);
 });
 
@@ -43,7 +43,7 @@ function nel_autoload_core($class, $prefix, $base_directory)
     }
 }
 
-require_once LIBRARY_PATH . 'phpDOMExtend/autoload.php';
-require_once LIBRARY_PATH . 'NellielTemplates/autoload.php';
-require_once LIBRARY_PATH . 'SmallPHPGettext/autoload.php';
-require_once LIBRARY_PATH . 'Mustache/src/Mustache/Autoloader.php';
+require_once NEL_LIBRARY_PATH . 'phpDOMExtend/autoload.php';
+require_once NEL_LIBRARY_PATH . 'NellielTemplates/autoload.php';
+require_once NEL_LIBRARY_PATH . 'SmallPHPGettext/autoload.php';
+require_once NEL_LIBRARY_PATH . 'Mustache/src/Mustache/Autoloader.php';

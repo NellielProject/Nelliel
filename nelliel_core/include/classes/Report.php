@@ -53,7 +53,7 @@ class Report
             if ($value == 'action')
             {
                 $report_data['content_id'] = $content_id->getIDString();
-                $query = 'INSERT INTO "' . REPORTS_TABLE .
+                $query = 'INSERT INTO "' . NEL_REPORTS_TABLE .
                 '" ("board_id", "content_id", "reason", "reporter_ip") VALUES (?, ?, ?, ?)';
                 $prepared = $this->database->prepare($query);
                 $this->database->executePrepared($prepared,

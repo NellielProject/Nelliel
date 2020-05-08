@@ -75,7 +75,7 @@ class AdminBoards extends AdminHandler
 
         $board_id = $_POST['new_board_id'];
         $board_uri = $_POST['new_board_uri'];
-        $prepared = $this->database->prepare('SELECT 1 FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
+        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$board_id], PDO::FETCH_COLUMN);
 
         if ($result == 1)
@@ -83,7 +83,7 @@ class AdminBoards extends AdminHandler
             nel_derp(240, _gettext('There is already a board with the ID ' . $board_id . '.'));
         }
 
-        $prepared = $this->database->prepare('SELECT 1 FROM "' . BOARD_DATA_TABLE . '" WHERE "board_uri" = ?');
+        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_uri" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$board_uri], PDO::FETCH_COLUMN);
 
         if ($result == 1)
@@ -93,7 +93,7 @@ class AdminBoards extends AdminHandler
 
         $db_prefix = '_' . $board_id;
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . BOARD_DATA_TABLE . '" ("board_id", "db_prefix", "board_uri") VALUES (?, ?, ?)');
+                'INSERT INTO "' . NEL_BOARD_DATA_TABLE . '" ("board_id", "db_prefix", "board_uri") VALUES (?, ?, ?)');
         $this->database->executePrepared($prepared, [$board_id, $db_prefix, $board_uri]);
         $setup = new \Nelliel\Setup\Setup();
         $setup->createBoardTables($board_id, $db_prefix);
@@ -101,7 +101,7 @@ class AdminBoards extends AdminHandler
         $domain = new \Nelliel\DomainBoard($board_id, $this->database);
         $regen = new \Nelliel\Regen();
 
-        if (USE_INTERNAL_CACHE)
+        if (NEL_USE_INTERNAL_CACHE)
         {
             $regen->boardCache($domain);
         }
@@ -136,59 +136,59 @@ class AdminBoards extends AdminHandler
         if ($this->database->tableExists($domain->reference('config_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('config_table'));
-            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('config_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('content_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('content_table'));
-            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('content_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('posts_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('posts_table'));
-            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('posts_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('threads_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('threads_table'));
-            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('threads_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('archive_content_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('archive_content_table'));
-            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('archive_content_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('archive_posts_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('archive_posts_table'));
-            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('archive_posts_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('archive_threads_table')))
         {
             $this->database->query('DROP TABLE ' . $domain->reference('archive_threads_table'));
-            $prepared = $this->database->prepare('DELETE FROM "' . VERSIONS_TABLE . '" WHERE "id" = ?');
+            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('archive_threads_table')]);
         }
 
         $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->eraserGun($domain->reference('board_path'));
         $domain->deleteCache();
-        $prepared = $this->database->prepare('DELETE FROM "' . BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $prepared = $this->database->prepare(
-                'DELETE FROM "' . CITES_TABLE . '" WHERE "source_board" = ? OR "target_board" = ?');
+                'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? OR "target_board" = ?');
         $this->database->executePrepared($prepared, [$board_id, $board_id]);
         $regen = new \Nelliel\Regen();
         $regen->boardList(new \Nelliel\DomainSite($this->database));
@@ -202,7 +202,7 @@ class AdminBoards extends AdminHandler
         }
 
         $board_id = $_GET['board_id'];
-        $prepared = $this->database->prepare('UPDATE "' . BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
+        $prepared = $this->database->prepare('UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
     }
 
@@ -214,7 +214,7 @@ class AdminBoards extends AdminHandler
         }
 
         $board_id = $_GET['board_id'];
-        $prepared = $this->database->prepare('UPDATE "' . BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
+        $prepared = $this->database->prepare('UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
     }
 
@@ -223,7 +223,7 @@ class AdminBoards extends AdminHandler
         $message = _gettext(
                 'Are you certain you want to delete the board? Everything will be gone and this cannot be undone!');
         $url_constructor = new \Nelliel\URLConstructor();
-        $continue_link['href'] = $url_constructor->dynamic(MAIN_SCRIPT,
+        $continue_link['href'] = $url_constructor->dynamic(NEL_MAIN_SCRIPT,
                 ['module' => 'manage-boards', 'action' => 'remove', 'action-confirmed' => 'true',
                     'board_id' => $_GET['board_id']]);
         $continue_link['text'] = _gettext('Confirm and delete the board.');

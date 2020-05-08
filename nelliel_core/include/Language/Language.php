@@ -26,7 +26,7 @@ class Language
         {
             $gettext = new \SmallPHPGettext\SmallPHPGettext();
             self::$gettext = $gettext;
-            $gettext->bindtextdomain('nelliel', DEFAULT_TEXTDOMAIN_BIND);
+            $gettext->bindtextdomain('nelliel', NEL_DEFAULT_TEXTDOMAIN_BIND);
             $gettext->registerFunctions();
         }
 
@@ -52,11 +52,11 @@ class Language
             $hash = md5_file($file);
         }
 
-        if (USE_INTERNAL_CACHE && $cache_handler->checkHash($file_id, $hash))
+        if (NEL_USE_INTERNAL_CACHE && $cache_handler->checkHash($file_id, $hash))
         {
-            if (file_exists(CACHE_FILE_PATH . $cache_file))
+            if (file_exists(NEL_CACHE_FILES_PATH . $cache_file))
             {
-                include CACHE_FILE_PATH . $cache_file;
+                include NEL_CACHE_FILES_PATH . $cache_file;
                 $loaded = true;
             }
         }
@@ -66,10 +66,10 @@ class Language
             $po_parser = new \SmallPHPGettext\ParsePo();
             $language_array = $po_parser->parseFile($file, $domain);
 
-            if (USE_INTERNAL_CACHE)
+            if (NEL_USE_INTERNAL_CACHE)
             {
                 $cache_handler->updateHash($file_id, $hash);
-                $cache_handler->writeCacheFile(CACHE_FILE_PATH, $cache_file,
+                $cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH, $cache_file,
                         '$language_array = ' . var_export($language_array, true) . ';');
             }
 
@@ -95,8 +95,8 @@ class Language
         {
             foreach ($domain_output as $out_domain => $output)
             {
-                $directory = LANGUAGES_FILE_PATH . 'extracted/' . date('Y-m-d_H-i-s') . '/' . $category_str;
-                $file_handler->createDirectory($directory, DIRECTORY_PERM, true);
+                $directory = NEL_LANGUAGES_FILES_PATH . 'extracted/' . date('Y-m-d_H-i-s') . '/' . $category_str;
+                $file_handler->createDirectory($directory, NEL_DIRECTORY_PERM, true);
                 $file = $directory . '/' . $out_domain . '.pot';
                 $file_handler->writeFile($file, $output);
             }

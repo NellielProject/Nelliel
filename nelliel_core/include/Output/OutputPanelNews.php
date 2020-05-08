@@ -40,10 +40,10 @@ class OutputPanelNews extends OutputCore
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('News')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        $news_entries = $this->database->executeFetchAll('SELECT * FROM "' . NEWS_TABLE . '" ORDER BY "time" ASC',
+        $news_entries = $this->database->executeFetchAll('SELECT * FROM "' . NEL_NEWS_TABLE . '" ORDER BY "time" ASC',
                 PDO::FETCH_ASSOC);
         $bgclass = 'row1';
-        $this->render_data['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+        $this->render_data['form_action'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                 ['module' => 'news', 'action' => 'add']);
 
         foreach ($news_entries as $news_entry)
@@ -53,7 +53,7 @@ class OutputPanelNews extends OutputCore
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $entry_info['headline'] = $news_entry['headline'];
             $entry_info['time'] = date('Y/m/d (D) H:i:s', $news_entry['time']);
-            $entry_info['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+            $entry_info['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                     ['module' => 'news', 'action' => 'remove', 'entry' => $news_entry['entry']]);
             $this->render_data['news_entry'][] = $entry_info;
         }

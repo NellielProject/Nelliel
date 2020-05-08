@@ -62,7 +62,7 @@ class OutputBanPage extends OutputCore
 
         if ($ban_info['appeal_status'] == 0)
         {
-            $this->render_data['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+            $this->render_data['form_action'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                     ['module' => 'ban-page', 'action' => 'add-appeal']);
 
             if (!empty($ban_info['board_id']))

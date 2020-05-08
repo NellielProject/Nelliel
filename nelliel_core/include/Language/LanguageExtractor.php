@@ -119,12 +119,12 @@ class LanguageExtractor
     private function parseSiteFiles(array $strings, int $default_category)
     {
         $file_handler = new \Nelliel\Utility\FileHandler();
-        $php_files = $file_handler->recursiveFileList(BASE_PATH, 0);
-        $php_files = array_merge($php_files, $file_handler->recursiveFileList(INCLUDE_PATH));
+        $php_files = $file_handler->recursiveFileList(NEL_BASE_PATH, 0);
+        $php_files = array_merge($php_files, $file_handler->recursiveFileList(NEL_INCLUDE_PATH));
 
         foreach ($php_files as $file)
         {
-            $file_id = str_replace(BASE_PATH, '', $file);
+            $file_id = str_replace(NEL_BASE_PATH, '', $file);
 
             if ($file->getExtension() !== 'php' && $file->getExtension() !== 'inc')
             {
@@ -302,13 +302,13 @@ class LanguageExtractor
     private function parseHTMLFiles(array $strings, string $default_category)
     {
         $file_handler = new \Nelliel\Utility\FileHandler();
-        $html_files = $file_handler->recursiveFileList(CORE_TEMPLATES_FILE_PATH . 'nelliel_basic/'); // TODO: Be able to parse custom template sets
-        $html_files = array_merge($html_files, $file_handler->recursiveFileList(INCLUDE_PATH));
+        $html_files = $file_handler->recursiveFileList(NEL_CORE_TEMPLATES_FILES_PATH . 'nelliel_basic/'); // TODO: Be able to parse custom template sets
+        $html_files = array_merge($html_files, $file_handler->recursiveFileList(NEL_INCLUDE_PATH));
         $render = new \Nelliel\RenderCoreDOM();
 
         foreach ($html_files as $file)
         {
-            $file_id = str_replace(BASE_PATH, '', $file);
+            $file_id = str_replace(NEL_BASE_PATH, '', $file);
 
             if ($file->getExtension() !== 'html')
             {
@@ -365,7 +365,7 @@ class LanguageExtractor
     private function parseDatabaseEntries(array $strings, string $default_category)
     {
         $database = $this->domain->database();
-        $filetype_labels = $database->executeFetchAll('SELECT "label" FROM "' . FILETYPES_TABLE . '"', PDO::FETCH_COLUMN);
+        $filetype_labels = $database->executeFetchAll('SELECT "label" FROM "' . NEL_FILETYPES_TABLE . '"', PDO::FETCH_COLUMN);
 
         foreach ($filetype_labels as $label)
         {
@@ -373,12 +373,12 @@ class LanguageExtractor
             {
                 $msgid = $label;
                 $strings[$default_category][$msgid]['msgid'] = $label;
-                $strings[$default_category][$msgid]['comments']['(Database) Table: ' . FILETYPES_TABLE .
+                $strings[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_FILETYPES_TABLE .
                         ' | Column: label'] = '#:';
             }
         }
 
-        $permission_description = $database->executeFetchAll('SELECT "description" FROM "' . PERMISSIONS_TABLE . '"',
+        $permission_description = $database->executeFetchAll('SELECT "description" FROM "' . NEL_PERMISSIONS_TABLE . '"',
                 PDO::FETCH_COLUMN);
 
         foreach ($permission_description as $description)
@@ -387,7 +387,7 @@ class LanguageExtractor
             {
                 $msgid = $description;
                 $strings[$default_category][$msgid]['msgid'] = $description;
-                $strings[$default_category][$msgid]['comments']['(Database) Table: ' . PERMISSIONS_TABLE .
+                $strings[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_PERMISSIONS_TABLE .
                         ' | Column: description'] = '#:';
             }
         }

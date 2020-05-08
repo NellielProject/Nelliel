@@ -44,16 +44,16 @@ class OutputPanelFileFilters extends OutputCore
         if ($this->domain->id() !== '_site_')
         {
             $prepared = $this->database->prepare(
-                    'SELECT * FROM "' . FILE_FILTERS_TABLE . '" WHERE "board_id" = ? ORDER BY "entry" DESC');
+                    'SELECT * FROM "' . NEL_FILES_FILTERS_TABLE . '" WHERE "board_id" = ? ORDER BY "entry" DESC');
             $filters = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
         }
         else
         {
             $filters = $this->database->executeFetchAll(
-                    'SELECT * FROM "' . FILE_FILTERS_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
+                    'SELECT * FROM "' . NEL_FILES_FILTERS_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
         }
 
-        $this->render_data['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+        $this->render_data['form_action'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                 ['module' => 'file-filters', 'action' => 'add']);
         $bgclass = 'row1';
 
@@ -67,7 +67,7 @@ class OutputPanelFileFilters extends OutputCore
             $filter_data['file_hash'] = bin2hex($filter['file_hash']);
             $filter_data['file_notes'] = $filter['file_notes'];
             $filter_data['board_id'] = $filter['board_id'];
-            $filter_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+            $filter_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                     ['module' => 'file-filters', 'action' => 'remove', 'filter-id' => $filter['entry']]);
             $this->render_data['filter_list'][] = $filter_data;
         }

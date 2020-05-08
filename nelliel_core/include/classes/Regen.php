@@ -59,7 +59,7 @@ class Regen
     {
         $board_json = new \Nelliel\API\JSON\JSONBoard($domain, new \Nelliel\Utility\FileHandler());
         $board_list_json = new \Nelliel\API\JSON\JSONBoardList($domain, new \Nelliel\Utility\FileHandler());
-        $board_ids = $domain->database()->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+        $board_ids = $domain->database()->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
 
         foreach($board_ids as $id)
         {
@@ -75,7 +75,7 @@ class Regen
             $board_list_json->addBoardData($board_json->prepareData($board_data));
         }
 
-        $board_list_json->writeStoredData(BASE_PATH, 'boards');
+        $board_list_json->writeStoredData(NEL_BASE_PATH, 'boards');
     }
 
     public function allSitePages(Domain $domain)

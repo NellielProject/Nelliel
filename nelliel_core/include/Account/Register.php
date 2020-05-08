@@ -49,7 +49,7 @@ class Register
 
         if ($creating_owner)
         {
-            include GENERATED_FILE_PATH . 'create_owner.php';
+            include NEL_GENERATED_FILES_PATH . 'create_owner.php';
 
             if ($install_id != $_GET['create_owner'])
             {
@@ -99,7 +99,7 @@ class Register
 
         if ($creating_owner)
         {
-            unlink(GENERATED_FILE_PATH . 'create_owner.php');
+            unlink(NEL_GENERATED_FILES_PATH . 'create_owner.php');
         }
 
         $output_register = new \Nelliel\Output\OutputRegisterPage($this->domain);

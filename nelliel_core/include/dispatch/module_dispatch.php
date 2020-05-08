@@ -212,7 +212,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     if ($session->inModmode($domain))
                     {
                         $url_constructor = new \Nelliel\URLConstructor();
-                        $url = $url_constructor->dynamic(MAIN_SCRIPT,
+                        $url = $url_constructor->dynamic(NEL_MAIN_SCRIPT,
                                 ['module' => 'render', 'action' => 'view-thread',
                                     'thread' => $fgsfds->getCommandData('noko', 'topic'),
                                     'board_id' => $inputs['board_id']]);
@@ -232,7 +232,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     if ($session->inModmode($domain))
                     {
                         $url_constructor = new \Nelliel\URLConstructor();
-                        $url = $url_constructor->dynamic(MAIN_SCRIPT,
+                        $url = $url_constructor->dynamic(NEL_MAIN_SCRIPT,
                                 ['module' => 'render', 'action' => 'view-index', 'index' => '0',
                                     'board_id' => $inputs['board_id']]);
 
@@ -240,7 +240,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     }
                     else
                     {
-                        $url = $domain->reference('board_directory') . '/' . MAIN_INDEX . PAGE_EXT;
+                        $url = $domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
                         nel_redirect($url, 2);
                     }
                 }
@@ -278,13 +278,13 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 if ($session->inModmode($domain))
                 {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . MAIN_SCRIPT .
+                    echo '<meta http-equiv="refresh" content="1;URL=' . NEL_MAIN_SCRIPT .
                             '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';
                 }
                 else
                 {
                     echo '<meta http-equiv="refresh" content="1;URL=' . $domain->reference('board_directory') . '/' .
-                            MAIN_INDEX . PAGE_EXT . '">';
+                            NEL_MAIN_INDEX . NEL_PAGE_EXT . '">';
                 }
             }
 
@@ -295,13 +295,13 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 if ($session->inModmode($domain))
                 {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . MAIN_SCRIPT .
+                    echo '<meta http-equiv="refresh" content="1;URL=' . NEL_MAIN_SCRIPT .
                             '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';
                 }
                 else
                 {
                     echo '<meta http-equiv="refresh" content="1;URL=' . $domain->reference('board_directory') . '/' .
-                            MAIN_INDEX . PAGE_EXT . '">';
+                            NEL_MAIN_INDEX . NEL_PAGE_EXT . '">';
                 }
 
                 nel_clean_exit(true, $inputs['board_id']);

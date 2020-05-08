@@ -35,7 +35,7 @@ class RateLimit
     private function loadRecord(string $ip_address)
     {
         $prepared = $this->database->prepare(
-                'SELECT "record" FROM "' . RATE_LIMIT_TABLE . '" WHERE "ip_address" = :ip_address');
+                'SELECT "record" FROM "' . NEL_RATE_LIMIT_TABLE . '" WHERE "ip_address" = :ip_address');
         $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);
         $this->records[$ip_address] = unserialize(
                 $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN));
@@ -45,14 +45,14 @@ class RateLimit
     {
         $serialized_record = serialize($this->records[$ip_address]);
         $prepared = $this->database->prepare(
-                'SELECT 1 FROM "' . RATE_LIMIT_TABLE . '" WHERE "ip_address" = :ip_address');
+                'SELECT 1 FROM "' . NEL_RATE_LIMIT_TABLE . '" WHERE "ip_address" = :ip_address');
         $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);
         $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
         if (!empty($result))
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . RATE_LIMIT_TABLE . '" SET "record" = :record WHERE "ip_address" = :ip_address');
+                    'UPDATE "' . NEL_RATE_LIMIT_TABLE . '" SET "record" = :record WHERE "ip_address" = :ip_address');
             $prepared->bindValue(':record', $serialized_record, PDO::PARAM_STR);
             $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);
             $this->database->executePrepared($prepared);
@@ -61,7 +61,7 @@ class RateLimit
         {
             $rate_key = hash('sha256', random_bytes(16));
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . RATE_LIMIT_TABLE .
+                    'INSERT INTO "' . NEL_RATE_LIMIT_TABLE .
                     '" (rate_key, ip_address, record) VALUES (:rate_key, :ip_address, :record)');
             $prepared->bindValue(':rate_key', $rate_key, PDO::PARAM_STR);
             $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);

@@ -40,7 +40,7 @@ class OutputPost extends OutputCore
         $thread_content_id = new ContentID(ContentID::createIDString($post_data['parent_thread']));
         $post_content_id = new ContentID(
                 ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
-        $web_paths['base_domain'] = BASE_DOMAIN . BASE_WEB_PATH;
+        $web_paths['base_domain'] = NEL_BASE_DOMAIN . NEL_BASE_WEB_PATH;
         $web_paths['board'] = '//' . $web_paths['base_domain'] .
                 rawurlencode($this->domain->reference('board_directory')) . '/';
         $web_paths['pages'] = $web_paths['board'] . rawurlencode($this->domain->reference('page_dir')) . '/';
@@ -142,7 +142,7 @@ class OutputPost extends OutputCore
         $header_data['response'] = $response;
 
         // TODO: Convert to passed $web_paths values
-        $base_domain_path = BASE_DOMAIN . BASE_WEB_PATH;
+        $base_domain_path = NEL_BASE_DOMAIN . NEL_BASE_WEB_PATH;
         $board_web_path = '//' . $base_domain_path . rawurlencode($this->domain->reference('board_directory')) . '/';
         $pages_web_path = $board_web_path . rawurlencode($this->domain->reference('page_dir')) . '/';
         $thread_page_web_path = $pages_web_path . $thread_content_id->thread_id . '/thread-' .
@@ -214,7 +214,7 @@ class OutputPost extends OutputCore
             if ($session->inModmode($this->domain) && !$ignore_session)
             {
                 $thread_headers['render'] = '-render';
-                $thread_headers['reply_to_url'] = MAIN_SCRIPT . '?module=render&action=view-thread&content-id=' .
+                $thread_headers['reply_to_url'] = NEL_MAIN_SCRIPT . '?module=render&action=view-thread&content-id=' .
                         $thread_content_id->getIDString() . '&thread=' . $thread_content_id->thread_id . '&board_id=' .
                         $this->domain->id() . '&modmode=true';
             }
@@ -264,7 +264,7 @@ class OutputPost extends OutputCore
         if ($this->domain->setting('display_poster_id'))
         {
             $raw_poster_id = hash('sha256',
-                    POSTER_ID_PEPPER . @inet_ntop($post_data['ip_address']) . $this->domain->id() .
+                    NEL_POSTER_ID_PEPPER . @inet_ntop($post_data['ip_address']) . $this->domain->id() .
                     $thread_data['thread_id']);
             $poster_id = substr($raw_poster_id, 0, $this->domain->setting('poster_id_length'));
             $post_headers['poster_id'] = 'ID: ' . $poster_id;
@@ -285,7 +285,7 @@ class OutputPost extends OutputCore
         if ($this->domain->setting('display_post_backlinks'))
         {
             $prepared = $this->database->prepare(
-                    'SELECT * FROM "' . CITES_TABLE . '" WHERE "target_board" = ? AND "target_post" = ?');
+                    'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "target_board" = ? AND "target_post" = ?');
             $cite_list = $this->database->executePreparedFetchAll($prepared,
                     [$this->domain->id(), $post_content_id->post_id], PDO::FETCH_ASSOC);
 

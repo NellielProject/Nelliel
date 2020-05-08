@@ -20,15 +20,15 @@ class SQLCompatibility
     {
         $auto = '';
 
-        if (SQLTYPE === 'MYSQL')
+        if (NEL_SQLTYPE === 'MYSQL')
         {
             $auto = 'AUTO_INCREMENT';
         }
-        else if (SQLTYPE === 'MARIADB')
+        else if (NEL_SQLTYPE === 'MARIADB')
         {
             $auto = 'AUTO_INCREMENT';
         }
-        else if (SQLTYPE === 'POSTGRESQL')
+        else if (NEL_SQLTYPE === 'POSTGRESQL')
         {
             if ($int_column === 'SMALLINT')
             {
@@ -45,7 +45,7 @@ class SQLCompatibility
                 $int_column = 'BIGSERIAL';
             }
         }
-        else if (SQLTYPE === 'SQLITE')
+        else if (NEL_SQLTYPE === 'SQLITE')
         {
             $auto = 'AUTOINCREMENT';
         }
@@ -55,7 +55,7 @@ class SQLCompatibility
 
     public function sqlAlternatives($datatype, $length)
     {
-        if (SQLTYPE === 'MYSQL')
+        if (NEL_SQLTYPE === 'MYSQL')
         {
             if ($datatype === "BINARY")
             {
@@ -66,7 +66,7 @@ class SQLCompatibility
                 return 'VARBINARY(' . $length . ')';
             }
         }
-        else if (SQLTYPE === 'MARIADB')
+        else if (NEL_SQLTYPE === 'MARIADB')
         {
             if ($datatype === "BINARY")
             {
@@ -77,7 +77,7 @@ class SQLCompatibility
                 return 'VARBINARY(' . $length . ')';
             }
         }
-        else if (SQLTYPE === 'POSTGRESQL')
+        else if (NEL_SQLTYPE === 'POSTGRESQL')
         {
             if ($datatype === "BINARY")
             {
@@ -88,7 +88,7 @@ class SQLCompatibility
                 return 'BYTEA';
             }
         }
-        else if (SQLTYPE === 'SQLITE')
+        else if (NEL_SQLTYPE === 'SQLITE')
         {
             if ($datatype === "BINARY")
             {
@@ -105,12 +105,12 @@ class SQLCompatibility
     {
         $options = '';
 
-        if (SQLTYPE === 'MYSQL')
+        if (NEL_SQLTYPE === 'MYSQL')
         {
             $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
             $options .= ' ENGINE = InnoDB';
         }
-        else if (SQLTYPE === 'MARIADB')
+        else if (NEL_SQLTYPE === 'MARIADB')
         {
             $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
             $options .= ' ENGINE = InnoDB';
@@ -121,7 +121,7 @@ class SQLCompatibility
 
     public function limitOffset($limit, $offset)
     {
-        if (SQLTYPE === 'MYSQL' || SQLTYPE === 'SQLITE' || SQLTYPE === 'MARIADB' || SQLTYPE === 'POSTGRESQL')
+        if (NEL_SQLTYPE === 'MYSQL' || NEL_SQLTYPE === 'SQLITE' || NEL_SQLTYPE === 'MARIADB' || NEL_SQLTYPE === 'POSTGRESQL')
         {
             return 'LIMIT ' . $limit . ' OFFSET ' . $offset;
         }

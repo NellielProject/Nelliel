@@ -13,7 +13,7 @@ In addition:
  - 4-space indentation for code; tabs are used for indentation of HTML, XML or other markup language.
  - Single quotes `' '` should be used for strings when practical.
  - No `?>` closing tags.
- - Constants should be ALL CAPS.
+ - Constants must be ALL CAPS and prefixed with `NEL_` or `NELLIEL_`.
 
 ## Functions, Classes and Structure
  - Procedural is not evil. OOP is not the Holy Grail. Use what makes sense for a given situation.
@@ -51,7 +51,7 @@ Minimum supported RDBMS versions:
  - MySQL 5.6
  - MariaDB 10
  - PostgreSQL 9.5
- - SQLite 3.16
+ - SQLite 3.20
 
 ### Browser Support
 These are the minimum browser versions Nelliel must be compatible with:

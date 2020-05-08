@@ -73,41 +73,41 @@ function nel_default_database_connection()
     $options = array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_EMULATE_PREPARES => false,
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
 
-    switch (SQLTYPE)
+    switch (NEL_SQLTYPE)
     {
         case 'MYSQL':
-            $dsn = 'mysql:host=' . MYSQL_HOST . ';port=' . MYSQL_PORT . ';dbname=' . MYSQL_DB . ';charset=' .
-                    MYSQL_ENCODING . ';';
-            $connection = nel_new_database_connection($dsn, MYSQL_USER, MYSQL_PASS, $options);
+            $dsn = 'mysql:host=' . NEL_MYSQL_HOST . ';port=' . NEL_MYSQL_PORT . ';dbname=' . NEL_MYSQL_DB . ';charset=' .
+                    NEL_MYSQL_ENCODING . ';';
+            $connection = nel_new_database_connection($dsn, NEL_MYSQL_USER, NEL_MYSQL_PASS, $options);
             $connection->exec("SET SESSION sql_mode='ANSI';");
             break;
 
         case 'MARIADB':
-            $dsn = 'mysql:host=' . MARIADB_HOST . ';port=' . MARIADB_PORT . ';dbname=' . MARIADB_DB . ';charset=' .
-                    MARIADB_ENCODING . ';';
-            $connection = nel_new_database_connection($dsn, MARIADB_USER, MARIADB_PASS, $options);
+            $dsn = 'mysql:host=' . NEL_MARIADB_HOST . ';port=' . NEL_MARIADB_PORT . ';dbname=' . NEL_MARIADB_DB . ';charset=' .
+                    NEL_MARIADB_ENCODING . ';';
+            $connection = nel_new_database_connection($dsn, NEL_MARIADB_USER, NEL_MARIADB_PASS, $options);
             $connection->exec("SET SESSION sql_mode='ANSI';");
             break;
 
         case 'POSTGRESQL':
-            $dsn = 'pgsql:host=' . POSTGRESQL_HOST . ';port=' . POSTGRESQL_PORT . ';dbname=' . POSTGRESQL_DB . ';';
-            $connection = nel_new_database_connection($dsn, POSTGRESQL_USER, POSTGRESQL_PASS, $options);
-            $connection->exec("SET search_path TO " . POSTGRESQL_SCHEMA . "; SET names '" . POSTGRESQL_ENCODING . "';");
+            $dsn = 'pgsql:host=' . NEL_POSTGRESQL_HOST . ';port=' . NEL_POSTGRESQL_PORT . ';dbname=' . NEL_POSTGRESQL_DB . ';';
+            $connection = nel_new_database_connection($dsn, NEL_POSTGRESQL_USER, NEL_POSTGRESQL_PASS, $options);
+            $connection->exec("SET search_path TO " . NEL_POSTGRESQL_SCHEMA . "; SET names '" . NEL_POSTGRESQL_ENCODING . "';");
             break;
 
         case 'SQLITE':
-            if (SQLITE_DB_PATH === '')
+            if (NEL_SQLITE_DB_PATH === '')
             {
-                $path = SQLITE_DB_DEFAULT_PATH;
+                $path = NEL_SQLITE_DB_DEFAULT_PATH;
             }
             else
             {
-                $path = SQLITE_DB_PATH;
+                $path = NEL_SQLITE_DB_PATH;
             }
 
-            $dsn = 'sqlite:' . $path . SQLITE_DB_NAME;
+            $dsn = 'sqlite:' . $path . NEL_SQLITE_DB_NAME;
             $connection = nel_new_database_connection($dsn);
-            $connection->exec('PRAGMA encoding = "' . SQLITE_ENCODING . '"; PRAGMA foreign_keys = ON;');
+            $connection->exec('PRAGMA encoding = "' . NEL_SQLITE_ENCODING . '"; PRAGMA foreign_keys = ON;');
             break;
 
         default:

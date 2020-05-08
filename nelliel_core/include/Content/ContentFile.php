@@ -129,9 +129,9 @@ class ContentFile extends ContentHandler
     {
         $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->createDirectory(
-                $this->src_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
+                $this->src_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, NEL_DIRECTORY_PERM);
         $file_handler->createDirectory(
-                $this->preview_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
+                $this->preview_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, NEL_DIRECTORY_PERM);
     }
 
     public function remove(bool $perm_override = false)

@@ -19,7 +19,7 @@ class DomainSite extends Domain
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();
-        $templates_file_path = ($this->front_end_data->templateIsCore($this->setting('template_id'))) ? CORE_TEMPLATES_FILE_PATH : CUSTOM_TEMPLATES_FILE_PATH;
+        $templates_file_path = ($this->front_end_data->templateIsCore($this->setting('template_id'))) ? NEL_CORE_TEMPLATES_FILES_PATH : NEL_CUSTOM_TEMPLATES_FILES_PATH;
         $this->templatePath(
                 $templates_file_path . $this->front_end_data->template($this->setting('template_id'))['directory']);
     }
@@ -32,9 +32,9 @@ class DomainSite extends Domain
         {
             $settings = $this->loadSettingsFromDatabase();
 
-            if (USE_INTERNAL_CACHE)
+            if (NEL_USE_INTERNAL_CACHE)
             {
-                $this->cache_handler->writeCacheFile(CACHE_FILE_PATH . $this->domain_id . '/', 'domain_settings.php',
+                $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/', 'domain_settings.php',
                         '$domain_settings = ' . var_export($settings, true) . ';');
             }
         }
@@ -51,7 +51,7 @@ class DomainSite extends Domain
     protected function loadSettingsFromDatabase()
     {
         $settings = array();
-        $config_list = $this->database->executeFetchAll('SELECT * FROM "' . SITE_CONFIG_TABLE . '"', PDO::FETCH_ASSOC);
+        $config_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_SITE_CONFIG_TABLE . '"', PDO::FETCH_ASSOC);
 
         foreach ($config_list as $config)
         {
@@ -69,19 +69,19 @@ class DomainSite extends Domain
 
     public function regenCache()
     {
-        if (USE_INTERNAL_CACHE)
+        if (NEL_USE_INTERNAL_CACHE)
         {
             $settings = $this->loadSettingsFromDatabase();
-            $this->cache_handler->writeCacheFile(CACHE_FILE_PATH, 'site_settings.php',
+            $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH, 'site_settings.php',
                     '$site_settings = ' . var_export($settings, true) . ';');
         }
     }
 
     public function deleteCache()
     {
-        if (USE_INTERNAL_CACHE)
+        if (NEL_USE_INTERNAL_CACHE)
         {
-            $this->file_handler->eraserGun(CACHE_FILE_PATH, 'site_settings.php');
+            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH, 'site_settings.php');
         }
     }
 

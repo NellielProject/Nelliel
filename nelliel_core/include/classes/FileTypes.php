@@ -208,10 +208,10 @@ class FileTypes
 
     public function generateSettingsCache(string $board_id)
     {
-        if (USE_INTERNAL_CACHE)
+        if (NEL_USE_INTERNAL_CACHE)
         {
             $this->settingsLoaded($board_id, true, true);
-            $this->cache_handler->writeCacheFile(CACHE_FILE_PATH . $board_id . '/', 'filetype_settings.php',
+            $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $board_id . '/', 'filetype_settings.php',
                     '$filetype_settings = ' . var_export(self::$filetype_settings[$board_id], true) . ';');
         }
     }

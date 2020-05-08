@@ -16,7 +16,7 @@ class TableRateLimit extends TableHandler
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = RATE_LIMIT_TABLE;
+        $this->table_name = NEL_RATE_LIMIT_TABLE;
         $this->columns_data = [
             'rate_key' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],

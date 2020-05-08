@@ -68,7 +68,7 @@ class AdminReports extends AdminHandler
             nel_derp(381, _gettext('You are not allowed to dismiss reports.'));
         }
 
-        $prepared = $this->database->prepare('DELETE FROM "' . REPORTS_TABLE . '" WHERE "report_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_REPORTS_TABLE . '" WHERE "report_id" = ?');
         $this->database->executePrepared($prepared, [$report_id]);
     }
 }

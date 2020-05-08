@@ -26,7 +26,7 @@ class PluginAPI
 
     public function registerPlugin($plugin_directory, $initializer_file)
     {
-        if (!ENABLE_PLUGINS)
+        if (!NEL_ENABLE_PLUGINS)
         {
             return false;
         }
@@ -115,7 +115,7 @@ class PluginAPI
 
     public function processHook(string $hook_name, array $args, $returnable = null)
     {
-        if (!ENABLE_PLUGINS || !$this->isValidHook($hook_name))
+        if (!NEL_ENABLE_PLUGINS || !$this->isValidHook($hook_name))
         {
             return $returnable;
         }
@@ -126,13 +126,13 @@ class PluginAPI
 
     public function loadPlugins()
     {
-        if (!ENABLE_PLUGINS)
+        if (!NEL_ENABLE_PLUGINS)
         {
             return;
         }
 
         $file_handler = new \Nelliel\Utility\FileHandler();
-        $plugin_files = $file_handler->recursiveFileList(PLUGINS_FILE_PATH);
+        $plugin_files = $file_handler->recursiveFileList(NEL_PLUGINS_FILES_PATH);
 
         foreach ($plugin_files as $file)
         {

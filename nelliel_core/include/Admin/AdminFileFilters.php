@@ -66,7 +66,7 @@ class AdminFileFilters extends AdminHandler
         foreach ($hashes as $hash)
         {
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . FILE_FILTERS_TABLE .
+                    'INSERT INTO "' . NEL_FILES_FILTERS_TABLE .
                     '" ("hash_type", "file_hash", "file_notes", "board_id") VALUES (?, ?, ?, ?)');
             $this->database->executePrepared($prepared, [$type, pack("H*", $hash), $notes, $board_id]);
         }
@@ -88,7 +88,7 @@ class AdminFileFilters extends AdminHandler
         }
 
         $filter_id = $_GET['filter-id'];
-        $prepared = $this->database->prepare('DELETE FROM "' . FILE_FILTERS_TABLE . '" WHERE "entry" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_FILES_FILTERS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
     }
 }

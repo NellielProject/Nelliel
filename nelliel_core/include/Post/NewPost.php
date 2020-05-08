@@ -103,7 +103,7 @@ class NewPost
             $poster_password = $post->content_data['post_password'];
             $post->content_data['post_password'] = nel_generate_salted_hash(
                     $site_domain->setting('post_password_algorithm'),
-                    POST_PASSWORD_PEPPER . $post->content_data['post_password']);
+                    NEL_POST_PASSWORD_PEPPER . $post->content_data['post_password']);
         }
         else
         {
@@ -198,7 +198,7 @@ class NewPost
                 $file->content_data['content_order'] = $order;
                 $file_handler->moveFile($file->content_data['location'], $src_path . $file->content_data['fullname'],
                         false);
-                chmod($src_path . $file->content_data['fullname'], octdec(FILE_PERM));
+                chmod($src_path . $file->content_data['fullname'], octdec(NEL_FILES_PERM));
                 $file->writeToDatabase();
                 ++ $order;
             }

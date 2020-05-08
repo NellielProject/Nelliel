@@ -23,7 +23,7 @@ class AuthRole extends AuthHandler
     public function loadFromDatabase($temp_database = null)
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT * FROM "' . ROLES_TABLE . '" WHERE "role_id" = ?');
+        $prepared = $database->prepare('SELECT * FROM "' . NEL_ROLES_TABLE . '" WHERE "role_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
 
         if (empty($result))
@@ -45,20 +45,20 @@ class AuthRole extends AuthHandler
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT "entry" FROM "' . ROLES_TABLE . '" WHERE "role_id" = ?');
+        $prepared = $database->prepare('SELECT "entry" FROM "' . NEL_ROLES_TABLE . '" WHERE "role_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $database->prepare(
-                    'UPDATE "' . ROLES_TABLE .
+                    'UPDATE "' . NEL_ROLES_TABLE .
                     '" SET "role_id" = :role_id, "role_level" = :role_level, "role_title" = :role_title, "capcode" = :capcode WHERE "entry" = :entry');
             $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
         }
         else
         {
             $prepared = $database->prepare(
-                    'INSERT INTO "' . ROLES_TABLE . '" ("role_id", "role_level", "role_title", "capcode") VALUES
+                    'INSERT INTO "' . NEL_ROLES_TABLE . '" ("role_id", "role_level", "role_title", "capcode") VALUES
                     (:role_id, :role_level, :role_title, :capcode)');
         }
 
@@ -81,7 +81,7 @@ class AuthRole extends AuthHandler
     {
         $authorization = new \Nelliel\Auth\Authorization($this->database);
         $prepared = $this->database->prepare(
-                'SELECT "user_id", "board" FROM "' . USER_ROLES_TABLE . '" WHERE "role_id" = ?');
+                'SELECT "user_id", "board" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "role_id" = ?');
         $user_roles = $this->database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
         foreach($user_roles as $user_role)
@@ -89,9 +89,9 @@ class AuthRole extends AuthHandler
             $authorization->getUser($user_role['user_id'])->removeRole($user_role['domain'], $this->id());
         }
 
-        $prepared = $this->database->prepare('DELETE FROM "' . ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
-        $prepared = $this->database->prepare('DELETE FROM "' . ROLES_TABLE . '" WHERE "role_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_ROLES_TABLE . '" WHERE "role_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 

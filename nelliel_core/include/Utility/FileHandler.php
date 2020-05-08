@@ -14,8 +14,8 @@ class FileHandler
     {
     }
 
-    public function writeFile($file, $output, $chmod = FILE_PERM, bool $create_directories = false,
-            $dir_chmod = DIRECTORY_PERM, bool $temp_move = true)
+    public function writeFile($file, $output, $chmod = NEL_FILES_PERM, bool $create_directories = false,
+            $dir_chmod = NEL_DIRECTORY_PERM, bool $temp_move = true)
     {
         $success = false;
         $file_directory = dirname($file);
@@ -63,10 +63,10 @@ class FileHandler
             $output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} ' . $output;
         }
 
-        return $this->writeFile($file, $output, FILE_PERM, true, DIRECTORY_PERM, $temp_move);
+        return $this->writeFile($file, $output, NEL_FILES_PERM, true, NEL_DIRECTORY_PERM, $temp_move);
     }
 
-    public function createDirectory($directory, $chmod = DIRECTORY_PERM, bool $recursive = false)
+    public function createDirectory($directory, $chmod = NEL_DIRECTORY_PERM, bool $recursive = false)
     {
         clearstatcache();
 
@@ -111,7 +111,7 @@ class FileHandler
         return $success;
     }
 
-    public function moveFile($file, $destination, bool $create_directories = false, $chmod = DIRECTORY_PERM)
+    public function moveFile($file, $destination, bool $create_directories = false, $chmod = NEL_DIRECTORY_PERM)
     {
         clearstatcache();
         $success = false;
@@ -136,7 +136,7 @@ class FileHandler
     }
 
     public function moveDirectory($directory, $destination, bool $create_directories = false,
-            $dir_chmod = DIRECTORY_PERM)
+            $dir_chmod = NEL_DIRECTORY_PERM)
     {
         clearstatcache();
 

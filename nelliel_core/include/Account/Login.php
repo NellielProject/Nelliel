@@ -97,7 +97,7 @@ class Login
         $login_data['user_id'] = $form_user_id;
         $login_data['login_time'] = $attempt_time;
         $rate_limit->clearAttempts($ip_address, 'login', true);
-        $prepared = $this->database->prepare('UPDATE "' . USERS_TABLE . '" SET "last_login" = ? WHERE "user_id" = ?');
+        $prepared = $this->database->prepare('UPDATE "' . NEL_USERS_TABLE . '" SET "last_login" = ? WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [time(), $_POST['user_id']]);
         return $login_data;
     }

@@ -63,7 +63,7 @@ class AdminNews extends AdminHandler
         $news_info['headline'] = $_POST['headline'] ?? null;
         $news_info['time'] = time();
         $news_info['text'] = $_POST['news_text'] ?? null;
-        $query = 'INSERT INTO "' . NEWS_TABLE . '" ("poster_id", "headline", "time", "text") VALUES (?, ?, ?, ?)';
+        $query = 'INSERT INTO "' . NEL_NEWS_TABLE . '" ("poster_id", "headline", "time", "text") VALUES (?, ?, ?, ?)';
         $prepared = $this->database->prepare($query);
         $this->database->executePrepared($prepared,
                 [$news_info['poster_id'], $news_info['headline'], $news_info['time'], $news_info['text']]);
@@ -86,7 +86,7 @@ class AdminNews extends AdminHandler
         }
 
         $entry = $_GET['entry'];
-        $prepared = $this->database->prepare('DELETE FROM "' . NEWS_TABLE . '" WHERE "entry" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_NEWS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$entry]);
         $this->regenNews();
     }

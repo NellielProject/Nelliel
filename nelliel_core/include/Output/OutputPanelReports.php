@@ -44,14 +44,14 @@ class OutputPanelReports extends OutputCore
         if ($this->domain->id() !== '_site_')
         {
             $prepared = $this->database->prepare(
-                    'SELECT * FROM "' . REPORTS_TABLE . '" WHERE "board_id" = ? ORDER BY "report_id" DESC');
+                    'SELECT * FROM "' . NEL_REPORTS_TABLE . '" WHERE "board_id" = ? ORDER BY "report_id" DESC');
             $report_list = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()],
                     PDO::FETCH_ASSOC);
         }
         else
         {
             $report_list = $this->database->executeFetchAll(
-                    'SELECT * FROM "' . REPORTS_TABLE . '" ORDER BY "report_id" DESC', PDO::FETCH_ASSOC);
+                    'SELECT * FROM "' . NEL_REPORTS_TABLE . '" ORDER BY "report_id" DESC', PDO::FETCH_ASSOC);
         }
 
         $bgclass = 'row1';
@@ -69,14 +69,14 @@ class OutputPanelReports extends OutputCore
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $current_domain = $domains[$report_info['board_id']];
             $content_id = new \Nelliel\ContentID($report_info['content_id']);
-            $base_domain = BASE_DOMAIN . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
+            $base_domain = NEL_BASE_DOMAIN . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
             $board_web_path = '//' . $base_domain . '/' . rawurlencode($current_domain->reference('board_directory')) .
                     '/';
             $content_url = '';
 
             if ($content_id->isThread())
             {
-                $content_url = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                $content_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                         ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
                             'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                             'modmode' => 'true']);
@@ -84,7 +84,7 @@ class OutputPanelReports extends OutputCore
             }
             else if ($content_id->isPost())
             {
-                $content_url = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                $content_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                         ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
                             'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                             'modmode' => 'true']);
@@ -103,7 +103,7 @@ class OutputPanelReports extends OutputCore
                 $report_data['file_url'] = $src_web_path . $content_id->thread_id . '/' . $content_id->post_id . '/' .
                         $filename;
 
-                $content_url = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                $content_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                         ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
                             'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                             'modmode' => 'true']);
@@ -116,7 +116,7 @@ class OutputPanelReports extends OutputCore
             $report_data['content_id'] = $report_info['content_id'];
             $report_data['reason'] = $report_info['reason'];
             $report_data['reporter_ip'] = $report_info['reporter_ip'];
-            $report_data['dismiss_url'] = MAIN_SCRIPT . '?module=reports&board_id=' . $report_info['board_id'] .
+            $report_data['dismiss_url'] = NEL_MAIN_SCRIPT . '?module=reports&board_id=' . $report_info['board_id'] .
                     '&action=dismiss&report_id=' . $report_info['report_id'];
             $this->render_data['reports_list'][] = $report_data;
         }

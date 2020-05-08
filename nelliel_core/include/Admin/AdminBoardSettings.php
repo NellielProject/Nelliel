@@ -69,7 +69,7 @@ class AdminBoardSettings extends AdminHandler
             nel_derp(332, _gettext('You are not allowed to modify the default board settings.'));
         }
 
-        $config_table = ($this->defaults) ? BOARD_DEFAULTS_TABLE : $this->domain->reference('config_table');
+        $config_table = ($this->defaults) ? NEL_BOARD_DEFAULTS_TABLE : $this->domain->reference('config_table');
         $lock_override = $this->session_user->checkPermission($this->domain, 'perm_board_config_lock_override');
 
         while ($item = each($_POST))
@@ -132,7 +132,7 @@ class AdminBoardSettings extends AdminHandler
 
     private function getBoardDomains()
     {
-        $query = 'SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"';
+        $query = 'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"';
         $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
         $board_domains = array();
 

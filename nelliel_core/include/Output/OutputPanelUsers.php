@@ -61,7 +61,7 @@ class OutputPanelUsers extends OutputCore
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Users')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        $users = $this->database->executeFetchAll('SELECT * FROM "' . USERS_TABLE . '"', PDO::FETCH_ASSOC);
+        $users = $this->database->executeFetchAll('SELECT * FROM "' . NEL_USERS_TABLE . '"', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
         foreach ($users as $user_info)
@@ -75,14 +75,14 @@ class OutputPanelUsers extends OutputCore
 
             if ($user_info['owner'] == 0)
             {
-                $user_data['edit_url'] = MAIN_SCRIPT . '?module=users&action=edit&user-id=' . $user_info['user_id'];
-                $user_data['remove_url'] = MAIN_SCRIPT . '?module=users&action=remove&user-id=' . $user_info['user_id'];
+                $user_data['edit_url'] = NEL_MAIN_SCRIPT . '?module=users&action=edit&user-id=' . $user_info['user_id'];
+                $user_data['remove_url'] = NEL_MAIN_SCRIPT . '?module=users&action=remove&user-id=' . $user_info['user_id'];
             }
 
             $this->render_data['users_list'][] = $user_data;
         }
 
-        $this->render_data['new_user_url'] = MAIN_SCRIPT . '?module=users&action=new';
+        $this->render_data['new_user_url'] = NEL_MAIN_SCRIPT . '?module=users&action=new';
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/users_panel_main',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
@@ -109,14 +109,14 @@ class OutputPanelUsers extends OutputCore
 
         if (empty($user_id))
         {
-            $this->render_data['form_action'] = MAIN_SCRIPT . '?module=users&action=add';
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=users&action=add';
         }
         else
         {
             $edit_user = $authorization->getUser($user_id);
             $this->render_data['user_id'] = $edit_user->auth_data['user_id'];
             $this->render_data['display_name'] = $edit_user->auth_data['display_name'];
-            $this->render_data['form_action'] = MAIN_SCRIPT . '?module=users&action=update&user-id=' . $user_id;
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=users&action=update&user-id=' . $user_id;
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';
         }
 
@@ -128,7 +128,7 @@ class OutputPanelUsers extends OutputCore
         {
             $this->render_data['is_site_owner'] = false;
             $prepared = $this->database->prepare(
-                    'SELECT "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
+                    'SELECT "role_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
             $site_role = $this->database->executePreparedFetch($prepared, array($user_id, ''), PDO::FETCH_COLUMN);
 
             if (!empty($site_role))
@@ -136,14 +136,14 @@ class OutputPanelUsers extends OutputCore
                 $this->render_data['site_role_id'] = $site_role;
             }
 
-            $board_list = $this->database->executeFetchAll('SELECT * FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
+            $board_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
 
             foreach ($board_list as $board)
             {
                 $board_role_data = array();
                 $board_role_data['board_id'] = $board['board_id'];
                 $prepared = $this->database->prepare(
-                        'SELECT "role_id" FROM "' . USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
+                        'SELECT "role_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
                 $role_id = $this->database->executePreparedFetch($prepared, array($user_id, $board['board_id']),
                         PDO::FETCH_COLUMN);
 

@@ -16,7 +16,7 @@ class TableCites extends TableHandler
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = CITES_TABLE;
+        $this->table_name = NEL_CITES_TABLE;
         $this->columns_data = [
             'source_board' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'source_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],

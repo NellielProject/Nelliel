@@ -31,20 +31,20 @@ class OutputPostingForm extends OutputCore
         $this->render_data['response_to'] = $response_to;
 
         $this->startTimer();
-        $this->render_data['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&action=new-post&board_id=' .
+        $this->render_data['form_action'] = $dotdot . NEL_MAIN_SCRIPT . '?module=threads&action=new-post&board_id=' .
                 $this->domain->id();
 
         if ($response_to)
         {
             if ($session->inModmode($this->domain))
             {
-                $return_url = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                $return_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                         ['module' => 'render', 'action' => 'view-index', 'index' => '0',
                             'board_id' => $this->domain->id(), 'modmode' => 'true']);
             }
             else
             {
-                $return_url = $dotdot . $this->domain->reference('board_directory') . '/' . MAIN_INDEX . PAGE_EXT;
+                $return_url = $dotdot . $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }
 
             $this->render_data['return_url'] = $return_url;
@@ -79,15 +79,15 @@ class OutputPostingForm extends OutputCore
         $this->render_data['use_fgsfds'] = $this->domain->setting('use_fgsfds');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_post_captcha'] = $this->domain->setting('use_post_captcha');
-        $this->render_data['captcha_gen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=get';
-        $this->render_data['captcha_regen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=generate&no-display';
+        $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=get';
+        $this->render_data['captcha_regen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=generate&no-display';
         $this->render_data['use_post_recaptcha'] = $this->domain->setting('use_post_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['captcha_label'] = true;
         $this->render_data['use_honeypot'] = $this->domain->setting('use_honeypot');
-        $this->render_data['honeypot_field_name1'] = BASE_HONEYPOT_FIELD1 . '_' . $this->domain->id();
-        $this->render_data['honeypot_field_name2'] = BASE_HONEYPOT_FIELD2 . '_' . $this->domain->id();
-        $this->render_data['honeypot_field_name3'] = BASE_HONEYPOT_FIELD3 . '_' . $this->domain->id();
+        $this->render_data['honeypot_field_name1'] = NEL_BASE_HONEYPOT_FIELD1 . '_' . $this->domain->id();
+        $this->render_data['honeypot_field_name2'] = NEL_BASE_HONEYPOT_FIELD2 . '_' . $this->domain->id();
+        $this->render_data['honeypot_field_name3'] = NEL_BASE_HONEYPOT_FIELD3 . '_' . $this->domain->id();
         $this->render_data['posting_mode'] = ($response_to) ? _gettext('Posting mode: Reply') : _gettext(
                 'Posting mode: New thread');
         $this->postingRules();

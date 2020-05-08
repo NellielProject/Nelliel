@@ -44,7 +44,7 @@ class OutputDerp extends OutputCore
             }
             else
             {
-                $return_url = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                $return_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                         ['module' => 'render', 'action' => 'view-index', 'index' => '0',
                             'board_id' => $this->domain->id(), 'modmode' => 'true']);
             }
@@ -53,11 +53,11 @@ class OutputDerp extends OutputCore
         {
             if ($this->domain->id() === '_site_')
             {
-                $return_url = BASE_WEB_PATH . $this->domain->setting('home_page');
+                $return_url = NEL_BASE_WEB_PATH . $this->domain->setting('home_page');
             }
             else
             {
-                $return_url = BASE_WEB_PATH . $this->domain->reference('board_directory');
+                $return_url = NEL_BASE_WEB_PATH . $this->domain->reference('board_directory');
             }
         }
 

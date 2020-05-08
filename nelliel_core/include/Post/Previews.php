@@ -42,7 +42,7 @@ class Previews
                         $ratio * $files[$i]->content_data['display_width']) : $files[$i]->content_data['display_width'];
                 $files[$i]->content_data['preview_height'] = ($ratio < 1) ? intval(
                         $ratio * $files[$i]->content_data['display_height']) : $files[$i]->content_data['display_height'];
-                $file_handler->createDirectory($preview_path, DIRECTORY_PERM, true);
+                $file_handler->createDirectory($preview_path, NEL_DIRECTORY_PERM, true);
                 $files[$i]->content_data['preview_name'] = $files[$i]->content_data['filename'] . '-preview';
 
                 if ($this->domain->setting('use_png_preview'))
@@ -176,7 +176,7 @@ class Previews
                 $preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension']);
         exec($resize_command, $out, $code);
         chmod($preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension'],
-                octdec(FILE_PERM));
+                octdec(NEL_FILES_PERM));
     }
 
     public function gmagick($file, $preview_path, $parameters)
@@ -251,7 +251,7 @@ class Previews
                 $preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension']);
         exec($resize_command, $out, $code);
         chmod($preview_path . $file->content_data['preview_name'] . '.' . $file->content_data['preview_extension'],
-                octdec(FILE_PERM));
+                octdec(NEL_FILES_PERM));
     }
 
     public function imagick($file, $preview_path, $parameters)

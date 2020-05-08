@@ -41,7 +41,7 @@ class OutputPanelIconSets extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $icon_sets = $this->database->executeFetchAll(
-                'SELECT * FROM "' . ASSETS_TABLE .
+                'SELECT * FROM "' . NEL_ASSETS_TABLE .
                 '" WHERE "type" = \'icon-set\' ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
         $installed_ids = array();
         $bgclass = 'row1';
@@ -58,10 +58,10 @@ class OutputPanelIconSets extends OutputCore
             $set_data['name'] = $icon_set_info['name'];
             $set_data['directory'] = $icon_set_info['directory'];
             $set_data['is_default'] = $icon_set['is_default'] == 1;
-            $set_data['default_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+            $set_data['default_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                     ['module' => 'icon-sets', 'action' => 'make-default', 'icon-set-id' => $icon_set['asset_id'],
                         'set-type' => $icon_set_info['set_type']]);
-            $set_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+            $set_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                     ['module' => 'icon-sets', 'action' => 'remove', 'icon-set-id' => $icon_set['asset_id'],
                         'set-type' => $icon_set_info['set_type']]);
             $set_data['is_core'] = $this->domain->frontEndData()->iconSetIsCore($icon_set['asset_id']);
@@ -83,7 +83,7 @@ class OutputPanelIconSets extends OutputCore
             $set_data['name'] = $icon_set_info['name'];
             $set_data['directory'] = $icon_set_info['directory'];
             $set_data['is_installed'] = in_array($icon_set['id'], $installed_ids);
-            $set_data['install_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+            $set_data['install_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                     ['module' => 'icon-sets', 'action' => 'add', 'icon-set-id' => $icon_set['id'],
                         'set-type' => $icon_set['set_type']]);
             $this->render_data['available_list'][] = $set_data;

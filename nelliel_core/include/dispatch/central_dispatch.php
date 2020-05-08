@@ -16,13 +16,13 @@ function nel_central_dispatch()
 
     if (isset($_GET['about_nelliel']))
     {
-        require_once INCLUDE_PATH . 'wat/about_nelliel.php';
+        require_once NEL_INCLUDE_PATH . 'wat/about_nelliel.php';
         nel_about_page(new \Nelliel\DomainSite(nel_database()));
     }
 
     if (isset($_GET['blank']) || isset($_GET['tpilb']))
     {
-        require_once INCLUDE_PATH . 'wat/blank.php';
+        require_once NEL_INCLUDE_PATH . 'wat/blank.php';
         nel_tpilb();
     }
 
@@ -48,7 +48,7 @@ function nel_central_dispatch()
     $snacks->applyBan($domain, $inputs);
     $snacks->checkHoneypot($domain);
 
-    require_once INCLUDE_PATH . 'dispatch/module_dispatch.php';
+    require_once NEL_INCLUDE_PATH . 'dispatch/module_dispatch.php';
     $inputs = nel_module_dispatch($inputs, $domain);
     $inputs = nel_plugins()->processHook('nel-in-after-central-dispatch', [$domain], $inputs);
 }

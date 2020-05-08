@@ -20,9 +20,9 @@ class Snacks
 
     public function checkHoneypot(Domain $domain)
     {
-        if (!empty($_POST[BASE_HONEYPOT_FIELD1 . '_' . $domain->id()]) ||
-                !empty($_POST[BASE_HONEYPOT_FIELD2 . '_' . $domain->id()]) ||
-                !empty($_POST[BASE_HONEYPOT_FIELD3 . '_' . $domain->id()]))
+        if (!empty($_POST[NEL_BASE_HONEYPOT_FIELD1 . '_' . $domain->id()]) ||
+                !empty($_POST[NEL_BASE_HONEYPOT_FIELD2 . '_' . $domain->id()]) ||
+                !empty($_POST[NEL_BASE_HONEYPOT_FIELD3 . '_' . $domain->id()]))
         {
             $ban_input['type'] = 'SPAMBOT';
             $ban_input['ip_address_start'] = $_SERVER['REMOTE_ADDR'];
@@ -68,7 +68,7 @@ class Snacks
         }
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . BANS_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ban_id" = ?');
+                'UPDATE "' . NEL_BANS_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ban_id" = ?');
         $this->database->executePrepared($prepared, [$bawww, $ban_info['ban_id']]);
     }
 

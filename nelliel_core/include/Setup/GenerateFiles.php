@@ -20,9 +20,9 @@ class GenerateFiles
 
     public function installDone(bool $replace = false)
     {
-        if (!file_exists(GENERATED_FILE_PATH . 'install_done.php') || $replace)
+        if (!file_exists(NEL_GENERATED_FILES_PATH . 'install_done.php') || $replace)
         {
-            $this->file_handler->writeInternalFile(GENERATED_FILE_PATH . 'install_done.php', '', true, false);
+            $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'install_done.php', '', true, false);
             return true;
         }
 
@@ -31,7 +31,7 @@ class GenerateFiles
 
     public function peppers(bool $replace = false)
     {
-        if (!file_exists(GENERATED_FILE_PATH . 'peppers.php') || $replace)
+        if (!file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php') || $replace)
         {
             $peppers = array();
             $peppers['tripcode_pepper'] = base64_encode(random_bytes(33));
@@ -39,7 +39,7 @@ class GenerateFiles
             $peppers['poster_id_pepper'] = base64_encode(random_bytes(33));
             $peppers['post_password_pepper'] = base64_encode(random_bytes(33));
             $prepend = "\n" . '// DO NOT EDIT THESE VALUES OR REMOVE THIS FILE UNLESS YOU HAVE A DAMN GOOD REASON';
-            $this->file_handler->writeInternalFile(GENERATED_FILE_PATH . 'peppers.php',
+            $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'peppers.php',
                     $prepend . "\n" . '$peppers = ' . var_export($peppers, true) . ';', true, false);
             return true;
         }
@@ -49,11 +49,11 @@ class GenerateFiles
 
     public function ownerCreate(string $id, bool $replace = false)
     {
-        if (!file_exists(GENERATED_FILE_PATH . 'create_owner.php') || $replace)
+        if (!file_exists(NEL_GENERATED_FILES_PATH . 'create_owner.php') || $replace)
         {
             $text = '';
             $text .= "\n" . '$install_id = \'' . $id . '\';';
-            $this->file_handler->writeInternalFile(GENERATED_FILE_PATH . 'create_owner.php', $text, true, false);
+            $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'create_owner.php', $text, true, false);
             return true;
         }
 

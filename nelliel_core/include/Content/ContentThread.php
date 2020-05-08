@@ -121,9 +121,9 @@ class ContentThread extends ContentHandler
     public function createDirectories()
     {
         $file_handler = new \Nelliel\Utility\FileHandler();
-        $file_handler->createDirectory($this->src_path . $this->content_id->thread_id, DIRECTORY_PERM);
-        $file_handler->createDirectory($this->preview_path . $this->content_id->thread_id, DIRECTORY_PERM);
-        $file_handler->createDirectory($this->page_path . $this->content_id->thread_id, DIRECTORY_PERM);
+        $file_handler->createDirectory($this->src_path . $this->content_id->thread_id, NEL_DIRECTORY_PERM);
+        $file_handler->createDirectory($this->preview_path . $this->content_id->thread_id, NEL_DIRECTORY_PERM);
+        $file_handler->createDirectory($this->page_path . $this->content_id->thread_id, NEL_DIRECTORY_PERM);
     }
 
     public function remove(bool $perm_override = false)
@@ -153,7 +153,7 @@ class ContentThread extends ContentHandler
         $prepared = $database->prepare('DELETE FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
         $database->executePrepared($prepared, [$this->content_id->thread_id]);
         $prepared = $database->prepare(
-                'DELETE FROM "' . CITES_TABLE . '" WHERE "source_thread" = ? OR "target_thread" = ?');
+                'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_thread" = ? OR "target_thread" = ?');
         $database->executePrepared($prepared, [$this->content_id->thread_id, $this->content_id->thread_id]);
         return true;
     }

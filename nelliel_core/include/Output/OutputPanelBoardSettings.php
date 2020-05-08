@@ -55,16 +55,16 @@ class OutputPanelBoardSettings extends OutputCore
 
         if ($defaults)
         {
-            $table_name = BOARD_DEFAULTS_TABLE;
+            $table_name = NEL_BOARD_DEFAULTS_TABLE;
             $manage_headers = ['header' => _gettext('Board Management'),
                 'sub_header' => _gettext('Default Board Settings')];
-            $this->render_data['form_action'] = MAIN_SCRIPT . '?module=board-defaults&action=update';
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=board-defaults&action=update';
         }
         else
         {
             $table_name = $this->domain->reference('config_table');
             $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')];
-            $this->render_data['form_action'] = MAIN_SCRIPT . '?module=board-settings&action=update&board_id=' .
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=board-settings&action=update&board_id=' .
                     $this->domain->id();
         }
 

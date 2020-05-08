@@ -71,12 +71,12 @@ class OutputPanelBans extends OutputCore
         if ($this->domain->id() !== '_site_')
         {
             $prepared = $this->database->prepare(
-                    'SELECT * FROM "' . BANS_TABLE . '" WHERE "board_id" = ? ORDER BY "ban_id" DESC');
+                    'SELECT * FROM "' . NEL_BANS_TABLE . '" WHERE "board_id" = ? ORDER BY "ban_id" DESC');
             $ban_list = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
         }
         else
         {
-            $ban_list = $this->database->executeFetchAll('SELECT * FROM "' . BANS_TABLE . '" ORDER BY "ban_id" DESC',
+            $ban_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BANS_TABLE . '" ORDER BY "ban_id" DESC',
                     PDO::FETCH_ASSOC);
         }
 
@@ -98,14 +98,14 @@ class OutputPanelBans extends OutputCore
             $ban_data['appeal'] = $ban_info['appeal'];
             $ban_data['appeal_response'] = $ban_info['appeal_response'];
             $ban_data['appeal_status'] = $ban_info['appeal_status'];
-            $ban_data['modify_url'] = MAIN_SCRIPT . '?module=board&module=bans&action=modify&ban_id=' .
+            $ban_data['modify_url'] = NEL_MAIN_SCRIPT . '?module=board&module=bans&action=modify&ban_id=' .
                     $ban_info['ban_id'] . '&board_id=' . $this->domain->id();
-            $ban_data['remove_url'] = MAIN_SCRIPT . '?module=board&module=bans&action=remove&ban_id=' .
+            $ban_data['remove_url'] = NEL_MAIN_SCRIPT . '?module=board&module=bans&action=remove&ban_id=' .
                     $ban_info['ban_id'] . '&board_id=' . $this->domain->id();
             $this->render_data['ban_list'][] = $ban_data;
         }
 
-        $this->render_data['new_ban_url'] = MAIN_SCRIPT . '?module=board&module=bans&action=new&board_id=' .
+        $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT . '?module=board&module=bans&action=new&board_id=' .
                 $this->domain->id();
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/bans_panel_main',
                 $this->render_data);
@@ -142,7 +142,7 @@ class OutputPanelBans extends OutputCore
             $post_param = '';
         }
 
-        $this->render_data['form_action'] = MAIN_SCRIPT . '?module=board&module=bans&action=add&board_id=' .
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=board&module=bans&action=add&board_id=' .
                 $this->domain->id() . $post_param;
         $this->render_data['ban_ip'] = $ip;
         $this->render_data['ban_type'] = $type;
@@ -167,7 +167,7 @@ class OutputPanelBans extends OutputCore
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Modify Ban')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        $this->render_data['form_action'] = MAIN_SCRIPT . '?module=board&module=bans&action=update&board_id=' .
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=board&module=bans&action=update&board_id=' .
                 $this->domain->id();
         $ban_id = $_GET['ban_id'];
         $ban_hammer = new \Nelliel\BanHammer($this->database);

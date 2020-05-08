@@ -69,8 +69,8 @@ class OutputIndex extends OutputCore
 
             if ($write)
             {
-                $this->file_handler->writeFile($this->domain->reference('board_path') . MAIN_INDEX . PAGE_EXT, $output,
-                        FILE_PERM);
+                $this->file_handler->writeFile($this->domain->reference('board_path') . NEL_MAIN_INDEX . NEL_PAGE_EXT, $output,
+                        NEL_FILES_PERM);
                 $json_index->writeStoredData($this->domain->reference('board_path'), 'index-1');
             }
             else
@@ -83,7 +83,7 @@ class OutputIndex extends OutputCore
 
         $gen_data['index_rendering'] = true;
         $this->render_data['catalog_url'] = 'catalog.html';
-        $this->render_data['form_action'] = $dotdot . MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
+        $this->render_data['form_action'] = $dotdot . NEL_MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
         $index_format = $site_domain->setting('index_filename_format');
         $page = 1;
         $page_count = (int) ceil($thread_count / $this->domain->setting('threads_per_page'));
@@ -151,20 +151,20 @@ class OutputIndex extends OutputCore
                 $json_index->addThreadData($json_thread->retrieveData());
                 $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
                 $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
-                $this->render_data['captcha_gen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=get';
-                $this->render_data['captcha_regen_url'] = $dotdot . MAIN_SCRIPT . '?module=captcha&action=generate&no-display';
+                $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=get';
+                $this->render_data['captcha_regen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=generate&no-display';
                 $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
                 $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
                 $output_footer = new OutputFooter($this->domain);
                 $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => true],
                         true);
                 $output = $this->output('index/index_page', $data_only, true);
-                $index_filename = ($page == 1) ? 'index' . PAGE_EXT : sprintf($index_format, ($page)) . PAGE_EXT;
+                $index_filename = ($page == 1) ? 'index' . NEL_PAGE_EXT : sprintf($index_format, ($page)) . NEL_PAGE_EXT;
 
                 if ($write)
                 {
                     $this->file_handler->writeFile($this->domain->reference('board_path') . $index_filename, $output,
-                            FILE_PERM, true);
+                            NEL_FILES_PERM, true);
                     $json_index->storeData($json_index->prepareData($gen_data['index']), 'index');
                     $json_index->writeStoredData($this->domain->reference('board_path'), sprintf('index-%d', $page));
                 }
@@ -188,7 +188,7 @@ class OutputIndex extends OutputCore
         $pagination_object->setPrevious(_gettext('Previous'));
         $pagination_object->setNext(_gettext('Next'));
         $pagination_object->setPage('%d', $page_format);
-        $pagination_object->setFirst('%d', 'index' . PAGE_EXT);
+        $pagination_object->setFirst('%d', 'index' . NEL_PAGE_EXT);
         $pagination_object->setLast('%d', $page_format);
         return $pagination_object->generateNumerical(1, $page_count, $page);
     }

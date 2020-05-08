@@ -35,16 +35,16 @@ abstract class TableHandler
 
     protected function updateVersionsTable()
     {
-        if ($this->database->rowExists(VERSIONS_TABLE, ['id'], [$this->table_name]))
+        if ($this->database->rowExists(NEL_VERSIONS_TABLE, ['id'], [$this->table_name]))
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . VERSIONS_TABLE . '" SET "current" = ? WHERE "id" = ? AND "type" = ?');
+                    'UPDATE "' . NEL_VERSIONS_TABLE . '" SET "current" = ? WHERE "id" = ? AND "type" = ?');
             $this->database->executePrepared($prepared, [$this->schema_version, $this->table_name, 'table']);
         }
         else
         {
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . VERSIONS_TABLE . '" ("id", "type", "original", "current") VALUES
+                    'INSERT INTO "' . NEL_VERSIONS_TABLE . '" ("id", "type", "original", "current") VALUES
                     (?, ?, ?, ?)');
             $this->database->executePrepared($prepared,
                     [$this->table_name, 'table', $this->schema_version, $this->schema_version]);

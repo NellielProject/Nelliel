@@ -34,7 +34,7 @@ class OutputCatalog extends OutputCore
         $output_header = new OutputHeader($this->domain);
         $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot], true);
         $this->render_data['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->id() . '/';
-        $base_domain_path = BASE_DOMAIN . BASE_WEB_PATH;
+        $base_domain_path = NEL_BASE_DOMAIN . NEL_BASE_WEB_PATH;
         $board_web_path = '//' . $base_domain_path . rawurlencode($this->domain->reference('board_directory')) . '/';
         $pages_web_path = $board_web_path . rawurlencode($this->domain->reference('page_dir')) . '/';
         $preview_web_path = $board_web_path . rawurlencode($this->domain->reference('preview_dir')) . '/';

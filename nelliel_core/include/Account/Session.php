@@ -33,7 +33,7 @@ class Session
             ini_set('session.use_only_cookies', 1);
             ini_set('session.cookie_httponly', 1);
 
-            if (SECURE_SESSION_ONLY)
+            if (NEL_SECURE_SESSION_ONLY)
             {
                 ini_set('session.cookie_secure', 1);
             }
@@ -62,7 +62,7 @@ class Session
 
     protected function setup()
     {
-        if (SECURE_SESSION_ONLY && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'))
+        if (NEL_SECURE_SESSION_ONLY && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'))
         {
             $this->terminate();
             nel_derp(220, _gettext('Session requires a secure connection.'));
@@ -131,7 +131,7 @@ class Session
 
     protected function setCookie($expiry = 0)
     {
-        setrawcookie(session_name(), session_id(), 0, '/', '', SECURE_SESSION_ONLY, true);
+        setrawcookie(session_name(), session_id(), 0, '/', '', NEL_SECURE_SESSION_ONLY, true);
     }
 
     public function isOld()

@@ -41,8 +41,8 @@ class OutputPanelPermissions extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $permissions = $this->database->executeFetchAll(
-                'SELECT * FROM "' . PERMISSIONS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
-        $this->render_data['form_action'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+                'SELECT * FROM "' . NEL_PERMISSIONS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
+        $this->render_data['form_action'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                 ['module' => 'permissions', 'action' => 'add']);
         $bgclass = 'row1';
 
@@ -53,7 +53,7 @@ class OutputPanelPermissions extends OutputCore
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $permission_data['permission'] = $permission['permission'];
             $permission_data['description'] = _gettext($permission['description']);
-            $permission_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
+            $permission_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                     ['module' => 'permissions', 'action' => 'remove', 'permission' => $permission['permission']]);
             $this->render_data['permission_list'][] = $permission_data;
         }

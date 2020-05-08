@@ -16,7 +16,7 @@ class TableRoles extends TableHandler
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = ROLES_TABLE;
+        $this->table_name = NEL_ROLES_TABLE;
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'role_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
@@ -44,8 +44,8 @@ class TableRoles extends TableHandler
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow(['SITE_ADMIN', 80, 'Site Administrator', '## Site Administrator ##']);
-        $this->insertDefaultRow(['BOARD_OWNER', 60, 'Board Owner', '## Board Owner ##']);
+        $this->insertDefaultRow(['NEL_SITE_ADMIN', 80, 'Site Administrator', '## Site Administrator ##']);
+        $this->insertDefaultRow(['NEL_BOARD_OWNER', 60, 'Board Owner', '## Board Owner ##']);
         $this->insertDefaultRow(['MODERATOR', 40, 'Moderator', '## Moderator ##']);
         $this->insertDefaultRow(['JANITOR', 20, 'Janitor', '']);
         $this->insertDefaultRow(['BASIC_USER', 0, 'Basic', '']);
