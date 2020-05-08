@@ -52,7 +52,7 @@ class OutputPanelBoard extends OutputCore
         $this->render_data['regen_board_caches'] = $user->checkPermission($this->domain, 'perm_regen_cache');
         $this->render_data['regen_caches_url'] = NEL_MAIN_SCRIPT . '?module=regen&action=board-all-caches&board_id=' .
                 $this->domain->id();
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/board_panel',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/board_panel',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

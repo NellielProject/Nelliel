@@ -10,10 +10,10 @@
 		<span class="display-cell" data-i18n="gettext">Confirm password: </span><input class="display-cell" type="password" name="register_super_sekrit_confirm" size="25" maxlength="255">
 	</div>
 	{{# use_register_captcha }}
-		{{> pieces/captcha }}
+		{{> captcha }}
 	{{/ use_register_captcha }}
 	{{# use_register_recaptcha }}
-		{{> pieces/recaptcha }}
+		{{> recaptcha }}
 	{{/ use_register_recaptcha }}
 	<div class="display-row">
 		<span class="display-cell"></span><input class="display-cell" type="submit" value="Submit" data-i18n-attributes="gettext|value">

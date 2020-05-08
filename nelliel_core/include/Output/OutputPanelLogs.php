@@ -94,7 +94,7 @@ class OutputPanelLogs extends OutputCore
         $this->render_data['staff_logs_url'] = NEL_MAIN_SCRIPT . '?module=logs&log-type=staff';
         $this->render_data['system_logs_url'] = NEL_MAIN_SCRIPT . '?module=logs&log-type=system';
         $this->render_data['all_logs_url'] = NEL_MAIN_SCRIPT . '?module=logs&log-type=all';
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/logs_panel',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/logs_panel',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

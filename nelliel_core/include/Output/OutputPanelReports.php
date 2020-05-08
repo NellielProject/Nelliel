@@ -121,7 +121,7 @@ class OutputPanelReports extends OutputCore
             $this->render_data['reports_list'][] = $report_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/reports_panel',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/reports_panel',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

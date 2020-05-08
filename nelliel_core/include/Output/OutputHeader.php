@@ -64,8 +64,9 @@ class OutputHeader extends OutputCore
                     ['menu' => 'styles', 'dotdot' => $dotdot, 'ignore_session' => $ignore_session], true);
         }
 
-        $this->render_data['site_navigation'] = $output_menu->render(
-                ['menu' => 'site_navigation', 'dotdot' => $dotdot, 'ignore_session' => $ignore_session], true);
+        $output_navigation = new OutputNavigation($this->domain);
+        $this->render_data['site_navigation'] = $output_navigation->render(
+                ['navigation' => 'site_links', 'dotdot' => $dotdot, 'ignore_session' => $ignore_session], true);
 
         if (isset($parameters['use_site_titles']) && $parameters['use_site_titles'])
         {
@@ -121,8 +122,9 @@ class OutputHeader extends OutputCore
                     ['menu' => 'styles', 'dotdot' => $dotdot, 'ignore_session' => $ignore_session], true);
         }
 
-        $this->render_data['site_navigation'] = $output_menu->render(
-                ['menu' => 'site_navigation', 'dotdot' => $dotdot, 'ignore_session' => $ignore_session], true);
+        $output_navigation = new OutputNavigation($this->domain);
+        $this->render_data['site_navigation'] = $output_navigation->render(
+                ['navigation' => 'site_links', 'dotdot' => $dotdot, 'ignore_session' => $ignore_session], true);
 
         $this->render_data['name'] = ($this->domain->setting('show_name')) ? $this->domain->setting('name') : '';
         $this->render_data['slogan'] = ($this->domain->setting('show_slogan')) ? $this->domain->setting('slogan') : '';
@@ -158,7 +160,7 @@ class OutputHeader extends OutputCore
             }
         }
 
-        $this->render_data['boards_menu'] = $output_menu->render(['menu' => 'boards', 'dotdot' => $dotdot], true);
+        $this->render_data['board_navigation'] = $output_menu->render(['menu' => 'board_links', 'dotdot' => $dotdot], true);
         $output = $this->output('header', $data_only, true);
         return $output;
     }

@@ -58,7 +58,7 @@ class OutputPanelNews extends OutputCore
             $this->render_data['news_entry'][] = $entry_info;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/news_panel',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/news_panel',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

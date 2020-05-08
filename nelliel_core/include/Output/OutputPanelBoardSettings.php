@@ -179,7 +179,7 @@ class OutputPanelBoardSettings extends OutputCore
         }
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile(
-                'management/panels/board_settings_panel', $this->render_data);
+                'panels/board_settings_panel', $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

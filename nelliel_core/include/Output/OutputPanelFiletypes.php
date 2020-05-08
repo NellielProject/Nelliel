@@ -64,7 +64,7 @@ class OutputPanelFiletypes extends OutputCore
             $this->render_data['filetype_list'][] = $filetype_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/filetypes_panel',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/filetypes_panel',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

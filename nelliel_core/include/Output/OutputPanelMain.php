@@ -119,7 +119,7 @@ class OutputPanelMain extends OutputCore
         $this->render_data['news_url'] = NEL_MAIN_SCRIPT . '?module=news';
         $this->render_data['module_extract_gettext'] = $user->checkPermission($this->domain, 'perm_extract_gettext');
         $this->render_data['extract_gettext_url'] = NEL_MAIN_SCRIPT . '?module=language&action=extract-gettext';
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/main_panel',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/main_panel',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

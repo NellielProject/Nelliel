@@ -83,7 +83,7 @@ class OutputPanelUsers extends OutputCore
         }
 
         $this->render_data['new_user_url'] = NEL_MAIN_SCRIPT . '?module=users&action=new';
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/users_panel_main',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/users_panel_main',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
@@ -156,7 +156,7 @@ class OutputPanelUsers extends OutputCore
             }
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/users_panel_edit',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/users_panel_edit',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

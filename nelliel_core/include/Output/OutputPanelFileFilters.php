@@ -72,7 +72,7 @@ class OutputPanelFileFilters extends OutputCore
             $this->render_data['filter_list'][] = $filter_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/file_filters_panel',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/file_filters_panel',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

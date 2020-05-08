@@ -80,7 +80,7 @@ class OutputPanelRoles extends OutputCore
 
         $this->render_data['new_role_url'] = NEL_MAIN_SCRIPT . '?module=roles&action=new';
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/roles_panel_main',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/roles_panel_main',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
@@ -142,7 +142,7 @@ class OutputPanelRoles extends OutputCore
             $this->render_data['permissions_list'][] = $permission_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/roles_panel_edit',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/roles_panel_edit',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

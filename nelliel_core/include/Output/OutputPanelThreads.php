@@ -113,7 +113,7 @@ class OutputPanelThreads extends OutputCore
             $this->render_data['threads'][] = $thread_info;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/thread_panel',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/thread_panel',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
@@ -165,7 +165,7 @@ class OutputPanelThreads extends OutputCore
             $this->render_data['posts'][] = $post_info;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('management/panels/thread_panel_expand',
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/thread_panel_expand',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
