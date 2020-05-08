@@ -21,7 +21,7 @@ class CAPTCHA
         $this->domain = $domain;
         $this->database = $domain->database();
         $this->site_domain = new DomainSite($this->database);
-        $this->file_handler = new \Nelliel\FileHandler();
+        $this->file_handler = new \Nelliel\Utility\FileHandler();
     }
 
     public function get()
@@ -262,7 +262,7 @@ class CAPTCHA
         return true;
     }
 
-    public function remove($key)
+    public function remove(string $key)
     {
         $prepared = $this->database->prepare('DELETE FROM "' . CAPTCHA_TABLE . '" WHERE "captcha_key" = ?');
         $this->database->executePrepared($prepared, [$key]);

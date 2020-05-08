@@ -2,17 +2,18 @@
 
 namespace Nelliel\Auth;
 
-use PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
 
+use Nelliel\NellielPDO;
+use PDO;
+
 class AuthPermissions extends AuthHandler
 {
 
-    function __construct($database, $role_id)
+    function __construct(NellielPDO $database, string $role_id)
     {
         $this->database = $database;
         $this->auth_id = $role_id;

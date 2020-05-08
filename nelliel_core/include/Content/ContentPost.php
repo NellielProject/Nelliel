@@ -136,7 +136,7 @@ class ContentPost extends ContentHandler
 
     public function createDirectories()
     {
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->createDirectory(
                 $this->src_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
         $file_handler->createDirectory(
@@ -200,7 +200,7 @@ class ContentPost extends ContentHandler
 
     protected function removeFromDisk()
     {
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->eraserGun($this->src_path . $this->content_id->thread_id . '/' . $this->content_id->post_id);
         $file_handler->eraserGun($this->preview_path . $this->content_id->thread_id . '/' . $this->content_id->post_id);
     }
@@ -275,7 +275,7 @@ class ContentPost extends ContentHandler
         $new_thread->content_data['last_update_milli'] = $time['milli'];
         $new_thread->writeToDatabase();
         $new_thread->loadFromDatabase();
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $new_thread->createDirectories();
         $file_handler->moveDirectory($this->src_path . $this->content_id->thread_id . '/' . $this->content_id->post_id,
                 $this->src_path . '/' . $new_thread->content_id->thread_id . '/' . $this->content_id->post_id, true);

@@ -17,9 +17,9 @@ class ArchiveAndPrune
     private $end_buffer;
     private $domain;
 
-    function __construct($database, Domain $domain, $file_handler)
+    function __construct(Domain $domain, $file_handler)
     {
-        $this->database = $database;
+        $this->database = $domain->database();
         $this->domain = $domain;
         $this->start_buffer = $domain->setting('threads_per_page') * $domain->setting('page_limit');
         $this->end_buffer = $domain->setting('threads_per_page') * $domain->setting('page_buffer');

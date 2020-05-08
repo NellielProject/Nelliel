@@ -120,7 +120,7 @@ class ContentThread extends ContentHandler
 
     public function createDirectories()
     {
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->createDirectory($this->src_path . $this->content_id->thread_id, DIRECTORY_PERM);
         $file_handler->createDirectory($this->preview_path . $this->content_id->thread_id, DIRECTORY_PERM);
         $file_handler->createDirectory($this->page_path . $this->content_id->thread_id, DIRECTORY_PERM);
@@ -160,7 +160,7 @@ class ContentThread extends ContentHandler
 
     protected function removeFromDisk()
     {
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->eraserGun($this->src_path . $this->content_id->thread_id);
         $file_handler->eraserGun($this->preview_path . $this->content_id->thread_id);
         $file_handler->eraserGun($this->page_path . $this->content_id->thread_id);

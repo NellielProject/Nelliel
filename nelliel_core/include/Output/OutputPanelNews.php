@@ -25,7 +25,7 @@ class OutputPanelNews extends OutputCore
     {
         $user = $parameters['user'];
 
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_news'))
+        if (!$user->checkPermission($this->domain, 'perm_manage_news'))
         {
             nel_derp(470, _gettext('You are not allowed to manage news.'));
         }

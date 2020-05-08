@@ -2,12 +2,13 @@
 
 namespace Nelliel;
 
-use PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
+
+use PDO;
+use Nelliel\Utility\FileHandler;
 
 class FrontEndData
 {
@@ -23,10 +24,10 @@ class FrontEndData
     private $core_style_ids = array();
     private $core_template_ids = array();
 
-    function __construct($database)
+    function __construct(NellielPDO $database)
     {
         $this->database = $database;
-        $this->ini_parser = new \Nelliel\INIParser(new \Nelliel\FileHandler());
+        $this->ini_parser = new \Nelliel\INIParser(new FileHandler());
         $this->core_icon_set_ids = ['filetype-nelliel-basic'];
         $this->core_style_ids = ['style-nelliel', 'style-nelliel-b', 'style-futaba', 'style-burichan', 'style-nigra'];
         $this->core_template_ids = ['template-nelliel-basic'];
@@ -34,7 +35,8 @@ class FrontEndData
 
     private function loadStylesData()
     {
-        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\'', PDO::FETCH_ASSOC);
+        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . ASSETS_TABLE . '" WHERE "type" = \'style\'',
+                PDO::FETCH_ASSOC);
 
         foreach ($all_data as $data)
         {
@@ -78,8 +80,7 @@ class FrontEndData
 
     private function loadTemplateData()
     {
-        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . TEMPLATES_TABLE . '"',
-                PDO::FETCH_ASSOC);
+        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . TEMPLATES_TABLE . '"', PDO::FETCH_ASSOC);
 
         foreach ($all_data as $data)
         {

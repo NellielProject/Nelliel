@@ -2,13 +2,14 @@
 
 namespace Nelliel\Post;
 
-use PDO;
-use Nelliel\Domain;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
+
+use Nelliel\Auth\Authorization;
+use Nelliel\Domain;
+use PDO;
 
 class FilesUpload
 {
@@ -17,7 +18,7 @@ class FilesUpload
     private $processed_files = array();
     private $authorization;
 
-    function __construct(Domain $domain, array $files = array(), $authorization)
+    function __construct(Domain $domain, array $files = array(), Authorization $authorization)
     {
         $this->domain = $domain;
         $this->uploaded_files = $files;
@@ -28,7 +29,7 @@ class FilesUpload
     {
         $response_to = $post->content_data['response_to'];
         $data_handler = new PostData($this->domain, $this->authorization);
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $error_data = ['delete_files' => true, 'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
         $file_count = count($this->uploaded_files['upload_files']['name']);
 
@@ -81,7 +82,7 @@ class FilesUpload
             $file->content_data['display_width'] = null;
             $file->content_data['display_height'] = null;
 
-            if($file->content_data['type'] === 'graphics' || $file->content_data['format'] === 'swf')
+            if ($file->content_data['type'] === 'graphics' || $file->content_data['format'] === 'swf')
             {
                 $dim = getimagesize($file->content_data['location']);
                 $file->content_data['display_width'] = $dim[0];
@@ -128,7 +129,7 @@ class FilesUpload
 
                 case 'timestamp':
                     $file->content_data['filename'] = $post->content_data['post_time'] .
-                    $post->content_data['post_time_milli'];
+                            $post->content_data['post_time_milli'];
                     $file->content_data['fullname'] = $file->content_data['filename'] . '.' .
                             $file->content_data['extension'];
                     break;
@@ -147,7 +148,7 @@ class FilesUpload
 
                 default:
                     $file->content_data['filename'] = $post->content_data['post_time'] .
-                    $post->content_data['post_time_milli'];
+                            $post->content_data['post_time_milli'];
                     $file->content_data['fullname'] = $file->content_data['filename'] . '.' .
                             $file->content_data['extension'];
                     break;

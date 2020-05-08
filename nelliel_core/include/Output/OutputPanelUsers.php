@@ -96,7 +96,7 @@ class OutputPanelUsers extends OutputCore
     {
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $user_id = $parameters['user_id'];
+        $user_id = $parameters['user_id'] ?? '';
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
@@ -107,7 +107,7 @@ class OutputPanelUsers extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
 
-        if (is_null($user_id))
+        if (empty($user_id))
         {
             $this->render_data['form_action'] = MAIN_SCRIPT . '?module=users&action=add';
         }
@@ -120,7 +120,7 @@ class OutputPanelUsers extends OutputCore
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';
         }
 
-        if ($edit_user->isSiteOwner())
+        if (!empty($user_id) && $edit_user->isSiteOwner())
         {
             $this->render_data['is_site_owner'] = true;
         }

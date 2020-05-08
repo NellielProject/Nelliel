@@ -14,7 +14,7 @@ class OutputFilter
     {
     }
 
-    public function cleanAndEncode(&$string)
+    public function cleanAndEncode(string &$string)
     {
         if(empty($string))
         {
@@ -30,7 +30,7 @@ class OutputFilter
         $string = htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
     }
 
-    public function clearWhitespace(&$string)
+    public function clearWhitespace(string &$string)
     {
         if(empty($string))
         {
@@ -43,21 +43,9 @@ class OutputFilter
         }
     }
 
-    public function newlinesToArray($string)
+    public function newlinesToArray(string $string)
     {
         $text_array = preg_split('#\r\n?|\n#', $string);
         return $text_array;
-    }
-
-    public function postQuote($target_element, $text_input, $return_text = false)
-    {
-        if($return_text)
-        {
-            return '<span class="post-quote">' . $text_input . '</span>';
-        }
-
-        $segment_node = $target_element->ownerDocument->createElement('span', $text_input);
-        $segment_node->extSetAttribute('class', 'post-quote');
-        return $segment_node;
     }
 }

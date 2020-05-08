@@ -3,6 +3,7 @@
 namespace Nelliel\Auth;
 
 use PDO;
+use Nelliel\NellielPDO;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -13,7 +14,7 @@ class AuthRole extends AuthHandler
 {
     public $permissions = array();
 
-    function __construct($database, $role_id)
+    function __construct(NellielPDO $database, string $role_id)
     {
         $this->database = $database;
         $this->auth_id = $role_id;
@@ -94,7 +95,7 @@ class AuthRole extends AuthHandler
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
-    public function checkPermission($permission_id)
+    public function checkPermission(string $permission_id)
     {
         if (isset($this->permissions->auth_data[$permission_id]))
         {

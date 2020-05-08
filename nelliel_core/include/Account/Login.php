@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domain;
 use Nelliel\NellielPDO;
 use Nelliel\Auth\Authorization;
 use PDO;
@@ -17,7 +18,7 @@ class Login
     private $database;
     private $domain;
 
-    function __construct(Authorization $authorization, $domain)
+    function __construct(Authorization $authorization, Domain $domain)
     {
         $this->authorization = $authorization;
         $this->domain = $domain;

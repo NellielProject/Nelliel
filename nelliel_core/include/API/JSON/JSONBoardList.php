@@ -8,7 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use \Nelliel\Domain;
-use \Nelliel\FileHandler;
+use \Nelliel\Utility\FileHandler;
 
 class JSONBoardList extends JSONOutput
 {

@@ -8,13 +8,14 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domain;
+use Nelliel\NellielPDO;
 use PDO;
 
 class AuthUser extends AuthHandler
 {
     public $user_roles = array();
 
-    function __construct($database, $user_id)
+    function __construct(NellielPDO $database, string $user_id)
     {
         $this->database = $database;
         $this->auth_id = $user_id;
@@ -140,7 +141,7 @@ class AuthUser extends AuthHandler
         }
     }
 
-    public function modifyRole($domain_id, $role_id)
+    public function modifyRole(string $domain_id, string $role_id)
     {
         if (!isset($this->user_roles[$domain_id]))
         {
@@ -154,7 +155,7 @@ class AuthUser extends AuthHandler
         }
     }
 
-    public function removeRole($domain_id, $role_id)
+    public function removeRole(string $domain_id, string $role_id)
     {
         if (!isset($this->user_roles[$domain_id]))
         {
@@ -167,7 +168,7 @@ class AuthUser extends AuthHandler
         unset($this->user_roles[$domain_id]);
     }
 
-    public function checkPermission(Domain $domain, $perm_id)
+    public function checkPermission(Domain $domain, string $perm_id)
     {
         // Site Owner can do all the things
         if ($this->isSiteOwner())
@@ -198,7 +199,7 @@ class AuthUser extends AuthHandler
         return false;
     }
 
-    private function setupAuthRole($role_id)
+    private function setupAuthRole(string $role_id)
     {
         $role = new AuthRole($this->database, $role_id);
         $role->loadFromDatabase();

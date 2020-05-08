@@ -31,7 +31,7 @@ class Setup
         $this->coreDirWritable();
         $this->configDirWritable();
 
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $generate_files = new \Nelliel\Setup\GenerateFiles($file_handler);
         $install_id = base64_encode(random_bytes(33));
 
@@ -205,7 +205,7 @@ class Setup
 
     public function createCoreDirectories()
     {
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->createDirectory(CACHE_FILE_PATH, DIRECTORY_PERM, true);
         $file_handler->createDirectory(GENERATED_FILE_PATH, DIRECTORY_PERM, true);
         $file_handler->createDirectory(OUTPUT_FILE_PATH, DIRECTORY_PERM, true);
@@ -245,7 +245,7 @@ class Setup
 
     public function createBoardDirectories(string $board_id)
     {
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $domain = new \Nelliel\DomainBoard($board_id, nel_database());
         $references = $domain->reference();
         $file_handler->createDirectory($references['src_path'], DIRECTORY_PERM, true);

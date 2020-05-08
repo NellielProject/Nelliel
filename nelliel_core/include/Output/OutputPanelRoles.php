@@ -93,7 +93,7 @@ class OutputPanelRoles extends OutputCore
     {
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $role_id = $parameters['role_id'];
+        $role_id = $parameters['role_id'] ?? '';
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $role = $authorization->getRole($role_id);
         $this->startTimer();
@@ -105,7 +105,7 @@ class OutputPanelRoles extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
 
-        if (is_null($role_id))
+        if (empty($role_id))
         {
             $this->render_data['form_action'] = MAIN_SCRIPT . '?module=roles&action=add';
         }
@@ -114,7 +114,7 @@ class OutputPanelRoles extends OutputCore
             $this->render_data['form_action'] = MAIN_SCRIPT . '?module=roles&action=update&role-id=' . $role_id;
         }
 
-        if (!is_null($role_id))
+        if (!empty($role_id))
         {
             $this->render_data['role_id'] = $role->auth_data['role_id'];
             $this->render_data['role_level'] = $role->auth_data['role_level'];
@@ -129,7 +129,7 @@ class OutputPanelRoles extends OutputCore
         {
             $permission_data = array();
 
-            if (!is_null($role_id))
+            if (!empty($role_id))
             {
                 if ($role->checkPermission($permission['permission']))
                 {

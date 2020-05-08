@@ -12,12 +12,10 @@ use PDO;
 class Cites
 {
     private $database;
-    private $output_filter;
 
     function __construct($database)
     {
         $this->database = $database;
-        $this->output_filter = new OutputFilter();
     }
 
     private function organizeCiteData(array $cite_data)

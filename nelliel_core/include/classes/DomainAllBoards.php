@@ -12,7 +12,7 @@ use PDO;
 class DomainAllBoards extends Domain
 {
 
-    public function __construct($database)
+    public function __construct(NellielPDO $database)
     {
         $this->domain_id = '__all_boards_';
         $this->database = $database;
@@ -46,5 +46,10 @@ class DomainAllBoards extends Domain
 
     public function deleteCache()
     {
+    }
+
+    public function globalVariation()
+    {
+        return false;
     }
 }

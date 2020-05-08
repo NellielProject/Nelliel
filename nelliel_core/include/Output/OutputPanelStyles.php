@@ -64,7 +64,7 @@ class OutputPanelStyles extends OutputCore
             $style_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'styles', 'action' => 'remove', 'style-id' => $style['asset_id'],
                         'set-type' => $style_info['style_type']]);
-            $style_data['is_core'] = $this->domain->getFrontEndData()->styleIsCore($style['asset_id']);
+            $style_data['is_core'] = $this->domain->frontEndData()->styleIsCore($style['asset_id']);
 
             $this->render_data['installed_list'][] = $style_data;
         }

@@ -12,7 +12,7 @@ class ThreadHandler
     private $database;
     private $domain;
 
-    function __construct($database, Domain $domain)
+    function __construct(NellielPDO $database, Domain $domain)
     {
         $this->database = $database;
         $this->domain = $domain;
@@ -62,7 +62,7 @@ class ThreadHandler
 
         if ($update_archive)
         {
-            $archive = new ArchiveAndPrune($this->database, $this->domain, new FileHandler());
+            $archive = new ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
             $archive->updateThreads();
         }
 

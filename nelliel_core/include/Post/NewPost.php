@@ -46,8 +46,8 @@ class NewPost
         }
 
         $authorization = new \Nelliel\Auth\Authorization($this->database);
-        $archive = new \Nelliel\ArchiveAndPrune($this->database, $this->domain, new \Nelliel\FileHandler());
-        $file_handler = new \Nelliel\FileHandler();
+        $archive = new \Nelliel\ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $file_upload = new FilesUpload($this->domain, $_FILES, $authorization);
         $data_handler = new PostData($this->domain, $authorization);
         $post = new \Nelliel\Content\ContentPost(new \Nelliel\ContentID(), $this->domain);

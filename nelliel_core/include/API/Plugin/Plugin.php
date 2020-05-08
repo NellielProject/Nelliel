@@ -14,7 +14,7 @@ class Plugin
     private $directory;
     private $initializer;
 
-    function __construct($id, $directory, $ini)
+    function __construct(string $id, string $directory, array $ini)
     {
         $this->id = $id;
         $this->directory = new \SplFileInfo($directory);

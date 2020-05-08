@@ -14,7 +14,7 @@ abstract class AuthHandler
     public $auth_id;
     public $authorization;
 
-    public function authDataOrDefault($data_name, $default)
+    public function authDataOrDefault(string $data_name, ?string $default = null)
     {
         return $this->auth_data[$data_name] ?? $default;
     }

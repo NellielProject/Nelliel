@@ -32,8 +32,7 @@ class OutputCatalog extends OutputCore
         $output_head = new OutputHead($this->domain);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_header = new OutputHeader($this->domain);
-        $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot],
-                true);
+        $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot], true);
         $this->render_data['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->id() . '/';
         $base_domain_path = BASE_DOMAIN . BASE_WEB_PATH;
         $board_web_path = '//' . $base_domain_path . rawurlencode($this->domain->reference('board_directory')) . '/';
@@ -66,35 +65,38 @@ class OutputCatalog extends OutputCore
                 $thread_data['first_post_subject'] = $first_post['subject'];
             }
 
-            $this->output_filter->clearWhitespace($first_post['comment']);
-
-            foreach ($this->output_filter->newlinesToArray($first_post['comment']) as $line)
+            if (!empty($first_post['comment']))
             {
-                $line_parts = array();
-                $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, null, PREG_SPLIT_DELIM_CAPTURE);
-                $line_final = '';
+                $this->output_filter->clearWhitespace($first_post['comment']);
 
-                foreach ($segments as $segment)
+                foreach ($this->output_filter->newlinesToArray($first_post['comment']) as $line)
                 {
-                    $link_url = $cites->createPostLinkURL($this->domain, $post_content_id, $segment);
+                    $line_parts = array();
+                    $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, null, PREG_SPLIT_DELIM_CAPTURE);
+                    $line_final = '';
 
-                    if (!empty($link_url))
+                    foreach ($segments as $segment)
                     {
-                        if (preg_match('#^\s*>#', $segment) === 1)
+                        $link_url = $cites->createPostLinkURL($this->domain, $post_content_id, $segment);
+
+                        if (!empty($link_url))
                         {
-                            $link = array();
-                            $link['link_url'] = $link_url;
-                            $link['link_text'] = $segment;
-                            $line_parts[]['link'] = $link;
+                            if (preg_match('#^\s*>#', $segment) === 1)
+                            {
+                                $link = array();
+                                $link['link_url'] = $link_url;
+                                $link['link_text'] = $segment;
+                                $line_parts[]['link'] = $link;
+                            }
+                        }
+                        else
+                        {
+                            $line_parts[]['text'] = $segment;
                         }
                     }
-                    else
-                    {
-                        $line_parts[]['text'] = $segment;
-                    }
-                }
 
-                $thread_data['comment_lines'][]['line'] = $line_parts;
+                    $thread_data['comment_lines'][]['line'] = $line_parts;
+                }
             }
 
             $thread_data['mod-comment'] = $first_post['mod_comment'];

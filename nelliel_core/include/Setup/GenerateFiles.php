@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\FileHandler;
+use \Nelliel\Utility\FileHandler;
 
 class GenerateFiles
 {

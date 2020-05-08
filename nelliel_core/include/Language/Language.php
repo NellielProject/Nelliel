@@ -36,13 +36,13 @@ class Language
         }
     }
 
-    public function loadLanguage(string $locale, string $domain, int $category)
+    public function loadLanguage(string $locale, string $domain_id, int $category)
     {
         $category_string = self::$gettext_helpers->categoryToString($category);
-        $file = self::$gettext->bindtextdomain($domain) . '/' . $locale . '/' . $category_string . '/' . $domain . '.po';
-        $file_id = $locale . '/' . $category_string . '/' . $domain . '.po';
-        $cache_file = 'language/' . $locale . '/' . $category_string . '/' . $domain . '_po.php';
-        $cache_handler = new \Nelliel\CacheHandler();
+        $file = self::$gettext->bindtextdomain($domain_id) . '/' . $locale . '/' . $category_string . '/' . $domain_id . '.po';
+        $file_id = $locale . '/' . $category_string . '/' . $domain_id . '.po';
+        $cache_file = 'language/' . $locale . '/' . $category_string . '/' . $domain_id . '_po.php';
+        $cache_handler = new \Nelliel\Utility\CacheHandler();
         $language_array = array();
         $loaded = false;
         $hash = '';
@@ -88,7 +88,7 @@ class Language
         }
 
         $extractor = new \Nelliel\Language\LanguageExtractor($domain);
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $extracted = $extractor->assemblePoString($default_textdomain, $default_category);
 
         foreach ($extracted as $category_str => $domain_output)

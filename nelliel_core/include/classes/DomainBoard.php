@@ -12,7 +12,7 @@ use PDO;
 class DomainBoard extends Domain
 {
 
-    public function __construct(string $domain_id, $database)
+    public function __construct(string $domain_id, NellielPDO $database)
     {
         $this->domain_id = $domain_id;
         $this->database = $database;
@@ -22,13 +22,6 @@ class DomainBoard extends Domain
         $this->templatePath(
                 $templates_file_path . $this->front_end_data->template($this->setting('template_id'))['directory']);
         $this->global_variation = new DomainAllBoards($this->database);
-    }
-
-    public function boardExists()
-    {
-        $prepared = $this->database->prepare('SELECT 1 FROM "nelliel_board_data" WHERE "board_id" = ?');
-        $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);
-        return !empty($board_data);
     }
 
     protected function loadSettings()
@@ -102,11 +95,6 @@ class DomainBoard extends Domain
         return $settings;
     }
 
-    public function globalVariation()
-    {
-        return new DomainAllBoards($this->database);
-    }
-
     public function regenCache()
     {
         if (USE_INTERNAL_CACHE)
@@ -123,5 +111,17 @@ class DomainBoard extends Domain
         {
             $this->file_handler->eraserGun(CACHE_FILE_PATH . $this->domain_id);
         }
+    }
+
+    public function globalVariation()
+    {
+        return new DomainAllBoards($this->database);
+    }
+
+    public function boardExists()
+    {
+        $prepared = $this->database->prepare('SELECT 1 FROM "nelliel_board_data" WHERE "board_id" = ?');
+        $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);
+        return !empty($board_data);
     }
 }

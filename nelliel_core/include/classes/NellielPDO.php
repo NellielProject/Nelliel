@@ -2,15 +2,13 @@
 
 namespace Nelliel;
 
-use PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
 
-// Handle all the authorization functions
-//
+use PDO;
+
 class NellielPDO extends PDO
 {
 

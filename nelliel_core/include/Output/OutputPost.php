@@ -327,9 +327,9 @@ class OutputPost extends OutputCore
         if (!nel_true_empty($post_data['mod_comment']))
         {
             $comment_data['mod_comment'] = $post_data['mod_comment'];
+            $this->output_filter->clearWhitespace($post_data['comment']);
         }
 
-        $this->output_filter->clearWhitespace($post_data['comment']);
         $comment_data['post_comment_class'] = $post_type_class . 'post-comment';
 
         if (nel_true_empty($post_data['comment']))

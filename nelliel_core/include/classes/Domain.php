@@ -34,11 +34,13 @@ abstract class Domain
 
     public abstract function deleteCache();
 
+    public abstract function globalVariation();
+
     protected function utilitySetup()
     {
         $this->front_end_data = new FrontEndData($this->database);
-        $this->file_handler = new \Nelliel\FileHandler();
-        $this->cache_handler = new \Nelliel\CacheHandler();
+        $this->file_handler = new \Nelliel\Utility\FileHandler();
+        $this->cache_handler = new \Nelliel\Utility\CacheHandler();
         $this->translator = new \Nelliel\Language\Translator($this);
         $this->language = new \Nelliel\Language\Language();
     }
@@ -143,12 +145,7 @@ abstract class Domain
         }
     }
 
-    public function globalVariation()
-    {
-        return $this->global_variation;
-    }
-
-    public function getFrontEndData()
+    public function frontEndData()
     {
         return $this->front_end_data;
     }

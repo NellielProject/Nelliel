@@ -2,18 +2,18 @@
 
 namespace Nelliel;
 
-use PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
 
+use PDO;
+
 class BanHammer
 {
     private $database;
 
-    public function __construct($database)
+    public function __construct(NellielPDO $database)
     {
         $this->database = $database;
     }
@@ -54,7 +54,7 @@ class BanHammer
         return $time;
     }
 
-    private function combineTimeToSeconds($time)
+    private function combineTimeToSeconds(array $time)
     {
         return ($time['years'] * 31536000) + ($time['months'] * 2592000) + ($time['days'] * 86400) +
                 ($time['hours'] * 3600) + ($time['minutes'] * 60) + $time['seconds'];
@@ -78,7 +78,7 @@ class BanHammer
         return $ban_info;
     }
 
-    public function getBansByIp($ban_ip)
+    public function getBansByIp(string $ban_ip)
     {
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . BANS_TABLE . '" WHERE "ip_address_start" = :ip_address_start');

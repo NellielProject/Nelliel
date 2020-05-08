@@ -21,7 +21,7 @@ class Session
     protected $authorization;
     protected $database;
 
-    function __construct($domain)
+    function __construct(Domain $domain)
     {
         $this->domain = $domain;
         $this->authorization = new Authorization(nel_database());

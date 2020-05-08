@@ -2,13 +2,14 @@
 
 namespace Nelliel\Account;
 
-use Nelliel\NellielPDO;
-use Nelliel\Auth\Authorization;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
+
+use Nelliel\Domain;
+use Nelliel\NellielPDO;
+use Nelliel\Auth\Authorization;
 
 class Register
 {
@@ -16,7 +17,7 @@ class Register
     private $database;
     private $domain;
 
-    function __construct(Authorization $authorization, $domain)
+    function __construct(Authorization $authorization, Domain $domain)
     {
         $this->authorization = $authorization;
         $this->domain = $domain;

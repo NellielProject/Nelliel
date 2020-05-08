@@ -323,7 +323,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 }
 
                 $regen->allBoardPages($domain);
-                $archive = new \Nelliel\ArchiveAndPrune($domain->database(), $domain, new \Nelliel\FileHandler());
+                $archive = new \Nelliel\ArchiveAndPrune($domain, new \Nelliel\Utility\FileHandler());
                 $archive->updateThreads();
             }
 

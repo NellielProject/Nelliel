@@ -16,8 +16,8 @@ class RenderCoreMustache extends RenderCore
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
-        $this->output_filter = new OutputFilter();
-        $this->file_handler = new FileHandler();
+        $this->output_filter = new \Nelliel\OutputFilter();
+        $this->file_handler = new \Nelliel\Utility\FileHandler();
         $this->escaper = new \phpDOMExtend\DOMEscaper();
         $this->template_loaders['file'] = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(),
                 ['extension' => '.html']);

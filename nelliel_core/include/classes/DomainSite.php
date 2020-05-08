@@ -13,7 +13,7 @@ class DomainSite extends Domain
 {
     private $file_filters;
 
-    public function __construct($database)
+    public function __construct(NellielPDO $database)
     {
         $this->domain_id = '_site_';
         $this->database = $database;

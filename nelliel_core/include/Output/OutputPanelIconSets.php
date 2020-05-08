@@ -64,7 +64,7 @@ class OutputPanelIconSets extends OutputCore
             $set_data['remove_url'] = $this->url_constructor->dynamic(MAIN_SCRIPT,
                     ['module' => 'icon-sets', 'action' => 'remove', 'icon-set-id' => $icon_set['asset_id'],
                         'set-type' => $icon_set_info['set_type']]);
-            $set_data['is_core'] = $this->domain->getFrontEndData()->iconSetIsCore($icon_set['asset_id']);
+            $set_data['is_core'] = $this->domain->frontEndData()->iconSetIsCore($icon_set['asset_id']);
 
             $this->render_data['installed_list'][] = $set_data;
         }

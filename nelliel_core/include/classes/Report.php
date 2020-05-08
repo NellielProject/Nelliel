@@ -12,7 +12,7 @@ class Report
     private $domain;
     private $database;
 
-    function __construct($domain)
+    function __construct(Domain $domain)
     {
         $this->domain = $domain;
         $this->database = $this->domain->database();

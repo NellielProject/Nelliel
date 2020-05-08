@@ -118,7 +118,7 @@ class LanguageExtractor
 
     private function parseSiteFiles(array $strings, int $default_category)
     {
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $php_files = $file_handler->recursiveFileList(BASE_PATH, 0);
         $php_files = array_merge($php_files, $file_handler->recursiveFileList(INCLUDE_PATH));
 
@@ -301,7 +301,7 @@ class LanguageExtractor
 
     private function parseHTMLFiles(array $strings, string $default_category)
     {
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $html_files = $file_handler->recursiveFileList(CORE_TEMPLATES_FILE_PATH . 'nelliel_basic/'); // TODO: Be able to parse custom template sets
         $html_files = array_merge($html_files, $file_handler->recursiveFileList(INCLUDE_PATH));
         $render = new \Nelliel\RenderCoreDOM();

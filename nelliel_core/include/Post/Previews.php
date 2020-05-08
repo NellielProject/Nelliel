@@ -7,12 +7,14 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domain;
+
 class Previews
 {
     private $domain;
     private $site_domain;
 
-    function __construct($domain)
+    function __construct(Domain $domain)
     {
         $this->domain = $domain;
         $this->site_domain = new \Nelliel\DomainSite(nel_database());
@@ -20,7 +22,7 @@ class Previews
 
     public function generate($files, $preview_path)
     {
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $i = 0;
         $files_count = count($files);
 

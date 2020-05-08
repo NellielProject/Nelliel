@@ -7,14 +7,15 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use \Nelliel\Domain;
+use Nelliel\Auth\Authorization;
+use Nelliel\Domain;
 
 class PostData
 {
     private $domain;
     private $authorization;
 
-    function __construct(Domain $domain, $authorization)
+    function __construct(Domain $domain, Authorization $authorization)
     {
         $this->domain = $domain;
         $this->authorization = $authorization;

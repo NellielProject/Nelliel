@@ -12,7 +12,7 @@ class Snacks
     private $database;
     private $ban_hammer;
 
-    function __construct($database, BanHammer $ban_hammer)
+    function __construct(NellielPDO $database, BanHammer $ban_hammer)
     {
         $this->database = $database;
         $this->ban_hammer = $ban_hammer;

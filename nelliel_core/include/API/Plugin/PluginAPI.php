@@ -66,7 +66,7 @@ class PluginAPI
     }
 
     // Register hook functions here
-    public function addFunction(string $hook_name, string $function_name, $plugin_id, int $priority = 10)
+    public function addFunction(string $hook_name, string $function_name, string $plugin_id, int $priority = 10)
     {
         if (!$this->isValidPlugin($plugin_id))
         {
@@ -79,7 +79,7 @@ class PluginAPI
     }
 
     // Register hook methods here
-    public function addMethod(string $hook_name, $class, string $method_name, $plugin_id, int $priority = 10)
+    public function addMethod(string $hook_name, $class, string $method_name, string $plugin_id, int $priority = 10)
     {
         if (!$this->isValidPlugin($plugin_id))
         {
@@ -91,7 +91,7 @@ class PluginAPI
         return true;
     }
 
-    public function removeFunction(string $hook_name, string $function_name, $plugin_id)
+    public function removeFunction(string $hook_name, string $function_name, string $plugin_id)
     {
         if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id))
         {
@@ -102,7 +102,7 @@ class PluginAPI
         return true;
     }
 
-    public function removeMethod(string $hook_name, $class, string $method_name, $plugin_id)
+    public function removeMethod(string $hook_name, $class, string $method_name, string $plugin_id)
     {
         if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id))
         {
@@ -131,7 +131,7 @@ class PluginAPI
             return;
         }
 
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $plugin_files = $file_handler->recursiveFileList(PLUGINS_FILE_PATH);
 
         foreach ($plugin_files as $file)

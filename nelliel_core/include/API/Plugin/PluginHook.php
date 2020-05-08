@@ -22,19 +22,19 @@ class PluginHook
         return $this->hook_name;
     }
 
-    public function addFunction(string $function_name, $plugin_id, int $priority)
+    public function addFunction(string $function_name, string $plugin_id, int $priority)
     {
         $this->registered[] = ['type' => 'function', 'function_name' => $function_name, 'plugin_id' => $plugin_id,
             'priority' => $priority];
     }
 
-    public function addMethod($class, string $method_name, $plugin_id, int $priority)
+    public function addMethod($class, string $method_name, string $plugin_id, int $priority)
     {
         $this->registered[] = ['type' => 'method', 'class' => $class, 'method_name' => $method_name,
             'plugin_id' => $plugin_id, 'priority' => $priority];
     }
 
-    public function removeFunction(string $function_name, $plugin_id)
+    public function removeFunction(string $function_name, string $plugin_id)
     {
         foreach ($this->registered as $key => $registered)
         {
@@ -49,7 +49,7 @@ class PluginHook
         return false;
     }
 
-    public function removeMethod($class, string $method_name, $plugin_id)
+    public function removeMethod($class, string $method_name, string $plugin_id)
     {
         foreach ($this->registered as $key => $registered)
         {

@@ -37,22 +37,12 @@ class FGSFDS
 
     public function getCommand(string $command)
     {
-        if (isset(self::$commands[$command]))
-        {
-            return self::$commands[$command];
-        }
-
-        return false;
+        return self::$commands[$command] ?? false;
     }
 
     public function getCommandData(string $command, $data_id)
     {
-        if (isset(self::$commands[$command]))
-        {
-            return self::$commands[$command][$data_id];
-        }
-
-        return false;
+        return self::$commands[$command][$data_id] ?? false;
     }
 
     public function addCommand(string $command)

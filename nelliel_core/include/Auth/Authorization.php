@@ -7,18 +7,21 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\NellielPDO;
+use PDO;
+
 class Authorization
 {
     private $database;
     private static $users = array();
     private static $roles = array();
 
-    function __construct($database)
+    function __construct(NellielPDO $database)
     {
         $this->database = $database;
     }
 
-    public function newUser($user_id)
+    public function newUser(string $user_id)
     {
         $user_id_lower = utf8_strtolower($user_id);
         self::$users[$user_id_lower] = new AuthUser($this->database, $user_id);
@@ -26,7 +29,7 @@ class Authorization
         return self::$users[$user_id_lower];
     }
 
-    public function userExists($user_id)
+    public function userExists(string $user_id)
     {
         if ($this->getUser($user_id) !== false)
         {
@@ -36,7 +39,7 @@ class Authorization
         return false;
     }
 
-    public function getUser($user_id)
+    public function getUser(string $user_id)
     {
         $user_id_lower = utf8_strtolower($user_id);
 
@@ -55,7 +58,7 @@ class Authorization
         return false;
     }
 
-    public function removeUser($user_id)
+    public function removeUser(string $user_id)
     {
         $user_id_lower = utf8_strtolower($user_id);
 
@@ -69,20 +72,20 @@ class Authorization
         return true;
     }
 
-    public function isSiteOwner($user_id)
+    public function isSiteOwner(string $user_id)
     {
         $user_id_lower = utf8_strtolower($user_id);
         return self::$users[$user_id_lower]->auth_data['owner'] == 1;
     }
 
-    public function newRole($role_id)
+    public function newRole(string $role_id)
     {
         self::$roles[$role_id] = new AuthRole($this->database, $role_id);
         self::$roles[$role_id]->setupNew();
         return self::$roles[$role_id];
     }
 
-    public function roleExists($role_id)
+    public function roleExists(string $role_id)
     {
         if ($this->getRole($role_id) !== false)
         {
@@ -92,7 +95,7 @@ class Authorization
         return false;
     }
 
-    public function getRole($role_id)
+    public function getRole(string $role_id)
     {
         if (isset(self::$roles[$role_id]))
         {
@@ -109,7 +112,7 @@ class Authorization
         return false;
     }
 
-    public function removeRole($role_id)
+    public function removeRole(string $role_id)
     {
         if (!isset(self::$roles[$role_id]))
         {
@@ -121,7 +124,7 @@ class Authorization
         return true;
     }
 
-    public function roleLevelCheck($role1, $role2, bool $false_if_equal = false)
+    public function roleLevelCheck(string $role1, string $role2, bool $false_if_equal = false)
     {
         if (!$this->roleExists($role1))
         {

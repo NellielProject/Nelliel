@@ -14,7 +14,7 @@ class RateLimit
     private $database;
     private $records;
 
-    function __construct($database)
+    function __construct(NellielPDO $database)
     {
         $this->database = $database;
         $this->records = array();

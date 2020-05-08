@@ -18,8 +18,8 @@ class RenderCoreDOM extends RenderCore
         $this->template_loaders['file'] = $this->template_instance;
         $this->template_loaders['string'] = $this->template_instance;
         libxml_use_internal_errors(true);
-        $this->output_filter = new OutputFilter();
-        $this->file_handler = new FileHandler();
+        $this->output_filter = new \Nelliel\OutputFilter();
+        $this->file_handler = new \Nelliel\Utility\FileHandler();
     }
 
     public function newDOMDocument()

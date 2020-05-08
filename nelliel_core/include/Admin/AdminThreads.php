@@ -102,7 +102,7 @@ class AdminThreads extends AdminHandler
         {
             $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
             $thread->remove();
-            $archive = new \Nelliel\ArchiveAndPrune($this->database, $this->domain, new \Nelliel\FileHandler());
+            $archive = new \Nelliel\ArchiveAndPrune($this->database, $this->domain, new \Nelliel\Utility\FileHandler());
             $archive->updateThreads();
         }
         else if ($content_id->isPost())

@@ -127,7 +127,7 @@ class ContentFile extends ContentHandler
 
     public function createDirectories()
     {
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->createDirectory(
                 $this->src_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, DIRECTORY_PERM);
         $file_handler->createDirectory(
@@ -175,7 +175,7 @@ class ContentFile extends ContentHandler
             $this->loadFromDatabase();
         }
 
-        $file_handler = new \Nelliel\FileHandler();
+        $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->eraserGun($this->src_path,
                 $this->content_id->thread_id . '/' . $this->content_id->post_id . '/' . $this->content_data['filename'] .
                 '.' . $this->content_data['extension']);

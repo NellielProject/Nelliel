@@ -2,12 +2,12 @@
 
 namespace Nelliel;
 
-use PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
+
+use PDO;
 
 class FileTypes
 {
@@ -17,9 +17,9 @@ class FileTypes
     private static $filetype_settings;
     private static $filetype_categories;
 
-    function __construct($database)
+    function __construct(NellielPDO $database)
     {
-        $this->cache_handler = new CacheHandler();
+        $this->cache_handler = new \Nelliel\Utility\CacheHandler();
         $this->database = $database;
     }
 

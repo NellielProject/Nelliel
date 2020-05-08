@@ -11,11 +11,9 @@ if (!defined('NELLIEL_VERSION'))
 
 class Regen
 {
-    private $database;
 
     function __construct()
     {
-        $this->database = nel_database();
     }
 
     public function threads(Domain $domain, bool $write, array $ids)
@@ -34,7 +32,7 @@ class Regen
     public function boardCache(Domain $domain)
     {
         $domain->regenCache();
-        $filetypes = new FileTypes($this->database);
+        $filetypes = new FileTypes($domain->database());
         $filetypes->generateSettingsCache($domain->id());
     }
 
@@ -59,8 +57,8 @@ class Regen
 
     public function boardList(Domain $domain)
     {
-        $board_json = new \Nelliel\API\JSON\JSONBoard($domain, new FileHandler());
-        $board_list_json = new \Nelliel\API\JSON\JSONBoardList($domain, new FileHandler());
+        $board_json = new \Nelliel\API\JSON\JSONBoard($domain, new \Nelliel\Utility\FileHandler());
+        $board_list_json = new \Nelliel\API\JSON\JSONBoardList($domain, new \Nelliel\Utility\FileHandler());
         $board_ids = $domain->database()->executeFetchAll('SELECT "board_id" FROM "' . BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
 
         foreach($board_ids as $id)
