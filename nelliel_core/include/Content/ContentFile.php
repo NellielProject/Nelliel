@@ -7,7 +7,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\ContentID;
 use Nelliel\Domain;
 use PDO;
 
@@ -18,7 +17,7 @@ class ContentFile extends ContentHandler
     protected $preview_path;
     protected $archived;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $db_load = false, bool $archived = false)
+    function __construct(ContentID $content_id, Domain $domain, bool $archived = false)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
@@ -37,11 +36,6 @@ class ContentFile extends ContentHandler
             $this->src_path = $this->domain->reference('src_path');
             $this->preview_path = $this->domain->reference('preview_path');
         }
-
-        if ($db_load)
-        {
-            $this->loadFromDatabase();
-        }
     }
 
     public function loadFromDatabase($temp_database = null)
@@ -49,7 +43,7 @@ class ContentFile extends ContentHandler
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
                 'SELECT * FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id, $this->content_id->order_id],
+        $result = $database->executePreparedFetch($prepared, [$this->content_id->postID(), $this->content_id->orderID()],
                 PDO::FETCH_ASSOC);
 
         if (empty($result))
@@ -63,7 +57,7 @@ class ContentFile extends ContentHandler
 
     public function writeToDatabase($temp_database = null)
     {
-        if (empty($this->content_data) || empty($this->content_id->order_id))
+        if (empty($this->content_data) || empty($this->content_id->orderID()))
         {
             return false;
         }
@@ -71,7 +65,7 @@ class ContentFile extends ContentHandler
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
                 'SELECT "entry" FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->content_id->post_id, $this->content_id->order_id],
+        $result = $database->executePreparedFetch($prepared, [$this->content_id->postID(), $this->content_id->orderID()],
                 PDO::FETCH_COLUMN);
 
         if ($result)
@@ -86,7 +80,7 @@ class ContentFile extends ContentHandler
                     "preview_extension" = :preview_extension, "preview_width" = :preview_width, "preview_height" = :preview_height,
                     "filesize" = :filesize, "md5" = :md5, "sha1" = :sha1, "sha256" = :sha256, "sha512" = :sha512, "spoiler" = :spoiler, "exif" = :exif
                     WHERE "post_number" = :post_number');
-            $prepared->bindValue(':post_number', $this->content_id->post_id, PDO::PARAM_INT);
+            $prepared->bindValue(':post_number', $this->content_id->postID(), PDO::PARAM_INT);
         }
         else
         {
@@ -129,21 +123,24 @@ class ContentFile extends ContentHandler
     {
         $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->createDirectory(
-                $this->src_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, NEL_DIRECTORY_PERM);
+                $this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(), NEL_DIRECTORY_PERM);
         $file_handler->createDirectory(
-                $this->preview_path . $this->content_id->thread_id . '/' . $this->content_id->post_id, NEL_DIRECTORY_PERM);
+                $this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID(), NEL_DIRECTORY_PERM);
     }
 
     public function remove(bool $perm_override = false)
     {
-        if (!$perm_override && !$this->verifyModifyPerms())
+        if (!$perm_override)
         {
-            return false;
-        }
+            if (!$this->verifyModifyPerms())
+            {
+                return false;
+            }
 
-        if (!$perm_override && $this->domain->reference('locked'))
-        {
-            nel_derp(51, _gettext('Cannot remove file. Board is locked.'));
+            if ($this->domain->reference('locked'))
+            {
+                nel_derp(51, _gettext('Cannot remove file. Board is locked.'));
+            }
         }
 
         $this->removeFromDisk();
@@ -156,7 +153,7 @@ class ContentFile extends ContentHandler
 
     protected function removeFromDatabase($temp_database = null)
     {
-        if (empty($this->content_id->order_id))
+        if (empty($this->content_id->orderID()))
         {
             return false;
         }
@@ -164,7 +161,7 @@ class ContentFile extends ContentHandler
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
                 'DELETE FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
-        $database->executePrepared($prepared, [$this->content_id->post_id, $this->content_id->order_id]);
+        $database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
         return true;
     }
 
@@ -177,10 +174,10 @@ class ContentFile extends ContentHandler
 
         $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->eraserGun($this->src_path,
-                $this->content_id->thread_id . '/' . $this->content_id->post_id . '/' . $this->content_data['filename'] .
+                $this->content_id->threadID() . '/' . $this->content_id->postID() . '/' . $this->content_data['filename'] .
                 '.' . $this->content_data['extension']);
         $file_handler->eraserGun($this->preview_path,
-                $this->content_id->thread_id . '/' . $this->content_id->post_id . '/' .
+                $this->content_id->threadID() . '/' . $this->content_id->postID() . '/' .
                 $this->content_data['preview_name'] . '.' . $this->content_data['preview_extension']);
     }
 

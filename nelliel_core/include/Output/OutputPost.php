@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\ContentID;
+use Nelliel\Content\ContentID;
 use Nelliel\Domain;
 use PDO;
 
@@ -39,17 +39,17 @@ class OutputPost extends OutputCore
         $response = $post_data['op'] != 1;
         $thread_content_id = new ContentID(ContentID::createIDString($post_data['parent_thread']));
         $post_content_id = new ContentID(
-                ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
+                ContentID::createIDString($post_data['parent_thread']), intval($post_data['post_number']));
         $web_paths['base_domain'] = NEL_BASE_DOMAIN . NEL_BASE_WEB_PATH;
         $web_paths['board'] = '//' . $web_paths['base_domain'] .
                 rawurlencode($this->domain->reference('board_directory')) . '/';
         $web_paths['pages'] = $web_paths['board'] . rawurlencode($this->domain->reference('page_dir')) . '/';
-        $web_paths['thread_page'] = $web_paths['pages'] . $thread_content_id->thread_id . '/thread-' .
-                $thread_content_id->thread_id . '.html';
+        $web_paths['thread_page'] = $web_paths['pages'] . $thread_content_id->threadID() . '/thread-' .
+                $thread_content_id->threadID() . '.html';
         $web_paths['thread_src'] = $web_paths['board'] . rawurlencode($this->domain->reference('src_dir')) . '/' .
-                $thread_content_id->thread_id . '/';
+                $thread_content_id->threadID() . '/';
         $web_paths['thread_preview'] = $web_paths['board'] . rawurlencode($this->domain->reference('preview_dir')) . '/' .
-                $thread_content_id->thread_id . '/';
+                $thread_content_id->threadID() . '/';
         $this->render_data['post_corral_id'] = 'post-id-' . $post_content_id->getIDString();
         $this->render_data['post_container_id'] = 'post-container-' . $post_content_id->getIDString();
         $this->render_data['header_id'] = 'header-' . $post_content_id->getIDString();
@@ -73,7 +73,7 @@ class OutputPost extends OutputCore
             $this->render_data['comments_class'] = 'op-post-comments';
         }
 
-        $this->render_data['post_anchor_id'] = 't' . $post_content_id->thread_id . 'p' . $post_content_id->post_id;
+        $this->render_data['post_anchor_id'] = 't' . $post_content_id->threadID() . 'p' . $post_content_id->postID();
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
                 $post_content_id, $web_paths, $gen_data, $in_thread_number, $ignore_session);
 
@@ -145,12 +145,12 @@ class OutputPost extends OutputCore
         $base_domain_path = NEL_BASE_DOMAIN . NEL_BASE_WEB_PATH;
         $board_web_path = '//' . $base_domain_path . rawurlencode($this->domain->reference('board_directory')) . '/';
         $pages_web_path = $board_web_path . rawurlencode($this->domain->reference('page_dir')) . '/';
-        $thread_page_web_path = $pages_web_path . $thread_content_id->thread_id . '/thread-' .
-                $thread_content_id->thread_id . '.html';
+        $thread_page_web_path = $pages_web_path . $thread_content_id->threadID() . '/thread-' .
+                $thread_content_id->threadID() . '.html';
         $src_web_path = $board_web_path . rawurlencode($this->domain->reference('src_dir')) . '/';
-        $thread_src_web_path = $src_web_path . $thread_content_id->thread_id . '/';
+        $thread_src_web_path = $src_web_path . $thread_content_id->threadID() . '/';
         $preview_web_path = $board_web_path . rawurlencode($this->domain->reference('preview_dir')) . '/';
-        $thread_preview_web_path = $preview_web_path . $thread_content_id->thread_id . '/';
+        $thread_preview_web_path = $preview_web_path . $thread_content_id->threadID() . '/';
 
         if ($session->inModmode($this->domain) && !$ignore_session)
         {
@@ -215,7 +215,7 @@ class OutputPost extends OutputCore
             {
                 $thread_headers['render'] = '-render';
                 $thread_headers['reply_to_url'] = NEL_MAIN_SCRIPT . '?module=render&action=view-thread&content-id=' .
-                        $thread_content_id->getIDString() . '&thread=' . $thread_content_id->thread_id . '&board_id=' .
+                        $thread_content_id->getIDString() . '&thread=' . $thread_content_id->threadID() . '&board_id=' .
                         $this->domain->id() . '&modmode=true';
             }
 
@@ -279,15 +279,15 @@ class OutputPost extends OutputCore
         $post_headers['capcode'] = $capcode;
         $post_headers['post_time'] = date($this->domain->setting('date_format'), $post_data['post_time']);
         $post_headers['post_number'] = $post_data['post_number'];
-        $post_headers['post_number_url'] = $thread_page_web_path . '#t' . $post_content_id->thread_id . 'p' .
-                $post_content_id->post_id;
+        $post_headers['post_number_url'] = $thread_page_web_path . '#t' . $post_content_id->threadID() . 'p' .
+                $post_content_id->postID();
 
         if ($this->domain->setting('display_post_backlinks'))
         {
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "target_board" = ? AND "target_post" = ?');
             $cite_list = $this->database->executePreparedFetchAll($prepared,
-                    [$this->domain->id(), $post_content_id->post_id], PDO::FETCH_ASSOC);
+                    [$this->domain->id(), $post_content_id->postID()], PDO::FETCH_ASSOC);
 
             foreach ($cite_list as $cite)
             {
@@ -347,8 +347,8 @@ class OutputPost extends OutputCore
 
                 if ($gen_data['index_rendering'] && $line_count == $this->domain->setting('comment_display_lines'))
                 {
-                    $comment_data['post_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->thread_id . 'p' .
-                            $post_content_id->post_id;
+                    $comment_data['post_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
+                            $post_content_id->postID();
                     break;
                 }
 

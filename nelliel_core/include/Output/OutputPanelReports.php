@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Content\ContentID;
 use Nelliel\Domain;
 use PDO;
 
@@ -68,7 +69,7 @@ class OutputPanelReports extends OutputCore
             $report_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $current_domain = $domains[$report_info['board_id']];
-            $content_id = new \Nelliel\ContentID($report_info['content_id']);
+            $content_id = new ContentID($report_info['content_id']);
             $base_domain = NEL_BASE_DOMAIN . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
             $board_web_path = '//' . $base_domain . '/' . rawurlencode($current_domain->reference('board_directory')) .
                     '/';
@@ -77,7 +78,7 @@ class OutputPanelReports extends OutputCore
             if ($content_id->isThread())
             {
                 $content_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
+                        ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->threadID(),
                             'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                             'modmode' => 'true']);
                 $report_data['is_content'] = false;
@@ -85,10 +86,10 @@ class OutputPanelReports extends OutputCore
             else if ($content_id->isPost())
             {
                 $content_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
+                        ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->threadID(),
                             'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                             'modmode' => 'true']);
-                $content_url .= '#t' . $content_id->thread_id . 'p' . $content_id->post_id;
+                $content_url .= '#t' . $content_id->threadID() . 'p' . $content_id->postID();
                 $report_data['is_content'] = false;
             }
             else if ($content_id->isContent())
@@ -98,16 +99,16 @@ class OutputPanelReports extends OutputCore
                         'SELECT "filename" FROM "' . $current_domain->reference('content_table') .
                         '" WHERE "parent_thread" = ? AND post_ref = ? AND "content_order" = ?');
                 $filename = $this->database->executePreparedFetch($prepared,
-                        [$content_id->thread_id, $content_id->post_id, $content_id->order_id], PDO::FETCH_COLUMN);
+                        [$content_id->threadID(), $content_id->postID(), $content_id->orderID()], PDO::FETCH_COLUMN);
                 $src_web_path = $board_web_path . rawurlencode($current_domain->reference('src_dir')) . '/';
-                $report_data['file_url'] = $src_web_path . $content_id->thread_id . '/' . $content_id->post_id . '/' .
+                $report_data['file_url'] = $src_web_path . $content_id->threadID() . '/' . $content_id->postID() . '/' .
                         $filename;
 
                 $content_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->thread_id,
+                        ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->threadID(),
                             'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                             'modmode' => 'true']);
-                $content_url .= '#t' . $content_id->thread_id . 'p' . $content_id->post_id;
+                $content_url .= '#t' . $content_id->threadID() . 'p' . $content_id->postID();
             }
 
             $report_data['report_id'] = $report_info['report_id'];

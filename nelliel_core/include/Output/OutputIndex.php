@@ -8,6 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domain;
+use Nelliel\Content\ContentID;
 use PDO;
 
 class OutputIndex extends OutputCore
@@ -102,7 +103,7 @@ class OutputIndex extends OutputCore
 
             $output_post = new OutputPost($this->domain);
             $json_thread = new \Nelliel\API\JSON\JSONThread($this->domain, $this->file_handler);
-            $thread_content_id = \Nelliel\ContentID::createIDString($thread_data['thread_id']);
+            $thread_content_id = ContentID::createIDString(intval($thread_data['thread_id']));
             $thread_input = array();
             $thread_input['thread_id'] = $thread_content_id;
             $thread_input['thread_expand_id'] = 'thread-expand-' . $thread_content_id;

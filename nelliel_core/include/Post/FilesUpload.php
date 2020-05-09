@@ -27,7 +27,7 @@ class FilesUpload
 
     public function processFiles($post)
     {
-        $response_to = $post->content_data['response_to'];
+        $response_to = $post->data('response_to');
         $data_handler = new PostData($this->domain, $this->authorization);
         $file_handler = new \Nelliel\Utility\FileHandler();
         $error_data = ['delete_files' => true, 'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
@@ -70,53 +70,49 @@ class FilesUpload
                 continue;
             }
 
-            $file = new \Nelliel\Content\ContentFile(new \Nelliel\ContentID(), $this->domain);
+            $file = new \Nelliel\Content\ContentFile(new \Nelliel\Content\ContentID(), $this->domain);
             $new_file = array();
-            $file->content_data['location'] = $file_data['tmp_name'];
-            $file->content_data['name'] = $file_data['name'];
+            $file->changeData('location', $file_data['tmp_name']);
+            $file->changeData('name', $file_data['name']);
             $file_data['location'] = $file_data['tmp_name'];
             $this->checkForErrors($file_data);
             $this->doesFileExist($response_to, $file);
             $this->checkFiletype($file);
 
-            $file->content_data['display_width'] = null;
-            $file->content_data['display_height'] = null;
-
-            if ($file->content_data['type'] === 'graphics' || $file->content_data['format'] === 'swf')
+            if ($file->data('type') === 'graphics' || $file->data('format') === 'swf')
             {
-                $dim = getimagesize($file->content_data['location']);
-                $file->content_data['display_width'] = $dim[0];
-                $file->content_data['display_height'] = $dim[1];
+                $dim = getimagesize($file->data('location'));
+                $file->changeData('display_width', $dim[0]);
+                $file->changeData('display_height', $dim[1]);
             }
 
             $this->getPathInfo($file);
-            $file->content_data['name'] = $file_handler->filterFilename($file_data['name']);
+            $file->changeData('name', $file_handler->filterFilename($file_data['name']));
             $spoiler = $_POST['form_spoiler'];
-            $file->content_data['filesize'] = $file_data['size'];
+            $file->changeData('filesize', $file_data['size']);
 
             if (isset($spoiler) && $this->domain->setting('enable_spoilers'))
             {
-                $file->content_data['spoiler'] = $data_handler->checkEntry($spoiler, 'integer');
+                $file->changeData('spoiler', $data_handler->checkEntry($spoiler, 'integer'));
             }
 
-            if (strlen($file->content_data['fullname'] >= 255))
+            if (strlen($file->data('fullname') >= 255))
             {
-                $file->content_data['filename'] = substr($file->content_data['filename'], 0, 254);
+                $file->changeData('filename', substr($file->data('filename'), 0, 254));
             }
 
             foreach ($filenames as $filename)
             {
-                if (strcasecmp($filename, $file->content_data['fullname']) === 0)
+                if (strcasecmp($filename, $file->data('fullname')) === 0)
                 {
-                    if (strlen($file->content_data['fullname']) >= 255)
+                    if (strlen($file->data('fullname')) >= 255)
                     {
-                        $overage = strlen($file->content_data['fullname']) - 250;
-                        $file->content_data['filename'] = substr($file->content_data['filename'], 0, $overage);
+                        $overage = strlen($file->data('fullname')) - 250;
+                        $file->changeData('filename', substr($file->data('filename'), 0, $overage));
                     }
 
-                    $file->content_data['filename'] = $file->content_data['filename'] . '_' . $file_duplicate;
-                    $file->content_data['fullname'] = $file->content_data['filename'] . '.' .
-                            $file->content_data['extension'];
+                    $file->changeData('filename', $file->data('filename') . '_' . $file_duplicate);
+                    $file->changeData('fullname', $file->data('filename') . '.' . $file->data('extension'));
                     ++ $file_duplicate;
                 }
             }
@@ -128,33 +124,27 @@ class FilesUpload
                     break;
 
                 case 'timestamp':
-                    $file->content_data['filename'] = $post->content_data['post_time'] .
-                            $post->content_data['post_time_milli'];
-                    $file->content_data['fullname'] = $file->content_data['filename'] . '.' .
-                            $file->content_data['extension'];
+                    $file->changeData('filename', $post->data('post_time') . $post->data('post_time_milli'));
+                    $file->changeData('fullname', $file->data('filename') . '.' . $file->data('extension'));
                     break;
 
                 case 'sha1':
-                    $file->content_data['filename'] = bin2hex($file->content_data['sha1']);
-                    $file->content_data['fullname'] = bin2hex($file->content_data['sha1']) . '.' .
-                            $file->content_data['extension'];
+                    $file->changeData('filename', bin2hex($file->data('sha1')));
+                    $file->changeData('fullname', bin2hex($file->data('sha1')) . '.' . $file->data('extension'));
                     break;
 
                 case 'md5':
-                    $file->content_data['filename'] = bin2hex($file->content_data['md5']);
-                    $file->content_data['fullname'] = bin2hex($file->content_data['md5']) . '.' .
-                            $file->content_data['extension'];
+                    $file->changeData('filename', bin2hex($file->data('md5')));
+                    $file->changeData('fullname', bin2hex($file->data('md5')) . '.' . $file->data('extension'));
                     break;
 
                 default:
-                    $file->content_data['filename'] = $post->content_data['post_time'] .
-                            $post->content_data['post_time_milli'];
-                    $file->content_data['fullname'] = $file->content_data['filename'] . '.' .
-                            $file->content_data['extension'];
+                    $file->changeData('filename', $post->data('post_time') . $post->data('post_time_milli'));
+                    $file->changeData('fullname', $file->data('filename') . '.' . $file->data('extension'));
                     break;
             }
 
-            array_push($filenames, $file->content_data['fullname']);
+            array_push($filenames, $file->data('fullname'));
             array_push($this->processed_files, $file);
 
             if ($file_count == $this->domain->setting('max_post_files'))
@@ -170,10 +160,10 @@ class FilesUpload
 
     public function getPathInfo($file)
     {
-        $file_info = new \SplFileInfo($file->content_data['name']);
-        $file->content_data['extension'] = $file_info->getExtension();
-        $file->content_data['filename'] = $file_info->getBasename('.' . $file->content_data['extension']);
-        $file->content_data['fullname'] = $file_info->getFilename();
+        $file_info = new \SplFileInfo($file->data('name'));
+        $file->changeData('extension', $file_info->getExtension());
+        $file->changeData('filename', $file_info->getBasename('.' . $file->data('extension')));
+        $file->changeData('fullname', $file_info->getFilename());
     }
 
     public function checkForErrors($file)
@@ -223,32 +213,28 @@ class FilesUpload
     {
         $database = $this->domain->database();
         $snacks = new \Nelliel\Snacks($database, new \Nelliel\BanHammer($database));
-        $error_data = ['delete_files' => true, 'bad-filename' => $file->content_data['name'],
-            'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
+        $error_data = ['delete_files' => true, 'bad-filename' => $file->data('name'), 'files' => $this->uploaded_files,
+            'board_id' => $this->domain->id()];
         $is_banned = false;
-        $file->content_data['md5'] = hash_file('md5', $file->content_data['location'], true);
-        $is_banned = $snacks->fileHashIsBanned($file->content_data['md5'], 'md5');
+        $file->changeData('md5', hash_file('md5', $file->data('location'), true));
+        $is_banned = $snacks->fileHashIsBanned($file->data('md5'), 'md5');
 
         if (!$is_banned)
         {
-            $file->content_data['sha1'] = hash_file('sha1', $file->content_data['location'], true);
-            $is_banned = $snacks->fileHashIsBanned($file->content_data['sha1'], 'sha1');
+            $file->changeData('sha1', hash_file('sha1', $file->data('location'), true));
+            $is_banned = $snacks->fileHashIsBanned($file->data('sha1'), 'sha1');
         }
-
-        $file->content_data['sha256'] = null;
 
         if (!$is_banned && $this->domain->setting('file_sha256'))
         {
-            $file->content_data['sha256'] = hash_file('sha256', $file->content_data['location'], true);
-            $is_banned = $snacks->fileHashIsBanned($file->content_data['sha256'], 'sha256');
+            $file->changeData('sha256', hash_file('sha256', $file->data('location'), true));
+            $is_banned = $snacks->fileHashIsBanned($file->data('sha256'), 'sha256');
         }
-
-        $file->content_data['sha512'] = null;
 
         if (!$is_banned && $this->domain->setting('file_sha512'))
         {
-            $file->content_data['sha512'] = hash_file('sha512', $file->content_data['location'], true);
-            $is_banned = $snacks->fileHashIsBanned($file->content_data['sha512'], 'sha512');
+            $file->changeData('sha512', hash_file('sha512', $file->data('location'), true));
+            $is_banned = $snacks->fileHashIsBanned($file->data('sha512'), 'sha512');
         }
 
         if ($is_banned)
@@ -261,10 +247,10 @@ class FilesUpload
             $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
                     '" WHERE "parent_thread" = "post_ref" AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $database->prepare($query);
-            $prepared->bindValue(1, $file->content_data['md5'], PDO::PARAM_LOB);
-            $prepared->bindValue(2, $file->content_data['sha1'], PDO::PARAM_LOB);
-            $prepared->bindValue(3, $file->content_data['sha256'], PDO::PARAM_LOB);
-            $prepared->bindValue(4, $file->content_data['sha512'], PDO::PARAM_LOB);
+            $prepared->bindValue(1, $file->data('md5'), PDO::PARAM_LOB);
+            $prepared->bindValue(2, $file->data('sha1'), PDO::PARAM_LOB);
+            $prepared->bindValue(3, $file->data('sha256'), PDO::PARAM_LOB);
+            $prepared->bindValue(4, $file->data('sha512'), PDO::PARAM_LOB);
         }
         else if ($response_to > 0 && $this->domain->setting('only_thread_duplicates'))
         {
@@ -272,20 +258,20 @@ class FilesUpload
                     '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
-            $prepared->bindValue(2, $file->content_data['md5'], PDO::PARAM_LOB);
-            $prepared->bindValue(3, $file->content_data['sha1'], PDO::PARAM_LOB);
-            $prepared->bindValue(4, $file->content_data['sha256'], PDO::PARAM_LOB);
-            $prepared->bindValue(5, $file->content_data['sha512'], PDO::PARAM_LOB);
+            $prepared->bindValue(2, $file->data('md5'), PDO::PARAM_LOB);
+            $prepared->bindValue(3, $file->data('sha1'), PDO::PARAM_LOB);
+            $prepared->bindValue(4, $file->data('sha256'), PDO::PARAM_LOB);
+            $prepared->bindValue(5, $file->data('sha512'), PDO::PARAM_LOB);
         }
         else
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
                     '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?';
             $prepared = $database->prepare($query);
-            $prepared->bindValue(1, $file->content_data['md5'], PDO::PARAM_LOB);
-            $prepared->bindValue(2, $file->content_data['sha1'], PDO::PARAM_LOB);
-            $prepared->bindValue(3, $file->content_data['sha256'], PDO::PARAM_LOB);
-            $prepared->bindValue(4, $file->content_data['sha512'], PDO::PARAM_LOB);
+            $prepared->bindValue(1, $file->data('md5'), PDO::PARAM_LOB);
+            $prepared->bindValue(2, $file->data('sha1'), PDO::PARAM_LOB);
+            $prepared->bindValue(3, $file->data('sha256'), PDO::PARAM_LOB);
+            $prepared->bindValue(4, $file->data('sha512'), PDO::PARAM_LOB);
         }
 
         $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
@@ -299,10 +285,10 @@ class FilesUpload
     public function checkFiletype($file)
     {
         $filetypes = new \Nelliel\FileTypes($this->domain->database());
-        $error_data = ['delete_files' => true, 'bad-filename' => $file->content_data['name'],
-            'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
+        $error_data = ['delete_files' => true, 'bad-filename' => $file->data('name'), 'files' => $this->uploaded_files,
+            'board_id' => $this->domain->id()];
         $this->getPathInfo($file);
-        $test_ext = utf8_strtolower($file->content_data['extension']);
+        $test_ext = utf8_strtolower($file->data('extension'));
 
         if (!$filetypes->isValidExtension($test_ext))
         {
@@ -316,13 +302,13 @@ class FilesUpload
             nel_derp(19, _gettext('Filetype is not allowed.'), $error_data);
         }
 
-        if (!$filetypes->verifyFile($test_ext, $file->content_data['location'], 65535, 65535))
+        if (!$filetypes->verifyFile($test_ext, $file->data('location'), 65535, 65535))
         {
             nel_derp(20, _gettext('Incorrect file type detected (does not match extension). Possible Hax.'), $error_data);
         }
 
-        $file->content_data['type'] = $type_data['type'];
-        $file->content_data['format'] = $type_data['format'];
-        $file->content_data['mime'] = $type_data['mime'];
+        $file->changeData('type', $type_data['type']);
+        $file->changeData('format', $type_data['format']);
+        $file->changeData('mime', $type_data['mime']);
     }
 }

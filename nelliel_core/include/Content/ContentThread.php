@@ -7,7 +7,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\ContentID;
 use Nelliel\Domain;
 use PDO;
 
@@ -21,7 +20,7 @@ class ContentThread extends ContentHandler
     protected $page_path;
     protected $archived;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $db_load = false, bool $archived = false)
+    function __construct(ContentID $content_id, Domain $domain, bool $archived = false)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
@@ -46,18 +45,13 @@ class ContentThread extends ContentHandler
             $this->preview_path = $this->domain->reference('preview_path');
             $this->page_path = $this->domain->reference('page_path');
         }
-
-        if ($db_load)
-        {
-            $this->loadFromDatabase();
-        }
     }
 
     public function loadFromDatabase($temp_database = null)
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('SELECT * FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->content_id->thread_id], PDO::FETCH_ASSOC);
+        $result = $database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_ASSOC);
 
         if (empty($result))
         {
@@ -70,14 +64,14 @@ class ContentThread extends ContentHandler
 
     public function writeToDatabase($temp_database = null)
     {
-        if (empty($this->content_data) || empty($this->content_id->thread_id))
+        if (empty($this->content_data) || empty($this->content_id->threadID()))
         {
             return false;
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('SELECT "thread_id" FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->content_id->thread_id], PDO::FETCH_COLUMN);
+        $result = $database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
 
         if ($result)
         {
@@ -100,7 +94,7 @@ class ContentThread extends ContentHandler
                     :last_update, :last_update_milli, :post_count, :thread_sage, :sticky, :archive_status, :locked)');
         }
 
-        $prepared->bindValue(':thread_id', $this->content_id->thread_id, PDO::PARAM_INT);
+        $prepared->bindValue(':thread_id', $this->content_id->threadID(), PDO::PARAM_INT);
         $prepared->bindValue(':first_post', $this->contentDataOrDefault('first_post', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_post', $this->contentDataOrDefault('last_post', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_bump_time', $this->contentDataOrDefault('last_bump_time', 0), PDO::PARAM_INT);
@@ -121,56 +115,60 @@ class ContentThread extends ContentHandler
     public function createDirectories()
     {
         $file_handler = new \Nelliel\Utility\FileHandler();
-        $file_handler->createDirectory($this->src_path . $this->content_id->thread_id, NEL_DIRECTORY_PERM);
-        $file_handler->createDirectory($this->preview_path . $this->content_id->thread_id, NEL_DIRECTORY_PERM);
-        $file_handler->createDirectory($this->page_path . $this->content_id->thread_id, NEL_DIRECTORY_PERM);
+        $file_handler->createDirectory($this->src_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM);
+        $file_handler->createDirectory($this->preview_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM);
+        $file_handler->createDirectory($this->page_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM);
     }
 
     public function remove(bool $perm_override = false)
     {
-        if (!$perm_override && !$this->verifyModifyPerms())
+        if (!$perm_override)
         {
-            return false;
-        }
+            if (!$this->verifyModifyPerms())
+            {
+                return false;
+            }
 
-        if (!$perm_override && $this->domain->reference('locked'))
-        {
-            nel_derp(53, _gettext('Cannot remove thread. Board is locked.'));
+            if ($this->domain->reference('locked'))
+            {
+                nel_derp(53, _gettext('Cannot remove thread. Board is locked.'));
+            }
         }
 
         $this->removeFromDatabase();
         $this->removeFromDisk();
+        return true;
     }
 
     protected function removeFromDatabase($temp_database = null)
     {
-        if (empty($this->content_id->thread_id))
+        if (empty($this->content_id->threadID()))
         {
             return false;
         }
 
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('DELETE FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
-        $database->executePrepared($prepared, [$this->content_id->thread_id]);
+        $database->executePrepared($prepared, [$this->content_id->threadID()]);
         $prepared = $database->prepare(
                 'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_thread" = ? OR "target_thread" = ?');
-        $database->executePrepared($prepared, [$this->content_id->thread_id, $this->content_id->thread_id]);
+        $database->executePrepared($prepared, [$this->content_id->threadID(), $this->content_id->threadID()]);
         return true;
     }
 
     protected function removeFromDisk()
     {
         $file_handler = new \Nelliel\Utility\FileHandler();
-        $file_handler->eraserGun($this->src_path . $this->content_id->thread_id);
-        $file_handler->eraserGun($this->preview_path . $this->content_id->thread_id);
-        $file_handler->eraserGun($this->page_path . $this->content_id->thread_id);
+        $file_handler->eraserGun($this->src_path . $this->content_id->threadID());
+        $file_handler->eraserGun($this->preview_path . $this->content_id->threadID());
+        $file_handler->eraserGun($this->page_path . $this->content_id->threadID());
     }
 
     public function postCount()
     {
         $prepared = $this->database->prepare(
                 'SELECT COUNT("post_number") FROM "' . $this->posts_table . '" WHERE "parent_thread" = ?');
-        $post_count = $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id],
+        $post_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_COLUMN);
         return $post_count;
     }
@@ -181,53 +179,73 @@ class ContentThread extends ContentHandler
 
         $prepared = $this->database->prepare(
                 'UPDATE "' . $this->threads_table . '" SET "post_count" = ? WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, [$post_count, $this->content_id->thread_id]);
+        $this->database->executePrepared($prepared, [$post_count, $this->content_id->threadID()]);
 
         $prepared = $this->database->prepare(
                 'SELECT COUNT("entry") FROM "' . $this->content_table . '" WHERE "parent_thread" = ?');
-        $content_count = $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id],
+        $content_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_COLUMN);
 
         $prepared = $this->database->prepare(
                 'UPDATE "' . $this->threads_table . '" SET "content_count" = ? WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, [$content_count, $this->content_id->thread_id]);
+        $this->database->executePrepared($prepared, [$content_count, $this->content_id->threadID()]);
 
         $first_post = $this->firstPost();
         $last_post = $this->lastPost();
         $prepared = $this->database->prepare(
                 'UPDATE "' . $this->threads_table . '" SET "first_post" = ?, "last_post" = ? WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, [$first_post, $last_post, $this->content_id->thread_id]);
+        $this->database->executePrepared($prepared, [$first_post, $last_post, $this->content_id->threadID()]);
     }
 
     public function verifyModifyPerms()
     {
         $post = new ContentPost($this->content_id, $this->domain, $this->archived);
-        $post->content_id->post_id = $this->firstPost();
+        $post->content_id->changePostID($this->firstPost());
         return $post->verifyModifyPerms();
     }
 
     public function sticky()
     {
-        if (!$this->dataIsLoaded(true))
+        if (!$this->dataLoaded(true))
         {
             return false;
         }
 
-        $this->content_data['sticky'] = ($this->content_data['sticky'] == 1) ? 0 : 1;
-        $this->writeToDatabase();
-        return true;
+        $this->content_data['sticky'] = 1;
+        return $this->writeToDatabase();
+    }
+
+    public function unsticky()
+    {
+        if (!$this->dataLoaded(true))
+        {
+            return false;
+        }
+
+        $this->content_data['sticky'] = 0;
+        return $this->writeToDatabase();
     }
 
     public function lock()
     {
-        if (!$this->dataIsLoaded(true))
+        if (!$this->dataLoaded(true))
         {
             return false;
         }
 
-        $this->content_data['locked'] = ($this->content_data['locked'] == 1) ? 0 : 1;
-        $this->writeToDatabase();
-        return true;
+        $this->content_data['locked'] = 1;
+        return $this->writeToDatabase();
+    }
+
+    public function unlock()
+    {
+        if (!$this->dataLoaded(true))
+        {
+            return false;
+        }
+
+        $this->content_data['locked'] = 0;
+        return $this->writeToDatabase();
     }
 
     public function lastPost(bool $no_sage = false)
@@ -245,7 +263,7 @@ class ContentThread extends ContentHandler
                     '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC');
         }
 
-        $last_post = $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id], PDO::FETCH_COLUMN);
+        $last_post = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
         return intval($last_post);
     }
 
@@ -254,7 +272,7 @@ class ContentThread extends ContentHandler
         $prepared = $this->database->prepare(
                 'SELECT "post_number" FROM "' . $this->posts_table .
                 '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
-        $first_post = $this->database->executePreparedFetch($prepared, [$this->content_id->thread_id],
+        $first_post = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_COLUMN);
         return intval($first_post);
     }

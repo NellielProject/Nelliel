@@ -9,11 +9,10 @@ if (!defined('NELLIEL_VERSION'))
 
 abstract class ContentHandler
 {
-    public $content_id;
-    public $database;
-    public $board_id;
-    public $domain;
-    public $content_data = array();
+    protected $content_id;
+    protected $database;
+    protected $domain;
+    protected $content_data = array();
 
     public abstract function loadFromDatabase($temp_database = null);
 
@@ -39,7 +38,7 @@ abstract class ContentHandler
         return $default;
     }
 
-    protected function dataIsLoaded(bool $load = false)
+    protected function dataLoaded(bool $load = false)
     {
         if(empty($this->content_data))
         {
@@ -54,5 +53,22 @@ abstract class ContentHandler
         }
 
         return true;
+    }
+
+    public function contentID()
+    {
+        return $this->content_id;
+    }
+
+    public function data(string $key)
+    {
+        return $this->content_data[$key] ?? null;
+    }
+
+    public function changeData(string $key, $new_data)
+    {
+        $old_data = $this->data($key);
+        $this->content_data[$key] = $new_data;
+        return $old_data;
     }
 }

@@ -56,7 +56,7 @@ class OutputCatalog extends OutputCore
                 continue;
             }
 
-            $post_content_id = new \Nelliel\ContentId('cid_' . $thread['thread_id'] . '_' . $first_post['post_number']);
+            $post_content_id = new \Nelliel\Content\ContentId('cid_' . $thread['thread_id'] . '_' . $first_post['post_number']);
             $thread_page_web_path = $pages_web_path . $thread['thread_id'] . '/thread-' . $thread['thread_id'] . '.html';
             $thread_data['open_url'] = $thread_page_web_path;
 

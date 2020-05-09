@@ -28,39 +28,33 @@ class PostData
             die("no new post data?");
         }
 
-        $post->content_data['parent_thread'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer');
+        $post->changeData('parent_thread', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
+        $post->contentID()->changeThreadID($post->data('parent_thread'));
+        $post->changeData('reply_to', $post->data('parent_thread')); // This may enable nested posts in the future
+        $post->changeData('ip_address', inet_pton($_SERVER['REMOTE_ADDR']));
+        $post->changeData('poster_name', $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string'));
+        $post->changeData('email', $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string'));
+        $post->changeData('subject', $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string'));
+        $post->changeData('comment', $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], 'string'));
+        $post->changeData('fgsfds', $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], 'string'));
+        $post->changeData('post_password', $this->checkEntry($_POST['new_post']['post_info']['sekrit'], 'string'));
+        $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
+        $post->changeData('post_as_staff', (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false);
 
-        if($post->content_data['parent_thread'] != 0)
-        {
-            $post->content_id->thread_id = $post->content_data['parent_thread'];
-        }
-
-        $post->content_data['reply_to'] = $post->content_data['parent_thread']; // This may enable nested posts in the future
-        $post->content_data['ip_address'] = inet_pton($_SERVER['REMOTE_ADDR']);
-        $post->content_data['poster_name'] = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
-        $post->content_data['email'] = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string');
-        $post->content_data['subject'] = $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string');
-        $post->content_data['comment'] = $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], 'string');
-        $post->content_data['fgsfds'] = $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], 'string');
-        $post->content_data['post_password'] = $this->checkEntry($_POST['new_post']['post_info']['sekrit'], 'string');
-        $post->content_data['response_to'] = $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer');
-        $post->content_data['post_as_staff'] = (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false;
-        $post->content_data['mod_post_id'] = null;
-
-        if ($post->content_data['poster_name'] !== '')
+        if ($post->data('poster_name') !== '')
         {
             $this->tripcodes($post);
             $this->staffPost($post);
         }
         else
         {
-            $post->content_data['poster_name'] = _gettext('Anonymous');
+            $post->changeData('poster_name', _gettext('Anonymous'));
         }
 
         if ($this->domain->setting('force_anonymous'))
         {
-            $post->content_data['poster_name'] = _gettext('Anonymous');
-            $post->content_data['email'] = '';
+            $post->changeData('poster_name', _gettext('Anonymous'));
+            $post->changeData('email', '');
         }
 
         $post = nel_plugins()->processHook('nel-post-data-processed', [$this->domain], $post);
@@ -90,7 +84,7 @@ class PostData
 
     public function staffPost($post)
     {
-        if(!$post->content_data['post_as_staff'])
+        if(!$post->data('post_as_staff'))
         {
             return;
         }
@@ -113,19 +107,19 @@ class PostData
 
         if($role !== false)
         {
-            $post->content_data['poster_name'] = $user->auth_data['display_name'];
-            $post->content_data['mod_post_id'] = $role->id();
+            $post->changeData('poster_name', $user->auth_data['display_name']);
+            $post->changeData('mod_post_id', $role->id());
         }
     }
 
     public function tripcodes($post)
     {
         $site_domain = new \Nelliel\DomainSite($this->domain->database());
-        $post->content_data['poster_name'] = preg_replace("/#+$/", "", $post->content_data['poster_name']);
-        preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post->content_data['poster_name'], $name_pieces);
-        $post->content_data['poster_name'] = $name_pieces[1];
-        $post->content_data['tripcode'] = '';
-        $post->content_data['secure_tripcode'] = '';
+        $post->changeData('poster_name', preg_replace("/#+$/", "", $post->data('poster_name')));
+        preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post->data('poster_name'), $name_pieces);
+        $post->changeData('poster_name', $name_pieces[1]);
+        $post->changeData('tripcode', '');
+        $post->changeData('secure_tripcode', '');
 
 
         if ($name_pieces[2] !== '' && $this->domain->setting('allow_tripkeys'))
@@ -134,7 +128,7 @@ class PostData
             $salt = substr($trip . 'H.', 1, 2);
             $salt = preg_replace('#[^\.-z]#', '.', $salt);
             $salt = strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
-            $post->content_data['tripcode'] = substr(crypt($trip, $salt), -10);
+            $post->changeData('tripcode', substr(crypt($trip, $salt), -10));
         }
 
         if ($name_pieces[3] !== '' && $this->domain->setting('allow_tripkeys'))
@@ -142,7 +136,7 @@ class PostData
             $trip = $name_pieces[3];
             $trip = hash($site_domain->setting('secure_tripcode_algorithm'), $trip . NEL_TRIPCODE_PEPPER);
             $trip = base64_encode(pack("H*", $trip));
-            $post->content_data['secure_tripcode'] = substr($trip, 2, 10);
+            $post->changeData('secure_tripcode', substr($trip, 2, 10));
         }
 
         $post = nel_plugins()->processHook('nel-post-tripcodes', [$this->domain, $name_pieces], $post);

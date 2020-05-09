@@ -1,6 +1,6 @@
 <?php
 
-namespace Nelliel;
+namespace Nelliel\Content;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -9,18 +9,18 @@ if (!defined('NELLIEL_VERSION'))
 
 class ContentID
 {
-    public $thread_id = 0;
-    public $post_id = 0;
-    public $order_id = 0;
+    protected $thread_id = 0;
+    protected $post_id = 0;
+    protected $order_id = 0;
     protected $id_string = 'cid_0_0_0';
 
     function __construct(string $id_string = 'cid_0_0_0')
     {
         $this->id_string = $id_string;
         $id_array = self::parseIDString($id_string);
-        $this->thread_id = $id_array['thread'];
-        $this->post_id = $id_array['post'];
-        $this->order_id = $id_array['order'];
+        $this->thread_id = intval($id_array['thread']);
+        $this->post_id = intval($id_array['post']);
+        $this->order_id = intval($id_array['order']);
     }
 
     public static function isContentID(string $string)
@@ -61,5 +61,41 @@ class ContentID
     public function isContent()
     {
         return $this->order_id > 0;
+    }
+
+    public function threadID()
+    {
+        return $this->thread_id;
+    }
+
+    public function postID()
+    {
+        return $this->post_id;
+    }
+
+    public function orderID()
+    {
+        return $this->order_id;
+    }
+
+    public function changeThreadID($thread_id)
+    {
+        $old_id = $this->thread_id;
+        $this->thread_id = intval($thread_id);
+        return $old_id;
+    }
+
+    public function changePostID($post_id)
+    {
+        $old_id = $this->post_id;
+        $this->post_id = intval($post_id);
+        return $old_id;
+    }
+
+    public function changeOrderID($order_id)
+    {
+        $old_id = $this->order_id;
+        $this->order_id = intval($order_id);
+        return $old_id;
     }
 }

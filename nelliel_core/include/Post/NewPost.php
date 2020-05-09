@@ -50,19 +50,19 @@ class NewPost
         $file_handler = new \Nelliel\Utility\FileHandler();
         $file_upload = new FilesUpload($this->domain, $_FILES, $authorization);
         $data_handler = new PostData($this->domain, $authorization);
-        $post = new \Nelliel\Content\ContentPost(new \Nelliel\ContentID(), $this->domain);
+        $post = new \Nelliel\Content\ContentPost(new \Nelliel\Content\ContentID(), $this->domain);
         $data_handler->processPostData($post);
         $time = nel_get_microtime();
-        $post->content_data['post_time'] = $time['time'];
-        $post->content_data['post_time_milli'] = $time['milli'];
+        $post->changeData('post_time', $time['time']);
+        $post->changeData('post_time_milli', $time['milli']);
 
         // Check if post is ok
-        $this->isPostOk($post->content_data, $time['time']);
+        $this->isPostOk($post, $time['time']);
 
         // Process FGSFDS
-        $fgsfds = new \Nelliel\FGSFDS($post->content_data['fgsfds']);
+        $fgsfds = new \Nelliel\FGSFDS($post->data('fgsfds'));
 
-        if (!empty($post->content_data['fgsfds']))
+        if (!empty($post->data('fgsfds')))
         {
             if ($fgsfds->getCommand('sage') !== false)
             {
@@ -70,14 +70,14 @@ class NewPost
             }
         }
 
-        $post->content_data['sage'] = $fgsfds->getCommandData('sage', 'value');
+        $post->changeData('sage', $fgsfds->getCommandData('sage', 'value'));
         $files = $file_upload->processFiles($post);
         $spoon = !empty($files);
-        $post->content_data['content_count'] = count($files);
+        $post->changeData('content_count', count($files));
 
         if (!$spoon)
         {
-            if (!$post->content_data['comment'])
+            if (!$post->data('comment'))
             {
                 nel_derp(7, _gettext('Post contains no content or file. Dumbass.'), $error_data);
             }
@@ -87,23 +87,23 @@ class NewPost
                 nel_derp(8, _gettext('Image or file required when making a new post.'), $error_data);
             }
 
-            if ($this->domain->setting('require_content_start') && $post->content_data['response_to'] == 0)
+            if ($this->domain->setting('require_content_start') && $post->data('response_to') == 0)
             {
                 nel_derp(9, _gettext('Image or file required to make new thread.'), $error_data);
             }
         }
 
-        if (utf8_strlen($post->content_data['comment']) > $this->domain->setting('max_comment_length'))
+        if (utf8_strlen($post->data('comment')) > $this->domain->setting('max_comment_length'))
         {
             nel_derp(10, _gettext('Post is too long. Try looking up the word concise.'), $error_data);
         }
 
-        if (isset($post->content_data['post_password']))
+        if (!is_null($post->data('post_password')))
         {
-            $poster_password = $post->content_data['post_password'];
-            $post->content_data['post_password'] = nel_generate_salted_hash(
+            $poster_password = $post->data('post_password');
+            $post->changeData('post_password', nel_generate_salted_hash(
                     $site_domain->setting('post_password_algorithm'),
-                    NEL_POST_PASSWORD_PEPPER . $post->content_data['post_password']);
+                    NEL_POST_PASSWORD_PEPPER . $post->data('post_password')));
         }
         else
         {
@@ -119,48 +119,48 @@ class NewPost
         }
 
         if (empty($cookie_password) ||
-                (isset($post->content_data['post_password']) && $cookie_password !== $poster_password))
+                (!is_null($post->data('post_password')) && $cookie_password !== $poster_password))
         {
             setrawcookie('pwd-' . $this->domain->id(), $poster_password, time() + 9001 * 24 * 3600, '/');
         }
 
-        setrawcookie('name-' . $this->domain->id(), $post->content_data['poster_name'], time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
+        setrawcookie('name-' . $this->domain->id(), $post->data('poster_name'), time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
 
         // Go ahead and put post into database
-        $post->content_data['op'] = ($post->content_data['parent_thread'] == 0) ? 1 : 0;
-        $post->content_data['has_content'] = ($post->content_data['content_count'] > 0) ? 1 : 0;
+        $post->changeData('op', ($post->data('parent_thread') == 0) ? 1 : 0);
+        $post->changeData('has_content', ($post->data('content_count') > 0) ? 1 : 0);
         $post->reserveDatabaseRow($time['time'], $time['milli']);
-        $thread = new \Nelliel\Content\ContentThread(new \Nelliel\ContentID(), $this->domain);
+        $thread = new \Nelliel\Content\ContentThread(new \Nelliel\Content\ContentID(), $this->domain);
 
-        if ($post->content_data['response_to'] == 0)
+        if ($post->data('response_to') == 0)
         {
-            $thread->content_id->thread_id = $post->content_id->post_id;
-            $thread->content_data['first_post'] = $post->content_id->post_id;
-            $thread->content_data['last_post'] = $post->content_id->post_id;
-            $thread->content_data['last_bump_time'] = $time['time'];
-            $thread->content_data['last_bump_time_milli'] = $time['milli'];
-            $thread->content_data['content_count'] = $post->content_data['content_count'];
-            $thread->content_data['last_update'] = $time['time'];
-            $thread->content_data['last_update_milli'] = $time['milli'];
-            $thread->content_data['post_count'] = 1;
+            $thread->contentID()->changeThreadID($post->contentID()->postID());
+            $thread->changeData('first_post', $post->contentID()->postID());
+            $thread->changeData('last_post', $post->contentID()->postID());
+            $thread->changeData('last_bump_time', $time['time']);
+            $thread->changeData('last_bump_time_milli', $time['milli']);
+            $thread->changeData('content_count', $post->data('content_count'));
+            $thread->changeData('last_update', $time['time']);
+            $thread->changeData('last_update_milli', $time['milli']);
+            $thread->changeData('post_count', 1);
             $thread->writeToDatabase();
             $thread->createDirectories();
         }
         else
         {
-            $thread->content_id->thread_id = $post->content_data['parent_thread'];
+            $thread->contentID()->changeThreadID($post->data('parent_thread'));
             $thread->loadFromDatabase();
-            $thread->content_data['content_count'] = $thread->content_data['content_count'] +
-                    $post->content_data['content_count'];
-            $thread->content_data['last_update'] = $time['time'];
-            $thread->content_data['last_update_milli'] = $time['milli'];
-            $thread->content_data['post_count'] = $thread->content_data['post_count'] + 1;
+            $thread->changeData('content_count', $thread->data('content_count') +
+                    $post->data('content_count'));
+                    $thread->changeData('last_update', $time['time']);
+                    $thread->changeData('last_update_milli', $time['milli']);
+                    $thread->changeData('post_count', $thread->data('post_count') + 1);
 
-            if ($thread->content_data['post_count'] <= $this->domain->setting('max_bumps') &&
+            if ($thread->data('post_count') <= $this->domain->setting('max_bumps') &&
                     !$fgsfds->getCommandData('sage', 'value'))
             {
-                $thread->content_data['last_bump_time'] = $time['time'];
-                $thread->content_data['last_bump_time_milli'] = $time['milli'];
+                $thread->changeData('last_bump_time', $time['time']);
+                $thread->changeData('last_bump_time_milli', $time['milli']);
             }
 
             $thread->writeToDatabase();
@@ -168,9 +168,9 @@ class NewPost
 
         $post->writeToDatabase();
         $post->createDirectories();
-        $fgsfds->modifyCommandData('noko', 'topic', $thread->content_id->thread_id);
-        $src_path = $this->domain->reference('src_path') . $thread->content_id->thread_id . '/' .
-                $post->content_id->post_id . '/';
+        $fgsfds->modifyCommandData('noko', 'topic', $thread->contentID()->threadID());
+        $src_path = $this->domain->reference('src_path') . $thread->contentID()->threadID() . '/' .
+                $post->contentID()->postID() . '/';
 
         clearstatcache();
 
@@ -180,8 +180,8 @@ class NewPost
             // Make previews and do final file processing
             if ($this->domain->setting('use_preview'))
             {
-                $preview_path = $this->domain->reference('preview_path') . $thread->content_id->thread_id . '/' .
-                        $post->content_id->post_id . '/';
+                $preview_path = $this->domain->reference('preview_path') . $thread->contentID()->threadID() . '/' .
+                        $post->contentID()->postID() . '/';
                 $gen_previews = new Previews($this->domain);
                 $files = $gen_previews->generate($files, $preview_path);
             }
@@ -190,15 +190,15 @@ class NewPost
 
             foreach ($files as $file)
             {
-                $file->content_id->thread_id = $thread->content_id->thread_id;
-                $file->content_data['parent_thread'] = $thread->content_id->thread_id;
-                $file->content_id->post_id = $post->content_id->post_id;
-                $file->content_data['post_ref'] = $post->content_id->post_id;
-                $file->content_id->order_id = $order;
-                $file->content_data['content_order'] = $order;
-                $file_handler->moveFile($file->content_data['location'], $src_path . $file->content_data['fullname'],
+                $file->contentID()->changeThreadID($thread->contentID()->threadID());
+                $file->changeData('parent_thread', $thread->contentID()->threadID());
+                $file->contentID()->changePostID($post->contentID()->postID());
+                $file->changeData('post_ref', $post->contentID()->postID());
+                $file->contentID()->changeOrderID($order);
+                $file->changeData('content_order', $order);
+                $file_handler->moveFile($file->data('location'), $src_path . $file->data('fullname'),
                         false);
-                chmod($src_path . $file->content_data['fullname'], octdec(NEL_FILES_PERM));
+                chmod($src_path . $file->data('fullname'), octdec(NEL_FILES_PERM));
                 $file->writeToDatabase();
                 ++ $order;
             }
@@ -208,19 +208,19 @@ class NewPost
 
         // Generate response page if it doesn't exist, otherwise update
         $regen = new \Nelliel\Regen();
-        $regen->threads($this->domain, true, [$thread->content_id->thread_id]);
+        $regen->threads($this->domain, true, [$thread->contentID()->threadID()]);
         $regen->index($this->domain);
-        return $thread->content_id->thread_id;
+        return $thread->contentID()->threadID();
     }
 
-    private function isPostOk($post_data, $time)
+    private function isPostOk($post, $time)
     {
         $error_data = ['board_id' => $this->domain->id()];
 
         // Check for flood
         // If post is a reply, also check if the thread still exists
 
-        if ($post_data['parent_thread'] == 0)
+        if ($post->data('parent_thread') == 0)
         {
             $thread_cooldown = $time - $this->domain->setting('thread_cooldown');
             $prepared = $this->database->prepare(
@@ -236,7 +236,7 @@ class NewPost
             $prepared = $this->database->prepare(
                     'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? AND "post_time" > ? AND "ip_address" = ?');
-            $prepared->bindValue(1, $post_data['parent_thread'], PDO::PARAM_INT);
+            $prepared->bindValue(1, $post->data('parent_thread'), PDO::PARAM_INT);
             $prepared->bindValue(2, $reply_cooldown, PDO::PARAM_STR);
             $prepared->bindValue(3, @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
             $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
@@ -247,12 +247,12 @@ class NewPost
             nel_derp(1, _gettext('Flood detected! You\'re posting too fast, slow the fuck down.'), $error_data);
         }
 
-        if ($post_data['parent_thread'] != 0)
+        if ($post->data('parent_thread') != 0)
         {
             $prepared = $this->database->prepare(
                     'SELECT "post_count", "archive_status", "locked" FROM "' . $this->domain->reference('threads_table') .
                     '" WHERE "thread_id" = ?');
-            $thread_info = $this->database->executePreparedFetch($prepared, [$post_data['parent_thread']],
+            $thread_info = $this->database->executePreparedFetch($prepared, [$post->data('parent_thread')],
                     PDO::FETCH_ASSOC, true);
 
             if (!empty($thread_info))

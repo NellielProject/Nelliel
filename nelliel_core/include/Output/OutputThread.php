@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Content\ContentID;
 use Nelliel\Domain;
 use PDO;
 
@@ -31,7 +32,7 @@ class OutputThread extends OutputCore
         $thread_id = ($parameters['thread_id']) ?? 0;
         $dotdot = ($write) ? '../../../' : '';
         $command = ($parameters['command']) ?? 'view-thread';
-        $thread_content_id = \Nelliel\ContentID::createIDString($thread_id);
+        $thread_content_id = ContentID::createIDString($thread_id);
         $this->render_data['form_action'] = $dotdot . NEL_MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');

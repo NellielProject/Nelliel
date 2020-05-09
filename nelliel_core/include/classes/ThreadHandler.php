@@ -7,6 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Content\ContentID;
+
 class ThreadHandler
 {
     private $database;
@@ -54,9 +56,9 @@ class ThreadHandler
                 }
             }
 
-            if (!in_array($content_id->thread_id, $updates))
+            if (!in_array($content_id->threadID(), $updates))
             {
-                array_push($updates, $content_id->thread_id);
+                array_push($updates, $content_id->threadID());
             }
         }
 

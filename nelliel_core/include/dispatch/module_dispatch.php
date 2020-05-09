@@ -198,7 +198,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             break;
 
         case 'threads':
-            $content_id = new \Nelliel\ContentID($inputs['content_id']);
+            $content_id = new \Nelliel\Content\ContentID($inputs['content_id']);
             $fgsfds = new \Nelliel\FGSFDS();
             $session = new \Nelliel\Account\Session($domain);
 
@@ -250,19 +250,19 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             if ($inputs['action'] === 'delete-post')
             {
-                $post = new \Nelliel\Content\ContentPost($content_id, $domain, true);
+                $post = new \Nelliel\Content\ContentPost($content_id, $domain);
                 $post->remove();
             }
 
             if ($inputs['action'] === 'delete-thread')
             {
-                $thread = new \Nelliel\Content\ContentThread($content_id, $domain, true);
+                $thread = new \Nelliel\Content\ContentThread($content_id, $domain);
                 $thread->remove();
             }
 
             if ($inputs['action'] === 'delete-file')
             {
-                $file = new \Nelliel\Content\ContentFile($content_id, $domain, true);
+                $file = new \Nelliel\Content\ContentFile($content_id, $domain);
                 $file->remove();
             }
 

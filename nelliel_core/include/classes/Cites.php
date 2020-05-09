@@ -8,6 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use PDO;
+use Nelliel\Content\ContentID;
 
 class Cites
 {
@@ -105,7 +106,7 @@ class Cites
 
         if (preg_match('#^>>([0-9]+)$#', $text_input, $matches) === 1)
         {
-            $cite_data = $this->getCiteData($domain->id(), $source_content_id->post_id, $domain->id(), $matches[1]);
+            $cite_data = $this->getCiteData($domain->id(), $source_content_id->postID(), $domain->id(), $matches[1]);
 
             if (empty($cite_data))
             {
@@ -115,8 +116,8 @@ class Cites
 
                 if (!empty($parent_thread))
                 {
-                    $cite_data = ['source_board' => $domain->id(), 'source_thread' => $source_content_id->thread_id,
-                        'source_post' => $source_content_id->post_id, 'target_board' => $domain->id(),
+                    $cite_data = ['source_board' => $domain->id(), 'source_thread' => $source_content_id->threadID(),
+                        'source_post' => $source_content_id->postID(), 'target_board' => $domain->id(),
                         'target_thread' => $parent_thread, 'target_post' => $matches[1]];
 
                     if ($add_cite)
@@ -129,7 +130,7 @@ class Cites
         else if (preg_match('#^>>>\/(.+)\/([0-9]+)$#', $text_input, $matches) === 1)
         {
             $target_domain = new DomainBoard($matches[1], $this->database);
-            $cite_data = $this->getCiteData($domain->id(), $source_content_id->post_id, $domain->id(), $matches[2]);
+            $cite_data = $this->getCiteData($domain->id(), $source_content_id->postID(), $domain->id(), $matches[2]);
 
             if (empty($cite_data))
             {
@@ -140,8 +141,8 @@ class Cites
 
                 if (!empty($parent_thread))
                 {
-                    $cite_data = ['source_board' => $domain->id(), 'source_thread' => $source_content_id->thread_id,
-                        'source_post' => $source_content_id->post_id, 'target_board' => $matches[1],
+                    $cite_data = ['source_board' => $domain->id(), 'source_thread' => $source_content_id->threadID(),
+                        'source_post' => $source_content_id->postID(), 'target_board' => $matches[1],
                         'target_thread' => $parent_thread, 'target_post' => $matches[2]];
 
                     if ($add_cite)

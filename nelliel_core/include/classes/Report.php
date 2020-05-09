@@ -7,6 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Content\ContentID;
+
 class Report
 {
     private $domain;
@@ -37,13 +39,13 @@ class Report
         $report_data = array();
         $report_data['reason'] = $_POST['report_reason'] ?? null;
         $report_data['reporter_ip'] = $_SERVER['REMOTE_ADDR'];
-        $base_content_id = new \Nelliel\ContentID();
+        $base_content_id = new ContentID();
 
         foreach ($_POST as $name => $value)
         {
             if ($base_content_id->isContentID($name))
             {
-                $content_id = new \Nelliel\ContentID($name);
+                $content_id = new ContentID($name);
             }
             else
             {

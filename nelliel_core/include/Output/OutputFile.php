@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\ContentID;
+use Nelliel\Content\ContentID;
 use Nelliel\Domain;
 use PDO;
 
@@ -40,9 +40,9 @@ class OutputFile extends OutputCore
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $session = new \Nelliel\Account\Session($this->domain);
         $file_content_id = new ContentID();
-        $file_content_id->thread_id = $post_data['parent_thread'];
-        $file_content_id->post_id = $post_data['post_number'];
-        $file_content_id->order_id = $file['content_order'];
+        $file_content_id->changeThreadID($post_data['parent_thread']);
+        $file_content_id->changePostID($post_data['post_number']);
+        $file_content_id->changeOrderID($file['content_order']);
         $full_filename = $file['filename'] . '.' . $file['extension'];
         $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['content_order'];
         $this->render_data['file_info_id'] = 'fileinfo-' . $file_content_id->getIDString();

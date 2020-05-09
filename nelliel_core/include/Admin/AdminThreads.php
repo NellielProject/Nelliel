@@ -9,6 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
+use Nelliel\Content\ContentID;
 
 class AdminThreads extends AdminHandler
 {
@@ -71,9 +72,9 @@ class AdminThreads extends AdminHandler
     {
         if (isset($_GET['action']) && $_GET['action'] === 'expand-thread')
         {
-            $content_id = new \Nelliel\ContentID($_GET['content-id']);
+            $content_id = new ContentID($_GET['content-id']);
             $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain);
-            $output_panel->render(['section' => 'expanded_thread', 'user' => $this->session_user, 'thread_id' => $content_id->thread_id], false);
+            $output_panel->render(['section' => 'expanded_thread', 'user' => $this->session_user, 'thread_id' => $content_id->threadID()], false);
         }
         else
         {
@@ -102,27 +103,27 @@ class AdminThreads extends AdminHandler
 
     public function remove()
     {
-        $content_id = new \Nelliel\ContentID($_GET['content-id']);
+        $content_id = new ContentID($_GET['content-id']);
 
         if ($content_id->isThread())
         {
-            $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
+            $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain);
             $thread->remove(true);
             $archive = new \Nelliel\ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
             $archive->updateThreads();
         }
         else if ($content_id->isPost())
         {
-            $post = new \Nelliel\Content\ContentPost($content_id, $this->domain, true);
+            $post = new \Nelliel\Content\ContentPost($content_id, $this->domain);
             $post->remove();
         }
         else if ($content_id->isContent())
         {
-            $file = new \Nelliel\Content\ContentFile($content_id, $this->domain, true);
+            $file = new \Nelliel\Content\ContentFile($content_id, $this->domain);
             $file->remove();
         }
 
-        $this->regenThread($content_id->thread_id, true);
+        $this->regenThread($content_id->threadID(), true);
     }
 
     public function sticky()
@@ -132,25 +133,20 @@ class AdminThreads extends AdminHandler
             nel_derp(351, _gettext('You are not allowed to sticky threads.'));
         }
 
-        $content_id = new \Nelliel\ContentID($_GET['content-id']);
+        $content_id = new ContentID($_GET['content-id']);
 
         if ($content_id->isPost())
         {
-            $post = new \Nelliel\Content\ContentPost($content_id, $this->domain, true);
-            $post->convertToThread();
-            $new_content_id = new \Nelliel\ContentID();
-            $new_content_id->thread_id = $content_id->post_id;
-            $new_content_id->post_id = $content_id->post_id;
-            $new_thread = new \Nelliel\Content\ContentThread($new_content_id, $this->domain);
-            $new_thread->sticky();
+            $post = new \Nelliel\Content\ContentPost($content_id, $this->domain);
+            $post->sticky();
         }
         else
         {
-            $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
+            $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain);
             $thread->sticky();
         }
 
-        $this->regenThread($content_id->thread_id, true);
+        $this->regenThread($content_id->threadID(), true);
     }
 
     public function unsticky()
@@ -160,10 +156,10 @@ class AdminThreads extends AdminHandler
             nel_derp(352, _gettext('You are not allowed to unsticky threads.'));
         }
 
-        $content_id = new \Nelliel\ContentID($_GET['content-id']);
-        $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
-        $thread->sticky();
-        $this->regenThread($content_id->thread_id, true);
+        $content_id = new ContentID($_GET['content-id']);
+        $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain);
+        $thread->unsticky();
+        $this->regenThread($content_id->threadID(), true);
     }
 
     public function lock()
@@ -173,10 +169,10 @@ class AdminThreads extends AdminHandler
             nel_derp(353, _gettext('You are not allowed to lock threads.'));
         }
 
-        $content_id = new \Nelliel\ContentID($_GET['content-id']);
-        $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
+        $content_id = new ContentID($_GET['content-id']);
+        $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain);
         $thread->lock();
-        $this->regenThread($content_id->thread_id, true);
+        $this->regenThread($content_id->threadID(), true);
     }
 
     public function unlock()
@@ -186,10 +182,10 @@ class AdminThreads extends AdminHandler
             nel_derp(354, _gettext('You are not allowed to unlock threads.'));
         }
 
-        $content_id = new \Nelliel\ContentID($_GET['content-id']);
-        $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
-        $thread->lock();
-        $this->regenThread($content_id->thread_id, true);
+        $content_id = new ContentID($_GET['content-id']);
+        $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain);
+        $thread->unlock();
+        $this->regenThread($content_id->threadID(), true);
     }
 
     private function regenThread($thread_id, bool $regen_index = false)

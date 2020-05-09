@@ -2,12 +2,14 @@
 
 namespace Nelliel;
 
-use PDO;
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
+
+
+use PDO;
+use Nelliel\Content\ContentID;
 
 class ArchiveAndPrune
 {
@@ -270,7 +272,7 @@ class ArchiveAndPrune
     {
         foreach ($this->getArchiveThreadListForStatus(3) as $thread_id)
         {
-            $thread = new \Nelliel\Content\ContentThread(new ContentID('cid_' . $thread_id . '_0_0'), $this->domain, false, true);
+            $thread = new \Nelliel\Content\ContentThread(new ContentID('cid_' . $thread_id . '_0_0'), $this->domain, true);
             $thread->remove(true);
         }
     }
