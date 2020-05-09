@@ -18,12 +18,18 @@ class AuthUser extends AuthHandler
     function __construct(NellielPDO $database, string $user_id)
     {
         $this->database = $database;
+        $this->empty = nel_true_empty($user_id);
         $this->auth_id = $user_id;
         $this->authorization = new Authorization($this->database);
     }
 
     public function loadFromDatabase($temp_database = null)
     {
+        if($this->empty())
+        {
+            return false;
+        }
+
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare('SELECT * FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
         $result = $database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
@@ -47,7 +53,7 @@ class AuthUser extends AuthHandler
 
     public function writeToDatabase($temp_database = null)
     {
-        if (empty($this->id()))
+        if ($this->empty() || empty($this->id()))
         {
             return false;
         }
@@ -113,6 +119,11 @@ class AuthUser extends AuthHandler
 
     public function remove()
     {
+        if($this->empty())
+        {
+            return false;
+        }
+
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
@@ -126,7 +137,7 @@ class AuthUser extends AuthHandler
 
     public function checkRole(Domain $domain, bool $return_id = false)
     {
-        if (!isset($this->user_roles[$domain->id()]))
+        if ($this->empty() || !isset($this->user_roles[$domain->id()]))
         {
             return false;
         }
@@ -170,6 +181,11 @@ class AuthUser extends AuthHandler
 
     public function checkPermission(Domain $domain, string $perm_id)
     {
+        if($this->empty())
+        {
+            return false;
+        }
+
         // Site Owner can do all the things
         if ($this->isSiteOwner())
         {

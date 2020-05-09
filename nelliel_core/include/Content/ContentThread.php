@@ -21,7 +21,7 @@ class ContentThread extends ContentHandler
     protected $page_path;
     protected $archived;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $archived = false, bool $db_load = false)
+    function __construct(ContentID $content_id, Domain $domain, bool $db_load = false, bool $archived = false)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
@@ -208,9 +208,6 @@ class ContentThread extends ContentHandler
 
     public function sticky()
     {
-        $session = new \Nelliel\Account\Session($this->domain);
-        $user = $session->sessionUser();
-
         if (!$this->dataIsLoaded(true))
         {
             return false;
@@ -223,9 +220,6 @@ class ContentThread extends ContentHandler
 
     public function lock()
     {
-        $session = new \Nelliel\Account\Session($this->domain);
-        $user = $session->sessionUser();
-
         if (!$this->dataIsLoaded(true))
         {
             return false;

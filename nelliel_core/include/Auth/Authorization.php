@@ -24,19 +24,20 @@ class Authorization
     public function newUser(string $user_id)
     {
         $user_id_lower = utf8_strtolower($user_id);
-        self::$users[$user_id_lower] = new AuthUser($this->database, $user_id);
-        self::$users[$user_id_lower]->setupNew();
+        $new_user = new AuthUser($this->database, $user_id);
+        $new_user->setupNew();
+        self::$users[$user_id_lower] = $new_user;
         return self::$users[$user_id_lower];
+    }
+
+    public function emptyUser()
+    {
+        return new AuthUser($this->database, '');
     }
 
     public function userExists(string $user_id)
     {
-        if ($this->getUser($user_id) !== false)
-        {
-            return true;
-        }
-
-        return false;
+        return $this->getUser($user_id)->empty();
     }
 
     public function getUser(string $user_id)
@@ -48,14 +49,15 @@ class Authorization
             return self::$users[$user_id_lower];
         }
 
-        self::$users[$user_id_lower] = new AuthUser($this->database, $user_id);
+        $new_user = new AuthUser($this->database, $user_id);
 
-        if (self::$users[$user_id_lower]->loadFromDatabase())
+        if ($new_user->loadFromDatabase())
         {
+            self::$users[$user_id_lower] = $new_user;
             return self::$users[$user_id_lower];
         }
 
-        return false;
+        return $this->emptyUser();
     }
 
     public function removeUser(string $user_id)

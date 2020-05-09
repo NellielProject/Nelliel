@@ -185,7 +185,7 @@ class OutputPost extends OutputCore
             $modmode_headers['delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
                     '&action=delete&content-id=' . $temp_content_id->getIDString() . '&modmode=true';
             $modmode_headers['ban_delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
-                    '&action=ban~delete&content-id=' . $temp_content_id->getIDString() . '&ban_type=POST&ban_ip=' .
+                    '&action=ban-delete&content-id=' . $temp_content_id->getIDString() . '&ban_type=POST&ban_ip=' .
                     rawurlencode($ip) . '&modmode=true';
             $header_data['modmode_headers'] = $modmode_headers;
         }

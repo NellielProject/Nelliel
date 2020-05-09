@@ -47,6 +47,12 @@ class AdminThreads extends AdminHandler
         {
             $this->remove();
         }
+        else if ($action === 'ban-delete')
+        {
+            $this->remove();
+            $bans_admin = new \Nelliel\Admin\AdminBans($this->authorization, $this->domain);
+            $bans_admin->actionDispatch('new', false);
+        }
         else if ($action === 'expand') // TODO: Figure this out better
         {
             $this->renderPanel();
@@ -101,8 +107,8 @@ class AdminThreads extends AdminHandler
         if ($content_id->isThread())
         {
             $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain, true);
-            $thread->remove();
-            $archive = new \Nelliel\ArchiveAndPrune($this->database, $this->domain, new \Nelliel\Utility\FileHandler());
+            $thread->remove(true);
+            $archive = new \Nelliel\ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
             $archive->updateThreads();
         }
         else if ($content_id->isPost())

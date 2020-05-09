@@ -13,6 +13,7 @@ abstract class AuthHandler
     public $auth_data = array();
     public $auth_id;
     public $authorization;
+    private $empty;
 
     public function authDataOrDefault(string $data_name, ?string $default = null)
     {
@@ -35,6 +36,11 @@ abstract class AuthHandler
     public function id()
     {
         return $this->auth_id;
+    }
+
+    public function empty()
+    {
+        return $this->empty;
     }
 }
 

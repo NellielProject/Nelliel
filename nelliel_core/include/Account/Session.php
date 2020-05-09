@@ -83,7 +83,7 @@ class Session
 
         $user = $this->authorization->getUser($_SESSION['user_id']);
 
-        if (!$user || !$user->active())
+        if ($user->empty() || !$user->active())
         {
             nel_derp(222, _gettext('Not an active user.'));
         }

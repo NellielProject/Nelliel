@@ -19,7 +19,7 @@ class ContentPost extends ContentHandler
     protected $preview_path;
     protected $archived;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $archived = false, bool $db_load = false)
+    function __construct(ContentID $content_id, Domain $domain, bool $db_load = false, bool $archived = false)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
