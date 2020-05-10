@@ -13,9 +13,10 @@ use PDO;
 class OutputMenu extends OutputCore
 {
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, bool $write_mode)
     {
         $this->domain = $domain;
+        $this->write_mode = $write_mode;
         $this->database = $domain->database();
         $this->selectRenderCore('mustache');
         $this->utilitySetup();

@@ -65,13 +65,13 @@ class AdminRoles extends AdminHandler
 
     public function renderPanel()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
         $output_panel->render(['section' => 'panel', 'user' => $this->session_user], false);
     }
 
     public function creator()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
     }
 
@@ -84,13 +84,13 @@ class AdminRoles extends AdminHandler
 
         $this->role_id = $_POST['role_id'];
         $this->update();
-        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
     }
 
     public function editor()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
     }
 
@@ -117,7 +117,7 @@ class AdminRoles extends AdminHandler
         }
 
         $this->authorization->saveRoles();
-        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
     }
 

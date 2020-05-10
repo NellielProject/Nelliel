@@ -73,12 +73,12 @@ class AdminThreads extends AdminHandler
         if (isset($_GET['action']) && $_GET['action'] === 'expand-thread')
         {
             $content_id = new ContentID($_GET['content-id']);
-            $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain);
+            $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain, false);
             $output_panel->render(['section' => 'expanded_thread', 'user' => $this->session_user, 'thread_id' => $content_id->threadID()], false);
         }
         else
         {
-            $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain);
+            $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain, false);
             $output_panel->render(['section' => 'panel', 'user' => $this->session_user], false);
         }
     }

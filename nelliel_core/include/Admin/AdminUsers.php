@@ -65,13 +65,13 @@ class AdminUsers extends AdminHandler
 
     public function renderPanel()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
         $output_panel->render(['section' => 'panel', 'user' => $this->session_user], false);
     }
 
     public function creator()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
     }
 
@@ -88,7 +88,7 @@ class AdminUsers extends AdminHandler
 
     public function editor()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
     }
 
@@ -148,7 +148,7 @@ class AdminUsers extends AdminHandler
         }
 
         $this->authorization->saveUsers();
-        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
     }
 

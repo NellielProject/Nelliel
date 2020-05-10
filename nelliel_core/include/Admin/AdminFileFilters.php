@@ -42,7 +42,7 @@ class AdminFileFilters extends AdminHandler
 
     public function renderPanel()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelFileFilters($this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelFileFilters($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
 

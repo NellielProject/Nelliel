@@ -23,8 +23,8 @@ class Regen
 
         while ($i < $threads)
         {
-            $output_thread = new \Nelliel\Output\OutputThread($domain);
-            $output_thread->render(['write' => $write, 'thread_id' => $ids[$i]], false);
+            $output_thread = new \Nelliel\Output\OutputThread($domain, $write);
+            $output_thread->render(['thread_id' => $ids[$i]], false);
             ++ $i;
         }
     }
@@ -43,16 +43,16 @@ class Regen
 
     public function news(Domain $domain)
     {
-        $news = new \Nelliel\Output\OutputNews($domain);
+        $news = new \Nelliel\Output\OutputNews($domain, true);
         $news->render(array(), false);
     }
 
     public function index(Domain $domain)
     {
-        $output_thread = new \Nelliel\Output\OutputIndex($domain);
-        $output_thread->render(['write' => true, 'thread_id' => 0], false);
-        $output_catalog = new \Nelliel\Output\OutputCatalog($domain);
-        $output_catalog->render(['write' => true], false);
+        $output_thread = new \Nelliel\Output\OutputIndex($domain, true);
+        $output_thread->render(['thread_id' => 0], false);
+        $output_catalog = new \Nelliel\Output\OutputCatalog($domain, true);
+        $output_catalog->render([], false);
     }
 
     public function boardList(Domain $domain)

@@ -13,9 +13,10 @@ use PDO;
 class OutputNavigation extends OutputCore
 {
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, bool $write_mode)
     {
         $this->domain = $domain;
+        $this->write_mode = $write_mode;
         $this->database = $domain->database();
         $this->selectRenderCore('mustache');
         $this->utilitySetup();
@@ -69,8 +70,7 @@ class OutputNavigation extends OutputCore
         $session = new \Nelliel\Account\Session($this->domain);
         $site_domain = new \Nelliel\DomainSite($this->database);
         $dotdot = $parameters['dotdot'] ?? '';
-        $ignore_session = $parameters['ignore_session'] ?? false;
-        $render_data['session_active'] = $session->isActive() && !$ignore_session;
+        $render_data['session_active'] = $session->isActive() && !$this->write_mode;
         $render_data['logout_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=account&action=logout';
         $render_data['main_panel_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=main-panel';
         $render_data['home_url'] = $site_domain->setting('home_page');

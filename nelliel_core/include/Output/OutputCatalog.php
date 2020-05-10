@@ -13,9 +13,10 @@ use PDO;
 class OutputCatalog extends OutputCore
 {
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, bool $write_mode)
     {
         $this->domain = $domain;
+        $this->writeMode($write_mode);
         $this->database = $this->domain->database();
         $this->selectRenderCore('mustache');
         $this->utilitySetup();
@@ -25,13 +26,12 @@ class OutputCatalog extends OutputCore
     {
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $write = ($parameters['write']) ?? false;
         $cites = new \Nelliel\Cites($this->database);
-        $dotdot = ($write) ? '../' : '';
+        $dotdot = ($this->write_mode) ? '../' : '';
         $this->startTimer();
-        $output_head = new OutputHead($this->domain);
+        $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
-        $output_header = new OutputHeader($this->domain);
+        $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot], true);
         $this->render_data['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->id() . '/';
         $base_domain_path = NEL_BASE_DOMAIN . NEL_BASE_WEB_PATH;
@@ -145,11 +145,11 @@ class OutputCatalog extends OutputCore
         }
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('catalog', $this->render_data);
-        $output_footer = new OutputFooter($this->domain);
+        $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
 
-        if ($write)
+        if ($this->write_mode)
         {
             $file = $this->domain->reference('board_path') . 'catalog.html';
             $this->file_handler->writeFile($file, $output);

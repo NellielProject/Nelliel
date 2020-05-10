@@ -43,7 +43,7 @@ class AdminNews extends AdminHandler
 
     public function renderPanel()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelNews($this->domain);
+        $output_panel = new \Nelliel\Output\OutputPanelNews($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
 

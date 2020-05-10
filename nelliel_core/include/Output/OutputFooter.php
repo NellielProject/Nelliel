@@ -13,9 +13,10 @@ use PDO;
 class OutputFooter extends OutputCore
 {
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, bool $write_mode)
     {
         $this->domain = $domain;
+        $this->write_mode = $write_mode;
         $this->database = $domain->database();
         $this->selectRenderCore('mustache');
         $this->utilitySetup();
@@ -28,7 +29,7 @@ class OutputFooter extends OutputCore
         $dotdot = ($parameters['dotdot']) ?? array();
         $show_timer = ($parameters['show_timer']) ?? true;
         $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
-        $output_menu = new OutputMenu($this->domain);
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
         if ($this->render_data['show_styles'])
         {

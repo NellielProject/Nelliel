@@ -22,6 +22,8 @@ abstract class OutputCore
     protected $timer_start;
     protected $timer_stored;
     protected $core_id;
+    protected $static_output = false;
+    protected $write_mode = false;
 
     public abstract function render(array $parameters, bool $data_only);
 
@@ -78,7 +80,8 @@ abstract class OutputCore
         }
     }
 
-    protected function output(string $template, bool $data_only, bool $translate, array $render_data = array(), $dom = null)
+    protected function output(string $template, bool $data_only, bool $translate, array $render_data = array(),
+            $dom = null)
     {
         $output = null;
         $render_data = (empty($render_data)) ? $this->render_data : $render_data;
@@ -110,5 +113,25 @@ abstract class OutputCore
         }
 
         return $output;
+    }
+
+    public function staticOutput(bool $status = null)
+    {
+        if (!is_null($status))
+        {
+            $this->static_output = $status;
+        }
+
+        return $this->static_output;
+    }
+
+    public function writeMode(bool $status = null)
+    {
+        if (!is_null($status))
+        {
+            $this->write_mode = $status;
+        }
+
+        return $this->write_mode;
     }
 }

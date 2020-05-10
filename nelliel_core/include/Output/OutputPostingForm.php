@@ -12,9 +12,10 @@ use Nelliel\Domain;
 class OutputPostingForm extends OutputCore
 {
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, bool $write_mode)
     {
         $this->domain = $domain;
+        $this->writeMode($write_mode);
         $this->database = $this->domain->database();
         $this->selectRenderCore('mustache');
         $this->utilitySetup();
@@ -36,7 +37,7 @@ class OutputPostingForm extends OutputCore
 
         if ($response_to)
         {
-            if ($session->inModmode($this->domain))
+            if ($session->inModmode($this->domain) && !$this->write_mode)
             {
                 $return_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                         ['module' => 'render', 'action' => 'view-index', 'index' => '0',
@@ -50,7 +51,7 @@ class OutputPostingForm extends OutputCore
             $this->render_data['return_url'] = $return_url;
         }
 
-        $this->render_data['is_staff'] = $session->inModmode($this->domain);
+        $this->render_data['is_staff'] = $session->inModmode($this->domain) && !$this->write_mode;
         $this->render_data['not_anonymous_maxlength'] = $this->domain->setting('max_name_length');
         $this->render_data['spam_target_maxlength'] = $this->domain->setting('max_email_length');
         $this->render_data['verb_maxlength'] = $this->domain->setting('max_subject_length');

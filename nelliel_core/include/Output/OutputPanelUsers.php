@@ -13,9 +13,10 @@ use PDO;
 class OutputPanelUsers extends OutputCore
 {
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, bool $write_mode)
     {
         $this->domain = $domain;
+        $this->write_mode = $write_mode;
         $this->database = $this->domain->database();
         $this->selectRenderCore('mustache');
         $this->utilitySetup();
@@ -55,9 +56,9 @@ class OutputPanelUsers extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
-        $output_head = new OutputHead($this->domain);
+        $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
-        $output_header = new OutputHeader($this->domain);
+        $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Users')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
@@ -85,7 +86,7 @@ class OutputPanelUsers extends OutputCore
         $this->render_data['new_user_url'] = NEL_MAIN_SCRIPT . '?module=users&action=new';
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/users_panel_main',
                 $this->render_data);
-        $output_footer = new OutputFooter($this->domain);
+        $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
         echo $output;
@@ -100,9 +101,9 @@ class OutputPanelUsers extends OutputCore
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
-        $output_head = new OutputHead($this->domain);
+        $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
-        $output_header = new OutputHeader($this->domain);
+        $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit User')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
@@ -158,7 +159,7 @@ class OutputPanelUsers extends OutputCore
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/users_panel_edit',
                 $this->render_data);
-        $output_footer = new OutputFooter($this->domain);
+        $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
         echo $output;

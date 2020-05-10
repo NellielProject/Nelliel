@@ -14,9 +14,10 @@ use PDO;
 class OutputPost extends OutputCore
 {
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, bool $write_mode)
     {
         $this->domain = $domain;
+        $this->write_mode = $write_mode;
         $this->database = $this->domain->database();
         $this->selectRenderCore('mustache');
         $this->utilitySetup();
@@ -33,13 +34,12 @@ class OutputPost extends OutputCore
         $json_post = $parameters['json_instances']['post'];
         $post_data = $parameters['post_data'] ?? $this->getPostFromDatabase($post_id);
         $in_thread_number = $parameters['in_thread_number'] ?? 0;
-        $ignore_session = $parameters['ignore_session'] ?? false;
         $this->startTimer();
         $json_post->storeData($json_post->prepareData($post_data), 'post');
         $response = $post_data['op'] != 1;
         $thread_content_id = new ContentID(ContentID::createIDString($post_data['parent_thread']));
         $post_content_id = new ContentID(
-                ContentID::createIDString($post_data['parent_thread']), intval($post_data['post_number']));
+                ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
         $web_paths['base_domain'] = NEL_BASE_DOMAIN . NEL_BASE_WEB_PATH;
         $web_paths['board'] = '//' . $web_paths['base_domain'] .
                 rawurlencode($this->domain->reference('board_directory')) . '/';
@@ -75,7 +75,7 @@ class OutputPost extends OutputCore
 
         $this->render_data['post_anchor_id'] = 't' . $post_content_id->threadID() . 'p' . $post_content_id->postID();
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
-                $post_content_id, $web_paths, $gen_data, $in_thread_number, $ignore_session);
+                $post_content_id, $web_paths, $gen_data, $in_thread_number);
 
         if ($post_data['has_content'] == 1)
         {
@@ -84,7 +84,7 @@ class OutputPost extends OutputCore
             $prepared = $this->database->prepare($query);
             $file_list = $this->database->executePreparedFetchAll($prepared, [$post_data['post_number']],
                     PDO::FETCH_ASSOC);
-            $output_file_info = new OutputFile($this->domain);
+            $output_file_info = new OutputFile($this->domain, $this->write_mode);
             $content_count = count($file_list);
             $content_row = array();
 
@@ -131,7 +131,7 @@ class OutputPost extends OutputCore
     }
 
     private function postHeaders(bool $response, array $thread_data, array $post_data, ContentID $thread_content_id,
-            ContentID $post_content_id, array $web_paths, array $gen_data, int $in_thread_number, bool $ignore_session)
+            ContentID $post_content_id, array $web_paths, array $gen_data, int $in_thread_number)
     {
         $header_data = array();
         $modmode_headers = array();
@@ -152,7 +152,7 @@ class OutputPost extends OutputCore
         $preview_web_path = $board_web_path . rawurlencode($this->domain->reference('preview_dir')) . '/';
         $thread_preview_web_path = $preview_web_path . $thread_content_id->threadID() . '/';
 
-        if ($session->inModmode($this->domain) && !$ignore_session)
+        if ($session->inModmode($this->domain) && !$this->write_mode)
         {
 
             $ip = @inet_ntop($post_data['ip_address']);
@@ -211,7 +211,7 @@ class OutputPost extends OutputCore
 
             $thread_headers['reply_to_url'] = $web_paths['thread_page'];
 
-            if ($session->inModmode($this->domain) && !$ignore_session)
+            if ($session->inModmode($this->domain) && !$this->write_mode)
             {
                 $thread_headers['render'] = '-render';
                 $thread_headers['reply_to_url'] = NEL_MAIN_SCRIPT . '?module=render&action=view-thread&content-id=' .

@@ -102,7 +102,7 @@ class Register
             unlink(NEL_GENERATED_FILES_PATH . 'create_owner.php');
         }
 
-        $output_register = new \Nelliel\Output\OutputRegisterPage($this->domain);
+        $output_register = new \Nelliel\Output\OutputRegisterPage($this->domain, false);
         $output_register->render(['dotdot' => '', 'section' => 'registration-done'], false);
     }
 }

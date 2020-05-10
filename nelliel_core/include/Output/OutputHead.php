@@ -13,9 +13,10 @@ use PDO;
 class OutputHead extends OutputCore
 {
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, bool $write_mode)
     {
         $this->domain = $domain;
+        $this->write_mode = $write_mode;
         $this->database = $this->domain->database();
         $this->selectRenderCore('mustache');
         $this->utilitySetup();
@@ -26,7 +27,6 @@ class OutputHead extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $session = new \Nelliel\Account\Session($this->domain);
-        $site_domain = new \Nelliel\DomainSite($this->database);
         $dotdot = ($parameters['dotdot']) ?? '';
         $this->render_data['main_js_file'] = $dotdot . NEL_ASSETS_CORE_WEB_PATH . 'scripts/nel.js';
         $this->render_data['js_ui_url'] = $dotdot . NEL_ASSETS_CORE_WEB_PATH . 'scripts/ui.js';
@@ -68,9 +68,9 @@ class OutputHead extends OutputCore
             }
             else
             {
-                if ($site_domain->setting('show_favicon') && !empty($site_domain->setting('favicon')))
+                if ($this->site_domain->setting('show_favicon') && !empty($this->site_domain->setting('favicon')))
                 {
-                    $this->render_data['favicon_url'] = $site_domain->setting('favicon');
+                    $this->render_data['favicon_url'] = $this->site_domain->setting('favicon');
                     $this->render_data['show_favicon'] = true;
                 }
             }
