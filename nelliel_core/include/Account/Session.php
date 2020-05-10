@@ -76,7 +76,7 @@ class Session
             nel_derp(221, _gettext('Session has expired.'));
         }
 
-        if($empty_session)
+        if ($empty_session)
         {
             return;
         }
@@ -91,14 +91,29 @@ class Session
         self::$user = $this->authorization->getUser($_SESSION['user_id']);
         $_SESSION['ignores'] = ['default' => false];
         $_SESSION['last_activity'] = time();
-        self::$in_modmode = (isset($_GET['modmode'])) ? (bool) $_GET['modmode'] : false;
+
+        if (self::$user->checkPermission($this->domain, 'perm_mod_mode'))
+        {
+            if (isset($_GET['modmode']) && $_GET['modmode'] === 'true')
+            {
+                self::$in_modmode = true;
+            }
+
+            if (isset($_POST['in_modmode']) && $_POST['in_modmode'] === 'true')
+            {
+                self::$in_modmode = true;
+            }
+        }
+
         self::$session_active = true;
     }
 
     public function logout()
     {
         $this->terminate();
-        nel_clean_exit(true);
+        $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
+        $output_login->render(['dotdot' => ''], false);
+        nel_clean_exit();
     }
 
     public function login()
@@ -106,7 +121,7 @@ class Session
         $login = new \Nelliel\Account\Login($this->authorization, $this->domain);
         $login_data = $login->validate();
 
-        if(empty($login_data))
+        if (empty($login_data))
         {
             $this->terminate();
             nel_derp(223, _gettext('Login has not been validated. Cannot start session.'));
@@ -161,7 +176,7 @@ class Session
 
     public function loggedInOrError()
     {
-        if(is_null(self::$user))
+        if (is_null(self::$user))
         {
             nel_derp(224, _gettext('You must be logged in for this action.'));
         }

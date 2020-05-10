@@ -56,7 +56,7 @@ class OutputFile extends OutputCore
         {
             $this->render_data['in_modmode'] = true;
             $this->render_data['delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
-                    '&action=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true';
+                    '&action=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true&goback=true';
         }
 
         $this->render_data['display_filesize'] = ' (' . round(((int) $file['filesize'] / 1024), 2) . ' KB)';

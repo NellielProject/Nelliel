@@ -203,6 +203,9 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 $new_post = new \Nelliel\Post\NewPost($domain);
                 $new_post->processPost();
 
+                $redirect = new \Nelliel\Redirect();
+                $redirect->doRedirect(true);
+
                 if ($fgsfds->getCommand('noko') !== false)
                 {
                     if ($session->inModmode($domain))
@@ -210,38 +213,34 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                         $url_constructor = new \Nelliel\URLConstructor();
                         $url = $url_constructor->dynamic(NEL_MAIN_SCRIPT,
                                 ['module' => 'render', 'action' => 'view-thread',
-                                    'thread' => $fgsfds->getCommandData('noko', 'topic'),
-                                    'board_id' => $inputs['board_id']]);
-
-                        nel_redirect($url, 2);
+                                'thread' => $fgsfds->getCommandData('noko', 'topic'),
+                                'board_id' => $inputs['board_id'], 'modmode' => 'true']);
+                        $redirect->changeURL($url);
                     }
                     else
                     {
+                        $url_constructor = new \Nelliel\URLConstructor();
                         $url = $domain->reference('board_directory') . '/' . $domain->reference('page_dir') . '/' .
                                 $fgsfds->getCommandData('noko', 'topic') . '/thread-' .
                                 $fgsfds->getCommandData('noko', 'topic') . '.html';
-                        nel_redirect($url, 2);
+                        $redirect->changeURL($url);
                     }
                 }
                 else
                 {
                     if ($session->inModmode($domain))
                     {
-                        $url_constructor = new \Nelliel\URLConstructor();
-                        $url = $url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                                ['module' => 'render', 'action' => 'view-index', 'index' => '0',
-                                    'board_id' => $inputs['board_id']]);
-
-                        nel_redirect($url, 2);
+                            $redirect->changeURL(NEL_MAIN_SCRIPT .
+                                    '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '&modmode=true');
                     }
                     else
                     {
-                        $url = $domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
-                        nel_redirect($url, 2);
+                        $redirect->changeURL($domain->reference('board_directory') . '/' .
+                                NEL_MAIN_INDEX . NEL_PAGE_EXT);
                     }
                 }
 
-                nel_clean_exit(false);
+                nel_clean_exit();
             }
 
             if ($inputs['action'] === 'delete-post')
@@ -267,6 +266,9 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 ; // TODO: Add file hash
             }
 
+            $redirect = new \Nelliel\Redirect();
+            $redirect->doRedirect(true);
+
             if (isset($_POST['form_submit_report']))
             {
                 $report = new \Nelliel\Report($domain);
@@ -274,33 +276,28 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 if ($session->inModmode($domain))
                 {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . NEL_MAIN_SCRIPT .
-                            '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';
+                    $redirect->changeURL(NEL_MAIN_SCRIPT .
+                            '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '&modmode=true');
                 }
                 else
                 {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . $domain->reference('board_directory') . '/' .
-                            NEL_MAIN_INDEX . NEL_PAGE_EXT . '">';
+                    $redirect->changeURL($domain->reference('board_directory') . '/' .
+                            NEL_MAIN_INDEX . NEL_PAGE_EXT);
                 }
             }
 
             if (isset($_POST['form_submit_delete']))
             {
-                $thread_handler = new \Nelliel\ThreadHandler($domain->database(), $domain);
-                $thread_handler->processContentDeletes();
-
                 if ($session->inModmode($domain))
                 {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . NEL_MAIN_SCRIPT .
-                            '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '">';
+                    $redirect->changeURL(NEL_MAIN_SCRIPT .
+                            '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '&modmode=true');
                 }
                 else
                 {
-                    echo '<meta http-equiv="refresh" content="1;URL=' . $domain->reference('board_directory') . '/' .
-                            NEL_MAIN_INDEX . NEL_PAGE_EXT . '">';
+                    $redirect->changeURL($domain->reference('board_directory') . '/' .
+                            NEL_MAIN_INDEX . NEL_PAGE_EXT);
                 }
-
-                nel_clean_exit(true, $inputs['board_id']);
             }
 
             break;

@@ -32,16 +32,28 @@ function nel_central_dispatch()
     $inputs['board_id'] = $_GET['board_id'] ?? '';
     $inputs['action'] = $_GET['action'] ?? '';
     $inputs['content_id'] = $_GET['content-id'] ?? '';
-    $inputs['modmode'] = $_GET['modmode'] ?? false;
-    $inputs['return'] = $_GET['return'] ?? null;
+    $goback = $_GET['goback'] ?? false;
 
-    if($inputs['board_id'] === '' || $inputs['domain_id'])
+    if ($goback)
+    {
+        $redirect = new \Nelliel\Redirect();
+        $redirect->changeURL($_SERVER['HTTP_REFERER']);
+        $redirect->doRedirect(true);
+    }
+
+    if ($inputs['board_id'] === '' || $inputs['domain_id'])
     {
         $domain = new \Nelliel\DomainSite(nel_database());
     }
     else
     {
         $domain = new \Nelliel\DomainBoard($inputs['board_id'], nel_database());
+    }
+
+    if(isset($_GET['modmode']) || isset($_POST['modmode']))
+    {
+        $inputs['modmode'] = $_GET['modmode'] ?? false;
+        $session = new \Nelliel\Account\Session($domain);
     }
 
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));

@@ -170,23 +170,23 @@ class OutputPost extends OutputCore
                 $modmode_headers['lock_text'] = ($locked) ? _gettext('Unlock Thread') : _gettext('Lock Thread');
                 $lock_action = ($locked) ? 'unlock' : 'lock';
                 $modmode_headers['lock_url'] = '?module=threads-admin&board_id=' . $this->domain->id() . '&action=' .
-                        $lock_action . '&content-id=' . $thread_content_id->getIDString() . '&modmode=true';
+                        $lock_action . '&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
                 $temp_content_id = $thread_content_id;
                 $sticky = ($thread_data['sticky'] == 1);
                 $modmode_headers['sticky_text'] = ($sticky) ? _gettext('Unsticky Thread') : _gettext('Sticky Thread');
                 $sticky_action = ($sticky) ? 'unsticky' : 'sticky';
                 $modmode_headers['sticky_url'] = '?module=threads-admin&board_id=' . $this->domain->id() . '&action=' .
-                        $sticky_action . '&content-id=' . $thread_content_id->getIDString() . '&modmode=true';
+                        $sticky_action . '&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
             }
 
             $modmode_headers['ban_url'] = '?module=bans&board_id=' . $this->domain->id() .
                     '&action=new&ban_type=POST&content-id=' . $temp_content_id->getIDString() . '&ban_ip=' .
-                    rawurlencode($ip) . '&modmode=true';
+                    rawurlencode($ip) . '&modmode=true&goback=true';
             $modmode_headers['delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
-                    '&action=delete&content-id=' . $temp_content_id->getIDString() . '&modmode=true';
+                    '&action=delete&content-id=' . $temp_content_id->getIDString() . '&modmode=true&goback=true';
             $modmode_headers['ban_delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
                     '&action=ban-delete&content-id=' . $temp_content_id->getIDString() . '&ban_type=POST&ban_ip=' .
-                    rawurlencode($ip) . '&modmode=true';
+                    rawurlencode($ip) . '&modmode=true&goback=true';
             $header_data['modmode_headers'] = $modmode_headers;
         }
 

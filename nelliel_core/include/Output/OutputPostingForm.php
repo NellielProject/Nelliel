@@ -51,6 +51,7 @@ class OutputPostingForm extends OutputCore
             $this->render_data['return_url'] = $return_url;
         }
 
+        $this->render_data['in_modmode'] = $session->inModmode($this->domain) && !$this->write_mode;
         $this->render_data['is_staff'] = $session->inModmode($this->domain) && !$this->write_mode;
         $this->render_data['not_anonymous_maxlength'] = $this->domain->setting('max_name_length');
         $this->render_data['spam_target_maxlength'] = $this->domain->setting('max_email_length');

@@ -4,27 +4,14 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-function nel_clean_exit(bool $redirect = false, $redirect_board = null, int $redirect_delay = 2)
+function nel_clean_exit()
 {
     $site_domain = new \Nelliel\DomainSite(nel_database());
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $authorization->saveUsers();
     $authorization->saveRoles();
-    //$authorization->saveUserRoles();
-
-    if ($redirect)
-    {
-        if (is_null($redirect_board))
-        {
-            nel_redirect($site_domain->setting('home_page'), $redirect_delay);
-        }
-        else
-        {
-            $domain = new \Nelliel\DomainBoard($redirect_board, nel_database());
-            $url = $domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
-            nel_redirect($url, $redirect_delay);
-        }
-    }
+    $redirect = new \Nelliel\Redirect();
+    $redirect->go();
 
     die();
 }
