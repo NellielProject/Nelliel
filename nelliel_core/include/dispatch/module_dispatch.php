@@ -37,7 +37,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 }
                 else
                 {
-                    $session = new \Nelliel\Account\Session($domain);
+                    $session = new \Nelliel\Account\Session();
                     $session->login();
                     $session->loggedInOrError();
                     $output_account = new \Nelliel\Output\OutputAccount($domain, false);
@@ -46,7 +46,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             }
             else if ($inputs['action'] === 'logout')
             {
-                $session = new \Nelliel\Account\Session($domain);
+                $session = new \Nelliel\Account\Session();
                 $session->logout();
             }
             else if ($inputs['action'] === 'register')
@@ -66,7 +66,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             {
                 if (empty($_POST))
                 {
-                    $session = new \Nelliel\Account\Session($domain);
+                    $session = new \Nelliel\Account\Session();
 
                     if ($session->isActive())
                     {
@@ -86,7 +86,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'render':
             $inputs['index'] = $_GET['index'] ?? null;
             $inputs['thread'] = $_GET['thread'] ?? null;
-            $session = new \Nelliel\Account\Session($domain);
+            $session = new \Nelliel\Account\Session();
 
             if ($inputs['action'] === 'view-index')
             {
@@ -113,7 +113,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             break;
 
         case 'main-panel':
-            $session = new \Nelliel\Account\Session($domain);
+            $session = new \Nelliel\Account\Session();
             $session->loggedInOrError();
 
             if ($domain->id() !== '_site_')
@@ -160,7 +160,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             break;
 
         case 'language':
-            $session = new \Nelliel\Account\Session($domain);
+            $session = new \Nelliel\Account\Session();
             $session->loggedInOrError();
 
             if ($inputs['action'] === 'extract-gettext')
@@ -196,7 +196,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'threads':
             $content_id = new \Nelliel\Content\ContentID($inputs['content_id']);
             $fgsfds = new \Nelliel\FGSFDS();
-            $session = new \Nelliel\Account\Session($domain);
+            $session = new \Nelliel\Account\Session();
 
             if ($inputs['action'] === 'new-post')
             {
@@ -304,7 +304,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
         case 'regen':
             $regen = new \Nelliel\Regen();
-            $session = new \Nelliel\Account\Session($domain);
+            $session = new \Nelliel\Account\Session();
             $session->loggedInOrError();
             $user = $session->sessionUser();
 

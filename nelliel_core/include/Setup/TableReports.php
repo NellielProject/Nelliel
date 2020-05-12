@@ -36,7 +36,7 @@ class TableReports extends TableHandler
             report_id       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             board_id        VARCHAR(255) NOT NULL,
             content_id      VARCHAR(255) NOT NULL,
-            reason          VARCHAR(255) NOT NULL DEFAULT '',
+            reason          TEXT NOT NULL,
             reporter_ip     " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
             hashed_ip       VARCHAR(255) DEFAULT NULL
         ) " . $options . ";";

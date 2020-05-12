@@ -8,6 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domain;
+use Nelliel\DomainSite;
 use Nelliel\Auth\Authorization;
 
 class Session
@@ -21,11 +22,11 @@ class Session
     protected $authorization;
     protected $database;
 
-    function __construct(Domain $domain)
+    function __construct()
     {
-        $this->domain = $domain;
-        $this->authorization = new Authorization(nel_database());
-        $this->database = $domain->database();
+        $this->domain = new DomainSite(nel_database());
+        $this->database = $this->domain->database();
+        $this->authorization = new Authorization($this->database);
 
         if (!self::$initialized)
         {
@@ -151,7 +152,12 @@ class Session
 
     public function isOld()
     {
-        return (time() - $_SESSION['last_activity']) > 7200;
+        if ($this->domain->setting('session_length') == 0)
+        {
+            return false;
+        }
+
+        return (time() - $_SESSION['last_activity']) > $this->domain->setting('session_length');
     }
 
     public function sessionUser()

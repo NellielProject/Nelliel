@@ -26,7 +26,7 @@ class OutputAccount extends OutputCore
     {
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $session = new \Nelliel\Account\Session($this->domain);
+        $session = new \Nelliel\Account\Session();
         $user = $session->sessionUser();
         $dotdot = ($parameters['dotdot']) ?? '';
         $this->startTimer();

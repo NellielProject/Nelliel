@@ -53,7 +53,7 @@ function nel_central_dispatch()
     if(isset($_GET['modmode']) || isset($_POST['modmode']))
     {
         $inputs['modmode'] = $_GET['modmode'] ?? false;
-        $session = new \Nelliel\Account\Session($domain);
+        $session = new \Nelliel\Account\Session();
     }
 
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));

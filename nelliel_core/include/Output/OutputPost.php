@@ -137,7 +137,7 @@ class OutputPost extends OutputCore
         $modmode_headers = array();
         $thread_headers = array();
         $authorization = new \Nelliel\Auth\Authorization($this->database);
-        $session = new \Nelliel\Account\Session($this->domain);
+        $session = new \Nelliel\Account\Session();
         $cites = new \Nelliel\Cites($this->domain->database());
         $header_data['response'] = $response;
 
@@ -267,7 +267,12 @@ class OutputPost extends OutputCore
                     NEL_POSTER_ID_PEPPER . @inet_ntop($post_data['ip_address']) . $this->domain->id() .
                     $thread_data['thread_id']);
             $poster_id = substr($raw_poster_id, 0, $this->domain->setting('poster_id_length'));
-            $post_headers['poster_id'] = 'ID: ' . $poster_id;
+            $post_headers['poster_id'] = $poster_id;
+
+            if ($this->domain->setting('poster_id_colors'))
+            {
+                $post_headers['id_colors'] = true;
+            }
         }
 
         $tripcode = (!empty($post_data['tripcode'])) ? $this->domain->setting('tripkey_marker') . $post_data['tripcode'] : '';
@@ -318,6 +323,10 @@ class OutputPost extends OutputCore
 
     private function postComments(array $post_data, ContentID $post_content_id, array $gen_data, array $web_paths)
     {
+        $url_protocols = $this->domain->setting('url_protocols');
+        $url_split_regex = '#(' . $url_protocols . ')(:\/\/)[^s>]*?#';
+        $url_match_regex = '#((' . $url_protocols . '):\/\/[^\s].*?)(?=(' . $url_protocols . ')|$)#';
+        $url_protocol_array = explode('|', $url_protocols);
         $cites = new \Nelliel\Cites($this->domain->database());
         $comment_data = array();
         $post_type_class = $post_data['op'] == 1 ? 'op-' : 'reply-';
@@ -338,12 +347,18 @@ class OutputPost extends OutputCore
         }
         else
         {
+            if ($this->domain->setting('filter_combining_characters'))
+            {
+                $post_data['comment'] = $this->output_filter->filterUnicodeCombiningCharacters($post_data['comment']);
+            }
+
             $line_count = 0;
+            $cite_total = 0;
+            $cite_link_max = $this->domain->setting('max_cite_links');
 
             foreach ($this->output_filter->newlinesToArray($post_data['comment']) as $line)
             {
                 $line_parts = array();
-                $final_line = '';
 
                 if ($gen_data['index_rendering'] && $line_count == $this->domain->setting('comment_display_lines'))
                 {
@@ -352,26 +367,74 @@ class OutputPost extends OutputCore
                     break;
                 }
 
-                $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, null,
-                        PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+                $word_segments = explode(' ', $line);
 
-                foreach ($segments as $segment)
+                foreach ($word_segments as $segment)
                 {
-                    $link_url = $cites->createPostLinkURL($this->domain, $post_content_id, $segment, true);
+                    $segment_chunks = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $segment, null,
+                            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
-                    if (!empty($link_url))
+                    foreach ($segment_chunks as $chunk)
                     {
-                        if (preg_match('#^\s*>#', $segment) === 1)
+                        if (preg_match('#^\s*>#', $chunk) === 1)
                         {
-                            $link = array();
-                            $link['link_url'] = $link_url;
-                            $link['link_text'] = $segment;
-                            $line_parts[]['link'] = $link;
+                            if ($cite_total <= $cite_link_max)
+                            {
+                                $link_url = $cites->createPostLinkURL($this->domain, $post_content_id, $chunk, true);
+
+                                if (!empty($link_url))
+                                {
+                                        $link = array();
+                                        $link['link_url'] = $link_url;
+                                        $link['link_text'] = $chunk;
+                                        $line_parts[]['link'] = $link;
+                                }
+                                else
+                                {
+                                    $line_parts[]['text'] = $chunk;
+                                }
+
+                                ++ $cite_total;
+                            }
+                            else
+                            {
+                                $line_parts[]['text'] = $chunk;
+                            }
+
+                            continue;
                         }
-                    }
-                    else
-                    {
-                        $line_parts[]['text'] = $segment;
+
+                        if(!$this->domain->setting('create_url_links'))
+                        {
+                            $line_parts[]['text'] = $chunk;
+                            continue;
+                        }
+
+                        $subchunks = preg_split($url_split_regex, $chunk, null,
+                                PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+                        $subchunk_count = count($subchunks);
+
+                        for ($i = 0; $i < $subchunk_count; ++ $i)
+                        {
+                            $current_subchunk = $subchunks[$i];
+                            $next_subchunk = $subchunks[$i + 1] ?? '';
+                            $second_subchunk = $subchunks[$i + 2] ?? '';
+
+                            if (in_array($current_subchunk, $url_protocol_array) && $next_subchunk === '://' &&
+                                    !in_array($second_subchunk, $url_protocol_array))
+                            {
+                                $link = array();
+                                $link_url = $current_subchunk . $next_subchunk . $second_subchunk;
+                                $link['link_url'] = $link_url;
+                                $link['link_text'] = $link_url;
+                                $line_parts[]['link'] = $link;
+                                $i += 2;
+                            }
+                            else
+                            {
+                                $line_parts[]['text'] = $current_subchunk;
+                            }
+                        }
                     }
                 }
 

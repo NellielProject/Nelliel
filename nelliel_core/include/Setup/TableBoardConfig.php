@@ -42,7 +42,7 @@ class TableBoardConfig extends TableHandler
             config_category     VARCHAR(255) DEFAULT NULL,
             data_type           VARCHAR(255) DEFAULT NULL,
             config_name         VARCHAR(255) NOT NULL,
-            setting             VARCHAR(255) NOT NULL,
+            setting             VARCHAR(2000) NOT NULL DEFAULT '',
             select_type         SMALLINT NOT NULL DEFAULT 0,
             edit_lock           SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
@@ -92,8 +92,8 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_email_length', '100', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_subject_length', '100', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_comment_length', '5000', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_comment_lines', '60', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'comment_display_lines', '15', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'truncate_long_fields', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'threads_per_page', '10', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'page_limit', '10', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'page_buffer', '0', 0, 0]);
@@ -117,7 +117,7 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_post_recaptcha', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_report_captcha', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_report_recaptcha', '0', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'poster_id_length', '6', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'poster_id_colors', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'display_render_timer', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'no_comment_text', '(no comment)', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'display_post_backlinks', '1', 0, 0]);
@@ -127,6 +127,11 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_catalog_height', '128', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'enable_spoilers', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'safety_level', 'SFW', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_cite_links', '40', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'filter_combining_characters', '0', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'create_url_links', '1', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'url_protocols', 'http|https|ftp|sftp|irc|nntp', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'url_prefix', '', 0, 0]);
         $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'graphics', '1', 0, 0]);
         $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'jpeg', '1', 0, 0]);
         $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'gif', '1', 0, 0]);

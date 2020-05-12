@@ -118,9 +118,13 @@
 		<label for="captcha_character_count" class="display-cell" data-i18n="gettext">How many characters to use in CAPTCHA</label>
 		<input id="captcha_character_count" class="display-cell" type="text" name="captcha_character_count" size="15" value="{{ captcha_character_count }}">
 	</div>
-		<div class="display-row">
+	<div class="display-row">
 		<label for="login_delay" class="display-cell" data-i18n="gettext">Delay between login attempts (seconds)</label>
 		<input id="login_delay" class="display-cell" type="text" name="login_delay" size="15" value="{{ login_delay }}">
+	</div>
+	<div class="display-row">
+		<label for="session_length" class="display-cell" data-i18n="gettext">Idle time before a user is logged out (in seconds; 0 to disable)</label>
+		<input id="session_length" class="display-cell" type="text" name="session_length" size="15" value="{{ session_length }}">
 	</div>
 	<div class="display-row">
 		<span class="display-cell">

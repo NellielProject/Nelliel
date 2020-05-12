@@ -35,7 +35,7 @@ class OutputDerp extends OutputCore
         $this->render_data['error_id'] = $diagnostic['error_id'];
         $this->render_data['error_message'] = $diagnostic['error_message'];
         $this->render_data['error_data'] = '';
-        $session = new \Nelliel\Account\Session($this->domain);
+        $session = new \Nelliel\Account\Session();
 
         if ($session->inModmode($this->domain))
         {

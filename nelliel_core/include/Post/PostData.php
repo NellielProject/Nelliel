@@ -23,7 +23,7 @@ class PostData
 
     public function processPostData($post)
     {
-        if(!isset($_POST['new_post']))
+        if (!isset($_POST['new_post']))
         {
             die("no new post data?");
         }
@@ -32,14 +32,19 @@ class PostData
         $post->contentID()->changeThreadID($post->data('parent_thread'));
         $post->changeData('reply_to', $post->data('parent_thread')); // This may enable nested posts in the future
         $post->changeData('ip_address', inet_pton($_SERVER['REMOTE_ADDR']));
-        $post->changeData('poster_name', $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string'));
-        $post->changeData('email', $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string'));
-        $post->changeData('subject', $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string'));
-        $post->changeData('comment', $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], 'string'));
+        $poster_name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
+        $post->changeData('poster_name', $this->fieldMaxCheck('poster_name', $poster_name));
+        $email = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string');
+        $post->changeData('email', $this->fieldMaxCheck('email', $email));
+        $subject = $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string');
+        $post->changeData('subject', $this->fieldMaxCheck('subject', $subject));
+        $comment = $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], 'string');
+        $post->changeData('comment', $this->fieldMaxCheck('comment', $comment));
         $post->changeData('fgsfds', $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], 'string'));
         $post->changeData('post_password', $this->checkEntry($_POST['new_post']['post_info']['sekrit'], 'string'));
         $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
-        $post->changeData('post_as_staff', (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false);
+        $post->changeData('post_as_staff',
+                (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false);
 
         if ($post->data('poster_name') !== '')
         {
@@ -84,28 +89,28 @@ class PostData
 
     public function staffPost($post)
     {
-        if(!$post->data('post_as_staff'))
+        if (!$post->data('post_as_staff'))
         {
             return;
         }
 
-        $session = new \Nelliel\Account\Session($this->domain);
+        $session = new \Nelliel\Account\Session();
 
-        if(!$session->isActive())
+        if (!$session->isActive())
         {
             return;
         }
 
         $user = $session->sessionUser();
 
-        if(!$user->checkPermission($this->domain, 'perm_board_post_as_staff'))
+        if (!$user->checkPermission($this->domain, 'perm_board_post_as_staff'))
         {
             return;
         }
 
         $role = $user->checkRole($this->domain);
 
-        if($role !== false)
+        if ($role !== false)
         {
             $post->changeData('poster_name', $user->auth_data['display_name']);
             $post->changeData('mod_post_id', $role->id());
@@ -120,7 +125,6 @@ class PostData
         $post->changeData('poster_name', $name_pieces[1]);
         $post->changeData('tripcode', '');
         $post->changeData('secure_tripcode', '');
-
 
         if ($name_pieces[2] !== '' && $this->domain->setting('allow_tripkeys'))
         {
@@ -144,11 +148,11 @@ class PostData
 
     public function tripcodeCharsetConvert($text, $to, $from)
     {
-        if(function_exists('iconv'))
+        if (function_exists('iconv'))
         {
             return iconv($from, $to . '//IGNORE', $text);
         }
-        else if(function_exists('mb_convert_encoding'))
+        else if (function_exists('mb_convert_encoding'))
         {
             return mb_convert_encoding($text, $to, $from);
         }
@@ -156,5 +160,77 @@ class PostData
         {
             return $text;
         }
+    }
+
+    public function fieldMaxCheck(string $field_name, ?string $text)
+    {
+        if(is_null($text))
+        {
+            return $text;
+        }
+
+        switch ($field_name)
+        {
+            case 'poster_name':
+                if (utf8_strlen($text) > $this->domain->setting('max_name_length'))
+                {
+                    if ($this->domain_setting('truncate_long_fields'))
+                    {
+                        $text = utf8_substr($text, 0, $this->domain->setting('max_name_length'));
+                    }
+                    else
+                    {
+                        nel_derp(30, _gettext('Name is too long.'));
+                    }
+                }
+                break;
+
+            case 'email':
+                if (utf8_strlen($text) > $this->domain->setting('max_email_length'))
+                {
+                    if ($this->domain_setting('truncate_long_fields'))
+                    {
+                        $text = utf8_substr($text, 0, $this->domain->setting('max_email_length'));
+                    }
+                    else
+                    {
+                        nel_derp(31, _gettext('Email is too long.'));
+                    }
+                }
+
+                break;
+
+            case 'subject':
+                if (utf8_strlen($text) > $this->domain->setting('max_subject_length'))
+                {
+                    if ($this->domain_setting('truncate_long_fields'))
+                    {
+                        $text = utf8_substr($text, 0, $this->domain->setting('max_subject_length'));
+                    }
+                    else
+                    {
+                        nel_derp(32, _gettext('Subject is too long.'));
+                    }
+                }
+
+                break;
+
+            case 'comment':
+                if (utf8_strlen($text) > $this->domain->setting('max_comment_length'))
+                {
+                    if ($this->domain_setting('truncate_long_fields'))
+                    {
+                        $text = utf8_substr($text, 0, $this->domain->setting('max_comment_length'));
+                    }
+                    else
+                    {
+                        nel_derp(33, _gettext('Comment is too long.'));
+                    }
+                }
+
+                break;
+        }
+
+        return $text;
     }
 }

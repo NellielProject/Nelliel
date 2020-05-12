@@ -49,7 +49,10 @@
 	<span class="{{ tripline_class }}">{{ tripline }}</span>
 	<span class="capcode">{{ capcode }}</span>
 	<span class="{{ post_time_class }}">{{ post_time }}</span>
-	<span class="poster-id">{{ poster_id }}</span>
+	{{# poster_id }}
+	<span class="poster-id"><span data-i18n="gettext">ID: </span>
+	<span{{# id_colors }} class="poster-id-color" style="background-color: #{{ poster_id }}"{{/ id_colors }}>{{ poster_id }}</span></span>
+	{{/ poster_id }}
 	<span data-i18n="gettext">No.</span>
 	<a href="{{ post_number_url }}" class="{{ post_number_class }}">{{ post_number }}</a>
 	<span>({{ in_thread_number }})</span>

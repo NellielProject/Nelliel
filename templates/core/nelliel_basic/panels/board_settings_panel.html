@@ -461,7 +461,7 @@
 			<span class="display-cell">
 				<input type="hidden" name="require_content_always" value="0">
 				<input id="require_content_always" type="checkbox" name="require_content_always" value="1" {{ value }} {{ disabled }}>
-				<label for="require_content_always" data-i18n="gettext">Always require an image, file or embed</label>
+				<label for="require_content_always" data-i18n="gettext">Require an image, file or embed for all posts</label>
 			</span>
 		</div>
 		{{/ require_content_always }}
@@ -655,7 +655,7 @@
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<label for="max_name_length" data-i18n="gettext">Maximum length of name (255 or less)</label>
+				<label for="max_name_length" data-i18n="gettext">Maximum length of name</label>
 			</span>
 			<span class="display-cell">
 				<input id="max_name_length" type="text" name="max_name_length" size="8" value="{{ value }}" {{ disabled }}>
@@ -672,7 +672,7 @@
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<label for="max_email_length" data-i18n="gettext">Maximum length of e-mail (255 or less)</label>
+				<label for="max_email_length" data-i18n="gettext">Maximum length of e-mail</label>
 			</span>
 			<span class="display-cell">
 				<input id="max_email_length" type="text" name="max_email_length" size="8" value="{{ value }}" {{ disabled }}>
@@ -689,7 +689,7 @@
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<label for="max_subject_length" data-i18n="gettext">Maximum length of subject (255 or less)</label>
+				<label for="max_subject_length" data-i18n="gettext">Maximum length of subject</label>
 			</span>
 			<span class="display-cell">
 				<input id="max_subject_length" type="text" name="max_subject_length" size="8" value="{{ value }}" {{ disabled }}>
@@ -706,30 +706,13 @@
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<label for="max_comment_length" data-i18n="gettext">Maximum length of comment (# of characters)</label>
+				<label for="max_comment_length" data-i18n="gettext">Maximum length of comment</label>
 			</span>
 			<span class="display-cell">
 				<input id="max_comment_length" type="text" name="max_comment_length" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ max_comment_length }}
-		{{# max_comment_lines }}
-		<div class="display-row">
-			{{# defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="max_comment_lines_lock" value="0">
-				<input id="max_comment_lines_lock" type="checkbox" name="max_comment_lines_lock" value="1" {{ locked }}>
-				<label for="max_comment_lines_lock" data-i18n="gettext">(Lock)</label>
-			</span>
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_comment_lines" data-i18n="gettext">Maximum number of lines in comment</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_comment_lines" type="text" name="max_comment_lines" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
-		{{/ max_comment_lines }}
 		{{# comment_display_lines }}
 		<div class="display-row">
 			{{# defaults }}
@@ -740,48 +723,47 @@
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<label for="comment_display_lines" data-i18n="gettext">How many lines of comment to display</label>
+				<label for="comment_display_lines" data-i18n="gettext">How many lines of comment to display when abbreviated</label>
 			</span>
 			<span class="display-cell">
 				<input id="comment_display_lines" type="text" name="comment_display_lines" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
 		{{/ comment_display_lines }}
-		{{# max_source_length }}
+		{{# truncate_long_fields }}
 		<div class="display-row">
 			{{# defaults }}
 			<span class="display-cell">
-				<input type="hidden" name="max_source_length_lock" value="0">
-				<input id="max_source_length_lock" type="checkbox" name="max_source_length_lock" value="1" {{ locked }}>
-				<label for="max_source_length_lock" data-i18n="gettext">(Lock)</label>
+				<input type="hidden" name="truncate_long_fields_lock" value="0">
+				<input id="truncate_long_fields_lock" type="checkbox" name="truncate_long_fields_lock" value="1" {{ locked }}>
+				<label for="truncate_long_fields_lock" data-i18n="gettext">(Lock)</label>
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<label for="max_source_length" data-i18n="gettext">Maximum length of source field (255 or less)</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_source_length" type="text" name="max_source_length" size="8" value="{{ value }}" {{ disabled }}>
+				<input type="hidden" name="truncate_long_fields" value="0">
+				<input id="truncate_long_fields" type="checkbox" name="truncate_long_fields" value="1" {{ value }} {{ disabled }}>
+				<label for="truncate_long_fields" data-i18n="gettext">Truncate fields that are too long instead of giving an error</label>
 			</span>
 		</div>
-		{{/ max_source_length }}
-		{{# max_license_length }}
+		{{/ truncate_long_fields }}
+		{{# filter_combining_characters }}
 		<div class="display-row">
 			{{# defaults }}
 			<span class="display-cell">
-				<input type="hidden" name="max_license_length_lock" value="0">
-				<input id="max_license_length_lock" type="checkbox" name="max_license_length_lock" value="1" {{ locked }}>
-				<label for="max_license_length_lock" data-i18n="gettext">(Lock)</label>
+				<input type="hidden" name="filter_combining_characters_lock" value="0">
+				<input id="filter_combining_characters_lock" type="checkbox" name="filter_combining_characters_lock" value="1" {{ locked }}>
+				<label for="filter_combining_characters_lock" data-i18n="gettext">(Lock)</label>
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<label for="max_license_length" data-i18n="gettext">Maximum length of license field (255 or less)</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_license_length" type="text" name="max_license_length" size="8" value="{{ value }}" {{ disabled }}>
+				<input type="hidden" name="filter_combining_characters" value="0">
+				<input id="filter_combining_characters" type="checkbox" name="filter_combining_characters" value="1" {{ value }} {{ disabled }}>
+				<label for="filter_combining_characters" data-i18n="gettext">Filter out Unicode combining characters (sometimes misused for things like Zalgo text).
+				WARNING: This potentially breaks a bunch of non-English languages!</label>
 			</span>
 		</div>
-		{{/ max_license_length }}
-		{{# max_filesize_length }}
+		{{/ filter_combining_characters }}
+		{{# max_filesize }}
 		<div class="display-row">
 			{{# defaults }}
 			<span class="display-cell">
@@ -797,7 +779,7 @@
 				<input id="max_filesize" type="text" name="max_filesize" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
-		{{/ max_filesize_length }}
+		{{/ max_filesize }}
 		{{# enable_spoilers }}
 		<div class="display-row">
 			{{# defaults }}
@@ -1253,6 +1235,22 @@
 			</span>
 		</div>
 		{{/ display_post_backlinks }}
+		{{# poster_id_colors }}
+		<div class="display-row">
+			{{# defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="poster_id_colors_lock" value="0">
+				<input id="poster_id_colors_lock" type="checkbox" name="poster_id_colors_lock" value="1" {{ locked }}>
+				<label for="poster_id_colors_lock" data-i18n="gettext">(Lock)</label>
+			</span>
+			{{/ defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="poster_id_colors" value="0">
+				<input id="poster_id_colors" type="checkbox" name="poster_id_colors" value="1" {{ value }} {{ disabled }}>
+				<label for="poster_id_colors" data-i18n="gettext">Use a color background for poster IDs</label>
+			</span>
+		</div>
+		{{/ poster_id_colors }}
 		{{# display_poster_id }}
 		<div class="display-row">
 			{{# defaults }}
@@ -1269,6 +1267,73 @@
 			</span>
 		</div>
 		{{/ display_poster_id }}
+		{{# max_cite_links }}
+		<div class="display-row">
+			{{# defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="max_cite_links_lock" value="0">
+				<input id="max_cite_links_lock" type="checkbox" name="max_cite_links_lock" value="1" {{ locked }}>
+				<label for="max_cite_links_lock" data-i18n="gettext">(Lock)</label>
+			</span>
+			{{/ defaults }}
+			<span class="display-cell">
+				<label for="max_cite_links" data-i18n="gettext">Maximum cite links that will be generated per comment</label>
+			</span>
+			<span class="display-cell">
+				<input id="max_cite_links" type="text" name="max_cite_links" size="8" value="{{ value }}" {{ disabled }}>
+			</span>
+		</div>
+		{{/ max_cite_links }}
+		{{# create_url_links }}
+		<div class="display-row">
+			{{# defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="create_url_links_lock" value="0">
+				<input id="create_url_links_lock" type="checkbox" name="create_url_links_lock" value="1" {{ locked }}>
+				<label for="create_url_links_lock" data-i18n="gettext">(Lock)</label>
+			</span>
+			{{/ defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="create_url_links" value="0">
+				<input id="create_url_links" type="checkbox" name="create_url_links" value="1" {{ value }} {{ disabled }}>
+				<label for="create_url_links" data-i18n="gettext">Convert URLs into links</label>
+			</span>
+		</div>
+		{{/ create_url_links }}
+		{{# url_protocols }}
+		<div class="display-row">
+			{{# defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="url_protocols_lock" value="0">
+				<input id="url_protocols_lock" type="checkbox" name="url_protocols_lock" value="1" {{ locked }}>
+				<label for="url_protocols_lock" data-i18n="gettext">(Lock)</label>
+			</span>
+			{{/ defaults }}
+			<span class="display-cell">
+				<label for="url_protocols" data-i18n="gettext">Protocols which will be parsed to links (must be separated with |)</label>
+			</span>
+			<span class="display-cell">
+				<input id="url_protocols" type="text" name="url_protocols" size="30" value="{{ value }}" {{ disabled }}>
+			</span>
+		</div>
+		{{/ url_protocols }}
+		{{# url_prefix }}
+		<div class="display-row">
+			{{# defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="url_prefix_lock" value="0">
+				<input id="url_prefix_lock" type="checkbox" name="url_prefix_lock" value="1" {{ locked }}>
+				<label for="url_prefix_lock" data-i18n="gettext">(Lock)</label>
+			</span>
+			{{/ defaults }}
+			<span class="display-cell">
+				<label for="url_prefix" data-i18n="gettext">Prefix that will be added to URLs (useful for anonymizers and the like)</label>
+			</span>
+			<span class="display-cell">
+				<input id="url_prefix" type="text" name="url_prefix" size="30" value="{{ value }}" {{ disabled }}>
+			</span>
+		</div>
+		{{/ url_prefix }}
 	</div>
 	<hr>
 	{{# categories }}

@@ -41,7 +41,7 @@ class TableSiteConfig extends TableHandler
             config_category     VARCHAR(255) DEFAULT NULL,
             data_type           VARCHAR(255) DEFAULT NULL,
             config_name         VARCHAR(255) NOT NULL,
-            setting             VARCHAR(255) NOT NULL,
+            setting             VARCHAR(2000) NOT NULL,
             select_type         SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
@@ -85,6 +85,6 @@ class TableSiteConfig extends TableHandler
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'max_boards_per_user', '1', 0, 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'display_render_timer', '1', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'login_delay', '3', 0, 0]);
-
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'session_length', '10800', 0, 0]);
     }
 }

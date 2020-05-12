@@ -67,7 +67,7 @@ class OutputNavigation extends OutputCore
     {
         $render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $session = new \Nelliel\Account\Session($this->domain);
+        $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
         $dotdot = $parameters['dotdot'] ?? '';
         $render_data['session_active'] = $session->isActive() && !$this->write_mode;

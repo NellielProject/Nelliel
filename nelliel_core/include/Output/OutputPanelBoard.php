@@ -25,7 +25,7 @@ class OutputPanelBoard extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
-        $session = new \Nelliel\Account\Session($this->domain);
+        $session = new \Nelliel\Account\Session();
         $user = $session->sessionUser();
         $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain, $this->write_mode);

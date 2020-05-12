@@ -9,7 +9,7 @@ These are only the bare minimum requirements for Nelliel to function. Even if an
 
 Required:
 - PHP 7.1+
-- MySQL 5.6+, MariaDB 10+, PostgreSQL 9.5+ or SQLite 3.20+
+- MySQL 5.6+, MariaDB 10.1+, PostgreSQL 9.5+ or SQLite 3.20+
 - PHP PDO with MySQL, MariaDB, PostgreSQL or SQLite support
 - PHP GD
 - PHP DOM

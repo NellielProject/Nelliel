@@ -49,7 +49,7 @@ At present Nelliel has a target version of **PHP 7.1**.
 ### Database Support
 Minimum supported RDBMS versions:
  - MySQL 5.6
- - MariaDB 10
+ - MariaDB 10.1
  - PostgreSQL 9.5
  - SQLite 3.20
 

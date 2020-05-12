@@ -39,7 +39,7 @@ class OutputFile extends OutputCore
         $json_post->addContentData($json_content->prepareData($file));
 
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
-        $session = new \Nelliel\Account\Session($this->domain);
+        $session = new \Nelliel\Account\Session();
         $file_content_id = new ContentID();
         $file_content_id->changeThreadID($post_data['parent_thread']);
         $file_content_id->changePostID($post_data['post_number']);

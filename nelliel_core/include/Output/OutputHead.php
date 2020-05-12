@@ -26,7 +26,7 @@ class OutputHead extends OutputCore
     {
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $session = new \Nelliel\Account\Session($this->domain);
+        $session = new \Nelliel\Account\Session();
         $dotdot = ($parameters['dotdot']) ?? '';
         $this->render_data['main_js_file'] = $dotdot . NEL_ASSETS_CORE_WEB_PATH . 'scripts/nel.js';
         $this->render_data['js_ui_url'] = $dotdot . NEL_ASSETS_CORE_WEB_PATH . 'scripts/ui.js';

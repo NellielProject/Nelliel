@@ -66,7 +66,7 @@ class TablePosts extends TableHandler
             op                  SMALLINT NOT NULL DEFAULT 0,
             sage                SMALLINT NOT NULL DEFAULT 0,
             mod_post_id         VARCHAR(255) DEFAULT NULL,
-            mod_comment         VARCHAR(255) DEFAULT NULL,
+            mod_comment         TEXT DEFAULT NULL,
             CONSTRAINT fk_parent_thread_" . $other_tables['threads_table'] . "_thread_id
             FOREIGN KEY (parent_thread) REFERENCES " . $other_tables['threads_table'] . "(thread_id)
             ON UPDATE CASCADE
