@@ -35,11 +35,11 @@ class TableSiteConfig extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            config_type         VARCHAR(255) DEFAULT NULL,
+            entry               " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
+            config_type         VARCHAR(255) NOT NULL,
             config_owner        VARCHAR(255) NOT NULL,
-            config_category     VARCHAR(255) DEFAULT NULL,
-            data_type           VARCHAR(255) DEFAULT NULL,
+            config_category     VARCHAR(255) NOT NULL,
+            data_type           VARCHAR(255) NOT NULL,
             config_name         VARCHAR(255) NOT NULL,
             setting             VARCHAR(2000) NOT NULL,
             select_type         SMALLINT NOT NULL DEFAULT 0

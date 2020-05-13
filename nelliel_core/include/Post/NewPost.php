@@ -129,7 +129,7 @@ class NewPost
         // Go ahead and put post into database
         $post->changeData('op', ($post->data('parent_thread') == 0) ? 1 : 0);
         $post->changeData('has_content', ($post->data('content_count') > 0) ? 1 : 0);
-        $post->reserveDatabaseRow($time['time'], $time['milli']);
+        $post->reserveDatabaseRow($time['time'], $time['milli'], @inet_pton($_SERVER['REMOTE_ADDR']));
         $thread = new \Nelliel\Content\ContentThread(new \Nelliel\Content\ContentID(), $this->domain);
 
         if ($post->data('response_to') == 0)

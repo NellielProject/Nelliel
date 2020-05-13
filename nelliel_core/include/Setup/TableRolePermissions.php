@@ -31,7 +31,7 @@ class TableRolePermissions extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            entry           " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
             role_id         VARCHAR(255) NOT NULL,
             perm_id         VARCHAR(255) NOT NULL,
             perm_setting    SMALLINT NOT NULL DEFAULT 0

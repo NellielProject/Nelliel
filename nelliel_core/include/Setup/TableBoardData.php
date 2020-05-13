@@ -32,7 +32,7 @@ class TableBoardData extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            entry       " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
             board_id    VARCHAR(255) NOT NULL,
             db_prefix   VARCHAR(255) NOT NULL,
             board_uri   VARCHAR(255) NOT NULL,

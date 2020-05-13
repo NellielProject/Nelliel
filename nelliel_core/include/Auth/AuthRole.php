@@ -81,7 +81,7 @@ class AuthRole extends AuthHandler
     {
         $authorization = new \Nelliel\Auth\Authorization($this->database);
         $prepared = $this->database->prepare(
-                'SELECT "user_id", "board" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "role_id" = ?');
+                'SELECT "user_id", "domain_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "role_id" = ?');
         $user_roles = $this->database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
         foreach($user_roles as $user_role)

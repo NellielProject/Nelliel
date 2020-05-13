@@ -31,10 +31,10 @@ class TableUserRoles extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            entry       " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
             user_id         VARCHAR(255) NOT NULL,
             role_id         VARCHAR(255) NOT NULL,
-            domain_id       VARCHAR(255) DEFAULT NULL
+            domain_id       VARCHAR(255) NOT NULL
         ) " . $options . ";";
 
         return $schema;

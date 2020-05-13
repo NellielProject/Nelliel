@@ -33,10 +33,10 @@ class TableOverboard extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            ob_key                  VARCHAR(255) NOT NULL PRIMARY KEY,
+            ob_key                  VARCHAR(64) NOT NULL PRIMARY KEY,
             thread_id               INTEGER NOT NULL,
-            last_bump_time          BIGINT DEFAULT NULL,
-            last_bump_time_milli    SMALLINT DEFAULT NULL,
+            last_bump_time          BIGINT NOT NULL,
+            last_bump_time_milli    SMALLINT NOT NULL,
             board_id                VARCHAR(255) NOT NULL,
             safety_level            VARCHAR(255) NOT NULL
         ) " . $options . ";";

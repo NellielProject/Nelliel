@@ -8,6 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Content\ContentID;
+use PDO;
 
 class Report
 {
@@ -56,11 +57,13 @@ class Report
             {
                 $report_data['content_id'] = $content_id->getIDString();
                 $query = 'INSERT INTO "' . NEL_REPORTS_TABLE .
-                '" ("board_id", "content_id", "reason", "reporter_ip") VALUES (?, ?, ?, ?)';
+                        '" ("board_id", "content_id", "reporter_ip", "reason") VALUES (?, ?, ?, ?)';
                 $prepared = $this->database->prepare($query);
-                $this->database->executePrepared($prepared,
-                        [$this->domain->id(), $report_data['content_id'], $report_data['reason'],
-                        @inet_pton($report_data['reporter_ip'])]);
+                $prepared->bindValue(1, $this->domain->id(), PDO::PARAM_STR);
+                $prepared->bindValue(2, $report_data['content_id'], PDO::PARAM_STR);
+                $prepared->bindValue(3, @inet_pton($report_data['reporter_ip']), PDO::PARAM_LOB);
+                $prepared->bindValue(4, $report_data['reason'], PDO::PARAM_STR);
+                $this->database->executePrepared($prepared);
             }
         }
     }

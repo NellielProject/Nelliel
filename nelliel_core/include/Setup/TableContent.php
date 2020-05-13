@@ -52,7 +52,7 @@ class TableContent extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            entry               " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
             parent_thread       INTEGER DEFAULT NULL,
             post_ref            INTEGER DEFAULT NULL,
             content_order       SMALLINT NOT NULL DEFAULT 0,

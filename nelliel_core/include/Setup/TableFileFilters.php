@@ -32,9 +32,9 @@ class TableFileFilters extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            entry           " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
             hash_type       VARCHAR(255) NOT NULL,
-            file_hash       " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '128') . " NOT NULL,
+            file_hash       " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
             file_notes      VARCHAR(255) DEFAULT NULL,
             board_id        VARCHAR(255) NOT NULL
         ) " . $options . ";";

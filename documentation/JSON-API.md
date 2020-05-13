@@ -88,7 +88,6 @@ Contains information about a thread.
 |`thread_sage`         |`boolean`|true or false        |Is the thread permasaged.|
 |`sticky`              |`boolean`|true or false        |Is the thread stickied.|
 |`locked`              |`boolean`|true or false        |Is the thread locked.|
-|`slug`                |`string` |text                 |Human-friendly thread ID.|
 
 ### `post-list`
 Contains zero or more `post` objects.

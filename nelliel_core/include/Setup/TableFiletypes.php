@@ -36,7 +36,7 @@ class TableFiletypes extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            entry               " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
             extension           VARCHAR(255) NOT NULL,
             parent_extension    VARCHAR(255) DEFAULT NULL,
             type                VARCHAR(255) DEFAULT NULL,

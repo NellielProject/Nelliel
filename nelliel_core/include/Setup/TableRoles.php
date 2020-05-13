@@ -32,11 +32,11 @@ class TableRoles extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            entry           " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
             role_id         VARCHAR(255) NOT NULL,
             role_level      SMALLINT NOT NULL DEFAULT 0,
-            role_title      VARCHAR(255) DEFAULT NULL,
-            capcode    TEXT DEFAULT NULL
+            role_title      VARCHAR(255) NOT NULL,
+            capcode         TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;
@@ -44,10 +44,10 @@ class TableRoles extends TableHandler
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 80, 'Site Administrator', '## Site Administrator ##']);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 60, 'Board Owner', '## Board Owner ##']);
-        $this->insertDefaultRow(['MODERATOR', 40, 'Moderator', '## Moderator ##']);
-        $this->insertDefaultRow(['JANITOR', 20, 'Janitor', '']);
+        $this->insertDefaultRow(['NEL_SITE_ADMIN', 100, 'Site Administrator', '## Site Administrator ##']);
+        $this->insertDefaultRow(['NEL_BOARD_OWNER', 75, 'Board Owner', '## Board Owner ##']);
+        $this->insertDefaultRow(['MODERATOR', 50, 'Moderator', '## Moderator ##']);
+        $this->insertDefaultRow(['JANITOR', 25, 'Janitor', '']);
         $this->insertDefaultRow(['BASIC_USER', 0, 'Basic', '']);
     }
 }

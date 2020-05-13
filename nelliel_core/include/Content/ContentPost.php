@@ -101,7 +101,7 @@ class ContentPost extends ContentHandler
         $prepared->bindValue(':email', $this->contentDataOrDefault('email', null), PDO::PARAM_STR);
         $prepared->bindValue(':subject', $this->contentDataOrDefault('subject', null), PDO::PARAM_STR);
         $prepared->bindValue(':comment', $this->contentDataOrDefault('comment', null), PDO::PARAM_STR);
-        $prepared->bindValue(':ip_address', $this->contentDataOrDefault('ip_address', null), PDO::PARAM_LOB);
+        $prepared->bindValue(':ip_address', $this->contentDataOrDefault('ip_address', '0.0.0.0'), PDO::PARAM_LOB);
         $prepared->bindValue(':post_time', $this->contentDataOrDefault('post_time', 0), PDO::PARAM_INT);
         $prepared->bindValue(':post_time_milli', $this->contentDataOrDefault('post_time_milli', 0), PDO::PARAM_INT);
         $prepared->bindValue(':has_content', $this->contentDataOrDefault('has_content', 0), PDO::PARAM_INT);
@@ -114,16 +114,20 @@ class ContentPost extends ContentHandler
         return true;
     }
 
-    public function reserveDatabaseRow($post_time, $post_time_milli, $temp_database = null)
+    public function reserveDatabaseRow($post_time, $post_time_milli, $ip_address, $temp_database = null)
     {
         $parent_thread = $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'INSERT INTO "' . $this->posts_table . '" ("post_time", "post_time_milli") VALUES (?, ?)');
-        $database->executePrepared($prepared, [$post_time, $post_time_milli]);
+                'INSERT INTO "' . $this->posts_table .
+                '" ("post_time", "post_time_milli", "ip_address") VALUES (?, ?, ?)');
+        $database->executePrepared($prepared, [$post_time, $post_time_milli, @inet_pton($ip_address)]);
         $prepared = $database->prepare(
-                'SELECT "post_number" FROM "' . $this->posts_table . '" WHERE "post_time" = ? AND post_time_milli = ?');
-        $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli], PDO::FETCH_COLUMN, true);
-        $this->content_id->changeThreadID(($this->content_id->threadID() == 0) ? $result : $this->content_id->threadID());
+                'SELECT "post_number" FROM "' . $this->posts_table .
+                '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "ip_address" = ?');
+        $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli, @inet_pton($ip_address)],
+                PDO::FETCH_COLUMN, true);
+        $this->content_id->changeThreadID(
+                ($this->content_id->threadID() == 0) ? $result : $this->content_id->threadID());
         $this->content_data['parent_thread'] = ($this->content_data['parent_thread'] == 0) ? $result : $this->content_data['parent_thread'];
         $this->content_id->changePostID($result);
     }
@@ -201,7 +205,8 @@ class ContentPost extends ContentHandler
     {
         $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->eraserGun($this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID());
-        $file_handler->eraserGun($this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID());
+        $file_handler->eraserGun(
+                $this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID());
     }
 
     public function updateCounts()
@@ -276,11 +281,13 @@ class ContentPost extends ContentHandler
         $new_thread->loadFromDatabase();
         $file_handler = new \Nelliel\Utility\FileHandler();
         $new_thread->createDirectories();
-        $file_handler->moveDirectory($this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(),
+        $file_handler->moveDirectory(
+                $this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(),
                 $this->src_path . '/' . $new_thread->content_id->threadID() . '/' . $this->content_id->postID(), true);
         $file_handler->moveDirectory(
                 $this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID(),
-                $this->preview_path . '/' . $new_thread->content_id->threadID() . '/' . $this->content_id->postID(), true);
+                $this->preview_path . '/' . $new_thread->content_id->threadID() . '/' . $this->content_id->postID(),
+                true);
 
         $prepared = $this->database->prepare('SELECT entry FROM "' . $this->content_table . '" WHERE "post_ref" = ?');
         $files = $this->database->executePreparedFetchAll($prepared, [$this->content_id->postID()], PDO::FETCH_ASSOC);
@@ -289,7 +296,8 @@ class ContentPost extends ContentHandler
         {
             $prepared = $this->database->prepare(
                     'UPDATE "' . $this->content_table . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
-            $this->database->executePrepared($prepared, [$new_thread->content_id->threadID(), $this->content_id->postID()]);
+            $this->database->executePrepared($prepared,
+                    [$new_thread->content_id->threadID(), $this->content_id->postID()]);
         }
 
         $this->loadFromDatabase();

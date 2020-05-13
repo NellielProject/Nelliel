@@ -31,7 +31,8 @@ class TableThreads extends TableHandler
             'sticky' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'archive_status' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'slug' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'meta' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]
+        ];
         $this->schema_version = 1;
     }
 
@@ -44,8 +45,8 @@ class TableThreads extends TableHandler
             thread_id               INTEGER NOT NULL PRIMARY KEY,
             first_post              INTEGER DEFAULT NULL,
             last_post               INTEGER DEFAULT NULL,
-            last_bump_time          BIGINT DEFAULT NULL,
-            last_bump_time_milli    SMALLINT DEFAULT NULL,
+            last_bump_time          BIGINT NOT NULL,
+            last_bump_time_milli    SMALLINT NOT NULL,
             last_update             BIGINT NOT NULL,
             last_update_milli       SMALLINT NOT NULL,
             post_count              INTEGER NOT NULL DEFAULT 0,
@@ -54,7 +55,7 @@ class TableThreads extends TableHandler
             sticky                  SMALLINT NOT NULL DEFAULT 0,
             archive_status          SMALLINT NOT NULL DEFAULT 0,
             locked                  SMALLINT NOT NULL DEFAULT 0,
-            slug                    VARCHAR(255) DEFAULT NULL
+            meta                    TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;

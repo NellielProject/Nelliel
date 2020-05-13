@@ -62,8 +62,7 @@ class RateLimit
             $rate_key = hash('sha256', random_bytes(16));
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . NEL_RATE_LIMIT_TABLE .
-                    '" (rate_key, ip_address, record) VALUES (:rate_key, :ip_address, :record)');
-            $prepared->bindValue(':rate_key', $rate_key, PDO::PARAM_STR);
+                    '" (ip_address, record) VALUES (:ip_address, :record)');
             $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);
             $prepared->bindValue(':record', $serialized_record, PDO::PARAM_STR);
             $this->database->executePrepared($prepared);

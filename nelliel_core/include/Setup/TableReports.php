@@ -21,9 +21,8 @@ class TableReports extends TableHandler
             'report_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'content_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'reason' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'reporter_ip' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
-            'hashed_ip' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'reason' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -33,12 +32,11 @@ class TableReports extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            report_id       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            report_id       " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
             board_id        VARCHAR(255) NOT NULL,
             content_id      VARCHAR(255) NOT NULL,
-            reason          TEXT NOT NULL,
-            reporter_ip     " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            hashed_ip       VARCHAR(255) DEFAULT NULL
+            reporter_ip     " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " NOT NULL,
+            reason          TEXT NOT NULL
         ) " . $options . ";";
 
         return $schema;

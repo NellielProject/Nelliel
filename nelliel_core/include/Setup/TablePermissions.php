@@ -30,9 +30,9 @@ class TablePermissions extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            entry           " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
             permission      VARCHAR(255) NOT NULL,
-            description     VARCHAR(255) NOT NULL DEFAULT ''
+            description     VARCHAR(2000) NOT NULL DEFAULT ''
         ) " . $options . ";";
 
         return $schema;

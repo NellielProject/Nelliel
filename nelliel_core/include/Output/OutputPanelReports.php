@@ -117,7 +117,7 @@ class OutputPanelReports extends OutputCore
             $report_data['content_url'] = $content_url;
             $report_data['content_id'] = $report_info['content_id'];
             $report_data['reason'] = $report_info['reason'];
-            $report_data['reporter_ip'] = $report_info['reporter_ip'];
+            $report_data['reporter_ip'] = @inet_pton($report_info['reporter_ip']);
             $report_data['dismiss_url'] = NEL_MAIN_SCRIPT . '?module=reports&board_id=' . $report_info['board_id'] .
                     '&action=dismiss&report_id=' . $report_info['report_id'];
             $this->render_data['reports_list'][] = $report_data;

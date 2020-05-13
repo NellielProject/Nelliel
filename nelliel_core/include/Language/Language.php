@@ -64,7 +64,7 @@ class Language
         if (!$loaded)
         {
             $po_parser = new \SmallPHPGettext\ParsePo();
-            $language_array = $po_parser->parseFile($file, $domain);
+            $language_array = $po_parser->parseFile($file, $domain_id);
 
             if (NEL_USE_INTERNAL_CACHE)
             {
