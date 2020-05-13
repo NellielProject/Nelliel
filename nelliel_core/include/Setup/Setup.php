@@ -178,6 +178,8 @@ class Setup
         $news_table->createTable();
         $permissions_table = new TablePermissions($database, $sql_compatibility);
         $permissions_table->createTable();
+        $permissions_table = new TableOverboard($database, $sql_compatibility);
+        $permissions_table->createTable();
         $rate_limit_table = new TableRateLimit($database, $sql_compatibility);
         $rate_limit_table->createTable();
         $reports_table = new TableReports($database, $sql_compatibility);

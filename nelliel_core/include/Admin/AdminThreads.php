@@ -192,6 +192,12 @@ class AdminThreads extends AdminHandler
     {
         $regen = new \Nelliel\Regen();
         $regen->threads($this->domain, true, [$thread_id]);
+        $this->site_domain = new \Nelliel\DomainSite($this->database);
+
+        if($site_domain->setting('overboard_active'))
+        {
+            $regen->overboard($site_domain);
+        }
 
         if($regen_index)
         {

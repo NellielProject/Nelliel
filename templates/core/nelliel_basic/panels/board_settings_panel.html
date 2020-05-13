@@ -1334,6 +1334,22 @@
 			</span>
 		</div>
 		{{/ url_prefix }}
+		{{# exclude_from_overboards }}
+		<div class="display-row">
+			{{# defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="exclude_from_overboards_lock" value="0">
+				<input id="exclude_from_overboards_lock" type="checkbox" name="exclude_from_overboards_lock" value="1" {{ locked }}>
+				<label for="exclude_from_overboards_lock" data-i18n="gettext">(Lock)</label>
+			</span>
+			{{/ defaults }}
+			<span class="display-cell">
+				<input type="hidden" name="exclude_from_overboards" value="0">
+				<input id="exclude_from_overboards" type="checkbox" name="exclude_from_overboards" value="1" {{ value }} {{ disabled }}>
+				<label for="exclude_from_overboards" data-i18n="gettext">(UNUSED) Exclude this board's threads from the overboards</label>
+			</span>
+		</div>
+		{{/ exclude_from_overboards }}
 	</div>
 	<hr>
 	{{# categories }}

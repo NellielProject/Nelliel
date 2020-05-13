@@ -92,6 +92,7 @@ class AdminBans extends AdminHandler
                 $regen = new \Nelliel\Regen();
                 $regen->threads($this->domain, true, [$_GET['post-id']]);
                 $regen->index($this->domain);
+                $regen->overboard($this->domain);
             }
         }
     }

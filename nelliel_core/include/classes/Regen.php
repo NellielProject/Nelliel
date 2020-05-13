@@ -55,6 +55,12 @@ class Regen
         $output_catalog->render([], false);
     }
 
+    public function overboard(Domain $domain)
+    {
+        $output_thread = new \Nelliel\Output\OutputOverboard($domain, true);
+        $output_thread->render([], false);
+    }
+
     public function boardList(Domain $domain)
     {
         $board_json = new \Nelliel\API\JSON\JSONBoard($domain, new \Nelliel\Utility\FileHandler());

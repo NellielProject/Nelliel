@@ -70,6 +70,13 @@ class ThreadHandler
 
         $regen = new Regen();
         $regen->threads($this->domain, true, $updates);
+        $this->site_domain = new \Nelliel\DomainSite($this->database);
+
+        if($site_domain->setting('overboard_active'))
+        {
+            $regen->overboard($site_domain);
+        }
+
         $regen->index($this->domain);
     }
 }
