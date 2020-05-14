@@ -78,9 +78,9 @@ class TableSiteConfig extends TableHandler
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'overboard_active', '0', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'overboard_uri', 'overboard', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'overboard_threads', '20', 0]);
-        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'overboard_sfw_active', '0', 0]);
-        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'overboard_sfw_uri', 'sfw_overboard', 0]);
-        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'overboard_sfw_threads', '20', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'sfw_overboard_active', '0', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'string', 'sfw_overboard__uri', 'sfwoverboard', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'sfw_overboard_threads', '20', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'user_board_creation', '0', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'max_boards_per_user', '1', 0, 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'display_render_timer', '1', 0]);

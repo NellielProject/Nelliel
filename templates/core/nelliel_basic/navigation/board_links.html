@@ -1,9 +1,11 @@
 {{% FILTERS }}
 <nav class="board-navigation">
+	<span>[ </span>
 	{{# boards }}
-	<span>[ <a href="{{ board_url }}" class="board-navigation-link">{{ board_id }}</a> ]</span>
-	{{# multiple_boards }}
+	<a href="{{ board_url }}" class="board-navigation-link">{{ board_id }}</a>
+	{{^ end }}
 	<span> / </span>
-	{{/ multiple_boards }}
+	{{/ end }}
 	{{/ boards }}
+	<span> ]</span>
 </nav>

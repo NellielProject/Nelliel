@@ -17,15 +17,15 @@ function nel_about_page(DomainSite $domain)
     $render_data = array();
     $dotdot = '';
     $render_data['page_language'] = str_replace('_', '-', $domain->locale());
-    $output_head = new \Nelliel\Output\OutputHead($domain);
+    $output_head = new \Nelliel\Output\OutputHead($domain, false);
     $render_data['head'] = $output_head->render(['dotdot' => $dotdot], false);
-    $output_header = new \Nelliel\Output\OutputHeader($domain);
+    $output_header = new \Nelliel\Output\OutputHeader($domain, false);
     $render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot],
             false);
     $render_data['nelliel_version'] = _gettext('Version: ') . NELLIEL_VERSION;
     $render_data['disclaimer_image_url'] = NEL_CORE_IMAGES_WEB_PATH . 'wat/luna_canterlot_disclaimer.png';
     $render_data['disclaimer_alt_text'] = 'Luna Canterlot Voice';
-    $output_footer = new \Nelliel\Output\OutputFooter($domain);
+    $output_footer = new \Nelliel\Output\OutputFooter($domain, false);
     $render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], false);
     echo $render_engine->render(file_get_contents(NEL_WAT_FILES_PATH . 'about_nelliel.html'), $render_data);
     nel_clean_exit();

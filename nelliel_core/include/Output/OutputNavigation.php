@@ -49,14 +49,16 @@ class OutputNavigation extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $dotdot = $parameters['dotdot'] ?? '';
         $board_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
-        $render_data['multiple_boards'] = count($board_data) > 1;
+        $board_count = count($board_data);
+        $end = $board_count - 1;
 
-        foreach ($board_data as $data)
+        for ($i = 0; $i < $board_count; ++ $i)
         {
             $board_info = array();
-            $board_info['board_url'] = $dotdot . $data['board_uri'];
-            $board_info['name'] = $this->domain->setting('name');
-            $board_info['board_id'] = $data['board_id'];
+            $board_info['board_url'] = $dotdot . $board_data[$i]['board_uri'] . '/';
+            $board_info['name'] = ''; // TODO: Get and use actual name
+            $board_info['board_id'] = $board_data[$i]['board_id'];
+            $board_info['end'] = $i === $end;
             $render_data['boards'][] = $board_info;
         }
 
@@ -76,6 +78,10 @@ class OutputNavigation extends OutputCore
         $render_data['home_url'] = $site_domain->setting('home_page');
         $render_data['news_url'] = $dotdot . 'news.html';
         $render_data['account_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=account';
+        $render_data['overboard_active'] = $this->site_domain->setting('overboard_active');
+        $render_data['overboard_url'] = $dotdot . $this->site_domain->setting('overboard_uri') . '/';
+        $render_data['sfw_overboard_active'] = $this->site_domain->setting('sfw_overboard_active');
+        $render_data['sfw_overboard_url'] = $dotdot . $this->site_domain->setting('sfw_overboard_uri') . '/';
         $render_data['about_nelliel_url'] = $dotdot . NEL_MAIN_SCRIPT . '?about_nelliel';
         return $render_data;
     }

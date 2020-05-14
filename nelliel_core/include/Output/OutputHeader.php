@@ -122,6 +122,8 @@ class OutputHeader extends OutputCore
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['site_navigation'] = $output_navigation->render(
                 ['navigation' => 'site_links', 'dotdot' => $dotdot], true);
+        $this->render_data['board_navigation'] = $output_navigation->render(['navigation' => 'board_links', 'dotdot' => $dotdot],
+                true);
 
         $this->render_data['name'] = ($this->domain->setting('show_name')) ? $this->domain->setting('name') : '';
         $this->render_data['slogan'] = ($this->domain->setting('show_slogan')) ? $this->domain->setting('slogan') : '';
@@ -157,8 +159,6 @@ class OutputHeader extends OutputCore
             }
         }
 
-        $this->render_data['board_navigation'] = $output_menu->render(['menu' => 'board_links', 'dotdot' => $dotdot],
-                true);
         $output = $this->output('header', $data_only, true);
         return $output;
     }

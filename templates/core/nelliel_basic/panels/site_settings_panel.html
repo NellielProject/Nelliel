@@ -126,6 +126,32 @@
 		<label for="session_length" class="display-cell" data-i18n="gettext">Idle time before a user is logged out (in seconds; 0 to disable)</label>
 		<input id="session_length" class="display-cell" type="text" name="session_length" size="15" value="{{ session_length }}">
 	</div>
+		<div class="display-row">
+		<input type="hidden" name="overboard_active" value="0">
+		<input id="overboard_active" type="checkbox" name="overboard_active" value="1" {{ overboard_active }}>
+		<label for="overboard_active" data-i18n="gettext">Enable overboard</label>
+	</div>
+	<div class="display-row">
+		<label for="overboard_uri" class="display-cell" data-i18n="gettext">URI of overboard</label>
+		<input id="overboard_uri" class="display-cell" type="text" name="overboard_uri" size="45" value="{{ overboard_uri }}">
+	</div>
+	<div class="display-row">
+		<label for="overboard_threads" class="display-cell" data-i18n="gettext">How many threads to display on overboard</label>
+		<input id="overboard_threads" class="display-cell" type="text" name="overboard_threads" size="15" value="{{ overboard_threads }}">
+	</div>
+	<div class="display-row">
+		<input type="hidden" name="sfw_overboard_active" value="0">
+		<input id="sfw_overboard_active" type="checkbox" name="sfw_overboard_active" value="1" {{ sfw_overboard_active }}>
+		<label for="sfw_overboard_active" data-i18n="gettext">Enable SFW overboard</label>
+	</div>
+	<div class="display-row">
+		<label for="sfw_overboard_uri" class="display-cell" data-i18n="gettext">URI of SFW overboard</label>
+		<input id="sfw_overboard_uri" class="display-cell" type="text" name="sfw_overboard_uri" size="45" value="{{ sfw_overboard_uri }}">
+	</div>
+	<div class="display-row">
+		<label for="sfw_overboard_threads" class="display-cell" data-i18n="gettext">How many threads to display on SFW overboard</label>
+		<input id="sfw_overboard_threads" class="display-cell" type="text" name="sfw_overboard_threads" size="15" value="{{ sfw_overboard_threads }}">
+	</div>
 	<div class="display-row">
 		<span class="display-cell">
 			<span data-i18n="gettext">Preferred graphics handler:</span>
