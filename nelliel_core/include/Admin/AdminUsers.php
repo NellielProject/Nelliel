@@ -99,15 +99,7 @@ class AdminUsers extends AdminHandler
             nel_derp(302, _gettext('You are not allowed to modify users.'));
         }
 
-        if (!$this->authorization->userExists($this->user_id))
-        {
-            $update_user = $this->authorization->newUser($this->user_id);
-        }
-        else
-        {
-            $update_user = $this->authorization->getUser($this->user_id);
-            $update_user->loadFromDatabase();
-        }
+        $update_user = $this->authorization->getUser($this->user_id);
 
         foreach ($_POST as $key => $value) // TODO: Improve this
         {
@@ -148,6 +140,7 @@ class AdminUsers extends AdminHandler
         }
 
         $this->authorization->saveUsers();
+        $update_user->loadFromDatabase();
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
     }

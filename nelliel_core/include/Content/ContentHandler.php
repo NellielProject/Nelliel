@@ -14,13 +14,13 @@ abstract class ContentHandler
     protected $domain;
     protected $content_data = array();
 
-    public abstract function loadFromDatabase($temp_database = null);
+    public abstract function loadFromDatabase();
 
-    public abstract function writeToDatabase($temp_database = null);
+    public abstract function writeToDatabase();
 
     public abstract function remove();
 
-    protected abstract function removeFromDatabase($temp_database = null);
+    protected abstract function removeFromDatabase();
 
     protected abstract function removeFromDisk();
 

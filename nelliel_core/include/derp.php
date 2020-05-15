@@ -16,6 +16,17 @@ function nel_early_derp(int $error_id, string $error_message, array $error_data 
 
 function nel_derp(int $error_id, string $error_message, array $error_data = array())
 {
+    static $already_derping;
+
+    if(!$already_derping)
+    {
+        $already_derping = true;
+    }
+    else
+    {
+        return;
+    }
+
     if(!defined('NEL_SETUP_GOOD'))
     {
         nel_early_derp($error_id, $error_message, $error_data);

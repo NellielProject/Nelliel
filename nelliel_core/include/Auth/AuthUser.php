@@ -15,24 +15,28 @@ class AuthUser extends AuthHandler
 {
     public $user_roles = array();
 
-    function __construct(NellielPDO $database, string $user_id)
+    function __construct(NellielPDO $database, string $user_id, bool $db_load = true)
     {
         $this->database = $database;
         $this->empty = nel_true_empty($user_id);
         $this->auth_id = $user_id;
         $this->authorization = new Authorization($this->database);
+
+        if ($db_load)
+        {
+            $this->loadFromDatabase();
+        }
     }
 
-    public function loadFromDatabase($temp_database = null)
+    public function loadFromDatabase()
     {
-        if($this->empty())
+        if ($this->empty())
         {
             return false;
         }
 
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT * FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
+        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
 
         if (empty($result))
         {
@@ -40,8 +44,8 @@ class AuthUser extends AuthHandler
         }
 
         $this->auth_data = $result;
-        $prepared = $database->prepare('SELECT * FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ?');
-        $result = $database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
+        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ?');
+        $result = $this->database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
 
         foreach ($result as $row)
         {
@@ -51,63 +55,64 @@ class AuthUser extends AuthHandler
         return true;
     }
 
-    public function writeToDatabase($temp_database = null)
+    public function writeToDatabase()
     {
         if ($this->empty() || empty($this->id()))
         {
             return false;
         }
 
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT "entry" FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_COLUMN);
+        $prepared = $this->database->prepare('SELECT "entry" FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_COLUMN);
 
         if ($result)
         {
-            $prepared = $database->prepare(
+            $prepared = $this->database->prepare(
                     'UPDATE "' . NEL_USERS_TABLE .
                     '" SET "user_id" = :user_id, "display_name" = :display_name, "user_password" = :user_password, "active" = :active, "owner" = :owner, "last_login" = :last_login WHERE "entry" = :entry');
             $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
         }
         else
         {
-            $prepared = $database->prepare(
-                    'INSERT INTO "' . NEL_USERS_TABLE . '" ("user_id", "display_name", "user_password", "active", "owner", "last_login") VALUES
+            $prepared = $this->database->prepare(
+                    'INSERT INTO "' . NEL_USERS_TABLE .
+                    '" ("user_id", "display_name", "user_password", "active", "owner", "last_login") VALUES
                     (:user_id, :display_name, :user_password, :active, :owner, :last_login)');
         }
 
         $prepared->bindValue(':user_id', $this->authDataOrDefault('user_id', $this->id()), PDO::PARAM_STR);
-        $prepared->bindValue(':display_name', $this->authDataOrDefault('display_name', null), PDO::PARAM_STR);
-        $prepared->bindValue(':user_password', $this->authDataOrDefault('user_password', null), PDO::PARAM_STR);
+        $prepared->bindValue(':display_name', $this->authDataOrDefault('display_name', ''), PDO::PARAM_STR);
+        $prepared->bindValue(':user_password', $this->authDataOrDefault('user_password', ''), PDO::PARAM_STR);
         $prepared->bindValue(':active', $this->authDataOrDefault('active', 0), PDO::PARAM_INT);
         $prepared->bindValue(':owner', $this->authDataOrDefault('owner', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_login', $this->authDataOrDefault('last_login', 0), PDO::PARAM_INT);
-        $database->executePrepared($prepared);
+        $this->database->executePrepared($prepared);
 
         foreach ($this->user_roles as $domain_id => $user_role)
         {
-            $prepared = $database->prepare(
+            $prepared = $this->database->prepare(
                     'SELECT "entry" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
-            $result = $database->executePreparedFetch($prepared, [$this->id(), $domain_id], PDO::FETCH_COLUMN);
+            $result = $this->database->executePreparedFetch($prepared, [$this->id(), $domain_id], PDO::FETCH_COLUMN);
 
             if ($result)
             {
-                $prepared = $database->prepare(
+                $prepared = $this->database->prepare(
                         'UPDATE "' . NEL_USER_ROLES_TABLE .
                         '" SET "user_id" = :user_id, "role_id" = :role_id, "domain_id" = :domain_id WHERE "entry" = :entry');
                 $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
             }
             else
             {
-                $prepared = $database->prepare(
-                        'INSERT INTO "' . NEL_USER_ROLES_TABLE . '" ("user_id", "role_id", "domain_id") VALUES
+                $prepared = $this->database->prepare(
+                        'INSERT INTO "' . NEL_USER_ROLES_TABLE .
+                        '" ("user_id", "role_id", "domain_id") VALUES
                     (:user_id, :role_id, :domain_id)');
             }
 
             $prepared->bindValue(':user_id', $this->id(), PDO::PARAM_STR);
             $prepared->bindValue(':role_id', $user_role['role_id'], PDO::PARAM_STR);
             $prepared->bindValue(':domain_id', $domain_id, PDO::PARAM_STR);
-            $database->executePrepared($prepared);
+            $this->database->executePrepared($prepared);
         }
 
         return true;
@@ -119,7 +124,7 @@ class AuthUser extends AuthHandler
 
     public function remove()
     {
-        if($this->empty())
+        if ($this->empty())
         {
             return false;
         }
@@ -181,7 +186,7 @@ class AuthUser extends AuthHandler
 
     public function checkPermission(Domain $domain, string $perm_id)
     {
-        if($this->empty())
+        if ($this->empty())
         {
             return false;
         }
@@ -202,7 +207,7 @@ class AuthUser extends AuthHandler
         // Check if there is a global variation which may have permission set
         $global_domain = $domain->globalVariation();
 
-        if($global_domain)
+        if ($global_domain)
         {
             $role = $this->checkRole($global_domain);
 
@@ -224,11 +229,11 @@ class AuthUser extends AuthHandler
 
     public function active()
     {
-        return boolval($this->getInfo('active') || $this->isSiteOwner());
+        return $this->getInfo('active') || $this->isSiteOwner();
     }
 
     public function isSiteOwner()
     {
-        return $this->authorization->isSiteOwner($this->auth_id);
+        return isset($this->auth_data['owner']) && $this->auth_data['owner'] == 1;
     }
 }

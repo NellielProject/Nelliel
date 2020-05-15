@@ -13,16 +13,16 @@ abstract class AuthHandler
     public $auth_data = array();
     public $auth_id;
     public $authorization;
-    private $empty;
+    protected $empty;
 
     public function authDataOrDefault(string $data_name, ?string $default = null)
     {
         return $this->auth_data[$data_name] ?? $default;
     }
 
-    public abstract function loadFromDatabase($temp_database = null);
+    public abstract function loadFromDatabase();
 
-    public abstract function writeToDatabase($temp_database = null);
+    public abstract function writeToDatabase();
 
     public abstract function setupNew();
 

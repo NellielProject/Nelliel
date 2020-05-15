@@ -146,7 +146,7 @@ $base_config['use_mustache_cache'] = true;
 
 // The hash settings for staff logins and other higher security things
 
-// Which algorithm to use. Current valid options: BCRYPT, ARGON2I
+// Which algorithm to use. Current valid options: BCRYPT, ARGON2
 // If a selected algorithm is not available, Nelliel will use the PASSWORD_DEFAULT
 $crypt_config['password_algorithm'] = 'BCRYPT';
 
@@ -155,7 +155,7 @@ $crypt_config['password_algorithm'] = 'BCRYPT';
 // PHP default cost is 10; Nelliel default is 12; 04 is the minimum; 31 is maximum
 $crypt_config['password_bcrypt_cost'] = 12;
 
-// Argon2I
+// Argon2
 // Only available in PHP 7.2+
 
 // PHP default memory cost is 1024; Nelliel default is 1024

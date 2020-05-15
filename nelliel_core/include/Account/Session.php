@@ -21,9 +21,15 @@ class Session
     protected $session_name = 'NellielSession';
     protected $authorization;
     protected $database;
+    protected $failed = false;
 
     function __construct()
     {
+        if ($this->failed)
+        {
+            return;
+        }
+
         $this->domain = new DomainSite(nel_database());
         $this->database = $this->domain->database();
         $this->authorization = new Authorization($this->database);
@@ -66,6 +72,7 @@ class Session
         if (NEL_SECURE_SESSION_ONLY && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'))
         {
             $this->terminate();
+            $this->failed = true;
             nel_derp(220, _gettext('Session requires a secure connection.'));
         }
 
@@ -74,6 +81,7 @@ class Session
         if (!$empty_session && $this->isOld())
         {
             $this->terminate();
+            $this->failed = true;
             nel_derp(221, _gettext('Session has expired.'));
         }
 
@@ -86,6 +94,7 @@ class Session
 
         if ($user->empty() || !$user->active())
         {
+            $this->failed = true;
             nel_derp(222, _gettext('Not an active user.'));
         }
 
@@ -125,6 +134,7 @@ class Session
         if (empty($login_data))
         {
             $this->terminate();
+            $this->failed = true;
             nel_derp(223, _gettext('Login has not been validated. Cannot start session.'));
         }
 
@@ -184,6 +194,7 @@ class Session
     {
         if (is_null(self::$user))
         {
+            $this->failed = true;
             nel_derp(224, _gettext('You must be logged in for this action.'));
         }
     }

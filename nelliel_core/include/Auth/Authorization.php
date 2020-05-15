@@ -21,10 +21,10 @@ class Authorization
         $this->database = $database;
     }
 
-    public function newUser(string $user_id)
+    public function newUser(string $user_id, bool $db_load = true)
     {
         $user_id_lower = utf8_strtolower($user_id);
-        $new_user = new AuthUser($this->database, $user_id);
+        $new_user = new AuthUser($this->database, $user_id, $db_load);
         $new_user->setupNew();
         self::$users[$user_id_lower] = $new_user;
         return self::$users[$user_id_lower];
@@ -37,10 +37,10 @@ class Authorization
 
     public function userExists(string $user_id)
     {
-        return $this->getUser($user_id)->empty();
+        return $this->getUser($user_id)->loadFromDatabase();
     }
 
-    public function getUser(string $user_id)
+    public function getUser(string $user_id, bool $db_load = true)
     {
         $user_id_lower = utf8_strtolower($user_id);
 
@@ -49,15 +49,8 @@ class Authorization
             return self::$users[$user_id_lower];
         }
 
-        $new_user = new AuthUser($this->database, $user_id);
-
-        if ($new_user->loadFromDatabase())
-        {
-            self::$users[$user_id_lower] = $new_user;
-            return self::$users[$user_id_lower];
-        }
-
-        return $this->emptyUser();
+        $new_user = $this->newUser($user_id, $db_load);
+        return $new_user;
     }
 
     public function removeUser(string $user_id)
@@ -77,7 +70,7 @@ class Authorization
     public function isSiteOwner(string $user_id)
     {
         $user_id_lower = utf8_strtolower($user_id);
-        return self::$users[$user_id_lower]->auth_data['owner'] == 1;
+        return self::$users[$user_id_lower]->isSiteOwner();
     }
 
     public function newRole(string $role_id)

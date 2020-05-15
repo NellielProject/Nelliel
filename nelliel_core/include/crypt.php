@@ -33,15 +33,30 @@ function nel_set_password_algorithm(string $algorithm)
         return;
     }
 
-    if ($algorithm === 'BCRYPT' && defined('PASSWORD_BCRYPT'))
+    if($algorithm === 'ARGON2')
     {
-        define('NEL_PASSWORD_ALGORITHM', PASSWORD_BCRYPT);
+        if(defined('PASSWORD_ARGON2ID'))
+        {
+            define('NEL_PASSWORD_ALGORITHM', PASSWORD_ARGON2ID);
+            return;
+        }
+        else if(defined('PASSWORD_ARGON2I'))
+        {
+            define('NEL_PASSWORD_ALGORITHM', PASSWORD_ARGON2I);
+            return;
+        }
     }
-    else if ($algorithm === 'ARGON2I' && defined('PASSWORD_ARGON2I'))
+
+    if (!defined('NEL_PASSWORD_ALGORITHM') || $algorithm === 'BCRYPT')
     {
-        define('NEL_PASSWORD_ALGORITHM', PASSWORD_ARGON2I);
+        if(defined('PASSWORD_BCRYPT'))
+        {
+            define('NEL_PASSWORD_ALGORITHM', PASSWORD_BCRYPT);
+            return;
+        }
     }
-    else if (defined('PASSWORD_DEFAULT'))
+
+    if (defined('PASSWORD_DEFAULT'))
     {
         define('NEL_PASSWORD_ALGORITHM', PASSWORD_DEFAULT);
     }
@@ -55,11 +70,12 @@ function nel_password_hash(string $password, int $algorithm, array $options = ar
 {
     switch ($algorithm)
     {
-        case 1:
+        case PASSWORD_BCRYPT:
             $options['cost'] = $options['cost'] ?? NEL_PASSWORD_BCRYPT_COST;
             return password_hash($password, $algorithm, $options);
 
-        case 2:
+        case PASSWORD_ARGON2I:
+        case PASSWORD_ARGON2ID:
             $options['memory_cost'] = $options['memory_cost'] ?? NEL_PASSWORD_ARGON2_MEMORY_COST;
             $options['time_cost'] = $options['time_cost'] ?? NEL_PASSWORD_ARGON2_TIME_COST;
             $options['threads'] = $options['threads'] ?? NEL_PASSWORD_ARGON2_THREADS;

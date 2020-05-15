@@ -38,12 +38,11 @@ class ContentFile extends ContentHandler
         }
     }
 
-    public function loadFromDatabase($temp_database = null)
+    public function loadFromDatabase()
     {
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare(
+        $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->content_id->postID(), $this->content_id->orderID()],
+        $result = $this->database->executePreparedFetch($prepared, [$this->content_id->postID(), $this->content_id->orderID()],
                 PDO::FETCH_ASSOC);
 
         if (empty($result))
@@ -55,22 +54,21 @@ class ContentFile extends ContentHandler
         return true;
     }
 
-    public function writeToDatabase($temp_database = null)
+    public function writeToDatabase()
     {
         if (empty($this->content_data) || empty($this->content_id->orderID()))
         {
             return false;
         }
 
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare(
+        $prepared = $this->database->prepare(
                 'SELECT "entry" FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->content_id->postID(), $this->content_id->orderID()],
+        $result = $this->database->executePreparedFetch($prepared, [$this->content_id->postID(), $this->content_id->orderID()],
                 PDO::FETCH_COLUMN);
 
         if ($result)
         {
-            $prepared = $database->prepare(
+            $prepared = $this->database->prepare(
                     'UPDATE "' . $this->content_table .
                     '" SET "parent_thread" = :parent_thread,
                     "post_ref" = :post_ref, "content_order" = :content_order,
@@ -84,7 +82,7 @@ class ContentFile extends ContentHandler
         }
         else
         {
-            $prepared = $database->prepare(
+            $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->content_table .
                     '" ("parent_thread", "post_ref", "content_order", "type", "format", "mime",
                     "filename", "extension", "display_width", "display_height", "preview_name", "preview_extension", "preview_width", "preview_height",
@@ -115,7 +113,7 @@ class ContentFile extends ContentHandler
         $prepared->bindValue(':sha512', $this->contentDataOrDefault('sha512', null), PDO::PARAM_LOB);
         $prepared->bindValue(':spoiler', $this->contentDataOrDefault('spoiler', 0), PDO::PARAM_INT);
         $prepared->bindValue(':exif', $this->contentDataOrDefault('exif', null), PDO::PARAM_STR);
-        $database->executePrepared($prepared);
+        $this->database->executePrepared($prepared);
         return true;
     }
 
@@ -151,17 +149,16 @@ class ContentFile extends ContentHandler
         $thread->updateCounts();
     }
 
-    protected function removeFromDatabase($temp_database = null)
+    protected function removeFromDatabase()
     {
         if (empty($this->content_id->orderID()))
         {
             return false;
         }
 
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare(
+        $prepared = $this->database->prepare(
                 'DELETE FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
-        $database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
+        $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
         return true;
     }
 

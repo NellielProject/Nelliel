@@ -82,7 +82,6 @@ class Register
 
         if ($creating_owner)
         {
-            //$new_user->modifyRole('_site_', '');
             $new_user->auth_data['owner'] = 1;
         }
         else

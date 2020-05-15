@@ -41,11 +41,10 @@ class ContentPost extends ContentHandler
         }
     }
 
-    public function loadFromDatabase($temp_database = null)
+    public function loadFromDatabase()
     {
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT * FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_ASSOC);
+        $prepared = $this->database->prepare('SELECT * FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_ASSOC);
 
         if (empty($result))
         {
@@ -63,13 +62,12 @@ class ContentPost extends ContentHandler
             return false;
         }
 
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT "post_number" FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN);
+        $prepared = $this->database->prepare('SELECT "post_number" FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN);
 
         if ($result)
         {
-            $prepared = $database->prepare(
+            $prepared = $this->database->prepare(
                     'UPDATE "' . $this->posts_table .
                     '" SET "parent_thread" = :parent_thread,
                     "poster_name" = :poster_name, "reply_to" = :reply_to, "post_password" = :post_password,
@@ -82,7 +80,7 @@ class ContentPost extends ContentHandler
         }
         else
         {
-            $prepared = $database->prepare(
+            $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->posts_table .
                     '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "email",
                     "subject", "comment", "ip_address", "post_time", "post_time_milli", "has_content", "content_count", "op", "sage", "mod_post_id", "mod_comment") VALUES
@@ -110,7 +108,7 @@ class ContentPost extends ContentHandler
         $prepared->bindValue(':sage', $this->contentDataOrDefault('sage', 0), PDO::PARAM_INT);
         $prepared->bindValue(':mod_post_id', $this->contentDataOrDefault('mod_post_id', null), PDO::PARAM_STR);
         $prepared->bindValue(':mod_comment', $this->contentDataOrDefault('mod_comment', null), PDO::PARAM_STR);
-        $database->executePrepared($prepared);
+        $this->database->executePrepared($prepared);
         return true;
     }
 
@@ -185,19 +183,18 @@ class ContentPost extends ContentHandler
         return true;
     }
 
-    protected function removeFromDatabase($temp_database = null)
+    protected function removeFromDatabase()
     {
         if (empty($this->content_id->postID()))
         {
             return false;
         }
 
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('DELETE FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
-        $database->executePrepared($prepared, [$this->content_id->postID()]);
-        $prepared = $database->prepare(
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
+        $this->database->executePrepared($prepared, [$this->content_id->postID()]);
+        $prepared = $this->database->prepare(
                 'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_post" = ? OR "target_post" = ?');
-        $database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->postID()]);
+        $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->postID()]);
         return true;
     }
 

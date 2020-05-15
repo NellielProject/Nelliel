@@ -47,11 +47,10 @@ class ContentThread extends ContentHandler
         }
     }
 
-    public function loadFromDatabase($temp_database = null)
+    public function loadFromDatabase()
     {
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT * FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_ASSOC);
+        $prepared = $this->database->prepare('SELECT * FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_ASSOC);
 
         if (empty($result))
         {
@@ -62,20 +61,19 @@ class ContentThread extends ContentHandler
         return true;
     }
 
-    public function writeToDatabase($temp_database = null)
+    public function writeToDatabase()
     {
         if (empty($this->content_data) || empty($this->content_id->threadID()))
         {
             return false;
         }
 
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('SELECT "thread_id" FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
-        $result = $database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
+        $prepared = $this->database->prepare('SELECT "thread_id" FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
 
         if ($result)
         {
-            $prepared = $database->prepare(
+            $prepared = $this->database->prepare(
                     'UPDATE "' . $this->threads_table .
                     '" SET "first_post" = :first_post,
                     "last_post" = :last_post, "last_bump_time" = :last_bump_time, "last_bump_time_milli" = :last_bump_time_milli,
@@ -85,7 +83,7 @@ class ContentThread extends ContentHandler
         }
         else
         {
-            $prepared = $database->prepare(
+            $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->threads_table .
                     '" ("thread_id", "first_post", "last_post",
                     "last_bump_time", "last_bump_time_milli", "content_count", "last_update", "last_update_milli",
@@ -108,7 +106,7 @@ class ContentThread extends ContentHandler
         $prepared->bindValue(':sticky', $this->contentDataOrDefault('sticky', 0), PDO::PARAM_INT);
         $prepared->bindValue(':archive_status', $this->contentDataOrDefault('archive_status', 0), PDO::PARAM_INT);
         $prepared->bindValue(':locked', $this->contentDataOrDefault('locked', 0), PDO::PARAM_INT);
-        $database->executePrepared($prepared);
+        $this->database->executePrepared($prepared);
         return true;
     }
 
@@ -140,19 +138,18 @@ class ContentThread extends ContentHandler
         return true;
     }
 
-    protected function removeFromDatabase($temp_database = null)
+    protected function removeFromDatabase()
     {
         if (empty($this->content_id->threadID()))
         {
             return false;
         }
 
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare('DELETE FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
-        $database->executePrepared($prepared, [$this->content_id->threadID()]);
-        $prepared = $database->prepare(
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
+        $this->database->executePrepared($prepared, [$this->content_id->threadID()]);
+        $prepared = $this->database->prepare(
                 'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_thread" = ? OR "target_thread" = ?');
-        $database->executePrepared($prepared, [$this->content_id->threadID(), $this->content_id->threadID()]);
+        $this->database->executePrepared($prepared, [$this->content_id->threadID(), $this->content_id->threadID()]);
         return true;
     }
 
