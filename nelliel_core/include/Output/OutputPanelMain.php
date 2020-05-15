@@ -36,8 +36,7 @@ class OutputPanelMain extends OutputCore
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Main Panel')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ?');
+        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ?');
         $user_roles = $this->database->executePreparedFetchAll($prepared, [$user->id()], PDO::FETCH_ASSOC);
         $boards = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
 
@@ -56,7 +55,7 @@ class OutputPanelMain extends OutputCore
         {
             $user_roles_list[$user_role['domain_id']]['role_id'] = $user_role['role_id'];
 
-            if(isset($roles_list[$user_role['role_id']]))
+            if (isset($roles_list[$user_role['role_id']]))
             {
                 $user_roles_list[$user_role['domain_id']]['role_title'] = $roles_list[$user_role['role_id']]['role_title'];
             }
@@ -118,10 +117,13 @@ class OutputPanelMain extends OutputCore
         $this->render_data['icon_sets_url'] = NEL_MAIN_SCRIPT . '?module=icon-sets';
         $this->render_data['module_news'] = $user->checkPermission($this->domain, 'perm_manage_news');
         $this->render_data['news_url'] = NEL_MAIN_SCRIPT . '?module=news';
+        $this->render_data['regen_overboard_pages'] = $user->checkPermission($this->domain, 'perm_regen_pages');
+        $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT . '?module=regen&action=overboard-all-pages';
+        $this->render_data['regen_site_caches'] = $user->checkPermission($this->domain, 'perm_regen_cache');
+        $this->render_data['regen_caches_url'] = NEL_MAIN_SCRIPT . '?module=regen&action=site-all-caches';
         $this->render_data['module_extract_gettext'] = $user->checkPermission($this->domain, 'perm_extract_gettext');
         $this->render_data['extract_gettext_url'] = NEL_MAIN_SCRIPT . '?module=language&action=extract-gettext';
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/main_panel',
-                $this->render_data);
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/main_panel', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

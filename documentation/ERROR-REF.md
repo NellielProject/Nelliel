@@ -122,6 +122,7 @@ Error 390: perm_extract_gettext (language/Language.php)
 Error 410: perm_regen_pages (dispatch/module_dispatch.php)  
 Error 411: perm_regen_caches (board) (dispatch/module_dispatch.php)  
 Error 412: perm_regen_caches (site) (dispatch/module_dispatch.php)  
+Error 413: perm_regen_pages (overboard) (dispatch/module_dispatch.php)  
 
 Error 420: perm_manage_templates (access) (Output/OutputPanelTemplates.php)  
 Error 421: perm_manage_templates (install) (Admin/AdminTemplates.php)  

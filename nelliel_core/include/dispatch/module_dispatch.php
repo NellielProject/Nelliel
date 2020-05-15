@@ -213,8 +213,8 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                         $url_constructor = new \Nelliel\URLConstructor();
                         $url = $url_constructor->dynamic(NEL_MAIN_SCRIPT,
                                 ['module' => 'render', 'action' => 'view-thread',
-                                'thread' => $fgsfds->getCommandData('noko', 'topic'),
-                                'board_id' => $inputs['board_id'], 'modmode' => 'true']);
+                                    'thread' => $fgsfds->getCommandData('noko', 'topic'),
+                                    'board_id' => $inputs['board_id'], 'modmode' => 'true']);
                         $redirect->changeURL($url);
                     }
                     else
@@ -230,13 +230,14 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 {
                     if ($session->inModmode($domain))
                     {
-                            $redirect->changeURL(NEL_MAIN_SCRIPT .
-                                    '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '&modmode=true');
+                        $redirect->changeURL(
+                                NEL_MAIN_SCRIPT . '?module=render&action=view-index&index=0&board_id=' .
+                                $inputs['board_id'] . '&modmode=true');
                     }
                     else
                     {
-                        $redirect->changeURL($domain->reference('board_directory') . '/' .
-                                NEL_MAIN_INDEX . NEL_PAGE_EXT);
+                        $redirect->changeURL(
+                                $domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT);
                     }
                 }
 
@@ -276,13 +277,13 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 if ($session->inModmode($domain))
                 {
-                    $redirect->changeURL(NEL_MAIN_SCRIPT .
-                            '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '&modmode=true');
+                    $redirect->changeURL(
+                            NEL_MAIN_SCRIPT . '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] .
+                            '&modmode=true');
                 }
                 else
                 {
-                    $redirect->changeURL($domain->reference('board_directory') . '/' .
-                            NEL_MAIN_INDEX . NEL_PAGE_EXT);
+                    $redirect->changeURL($domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT);
                 }
             }
 
@@ -290,13 +291,13 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             {
                 if ($session->inModmode($domain))
                 {
-                    $redirect->changeURL(NEL_MAIN_SCRIPT .
-                            '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] . '&modmode=true');
+                    $redirect->changeURL(
+                            NEL_MAIN_SCRIPT . '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] .
+                            '&modmode=true');
                 }
                 else
                 {
-                    $redirect->changeURL($domain->reference('board_directory') . '/' .
-                            NEL_MAIN_INDEX . NEL_PAGE_EXT);
+                    $redirect->changeURL($domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT);
                 }
             }
 
@@ -318,6 +319,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 $regen->allBoardPages($domain);
                 $archive = new \Nelliel\ArchiveAndPrune($domain, new \Nelliel\Utility\FileHandler());
                 $archive->updateThreads();
+                $forward = 'board';
             }
 
             if ($inputs['action'] === 'board-all-caches')
@@ -328,6 +330,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 }
 
                 $regen->boardCache($domain);
+                $forward = 'board';
             }
 
             if ($inputs['action'] === 'site-all-caches')
@@ -338,10 +341,31 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 }
 
                 $regen->siteCache($domain);
+                $forward = 'site';
             }
 
-            $output_board_panel = new \Nelliel\Output\OutputPanelBoard($domain, false);
-            $output_board_panel->render(['user' => $session->sessionUser()], false);
+            if ($inputs['action'] === 'overboard-all-pages')
+            {
+                if (!$user->checkPermission($domain, 'perm_regen_pages'))
+                {
+                    nel_derp(413, _gettext('You are not allowed to regenerate overboard pages.'));
+                }
+
+                $regen->overboard($domain);
+                $forward = 'site';
+            }
+
+            if (empty($forward) || $forward === 'site')
+            {
+                $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain, false);
+                $output_main_panel->render(['user' => $session->sessionUser()], false);
+            }
+            else if ($forward === 'board')
+            {
+                $output_board_panel = new \Nelliel\Output\OutputPanelBoard($domain, false);
+                $output_board_panel->render(['user' => $session->sessionUser()], false);
+            }
+
             break;
 
         case 'templates':

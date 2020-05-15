@@ -72,26 +72,26 @@ class AdminBoardSettings extends AdminHandler
         $config_table = ($this->defaults) ? NEL_BOARD_DEFAULTS_TABLE : $this->domain->reference('config_table');
         $lock_override = $this->session_user->checkPermission($this->domain, 'perm_board_config_lock_override');
 
-        while ($item = each($_POST))
+        foreach ($_POST as $key => $value)
         {
-            if ($item[0] === 'jpeg_quality' && $item[1] > 100)
+            if ($key === 'jpeg_quality' && $value > 100)
             {
-                $item[0] = 100;
+                $key = 100;
             }
 
-            if (substr($item[0], -5) === '_lock' && $this->defaults)
+            if (substr($key, -5) === '_lock' && $this->defaults)
             {
-                $config_name = substr($item[0], 0, strlen($item[0]) - 5);
-                $this->setLock($config_table, $config_name, $item[1]);
+                $config_name = substr($key, 0, strlen($key) - 5);
+                $this->setLock($config_table, $config_name, $value);
 
                 foreach ($this->getBoardDomains() as $board_domain)
                 {
-                    $this->setLock($board_domain->reference('config_table'), $config_name, $item[1]);
+                    $this->setLock($board_domain->reference('config_table'), $config_name, $value);
                 }
             }
             else
             {
-                $this->updateSetting($config_table, $item[0], $item[1], $lock_override);
+                $this->updateSetting($config_table, $key, $value, $lock_override);
             }
         }
 

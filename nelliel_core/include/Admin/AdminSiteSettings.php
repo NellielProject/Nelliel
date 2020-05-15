@@ -23,7 +23,7 @@ class AdminSiteSettings extends AdminHandler
 
     public function actionDispatch(string $action, bool $return)
     {
-        if($action === 'update')
+        if ($action === 'update')
         {
             $this->update();
         }
@@ -61,10 +61,11 @@ class AdminSiteSettings extends AdminHandler
             nel_derp(361, _gettext('You are not allowed to modify the site settings.'));
         }
 
-        while ($item = each($_POST))
+        foreach ($_POST as $key => $value)
         {
-            $prepared = $this->database->prepare('UPDATE "nelliel_site_config" SET "setting" = ? WHERE "config_name" = ?');
-            $this->database->executePrepared($prepared, [$item[1], $item[0]], true);
+            $prepared = $this->database->prepare(
+                    'UPDATE "nelliel_site_config" SET "setting" = ? WHERE "config_name" = ?');
+            $this->database->executePrepared($prepared, [$value, $key], true);
         }
 
         $regen = new \Nelliel\Regen();

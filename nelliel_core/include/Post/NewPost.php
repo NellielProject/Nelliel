@@ -213,7 +213,7 @@ class NewPost
         $regen->threads($this->domain, true, [$thread->contentID()->threadID()]);
         $regen->index($this->domain);
 
-        if($site_domain->setting('overboard_active'))
+        if($site_domain->setting('overboard_active') || $site_domain->setting('sfw_overboard_active'))
         {
             $regen->overboard($this->domain);
         }

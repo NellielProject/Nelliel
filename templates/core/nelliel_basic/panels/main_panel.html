@@ -47,7 +47,19 @@
 	<div><a href="{{ news_url }}" data-i18n="gettext">News</a></div>
 	{{/ module_news }}
 	<hr>
-	{{# module_extract_gettext }}
-	<div><a href="{{ extract_gettext_url }}" data-i18n="gettext">Extract Gettext Strings</a></div>
-	{{/ module_extract_gettext }}
+	{{# regen_overboard_pages }}
+	<div>
+		<a href="{{ regen_pages_url }}" data-i18n="gettext">Regenerate Overboard Pages</a>
+		<span data-i18n="gettext">Regenerates all posts and threads for the overboards.</span>
+	</div>
+	{{/ regen_overboard_pages }}
+	{{# regen_site_caches }}
+	<div>
+		<a href="{{ regen_caches_url }}" data-i18n="gettext">Regenerate Site Caches</a>
+		<span data-i18n="gettext">Regenerates all internal cache files for the main site.</span>
+	</div>
+	{{/ regen_site_caches }}
+		{{# module_extract_gettext }}
+		<div><a href="{{ extract_gettext_url }}" data-i18n="gettext">Extract Gettext Strings</a></div>
+		{{/ module_extract_gettext }}
 </div>

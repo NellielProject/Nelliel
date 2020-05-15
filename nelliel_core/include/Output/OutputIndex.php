@@ -138,13 +138,15 @@ class OutputIndex extends OutputCore
                 $post_counter ++;
             }
 
+            $json_index->addThreadData($json_thread->retrieveData());
             $this->render_data['threads'][] = $thread_input;
             $threads_on_page ++;
             $threads_done++;
 
             if ($threads_on_page >= $this->domain->setting('threads_per_page') || $threads_done == $thread_count)
             {
-                $json_index->addThreadData($json_thread->retrieveData());
+                $this->render_data['index_navigation'] = true;
+                $this->render_data['footer_form'] = true;
                 $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
                 $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
                 $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=get';
