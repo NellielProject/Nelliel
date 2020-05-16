@@ -14,10 +14,10 @@
 		<input id="report_reason" type="text" name="report_reason" size="20" value="">
 	</div>
 	{{# use_report_captcha }}
-		{{> captcha }}
+		{{> pieces/captcha }}
 	{{/ use_report_captcha }}
 	{{# use_report_recaptcha }}
-		{{> recaptcha }}
+		{{> pieces/recaptcha }}
 	{{/ use_report_recaptcha }}
 	<div>
 		<input type="submit" name="form_submit_report" value="Report" data-i18n-attributes="gettext|value">

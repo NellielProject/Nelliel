@@ -20,10 +20,10 @@ define('NEL_SCRIPTS_DIR', 'scripts');
 define('NEL_FONTS_DIR', 'fonts');
 define('NEL_CORE_DIR', 'core');
 define('NEL_CUSTOM_DIR', 'custom');
-define('NEL_OUTPUT_DIR', 'nelliel_output');
+define('NEL_GENERAL_DIR', '.nelliel');
 define('NEL_CAPTCHA_DIR', 'captchas');
 
-if($_SERVER['SERVER_PORT'] != 80 && empty($_SERVER['HTTPS']))
+if ($_SERVER['SERVER_PORT'] != 80 && empty($_SERVER['HTTPS']))
 {
     define('NEL_BASE_DOMAIN', $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT']);
 }
@@ -74,12 +74,12 @@ define('NEL_PLUGINS_FILES_PATH', NELLIEL_CORE_PATH . 'plugins/');
 define('NEL_LANGUAGES_FILES_PATH', NELLIEL_CORE_PATH . 'languages/');
 define('NEL_LOCALE_FILES_PATH', NEL_LANGUAGES_FILES_PATH . 'locale/');
 define('NEL_CORE_STYLES_FILES_PATH', NEL_ASSETS_CORE_FILES_PATH . NEL_STYLES_DIR . '/');
-define('NEL_CUSTOM_STYLES_FILES_PATH', NEL_ASSETS_CUSTOM_FILES_PATH .NEL_STYLES_DIR . '/');
+define('NEL_CUSTOM_STYLES_FILES_PATH', NEL_ASSETS_CUSTOM_FILES_PATH . NEL_STYLES_DIR . '/');
 define('NEL_CORE_ICON_SETS_FILES_PATH', NEL_ASSETS_CORE_FILES_PATH . NEL_ICON_SETS_DIR . '/');
 define('NEL_CUSTOM_ICON_SETS_FILES_PATH', NEL_ASSETS_CUSTOM_FILES_PATH . NEL_ICON_SETS_DIR . '/');
 define('NEL_WAT_FILES_PATH', NEL_INCLUDE_PATH . 'wat/');
-define('NEL_OUTPUT_FILES_PATH', NEL_BASE_PATH . 'nelliel_output/');
-define('NEL_CAPTCHA_FILES_PATH', NEL_OUTPUT_FILES_PATH . NEL_CAPTCHA_DIR . '/');
+define('NEL_GENERAL_FILES_PATH', NEL_BASE_PATH . NEL_GENERAL_DIR . '/');
+define('NEL_CAPTCHA_FILES_PATH', NEL_GENERAL_FILES_PATH . NEL_CAPTCHA_DIR . '/');
 
 define('NEL_ASSETS_CORE_WEB_PATH', NEL_ASSETS_DIR . '/' . NEL_CORE_DIR . '/');
 define('NEL_ASSETS_CUSTOM_WEB_PATH', NEL_ASSETS_DIR . '/' . NEL_CUSTOM_DIR . '/');
@@ -91,8 +91,8 @@ define('NEL_CORE_STYLES_WEB_PATH', NEL_ASSETS_CORE_WEB_PATH . NEL_STYLES_DIR . '
 define('NEL_CUSTOM_STYLES_WEB_PATH', NEL_ASSETS_CUSTOM_WEB_PATH . NEL_STYLES_DIR . '/');
 define('NEL_CORE_ICON_SETS_WEB_PATH', NEL_ASSETS_CORE_WEB_PATH . NEL_ICON_SETS_DIR . '/');
 define('NEL_CUSTOM_ICON_SETS_WEB_PATH', NEL_ASSETS_CUSTOM_WEB_PATH . NEL_ICON_SETS_DIR . '/');
-define('NEL_OUTPUT_WEB_PATH', 'nelliel_output/');
-define('NEL_CAPTCHA_WEB_PATH', NEL_OUTPUT_WEB_PATH . NEL_CAPTCHA_DIR . '/');
+define('NEL_GENERAL_WEB_PATH', NEL_GENERAL_DIR . '/');
+define('NEL_CAPTCHA_WEB_PATH', NEL_GENERAL_WEB_PATH . NEL_CAPTCHA_DIR . '/');
 define('NEL_BASE_WEB_PATH', pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME) . '/');
 define('NEL_SQLITE_DB_DEFAULT_PATH', NELLIEL_CORE_PATH);
 
@@ -166,17 +166,17 @@ require_once NEL_INCLUDE_PATH . 'database.php';
 require_once NEL_INCLUDE_PATH . 'general_functions.php';
 $setup = new \Nelliel\Setup\Setup();
 
-if(isset($_GET['install']))
+if (isset($_GET['install']))
 {
     $setup->install();
 }
 
-if(!$setup->checkInstallDone())
+if (!$setup->checkInstallDone())
 {
     nel_derp(107, _gettext('Installation has not been done yet or is not complete.'));
 }
 
-if(file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php'))
+if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php'))
 {
     $peppers = array();
     include_once NEL_GENERATED_FILES_PATH . 'peppers.php';
@@ -187,7 +187,7 @@ if(file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php'))
     unset($peppers);
 }
 
-unset ($setup);
+unset($setup);
 unset($base_config);
 unset($db_config);
 unset($crypt_config);

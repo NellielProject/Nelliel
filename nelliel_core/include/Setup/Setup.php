@@ -210,7 +210,7 @@ class Setup
         $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->createDirectory(NEL_CACHE_FILES_PATH, NEL_DIRECTORY_PERM, true);
         $file_handler->createDirectory(NEL_GENERATED_FILES_PATH, NEL_DIRECTORY_PERM, true);
-        $file_handler->createDirectory(NEL_OUTPUT_FILES_PATH, NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory(NEL_GENERAL_FILES_PATH, NEL_DIRECTORY_PERM, true);
         $file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH, NEL_DIRECTORY_PERM, true);
         echo _gettext('Core directories created.'), '<br>';
     }
