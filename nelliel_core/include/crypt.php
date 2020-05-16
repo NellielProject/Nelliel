@@ -1,5 +1,8 @@
 <?php
-
+if (!defined('NELLIEL_VERSION'))
+{
+    die("NOPE.AVI");
+}
 //
 // Most of these functions are basically wrappers to extend or simplify PHP password and crypt functions
 //
