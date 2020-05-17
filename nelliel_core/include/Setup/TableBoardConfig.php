@@ -137,9 +137,9 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'jpeg', '1', 0, 0]);
         $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'gif', '1', 0, 0]);
         $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'png', '1', 0, 0]);
-        $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'jpeg2000', '1', 0, 0]);
-        $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'tiff', '1', 0, 0]);
-        $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'bmp', '1', 0, 0]);
+        $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'jpeg2000', '0', 0, 0]);
+        $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'tiff', '0', 0, 0]);
+        $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'bmp', '0', 0, 0]);
         $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'icon', '0', 0, 0]);
         $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'photoshop', '0', 0, 0]);
         $this->insertDefaultRow(['filetype_enable', 'nelliel', 'graphics', 'boolean', 'tga', '0', 0, 0]);

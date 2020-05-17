@@ -203,7 +203,7 @@ class FilesUpload
 
         if ($file['error'] !== UPLOAD_ERR_OK)
         {
-            nel_derp(17, _gettext('The uploaded file just ain\'t right. That\'s all I know.'), $error_data);
+            nel_derp(17, _gettext("The uploaded file just ain't right. That's all I know.'"), $error_data);
         }
 
         nel_plugins()->processHook('nel-post-check-file-errors', [$file, $error_data]);

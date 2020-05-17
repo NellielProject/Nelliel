@@ -60,7 +60,12 @@ abstract class TableHandler
 
         foreach ($this->columns_data as $column_name => $info)
         {
-            if ($info['row_check'] && isset($values[$index]))
+            if ($info['auto_inc'])
+            {
+                continue;
+            }
+
+            if (!$info['auto_inc'] && $info['row_check'] && isset($values[$index]))
             {
                 $check_values[] = $values[$index];
                 $check_columns[] = $column_name;

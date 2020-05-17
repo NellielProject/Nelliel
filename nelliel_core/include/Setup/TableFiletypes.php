@@ -27,7 +27,7 @@ class TableFiletypes extends TableHandler
             'id_regex' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'label' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'type_def' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
-            'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false]];
+            'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
