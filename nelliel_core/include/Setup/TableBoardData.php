@@ -31,7 +31,8 @@ class TableBoardData extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             board_id    VARCHAR(50) NOT NULL PRIMARY KEY,
-            db_prefix   VARCHAR(60) NOT NULL UNIQUE,
+            board_uri   VARCHAR(50) NOT NULL,
+            db_prefix   VARCHAR(20) NOT NULL UNIQUE,
             locked      SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 

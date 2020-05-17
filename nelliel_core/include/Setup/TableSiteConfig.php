@@ -41,7 +41,7 @@ class TableSiteConfig extends TableHandler
             config_category     VARCHAR(50) NOT NULL,
             data_type           VARCHAR(50) NOT NULL,
             config_name         VARCHAR(100) NOT NULL,
-            setting             VARCHAR(4000) NOT NULL DEFAULT '',
+            setting             TEXT NOT NULL,
             select_type         SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 

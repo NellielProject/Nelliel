@@ -33,7 +33,7 @@ class TableFileFilters extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
-            hash_type       VARCHAR(255) NOT NULL,
+            hash_type       VARCHAR(50) NOT NULL,
             file_hash       " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
             file_notes      VARCHAR(255) DEFAULT NULL,
             board_id        VARCHAR(50) NOT NULL,

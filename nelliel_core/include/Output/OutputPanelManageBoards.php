@@ -72,23 +72,23 @@ class OutputPanelManageBoards extends OutputCore
             $board_data = array();
             $board_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $board_data['id'] = $board_info['board_id'];
-            $board_data['directory'] = $board_info['board_id'];
+            $board_data['board_id'] = $board_info['board_id'];
+            $board_data['board_uri'] = $board_info['board_uri'];
             $board_data['db_prefix'] = $board_info['db_prefix'];
 
             if ($board_info['locked'] == 0)
             {
-                $this->render_data['lock_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
+                $board_data['lock_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                         ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'lock']);
-                $this->render_data['status'] = _gettext('Active');
-                $this->render_data['lock_text'] = _gettext('Lock Board');
+                $board_data['status'] = _gettext('Active');
+                $board_data['lock_text'] = _gettext('Lock Board');
             }
             else
             {
-                $this->render_data['lock_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
+                $board_data['lock_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                         ['module' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'unlock']);
-                $this->render_data['status'] = _gettext('Locked');
-                $this->render_data['lock_text'] = _gettext('Unlock Board');
+                $board_data['status'] = _gettext('Locked');
+                $board_data['lock_text'] = _gettext('Unlock Board');
             }
 
             $board_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,

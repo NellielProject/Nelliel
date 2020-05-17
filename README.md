@@ -3,6 +3,7 @@
 A relatively lightweight, expandable Futallaby-style imageboard. Nelliel was originally a modified version of [Futallaby](https://www.1chan.net/futallaby/) made to host Nigrachan. It has since been fully rewritten and expanded. It is meant to provide a solid core that is readily expandable for users with additional needs.
 
 **At present Nelliel is in a beta stage of development. Use with caution. It is still incomplete and has bugs.**
+**NOTE: Currently a lot of breaking changes**
 
 ## Minimum Requirements
 These are only the bare minimum requirements for Nelliel to function. Even if an earlier version somehow works, you will not receive any support. **It is strongly recommended to use the latest software versions available.**

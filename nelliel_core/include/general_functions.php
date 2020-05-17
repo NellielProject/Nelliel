@@ -104,3 +104,15 @@ function nel_true_empty($variable)
 {
     return is_null($variable) || $variable === '' || $variable === array();
 }
+
+function nel_random_alphanumeric($length)
+{
+    if($length <= 0)
+    {
+        return '';
+    }
+
+    $base = str_repeat('abcdefghijklmnopqrstuvwxyz0123456789', ceil($length/36));
+    $random = str_shuffle($base);
+    return substr($random, 0, $length);
+}
