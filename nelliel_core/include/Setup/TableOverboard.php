@@ -37,8 +37,12 @@ class TableOverboard extends TableHandler
             thread_id               INTEGER NOT NULL,
             last_bump_time          BIGINT NOT NULL,
             last_bump_time_milli    SMALLINT NOT NULL,
-            board_id                VARCHAR(255) NOT NULL,
-            safety_level            VARCHAR(255) NOT NULL
+            board_id                VARCHAR(50) NOT NULL,
+            safety_level            VARCHAR(20) NOT NULL,
+            CONSTRAINT fk_board_id_" . $other_tables['board_data_table'] . "_board_id
+            FOREIGN KEY (board_id) REFERENCES " . $other_tables['board_data_table'] . " (board_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
         ) " . $options . ";";
 
         return $schema;

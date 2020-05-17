@@ -44,6 +44,7 @@
 		<th data-i18n="gettext">Mime</th>
 		<th data-i18n="gettext">Regex</th>
 		<th data-i18n="gettext">Label</th>
+		<th data-i18n="gettext">Enabled</th>
 		<th data-i18n="gettext">Remove</th>
 	</tr>
 	{{# filetype_list }}
@@ -53,8 +54,9 @@
 		<td>{{ type }}</td>
 		<td>{{ format }}</td>
 		<td>{{ mime }}</td>
-		<td>{{ regex }}</td>
+		<td>{{ id_regex }}</td>
 		<td>{{ label }}</td>
+		<td>{{ enabled }}</td>
 		<td>
 			<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Filetype</a>
 		</td>

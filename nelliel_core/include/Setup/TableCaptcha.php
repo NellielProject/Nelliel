@@ -33,8 +33,8 @@ class TableCaptcha extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             captcha_key     VARCHAR(64) NOT NULL PRIMARY KEY,
-            captcha_text    VARCHAR(255) NOT NULL,
-            domain_id       VARCHAR(255) DEFAULT NULL,
+            captcha_text    VARCHAR(100) NOT NULL,
+            domain_id       VARCHAR(50) DEFAULT NULL,
             time_created    BIGINT NOT NULL,
             ip_address      " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL
         ) " . $options . ";";

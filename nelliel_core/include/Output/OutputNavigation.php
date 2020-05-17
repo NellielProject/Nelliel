@@ -55,7 +55,7 @@ class OutputNavigation extends OutputCore
         for ($i = 0; $i < $board_count; ++ $i)
         {
             $board_info = array();
-            $board_info['board_url'] = $dotdot . $board_data[$i]['board_uri'] . '/';
+            $board_info['board_url'] = $dotdot . $board_data[$i]['board_id'] . '/';
             $board_info['name'] = ''; // TODO: Get and use actual name
             $board_info['board_id'] = $board_data[$i]['board_id'];
             $board_info['end'] = $i === $end;
@@ -79,9 +79,9 @@ class OutputNavigation extends OutputCore
         $render_data['news_url'] = $dotdot . 'news.html';
         $render_data['account_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=account';
         $render_data['overboard_active'] = $this->site_domain->setting('overboard_active');
-        $render_data['overboard_url'] = $dotdot . $this->site_domain->setting('overboard_uri') . '/';
+        $render_data['overboard_url'] = $dotdot . $this->site_domain->setting('overboard_id') . '/';
         $render_data['sfw_overboard_active'] = $this->site_domain->setting('sfw_overboard_active');
-        $render_data['sfw_overboard_url'] = $dotdot . $this->site_domain->setting('sfw_overboard_uri') . '/';
+        $render_data['sfw_overboard_url'] = $dotdot . $this->site_domain->setting('sfw_overboard_id') . '/';
         $render_data['about_nelliel_url'] = $dotdot . NEL_MAIN_SCRIPT . '?about_nelliel';
         return $render_data;
     }

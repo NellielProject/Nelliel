@@ -36,7 +36,11 @@ class TableFileFilters extends TableHandler
             hash_type       VARCHAR(255) NOT NULL,
             file_hash       " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
             file_notes      VARCHAR(255) DEFAULT NULL,
-            board_id        VARCHAR(255) NOT NULL
+            board_id        VARCHAR(50) NOT NULL,
+            CONSTRAINT fk_board_id_" . $other_tables['board_data_table'] . "_board_id
+            FOREIGN KEY (board_id) REFERENCES " . $other_tables['board_data_table'] . " (board_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
         ) " . $options . ";";
 
         return $schema;

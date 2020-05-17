@@ -31,8 +31,8 @@ class TablePermissions extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
-            permission      VARCHAR(255) NOT NULL,
-            description     VARCHAR(2000) NOT NULL DEFAULT ''
+            permission      VARCHAR(50) NOT NULL,
+            description     VARCHAR(255) NOT NULL DEFAULT ''
         ) " . $options . ";";
 
         return $schema;

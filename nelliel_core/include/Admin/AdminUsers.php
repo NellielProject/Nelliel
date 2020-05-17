@@ -120,7 +120,7 @@ class AdminUsers extends AdminHandler
                 }
                 else
                 {
-                    $update_user->ChangeOrAddRole($domain->id(), $value);
+                    $update_user->modifyRole($domain->id(), $value);
                 }
 
                 continue;

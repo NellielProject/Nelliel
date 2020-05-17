@@ -153,41 +153,26 @@ class Setup
 
     public function createCoreTables()
     {
+        // IMPORTANT: Table creation must occur in the given order so foreign keys can be created.
         $database = nel_database();
         $sql_compatibility = new SQLCompatibility($database);
         $versions_table = new TableVersions($database, $sql_compatibility);
         $versions_table->createTable();
         $assets_table = new TableAssets($database, $sql_compatibility);
         $assets_table->createTable();
-        $bans_table = new TableBans($database, $sql_compatibility);
-        $bans_table->createTable();
-        $board_data_table = new TableBoardData($database, $sql_compatibility);
-        $board_data_table->createTable();
         $captcha_table = new TableCaptcha($database, $sql_compatibility);
         $captcha_table->createTable();
-        $cites_table = new TableCites($database, $sql_compatibility);
-        $cites_table->createTable();
         $board_defaults_table = new TableBoardConfig($database, $sql_compatibility);
         $board_defaults_table->tableName(NEL_BOARD_DEFAULTS_TABLE);
         $board_defaults_table->createTable();
-        $file_filters_table = new TableFileFilters($database, $sql_compatibility);
-        $file_filters_table->createTable();
         $filetypes_table = new TableFiletypes($database, $sql_compatibility);
         $filetypes_table->createTable();
         $news_table = new TableNews($database, $sql_compatibility);
         $news_table->createTable();
         $permissions_table = new TablePermissions($database, $sql_compatibility);
         $permissions_table->createTable();
-        $permissions_table = new TableOverboard($database, $sql_compatibility);
-        $permissions_table->createTable();
         $rate_limit_table = new TableRateLimit($database, $sql_compatibility);
         $rate_limit_table->createTable();
-        $reports_table = new TableReports($database, $sql_compatibility);
-        $reports_table->createTable();
-        $role_permissions_table = new TableRolePermissions($database, $sql_compatibility);
-        $role_permissions_table->createTable();
-        $roles_table = new TableRoles($database, $sql_compatibility);
-        $roles_table->createTable();
         $site_config_table = new TableSiteConfig($database, $sql_compatibility);
         $site_config_table->createTable();
         $staff_logs_table = new TableLogs($database, $sql_compatibility);
@@ -198,10 +183,32 @@ class Setup
         $system_logs_table->createTable();
         $templates_table = new TableTemplates($database, $sql_compatibility);
         $templates_table->createTable();
-        $user_roles_table = new TableUserRoles($database, $sql_compatibility);
-        $user_roles_table->createTable();
+
+        // NOTE: Tables must be created in order of:
+        // board data -> bans -> file filters -> overboard -> reports
+        $board_data_table = new TableBoardData($database, $sql_compatibility);
+        $board_data_table->createTable();
+        $bans_table = new TableBans($database, $sql_compatibility);
+        $bans_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $file_filters_table = new TableFileFilters($database, $sql_compatibility);
+        $file_filters_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $permissions_table = new TableOverboard($database, $sql_compatibility);
+        $permissions_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $reports_table = new TableReports($database, $sql_compatibility);
+        $reports_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $cites_table = new TableCites($database, $sql_compatibility);
+        $cites_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+
+        // NOTE: Tables must be created in order of:
+        // roles -> role permissions -> users -> user roles
+        $roles_table = new TableRoles($database, $sql_compatibility);
+        $roles_table->createTable();
+        $role_permissions_table = new TableRolePermissions($database, $sql_compatibility);
+        $role_permissions_table->createTable(['roles_table' => NEL_ROLES_TABLE]);
         $users_table = new TableUsers($database, $sql_compatibility);
         $users_table->createTable();
+        $user_roles_table = new TableUserRoles($database, $sql_compatibility);
+        $user_roles_table->createTable(['users_table' => NEL_USERS_TABLE, 'roles_table' => NEL_ROLES_TABLE]);
         echo _gettext('Core database tables created.'), '<br>';
     }
 
@@ -217,6 +224,7 @@ class Setup
 
     public function createBoardTables(string $board_id, string $db_prefix)
     {
+        // IMPORTANT: Table creation must occur in the given order so foreign keys can be created.
         $database = nel_database();
         $sql_compatibility = new SQLCompatibility($database);
 
@@ -228,6 +236,9 @@ class Setup
 
         $domain = new \Nelliel\DomainBoard($board_id, nel_database());
         $references = $domain->reference();
+
+        // NOTE: Tables must be created in order of
+        // threads -> posts -> content
         $threads_table = new TableThreads($database, $sql_compatibility);
         $threads_table->tableName($domain->reference('threads_table'));
         $threads_table->createTable();

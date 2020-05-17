@@ -56,7 +56,7 @@ abstract class TableHandler
         $check_values = array();
         $check_columns = array();
         $check_pdo_types = array();
-        $index = -1;
+        $index = 0;
 
         foreach ($this->columns_data as $column_name => $info)
         {

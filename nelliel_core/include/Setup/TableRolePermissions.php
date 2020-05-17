@@ -32,9 +32,13 @@ class TableRolePermissions extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
-            role_id         VARCHAR(255) NOT NULL,
-            perm_id         VARCHAR(255) NOT NULL,
-            perm_setting    SMALLINT NOT NULL DEFAULT 0
+            role_id         VARCHAR(50) NOT NULL,
+            perm_id         VARCHAR(50) NOT NULL,
+            perm_setting    SMALLINT NOT NULL DEFAULT 0,
+            CONSTRAINT fk_role_id_" . $other_tables['roles_table'] . "_role_id
+            FOREIGN KEY (role_id) REFERENCES " . $other_tables['roles_table'] . " (role_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
         ) " . $options . ";";
 
         return $schema;
@@ -42,68 +46,68 @@ class TableRolePermissions extends TableHandler
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_site_config', 0]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_manage_permissions', 0]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_manage_templates', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_manage_styles', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_manage_icon_sets', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_manage_users', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_manage_roles', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_manage_filetypes', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_extract_gettext', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_defaults', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_config_lock_override', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_manage_news', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_manage_file_filters', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_regen_cache', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_regen_pages', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_assign_role', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_create', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_delete', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_transfer', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_lock', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_config', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_manage_bans', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_sticky_posts', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_lock_posts', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_post_in_locked', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_post_as_staff', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_mod_comment', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_modify_posts', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_manage_reports', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_mod_mode', 1]);
-        $this->insertDefaultRow(['NEL_SITE_ADMIN', 'perm_board_delete_posts', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_site_config', 0]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_manage_permissions', 0]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_manage_templates', 0]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_manage_styles', 0]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_manage_icon_sets', 0]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_manage_users', 0]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_manage_roles', 0]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_manage_filetypes', 0]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_extract_gettext', 0]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_defaults', 0]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_config_lock_override', 0]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_manage_news', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_manage_file_filters', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_regen_cache', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_regen_pages', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_assign_role', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_create', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_delete', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_transfer', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_lock', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_config', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_manage_bans', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_sticky_posts', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_lock_posts', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_post_in_locked', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_post_as_staff', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_mod_comment', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_modify_posts', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_manage_reports', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_mod_mode', 1]);
-        $this->insertDefaultRow(['NEL_BOARD_OWNER', 'perm_board_delete_posts', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_site_config', 0]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_permissions', 0]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_templates', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_styles', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_icon_sets', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_users', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_roles', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_filetypes', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_extract_gettext', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_defaults', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_config_lock_override', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_news', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_file_filters', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_regen_cache', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_regen_pages', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_assign_role', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_create', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_delete', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_transfer', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_lock', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_config', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_bans', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_sticky_posts', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_lock_posts', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_post_in_locked', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_post_as_staff', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_mod_comment', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_modify_posts', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_reports', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_mod_mode', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_delete_posts', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_site_config', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_permissions', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_templates', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_styles', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_icon_sets', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_users', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_roles', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_filetypes', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_extract_gettext', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_defaults', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_config_lock_override', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_news', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_file_filters', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_regen_cache', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_regen_pages', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_assign_role', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_create', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_delete', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_transfer', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_lock', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_config', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_bans', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_sticky_posts', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_lock_posts', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_post_in_locked', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_post_as_staff', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_mod_comment', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_modify_posts', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_reports', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_mod_mode', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_delete_posts', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_site_config', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_manage_permissions', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_manage_templates', 0]);

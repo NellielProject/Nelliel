@@ -32,9 +32,17 @@ class TableUserRoles extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry       " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
-            user_id         VARCHAR(255) NOT NULL,
-            role_id         VARCHAR(255) NOT NULL,
-            domain_id       VARCHAR(255) NOT NULL
+            user_id     VARCHAR(50) NOT NULL,
+            role_id     VARCHAR(50) NOT NULL,
+            domain_id   VARCHAR(50) NOT NULL,
+            CONSTRAINT fk_user_id_" . $other_tables['users_table'] . "_user_id
+            FOREIGN KEY (user_id) REFERENCES " . $other_tables['users_table'] . " (user_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE,
+            CONSTRAINT fk_role_id_" . $other_tables['roles_table'] . "_role_id
+            FOREIGN KEY (role_id) REFERENCES " . $other_tables['roles_table'] . " (role_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
         ) " . $options . ";";
 
         return $schema;

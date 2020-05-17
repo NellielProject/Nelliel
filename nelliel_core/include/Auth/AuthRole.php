@@ -48,15 +48,14 @@ class AuthRole extends AuthHandler
             return false;
         }
 
-        $prepared = $this->database->prepare('SELECT "entry" FROM "' . NEL_ROLES_TABLE . '" WHERE "role_id" = ?');
+        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_ROLES_TABLE . '" WHERE "role_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $this->database->prepare(
                     'UPDATE "' . NEL_ROLES_TABLE .
-                    '" SET "role_id" = :role_id, "role_level" = :role_level, "role_title" = :role_title, "capcode" = :capcode WHERE "entry" = :entry');
-            $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
+                    '" SET "role_level" = :role_level, "role_title" = :role_title, "capcode" = :capcode WHERE "role_id" = :role_id');
         }
         else
         {
@@ -83,18 +82,6 @@ class AuthRole extends AuthHandler
 
     public function remove()
     {
-        $authorization = new \Nelliel\Auth\Authorization($this->database);
-        $prepared = $this->database->prepare(
-                'SELECT "user_id", "domain_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "role_id" = ?');
-        $user_roles = $this->database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC);
-
-        foreach ($user_roles as $user_role)
-        {
-            $authorization->getUser($user_role['user_id'])->removeRole($user_role['domain'], $this->id());
-        }
-
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ?');
-        $this->database->executePrepared($prepared, [$this->id()]);
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_ROLES_TABLE . '" WHERE "role_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
     }

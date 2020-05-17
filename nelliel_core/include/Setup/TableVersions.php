@@ -33,8 +33,8 @@ class TableVersions extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry       " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
-            id          VARCHAR(255) NOT NULL,
-            type        VARCHAR(255) NOT NULL,
+            id          VARCHAR(100) NOT NULL,
+            type        VARCHAR(50) NOT NULL,
             original    SMALLINT NOT NULL DEFAULT 0,
             current     SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";

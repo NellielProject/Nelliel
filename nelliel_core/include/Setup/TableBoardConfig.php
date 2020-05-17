@@ -37,12 +37,12 @@ class TableBoardConfig extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry               " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
-            config_type         VARCHAR(255) NOT NULL,
-            config_owner        VARCHAR(255) NOT NULL,
-            config_category     VARCHAR(255) NOT NULL,
-            data_type           VARCHAR(255) NOT NULL,
-            config_name         VARCHAR(255) NOT NULL,
-            setting             VARCHAR(2000) NOT NULL DEFAULT '',
+            config_type         VARCHAR(50) NOT NULL,
+            config_owner        VARCHAR(50) NOT NULL,
+            config_category     VARCHAR(50) NOT NULL,
+            data_type           VARCHAR(50) NOT NULL,
+            config_name         VARCHAR(100) NOT NULL,
+            setting             VARCHAR(4000) NOT NULL DEFAULT '',
             select_type         SMALLINT NOT NULL DEFAULT 0,
             edit_lock           SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
@@ -70,7 +70,7 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'use_honeypot', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'only_thread_duplicates', '1', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'only_op_duplicates', '1', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'name', 'Nelliel-powered image board', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'name', '', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'slogan', '', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'description', '', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'favicon', '', 0, 0]);

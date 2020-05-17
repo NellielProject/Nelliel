@@ -62,15 +62,14 @@ class AuthUser extends AuthHandler
             return false;
         }
 
-        $prepared = $this->database->prepare('SELECT "entry" FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
+        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $this->database->prepare(
                     'UPDATE "' . NEL_USERS_TABLE .
-                    '" SET "user_id" = :user_id, "display_name" = :display_name, "user_password" = :user_password, "active" = :active, "owner" = :owner, "last_login" = :last_login WHERE "entry" = :entry');
-            $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
+                    '" SET "display_name" = :display_name, "user_password" = :user_password, "active" = :active, "owner" = :owner, "last_login" = :last_login WHERE "user_id" = :user_id');
         }
         else
         {
@@ -129,8 +128,6 @@ class AuthUser extends AuthHandler
             return false;
         }
 
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ?');
-        $this->database->executePrepared($prepared, [$this->id()]);
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
     }

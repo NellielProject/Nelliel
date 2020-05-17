@@ -71,11 +71,11 @@ class OutputOverboard extends OutputCore
                 if ($this->write_mode)
                 {
                     $this->file_handler->writeFile(
-                            NEL_BASE_PATH . $this->site_domain->setting($prefix . 'overboard_uri') . '/' .
+                            NEL_BASE_PATH . $this->site_domain->setting($prefix . 'overboard_id') . '/' .
                             $index_filename, $output, NEL_FILES_PERM, true);
                     $json_index->storeData($json_index->prepareData($gen_data['index']), 'index');
                     $json_index->writeStoredData(
-                            NEL_BASE_PATH . $this->site_domain->setting($prefix . 'overboard_uri') . '/', 'index');
+                            NEL_BASE_PATH . $this->site_domain->setting($prefix . 'overboard_id') . '/', 'index');
                 }
                 else
                 {
