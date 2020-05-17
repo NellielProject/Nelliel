@@ -216,21 +216,21 @@ class NellielPDO extends PDO
 
     public function executePrepared($prepared, $parameters = null, bool $close_cursor = true)
     {
-        $prepared->execute($parameters);
+        $result = $prepared->execute($parameters);
 
-        if ($prepared !== false && $close_cursor)
+        if ($result !== false && $close_cursor)
         {
             $prepared->closeCursor();
         }
 
-        return $prepared;
+        return $result;
     }
 
     public function executePreparedFetch($prepared, $parameters = null, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, bool $close_cursor = true)
     {
-        $prepared = $this->executePrepared($prepared, $parameters, false);
+        $result = $this->executePrepared($prepared, $parameters, false);
 
-        if ($prepared !== false)
+        if ($result !== false)
         {
             if ($fetch_style === PDO::FETCH_COLUMN)
             {
@@ -256,9 +256,9 @@ class NellielPDO extends PDO
 
     public function executePreparedFetchAll($prepared, $parameters = null, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)
     {
-        $prepared = $this->executePrepared($prepared, $parameters, false);
+        $result = $this->executePrepared($prepared, $parameters, false);
 
-        if ($prepared !== false)
+        if ($result !== false)
         {
             $fetched_result = $prepared->fetchAll($fetch_style);
         }

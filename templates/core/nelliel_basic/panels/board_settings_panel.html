@@ -226,23 +226,23 @@
 			</span>
 		</div>
 		{{/ page_limit }}
-		{{# page_buffer }}
+		{{# thread_buffer }}
 		<div class="display-row">
 			{{# defaults }}
 			<span class="display-cell">
-				<input type="hidden" name="page_buffer_lock" value="0">
-				<input id="page_buffer_lock" type="checkbox" name="page_buffer_lock" value="1" {{ locked }}>
-				<label for="page_buffer_lock" data-i18n="gettext">(Lock)</label>
+				<input type="hidden" name="thread_buffer_lock" value="0">
+				<input id="thread_buffer_lock" type="checkbox" name="thread_buffer_lock" value="1" {{ locked }}>
+				<label for="thread_buffer_lock" data-i18n="gettext">(Lock)</label>
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<label for="page_buffer" data-i18n="gettext">Prune oldest archived threads</label>
+				<label for="thread_buffer" data-i18n="gettext">How many threads in buffer</label>
 			</span>
 			<span class="display-cell">
-				<input id="page_buffer" type="text" name="page_buffer" size="8" value="{{ value }}" {{ disabled }}>
+				<input id="thread_buffer" type="text" name="thread_buffer" size="8" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
-		{{/ page_buffer }}
+		{{/ thread_buffer }}
 		{{# max_posts }}
 		<div class="display-row">
 			{{# defaults }}

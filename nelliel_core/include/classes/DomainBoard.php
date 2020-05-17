@@ -70,9 +70,6 @@ class DomainBoard extends Domain
         $new_reference['posts_table'] = $new_reference['db_prefix'] . '_posts';
         $new_reference['threads_table'] = $new_reference['db_prefix'] . '_threads';
         $new_reference['content_table'] = $new_reference['db_prefix'] . '_content';
-        $new_reference['archive_posts_table'] = $new_reference['db_prefix'] . '_archive_posts';
-        $new_reference['archive_threads_table'] = $new_reference['db_prefix'] . '_archive_threads';
-        $new_reference['archive_content_table'] = $new_reference['db_prefix'] . '_archive_content';
         $new_reference['config_table'] = $new_reference['db_prefix'] . '_config';
         $this->domain_references = $new_reference;
     }

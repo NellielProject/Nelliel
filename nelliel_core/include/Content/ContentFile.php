@@ -23,16 +23,15 @@ class ContentFile extends ContentHandler
         $this->content_id = $content_id;
         $this->domain = $domain;
         $this->archived = $archived;
+        $this->content_table = $this->domain->reference('content_table');
 
         if ($archived)
         {
-            $this->content_table = $this->domain->reference('archive_content_table');
             $this->src_path = $this->domain->reference('archive_src_path');
             $this->preview_path = $this->domain->reference('archive_preview_path');
         }
         else
         {
-            $this->content_table = $this->domain->reference('content_table');
             $this->src_path = $this->domain->reference('src_path');
             $this->preview_path = $this->domain->reference('preview_path');
         }

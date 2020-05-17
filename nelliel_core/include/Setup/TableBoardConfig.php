@@ -96,7 +96,7 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'truncate_long_fields', '0', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'threads_per_page', '10', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'page_limit', '10', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'page_buffer', '0', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'thread_buffer', '100', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_posts', '1000', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'integer', 'max_bumps', '1000', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'tripkey_marker', '!', 0, 0]);

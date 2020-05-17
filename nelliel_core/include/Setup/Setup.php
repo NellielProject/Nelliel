@@ -241,18 +241,12 @@ class Setup
         $threads_table = new TableThreads($database, $sql_compatibility);
         $threads_table->tableName($domain->reference('threads_table'));
         $threads_table->createTable();
-        $threads_table->tableName($domain->reference('archive_threads_table'));
-        $threads_table->createTable();
         $posts_table = new TablePosts($database, $sql_compatibility);
         $posts_table->tableName($domain->reference('posts_table'));
         $posts_table->createTable(['threads_table' => $domain->reference('threads_table')]);
-        $posts_table->tableName($domain->reference('archive_posts_table'));
-        $posts_table->createTable(['threads_table' => $domain->reference('archive_threads_table')]);
         $content_table = new TableContent($database, $sql_compatibility);
         $content_table->tableName($domain->reference('content_table'));
         $content_table->createTable(['posts_table' => $domain->reference('posts_table')]);
-        $content_table->tableName($domain->reference('archive_content_table'));
-        $content_table->createTable(['posts_table' => $domain->reference('archive_posts_table')]);
     }
 
     public function createBoardDirectories(string $board_id)

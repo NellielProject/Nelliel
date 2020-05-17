@@ -26,21 +26,19 @@ class ContentThread extends ContentHandler
         $this->content_id = $content_id;
         $this->domain = $domain;
         $this->archived = $archived;
+        $this->threads_table = $this->domain->reference('threads_table');
+        $this->posts_table = $this->domain->reference('posts_table');
+        $this->content_table = $this->domain->reference('content_table');
 
         if ($archived)
         {
-            $this->threads_table = $this->domain->reference('archive_threads_table');
-            $this->posts_table = $this->domain->reference('archive_posts_table');
-            $this->content_table = $this->domain->reference('archive_content_table');
             $this->src_path = $this->domain->reference('archive_src_path');
             $this->preview_path = $this->domain->reference('archive_preview_path');
             $this->page_path = $this->domain->reference('archive_page_path');
         }
         else
         {
-            $this->threads_table = $this->domain->reference('threads_table');
-            $this->posts_table = $this->domain->reference('posts_table');
-            $this->content_table = $this->domain->reference('content_table');
+
             $this->src_path = $this->domain->reference('src_path');
             $this->preview_path = $this->domain->reference('preview_path');
             $this->page_path = $this->domain->reference('page_path');

@@ -158,27 +158,6 @@ class AdminBoards extends AdminHandler
             $this->database->executePrepared($prepared, [$domain->reference('threads_table')]);
         }
 
-        if ($this->database->tableExists($domain->reference('archive_content_table')))
-        {
-            $this->database->query('DROP TABLE "' . $domain->reference('archive_content_table') . '"');
-            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
-            $this->database->executePrepared($prepared, [$domain->reference('archive_content_table')]);
-        }
-
-        if ($this->database->tableExists($domain->reference('archive_posts_table')))
-        {
-            $this->database->query('DROP TABLE "' . $domain->reference('archive_posts_table') . '"');
-            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
-            $this->database->executePrepared($prepared, [$domain->reference('archive_posts_table')]);
-        }
-
-        if ($this->database->tableExists($domain->reference('archive_threads_table')))
-        {
-            $this->database->query('DROP TABLE "' . $domain->reference('archive_threads_table') . '"');
-            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
-            $this->database->executePrepared($prepared, [$domain->reference('archive_threads_table')]);
-        }
-
         $file_handler = new \Nelliel\Utility\FileHandler();
         $file_handler->eraserGun($domain->reference('board_path'));
         $domain->deleteCache();

@@ -24,18 +24,16 @@ class ContentPost extends ContentHandler
         $this->content_id = $content_id;
         $this->domain = $domain;
         $this->archived = $archived;
+        $this->posts_table = $this->domain->reference('posts_table');
+        $this->content_table = $this->domain->reference('content_table');
 
         if ($archived)
         {
-            $this->posts_table = $this->domain->reference('archive_posts_table');
-            $this->content_table = $this->domain->reference('archive_content_table');
             $this->src_path = $this->domain->reference('archive_src_path');
             $this->preview_path = $this->domain->reference('archive_preview_path');
         }
         else
         {
-            $this->posts_table = $this->domain->reference('posts_table');
-            $this->content_table = $this->domain->reference('content_table');
             $this->src_path = $this->domain->reference('src_path');
             $this->preview_path = $this->domain->reference('preview_path');
         }
