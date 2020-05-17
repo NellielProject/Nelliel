@@ -41,7 +41,7 @@ class TableLogs extends TableHandler
             originator          VARCHAR(50) DEFAULT NULL,
             ip_address          " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
             time                INTEGER NOT NULL,
-            message             TEXT DEFAULT NULL
+            message             VARCHAR(255) DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;

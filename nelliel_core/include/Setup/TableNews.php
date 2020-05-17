@@ -33,7 +33,7 @@ class TableNews extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
-            poster_id       VARCHAR(50255) NOT NULL,
+            poster_id       VARCHAR(50) NOT NULL,
             time            BIGINT NOT NULL,
             headline        VARCHAR(255) NOT NULL,
             text            TEXT NOT NULL

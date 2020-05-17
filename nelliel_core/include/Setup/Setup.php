@@ -153,7 +153,6 @@ class Setup
 
     public function createCoreTables()
     {
-        // IMPORTANT: Table creation must occur in the given order so foreign keys can be created.
         $database = nel_database();
         $sql_compatibility = new SQLCompatibility($database);
         $versions_table = new TableVersions($database, $sql_compatibility);
@@ -185,7 +184,7 @@ class Setup
         $templates_table->createTable();
 
         // NOTE: Tables must be created in order of:
-        // board data -> bans -> file filters -> overboard -> reports
+        // board data -> bans -> file filters -> overboard -> reports -> cites
         $board_data_table = new TableBoardData($database, $sql_compatibility);
         $board_data_table->createTable();
         $bans_table = new TableBans($database, $sql_compatibility);

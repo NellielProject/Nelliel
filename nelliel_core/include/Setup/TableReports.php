@@ -36,7 +36,7 @@ class TableReports extends TableHandler
             board_id        VARCHAR(50) NOT NULL,
             content_id      VARCHAR(255) NOT NULL,
             reporter_ip     " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " NOT NULL,
-            reason          TEXT NOT NULL,
+            reason          VARCHAR(255) NOT NULL,
             CONSTRAINT fk_board_id_" . $other_tables['board_data_table'] . "_board_id
             FOREIGN KEY (board_id) REFERENCES " . $other_tables['board_data_table'] . " (board_id)
             ON UPDATE CASCADE

@@ -50,8 +50,8 @@ class TableBans extends TableHandler
             reason              VARCHAR(255) NOT NULL,
             length              BIGINT NOT NULL,
             start_time          BIGINT NOT NULL,
-            appeal              TEXT DEFAULT NULL,
-            appeal_response     TEXT DEFAULT NULL,
+            appeal              VARCHAR(255) DEFAULT NULL,
+            appeal_response     VARCHAR(255) DEFAULT NULL,
             appeal_status       SMALLINT NOT NULL DEFAULT 0,
             CONSTRAINT fk_board_id_" . $other_tables['board_data_table'] . "_board_id
             FOREIGN KEY (board_id) REFERENCES " . $other_tables['board_data_table'] . " (board_id)
