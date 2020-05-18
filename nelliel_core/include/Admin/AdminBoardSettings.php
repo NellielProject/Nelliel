@@ -89,6 +89,26 @@ class AdminBoardSettings extends AdminHandler
                     $this->setLock($board_domain->reference('config_table'), $config_name, $value);
                 }
             }
+            else if($key === 'filetypes')
+            {
+                $filetypes_array = array();
+
+                foreach($value as $type => $entries)
+                {
+                    $filetypes_array[$type]['enabled'] = boolval($entries['enabled']);
+
+                    foreach($entries['formats'] as $format => $enabled)
+                    {
+                        if($enabled === '1')
+                        {
+                            $filetypes_array[$type]['formats'][$format] = true;
+                        }
+                    }
+                }
+
+                $encoded_filetypes = json_encode($filetypes_array);
+                $this->updateSetting($config_table, 'enabled_filetypes', $encoded_filetypes, $lock_override);
+            }
             else
             {
                 $this->updateSetting($config_table, $key, $value, $lock_override);

@@ -295,8 +295,6 @@ class FilesUpload
             nel_derp(18, _gettext('Unrecognized file type.'), $error_data);
         }
 
-        $type_data = $filetypes->extensionData($test_ext);
-
         if (!$filetypes->extensionIsEnabled($this->domain->id(), $test_ext))
         {
             nel_derp(19, _gettext('Filetype is not allowed.'), $error_data);
@@ -307,6 +305,7 @@ class FilesUpload
             nel_derp(20, _gettext('Incorrect file type detected (does not match extension). Possible Hax.'), $error_data);
         }
 
+        $type_data = $filetypes->extensionData($test_ext);
         $file->changeData('type', $type_data['type']);
         $file->changeData('format', $type_data['format']);
         $file->changeData('mime', $type_data['mime']);

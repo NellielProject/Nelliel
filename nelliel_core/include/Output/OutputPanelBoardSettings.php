@@ -69,29 +69,39 @@ class OutputPanelBoardSettings extends OutputCore
                     $this->domain->id();
         }
 
-        $all_filetypes = $filetypes->getFiletypeData();
-        $all_categories = $filetypes->getFiletypeCategories();
-        $category_nodes = array();
+        $all_filetypes = $filetypes->allTypeData();
+        $all_types = $filetypes->types();
+        $type_nodes = array();
         $filetype_entries_nodes = array();
-        $category_row_count = array();
+        $type_row_count = array();
+        $prepared = $this->database->prepare('SELECT "setting" FROM "' . $table_name . '" WHERE "config_name" = ?');
+        $enabled_json = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_COLUMN);
+        $enabled_array = json_decode($enabled_json, true);
 
-        // TODO: Needs optimizing
-        foreach ($all_categories as $category)
+        foreach ($all_types as $type)
         {
-            $category_data = array();
-            $category_data['label'] = _gettext($category['label']);
-            $category_data['category_select']['name'] = $category['type'];
-            $prepared = $this->database->prepare(
-                    'SELECT "setting" FROM "' . $table_name .
-                    '" WHERE "config_type" = \'filetype_enable\' AND "config_name" = ?');
-            $enabled = $this->database->executePreparedFetch($prepared, [$category['type']], PDO::FETCH_COLUMN);
-            $category_data['category_select']['value'] = ($enabled == 1) ? 'checked' : '';
+            $type_data = array();
+            $type_data['label'] = _gettext($type['label']);
+            $type_data['type_select']['name'] = $type['type'];
+            $type_data['type_select']['input_name'] = 'filetypes[' . $type['type'] . '][enabled]';
+
+            if (isset($enabled_array[$type['type']]))
+            {
+                $type_enabled = $enabled_array[$type['type']]['enabled'] ?? false;
+            }
+            else
+            {
+                $type_enabled = false;
+            }
+
+            $type_data['type_select']['value'] = ($type_enabled) ? 'checked' : '';
+            $enabled_formats = $enabled_array[$type['type']]['formats'] ?? array();
             $entry_count = 0;
             $filetype_set = array();
 
             foreach ($all_filetypes as $filetype)
             {
-                if ($filetype['type'] != $category['type'])
+                if ($filetype['type'] != $type['type'])
                 {
                     continue;
                 }
@@ -99,14 +109,11 @@ class OutputPanelBoardSettings extends OutputCore
                 if ($filetype['extension'] == $filetype['parent_extension'])
                 {
                     $filetype_set[$filetype['parent_extension']]['format'] = $filetype['format'];
+                    $filetype_set[$filetype['parent_extension']]['input_name'] = 'filetypes[' . $type['type'] . '][formats][' . $filetype['format'] . ']';
                     $filetype_set[$filetype['parent_extension']]['label'] = _gettext($filetype['label']) . ' - .' .
                             $filetype['extension'];
-                    $prepared = $this->database->prepare(
-                            'SELECT "setting" FROM "' . $table_name .
-                            '" WHERE "config_type" = \'filetype_enable\' AND "config_name" = ?');
-                    $enabled = $this->database->executePreparedFetch($prepared, [$filetype['format']],
-                            PDO::FETCH_COLUMN);
-                    $filetype_set[$filetype['parent_extension']]['value'] = ($enabled == 1) ? 'checked' : '';
+                    $filetype_set[$filetype['parent_extension']]['value'] = (array_key_exists($filetype['format'],
+                            $enabled_formats)) ? 'checked' : '';
                 }
                 else
                 {
@@ -120,15 +127,15 @@ class OutputPanelBoardSettings extends OutputCore
             {
                 if (count($entry_row['entry']) >= 4)
                 {
-                    $category_data['entry_rows'][] = $entry_row;
+                    $type_data['entry_rows'][] = $entry_row;
                     $entry_row['entry'] = array();
                 }
 
                 $entry_row['entry'][] = $data;
             }
 
-            $category_data['entry_rows'][] = $entry_row;
-            $this->render_data['categories'][] = $category_data;
+            $type_data['entry_rows'][] = $entry_row;
+            $this->render_data['file_types'][] = $type_data;
         }
 
         $user_lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');
@@ -179,8 +186,8 @@ class OutputPanelBoardSettings extends OutputCore
             $this->render_data[$config_line['config_name']] = $config_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile(
-                'panels/board_settings_panel', $this->render_data);
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/board_settings_panel',
+                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

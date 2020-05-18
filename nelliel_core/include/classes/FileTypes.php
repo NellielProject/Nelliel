@@ -13,9 +13,9 @@ class FileTypes
 {
     private $cache_handler;
     private $database;
-    private static $filetype_data;
-    private static $filetype_settings;
-    private static $filetype_categories;
+    private static $data;
+    private static $settings;
+    private static $types;
 
     function __construct(NellielPDO $database)
     {
@@ -23,18 +23,18 @@ class FileTypes
         $this->database = $database;
     }
 
-    private function loadDataFromDatabase()
+    private function loadDataFromDatabase(bool $ignore_cache = false)
     {
         $filetypes = array();
-        $db_results = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes" ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
         $sub_extensions = array();
-        $categories = array();
+        $types = array();
+        $db_results = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes" ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
 
         foreach ($db_results as $result)
         {
-            if($result['extension'] == '')
+            if($result['type_def'] == 1)
             {
-                $categories[$result['type']] = $result;
+                $types[$result['type']] = $result;
                 continue;
             }
 
@@ -48,7 +48,7 @@ class FileTypes
             }
         }
 
-        self::$filetype_categories = $categories;
+        self::$types = $types;
 
         foreach ($sub_extensions as $sub_extension)
         {
@@ -59,140 +59,114 @@ class FileTypes
             }
         }
 
-        self::$filetype_data = $filetypes;
+        self::$data = $filetypes;
     }
 
-    private function loadSettingsFromDatabase(string $board_id, bool $ignore_cache = false)
+    private function loadSettingsFromDatabase(string $domain_id, bool $ignore_cache = false)
     {
+        $settings = array();
+
         if(!$ignore_cache)
         {
-            $settings = $this->cache_handler->loadArrayFromCache($board_id . '/filetype_settings.php', 'filetype_settings');
+            $settings = $this->cache_handler->loadArrayFromCache($domain_id . '/filetype_settings.php', 'settings');
         }
 
         if (empty($settings))
         {
             $prepared = $this->database->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
-            $db_prefix = $this->database->executePreparedFetch($prepared, [$board_id], PDO::FETCH_COLUMN);
+            $db_prefix = $this->database->executePreparedFetch($prepared, [$domain_id], PDO::FETCH_COLUMN);
             $config_table = $db_prefix . '_config';
-            $config_list = $this->database->executeFetchAll(
-                    'SELECT * FROM "' . $config_table . '" WHERE "config_type" = \'filetype_enable\'', PDO::FETCH_ASSOC);
-            $settings = array();
-
-            foreach ($config_list as $config)
-            {
-                $settings[$config['config_category']][utf8_strtolower($config['config_name'])] = (bool) $config['setting'];
-            }
+            $filetypes_json = $this->database->executeFetch(
+                    'SELECT "setting" FROM "' . $config_table . '" WHERE "config_name" = \'enabled_filetypes\'', PDO::FETCH_COLUMN);
+            $settings = json_decode($filetypes_json, true);
         }
 
-        self::$filetype_settings[$board_id] = $settings;
+        self::$settings[$domain_id] = $settings;
     }
 
-    public function getFiletypeData()
+    public function allTypeData()
     {
-        $this->filetypesLoaded(true);
-        return self::$filetype_data;
-    }
-
-    public function getFiletypeCategories()
-    {
-        $this->filetypesLoaded(true);
-        return self::$filetype_categories;
-    }
-
-    public function isValidExtension(string $extension)
-    {
-        if (!isset(self::$filetype_data))
-        {
-            $this->loadDataFromDatabase();
-        }
-
-        return isset(self::$filetype_data[$extension]);
+        $this->loadDataIfNot();
+        return self::$data;
     }
 
     public function extensionData(string $extension)
     {
-        if (!$this->isValidExtension($extension))
-        {
-            return false;
-        }
-
-        return self::$filetype_data[$extension];
+        return $this->isValidExtension($extension) ? self::$data[$extension] : array();
     }
 
-    public function settings(string $board_id, string $setting = null, bool $cache_regen = false)
+    public function types()
     {
-        if ($board_id === '' || is_null($board_id))
+        $this->loadDataIfNot();
+        return self::$types;
+    }
+
+    public function isValidExtension(string $extension)
+    {
+        $this->loadDataIfNot();
+        return isset(self::$data[$extension]);
+    }
+
+    public function settings(string $domain_id, string $setting = null, bool $cache_regen = false)
+    {
+        if ($domain_id === '' || is_null($domain_id))
         {
-            return;
+            return array();
         }
 
-        if (empty(self::$filetype_settings[$board_id]) || $cache_regen)
+        if (empty(self::$settings[$domain_id]) || $cache_regen)
         {
-            $this->loadSettingsFromDatabase($board_id);
+            $this->loadSettingsFromDatabase($domain_id);
         }
 
         if (is_null($setting))
         {
-            return self::$filetype_settings[$board_id];
+            return self::$settings[$domain_id];
         }
 
-        return self::$filetype_settings[$board_id][$setting];
+        return self::$settings[$domain_id][$setting];
     }
 
-    private function settingsLoaded(string $board_id, bool $load_if_not = false, bool $ignore_cache = false)
+    private function loadDataIfNot(bool $ignore_cache = false)
     {
-        $result = empty(self::$filetype_settings) && empty(self::$filetype_settings[$board_id]);
-
-        if ($result && $load_if_not)
+        if(empty(self::$data))
         {
-            $this->loadSettingsFromDatabase($board_id, $ignore_cache);
+            $this->loadDataFromDatabase($ignore_cache);
         }
-
-        return $result;
     }
 
-    private function filetypesLoaded(bool $load_if_not = false, bool $ignore_cache = false)
+    private function loadSettingsIfNot(string $domain_id, bool $ignore_cache = false)
     {
-        $result = empty(self::$filetype_data);
-
-        if ($result && $load_if_not)
+        if(!isset(self::$settings[$domain_id]))
         {
-            $this->loadDataFromDatabase();
-            return true;
+            $this->loadSettingsFromDatabase($domain_id, $ignore_cache);
         }
-
-        return $result;
     }
 
-    public function extensionIsEnabled(string $board_id, string $extension)
+    public function extensionIsEnabled(string $domain_id, string $extension)
     {
         $extension_data = $this->extensionData($extension);
 
-        if ($extension_data === false)
+        if (empty($extension_data))
         {
             return false;
         }
 
         $type = $extension_data['type'];
         $format = $extension_data['format'];
-        return $this->typeIsEnabled($board_id, $type) && $this->formatIsEnabled($board_id, $type, $format);
+        return $this->typeIsEnabled($domain_id, $type) && $this->formatIsEnabled($domain_id, $type, $format);
     }
 
-    public function typeIsEnabled(string $board_id, string $type)
+    public function typeIsEnabled(string $domain_id, string $type)
     {
-        if (!$this->settingsLoaded($board_id, true))
-        {
-            $this->loadSettingsFromDatabase($board_id);
-        }
-
-        return isset(self::$filetype_settings[$board_id][$type][$type]) &&
-                self::$filetype_settings[$board_id][$type][$type];
+        $this->loadSettingsIfNot($domain_id);
+        return self::$settings[$domain_id][$type]['enabled'] ?? false;
     }
 
-    public function formatIsEnabled(string $board_id, string $type, string $format)
+    public function formatIsEnabled(string $domain_id, string $type, string $format)
     {
-        return isset(self::$filetype_settings[$board_id][$type][$format]) &&
-                self::$filetype_settings[$board_id][$type][$format];
+        $this->loadSettingsIfNot($domain_id);
+        return self::$settings[$domain_id][$type]['formats'][$format] ?? false;
     }
 
     public function verifyFile(string $extension, $file_path, $start_buffer = 65535, $end_buffer = 65535)
@@ -206,13 +180,42 @@ class FileTypes
                 preg_match('#' . $extension_data['id_regex'] . '#', $file_test_end);
     }
 
-    public function generateSettingsCache(string $board_id)
+    public function generateSettingsCache(string $domain_id)
     {
         if (NEL_USE_INTERNAL_CACHE)
         {
-            $this->settingsLoaded($board_id, true, true);
-            $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $board_id . '/', 'filetype_settings.php',
-                    '$filetype_settings = ' . var_export(self::$filetype_settings[$board_id], true) . ';');
+            $this->loadSettingsIfNot($domain_id, true);
+            $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $domain_id . '/', 'filetype_settings.php',
+                    '$settings = ' . var_export(self::$settings[$domain_id], true) . ';');
         }
+    }
+
+    public function enabledTypes(string $domain_id)
+    {
+        $this->loadSettingsIfNot($domain_id);
+        $enabled = array();
+
+        foreach(self::$settings[$domain_id] as $type => $settings)
+        {
+            if(isset($settings['enabled']) && $settings['enabled'])
+            {
+                $enabled[$type] = true;
+            }
+        }
+
+        return $enabled;
+    }
+
+    public function enabledFormats(string $domain_id, string $type)
+    {
+        $this->loadSettingsIfNot($domain_id);
+        $enabled = array();
+
+        if(!isset(self::$settings[$domain_id][$type]))
+        {
+            return $enabled;
+        }
+
+        return self::$settings[$domain_id][$type]['formats'];
     }
 }

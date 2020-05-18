@@ -101,30 +101,16 @@ class OutputPostingForm extends OutputCore
     {
         $filetypes = new \Nelliel\FileTypes($this->domain->database());
 
-        foreach ($filetypes->settings($this->domain->id()) as $type => $formats)
+        foreach($filetypes->enabledTypes($this->domain->id()) as $type => $setting)
         {
-            if (!$filetypes->typeIsEnabled($this->domain->id(), $type))
+            $supported_types = sprintf(_gettext('Supported %s file types: '), $type);
+
+            foreach($filetypes->enabledFormats($this->domain->id(), $type) as $format)
             {
-                continue;
+                $supported_types .= utf8_strtoupper($format) . ', ';
             }
 
-            $list_set = '';
-
-            foreach ($formats as $name => $setting)
-            {
-                if ($name == $type || $setting === false)
-                {
-                    continue;
-                }
-
-                $list_set .= utf8_strtoupper($name) . ', ';
-            }
-
-            if ($list_set !== '_site_')
-            {
-                $this->render_data['rules_list'][]['rules_text'] = sprintf(_gettext('Supported %s file types: '), $type) .
-                        substr($list_set, 0, -2);
-            }
+            $this->render_data['rules_list'][]['rules_text'] = substr($supported_types, 0, -2);
         }
 
         $this->render_data['rules_list'][]['rules_text'] = sprintf(_gettext('Maximum file size allowed is %dKB'),

@@ -58,27 +58,19 @@ class AdminFiletypes extends AdminHandler
             nel_derp(431, _gettext('You are not allowed to add filetypes.'));
         }
 
-        $extension = $_POST['extension'];
-        $parent_extension = $_POST['parent_extension'];
-        $type = $_POST['type'];
-        $format = $_POST['format'];
-        $mime = $_POST['mime'];
-        $regex = $_POST['regex'];
-        $label = $_POST['label'];
+        $extension = $_POST['extension'] ?? '';
+        $parent_extension = $_POST['parent_extension'] ?? null;
+        $type = $_POST['type'] ?? null;
+        $format = $_POST['format'] ?? null;
+        $mime = $_POST['mime'] ?? null;
+        $regex = $_POST['id_regex'] ?? null;
+        $label = $_POST['label'] ?? null;
+        $type_def = $_POST['type_def'] ?? 0;
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_FILETYPES_TABLE .
-                '" ("extension", "parent_extension", "type", "format", "mime", "id_regex", "label") VALUES (?, ?, ?, ?, ?, ?, ?)');
+                '" ("extension", "parent_extension", "type", "format", "mime", "id_regex", "label" "type_def") VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
-                [$extension, $parent_extension, $type, $format, $mime, $regex, $label]);
-
-        foreach ($this->getBoardDomains() as $board_domain)
-        {
-            $prepared = $this->database->prepare(
-                    'INSERT INTO "' . $board_domain->reference('config_table') .
-                    '" ("config_type", "config_owner", "config_category", "data_type", "config_name", "setting", "select_type", "edit_lock") VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-            $this->database->executePrepared($prepared,
-                    ['filetype_enable', 'nelliel', $type, 'boolean', $format, '0', 0, 0]);
-        }
+                [$extension, $parent_extension, $type, $format, $mime, $id_regex, $label, $type_def]);
     }
 
     public function editor()
@@ -97,18 +89,8 @@ class AdminFiletypes extends AdminHandler
         }
 
         $filetype_id = $_GET['filetype-id'];
-        $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" WHERE "entry" = ?');
-        $filetype_info = $this->database->executePreparedFetch($prepared, [$filetype_id], PDO::FETCH_ASSOC);
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_FILETYPES_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filetype_id]);
-
-        foreach ($this->getBoardDomains() as $board_domain)
-        {
-            $prepared = $this->database->prepare(
-                    'DELETE FROM "' . $board_domain->reference('config_table') . '" WHERE "config_type" = \'filetype_enable\' AND "config_name" = ?');
-            $this->database->executePrepared($prepared, [$filetype_info['format']]);
-        }
     }
 
     private function getBoardDomains()

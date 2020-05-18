@@ -24,17 +24,18 @@ class CacheHandler
 
     public function loadArrayFromCache(string $filename, $array_variable)
     {
+        $array = array();
+
         if (NEL_USE_INTERNAL_CACHE)
         {
             if (file_exists(NEL_CACHE_FILES_PATH . $filename))
             {
                 include NEL_CACHE_FILES_PATH . $filename;
                 $array = $$array_variable;
-                return $array;
             }
         }
 
-        return array();
+        return $array;
     }
 
     public function checkHash($id, $hash)

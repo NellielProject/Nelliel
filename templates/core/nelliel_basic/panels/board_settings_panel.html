@@ -1352,31 +1352,31 @@
 		{{/ exclude_from_overboards }}
 	</div>
 	<hr>
-	{{# categories }}
+	{{# file_types }}
 	<div class="display-table text-left">
-		{{# category_select }}
+		{{# type_select }}
 		<div class="display-row">
 			<span class="display-cell">
 				<br>
-				<input type="hidden" name="{{ name }}" value="0">
-				<input id="{{ name }}" type="checkbox" name="{{ name }}" value="1" {{ value }}>
+				<input type="hidden" name="{{ input_name }}" value="0">
+				<input id="{{ name }}" type="checkbox" name="{{ input_name }}" value="1" {{ value }}>
 				<label for="{{ name }}" class="bold">{{ label }}</label>
 			</span>
 		</div>
-		{{/ category_select }}
+		{{/ type_select }}
 		{{# entry_rows }}
 		<div class="display-row">
 			{{# entry }}
 			<span class="display-cell">
-				<input type="hidden" name="{{ format }}" value="0">
-				<input id="{{ format }}" type="checkbox" name="{{ format }}" value="1" {{ value }}>
+				<input type="hidden" name="{{ input_name }}" value="0">
+				<input id="{{ format }}" type="checkbox" name="{{ input_name }}" value="1" {{ value }}>
 				<label for="{{ format }}">{{ label }}</label>
 			</span>
 			{{/ entry }}
 		</div>
 		{{/ entry_rows }}
 	</div>
-	{{/ categories }}
+	{{/ file_types }}
 	<div>
 		<input type="submit" value="Update Settings" data-i18n-attributes="gettext|value">
 	</div>
