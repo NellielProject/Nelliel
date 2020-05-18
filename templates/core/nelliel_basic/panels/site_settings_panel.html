@@ -153,6 +153,11 @@
 		<input id="sfw_overboard_threads" class="display-cell" type="text" name="sfw_overboard_threads" size="15" value="{{ sfw_overboard_threads }}">
 	</div>
 	<div class="display-row">
+		<input type="hidden" name="only_alphanumeric_board_ids" value="0">
+		<input id="only_alphanumeric_board_ids" type="checkbox" name="only_alphanumeric_board_ids" value="1" {{ only_alphanumeric_board_ids }}>
+		<label for="only_alphanumeric_board_ids" data-i18n="gettext">Only allow alphanumeric board IDs</label>
+	</div>
+	<div class="display-row">
 		<span class="display-cell">
 			<span data-i18n="gettext">Preferred graphics handler:</span>
 		</span>

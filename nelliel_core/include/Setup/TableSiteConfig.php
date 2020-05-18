@@ -86,5 +86,6 @@ class TableSiteConfig extends TableHandler
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'display_render_timer', '1', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'login_delay', '3', 0]);
         $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'integer', 'session_length', '10800', 0]);
+        $this->insertDefaultRow(['core_setting', 'nelliel', 'general', 'boolean', 'only_alphanumeric_board_ids', '1', 0]);
     }
 }

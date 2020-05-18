@@ -74,7 +74,8 @@ Error 230: User does not exist. (Admin/AdminUsers.php)
 Error 231: Role does not exist. (Admin/AdminRoles.php)  
 
 Error 240: Board ID already exists. (Admin/AdminBoards.php)  
-Error 241: Board URI already exists. (Admin/AdminBoards.php)  
+Error 241: Trouble with board ID. (Admin/AdminBoards.php)  
+Error 242: Invalid characters board ID. (Admin/AdminBoards.php) 
 
 Error 300: perm_manage_users (access) (Output/OutputPanelUsers.php)  
 Error 301: perm_manage_users (add) (Admin/AdminStaff.php)  

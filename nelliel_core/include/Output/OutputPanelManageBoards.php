@@ -96,6 +96,7 @@ class OutputPanelManageBoards extends OutputCore
             $this->render_data['board_list'][] = $board_data;
         }
 
+        $this->render_data['alphanumeric_only'] = $this->domain->setting('only_alphanumeric_board_ids');
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/manage_boards_panel',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);

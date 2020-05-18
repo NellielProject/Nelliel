@@ -73,7 +73,17 @@ class AdminBoards extends AdminHandler
             nel_derp(371, _gettext('You are not allowed to create boards.'));
         }
 
+        $site_domain = new \Nelliel\DomainSite($this->database);
         $board_id = $_POST['new_board_id'];
+
+        if($site_domain->setting('only_alphanumeric_board_ids'))
+        {
+            if(preg_match('/[^a-zA-Z0-9]/', $board_id) === 1)
+            {
+                nel_derp(242, _gettext('Board ID contains invalid characters!'));
+            }
+        }
+
         $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ? OR "board_uri" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$board_id, $board_id], PDO::FETCH_COLUMN);
 
