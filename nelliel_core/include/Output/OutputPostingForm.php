@@ -82,7 +82,8 @@ class OutputPostingForm extends OutputCore
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_post_captcha'] = $this->domain->setting('use_post_captcha');
         $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=get';
-        $this->render_data['captcha_regen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=generate&no-display';
+        $this->render_data['captcha_regen_url'] = $dotdot . NEL_MAIN_SCRIPT .
+                '?module=captcha&action=generate&no-display';
         $this->render_data['use_post_recaptcha'] = $this->domain->setting('use_post_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['captcha_label'] = true;
@@ -101,11 +102,11 @@ class OutputPostingForm extends OutputCore
     {
         $filetypes = new \Nelliel\FileTypes($this->domain->database());
 
-        foreach($filetypes->enabledTypes($this->domain->id()) as $type => $setting)
+        foreach ($filetypes->enabledTypes($this->domain->id()) as $type)
         {
             $supported_types = sprintf(_gettext('Supported %s file types: '), $type);
 
-            foreach($filetypes->enabledFormats($this->domain->id(), $type) as $format)
+            foreach ($filetypes->enabledFormats($this->domain->id(), $type) as $format)
             {
                 $supported_types .= utf8_strtoupper($format) . ', ';
             }

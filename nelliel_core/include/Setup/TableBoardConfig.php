@@ -133,6 +133,6 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'url_protocols', 'http|https|ftp|sftp|irc|nntp', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'url_prefix', '', 0, 0]);
         $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'boolean', 'exclude_from_overboards', '0', 0, 0]);
-        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'enabled_filetypes', '{"graphics":{"enabled":true,"formats":["jpeg","gif","png","webp"]}}', 0, 0]);
+        $this->insertDefaultRow(['board_setting', 'nelliel', 'general', 'string', 'enabled_filetypes', '{"graphics":{"enabled":true,"formats":{"jpeg":{"enabled":true},"gif":{"enabled":true},"png":{"enabled":true},"webp":{"enabled":true}}}}', 0, 0]);
     }
 }

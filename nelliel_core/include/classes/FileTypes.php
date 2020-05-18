@@ -160,13 +160,13 @@ class FileTypes
     public function typeIsEnabled(string $domain_id, string $type)
     {
         $this->loadSettingsIfNot($domain_id);
-        return self::$settings[$domain_id][$type]['enabled'] ?? false;
+        return in_array($type, $this->enabledTypes($domain_id));
     }
 
     public function formatIsEnabled(string $domain_id, string $type, string $format)
     {
         $this->loadSettingsIfNot($domain_id);
-        return self::$settings[$domain_id][$type]['formats'][$format] ?? false;
+        return in_array($format, $this->enabledFormats($domain_id, $type));
     }
 
     public function verifyFile(string $extension, $file_path, $start_buffer = 65535, $end_buffer = 65535)
@@ -199,7 +199,7 @@ class FileTypes
         {
             if(isset($settings['enabled']) && $settings['enabled'])
             {
-                $enabled[$type] = true;
+                $enabled[] = $type;
             }
         }
 
@@ -216,6 +216,14 @@ class FileTypes
             return $enabled;
         }
 
-        return self::$settings[$domain_id][$type]['formats'];
+        foreach(self::$settings[$domain_id][$type]['formats'] as $format => $settings)
+        {
+            if(isset($settings['enabled']) && $settings['enabled'])
+            {
+                $enabled[] = $format;
+            }
+        }
+
+        return $enabled;
     }
 }
