@@ -95,7 +95,13 @@ class Previews
                 }
                 else
                 {
-                    $this->gd($files[$i], $preview_path);
+                    $preview_made = $this->gd($files[$i], $preview_path);
+
+                    if(!$preview_made)
+                    {
+                        $files[$i]->changeData('preview_name', null);
+                        $files[$i]->changeData('preview_extension', null);
+                    }
                 }
             }
 

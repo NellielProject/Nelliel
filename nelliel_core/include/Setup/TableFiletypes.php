@@ -52,6 +52,7 @@ class TableFiletypes extends TableHandler
 
     public function insertDefaults()
     {
+        // IMPORTANT: If the regex has / in it, that needs to be escaped since that's the delimiter Nelliel uses
         $this->insertDefaultRow(['', null, 'graphics', null, null, null, 'Graphics files', 1]);
         $this->insertDefaultRow(['jpg', 'jpg', 'graphics', 'jpeg', 'image/jpeg', '^\xFF\xD8\xFF', 'JPEG', 0]);
         $this->insertDefaultRow(['jpeg', 'jpg', null, null, null, null, null, 0]);

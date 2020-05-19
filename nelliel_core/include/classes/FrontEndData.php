@@ -18,8 +18,8 @@ class FrontEndData
     private $default_style = array();
     private $templates = array();
     private $default_template = array();
-    private $filetype_icon_sets = array();
-    private $default_filetype_icon_set = array();
+    private $icon_sets = array();
+    private $default_icon_set = array();
     private $core_icon_set_ids = array();
     private $core_style_ids = array();
     private $core_template_ids = array();
@@ -28,7 +28,7 @@ class FrontEndData
     {
         $this->database = $database;
         $this->ini_parser = new \Nelliel\INIParser(new FileHandler());
-        $this->core_icon_set_ids = ['filetype-nelliel-basic'];
+        $this->core_icon_set_ids = ['icons-nelliel-basic'];
         $this->core_style_ids = ['style-nelliel', 'style-nelliel-b', 'style-futaba', 'style-burichan', 'style-nigra'];
         $this->core_template_ids = ['template-nelliel-basic'];
     }
@@ -53,7 +53,7 @@ class FrontEndData
         }
     }
 
-    private function loadFiletypeIconData()
+    private function loadIconSetData()
     {
         $all_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'icon-set\'',
                 PDO::FETCH_ASSOC);
@@ -62,18 +62,13 @@ class FrontEndData
         {
             $info = json_decode($data['info'], true);
 
-            if ($info['set_type'] !== 'filetype')
-            {
-                continue;
-            }
-
             if ($data['is_default'] == 1)
             {
-                $this->default_filetype_icon_set = $info;
+                $this->default_icon_set = $info;
             }
             else
             {
-                $this->templates[$data['id']] = $info;
+                $this->icon_sets[$data['id']] = $info;
             }
         }
     }
@@ -161,24 +156,24 @@ class FrontEndData
         return array_merge($custom_template_inis, $core_template_inis);
     }
 
-    public function filetypeIconSet($set = null, bool $return_default = true)
+    public function iconSet($set = null, bool $return_default = true)
     {
-        if (empty($this->filetype_icon_sets))
+        if (empty($this->icon_sets))
         {
-            $this->loadFiletypeIconData();
+            $this->loadIconSetData();
         }
 
         if (is_null($set))
         {
-            return $this->filetype_icon_sets;
+            return $this->icon_sets;
         }
 
-        if (!isset($this->filetype_icon_sets[$set]) && $return_default)
+        if (!isset($this->icon_sets[$set]) && $return_default)
         {
-            return $this->default_filetype_icon_set;
+            return $this->default_icon_set;
         }
 
-        return $this->filetype_icon_sets[$set];
+        return $this->icon_sets[$set];
     }
 
     public function iconSetIsCore(string $id)
@@ -188,8 +183,8 @@ class FrontEndData
 
     public function getIconSetInis()
     {
-        $core_icon_set_inis = $this->ini_parser->parseDirectories(NEL_CORE_ICON_SETS_FILES_PATH, 'icon_set_info.ini');
-        $custom_icon_set_inis = $this->ini_parser->parseDirectories(NEL_CUSTOM_ICON_SETS_FILES_PATH, 'icon_set_info.ini');
+        $core_icon_set_inis = $this->ini_parser->parseDirectories(NEL_CORE_ICON_SETS_FILES_PATH, 'icons_info.ini');
+        $custom_icon_set_inis = $this->ini_parser->parseDirectories(NEL_CUSTOM_ICON_SETS_FILES_PATH, 'icons_info.ini');
         return array_merge($custom_icon_set_inis, $core_icon_set_inis);
     }
 }

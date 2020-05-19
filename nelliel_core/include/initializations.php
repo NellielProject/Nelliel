@@ -13,7 +13,7 @@ if (ini_get('date.timezone') === '')
 
 define('NEL_ASSETS_DIR', 'assets');
 define('NEL_STYLES_DIR', 'styles');
-define('NEL_ICON_SETS_DIR', 'icon_sets');
+define('NEL_ICON_SETS_DIR', 'icons');
 define('NEL_IMAGES_DIR', 'imagez');
 define('NEL_TEMPLATES_DIR', 'templates');
 define('NEL_SCRIPTS_DIR', 'scripts');

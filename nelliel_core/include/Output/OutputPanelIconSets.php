@@ -55,16 +55,13 @@ class OutputPanelIconSets extends OutputCore
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $installed_ids[] = $icon_set['asset_id'];
             $set_data['id'] = $icon_set['asset_id'];
-            $set_data['set_type'] = strtoupper($icon_set_info['set_type']);
             $set_data['name'] = $icon_set_info['name'];
             $set_data['directory'] = $icon_set_info['directory'];
             $set_data['is_default'] = $icon_set['is_default'] == 1;
             $set_data['default_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'icon-sets', 'action' => 'make-default', 'icon-set-id' => $icon_set['asset_id'],
-                        'set-type' => $icon_set_info['set_type']]);
+                    ['module' => 'icon-sets', 'action' => 'make-default', 'icon-set-id' => $icon_set['asset_id']]);
             $set_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'icon-sets', 'action' => 'remove', 'icon-set-id' => $icon_set['asset_id'],
-                        'set-type' => $icon_set_info['set_type']]);
+                    ['module' => 'icon-sets', 'action' => 'remove', 'icon-set-id' => $icon_set['asset_id']]);
             $set_data['is_core'] = $this->domain->frontEndData()->iconSetIsCore($icon_set['asset_id']);
 
             $this->render_data['installed_list'][] = $set_data;
@@ -80,13 +77,11 @@ class OutputPanelIconSets extends OutputCore
             $set_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $set_data['id'] = $icon_set['id'];
-            $set_data['set_type'] = strtoupper($icon_set_info['set_type']);
             $set_data['name'] = $icon_set_info['name'];
             $set_data['directory'] = $icon_set_info['directory'];
             $set_data['is_installed'] = in_array($icon_set['id'], $installed_ids);
             $set_data['install_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'icon-sets', 'action' => 'add', 'icon-set-id' => $icon_set['id'],
-                        'set-type' => $icon_set['set_type']]);
+                    ['module' => 'icon-sets', 'action' => 'add', 'icon-set-id' => $icon_set['id']]);
             $this->render_data['available_list'][] = $set_data;
         }
 

@@ -44,7 +44,7 @@ class TableAssets extends TableHandler
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow(['filetype-nelliel-basic', 'icon-set', 1, '{"id": "filetype-nelliel-basic","directory": "filetype_nelliel_basic","name": "Nelliel Basic Filetype Icon Set","set_type": "filetype","version": "1.0","description": "The basic filetype icon set for Nelliel."}']);
+        $this->insertDefaultRow(['icons-nelliel-basic', 'icon-set', 1, '{"id": "icons-nelliel-basic","directory": "nelliel_basic","name": "Nelliel Basic Icon Set","version": "1.0","description": "The basic icon set for Nelliel."}']);
         $this->insertDefaultRow(['style-nelliel', 'style', 1, '{"id": "style-nelliel","directory": "nelliel","main_file": "nelliel.css","name": "Nelliel","version": "1.0","description": "Nelliel style","style_type": "css"}']);
         $this->insertDefaultRow(['style-nelliel-b', 'style', 0, '{"id": "style-nelliel-b","directory": "nelliel_b","main_file": "nelliel_b.css","name": "Nelliel B","version": "1.0","description": "Nelliel B style","style_type": "css"}']);
         $this->insertDefaultRow(['style-futaba', 'style', 0, '{"id": "style-futaba","directory": "futaba","main_file": "futaba.css","name": "Futaba","version": "1.0","description": "Futaba style","style_type": "css"}']);

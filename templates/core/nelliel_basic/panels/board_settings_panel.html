@@ -354,23 +354,23 @@
 			</span>
 		</div>
 		{{/ template_id }}
-		{{# filetype_icon_set_id }}
+		{{# icon_set_id }}
 		<div class="display-row">
 			{{# defaults }}
 			<span class="display-cell">
-				<input type="hidden" name="filetype_icon_set_id_lock" value="0">
-				<input id="filetype_icon_set_id_lock" type="checkbox" name="filetype_icon_set_id_lock" value="1" {{ locked }}>
-				<label for="filetype_icon_set_id_lock" data-i18n="gettext">(Lock)</label>
+				<input type="hidden" name="icon_set_id_lock" value="0">
+				<input id="icon_set_id_lock" type="checkbox" name="icon_set_id_lock" value="1" {{ locked }}>
+				<label for="icon_set_id_lock" data-i18n="gettext">(Lock)</label>
 			</span>
 			{{/ defaults }}
 			<span class="display-cell">
-				<label for="filetype_icon_set_id" data-i18n="gettext">ID of icon set to use with filetypes</label>
+				<label for="icon_set_id" data-i18n="gettext">ID of icon set to use with filetypes</label>
 			</span>
 			<span class="display-cell">
-				<input id="filetype_icon_set_id" type="text" name="filetype_icon_set_id" size="30" value="{{ value }}" {{ disabled }}>
+				<input id="icon_set_id" type="text" name="icon_set_id" size="30" value="{{ value }}" {{ disabled }}>
 			</span>
 		</div>
-		{{/ filetype_icon_set_id }}
+		{{/ icon_set_id }}
 		{{# display_render_timer }}
 		<div class="display-row">
 			{{# defaults }}

@@ -109,6 +109,7 @@ class OutputFile extends OutputCore
 
         if ($this->domain->setting('use_preview'))
         {
+            $this->render_data['image_preview'] = true;
             $max_width = ($multiple) ? $this->domain->setting('max_multi_width') : $this->domain->setting('max_width');
             $max_height = ($multiple) ? $this->domain->setting('max_multi_height') : $this->domain->setting(
                     'max_height');
@@ -122,9 +123,7 @@ class OutputFile extends OutputCore
             }
             else
             {
-                $this->render_data['image_preview'] = true;
-
-                if (!empty($file['preview_name']))
+                if (!empty($file['preview_name']) && $file['preview_width'] > 0 && $file['preview_height'] > 0)
                 {
                     $full_preview_name = $file['preview_name'] . '.' . $file['preview_extension'];
                     $this->render_data['preview_url'] = $web_paths['thread_preview'] . $post_data['post_number'] . '/' .
@@ -145,11 +144,11 @@ class OutputFile extends OutputCore
                 else if ($this->domain->setting('use_file_icon'))
                 {
                     $front_end_data = new \Nelliel\FrontEndData($this->domain->database());
-                    $icon_set = $front_end_data->filetypeIconSet($this->domain->setting('filetype_icon_set_id'));
-                    $web_path = $front_end_data->iconSetIsCore($this->domain->setting('filetype_icon_set_id')) ? NEL_CORE_ICON_SETS_WEB_PATH : NEL_CUSTOM_ICON_SETS_WEB_PATH;
+                    $icon_set = $front_end_data->iconSet($this->domain->setting('icon_set_id'));
+                    $web_path = $front_end_data->iconSetIsCore($this->domain->setting('icon_set_id')) ? NEL_CORE_ICON_SETS_WEB_PATH : NEL_CUSTOM_ICON_SETS_WEB_PATH;
                     $icons_web_path = '//' . $web_paths['base_domain'] . $web_path . $icon_set['directory'] .
                             '/';
-                    $file_path = $front_end_data->iconSetIsCore($this->domain->setting('filetype_icon_set_id')) ? NEL_CORE_ICON_SETS_FILES_PATH : NEL_CUSTOM_ICON_SETS_FILES_PATH;
+                    $file_path = $front_end_data->iconSetIsCore($this->domain->setting('icon_set_id')) ? NEL_CORE_ICON_SETS_FILES_PATH : NEL_CUSTOM_ICON_SETS_FILES_PATH;
                     $icons_file_path = $file_path . $icon_set['directory'] . '/';
                     $format_icon = utf8_strtolower($file['format']) . '.png';
                     $type_icon = utf8_strtolower($file['type']) . '.png';
@@ -157,15 +156,23 @@ class OutputFile extends OutputCore
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
 
-                    if (file_exists($icons_file_path . utf8_strtolower($file['type']) . '/' . $format_icon))
+                    if (file_exists($icons_file_path . 'filetype/' . utf8_strtolower($file['type']) . '/' . $format_icon))
                     {
-                        $this->render_data['preview_url'] = $icons_web_path . utf8_strtolower($file['type']) . '/' .
+                        $this->render_data['preview_url'] = $icons_web_path . 'filetype/' . utf8_strtolower($file['type']) . '/' .
                                 $format_icon;
                     }
-                    else if (file_exists($icons_file_path . 'generic/' . $type_icon))
+                    else if (file_exists($icons_file_path . 'filetype/generic/' . $type_icon))
                     {
-                        $this->render_data['preview_url'] = $icons_web_path . '/generic/' . $type_icon;
+                        $this->render_data['preview_url'] = $icons_web_path . 'filetype/generic/' . $type_icon;
                     }
+                    else
+                    {
+                        $this->render_data['image_preview'] = false;
+                    }
+                }
+                else
+                {
+                    $this->render_data['image_preview'] = false;
                 }
 
                 if ($file['spoiler'])

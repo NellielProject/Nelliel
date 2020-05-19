@@ -106,7 +106,6 @@ class AdminIconSets extends AdminHandler
         }
 
         $icon_set_id = $_GET['icon-set-id'];
-        $set_type = $_GET['set-type'];
         $this->database->exec('UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 0 WHERE "type" = \'icon-set\'');
         $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'icon-set\'');
