@@ -97,7 +97,7 @@ class AdminThreads extends AdminHandler
 
     public function update()
     {
-        $thread_handler = new \Nelliel\ThreadHandler($this->database, $this->domain->id());
+        $thread_handler = new \Nelliel\ThreadHandler($this->database, $this->domain);
         $thread_handler->processContentDeletes();
     }
 

@@ -262,11 +262,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 $file->remove();
             }
 
-            if ($inputs['action'] === 'ban-file')
-            {
-                ; // TODO: Add file hash
-            }
-
             $redirect = new \Nelliel\Redirect();
             $redirect->doRedirect(true);
 
@@ -289,6 +284,9 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             if (isset($_POST['form_submit_delete']))
             {
+                $thread_handler = new \Nelliel\ThreadHandler($domain);
+                $thread_handler->processContentDeletes();
+
                 if ($session->inModmode($domain))
                 {
                     $redirect->changeURL(

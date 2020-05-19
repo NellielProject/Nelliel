@@ -14,9 +14,9 @@ class ThreadHandler
     private $database;
     private $domain;
 
-    function __construct(NellielPDO $database, Domain $domain)
+    function __construct(Domain $domain)
     {
-        $this->database = $database;
+        $this->database = $domain->database();
         $this->domain = $domain;
     }
 
@@ -72,9 +72,9 @@ class ThreadHandler
         $regen->threads($this->domain, true, $updates);
         $this->site_domain = new \Nelliel\DomainSite($this->database);
 
-        if($site_domain->setting('overboard_active'))
+        if($this->site_domain->setting('overboard_active'))
         {
-            $regen->overboard($site_domain);
+            $regen->overboard($this->site_domain);
         }
 
         $regen->index($this->domain);
