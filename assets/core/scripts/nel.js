@@ -19,7 +19,7 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     dataBin.hidden_posts = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_posts_id, true);
     dataBin.collapsedThreads = [];
 
-    if(board_id === "") {
+    if (board_id === "") {
         setStyle(nelliel.core.getCookie("base-style"));
     }
     else {
@@ -29,7 +29,7 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     nelliel.setup.setupListeners();
     nelliel.core.hashHandler();
     
-    if(board_id !== "") {
+    if (board_id !== "") {
         nelliel.setup.fillForms(board_id);
         nelliel.ui.applyHidePostThread();
     }
@@ -38,11 +38,11 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
 }
 
 nelliel.setup.localStorageInitCheck = function() {
-    if(!localStorage[dataBin.hidden_threads_id]) {
+    if (!localStorage[dataBin.hidden_threads_id]) {
         localStorage[dataBin.hidden_threads_id] = '{}';
     }
     
-    if(!localStorage[dataBin.hidden_posts_id]) {
+    if (!localStorage[dataBin.hidden_posts_id]) {
         localStorage[dataBin.hidden_posts_id] = '{}';
     }
 }
@@ -87,12 +87,17 @@ nelliel.setup.fillForms = function(board) {
     var pwd = nelliel.core.getCookie("pwd-" + board);
     var name = nelliel.core.getCookie("name-" + board);
     
-    if(pwd !== null) {
-        document.getElementById("posting-form-sekrit").value = pwd;
-        document.getElementById("update-sekrit").value = pwd;
+    if (pwd !== null) {
+        if (document.getElementById("posting-form-sekrit") !== null) {
+            document.getElementById("posting-form-sekrit").value = pwd;
+        }
+
+        if (document.getElementById("update-sekrit") !== null) {
+            document.getElementById("update-sekrit").value = pwd;
+        }
     }
 
-    /*document.getElementById("not-anonymous").value = name;*/
+    /* document.getElementById("not-anonymous").value = name; */
 }
 
 nelliel.events.processPostClicks = function(event) {
@@ -252,12 +257,12 @@ function addNewFileMeta(element, command) {
 }
 
 function setStyle(style, update_cookie = false) {
-    if(style == null) {
+    if (style == null) {
         return;
     }
     
-    if(update_cookie) {
-        if(dataBin.board_id == "") {
+    if (update_cookie) {
+        if (dataBin.board_id == "") {
             style_cookie = "base-style";
         } else {
             style_cookie = "style-" + dataBin.board_id;

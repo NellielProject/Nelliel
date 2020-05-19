@@ -59,7 +59,6 @@ class OutputPanelFiletypes extends OutputCore
             $filetype_data['format'] = $filetype['format'];
             $filetype_data['mime'] = $filetype['mime'];
             $filetype_data['id_regex'] = $filetype['id_regex'];
-            $filetype_data['enabled'] = $filetype['enabled'];
             $filetype_data['label'] = $filetype['label'];
             $filetype_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                     ['module' => 'filetypes', 'action' => 'remove', 'filetype-id' => $filetype['entry']]);
