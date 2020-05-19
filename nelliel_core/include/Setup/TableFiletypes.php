@@ -75,7 +75,10 @@ class TableFiletypes extends TableHandler
         $this->insertDefaultRow(['ai', 'ai', 'graphics', 'illustrator', 'application/postscript', '^%PDF', 'Adobe Illustrator', 0]);
         $this->insertDefaultRow(['ps', 'ps', 'graphics', 'postscript', 'application/postscript', '%!PS', 'PostScript', 0]);
         $this->insertDefaultRow(['eps', 'eps', 'graphics', 'eps', 'application/postscript', '^\xC5\xD0\xD3\xC6|%!PS-Adobe-[0-9]\.[0-9] EPSF-[0-9]\.[0-9]', 'Encapsulated PostScript', 0]);
-        $this->insertDefaultRow(['webp', 'webp', 'graphics', 'webp', 'audio/x-wave', '^RIFF.{4}WEBP', 'WebP', 0]);
+        $this->insertDefaultRow(['webp', 'webp', 'graphics', 'webp', 'image/webp', '^RIFF.{4}WEBP', 'WebP', 0]);
+        $this->insertDefaultRow(['wbmp', 'wbmp', 'graphics', 'wbmp', 'image/vnd.wap.wbmp', '^\x00[\x00|\x01]', 'Wireless Bitmap', 0]);
+        $this->insertDefaultRow(['xbm', 'xbm', 'graphics', 'xbm', 'image/x-xbitmap', '^#define ', 'X Bitmap', 0]);
+        $this->insertDefaultRow(['xpm', 'xpm', 'graphics', 'xpm', 'image/x-xpixmap', '^\/\* XPM \*\/\x0D\x0Astatic char \*', 'X PixMap', 0]);
         $this->insertDefaultRow(['', null, 'audio', null, null, null, 'Audio files', 1]);
         $this->insertDefaultRow(['wav', 'wav', 'audio', 'wave', 'audio/x-wave', '^RIFF.{4}WAVEfmt', 'WAVE', 0]);
         $this->insertDefaultRow(['aif', 'aif', 'audio', 'aiff', 'audio/aiff', '^FORM.{4}AIFF', 'AIFF', 0]);

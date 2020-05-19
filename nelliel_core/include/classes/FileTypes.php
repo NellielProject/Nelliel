@@ -176,8 +176,8 @@ class FileTypes
         $file_test_begin = file_get_contents($file_path, null, null, 0, 65535);
         $file_test_end = file_get_contents($file_path, null, null, $end_offset);
         $extension_data = $this->extensionData($extension);
-        return preg_match('#' . $extension_data['id_regex'] . '#', $file_test_begin) ||
-                preg_match('#' . $extension_data['id_regex'] . '#', $file_test_end);
+        return preg_match('/' . $extension_data['id_regex'] . '/', $file_test_begin) ||
+                preg_match('/' . $extension_data['id_regex'] . '/', $file_test_end);
     }
 
     public function generateSettingsCache(string $domain_id)
@@ -216,9 +216,9 @@ class FileTypes
             return $enabled;
         }
 
-        foreach(self::$settings[$domain_id][$type]['formats'] as $format => $settings)
+        foreach(self::$settings[$domain_id][$type]['formats'] as $format => $setting)
         {
-            if(isset($settings['enabled']) && $settings['enabled'])
+            if($setting)
             {
                 $enabled[] = $format;
             }

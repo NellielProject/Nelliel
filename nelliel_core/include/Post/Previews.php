@@ -26,17 +26,24 @@ class Previews
         $i = 0;
         $files_count = count($files);
 
-        while ($i < $files_count)
+        for($i  = 0; $i < $files_count; $i++)
         {
+            if (!$files[$i]->data('display_width') > 0 || !$files[$i]->data('display_height') > 0)
+            {
+                continue;
+            }
+
             if ($files[$i]->data('type') === 'graphics')
             {
                 $parameters = array();
                 $ratio = min(($this->domain->setting('max_height') / $files[$i]->data('display_height')),
                         ($this->domain->setting('max_width') / $files[$i]->data('display_width')));
-                $files[$i]->changeData('preview_width', ($ratio < 1) ? intval(
-                        $ratio * $files[$i]->data('display_width')) : $files[$i]->data('display_width'));
-                        $files[$i]->changeData('preview_height', ($ratio < 1) ? intval(
-                        $ratio * $files[$i]->data('display_height')) : $files[$i]->data('display_height'));
+                $files[$i]->changeData('preview_width',
+                        ($ratio < 1) ? intval($ratio * $files[$i]->data('display_width')) : $files[$i]->data(
+                                'display_width'));
+                $files[$i]->changeData('preview_height',
+                        ($ratio < 1) ? intval($ratio * $files[$i]->data('display_height')) : $files[$i]->data(
+                                'display_height'));
                 $file_handler->createDirectory($preview_path, NEL_DIRECTORY_PERM, true);
                 $files[$i]->changeData('preview_name', $files[$i]->data('filename') . '-preview');
 
@@ -93,7 +100,6 @@ class Previews
             }
 
             clearstatcache();
-            ++ $i;
         }
 
         return $files;
@@ -153,15 +159,13 @@ class Previews
                     $file->data('display_height') > $this->domain->setting('max_height'))
             {
                 $resize_command .= '-coalesce ';
-                $resize_command .= '-resize ' . $file->data('preview_width') . 'x' .
-                        $file->data('preview_height') . ' ';
+                $resize_command .= '-resize ' . $file->data('preview_width') . 'x' . $file->data('preview_height') . ' ';
             }
         }
         else
         {
             $resize_command .= '-filter lanczos ';
-            $resize_command .= '-resize ' . $file->data('preview_width') . 'x' .
-                    $file->data('preview_height') . ' ';
+            $resize_command .= '-resize ' . $file->data('preview_width') . 'x' . $file->data('preview_height') . ' ';
             $resize_command .= '-sharpen 0x' . $sharpen_sigma . ' ';
             $resize_command .= '-quality ' . $parameters['compression'] . ' ';
         }
@@ -182,8 +186,7 @@ class Previews
         $image->setCompressionQuality($parameters['compression']);
         $image_count = $image->getNumberImages();
 
-        if ($file->data('format') === 'gif' && $image_count > 1 && $this->domain->setting(
-                'animated_gif_preview'))
+        if ($file->data('format') === 'gif' && $image_count > 1 && $this->domain->setting('animated_gif_preview'))
         {
             $file->changeData('preview_extension', 'gif');
 
@@ -203,16 +206,13 @@ class Previews
         }
         else
         {
-            $image->resizeImage($file->data('preview_width'), $file->data('preview_height'), $filter,
-                    1.0);
+            $image->resizeImage($file->data('preview_width'), $file->data('preview_height'), $filter, 1.0);
             $image->sharpenImage(0, $sharpen_sigma);
             $image->setFormat($parameters['destination_format']);
         }
 
         $image->stripImage();
-        $image->writeImage(
-                $preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'),
-                true);
+        $image->writeImage($preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'), true);
     }
 
     public function imageMagick($file, $preview_path, $parameters)
@@ -228,15 +228,13 @@ class Previews
                     $file->data('display_height') > $this->domain->setting('max_height'))
             {
                 $resize_command .= '-coalesce ';
-                $resize_command .= '-resize ' . $file->data('preview_width') . 'x' .
-                        $file->data('preview_height') . ' ';
+                $resize_command .= '-resize ' . $file->data('preview_width') . 'x' . $file->data('preview_height') . ' ';
             }
         }
         else
         {
             $resize_command .= '-filter lanczos ';
-            $resize_command .= '-resize ' . $file->data('preview_width') . 'x' .
-                    $file->data('preview_height') . ' ';
+            $resize_command .= '-resize ' . $file->data('preview_width') . 'x' . $file->data('preview_height') . ' ';
             $resize_command .= '-sharpen 0x' . $sharpen_sigma . ' ';
             $resize_command .= '-quality ' . $parameters['compression'] . ' ';
         }
@@ -257,8 +255,7 @@ class Previews
         $image->setImageCompressionQuality($parameters['compression']);
         $image_count = $image->getNumberImages();
 
-        if ($file->data('format') === 'gif' && $image_count > 1 &&
-                $this->domain->setting('animated_gif_preview'))
+        if ($file->data('format') === 'gif' && $image_count > 1 && $this->domain->setting('animated_gif_preview'))
         {
             $file->changeData('preview_extension', 'gif');
 
@@ -277,33 +274,50 @@ class Previews
         }
         else
         {
-            $image->resizeImage($file->data('preview_width'), $file->data('preview_height'), $filter,
-                    1.0);
+            $image->resizeImage($file->data('preview_width'), $file->data('preview_height'), $filter, 1.0);
             $image->sharpenImage(0, $sharpen_sigma);
             $image->setFormat($parameters['destination_format']);
         }
 
         $image->stripImage();
-        $image->writeImages(
-                $preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'),
-                true);
+        $image->writeImages($preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'), true);
     }
 
     public function gd($file, $preview_path)
     {
-        $gd_test = gd_info(); // This shouldn't be needed. If your host actually doesn't have these, it sucks. Get a new one, srsly.
+        $gd_test = gd_info();
 
-        if ($file->data('format') === 'jpeg' && $gd_test["JPEG Support"])
+        if ($file->data('format') === 'jpeg' && $gd_test['JPEG Support'])
         {
             $image = imagecreatefromjpeg($file->data('location'));
         }
-        else if ($file->data('format') === 'gif' && $gd_test["GIF Read Support"])
+        else if ($file->data('format') === 'gif' && $gd_test['GIF Read Support'])
         {
             $image = imagecreatefromgif($file->data('location'));
         }
-        else if ($file->data('format') === 'png' && $gd_test["PNG Support"])
+        else if ($file->data('format') === 'png' && $gd_test['PNG Support'])
         {
             $image = imagecreatefrompng($file->data('location'));
+        }
+        else if ($file->data('format') === 'webp' && $gd_test['WebP Support'])
+        {
+            $image = imagecreatefromwebp($file->data('location'));
+        }
+        else if ($file->data('format') === 'bmp' && $gd_test['BMP Support'])
+        {
+            $image = imagecreatefrombmp($file->data('location'));
+        }
+        else if ($file->data('format') === 'wbmp' && $gd_test['WBMP Support'])
+        {
+            $image = imagecreatefromwbmp($file->data('location'));
+        }
+        else if ($file->data('format') === 'xbm' && $gd_test['XBM Support'])
+        {
+            $image = imagecreatefromxbm($file->data('location'));
+        }
+        else if ($file->data('format') === 'xpm' && $gd_test['XPM Support'])
+        {
+            $image = imagecreatefromxpm($file->data('location'));
         }
         else
         {
@@ -317,21 +331,18 @@ class Previews
             imagecolortransparent($preview, imagecolortransparent($image));
             imagealphablending($preview, false);
             imagesavealpha($preview, true);
-            imagecopyresampled($preview, $image, 0, 0, 0, 0, $file->data('preview_width'),
-                    $file->data('preview_height'), $file->data('display_width'),
-                    $file->data('display_height'));
+            imagecopyresampled($preview, $image, 0, 0, 0, 0, $file->data('preview_width'), $file->data('preview_height'),
+                    $file->data('display_width'), $file->data('display_height'));
 
             if ($this->domain->setting('use_png_preview'))
             {
-                imagepng($preview,
-                        $preview_path . $file->data('preview_name') . '.' .
-                        $file->data('preview_extension'), $this->domain->setting('png_compression'));
+                imagepng($preview, $preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'),
+                        $this->domain->setting('png_compression'));
             }
             else
             {
-                imagejpeg($preview,
-                        $preview_path . $file->data('preview_name') . '.' .
-                        $file->data('preview_extension'), $this->domain->setting('jpeg_quality'));
+                imagejpeg($preview, $preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'),
+                        $this->domain->setting('jpeg_quality'));
             }
         }
     }

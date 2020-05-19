@@ -82,8 +82,12 @@ class FilesUpload
             if ($file->data('type') === 'graphics' || $file->data('format') === 'swf')
             {
                 $dim = getimagesize($file->data('location'));
-                $file->changeData('display_width', $dim[0]);
-                $file->changeData('display_height', $dim[1]);
+
+                if($dim !== false)
+                {
+                    $file->changeData('display_width', $dim[0]);
+                    $file->changeData('display_height', $dim[1]);
+                }
             }
 
             $this->getPathInfo($file);
