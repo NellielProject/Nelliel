@@ -159,6 +159,8 @@ class Setup
         $versions_table->createTable();
         $assets_table = new TableAssets($database, $sql_compatibility);
         $assets_table->createTable();
+        $bans_table = new TableBans($database, $sql_compatibility);
+        $bans_table->createTable();
         $captcha_table = new TableCaptcha($database, $sql_compatibility);
         $captcha_table->createTable();
         $board_defaults_table = new TableBoardConfig($database, $sql_compatibility);
@@ -178,11 +180,9 @@ class Setup
         $templates_table->createTable();
 
         // NOTE: Tables must be created in order of:
-        // board data -> bans -> file filters -> overboard -> reports -> cites
+        // board data -> file filters -> overboard -> reports -> cites
         $board_data_table = new TableBoardData($database, $sql_compatibility);
         $board_data_table->createTable();
-        $bans_table = new TableBans($database, $sql_compatibility);
-        $bans_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
         $file_filters_table = new TableFileFilters($database, $sql_compatibility);
         $file_filters_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
         $overboard_table = new TableOverboard($database, $sql_compatibility);

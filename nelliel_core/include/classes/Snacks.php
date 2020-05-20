@@ -89,6 +89,7 @@ class Snacks
 
         foreach ($bans as $ban)
         {
+            // TODO: We can probably set up a general clear expired bans method in BanHammer
             $length = $ban['length'] + $ban['start_time'];
 
             if (time() >= $length)
