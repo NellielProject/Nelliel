@@ -333,20 +333,22 @@ class OutputPost extends OutputCore
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
         $comment_data['post_contents_class'] = $post_type_class . 'post-contents';
 
+        $comment_data['mod_comment'] = $post_data['mod_comment'] ?? null;
         if (!nel_true_empty($post_data['mod_comment']))
         {
-            $comment_data['mod_comment'] = $post_data['mod_comment'];
-            $this->output_filter->clearWhitespace($post_data['comment']);
+            //$comment_data['mod_comment'] = $post_data['mod_comment'];
         }
 
         $comment_data['post_comment_class'] = $post_type_class . 'post-comment';
 
         if (nel_true_empty($post_data['comment']))
         {
-            $comment_data['mod_comment'] = $this->domain->setting('no_comment_text');
+            $comment_data['comment_lines'][]['line']['text'] = $this->domain->setting('no_comment_text');
         }
         else
         {
+            $this->output_filter->clearWhitespace($post_data['comment']);
+
             if ($this->domain->setting('filter_combining_characters'))
             {
                 $post_data['comment'] = $this->output_filter->filterUnicodeCombiningCharacters($post_data['comment']);

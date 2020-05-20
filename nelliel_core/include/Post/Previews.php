@@ -350,6 +350,10 @@ class Previews
                 imagejpeg($preview, $preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'),
                         $this->domain->setting('jpeg_quality'));
             }
+
+            return true;
         }
+
+        return false;
     }
 }
