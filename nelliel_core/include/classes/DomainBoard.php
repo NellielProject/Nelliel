@@ -110,9 +110,16 @@ class DomainBoard extends Domain
         }
     }
 
-    public function globalVariation()
+    public function globalVariation(string $variant_id)
     {
-        return new DomainAllBoards($this->database);
+        if($variant_id === 'multi')
+        {
+            return new DomainMultiBoard($this->database);
+        }
+        else if($variant_id === 'all')
+        {
+            return new DomainAllBoards($this->database);
+        }
     }
 
     public function boardExists()

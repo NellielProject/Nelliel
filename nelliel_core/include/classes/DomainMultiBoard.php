@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class DomainAllBoards extends Domain
+class DomainMultiBoard extends Domain
 {
 
     public function __construct(NellielPDO $database)

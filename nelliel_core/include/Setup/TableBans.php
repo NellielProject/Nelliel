@@ -53,6 +53,7 @@ class TableBans extends TableHandler
             appeal              VARCHAR(255) DEFAULT NULL,
             appeal_response     VARCHAR(255) DEFAULT NULL,
             appeal_status       SMALLINT NOT NULL DEFAULT 0,
+            moar_info           TEXT DEFAULT NULL,
             CONSTRAINT fk_board_id_" . $other_tables['board_data_table'] . "_board_id
             FOREIGN KEY (board_id) REFERENCES " . $other_tables['board_data_table'] . " (board_id)
             ON UPDATE CASCADE
