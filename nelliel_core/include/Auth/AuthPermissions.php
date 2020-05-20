@@ -36,7 +36,7 @@ class AuthPermissions extends AuthHandler
 
         foreach ($result as $perm)
         {
-            $this->auth_data[$perm['perm_id']] = (bool) $perm['perm_setting'];
+            $this->auth_data[$perm['permission']] = (bool) $perm['perm_setting'];
         }
 
         return true;
@@ -52,25 +52,25 @@ class AuthPermissions extends AuthHandler
         foreach ($this->auth_data as $perm => $setting)
         {
             $prepared = $this->database->prepare(
-                    'SELECT "entry" FROM "' . NEL_ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ? AND "perm_id" = ?');
+                    'SELECT "entry" FROM "' . NEL_ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ? AND "permission" = ?');
             $result = $this->database->executePreparedFetch($prepared, [$this->id(), $perm], PDO::FETCH_COLUMN);
 
             if ($result)
             {
                 $prepared = $this->database->prepare(
                         'UPDATE "' . NEL_ROLE_PERMISSIONS_TABLE .
-                        '" SET "role_id" = :role_id, "perm_id" = :perm_id, "perm_setting" = :perm_setting WHERE "entry" = :entry');
+                        '" SET "role_id" = :role_id, "permission" = :permission, "perm_setting" = :perm_setting WHERE "entry" = :entry');
                 $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
             }
             else
             {
                 $prepared = $this->database->prepare(
-                        'INSERT INTO "' . NEL_ROLE_PERMISSIONS_TABLE . '" ("role_id", "perm_id", "perm_setting") VALUES
-                    (:role_id, :perm_id, :perm_setting)');
+                        'INSERT INTO "' . NEL_ROLE_PERMISSIONS_TABLE . '" ("role_id", "permission", "perm_setting") VALUES
+                    (:role_id, :permission, :perm_setting)');
             }
 
             $prepared->bindValue(':role_id', $this->authDataOrDefault('role_id', $this->id()), PDO::PARAM_STR);
-            $prepared->bindValue(':perm_id', $perm, PDO::PARAM_STR);
+            $prepared->bindValue(':permission', $perm, PDO::PARAM_STR);
             $prepared->bindValue(':perm_setting', intval($setting), PDO::PARAM_INT);
             $this->database->executePrepared($prepared);
         }

@@ -168,18 +168,12 @@ class Setup
         $filetypes_table->createTable();
         $news_table = new TableNews($database, $sql_compatibility);
         $news_table->createTable();
-        $permissions_table = new TablePermissions($database, $sql_compatibility);
-        $permissions_table->createTable();
         $rate_limit_table = new TableRateLimit($database, $sql_compatibility);
         $rate_limit_table->createTable();
         $site_config_table = new TableSiteConfig($database, $sql_compatibility);
         $site_config_table->createTable();
-        $staff_logs_table = new TableLogs($database, $sql_compatibility);
-        $staff_logs_table->tableName(NEL_STAFF_LOGS_TABLE);
-        $staff_logs_table->createTable();
-        $system_logs_table = new TableLogs($database, $sql_compatibility);
-        $system_logs_table->tableName(NEL_SYSTEM_LOGS_TABLE);
-        $system_logs_table->createTable();
+        $logs_table = new TableLogs($database, $sql_compatibility);
+        $logs_table->createTable();
         $templates_table = new TableTemplates($database, $sql_compatibility);
         $templates_table->createTable();
 
@@ -191,19 +185,21 @@ class Setup
         $bans_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
         $file_filters_table = new TableFileFilters($database, $sql_compatibility);
         $file_filters_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
-        $permissions_table = new TableOverboard($database, $sql_compatibility);
-        $permissions_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $overboard_table = new TableOverboard($database, $sql_compatibility);
+        $overboard_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
         $reports_table = new TableReports($database, $sql_compatibility);
         $reports_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
         $cites_table = new TableCites($database, $sql_compatibility);
         $cites_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
 
         // NOTE: Tables must be created in order of:
-        // roles -> role permissions -> users -> user roles
+        // roles -> permissions -> role permissions -> users -> user roles
         $roles_table = new TableRoles($database, $sql_compatibility);
         $roles_table->createTable();
+        $permissions_table = new TablePermissions($database, $sql_compatibility);
+        $permissions_table->createTable();
         $role_permissions_table = new TableRolePermissions($database, $sql_compatibility);
-        $role_permissions_table->createTable(['roles_table' => NEL_ROLES_TABLE]);
+        $role_permissions_table->createTable(['roles_table' => NEL_ROLES_TABLE, 'permissions_table' => NEL_PERMISSIONS_TABLE]);
         $users_table = new TableUsers($database, $sql_compatibility);
         $users_table->createTable();
         $user_roles_table = new TableUserRoles($database, $sql_compatibility);

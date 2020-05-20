@@ -16,7 +16,7 @@ class TableLogs extends TableHandler
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = '_logs';
+        $this->table_name = NEL_LOGS_TABLE;
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'level' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],

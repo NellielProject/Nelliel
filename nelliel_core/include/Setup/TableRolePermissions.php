@@ -20,7 +20,7 @@ class TableRolePermissions extends TableHandler
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'role_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'perm_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'permission' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
             'perm_setting' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -33,10 +33,14 @@ class TableRolePermissions extends TableHandler
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
             role_id         VARCHAR(50) NOT NULL,
-            perm_id         VARCHAR(50) NOT NULL,
+            permission      VARCHAR(50) NOT NULL,
             perm_setting    SMALLINT NOT NULL DEFAULT 0,
             CONSTRAINT fk_role_id_" . $other_tables['roles_table'] . "_role_id
             FOREIGN KEY (role_id) REFERENCES " . $other_tables['roles_table'] . " (role_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE,
+            CONSTRAINT fk_permission_" . $other_tables['permissions_table'] . "_permission
+            FOREIGN KEY (permission) REFERENCES " . $other_tables['permissions_table'] . " (permission)
             ON UPDATE CASCADE
             ON DELETE CASCADE
         ) " . $options . ";";
@@ -73,7 +77,6 @@ class TableRolePermissions extends TableHandler
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_post_in_locked', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_post_as_staff', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_mod_comment', 1]);
-        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_modify_posts', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_reports', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_mod_mode', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_delete_posts', 1]);
@@ -104,7 +107,6 @@ class TableRolePermissions extends TableHandler
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_post_in_locked', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_post_as_staff', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_mod_comment', 1]);
-        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_modify_posts', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_reports', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_mod_mode', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_delete_posts', 1]);
@@ -135,7 +137,6 @@ class TableRolePermissions extends TableHandler
         $this->insertDefaultRow(['MODERATOR', 'perm_board_post_in_locked', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_board_post_as_staff', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_board_mod_comment', 1]);
-        $this->insertDefaultRow(['MODERATOR', 'perm_board_modify_posts', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_manage_reports', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_mod_mode', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_board_delete_posts', 1]);
@@ -166,7 +167,6 @@ class TableRolePermissions extends TableHandler
         $this->insertDefaultRow(['JANITOR', 'perm_board_post_in_locked', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_board_post_as_staff', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_board_mod_comment', 0]);
-        $this->insertDefaultRow(['JANITOR', 'perm_board_modify_posts', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_manage_reports', 1]);
         $this->insertDefaultRow(['JANITOR', 'perm_mod_mode', 1]);
         $this->insertDefaultRow(['JANITOR', 'perm_board_delete_posts', 1]);
@@ -197,7 +197,6 @@ class TableRolePermissions extends TableHandler
         $this->insertDefaultRow(['BASIC_USER', 'perm_board_post_in_locked', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_board_post_as_staff', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_board_mod_comment', 0]);
-        $this->insertDefaultRow(['BASIC_USER', 'perm_board_modify_posts', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_manage_reports', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_mod_mode', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_board_delete_posts', 0]);

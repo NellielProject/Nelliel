@@ -181,7 +181,7 @@ class AuthUser extends AuthHandler
         unset($this->user_roles[$domain_id]);
     }
 
-    public function checkPermission(Domain $domain, string $perm_id)
+    public function checkPermission(Domain $domain, string $permission)
     {
         if ($this->empty())
         {
@@ -196,7 +196,7 @@ class AuthUser extends AuthHandler
 
         $role = $this->checkRole($domain);
 
-        if ($role && $role->checkPermission($perm_id))
+        if ($role && $role->checkPermission($permission))
         {
             return true;
         }
@@ -208,7 +208,7 @@ class AuthUser extends AuthHandler
         {
             $role = $this->checkRole($global_domain);
 
-            if ($role && $role->checkPermission($perm_id))
+            if ($role && $role->checkPermission($permission))
             {
                 return true;
             }
