@@ -32,12 +32,12 @@ class TableFileFilters extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
+            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             hash_type       VARCHAR(50) NOT NULL,
             file_hash       " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
             file_notes      VARCHAR(255) DEFAULT NULL,
             board_id        VARCHAR(50) NOT NULL,
-            CONSTRAINT fk_board_id_" . $other_tables['board_data_table'] . "_board_id
+            CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['board_data_table'] . "
             FOREIGN KEY (board_id) REFERENCES " . $other_tables['board_data_table'] . " (board_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE

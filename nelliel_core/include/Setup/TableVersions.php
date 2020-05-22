@@ -32,7 +32,7 @@ class TableVersions extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry       " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
+            entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             id          VARCHAR(100) NOT NULL,
             type        VARCHAR(50) NOT NULL,
             original    SMALLINT NOT NULL DEFAULT 0,

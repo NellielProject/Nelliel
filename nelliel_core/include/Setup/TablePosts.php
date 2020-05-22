@@ -47,7 +47,7 @@ class TablePosts extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            post_number         " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
+            post_number         " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             parent_thread       INTEGER DEFAULT NULL,
             reply_to            INTEGER DEFAULT NULL,
             poster_name         VARCHAR(255) DEFAULT NULL,
@@ -67,8 +67,8 @@ class TablePosts extends TableHandler
             mod_post_id         VARCHAR(50) DEFAULT NULL,
             mod_comment         TEXT DEFAULT NULL,
             meta                TEXT DEFAULT NULL,
-            CONSTRAINT fk_parent_thread_" . $other_tables['threads_table'] . "_thread_id
-            FOREIGN KEY (parent_thread) REFERENCES " . $other_tables['threads_table'] . "(thread_id)
+            CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['threads_table'] . "
+            FOREIGN KEY (parent_thread) REFERENCES " . $other_tables['threads_table'] . " (thread_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE
         ) " . $options . ";";

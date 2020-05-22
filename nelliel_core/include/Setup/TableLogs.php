@@ -34,7 +34,7 @@ class TableLogs extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry               " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
+            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             level               INTEGER NOT NULL,
             domain_id           VARCHAR(50) DEFAULT NULL,
             event_id            VARCHAR(50) NOT NULL,

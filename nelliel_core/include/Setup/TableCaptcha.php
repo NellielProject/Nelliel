@@ -32,7 +32,7 @@ class TableCaptcha extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            captcha_key     VARCHAR(64) NOT NULL PRIMARY KEY,
+            captcha_key     VARCHAR(64) PRIMARY KEY NOT NULL,
             captcha_text    VARCHAR(100) NOT NULL,
             domain_id       VARCHAR(50) DEFAULT NULL,
             time_created    BIGINT NOT NULL,

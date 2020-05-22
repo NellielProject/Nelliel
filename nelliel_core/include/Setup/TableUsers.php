@@ -34,7 +34,7 @@ class TableUsers extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            user_id         VARCHAR(50) NOT NULL PRIMARY KEY,
+            user_id         VARCHAR(50) PRIMARY KEY NOT NULL,
             display_name    VARCHAR(255) NOT NULL,
             user_password   VARCHAR(255) NOT NULL,
             active          SMALLINT NOT NULL DEFAULT 0,

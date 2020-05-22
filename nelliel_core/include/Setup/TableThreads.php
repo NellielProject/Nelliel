@@ -42,7 +42,7 @@ class TableThreads extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            thread_id               INTEGER NOT NULL PRIMARY KEY,
+            thread_id               INTEGER PRIMARY KEY NOT NULL,
             first_post              INTEGER DEFAULT NULL,
             last_post               INTEGER DEFAULT NULL,
             last_bump_time          BIGINT NOT NULL,

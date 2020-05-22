@@ -4,12 +4,19 @@ define('NELLIEL_COPYRIGHT', '2010-2020 Nelliel Project'); // Copyright line
 define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('NEL_BASE_PATH', realpath('.') . '/'); // Base path for script
 
-require_once 'nelliel_base.php';
-define('NELLIEL_CORE_PATH', realpath($core_path) . '/nelliel_core/'); // Base board files path
+$core_path = '.';
+
+if(file_exists('nelliel_base.php'))
+{
+    include 'nelliel_base.php';
+}
+
+define('NEL_CORE_PATH', realpath($core_path) . '/nelliel_core/'); // Base board files path
 unset($core_path);
 
-define('NEL_INCLUDE_PATH', NELLIEL_CORE_PATH . 'include/'); // Base include files path
-define('NEL_LIBRARY_PATH', NELLIEL_CORE_PATH . 'libraries/'); // Libraries path
+
+define('NEL_INCLUDE_PATH', NEL_CORE_PATH . 'include/'); // Base include files path
+define('NEL_LIBRARY_PATH', NEL_CORE_PATH . 'libraries/'); // Libraries path
 
 require_once NEL_INCLUDE_PATH . 'autoload.php';
 require_once NEL_INCLUDE_PATH . 'derp.php';

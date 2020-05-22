@@ -29,7 +29,7 @@ class TableRateLimit extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            ip_address  " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " PRIMARY KEY,
+            ip_address  " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " PRIMARY KEY NOT NULL,
             record     TEXT NOT NULL
         ) " . $options . ";";
 

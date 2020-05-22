@@ -31,7 +31,7 @@ class TableRoles extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            role_id         VARCHAR(50) NOT NULL PRIMARY KEY,
+            role_id         VARCHAR(50) PRIMARY KEY NOT NULL,
             role_level      SMALLINT NOT NULL DEFAULT 0,
             role_title      VARCHAR(255) NOT NULL,
             capcode         TEXT DEFAULT NULL

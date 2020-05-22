@@ -33,13 +33,13 @@ class TableOverboard extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            ob_key                  VARCHAR(64) NOT NULL PRIMARY KEY,
+            ob_key                  VARCHAR(64) PRIMARY KEY NOT NULL,
             thread_id               INTEGER NOT NULL,
             last_bump_time          BIGINT NOT NULL,
             last_bump_time_milli    SMALLINT NOT NULL,
             board_id                VARCHAR(50) NOT NULL,
             safety_level            VARCHAR(20) NOT NULL,
-            CONSTRAINT fk_board_id_" . $other_tables['board_data_table'] . "_board_id
+            CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['board_data_table'] . "
             FOREIGN KEY (board_id) REFERENCES " . $other_tables['board_data_table'] . " (board_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE

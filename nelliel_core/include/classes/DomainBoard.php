@@ -35,8 +35,8 @@ class DomainBoard extends Domain
 
             if (NEL_USE_INTERNAL_CACHE)
             {
-                $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/', 'domain_settings.php',
-                        '$domain_settings = ' . var_export($settings, true) . ';');
+                $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/',
+                        'domain_settings.php', '$domain_settings = ' . var_export($settings, true) . ';');
             }
         }
 
@@ -77,7 +77,8 @@ class DomainBoard extends Domain
     protected function loadSettingsFromDatabase()
     {
         $settings = array();
-        $prepared = $this->database->prepare('SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
+        $prepared = $this->database->prepare(
+                'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $db_prefix = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);
         $config_table = $db_prefix . '_config';
         $config_list = $this->database->executeFetchAll(
@@ -110,16 +111,14 @@ class DomainBoard extends Domain
         }
     }
 
-    public function globalVariation(string $variant_id)
+    public function globalVariation()
     {
-        if($variant_id === 'multi')
-        {
-            return new DomainMultiBoard($this->database);
-        }
-        else if($variant_id === 'all')
-        {
-            return new DomainAllBoards($this->database);
-        }
+        return new DomainAllBoards($this->database);
+    }
+
+    public function multiVariation()
+    {
+        return new DomainMultiBoard($this->database);
     }
 
     public function boardExists()

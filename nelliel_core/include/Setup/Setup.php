@@ -117,7 +117,7 @@ class Setup
 
     public function coreDirWritable()
     {
-        if (!is_writable(NELLIEL_CORE_PATH))
+        if (!is_writable(NEL_CORE_PATH))
         {
             nel_derp(104, _gettext('The core directory not writable.'));
         }

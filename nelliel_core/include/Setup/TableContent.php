@@ -52,7 +52,7 @@ class TableContent extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry               " . $auto_inc[0] . " NOT NULL " . $auto_inc[1] . " PRIMARY KEY,
+            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             parent_thread       INTEGER DEFAULT NULL,
             post_ref            INTEGER DEFAULT NULL,
             content_order       SMALLINT NOT NULL DEFAULT 0,
@@ -77,8 +77,8 @@ class TableContent extends TableHandler
             deleted             SMALLINT NOT NULL DEFAULT 0,
             exif                TEXT DEFAULT NULL,
             meta                TEXT DEFAULT NULL,
-            CONSTRAINT fk_post_ref_" . $other_tables['posts_table'] . "_post_number
-            FOREIGN KEY(post_ref) REFERENCES " . $other_tables['posts_table'] . "(post_number)
+            CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['posts_table'] . "
+            FOREIGN KEY (post_ref) REFERENCES " . $other_tables['posts_table'] . " (post_number)
             ON UPDATE CASCADE
             ON DELETE CASCADE
         ) " . $options . ";";

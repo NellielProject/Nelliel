@@ -8,4 +8,4 @@ if (!defined('NELLIEL_VERSION'))
 // Usually that would be outside web accessible space.
 // If you don't have a need to do so, it should be left alone.
 
-$core_location = '.';
+$core_path = '.';
