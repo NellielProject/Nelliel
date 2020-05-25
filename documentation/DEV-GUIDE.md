@@ -22,18 +22,17 @@ In addition:
  - If a class instance or mutable variable needs to be accessible in a global scope it must be encapsulated inside a function.
  
 ## SQL and Queries
-All schemas and queries should follow SQL standard when reasonably possible. When something is not available in the standard or is not often implemented then a commonly implemented alternative can be used. If there is no option widely used, an alternative may be added to the `SQLCompatibility` class.
+All schemas and queries should follow SQL standard (ANSI) when reasonably possible. When something is not covered in the standard then a commonly implemented alternative can be used. If there is none widely used, a RDBMNS-specific option may be added to the `SQLCompatibility` class.
 
-In cases where a data type is not fully cross-compatible or has a differing name (e.g. the BINARY equivalent in PostgreSQL is BYTEA), an equivalent may be used for the specific RDBMS schema so long as the behavior is indistinguishable.
+In cases where a data type is not fully cross-compatible or has a differing name (e.g. the BINARY equivalent in PostgreSQL is BYTEA), an equivalent may be used for the specific RDBMS so long as the behavior is indistinguishable.
 
-Query requirements:
+On queries:
  - Queries must be done through PDO or a PDO-extending class such as NellielPDO.
  - Queries must be parameterized unless the entire query is hardcoded.
  - Identifiers must be placed in double quotes `" "`, with the exception of table or column creation.
  - All identifiers should be treated as case sensitive.
  - Non-parameterized string literals must be placed inside single quotes `' '`.
  - SQL keywords should be ALL CAPS.
- - Database NULL should be treated as unknown value.
  
 ## Targets and Version Support
 Any core functions and features contributed to Nelliel must be fully functional with the minimum versions listed below in addition to all later versions of the software. These minimum requirements will change over time due to certain circumstances including (but not limited to):
@@ -41,7 +40,7 @@ Any core functions and features contributed to Nelliel must be fully functional 
  - A necessary feature or function cannot be reasonably implemented.
  - Forward compatibility becomes impractical.
 
-When minimum requirements are changed, the Minor version number must be incremented.
+When minimum requirements are changed, a Minor release must be done.
 
 ### PHP Support
 At present Nelliel has a target version of **PHP 7.1**.
@@ -54,15 +53,10 @@ Minimum supported RDBMS versions:
  - SQLite 3.20
 
 ### Browser Support
-These are the minimum browser versions Nelliel must be compatible with:
- - Safari 11
- - Chrome 72
- - Firefox 68
- 
- Retaining compatibility with older browsers is encouraged when reasonably possible.
+Nelliel must be fully functional with Firefox, Chrome, Safari and Edge. Maintaining compatibility with older versions of these browsers is encouraged when reasonably possible.
 
 ## Versioning
-Upon the initial 1.0 Release, Nelliel versioning will follow Major.Minor.Patch under these definitions:
+After the 1.0 Release, Nelliel versioning will follow Major.Minor.Patch under these definitions:
  - Major: Major breaking changes or project-wide rework.
  - Minor: Minor breaking changes, requirements update, significant new features or changes introduced.
  - Patch: Bug fixes, code tweaks, refinements, minor new features.
@@ -70,16 +64,17 @@ Upon the initial 1.0 Release, Nelliel versioning will follow Major.Minor.Patch u
 When the version changes, the constant `NELLIEL_VERSION` in file `imgboard.php` must be updated. A git tag should be created upon Major or Minor changes, or when a formal release is created.
 
 ## Error Codes
-Nelliel returns a numeric error id along with an error message. This keeps the better user experience without making it difficult to track exactly where in the code things went wrong (especially when other translations are involved). These are the designated ranges:
+Nelliel returns a numeric error id along with an error message. This keeps the better user experience while making it seasier to track where in the code the problem occurs. These are the designated ranges:
  - 0: Unknown or nonspecific error.
  - 1-99: Content-related errors (upload problems, duplicate files, etc.).
  - 100-199: General system and input errors.
  - 200-299: Management-related system and input errors.
  - 300-699: Permissions errors.
  - 700-999: Reserved
+ - 1000+: Plugins and other uses
 
 
 ## Other
- - Only basic initialization and early loading should happen in `imgboard.php`.
+ - Only early loading and initialization should happen in `imgboard.php`.
  - Configurations should be stored in the database whenever possible.
  - Nelliel should cause no PHP errors, warnings or notices when `E_ALL` and `E_STRICT` are enabled.
