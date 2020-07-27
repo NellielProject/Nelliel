@@ -17,6 +17,11 @@ class Language
 
     function __construct($gettext_instance = null)
     {
+        if (!defined(LC_MESSAGES))
+        {
+            define('LC_MESSAGES', 6);
+        }
+
         if (!is_null($gettext_instance))
         {
             self::$gettext = $gettext_instance;
@@ -39,7 +44,8 @@ class Language
     public function loadLanguage(string $locale, string $domain_id, int $category)
     {
         $category_string = self::$gettext_helpers->categoryToString($category);
-        $file = self::$gettext->bindtextdomain($domain_id) . '/' . $locale . '/' . $category_string . '/' . $domain_id . '.po';
+        $file = self::$gettext->bindtextdomain($domain_id) . '/' . $locale . '/' . $category_string . '/' . $domain_id .
+                '.po';
         $file_id = $locale . '/' . $category_string . '/' . $domain_id . '.po';
         $cache_file = 'language/' . $locale . '/' . $category_string . '/' . $domain_id . '_po.php';
         $cache_handler = new \Nelliel\Utility\CacheHandler();
