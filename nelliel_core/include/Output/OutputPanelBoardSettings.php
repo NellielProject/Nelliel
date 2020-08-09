@@ -145,7 +145,9 @@ class OutputPanelBoardSettings extends OutputCore
 
         foreach ($rows as $config_line)
         {
-            $config_data = array('display' => true);
+            $config_data = array();
+            $config_data['display'] = true;
+            $config_data['setting_name'] = $config_line['config_name'];
 
             if ($config_line['data_type'] == 'boolean')
             {
