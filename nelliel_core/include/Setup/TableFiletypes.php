@@ -39,12 +39,12 @@ class TableFiletypes extends TableHandler
             entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             extension           VARCHAR(20) NOT NULL,
             parent_extension    VARCHAR(20) DEFAULT NULL,
-            type            VARCHAR(50) DEFAULT NULL,
+            type                VARCHAR(50) DEFAULT NULL,
             format              VARCHAR(50) DEFAULT NULL,
             mime                VARCHAR(255) DEFAULT NULL,
             id_regex            TEXT DEFAULT NULL,
             label               VARCHAR(255) DEFAULT NULL,
-            type_def        SMALLINT NOT NULL DEFAULT 0
+            type_def            SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
         return $schema;

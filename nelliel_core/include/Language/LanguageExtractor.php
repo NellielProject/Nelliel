@@ -378,10 +378,10 @@ class LanguageExtractor
             }
         }
 
-        $permission_description = $database->executeFetchAll('SELECT "description" FROM "' . NEL_PERMISSIONS_TABLE . '"',
+        $permission_descriptions = $database->executeFetchAll('SELECT "description" FROM "' . NEL_PERMISSIONS_TABLE . '"',
                 PDO::FETCH_COLUMN);
 
-        foreach ($permission_description as $description)
+        foreach ($permission_descriptions as $description)
         {
             if ($description !== '' && !is_null($description))
             {
@@ -389,6 +389,34 @@ class LanguageExtractor
                 $strings[$default_category][$msgid]['msgid'] = $description;
                 $strings[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_PERMISSIONS_TABLE .
                         ' | Column: description'] = '#:';
+            }
+        }
+
+        $setting_descriptions = $database->executeFetchAll('SELECT "setting_description" FROM "' . NEL_SETTINGS_TABLE . '"',
+                PDO::FETCH_COLUMN);
+
+        foreach ($setting_descriptions as $description)
+        {
+            if ($description !== '' && !is_null($description))
+            {
+                $msgid = $description;
+                $strings[$default_category][$msgid]['msgid'] = $description;
+                $strings[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_SETTINGS_TABLE .
+                ' | Column: setting_description'] = '#:';
+            }
+        }
+
+        $setting_labels = $database->executeFetchAll('SELECT "setting_label" FROM "' . NEL_SETTINGS_TABLE . '"',
+                PDO::FETCH_COLUMN);
+
+        foreach ($setting_labels as $label)
+        {
+            if ($label !== '' && !is_null($label))
+            {
+                $msgid = $label;
+                $strings[$default_category][$msgid]['msgid'] = $label;
+                $strings[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_SETTINGS_TABLE .
+                ' | Column: setting_label'] = '#:';
             }
         }
 

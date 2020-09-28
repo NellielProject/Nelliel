@@ -163,6 +163,8 @@ class Setup
         $bans_table->createTable();
         $captcha_table = new TableCaptcha($database, $sql_compatibility);
         $captcha_table->createTable();
+        $settings_table = new TableSettings($database, $sql_compatibility);
+        $settings_table->createTable();
         $board_defaults_table = new TableBoardConfig($database, $sql_compatibility);
         $board_defaults_table->tableName(NEL_BOARD_DEFAULTS_TABLE);
         $board_defaults_table->createTable();

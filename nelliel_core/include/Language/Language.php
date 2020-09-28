@@ -17,7 +17,7 @@ class Language
 
     function __construct($gettext_instance = null)
     {
-        if (!defined(LC_MESSAGES))
+        if (!defined('LC_MESSAGES'))
         {
             define('LC_MESSAGES', 6);
         }
