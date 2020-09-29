@@ -211,7 +211,7 @@ class FileTypes
         $this->loadSettingsIfNot($domain_id);
         $enabled = array();
 
-        if(!isset(self::$settings[$domain_id][$type]))
+        if(!isset(self::$settings[$domain_id][$type]) || !isset(self::$settings[$domain_id][$type]['formats']))
         {
             return $enabled;
         }
