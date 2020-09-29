@@ -37,9 +37,6 @@
 	{{# recaptcha_sekrit_key }}
 		{{> panels/pieces/settings_text }}
 	{{/ recaptcha_sekrit_key }}
-	<div class="display-row">
-		<span>reCAPTCHA type:</span>
-	</div>
 	{{# recaptcha_type }}
 		{{> panels/pieces/settings_radio }}
 	{{/ recaptcha_type }}
@@ -112,11 +109,6 @@
 	{{# only_alphanumeric_board_ids }}
 		{{> panels/pieces/settings_checkbox }}
 	{{/ only_alphanumeric_board_ids }}
-	<div class="display-row">
-		<span class="display-cell">
-			<span data-i18n="gettext">Preferred graphics handler:</span>
-		</span>
-	</div>
 	{{# graphics_handler }}
 		{{> panels/pieces/settings_radio }}
 	{{/ graphics_handler }}

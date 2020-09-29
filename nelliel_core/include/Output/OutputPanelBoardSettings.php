@@ -74,7 +74,7 @@ class OutputPanelBoardSettings extends OutputCore
         $type_nodes = array();
         $filetype_entries_nodes = array();
         $type_row_count = array();
-        $prepared = $this->database->prepare('SELECT "setting" FROM "' . $table_name . '" WHERE "config_name" = ?');
+        $prepared = $this->database->prepare('SELECT "setting_value" FROM "' . $table_name . '" WHERE "setting_name" = ?');
         $enabled_json = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_COLUMN);
         $enabled_array = json_decode($enabled_json, true);
 
@@ -139,8 +139,61 @@ class OutputPanelBoardSettings extends OutputCore
         }
 
         $user_lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');
-        $this->render_data['defaults'] = $defaults;
-        $result = $this->database->query('SELECT * FROM "' . $table_name . '"');
+        $this->render_data['show_locked'] = $defaults;
+        $board_settings = $this->database->query(
+                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . $table_name . '" ON "' .
+                NEL_SETTINGS_TABLE . '"."setting_name" = "' . $table_name .
+                '"."setting_name" WHERE "setting_category" = \'board\'')->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($board_settings as $setting)
+        {
+            $setting_data = array();
+            $setting_data['setting_name'] = $setting['setting_name'];
+            $setting_data['setting_label'] = $setting['setting_label'];
+            $setting_data['setting_description'] = $setting['setting_description'];
+            $setting_options = json_decode($setting['setting_options'], true) ?? array();
+            $input_attributes = json_decode($setting['input_attributes'], true) ?? array();
+
+            foreach ($input_attributes as $attribute => $value)
+            {
+                $setting_data['input_attributes']['input_' . $attribute] = $value;
+            }
+
+            if ($setting['data_type'] === 'boolean')
+            {
+                if ($setting['setting_value'] == 1)
+                {
+                    $setting_data['setting_checked'] = 'checked';
+                }
+            }
+            else
+            {
+                if (isset($input_attributes['type']) && $input_attributes['type'] == 'radio')
+                {
+                    foreach ($setting_options as $option => $values)
+                    {
+                        $options = array();
+                        $options['option_name'] = $option;
+                        $options['option_label'] = $values['label'];
+                        $options['option_key'] = $setting_data['setting_name'] . '_' . $option;
+
+                        if ($setting['setting_value'] === $option)
+                        {
+                            $options['option_checked'] = 'checked';
+                        }
+
+                        $setting_data['options'][] = $options;
+                    }
+                }
+                else
+                {
+                    $setting_data['setting_value'] = $setting['setting_value'];
+                }
+            }
+
+            $this->render_data[$setting['setting_name']] = $setting_data;
+        }
+        /*$result = $this->database->query('SELECT * FROM "' . $table_name . '"');
         $rows = $result->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($rows as $config_line)
@@ -186,7 +239,7 @@ class OutputPanelBoardSettings extends OutputCore
             }
 
             $this->render_data[$config_line['config_name']] = $config_data;
-        }
+        }*/
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/board_settings_panel',
                 $this->render_data);

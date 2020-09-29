@@ -1,4 +1,10 @@
 <div class="display-row">
+	{{# show_locked }}
+		{{> panels/pieces/setting_locked }}
+	{{/ show_locked }}
+	<span class="display-cell">
+		<span data-i18n="gettext">{{ setting_label }}</span>
+	</span>
 	<span class="display-cell">
 	{{# options }}
 		{{> panels/pieces/setting_radio_option }}

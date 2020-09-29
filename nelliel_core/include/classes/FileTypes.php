@@ -77,7 +77,7 @@ class FileTypes
             $db_prefix = $this->database->executePreparedFetch($prepared, [$domain_id], PDO::FETCH_COLUMN);
             $config_table = $db_prefix . '_config';
             $filetypes_json = $this->database->executeFetch(
-                    'SELECT "setting" FROM "' . $config_table . '" WHERE "config_name" = \'enabled_filetypes\'', PDO::FETCH_COLUMN);
+                    'SELECT "setting_value" FROM "' . $config_table . '" WHERE "setting_name" = \'enabled_filetypes\'', PDO::FETCH_COLUMN);
             $settings = json_decode($filetypes_json, true);
         }
 

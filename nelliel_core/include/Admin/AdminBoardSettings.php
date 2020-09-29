@@ -130,7 +130,7 @@ class AdminBoardSettings extends AdminHandler
     private function setLock($config_table, $config_name, $setting)
     {
         $prepared = $this->database->prepare(
-                'UPDATE "' . $config_table . '" SET "edit_lock" = ? WHERE "config_name" = ?');
+                'UPDATE "' . $config_table . '" SET "edit_lock" = ? WHERE "setting_name" = ?');
         $this->database->executePrepared($prepared, [$setting, $config_name], true);
     }
 
@@ -139,13 +139,13 @@ class AdminBoardSettings extends AdminHandler
         if ($this->defaults || $lock_override)
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $config_table . '" SET "setting" = ? WHERE "config_name" = ?');
+                    'UPDATE "' . $config_table . '" SET "setting_value" = ? WHERE "setting_name" = ?');
             $this->database->executePrepared($prepared, [$setting, $config_name], true);
         }
         else
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $config_table . '" SET "setting" = ? WHERE "config_name" = ? AND "edit_lock" = 0');
+                    'UPDATE "' . $config_table . '" SET "setting_value" = ? WHERE "setting_name" = ? AND "edit_lock" = 0');
             $this->database->executePrepared($prepared, [$setting, $config_name], true);
         }
     }
