@@ -123,7 +123,7 @@ class Session
         $this->terminate();
         $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
         $output_login->render(['dotdot' => ''], false);
-        nel_clean_exit();
+        nel_clean_exit(false);
     }
 
     public function login()

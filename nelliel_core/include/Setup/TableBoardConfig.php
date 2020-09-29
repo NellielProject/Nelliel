@@ -124,5 +124,6 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['url_prefix', '', 0]);
         $this->insertDefaultRow(['exclude_from_overboards', '0', 0]);
         $this->insertDefaultRow(['enabled_filetypes', '{"graphics":{"enabled":true,"formats":{"jpeg":{"enabled":true},"gif":{"enabled":true},"png":{"enabled":true},"webp":{"enabled":true}}}}', 0]);
+        $this->insertDefaultRow(['user_delete_own', '1', 0]);
     }
 }

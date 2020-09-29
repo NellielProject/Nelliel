@@ -12,7 +12,7 @@ use Nelliel\Content\ContentID;
 
 class Redirect
 {
-    private static $url;
+    private static $url = '';
     private static $do_redirect = false;
     private static $delay = 3;
 

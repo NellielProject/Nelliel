@@ -249,7 +249,7 @@ class ContentPost extends ContentHandler
         {
             if (!isset($this->content_data['post_password']) ||
                     !nel_verify_salted_hash(NEL_POST_PASSWORD_PEPPER . $_POST['update_sekrit'],
-                            $this->content_data['post_password']))
+                            $this->content_data['post_password']) || !$this->domain->setting('user_delete_own'))
             {
                 nel_derp(50, _gettext('Password is wrong or you are not allowed to delete that.'));
             }
