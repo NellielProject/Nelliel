@@ -102,681 +102,174 @@
 			{{> panels/pieces/settings_checkbox }}
 		{{/ require_content_always }}
 		{{# only_thread_duplicates }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="only_thread_duplicates" value="0">
-				<input id="only_thread_duplicates" type="checkbox" name="only_thread_duplicates" value="1" {{ value }} {{ disabled }}>
-				<label for="only_thread_duplicates" data-i18n="gettext">Only check for duplicates in current thread when replying</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ only_thread_duplicates }}
 		{{# only_op_duplicates }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="only_op_duplicates" value="0">
-				<input id="only_op_duplicates" type="checkbox" name="only_op_duplicates" value="1" {{ value }} {{ disabled }}>
-				<label for="only_op_duplicates" data-i18n="gettext">Only check for duplicates in other op posts when creating new thread</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ only_op_duplicates }}
 		{{# force_anonymous }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="force_anonymous" value="0">
-				<input id="force_anonymous" type="checkbox" name="force_anonymous" value="1" {{ value }} {{ disabled }}>
-				<label for="force_anonymous" data-i18n="gettext">Force Anonymous posting</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ force_anonymous }}
 		{{# allow_tripkeys }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="allow_tripkeys" value="0">
-				<input id="allow_tripkeys" type="checkbox" name="allow_tripkeys" value="1" {{ value }} {{ disabled }}>
-				<label for="allow_tripkeys" data-i18n="gettext">Allow use of tripcodes</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ allow_tripkeys }}
 		{{# allow_multifile }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="allow_multifile" value="0">
-				<input id="allow_multifile" type="checkbox" name="allow_multifile" value="1" {{ value }} {{ disabled }}>
-				<label for="allow_multifile" data-i18n="gettext">Allow mutiple files per post</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ allow_multifile }}
 		{{# allow_op_multifile }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="allow_op_multifile" value="0">
-				<input id="allow_op_multifile" type="checkbox" name="allow_op_multifile" value="1" {{ value }} {{ disabled }}>
-				<label for="allow_op_multifile" data-i18n="gettext">Allow first post in thread to have multiple files</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ allow_op_multifile }}
 		{{# use_fgsfds }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="use_fgsfds" value="0">
-				<input id="use_fgsfds" type="checkbox" name="use_fgsfds" value="1" {{ value }} {{ disabled }}>
-				<label for="use_fgsfds" data-i18n="gettext">Use FGSFDS field for commands (noko, sage, etc)</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ use_fgsfds }}
 		{{# fgsfds_name }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="fgsfds_name" data-i18n="gettext">Name of the FGSFDS field</label>
-			</span>
-			<span class="display-cell">
-				<input id="fgsfds_name" type="text" name="fgsfds_name" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_text }}
 		{{/ fgsfds_name }}
 		{{# max_post_files }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_post_files" data-i18n="gettext">Maximum number of files per post</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_post_files" type="text" name="max_post_files" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_post_files }}
 		{{# thread_cooldown }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="thread_cooldown" data-i18n="gettext">Delay between new threads (seconds)</label>
-			</span>
-			<span class="display-cell">
-				<input id="thread_cooldown" type="text" name="thread_cooldown" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ thread_cooldown }}
 		{{# reply_cooldown }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="reply_cooldown" data-i18n="gettext">Delay between new posts (seconds)</label>
-			</span>
-			<span class="display-cell">
-				<input id="reply_cooldown" type="text" name="reply_cooldown" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ reply_cooldown }}
 		{{# max_name_length }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_name_length" data-i18n="gettext">Maximum length of name</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_name_length" type="text" name="max_name_length" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_name_length }}
 		{{# max_email_length }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_email_length" data-i18n="gettext">Maximum length of e-mail</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_email_length" type="text" name="max_email_length" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_email_length }}
 		{{# max_subject_length }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_subject_length" data-i18n="gettext">Maximum length of subject</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_subject_length" type="text" name="max_subject_length" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_subject_length }}
 		{{# max_comment_length }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_comment_length" data-i18n="gettext">Maximum length of comment</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_comment_length" type="text" name="max_comment_length" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_comment_length }}
 		{{# comment_display_lines }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="comment_display_lines" data-i18n="gettext">How many lines of comment to display when abbreviated</label>
-			</span>
-			<span class="display-cell">
-				<input id="comment_display_lines" type="text" name="comment_display_lines" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ comment_display_lines }}
 		{{# truncate_long_fields }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="truncate_long_fields" value="0">
-				<input id="truncate_long_fields" type="checkbox" name="truncate_long_fields" value="1" {{ value }} {{ disabled }}>
-				<label for="truncate_long_fields" data-i18n="gettext">Truncate fields that are too long instead of giving an error</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ truncate_long_fields }}
 		{{# filter_combining_characters }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="filter_combining_characters" value="0">
-				<input id="filter_combining_characters" type="checkbox" name="filter_combining_characters" value="1" {{ value }} {{ disabled }}>
-				<label for="filter_combining_characters" data-i18n="gettext">Filter out Unicode combining characters (sometimes misused for things like Zalgo text).
-				WARNING: This potentially breaks a bunch of non-English languages!</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ filter_combining_characters }}
 		{{# max_filesize }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_filesize" data-i18n="gettext">Max file size (KB)</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_filesize" type="text" name="max_filesize" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_filesize }}
 		{{# enable_spoilers }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="enable_spoilers" value="0">
-				<input id="enable_spoilers" type="checkbox" name="enable_spoilers" value="1" {{ value }} {{ disabled }}>
-				<label for="enable_spoilers" data-i18n="gettext">Enable spoilers for content.</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ enable_spoilers }}
 		{{# use_post_captcha }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="use_post_captcha" value="0">
-				<input id="use_post_captcha" type="checkbox" name="use_post_captcha" value="1" {{ value }} {{ disabled }}>
-				<label for="use_post_captcha" data-i18n="gettext">Use a CAPTCHA for new posts and threads.</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ use_post_captcha }}
 		{{# use_post_recaptcha }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="use_post_recaptcha" value="0">
-				<input id="use_post_recaptcha" type="checkbox" name="use_post_recaptcha" value="1" {{ value }} {{ disabled }}>
-				<label for="use_post_recaptcha" data-i18n="gettext">Use reCAPTCHA for new posts and threads.</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ use_post_recaptcha }}
 		{{# use_report_captcha }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="use_report_captcha" value="0">
-				<input id="use_report_captcha" type="checkbox" name="use_report_captcha" value="1" {{ value }} {{ disabled }}>
-				<label for="use_report_captcha" data-i18n="gettext">Use a CAPTCHA for making reports.</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ use_report_captcha }}
 		{{# use_report_recaptcha }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="use_report_recaptcha" value="0">
-				<input id="use_report_recaptcha" type="checkbox" name="use_report_recaptcha" value="1" {{ value }} {{ disabled }}>
-				<label for="use_report_recaptcha" data-i18n="gettext">Use reCAPTCHA for making reports.</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ use_report_recaptcha }}
 		{{# use_honeypot }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="use_honeypot" value="0">
-				<input id="use_honeypot" type="checkbox" name="use_honeypot" value="1" {{ value }} {{ disabled }}>
-				<label for="use_honeypot" data-i18n="gettext">Use honeypot to block spambots.</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ use_honeypot }}
 		<div class="display-row">
 			<hr class="display_cell">
-			{{# defaults }}
+			{{# show_locked }}
 			<span class="display-cell"></span>
-			{{/ defaults }}
+			{{/show_locked }}
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
 				<span class="bold" data-i18n="gettext">Content Handling and Rendering</span>
 			</span>
-			{{# defaults }}
+			{{# show-locked }}
 			<span class="display-cell"></span>
-			{{/ defaults }}
+			{{/ show-locked }}
 		</div>
 		{{# preferred_filename }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<span data-i18n="gettext">Preferred filename for uploads:</span>
-			</span>
-		</div>
-		<div class="display-row">
-			{{# defaults }}
-			<span></span>
-			{{/ defaults }}
-			<span class="display-cell">
-				<input id="preferred_filename_original" type="radio" name="preferred_filename" value="original" {{ preferred_filename_original }}> 
-				<label for="preferred_filename_original" data-i18n="gettext">Original filename</label><br>
-				<input id="preferred_filename_timestamp" type="radio" name="preferred_filename" value="timestamp" {{ preferred_filename_timestamp }}> 
-				<label for="preferred_filename_timestamp" data-i18n="gettext">Unix timestamp</label><br>
-				<input id="preferred_filename_sha1" type="radio" name="preferred_filename" value="sha1" {{ preferred_filename_sha1 }}> 
-				<label for="preferred_filename_sha1" data-i18n="gettext">SHA1 hash</label><br>
-				<input id="preferred_filename_md5" type="radio" name="preferred_filename" value="md5" {{ preferred_filename_md5 }}> 
-				<label for="preferred_filename_md5" data-i18n="gettext">MD5 hash</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_radio }}
 		{{/ preferred_filename }}
 		{{# use_preview }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="use_preview" value="0">
-				<input id="use_preview" type="checkbox" name="use_preview" value="1" {{ value }} {{ disabled }}>
-				<label for="use_preview" data-i18n="gettext">Use previews</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ use_preview }}
 		{{# use_file_icon }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="use_file_icon" value="0">
-				<input id="use_file_icon" type="checkbox" name="use_file_icon" value="1" {{ value }} {{ disabled }}>
-				<label for="use_file_icon" data-i18n="gettext">Use filetype icon for non-images</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ use_file_icon }}
 		{{# use_png_preview }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="use_png_preview" value="0">
-				<input id="use_png_preview" type="checkbox" name="use_png_preview" value="1" {{ value }} {{ disabled }}>
-				<label for="use_png_preview" data-i18n="gettext">Use PNG for previews instead of JPEG</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ use_png_preview }}
 		{{# animated_gif_preview }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="animated_gif_preview" value="0">
-				<input id="animated_gif_preview" type="checkbox" name="animated_gif_preview" value="1" {{ value }} {{ disabled }}>
-				<label for="animated_gif_preview" data-i18n="gettext">Used animated previews (requires extra libraries)</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ animated_gif_preview }}
 		{{# file_sha256 }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="file_sha256" value="0">
-				<input id="file_sha256" type="checkbox" name="file_sha256" value="1" {{ value }} {{ disabled }}>
-				<label for="file_sha256" data-i18n="gettext">Generate a SHA256 hash for uploaded files</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ file_sha256 }}
 		{{# file_sha512 }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="file_sha512" value="0">
-				<input id="file_sha512" type="checkbox" name="file_sha512" value="1" {{ value }} {{ disabled }}>
-				<label for="file_sha512" data-i18n="gettext">Generate a SHA512 hash for uploaded files</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ file_sha512 }}
 		{{# max_files_row }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_files_row" data-i18n="gettext">Number of files to display in each row of post</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_files_row" type="text" name="max_files_row" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_files_row }}
 		{{# jpeg_quality }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="jpeg_quality" data-i18n="gettext">JPEG quality (0 - 100)</label>
-			</span>
-			<span class="display-cell">
-				<input id="jpeg_quality" type="text" name="jpeg_quality" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ jpeg_quality }}
 		{{# png_compression }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="png_compression" data-i18n="gettext">PNG compression level (0 - 9)</label>
-			</span>
-			<span class="display-cell">
-				<input id="png_compression" type="text" name="png_compression" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ png_compression }}
 		{{# max_width }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_width" data-i18n="gettext">Maximum preview width</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_width" type="text" name="max_width" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_width }}
 		{{# max_height }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_height" data-i18n="gettext">Maximum preview height</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_height" type="text" name="max_height" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_height }}
 		{{# max_multi_width }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_multi_width" data-i18n="gettext">Maximum preview width when post has multiple content</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_multi_width" type="text" name="max_multi_width" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_multi_width }}
 		{{# max_multi_height }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_multi_height" data-i18n="gettext">Maximum preview height when post has multiple content</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_multi_height" type="text" name="max_multi_height" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_multi_height }}
 		{{# max_catalog_width }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_catalog_width" data-i18n="gettext">Maximum preview width for catalog entries</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_catalog_width" type="text" name="max_catalog_width" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_catalog_width }}
 		{{# max_catalog_height }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_catalog_height" data-i18n="gettext">Maximum preview height for catalog entries</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_catalog_height" type="text" name="max_catalog_height" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_catalog_height }}
 		{{# indent_marker }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="indent_marker" data-i18n="gettext">Set the indent marker next to replies</label>
-			</span>
-			<span class="display-cell">
-				<input id="indent_marker" type="text" name="indent_marker" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_text }}
 		{{/ indent_marker }}
 		{{# tripkey_marker }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="tripkey_marker" data-i18n="gettext">Tripcode marker</label>
-			</span>
-			<span class="display-cell">
-				<input id="tripkey_marker" type="text" name="tripkey_marker" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_text }}
 		{{/ tripkey_marker }}
 		{{# no_comment_text }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="no_comment_text" data-i18n="gettext">Text when there is no comment</label>
-			</span>
-			<span class="display-cell">
-				<input id="no_comment_text" type="text" name="no_comment_text" size="30" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_text }}
 		{{/ no_comment_text }}
 		{{# display_post_backlinks }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="display_post_backlinks" value="0">
-				<input id="display_post_backlinks" type="checkbox" name="display_post_backlinks" value="1" {{ value }} {{ disabled }}>
-				<label for="display_post_backlinks" data-i18n="gettext">Display backlinks for a post that has been referenced</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ display_post_backlinks }}
 		{{# poster_id_colors }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="poster_id_colors" value="0">
-				<input id="poster_id_colors" type="checkbox" name="poster_id_colors" value="1" {{ value }} {{ disabled }}>
-				<label for="poster_id_colors" data-i18n="gettext">Use a color background for poster IDs</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ poster_id_colors }}
 		{{# display_poster_id }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="display_poster_id" value="0">
-				<input id="display_poster_id" type="checkbox" name="display_poster_id" value="1" {{ value }} {{ disabled }}>
-				<label for="display_poster_id" data-i18n="gettext">Display ID for posters in a thread</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ display_poster_id }}
 		{{# max_cite_links }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="max_cite_links" data-i18n="gettext">Maximum cite links that will be generated per comment</label>
-			</span>
-			<span class="display-cell">
-				<input id="max_cite_links" type="text" name="max_cite_links" size="8" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_number }}
 		{{/ max_cite_links }}
 		{{# create_url_links }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="create_url_links" value="0">
-				<input id="create_url_links" type="checkbox" name="create_url_links" value="1" {{ value }} {{ disabled }}>
-				<label for="create_url_links" data-i18n="gettext">Convert URLs into links</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ create_url_links }}
 		{{# url_protocols }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="url_protocols" data-i18n="gettext">Protocols which will be parsed to links (must be separated with |)</label>
-			</span>
-			<span class="display-cell">
-				<input id="url_protocols" type="text" name="url_protocols" size="30" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_text }}
 		{{/ url_protocols }}
 		{{# url_prefix }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<label for="url_prefix" data-i18n="gettext">Prefix that will be added to URLs (useful for anonymizers and the like)</label>
-			</span>
-			<span class="display-cell">
-				<input id="url_prefix" type="text" name="url_prefix" size="30" value="{{ value }}" {{ disabled }}>
-			</span>
-		</div>
+			{{> panels/pieces/settings_text }}
 		{{/ url_prefix }}
 		{{# exclude_from_overboards }}
-		<div class="display-row">
-			{{# defaults }}
-				{{> panels/pieces/setting_locked }}
-			{{/ defaults }}
-			<span class="display-cell">
-				<input type="hidden" name="exclude_from_overboards" value="0">
-				<input id="exclude_from_overboards" type="checkbox" name="exclude_from_overboards" value="1" {{ value }} {{ disabled }}>
-				<label for="exclude_from_overboards" data-i18n="gettext">(UNUSED) Exclude this board's threads from the overboards</label>
-			</span>
-		</div>
+			{{> panels/pieces/settings_checkbox }}
 		{{/ exclude_from_overboards }}
 	</div>
 	<hr>

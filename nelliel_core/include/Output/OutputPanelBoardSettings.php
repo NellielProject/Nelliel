@@ -193,53 +193,6 @@ class OutputPanelBoardSettings extends OutputCore
 
             $this->render_data[$setting['setting_name']] = $setting_data;
         }
-        /*$result = $this->database->query('SELECT * FROM "' . $table_name . '"');
-        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($rows as $config_line)
-        {
-            $config_data = array();
-            $config_data['display'] = true;
-            $config_data['setting_name'] = $config_line['config_name'];
-
-            if ($config_line['data_type'] == 'boolean')
-            {
-                if ($config_line['setting'] == 1)
-                {
-                    $config_data['value'] = 'checked';
-                }
-            }
-            else
-            {
-                // 0 is field or checkbox; 1 is radio button; 2 is menu
-                switch ($config_line['select_type'])
-                {
-                    case 0:
-                        $config_data['value'] = $config_line['setting'];
-                        break;
-
-                    case 1:
-                        $config_data[$config_line['config_name'] . '_' . $config_line['setting']] = 'checked';
-                        break;
-
-                    case 2:
-                        $config_data[$config_line['config_name'] . '_' . $config_line['setting']] = 'selected';
-                        break;
-                }
-            }
-
-            if ($config_line['edit_lock'] == 1)
-            {
-                $config_data['locked'] = 'checked';
-
-                if (!$user_lock_override)
-                {
-                    $config_data['disabled'] = 'disabled';
-                }
-            }
-
-            $this->render_data[$config_line['config_name']] = $config_data;
-        }*/
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/board_settings_panel',
                 $this->render_data);
