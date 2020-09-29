@@ -103,6 +103,11 @@ class AdminUsers extends AdminHandler
 
         foreach ($_POST as $key => $value) // TODO: Improve this
         {
+            if(is_array($value))
+            {
+                $value = nel_form_input_default($values);
+            }
+
             if (strpos($key, 'board_role') !== false || $key === 'site_role')
             {
                 if ($key === 'site_role')

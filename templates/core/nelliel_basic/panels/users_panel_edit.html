@@ -15,8 +15,8 @@
 		</div>
 		{{^ is_site_owner }}
 		<div class="display-row">
-			<input type="hidden" name="active" value="0">
-			<input id="user_active" type="checkbox" name="active" value="1" {{ active }}>
+			<input type="hidden" name="active[default]" value="0">
+			<input id="user_active" type="checkbox" name="active[value]" value="1" {{ active }}>
 			<label for="user_active" data-i18n="gettext">User is active</label>
 		</div>
 		{{/ is_site_owner }}
