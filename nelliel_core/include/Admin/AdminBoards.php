@@ -208,7 +208,7 @@ class AdminBoards extends AdminHandler
         $url_constructor = new \Nelliel\URLConstructor();
         $continue_link['href'] = $url_constructor->dynamic(NEL_MAIN_SCRIPT,
                 ['module' => 'manage-boards', 'action' => 'remove', 'action-confirmed' => 'true',
-                    'board_id' => $_GET['board_id']]);
+                    'board_id' => $_GET['board_id'], 'domain_id' => '_site_']);
         $continue_link['text'] = _gettext('Confirm and delete the board.');
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain, false);
         $output_panel->render(

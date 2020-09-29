@@ -106,6 +106,11 @@ class AdminRoles extends AdminHandler
 
         foreach ($_POST as $key => $value)
         {
+            if(is_array($value))
+            {
+                $value = nel_form_input_default($values);
+            }
+
             if (substr($key, 0, 5) === 'perm_')
             {
                 $value = ($value == 1) ? true : false;

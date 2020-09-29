@@ -4,6 +4,6 @@
 		{{/ show_locked }}
 		{{# input_attributes }}
 		<label for="{{ setting_name }}" class="display-cell" data-i18n="gettext">{{ setting_label }}</label>
-		<input id="{{ setting_name }}" class="display-cell" type="{{ input_type }}" name="{{ setting_name }}" size="{{ input_size }}" value="{{ setting_value }}">
+		<input id="{{ setting_name }}" class="display-cell" type="{{ input_type }}" name="{{ setting_name }}[value]" size="{{ input_size }}" value="{{ setting_value }}" {{ setting_disabled }}>
 		{{/ input_attributes }}
 	</div>

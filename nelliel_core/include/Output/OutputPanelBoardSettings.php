@@ -69,21 +69,24 @@ class OutputPanelBoardSettings extends OutputCore
                     $this->domain->id();
         }
 
+
+        $user_lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');
         $all_filetypes = $filetypes->allTypeData();
         $all_types = $filetypes->types();
         $type_nodes = array();
         $filetype_entries_nodes = array();
         $type_row_count = array();
-        $prepared = $this->database->prepare('SELECT "setting_value" FROM "' . $table_name . '" WHERE "setting_name" = ?');
-        $enabled_json = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_COLUMN);
-        $enabled_array = json_decode($enabled_json, true);
+        $prepared = $this->database->prepare('SELECT "setting_value","edit_lock" FROM "' . $table_name . '" WHERE "setting_name" = ?');
+        $enabled_types = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_ASSOC);
+        $enabled_array = json_decode($enabled_types['setting_value'], true);
+        $types_edit_lock = $enabled_types['edit_lock'] == 1 && !$defaults && !$user_lock_override;
 
         foreach ($all_types as $type)
         {
             $type_data = array();
             $type_data['label'] = _gettext($type['label']);
             $type_data['type_select']['name'] = $type['type'];
-            $type_data['type_select']['input_name'] = 'filetypes[' . $type['type'] . '][enabled]';
+            $type_data['type_select']['input_name'] = 'enabled_filetypes[types][' . $type['type'] . '][enabled]';
 
             if (isset($enabled_array[$type['type']]))
             {
@@ -95,6 +98,7 @@ class OutputPanelBoardSettings extends OutputCore
             }
 
             $type_data['type_select']['value'] = ($type_enabled) ? 'checked' : '';
+            $type_data['type_select']['disabled'] = ($types_edit_lock) ? 'disabled' : '';
             $enabled_formats = $enabled_array[$type['type']]['formats'] ?? array();
             $entry_count = 0;
             $filetype_set = array();
@@ -109,11 +113,12 @@ class OutputPanelBoardSettings extends OutputCore
                 if ($filetype['extension'] == $filetype['parent_extension'])
                 {
                     $filetype_set[$filetype['parent_extension']]['format'] = $filetype['format'];
-                    $filetype_set[$filetype['parent_extension']]['input_name'] = 'filetypes[' . $type['type'] . '][formats][' . $filetype['format'] . ']';
+                    $filetype_set[$filetype['parent_extension']]['input_name'] = 'enabled_filetypes[types][' . $type['type'] . '][formats][' . $filetype['format'] . ']';
                     $filetype_set[$filetype['parent_extension']]['label'] = _gettext($filetype['label']) . ' - .' .
                             $filetype['extension'];
                     $filetype_set[$filetype['parent_extension']]['value'] = (array_key_exists($filetype['format'],
                             $enabled_formats)) ? 'checked' : '';
+                    $filetype_set[$filetype['parent_extension']]['disabled'] = ($types_edit_lock) ? 'disabled' : '';
                 }
                 else
                 {
@@ -138,7 +143,6 @@ class OutputPanelBoardSettings extends OutputCore
             $this->render_data['file_types'][] = $type_data;
         }
 
-        $user_lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');
         $this->render_data['show_locked'] = $defaults;
         $board_settings = $this->database->query(
                 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . $table_name . '" ON "' .
@@ -153,6 +157,16 @@ class OutputPanelBoardSettings extends OutputCore
             $setting_data['setting_description'] = $setting['setting_description'];
             $setting_options = json_decode($setting['setting_options'], true) ?? array();
             $input_attributes = json_decode($setting['input_attributes'], true) ?? array();
+
+            if ($setting['edit_lock'] == 1)
+            {
+                $setting_data['setting_locked'] = 'checked';
+
+                if(!$defaults)
+                {
+                    $setting_data['setting_disabled'] = 'disabled';
+                }
+            }
 
             foreach ($input_attributes as $attribute => $value)
             {

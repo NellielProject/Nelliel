@@ -107,12 +107,29 @@ function nel_true_empty($variable)
 
 function nel_random_alphanumeric($length)
 {
-    if($length <= 0)
+    if ($length <= 0)
     {
         return '';
     }
 
-    $base = str_repeat('abcdefghijklmnopqrstuvwxyz0123456789', ceil($length/36));
+    $base = str_repeat('abcdefghijklmnopqrstuvwxyz0123456789', ceil($length / 36));
     $random = str_shuffle($base);
     return substr($random, 0, $length);
+}
+
+function nel_form_input_default(array $input)
+{
+    $value = '';
+
+    if (isset($input['default']))
+    {
+        $value = $input['default'];
+    }
+
+    if (isset($input['value']))
+    {
+        $value = $input['value'];
+    }
+
+    return $value;
 }

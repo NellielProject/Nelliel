@@ -13,7 +13,7 @@
 			{{> panels/pieces/settings_text }}
 		{{/ name }}
 		{{# show_name }}
-			{{> panels/pieces/settings_text }}
+			{{> panels/pieces/settings_checkbox }}
 		{{/ show_name }}
 		{{# slogan }}
 			{{> panels/pieces/settings_text }}
@@ -273,14 +273,20 @@
 		{{/ exclude_from_overboards }}
 	</div>
 	<hr>
+	{{# enabled_filetypes }}
+	{{# show_locked }}
+		<div>
+			{{> panels/pieces/setting_locked }}
+		</div>
+	{{/ show_locked }}
 	{{# file_types }}
 	<div class="display-table text-left">
 		{{# type_select }}
 		<div class="display-row">
 			<span class="display-cell">
 				<br>
-				<input type="hidden" name="{{ input_name }}" value="0">
-				<input id="{{ name }}" type="checkbox" name="{{ input_name }}" value="1" {{ value }}>
+				<input type="hidden" name="{{ input_name }}[default]" value="0">
+				<input id="{{ name }}" type="checkbox" name="{{ input_name }}[value]" value="1" {{ value }} {{ disabled }}>
 				<label for="{{ name }}" class="bold">{{ label }}</label>
 			</span>
 		</div>
@@ -289,8 +295,8 @@
 		<div class="display-row">
 			{{# entry }}
 			<span class="display-cell">
-				<input type="hidden" name="{{ input_name }}" value="0">
-				<input id="{{ format }}" type="checkbox" name="{{ input_name }}" value="1" {{ value }}>
+				<input type="hidden" name="{{ input_name }}[default]" value="0">
+				<input id="{{ format }}" type="checkbox" name="{{ input_name }}[value]" value="1" {{ value }} {{ disabled }}>
 				<label for="{{ format }}">{{ label }}</label>
 			</span>
 			{{/ entry }}
@@ -298,6 +304,7 @@
 		{{/ entry_rows }}
 	</div>
 	{{/ file_types }}
+	{{/ enabled_filetypes }}
 	<div>
 		<input type="submit" value="Update Settings" data-i18n-attributes="gettext|value">
 	</div>

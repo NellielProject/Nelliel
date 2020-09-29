@@ -2,7 +2,7 @@
 		{{# show_locked }}
 			{{> panels/pieces/setting_locked }}
 		{{/ show_locked }}
-		<input type="hidden" name="{{ setting_name }}" value="0">
-		<input id="{{ setting_name }}" type="checkbox" name="{{ setting_name }}" value="1" {{ setting_checked }}>
+		<input type="hidden" name="{{ setting_name }}[default]" value="0">
+		<input id="{{ setting_name }}" type="checkbox" name="{{ setting_name }}[value]" value="1" {{ setting_checked }} {{ setting_disabled }}>
 		<label for="{{ setting_name }}" data-i18n="gettext">{{ setting_label }}</label>
 	</div>
