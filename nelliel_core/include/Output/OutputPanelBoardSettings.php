@@ -183,7 +183,7 @@ class OutputPanelBoardSettings extends OutputCore
             }
             else
             {
-                if (isset($input_attributes['type']) && $input_attributes['type'] == 'radio')
+                if (isset($input_attributes['type']) && $input_attributes['type'] === 'radio')
                 {
                     foreach ($setting_options as $option => $values)
                     {
