@@ -1,7 +1,7 @@
 	<div class="display-row">
-		{{# show_locked }}
-			{{> panels/pieces/setting_locked }}
-		{{/ show_locked }}
+		{{# show_lock_update }}
+			{{> panels/pieces/setting_lock_update }}
+		{{/ show_lock_update }}
 		<input type="hidden" name="{{ setting_name }}[default]" value="0">
 		<input id="{{ setting_name }}" type="checkbox" name="{{ setting_name }}[value]" value="1" {{ setting_checked }} {{ setting_disabled }}>
 		<label for="{{ setting_name }}" data-i18n="gettext">{{ setting_label }}</label>

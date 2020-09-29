@@ -115,7 +115,7 @@ class OutputOverboard extends OutputCore
             $thread_input['thread_id'] = $thread_content_id;
             $thread_input['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
             $thread_input['thread_corral_id'] = 'thread-' . $thread_content_id;
-            $thread_input['omitted_count'] = $thread_data['post_count'] - 5; // TODO: overboard setting
+            $thread_input['omitted_count'] = $thread_data['post_count'] - 5;
             $gen_data['abbreviate'] = $thread_data['post_count'] > 5;
             $thread_input['abbreviate'] = $gen_data['abbreviate'];
             $abbreviate_start = $thread_data['post_count'] - (5 - 1);

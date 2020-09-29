@@ -80,7 +80,7 @@ class AdminBoardSettings extends AdminHandler
                 continue;
             }
 
-            if (isset($value['lock']))
+            if (isset($value['lock']) && $this->defaults)
             {
                 $lock_value = nel_form_input_default($value['lock']);
                 $this->setLock($config_table, $key, $lock_value);
@@ -91,6 +91,8 @@ class AdminBoardSettings extends AdminHandler
                     $this->setLock($board_domain->reference('config_table'), $key, $lock_value);
                 }
             }
+
+            $force_update = isset($value['force_update']) && $value['force_update'] == 1 && $this->defaults;
 
             if ($key === 'enabled_filetypes')
             {
@@ -119,6 +121,14 @@ class AdminBoardSettings extends AdminHandler
             else
             {
                 $value = nel_form_input_default($value);
+            }
+
+            if($force_update)
+            {
+                foreach ($this->getBoardDomains() as $board_domain)
+                {
+                    $this->updateSetting($board_domain->reference('config_table'), $key, $value, $lock_override);
+                }
             }
 
             $this->updateSetting($config_table, $key, $value, $lock_override);

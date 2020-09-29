@@ -144,7 +144,7 @@ class OutputPanelBoardSettings extends OutputCore
             $this->render_data['file_types'][] = $type_data;
         }
 
-        $this->render_data['show_locked'] = $defaults;
+        $this->render_data['show_lock_update'] = $defaults;
         $board_settings = $this->database->query(
                 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . $table_name . '" ON "' .
                 NEL_SETTINGS_TABLE . '"."setting_name" = "' . $table_name .
