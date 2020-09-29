@@ -105,7 +105,7 @@ class AdminUsers extends AdminHandler
         {
             if(is_array($value))
             {
-                $value = nel_form_input_default($values);
+                $value = nel_form_input_default($value);
             }
 
             if (strpos($key, 'board_role') !== false || $key === 'site_role')
