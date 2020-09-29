@@ -80,6 +80,7 @@ class OutputPanelBoardSettings extends OutputCore
         $enabled_types = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_ASSOC);
         $enabled_array = json_decode($enabled_types['setting_value'], true);
         $types_edit_lock = $enabled_types['edit_lock'] == 1 && !$defaults && !$user_lock_override;
+        $available_formats = $filetypes->availableFormats();
 
         foreach ($all_types as $type)
         {
@@ -105,7 +106,7 @@ class OutputPanelBoardSettings extends OutputCore
 
             foreach ($all_filetypes as $filetype)
             {
-                if ($filetype['type'] != $type['type'])
+                if ($filetype['type'] != $type['type'] || !isset($available_formats[$filetype['format']]))
                 {
                     continue;
                 }

@@ -100,8 +100,9 @@ class AdminBoardSettings extends AdminHandler
                 {
                     $type_enabled = nel_form_input_default($entries['enabled']) === '1';
                     $filetypes_array[$type]['enabled'] = $type_enabled;
+                    $type_formats = $entries['formats'] ?? array();
 
-                    foreach ($entries['formats'] as $format => $enabled)
+                    foreach ($type_formats as $format => $enabled)
                     {
                         $format_enabled = nel_form_input_default($enabled) === '1';
 
