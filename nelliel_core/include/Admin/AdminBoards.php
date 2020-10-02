@@ -8,17 +8,20 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domain;
+use Nelliel\DomainSite;
 use Nelliel\Auth\Authorization;
 use PDO;
 
 class AdminBoards extends AdminHandler
 {
+    private $site_domain;
 
     function __construct(Authorization $authorization, Domain $domain)
     {
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
+        $this->site_domain = new DomainSite($this->database);
         $this->validateUser();
     }
 

@@ -52,7 +52,8 @@ class ContentPost extends ContentHandler
         }
 
         $this->content_data = $result;
-        $this->getMeta()->storeFromJSON($result['meta']);
+        $meta = $result['meta'] ?? '';
+        $this->getMeta()->storeFromJSON($meta);
         return true;
     }
 

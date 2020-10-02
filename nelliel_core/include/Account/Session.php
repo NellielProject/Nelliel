@@ -16,8 +16,8 @@ class Session
     protected $domain;
     protected static $initialized = false;
     protected static $session_active = false;
-    protected static $in_modmode = false;
     protected static $user;
+    protected static $modmode_requested = false;
     protected $session_name = 'NellielSession';
     protected $authorization;
     protected $database;
@@ -54,6 +54,16 @@ class Session
         {
             $this->setup();
         }
+    }
+
+    protected function valid()
+    {
+        if (!self::$session_active)
+        {
+            $this->setup();
+        }
+
+        return true;
     }
 
     protected function startSession()
@@ -101,25 +111,14 @@ class Session
         self::$user = $this->authorization->getUser($_SESSION['user_id']);
         $_SESSION['ignores'] = ['default' => false];
         $_SESSION['last_activity'] = time();
-
-        if (self::$user->checkPermission($this->domain, 'perm_mod_mode'))
-        {
-            if (isset($_GET['modmode']) && $_GET['modmode'] === 'true')
-            {
-                self::$in_modmode = true;
-            }
-
-            if (isset($_POST['in_modmode']) && $_POST['in_modmode'] === 'true')
-            {
-                self::$in_modmode = true;
-            }
-        }
-
+        $self::$modmode_requested = (isset($_GET['modmode']) && $_GET['modmode'] === 'true') ||
+                isset($_POST['in_modmode']) && $_POST['in_modmode'] === 'true';
         self::$session_active = true;
     }
 
     public function logout()
     {
+        $this->valid();
         $this->terminate();
         $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
         $output_login->render(['dotdot' => ''], false);
@@ -128,6 +127,7 @@ class Session
 
     public function login()
     {
+        $this->valid();
         $login = new \Nelliel\Account\Login($this->authorization, $this->domain);
         $login_data = $login->validate();
 
@@ -162,6 +162,8 @@ class Session
 
     public function isOld()
     {
+        $this->valid();
+
         if ($this->domain->setting('session_length') == 0)
         {
             return false;
@@ -172,26 +174,26 @@ class Session
 
     public function sessionUser()
     {
+        $this->valid();
         return self::$user;
     }
 
     public function isActive()
     {
+        $this->valid();
         return self::$session_active;
     }
 
     public function inModmode(Domain $domain)
     {
-        if (!$this->isActive())
-        {
-            return false;
-        }
-
-        return self::$in_modmode && self::$user->checkPermission($domain, 'perm_mod_mode');
+        $this->valid();
+        return $this->isActive() && self::$modmode_requested && self::$user->checkPermission($domain, 'perm_mod_mode');
     }
 
     public function loggedInOrError()
     {
+        $this->valid();
+
         if (is_null(self::$user))
         {
             $this->failed = true;
