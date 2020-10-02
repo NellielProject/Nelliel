@@ -37,6 +37,8 @@ class ContentPost extends ContentHandler
             $this->src_path = $this->domain->reference('src_path');
             $this->preview_path = $this->domain->reference('preview_path');
         }
+
+        $this->storeMeta(new Meta());
     }
 
     public function loadFromDatabase()
@@ -50,6 +52,7 @@ class ContentPost extends ContentHandler
         }
 
         $this->content_data = $result;
+        $this->getMeta()->storeFromJSON($result['meta']);
         return true;
     }
 

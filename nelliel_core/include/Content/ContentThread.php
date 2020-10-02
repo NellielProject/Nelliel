@@ -43,6 +43,8 @@ class ContentThread extends ContentHandler
             $this->preview_path = $this->domain->reference('preview_path');
             $this->page_path = $this->domain->reference('page_path');
         }
+
+        $this->storeMeta(new Meta());
     }
 
     public function loadFromDatabase()
@@ -56,6 +58,7 @@ class ContentThread extends ContentHandler
         }
 
         $this->content_data = $result;
+        $this->getMeta()->storeFromJSON($result['meta']);
         return true;
     }
 

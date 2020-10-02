@@ -13,6 +13,7 @@ abstract class ContentHandler
     protected $database;
     protected $domain;
     protected $content_data = array();
+    protected $content_meta;
 
     public abstract function loadFromDatabase();
 
@@ -27,6 +28,16 @@ abstract class ContentHandler
     public abstract function updateCounts();
 
     public abstract function verifyModifyPerms();
+
+    public function storeMeta(Meta $meta)
+    {
+        $this->content_meta = $meta;
+    }
+
+    public function getMeta()
+    {
+        return $this->content_meta;
+    }
 
     protected function contentDataOrDefault(string $data_name, $default)
     {
