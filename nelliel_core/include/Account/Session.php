@@ -47,26 +47,9 @@ class Session
 
             self::$initialized = true;
         }
-
-        $this->startSession();
-
-        if (!self::$session_active)
-        {
-            $this->setup();
-        }
     }
 
-    protected function valid()
-    {
-        if (!self::$session_active)
-        {
-            $this->setup();
-        }
-
-        return true;
-    }
-
-    protected function startSession()
+    protected function check()
     {
         if (session_status() === PHP_SESSION_ACTIVE)
         {
@@ -75,6 +58,11 @@ class Session
 
         session_name($this->session_name);
         session_start();
+
+        if (!self::$session_active)
+        {
+            $this->setup();
+        }
     }
 
     protected function setup()
@@ -88,6 +76,11 @@ class Session
 
         $empty_session = empty($_SESSION);
 
+        if ($empty_session)
+        {
+            return;
+        }
+
         if (!$empty_session && $this->isOld())
         {
             $this->terminate();
@@ -95,16 +88,12 @@ class Session
             nel_derp(221, _gettext('Session has expired.'));
         }
 
-        if ($empty_session)
-        {
-            return;
-        }
-
         $user = $this->authorization->getUser($_SESSION['user_id']);
 
         if ($user->empty() || !$user->active())
         {
             $this->failed = true;
+            $this->terminate();
             nel_derp(222, _gettext('Not an active user.'));
         }
 
@@ -118,7 +107,7 @@ class Session
 
     public function logout()
     {
-        $this->valid();
+        $this->check();
         $this->terminate();
         $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
         $output_login->render(['dotdot' => ''], false);
@@ -127,7 +116,7 @@ class Session
 
     public function login()
     {
-        $this->valid();
+        $this->check();
         $login = new \Nelliel\Account\Login($this->authorization, $this->domain);
         $login_data = $login->validate();
 
@@ -162,7 +151,7 @@ class Session
 
     public function isOld()
     {
-        $this->valid();
+        $this->check();
 
         if ($this->domain->setting('session_length') == 0)
         {
@@ -174,25 +163,25 @@ class Session
 
     public function sessionUser()
     {
-        $this->valid();
+        $this->check();
         return self::$user;
     }
 
     public function isActive()
     {
-        $this->valid();
+        $this->check();
         return self::$session_active;
     }
 
     public function inModmode(Domain $domain)
     {
-        $this->valid();
+        $this->check();
         return $this->isActive() && self::$modmode_requested && self::$user->checkPermission($domain, 'perm_mod_mode');
     }
 
     public function loggedInOrError()
     {
-        $this->valid();
+        $this->check();
 
         if (is_null(self::$user))
         {
