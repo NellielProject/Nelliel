@@ -16,13 +16,12 @@ if (!defined('NELLIEL_VERSION'))
 
 // The fallback default value for locale.
 // If a locale is specified elsewhere but no language file exists for it, Nelliel will use this value instead.
-// Locale should follow the standard format using ISO-639 language and ISO-3166 country codes.
-// e.g. 'en_US' for 'English (United States)', 'en_GB' for 'English (United Kingdom)'
+// Locale should follow the standard format using ISO-639 language and ISO-3166 country codes, e.g. 'en_US' for 'English (United States)'
 // The available locales and their translations can be found in the directory 'nelliel_core/language/locale'
 $base_config['default_locale'] = 'en_US';
 
 // Forces Nelliel to only allow sessions over a secure connection.
-// Once SSL set up for the site, it is recommended you set this to true.
+// Once SSL is set up for the site, it is recommended you set this to true.
 $base_config['secure_session_only'] = false;
 
 //
@@ -144,10 +143,9 @@ $base_config['use_mustache_cache'] = true;
 // === Crypt Settings ===
 //
 
-// The hash settings for staff logins and other higher security things
-
-// Which algorithm to use. Current valid options: BCRYPT, ARGON2
+// The hashing algorithm to use for staff logins and other higher security things
 // If a selected algorithm is not available, Nelliel will use the PASSWORD_DEFAULT
+// Current valid options: BCRYPT, ARGON2
 $crypt_config['password_algorithm'] = 'BCRYPT';
 
 // Bcrypt
@@ -157,6 +155,7 @@ $crypt_config['password_bcrypt_cost'] = 12;
 
 // Argon2
 // Only available in PHP 7.2+
+// If not available, Nelliel will attempt a fallback to bcrypt
 
 // PHP default memory cost is 1024; Nelliel default is 1024
 $crypt_config['password_argon2_memory_cost'] = 1024;

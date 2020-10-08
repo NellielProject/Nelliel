@@ -69,21 +69,25 @@ class OutputPanelBoardSettings extends OutputCore
                     $this->domain->id();
         }
 
+
+        $user_lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');
         $all_filetypes = $filetypes->allTypeData();
         $all_types = $filetypes->types();
         $type_nodes = array();
         $filetype_entries_nodes = array();
         $type_row_count = array();
-        $prepared = $this->database->prepare('SELECT "setting" FROM "' . $table_name . '" WHERE "config_name" = ?');
-        $enabled_json = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_COLUMN);
-        $enabled_array = json_decode($enabled_json, true);
+        $prepared = $this->database->prepare('SELECT "setting_value","edit_lock" FROM "' . $table_name . '" WHERE "setting_name" = ?');
+        $enabled_types = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_ASSOC);
+        $enabled_array = json_decode($enabled_types['setting_value'], true);
+        $types_edit_lock = $enabled_types['edit_lock'] == 1 && !$defaults && !$user_lock_override;
+        $available_formats = $filetypes->availableFormats();
 
         foreach ($all_types as $type)
         {
             $type_data = array();
             $type_data['label'] = _gettext($type['label']);
             $type_data['type_select']['name'] = $type['type'];
-            $type_data['type_select']['input_name'] = 'filetypes[' . $type['type'] . '][enabled]';
+            $type_data['type_select']['input_name'] = 'enabled_filetypes[types][' . $type['type'] . '][enabled]';
 
             if (isset($enabled_array[$type['type']]))
             {
@@ -95,13 +99,14 @@ class OutputPanelBoardSettings extends OutputCore
             }
 
             $type_data['type_select']['value'] = ($type_enabled) ? 'checked' : '';
+            $type_data['type_select']['disabled'] = ($types_edit_lock) ? 'disabled' : '';
             $enabled_formats = $enabled_array[$type['type']]['formats'] ?? array();
             $entry_count = 0;
             $filetype_set = array();
 
             foreach ($all_filetypes as $filetype)
             {
-                if ($filetype['type'] != $type['type'])
+                if ($filetype['type'] != $type['type'] || !isset($available_formats[$filetype['format']]))
                 {
                     continue;
                 }
@@ -109,11 +114,12 @@ class OutputPanelBoardSettings extends OutputCore
                 if ($filetype['extension'] == $filetype['parent_extension'])
                 {
                     $filetype_set[$filetype['parent_extension']]['format'] = $filetype['format'];
-                    $filetype_set[$filetype['parent_extension']]['input_name'] = 'filetypes[' . $type['type'] . '][formats][' . $filetype['format'] . ']';
+                    $filetype_set[$filetype['parent_extension']]['input_name'] = 'enabled_filetypes[types][' . $type['type'] . '][formats][' . $filetype['format'] . ']';
                     $filetype_set[$filetype['parent_extension']]['label'] = _gettext($filetype['label']) . ' - .' .
                             $filetype['extension'];
                     $filetype_set[$filetype['parent_extension']]['value'] = (array_key_exists($filetype['format'],
                             $enabled_formats)) ? 'checked' : '';
+                    $filetype_set[$filetype['parent_extension']]['disabled'] = ($types_edit_lock) ? 'disabled' : '';
                 }
                 else
                 {
@@ -138,52 +144,69 @@ class OutputPanelBoardSettings extends OutputCore
             $this->render_data['file_types'][] = $type_data;
         }
 
-        $user_lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');
-        $this->render_data['defaults'] = $defaults;
-        $result = $this->database->query('SELECT * FROM "' . $table_name . '"');
-        $rows = $result->fetchAll(PDO::FETCH_ASSOC);
+        $this->render_data['show_lock_update'] = $defaults;
+        $board_settings = $this->database->query(
+                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . $table_name . '" ON "' .
+                NEL_SETTINGS_TABLE . '"."setting_name" = "' . $table_name .
+                '"."setting_name" WHERE "setting_category" = \'board\'')->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($rows as $config_line)
+        foreach ($board_settings as $setting)
         {
-            $config_data = array('display' => true);
+            $setting_data = array();
+            $setting_data['setting_name'] = $setting['setting_name'];
+            $setting_data['setting_label'] = $setting['setting_label'];
+            $setting_data['setting_description'] = $setting['setting_description'];
+            $setting_options = json_decode($setting['setting_options'], true) ?? array();
+            $input_attributes = json_decode($setting['input_attributes'], true) ?? array();
 
-            if ($config_line['data_type'] == 'boolean')
+            if ($setting['edit_lock'] == 1)
             {
-                if ($config_line['setting'] == 1)
+                $setting_data['setting_locked'] = 'checked';
+
+                if(!$defaults)
                 {
-                    $config_data['value'] = 'checked';
+                    $setting_data['setting_disabled'] = 'disabled';
+                }
+            }
+
+            foreach ($input_attributes as $attribute => $value)
+            {
+                $setting_data['input_attributes']['input_' . $attribute] = $value;
+            }
+
+            if ($setting['data_type'] === 'boolean')
+            {
+                if ($setting['setting_value'] == 1)
+                {
+                    $setting_data['setting_checked'] = 'checked';
                 }
             }
             else
             {
-                // 0 is field or checkbox; 1 is radio button; 2 is menu
-                switch ($config_line['select_type'])
+                if (isset($input_attributes['type']) && $input_attributes['type'] === 'radio')
                 {
-                    case 0:
-                        $config_data['value'] = $config_line['setting'];
-                        break;
+                    foreach ($setting_options as $option => $values)
+                    {
+                        $options = array();
+                        $options['option_name'] = $option;
+                        $options['option_label'] = $values['label'];
+                        $options['option_key'] = $setting_data['setting_name'] . '_' . $option;
 
-                    case 1:
-                        $config_data[$config_line['config_name'] . '_' . $config_line['setting']] = 'checked';
-                        break;
+                        if ($setting['setting_value'] === $option)
+                        {
+                            $options['option_checked'] = 'checked';
+                        }
 
-                    case 2:
-                        $config_data[$config_line['config_name'] . '_' . $config_line['setting']] = 'selected';
-                        break;
+                        $setting_data['options'][] = $options;
+                    }
+                }
+                else
+                {
+                    $setting_data['setting_value'] = $setting['setting_value'];
                 }
             }
 
-            if ($config_line['edit_lock'] == 1)
-            {
-                $config_data['locked'] = 'checked';
-
-                if (!$user_lock_override)
-                {
-                    $config_data['disabled'] = 'disabled';
-                }
-            }
-
-            $this->render_data[$config_line['config_name']] = $config_data;
+            $this->render_data[$setting['setting_name']] = $setting_data;
         }
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/board_settings_panel',

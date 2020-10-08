@@ -71,12 +71,12 @@ class Regen
         foreach($board_ids as $id)
         {
             $board_domain = new DomainBoard($id, $domain->database());
-            $board_config = $domain->database()->executeFetchAll('SELECT "config_name", "setting" FROM "' . $board_domain->reference('config_table') . '"', PDO::FETCH_ASSOC);
+            $board_config = $domain->database()->executeFetchAll('SELECT "setting_name", "setting_value" FROM "' . $board_domain->reference('config_table') . '"', PDO::FETCH_ASSOC);
             $board_data = ['board_id' => $id];
 
             foreach($board_config as $config)
             {
-                $board_data[$config['config_name']] = $config['setting'];
+                $board_data[$config['setting_name']] = $config['setting_value'];
             }
 
             $board_list_json->addBoardData($board_json->prepareData($board_data));

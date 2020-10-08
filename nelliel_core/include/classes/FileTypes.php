@@ -28,11 +28,12 @@ class FileTypes
         $filetypes = array();
         $sub_extensions = array();
         $types = array();
-        $db_results = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes" ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
+        $db_results = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes" ORDER BY "entry" ASC',
+                PDO::FETCH_ASSOC);
 
         foreach ($db_results as $result)
         {
-            if($result['type_def'] == 1)
+            if ($result['type_def'] == 1)
             {
                 $types[$result['type']] = $result;
                 continue;
@@ -66,7 +67,7 @@ class FileTypes
     {
         $settings = array();
 
-        if(!$ignore_cache)
+        if (!$ignore_cache)
         {
             $settings = $this->cache_handler->loadArrayFromCache($domain_id . '/filetype_settings.php', 'settings');
         }
@@ -77,7 +78,8 @@ class FileTypes
             $db_prefix = $this->database->executePreparedFetch($prepared, [$domain_id], PDO::FETCH_COLUMN);
             $config_table = $db_prefix . '_config';
             $filetypes_json = $this->database->executeFetch(
-                    'SELECT "setting" FROM "' . $config_table . '" WHERE "config_name" = \'enabled_filetypes\'', PDO::FETCH_COLUMN);
+                    'SELECT "setting_value" FROM "' . $config_table . '" WHERE "setting_name" = \'enabled_filetypes\'',
+                    PDO::FETCH_COLUMN);
             $settings = json_decode($filetypes_json, true);
         }
 
@@ -129,7 +131,7 @@ class FileTypes
 
     private function loadDataIfNot(bool $ignore_cache = false)
     {
-        if(empty(self::$data))
+        if (empty(self::$data))
         {
             $this->loadDataFromDatabase($ignore_cache);
         }
@@ -137,7 +139,7 @@ class FileTypes
 
     private function loadSettingsIfNot(string $domain_id, bool $ignore_cache = false)
     {
-        if(!isset(self::$settings[$domain_id]))
+        if (!isset(self::$settings[$domain_id]))
         {
             $this->loadSettingsFromDatabase($domain_id, $ignore_cache);
         }
@@ -165,8 +167,10 @@ class FileTypes
 
     public function formatIsEnabled(string $domain_id, string $type, string $format)
     {
+        $this->loadDataIfNot();
         $this->loadSettingsIfNot($domain_id);
-        return in_array($format, $this->enabledFormats($domain_id, $type));
+        $available_formats = $this->availableFormats();
+        return in_array($format, $this->enabledFormats($domain_id, $type)) && isset($available_formats[$format]) && $available_formats[$format];
     }
 
     public function verifyFile(string $extension, $file_path, $start_buffer = 65535, $end_buffer = 65535)
@@ -195,9 +199,9 @@ class FileTypes
         $this->loadSettingsIfNot($domain_id);
         $enabled = array();
 
-        foreach(self::$settings[$domain_id] as $type => $settings)
+        foreach (self::$settings[$domain_id] as $type => $settings)
         {
-            if(isset($settings['enabled']) && $settings['enabled'])
+            if (isset($settings['enabled']) && $settings['enabled'])
             {
                 $enabled[] = $type;
             }
@@ -211,19 +215,35 @@ class FileTypes
         $this->loadSettingsIfNot($domain_id);
         $enabled = array();
 
-        if(!isset(self::$settings[$domain_id][$type]))
+        if (!isset(self::$settings[$domain_id][$type]) || !isset(self::$settings[$domain_id][$type]['formats']))
         {
             return $enabled;
         }
 
-        foreach(self::$settings[$domain_id][$type]['formats'] as $format => $setting)
+        foreach (self::$settings[$domain_id][$type]['formats'] as $format => $setting)
         {
-            if($setting)
+            if ($setting)
             {
                 $enabled[] = $format;
             }
         }
 
         return $enabled;
+    }
+
+    public function availableFormats()
+    {
+        $this->loadDataIfNot();
+        $available = array();
+
+        foreach (self::$data as $data)
+        {
+            if ($data['extension'] == $data['parent_extension'] && $data['enabled'] == 1)
+            {
+                $available[$data['format']] = true;
+            }
+        }
+
+        return $available;
     }
 }

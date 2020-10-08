@@ -63,8 +63,13 @@ class AdminSiteSettings extends AdminHandler
 
         foreach ($_POST as $key => $value)
         {
+            if(is_array($value))
+            {
+                $value = nel_form_input_default($value);
+            }
+
             $prepared = $this->database->prepare(
-                    'UPDATE "nelliel_site_config" SET "setting" = ? WHERE "config_name" = ?');
+                    'UPDATE "' . NEL_SITE_CONFIG_TABLE . '" SET "setting_value" = ? WHERE "setting_name" = ?');
             $this->database->executePrepared($prepared, [$value, $key], true);
         }
 

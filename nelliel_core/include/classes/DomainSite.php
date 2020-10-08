@@ -51,12 +51,14 @@ class DomainSite extends Domain
     protected function loadSettingsFromDatabase()
     {
         $settings = array();
-        $config_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_SITE_CONFIG_TABLE . '"', PDO::FETCH_ASSOC);
+        $config_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_SITE_CONFIG_TABLE . '" ON "' .
+                NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SITE_CONFIG_TABLE .
+                '"."setting_name" WHERE "setting_category" = \'core\'', PDO::FETCH_ASSOC);
 
         foreach ($config_list as $config)
         {
-            $config['setting'] = nel_cast_to_datatype($config['setting'], $config['data_type'], false);
-            $settings[$config['config_name']] = $config['setting'];
+            $config['setting_value'] = nel_cast_to_datatype($config['setting_value'], $config['data_type'], false);
+            $settings[$config['setting_name']] = $config['setting_value'];
         }
 
         return $settings;

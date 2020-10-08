@@ -74,45 +74,64 @@ class AdminBoardSettings extends AdminHandler
 
         foreach ($_POST as $key => $value)
         {
-            if ($key === 'jpeg_quality' && $value > 100)
+            if(!is_array($value))
             {
-                $key = 100;
+                $this->updateSetting($config_table, $key, $value, $lock_override);
+                continue;
             }
 
-            if (substr($key, -5) === '_lock' && $this->defaults)
+            if (isset($value['lock']) && $this->defaults)
             {
-                $config_name = substr($key, 0, strlen($key) - 5);
-                $this->setLock($config_table, $config_name, $value);
+                $lock_value = nel_form_input_default($value['lock']);
+                $this->setLock($config_table, $key, $lock_value);
 
+                // TODO: Possibly alter check to defaults board instead of setting individual boards
                 foreach ($this->getBoardDomains() as $board_domain)
                 {
-                    $this->setLock($board_domain->reference('config_table'), $config_name, $value);
+                    $this->setLock($board_domain->reference('config_table'), $key, $lock_value);
                 }
             }
-            else if($key === 'filetypes')
+
+            $force_update = isset($value['force_update']) && $value['force_update'] == 1 && $this->defaults;
+
+            if ($key === 'enabled_filetypes')
             {
                 $filetypes_array = array();
 
-                foreach($value as $type => $entries)
+                foreach ($value['types'] as $type => $entries)
                 {
-                    $filetypes_array[$type]['enabled'] = boolval($entries['enabled']);
+                    $type_enabled = nel_form_input_default($entries['enabled']) === '1';
+                    $filetypes_array[$type]['enabled'] = $type_enabled;
+                    $type_formats = $entries['formats'] ?? array();
 
-                    foreach($entries['formats'] as $format => $enabled)
+                    foreach ($type_formats as $format => $enabled)
                     {
-                        if($enabled === '1')
+                        $format_enabled = nel_form_input_default($enabled) === '1';
+
+                        if ($format_enabled)
                         {
                             $filetypes_array[$type]['formats'][$format] = true;
                         }
                     }
                 }
 
-                $encoded_filetypes = json_encode($filetypes_array);
-                $this->updateSetting($config_table, 'enabled_filetypes', $encoded_filetypes, $lock_override);
+                $value = json_encode($filetypes_array);
+                $key = 'enabled_filetypes';
             }
             else
             {
-                $this->updateSetting($config_table, $key, $value, $lock_override);
+                $value = nel_form_input_default($value);
             }
+
+            if($force_update)
+            {
+                foreach ($this->getBoardDomains() as $board_domain)
+                {
+                    $this->updateSetting($board_domain->reference('config_table'), $key, $value, $lock_override);
+                }
+            }
+
+            $this->updateSetting($config_table, $key, $value, $lock_override);
         }
 
         if (!$this->defaults)
@@ -130,7 +149,7 @@ class AdminBoardSettings extends AdminHandler
     private function setLock($config_table, $config_name, $setting)
     {
         $prepared = $this->database->prepare(
-                'UPDATE "' . $config_table . '" SET "edit_lock" = ? WHERE "config_name" = ?');
+                'UPDATE "' . $config_table . '" SET "edit_lock" = ? WHERE "setting_name" = ?');
         $this->database->executePrepared($prepared, [$setting, $config_name], true);
     }
 
@@ -139,13 +158,13 @@ class AdminBoardSettings extends AdminHandler
         if ($this->defaults || $lock_override)
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $config_table . '" SET "setting" = ? WHERE "config_name" = ?');
+                    'UPDATE "' . $config_table . '" SET "setting_value" = ? WHERE "setting_name" = ?');
             $this->database->executePrepared($prepared, [$setting, $config_name], true);
         }
         else
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $config_table . '" SET "setting" = ? WHERE "config_name" = ? AND "edit_lock" = 0');
+                    'UPDATE "' . $config_table . '" SET "setting_value" = ? WHERE "setting_name" = ? AND "edit_lock" = 0');
             $this->database->executePrepared($prepared, [$setting, $config_name], true);
         }
     }

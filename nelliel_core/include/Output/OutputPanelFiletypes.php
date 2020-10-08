@@ -50,6 +50,7 @@ class OutputPanelFiletypes extends OutputCore
 
         foreach ($filetypes as $filetype)
         {
+            $is_parent = $filetype['extension'] === $filetype['parent_extension'];
             $filetype_data = array();
             $filetype_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
@@ -60,6 +61,21 @@ class OutputPanelFiletypes extends OutputCore
             $filetype_data['mime'] = $filetype['mime'];
             $filetype_data['id_regex'] = $filetype['id_regex'];
             $filetype_data['label'] = $filetype['label'];
+
+            if($filetype['enabled'] == 1 && $is_parent)
+            {
+                $filetype_data['enable_disable_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
+                        ['module' => 'filetypes', 'action' => 'disable', 'parent-extension' => $filetype['parent_extension']]);
+                $filetype_data['enable_disable_text'] = _gettext('Disable');
+            }
+
+            if($filetype['enabled'] == 0 && $is_parent)
+            {
+                $filetype_data['enable_disable_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
+                        ['module' => 'filetypes', 'action' => 'enable', 'parent-extension' => $filetype['parent_extension']]);
+                $filetype_data['enable_disable_text'] = _gettext('Enable');
+            }
+
             $filetype_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                     ['module' => 'filetypes', 'action' => 'remove', 'filetype-id' => $filetype['entry']]);
             $this->render_data['filetype_list'][] = $filetype_data;

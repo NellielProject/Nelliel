@@ -32,6 +32,8 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
         nel_early_derp($error_id, $error_message, $error_data);
     }
 
+    $redirect = new \Nelliel\Redirect();
+    $redirect->doRedirect(false);
     $backtrace = debug_backtrace();
     $diagnostic = array();
     $diagnostic['error_id'] = (!empty($error_id)) ? $error_id : 0;
@@ -64,5 +66,5 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
     $output_derp = new \Nelliel\Output\OutputDerp($domain, false);
     echo $output_derp->render(['diagnostic' => $diagnostic], false);
 
-    nel_clean_exit();
+    nel_clean_exit(false);
 }

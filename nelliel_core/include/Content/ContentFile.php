@@ -35,6 +35,8 @@ class ContentFile extends ContentHandler
             $this->src_path = $this->domain->reference('src_path');
             $this->preview_path = $this->domain->reference('preview_path');
         }
+
+        $this->storeMeta(new Meta());
     }
 
     public function loadFromDatabase()
@@ -50,6 +52,8 @@ class ContentFile extends ContentHandler
         }
 
         $this->content_data = $result;
+        $meta = $result['meta'] ?? '';
+        $this->getMeta()->storeFromJSON($meta);
         return true;
     }
 
@@ -75,7 +79,8 @@ class ContentFile extends ContentHandler
                     "filename" = :filename, "extension" = :extension,
                     "display_width" = :display_width, "display_height" = :display_height, "preview_name" = :preview_name,
                     "preview_extension" = :preview_extension, "preview_width" = :preview_width, "preview_height" = :preview_height,
-                    "filesize" = :filesize, "md5" = :md5, "sha1" = :sha1, "sha256" = :sha256, "sha512" = :sha512, "spoiler" = :spoiler, "exif" = :exif
+                    "filesize" = :filesize, "md5" = :md5, "sha1" = :sha1, "sha256" = :sha256, "sha512" = :sha512, "embed_url" = :embed_url,
+                    "spoiler" = :spoiler, "deleted" = :deleted, "exif" = :exif, "meta" = :meta
                     WHERE "post_number" = :post_number');
             $prepared->bindValue(':post_number', $this->content_id->postID(), PDO::PARAM_INT);
         }
@@ -85,9 +90,10 @@ class ContentFile extends ContentHandler
                     'INSERT INTO "' . $this->content_table .
                     '" ("parent_thread", "post_ref", "content_order", "type", "format", "mime",
                     "filename", "extension", "display_width", "display_height", "preview_name", "preview_extension", "preview_width", "preview_height",
-                    "filesize", "md5", "sha1", "sha256", "sha512", "spoiler", "exif") VALUES
+                    "filesize", "md5", "sha1", "sha256", "sha512", "embed_url", "spoiler", "deleted", "exif", "meta") VALUES
                     (:parent_thread, :post_ref, :content_order, :type, :format, :mime, :filename, :extension, :display_width, :display_height,
-                    :preview_name, :preview_extension, :preview_width, :preview_height, :filesize, :md5, :sha1, :sha256, :sha512, :spoiler, :exif)');
+                    :preview_name, :preview_extension, :preview_width, :preview_height, :filesize, :md5, :sha1, :sha256, :sha512, :embed_url, :spoiler,
+                    :deleted, :exif, :meta)');
         }
 
         $prepared->bindValue(':parent_thread', $this->contentDataOrDefault('parent_thread', 0), PDO::PARAM_INT);
@@ -110,8 +116,11 @@ class ContentFile extends ContentHandler
         $prepared->bindValue(':sha1', $this->contentDataOrDefault('sha1', null), PDO::PARAM_LOB);
         $prepared->bindValue(':sha256', $this->contentDataOrDefault('sha256', null), PDO::PARAM_LOB);
         $prepared->bindValue(':sha512', $this->contentDataOrDefault('sha512', null), PDO::PARAM_LOB);
+        $prepared->bindValue(':embed_url', $this->contentDataOrDefault('embed_url', null), PDO::PARAM_STR);
         $prepared->bindValue(':spoiler', $this->contentDataOrDefault('spoiler', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':deleted', $this->contentDataOrDefault('deleted', 0), PDO::PARAM_INT);
         $prepared->bindValue(':exif', $this->contentDataOrDefault('exif', null), PDO::PARAM_STR);
+        $prepared->bindValue(':meta', $this->getMeta()->getJSON(), PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
         return true;
     }

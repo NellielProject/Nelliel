@@ -20,8 +20,8 @@
 		<hr>
 		{{# permissions_list }}
 		<div class="display-row">
-			<input type="hidden" name="{{ permission }}" value="0">
-			<input id="{{ permission }}" type="checkbox" name="{{ permission }}" value="1" {{ checked }}>
+			<input type="hidden" name="{{ permission }}[default]" value="0">
+			<input id="{{ permission }}" type="checkbox" name="{{ permission }}[value]" value="1" {{ checked }}>
 			<label for="{{ permission }}">{{ label }}</label>
 		</div>
 		{{/ permissions_list }}

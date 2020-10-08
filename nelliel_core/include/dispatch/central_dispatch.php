@@ -41,7 +41,7 @@ function nel_central_dispatch()
         $redirect->doRedirect(true);
     }
 
-    if ($inputs['board_id'] === '' || $inputs['domain_id'])
+    if ($inputs['board_id'] === '' || $inputs['domain_id'] === '_site_')
     {
         $domain = new \Nelliel\DomainSite(nel_database());
     }

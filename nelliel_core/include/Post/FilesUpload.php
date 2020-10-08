@@ -91,6 +91,8 @@ class FilesUpload
             }
 
             $this->getPathInfo($file);
+            $file->getMeta()->modify('original_filename', $file->data('filename'));
+            $file->getMeta()->modify('original_extension', $file->data('extension'));
             $file->changeData('name', $file_handler->filterFilename($file_data['name']));
             $spoiler = $_POST['form_spoiler'];
             $file->changeData('filesize', $file_data['size']);
@@ -100,21 +102,16 @@ class FilesUpload
                 $file->changeData('spoiler', $data_handler->checkEntry($spoiler, 'integer'));
             }
 
-            if (strlen($file->data('fullname') >= 255))
+            if (strlen($file->data('fullname')) >= 255)
             {
-                $file->changeData('filename', substr($file->data('filename'), 0, 254));
+                $overage = strlen($file->data('fullname')) - 250;
+                $file->changeData('filename', substr($file->data('filename'), 0, $overage));
             }
 
             foreach ($filenames as $filename)
             {
                 if (strcasecmp($filename, $file->data('fullname')) === 0)
                 {
-                    if (strlen($file->data('fullname')) >= 255)
-                    {
-                        $overage = strlen($file->data('fullname')) - 250;
-                        $file->changeData('filename', substr($file->data('filename'), 0, $overage));
-                    }
-
                     $file->changeData('filename', $file->data('filename') . '_' . $file_duplicate);
                     $file->changeData('fullname', $file->data('filename') . '.' . $file->data('extension'));
                     ++ $file_duplicate;
@@ -207,7 +204,7 @@ class FilesUpload
 
         if ($file['error'] !== UPLOAD_ERR_OK)
         {
-            nel_derp(17, _gettext("The uploaded file just ain't right. That's all I know.'"), $error_data);
+            nel_derp(17, _gettext("The uploaded file just ain't right.'"), $error_data);
         }
 
         nel_plugins()->processHook('nel-post-check-file-errors', [$file, $error_data]);

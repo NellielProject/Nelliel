@@ -1,0 +1,13 @@
+<div class="display-row">
+	{{# show_lock_update}}
+		{{> panels/pieces/setting_lock_update }}
+	{{/ show_lock_update}}
+	<span class="display-cell">
+		<span data-i18n="gettext">{{ setting_label }}</span>
+	</span>
+	<span class="display-cell">
+	{{# options }}
+		{{> panels/pieces/setting_radio_option }}
+	{{/ options }}
+	</span>
+</div>

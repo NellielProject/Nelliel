@@ -105,12 +105,18 @@ class OutputPostingForm extends OutputCore
         foreach ($filetypes->enabledTypes($this->domain->id()) as $type)
         {
             $supported_types = sprintf(_gettext('Supported %s file types: '), $type);
+            $supported_formats = '';
 
             foreach ($filetypes->enabledFormats($this->domain->id(), $type) as $format)
             {
-                $supported_types .= utf8_strtoupper($format) . ', ';
+                $supported_formats .= utf8_strtoupper($format) . ', ';
             }
 
+            if(empty($supported_formats)) {
+                continue;
+            }
+
+            $supported_types .= $supported_formats;
             $this->render_data['rules_list'][]['rules_text'] = substr($supported_types, 0, -2);
         }
 

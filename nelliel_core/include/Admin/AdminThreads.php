@@ -8,17 +8,20 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domain;
+use Nelliel\DomainSite;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\ContentID;
 
 class AdminThreads extends AdminHandler
 {
+    private $site_domain;
 
     function __construct(Authorization $authorization, Domain $domain)
     {
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
+        $this->site_domain = new DomainSite($this->database);
         $this->validateUser();
     }
 
@@ -192,11 +195,10 @@ class AdminThreads extends AdminHandler
     {
         $regen = new \Nelliel\Regen();
         $regen->threads($this->domain, true, [$thread_id]);
-        $this->site_domain = new \Nelliel\DomainSite($this->database);
 
-        if($site_domain->setting('overboard_active'))
+        if($this->site_domain->setting('overboard_active'))
         {
-            $regen->overboard($site_domain);
+            $regen->overboard($this->site_domain);
         }
 
         if($regen_index)

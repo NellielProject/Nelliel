@@ -32,6 +32,14 @@ class AdminFiletypes extends AdminHandler
         {
             $this->remove();
         }
+        else if ($action == 'enable')
+        {
+            $this->enable();
+        }
+        else if ($action == 'disable')
+        {
+            $this->disable();
+        }
 
         if ($return)
         {
@@ -105,5 +113,30 @@ class AdminFiletypes extends AdminHandler
         }
 
         return $board_domains;
+    }
+
+    // TODO: combine these
+    public function enable()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
+        {
+            nel_derp(433, _gettext('You are not allowed to enable or disable filetypes.'));
+        }
+
+        $parent_extension = $_GET['parent-extension'];
+        $prepared = $this->database->prepare('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "enabled" = 1 WHERE "parent_extension" = ?');
+        $this->database->executePrepared($prepared, [$parent_extension]);
+    }
+
+    public function disable()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
+        {
+            nel_derp(433, _gettext('You are not allowed to enable or disable filetypes.'));
+        }
+
+        $parent_extension = $_GET['parent-extension'];
+        $prepared = $this->database->prepare('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "enabled" = 0 WHERE "parent_extension" = ?');
+        $this->database->executePrepared($prepared, [$parent_extension]);
     }
 }

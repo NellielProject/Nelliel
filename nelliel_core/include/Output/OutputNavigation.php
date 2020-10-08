@@ -79,9 +79,9 @@ class OutputNavigation extends OutputCore
         $render_data['news_url'] = $dotdot . 'news.html';
         $render_data['account_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=account';
         $render_data['overboard_active'] = $this->site_domain->setting('overboard_active');
-        $render_data['overboard_url'] = $dotdot . $this->site_domain->setting('overboard_id') . '/';
+        $render_data['overboard_url'] = $dotdot . $this->site_domain->setting('overboard_uri') . '/';
         $render_data['sfw_overboard_active'] = $this->site_domain->setting('sfw_overboard_active');
-        $render_data['sfw_overboard_url'] = $dotdot . $this->site_domain->setting('sfw_overboard_id') . '/';
+        $render_data['sfw_overboard_url'] = $dotdot . $this->site_domain->setting('sfw_overboard_uri') . '/';
         $render_data['about_nelliel_url'] = $dotdot . NEL_MAIN_SCRIPT . '?about_nelliel';
         return $render_data;
     }
