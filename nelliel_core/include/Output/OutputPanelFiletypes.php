@@ -9,6 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domain;
 use PDO;
+use Nelliel\Auth\AuthUser;
 
 class OutputPanelFiletypes extends OutputCore
 {
@@ -25,11 +26,7 @@ class OutputPanelFiletypes extends OutputCore
     public function render(array $parameters, bool $data_only)
     {
         $user = $parameters['user'];
-
-        if (!$user->checkPermission($this->domain, 'perm_manage_filetypes'))
-        {
-            nel_derp(430, _gettext('You are not allowed to manage filetypes.'));
-        }
+        $this->permCheck($user);
 
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
@@ -44,8 +41,10 @@ class OutputPanelFiletypes extends OutputCore
         $filetypes = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" WHERE "base_extension" <> \'\' ORDER BY "entry" ASC',
                 PDO::FETCH_ASSOC);
-        $this->render_data['form_action'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT, ['module' => 'filetypes', 'action' => 'add']);
-        $this->render_data['new_filetype_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT, ['module' => 'filetypes', 'action' => 'new']);
+        $this->render_data['form_action'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
+                ['module' => 'filetypes', 'action' => 'add']);
+        $this->render_data['new_filetype_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
+                ['module' => 'filetypes', 'action' => 'new']);
         $bgclass = 'row1';
 
         foreach ($filetypes as $filetype)
@@ -72,14 +71,12 @@ class OutputPanelFiletypes extends OutputCore
             $filetype_data['id_regex'] = $filetype['id_regex'];
             $filetype_data['label'] = $filetype['label'];
             $filetype_data['edit_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'filetypes', 'action' => 'edit',
-                    'filetype-id' => $filetype['entry']]);
+                    ['module' => 'filetypes', 'action' => 'edit', 'filetype-id' => $filetype['entry']]);
 
             if ($filetype['enabled'] == 1)
             {
                 $filetype_data['enable_disable_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'filetypes', 'action' => 'disable',
-                            'filetype-id' => $filetype['entry']]);
+                        ['module' => 'filetypes', 'action' => 'disable', 'filetype-id' => $filetype['entry']]);
                 $filetype_data['enable_disable_text'] = _gettext('Disable');
             }
 
@@ -112,11 +109,7 @@ class OutputPanelFiletypes extends OutputCore
     public function edit(array $parameters, bool $data_only)
     {
         $user = $parameters['user'];
-
-        if (!$user->checkPermission($this->domain, 'perm_manage_filetypes'))
-        {
-            nel_derp(430, _gettext('You are not allowed to manage filetypes.'));
-        }
+        $this->permCheck($user);
 
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
@@ -135,7 +128,8 @@ class OutputPanelFiletypes extends OutputCore
         if ($editing)
         {
             $entry = $parameters['entry'] ?? 0;
-            $form_action = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT, ['module' => 'filetypes', 'action' => 'update', 'filetype-id' => $entry]);
+            $form_action = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
+                    ['module' => 'filetypes', 'action' => 'update', 'filetype-id' => $entry]);
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_FILETYPES_TABLE . '" WHERE "entry" = ?');
             $filetype_data = $this->database->executePreparedFetch($prepared, [$entry], PDO::FETCH_ASSOC);
 
@@ -164,7 +158,8 @@ class OutputPanelFiletypes extends OutputCore
         }
         else
         {
-            $form_action = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT, ['module' => 'filetypes', 'action' => 'update']);
+            $form_action = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
+                    ['module' => 'filetypes', 'action' => 'update']);
         }
 
         $this->render_data['form_action'] = $form_action;
@@ -175,5 +170,13 @@ class OutputPanelFiletypes extends OutputCore
         $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;
+    }
+
+    private function permCheck(AuthUser $user)
+    {
+        if (!$user->checkPermission($this->domain, 'perm_manage_filetypes'))
+        {
+            nel_derp(430, _gettext('You are not allowed to manage filetypes.'));
+        }
     }
 }
