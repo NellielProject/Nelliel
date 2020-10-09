@@ -100,7 +100,7 @@ class Session
         self::$user = $this->authorization->getUser($_SESSION['user_id']);
         $_SESSION['ignores'] = ['default' => false];
         $_SESSION['last_activity'] = time();
-        $self::$modmode_requested = (isset($_GET['modmode']) && $_GET['modmode'] === 'true') ||
+        self::$modmode_requested = (isset($_GET['modmode']) && $_GET['modmode'] === 'true') ||
                 isset($_POST['in_modmode']) && $_POST['in_modmode'] === 'true';
         self::$session_active = true;
     }

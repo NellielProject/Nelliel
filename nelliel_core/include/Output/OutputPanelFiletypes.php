@@ -42,7 +42,7 @@ class OutputPanelFiletypes extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $filetypes = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" WHERE "extension" <> \'\' ORDER BY "entry" ASC',
+                'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" WHERE "base_extension" <> \'\' ORDER BY "entry" ASC',
                 PDO::FETCH_ASSOC);
         $form_action = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT, ['module' => 'filetypes', 'action' => 'add']);
         $this->render_data['form_action'] = $form_action;
@@ -50,29 +50,39 @@ class OutputPanelFiletypes extends OutputCore
 
         foreach ($filetypes as $filetype)
         {
-            $is_parent = $filetype['extension'] === $filetype['parent_extension'];
             $filetype_data = array();
             $filetype_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $filetype_data['extension'] = $filetype['extension'];
-            $filetype_data['parent_extension'] = $filetype['parent_extension'];
+            $filetype_data['base_extension'] = $filetype['base_extension'];
             $filetype_data['type'] = $filetype['type'];
             $filetype_data['format'] = $filetype['format'];
+            $filetype_data['mime'] = $filetype['mime'];
+            $sub_extensions = '';
+
+            if(!empty($filetype['sub_extensions']))
+            {
+                foreach(json_decode($filetype['sub_extensions'], true) as $sub_extension)
+                {
+                    $sub_extensions .= $sub_extension . ' ';
+                }
+            }
+
+            $filetype_data['sub_extensions'] = substr($sub_extensions, 0, -1);
             $filetype_data['mime'] = $filetype['mime'];
             $filetype_data['id_regex'] = $filetype['id_regex'];
             $filetype_data['label'] = $filetype['label'];
 
-            if($filetype['enabled'] == 1 && $is_parent)
+            if($filetype['enabled'] == 1)
             {
                 $filetype_data['enable_disable_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'filetypes', 'action' => 'disable', 'parent-extension' => $filetype['parent_extension']]);
+                        ['module' => 'filetypes', 'action' => 'disable', 'parent-extension' => $filetype['base_extension']]);
                 $filetype_data['enable_disable_text'] = _gettext('Disable');
             }
 
-            if($filetype['enabled'] == 0 && $is_parent)
+            if($filetype['enabled'] == 0)
             {
                 $filetype_data['enable_disable_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'filetypes', 'action' => 'enable', 'parent-extension' => $filetype['parent_extension']]);
+                        ['module' => 'filetypes', 'action' => 'enable', 'parent-extension' => $filetype['base_extension']]);
                 $filetype_data['enable_disable_text'] = _gettext('Enable');
             }
 

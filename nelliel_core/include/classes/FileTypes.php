@@ -13,7 +13,7 @@ class FileTypes
 {
     private $cache_handler;
     private $database;
-    private static $data;
+    private static $extensions;
     private static $settings;
     private static $types;
 
@@ -25,8 +25,7 @@ class FileTypes
 
     private function loadDataFromDatabase(bool $ignore_cache = false)
     {
-        $filetypes = array();
-        $sub_extensions = array();
+        $extensions = array();
         $types = array();
         $db_results = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes" ORDER BY "entry" ASC',
                 PDO::FETCH_ASSOC);
@@ -38,29 +37,30 @@ class FileTypes
                 $types[$result['type']] = $result;
                 continue;
             }
-
-            if ($result['extension'] == $result['parent_extension'])
-            {
-                $filetypes[$result['extension']] = $result;
-            }
             else
             {
-                $sub_extensions[] = $result;
+                $extensions[$base_extension] = $result;
+                $sub_extensions = json_decode($result['sub_extensions'], true);
+
+                foreach ($sub_extensions as $sub_extension)
+                {
+                    $filetypes['extensions'][$sub_extension] = $result['base_extensions'];
+                }
             }
         }
 
         self::$types = $types;
 
-        foreach ($sub_extensions as $sub_extension)
-        {
-            if (array_key_exists($sub_extension['parent_extension'], $filetypes))
-            {
-                $filetypes[$sub_extension['extension']] = $filetypes[$sub_extension['parent_extension']];
-                $filetypes[$sub_extension['extension']]['extension'] = $sub_extension['extension'];
-            }
-        }
+        /*foreach ($sub_extensions as $sub_extension)
+         {
+         if (array_key_exists($sub_extension['parent_extension'], $filetypes))
+         {
+         $filetypes[$sub_extension['extension']] = $filetypes[$sub_extension['parent_extension']];
+         $filetypes[$sub_extension['extension']]['extension'] = $sub_extension['extension'];
+         }
+         }*/
 
-        self::$data = $filetypes;
+        self::$extensions = $extensions;
     }
 
     private function loadSettingsFromDatabase(string $domain_id, bool $ignore_cache = false)
@@ -88,25 +88,39 @@ class FileTypes
 
     public function allTypeData()
     {
-        $this->loadDataIfNot();
-        return self::$data;
+        $this->loadDataIfNot(false);
+        return self::$extensions;
     }
 
     public function extensionData(string $extension)
     {
-        return $this->isValidExtension($extension) ? self::$data[$extension] : array();
+        $extension_data = array();
+
+        if (!$this->isValidExtension($extension))
+        {
+            return $extension_data;
+        }
+
+        $extension_data = self::$extensions[$extension];
+
+        if (!is_array($extension_data) && $this->isValidExtension($extension_data))
+        {
+            $extension_data = self::$extensions[$extension_data];
+        }
+
+        return $extension_data;
     }
 
     public function types()
     {
-        $this->loadDataIfNot();
+        $this->loadDataIfNot(false);
         return self::$types;
     }
 
     public function isValidExtension(string $extension)
     {
-        $this->loadDataIfNot();
-        return isset(self::$data[$extension]);
+        $this->loadDataIfNot(false);
+        return isset(self::$extensions[$extension]);
     }
 
     public function settings(string $domain_id, string $setting = null, bool $cache_regen = false)
@@ -129,9 +143,9 @@ class FileTypes
         return self::$settings[$domain_id][$setting];
     }
 
-    private function loadDataIfNot(bool $ignore_cache = false)
+    private function loadDataIfNot(bool $ignore_cache)
     {
-        if (empty(self::$data))
+        if (empty(self::$extensions))
         {
             $this->loadDataFromDatabase($ignore_cache);
         }
@@ -167,10 +181,11 @@ class FileTypes
 
     public function formatIsEnabled(string $domain_id, string $type, string $format)
     {
-        $this->loadDataIfNot();
+        $this->loadDataIfNot(false);
         $this->loadSettingsIfNot($domain_id);
         $available_formats = $this->availableFormats();
-        return in_array($format, $this->enabledFormats($domain_id, $type)) && isset($available_formats[$format]) && $available_formats[$format];
+        return in_array($format, $this->enabledFormats($domain_id, $type)) && isset($available_formats[$format]) &&
+                $available_formats[$format];
     }
 
     public function verifyFile(string $extension, $file_path, $start_buffer = 65535, $end_buffer = 65535)
@@ -233,12 +248,17 @@ class FileTypes
 
     public function availableFormats()
     {
-        $this->loadDataIfNot();
+        $this->loadDataIfNot(false);
         $available = array();
 
-        foreach (self::$data as $data)
+        foreach (self::$extensions as $data)
         {
-            if ($data['extension'] == $data['parent_extension'] && $data['enabled'] == 1)
+            if(!is_array($data))
+            {
+                $data = $this->extensionData($data);
+            }
+
+            if ($data['enabled'])
             {
                 $available[$data['format']] = true;
             }

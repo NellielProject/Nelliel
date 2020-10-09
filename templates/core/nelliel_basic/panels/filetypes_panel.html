@@ -2,15 +2,11 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="extension" class="display-cell" data-i18n="gettext">Extension</label>
-			<input id="extension" class="display-cell" type="text" name="extension" size="30">
+			<label for="base_extension" class="display-cell" data-i18n="gettext">Base Extension</label>
+			<input id="base_extension" class="display-cell" type="text" name="base_extension" size="30">
 		</div>
 		<div class="display-row">
-			<label for="parent_extension" class="display-cell" data-i18n="gettext">Parent Extension</label>
-			<input id="parent_extension" class="display-cell" type="text" name="parent_extension" size="30">
-		</div>
-		<div class="display-row">
-			<label for="type" class="display-cell" data-i18n="gettext">Type</label>
+			<label for="type" class="display-cell" data-i18n="gettext">Category</label>
 			<input id="type" class="display-cell" type="text" name="type" size="30">
 		</div>
 		<div class="display-row">
@@ -18,8 +14,12 @@
 			<input id="format" class="display-cell" type="text" name="format" size="30">
 		</div>
 		<div class="display-row">
-			<label for="mime" class="display-cell" data-i18n="gettext">Mime type</label>
+			<label for="mime" class="display-cell" data-i18n="gettext">Mime</label>
 			<input id="mime" class="display-cell" type="text" name="mime" size="30">
+		</div>
+		<div class="display-row">
+			<label for="sub_extensions" class="display-cell" data-i18n="gettext">Sub Extensions</label>
+			<input id="sub_extensions" class="display-cell" type="text" name="sub_extensions" size="30">
 		</div>
 		<div class="display-row">
 			<label for="regex" class="display-cell" data-i18n="gettext">Identification regex</label>
@@ -37,11 +37,11 @@
 <hr>
 <table class="data-table">
 	<tr class="manage-header">
-		<th data-i18n="gettext">Extension</th>
-		<th data-i18n="gettext">Parent Extension</th>
+		<th data-i18n="gettext">Base Extension</th>
 		<th data-i18n="gettext">Category</th>
 		<th data-i18n="gettext">Format</th>
 		<th data-i18n="gettext">Mime</th>
+		<th data-i18n="gettext">Sub Extensions</th>
 		<th data-i18n="gettext">Regex</th>
 		<th data-i18n="gettext">Label</th>
 		<th data-i18n="gettext">Enable/Disable</th>
@@ -49,11 +49,11 @@
 	</tr>
 	{{# filetype_list }}
 	<tr class="{{ bgclass }}">
-		<td>{{ extension }}</td>
-		<td>{{ parent_extension }}</td>
+		<td>{{ base_extension }}</td>
 		<td>{{ type }}</td>
 		<td>{{ format }}</td>
 		<td>{{ mime }}</td>
+		<td>{{ sub_extensions }}</td>
 		<td>{{ id_regex }}</td>
 		<td>{{ label }}</td>
 		<td>
