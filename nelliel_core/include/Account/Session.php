@@ -100,7 +100,7 @@ class Session
         self::$user = $this->authorization->getUser($_SESSION['user_id']);
         $_SESSION['ignores'] = ['default' => false];
         $_SESSION['last_activity'] = time();
-        $self::$modmode_requested = (isset($_GET['modmode']) && $_GET['modmode'] === 'true') ||
+        self::$modmode_requested = (isset($_GET['modmode']) && $_GET['modmode'] === 'true') ||
                 isset($_POST['in_modmode']) && $_POST['in_modmode'] === 'true';
         self::$session_active = true;
     }
@@ -149,10 +149,8 @@ class Session
         setrawcookie(session_name(), session_id(), 0, '/', '', NEL_SECURE_SESSION_ONLY, true);
     }
 
-    public function isOld()
+    protected function isOld()
     {
-        $this->check();
-
         if ($this->domain->setting('session_length') == 0)
         {
             return false;
