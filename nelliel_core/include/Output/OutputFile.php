@@ -191,6 +191,14 @@ class OutputFile extends OutputCore
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }
 
+                if ($file['deleted'])
+                {
+                    $this->render_data['preview_url'] = '//' . $web_paths['base_domain'] . NEL_CORE_IMAGES_WEB_PATH .
+                    'covers/deleted_file.png';
+                    $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
+                    $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
+                }
+
                 $this->render_data['other_dims'] = 'w' . $file['display_width'] . 'h' . $file['display_height'];
                 $this->render_data['other_loc'] = $this->render_data['file_url'];
             }

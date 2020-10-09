@@ -69,14 +69,14 @@ class OutputPanelBoardSettings extends OutputCore
                     $this->domain->id();
         }
 
-
         $user_lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');
         $all_filetypes = $filetypes->allTypeData();
         $all_types = $filetypes->types();
         $type_nodes = array();
         $filetype_entries_nodes = array();
         $type_row_count = array();
-        $prepared = $this->database->prepare('SELECT "setting_value","edit_lock" FROM "' . $table_name . '" WHERE "setting_name" = ?');
+        $prepared = $this->database->prepare(
+                'SELECT "setting_value","edit_lock" FROM "' . $table_name . '" WHERE "setting_name" = ?');
         $enabled_types = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_ASSOC);
         $enabled_array = json_decode($enabled_types['setting_value'], true);
         $types_edit_lock = $enabled_types['edit_lock'] == 1 && !$defaults && !$user_lock_override;
@@ -111,20 +111,24 @@ class OutputPanelBoardSettings extends OutputCore
                     continue;
                 }
 
-                if ($filetype['extension'] == $filetype['parent_extension'])
+                $filetype_set[$filetype['base_extension']]['format'] = $filetype['format'];
+                $filetype_set[$filetype['base_extension']]['input_name'] = 'enabled_filetypes[types][' . $type['type'] .
+                        '][formats][' . $filetype['format'] . ']';
+                $filetype_set[$filetype['base_extension']]['label'] = _gettext($filetype['label']);
+                $filetype_set[$filetype['base_extension']]['value'] = (array_key_exists($filetype['format'],
+                        $enabled_formats)) ? 'checked' : '';
+                $filetype_set[$filetype['base_extension']]['disabled'] = ($types_edit_lock) ? 'disabled' : '';
+                $sub_extensions = ' - ';
+
+                if (!empty($filetype['sub_extensions']))
                 {
-                    $filetype_set[$filetype['parent_extension']]['format'] = $filetype['format'];
-                    $filetype_set[$filetype['parent_extension']]['input_name'] = 'enabled_filetypes[types][' . $type['type'] . '][formats][' . $filetype['format'] . ']';
-                    $filetype_set[$filetype['parent_extension']]['label'] = _gettext($filetype['label']) . ' - .' .
-                            $filetype['extension'];
-                    $filetype_set[$filetype['parent_extension']]['value'] = (array_key_exists($filetype['format'],
-                            $enabled_formats)) ? 'checked' : '';
-                    $filetype_set[$filetype['parent_extension']]['disabled'] = ($types_edit_lock) ? 'disabled' : '';
+                    foreach (json_decode($filetype['sub_extensions'], true) as $sub_extension)
+                    {
+                        $sub_extensions .= $sub_extension . ', ';
+                    }
                 }
-                else
-                {
-                    $filetype_set[$filetype['parent_extension']]['label'] .= ', .' . $filetype['extension'];
-                }
+
+                $filetype_set[$filetype['base_extension']]['label'] .= substr($sub_extensions, 0, -2);
             }
 
             $entry_row['entry'] = array();
@@ -146,9 +150,9 @@ class OutputPanelBoardSettings extends OutputCore
 
         $this->render_data['show_lock_update'] = $defaults;
         $board_settings = $this->database->query(
-                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . $table_name . '" ON "' .
-                NEL_SETTINGS_TABLE . '"."setting_name" = "' . $table_name .
-                '"."setting_name" WHERE "setting_category" = \'board\'')->fetchAll(PDO::FETCH_ASSOC);
+                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . $table_name . '" ON "' . NEL_SETTINGS_TABLE .
+                '"."setting_name" = "' . $table_name . '"."setting_name" WHERE "setting_category" = \'board\'')->fetchAll(
+                PDO::FETCH_ASSOC);
 
         foreach ($board_settings as $setting)
         {
@@ -163,7 +167,7 @@ class OutputPanelBoardSettings extends OutputCore
             {
                 $setting_data['setting_locked'] = 'checked';
 
-                if(!$defaults)
+                if (!$defaults)
                 {
                     $setting_data['setting_disabled'] = 'disabled';
                 }

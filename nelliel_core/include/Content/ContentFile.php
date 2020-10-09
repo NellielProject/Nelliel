@@ -43,8 +43,8 @@ class ContentFile extends ContentHandler
     {
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [$this->content_id->postID(), $this->content_id->orderID()],
-                PDO::FETCH_ASSOC);
+        $result = $this->database->executePreparedFetch($prepared,
+                [$this->content_id->postID(), $this->content_id->orderID()], PDO::FETCH_ASSOC);
 
         if (empty($result))
         {
@@ -66,8 +66,8 @@ class ContentFile extends ContentHandler
 
         $prepared = $this->database->prepare(
                 'SELECT "entry" FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [$this->content_id->postID(), $this->content_id->orderID()],
-                PDO::FETCH_COLUMN);
+        $result = $this->database->executePreparedFetch($prepared,
+                [$this->content_id->postID(), $this->content_id->orderID()], PDO::FETCH_COLUMN);
 
         if ($result)
         {
@@ -131,7 +131,8 @@ class ContentFile extends ContentHandler
         $file_handler->createDirectory(
                 $this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(), NEL_DIRECTORY_PERM);
         $file_handler->createDirectory(
-                $this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID(), NEL_DIRECTORY_PERM);
+                $this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID(),
+                NEL_DIRECTORY_PERM);
     }
 
     public function remove(bool $perm_override = false)
@@ -164,10 +165,21 @@ class ContentFile extends ContentHandler
             return false;
         }
 
-        $prepared = $this->database->prepare(
-                'DELETE FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
-        $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
-        return true;
+        if ($this->domain->setting('deleted_content_placeholder'))
+        {
+            $prepared = $this->database->prepare(
+                    'UPDATE "' . $this->content_table .
+                    '" SET "preview_name" = null, "preview_extension" = null, "preview_width" = null, "preview_height" = null,
+                    "deleted" = 1 WHERE "post_ref" = ? AND "content_order" = ?');
+            $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
+        }
+        else
+        {
+            $prepared = $this->database->prepare(
+                    'DELETE FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
+            $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
+            return true;
+        }
     }
 
     protected function removeFromDisk()

@@ -90,7 +90,7 @@ class TableFiletypes extends TableHandler
         $this->insertDefaultRow(['ac3', 'audio', 'ac3', 'audio/ac3', '[]', '^\x0B\x77', 'AC3', 0, 1]);
         $this->insertDefaultRow(['wma', 'audio', 'wma', 'audio/x-ms-wma', '[]', '^\x30\x26\xB2\x75\x8E\x66\xCF\x11\xA6\xD9\x00\xAA\x00\x62\xCE\x6C', 'Windows Media Audio', 0, 1]);
         $this->insertDefaultRow(['midi', 'audio', 'midi', 'audio/midi', '["mid"]', '^MThd', 'MIDI', 0, 1]);
-        $this->insertDefaultRow(['video', null, null, null, null, 'Video files', 1, 1]);
+        $this->insertDefaultRow(['', 'video', null, null, null, null, 'Video files', 1, 1]);
         $this->insertDefaultRow(['mpg', 'video', 'mpeg', 'video/mpeg', '["mpeg","mpe"]', '^\x00\x00\x01[\xB0-\xBF]', 'MPEG-1/MPEG-2', 0, 1]);
         $this->insertDefaultRow(['mov', 'video', 'quicktime', 'video/quicktime', '[]', '^.{4}(?:cmov|free|ftypqt|mdat|moov|pnot|skip|wide)', 'Quicktime Movie', 0, 1]);
         $this->insertDefaultRow(['avi', 'video', 'avi', 'video/x-msvideo', '[]', '^RIFF.{4}AVI\sx20LIST', 'AVI', 0, 1]);
