@@ -149,10 +149,8 @@ class Session
         setrawcookie(session_name(), session_id(), 0, '/', '', NEL_SECURE_SESSION_ONLY, true);
     }
 
-    public function isOld()
+    protected function isOld()
     {
-        $this->check();
-
         if ($this->domain->setting('session_length') == 0)
         {
             return false;

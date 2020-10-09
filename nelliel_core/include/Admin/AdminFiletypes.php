@@ -66,19 +66,23 @@ class AdminFiletypes extends AdminHandler
             nel_derp(431, _gettext('You are not allowed to add filetypes.'));
         }
 
-        $extension = $_POST['extension'] ?? '';
-        $parent_extension = $_POST['parent_extension'] ?? null;
+        $base_extension = $_POST['base_extension'] ?? null;
         $type = $_POST['type'] ?? null;
         $format = $_POST['format'] ?? null;
         $mime = $_POST['mime'] ?? null;
-        $regex = $_POST['id_regex'] ?? null;
+        $id_regex = $_POST['id_regex'] ?? null;
         $label = $_POST['label'] ?? null;
         $type_def = $_POST['type_def'] ?? 0;
+        $enabled = $_POST['enabled'] ?? 0;
+        $post_sub = $_POST['sub_extensions'] ?? '';
+        $sub_explode = explode(' ', $post_sub);
+        $sub_extensions = is_array($sub_explode) ? json_encode($sub_explode) : '';
+
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_FILETYPES_TABLE .
-                '" ("extension", "parent_extension", "type", "format", "mime", "id_regex", "label" "type_def") VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+                '" ("base_extension", "type", "format", "mime", "sub_extensions", "id_regex", "label", "type_def", "enabled") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
-                [$extension, $parent_extension, $type, $format, $mime, $id_regex, $label, $type_def]);
+                [$base_extension, $type, $format, $mime, $sub_extensions, $id_regex, $label, $type_def, $enabled]);
     }
 
     public function editor()
@@ -123,9 +127,9 @@ class AdminFiletypes extends AdminHandler
             nel_derp(433, _gettext('You are not allowed to enable or disable filetypes.'));
         }
 
-        $parent_extension = $_GET['parent-extension'];
-        $prepared = $this->database->prepare('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "enabled" = 1 WHERE "parent_extension" = ?');
-        $this->database->executePrepared($prepared, [$parent_extension]);
+        $base_extension = $_GET['base-extension'];
+        $prepared = $this->database->prepare('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "enabled" = 1 WHERE "base_extension" = ?');
+        $this->database->executePrepared($prepared, [$base_extension]);
     }
 
     public function disable()
@@ -135,8 +139,8 @@ class AdminFiletypes extends AdminHandler
             nel_derp(433, _gettext('You are not allowed to enable or disable filetypes.'));
         }
 
-        $parent_extension = $_GET['parent-extension'];
-        $prepared = $this->database->prepare('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "enabled" = 0 WHERE "parent_extension" = ?');
-        $this->database->executePrepared($prepared, [$parent_extension]);
+        $base_extension = $_GET['base-extension'];
+        $prepared = $this->database->prepare('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "enabled" = 0 WHERE "base_extension" = ?');
+        $this->database->executePrepared($prepared, [$base_extension]);
     }
 }

@@ -2,7 +2,7 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="base_extension" class="display-cell" data-i18n="gettext">Base Extension</label>
+			<label for="base_extension" class="display-cell" data-i18n="gettext">Base extension</label>
 			<input id="base_extension" class="display-cell" type="text" name="base_extension" size="30">
 		</div>
 		<div class="display-row">
@@ -18,16 +18,20 @@
 			<input id="mime" class="display-cell" type="text" name="mime" size="30">
 		</div>
 		<div class="display-row">
-			<label for="sub_extensions" class="display-cell" data-i18n="gettext">Sub Extensions</label>
+			<label for="sub_extensions" class="display-cell" data-i18n="gettext">Sub extensions</label>
 			<input id="sub_extensions" class="display-cell" type="text" name="sub_extensions" size="30">
 		</div>
 		<div class="display-row">
-			<label for="regex" class="display-cell" data-i18n="gettext">Identification regex</label>
+			<label for="regex" class="display-cell" data-i18n="gettext">ID regex</label>
 			<input id="regex" class="display-cell" type="text" name="id_regex" size="30">
 		</div>
 		<div class="display-row">
 			<label for="label" class="display-cell" data-i18n="gettext">Label</label>
 			<input id="label" class="display-cell" type="text" name="label" size="30">
+		</div>
+				<div class="display-row">
+			<label for="enabled" class="display-cell" data-i18n="gettext">Enabled</label>
+			<input id="enabled" class="display-cell" type="checkbox" value="1" name="enabled">
 		</div>
 		<div class="display-row">
 			<input type="submit" value="Add Filetype" data-i18n-attributes="gettext|value">
@@ -37,12 +41,12 @@
 <hr>
 <table class="data-table">
 	<tr class="manage-header">
-		<th data-i18n="gettext">Base Extension</th>
+		<th data-i18n="gettext">Base extension</th>
 		<th data-i18n="gettext">Category</th>
 		<th data-i18n="gettext">Format</th>
 		<th data-i18n="gettext">Mime</th>
-		<th data-i18n="gettext">Sub Extensions</th>
-		<th data-i18n="gettext">Regex</th>
+		<th data-i18n="gettext">Sub extensions</th>
+		<th data-i18n="gettext">ID regex</th>
 		<th data-i18n="gettext">Label</th>
 		<th data-i18n="gettext">Enable/Disable</th>
 		<th data-i18n="gettext">Remove</th>

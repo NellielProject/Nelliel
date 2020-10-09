@@ -75,14 +75,14 @@ class OutputPanelFiletypes extends OutputCore
             if($filetype['enabled'] == 1)
             {
                 $filetype_data['enable_disable_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'filetypes', 'action' => 'disable', 'parent-extension' => $filetype['base_extension']]);
+                        ['module' => 'filetypes', 'action' => 'disable', 'base-extension' => $filetype['base_extension']]);
                 $filetype_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if($filetype['enabled'] == 0)
             {
                 $filetype_data['enable_disable_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'filetypes', 'action' => 'enable', 'parent-extension' => $filetype['base_extension']]);
+                        ['module' => 'filetypes', 'action' => 'enable', 'base-extension' => $filetype['base_extension']]);
                 $filetype_data['enable_disable_text'] = _gettext('Enable');
             }
 

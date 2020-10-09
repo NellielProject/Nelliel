@@ -39,27 +39,17 @@ class FileTypes
             }
             else
             {
-                $extensions[$base_extension] = $result;
+                $extensions[$result['base_extension']] = $result;
                 $sub_extensions = json_decode($result['sub_extensions'], true);
 
                 foreach ($sub_extensions as $sub_extension)
                 {
-                    $filetypes['extensions'][$sub_extension] = $result['base_extensions'];
+                    $filetypes['extensions'][$sub_extension] = $result['base_extension'];
                 }
             }
         }
 
         self::$types = $types;
-
-        /*foreach ($sub_extensions as $sub_extension)
-         {
-         if (array_key_exists($sub_extension['parent_extension'], $filetypes))
-         {
-         $filetypes[$sub_extension['extension']] = $filetypes[$sub_extension['parent_extension']];
-         $filetypes[$sub_extension['extension']]['extension'] = $sub_extension['extension'];
-         }
-         }*/
-
         self::$extensions = $extensions;
     }
 
