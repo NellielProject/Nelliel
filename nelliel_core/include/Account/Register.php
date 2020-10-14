@@ -86,7 +86,7 @@ class Register
         }
         else
         {
-            $new_user->modifyRole('', 'BASIC');
+            $new_user->modifyRole('', 'BASIC_USER');
             $new_user->auth_data['owner'] = 0;
         }
 

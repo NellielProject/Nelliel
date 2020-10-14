@@ -46,7 +46,7 @@ class OutputRegisterPage extends OutputCore
         $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot],
                 true);
         $this->render_data['form_action'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                ['module' => 'account', 'action' => 'register']);
+                ['module' => 'account', 'section' => 'register', 'action' => 'submit']);
         $this->render_data['login_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
                 ['module' => 'account', 'action' => 'login']);
         $this->render_data['use_register_captcha'] = $this->domain->setting('use_register_captcha');
@@ -74,7 +74,7 @@ class OutputRegisterPage extends OutputCore
         $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot],
                 true);
         $this->render_data['login_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                ['module' => 'account', 'action' => 'login']);
+                ['module' => 'account', 'section' => 'login']);
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('account/registration_complete', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

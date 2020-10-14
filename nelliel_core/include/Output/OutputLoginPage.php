@@ -32,9 +32,9 @@ class OutputLoginPage extends OutputCore
         $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot],
                 true);
         $this->render_data['form_action'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                ['module' => 'account', 'action' => 'login']);
+                ['module' => 'account', 'section' => 'login', 'action' => 'submit']);
         $this->render_data['register_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                ['module' => 'account', 'action' => 'register']);
+                ['module' => 'account', 'section' => 'register']);
         $this->render_data['use_login_captcha'] = $this->domain->setting('use_login_captcha');
         $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=get';
         $this->render_data['captcha_regen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=generate&no-display';
