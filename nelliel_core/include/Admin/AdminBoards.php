@@ -27,7 +27,7 @@ class AdminBoards extends AdminHandler
 
     public function actionDispatch(string $action, bool $return)
     {
-        if ($action === 'add')
+        /*if ($action === 'add')
         {
             $this->add();
         }
@@ -56,7 +56,7 @@ class AdminBoards extends AdminHandler
             return;
         }
 
-        $this->renderPanel();
+        $this->renderPanel();*/
     }
 
     public function renderPanel()
@@ -210,7 +210,7 @@ class AdminBoards extends AdminHandler
                 'Are you certain you want to delete the board? Everything will be gone and this cannot be undone!');
         $url_constructor = new \Nelliel\URLConstructor();
         $continue_link['href'] = $url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                ['module' => 'manage-boards', 'action' => 'remove', 'action-confirmed' => 'true',
+                ['module' => 'admin', 'section' => 'manage-boards', 'action' => 'remove', 'action-confirmed' => 'true',
                     'board_id' => $_GET['board_id'], 'domain_id' => '_site_']);
         $continue_link['text'] = _gettext('Confirm and delete the board.');
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain, false);

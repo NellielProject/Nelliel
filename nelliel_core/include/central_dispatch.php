@@ -36,7 +36,8 @@ function nel_dispatch_preparation()
     $inputs['domain_id'] = $_GET['domain_id'] ?? '';
     $inputs['board_id'] = $_GET['board_id'] ?? '';
     $inputs['content_id'] = $_GET['content-id'] ?? '';
-    $inputs['modmode'] = $_GET['modmode'] ?? false;
+    $inputs['modmode'] = isset($_GET['modmode']) ? true : false;
+    $inputs['action-confirmed'] = isset($_GET['action-confirmed']) ? true : false;
 
     //$session = new \Nelliel\Account\Session();
 
@@ -81,6 +82,11 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'account':
             $account_dispatch = new \Nelliel\Account\Dispatch($domain);
             $account_dispatch->dispatch($inputs);
+            break;
+
+        case 'admin':
+            $admin_dispatch = new \Nelliel\Admin\Dispatch($domain, $authorization);
+            $admin_dispatch->dispatch($inputs);
             break;
 
         case 'render':
@@ -142,11 +148,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'site-settings':
             $site_settings_admin = new \Nelliel\Admin\AdminSiteSettings($authorization, $domain);
             $site_settings_admin->actionDispatch($inputs['action'], false);
-            break;
-
-        case 'manage-boards':
-            $create_board_admin = new \Nelliel\Admin\AdminBoards($authorization, $domain);
-            $create_board_admin->actionDispatch($inputs['action'], false);
             break;
 
         case 'file-filters':

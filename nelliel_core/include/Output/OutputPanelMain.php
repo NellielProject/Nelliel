@@ -92,7 +92,7 @@ class OutputPanelMain extends OutputCore
         }
 
         $this->render_data['module_manage_boards'] = $user->checkPermission($this->domain, 'perm_manage_boards');
-        $this->render_data['manage_boards_url'] = NEL_MAIN_SCRIPT . '?module=manage-boards';
+        $this->render_data['manage_boards_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=manage-boards';
         $this->render_data['module_users'] = $user->checkPermission($this->domain, 'perm_manage_users');
         $this->render_data['users_url'] = NEL_MAIN_SCRIPT . '?module=users';
         $this->render_data['module_roles'] = $user->checkPermission($this->domain, 'perm_manage_roles');
