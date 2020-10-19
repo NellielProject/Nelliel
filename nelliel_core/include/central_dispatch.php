@@ -135,20 +135,20 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             break;
 
-        case 'users':
+        /*case 'users':
             $users_admin = new \Nelliel\Admin\AdminUsers($authorization, $domain);
             $users_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
-        case 'roles':
+        /*case 'roles':
             $roles_admin = new \Nelliel\Admin\AdminRoles($authorization, $domain);
             $roles_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
-        case 'site-settings':
+        /*case 'site-settings':
             $site_settings_admin = new \Nelliel\Admin\AdminSiteSettings($authorization, $domain);
             $site_settings_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
         /*case 'file-filters':
             $file_filters_admin = new \Nelliel\Admin\AdminFileFilters($authorization, $domain);

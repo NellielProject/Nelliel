@@ -20,11 +20,17 @@ class AdminRoles extends AdminHandler
         $this->authorization = $authorization;
         $this->domain = $domain;
         $this->validateUser();
+        $this->role_id = $_GET['role-id'] ?? null;
+
+        if (!is_null($this->role_id) && !$this->authorization->roleExists($this->role_id))
+        {
+            nel_derp(231, _gettext('The specified role does not exist.'));
+        }
     }
 
     public function actionDispatch(string $action, bool $return)
     {
-        $this->role_id = $_GET['role-id'] ?? null;
+        /*$this->role_id = $_GET['role-id'] ?? null;
 
         if (!is_null($this->role_id) && !$this->authorization->roleExists($this->role_id))
         {
@@ -60,7 +66,7 @@ class AdminRoles extends AdminHandler
             return;
         }
 
-        $this->renderPanel();
+        $this->renderPanel();*/
     }
 
     public function renderPanel()
@@ -73,6 +79,7 @@ class AdminRoles extends AdminHandler
     {
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
+        $this->output_main = false;
     }
 
     public function add()
@@ -86,12 +93,14 @@ class AdminRoles extends AdminHandler
         $this->update();
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
+        $this->output_main = true;
     }
 
     public function editor()
     {
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
+        $this->output_main = false;
     }
 
     public function update()
@@ -106,7 +115,7 @@ class AdminRoles extends AdminHandler
 
         foreach ($_POST as $key => $value)
         {
-            if(is_array($value))
+            if (is_array($value))
             {
                 $value = nel_form_input_default($value);
             }
@@ -122,8 +131,7 @@ class AdminRoles extends AdminHandler
         }
 
         $this->authorization->saveRoles();
-        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
-        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
+        $this->output_main = true;
     }
 
     public function remove()
@@ -134,5 +142,6 @@ class AdminRoles extends AdminHandler
         }
 
         $this->authorization->removeRole($this->role_id);
+        $this->output_main = true;
     }
 }

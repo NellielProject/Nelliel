@@ -94,13 +94,13 @@ class OutputPanelMain extends OutputCore
         $this->render_data['module_manage_boards'] = $user->checkPermission($this->domain, 'perm_manage_boards');
         $this->render_data['manage_boards_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=manage-boards';
         $this->render_data['module_users'] = $user->checkPermission($this->domain, 'perm_manage_users');
-        $this->render_data['users_url'] = NEL_MAIN_SCRIPT . '?module=users';
+        $this->render_data['users_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=users';
         $this->render_data['module_roles'] = $user->checkPermission($this->domain, 'perm_manage_roles');
-        $this->render_data['roles_url'] = NEL_MAIN_SCRIPT . '?module=roles';
+        $this->render_data['roles_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=roles';
         $this->render_data['module_permissions'] = $user->checkPermission($this->domain, 'perm_manage_permissions');
         $this->render_data['permissions_url'] = NEL_MAIN_SCRIPT . '?module=permissions';
         $this->render_data['module_site_settings'] = $user->checkPermission($this->domain, 'perm_site_config');
-        $this->render_data['site_settings_url'] = NEL_MAIN_SCRIPT . '?module=site-settings';
+        $this->render_data['site_settings_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=site-settings';
         $this->render_data['module_file_filters'] = $user->checkPermission($this->domain, 'perm_manage_file_filters');
         $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=file-filters';
         $this->render_data['module_board_defaults'] = $user->checkPermission($this->domain, 'perm_board_defaults');

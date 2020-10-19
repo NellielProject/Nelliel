@@ -23,7 +23,7 @@ class AdminSiteSettings extends AdminHandler
 
     public function actionDispatch(string $action, bool $return)
     {
-        if ($action === 'update')
+        /*if ($action === 'update')
         {
             $this->update();
         }
@@ -33,7 +33,7 @@ class AdminSiteSettings extends AdminHandler
             return;
         }
 
-        $this->renderPanel();
+        $this->renderPanel();*/
     }
 
     public function renderPanel()
@@ -63,7 +63,7 @@ class AdminSiteSettings extends AdminHandler
 
         foreach ($_POST as $key => $value)
         {
-            if(is_array($value))
+            if (is_array($value))
             {
                 $value = nel_form_input_default($value);
             }
@@ -75,6 +75,7 @@ class AdminSiteSettings extends AdminHandler
 
         $regen = new \Nelliel\Regen();
         $regen->siteCache($this->domain);
+        $this->output_main = true;
     }
 
     public function remove()

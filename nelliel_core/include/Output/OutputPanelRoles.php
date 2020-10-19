@@ -74,12 +74,12 @@ class OutputPanelRoles extends OutputCore
             $role_data['role_level'] = $role['role_level'];
             $role_data['role_title'] = $role['role_title'];
             $role_data['capcode'] = $role['capcode'];
-            $role_data['edit_url'] = NEL_MAIN_SCRIPT . '?module=roles&action=edit&role-id=' . $role['role_id'];
-            $role_row_nodes['remove_url'] = NEL_MAIN_SCRIPT . '?module=roles&action=remove&role-id=' . $role['role_id'];
+            $role_data['edit_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=roles&action=edit&role-id=' . $role['role_id'];
+            $role_row_nodes['remove_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=roles&action=remove&role-id=' . $role['role_id'];
             $this->render_data['roles_list'][] = $role_data;
         }
 
-        $this->render_data['new_role_url'] = NEL_MAIN_SCRIPT . '?module=roles&action=new';
+        $this->render_data['new_role_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=roles&action=new';
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/roles_panel_main',
                 $this->render_data);
@@ -108,11 +108,11 @@ class OutputPanelRoles extends OutputCore
 
         if (empty($role_id))
         {
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=roles&action=add';
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=roles&action=add';
         }
         else
         {
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=roles&action=update&role-id=' . $role_id;
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=roles&action=update&role-id=' . $role_id;
         }
 
         if (!empty($role_id))

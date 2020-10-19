@@ -78,6 +78,21 @@ class Dispatch
                 }
 
                 break;
+
+            case 'roles':
+                $admin_handler = new AdminRoles($this->authorization, $this->domain);
+                $this->standard($admin_handler, $inputs);
+                break;
+
+            case 'site-settings':
+                $admin_handler = new AdminSiteSettings($this->authorization, $this->domain);
+                $this->standard($admin_handler, $inputs);
+                break;
+
+            case 'users':
+                $admin_handler = new AdminUsers($this->authorization, $this->domain);
+                $this->standard($admin_handler, $inputs);
+                break;
         }
 
         if (is_null($admin_handler))

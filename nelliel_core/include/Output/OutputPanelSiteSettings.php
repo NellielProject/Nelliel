@@ -41,7 +41,7 @@ class OutputPanelSiteSettings extends OutputCore
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Site Settings')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=site-settings&action=update';
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=site-settings&action=update';
         $site_settings = $this->database->query(
                 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_SITE_CONFIG_TABLE . '" ON "' .
                 NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SITE_CONFIG_TABLE .
