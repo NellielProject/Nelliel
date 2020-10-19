@@ -42,9 +42,9 @@ class OutputPanelFiletypes extends OutputCore
                 'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" WHERE "base_extension" <> \'\' ORDER BY "entry" ASC',
                 PDO::FETCH_ASSOC);
         $this->render_data['form_action'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                ['module' => 'filetypes', 'action' => 'add']);
+                ['module' => 'admin', 'section' => 'filetypes', 'action' => 'add']);
         $this->render_data['new_filetype_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                ['module' => 'filetypes', 'action' => 'new']);
+                ['module' => 'admin', 'section' => 'filetypes', 'action' => 'new']);
         $bgclass = 'row1';
 
         foreach ($filetypes as $filetype)
@@ -71,24 +71,28 @@ class OutputPanelFiletypes extends OutputCore
             $filetype_data['id_regex'] = $filetype['id_regex'];
             $filetype_data['label'] = $filetype['label'];
             $filetype_data['edit_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'filetypes', 'action' => 'edit', 'filetype-id' => $filetype['entry']]);
+                    ['module' => 'admin', 'section' => 'filetypes', 'action' => 'edit',
+                        'filetype-id' => $filetype['entry']]);
 
             if ($filetype['enabled'] == 1)
             {
                 $filetype_data['enable_disable_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'filetypes', 'action' => 'disable', 'filetype-id' => $filetype['entry']]);
+                        ['module' => 'admin', 'section' => 'filetypes', 'action' => 'disable',
+                            'filetype-id' => $filetype['entry']]);
                 $filetype_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($filetype['enabled'] == 0)
             {
                 $filetype_data['enable_disable_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'filetypes', 'action' => 'enable', 'filetype-id' => $filetype['entry']]);
+                        ['module' => 'admin', 'section' => 'filetypes', 'action' => 'enable',
+                            'filetype-id' => $filetype['entry']]);
                 $filetype_data['enable_disable_text'] = _gettext('Enable');
             }
 
             $filetype_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'filetypes', 'action' => 'remove', 'filetype-id' => $filetype['entry']]);
+                    ['module' => 'admin', 'section' => 'filetypes', 'action' => 'remove',
+                        'filetype-id' => $filetype['entry']]);
             $this->render_data['filetype_list'][] = $filetype_data;
         }
 
@@ -129,7 +133,7 @@ class OutputPanelFiletypes extends OutputCore
         {
             $entry = $parameters['entry'] ?? 0;
             $form_action = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'filetypes', 'action' => 'update', 'filetype-id' => $entry]);
+                    ['module' => 'admin', 'section' => 'filetypes', 'action' => 'update', 'filetype-id' => $entry]);
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_FILETYPES_TABLE . '" WHERE "entry" = ?');
             $filetype_data = $this->database->executePreparedFetch($prepared, [$entry], PDO::FETCH_ASSOC);
 
@@ -159,7 +163,7 @@ class OutputPanelFiletypes extends OutputCore
         else
         {
             $form_action = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'filetypes', 'action' => 'update']);
+                    ['module' => 'admin', 'section' => 'filetypes', 'action' => 'update']);
         }
 
         $this->render_data['form_action'] = $form_action;

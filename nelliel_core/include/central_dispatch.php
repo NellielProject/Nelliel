@@ -174,10 +174,10 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $output_main_panel->render(['user' => $session->sessionUser()], false);
             break;
 
-        case 'reports':
+        /*case 'reports':
             $reports_admin = new \Nelliel\Admin\AdminReports($authorization, $domain);
             $reports_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
         /*case 'board-settings':
             $board_settings_admin = new \Nelliel\Admin\AdminBoardSettings($authorization, $domain);
@@ -367,40 +367,40 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             break;
 
-        case 'templates':
+        /*case 'templates':
             $templates_admin = new \Nelliel\Admin\AdminTemplates($authorization, $domain);
             $templates_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
-        case 'filetypes':
+        /*case 'filetypes':
             $filetypes_admin = new \Nelliel\Admin\AdminFiletypes($authorization, $domain);
             $filetypes_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
-        case 'styles':
+        /*case 'styles':
             $styles_admin = new \Nelliel\Admin\AdminStyles($authorization, $domain);
             $styles_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
-        case 'permissions':
+        /*case 'permissions':
             $permissions_admin = new \Nelliel\Admin\AdminPermissions($authorization, $domain);
             $permissions_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
-        case 'icon-sets':
+        /*case 'icon-sets':
             $icon_sets_admin = new \Nelliel\Admin\AdminIconSets($authorization, $domain);
             $icon_sets_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
-        case 'news':
+        /*case 'news':
             $news_admin = new \Nelliel\Admin\AdminNews($authorization, $domain);
             $news_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
-        case 'logs':
+        /*case 'logs':
             $logs_admin = new \Nelliel\Admin\AdminLogs($authorization, $domain);
             $logs_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
         default:
             break;

@@ -45,9 +45,9 @@ class OutputPanelBoard extends OutputCore
         $this->render_data['modmode_url'] = NEL_MAIN_SCRIPT . '?module=render&action=view-index&index=0&board_id=' .
                 $this->domain->id() . '&modmode=true';
         $this->render_data['module_reports'] = $user->checkPermission($this->domain, 'perm_manage_reports');
-        $this->render_data['reports_url'] = NEL_MAIN_SCRIPT . '?module=reports&board_id=' . $this->domain->id();
+        $this->render_data['reports_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=reports&board_id=' . $this->domain->id();
         $this->render_data['module_file_filters'] = $user->checkPermission($this->domain, 'perm_manage_file_filters');
-        $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT . '?module=file-filters&board_id=' . $this->domain->id();
+        $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=file-filters&board_id=' . $this->domain->id();
         $this->render_data['regen_board_pages'] = $user->checkPermission($this->domain, 'perm_regen_pages');
         $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT . '?module=regen&action=board-all-pages&board_id=' .
                 $this->domain->id();

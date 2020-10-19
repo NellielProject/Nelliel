@@ -45,7 +45,7 @@ class OutputPanelNews extends OutputCore
                 PDO::FETCH_ASSOC);
         $bgclass = 'row1';
         $this->render_data['form_action'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                ['module' => 'news', 'action' => 'add']);
+                ['module' => 'admin', 'section' => 'news', 'action' => 'add']);
 
         foreach ($news_entries as $news_entry)
         {
@@ -55,7 +55,7 @@ class OutputPanelNews extends OutputCore
             $entry_info['headline'] = $news_entry['headline'];
             $entry_info['time'] = date('Y/m/d (D) H:i:s', $news_entry['time']);
             $entry_info['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'news', 'action' => 'remove', 'entry' => $news_entry['entry']]);
+                    ['module' => 'admin', 'section' => 'news', 'action' => 'remove', 'entry' => $news_entry['entry']]);
             $this->render_data['news_entry'][] = $entry_info;
         }
 

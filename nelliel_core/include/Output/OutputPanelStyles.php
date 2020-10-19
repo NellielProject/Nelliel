@@ -42,8 +42,8 @@ class OutputPanelStyles extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $styles = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry" ASC, "is_default" DESC',
-                PDO::FETCH_ASSOC);
+                'SELECT * FROM "' . NEL_ASSETS_TABLE .
+                '" WHERE "type" = \'style\' ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
         $installed_ids = array();
         $bgclass = 'row1';
 
@@ -60,10 +60,10 @@ class OutputPanelStyles extends OutputCore
             $style_data['directory'] = $style_info['directory'];
             $style_data['is_default'] = $style['is_default'] == 1;
             $style_data['default_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'styles', 'action' => 'make-default', 'style-id' => $style['asset_id'],
-                        'style-type' => $style_info['style_type']]);
+                    ['module' => 'admin', 'section' => 'styles', 'action' => 'make-default',
+                        'style-id' => $style['asset_id'], 'style-type' => $style_info['style_type']]);
             $style_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'styles', 'action' => 'remove', 'style-id' => $style['asset_id']]);
+                    ['module' => 'admin', 'section' => 'styles', 'action' => 'remove', 'style-id' => $style['asset_id']]);
             $style_data['is_core'] = $this->domain->frontEndData()->styleIsCore($style['asset_id']);
 
             $this->render_data['installed_list'][] = $style_data;
@@ -83,7 +83,7 @@ class OutputPanelStyles extends OutputCore
             $style_data['directory'] = $style['directory'];
             $style_data['is_installed'] = in_array($style['id'], $installed_ids);
             $style_data['install_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'styles', 'action' => 'add', 'style-id' => $style['id'],
+                    ['module' => 'admin', 'section' => 'styles', 'action' => 'add', 'style-id' => $style['id'],
                         'style-type' => $style['style_type']]);
             $this->render_data['available_list'][] = $style_data;
         }

@@ -23,7 +23,7 @@ class AdminStyles extends AdminHandler
 
     public function actionDispatch(string $action, bool $return)
     {
-        if ($action === 'add')
+        /*if ($action === 'add')
         {
             $this->add();
         }
@@ -41,7 +41,7 @@ class AdminStyles extends AdminHandler
             return;
         }
 
-        $this->renderPanel();
+        $this->renderPanel();*/
     }
 
     public function renderPanel()
@@ -76,6 +76,7 @@ class AdminStyles extends AdminHandler
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_ASSETS_TABLE . '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$style_id, 'style', 0, $info]);
+        $this->output_main = true;
     }
 
     public function editor()
@@ -96,6 +97,7 @@ class AdminStyles extends AdminHandler
         $style_id = $_GET['style-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_ASSETS_TABLE . '" WHERE "asset_id" = ? AND "type" = \'style\'');
         $this->database->executePrepared($prepared, [$style_id]);
+        $this->output_main = true;
     }
 
     public function makeDefault()
@@ -110,5 +112,6 @@ class AdminStyles extends AdminHandler
         $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'style\'');
         $this->database->executePrepared($prepared, [$style_id]);
+        $this->output_main = true;
     }
 }

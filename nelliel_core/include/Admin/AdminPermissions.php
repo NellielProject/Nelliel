@@ -23,7 +23,7 @@ class AdminPermissions extends AdminHandler
 
     public function actionDispatch(string $action, bool $return)
     {
-        if ($action === 'add')
+        /*if ($action === 'add')
         {
             $this->add();
         }
@@ -37,7 +37,7 @@ class AdminPermissions extends AdminHandler
             return;
         }
 
-        $this->renderPanel();
+        $this->renderPanel();*/
     }
 
     public function renderPanel()
@@ -62,7 +62,7 @@ class AdminPermissions extends AdminHandler
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_PERMISSIONS_TABLE . '" ("permission", "description") VALUES (?, ?)');
         $this->database->executePrepared($prepared, [$permission, $description]);
-        $this->renderPanel($this->session_user);
+        $this->output_main = true;
     }
 
     public function editor()
@@ -83,6 +83,6 @@ class AdminPermissions extends AdminHandler
         $permission = $_GET['permission'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_PERMISSIONS_TABLE . '" WHERE "permission" = ?');
         $this->database->executePrepared($prepared, [$permission]);
-        $this->renderPanel($this->session_user);
+        $this->output_main = true;
     }
 }

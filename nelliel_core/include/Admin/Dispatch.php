@@ -50,6 +50,43 @@ class Dispatch
                 $this->standard($admin_handler, $inputs);
                 break;
 
+            case 'filetypes':
+                $admin_handler = new AdminFiletypes($this->authorization, $this->domain);
+
+                if ($inputs['action'] === 'enable')
+                {
+                    $admin_handler->enable();
+                }
+                else if ($inputs['action'] === 'disable')
+                {
+                    $admin_handler->disable();
+                }
+                else
+                {
+                    $this->standard($admin_handler, $inputs);
+                }
+
+                break;
+
+            case 'icon-sets':
+                $admin_handler = new AdminIconSets($this->authorization, $this->domain);
+
+                if ($inputs['action'] === 'make-default')
+                {
+                    $admin_handler->makeDefault();
+                }
+                else
+                {
+                    $this->standard($admin_handler, $inputs);
+                }
+
+                break;
+
+            case 'logs':
+                $admin_handler = new AdminLogs($this->authorization, $this->domain);
+                $this->standard($admin_handler, $inputs);
+                break;
+
             case 'manage-boards':
                 $admin_handler = new AdminBoards($this->authorization, $this->domain);
 
@@ -79,6 +116,21 @@ class Dispatch
 
                 break;
 
+            case 'news':
+                $admin_handler = new AdminNews($this->authorization, $this->domain);
+                $this->standard($admin_handler, $inputs);
+                break;
+
+            case 'permissions':
+                $admin_handler = new AdminPermissions($this->authorization, $this->domain);
+                $this->standard($admin_handler, $inputs);
+                break;
+
+            case 'reports':
+                $admin_handler = new AdminReports($this->authorization, $this->domain);
+                $this->standard($admin_handler, $inputs);
+                break;
+
             case 'roles':
                 $admin_handler = new AdminRoles($this->authorization, $this->domain);
                 $this->standard($admin_handler, $inputs);
@@ -87,6 +139,34 @@ class Dispatch
             case 'site-settings':
                 $admin_handler = new AdminSiteSettings($this->authorization, $this->domain);
                 $this->standard($admin_handler, $inputs);
+                break;
+
+            case 'styles':
+                $admin_handler = new AdminStyles($this->authorization, $this->domain);
+
+                if ($inputs['action'] === 'make-default')
+                {
+                    $admin_handler->makeDefault();
+                }
+                else
+                {
+                    $this->standard($admin_handler, $inputs);
+                }
+
+                break;
+
+            case 'templates':
+                $admin_handler = new AdminTemplates($this->authorization, $this->domain);
+
+                if ($inputs['action'] === 'make-default')
+                {
+                    $admin_handler->makeDefault();
+                }
+                else
+                {
+                    $this->standard($admin_handler, $inputs);
+                }
+
                 break;
 
             case 'users':

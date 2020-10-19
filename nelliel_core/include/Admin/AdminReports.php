@@ -24,7 +24,7 @@ class AdminReports extends AdminHandler
 
     public function actionDispatch(string $action, bool $return)
     {
-        if ($action === 'dismiss')
+        /*if ($action === 'dismiss')
         {
             $this->remove();
         }
@@ -34,7 +34,7 @@ class AdminReports extends AdminHandler
             return;
         }
 
-        $this->renderPanel();
+        $this->renderPanel();*/
     }
 
     public function renderPanel()
@@ -70,5 +70,6 @@ class AdminReports extends AdminHandler
 
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_REPORTS_TABLE . '" WHERE "report_id" = ?');
         $this->database->executePrepared($prepared, [$report_id]);
+        $this->output_main = true;
     }
 }

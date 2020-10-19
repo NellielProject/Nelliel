@@ -24,7 +24,7 @@ class AdminLogs extends AdminHandler
 
     public function actionDispatch(string $action, bool $return)
     {
-        if ($action === 'remove')
+        /*if ($action === 'remove')
         {
             $this->remove();
         }
@@ -34,7 +34,7 @@ class AdminLogs extends AdminHandler
             return;
         }
 
-        $this->renderPanel();
+        $this->renderPanel();*/
     }
 
     public function renderPanel()
