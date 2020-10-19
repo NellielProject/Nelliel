@@ -24,7 +24,7 @@ class BanHammer
         $ban_input['ban_id'] = $_POST['ban_id'] ?? null;
         $ban_input['board'] = $_POST['ban_board'] ?? null;
 
-        if(is_array($_POST['ban_all_boards_']))
+        if(isset($_POST['ban_all_boards_']) && is_array($_POST['ban_all_boards_']))
         {
             $ban_input['all_boards'] = nel_form_input_default($_POST['ban_all_boards_']);
         }

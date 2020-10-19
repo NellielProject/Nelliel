@@ -118,6 +118,7 @@ class AdminBoards extends AdminHandler
 
         $regen->allBoardPages($domain);
         $regen->boardList(new \Nelliel\DomainSite($this->database));
+        $this->output_main = true;
     }
 
     public function editor()
@@ -178,6 +179,7 @@ class AdminBoards extends AdminHandler
         $this->database->executePrepared($prepared, [$board_id]);
         $regen = new \Nelliel\Regen();
         $regen->boardList(new \Nelliel\DomainSite($this->database));
+        $this->output_main = true;
     }
 
     public function lock()
@@ -190,6 +192,7 @@ class AdminBoards extends AdminHandler
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare('UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
+        $this->output_main = true;
     }
 
     public function unlock()
@@ -202,6 +205,7 @@ class AdminBoards extends AdminHandler
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare('UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
+        $this->output_main = true;
     }
 
     public function createInterstitial()
@@ -217,6 +221,7 @@ class AdminBoards extends AdminHandler
         $output_panel->render(
                 ['section' => 'remove_interstitial', 'user' => $this->session_user, 'message' => $message,
                     'continue_link' => $continue_link], false);
+        $this->output_main = false;
     }
 
     // While most engines can handle unicode, there is potential for issues

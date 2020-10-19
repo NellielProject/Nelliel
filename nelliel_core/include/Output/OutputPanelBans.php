@@ -99,14 +99,14 @@ class OutputPanelBans extends OutputCore
             $ban_data['appeal'] = $ban_info['appeal'];
             $ban_data['appeal_response'] = $ban_info['appeal_response'];
             $ban_data['appeal_status'] = $ban_info['appeal_status'];
-            $ban_data['modify_url'] = NEL_MAIN_SCRIPT . '?module=board&module=bans&action=modify&ban_id=' .
+            $ban_data['modify_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&action=edit&ban_id=' .
                     $ban_info['ban_id'] . '&board_id=' . $this->domain->id();
-            $ban_data['remove_url'] = NEL_MAIN_SCRIPT . '?module=board&module=bans&action=remove&ban_id=' .
+            $ban_data['remove_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&action=remove&ban_id=' .
                     $ban_info['ban_id'] . '&board_id=' . $this->domain->id();
             $this->render_data['ban_list'][] = $ban_data;
         }
 
-        $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT . '?module=board&module=bans&action=new&board_id=' .
+        $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&action=new&board_id=' .
                 $this->domain->id();
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/bans_panel_main',
                 $this->render_data);
@@ -143,7 +143,7 @@ class OutputPanelBans extends OutputCore
             $post_param = '';
         }
 
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=board&module=bans&action=add&board_id=' .
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&action=add&board_id=' .
                 $this->domain->id() . $post_param;
         $this->render_data['ban_ip'] = $ip;
         $this->render_data['ban_type'] = $type;
@@ -168,7 +168,7 @@ class OutputPanelBans extends OutputCore
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Modify Ban')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=board&module=bans&action=update&board_id=' .
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&action=update&board_id=' .
                 $this->domain->id();
         $ban_id = $_GET['ban_id'];
         $ban_hammer = new \Nelliel\BanHammer($this->database);

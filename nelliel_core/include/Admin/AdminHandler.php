@@ -13,6 +13,7 @@ abstract class AdminHandler
     protected $authorization;
     protected $domain;
     protected $session_user;
+    protected $output_main = true;
 
     public abstract function actionDispatch(string $action, bool $return);
 
@@ -27,6 +28,11 @@ abstract class AdminHandler
     public abstract function update();
 
     public abstract function remove();
+
+    public function outputMain()
+    {
+        return $this->output_main;
+    }
 
     public function validateUser()
     {

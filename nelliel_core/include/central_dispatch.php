@@ -184,10 +184,10 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $board_settings_admin->actionDispatch($inputs['action'], false);
             break;
 
-        case 'bans':
+        /*case 'bans':
             $bans_admin = new \Nelliel\Admin\AdminBans($authorization, $domain);
             $bans_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
         case 'threads-admin':
             $threads_admin = new \Nelliel\Admin\AdminThreads($authorization, $domain);

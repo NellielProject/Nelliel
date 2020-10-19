@@ -31,16 +31,12 @@ class Dispatch
         switch ($inputs['section'])
         {
             case 'bans':
-
+                $admin_handler = new AdminBans($this->authorization, $this->domain);
+                $this->standard($admin_handler, $inputs);
                 break;
 
             case 'manage-boards':
                 $admin_handler = new AdminBoards($this->authorization, $this->domain);
-
-                if($inputs['action'] === '')
-                {
-                    $return = false;
-                }
 
                 if ($inputs['action'] === 'remove')
                 {
@@ -67,12 +63,15 @@ class Dispatch
                 }
         }
 
-        if ($return || is_null($admin_handler))
+        if (is_null($admin_handler))
         {
             return;
         }
 
-        $admin_handler->renderPanel();
+        if($admin_handler->outputMain())
+        {
+            $admin_handler->renderPanel();
+        }
     }
 
     private function standard(AdminHandler $admin_handler, array $inputs)

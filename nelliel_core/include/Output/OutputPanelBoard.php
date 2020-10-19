@@ -37,7 +37,7 @@ class OutputPanelBoard extends OutputCore
         $this->render_data['module_board_settings'] = $user->checkPermission($this->domain, 'perm_board_config');
         $this->render_data['board_settings_url'] = NEL_MAIN_SCRIPT . '?module=board-settings&board_id=' . $this->domain->id();
         $this->render_data['module_bans'] = $user->checkPermission($this->domain, 'perm_manage_bans');
-        $this->render_data['bans_url'] = NEL_MAIN_SCRIPT . '?module=bans&board_id=' . $this->domain->id();
+        $this->render_data['bans_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&board_id=' . $this->domain->id();
         $this->render_data['module_threads'] = true;
         $this->render_data['threads_url'] = NEL_MAIN_SCRIPT . '?module=threads-admin&board_id=' . $this->domain->id();
         $this->render_data['module_modmode'] = $user->checkPermission($this->domain, 'perm_mod_mode');
