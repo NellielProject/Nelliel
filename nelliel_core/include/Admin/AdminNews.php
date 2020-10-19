@@ -22,25 +22,6 @@ class AdminNews extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        /*if ($action === 'add')
-        {
-            $this->add();
-        }
-        else if ($action === 'remove')
-        {
-            $this->remove();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();*/
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelNews($this->domain, false);
@@ -68,7 +49,7 @@ class AdminNews extends AdminHandler
         $this->database->executePrepared($prepared,
                 [$news_info['poster_id'], $news_info['headline'], $news_info['time'], $news_info['text']]);
         $this->regenNews();
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function editor()
@@ -90,7 +71,7 @@ class AdminNews extends AdminHandler
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_NEWS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$entry]);
         $this->regenNews();
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     private function regenNews()

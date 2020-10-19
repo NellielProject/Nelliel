@@ -21,21 +21,6 @@ class AdminSiteSettings extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        /*if ($action === 'update')
-        {
-            $this->update();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();*/
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelSiteSettings($this->domain, false);
@@ -75,7 +60,7 @@ class AdminSiteSettings extends AdminHandler
 
         $regen = new \Nelliel\Regen();
         $regen->siteCache($this->domain);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function remove()

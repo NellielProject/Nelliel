@@ -8,7 +8,7 @@ use Nelliel\Domain;
 
 function nel_dispatch_preparation()
 {
-    //nel_plugins()->processHook('nel-inb4-central-dispatch', array());
+    nel_plugins()->processHook('nel-inb4-dispatch-prep', array());
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
 
     if (empty($_GET) && empty($_POST))
@@ -59,18 +59,19 @@ function nel_dispatch_preparation()
         $domain = new \Nelliel\DomainBoard($inputs['board_id'], nel_database());
     }
 
+    $inputs = nel_plugins()->processHook('nel-in-after-dispatch-prep', [$domain], $inputs);
+
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
     $snacks->applyBan($domain, $inputs);
     $snacks->checkHoneypot($domain);
 
     $inputs = nel_module_dispatch($inputs, $domain);
-    //$inputs = nel_plugins()->processHook('nel-in-after-central-dispatch', [$domain], $inputs);
 }
 
 function nel_module_dispatch(array $inputs, Domain $domain)
 {
-    $authorization = new \Nelliel\Auth\Authorization($domain->database());
     $inputs = nel_plugins()->processHook('nel-inb4-module-dispatch', [$domain], $inputs);
+    $authorization = new \Nelliel\Auth\Authorization($domain->database());
 
     switch ($inputs['module'])
     {
@@ -135,31 +136,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             break;
 
-        /*case 'users':
-            $users_admin = new \Nelliel\Admin\AdminUsers($authorization, $domain);
-            $users_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
-        /*case 'roles':
-            $roles_admin = new \Nelliel\Admin\AdminRoles($authorization, $domain);
-            $roles_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
-        /*case 'site-settings':
-            $site_settings_admin = new \Nelliel\Admin\AdminSiteSettings($authorization, $domain);
-            $site_settings_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
-        /*case 'file-filters':
-            $file_filters_admin = new \Nelliel\Admin\AdminFileFilters($authorization, $domain);
-            $file_filters_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
-        /*case 'board-defaults':
-            $board_settings_admin = new \Nelliel\Admin\AdminBoardSettings($authorization, $domain);
-            $board_settings_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
         case 'language':
             $session = new \Nelliel\Account\Session();
             $session->loggedInOrError();
@@ -172,26 +148,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain, false);
             $output_main_panel->render(['user' => $session->sessionUser()], false);
-            break;
-
-        /*case 'reports':
-            $reports_admin = new \Nelliel\Admin\AdminReports($authorization, $domain);
-            $reports_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
-        /*case 'board-settings':
-            $board_settings_admin = new \Nelliel\Admin\AdminBoardSettings($authorization, $domain);
-            $board_settings_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
-        /*case 'bans':
-            $bans_admin = new \Nelliel\Admin\AdminBans($authorization, $domain);
-            $bans_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
-        case 'threads-admin':
-            $threads_admin = new \Nelliel\Admin\AdminThreads($authorization, $domain);
-            $threads_admin->actionDispatch($inputs['action'], true);
             break;
 
         case 'threads':
@@ -366,41 +322,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             }
 
             break;
-
-        /*case 'templates':
-            $templates_admin = new \Nelliel\Admin\AdminTemplates($authorization, $domain);
-            $templates_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
-        /*case 'filetypes':
-            $filetypes_admin = new \Nelliel\Admin\AdminFiletypes($authorization, $domain);
-            $filetypes_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
-        /*case 'styles':
-            $styles_admin = new \Nelliel\Admin\AdminStyles($authorization, $domain);
-            $styles_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
-        /*case 'permissions':
-            $permissions_admin = new \Nelliel\Admin\AdminPermissions($authorization, $domain);
-            $permissions_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
-        /*case 'icon-sets':
-            $icon_sets_admin = new \Nelliel\Admin\AdminIconSets($authorization, $domain);
-            $icon_sets_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
-        /*case 'news':
-            $news_admin = new \Nelliel\Admin\AdminNews($authorization, $domain);
-            $news_admin->actionDispatch($inputs['action'], false);
-            break;*/
-
-        /*case 'logs':
-            $logs_admin = new \Nelliel\Admin\AdminLogs($authorization, $domain);
-            $logs_admin->actionDispatch($inputs['action'], false);
-            break;*/
 
         default:
             break;

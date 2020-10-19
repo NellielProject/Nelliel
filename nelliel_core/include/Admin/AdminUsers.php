@@ -28,40 +28,6 @@ class AdminUsers extends AdminHandler
         }
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        /*if ($action === 'new')
-        {
-            $this->creator();
-            $return = true;
-        }
-        else if ($action === 'add')
-        {
-            $this->add();
-        }
-        else if ($action === 'edit')
-        {
-            $this->editor();
-            $return = true;
-        }
-        else if ($action === 'update')
-        {
-            $this->update();
-            $return = true;
-        }
-        else if ($action === 'remove')
-        {
-            $this->remove();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();*/
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
@@ -72,7 +38,7 @@ class AdminUsers extends AdminHandler
     {
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
-        $this->output_main = false;
+        $admin_handler->outputMain(false);
     }
 
     public function add()
@@ -84,14 +50,14 @@ class AdminUsers extends AdminHandler
 
         $this->user_id = $_POST['user_id'];
         $this->update();
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function editor()
     {
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
-        $this->output_main = false;
+        $admin_handler->outputMain(false);
     }
 
     public function update()
@@ -148,7 +114,7 @@ class AdminUsers extends AdminHandler
 
         $this->authorization->saveUsers();
         $update_user->loadFromDatabase();
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function remove()
@@ -159,6 +125,6 @@ class AdminUsers extends AdminHandler
         }
 
         $this->authorization->removeUser($this->user_id);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 }

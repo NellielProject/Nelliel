@@ -21,29 +21,6 @@ class AdminStyles extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        /*if ($action === 'add')
-        {
-            $this->add();
-        }
-        else if ($action == 'remove')
-        {
-            $this->remove();
-        }
-        else if ($action == 'make-default')
-        {
-            $this->makeDefault();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();*/
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelStyles($this->domain, false);
@@ -76,7 +53,7 @@ class AdminStyles extends AdminHandler
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_ASSETS_TABLE . '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$style_id, 'style', 0, $info]);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function editor()
@@ -95,9 +72,10 @@ class AdminStyles extends AdminHandler
         }
 
         $style_id = $_GET['style-id'];
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_ASSETS_TABLE . '" WHERE "asset_id" = ? AND "type" = \'style\'');
+        $prepared = $this->database->prepare(
+                'DELETE FROM "' . NEL_ASSETS_TABLE . '" WHERE "asset_id" = ? AND "type" = \'style\'');
         $this->database->executePrepared($prepared, [$style_id]);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function makeDefault()
@@ -112,6 +90,6 @@ class AdminStyles extends AdminHandler
         $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'style\'');
         $this->database->executePrepared($prepared, [$style_id]);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 }

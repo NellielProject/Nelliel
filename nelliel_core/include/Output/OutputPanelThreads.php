@@ -70,37 +70,37 @@ class OutputPanelThreads extends OutputCore
             $prepared->execute();
             $op_post = $prepared->fetch(PDO::FETCH_ASSOC);
             $base_content_id = 'cid_' . $thread['thread_id'] . '_0_0';
-            $thread_info['expand_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
+            $thread_info['expand_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                     '&action=expand-thread&content-id=' . $base_content_id;
             $thread_info['thread_id'] = $thread['thread_id'];
 
             if ($thread['sticky'] == 1)
             {
-                $thread_info['sticky_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
+                $thread_info['sticky_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                         '&action=unsticky&content-id=' . $base_content_id;
                 $thread_info['sticky_text'] = _gettext('Unsticky Thread');
             }
             else
             {
-                $thread_info['sticky_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
+                $thread_info['sticky_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                         '&action=sticky&content-id=' . $base_content_id;
                 $thread_info['sticky_text'] = _gettext('Sticky Thread');
             }
 
             if ($thread['locked'] == 1)
             {
-                $thread_info['lock_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
+                $thread_info['lock_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                         '&action=unlock&content-id=' . $base_content_id;
                 $thread_info['lock_text'] = _gettext('Unlock Thread');
             }
             else
             {
-                $thread_info['lock_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
+                $thread_info['lock_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                         '&action=lock&content-id=' . $base_content_id;
                 $thread_info['lock_text'] = _gettext('Lock Thread');
             }
 
-            $thread_info['delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
+            $thread_info['delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                     '&action=delete&content-id=' . $base_content_id;
             $thread_info['delete_text'] = _gettext('Delete Thread');
             $thread_info['last_update'] = date($this->domain->setting('date_format'), $thread['last_update']);
@@ -148,10 +148,10 @@ class OutputPanelThreads extends OutputCore
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $base_content_id = 'cid_' . $post['parent_thread'] . '_' . $post['post_number'] . '_0';
             $post_info['post_number'] = $post['post_number'];
-            $post_info['delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
+            $post_info['delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                     '&action=delete&content-id=' . $base_content_id;
             $post_info['delete_text'] = _gettext('Delete Post');
-            $post_info['sticky_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
+            $post_info['sticky_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                     '&action=sticky&content-id=' . $base_content_id;
             $post_info['sticky_text'] = _gettext('Sticky Post');
             $post_info['parent_thread'] = $post['parent_thread'];

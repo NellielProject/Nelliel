@@ -21,25 +21,6 @@ class AdminFileFilters extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        /*if ($action === 'add')
-        {
-            $this->add();
-        }
-        else if ($action == 'remove')
-        {
-            $this->remove();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();*/
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelFileFilters($this->domain, false);
@@ -71,7 +52,7 @@ class AdminFileFilters extends AdminHandler
             $this->database->executePrepared($prepared, [$type, pack("H*", $hash), $notes, $board_id]);
         }
 
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function editor()
@@ -92,6 +73,6 @@ class AdminFileFilters extends AdminHandler
         $filter_id = $_GET['filter-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_FILES_FILTERS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 }

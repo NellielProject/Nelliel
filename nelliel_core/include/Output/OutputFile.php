@@ -55,7 +55,7 @@ class OutputFile extends OutputCore
         if ($session->inModmode($this->domain))
         {
             $this->render_data['in_modmode'] = true;
-            $this->render_data['delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
+            $this->render_data['delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                     '&action=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true&goback=true';
         }
 

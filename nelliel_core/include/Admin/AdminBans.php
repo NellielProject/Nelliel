@@ -23,39 +23,6 @@ class AdminBans extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        /*if ($action === 'modify')
-        {
-            $this->editor();
-            $return = true;
-        }
-        else if ($action === 'new')
-        {
-            $this->creator();
-            $return = true;
-        }
-        else if ($action === 'add')
-        {
-            $this->add();
-        }
-        else if ($action === 'remove')
-        {
-            $this->remove();
-        }
-        else if ($action === 'update')
-        {
-            $this->update();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();*/
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
@@ -68,7 +35,7 @@ class AdminBans extends AdminHandler
         $type = $_GET['ban_type'] ?? 'GENERAL';
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
         $output_panel->render(['section' => 'add', 'user' => $this->session_user, 'ip' => $ip, 'type' => $type], false);
-        $this->output_main = false;
+        $admin_handler->outputMain(false);
     }
 
     public function add()
@@ -97,14 +64,14 @@ class AdminBans extends AdminHandler
             }
         }
 
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function editor()
     {
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
         $output_panel->render(['section' => 'modify', 'user' => $this->session_user], false);
-        $this->output_main = false;
+        $admin_handler->outputMain(false);
     }
 
     public function update()
@@ -122,7 +89,7 @@ class AdminBans extends AdminHandler
         }
 
         $this->ban_hammer->modifyBan($ban_input);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function remove()
@@ -134,6 +101,6 @@ class AdminBans extends AdminHandler
 
         $ban_input = $this->ban_hammer->postToArray();
         $this->ban_hammer->removeBan($this->domain, $_GET['ban_id']);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 }

@@ -21,25 +21,6 @@ class AdminPermissions extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        /*if ($action === 'add')
-        {
-            $this->add();
-        }
-        else if ($action == 'remove')
-        {
-            $this->remove();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();*/
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelPermissions($this->domain, false);
@@ -62,7 +43,7 @@ class AdminPermissions extends AdminHandler
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_PERMISSIONS_TABLE . '" ("permission", "description") VALUES (?, ?)');
         $this->database->executePrepared($prepared, [$permission, $description]);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function editor()
@@ -83,6 +64,6 @@ class AdminPermissions extends AdminHandler
         $permission = $_GET['permission'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_PERMISSIONS_TABLE . '" WHERE "permission" = ?');
         $this->database->executePrepared($prepared, [$permission]);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 }

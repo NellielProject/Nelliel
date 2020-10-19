@@ -317,5 +317,6 @@ class ContentPost extends ContentHandler
     {
         $new_thread = $this->convertToThread();
         $new_thread->sticky();
+        return $new_thread;
     }
 }

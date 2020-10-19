@@ -25,40 +25,6 @@ class AdminBoards extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        /*if ($action === 'add')
-        {
-            $this->add();
-        }
-        else if ($action === 'remove')
-        {
-            if (isset($_GET['action-confirmed']) && $_GET['action-confirmed'] === 'true')
-            {
-                $this->remove();
-            }
-            else
-            {
-                $this->createInterstitial();
-            }
-        }
-        else if ($action === 'lock')
-        {
-            $this->lock();
-        }
-        else if ($action === 'unlock')
-        {
-            $this->unlock();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();*/
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain, false);
@@ -79,15 +45,16 @@ class AdminBoards extends AdminHandler
         $site_domain = new \Nelliel\DomainSite($this->database);
         $board_id = $_POST['new_board_id'];
 
-        if($site_domain->setting('only_alphanumeric_board_ids'))
+        if ($site_domain->setting('only_alphanumeric_board_ids'))
         {
-            if(preg_match('/[^a-zA-Z0-9]/', $board_id) === 1)
+            if (preg_match('/[^a-zA-Z0-9]/', $board_id) === 1)
             {
                 nel_derp(242, _gettext('Board ID contains invalid characters!'));
             }
         }
 
-        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ? OR "board_uri" = ?');
+        $prepared = $this->database->prepare(
+                'SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ? OR "board_uri" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$board_id, $board_id], PDO::FETCH_COLUMN);
 
         if ($result)
@@ -97,7 +64,7 @@ class AdminBoards extends AdminHandler
 
         $db_prefix = $this->generateDBPrefix($board_id);
 
-        if($db_prefix === '')
+        if ($db_prefix === '')
         {
             nel_derp(241, _gettext('Had trouble registering the board ID ' . $board_id . '. May want to change it.'));
         }
@@ -118,7 +85,7 @@ class AdminBoards extends AdminHandler
 
         $regen->allBoardPages($domain);
         $regen->boardList(new \Nelliel\DomainSite($this->database));
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function editor()
@@ -179,7 +146,7 @@ class AdminBoards extends AdminHandler
         $this->database->executePrepared($prepared, [$board_id]);
         $regen = new \Nelliel\Regen();
         $regen->boardList(new \Nelliel\DomainSite($this->database));
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function lock()
@@ -190,9 +157,10 @@ class AdminBoards extends AdminHandler
         }
 
         $board_id = $_GET['board_id'];
-        $prepared = $this->database->prepare('UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
+        $prepared = $this->database->prepare(
+                'UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function unlock()
@@ -203,9 +171,10 @@ class AdminBoards extends AdminHandler
         }
 
         $board_id = $_GET['board_id'];
-        $prepared = $this->database->prepare('UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
+        $prepared = $this->database->prepare(
+                'UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function createInterstitial()
@@ -221,7 +190,7 @@ class AdminBoards extends AdminHandler
         $output_panel->render(
                 ['section' => 'remove_interstitial', 'user' => $this->session_user, 'message' => $message,
                     'continue_link' => $continue_link], false);
-        $this->output_main = false;
+        $admin_handler->outputMain(false);
     }
 
     // While most engines can handle unicode, there is potential for issues
@@ -233,9 +202,9 @@ class AdminBoards extends AdminHandler
         $valid = false;
         $final_id = '';
 
-        for($i = 0; $i <= 10; $i ++)
+        for ($i = 0; $i <= 10; $i ++)
         {
-            if(strlen($ascii_id) <= 0)
+            if (strlen($ascii_id) <= 0)
             {
                 $test_id = '_board_' . nel_random_alphanumeric(8);
             }
@@ -248,7 +217,7 @@ class AdminBoards extends AdminHandler
             $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "db_prefix" = ?');
             $result = $this->database->executePreparedFetch($prepared, [$test_id], PDO::FETCH_COLUMN);
 
-            if(!$result)
+            if (!$result)
             {
                 $final_id = $test_id;
                 break;

@@ -25,59 +25,15 @@ class AdminThreads extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        if ($action === 'update')
-        {
-            $this->update();
-        }
-        else if ($action === 'sticky')
-        {
-            $this->sticky();
-        }
-        else if ($action === 'unsticky')
-        {
-            $this->unsticky();
-        }
-        else if ($action === 'lock')
-        {
-            $this->lock();
-        }
-        else if ($action === 'unlock')
-        {
-            $this->unlock();
-        }
-        else if ($action === 'delete')
-        {
-            $this->remove();
-        }
-        else if ($action === 'ban-delete')
-        {
-            $this->remove();
-            $bans_admin = new \Nelliel\Admin\AdminBans($this->authorization, $this->domain);
-            $bans_admin->actionDispatch('new', false);
-        }
-        else if ($action === 'expand') // TODO: Figure this out better
-        {
-            $this->renderPanel();
-            return;
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();
-    }
-
     public function renderPanel()
     {
         if (isset($_GET['action']) && $_GET['action'] === 'expand-thread')
         {
             $content_id = new ContentID($_GET['content-id']);
             $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain, false);
-            $output_panel->render(['section' => 'expanded_thread', 'user' => $this->session_user, 'thread_id' => $content_id->threadID()], false);
+            $output_panel->render(
+                    ['section' => 'expanded_thread', 'user' => $this->session_user,
+                        'thread_id' => $content_id->threadID()], false);
         }
         else
         {
@@ -196,12 +152,12 @@ class AdminThreads extends AdminHandler
         $regen = new \Nelliel\Regen();
         $regen->threads($this->domain, true, [$thread_id]);
 
-        if($this->site_domain->setting('overboard_active'))
+        if ($this->site_domain->setting('overboard_active'))
         {
             $regen->overboard($this->site_domain);
         }
 
-        if($regen_index)
+        if ($regen_index)
         {
             $regen->index($this->domain);
         }

@@ -22,48 +22,6 @@ class AdminFiletypes extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        /*if ($action === 'add')
-        {
-            $this->add();
-            $return = true;
-        }
-        else if ($action === 'new')
-        {
-            $this->creator();
-            $return = true;
-        }
-        else if ($action == 'edit')
-        {
-            $this->editor();
-            $return = true;
-        }
-        else if ($action == 'update')
-        {
-            $this->update();
-        }
-        else if ($action == 'remove')
-        {
-            $this->remove();
-        }
-        else if ($action == 'enable')
-        {
-            $this->enable();
-        }
-        else if ($action == 'disable')
-        {
-            $this->disable();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();*/
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelFiletypes($this->domain, false);
@@ -74,7 +32,7 @@ class AdminFiletypes extends AdminHandler
     {
         $output_panel = new \Nelliel\Output\OutputPanelFiletypes($this->domain, false);
         $output_panel->edit(['user' => $this->session_user, 'editing' => false], false);
-        $this->output_main = false;
+        $admin_handler->outputMain(false);
     }
 
     public function add()
@@ -101,7 +59,7 @@ class AdminFiletypes extends AdminHandler
                 '" ("base_extension", "type", "format", "mime", "sub_extensions", "id_regex", "label", "type_def", "enabled") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
                 [$base_extension, $type, $format, $mime, $sub_extensions, $id_regex, $label, $type_def, $enabled]);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function editor()
@@ -109,7 +67,7 @@ class AdminFiletypes extends AdminHandler
         $entry = $_GET['filetype-id'] ?? 0;
         $output_panel = new \Nelliel\Output\OutputPanelFiletypes($this->domain, false);
         $output_panel->edit(['user' => $this->session_user, 'editing' => true, 'entry' => $entry], false);
-        $this->output_main = false;
+        $admin_handler->outputMain(false);
     }
 
     public function update()
@@ -137,7 +95,7 @@ class AdminFiletypes extends AdminHandler
                 '" SET "base_extension" = ?, "type" = ?, "format" = ?, "mime" = ?, "sub_extensions" = ?, "id_regex" = ?, "label" = ?, "enabled" = ? WHERE "entry" = ?');
         $this->database->executePrepared($prepared,
                 [$base_extension, $type, $format, $mime, $sub_extensions, $id_regex, $label, $enabled, $filetype_id]);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function remove()
@@ -150,7 +108,7 @@ class AdminFiletypes extends AdminHandler
         $filetype_id = $_GET['filetype-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_FILETYPES_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filetype_id]);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     private function getBoardDomains()
@@ -178,6 +136,7 @@ class AdminFiletypes extends AdminHandler
         $filetype_id = $_GET['filetype-id'];
         $prepared = $this->database->prepare('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "enabled" = 1 WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filetype_id]);
+        $admin_handler->outputMain(true);
     }
 
     public function disable()
@@ -190,5 +149,6 @@ class AdminFiletypes extends AdminHandler
         $filetype_id = $_GET['filetype-id'];
         $prepared = $this->database->prepare('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "enabled" = 0 WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filetype_id]);
+        $admin_handler->outputMain(true);
     }
 }

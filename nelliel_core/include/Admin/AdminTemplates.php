@@ -21,29 +21,6 @@ class AdminTemplates extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        /*if ($action === 'add')
-        {
-            $this->add();
-        }
-        else if ($action == 'remove')
-        {
-            $this->remove();
-        }
-        else if ($action == 'make-default')
-        {
-            $this->makeDefault();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();*/
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelTemplates($this->domain, false);
@@ -81,7 +58,7 @@ class AdminTemplates extends AdminHandler
             $this->database->executePrepared($prepared, [$template_id, 'template', 0, $info]);
         }
 
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function editor()
@@ -103,7 +80,7 @@ class AdminTemplates extends AdminHandler
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . NEL_TEMPLATES_TABLE . '" WHERE "id" = ? AND "type" = \'template\'');
         $this->database->executePrepared($prepared, [$template_id]);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 
     public function makeDefault()
@@ -117,6 +94,6 @@ class AdminTemplates extends AdminHandler
         $this->database->exec('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 0');
         $prepared = $this->database->prepare('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 1 WHERE "id" = ?');
         $this->database->executePrepared($prepared, [$template_id]);
-        $this->output_main = true;
+        $admin_handler->outputMain(true);
     }
 }

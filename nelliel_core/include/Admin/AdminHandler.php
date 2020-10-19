@@ -15,8 +15,6 @@ abstract class AdminHandler
     protected $session_user;
     protected $output_main = true;
 
-    public abstract function actionDispatch(string $action, bool $return);
-
     public abstract function renderPanel();
 
     public abstract function creator();
@@ -29,8 +27,13 @@ abstract class AdminHandler
 
     public abstract function remove();
 
-    public function outputMain()
+    public function outputMain(bool $value = null)
     {
+        if (!is_null($value))
+        {
+            $this->output_main = $value;
+        }
+
         return $this->output_main;
     }
 

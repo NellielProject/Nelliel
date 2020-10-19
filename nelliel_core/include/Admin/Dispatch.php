@@ -169,6 +169,56 @@ class Dispatch
 
                 break;
 
+            case 'threads':
+                $admin_handler = new AdminThreads($this->authorization, $this->domain);
+
+                // TODO: Refine this whenever we get threads panel updated
+                if($inputs['subsection'] === 'panel')
+                {
+                    $admin_handler->outputMain(true);
+                }
+                else
+                {
+                    $admin_handler->outputMain(false);
+                }
+
+                if ($inputs['action'] === 'sticky')
+                {
+                    $admin_handler->sticky();
+                }
+                else if ($inputs['action'] === 'unsticky')
+                {
+                    $admin_handler->unsticky();
+                }
+                else if ($inputs['action'] === 'lock')
+                {
+                    $admin_handler->lock();
+                }
+                else if ($inputs['action'] === 'unlock')
+                {
+                    $admin_handler->unlock();
+                }
+                else if ($inputs['action'] === 'delete')
+                {
+                    $this->remove();
+                }
+                else if ($inputs['action'] === 'ban-delete') // TODO: multi-action dispatch; doesn't currently do the ban part
+                {
+                    $admin_handler->remove();
+                    $bans_admin = new \Nelliel\Admin\AdminBans($this->authorization, $this->domain);
+                    $bans_admin->actionDispatch('new', false);
+                }
+                else if ($inputs['action'] === 'expand')
+                {
+                    ; // TODO: Figure this out better
+                }
+                else
+                {
+                    $this->standard($admin_handler, $inputs);
+                }
+
+                break;
+
             case 'users':
                 $admin_handler = new AdminUsers($this->authorization, $this->domain);
                 $this->standard($admin_handler, $inputs);
