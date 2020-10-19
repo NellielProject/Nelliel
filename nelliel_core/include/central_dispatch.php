@@ -150,15 +150,15 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $site_settings_admin->actionDispatch($inputs['action'], false);
             break;
 
-        case 'file-filters':
+        /*case 'file-filters':
             $file_filters_admin = new \Nelliel\Admin\AdminFileFilters($authorization, $domain);
             $file_filters_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
-        case 'board-defaults':
+        /*case 'board-defaults':
             $board_settings_admin = new \Nelliel\Admin\AdminBoardSettings($authorization, $domain);
             $board_settings_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
         case 'language':
             $session = new \Nelliel\Account\Session();
@@ -179,10 +179,10 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $reports_admin->actionDispatch($inputs['action'], false);
             break;
 
-        case 'board-settings':
+        /*case 'board-settings':
             $board_settings_admin = new \Nelliel\Admin\AdminBoardSettings($authorization, $domain);
             $board_settings_admin->actionDispatch($inputs['action'], false);
-            break;
+            break;*/
 
         /*case 'bans':
             $bans_admin = new \Nelliel\Admin\AdminBans($authorization, $domain);

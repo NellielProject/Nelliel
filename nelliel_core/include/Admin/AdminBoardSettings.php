@@ -26,7 +26,7 @@ class AdminBoardSettings extends AdminHandler
 
     public function actionDispatch(string $action, bool $return)
     {
-        if ($action === 'update')
+        /*if ($action === 'update')
         {
             $this->update();
         }
@@ -36,7 +36,7 @@ class AdminBoardSettings extends AdminHandler
             return;
         }
 
-        $this->renderPanel();
+        $this->renderPanel();*/
     }
 
     public function renderPanel()
@@ -140,6 +140,8 @@ class AdminBoardSettings extends AdminHandler
             $regen->boardCache($this->domain);
             $regen->allBoardPages($this->domain);
         }
+
+        $this->output_main = true;
     }
 
     public function remove()

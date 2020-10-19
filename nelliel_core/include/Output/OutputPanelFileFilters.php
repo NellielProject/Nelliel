@@ -42,20 +42,20 @@ class OutputPanelFileFilters extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
 
-        if ($this->domain->id() !== '_site_')
+        if ($this->domain->id() === '' || $this->domain->id() === '_site_')
+        {
+            $filters = $this->database->executeFetchAll(
+                    'SELECT * FROM "' . NEL_FILES_FILTERS_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
+        }
+        else
         {
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . NEL_FILES_FILTERS_TABLE . '" WHERE "board_id" = ? ORDER BY "entry" DESC');
             $filters = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
         }
-        else
-        {
-            $filters = $this->database->executeFetchAll(
-                    'SELECT * FROM "' . NEL_FILES_FILTERS_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
-        }
 
         $this->render_data['form_action'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                ['module' => 'file-filters', 'action' => 'add']);
+                ['module' => 'admin', 'section' => 'file-filters', 'action' => 'add']);
         $bgclass = 'row1';
 
         foreach ($filters as $filter)
@@ -63,13 +63,14 @@ class OutputPanelFileFilters extends OutputCore
             $filter_data = array();
             $filter_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $filter_data['entry'] = $filter['entry'];
+            $filter_data['filter_id'] = $filter['entry'];
             $filter_data['hash_type'] = $filter['hash_type'];
             $filter_data['file_hash'] = bin2hex($filter['file_hash']);
             $filter_data['file_notes'] = $filter['file_notes'];
             $filter_data['board_id'] = $filter['board_id'];
             $filter_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'file-filters', 'action' => 'remove', 'filter-id' => $filter['entry']]);
+                    ['module' => 'admin', 'section' => 'file-filters', 'action' => 'remove',
+                        'filter-id' => $filter['entry']]);
             $this->render_data['filter_list'][] = $filter_data;
         }
 

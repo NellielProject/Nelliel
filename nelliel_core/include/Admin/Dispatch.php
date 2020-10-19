@@ -35,6 +35,21 @@ class Dispatch
                 $this->standard($admin_handler, $inputs);
                 break;
 
+            case 'board-settings':
+                $admin_handler = new AdminBoardSettings($this->authorization, $this->domain);
+                $this->standard($admin_handler, $inputs);
+                break;
+
+            case 'board-defaults':
+                $admin_handler = new AdminBoardSettings($this->authorization, $this->domain);
+                $this->standard($admin_handler, $inputs);
+                break;
+
+            case 'file-filters':
+                $admin_handler = new AdminFileFilters($this->authorization, $this->domain);
+                $this->standard($admin_handler, $inputs);
+                break;
+
             case 'manage-boards':
                 $admin_handler = new AdminBoards($this->authorization, $this->domain);
 
@@ -61,6 +76,8 @@ class Dispatch
                 {
                     $this->standard($admin_handler, $inputs);
                 }
+
+                break;
         }
 
         if (is_null($admin_handler))
@@ -68,7 +85,7 @@ class Dispatch
             return;
         }
 
-        if($admin_handler->outputMain())
+        if ($admin_handler->outputMain())
         {
             $admin_handler->renderPanel();
         }

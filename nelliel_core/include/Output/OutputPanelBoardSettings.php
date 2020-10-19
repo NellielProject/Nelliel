@@ -59,14 +59,14 @@ class OutputPanelBoardSettings extends OutputCore
             $table_name = NEL_BOARD_DEFAULTS_TABLE;
             $manage_headers = ['header' => _gettext('Board Management'),
                 'sub_header' => _gettext('Default Board Settings')];
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=board-defaults&action=update';
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=board-defaults&action=update';
         }
         else
         {
             $table_name = $this->domain->reference('config_table');
             $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')];
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=board-settings&action=update&board_id=' .
-                    $this->domain->id();
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT .
+                    '?module=admin&section=board-settings&action=update&board_id=' . $this->domain->id();
         }
 
         $user_lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');

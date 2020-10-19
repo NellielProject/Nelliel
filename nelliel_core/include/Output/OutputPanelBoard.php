@@ -35,7 +35,8 @@ class OutputPanelBoard extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $this->render_data['module_board_settings'] = $user->checkPermission($this->domain, 'perm_board_config');
-        $this->render_data['board_settings_url'] = NEL_MAIN_SCRIPT . '?module=board-settings&board_id=' . $this->domain->id();
+        $this->render_data['board_settings_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=board-settings&board_id=' .
+                $this->domain->id();
         $this->render_data['module_bans'] = $user->checkPermission($this->domain, 'perm_manage_bans');
         $this->render_data['bans_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&board_id=' . $this->domain->id();
         $this->render_data['module_threads'] = true;
@@ -53,8 +54,7 @@ class OutputPanelBoard extends OutputCore
         $this->render_data['regen_board_caches'] = $user->checkPermission($this->domain, 'perm_regen_cache');
         $this->render_data['regen_caches_url'] = NEL_MAIN_SCRIPT . '?module=regen&action=board-all-caches&board_id=' .
                 $this->domain->id();
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/board_panel',
-                $this->render_data);
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/board_panel', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

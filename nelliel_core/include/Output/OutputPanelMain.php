@@ -102,9 +102,9 @@ class OutputPanelMain extends OutputCore
         $this->render_data['module_site_settings'] = $user->checkPermission($this->domain, 'perm_site_config');
         $this->render_data['site_settings_url'] = NEL_MAIN_SCRIPT . '?module=site-settings';
         $this->render_data['module_file_filters'] = $user->checkPermission($this->domain, 'perm_manage_file_filters');
-        $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT . '?module=file-filters';
+        $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=file-filters';
         $this->render_data['module_board_defaults'] = $user->checkPermission($this->domain, 'perm_board_defaults');
-        $this->render_data['board_defaults_url'] = NEL_MAIN_SCRIPT . '?module=board-defaults';
+        $this->render_data['board_defaults_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=board-defaults';
         $this->render_data['module_reports'] = $user->checkPermission($this->domain, 'perm_manage_reports');
         $this->render_data['reports_url'] = NEL_MAIN_SCRIPT . '?module=reports';
         $this->render_data['module_templates'] = $user->checkPermission($this->domain, 'perm_manage_templates');
