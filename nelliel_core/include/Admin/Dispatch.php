@@ -223,6 +223,20 @@ class Dispatch
                 $admin_handler = new AdminUsers($this->authorization, $this->domain);
                 $this->standard($admin_handler, $inputs);
                 break;
+
+                // TODO: Work on these
+            case 'site-main-panel':
+                $session = new \Nelliel\Account\Session();
+                $session->loggedInOrError();
+                $output_main_panel = new \Nelliel\Output\OutputPanelMain($this->domain, false);
+                $output_main_panel->render(['user' => $session->sessionUser()], false);
+                break;
+
+            case 'board-main-panel':
+                $session = new \Nelliel\Account\Session();
+                $session->loggedInOrError();
+                $output_board_panel = new \Nelliel\Output\OutputPanelBoard($this->domain, false);
+                $output_board_panel->render(['user' => $session->sessionUser()], false);
         }
 
         if (is_null($admin_handler))

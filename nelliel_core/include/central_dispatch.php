@@ -119,7 +119,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             break;
 
-        case 'main-panel':
+        /*case 'main-panel':
             $session = new \Nelliel\Account\Session();
             $session->loggedInOrError();
 
@@ -134,20 +134,11 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 $output_main_panel->render(['user' => $session->sessionUser()], false);
             }
 
-            break;
+            break;*/
 
         case 'language':
-            $session = new \Nelliel\Account\Session();
-            $session->loggedInOrError();
-
-            if ($inputs['action'] === 'extract-gettext')
-            {
-                $language = new \Nelliel\Language\Language();
-                $language->extractLanguageStrings($domain, $session->sessionUser(), 'nelliel', LC_MESSAGES);
-            }
-
-            $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain, false);
-            $output_main_panel->render(['user' => $session->sessionUser()], false);
+            $language_dispatch = new \Nelliel\Language\Dispatch($domain, $authorization);
+            $language_dispatch->dispatch($inputs);
             break;
 
         case 'threads':

@@ -75,7 +75,7 @@ class OutputPanelMain extends OutputCore
                     continue;
                 }
 
-                $board_data['board_url'] = NEL_MAIN_SCRIPT . '?module=main-panel&board_id=' . $board['board_id'];
+                $board_data['board_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=board-main-panel&board_id=' . $board['board_id'];
                 $board_data['board_id'] = '/' . $board['board_id'] . '/';
 
                 if ($user->isSiteOwner())
