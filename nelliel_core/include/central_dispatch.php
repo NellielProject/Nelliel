@@ -141,6 +141,10 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $language_dispatch->dispatch($inputs);
             break;
 
+        case 'content':
+
+            break;
+
         case 'threads':
             $content_id = new \Nelliel\Content\ContentID($inputs['content_id']);
             $fgsfds = new \Nelliel\FGSFDS();
@@ -190,24 +194,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 }
 
                 nel_clean_exit();
-            }
-
-            if ($inputs['action'] === 'delete-post')
-            {
-                $post = new \Nelliel\Content\ContentPost($content_id, $domain);
-                $post->remove();
-            }
-
-            if ($inputs['action'] === 'delete-thread')
-            {
-                $thread = new \Nelliel\Content\ContentThread($content_id, $domain);
-                $thread->remove();
-            }
-
-            if ($inputs['action'] === 'delete-file')
-            {
-                $file = new \Nelliel\Content\ContentFile($content_id, $domain);
-                $file->remove();
             }
 
             $redirect = new \Nelliel\Redirect();
