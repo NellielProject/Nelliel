@@ -181,7 +181,7 @@ class AdminBoards extends AdminHandler
     {
         $message = _gettext(
                 'Are you certain you want to delete the board? Everything will be gone and this cannot be undone!');
-        $continue_link['href'] = NEL_MAIN_SCRIPT .
+        $continue_link['href'] = NEL_MAIN_SCRIPT_QUERY .
                 http_build_query(
                         ['module' => 'admin', 'section' => 'manage-boards', 'action' => 'remove',
                             'action-confirmed' => 'true', 'board_id' => $_GET['board_id'], 'domain_id' => '_site_']);

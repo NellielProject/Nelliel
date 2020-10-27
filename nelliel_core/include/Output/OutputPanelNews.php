@@ -44,7 +44,7 @@ class OutputPanelNews extends OutputCore
         $news_entries = $this->database->executeFetchAll('SELECT * FROM "' . NEL_NEWS_TABLE . '" ORDER BY "time" ASC',
                 PDO::FETCH_ASSOC);
         $bgclass = 'row1';
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT .
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY .
                 http_build_query(['module' => 'admin', 'section' => 'news', 'action' => 'add']);
 
         foreach ($news_entries as $news_entry)
@@ -54,7 +54,7 @@ class OutputPanelNews extends OutputCore
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $entry_info['headline'] = $news_entry['headline'];
             $entry_info['time'] = date('Y/m/d (D) H:i:s', $news_entry['time']);
-            $entry_info['remove_url'] = NEL_MAIN_SCRIPT .
+            $entry_info['remove_url'] = NEL_MAIN_SCRIPT_QUERY .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'news', 'action' => 'remove',
                                 'entry' => $news_entry['entry']]);

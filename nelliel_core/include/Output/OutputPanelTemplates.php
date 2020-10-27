@@ -58,11 +58,11 @@ class OutputPanelTemplates extends OutputCore
             $template_data['directory'] = $template_info['directory'];
             $template_data['output'] = $template_info['output_type'];
             $template_data['is_default'] = $template['is_default'] == 1;
-            $template_data['default_url'] = NEL_MAIN_SCRIPT .
+            $template_data['default_url'] = NEL_MAIN_SCRIPT_QUERY .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'templates', 'action' => 'make-default',
                                 'template-id' => $template['template_id']]);
-            $template_data['remove_url'] = NEL_MAIN_SCRIPT .
+                            $template_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'templates', 'action' => 'remove',
                                 'template-id' => $template['template_id']]);
@@ -83,7 +83,7 @@ class OutputPanelTemplates extends OutputCore
             $template_data['directory'] = $template['directory'];
             $template_data['output'] = $template['output_type'];
             $template_data['is_installed'] = in_array($template['id'], $installed_ids);
-            $template_data['install_url'] = NEL_MAIN_SCRIPT .
+            $template_data['install_url'] = NEL_MAIN_SCRIPT_QUERY .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'templates', 'action' => 'add',
                                 'template-id' => $template['id']]);

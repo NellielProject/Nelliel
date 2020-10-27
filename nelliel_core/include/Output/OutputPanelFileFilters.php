@@ -54,7 +54,7 @@ class OutputPanelFileFilters extends OutputCore
             $filters = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
         }
 
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT .
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY .
                 http_build_query(['module' => 'admin', 'section' => 'file-filters', 'action' => 'add']);
         $bgclass = 'row1';
 
@@ -68,7 +68,7 @@ class OutputPanelFileFilters extends OutputCore
             $filter_data['file_hash'] = bin2hex($filter['file_hash']);
             $filter_data['file_notes'] = $filter['file_notes'];
             $filter_data['board_id'] = $filter['board_id'];
-            $filter_data['remove_url'] = NEL_MAIN_SCRIPT .
+            $filter_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'file-filters', 'action' => 'remove',
                                 'filter-id' => $filter['entry']]);

@@ -171,7 +171,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 {
                     if ($session->inModmode($domain))
                     {
-                        $url = NEL_MAIN_SCRIPT . http_build_query(
+                        $url = NEL_MAIN_SCRIPT_QUERY . http_build_query(
                                 ['module' => 'render', 'action' => 'view-thread',
                                     'thread' => $fgsfds->getCommandData('noko', 'topic'),
                                     'board_id' => $inputs['board_id'], 'modmode' => 'true']);

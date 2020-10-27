@@ -77,7 +77,7 @@ class OutputPanelReports extends OutputCore
 
             if ($content_id->isThread())
             {
-                $content_url = NEL_MAIN_SCRIPT .
+                $content_url = NEL_MAIN_SCRIPT_QUERY .
                         http_build_query(
                                 ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->threadID(),
                                     'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
@@ -86,7 +86,7 @@ class OutputPanelReports extends OutputCore
             }
             else if ($content_id->isPost())
             {
-                $content_url = NEL_MAIN_SCRIPT .
+                $content_url = NEL_MAIN_SCRIPT_QUERY .
                         http_build_query(
                                 ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->threadID(),
                                     'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
@@ -106,7 +106,7 @@ class OutputPanelReports extends OutputCore
                 $report_data['file_url'] = $src_web_path . $content_id->threadID() . '/' . $content_id->postID() . '/' .
                         $filename;
 
-                $content_url = NEL_MAIN_SCRIPT .
+                        $content_url = NEL_MAIN_SCRIPT_QUERY .
                         http_build_query(
                                 ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->threadID(),
                                     'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],

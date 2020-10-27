@@ -39,7 +39,7 @@ class OutputPostingForm extends OutputCore
         {
             if ($session->inModmode($this->domain) && !$this->write_mode)
             {
-                $return_url = NEL_MAIN_SCRIPT .
+                $return_url = NEL_MAIN_SCRIPT_QUERY .
                         http_build_query(
                                 ['module' => 'render', 'action' => 'view-index', 'index' => '0',
                                     'board_id' => $this->domain->id(), 'modmode' => 'true']);

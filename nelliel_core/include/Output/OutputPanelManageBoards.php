@@ -79,7 +79,7 @@ class OutputPanelManageBoards extends OutputCore
 
             if ($board_info['locked'] == 0)
             {
-                $board_data['lock_url'] = NEL_MAIN_SCRIPT .
+                $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY .
                         http_build_query(
                                 ['module' => 'admin', 'section' => 'manage-boards',
                                     'board_id' => $board_info['board_id'], 'action' => 'lock', 'domain_id' => '_site_']);
@@ -88,7 +88,7 @@ class OutputPanelManageBoards extends OutputCore
             }
             else
             {
-                $board_data['lock_url'] = NEL_MAIN_SCRIPT .
+                $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY .
                         http_build_query(
                                 ['module' => 'admin', 'section' => 'manage-boards',
                                     'board_id' => $board_info['board_id'], 'action' => 'unlock', 'domain_id' => '_site_']);
@@ -96,7 +96,7 @@ class OutputPanelManageBoards extends OutputCore
                 $board_data['lock_text'] = _gettext('Unlock Board');
             }
 
-            $board_data['remove_url'] = NEL_MAIN_SCRIPT .
+            $board_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'manage-boards', 'board_id' => $board_info['board_id'],
                                 'action' => 'remove', 'domain_id' => '_site_']);

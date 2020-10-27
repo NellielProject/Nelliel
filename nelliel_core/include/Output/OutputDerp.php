@@ -44,7 +44,7 @@ class OutputDerp extends OutputCore
             }
             else
             {
-                $return_url = NEL_MAIN_SCRIPT .
+                $return_url = NEL_MAIN_SCRIPT_QUERY .
                         http_build_query(
                                 ['module' => 'render', 'action' => 'view-index', 'index' => '0',
                                     'board_id' => $this->domain->id(), 'modmode' => 'true']);
