@@ -59,11 +59,14 @@ class OutputPanelStyles extends OutputCore
             $style_data['name'] = $style_info['name'];
             $style_data['directory'] = $style_info['directory'];
             $style_data['is_default'] = $style['is_default'] == 1;
-            $style_data['default_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'admin', 'section' => 'styles', 'action' => 'make-default',
-                        'style-id' => $style['asset_id'], 'style-type' => $style_info['style_type']]);
-            $style_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'admin', 'section' => 'styles', 'action' => 'remove', 'style-id' => $style['asset_id']]);
+            $style_data['default_url'] = NEL_MAIN_SCRIPT .
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'styles', 'action' => 'make-default',
+                                'style-id' => $style['asset_id'], 'style-type' => $style_info['style_type']]);
+            $style_data['remove_url'] = NEL_MAIN_SCRIPT .
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'styles', 'action' => 'remove',
+                                'style-id' => $style['asset_id']]);
             $style_data['is_core'] = $this->domain->frontEndData()->styleIsCore($style['asset_id']);
 
             $this->render_data['installed_list'][] = $style_data;
@@ -82,9 +85,10 @@ class OutputPanelStyles extends OutputCore
             $style_data['name'] = $style['name'];
             $style_data['directory'] = $style['directory'];
             $style_data['is_installed'] = in_array($style['id'], $installed_ids);
-            $style_data['install_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'admin', 'section' => 'styles', 'action' => 'add', 'style-id' => $style['id'],
-                        'style-type' => $style['style_type']]);
+            $style_data['install_url'] = NEL_MAIN_SCRIPT .
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'styles', 'action' => 'add', 'style-id' => $style['id'],
+                                'style-type' => $style['style_type']]);
             $this->render_data['available_list'][] = $style_data;
         }
 

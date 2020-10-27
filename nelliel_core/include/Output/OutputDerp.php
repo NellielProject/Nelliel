@@ -29,8 +29,7 @@ class OutputDerp extends OutputCore
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot],
-                true);
+        $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot], true);
         $diagnostic = $parameters['diagnostic'];
         $this->render_data['error_id'] = $diagnostic['error_id'];
         $this->render_data['error_message'] = $diagnostic['error_message'];
@@ -45,9 +44,10 @@ class OutputDerp extends OutputCore
             }
             else
             {
-                $return_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'render', 'action' => 'view-index', 'index' => '0',
-                            'board_id' => $this->domain->id(), 'modmode' => 'true']);
+                $return_url = NEL_MAIN_SCRIPT .
+                        http_build_query(
+                                ['module' => 'render', 'action' => 'view-index', 'index' => '0',
+                                    'board_id' => $this->domain->id(), 'modmode' => 'true']);
             }
         }
         else

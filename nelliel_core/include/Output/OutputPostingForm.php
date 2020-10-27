@@ -39,9 +39,10 @@ class OutputPostingForm extends OutputCore
         {
             if ($session->inModmode($this->domain) && !$this->write_mode)
             {
-                $return_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'render', 'action' => 'view-index', 'index' => '0',
-                            'board_id' => $this->domain->id(), 'modmode' => 'true']);
+                $return_url = NEL_MAIN_SCRIPT .
+                        http_build_query(
+                                ['module' => 'render', 'action' => 'view-index', 'index' => '0',
+                                    'board_id' => $this->domain->id(), 'modmode' => 'true']);
             }
             else
             {
@@ -112,7 +113,8 @@ class OutputPostingForm extends OutputCore
                 $supported_formats .= utf8_strtoupper($format) . ', ';
             }
 
-            if(empty($supported_formats)) {
+            if (empty($supported_formats))
+            {
                 continue;
             }
 

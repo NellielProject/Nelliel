@@ -58,12 +58,14 @@ class OutputPanelIconSets extends OutputCore
             $set_data['name'] = $icon_set_info['name'];
             $set_data['directory'] = $icon_set_info['directory'];
             $set_data['is_default'] = $icon_set['is_default'] == 1;
-            $set_data['default_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'admin', 'section' => 'icon-sets', 'action' => 'make-default',
-                        'icon-set-id' => $icon_set['asset_id']]);
-            $set_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'admin', 'section' => 'icon-sets', 'action' => 'remove',
-                        'icon-set-id' => $icon_set['asset_id']]);
+            $set_data['default_url'] = NEL_MAIN_SCRIPT .
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'icon-sets', 'action' => 'make-default',
+                                'icon-set-id' => $icon_set['asset_id']]);
+            $set_data['remove_url'] = NEL_MAIN_SCRIPT .
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'icon-sets', 'action' => 'remove',
+                                'icon-set-id' => $icon_set['asset_id']]);
             $set_data['is_core'] = $this->domain->frontEndData()->iconSetIsCore($icon_set['asset_id']);
 
             $this->render_data['installed_list'][] = $set_data;
@@ -82,8 +84,10 @@ class OutputPanelIconSets extends OutputCore
             $set_data['name'] = $icon_set_info['name'];
             $set_data['directory'] = $icon_set_info['directory'];
             $set_data['is_installed'] = in_array($icon_set['id'], $installed_ids);
-            $set_data['install_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'admin', 'section' => 'icon-sets', 'action' => 'add', 'icon-set-id' => $icon_set['id']]);
+            $set_data['install_url'] = NEL_MAIN_SCRIPT .
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'icon-sets', 'action' => 'add',
+                                'icon-set-id' => $icon_set['id']]);
             $this->render_data['available_list'][] = $set_data;
         }
 

@@ -62,7 +62,8 @@ class OutputPanelManageBoards extends OutputCore
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=manage-boards&action=add&domain=_site_';
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT .
+                '?module=admin&section=manage-boards&action=add&domain=_site_';
         $board_data = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
@@ -78,21 +79,27 @@ class OutputPanelManageBoards extends OutputCore
 
             if ($board_info['locked'] == 0)
             {
-                $board_data['lock_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'admin', 'section' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'lock', 'domain_id' => '_site_']);
+                $board_data['lock_url'] = NEL_MAIN_SCRIPT .
+                        http_build_query(
+                                ['module' => 'admin', 'section' => 'manage-boards',
+                                    'board_id' => $board_info['board_id'], 'action' => 'lock', 'domain_id' => '_site_']);
                 $board_data['status'] = _gettext('Active');
                 $board_data['lock_text'] = _gettext('Lock Board');
             }
             else
             {
-                $board_data['lock_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'admin', 'section' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'unlock', 'domain_id' => '_site_']);
+                $board_data['lock_url'] = NEL_MAIN_SCRIPT .
+                        http_build_query(
+                                ['module' => 'admin', 'section' => 'manage-boards',
+                                    'board_id' => $board_info['board_id'], 'action' => 'unlock', 'domain_id' => '_site_']);
                 $board_data['status'] = _gettext('Locked');
                 $board_data['lock_text'] = _gettext('Unlock Board');
             }
 
-            $board_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'admin', 'section' => 'manage-boards', 'board_id' => $board_info['board_id'], 'action' => 'remove', 'domain_id' => '_site_']);
+            $board_data['remove_url'] = NEL_MAIN_SCRIPT .
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'manage-boards', 'board_id' => $board_info['board_id'],
+                                'action' => 'remove', 'domain_id' => '_site_']);
             $this->render_data['board_list'][] = $board_data;
         }
 

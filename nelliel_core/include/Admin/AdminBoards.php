@@ -181,10 +181,10 @@ class AdminBoards extends AdminHandler
     {
         $message = _gettext(
                 'Are you certain you want to delete the board? Everything will be gone and this cannot be undone!');
-        $url_constructor = new \Nelliel\URLConstructor();
-        $continue_link['href'] = $url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                ['module' => 'admin', 'section' => 'manage-boards', 'action' => 'remove', 'action-confirmed' => 'true',
-                    'board_id' => $_GET['board_id'], 'domain_id' => '_site_']);
+        $continue_link['href'] = NEL_MAIN_SCRIPT .
+                http_build_query(
+                        ['module' => 'admin', 'section' => 'manage-boards', 'action' => 'remove',
+                            'action-confirmed' => 'true', 'board_id' => $_GET['board_id'], 'domain_id' => '_site_']);
         $continue_link['text'] = _gettext('Confirm and delete the board.');
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain, false);
         $output_panel->render(

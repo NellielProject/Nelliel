@@ -210,8 +210,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 {
                     if ($session->inModmode($domain))
                     {
-                        $url_constructor = new \Nelliel\URLConstructor();
-                        $url = $url_constructor->dynamic(NEL_MAIN_SCRIPT,
+                        $url = NEL_MAIN_SCRIPT . http_build_query(
                                 ['module' => 'render', 'action' => 'view-thread',
                                     'thread' => $fgsfds->getCommandData('noko', 'topic'),
                                     'board_id' => $inputs['board_id'], 'modmode' => 'true']);
@@ -219,7 +218,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     }
                     else
                     {
-                        $url_constructor = new \Nelliel\URLConstructor();
                         $url = $domain->reference('board_directory') . '/' . $domain->reference('page_dir') . '/' .
                                 $fgsfds->getCommandData('noko', 'topic') . '/thread-' .
                                 $fgsfds->getCommandData('noko', 'topic') . '.html';
