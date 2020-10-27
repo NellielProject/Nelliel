@@ -60,7 +60,7 @@ class AdminSiteSettings extends AdminHandler
 
         $regen = new \Nelliel\Regen();
         $regen->siteCache($this->domain);
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 
     public function remove()

@@ -33,6 +33,7 @@ function nel_dispatch_preparation()
     $inputs['section'] = $_GET['section'] ?? '';
     $inputs['subsection'] = $_GET['subsection'] ?? '';
     $inputs['action'] = $_GET['action'] ?? '';
+    $inputs['actions'] = explode('+', $inputs['action']);
     $inputs['domain_id'] = $_GET['domain_id'] ?? '';
     $inputs['board_id'] = $_GET['board_id'] ?? '';
     $inputs['content_id'] = $_GET['content-id'] ?? '';

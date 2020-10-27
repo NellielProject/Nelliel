@@ -43,7 +43,7 @@ class AdminPermissions extends AdminHandler
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_PERMISSIONS_TABLE . '" ("permission", "description") VALUES (?, ?)');
         $this->database->executePrepared($prepared, [$permission, $description]);
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 
     public function editor()
@@ -64,6 +64,6 @@ class AdminPermissions extends AdminHandler
         $permission = $_GET['permission'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_PERMISSIONS_TABLE . '" WHERE "permission" = ?');
         $this->database->executePrepared($prepared, [$permission]);
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 }

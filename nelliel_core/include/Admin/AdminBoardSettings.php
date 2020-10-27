@@ -126,7 +126,7 @@ class AdminBoardSettings extends AdminHandler
             $regen->allBoardPages($this->domain);
         }
 
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 
     public function remove()

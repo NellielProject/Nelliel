@@ -55,6 +55,6 @@ class AdminReports extends AdminHandler
 
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_REPORTS_TABLE . '" WHERE "report_id" = ?');
         $this->database->executePrepared($prepared, [$report_id]);
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 }

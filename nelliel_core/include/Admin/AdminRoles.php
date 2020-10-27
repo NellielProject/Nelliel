@@ -38,7 +38,7 @@ class AdminRoles extends AdminHandler
     {
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
-        $admin_handler->outputMain(false);
+        $this->outputMain(false);
     }
 
     public function add()
@@ -52,14 +52,14 @@ class AdminRoles extends AdminHandler
         $this->update();
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 
     public function editor()
     {
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
-        $admin_handler->outputMain(false);
+        $this->outputMain(false);
     }
 
     public function update()
@@ -90,7 +90,7 @@ class AdminRoles extends AdminHandler
         }
 
         $this->authorization->saveRoles();
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 
     public function remove()
@@ -101,6 +101,6 @@ class AdminRoles extends AdminHandler
         }
 
         $this->authorization->removeRole($this->role_id);
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 }

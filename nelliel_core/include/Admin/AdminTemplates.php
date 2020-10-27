@@ -58,7 +58,7 @@ class AdminTemplates extends AdminHandler
             $this->database->executePrepared($prepared, [$template_id, 'template', 0, $info]);
         }
 
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 
     public function editor()
@@ -80,7 +80,7 @@ class AdminTemplates extends AdminHandler
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . NEL_TEMPLATES_TABLE . '" WHERE "id" = ? AND "type" = \'template\'');
         $this->database->executePrepared($prepared, [$template_id]);
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 
     public function makeDefault()
@@ -94,6 +94,6 @@ class AdminTemplates extends AdminHandler
         $this->database->exec('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 0');
         $prepared = $this->database->prepare('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 1 WHERE "id" = ?');
         $this->database->executePrepared($prepared, [$template_id]);
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 }

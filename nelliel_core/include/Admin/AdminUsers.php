@@ -38,7 +38,7 @@ class AdminUsers extends AdminHandler
     {
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
-        $admin_handler->outputMain(false);
+        $this->outputMain(false);
     }
 
     public function add()
@@ -50,14 +50,14 @@ class AdminUsers extends AdminHandler
 
         $this->user_id = $_POST['user_id'];
         $this->update();
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 
     public function editor()
     {
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
-        $admin_handler->outputMain(false);
+        $this->outputMain(false);
     }
 
     public function update()
@@ -114,7 +114,7 @@ class AdminUsers extends AdminHandler
 
         $this->authorization->saveUsers();
         $update_user->loadFromDatabase();
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 
     public function remove()
@@ -125,6 +125,6 @@ class AdminUsers extends AdminHandler
         }
 
         $this->authorization->removeUser($this->user_id);
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 }

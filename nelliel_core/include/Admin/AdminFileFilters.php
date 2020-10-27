@@ -52,7 +52,7 @@ class AdminFileFilters extends AdminHandler
             $this->database->executePrepared($prepared, [$type, pack("H*", $hash), $notes, $board_id]);
         }
 
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 
     public function editor()
@@ -73,6 +73,6 @@ class AdminFileFilters extends AdminHandler
         $filter_id = $_GET['filter-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_FILES_FILTERS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 }

@@ -28,14 +28,18 @@ class Dispatch
         $session = new \Nelliel\Account\Session();
         $session->loggedInOrError();
 
-        switch ($inputs['action'])
+        foreach ($inputs['actions'] as $action)
         {
-            case 'extract-gettext':
-                $language = new \Nelliel\Language\Language();
-                $language->extractLanguageStrings($this->domain, $session->sessionUser(), 'nelliel', LC_MESSAGES);
-                $output_main_panel = new \Nelliel\Output\OutputPanelMain($this->domain, false);
-                $output_main_panel->render(['user' => $session->sessionUser()], false);
-                break;
+            switch ($action)
+            {
+                case 'extract-gettext':
+                    $language = new \Nelliel\Language\Language();
+                    $language->extractLanguageStrings($this->domain, $session->sessionUser(), 'nelliel', LC_MESSAGES);
+                    break;
+            }
         }
+
+        $output_main_panel = new \Nelliel\Output\OutputPanelMain($this->domain, false);
+        $output_main_panel->render(['user' => $session->sessionUser()], false);
     }
 }

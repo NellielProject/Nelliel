@@ -49,7 +49,7 @@ class AdminNews extends AdminHandler
         $this->database->executePrepared($prepared,
                 [$news_info['poster_id'], $news_info['headline'], $news_info['time'], $news_info['text']]);
         $this->regenNews();
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 
     public function editor()
@@ -71,7 +71,7 @@ class AdminNews extends AdminHandler
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_NEWS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$entry]);
         $this->regenNews();
-        $admin_handler->outputMain(true);
+        $this->outputMain(true);
     }
 
     private function regenNews()
