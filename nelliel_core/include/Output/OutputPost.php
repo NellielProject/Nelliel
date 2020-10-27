@@ -181,12 +181,12 @@ class OutputPost extends OutputCore
 
             $modmode_headers['ban_url'] = '?module=admin&section=bans&board_id=' . $this->domain->id() .
                     '&action=new&ban_type=POST&content-id=' . $temp_content_id->getIDString() . '&ban_ip=' .
-                    rawurlencode($ip) . '&modmode=true&goback=true';
+                    rawurlencode($ip) . '&modmode=true&goback=false';
             $modmode_headers['delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                     '&action=delete&content-id=' . $temp_content_id->getIDString() . '&modmode=true&goback=true';
             $modmode_headers['ban_delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
-                    '&action=ban-delete&content-id=' . $temp_content_id->getIDString() . '&ban_type=POST&ban_ip=' .
-                    rawurlencode($ip) . '&modmode=true&goback=true';
+                    '&action[0]=delete&action[1]=ban&content-id=' . $temp_content_id->getIDString() . '&ban_type=POST&ban_ip=' .
+                    rawurlencode($ip) . '&modmode=true&goback=false';
             $header_data['modmode_headers'] = $modmode_headers;
         }
 

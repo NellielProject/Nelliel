@@ -29,20 +29,28 @@ function nel_dispatch_preparation()
     }
 
     $inputs = array();
+
+    $inputs['action'] = $_GET['action'] ?? array();
+
+    if(!is_array($inputs['action']))
+    {
+        $inputs['actions'] = [$inputs['action']];
+    }
+    else
+    {
+        $inputs['actions'] = $inputs['action'];
+    }
+
+
     $inputs['module'] = $_GET['module'] ?? '';
     $inputs['section'] = $_GET['section'] ?? '';
     $inputs['subsection'] = $_GET['subsection'] ?? '';
-    $inputs['action'] = $_GET['action'] ?? '';
-    $inputs['actions'] = explode('+', $inputs['action']);
     $inputs['domain_id'] = $_GET['domain_id'] ?? '';
     $inputs['board_id'] = $_GET['board_id'] ?? '';
     $inputs['content_id'] = $_GET['content-id'] ?? '';
     $inputs['modmode'] = isset($_GET['modmode']) ? true : false;
     $inputs['action-confirmed'] = isset($_GET['action-confirmed']) ? true : false;
-
-    //$session = new \Nelliel\Account\Session();
-
-    $goback = $_GET['goback'] ?? false;
+    $goback = isset($_GET['goback']) ? $_GET['goback'] === 'true' : false;
 
     if ($goback)
     {
