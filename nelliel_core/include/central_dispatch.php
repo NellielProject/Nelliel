@@ -31,7 +31,7 @@ function nel_dispatch_preparation()
     $inputs = array();
     $inputs['raw_actions'] = $_GET['actions'] ?? '';
 
-    if(!is_array($inputs['raw_actions']))
+    if (!is_array($inputs['raw_actions']))
     {
         $inputs['actions'] = [$inputs['raw_actions']];
     }
@@ -152,10 +152,11 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 {
                     if ($session->inModmode($domain))
                     {
-                        $url = NEL_MAIN_SCRIPT_QUERY . http_build_query(
-                                ['module' => 'render', 'action' => 'view-thread',
-                                    'thread' => $fgsfds->getCommandData('noko', 'topic'),
-                                    'board_id' => $inputs['board_id'], 'modmode' => 'true']);
+                        $url = NEL_MAIN_SCRIPT_QUERY .
+                                http_build_query(
+                                        ['module' => 'render', 'action' => 'view-thread',
+                                            'thread' => $fgsfds->getCommandData('noko', 'topic'),
+                                            'board_id' => $inputs['board_id'], 'modmode' => 'true']);
                         $redirect->changeURL($url);
                     }
                     else
@@ -228,54 +229,57 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $session = new \Nelliel\Account\Session();
             $session->loggedInOrError();
             $user = $session->sessionUser();
+            $forward = 'site';
 
-            if ($inputs['actions'][0] === 'board-all-pages')
+            foreach ($inputs['actions'] as $action)
             {
-                if (!$user->checkPermission($domain, 'perm_regen_pages'))
+                switch ($action)
                 {
-                    nel_derp(410, _gettext('You are not allowed to regenerate board pages.'));
-                }
+                    case 'board-all-pages':
+                        if (!$user->checkPermission($domain, 'perm_regen_pages'))
+                        {
+                            nel_derp(410, _gettext('You are not allowed to regenerate board pages.'));
+                        }
 
-                $regen->allBoardPages($domain);
-                $archive = new \Nelliel\ArchiveAndPrune($domain, new \Nelliel\Utility\FileHandler());
-                $archive->updateThreads();
-                $forward = 'board';
+                        $regen->allBoardPages($domain);
+                        $archive = new \Nelliel\ArchiveAndPrune($domain, new \Nelliel\Utility\FileHandler());
+                        $archive->updateThreads();
+                        $forward = 'board';
+                        break;
+
+                    case 'board-all-caches':
+                        if (!$user->checkPermission($domain, 'perm_regen_cache'))
+                        {
+                            nel_derp(411, _gettext('You are not allowed to regenerate board caches.'));
+                        }
+
+                        $regen->boardCache($domain);
+                        $forward = 'board';
+                        break;
+
+                    case 'site-all-caches':
+                        if (!$user->checkPermission($domain, 'perm_regen_cache'))
+                        {
+                            nel_derp(412, _gettext('You are not allowed to regenerate site caches.'));
+                        }
+
+                        $regen->siteCache($domain);
+                        $forward = 'site';
+                        break;
+
+                    case 'overboard-all-pages':
+                        if (!$user->checkPermission($domain, 'perm_regen_pages'))
+                        {
+                            nel_derp(413, _gettext('You are not allowed to regenerate overboard pages.'));
+                        }
+
+                        $regen->overboard($domain);
+                        $forward = 'site';
+                        break;
+                }
             }
 
-            if ($inputs['actions'][0] === 'board-all-caches')
-            {
-                if (!$user->checkPermission($domain, 'perm_regen_cache'))
-                {
-                    nel_derp(411, _gettext('You are not allowed to regenerate board caches.'));
-                }
-
-                $regen->boardCache($domain);
-                $forward = 'board';
-            }
-
-            if ($inputs['actions'][0] === 'site-all-caches')
-            {
-                if (!$user->checkPermission($domain, 'perm_regen_cache'))
-                {
-                    nel_derp(412, _gettext('You are not allowed to regenerate site caches.'));
-                }
-
-                $regen->siteCache($domain);
-                $forward = 'site';
-            }
-
-            if ($inputs['actions'][0] === 'overboard-all-pages')
-            {
-                if (!$user->checkPermission($domain, 'perm_regen_pages'))
-                {
-                    nel_derp(413, _gettext('You are not allowed to regenerate overboard pages.'));
-                }
-
-                $regen->overboard($domain);
-                $forward = 'site';
-            }
-
-            if (empty($forward) || $forward === 'site')
+            if ($forward === 'site')
             {
                 $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain, false);
                 $output_main_panel->render(['user' => $session->sessionUser()], false);
