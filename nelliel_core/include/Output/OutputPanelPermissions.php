@@ -44,7 +44,7 @@ class OutputPanelPermissions extends OutputCore
         $permissions = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_PERMISSIONS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY .
-                http_build_query(['module' => 'admin', 'section' => 'permissions', 'action' => 'add']);
+                http_build_query(['module' => 'admin', 'section' => 'permissions', 'actions' => 'add']);
         $bgclass = 'row1';
 
         foreach ($permissions as $permission)
@@ -56,7 +56,7 @@ class OutputPanelPermissions extends OutputCore
             $permission_data['description'] = _gettext($permission['description']);
             $permission_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY .
                     http_build_query(
-                            ['module' => 'admin', 'section' => 'permissions', 'action' => 'remove',
+                            ['module' => 'admin', 'section' => 'permissions', 'actions' => 'remove',
                                 'permission' => $permission['permission']]);
             $this->render_data['permission_list'][] = $permission_data;
         }

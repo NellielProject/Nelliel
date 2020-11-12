@@ -76,14 +76,14 @@ class OutputPanelUsers extends OutputCore
 
             if ($user_info['owner'] == 0)
             {
-                $user_data['edit_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=users&action=edit&user-id=' . $user_info['user_id'];
-                $user_data['remove_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=users&action=remove&user-id=' . $user_info['user_id'];
+                $user_data['edit_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=users&actions=edit&user-id=' . $user_info['user_id'];
+                $user_data['remove_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=users&actions=remove&user-id=' . $user_info['user_id'];
             }
 
             $this->render_data['users_list'][] = $user_data;
         }
 
-        $this->render_data['new_user_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=users&action=new';
+        $this->render_data['new_user_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=users&actions=new';
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/users_panel_main',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
@@ -110,14 +110,14 @@ class OutputPanelUsers extends OutputCore
 
         if (empty($user_id))
         {
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=users&action=add';
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=users&actions=add';
         }
         else
         {
             $edit_user = $authorization->getUser($user_id);
             $this->render_data['user_id'] = $edit_user->auth_data['user_id'];
             $this->render_data['display_name'] = $edit_user->auth_data['display_name'];
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=users&action=update&user-id=' . $user_id;
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=users&actions=update&user-id=' . $user_id;
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';
         }
 

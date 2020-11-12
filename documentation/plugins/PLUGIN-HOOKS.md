@@ -18,7 +18,7 @@ Called at the end of the central dispatch.
 
 |Order|Argument  |Type    |Returnable|Description|                               
 |:---:|:---------|:-------|:---------|:----------|
-|1    |`$inputs` |`array` |Yes       |Input action data.|
+|1    |`$inputs` |`array` |Yes       |Input actionz data.|
 |2    |`$domain` |`object`|No        |Domain object.|
 
 Return type: void  
@@ -29,7 +29,7 @@ Called at the beginning of the module dispatch.
 
 |Order|Argument  |Type    |Returnable|Description|                               
 |:---:|:---------|:-------|:---------|:----------|
-|1    |`$inputs` |`array` |Yes       |Input action data.|
+|1    |`$inputs` |`array` |Yes       |Input actionz data.|
 |2    |`$domain` |`object`|No        |Domain object.|
 
 ### nel-in-after-module-dispatch
@@ -38,7 +38,7 @@ Called at the end of the module dispatch.
 
 |Order|Argument  |Type    |Returnable|Description|                               
 |:---:|:---------|:-------|:---------|:----------|
-|1    |`$inputs` |`array` |Yes       |Input action data.|
+|1    |`$inputs` |`array` |Yes       |Input actionz data.|
 |2    |`$domain` |`object`|No        |Domain object.|
 
 ### nel-json-prepare-board-list

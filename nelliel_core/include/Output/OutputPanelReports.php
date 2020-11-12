@@ -79,7 +79,7 @@ class OutputPanelReports extends OutputCore
             {
                 $content_url = NEL_MAIN_SCRIPT_QUERY .
                         http_build_query(
-                                ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->threadID(),
+                                ['module' => 'render', 'actions' => 'view-thread', 'thread' => $content_id->threadID(),
                                     'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                                     'modmode' => 'true']);
                 $report_data['is_content'] = false;
@@ -88,7 +88,7 @@ class OutputPanelReports extends OutputCore
             {
                 $content_url = NEL_MAIN_SCRIPT_QUERY .
                         http_build_query(
-                                ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->threadID(),
+                                ['module' => 'render', 'actions' => 'view-thread', 'thread' => $content_id->threadID(),
                                     'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                                     'modmode' => 'true']);
                 $content_url .= '#t' . $content_id->threadID() . 'p' . $content_id->postID();
@@ -108,7 +108,7 @@ class OutputPanelReports extends OutputCore
 
                         $content_url = NEL_MAIN_SCRIPT_QUERY .
                         http_build_query(
-                                ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->threadID(),
+                                ['module' => 'render', 'actions' => 'view-thread', 'thread' => $content_id->threadID(),
                                     'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
                                     'modmode' => 'true']);
                 $content_url .= '#t' . $content_id->threadID() . 'p' . $content_id->postID();
@@ -121,7 +121,7 @@ class OutputPanelReports extends OutputCore
             $report_data['reason'] = $report_info['reason'];
             $report_data['reporter_ip'] = @inet_pton($report_info['reporter_ip']);
             $report_data['dismiss_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=reports&board_id=' .
-                    $report_info['board_id'] . '&action=remove&report_id=' . $report_info['report_id'];
+                    $report_info['board_id'] . '&actions=remove&report_id=' . $report_info['report_id'];
             $this->render_data['reports_list'][] = $report_data;
         }
 

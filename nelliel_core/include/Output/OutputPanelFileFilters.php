@@ -55,7 +55,7 @@ class OutputPanelFileFilters extends OutputCore
         }
 
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY .
-                http_build_query(['module' => 'admin', 'section' => 'file-filters', 'action' => 'add']);
+                http_build_query(['module' => 'admin', 'section' => 'file-filters', 'actions' => 'add']);
         $bgclass = 'row1';
 
         foreach ($filters as $filter)
@@ -70,7 +70,7 @@ class OutputPanelFileFilters extends OutputCore
             $filter_data['board_id'] = $filter['board_id'];
             $filter_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY .
                     http_build_query(
-                            ['module' => 'admin', 'section' => 'file-filters', 'action' => 'remove',
+                            ['module' => 'admin', 'section' => 'file-filters', 'actions' => 'remove',
                                 'filter-id' => $filter['entry']]);
             $this->render_data['filter_list'][] = $filter_data;
         }

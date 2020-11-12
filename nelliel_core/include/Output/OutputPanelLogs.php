@@ -68,7 +68,7 @@ class OutputPanelLogs extends OutputCore
         $prepared = $this->database->prepare($query);
         $logs = $this->database->executePreparedFetchAll($prepared, [$entries, $row_offset], PDO::FETCH_ASSOC);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY .
-                http_build_query(['module' => 'admin', 'section' => 'file-filters', 'action' => 'add']);
+                http_build_query(['module' => 'admin', 'section' => 'file-filters', 'actions' => 'add']);
         $bgclass = 'row1';
         $this->render_data['log_entry_list'] = array();
 

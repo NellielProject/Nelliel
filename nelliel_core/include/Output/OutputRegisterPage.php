@@ -45,13 +45,13 @@ class OutputRegisterPage extends OutputCore
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot], true);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY .
-                http_build_query(['module' => 'account', 'section' => 'register', 'action' => 'submit']);
+                http_build_query(['module' => 'account', 'section' => 'register', 'actions' => 'submit']);
                 $this->render_data['login_url'] = NEL_MAIN_SCRIPT_QUERY .
-                http_build_query(['module' => 'account', 'action' => 'login']);
+                http_build_query(['module' => 'account', 'actions' => 'login']);
         $this->render_data['use_register_captcha'] = $this->domain->setting('use_register_captcha');
-        $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=get';
+        $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&actions=get';
         $this->render_data['captcha_regen_url'] = $dotdot . NEL_MAIN_SCRIPT .
-                '?module=captcha&action=generate&no-display';
+                '?module=captcha&actions=generate&no-display';
         $this->render_data['use_register_recaptcha'] = $this->domain->setting('use_register_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('account/register', $this->render_data);

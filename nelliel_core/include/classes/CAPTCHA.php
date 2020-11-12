@@ -26,7 +26,7 @@ class CAPTCHA
 
     public function dispatch(array $inputs)
     {
-        switch ($inputs['action'])
+        switch ($inputs['actions'][0])
         {
             case 'get':
                 $this->get();

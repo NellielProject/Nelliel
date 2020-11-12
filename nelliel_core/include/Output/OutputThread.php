@@ -114,8 +114,8 @@ class OutputThread extends OutputCore
         $this->render_data['index_navigation'] = true;
         $this->render_data['footer_form'] = true;
         $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
-        $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=get';
-        $this->render_data['captcha_regen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&action=generate&no-display';
+        $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&actions=get';
+        $this->render_data['captcha_regen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&actions=generate&no-display';
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);

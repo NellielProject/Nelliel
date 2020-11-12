@@ -63,7 +63,7 @@ class OutputBanPage extends OutputCore
         if ($ban_info['appeal_status'] == 0)
         {
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY .
-                    http_build_query(['module' => 'ban-page', 'action' => 'add-appeal']);
+                    http_build_query(['module' => 'ban-page', 'actions' => 'add-appeal']);
 
             if (!empty($ban_info['board_id']))
             {

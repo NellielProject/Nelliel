@@ -29,18 +29,16 @@ function nel_dispatch_preparation()
     }
 
     $inputs = array();
+    $inputs['raw_actions'] = $_GET['actions'] ?? '';
 
-    $inputs['action'] = $_GET['action'] ?? array();
-
-    if(!is_array($inputs['action']))
+    if(!is_array($inputs['raw_actions']))
     {
-        $inputs['actions'] = [$inputs['action']];
+        $inputs['actions'] = [$inputs['raw_actions']];
     }
     else
     {
-        $inputs['actions'] = $inputs['action'];
+        $inputs['actions'] = $inputs['raw_actions'];
     }
-
 
     $inputs['module'] = $_GET['module'] ?? '';
     $inputs['section'] = $_GET['section'] ?? '';
@@ -104,22 +102,22 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $inputs['thread'] = $_GET['thread'] ?? null;
             $session = new \Nelliel\Account\Session();
 
-            if ($inputs['action'] === 'view-index')
+            if ($inputs['actions'][0] === 'view-index')
             {
                 $output_index = new \Nelliel\Output\OutputIndex($domain, false);
                 $output_index->render(['thread_id' => 0], false);
             }
-            else if ($inputs['action'] === 'view-thread')
+            else if ($inputs['actions'][0] === 'view-thread')
             {
                 $output_thread = new \Nelliel\Output\OutputThread($domain, false);
                 $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'view-thread'], false);
             }
-            else if ($inputs['action'] === 'expand-thread')
+            else if ($inputs['actions'][0] === 'expand-thread')
             {
                 $output_thread = new \Nelliel\Output\OutputThread($domain, false);
                 $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'expand-thread'], false);
             }
-            else if ($inputs['action'] === 'collapse-thread')
+            else if ($inputs['actions'][0] === 'collapse-thread')
             {
                 $output_thread = new \Nelliel\Output\OutputThread($domain, false);
                 $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'collapse-thread'],
@@ -127,23 +125,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             }
 
             break;
-
-        /*case 'main-panel':
-            $session = new \Nelliel\Account\Session();
-            $session->loggedInOrError();
-
-            if ($domain->id() !== '_site_')
-            {
-                $output_board_panel = new \Nelliel\Output\OutputPanelBoard($domain, false);
-                $output_board_panel->render(['user' => $session->sessionUser()], false);
-            }
-            else
-            {
-                $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain, false);
-                $output_main_panel->render(['user' => $session->sessionUser()], false);
-            }
-
-            break;*/
 
         case 'language':
             $language_dispatch = new \Nelliel\Language\Dispatch($domain, $authorization);
@@ -159,7 +140,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $fgsfds = new \Nelliel\FGSFDS();
             $session = new \Nelliel\Account\Session();
 
-            if ($inputs['action'] === 'new-post')
+            if ($inputs['actions'][0] === 'new-post')
             {
                 $new_post = new \Nelliel\Post\NewPost($domain);
                 $new_post->processPost();
@@ -248,7 +229,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $session->loggedInOrError();
             $user = $session->sessionUser();
 
-            if ($inputs['action'] === 'board-all-pages')
+            if ($inputs['actions'][0] === 'board-all-pages')
             {
                 if (!$user->checkPermission($domain, 'perm_regen_pages'))
                 {
@@ -261,7 +242,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 $forward = 'board';
             }
 
-            if ($inputs['action'] === 'board-all-caches')
+            if ($inputs['actions'][0] === 'board-all-caches')
             {
                 if (!$user->checkPermission($domain, 'perm_regen_cache'))
                 {
@@ -272,7 +253,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 $forward = 'board';
             }
 
-            if ($inputs['action'] === 'site-all-caches')
+            if ($inputs['actions'][0] === 'site-all-caches')
             {
                 if (!$user->checkPermission($domain, 'perm_regen_cache'))
                 {
@@ -283,7 +264,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 $forward = 'site';
             }
 
-            if ($inputs['action'] === 'overboard-all-pages')
+            if ($inputs['actions'][0] === 'overboard-all-pages')
             {
                 if (!$user->checkPermission($domain, 'perm_regen_pages'))
                 {

@@ -23,7 +23,7 @@ class Dispatch
         switch ($inputs['section'])
         {
             case 'login':
-                if ($inputs['action'] === 'submit')
+                if ($inputs['actions'][0] === 'submit')
                 {
                     $session = new \Nelliel\Account\Session();
                     $session->login();
@@ -47,7 +47,7 @@ class Dispatch
             case 'register':
                 $authorization = new \Nelliel\Auth\Authorization(nel_database());
 
-                if ($inputs['action'] === 'submit')
+                if ($inputs['actions'][0] === 'submit')
                 {
                     $register = new \Nelliel\Account\Register($authorization, $this->domain);
                     $register->new();

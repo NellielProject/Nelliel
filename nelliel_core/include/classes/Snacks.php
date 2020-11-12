@@ -127,7 +127,7 @@ class Snacks
 
         if (!empty($inputs) && $inputs['module'] === 'ban-page')
         {
-            if ($inputs['action'] === 'add-appeal')
+            if ($inputs['actions'][0] === 'add-appeal')
             {
                 $this->banAppeal($inputs['board_id'], $ban_info);
                 $ban_info = $this->ban_hammer->getBanById($ban_info['ban_id']);
