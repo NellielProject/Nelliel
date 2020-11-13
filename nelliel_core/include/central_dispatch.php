@@ -253,7 +253,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                             nel_derp(411, _gettext('You are not allowed to regenerate board caches.'));
                         }
 
-                        $regen->boardCache($domain);
+                        $domain->regenCache();
                         $forward = 'board';
                         break;
 
@@ -263,7 +263,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                             nel_derp(412, _gettext('You are not allowed to regenerate site caches.'));
                         }
 
-                        $regen->siteCache($domain);
+                        $domain->regenCache();
                         $forward = 'site';
                         break;
 

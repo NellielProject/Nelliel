@@ -121,8 +121,8 @@ class AdminBoardSettings extends AdminHandler
 
         if (!$this->defaults)
         {
+            $domain->regenCache();
             $regen = new \Nelliel\Regen();
-            $regen->boardCache($this->domain);
             $regen->allBoardPages($this->domain);
         }
 

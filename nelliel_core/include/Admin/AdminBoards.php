@@ -77,12 +77,7 @@ class AdminBoards extends AdminHandler
         $setup->createBoardDirectories($board_id);
         $domain = new \Nelliel\DomainBoard($board_id, $this->database);
         $regen = new \Nelliel\Regen();
-
-        if (NEL_USE_INTERNAL_CACHE)
-        {
-            $regen->boardCache($domain);
-        }
-
+        $domain->regenCache();
         $regen->allBoardPages($domain);
         $regen->boardList(new \Nelliel\DomainSite($this->database));
         $this->outputMain(true);

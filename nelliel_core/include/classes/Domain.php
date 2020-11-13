@@ -30,10 +30,6 @@ abstract class Domain
 
     protected abstract function loadSettingsFromDatabase();
 
-    public abstract function regenCache();
-
-    public abstract function deleteCache();
-
     public abstract function globalVariation();
 
     protected function utilitySetup()
@@ -97,7 +93,7 @@ abstract class Domain
 
     public function templatePath($new_path = null)
     {
-        if(!is_null($new_path))
+        if (!is_null($new_path))
         {
             $this->template_path = $new_path;
         }
@@ -112,11 +108,11 @@ abstract class Domain
 
     public function locale(string $locale = null)
     {
-        if(!isset($this->locale) && is_null($locale))
+        if (!isset($this->locale) && is_null($locale))
         {
             $locale = $this->setting('locale');
 
-            if(nel_true_empty($locale))
+            if (nel_true_empty($locale))
             {
                 $locale = NEL_DEFAULT_LOCALE;
             }
@@ -124,7 +120,7 @@ abstract class Domain
             $this->updateLocale($locale);
         }
 
-        if(!is_null($locale))
+        if (!is_null($locale))
         {
             $this->updateLocale($locale);
         }
@@ -138,15 +134,21 @@ abstract class Domain
         $this->language->accessGettext()->locale($this->locale);
         $this->language->accessGettext()->textdomain('nelliel');
 
-        if(!$this->language->accessGettext()->translationLoaded('nelliel', LC_MESSAGES))
+        if (!$this->language->accessGettext()->translationLoaded('nelliel', LC_MESSAGES))
         {
             $this->language->loadLanguage($locale, 'nelliel', LC_MESSAGES);
-
         }
     }
 
     public function frontEndData()
     {
         return $this->front_end_data;
+    }
+
+    protected function cacheSettings()
+    {
+        $settings = $this->loadSettingsFromDatabase();
+        $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/', 'domain_settings.php',
+                '$domain_settings = ' . var_export($settings, true) . ';');
     }
 }

@@ -48,7 +48,7 @@ class Setup
         $this->createCoreDirectories();
         $site_domain = new \Nelliel\DomainSite(nel_database());
         $regen = new \Nelliel\Regen();
-        $regen->siteCache($site_domain);
+        $site_domain->regenCache();
         //$regen->news($site_domain);
         $generate_files->installDone(false);
 

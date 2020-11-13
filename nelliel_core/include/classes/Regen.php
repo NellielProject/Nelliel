@@ -29,18 +29,6 @@ class Regen
         }
     }
 
-    public function boardCache(Domain $domain)
-    {
-        $domain->regenCache();
-        $filetypes = new FileTypes($domain->database());
-        $filetypes->generateSettingsCache($domain->id());
-    }
-
-    public function siteCache(Domain $domain)
-    {
-        $domain->regenCache();
-    }
-
     public function news(Domain $domain)
     {
         $news = new \Nelliel\Output\OutputNews($domain, true);
@@ -66,15 +54,18 @@ class Regen
     {
         $board_json = new \Nelliel\API\JSON\JSONBoard($domain, new \Nelliel\Utility\FileHandler());
         $board_list_json = new \Nelliel\API\JSON\JSONBoardList($domain, new \Nelliel\Utility\FileHandler());
-        $board_ids = $domain->database()->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+        $board_ids = $domain->database()->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
+                PDO::FETCH_COLUMN);
 
-        foreach($board_ids as $id)
+        foreach ($board_ids as $id)
         {
             $board_domain = new DomainBoard($id, $domain->database());
-            $board_config = $domain->database()->executeFetchAll('SELECT "setting_name", "setting_value" FROM "' . $board_domain->reference('config_table') . '"', PDO::FETCH_ASSOC);
+            $board_config = $domain->database()->executeFetchAll(
+                    'SELECT "setting_name", "setting_value" FROM "' . $board_domain->reference('config_table') . '"',
+                    PDO::FETCH_ASSOC);
             $board_data = ['board_id' => $id];
 
-            foreach($board_config as $config)
+            foreach ($board_config as $config)
             {
                 $board_data[$config['setting_name']] = $config['setting_value'];
             }

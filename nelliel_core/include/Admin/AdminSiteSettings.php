@@ -59,7 +59,7 @@ class AdminSiteSettings extends AdminHandler
         }
 
         $regen = new \Nelliel\Regen();
-        $regen->siteCache($this->domain);
+        $this->domain->regenCache();
         $this->outputMain(true);
     }
 

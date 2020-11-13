@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class DomainBoard extends Domain
+class DomainBoard extends Domain implements NellielCacheInterface
 {
 
     public function __construct(string $domain_id, NellielPDO $database)
@@ -81,9 +81,10 @@ class DomainBoard extends Domain
                 'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $db_prefix = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);
         $config_table = $db_prefix . '_config';
-        $config_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . $config_table . '" ON "' .
-                NEL_SETTINGS_TABLE . '"."setting_name" = "' . $config_table .
-                '"."setting_name" WHERE "setting_category" = \'board\'', PDO::FETCH_ASSOC);
+        $config_list = $this->database->executeFetchAll(
+                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . $config_table . '" ON "' . NEL_SETTINGS_TABLE .
+                '"."setting_name" = "' . $config_table . '"."setting_name" WHERE "setting_category" = \'board\'',
+                PDO::FETCH_ASSOC);
 
         foreach ($config_list as $config)
         {
@@ -92,24 +93,6 @@ class DomainBoard extends Domain
         }
 
         return $settings;
-    }
-
-    public function regenCache()
-    {
-        if (NEL_USE_INTERNAL_CACHE)
-        {
-            $settings = $this->loadSettingsFromDatabase();
-            $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/', 'domain_settings.php',
-                    '$domain_settings = ' . var_export($settings, true) . ';');
-        }
-    }
-
-    public function deleteCache()
-    {
-        if (NEL_USE_INTERNAL_CACHE)
-        {
-            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . $this->domain_id);
-        }
     }
 
     public function globalVariation()
@@ -127,5 +110,23 @@ class DomainBoard extends Domain
         $prepared = $this->database->prepare('SELECT 1 FROM "nelliel_board_data" WHERE "board_id" = ?');
         $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);
         return !empty($board_data);
+    }
+
+    public function regenCache()
+    {
+        if (NEL_USE_INTERNAL_CACHE)
+        {
+            $this->cacheSettings();
+            $filetypes = new FileTypes($this->database());
+            $filetypes->generateSettingsCache($this->domain_id);
+        }
+    }
+
+    public function deleteCache()
+    {
+        if (NEL_USE_INTERNAL_CACHE)
+        {
+            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . $this->domain_id);
+        }
     }
 }
