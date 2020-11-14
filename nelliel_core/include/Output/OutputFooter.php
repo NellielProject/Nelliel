@@ -54,7 +54,8 @@ class OutputFooter extends OutputCore
             $info = json_decode($style['info'], true);
             $style_data['stylesheet'] = ($style['is_default']) ? 'stylesheet' : 'alternate stylesheet';
             $style_data['style_id'] = $style['id'];
-            $style_data['stylesheet_url'] = $dotdot . NEL_CUSTOM_STYLES_WEB_PATH . $info['directory'] . '/' . $info['main_file'];
+            $style_data['stylesheet_url'] = $dotdot . NEL_CUSTOM_STYLES_WEB_PATH . $info['directory'] . '/' .
+                    $info['main_file'];
             $style_data['style_name'] = $info['name'];
             $style_set[] = $style_data;
         }

@@ -48,7 +48,7 @@ class Setup
         $this->createCoreDirectories();
         $site_domain = new \Nelliel\DomainSite(nel_database());
         $regen = new \Nelliel\Regen();
-        $regen->siteCache($site_domain);
+        $site_domain->regenCache();
         //$regen->news($site_domain);
         $generate_files->installDone(false);
 
@@ -58,7 +58,7 @@ class Setup
             echo _gettext('Site owner account already created.'), '<br>';
             echo _gettext(
                     'Install has finished with no apparent problems! When you\'re ready to continue, follow this link to the login page: '), '<br>';
-            echo '<a href="' . NEL_BASE_WEB_PATH . 'imgboard.php?module=account&amp;action=login">' . _gettext('Login page') . '</a>';
+            echo '<a href="' . NEL_BASE_WEB_PATH . 'imgboard.php?module=account&amp;actions=login">' . _gettext('Login page') . '</a>';
             echo '</body></html>';
             die();
         }
@@ -68,7 +68,7 @@ class Setup
             echo _gettext(
                     'No problems so far! To complete setup, a site owner account needs to be created. This account will have all permissions by default. It is also necessary to use the site settings control panel.');
             echo '</p>';
-            echo '<form accept-charset="utf-8" action="imgboard.php?module=account&amp;action=register&amp;create_owner=' . rawurlencode($install_id) . '" method="post">';
+            echo '<form accept-charset="utf-8" action="imgboard.php?module=account&amp;actions=register&amp;create_owner=' . rawurlencode($install_id) . '" method="post">';
             echo '
 <div>
     <span data-i18n="gettext">User ID: </span><input type="text" name="register_user_id" size="25" maxlength="255">

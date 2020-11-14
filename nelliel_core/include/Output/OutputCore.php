@@ -18,7 +18,6 @@ abstract class OutputCore
     protected $file_handler;
     protected $cache_handler;
     protected $output_filter;
-    protected $url_constructor;
     protected $timer_start;
     protected $timer_stored;
     protected $core_id;
@@ -33,7 +32,6 @@ abstract class OutputCore
         $this->file_handler = new \Nelliel\Utility\FileHandler();
         $this->cache_handler = new \Nelliel\Utility\CacheHandler();
         $this->output_filter = new \Nelliel\OutputFilter();
-        $this->url_constructor = new \Nelliel\URLConstructor();
     }
 
     protected function selectRenderCore(string $core_id)

@@ -21,21 +21,6 @@ class AdminSiteSettings extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        if ($action === 'update')
-        {
-            $this->update();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelSiteSettings($this->domain, false);
@@ -63,7 +48,7 @@ class AdminSiteSettings extends AdminHandler
 
         foreach ($_POST as $key => $value)
         {
-            if(is_array($value))
+            if (is_array($value))
             {
                 $value = nel_form_input_default($value);
             }
@@ -74,7 +59,8 @@ class AdminSiteSettings extends AdminHandler
         }
 
         $regen = new \Nelliel\Regen();
-        $regen->siteCache($this->domain);
+        $this->domain->regenCache();
+        $this->outputMain(true);
     }
 
     public function remove()

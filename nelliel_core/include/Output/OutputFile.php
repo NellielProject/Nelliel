@@ -55,8 +55,8 @@ class OutputFile extends OutputCore
         if ($session->inModmode($this->domain))
         {
             $this->render_data['in_modmode'] = true;
-            $this->render_data['delete_url'] = '?module=threads-admin&board_id=' . $this->domain->id() .
-                    '&action=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true&goback=true';
+            $this->render_data['delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
+                    '&actions=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true&goback=true';
         }
 
         $this->render_data['display_filesize'] = ' (' . round(((int) $file['filesize'] / 1024), 2) . ' KB)';
@@ -154,8 +154,7 @@ class OutputFile extends OutputCore
                     $front_end_data = new \Nelliel\FrontEndData($this->domain->database());
                     $icon_set = $front_end_data->iconSet($this->domain->setting('icon_set_id'));
                     $web_path = $front_end_data->iconSetIsCore($this->domain->setting('icon_set_id')) ? NEL_CORE_ICON_SETS_WEB_PATH : NEL_CUSTOM_ICON_SETS_WEB_PATH;
-                    $icons_web_path = '//' . $web_paths['base_domain'] . $web_path . $icon_set['directory'] .
-                            '/';
+                    $icons_web_path = '//' . $web_paths['base_domain'] . $web_path . $icon_set['directory'] . '/';
                     $file_path = $front_end_data->iconSetIsCore($this->domain->setting('icon_set_id')) ? NEL_CORE_ICON_SETS_FILES_PATH : NEL_CUSTOM_ICON_SETS_FILES_PATH;
                     $icons_file_path = $file_path . $icon_set['directory'] . '/';
                     $format_icon = utf8_strtolower($file['format']) . '.png';
@@ -164,10 +163,11 @@ class OutputFile extends OutputCore
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
 
-                    if (file_exists($icons_file_path . 'filetype/' . utf8_strtolower($file['type']) . '/' . $format_icon))
+                    if (file_exists(
+                            $icons_file_path . 'filetype/' . utf8_strtolower($file['type']) . '/' . $format_icon))
                     {
-                        $this->render_data['preview_url'] = $icons_web_path . 'filetype/' . utf8_strtolower($file['type']) . '/' .
-                                $format_icon;
+                        $this->render_data['preview_url'] = $icons_web_path . 'filetype/' .
+                                utf8_strtolower($file['type']) . '/' . $format_icon;
                     }
                     else if (file_exists($icons_file_path . 'filetype/generic/' . $type_icon))
                     {
@@ -194,7 +194,7 @@ class OutputFile extends OutputCore
                 if ($file['deleted'])
                 {
                     $this->render_data['preview_url'] = '//' . $web_paths['base_domain'] . NEL_CORE_IMAGES_WEB_PATH .
-                    'covers/deleted_file.png';
+                            'covers/deleted_file.png';
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }

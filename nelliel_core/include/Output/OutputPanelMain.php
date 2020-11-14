@@ -75,7 +75,7 @@ class OutputPanelMain extends OutputCore
                     continue;
                 }
 
-                $board_data['board_url'] = NEL_MAIN_SCRIPT . '?module=main-panel&board_id=' . $board['board_id'];
+                $board_data['board_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=board-main-panel&board_id=' . $board['board_id'];
                 $board_data['board_id'] = '/' . $board['board_id'] . '/';
 
                 if ($user->isSiteOwner())
@@ -92,37 +92,37 @@ class OutputPanelMain extends OutputCore
         }
 
         $this->render_data['module_manage_boards'] = $user->checkPermission($this->domain, 'perm_manage_boards');
-        $this->render_data['manage_boards_url'] = NEL_MAIN_SCRIPT . '?module=manage-boards';
+        $this->render_data['manage_boards_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=manage-boards';
         $this->render_data['module_users'] = $user->checkPermission($this->domain, 'perm_manage_users');
-        $this->render_data['users_url'] = NEL_MAIN_SCRIPT . '?module=users';
+        $this->render_data['users_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=users';
         $this->render_data['module_roles'] = $user->checkPermission($this->domain, 'perm_manage_roles');
-        $this->render_data['roles_url'] = NEL_MAIN_SCRIPT . '?module=roles';
+        $this->render_data['roles_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=roles';
         $this->render_data['module_permissions'] = $user->checkPermission($this->domain, 'perm_manage_permissions');
-        $this->render_data['permissions_url'] = NEL_MAIN_SCRIPT . '?module=permissions';
+        $this->render_data['permissions_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=permissions';
         $this->render_data['module_site_settings'] = $user->checkPermission($this->domain, 'perm_site_config');
-        $this->render_data['site_settings_url'] = NEL_MAIN_SCRIPT . '?module=site-settings';
+        $this->render_data['site_settings_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=site-settings';
         $this->render_data['module_file_filters'] = $user->checkPermission($this->domain, 'perm_manage_file_filters');
-        $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT . '?module=file-filters';
+        $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=file-filters';
         $this->render_data['module_board_defaults'] = $user->checkPermission($this->domain, 'perm_board_defaults');
-        $this->render_data['board_defaults_url'] = NEL_MAIN_SCRIPT . '?module=board-defaults';
+        $this->render_data['board_defaults_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=board-defaults';
         $this->render_data['module_reports'] = $user->checkPermission($this->domain, 'perm_manage_reports');
-        $this->render_data['reports_url'] = NEL_MAIN_SCRIPT . '?module=reports';
+        $this->render_data['reports_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=reports';
         $this->render_data['module_templates'] = $user->checkPermission($this->domain, 'perm_manage_templates');
-        $this->render_data['templates_url'] = NEL_MAIN_SCRIPT . '?module=templates';
+        $this->render_data['templates_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=templates';
         $this->render_data['module_filetypes'] = $user->checkPermission($this->domain, 'perm_manage_filetypes');
-        $this->render_data['filetypes_url'] = NEL_MAIN_SCRIPT . '?module=filetypes';
+        $this->render_data['filetypes_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=filetypes';
         $this->render_data['module_styles'] = $user->checkPermission($this->domain, 'perm_manage_styles');
-        $this->render_data['styles_url'] = NEL_MAIN_SCRIPT . '?module=styles';
+        $this->render_data['styles_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=styles';
         $this->render_data['module_icon_sets'] = $user->checkPermission($this->domain, 'perm_manage_icon_sets');
-        $this->render_data['icon_sets_url'] = NEL_MAIN_SCRIPT . '?module=icon-sets';
+        $this->render_data['icon_sets_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=icon-sets';
         $this->render_data['module_news'] = $user->checkPermission($this->domain, 'perm_manage_news');
-        $this->render_data['news_url'] = NEL_MAIN_SCRIPT . '?module=news';
+        $this->render_data['news_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=news';
         $this->render_data['regen_overboard_pages'] = $user->checkPermission($this->domain, 'perm_regen_pages');
-        $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT . '?module=regen&action=overboard-all-pages';
+        $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT . '?module=regen&actions=overboard-all-pages';
         $this->render_data['regen_site_caches'] = $user->checkPermission($this->domain, 'perm_regen_cache');
-        $this->render_data['regen_caches_url'] = NEL_MAIN_SCRIPT . '?module=regen&action=site-all-caches';
+        $this->render_data['regen_caches_url'] = NEL_MAIN_SCRIPT . '?module=regen&actions=site-all-caches';
         $this->render_data['module_extract_gettext'] = $user->checkPermission($this->domain, 'perm_extract_gettext');
-        $this->render_data['extract_gettext_url'] = NEL_MAIN_SCRIPT . '?module=language&action=extract-gettext';
+        $this->render_data['extract_gettext_url'] = NEL_MAIN_SCRIPT . '?module=language&actions=extract-gettext';
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/main_panel', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);

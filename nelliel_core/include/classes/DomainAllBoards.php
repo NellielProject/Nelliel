@@ -40,14 +40,6 @@ class DomainAllBoards extends Domain
         return array();
     }
 
-    public function regenCache()
-    {
-    }
-
-    public function deleteCache()
-    {
-    }
-
     public function globalVariation()
     {
         return false;

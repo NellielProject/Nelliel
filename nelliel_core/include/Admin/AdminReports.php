@@ -22,21 +22,6 @@ class AdminReports extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        if ($action === 'dismiss')
-        {
-            $this->remove();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelReports($this->domain, false);
@@ -70,5 +55,6 @@ class AdminReports extends AdminHandler
 
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_REPORTS_TABLE . '" WHERE "report_id" = ?');
         $this->database->executePrepared($prepared, [$report_id]);
+        $this->outputMain(true);
     }
 }

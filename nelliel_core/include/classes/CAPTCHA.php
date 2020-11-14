@@ -24,6 +24,20 @@ class CAPTCHA
         $this->file_handler = new \Nelliel\Utility\FileHandler();
     }
 
+    public function dispatch(array $inputs)
+    {
+        switch ($inputs['actions'][0])
+        {
+            case 'get':
+                $this->get();
+                break;
+
+            case 'generate':
+                $this->generate();
+                break;
+        }
+    }
+
     public function get()
     {
         $captcha_key = $_COOKIE['captcha-key'] ?? '';
@@ -191,7 +205,8 @@ class CAPTCHA
                 $this->file_handler->eraserGun(NEL_CAPTCHA_WEB_PATH, $key . '.jpg');
             }
 
-            $prepared = $this->database->prepare('DELETE FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "ip_address" = :ip_address');
+            $prepared = $this->database->prepare(
+                    'DELETE FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "ip_address" = :ip_address');
             $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);
             $this->database->executePrepared($prepared);
         }

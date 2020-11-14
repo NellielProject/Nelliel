@@ -73,8 +73,8 @@ class OutputNavigation extends OutputCore
         $site_domain = new \Nelliel\DomainSite($this->database);
         $dotdot = $parameters['dotdot'] ?? '';
         $render_data['session_active'] = $session->isActive() && !$this->write_mode;
-        $render_data['logout_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=account&action=logout';
-        $render_data['main_panel_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=main-panel';
+        $render_data['logout_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=account&section=logout';
+        $render_data['main_panel_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=admin&section=site-main-panel';
         $render_data['home_url'] = $site_domain->setting('home_page');
         $render_data['news_url'] = $dotdot . 'news.html';
         $render_data['account_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=account';

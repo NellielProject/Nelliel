@@ -33,6 +33,7 @@ else
 }
 
 define('NEL_MAIN_SCRIPT', 'imgboard.php');
+define('NEL_MAIN_SCRIPT_QUERY', 'imgboard.php?');
 define('NEL_MAIN_INDEX', 'index');
 define('NEL_PAGE_EXT', '.html');
 define('NEL_JSON_EXT', '.json');

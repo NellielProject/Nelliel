@@ -20,47 +20,12 @@ class AdminUsers extends AdminHandler
         $this->authorization = $authorization;
         $this->domain = $domain;
         $this->validateUser();
-    }
-
-    public function actionDispatch(string $action, bool $return)
-    {
         $this->user_id = $_GET['user-id'] ?? null;
 
         if (!is_null($this->user_id) && !$this->authorization->userExists($this->user_id))
         {
             nel_derp(230, _gettext('The specified user does not exist.'));
         }
-
-        if ($action === 'new')
-        {
-            $this->creator();
-            $return = true;
-        }
-        else if ($action === 'add')
-        {
-            $this->add();
-        }
-        else if ($action === 'edit')
-        {
-            $this->editor();
-            $return = true;
-        }
-        else if ($action === 'update')
-        {
-            $this->update();
-            $return = true;
-        }
-        else if ($action === 'remove')
-        {
-            $this->remove();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();
     }
 
     public function renderPanel()
@@ -73,6 +38,7 @@ class AdminUsers extends AdminHandler
     {
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
+        $this->outputMain(false);
     }
 
     public function add()
@@ -84,12 +50,14 @@ class AdminUsers extends AdminHandler
 
         $this->user_id = $_POST['user_id'];
         $this->update();
+        $this->outputMain(true);
     }
 
     public function editor()
     {
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
         $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
+        $this->outputMain(false);
     }
 
     public function update()
@@ -103,7 +71,7 @@ class AdminUsers extends AdminHandler
 
         foreach ($_POST as $key => $value) // TODO: Improve this
         {
-            if(is_array($value))
+            if (is_array($value))
             {
                 $value = nel_form_input_default($value);
             }
@@ -146,8 +114,7 @@ class AdminUsers extends AdminHandler
 
         $this->authorization->saveUsers();
         $update_user->loadFromDatabase();
-        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
-        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
+        $this->outputMain(true);
     }
 
     public function remove()
@@ -158,5 +125,6 @@ class AdminUsers extends AdminHandler
         }
 
         $this->authorization->removeUser($this->user_id);
+        $this->outputMain(true);
     }
 }

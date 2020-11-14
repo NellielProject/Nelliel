@@ -24,21 +24,6 @@ class AdminBoardSettings extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        if ($action === 'update')
-        {
-            $this->update();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelBoardSettings($this->domain, false);
@@ -74,7 +59,7 @@ class AdminBoardSettings extends AdminHandler
 
         foreach ($_POST as $key => $value)
         {
-            if(!is_array($value))
+            if (!is_array($value))
             {
                 $this->updateSetting($config_table, $key, $value, $lock_override);
                 continue;
@@ -123,7 +108,7 @@ class AdminBoardSettings extends AdminHandler
                 $value = nel_form_input_default($value);
             }
 
-            if($force_update)
+            if ($force_update)
             {
                 foreach ($this->getBoardDomains() as $board_domain)
                 {
@@ -136,10 +121,12 @@ class AdminBoardSettings extends AdminHandler
 
         if (!$this->defaults)
         {
+            $domain->regenCache();
             $regen = new \Nelliel\Regen();
-            $regen->boardCache($this->domain);
             $regen->allBoardPages($this->domain);
         }
+
+        $this->outputMain(true);
     }
 
     public function remove()

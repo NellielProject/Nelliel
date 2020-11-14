@@ -30,8 +30,7 @@ class OutputBanPage extends OutputCore
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot],
-                true);
+        $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot], true);
         $this->render_data['ban_board'] = ($ban_info['all_boards'] > 0) ? _gettext('All Boards') : $ban_info['board_id'];
         $this->render_data['ban_time'] = date("F jS, Y H:i e", $ban_info['start_time']);
         $ban_expire = $ban_info['length'] + $ban_info['start_time'];
@@ -63,8 +62,8 @@ class OutputBanPage extends OutputCore
 
         if ($ban_info['appeal_status'] == 0)
         {
-            $this->render_data['form_action'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'ban-page', 'action' => 'add-appeal']);
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY .
+                    http_build_query(['module' => 'ban-page', 'actions' => 'add-appeal']);
 
             if (!empty($ban_info['board_id']))
             {

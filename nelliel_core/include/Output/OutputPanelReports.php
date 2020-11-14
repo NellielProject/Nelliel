@@ -47,8 +47,7 @@ class OutputPanelReports extends OutputCore
         {
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . NEL_REPORTS_TABLE . '" WHERE "board_id" = ? ORDER BY "report_id" DESC');
-            $report_list = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()],
-                    PDO::FETCH_ASSOC);
+            $report_list = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
         }
         else
         {
@@ -78,18 +77,20 @@ class OutputPanelReports extends OutputCore
 
             if ($content_id->isThread())
             {
-                $content_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->threadID(),
-                            'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
-                            'modmode' => 'true']);
+                $content_url = NEL_MAIN_SCRIPT_QUERY .
+                        http_build_query(
+                                ['module' => 'render', 'actions' => 'view-thread', 'thread' => $content_id->threadID(),
+                                    'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
+                                    'modmode' => 'true']);
                 $report_data['is_content'] = false;
             }
             else if ($content_id->isPost())
             {
-                $content_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->threadID(),
-                            'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
-                            'modmode' => 'true']);
+                $content_url = NEL_MAIN_SCRIPT_QUERY .
+                        http_build_query(
+                                ['module' => 'render', 'actions' => 'view-thread', 'thread' => $content_id->threadID(),
+                                    'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
+                                    'modmode' => 'true']);
                 $content_url .= '#t' . $content_id->threadID() . 'p' . $content_id->postID();
                 $report_data['is_content'] = false;
             }
@@ -105,10 +106,11 @@ class OutputPanelReports extends OutputCore
                 $report_data['file_url'] = $src_web_path . $content_id->threadID() . '/' . $content_id->postID() . '/' .
                         $filename;
 
-                $content_url = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                        ['module' => 'render', 'action' => 'view-thread', 'thread' => $content_id->threadID(),
-                            'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
-                            'modmode' => 'true']);
+                        $content_url = NEL_MAIN_SCRIPT_QUERY .
+                        http_build_query(
+                                ['module' => 'render', 'actions' => 'view-thread', 'thread' => $content_id->threadID(),
+                                    'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
+                                    'modmode' => 'true']);
                 $content_url .= '#t' . $content_id->threadID() . 'p' . $content_id->postID();
             }
 
@@ -118,8 +120,8 @@ class OutputPanelReports extends OutputCore
             $report_data['content_id'] = $report_info['content_id'];
             $report_data['reason'] = $report_info['reason'];
             $report_data['reporter_ip'] = @inet_pton($report_info['reporter_ip']);
-            $report_data['dismiss_url'] = NEL_MAIN_SCRIPT . '?module=reports&board_id=' . $report_info['board_id'] .
-                    '&action=dismiss&report_id=' . $report_info['report_id'];
+            $report_data['dismiss_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=reports&board_id=' .
+                    $report_info['board_id'] . '&actions=remove&report_id=' . $report_info['report_id'];
             $this->render_data['reports_list'][] = $report_data;
         }
 

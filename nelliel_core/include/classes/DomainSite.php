@@ -9,14 +9,16 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class DomainSite extends Domain
+class DomainSite extends Domain implements NellielCacheInterface
 {
     private $file_filters;
+    private $settings_cache_file;
 
     public function __construct(NellielPDO $database)
     {
         $this->domain_id = '_site_';
         $this->database = $database;
+        $this->settings_cache_file = $this->domain_id . '/' . 'domain_settings.php';
         $this->utilitySetup();
         $this->locale();
         $templates_file_path = ($this->front_end_data->templateIsCore($this->setting('template_id'))) ? NEL_CORE_TEMPLATES_FILES_PATH : NEL_CUSTOM_TEMPLATES_FILES_PATH;
@@ -26,7 +28,7 @@ class DomainSite extends Domain
 
     protected function loadSettings()
     {
-        $settings = $this->cache_handler->loadArrayFromCache('site_settings.php', 'site_settings');
+        $settings = $this->cache_handler->loadArrayFromCache($this->settings_cache_file, 'domain_settings');
 
         if (empty($settings))
         {
@@ -34,8 +36,8 @@ class DomainSite extends Domain
 
             if (NEL_USE_INTERNAL_CACHE)
             {
-                $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/', 'domain_settings.php',
-                        '$domain_settings = ' . var_export($settings, true) . ';');
+                $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/',
+                        'domain_settings.php', '$domain_settings = ' . var_export($settings, true) . ';');
             }
         }
 
@@ -51,7 +53,8 @@ class DomainSite extends Domain
     protected function loadSettingsFromDatabase()
     {
         $settings = array();
-        $config_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_SITE_CONFIG_TABLE . '" ON "' .
+        $config_list = $this->database->executeFetchAll(
+                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_SITE_CONFIG_TABLE . '" ON "' .
                 NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SITE_CONFIG_TABLE .
                 '"."setting_name" WHERE "setting_category" = \'core\'', PDO::FETCH_ASSOC);
 
@@ -67,24 +70,6 @@ class DomainSite extends Domain
     public function globalVariation()
     {
         return false;
-    }
-
-    public function regenCache()
-    {
-        if (NEL_USE_INTERNAL_CACHE)
-        {
-            $settings = $this->loadSettingsFromDatabase();
-            $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH, 'site_settings.php',
-                    '$site_settings = ' . var_export($settings, true) . ';');
-        }
-    }
-
-    public function deleteCache()
-    {
-        if (NEL_USE_INTERNAL_CACHE)
-        {
-            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH, 'site_settings.php');
-        }
     }
 
     public function fileFilters()
@@ -105,5 +90,21 @@ class DomainSite extends Domain
         }
 
         return $this->file_filters;
+    }
+
+    public function regenCache()
+    {
+        if (NEL_USE_INTERNAL_CACHE)
+        {
+            $this->cacheSettings();
+        }
+    }
+
+    public function deleteCache()
+    {
+        if (NEL_USE_INTERNAL_CACHE)
+        {
+            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . $this->domain_id);
+        }
     }
 }

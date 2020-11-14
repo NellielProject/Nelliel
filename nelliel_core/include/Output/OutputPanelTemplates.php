@@ -58,10 +58,14 @@ class OutputPanelTemplates extends OutputCore
             $template_data['directory'] = $template_info['directory'];
             $template_data['output'] = $template_info['output_type'];
             $template_data['is_default'] = $template['is_default'] == 1;
-            $template_data['default_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'templates', 'action' => 'make-default', 'template-id' => $template['template_id']]);
-            $template_data['remove_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'templates', 'action' => 'remove', 'template-id' => $template['template_id']]);
+            $template_data['default_url'] = NEL_MAIN_SCRIPT_QUERY .
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'templates', 'actions' => 'make-default',
+                                'template-id' => $template['template_id']]);
+                            $template_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY .
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'templates', 'actions' => 'remove',
+                                'template-id' => $template['template_id']]);
             $this->render_data['installed_list'][] = $template_data;
         }
 
@@ -79,8 +83,10 @@ class OutputPanelTemplates extends OutputCore
             $template_data['directory'] = $template['directory'];
             $template_data['output'] = $template['output_type'];
             $template_data['is_installed'] = in_array($template['id'], $installed_ids);
-            $template_data['install_url'] = $this->url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                    ['module' => 'templates', 'action' => 'add', 'template-id' => $template['id']]);
+            $template_data['install_url'] = NEL_MAIN_SCRIPT_QUERY .
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'templates', 'actions' => 'add',
+                                'template-id' => $template['id']]);
             $template_data['is_core'] = $this->domain->frontEndData()->templateIsCore($template['id']);
 
             $this->render_data['available_list'][] = $template_data;

@@ -25,40 +25,6 @@ class AdminBoards extends AdminHandler
         $this->validateUser();
     }
 
-    public function actionDispatch(string $action, bool $return)
-    {
-        if ($action === 'add')
-        {
-            $this->add();
-        }
-        else if ($action === 'remove')
-        {
-            if (isset($_GET['action-confirmed']) && $_GET['action-confirmed'] === 'true')
-            {
-                $this->remove();
-            }
-            else
-            {
-                $this->createInterstitial();
-            }
-        }
-        else if ($action === 'lock')
-        {
-            $this->lock();
-        }
-        else if ($action === 'unlock')
-        {
-            $this->unlock();
-        }
-
-        if ($return)
-        {
-            return;
-        }
-
-        $this->renderPanel();
-    }
-
     public function renderPanel()
     {
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain, false);
@@ -79,15 +45,16 @@ class AdminBoards extends AdminHandler
         $site_domain = new \Nelliel\DomainSite($this->database);
         $board_id = $_POST['new_board_id'];
 
-        if($site_domain->setting('only_alphanumeric_board_ids'))
+        if ($site_domain->setting('only_alphanumeric_board_ids'))
         {
-            if(preg_match('/[^a-zA-Z0-9]/', $board_id) === 1)
+            if (preg_match('/[^a-zA-Z0-9]/', $board_id) === 1)
             {
                 nel_derp(242, _gettext('Board ID contains invalid characters!'));
             }
         }
 
-        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ? OR "board_uri" = ?');
+        $prepared = $this->database->prepare(
+                'SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ? OR "board_uri" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$board_id, $board_id], PDO::FETCH_COLUMN);
 
         if ($result)
@@ -97,7 +64,7 @@ class AdminBoards extends AdminHandler
 
         $db_prefix = $this->generateDBPrefix($board_id);
 
-        if($db_prefix === '')
+        if ($db_prefix === '')
         {
             nel_derp(241, _gettext('Had trouble registering the board ID ' . $board_id . '. May want to change it.'));
         }
@@ -110,14 +77,10 @@ class AdminBoards extends AdminHandler
         $setup->createBoardDirectories($board_id);
         $domain = new \Nelliel\DomainBoard($board_id, $this->database);
         $regen = new \Nelliel\Regen();
-
-        if (NEL_USE_INTERNAL_CACHE)
-        {
-            $regen->boardCache($domain);
-        }
-
+        $domain->regenCache();
         $regen->allBoardPages($domain);
         $regen->boardList(new \Nelliel\DomainSite($this->database));
+        $this->outputMain(true);
     }
 
     public function editor()
@@ -178,6 +141,7 @@ class AdminBoards extends AdminHandler
         $this->database->executePrepared($prepared, [$board_id]);
         $regen = new \Nelliel\Regen();
         $regen->boardList(new \Nelliel\DomainSite($this->database));
+        $this->outputMain(true);
     }
 
     public function lock()
@@ -188,8 +152,10 @@ class AdminBoards extends AdminHandler
         }
 
         $board_id = $_GET['board_id'];
-        $prepared = $this->database->prepare('UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
+        $prepared = $this->database->prepare(
+                'UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
+        $this->outputMain(true);
     }
 
     public function unlock()
@@ -200,23 +166,26 @@ class AdminBoards extends AdminHandler
         }
 
         $board_id = $_GET['board_id'];
-        $prepared = $this->database->prepare('UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
+        $prepared = $this->database->prepare(
+                'UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
+        $this->outputMain(true);
     }
 
     public function createInterstitial()
     {
         $message = _gettext(
                 'Are you certain you want to delete the board? Everything will be gone and this cannot be undone!');
-        $url_constructor = new \Nelliel\URLConstructor();
-        $continue_link['href'] = $url_constructor->dynamic(NEL_MAIN_SCRIPT,
-                ['module' => 'manage-boards', 'action' => 'remove', 'action-confirmed' => 'true',
-                    'board_id' => $_GET['board_id'], 'domain_id' => '_site_']);
+        $continue_link['href'] = NEL_MAIN_SCRIPT_QUERY .
+                http_build_query(
+                        ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove',
+                            'action-confirmed' => 'true', 'board_id' => $_GET['board_id'], 'domain_id' => '_site_']);
         $continue_link['text'] = _gettext('Confirm and delete the board.');
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain, false);
         $output_panel->render(
                 ['section' => 'remove_interstitial', 'user' => $this->session_user, 'message' => $message,
                     'continue_link' => $continue_link], false);
+        $this->outputMain(false);
     }
 
     // While most engines can handle unicode, there is potential for issues
@@ -228,9 +197,9 @@ class AdminBoards extends AdminHandler
         $valid = false;
         $final_id = '';
 
-        for($i = 0; $i <= 10; $i ++)
+        for ($i = 0; $i <= 10; $i ++)
         {
-            if(strlen($ascii_id) <= 0)
+            if (strlen($ascii_id) <= 0)
             {
                 $test_id = '_board_' . nel_random_alphanumeric(8);
             }
@@ -243,7 +212,7 @@ class AdminBoards extends AdminHandler
             $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "db_prefix" = ?');
             $result = $this->database->executePreparedFetch($prepared, [$test_id], PDO::FETCH_COLUMN);
 
-            if(!$result)
+            if (!$result)
             {
                 $final_id = $test_id;
                 break;
