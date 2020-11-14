@@ -102,26 +102,30 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $inputs['thread'] = $_GET['thread'] ?? null;
             $session = new \Nelliel\Account\Session();
 
-            if ($inputs['actions'][0] === 'view-index')
+            switch ($inputs['actions'][0])
             {
-                $output_index = new \Nelliel\Output\OutputIndex($domain, false);
-                $output_index->render(['thread_id' => 0], false);
-            }
-            else if ($inputs['actions'][0] === 'view-thread')
-            {
-                $output_thread = new \Nelliel\Output\OutputThread($domain, false);
-                $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'view-thread'], false);
-            }
-            else if ($inputs['actions'][0] === 'expand-thread')
-            {
-                $output_thread = new \Nelliel\Output\OutputThread($domain, false);
-                $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'expand-thread'], false);
-            }
-            else if ($inputs['actions'][0] === 'collapse-thread')
-            {
-                $output_thread = new \Nelliel\Output\OutputThread($domain, false);
-                $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'collapse-thread'],
-                        false);
+                case 'view-index':
+                    $output_index = new \Nelliel\Output\OutputIndex($domain, false);
+                    $output_index->render(['thread_id' => 0], false);
+                    break;
+
+                case 'view-thread':
+                    $output_thread = new \Nelliel\Output\OutputThread($domain, false);
+                    $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'view-thread'],
+                            false);
+                    break;
+
+                case 'expand-thread':
+                    $output_thread = new \Nelliel\Output\OutputThread($domain, false);
+                    $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'expand-thread'],
+                            false);
+                    break;
+
+                case 'collapse-thread':
+                    $output_thread = new \Nelliel\Output\OutputThread($domain, false);
+                    $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'collapse-thread'],
+                            false);
+                    break;
             }
 
             break;
