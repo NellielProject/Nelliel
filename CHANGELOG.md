@@ -1,4 +1,41 @@
 # Nelliel Changelog
+## v0.9.21 (2020/11/13)
+### Breaking
+ - Database
+
+### Added
+ - Option to prune archived threads
+ - Rate limiting functions
+ - Overboard and SFW overboard
+ - Argon2id support
+ - GD preview support for XBM, XPM and WBMP
+ - Dynamic settings system
+ - Option to block user content deletion
+ - Default settings can optionally force update to all boards
+ - Placeholder option and icon when a file has been deleted
+
+### Changed
+ - CAPTCHA system overhaul
+ - Proper constant prefixes
+ - Reorganize templates
+ - Refined database schemas
+ - nelliel_core can now be moved out of main directory
+ - Improve filetype handling
+ - Improve board creation and board id handling
+ - Overhaul of dispatch system
+ - Clean up cache regen and deletion
+
+### Fixed
+ - Some Mod Mode things
+ - Redirect issues
+ - Content deletion
+ - LC_MESSAGES defining
+ - Preferred filename setting
+ - Various small bugs
+ 
+### Removed
+  - `module_dispatch.php`
+
 ## v0.9.20 (2020/05/04)
 ### Breaking
  - Database
@@ -23,10 +60,10 @@
  - Permissions panel available again
  - Improved installation process
  - Better GIF processing
- 
+
 ### Fixed
  - So many things
- 
+
 ### Removed
  - Super Admin stuff
 
