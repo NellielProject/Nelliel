@@ -76,6 +76,7 @@ class NellielLogger implements LoggerInterface
         $data['event_id'] = $context['event_id'] ?? 'UNKNOWN';
         $data['originator'] = $context['originator'] ?? '';
         $data['ip_address'] = $context['ip_address'] ?? null;
+        $data['hashed_ip_address'] = $context['hashed_ip_address'] ?? null;
         $data['time'] = time();
         $data['message'] = $message;
         $this->dbInsert($context['table'], $data);
@@ -84,14 +85,15 @@ class NellielLogger implements LoggerInterface
     protected function dbInsert(string $table, array $data) {
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . $table .
-                '" ("level", "domain_id",  "event_id", "originator", "ip_address", "time", "message")
-								VALUES (:level, :domain_id, :event_id, :originator, :ip_address, :time, :message)');
+                '" ("level", "domain_id",  "event_id", "originator", "ip_address", "hashed_ip_address", "time", "message")
+								VALUES (:level, :domain_id, :event_id, :originator, :ip_address, :hashed_ip_address, :time, :message)');
         $prepared->bindParam(':level', $data['level'], PDO::PARAM_INT);
         $prepared->bindParam(':domain_id', $data['domain_id'], PDO::PARAM_STR);
         $prepared->bindParam(':event_id', $data['event_id'], PDO::PARAM_STR);
         $prepared->bindParam(':originator', $data['originator'], PDO::PARAM_STR);
         $encoded_ip = @inet_pton($data['ip_address']);
         $prepared->bindParam(':ip_address', $encoded_ip, PDO::PARAM_LOB);
+        $prepared->bindParam(':hashed_ip_address', $data['hashed_ip_address'], PDO::PARAM_LOB);
         $prepared->bindParam(':time', $data['time'], PDO::PARAM_INT);
         $prepared->bindParam(':message', $data['message'], PDO::PARAM_STR);
         $this->database->executePrepared($prepared);

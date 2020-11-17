@@ -64,7 +64,8 @@ class ContentPost extends ContentHandler
             return false;
         }
 
-        $prepared = $this->database->prepare('SELECT "post_number" FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
+        $prepared = $this->database->prepare(
+                'SELECT "post_number" FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN);
 
         if ($result)
@@ -74,7 +75,7 @@ class ContentPost extends ContentHandler
                     '" SET "parent_thread" = :parent_thread,
                     "poster_name" = :poster_name, "reply_to" = :reply_to, "post_password" = :post_password,
                     "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "email" = :email,
-                    "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address,
+                    "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address, "hashed_ip_address" = :hashed_ip_address,
                     "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_content" = :has_content, "content_count" = :content_count,
                     "op" = :op, "sage" = :sage, "mod_post_id" = :mod_post_id, "mod_comment" = :mod_comment
                     WHERE "post_number" = :post_number');
@@ -85,8 +86,8 @@ class ContentPost extends ContentHandler
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->posts_table .
                     '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "email",
-                    "subject", "comment", "ip_address", "post_time", "post_time_milli", "has_content", "content_count", "op", "sage", "mod_post_id", "mod_comment") VALUES
-                    (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :email, :subject, :comment, :ip_address, :post_time, :post_time_milli, :has_content, :content_count,
+                    "subject", "comment", "ip_address", "hashed_ip_address", "post_time", "post_time_milli", "has_content", "content_count", "op", "sage", "mod_post_id", "mod_comment") VALUES
+                    (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :email, :subject, :comment, :ip_address, :hashed_ip_address, :post_time, :post_time_milli, :has_content, :content_count,
                     :op, :sage, :mod_post_id, :mod_comment)');
         }
 
@@ -101,7 +102,9 @@ class ContentPost extends ContentHandler
         $prepared->bindValue(':email', $this->contentDataOrDefault('email', null), PDO::PARAM_STR);
         $prepared->bindValue(':subject', $this->contentDataOrDefault('subject', null), PDO::PARAM_STR);
         $prepared->bindValue(':comment', $this->contentDataOrDefault('comment', null), PDO::PARAM_STR);
-        $prepared->bindValue(':ip_address', $this->contentDataOrDefault('ip_address', '0.0.0.0'), PDO::PARAM_LOB);
+        $prepared->bindValue(':ip_address', $this->contentDataOrDefault('ip_address', null), PDO::PARAM_LOB);
+        $prepared->bindValue(':hashed_ip_address', $this->contentDataOrDefault('hashed_ip_address', null),
+                PDO::PARAM_LOB);
         $prepared->bindValue(':post_time', $this->contentDataOrDefault('post_time', 0), PDO::PARAM_INT);
         $prepared->bindValue(':post_time_milli', $this->contentDataOrDefault('post_time_milli', 0), PDO::PARAM_INT);
         $prepared->bindValue(':has_content', $this->contentDataOrDefault('has_content', 0), PDO::PARAM_INT);

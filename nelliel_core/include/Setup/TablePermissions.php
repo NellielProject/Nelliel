@@ -69,6 +69,7 @@ class TablePermissions extends TableHandler
         $this->insertDefaultRow(['perm_board_mod_comment', 'Add staff commentary to a post']);
         $this->insertDefaultRow(['perm_board_delete_posts', 'Delete posts and threads']);
         $this->insertDefaultRow(['perm_manage_reports', 'Manage reports']);
+        $this->insertDefaultRow(['perm_view_unhashed_ip', 'View unhashed IP addresses']);
         $this->insertDefaultRow(['perm_mod_mode', 'Access to Moderator Mode']);
     }
 }

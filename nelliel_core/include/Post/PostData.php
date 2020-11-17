@@ -32,6 +32,7 @@ class PostData
         $post->contentID()->changeThreadID($post->data('parent_thread'));
         $post->changeData('reply_to', $post->data('parent_thread')); // This may enable nested posts in the future
         $post->changeData('ip_address', inet_pton($_SERVER['REMOTE_ADDR']));
+        $post->changeData('hashed_ip_address', hash('sha256', $_SERVER['REMOTE_ADDR'], true));
         $poster_name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
         $post->changeData('poster_name', $this->fieldMaxCheck('poster_name', $poster_name));
         $email = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string');

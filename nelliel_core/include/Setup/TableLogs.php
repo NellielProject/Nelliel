@@ -23,6 +23,7 @@ class TableLogs extends TableHandler
             'event_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'originator' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
+            'hashed_ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
             'time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'message' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
@@ -40,6 +41,7 @@ class TableLogs extends TableHandler
             event_id            VARCHAR(50) NOT NULL,
             originator          VARCHAR(50) DEFAULT NULL,
             ip_address          " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
+            hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '32') . " DEFAULT NULL,
             time                INTEGER NOT NULL,
             message             TEXT NOT NULL
         ) " . $options . ";";

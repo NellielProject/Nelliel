@@ -138,6 +138,7 @@ class OutputPost extends OutputCore
         $thread_headers = array();
         $authorization = new \Nelliel\Auth\Authorization($this->database);
         $session = new \Nelliel\Account\Session();
+        $user = $session->sessionUser();
         $cites = new \Nelliel\Cites($this->domain->database());
         $header_data['response'] = $response;
 
@@ -154,8 +155,15 @@ class OutputPost extends OutputCore
 
         if ($session->inModmode($this->domain) && !$this->write_mode)
         {
+            if ($user->checkPermission($this->domain, 'perm_view_unhashed_ip'))
+            {
+                $ip = @inet_ntop($post_data['ip_address']);
+            }
+            else
+            {
+                $ip = $post_data['hashed_ip_address'];
+            }
 
-            $ip = @inet_ntop($post_data['ip_address']);
             $modmode_headers['ip_address'] = $ip;
 
             // TODO: Change display according to user perms
@@ -169,14 +177,16 @@ class OutputPost extends OutputCore
                 $locked = ($thread_data['locked'] == 1);
                 $modmode_headers['lock_text'] = ($locked) ? _gettext('Unlock Thread') : _gettext('Lock Thread');
                 $lock_action = ($locked) ? 'unlock' : 'lock';
-                $modmode_headers['lock_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() . '&actions=' .
-                        $lock_action . '&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
+                $modmode_headers['lock_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
+                        '&actions=' . $lock_action . '&content-id=' . $thread_content_id->getIDString() .
+                        '&modmode=true&goback=true';
                 $temp_content_id = $thread_content_id;
                 $sticky = ($thread_data['sticky'] == 1);
                 $modmode_headers['sticky_text'] = ($sticky) ? _gettext('Unsticky Thread') : _gettext('Sticky Thread');
                 $sticky_action = ($sticky) ? 'unsticky' : 'sticky';
-                $modmode_headers['sticky_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() . '&actions=' .
-                        $sticky_action . '&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
+                $modmode_headers['sticky_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
+                        '&actions=' . $sticky_action . '&content-id=' . $thread_content_id->getIDString() .
+                        '&modmode=true&goback=true';
             }
 
             $modmode_headers['ban_url'] = '?module=admin&section=bans&board_id=' . $this->domain->id() .
@@ -185,8 +195,8 @@ class OutputPost extends OutputCore
             $modmode_headers['delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                     '&actions=delete&content-id=' . $temp_content_id->getIDString() . '&modmode=true&goback=true';
             $modmode_headers['ban_delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
-                    '&actions[0]=delete&actions[1]=ban&content-id=' . $temp_content_id->getIDString() . '&ban_type=POST&ban_ip=' .
-                    rawurlencode($ip) . '&modmode=true&goback=false';
+                    '&actions[0]=delete&actions[1]=ban&content-id=' . $temp_content_id->getIDString() .
+                    '&ban_type=POST&ban_ip=' . rawurlencode($ip) . '&modmode=true&goback=false';
             $header_data['modmode_headers'] = $modmode_headers;
         }
 
@@ -386,10 +396,10 @@ class OutputPost extends OutputCore
 
                                 if (!empty($link_url))
                                 {
-                                        $link = array();
-                                        $link['link_url'] = $link_url;
-                                        $link['link_text'] = $chunk;
-                                        $line_parts[]['link'] = $link;
+                                    $link = array();
+                                    $link['link_url'] = $link_url;
+                                    $link['link_text'] = $chunk;
+                                    $line_parts[]['link'] = $link;
                                 }
                                 else
                                 {
@@ -406,7 +416,7 @@ class OutputPost extends OutputCore
                             continue;
                         }
 
-                        if(!$this->domain->setting('create_url_links'))
+                        if (!$this->domain->setting('create_url_links'))
                         {
                             $line_parts[]['text'] = $chunk;
                             continue;

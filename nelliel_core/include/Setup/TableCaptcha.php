@@ -22,7 +22,9 @@ class TableCaptcha extends TableHandler
             'captcha_text' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'domain_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'time_created' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false]];
+            'ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
+            'hashed_ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false]
+        ];
         $this->schema_version = 1;
     }
 
@@ -32,11 +34,12 @@ class TableCaptcha extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            captcha_key     VARCHAR(64) PRIMARY KEY NOT NULL,
-            captcha_text    VARCHAR(100) NOT NULL,
-            domain_id       VARCHAR(50) DEFAULT NULL,
-            time_created    BIGINT NOT NULL,
-            ip_address      " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL
+            captcha_key         VARCHAR(64) PRIMARY KEY NOT NULL,
+            captcha_text        VARCHAR(100) NOT NULL,
+            domain_id           VARCHAR(50) DEFAULT NULL,
+            time_created        BIGINT NOT NULL,
+            ip_address          " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
+            hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '32') . " DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;
