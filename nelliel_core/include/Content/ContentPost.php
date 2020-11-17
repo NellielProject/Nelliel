@@ -239,7 +239,7 @@ class ContentPost extends ContentHandler
         {
             if ($user->checkPermission($this->domain, 'perm_board_modify_posts'))
             {
-                if (!empty($this->content_data['mod_post_id']))
+                if (!empty($this->content_data['mod_post_id']) && $authorization->userExists($this->content_data['mod_post_id']))
                 {
                     $mod_post_user = $authorization->getUser($this->content_data['mod_post_id']);
                     $flag = $authorization->roleLevelCheck($user->checkRole($this->domain),

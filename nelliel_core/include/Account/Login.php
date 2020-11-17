@@ -44,26 +44,27 @@ class Login
         $login_data = array();
         $attempt_time = time();
         $ip_address = $_SERVER['REMOTE_ADDR'];
+        $hashed_ip_address = hash('sha256', $_SERVER['REMOTE_ADDR'], true);
         $form_user_id = (isset($_POST['user_id'])) ? strval($_POST['user_id']) : '';
         $session_user_id = (isset($_SESSION['user_id'])) ? strval($_SESSION['user_id']) : '';
         $form_password = (isset($_POST['super_sekrit'])) ? strval($_POST['super_sekrit']) : '';
         $rate_limit = new \Nelliel\RateLimit($this->database);
 
-        if ($rate_limit->lastTime($ip_address, 'login') > $attempt_time - 3)
+        if ($rate_limit->lastTime($hashed_ip_address, 'login') > $attempt_time - 3)
         {
-            $rate_limit->updateAttempts($ip_address, 'login');
+            $rate_limit->updateAttempts($hashed_ip_address, 'login');
             nel_derp(203, _gettext('Detecting rapid login attempts. Wait a few seconds.'));
         }
 
         if (empty($form_user_id))
         {
-            $rate_limit->updateAttempts($ip_address, 'login');
+            $rate_limit->updateAttempts($hashed_ip_address, 'login');
             nel_derp(200, _gettext('No user ID provided.'));
         }
 
         if (empty($form_password))
         {
-            $rate_limit->updateAttempts($ip_address, 'login');
+            $rate_limit->updateAttempts($hashed_ip_address, 'login');
             nel_derp(201, _gettext('No password provided.'));
         }
 
@@ -71,7 +72,7 @@ class Login
         $valid_user = false;
         $valid_password = false;
 
-        if ($user)
+        if (!$user->empty())
         {
             if (isset($user->auth_data['user_password']))
             {
@@ -90,13 +91,13 @@ class Login
 
         if (!$valid_user || !$valid_password)
         {
-            $rate_limit->updateAttempts($ip_address, 'login');
+            $rate_limit->updateAttempts($hashed_ip_address, 'login');
             nel_derp(202, _gettext('User ID or password is incorrect.'));
         }
 
         $login_data['user_id'] = $form_user_id;
         $login_data['login_time'] = $attempt_time;
-        $rate_limit->clearAttempts($ip_address, 'login', true);
+        $rate_limit->clearAttempts($hashed_ip_address, 'login', true);
         $prepared = $this->database->prepare('UPDATE "' . NEL_USERS_TABLE . '" SET "last_login" = ? WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [time(), $_POST['user_id']]);
         return $login_data;

@@ -21,13 +21,18 @@ class Authorization
         $this->database = $database;
     }
 
-    public function newUser(string $user_id, bool $db_load = true)
+    public function newUser(string $user_id, bool $db_load = true, bool $temp = false)
     {
         $user_id_lower = utf8_strtolower($user_id);
         $new_user = new AuthUser($this->database, $user_id, $db_load);
         $new_user->setupNew();
-        self::$users[$user_id_lower] = $new_user;
-        return self::$users[$user_id_lower];
+
+        if (!$temp)
+        {
+            self::$users[$user_id_lower] = $new_user;
+        }
+
+        return $new_user;
     }
 
     public function emptyUser()
@@ -37,20 +42,33 @@ class Authorization
 
     public function userExists(string $user_id)
     {
-        return $this->getUser($user_id)->loadFromDatabase();
+        $user_id_lower = utf8_strtolower($user_id);
+        return isset(self::$users[$user_id_lower]) || $this->newUser($user_id, false, true)->loadFromDatabase();
     }
 
-    public function getUser(string $user_id, bool $db_load = true)
+    public function userLoaded(string $user_id)
+    {
+        $user_id_lower = utf8_strtolower($user_id);
+        return isset(self::$users[$user_id_lower]);
+    }
+
+    public function getUser(string $user_id)
     {
         $user_id_lower = utf8_strtolower($user_id);
 
-        if (isset(self::$users[$user_id_lower]))
+        if ($this->userExists($user_id))
         {
+            if (!$this->userLoaded($user_id))
+            {
+                $this->newUser($user_id);
+            }
+
             return self::$users[$user_id_lower];
         }
-
-        $new_user = $this->newUser($user_id, $db_load);
-        return $new_user;
+        else
+        {
+            return $this->emptyUser();
+        }
     }
 
     public function removeUser(string $user_id)

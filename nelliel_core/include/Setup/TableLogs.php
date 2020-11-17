@@ -41,7 +41,7 @@ class TableLogs extends TableHandler
             event_id            VARCHAR(50) NOT NULL,
             originator          VARCHAR(50) DEFAULT NULL,
             ip_address          " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '32') . " DEFAULT NULL,
+            hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('BINARY', '32') . " DEFAULT NULL,
             time                INTEGER NOT NULL,
             message             TEXT NOT NULL
         ) " . $options . ";";

@@ -75,8 +75,9 @@ class AuthUser extends AuthHandler
         {
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . NEL_USERS_TABLE .
-                    '" ("user_id", "display_name", "user_password", "active", "owner", "last_login") VALUES
-                    (:user_id, :display_name, :user_password, :active, :owner, :last_login)');
+                    '" ("user_id", "display_name", "user_password", "hashed_user_id", "active", "owner", "last_login") VALUES
+                    (:user_id, :display_name, :user_password, :hashed_user_id, :active, :owner, :last_login)');
+            $prepared->bindValue(':hashed_user_id', $this->auth_data['hashed_user_id'], PDO::PARAM_LOB);
         }
 
         $prepared->bindValue(':user_id', $this->authDataOrDefault('user_id', $this->id()), PDO::PARAM_STR);
@@ -119,6 +120,7 @@ class AuthUser extends AuthHandler
 
     public function setupNew()
     {
+        $this->auth_data['hashed_user_id'] = hash('sha256', $this->id(), true);
     }
 
     public function remove()

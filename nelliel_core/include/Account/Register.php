@@ -77,7 +77,7 @@ class Register
             nel_derp(213, _gettext('Passwords do not match.'));
         }
 
-        $new_user = $this->authorization->newUser($register_user_id, $register_password);
+        $new_user = $this->authorization->newUser($register_user_id);
         $new_user->updatePassword($register_password);
 
         if ($creating_owner)

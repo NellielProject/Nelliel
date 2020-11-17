@@ -69,9 +69,10 @@ class AdminBoards extends AdminHandler
             nel_derp(241, _gettext('Had trouble registering the board ID ' . $board_id . '. May want to change it.'));
         }
 
+        $hashed_board_id = hash('sha256', $board_id, true);
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_BOARD_DATA_TABLE . '" ("board_id", "board_uri", "db_prefix") VALUES (?, ?, ?)');
-        $this->database->executePrepared($prepared, [$board_id, $board_id, $db_prefix]);
+                'INSERT INTO "' . NEL_BOARD_DATA_TABLE . '" ("board_id", "board_uri", "hashed_board_id", "db_prefix") VALUES (?, ?, ?)');
+        $this->database->executePrepared($prepared, [$board_id, $board_id, $hashed_board_id, $db_prefix]);
         $setup = new \Nelliel\Setup\Setup();
         $setup->createBoardTables($board_id, $db_prefix);
         $setup->createBoardDirectories($board_id);

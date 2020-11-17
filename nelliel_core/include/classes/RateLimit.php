@@ -20,102 +20,101 @@ class RateLimit
         $this->records = array();
     }
 
-    public function getRecord(string $ip_address)
+    public function getRecord(string $rate_id)
     {
-        $this->loadIfNot($ip_address);
-        return $this->records[$ip_address] ?? array();
+        $this->loadIfNot($rate_id);
+        return $this->records[$rate_id] ?? array();
     }
 
-    public function updateRecord(string $ip_address, array $record)
+    public function updateRecord(string $rate_id, array $record)
     {
-        $this->records[$ip_address] = $record;
-        $this->storeRecord($ip_address);
+        $this->records[$rate_id] = $record;
+        $this->storeRecord($rate_id);
     }
 
-    private function loadRecord(string $ip_address)
+    private function loadRecord(string $rate_id)
     {
         $prepared = $this->database->prepare(
-                'SELECT "record" FROM "' . NEL_RATE_LIMIT_TABLE . '" WHERE "ip_address" = :ip_address');
-        $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);
-        $this->records[$ip_address] = unserialize(
+                'SELECT "record" FROM "' . NEL_RATE_LIMIT_TABLE . '" WHERE "rate_id" = :rate_id');
+        $prepared->bindValue(':rate_id', $rate_id, PDO::PARAM_LOB);
+        $this->records[$rate_id] = unserialize(
                 $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN));
     }
 
-    private function storeRecord(string $ip_address)
+    private function storeRecord(string $rate_id)
     {
-        $serialized_record = serialize($this->records[$ip_address]);
+        $serialized_record = serialize($this->records[$rate_id]);
         $prepared = $this->database->prepare(
-                'SELECT 1 FROM "' . NEL_RATE_LIMIT_TABLE . '" WHERE "ip_address" = :ip_address');
-        $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);
+                'SELECT 1 FROM "' . NEL_RATE_LIMIT_TABLE . '" WHERE "rate_id" = :rate_id');
+        $prepared->bindValue(':rate_id', $rate_id, PDO::PARAM_LOB);
         $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
         if (!empty($result))
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . NEL_RATE_LIMIT_TABLE . '" SET "record" = :record WHERE "ip_address" = :ip_address');
+                    'UPDATE "' . NEL_RATE_LIMIT_TABLE . '" SET "record" = :record WHERE "rate_id" = :rate_id');
             $prepared->bindValue(':record', $serialized_record, PDO::PARAM_STR);
-            $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);
+            $prepared->bindValue(':rate_id', $rate_id, PDO::PARAM_LOB);
             $this->database->executePrepared($prepared);
         }
         else
         {
-            $rate_key = hash('sha256', random_bytes(16));
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . NEL_RATE_LIMIT_TABLE .
-                    '" (ip_address, record) VALUES (:ip_address, :record)');
-            $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);
+                    '" (rate_id, record) VALUES (:rate_id, :record)');
+            $prepared->bindValue(':rate_id', $rate_id, PDO::PARAM_LOB);
             $prepared->bindValue(':record', $serialized_record, PDO::PARAM_STR);
             $this->database->executePrepared($prepared);
         }
     }
 
-    private function loadIfNot(string $ip_address)
+    private function loadIfNot(string $rate_id)
     {
-        if (!isset($this->records[$ip_address]))
+        if (!isset($this->records[$rate_id]))
         {
-            $this->loadRecord($ip_address);
+            $this->loadRecord($rate_id);
         }
     }
 
-    public function attempts(string $ip_address, string $key)
+    public function attempts(string $rate_id, string $key)
     {
-        $this->loadIfNot($ip_address);
-        return $this->records[$ip_address][$key]['attempts'] ?? 0;
+        $this->loadIfNot($rate_id);
+        return $this->records[$rate_id][$key]['attempts'] ?? 0;
     }
 
-    public function lastTime(string $ip_address, string $key)
+    public function lastTime(string $rate_id, string $key)
     {
-        $this->loadIfNot($ip_address);
-        return $this->records[$ip_address][$key]['last_attempt'] ?? 0;
+        $this->loadIfNot($rate_id);
+        return $this->records[$rate_id][$key]['last_attempt'] ?? 0;
     }
 
-    public function updateAttempts(string $ip_address, string $key, bool $store = true)
+    public function updateAttempts(string $rate_id, string $key, bool $store = true)
     {
-        if (!isset($this->records[$ip_address][$key]['attempts']))
+        if (!isset($this->records[$rate_id][$key]['attempts']))
         {
-            $this->records[$ip_address][$key]['attempts'] = 1;
+            $this->records[$rate_id][$key]['attempts'] = 1;
         }
         else
         {
-            $this->records[$ip_address][$key]['attempts'] += 1;
+            $this->records[$rate_id][$key]['attempts'] += 1;
         }
 
-        $this->records[$ip_address][$key]['last_attempt'] = time();
+        $this->records[$rate_id][$key]['last_attempt'] = time();
 
         if ($store)
         {
-            $this->storeRecord($ip_address);
+            $this->storeRecord($rate_id);
         }
     }
 
-    public function clearAttempts(string $ip_address, string $key, bool $store = true)
+    public function clearAttempts(string $rate_id, string $key, bool $store = true)
     {
-        $this->records[$ip_address][$key]['attempts'] = 0;
-        $this->records[$ip_address][$key]['last_attempt'] = time();
+        $this->records[$rate_id][$key]['attempts'] = 0;
+        $this->records[$rate_id][$key]['last_attempt'] = time();
 
         if ($store)
         {
-            $this->storeRecord($ip_address);
+            $this->storeRecord($rate_id);
         }
     }
 }

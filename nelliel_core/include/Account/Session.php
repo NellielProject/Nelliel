@@ -94,10 +94,10 @@ class Session
         {
             $this->failed = true;
             $this->terminate();
-            nel_derp(222, _gettext('Not an active user.'));
+            nel_derp(222, _gettext('User does not exist or is inactive.'));
         }
 
-        self::$user = $this->authorization->getUser($_SESSION['user_id']);
+        self::$user = $user;
         $_SESSION['ignores'] = ['default' => false];
         $_SESSION['last_activity'] = time();
         self::$modmode_requested = (isset($_GET['modmode']) && $_GET['modmode'] === 'true') ||
