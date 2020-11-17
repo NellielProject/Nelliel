@@ -71,8 +71,12 @@ class AdminBoards extends AdminHandler
 
         $hashed_board_id = hash('sha256', $board_id, true);
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_BOARD_DATA_TABLE . '" ("board_id", "board_uri", "hashed_board_id", "db_prefix") VALUES (?, ?, ?)');
-        $this->database->executePrepared($prepared, [$board_id, $board_id, $hashed_board_id, $db_prefix]);
+                'INSERT INTO "' . NEL_BOARD_DATA_TABLE . '" ("board_id", "board_uri", "hashed_board_id", "db_prefix") VALUES (?, ?, ?, ?)');
+        $prepared->bindValue(1, $board_id, PDO::PARAM_STR);
+        $prepared->bindValue(2, $board_id, PDO::PARAM_STR);
+        $prepared->bindValue(3, $hashed_board_id, PDO::PARAM_LOB);
+        $prepared->bindValue(4, $db_prefix, PDO::PARAM_STR);
+        $this->database->executePrepared($prepared);
         $setup = new \Nelliel\Setup\Setup();
         $setup->createBoardTables($board_id, $db_prefix);
         $setup->createBoardDirectories($board_id);
