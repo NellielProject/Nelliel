@@ -58,7 +58,7 @@ class ContentID
         return !$this->isContent() && $this->post_id > 0;
     }
 
-    public function isContent()
+    public function isContent() // TODO: Change to specific type (file, etc)
     {
         return $this->order_id > 0;
     }
@@ -97,5 +97,21 @@ class ContentID
         $old_id = $this->order_id;
         $this->order_id = intval($order_id);
         return $old_id;
+    }
+
+    public function getInstanceFromID(bool $archived = false)
+    {
+        if($this->isThread())
+        {
+            return new ContentThread($this, $this->domain, $archived);
+        }
+        else if($this->isPost())
+        {
+            return new ContentPost($this, $this->domain, $archived);
+        }
+        else if($this->isContent())
+        {
+            return new ContentFile($this, $this->domain, $archived);
+        }
     }
 }
