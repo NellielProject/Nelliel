@@ -8,6 +8,9 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Content\ContentID;
+use Nelliel\Content\ContentThread;
+use Nelliel\Content\ContentPost;
+use Nelliel\Content\ContentFile;
 
 class ThreadHandler
 {
@@ -23,7 +26,7 @@ class ThreadHandler
     public function processContentDeletes()
     {
         $updates = array();
-        $update_archive = false;
+        $archive = new ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
 
         foreach ($_POST as $name => $value)
         {
@@ -38,22 +41,7 @@ class ThreadHandler
 
             if ($value === 'action')
             {
-                if ($content_id->isThread())
-                {
-                    $thread = new \Nelliel\Content\ContentThread($content_id, $this->domain);
-                    $thread->remove();
-                    $update_archive = true;
-                }
-                else if ($content_id->isPost())
-                {
-                    $post = new \Nelliel\Content\ContentPost($content_id, $this->domain);
-                    $post->remove();
-                }
-                else if ($content_id->isContent())
-                {
-                    $file = new \Nelliel\Content\ContentFile($content_id, $this->domain);
-                    $file->remove();
-                }
+                $content_id->getInstanceFromID($this->domain)->remove();
             }
 
             if (!in_array($content_id->threadID(), $updates))
@@ -62,17 +50,11 @@ class ThreadHandler
             }
         }
 
-        if ($update_archive)
-        {
-            $archive = new ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
-            $archive->updateThreads();
-        }
-
         $regen = new Regen();
         $regen->threads($this->domain, true, $updates);
-        $this->site_domain = new \Nelliel\DomainSite($this->database);
+        $this->site_domain = new DomainSite($this->database);
 
-        if($this->site_domain->setting('overboard_active'))
+        if ($this->site_domain->setting('overboard_active'))
         {
             $regen->overboard($this->site_domain);
         }

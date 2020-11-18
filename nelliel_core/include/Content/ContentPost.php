@@ -9,6 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domain;
 use PDO;
+use Nelliel\ArchiveAndPrune;
 
 class ContentPost extends ContentHandler
 {
@@ -17,6 +18,7 @@ class ContentPost extends ContentHandler
     protected $src_path;
     protected $preview_path;
     protected $archived;
+    protected $archive_prune;
 
     function __construct(ContentID $content_id, Domain $domain, bool $archived = false)
     {
@@ -38,6 +40,7 @@ class ContentPost extends ContentHandler
             $this->preview_path = $this->domain->reference('preview_path');
         }
 
+        $this->archive_prune = new ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
         $this->storeMeta(new Meta());
     }
 
@@ -114,6 +117,7 @@ class ContentPost extends ContentHandler
         $prepared->bindValue(':mod_post_id', $this->contentDataOrDefault('mod_post_id', null), PDO::PARAM_STR);
         $prepared->bindValue(':mod_comment', $this->contentDataOrDefault('mod_comment', null), PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
+        $this->archive_prune->updateThreads();
         return true;
     }
 
@@ -185,6 +189,7 @@ class ContentPost extends ContentHandler
             $thread->updateCounts();
         }
 
+        $this->archive_prune->updateThreads();
         return true;
     }
 
@@ -308,6 +313,7 @@ class ContentPost extends ContentHandler
         $this->content_data['op'] = 1;
         $this->writeToDatabase();
         $new_thread->updateCounts();
+        $this->archive_prune->updateThreads();
         return $new_thread;
     }
 

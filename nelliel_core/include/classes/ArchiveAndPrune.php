@@ -9,6 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 use Nelliel\Content\ContentID;
+use Nelliel\Content\ContentThread;
 
 class ArchiveAndPrune
 {
@@ -168,7 +169,7 @@ class ArchiveAndPrune
     {
         foreach ($this->getThreadListForStatus(2) as $thread_id)
         {
-            $thread = new \Nelliel\Content\ContentThread(new ContentID('cid_' . $thread_id . '_0_0'), $this->domain);
+            $thread = new ContentThread(new ContentID('cid_' . $thread_id . '_0_0'), $this->domain);
             $thread->remove(true);
         }
 
@@ -179,8 +180,7 @@ class ArchiveAndPrune
     {
         foreach ($this->getThreadListForStatus(3) as $thread_id)
         {
-            $thread = new \Nelliel\Content\ContentThread(new ContentID('cid_' . $thread_id . '_0_0'), $this->domain,
-                    true);
+            $thread = new ContentThread(new ContentID('cid_' . $thread_id . '_0_0'), $this->domain, true);
             $thread->remove(true);
         }
     }

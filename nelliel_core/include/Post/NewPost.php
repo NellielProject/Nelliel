@@ -206,7 +206,6 @@ class NewPost
 
         $update_overboard = new \Nelliel\UpdateOverboard($this->database);
         $update_overboard->addThread($thread->contentID()->threadID(), $this->domain->id());
-        $archive->updateThreads();
 
         // Generate response page if it doesn't exist, otherwise update
         $regen = new \Nelliel\Regen();

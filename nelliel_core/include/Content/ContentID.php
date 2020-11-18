@@ -7,6 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domain;
+
 class ContentID
 {
     protected $thread_id = 0;
@@ -99,19 +101,19 @@ class ContentID
         return $old_id;
     }
 
-    public function getInstanceFromID(bool $archived = false)
+    public function getInstanceFromID(Domain $domain, bool $archived = false)
     {
         if($this->isThread())
         {
-            return new ContentThread($this, $this->domain, $archived);
+            return new ContentThread($this, $domain, $archived);
         }
         else if($this->isPost())
         {
-            return new ContentPost($this, $this->domain, $archived);
+            return new ContentPost($this, $domain, $archived);
         }
         else if($this->isContent())
         {
-            return new ContentFile($this, $this->domain, $archived);
+            return new ContentFile($this, $domain, $archived);
         }
     }
 }

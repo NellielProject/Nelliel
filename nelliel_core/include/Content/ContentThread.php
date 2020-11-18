@@ -9,6 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domain;
 use PDO;
+use Nelliel\ArchiveAndPrune;
 
 class ContentThread extends ContentHandler
 {
@@ -19,6 +20,7 @@ class ContentThread extends ContentHandler
     protected $preview_path;
     protected $page_path;
     protected $archived;
+    protected $archive_prune;
 
     function __construct(ContentID $content_id, Domain $domain, bool $archived = false)
     {
@@ -44,6 +46,7 @@ class ContentThread extends ContentHandler
             $this->page_path = $this->domain->reference('page_path');
         }
 
+        $this->archive_prune = new \Nelliel\ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
         $this->storeMeta(new Meta());
     }
 
@@ -109,6 +112,7 @@ class ContentThread extends ContentHandler
         $prepared->bindValue(':archive_status', $this->contentDataOrDefault('archive_status', 0), PDO::PARAM_INT);
         $prepared->bindValue(':locked', $this->contentDataOrDefault('locked', 0), PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
+        $this->archive_prune->updateThreads();
         return true;
     }
 
@@ -137,6 +141,7 @@ class ContentThread extends ContentHandler
 
         $this->removeFromDatabase();
         $this->removeFromDisk();
+        $this->archive_prune->updateThreads();
         return true;
     }
 
@@ -211,7 +216,9 @@ class ContentThread extends ContentHandler
         }
 
         $this->content_data['sticky'] = 1;
-        return $this->writeToDatabase();
+        $success = $this->writeToDatabase();
+        $this->archive_prune->updateThreads();
+        return $success;
     }
 
     public function unsticky()
@@ -222,7 +229,8 @@ class ContentThread extends ContentHandler
         }
 
         $this->content_data['sticky'] = 0;
-        return $this->writeToDatabase();
+        $this->archive_prune->updateThreads();
+        return $success;
     }
 
     public function lock()
