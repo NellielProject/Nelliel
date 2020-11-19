@@ -137,23 +137,38 @@ class OutputPanelUsers extends OutputCore
                 $this->render_data['site_role_id'] = $site_role;
             }
 
-            $board_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
+            $domain_list = $this->database->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
+            array_unshift($domain_list, ['board_id' => '_site_']); // For site domain
+            $query = 'SELECT "role_id", "role_title" FROM "' . NEL_ROLES_TABLE . '"';
+            $roles = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
 
-            foreach ($board_list as $board)
+            foreach ($domain_list as $domain)
             {
-                $board_role_data = array();
-                $board_role_data['board_id'] = $board['board_id'];
+                $domain_role_data = array();
+                $domain_role_data['domain_id'] = $domain['board_id'];
+                $domain_role_data['domain_name'] = $domain['board_id'];
+                $domain_role_data['select_name'] = 'domain_role_' . $domain['board_id'];
+                $domain_role_data['select_id'] = 'domain_role_' . $domain['board_id'];
                 $prepared = $this->database->prepare(
                         'SELECT "role_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
-                $role_id = $this->database->executePreparedFetch($prepared, array($user_id, $board['board_id']),
+                $role_id = $this->database->executePreparedFetch($prepared, array($user_id, $domain['board_id']),
                         PDO::FETCH_COLUMN);
 
-                if (!empty($role_id))
+                foreach ($roles as $role)
                 {
-                    $board_role_data['role_id'] = $role_id;
+                    $role_options = array();
+                    $role_options['option_id'] = $role['role_id'];
+                    $role_options['option_name'] = $role['role_title'];
+
+                    if($role['role_id'] === $role_id)
+                    {
+                        $role_options['option_selected'] = 'selected';
+                    }
+
+                    $domain_role_data['roles']['options'][] = $role_options;
                 }
 
-                $this->render_data['board_roles'][] = $board_role_data;
+                $this->render_data['domain_roles'][] = $domain_role_data;
             }
         }
 

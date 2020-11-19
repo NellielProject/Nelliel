@@ -75,12 +75,13 @@ class Authorization
     {
         $user_id_lower = utf8_strtolower($user_id);
 
-        if (!isset(self::$users[$user_id_lower]))
+        if (!$this->userExists($user_id))
         {
             return false;
         }
 
-        self::$users[$user_id_lower]->remove();
+        $user = $this->getUser($user_id);
+        $user->remove();
         unset(self::$users[$user_id_lower]);
         return true;
     }

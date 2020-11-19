@@ -27,16 +27,14 @@
 		<div class="display-row">
 			<span>User Roles</span>
 		</div>
+		{{# domain_roles }}
 		<div class="display-row">
-			<label for="site_role" class="display-cell" data-i18n="gettext">Site Role</label>
-			<input id="site_role" class="display-cell" type="text" name="site_role" size="30" value="{{ site_role_id }}">
+			<label for="{{ select_id }}" class="display-cell" data-i18n="gettext">{{ domain_name }}</label>
+			{{# roles }}
+				{{> panels/pieces/options_menu }}
+			{{/ roles }}
 		</div>
-		{{# board_roles }}
-		<div class="display-row">
-			<label for="board_role_{{ board_id }}" class="display-cell">{{ board_id }}</label>
-			<input id="board_role_{{ board_id }}" class="display-cell" type="text" name="board_role_{{ board_id }}" size="30" value="{{ role_id }}">
-		</div>
-		{{/ board_roles }}
+		{{/ domain_roles }}
 	</div>
 	{{/ is_site_owner }}
 	<div>

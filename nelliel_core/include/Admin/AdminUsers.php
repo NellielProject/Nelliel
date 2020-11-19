@@ -76,26 +76,18 @@ class AdminUsers extends AdminHandler
                 $value = nel_form_input_default($value);
             }
 
-            if (strpos($key, 'board_role') !== false || $key === 'site_role')
+            if (strpos($key, 'domain_role') !== false)
             {
-                if ($key === 'site_role')
+                if (strpos($key, '_site_'))
                 {
                     $domain = new \Nelliel\DomainSite($this->database);
                 }
                 else
                 {
-                    $domain = new \Nelliel\DomainBoard(substr($key, 11), $this->database);
+                    $domain = new \Nelliel\DomainBoard(substr($key, 12), $this->database);
                 }
 
-                if ($value === '')
-                {
-                    $update_user->removeRole($domain->id(), $value);
-                }
-                else
-                {
-                    $update_user->modifyRole($domain->id(), $value);
-                }
-
+                $update_user->modifyRole($domain->id(), $value);
                 continue;
             }
 
