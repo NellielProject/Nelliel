@@ -16,6 +16,7 @@ class FileTypes
     private static $extensions;
     private static $settings;
     private static $types;
+    private static $extensions_map;
 
     function __construct(NellielPDO $database)
     {
@@ -39,18 +40,22 @@ class FileTypes
             }
             else
             {
-                $extensions[$result['base_extension']] = $result;
+                $base_extension = $result['base_extension'];
+                $extensions_map[$base_extension] = $base_extension;
+                $extensions[$base_extension] = $result;
                 $sub_extensions = json_decode($result['sub_extensions'], true);
 
                 foreach ($sub_extensions as $sub_extension)
                 {
-                    $filetypes['extensions'][$sub_extension] = $result['base_extension'];
+                    $filetypes['extensions'][$sub_extension] = $base_extension;
+                    $extensions_map[$sub_extension] = $base_extension;
                 }
             }
         }
 
         self::$types = $types;
         self::$extensions = $extensions;
+        self::$extensions_map = $extensions_map;
     }
 
     private function loadSettingsFromDatabase(string $domain_id, bool $ignore_cache = false)
@@ -76,6 +81,11 @@ class FileTypes
         self::$settings[$domain_id] = $settings;
     }
 
+    public function getBaseExtension(string $extension)
+    {
+        return self::$extensions_map[$extension];
+    }
+
     public function allTypeData()
     {
         $this->loadDataIfNot(false);
@@ -91,13 +101,8 @@ class FileTypes
             return $extension_data;
         }
 
-        $extension_data = self::$extensions[$extension];
-
-        if (!is_array($extension_data) && $this->isValidExtension($extension_data))
-        {
-            $extension_data = self::$extensions[$extension_data];
-        }
-
+        $base_extension = $this->getBaseExtension($extension);
+        $extension_data = self::$extensions[$base_extension];
         return $extension_data;
     }
 
@@ -110,7 +115,8 @@ class FileTypes
     public function isValidExtension(string $extension)
     {
         $this->loadDataIfNot(false);
-        return isset(self::$extensions[$extension]);
+        $base_extension = $this->getBaseExtension($extension);
+        return isset(self::$extensions[$base_extension]);
     }
 
     public function settings(string $domain_id, string $setting = null, bool $cache_regen = false)
