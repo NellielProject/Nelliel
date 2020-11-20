@@ -1,5 +1,6 @@
 {{% FILTERS }}
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="ban_hashed_ip" value="{{ hashed_ip_address }}">
 	<div class="display-table">
 		<div class="display-row">
 			<span class="display-cell">
@@ -10,14 +11,18 @@
 		<div class="display-row">
 			<span class="display-cell">
 				<span data-i18n="gettext">Ban expires on:</span>
-				<span>{{ ban_expiration }}</span>
+				<span>{{ expiration }}</span>
 			</span>
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
 				<span data-i18n="gettext">Ban type:</span>
-				<span>{{ ban_type }}</span>
+				<span>{{ type }}</span>
 			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell">Banned IP hash:</span>
+			<span class="display-cell">{{ hashed_ip_address }}</span>
 		</div>
 		<div class="display-row">
 			<span class="display-cell">

@@ -11,11 +11,15 @@ class Snacks
 {
     private $database;
     private $ban_hammer;
+    private $ip_address;
+    private $hashed_ip_address;
 
     function __construct(NellielPDO $database, BanHammer $ban_hammer)
     {
         $this->database = $database;
         $this->ban_hammer = $ban_hammer;
+        $this->ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
+        $this->hashed_ip_address = hash('sha256', $this->ip_address, true);
     }
 
     public function checkHoneypot(Domain $domain)
@@ -25,7 +29,8 @@ class Snacks
                 !empty($_POST[NEL_BASE_HONEYPOT_FIELD3 . '_' . $domain->id()]))
         {
             $ban_input['type'] = 'SPAMBOT';
-            $ban_input['ip_address_start'] = $_SERVER['REMOTE_ADDR'];
+            $ban_input['ip_address_start'] = $this->ip_address;
+            $ban_input['hashed_ip_address'] = $this->hashed_ip_address;
             $ban_input['reason'] = 'Ur a spambot. Nobody wants any. GTFO!';
             $ban_input['start_time'] = time();
             $ban_input['length'] = 86400 * 9001;
@@ -57,7 +62,8 @@ class Snacks
             return;
         }
 
-        if ($_SERVER['REMOTE_ADDR'] != @inet_ntop($ban_info['ip_address_start']))
+        if ($this->ip_address !=
+                @inet_ntop($ban_info['ip_address_start']) && $this->hashed_ip_address != $ban_info['hashed_ip_address'])
         {
             nel_derp(150, _gettext('Your ip address does not match the one listed in the ban.'));
         }
@@ -74,18 +80,13 @@ class Snacks
 
     public function applyBan(Domain $domain, array $inputs)
     {
-        if($domain->id() === '_site_')
+        if ($domain->id() === '_site_')
         {
             return;
         }
 
-        $bans = $this->ban_hammer->getBansByIp($_SERVER['REMOTE_ADDR']);
+        $bans = $this->ban_hammer->getBansByIp($this->ip_address, $this->hashed_ip_address);
         $ban_info = null;
-
-        if (empty($bans))
-        {
-            return;
-        }
 
         foreach ($bans as $ban)
         {

@@ -175,6 +175,7 @@ class OutputPanelBans extends OutputCore
         $ban_info = $ban_hammer->getBanById($ban_id, true);
         $this->render_data['ban_id'] = $ban_info['ban_id'];
         $this->render_data['ip_address_start'] = @inet_ntop($ban_info['ip_address_start']);
+        $this->render_data['hashed_ip_address'] = bin2hex($ban_info['hashed_ip_address']);
         $this->render_data['board_id'] = $ban_info['board_id'];
         $this->render_data['type'] = $ban_info['type'];
         $this->render_data['start_time_formatted'] = date("D F jS Y  H:i:s", $ban_info['start_time']);
