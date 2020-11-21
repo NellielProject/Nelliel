@@ -112,10 +112,14 @@ class ContentFile extends ContentHandler
         $prepared->bindValue(':preview_width', $this->contentDataOrDefault('preview_width', null), PDO::PARAM_INT);
         $prepared->bindValue(':preview_height', $this->contentDataOrDefault('preview_height', null), PDO::PARAM_INT);
         $prepared->bindValue(':filesize', $this->contentDataOrDefault('filesize', null), PDO::PARAM_INT);
-        $prepared->bindValue(':md5', $this->contentDataOrDefault('md5', null), PDO::PARAM_LOB);
-        $prepared->bindValue(':sha1', $this->contentDataOrDefault('sha1', null), PDO::PARAM_LOB);
-        $prepared->bindValue(':sha256', $this->contentDataOrDefault('sha256', null), PDO::PARAM_LOB);
-        $prepared->bindValue(':sha512', $this->contentDataOrDefault('sha512', null), PDO::PARAM_LOB);
+        $prepared->bindValue(':md5', nel_prepare_hash_for_storage($this->contentDataOrDefault('md5', null)),
+                PDO::PARAM_LOB);
+        $prepared->bindValue(':sha1', nel_prepare_hash_for_storage($this->contentDataOrDefault('sha1', null)),
+                PDO::PARAM_LOB);
+        $prepared->bindValue(':sha256', nel_prepare_hash_for_storage($this->contentDataOrDefault('sha256', null)),
+                PDO::PARAM_LOB);
+        $prepared->bindValue(':sha512', nel_prepare_hash_for_storage($this->contentDataOrDefault('sha512', null)),
+                PDO::PARAM_LOB);
         $prepared->bindValue(':embed_url', $this->contentDataOrDefault('embed_url', null), PDO::PARAM_STR);
         $prepared->bindValue(':spoiler', $this->contentDataOrDefault('spoiler', 0), PDO::PARAM_INT);
         $prepared->bindValue(':deleted', $this->contentDataOrDefault('deleted', 0), PDO::PARAM_INT);

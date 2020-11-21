@@ -35,11 +35,11 @@ class BanHammer
 
         if (isset($_POST['ban_hashed_ip']))
         {
-            $ban_input['hashed_ip_address'] = hex2bin($_POST['ban_hashed_ip']);
+            $ban_input['hashed_ip_address'] = $_POST['ban_hashed_ip'];
         }
         else
         {
-            $ban_input['hashed_ip_address'] = hash('sha256', $ban_input['ip_address_start'], true);
+            $ban_input['hashed_ip_address'] = hash('sha256', $ban_input['ip_address_start']);
         }
 
         $ban_input['years'] = $_POST['ban_time_years'] ?? 0;
@@ -93,12 +93,12 @@ class BanHammer
         return $ban_info;
     }
 
-    public function getBansByIp(string $ban_ip, string $hashed_ip)
+    public function getBansByIp(?string $ban_ip, string $hashed_ip)
     {
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_BANS_TABLE . '" WHERE "ip_address_start" = ? OR "hashed_ip_address" = ?');
-        $prepared->bindValue(1, @inet_pton($ban_ip), PDO::PARAM_LOB);
-        $prepared->bindValue(2, $hashed_ip, PDO::PARAM_LOB);
+        $prepared->bindValue(1, nel_prepare_ip_for_storage($ban_ip), PDO::PARAM_LOB);
+        $prepared->bindValue(2, nel_prepare_hash_for_storage($hashed_ip), PDO::PARAM_LOB);
         $ban_info = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
 
         if ($ban_info === false)
@@ -119,9 +119,9 @@ class BanHammer
         $prepared->bindValue(':all_boards', $ban_input['all_boards'], PDO::PARAM_INT);
         $prepared->bindValue(':type', $ban_input['type'], PDO::PARAM_STR);
         $prepared->bindValue(':creator', $ban_input['creator'], PDO::PARAM_STR);
-        $ban_ip = @inet_pton($ban_input['ip_address_start']); // Does have to be separate because reasons
-        $prepared->bindValue(':ip_address_start', $ban_ip, PDO::PARAM_LOB);
-        $prepared->bindValue(':hashed_ip_address', $ban_input['hashed_ip_address'], PDO::PARAM_LOB);
+        $prepared->bindValue(':ip_address_start', nel_prepare_ip_for_storage($ban_input['ip_address_start']),
+                PDO::PARAM_LOB);
+        $prepared->bindValue(':hashed_ip_address', nel_prepare_hash_for_storage($ban_input['hashed_ip_address']), PDO::PARAM_LOB);
         $prepared->bindValue(':reason', $ban_input['reason'], PDO::PARAM_STR);
         $prepared->bindValue(':length', $ban_input['length'], PDO::PARAM_INT);
 
@@ -146,9 +146,9 @@ class BanHammer
         $prepared->bindValue(':board_id', $ban_input['board'], PDO::PARAM_STR);
         $prepared->bindValue(':all_boards', $ban_input['all_boards'], PDO::PARAM_INT);
         $prepared->bindValue(':type', $ban_input['type'], PDO::PARAM_STR);
-        $ban_ip = @inet_pton($ban_input['ip_address_start']); // Does have to be separate because reasons
-        $prepared->bindValue(':ip_address_start', $ban_ip, PDO::PARAM_LOB);
-        $prepared->bindValue(':hashed_ip_address', $ban_input['hashed_ip_address'], PDO::PARAM_LOB);
+        $prepared->bindValue(':ip_address_start', nel_prepare_ip_for_storage($ban_input['ip_address_start']),
+                PDO::PARAM_LOB);
+        $prepared->bindValue(':hashed_ip_address', nel_prepare_hash_for_storage($ban_input['hashed_ip_address']), PDO::PARAM_LOB);
         $prepared->bindValue(':reason', $ban_input['reason'], PDO::PARAM_STR);
         $prepared->bindValue(':length', $ban_input['length'], PDO::PARAM_INT);
         $prepared->bindValue(':start_time', $ban_input['start_time'], PDO::PARAM_INT);

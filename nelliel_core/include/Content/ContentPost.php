@@ -105,18 +105,9 @@ class ContentPost extends ContentHandler
         $prepared->bindValue(':email', $this->contentDataOrDefault('email', null), PDO::PARAM_STR);
         $prepared->bindValue(':subject', $this->contentDataOrDefault('subject', null), PDO::PARAM_STR);
         $prepared->bindValue(':comment', $this->contentDataOrDefault('comment', null), PDO::PARAM_STR);
-
-        if (nel_site_domain()->setting('store_hashed_ip'))
-        {
-            $ip_address = @inet_pton($this->contentDataOrDefault('ip_address', ''));
-        }
-        else
-        {
-            $ip_address = '';
-        }
-
-        $prepared->bindValue(':ip_address', $ip_address, PDO::PARAM_LOB);
-        $prepared->bindValue(':hashed_ip_address', $this->contentDataOrDefault('hashed_ip_address', null),
+        $ip_address = $this->contentDataOrDefault('ip_address', null);
+        $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($ip_address), PDO::PARAM_LOB);
+        $prepared->bindValue(':hashed_ip_address', nel_prepare_hash_for_storage($this->contentDataOrDefault('hashed_ip_address', null)),
                 PDO::PARAM_LOB);
         $prepared->bindValue(':post_time', $this->contentDataOrDefault('post_time', 0), PDO::PARAM_INT);
         $prepared->bindValue(':post_time_milli', $this->contentDataOrDefault('post_time_milli', 0), PDO::PARAM_INT);
@@ -137,11 +128,11 @@ class ContentPost extends ContentHandler
         $prepared = $database->prepare(
                 'INSERT INTO "' . $this->posts_table .
                 '" ("post_time", "post_time_milli", "hashed_ip_address") VALUES (?, ?, ?)');
-        $database->executePrepared($prepared, [$post_time, $post_time_milli, $hashed_ip_address]);
+        $database->executePrepared($prepared, [$post_time, $post_time_milli, nel_prepare_hash_for_storage($hashed_ip_address)]);
         $prepared = $database->prepare(
                 'SELECT "post_number" FROM "' . $this->posts_table .
                 '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "hashed_ip_address" = ?');
-        $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli, $hashed_ip_address],
+        $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli, nel_prepare_hash_for_storage($hashed_ip_address)],
                 PDO::FETCH_COLUMN, true);
         $this->content_id->changeThreadID(
                 ($this->content_id->threadID() == 0) ? $result : $this->content_id->threadID());

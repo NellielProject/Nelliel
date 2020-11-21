@@ -36,7 +36,7 @@ class RateLimit
     {
         $prepared = $this->database->prepare(
                 'SELECT "record" FROM "' . NEL_RATE_LIMIT_TABLE . '" WHERE "rate_id" = :rate_id');
-        $prepared->bindValue(':rate_id', $rate_id, PDO::PARAM_LOB);
+        $prepared->bindValue(':rate_id', nel_prepare_hash_for_storage($rate_id), PDO::PARAM_LOB);
         $this->records[$rate_id] = unserialize(
                 $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN));
     }
@@ -44,9 +44,8 @@ class RateLimit
     private function storeRecord(string $rate_id)
     {
         $serialized_record = serialize($this->records[$rate_id]);
-        $prepared = $this->database->prepare(
-                'SELECT 1 FROM "' . NEL_RATE_LIMIT_TABLE . '" WHERE "rate_id" = :rate_id');
-        $prepared->bindValue(':rate_id', $rate_id, PDO::PARAM_LOB);
+        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_RATE_LIMIT_TABLE . '" WHERE "rate_id" = :rate_id');
+        $prepared->bindValue(':rate_id', nel_prepare_hash_for_storage($rate_id), PDO::PARAM_LOB);
         $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
         if (!empty($result))
@@ -54,15 +53,14 @@ class RateLimit
             $prepared = $this->database->prepare(
                     'UPDATE "' . NEL_RATE_LIMIT_TABLE . '" SET "record" = :record WHERE "rate_id" = :rate_id');
             $prepared->bindValue(':record', $serialized_record, PDO::PARAM_STR);
-            $prepared->bindValue(':rate_id', $rate_id, PDO::PARAM_LOB);
+            $prepared->bindValue(':rate_id', nel_prepare_hash_for_storage($rate_id), PDO::PARAM_LOB);
             $this->database->executePrepared($prepared);
         }
         else
         {
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_RATE_LIMIT_TABLE .
-                    '" (rate_id, record) VALUES (:rate_id, :record)');
-            $prepared->bindValue(':rate_id', $rate_id, PDO::PARAM_LOB);
+                    'INSERT INTO "' . NEL_RATE_LIMIT_TABLE . '" (rate_id, record) VALUES (:rate_id, :record)');
+            $prepared->bindValue(':rate_id', nel_prepare_hash_for_storage($rate_id), PDO::PARAM_LOB);
             $prepared->bindValue(':record', $serialized_record, PDO::PARAM_STR);
             $this->database->executePrepared($prepared);
         }

@@ -115,7 +115,7 @@ class OutputPanelThreads extends OutputCore
             }
             else
             {
-                $thread_info['op_ip'] = $op_post['hashed_ip_address'];
+                $thread_info['op_ip'] = bin2hex($op_post['hashed_ip_address']);
             }
 
             $thread_info['post_count'] = $thread['post_count'];

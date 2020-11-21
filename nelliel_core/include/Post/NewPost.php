@@ -101,9 +101,9 @@ class NewPost
         if (!is_null($post->data('post_password')))
         {
             $poster_password = $post->data('post_password');
-            $post->changeData('post_password', nel_generate_salted_hash(
-                    $site_domain->setting('post_password_algorithm'),
-                    NEL_POST_PASSWORD_PEPPER . $post->data('post_password')));
+            $post->changeData('post_password',
+                    nel_generate_salted_hash($site_domain->setting('post_password_algorithm'),
+                            NEL_POST_PASSWORD_PEPPER . $post->data('post_password')));
         }
         else
         {
@@ -118,8 +118,7 @@ class NewPost
             $cookie_password = $_COOKIE['pwd-' . $this->domain->id()];
         }
 
-        if (empty($cookie_password) ||
-                (!is_null($post->data('post_password')) && $cookie_password !== $poster_password))
+        if (empty($cookie_password) || (!is_null($post->data('post_password')) && $cookie_password !== $poster_password))
         {
             setrawcookie('pwd-' . $this->domain->id(), $poster_password, time() + 9001 * 24 * 3600, '/');
         }
@@ -150,11 +149,10 @@ class NewPost
         {
             $thread->contentID()->changeThreadID($post->data('parent_thread'));
             $thread->loadFromDatabase();
-            $thread->changeData('content_count', $thread->data('content_count') +
-                    $post->data('content_count'));
-                    $thread->changeData('last_update', $time['time']);
-                    $thread->changeData('last_update_milli', $time['milli']);
-                    $thread->changeData('post_count', $thread->data('post_count') + 1);
+            $thread->changeData('content_count', $thread->data('content_count') + $post->data('content_count'));
+            $thread->changeData('last_update', $time['time']);
+            $thread->changeData('last_update_milli', $time['milli']);
+            $thread->changeData('post_count', $thread->data('post_count') + 1);
 
             if ($thread->data('post_count') <= $this->domain->setting('max_bumps') &&
                     !$fgsfds->getCommandData('sage', 'value'))
@@ -196,8 +194,7 @@ class NewPost
                 $file->changeData('post_ref', $post->contentID()->postID());
                 $file->contentID()->changeOrderID($order);
                 $file->changeData('content_order', $order);
-                $file_handler->moveFile($file->data('location'), $src_path . $file->data('fullname'),
-                        false);
+                $file_handler->moveFile($file->data('location'), $src_path . $file->data('fullname'), false);
                 chmod($src_path . $file->data('fullname'), octdec(NEL_FILES_PERM));
                 $file->writeToDatabase();
                 ++ $order;
@@ -212,7 +209,7 @@ class NewPost
         $regen->threads($this->domain, true, [$thread->contentID()->threadID()]);
         $regen->index($this->domain);
 
-        if($site_domain->setting('overboard_active') || $site_domain->setting('sfw_overboard_active'))
+        if ($site_domain->setting('overboard_active') || $site_domain->setting('sfw_overboard_active'))
         {
             $regen->overboard($this->domain);
         }
@@ -234,7 +231,7 @@ class NewPost
                     'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "post_time" > ? AND "hashed_ip_address" = ?');
             $prepared->bindValue(1, $thread_cooldown, PDO::PARAM_STR);
-            $prepared->bindValue(2, nel_request_ip_address(true), PDO::PARAM_LOB);
+            $prepared->bindValue(2, nel_prepare_hash_for_storage(nel_request_ip_address(true)), PDO::PARAM_LOB);
             $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
         }
         else
@@ -245,7 +242,7 @@ class NewPost
                     '" WHERE "parent_thread" = ? AND "post_time" > ? AND "hashed_ip_address" = ?');
             $prepared->bindValue(1, $post->data('parent_thread'), PDO::PARAM_INT);
             $prepared->bindValue(2, $reply_cooldown, PDO::PARAM_STR);
-            $prepared->bindValue(3, nel_request_ip_address(true), PDO::PARAM_LOB);
+            $prepared->bindValue(3, nel_prepare_hash_for_storage(nel_request_ip_address(true)), PDO::PARAM_LOB);
             $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
         }
 

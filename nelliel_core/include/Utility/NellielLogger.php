@@ -101,9 +101,8 @@ class NellielLogger implements LoggerInterface
         $prepared->bindParam(':domain_id', $data['domain_id'], PDO::PARAM_STR);
         $prepared->bindParam(':event_id', $data['event_id'], PDO::PARAM_STR);
         $prepared->bindParam(':originator', $data['originator'], PDO::PARAM_STR);
-        $encoded_ip = @inet_pton($data['ip_address']);
-        $prepared->bindParam(':ip_address', $encoded_ip, PDO::PARAM_LOB);
-        $prepared->bindParam(':hashed_ip_address', $data['hashed_ip_address'], PDO::PARAM_LOB);
+        $prepared->bindParam(':ip_address', nel_prepare_ip_for_storage($data['ip_address']), PDO::PARAM_LOB);
+        $prepared->bindParam(':hashed_ip_address', nel_prepare_hash_for_storage($data['hashed_ip_address']), PDO::PARAM_LOB);
         $prepared->bindParam(':time', $data['time'], PDO::PARAM_INT);
         $prepared->bindParam(':message', $data['message'], PDO::PARAM_STR);
         $this->database->executePrepared($prepared);

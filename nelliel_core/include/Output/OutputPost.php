@@ -161,7 +161,7 @@ class OutputPost extends OutputCore
             }
             else
             {
-                $ip = $post_data['hashed_ip_address'];
+                $ip = bin2hex($post_data['hashed_ip_address']);
             }
 
             $modmode_headers['ip_address'] = $ip;

@@ -196,7 +196,7 @@ class CAPTCHA
     {
         $prepared = $this->database->prepare(
                 'SELECT "captcha_key" FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "ip_address" = :ip_address');
-        $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);
+        $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($ip_address), PDO::PARAM_LOB);
         $result = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
 
         if ($result !== false)
@@ -208,7 +208,7 @@ class CAPTCHA
 
             $prepared = $this->database->prepare(
                     'DELETE FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "ip_address" = :ip_address');
-            $prepared->bindValue(':ip_address', @inet_pton($ip_address), PDO::PARAM_LOB);
+            $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($ip_address), PDO::PARAM_LOB);
             $this->database->executePrepared($prepared);
         }
     }
@@ -250,7 +250,7 @@ class CAPTCHA
         $prepared->bindValue(':captcha_text', $captcha_data['captcha_text'], PDO::PARAM_STR);
         $prepared->bindValue(':domain_id', $captcha_data['domain_id'], PDO::PARAM_STR);
         $prepared->bindValue(':time_created', $captcha_data['time_created'], PDO::PARAM_INT);
-        $prepared->bindValue(':ip_address', @inet_pton($captcha_data['ip_address']), PDO::PARAM_LOB);
+        $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($captcha_data['ip_address']), PDO::PARAM_LOB);
         $this->database->executePrepared($prepared);
     }
 

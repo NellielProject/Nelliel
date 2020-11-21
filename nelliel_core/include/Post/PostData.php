@@ -31,16 +31,7 @@ class PostData
         $post->changeData('parent_thread', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
         $post->contentID()->changeThreadID($post->data('parent_thread'));
         $post->changeData('reply_to', $post->data('parent_thread')); // This may enable nested posts in the future
-
-        if (nel_site_domain()->setting('store_unhashed_ip'))
-        {
-            $post->changeData('ip_address', @inet_pton(nel_request_ip_address()));
-        }
-        else
-        {
-            $post->changeData('ip_address', '');
-        }
-
+        $post->changeData('ip_address', nel_request_ip_address());
         $post->changeData('hashed_ip_address', nel_request_ip_address(true));
         $poster_name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
         $post->changeData('poster_name', $this->fieldMaxCheck('poster_name', $poster_name));

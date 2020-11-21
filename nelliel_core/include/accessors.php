@@ -28,7 +28,7 @@ function nel_site_domain()
     return $site_domain;
 }
 
-function nel_request_ip_address($hashed = false)
+function nel_request_ip_address(bool $hashed = false)
 {
     static $ip_address;
     static $hashed_ip_address;
@@ -37,7 +37,7 @@ function nel_request_ip_address($hashed = false)
     {
         if(!isset($hashed_ip_address))
         {
-            $hashed_ip_address = hash('sha256', $_SERVER['REMOTE_ADDR'], true);
+            $hashed_ip_address = hash('sha256', $_SERVER['REMOTE_ADDR']);
         }
 
         return $hashed_ip_address;

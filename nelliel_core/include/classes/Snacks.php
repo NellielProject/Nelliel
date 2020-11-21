@@ -21,14 +21,14 @@ class Snacks
 
         if (nel_site_domain()->setting('store_unhashed_ip'))
         {
-            $this->ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
+            $this->ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
         }
         else
         {
-            $this->ip_address = '';
+            $this->ip_address = null;
         }
 
-        $this->hashed_ip_address = hash('sha256', $this->ip_address, true);
+        $this->hashed_ip_address = hash('sha256', $_SERVER['REMOTE_ADDR']);
     }
 
     public function checkHoneypot(Domain $domain)
@@ -72,9 +72,9 @@ class Snacks
         }
 
         if ($this->ip_address != @inet_ntop($ban_info['ip_address_start']) &&
-                $this->hashed_ip_address != $ban_info['hashed_ip_address'])
+                $this->hashed_ip_address != bin2hex($ban_info['hashed_ip_address']))
         {
-            nel_derp(150, _gettext('Your ip address does not match the one listed in the ban.'));
+            nel_derp(150, _gettext('Your IP address does not match the one listed in the ban.'));
         }
 
         if ($ban_info['appeal_status'] > 0)

@@ -69,12 +69,12 @@ class AdminBoards extends AdminHandler
             nel_derp(241, _gettext('Had trouble registering the board ID ' . $board_id . '. May want to change it.'));
         }
 
-        $hashed_board_id = hash('sha256', $board_id, true);
+        $hashed_board_id = hash('sha256', $board_id);
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_BOARD_DATA_TABLE . '" ("board_id", "board_uri", "hashed_board_id", "db_prefix") VALUES (?, ?, ?, ?)');
         $prepared->bindValue(1, $board_id, PDO::PARAM_STR);
         $prepared->bindValue(2, $board_id, PDO::PARAM_STR);
-        $prepared->bindValue(3, $hashed_board_id, PDO::PARAM_LOB);
+        $prepared->bindValue(3, nel_prepare_hash_for_storage($hashed_board_id), PDO::PARAM_LOB);
         $prepared->bindValue(4, $db_prefix, PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
         $setup = new \Nelliel\Setup\Setup();

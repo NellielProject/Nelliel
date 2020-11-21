@@ -133,3 +133,30 @@ function nel_form_input_default(array $input)
 
     return $value;
 }
+
+function nel_prepare_ip_for_storage(?string $ip_address)
+{
+    if (!nel_site_domain()->setting('store_unhashed_ip'))
+    {
+        return null;
+    }
+
+    $packed_ip_address = @inet_pton($ip_address);
+
+    if ($packed_ip_address === false)
+    {
+        return null;
+    }
+
+    return $packed_ip_address;
+}
+
+function nel_prepare_hash_for_storage(?string $hash)
+{
+    if(is_null($hash))
+    {
+        return null;
+    }
+
+    return hex2bin($hash);
+}

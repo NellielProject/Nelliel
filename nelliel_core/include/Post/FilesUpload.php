@@ -83,7 +83,7 @@ class FilesUpload
             {
                 $dim = getimagesize($file->data('location'));
 
-                if($dim !== false)
+                if ($dim !== false)
                 {
                     $file->changeData('display_width', $dim[0]);
                     $file->changeData('display_height', $dim[1]);
@@ -217,24 +217,24 @@ class FilesUpload
         $error_data = ['delete_files' => true, 'bad-filename' => $file->data('name'), 'files' => $this->uploaded_files,
             'board_id' => $this->domain->id()];
         $is_banned = false;
-        $file->changeData('md5', hash_file('md5', $file->data('location'), true));
+        $file->changeData('md5', hash_file('md5', $file->data('location')));
         $is_banned = $snacks->fileHashIsBanned($file->data('md5'), 'md5');
 
         if (!$is_banned)
         {
-            $file->changeData('sha1', hash_file('sha1', $file->data('location'), true));
+            $file->changeData('sha1', hash_file('sha1', $file->data('location')));
             $is_banned = $snacks->fileHashIsBanned($file->data('sha1'), 'sha1');
         }
 
         if (!$is_banned && $this->domain->setting('file_sha256'))
         {
-            $file->changeData('sha256', hash_file('sha256', $file->data('location'), true));
+            $file->changeData('sha256', hash_file('sha256', $file->data('location')));
             $is_banned = $snacks->fileHashIsBanned($file->data('sha256'), 'sha256');
         }
 
         if (!$is_banned && $this->domain->setting('file_sha512'))
         {
-            $file->changeData('sha512', hash_file('sha512', $file->data('location'), true));
+            $file->changeData('sha512', hash_file('sha512', $file->data('location')));
             $is_banned = $snacks->fileHashIsBanned($file->data('sha512'), 'sha512');
         }
 
@@ -243,15 +243,20 @@ class FilesUpload
             nel_derp(22, _gettext('That file is banned.'), $error_data);
         }
 
+        $db_md5 = nel_prepare_hash_for_storage($file->data('md5'));
+        $db_sha1 = nel_prepare_hash_for_storage($file->data('sha1'));
+        $db_sha256 = nel_prepare_hash_for_storage($file->data('sha256'));
+        $db_sha512 = nel_prepare_hash_for_storage($file->data('sha512'));
+
         if ($response_to === 0 && $this->domain->setting('only_op_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
                     '" WHERE "parent_thread" = "post_ref" AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $database->prepare($query);
-            $prepared->bindValue(1, $file->data('md5'), PDO::PARAM_LOB);
-            $prepared->bindValue(2, $file->data('sha1'), PDO::PARAM_LOB);
-            $prepared->bindValue(3, $file->data('sha256'), PDO::PARAM_LOB);
-            $prepared->bindValue(4, $file->data('sha512'), PDO::PARAM_LOB);
+            $prepared->bindValue(1, $db_md5, PDO::PARAM_LOB);
+            $prepared->bindValue(2, $db_sha1, PDO::PARAM_LOB);
+            $prepared->bindValue(3, $db_sha256, PDO::PARAM_LOB);
+            $prepared->bindValue(4, $db_sha512, PDO::PARAM_LOB);
         }
         else if ($response_to > 0 && $this->domain->setting('only_thread_duplicates'))
         {
@@ -259,20 +264,20 @@ class FilesUpload
                     '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
-            $prepared->bindValue(2, $file->data('md5'), PDO::PARAM_LOB);
-            $prepared->bindValue(3, $file->data('sha1'), PDO::PARAM_LOB);
-            $prepared->bindValue(4, $file->data('sha256'), PDO::PARAM_LOB);
-            $prepared->bindValue(5, $file->data('sha512'), PDO::PARAM_LOB);
+            $prepared->bindValue(2, $db_md5, PDO::PARAM_LOB);
+            $prepared->bindValue(3, $db_sha1, PDO::PARAM_LOB);
+            $prepared->bindValue(4, $db_sha256, PDO::PARAM_LOB);
+            $prepared->bindValue(5, $db_sha512, PDO::PARAM_LOB);
         }
         else
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
                     '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?';
             $prepared = $database->prepare($query);
-            $prepared->bindValue(1, $file->data('md5'), PDO::PARAM_LOB);
-            $prepared->bindValue(2, $file->data('sha1'), PDO::PARAM_LOB);
-            $prepared->bindValue(3, $file->data('sha256'), PDO::PARAM_LOB);
-            $prepared->bindValue(4, $file->data('sha512'), PDO::PARAM_LOB);
+            $prepared->bindValue(1, $db_md5, PDO::PARAM_LOB);
+            $prepared->bindValue(2, $db_sha1, PDO::PARAM_LOB);
+            $prepared->bindValue(3, $db_sha256, PDO::PARAM_LOB);
+            $prepared->bindValue(4, $db_sha512, PDO::PARAM_LOB);
         }
 
         $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
