@@ -155,7 +155,7 @@ class OutputPost extends OutputCore
 
         if ($session->inModmode($this->domain) && !$this->write_mode)
         {
-            if ($user->checkPermission($this->domain, 'perm_view_unhashed_ip'))
+            if ($user->checkPermission($this->domain, 'perm_view_unhashed_ip') && !empty($post_data['ip_address']))
             {
                 $ip = @inet_ntop($post_data['ip_address']);
             }
