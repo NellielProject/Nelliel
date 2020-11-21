@@ -158,10 +158,12 @@ class OutputPost extends OutputCore
             if ($user->checkPermission($this->domain, 'perm_view_unhashed_ip') && !empty($post_data['ip_address']))
             {
                 $ip = @inet_ntop($post_data['ip_address']);
+                $ban_ip_type = 'ban_ip';
             }
             else
             {
                 $ip = bin2hex($post_data['hashed_ip_address']);
+                $ban_ip_type = 'ban_hashed_ip';
             }
 
             $modmode_headers['ip_address'] = $ip;
@@ -190,13 +192,13 @@ class OutputPost extends OutputCore
             }
 
             $modmode_headers['ban_url'] = '?module=admin&section=bans&board_id=' . $this->domain->id() .
-                    '&actions=new&ban_type=POST&content-id=' . $temp_content_id->getIDString() . '&ban_ip=' .
+                    '&actions=new&ban_type=POST&content-id=' . $temp_content_id->getIDString() . '&' . $ban_ip_type . '=' .
                     rawurlencode($ip) . '&modmode=true&goback=false';
             $modmode_headers['delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                     '&actions=delete&content-id=' . $temp_content_id->getIDString() . '&modmode=true&goback=true';
             $modmode_headers['ban_delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
-                    '&actions[0]=delete&actions[1]=ban&content-id=' . $temp_content_id->getIDString() .
-                    '&ban_type=POST&ban_ip=' . rawurlencode($ip) . '&modmode=true&goback=false';
+                    '&actions[0]=delete&actions[1]=ban&content-id=' . $temp_content_id->getIDString() . '&ban_type=POST&' .
+                    $ban_ip_type . '=' . rawurlencode($ip) . '&modmode=true&goback=false';
             $header_data['modmode_headers'] = $modmode_headers;
         }
 
