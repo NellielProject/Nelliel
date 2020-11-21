@@ -79,6 +79,7 @@ class TableSiteConfig extends TableHandler
         $this->insertDefaultRow(['login_delay', '3', 0]);
         $this->insertDefaultRow(['session_length', '10800', 0]);
         $this->insertDefaultRow(['only_alphanumeric_board_ids', '1', 0]);
+        $this->insertDefaultRow(['store_unhashed_ip', '1', 0]);
         $this->insertDefaultRow(['enabled_filetypes', '{"graphics":{"enabled":true,"formats":{"jpeg":{"enabled":true},"gif":{"enabled":true},"png":{"enabled":true},"webp":{"enabled":true}}}}', 0, 0]);
     }
 }

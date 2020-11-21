@@ -39,7 +39,17 @@ class Report
 
         $report_data = array();
         $report_data['reason'] = $_POST['report_reason'] ?? null;
-        $report_data['reporter_ip'] = $_SERVER['REMOTE_ADDR'];
+
+        if (nel_site_domain()->setting('store_unhashed_ip'))
+        {
+            $report_data['reporter_ip'] = nel_request_ip_address();
+        }
+        else
+        {
+            $report_data['reporter_ip'] = '';
+        }
+
+        $report_data['hashed_reporter_ip'] = nel_request_ip_address(true);
         $base_content_id = new ContentID();
 
         foreach ($_POST as $name => $value)
@@ -57,12 +67,13 @@ class Report
             {
                 $report_data['content_id'] = $content_id->getIDString();
                 $query = 'INSERT INTO "' . NEL_REPORTS_TABLE .
-                        '" ("board_id", "content_id", "reporter_ip", "reason") VALUES (?, ?, ?, ?)';
+                        '" ("board_id", "content_id", "reporter_ip", "hashed_reporter_ip", "reason") VALUES (?, ?, ?, ?, ?)';
                 $prepared = $this->database->prepare($query);
                 $prepared->bindValue(1, $this->domain->id(), PDO::PARAM_STR);
                 $prepared->bindValue(2, $report_data['content_id'], PDO::PARAM_STR);
                 $prepared->bindValue(3, @inet_pton($report_data['reporter_ip']), PDO::PARAM_LOB);
-                $prepared->bindValue(4, $report_data['reason'], PDO::PARAM_STR);
+                $prepared->bindValue(4, $report_data['hashed_reporter_ip'], PDO::PARAM_LOB);
+                $prepared->bindValue(5, $report_data['reason'], PDO::PARAM_STR);
                 $this->database->executePrepared($prepared);
             }
         }

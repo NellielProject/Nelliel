@@ -62,14 +62,14 @@ class CAPTCHA
         }
 
         $rate_limit = new \Nelliel\RateLimit($this->database);
-        $ip_address = $_SERVER['REMOTE_ADDR'];
+        $hashed_ip_address = nel_request_ip_address(true);
         $attempt_time = time();
 
-        if ($rate_limit->lastTime($ip_address, 'captcha') > $attempt_time - 60)
+        if ($rate_limit->lastTime($hashed_ip_address, 'captcha') > $attempt_time - 60)
         {
-            if ($rate_limit->attempts($ip_address, 'captcha') < $this->site_domain->setting('captcha_rate_limit'))
+            if ($rate_limit->attempts($hashed_ip_address, 'captcha') < $this->site_domain->setting('captcha_rate_limit'))
             {
-                $rate_limit->updateAttempts($ip_address, 'captcha');
+                $rate_limit->updateAttempts($hashed_ip_address, 'captcha');
             }
             else
             {
@@ -78,7 +78,7 @@ class CAPTCHA
         }
         else
         {
-            $rate_limit->clearAttempts($ip_address, 'captcha');
+            $rate_limit->clearAttempts($hashed_ip_address, 'captcha');
         }
     }
 
@@ -117,7 +117,8 @@ class CAPTCHA
         $captcha_data['captcha_text'] = $captcha_text;
         $captcha_data['domain_id'] = $this->domain->id();
         $captcha_data['time_created'] = time();
-        $captcha_data['ip_address'] = $_SERVER['REMOTE_ADDR'];
+        $captcha_data['ip_address'] = nel_request_ip_address();
+        $hashed_ip_address = nel_request_ip_address(true);
         $this->store($captcha_data);
 
         if (!isset($_GET['no-display']))

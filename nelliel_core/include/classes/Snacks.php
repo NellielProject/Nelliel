@@ -18,7 +18,16 @@ class Snacks
     {
         $this->database = $database;
         $this->ban_hammer = $ban_hammer;
-        $this->ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
+
+        if (nel_site_domain()->setting('store_unhashed_ip'))
+        {
+            $this->ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
+        }
+        else
+        {
+            $this->ip_address = '';
+        }
+
         $this->hashed_ip_address = hash('sha256', $this->ip_address, true);
     }
 
@@ -62,8 +71,8 @@ class Snacks
             return;
         }
 
-        if ($this->ip_address !=
-                @inet_ntop($ban_info['ip_address_start']) && $this->hashed_ip_address != $ban_info['hashed_ip_address'])
+        if ($this->ip_address != @inet_ntop($ban_info['ip_address_start']) &&
+                $this->hashed_ip_address != $ban_info['hashed_ip_address'])
         {
             nel_derp(150, _gettext('Your ip address does not match the one listed in the ban.'));
         }

@@ -112,6 +112,9 @@
 	{{# graphics_handler }}
 		{{> panels/pieces/settings_radio }}
 	{{/ graphics_handler }}
+	{{# store_unhashed_ip }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ store_unhashed_ip }}
 
 	<div class="display-row">
 		<input type="submit" value="Update Settings" data-i18n-attributes="gettext|value">

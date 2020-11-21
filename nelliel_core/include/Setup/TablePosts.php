@@ -59,7 +59,7 @@ class TablePosts extends TableHandler
             subject             VARCHAR(255) DEFAULT NULL,
             comment             TEXT DEFAULT NULL,
             ip_address          " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('BINARY', '32') . " DEFAULT NULL,
+            hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('BINARY', '32') . " NOT NULL,
             post_time           BIGINT NOT NULL,
             post_time_milli     SMALLINT NOT NULL,
             has_content         SMALLINT NOT NULL DEFAULT 0,

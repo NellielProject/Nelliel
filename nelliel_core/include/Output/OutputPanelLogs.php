@@ -82,6 +82,7 @@ class OutputPanelLogs extends OutputCore
             $log_data['event_id'] = $log['event_id'];
             $log_data['originator'] = $log['originator'];
             $log_data['ip_address'] = @inet_ntop($log['ip_address']);
+            $log_data['hashed_ip_address'] = $log['hashed_ip_address'];
             $log_data['time'] = $log['time'];
             $log_data['message'] = $log['message'];
             $this->render_data['log_entry_list'][] = $log_data;

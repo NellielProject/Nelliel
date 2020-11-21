@@ -105,7 +105,17 @@ class ContentPost extends ContentHandler
         $prepared->bindValue(':email', $this->contentDataOrDefault('email', null), PDO::PARAM_STR);
         $prepared->bindValue(':subject', $this->contentDataOrDefault('subject', null), PDO::PARAM_STR);
         $prepared->bindValue(':comment', $this->contentDataOrDefault('comment', null), PDO::PARAM_STR);
-        $prepared->bindValue(':ip_address', $this->contentDataOrDefault('ip_address', null), PDO::PARAM_LOB);
+
+        if (nel_site_domain()->setting('store_hashed_ip'))
+        {
+            $ip_address = @inet_pton($this->contentDataOrDefault('ip_address', ''));
+        }
+        else
+        {
+            $ip_address = '';
+        }
+
+        $prepared->bindValue(':ip_address', $ip_address, PDO::PARAM_LOB);
         $prepared->bindValue(':hashed_ip_address', $this->contentDataOrDefault('hashed_ip_address', null),
                 PDO::PARAM_LOB);
         $prepared->bindValue(':post_time', $this->contentDataOrDefault('post_time', 0), PDO::PARAM_INT);
@@ -121,17 +131,17 @@ class ContentPost extends ContentHandler
         return true;
     }
 
-    public function reserveDatabaseRow($post_time, $post_time_milli, $ip_address, $temp_database = null)
+    public function reserveDatabaseRow($post_time, $post_time_milli, $hashed_ip_address, $temp_database = null)
     {
         $parent_thread = $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
                 'INSERT INTO "' . $this->posts_table .
-                '" ("post_time", "post_time_milli", "ip_address") VALUES (?, ?, ?)');
-        $database->executePrepared($prepared, [$post_time, $post_time_milli, @inet_pton($ip_address)]);
+                '" ("post_time", "post_time_milli", "hashed_ip_address") VALUES (?, ?, ?)');
+        $database->executePrepared($prepared, [$post_time, $post_time_milli, $hashed_ip_address]);
         $prepared = $database->prepare(
                 'SELECT "post_number" FROM "' . $this->posts_table .
-                '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "ip_address" = ?');
-        $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli, @inet_pton($ip_address)],
+                '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "hashed_ip_address" = ?');
+        $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli, $hashed_ip_address],
                 PDO::FETCH_COLUMN, true);
         $this->content_id->changeThreadID(
                 ($this->content_id->threadID() == 0) ? $result : $this->content_id->threadID());
@@ -244,7 +254,8 @@ class ContentPost extends ContentHandler
         {
             if ($user->checkPermission($this->domain, 'perm_board_modify_posts'))
             {
-                if (!empty($this->content_data['mod_post_id']) && $authorization->userExists($this->content_data['mod_post_id']))
+                if (!empty($this->content_data['mod_post_id']) &&
+                        $authorization->userExists($this->content_data['mod_post_id']))
                 {
                     $mod_post_user = $authorization->getUser($this->content_data['mod_post_id']);
                     $flag = $authorization->roleLevelCheck($user->checkRole($this->domain),

@@ -43,8 +43,8 @@ class Login
 
         $login_data = array();
         $attempt_time = time();
-        $ip_address = $_SERVER['REMOTE_ADDR'];
-        $hashed_ip_address = hash('sha256', $_SERVER['REMOTE_ADDR'], true);
+        $ip_address = nel_request_ip_address();
+        $hashed_ip_address = nel_request_ip_address(true);
         $form_user_id = (isset($_POST['user_id'])) ? strval($_POST['user_id']) : '';
         $session_user_id = (isset($_SESSION['user_id'])) ? strval($_SESSION['user_id']) : '';
         $form_password = (isset($_POST['super_sekrit'])) ? strval($_POST['super_sekrit']) : '';

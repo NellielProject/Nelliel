@@ -92,7 +92,6 @@ class OutputPanelBans extends OutputCore
             $ban_data['type'] = $ban_info['type'];
             $ban_data['ip_address_start'] = $ban_info['ip_address_start'] ? @inet_ntop($ban_info['ip_address_start']) : _gettext(
                     'Unknown');
-            $ban_data['ip_address_start'] = $ban_data['ip_address_start'];
             $ban_data['board_id'] = $ban_info['board_id'];
             $ban_data['reason'] = $ban_info['reason'];
             $ban_data['expiration'] = date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']);

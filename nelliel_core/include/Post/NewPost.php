@@ -129,7 +129,7 @@ class NewPost
         // Go ahead and put post into database
         $post->changeData('op', ($post->data('parent_thread') == 0) ? 1 : 0);
         $post->changeData('has_content', ($post->data('content_count') > 0) ? 1 : 0);
-        $post->reserveDatabaseRow($time['time'], $time['milli'], @inet_pton($_SERVER['REMOTE_ADDR']));
+        $post->reserveDatabaseRow($time['time'], $time['milli'], nel_request_ip_address(true));
         $thread = new \Nelliel\Content\ContentThread(new \Nelliel\Content\ContentID(), $this->domain);
 
         if ($post->data('response_to') == 0)
@@ -232,9 +232,9 @@ class NewPost
             $thread_cooldown = $time - $this->domain->setting('thread_cooldown');
             $prepared = $this->database->prepare(
                     'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
-                    '" WHERE "post_time" > ? AND "ip_address" = ?');
+                    '" WHERE "post_time" > ? AND "hashed_ip_address" = ?');
             $prepared->bindValue(1, $thread_cooldown, PDO::PARAM_STR);
-            $prepared->bindValue(2, @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
+            $prepared->bindValue(2, nel_request_ip_address(true), PDO::PARAM_LOB);
             $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
         }
         else
@@ -242,10 +242,10 @@ class NewPost
             $reply_cooldown = $time - $this->domain->setting('reply_cooldown');
             $prepared = $this->database->prepare(
                     'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
-                    '" WHERE "parent_thread" = ? AND "post_time" > ? AND "ip_address" = ?');
+                    '" WHERE "parent_thread" = ? AND "post_time" > ? AND "hashed_ip_address" = ?');
             $prepared->bindValue(1, $post->data('parent_thread'), PDO::PARAM_INT);
             $prepared->bindValue(2, $reply_cooldown, PDO::PARAM_STR);
-            $prepared->bindValue(3, @inet_pton($_SERVER['REMOTE_ADDR']), PDO::PARAM_LOB);
+            $prepared->bindValue(3, nel_request_ip_address(true), PDO::PARAM_LOB);
             $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
         }
 

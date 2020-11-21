@@ -75,14 +75,24 @@ class NellielLogger implements LoggerInterface
         $data['domain_id'] = $context['domain'] ?? null;
         $data['event_id'] = $context['event_id'] ?? 'UNKNOWN';
         $data['originator'] = $context['originator'] ?? '';
-        $data['ip_address'] = $context['ip_address'] ?? null;
+
+        if (nel_site_domain()->setting('store_unhashed_ip'))
+        {
+            $data['ip_address'] = $context['ip_address'] ?? null;
+        }
+        else
+        {
+            $data['ip_address'] = null;
+        }
+
         $data['hashed_ip_address'] = $context['hashed_ip_address'] ?? null;
         $data['time'] = time();
         $data['message'] = $message;
         $this->dbInsert($context['table'], $data);
     }
 
-    protected function dbInsert(string $table, array $data) {
+    protected function dbInsert(string $table, array $data)
+    {
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . $table .
                 '" ("level", "domain_id",  "event_id", "originator", "ip_address", "hashed_ip_address", "time", "message")

@@ -108,7 +108,16 @@ class OutputPanelThreads extends OutputCore
             $thread_info['thread_url'] = $this->domain->reference('page_dir') . '/' . $thread['thread_id'] . '/' .
                     $thread['thread_id'] . '.html';
             $thread_info['op_name'] = $op_post['poster_name'];
-            $thread_info['op_ip'] = @inet_ntop($op_post['ip_address']);
+
+            if ($user->checkPermission($this->domain, 'perm_view_unhashed_ip'))
+            {
+                $thread_info['op_ip'] = @inet_ntop($op_post['ip_address']);
+            }
+            else
+            {
+                $thread_info['op_ip'] = $op_post['hashed_ip_address'];
+            }
+
             $thread_info['post_count'] = $thread['post_count'];
             $thread_info['content_count'] = $thread['content_count'];
             $this->render_data['threads'][] = $thread_info;

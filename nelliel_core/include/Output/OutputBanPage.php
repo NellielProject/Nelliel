@@ -55,7 +55,7 @@ class OutputBanPage extends OutputCore
         $this->render_data['ban_length'] = $duration;
         $this->render_data['ban_expiration'] = date("F jS, Y H:i e", $ban_expire);
         $this->render_data['ban_reason'] = $ban_info['reason'];
-        $this->render_data['ban_ip'] = $_SERVER['REMOTE_ADDR'];
+        $this->render_data['ban_ip'] = nel_request_ip_address();
         $this->render_data['appealed'] = $ban_info['appeal_status'] != 0;
         $this->render_data['reviewed'] = $ban_info['appeal_status'] == 1;
         $this->render_data['responded'] = $ban_info['appeal_status'] > 1;
