@@ -106,7 +106,7 @@ class Login
         $rate_limit->clearAttempts($hashed_ip_address, 'login', true);
         $prepared = $this->database->prepare('UPDATE "' . NEL_USERS_TABLE . '" SET "last_login" = ? WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [time(), $_POST['user_id']]);
-        $log_message = 'Successful Login by ' . $user->id();
+        $log_message = sprintf(_gettext("Successful login by %s"), $user->id());
         $this->log_event->send($log_message);
         return $login_data;
     }
