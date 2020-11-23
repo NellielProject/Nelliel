@@ -38,7 +38,7 @@
 		{{> panels/pieces/settings_text }}
 	{{/ recaptcha_sekrit_key }}
 	{{# recaptcha_type }}
-		{{> panels/pieces/settings_radio }}
+		{{> panels/pieces/settings_select }}
 	{{/ recaptcha_type }}
 	{{# name }}
 		{{> panels/pieces/settings_text }}
@@ -110,7 +110,7 @@
 		{{> panels/pieces/settings_checkbox }}
 	{{/ only_alphanumeric_board_ids }}
 	{{# graphics_handler }}
-		{{> panels/pieces/settings_radio }}
+		{{> panels/pieces/settings_select }}
 	{{/ graphics_handler }}
 	{{# store_unhashed_ip }}
 		{{> panels/pieces/settings_checkbox }}

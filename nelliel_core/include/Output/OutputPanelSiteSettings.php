@@ -70,7 +70,9 @@ class OutputPanelSiteSettings extends OutputCore
             }
             else
             {
-                if (isset($input_attributes['type']) && $input_attributes['type'] == 'radio')
+                $type = $input_attributes['type'] ?? null;
+
+                if ($type == 'radio' || $type == 'select')
                 {
                     foreach ($setting_options as $option => $values)
                     {
@@ -81,12 +83,18 @@ class OutputPanelSiteSettings extends OutputCore
 
                         if ($setting['setting_value'] === $option)
                         {
-                            $options['option_checked'] = 'checked';
+                            if ($type == 'radio')
+                            {
+                                $options['option_checked'] = 'checked';
+                            }
+                            else if ($type == 'select')
+                            {
+                                $options['option_selected'] = 'selected';
+                            }
                         }
 
                         $setting_data['options'][] = $options;
                     }
-
                 }
                 else
                 {

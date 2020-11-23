@@ -91,7 +91,7 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['max_bumps', '1000', 0]);
         $this->insertDefaultRow(['tripkey_marker', '!', 0]);
         $this->insertDefaultRow(['date_format', 'Y/m/d (D) H:i:s', 0]);
-        $this->insertDefaultRow(['old_threads', 'ARCHIVE', 1]);
+        $this->insertDefaultRow(['old_threads', 'ARCHIVE', 0]);
         $this->insertDefaultRow(['do_archive_pruning', '1', 0]);
         $this->insertDefaultRow(['max_archive_threads', '500', 0]);
         $this->insertDefaultRow(['fgsfds_name', 'FGSFDS', 0]);
