@@ -9,19 +9,22 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domain;
 use Nelliel\Utility\NellielLogger;
+use Psr\Log\LogLevel;
 
 class LogEvent
 {
     private $domain;
     private $logger;
-    private $level = 6;
+    private $level = LogLevel::INFO;
     private $context = array();
 
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
         $this->logger = new NellielLogger($domain->database());
+        $this->changeContext('domain', $this->domain);
         $this->changeContext('domain_id', $this->domain->id());
+        $this->changeContext('log_table', $this->domain->reference('log_table'));
     }
 
     public function changeLevel(int $level)

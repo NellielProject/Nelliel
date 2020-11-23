@@ -47,6 +47,7 @@ class DomainSite extends Domain implements NellielCacheInterface
     protected function loadReferences()
     {
         $new_reference = array();
+        $new_reference['log_table'] = NEL_LOGS_TABLE;
         $this->domain_references = $new_reference;
     }
 

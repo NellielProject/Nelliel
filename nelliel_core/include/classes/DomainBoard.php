@@ -71,6 +71,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['threads_table'] = $new_reference['db_prefix'] . '_threads';
         $new_reference['content_table'] = $new_reference['db_prefix'] . '_content';
         $new_reference['config_table'] = $new_reference['db_prefix'] . '_config';
+        $new_reference['log_table'] = $new_reference['db_prefix'] . '_logs';
         $this->domain_references = $new_reference;
     }
 

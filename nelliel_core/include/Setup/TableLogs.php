@@ -37,13 +37,13 @@ class TableLogs extends TableHandler
         CREATE TABLE " . $this->table_name . " (
             entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             level               INTEGER NOT NULL,
-            domain_id           VARCHAR(50) DEFAULT NULL,
+            domain_id           VARCHAR(50) NOT NULL,
             event_id            VARCHAR(50) NOT NULL,
             originator          VARCHAR(50) DEFAULT NULL,
             ip_address          " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
             hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('BINARY', '32') . " DEFAULT NULL,
             time                INTEGER NOT NULL,
-            message             TEXT NOT NULL
+            message             TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;
