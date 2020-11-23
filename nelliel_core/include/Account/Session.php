@@ -9,6 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domain;
 use Nelliel\DomainSite;
+use Nelliel\LogEvent;
 use Nelliel\Auth\Authorization;
 
 class Session
@@ -109,6 +110,9 @@ class Session
     {
         $this->check();
         $this->terminate();
+        $log_event = new LogEvent($this->domain);
+        $log_event->changeContext('event_id', 'LOGOUT_SUCCESS');
+        $log_event->send(sprintf(_gettext("User %s logged out."), self::$user->id()));
         $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
         $output_login->render(['dotdot' => ''], false);
         nel_clean_exit(false);
@@ -129,6 +133,9 @@ class Session
 
         $_SESSION['user_id'] = $login_data['user_id'];
         self::$user = $this->authorization->getUser($login_data['user_id']);
+        $log_event = new LogEvent($this->domain);
+        $log_event->changeContext('event_id', 'LOGIN_SUCCESS');
+        $log_event->send(sprintf(_gettext("User %s logged in."), self::$user->id()));
         $_SESSION['login_time'] = $login_data['login_time'];
         $_SESSION['last_activity'] = $login_data['login_time'];
         self::$session_active = true;

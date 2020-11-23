@@ -245,6 +245,9 @@ class Setup
         $content_table = new TableContent($database, $sql_compatibility);
         $content_table->tableName($domain->reference('content_table'));
         $content_table->createTable(['posts_table' => $domain->reference('posts_table')]);
+        $content_table = new TableLogs($database, $sql_compatibility);
+        $content_table->tableName($domain->reference('log_table'));
+        $content_table->createTable();
     }
 
     public function createBoardDirectories(string $board_id)

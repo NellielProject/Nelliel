@@ -71,7 +71,8 @@ class AdminBoards extends AdminHandler
 
         $hashed_board_id = hash('sha256', $board_id);
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_BOARD_DATA_TABLE . '" ("board_id", "board_uri", "hashed_board_id", "db_prefix") VALUES (?, ?, ?, ?)');
+                'INSERT INTO "' . NEL_BOARD_DATA_TABLE .
+                '" ("board_id", "board_uri", "hashed_board_id", "db_prefix") VALUES (?, ?, ?, ?)');
         $prepared->bindValue(1, $board_id, PDO::PARAM_STR);
         $prepared->bindValue(2, $board_id, PDO::PARAM_STR);
         $prepared->bindValue(3, nel_prepare_hash_for_storage($hashed_board_id), PDO::PARAM_LOB);
@@ -137,6 +138,13 @@ class AdminBoards extends AdminHandler
             $this->database->query('DROP TABLE "' . $domain->reference('threads_table') . '"');
             $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('threads_table')]);
+        }
+
+        if ($this->database->tableExists($domain->reference('log_table')))
+        {
+            $this->database->query('DROP TABLE "' . $domain->reference('log_table') . '"');
+            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
+            $this->database->executePrepared($prepared, [$domain->reference('log_table')]);
         }
 
         $file_handler = new \Nelliel\Utility\FileHandler();
