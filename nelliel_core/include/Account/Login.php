@@ -8,6 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domain;
+use Nelliel\LogEvent;
 use Nelliel\NellielPDO;
 use Nelliel\Auth\Authorization;
 use PDO;
@@ -17,12 +18,17 @@ class Login
     private $authorization;
     private $database;
     private $domain;
+    private $log_event;
 
     function __construct(Authorization $authorization, Domain $domain)
     {
         $this->authorization = $authorization;
         $this->domain = $domain;
         $this->database = $domain->database();
+        $this->log_event = new LogEvent($domain);
+        $this->log_event->changeContext('event_id', 'LOGIN_SUCCESS');
+        $this->log_event->changeContext('ip_address', nel_request_ip_address());
+        $this->log_event->changeContext('hashed_ip_address', nel_request_ip_address(true));
     }
 
     public function validate()
@@ -100,6 +106,8 @@ class Login
         $rate_limit->clearAttempts($hashed_ip_address, 'login', true);
         $prepared = $this->database->prepare('UPDATE "' . NEL_USERS_TABLE . '" SET "last_login" = ? WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [time(), $_POST['user_id']]);
+        $log_message = 'Successful Login by ' . $user->id();
+        $this->log_event->send($log_message);
         return $login_data;
     }
 }

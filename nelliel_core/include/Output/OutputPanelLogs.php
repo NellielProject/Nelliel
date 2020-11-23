@@ -49,18 +49,18 @@ class OutputPanelLogs extends OutputCore
         switch ($log_type)
         {
             case 'staff':
-                $query = '(SELECT * FROM "' . NEL_STAFF_LOGS_TABLE .
+                $query = '(SELECT * FROM "' . NEL_LOGS_TABLE .
                         '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
 
             case 'system':
-                $query = '(SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE .
+                $query = '(SELECT * FROM "' . NEL_LOGS_TABLE .
                         '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
 
             default:
-                $query = '(SELECT * FROM "' . NEL_STAFF_LOGS_TABLE . '")
-                   UNION (SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE .
+                $query = '(SELECT * FROM "' . NEL_LOGS_TABLE . '")
+                   UNION (SELECT * FROM "' . NEL_LOGS_TABLE .
                         '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
         }
