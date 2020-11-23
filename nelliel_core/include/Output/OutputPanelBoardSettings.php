@@ -167,7 +167,7 @@ class OutputPanelBoardSettings extends OutputCore
             {
                 $setting_data['setting_locked'] = 'checked';
 
-                if (!$defaults)
+                if (!$defaults && !$user_lock_override)
                 {
                     $setting_data['setting_disabled'] = 'disabled';
                 }

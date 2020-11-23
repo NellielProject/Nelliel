@@ -7,7 +7,7 @@
 		<span data-i18n="gettext">{{ setting_label }}</span>
 	</span>
 	<span class="display-cell">
-		<select name="{{ setting_name }}" id="{{ setting_name }}" {{ setting_disabled }}>
+		<select name="{{ setting_name }}[value]" id="{{ setting_name }}" {{ setting_disabled }}>
 		{{# options }}
 			<option value="{{ option_name }}" {{ option_selected }}>{{ option_name }}</option>
 		{{/ options }}
