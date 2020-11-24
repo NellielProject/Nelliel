@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ page_language }}">
-{{ head }}
+{{# head }}
+	{{> head }}
+{{/ head }}
 <body>
-{{ header }}
+{{# header }}
+	{{> header }}
+{{/ header }}
 	<div class="text-center">
 		<h1 class="logo">Nelliel Imageboard</h1>
 		<p>{{ nelliel_version }}</p>
@@ -45,9 +49,17 @@
 			<p>
 				<a href="https://github.com/bobthecow/mustache.php">Mustache.php</a> library created by <a href="http://justinhileman.info/">Justin Hileman</a>.
 			</p>
+			<p>
+				<a href="https://github.com/S1lentium/IPTools">IPTools</a> library created by <a href="https://github.com/S1lentium">S1lentium</a>.
+			</p>
 		</div>
 	</div>
 	<hr>
-{{ footer }}
+{{# footer }}
+	{{> footer }}
+{{/ footer }}
+{{# show_stats }}
+	<div class="render_stats">{{ render_timer }}</div>
+{{/ show_stats }}
 </body>
 </html>
