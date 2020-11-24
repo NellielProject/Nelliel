@@ -63,6 +63,7 @@ class OutputPost extends OutputCore
             $this->render_data['header_class'] = 'reply-post-header';
             $this->render_data['content_container_class'] = 'reply-content-container';
             $this->render_data['comments_class'] = 'reply-post-comments';
+            $this->render_data['post_disclaimer_class'] = 'reply-post-disclaimer';
         }
         else
         {
@@ -70,7 +71,7 @@ class OutputPost extends OutputCore
             $this->render_data['post_container_class'] = 'op-post';
             $this->render_data['header_class'] = 'op-post-header';
             $this->render_data['content_container_class'] = 'op-content-container';
-            $this->render_data['comments_class'] = 'op-post-comments';
+            $this->render_data['post_disclaimer_class'] = 'op-post-disclaimer';
         }
 
         $this->render_data['post_anchor_id'] = 't' . $post_content_id->threadID() . 'p' . $post_content_id->postID();
@@ -112,6 +113,7 @@ class OutputPost extends OutputCore
         }
 
         $this->render_data['post_comments'] = $this->postComments($post_data, $post_content_id, $gen_data, $web_paths);
+        $this->render_data['content_disclaimer'] = nel_site_domain()->setting('content_disclaimer');
         $output = $this->output('thread/post', $data_only, true);
         return $output;
     }
