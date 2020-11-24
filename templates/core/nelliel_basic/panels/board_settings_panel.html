@@ -278,15 +278,29 @@
 			{{> panels/pieces/settings_checkbox }}
 		{{/ user_delete_own }}
 	</div>
-	<hr>
 	{{# enabled_filetypes }}
-	{{# show_locked }}
-		<div>
-			{{> panels/pieces/setting_locked }}
-		</div>
-	{{/ show_locked }}
-	{{# file_types }}
 	<div class="display-table text-left">
+		<div class="display-row">
+			<hr class="display_cell">
+			{{# show_locked }}
+			<span class="display-cell"></span>
+			{{/show_locked }}
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
+				<span class="bold" data-i18n="gettext">Filetype Enabling</span>
+			</span>
+			{{# show-locked }}
+			<span class="display-cell"></span>
+			{{/ show-locked }}
+		</div>
+		{{# show_lock_update }}
+		<div class="display-row">
+			{{> panels/pieces/settings_lock_update }}
+		</div>
+		{{/ show_lock_update }}
+
+		{{# file_types }}
 		{{# type_select }}
 		<div class="display-row">
 			<span class="display-cell">
@@ -308,9 +322,10 @@
 			{{/ entry }}
 		</div>
 		{{/ entry_rows }}
+		{{/ file_types }}
 	</div>
-	{{/ file_types }}
 	{{/ enabled_filetypes }}
+
 	<div>
 		<input type="submit" value="Update Settings" data-i18n-attributes="gettext|value">
 	</div>

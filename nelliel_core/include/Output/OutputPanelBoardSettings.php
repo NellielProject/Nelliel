@@ -76,7 +76,7 @@ class OutputPanelBoardSettings extends OutputCore
         $filetype_entries_nodes = array();
         $type_row_count = array();
         $prepared = $this->database->prepare(
-                'SELECT "setting_value","edit_lock" FROM "' . $table_name . '" WHERE "setting_name" = ?');
+                'SELECT "setting_name","setting_value","edit_lock" FROM "' . $table_name . '" WHERE "setting_name" = ?');
         $enabled_types = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_ASSOC);
         $enabled_array = json_decode($enabled_types['setting_value'], true);
         $types_edit_lock = $enabled_types['edit_lock'] == 1 && !$defaults && !$user_lock_override;
