@@ -25,6 +25,13 @@ spl_autoload_register(function ($class)
     nel_autoload_core($class, $prefix, $base_directory);
 });
 
+spl_autoload_register(function ($class)
+{
+    $prefix = 'IPTools\\';
+    $base_directory = NEL_LIBRARY_PATH . 'IPTools/src/';
+    nel_autoload_core($class, $prefix, $base_directory);
+});
+
 function nel_autoload_core($class, $prefix, $base_directory)
 {
     $len = strlen($prefix);
