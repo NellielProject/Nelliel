@@ -129,7 +129,7 @@ class OutputPanelBans extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $this->render_data['ban_board'] = (!empty($this->domain->id())) ? $this->domain->id() : '';
-        $ip = $parameters['ip'];
+        $ip_start = $parameters['ip_start'];
         $hashed_ip = $parameters['hashed_ip'];
         $type = $parameters['type'];
 
@@ -145,7 +145,7 @@ class OutputPanelBans extends OutputCore
 
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&actions=add&board_id=' .
                 $this->domain->id() . $post_param;
-        $this->render_data['ban_ip'] = $ip;
+        $this->render_data['ban_ip_start'] = $ip_start;
         $this->render_data['ban_hashed_ip'] = $hashed_ip;
         $this->render_data['ban_type'] = $type;
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/bans_panel_add',

@@ -3,15 +3,35 @@
 	<div class="display-table">
 		<div class="display-row">
 			<span class="display-cell">
-				<label for="ban_ip" data-i18n="gettext">IP to ban:</label>
+				<label for="address_type" data-i18n="gettext">IP type:</label>
 			</span>
 			<span class="display-cell">
-				<input id="ban_ip" type="text" name="ban_ip" size="24" maxlength="50" value="{{ ban_ip }}">
+				<select id="address_type" name="address_type">
+					<option value="single">Single IP</option>
+					<option value="range">IP range</option>
+					<option value="hash">IP hash</option>
+				</select>
 			</span>
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<label for="ban_hashed_ip" data-i18n="gettext">IP hash to ban:</label>
+				<label for="ban_ip_start" data-i18n="gettext">IP address or range start:</label>
+			</span>
+			<span class="display-cell">
+				<input id="ban_ip_start" type="text" name="ban_ip_start" size="24" maxlength="50" value="{{ ban_ip_start }}">
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
+				<label for="ban_ip_end" data-i18n="gettext">IP range end:</label>
+			</span>
+			<span class="display-cell">
+				<input id="ban_ip_end" type="text" name="ban_ip_end" size="24" maxlength="50" value="{{ ban_ip_end }}">
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
+				<label for="ban_hashed_ip" data-i18n="gettext">IP hash:</label>
 			</span>
 			<span class="display-cell">
 				<input id="ban_hashed_ip" type="text" name="ban_hashed_ip" size="24" maxlength="50" value="{{ ban_hashed_ip }}">

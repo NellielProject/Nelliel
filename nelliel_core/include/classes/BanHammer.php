@@ -31,15 +31,29 @@ class BanHammer
 
         $ban_input['type'] = $_POST['ban_type'] ?? 'GENERAL';
         $ban_input['creator'] = $_SESSION['user_id'] ?? null;
-        $ban_input['ip_address_start'] = $_POST['ban_ip'] ?? null;
+        $ban_input['ip_address_start'] = $_POST['ban_ip_start'] ?? null;
+        $ban_input['ip_address_end'] = $_POST['ban_ip_end'] ?? null;
+        $ban_input['hashed_ip_address'] = $_POST['ban_hashed_ip'] ?? null;
+        $address_type = $_POST['address_type'] ?? null;
 
-        if (isset($_POST['ban_hashed_ip']))
+        if (!is_null($address_type))
         {
-            $ban_input['hashed_ip_address'] = $_POST['ban_hashed_ip'];
-        }
-        else
-        {
-            $ban_input['hashed_ip_address'] = hash('sha256', $ban_input['ip_address_start']);
+            switch ($address_type)
+            {
+                case 'single':
+                    $ban_input['ip_address_end'] = null;
+                    $ban_input['hashed_ip_address'] = hash('sha256', $ban_input['ip_address_start']);
+                    break;
+
+                case 'range':
+                    $ban_input['hashed_ip_address'] = null;
+                    break;
+
+                case 'hash':
+                    $ban_input['ip_address_start'] = null;
+                    $ban_input['ip_address_end'] = null;
+                    break;
+            }
         }
 
         $ban_input['years'] = $_POST['ban_time_years'] ?? 0;
@@ -48,7 +62,7 @@ class BanHammer
         $ban_input['hours'] = $_POST['ban_time_hours'] ?? 0;
         $ban_input['minutes'] = $_POST['ban_time_minutes'] ?? 0;
         $ban_input['seconds'] = $_POST['ban_time_seconds'] ?? 0;
-        $ban_input['start_time'] = $_POST['ban_start_time'] ?? null;
+        $ban_input['start_time'] = $_POST['ban_start_time'] ?? time();
         $ban_input['reason'] = $_POST['ban_reason'] ?? null;
         //$ban_input['appeal'] = $_POST['ban_appeal'] ?? null;
         $ban_input['appeal_response'] = $_POST['ban_appeal_response'] ?? null;
@@ -113,27 +127,18 @@ class BanHammer
     {
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_BANS_TABLE .
-                '" ("board_id", "all_boards", "type", "creator", "ip_address_start", "hashed_ip_address", "reason", "length", "start_time")
-								VALUES (:board_id, :all_boards, :type, :creator, :ip_address_start, :hashed_ip_address, :reason, :length, :start_time)');
-        $prepared->bindValue(':board_id', $ban_input['board'], PDO::PARAM_STR);
-        $prepared->bindValue(':all_boards', $ban_input['all_boards'], PDO::PARAM_INT);
-        $prepared->bindValue(':type', $ban_input['type'], PDO::PARAM_STR);
-        $prepared->bindValue(':creator', $ban_input['creator'], PDO::PARAM_STR);
-        $prepared->bindValue(':ip_address_start', nel_prepare_ip_for_storage($ban_input['ip_address_start']),
-                PDO::PARAM_LOB);
-        $prepared->bindValue(':hashed_ip_address', nel_prepare_hash_for_storage($ban_input['hashed_ip_address']), PDO::PARAM_LOB);
-        $prepared->bindValue(':reason', $ban_input['reason'], PDO::PARAM_STR);
-        $prepared->bindValue(':length', $ban_input['length'], PDO::PARAM_INT);
-
-        if (!is_null($ban_input['start_time']))
-        {
-            $prepared->bindValue(':start_time', $ban_input['start_time'], PDO::PARAM_INT);
-        }
-        else
-        {
-            $prepared->bindValue(':start_time', time(), PDO::PARAM_INT);
-        }
-
+                '" ("board_id", "all_boards", "type", "creator", "ip_address_start", "hashed_ip_address",
+                 "ip_address_end", "reason", "length", "start_time") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $prepared->bindValue(1, $ban_input['board'], PDO::PARAM_STR);
+        $prepared->bindValue(2, $ban_input['all_boards'], PDO::PARAM_INT);
+        $prepared->bindValue(3, $ban_input['type'], PDO::PARAM_STR);
+        $prepared->bindValue(4, $ban_input['creator'], PDO::PARAM_STR);
+        $prepared->bindValue(5, nel_prepare_ip_for_storage($ban_input['ip_address_start']), PDO::PARAM_LOB);
+        $prepared->bindValue(6, nel_prepare_hash_for_storage($ban_input['hashed_ip_address']), PDO::PARAM_LOB);
+        $prepared->bindValue(7, nel_prepare_ip_for_storage($ban_input['ip_address_end']), PDO::PARAM_LOB);
+        $prepared->bindValue(8, $ban_input['reason'], PDO::PARAM_STR);
+        $prepared->bindValue(9, $ban_input['length'], PDO::PARAM_INT);
+        $prepared->bindValue(10, $ban_input['start_time'], PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
     }
 
@@ -148,7 +153,8 @@ class BanHammer
         $prepared->bindValue(':type', $ban_input['type'], PDO::PARAM_STR);
         $prepared->bindValue(':ip_address_start', nel_prepare_ip_for_storage($ban_input['ip_address_start']),
                 PDO::PARAM_LOB);
-        $prepared->bindValue(':hashed_ip_address', nel_prepare_hash_for_storage($ban_input['hashed_ip_address']), PDO::PARAM_LOB);
+        $prepared->bindValue(':hashed_ip_address', nel_prepare_hash_for_storage($ban_input['hashed_ip_address']),
+                PDO::PARAM_LOB);
         $prepared->bindValue(':reason', $ban_input['reason'], PDO::PARAM_STR);
         $prepared->bindValue(':length', $ban_input['length'], PDO::PARAM_INT);
         $prepared->bindValue(':start_time', $ban_input['start_time'], PDO::PARAM_INT);

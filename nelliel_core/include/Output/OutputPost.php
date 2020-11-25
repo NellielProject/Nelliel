@@ -160,7 +160,7 @@ class OutputPost extends OutputCore
             if ($user->checkPermission($this->domain, 'perm_view_unhashed_ip') && !empty($post_data['ip_address']))
             {
                 $ip = @inet_ntop($post_data['ip_address']);
-                $ban_ip_type = 'ban_ip';
+                $ban_ip_type = 'ban_ip_start';
             }
             else
             {
