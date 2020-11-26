@@ -74,7 +74,9 @@ class Snacks
         if ($this->ip_address != @inet_ntop($ban_info['ip_address_start']) &&
                 $this->hashed_ip_address != bin2hex($ban_info['hashed_ip_address']))
         {
-            nel_derp(150, _gettext('Your IP address does not match the one listed in the ban.'));
+            nel_derp(150,
+                    _gettext(
+                            'Your IP address does not match the one listed in the ban or you are trying to appeal a range ban.'));
         }
 
         if ($ban_info['appeal_status'] > 0)
