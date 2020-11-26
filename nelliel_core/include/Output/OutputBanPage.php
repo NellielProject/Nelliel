@@ -60,8 +60,9 @@ class OutputBanPage extends OutputCore
         $this->render_data['reviewed'] = $ban_info['appeal_status'] == 1;
         $this->render_data['responded'] = $ban_info['appeal_status'] > 1;
 
-        if ($ban_info['appeal_status'] == 0)
+        if ($ban_info['appeal_status'] == 0 && empty($ban_info['ip_address_end']))
         {
+            $this->render_data['appeal_allowed'] = true;
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY .
                     http_build_query(['module' => 'ban-page', 'actions' => 'add-appeal']);
 
@@ -70,9 +71,10 @@ class OutputBanPage extends OutputCore
                 $this->render_data['form_action'] .= '&board_id=' . $ban_info['board_id'];
             }
         }
-
-        if ($ban_info['appeal_status'] == 2 || $ban_info['appeal_status'] == 3)
+        else
         {
+            $this->render_data['appeal_allowed'] = false;
+
             if ($ban_info['appeal_status'] == 2)
             {
                 $this->render_data['what_done'] = _gettext(
@@ -88,6 +90,11 @@ class OutputBanPage extends OutputCore
             if ($ban_info['appeal_response'] != '')
             {
                 $this->render_data['appeal_response'] = $ban_info['appeal_response'];
+            }
+
+            if (!empty($ban_info['ip_address_end']))
+            {
+                $this->render_data['is_range'] = true;
             }
         }
 

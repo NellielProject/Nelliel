@@ -71,17 +71,22 @@ class Snacks
             return;
         }
 
+        if (!empty($ban_info['ip_address_end']))
+        {
+            nel_derp(150, _gettext('You cannot appeal a range ban.'));
+        }
+
         if ($this->ip_address != @inet_ntop($ban_info['ip_address_start']) &&
                 $this->hashed_ip_address != bin2hex($ban_info['hashed_ip_address']))
         {
-            nel_derp(150,
+            nel_derp(151,
                     _gettext(
                             'Your IP address does not match the one listed in the ban or you are trying to appeal a range ban.'));
         }
 
         if ($ban_info['appeal_status'] > 0)
         {
-            nel_derp(151, _gettext('You have already appealed your ban.'));
+            nel_derp(152, _gettext('You have already appealed your ban.'));
         }
 
         $prepared = $this->database->prepare(
