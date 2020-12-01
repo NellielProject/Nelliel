@@ -92,7 +92,7 @@ Error 320: perm_manage_bans (access) (Output/OutputPanelBans.php)
 Error 321: perm_manage_bans (add) (Admin/AdminBans.php)  
 Error 322: perm_manage_bans (modify) (Admin/AdminBans.php)  
 Error 323: perm_manage_bans (all_boards) (Admin/AdminBans.php)  
-Error 324: perm_manage_bans (remove) (Admin/AdminBans.php, classes/BanHammer.php)  
+Error 324: perm_manage_bans (remove) (Admin/AdminBans.php)  
 
 Error 330: perm_board_config (access) (Output/OutputPanelBoardSettings.php)  
 Error 331: perm_board_config (modify) (Admin/AdminBoardSettings.php)  

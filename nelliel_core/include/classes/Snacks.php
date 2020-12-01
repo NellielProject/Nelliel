@@ -37,15 +37,14 @@ class Snacks
                 !empty($_POST[NEL_BASE_HONEYPOT_FIELD2 . '_' . $domain->id()]) ||
                 !empty($_POST[NEL_BASE_HONEYPOT_FIELD3 . '_' . $domain->id()]))
         {
-            $ban_input['type'] = 'SPAMBOT';
-            $ban_input['ip_address_start'] = $this->ip_address;
-            $ban_input['hashed_ip_address'] = $this->hashed_ip_address;
-            $ban_input['reason'] = 'Ur a spambot. Nobody wants any. GTFO!';
-            $ban_input['start_time'] = time();
-            $ban_input['length'] = 86400 * 9001;
-            $ban_input['all_boards'] = 1;
-            $this->ban_hammer->addBan($ban_input);
-            $this->applyBan($domain);
+            $this->ban_hammer->modifyData('type') = 'SPAMBOT';
+            $this->ban_hammer->modifyData('ip_address_start') = $this->ip_address;
+            $this->ban_hammer->modifyData('hashed_ip_address') = $this->hashed_ip_address;
+            $this->ban_hammer->modifyData('reason') = 'Ur a spambot. Nobody wants any. GTFO!';
+            $this->ban_hammer->modifyData('start_time') = time();
+            $this->ban_hammer->modifyData('length') = 86400 * 9001;
+            $this->ban_hammer->modifyData('all_boards') = 1;
+            $this->ban_hammer->apply();
         }
     }
 
@@ -101,7 +100,7 @@ class Snacks
             return;
         }
 
-        $bans = $this->ban_hammer->getBansByIp($this->ip_address, $this->hashed_ip_address);
+        $bans = $this->ban_hammer->getBansByIP($this->ip_address, $this->hashed_ip_address);
         $ban_info = null;
 
         foreach ($bans as $ban)
@@ -147,7 +146,7 @@ class Snacks
             if ($inputs['actions'][0] === 'add-appeal')
             {
                 $this->banAppeal($inputs['board_id'], $ban_info);
-                $ban_info = $this->ban_hammer->getBanById($ban_info['ban_id']);
+                $ban_info = $this->ban_hammer->getBanByID($ban_info['ban_id']);
             }
         }
 

@@ -44,7 +44,7 @@ class TableBans extends TableHandler
             ban_id              " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             board_id            VARCHAR(50) DEFAULT NULL,
             all_boards          SMALLINT NOT NULL DEFAULT 0,
-            type                VARCHAR(50) NOT NULL,
+            type                SMALLINT NOT NULL DEFAULT 0,
             creator             VARCHAR(50) NOT NULL,
             ip_address_start    " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
             hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('BINARY', '32') . " NOT NULL,

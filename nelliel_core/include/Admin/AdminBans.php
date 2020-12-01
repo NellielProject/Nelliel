@@ -35,7 +35,9 @@ class AdminBans extends AdminHandler
         $hashed_ip = $_GET['ban_hashed_ip'] ?? '';
         $type = $_GET['ban_type'] ?? 'GENERAL';
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
-        $output_panel->render(['section' => 'add', 'user' => $this->session_user, 'ip_start' => $ip_start, 'hashed_ip' => $hashed_ip, 'type' => $type], false);
+        $output_panel->render(
+                ['section' => 'add', 'user' => $this->session_user, 'ip_start' => $ip_start, 'hashed_ip' => $hashed_ip,
+                    'type' => $type], false);
         $this->outputMain(false);
     }
 
@@ -46,8 +48,8 @@ class AdminBans extends AdminHandler
             nel_derp(321, _gettext('You are not allowed to issue bans.'));
         }
 
-        $ban_input = $this->ban_hammer->collectFromPOST();
-        $this->ban_hammer->addBan($ban_input);
+        $this->ban_hammer->collectFromPOST();
+        $this->ban_hammer->apply();
 
         if (isset($_GET['post-id']))
         {
@@ -82,14 +84,16 @@ class AdminBans extends AdminHandler
             nel_derp(322, _gettext('You are not allowed to modify bans.'));
         }
 
-        $ban_input = $this->ban_hammer->collectFromPOST();
+        $this->ban_hammer->collectFromPOST();
 
-        if ($ban_input['all_boards'] === 1 && !$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
+        // TODO: Update or remove this perm
+        if ($this->ban_hammer->getData('all_boards') === 1 &&
+                !$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
             nel_derp(323, _gettext('You are not allowed to ban from all boards.'));
         }
 
-        $this->ban_hammer->modifyBan($ban_input);
+        $this->ban_hammer->apply();
         $this->outputMain(true);
     }
 
@@ -100,8 +104,7 @@ class AdminBans extends AdminHandler
             nel_derp(324, _gettext('You are not allowed to modify bans.'));
         }
 
-        $ban_input = $this->ban_hammer->collectFromPOST();
-        $this->ban_hammer->removeBan($this->domain, $_GET['ban_id']);
+        $this->ban_hammer->removeBan($_GET['ban_id']);
         $this->outputMain(true);
     }
 }

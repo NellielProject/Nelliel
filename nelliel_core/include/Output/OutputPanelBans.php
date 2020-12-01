@@ -173,7 +173,7 @@ class OutputPanelBans extends OutputCore
                 $this->domain->id();
         $ban_id = $_GET['ban_id'];
         $ban_hammer = new \Nelliel\BanHammer($this->database);
-        $ban_info = $ban_hammer->getBanById($ban_id, true);
+        $ban_info = $ban_hammer->getBanByID($ban_id, true);
         $this->render_data['ban_id'] = $ban_info['ban_id'];
         $this->render_data['ban_ip_start'] = @inet_ntop($ban_info['ip_address_start']);
         $this->render_data['ban_hashed_ip'] = bin2hex($ban_info['hashed_ip_address']);
