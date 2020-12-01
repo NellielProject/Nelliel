@@ -57,13 +57,14 @@ function nel_dispatch_preparation()
         $redirect->doRedirect(true);
     }
 
-    if ($inputs['board_id'] === '' || $inputs['domain_id'] === '_site_')
+    // Add more options here if we implement further domain types
+    if (!empty($inputs['board_id']) && empty($inputs['domain_id']))
     {
-        $domain = new \Nelliel\DomainSite(nel_database());
+        $domain = new \Nelliel\DomainBoard($inputs['board_id'], nel_database());
     }
     else
     {
-        $domain = new \Nelliel\DomainBoard($inputs['board_id'], nel_database());
+        $domain = new \Nelliel\DomainSite(nel_database());
     }
 
     $inputs = nel_plugins()->processHook('nel-in-after-dispatch-prep', [$domain], $inputs);
