@@ -46,13 +46,13 @@ class BansAccess
         {
             $prepared = $this->database->prepare(
                     'SELECT "ban_id" FROM "' . NEL_BANS_TABLE .
-                    '" WHERE "ip_address_start" = ? AND "board_id" = ?');
+                    '" WHERE "ip_address_start" = ? AND "ip_type" = 1, AND "board_id" = ?');
             $prepared->bindValue(2, $board_id, PDO::PARAM_STR);
         }
         else
         {
             $prepared = $this->database->prepare(
-                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "ip_address_start" = ?');
+                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "ip_address_start" = ? AND "ip_type" = 1');
         }
 
         $prepared->bindValue(1, nel_prepare_ip_for_storage($ban_ip), PDO::PARAM_LOB);
@@ -72,13 +72,13 @@ class BansAccess
         {
             $prepared = $this->database->prepare(
                     'SELECT "ban_id" FROM "' . NEL_BANS_TABLE .
-                    '" WHERE "hashed_ip_address" = ? AND "board_id" = ?');
+                    '" WHERE "hashed_ip_address" = ? AND "ip_type" = 1, AND "board_id" = ?');
             $prepared->bindValue(2, $board_id, PDO::PARAM_STR);
         }
         else
         {
             $prepared = $this->database->prepare(
-                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "hashed_ip_address" = ?');
+                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "hashed_ip_address" = ? AND "ip_type" = 1');
         }
 
         $prepared->bindValue(1, nel_prepare_hash_for_storage($hashed_ip), PDO::PARAM_LOB);
@@ -97,12 +97,12 @@ class BansAccess
         if (!is_null($board_id))
         {
             $prepared = $this->database->prepare(
-                    'SELECT "ban_ids" FROM "' . NEL_BANS_TABLE . '" WHERE "type" = ? AND "board_id" = ?');
+                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "ip_type" = ? AND "board_id" = ?');
             $ban_ids = $this->database->executePreparedFetchAll($prepared, [$type, $board_id], PDO::FETCH_COLUMN);
         }
         else
         {
-            $prepared = $this->database->prepare('SELECT "ban_ids" FROM "' . NEL_BANS_TABLE . '" WHERE "type" = ?');
+            $prepared = $this->database->prepare('SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "ip_type" = ?');
             $ban_ids = $this->database->executePreparedFetchAll($prepared, [$type], PDO::FETCH_COLUMN);
         }
 

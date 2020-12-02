@@ -7,6 +7,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use IPTools\IP;
+use IPTools\Range;
+
 class Snacks
 {
     private $database;
@@ -99,6 +102,31 @@ class Snacks
     public function applyBan(Domain $domain)
     {
         $this->banAppeal();
+        $output_ban_page = new \Nelliel\Output\OutputBanPage($domain, false);
+        $bans_range = $this->bans_access->getBansByType(BansAccess::RANGE);
+
+        foreach ($bans_range as $ban_hammer)
+        {
+            if ($ban_hammer->expired())
+            {
+                $ban_hammer->remove();
+                continue;
+            }
+
+            if ($domain->id() === $ban_hammer->getData('board_id'))
+            {
+                $range = new Range(new IP($ban_hammer->getData('ip_address_start')),
+                        new IP($ban_hammer->getData('ip_address_end')));
+
+                if ($range->contains(new IP($this->ip_address)))
+                {
+                    $output_ban_page->render(['ban_hammer' => $ban_hammer], false);
+                    ;
+                    nel_clean_exit();
+                }
+            }
+        }
+
         $bans_ip = $this->bans_access->getBansByIP($this->ip_address);
         $bans_hashed = $this->bans_access->getBansByHashedIP($this->hashed_ip_address);
         $bans = array_merge($bans_ip, $bans_hashed);
@@ -136,7 +164,6 @@ class Snacks
             return;
         }
 
-        $output_ban_page = new \Nelliel\Output\OutputBanPage($domain, false);
         $output_ban_page->render(['ban_hammer' => $longest], false);
         nel_clean_exit();
     }
