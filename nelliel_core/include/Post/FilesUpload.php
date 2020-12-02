@@ -213,7 +213,7 @@ class FilesUpload
     public function doesFileExist($response_to, $file)
     {
         $database = $this->domain->database();
-        $snacks = new \Nelliel\Snacks($database, new \Nelliel\BanHammer($database));
+        $snacks = new \Nelliel\Snacks($database, new \Nelliel\BansAccess($database));
         $error_data = ['delete_files' => true, 'bad-filename' => $file->data('name'), 'files' => $this->uploaded_files,
             'board_id' => $this->domain->id()];
         $is_banned = false;

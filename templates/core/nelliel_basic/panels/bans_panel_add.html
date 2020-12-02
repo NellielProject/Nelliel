@@ -90,7 +90,14 @@
 		{{/ is_post_ban }}
 		<div class="display-row">
 			<span class="display-cell">
+				<label for="ban_type" data-i18n="gettext">Ban type:</label>
+			</span>
+			<span class="display-cell">
 				<input id="ban_type" type="text" name="ban_type" value="{{ ban_type }}">
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
 				<input type="submit" value="Add Ban" data-i18n-attributes="gettext|value">
 			</span>
 		</div>

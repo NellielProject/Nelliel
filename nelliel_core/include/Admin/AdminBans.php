@@ -104,7 +104,9 @@ class AdminBans extends AdminHandler
             nel_derp(324, _gettext('You are not allowed to modify bans.'));
         }
 
-        $this->ban_hammer->removeBan($_GET['ban_id']);
+        $ban_id = $_GET['ban_id'] ?? '';
+        $this->ban_hammer->loadFromID($ban_id);
+        $this->ban_hammer->remove();
         $this->outputMain(true);
     }
 }

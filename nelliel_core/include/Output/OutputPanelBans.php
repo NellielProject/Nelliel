@@ -89,7 +89,7 @@ class OutputPanelBans extends OutputCore
             $ban_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $ban_data['ban_id'] = $ban_info['ban_id'];
-            $ban_data['type'] = $ban_info['type'];
+            $ban_data['ban_type'] = $ban_info['ban_type'];
             $ban_data['ip_address_start'] = $ban_info['ip_address_start'] ? @inet_ntop($ban_info['ip_address_start']) : _gettext(
                     'Unknown');
             $ban_data['board_id'] = $ban_info['board_id'];
@@ -131,7 +131,7 @@ class OutputPanelBans extends OutputCore
         $this->render_data['ban_board'] = (!empty($this->domain->id())) ? $this->domain->id() : '';
         $ip_start = $parameters['ip_start'];
         $hashed_ip = $parameters['hashed_ip'];
-        $type = $parameters['type'];
+        $type = $parameters['ban_type'];
 
         if ($type === 'POST' && isset($_GET['post-id']))
         {
@@ -173,42 +173,43 @@ class OutputPanelBans extends OutputCore
                 $this->domain->id();
         $ban_id = $_GET['ban_id'];
         $ban_hammer = new \Nelliel\BanHammer($this->database);
-        $ban_info = $ban_hammer->getBanByID($ban_id, true);
-        $this->render_data['ban_id'] = $ban_info['ban_id'];
-        $this->render_data['ban_ip_start'] = @inet_ntop($ban_info['ip_address_start']);
-        $this->render_data['ban_hashed_ip'] = bin2hex($ban_info['hashed_ip_address']);
-        $this->render_data['ban_ip_end'] = @inet_ntop($ban_info['ip_address_end']);
-        $this->render_data['board_id'] = $ban_info['board_id'];
-        $this->render_data['type'] = $ban_info['type'];
-        $this->render_data['start_time_formatted'] = date("D F jS Y  H:i:s", $ban_info['start_time']);
-        $this->render_data['expiration'] = date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']);
-        $this->render_data['years'] = $ban_info['times']['years'];
-        $this->render_data['days'] = $ban_info['times']['days'];
-        $this->render_data['hours'] = $ban_info['times']['hours'];
-        $this->render_data['minutes'] = $ban_info['times']['minutes'];
-        $this->render_data['all_boards'] = ($ban_info['all_boards'] > 0) ? 'checked' : '';
-        $this->render_data['start_time'] = $ban_info['start_time'];
-        $this->render_data['reason'] = $ban_info['reason'];
-        $this->render_data['creator'] = $ban_info['creator'];
-        $this->render_data['appeal'] = $ban_info['appeal'];
-        $this->render_data['appeal_response'] = $ban_info['appeal_response'];
+        $ban_hammer->loadFromID($ban_id);
+        $this->render_data['ban_id'] = $ban_hammer->getData('ban_id');
+        $this->render_data['ban_ip_start'] = $ban_hammer->getData('ip_address_start');
+        $this->render_data['ban_hashed_ip'] = $ban_hammer->getData('hashed_ip_address');
+        $this->render_data['ban_ip_end'] = $ban_hammer->getData('ip_address_end');
+        $this->render_data['board_id'] = $ban_hammer->getData('board_id');
+        $this->render_data['ban_type'] = $ban_hammer->getData('ban_type');
+        $this->render_data['start_time_formatted'] = date("D F jS Y  H:i:s", $ban_hammer->getData('start_time'));
+        $this->render_data['expiration'] = date("D F jS Y  H:i:s", $ban_hammer->getData('length') + $ban_hammer->getData('start_time'));
+        $times = $ban_hammer->getData('times');
+        $this->render_data['years'] = $times['years'];
+        $this->render_data['days'] = $times['days'];
+        $this->render_data['hours'] = $times['hours'];
+        $this->render_data['minutes'] = $times['minutes'];
+        $this->render_data['all_boards'] = ($ban_hammer->getData('all_boards') > 0) ? 'checked' : '';
+        $this->render_data['start_time'] = $ban_hammer->getData('start_time');
+        $this->render_data['reason'] = $ban_hammer->getData('reason');
+        $this->render_data['creator'] = $ban_hammer->getData('creator');
+        $this->render_data['appeal'] = $ban_hammer->getData('appeal');
+        $this->render_data['appeal_response'] = $ban_hammer->getData('appeal_response');
 
-        if ($ban_info['appeal_status'] == 0)
+        if ($ban_hammer->getData('appeal_status') == 0)
         {
             $this->render_data['status_unappealed'] = 'checked';
         }
 
-        if ($ban_info['appeal_status'] == 1)
+        if ($ban_hammer->getData('appeal_status') == 1)
         {
             $this->render_data['status_appealed'] = 'checked';
         }
 
-        if ($ban_info['appeal_status'] == 2)
+        if ($ban_hammer->getData('appeal_status') == 2)
         {
             $this->render_data['status_modified'] = 'checked';
         }
 
-        if ($ban_info['appeal_status'] == 3)
+        if ($ban_hammer->getData('appeal_status') == 3)
         {
             $this->render_data['status_denied'] = 'checked';
         }
