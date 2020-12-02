@@ -131,9 +131,9 @@ class OutputPanelBans extends OutputCore
         $this->render_data['ban_board'] = (!empty($this->domain->id())) ? $this->domain->id() : '';
         $ip_start = $parameters['ip_start'];
         $hashed_ip = $parameters['hashed_ip'];
-        $type = $parameters['ban_type'];
+        $ban_type = $parameters['ban_type'];
 
-        if ($type === 'POST' && isset($_GET['post-id']))
+        if ($ban_type === 'POST' && isset($_GET['post-id']))
         {
             $this->render_data['is_post_ban'] = true;
             $post_param = '&post-id=' . $_GET['post-id'];
@@ -147,7 +147,7 @@ class OutputPanelBans extends OutputCore
                 $this->domain->id() . $post_param;
         $this->render_data['ban_ip_start'] = $ip_start;
         $this->render_data['ban_hashed_ip'] = $hashed_ip;
-        $this->render_data['ban_type'] = $type;
+        $this->render_data['ban_type'] = $ban_type;
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/bans_panel_add',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
