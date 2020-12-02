@@ -37,6 +37,7 @@ class BanHammer
         if (isset($_POST['ban_all_boards_']) && is_array($_POST['ban_all_boards_']))
         {
             $this->ban_data['all_boards'] = nel_form_input_default($_POST['ban_all_boards_']);
+            $this->ban_data['board'] = null;
         }
 
         $this->ban_data['ban_type'] = $_POST['ban_type'] ?? null;

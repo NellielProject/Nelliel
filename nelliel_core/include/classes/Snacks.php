@@ -141,7 +141,7 @@ class Snacks
                 continue;
             }
 
-            if ($domain->id() === $ban_hammer->getData('board_id'))
+            if ($domain->id() !== '_site_' && ($domain->id() === $ban_hammer->getData('board_id') || $ban_hammer->getData('all_boards') == 1))
             {
                 if (empty($longest))
                 {
