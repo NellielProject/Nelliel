@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Content\ContentID;
 use Nelliel\Domain;
 use PDO;
 
@@ -132,15 +133,17 @@ class OutputPanelBans extends OutputCore
         $ip_start = $parameters['ip_start'];
         $hashed_ip = $parameters['hashed_ip'];
         $ban_type = $parameters['ban_type'];
+        $post_param = '';
 
-        if ($ban_type === 'POST' && isset($_GET['post-id']))
+        if ($ban_type === 'POST' && isset($_GET['content-id']))
         {
-            $this->render_data['is_post_ban'] = true;
-            $post_param = '&post-id=' . $_GET['post-id'];
-        }
-        else
-        {
-            $post_param = '';
+            $content_id = new ContentID($_GET['content-id']);
+
+            if($content_id->isPost())
+            {
+                $this->render_data['is_post_ban'] = true;
+                $post_param = '&content-id=' . $content_id->getIDString();
+            }
         }
 
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&actions=add&board_id=' .

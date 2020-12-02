@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Content\ContentID;
 use Nelliel\Domain;
 use Nelliel\Auth\Authorization;
 
@@ -51,17 +52,19 @@ class AdminBans extends AdminHandler
         $this->ban_hammer->collectFromPOST();
         $this->ban_hammer->apply();
 
-        if (isset($_GET['post-id']))
+        if (isset($_GET['content-id']))
         {
-            if (isset($_POST['mod_post_comment']) && !empty($_POST['mod_post_comment']))
-            {
-                $post_table = $this->domain->reference('posts_table');
-                $prepared = $this->database->prepare(
-                        'UPDATE "' . $post_table . '" SET "mod_comment" = ? WHERE "post_number" = ?');
+            $content_id = new ContentID($_GET['content-id']);
+            $mod_post_comment = $_POST['mod_post_comment'] ?? null;
 
-                $this->database->executePrepared($prepared, [$_POST['mod_post_comment'], $_GET['post-id']]);
+            if($content_id->isPost() && !is_null($mod_post_comment))
+            {
+                $content_post = $content_id->getInstanceFromID($this->domain);
+                $content_post->loadFromDatabase();
+                $content_post->changeData('mod_comment', $mod_post_comment);
+                $content_post->writeToDatabase();
                 $regen = new \Nelliel\Regen();
-                $regen->threads($this->domain, true, [$_GET['post-id']]);
+                $regen->threads($this->domain, true, [$content_id->postID()]);
                 $regen->index($this->domain);
                 $regen->overboard($this->domain);
             }

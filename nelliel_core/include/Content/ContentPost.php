@@ -54,6 +54,8 @@ class ContentPost extends ContentHandler
             return false;
         }
 
+        $result['ip_address'] = nel_convert_ip_from_storage($result['ip_address']);
+        $result['hashed_ip_address'] = nel_convert_hash_from_storage($result['hashed_ip_address']);
         $this->content_data = $result;
         $meta = $result['meta'] ?? '';
         $this->getMeta()->storeFromJSON($meta);
