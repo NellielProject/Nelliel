@@ -90,7 +90,7 @@ class Snacks
         if ($this->ip_address !== $ban_hammer->getData('ip_address_start') &&
                 $this->hashed_ip_address !== $ban_hammer->getData('hashed_ip_address'))
         {
-            nel_derp(152, _gettext('Your IP address does not match the one listed in the ban.'));
+            nel_derp(152, _gettext('Your IP address does not match the one on the ban.'));
         }
 
         if (!$ban_hammer->addAppeal($bawww))

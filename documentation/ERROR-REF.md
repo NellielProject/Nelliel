@@ -50,10 +50,11 @@ Error 107: Install not done. (imgboard.php)
 Error 108: Install already done. (Setup/Setup.php)  
 Error 109: Board doesn't exist. (Admin/AdminBoards.php)  
 
-Error 150: Cannot appeal range. (classes/Snacks.php) 
-Error 151: IP doesn't match ban. (classes/Snacks.php)  
-Error 152: Already appealed. (classes/Snacks.php)  
- 
+Error 150: Invalid ban ID. (classes/Snacks.php) 
+Error 151: Can't appeal range ban. (classes/Snacks.php)  
+Error 152: IP does not match. (classes/Snacks.php)  
+Error 153: Already appealed. (classes/Snacks.php)  
+
 Error 200: No user ID. (Account/Login.php)  
 Error 201: No password. (Account/Login.php)  
 Error 202: Wrong user ID or password. (Account/Login.php)  
