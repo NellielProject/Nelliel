@@ -94,6 +94,7 @@ class OutputPanelBans extends OutputCore
             $ban_data['ip_address_start'] = $ban_info['ip_address_start'] ? @inet_ntop($ban_info['ip_address_start']) : _gettext(
                     'Unknown');
             $ban_data['board_id'] = $ban_info['board_id'];
+            $ban_data['all_boards'] = $ban_info['all_boards'];
             $ban_data['reason'] = $ban_info['reason'];
             $ban_data['expiration'] = date("D F jS Y  H:i:s", $ban_info['length'] + $ban_info['start_time']);
             $ban_data['appeal'] = $ban_info['appeal'];
@@ -181,7 +182,7 @@ class OutputPanelBans extends OutputCore
         $this->render_data['ban_ip_start'] = $ban_hammer->getData('ip_address_start');
         $this->render_data['ban_hashed_ip'] = $ban_hammer->getData('hashed_ip_address');
         $this->render_data['ban_ip_end'] = $ban_hammer->getData('ip_address_end');
-        $this->render_data['board_id'] = $ban_hammer->getData('board_id');
+        $this->render_data['ban_board'] = $ban_hammer->getData('board_id');
         $this->render_data['ban_type'] = $ban_hammer->getData('ban_type');
         $this->render_data['start_time_formatted'] = date("D F jS Y  H:i:s", $ban_hammer->getData('start_time'));
         $this->render_data['expiration'] = date("D F jS Y  H:i:s", $ban_hammer->getData('length') + $ban_hammer->getData('start_time'));
