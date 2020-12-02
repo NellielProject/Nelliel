@@ -196,27 +196,7 @@ class OutputPanelBans extends OutputCore
         $this->render_data['creator'] = $ban_hammer->getData('creator');
         $this->render_data['appeal'] = $ban_hammer->getData('appeal');
         $this->render_data['appeal_response'] = $ban_hammer->getData('appeal_response');
-
-        if ($ban_hammer->getData('appeal_status') == 0)
-        {
-            $this->render_data['status_unappealed'] = 'checked';
-        }
-
-        if ($ban_hammer->getData('appeal_status') == 1)
-        {
-            $this->render_data['status_appealed'] = 'checked';
-        }
-
-        if ($ban_hammer->getData('appeal_status') == 2)
-        {
-            $this->render_data['status_modified'] = 'checked';
-        }
-
-        if ($ban_hammer->getData('appeal_status') == 3)
-        {
-            $this->render_data['status_denied'] = 'checked';
-        }
-
+        $this->render_data['appeal_status_' . $ban_hammer->getData('appeal_status')] = 'selected';
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/bans_panel_modify',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
