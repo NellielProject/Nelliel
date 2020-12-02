@@ -1,6 +1,5 @@
 {{% FILTERS }}
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
-	<input type="hidden" name="ban_hashed_ip" value="{{ hashed_ip_address }}">
 	<div class="display-table">
 		<div class="display-row">
 			<span class="display-cell">
@@ -22,44 +21,18 @@
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<span data-i18n="gettext">Ban type:</span>
-				<span>{{ ban_type }}</span>
+				<span data-i18n="gettext">Ban hash:</span>
+			</span>
+			<span class="display-cell">
+				<span>{{ ban_hashed_ip }}</span>
 			</span>
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<label for="address_type" data-i18n="gettext">IP type:</label>
+				<label for="ban_ip" data-i18n="gettext">Enter a single IP address or a range.</label>
 			</span>
 			<span class="display-cell">
-				<select id="address_type" name="address_type">
-					<option value="single" data-i18n="gettext">Single IP</option>
-					<option value="range" data-i18n="gettext">IP range</option>
-					<option value="hash" data-i18n="gettext">IP hash</option>
-				</select>
-			</span>
-		</div>
-		<div class="display-row">
-			<span class="display-cell">
-				<label for="ban_ip_start" data-i18n="gettext">IP address or range start:</label>
-			</span>
-			<span class="display-cell">
-				<input id="ban_ip_start" type="text" name="ban_ip_start" value="{{ ban_ip_start }}">
-			</span>
-		</div>
-		<div class="display-row">
-			<span class="display-cell">
-				<label for="ban_ip_end" data-i18n="gettext">IP range end:</label>
-			</span>
-			<span class="display-cell">
-				<input id="ban_ip_end" type="text" name="ban_ip_end" value="{{ ban_ip_end }}">
-			</span>
-		</div>
-		<div class="display-row">
-			<span class="display-cell">
-				<label for="ban_hashed_ip" data-i18n="gettext">IP hash:</label>
-			</span>
-			<span class="display-cell">
-				<input id="ban_hashed_ip" type="text" name="ban_hashed_ip" value="{{ ban_hashed_ip }}">
+				<input id="ban_ip" type="text" name="ban_ip" value="{{ ban_ip }}">
 			</span>
 		</div>
 		<div class="display-row">
@@ -134,6 +107,14 @@
 					<option value="2" data-i18n="gettext" {{ appeal_status_2 }}>Appeal denied</option>
 					<option value="3" data-i18n="gettext" {{ appeal_status_3 }}>Appeal accepted; ban modified</option>
 				</select>
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
+				<label for="ban_type" data-i18n="gettext">Ban type:</label>
+			</span>
+			<span class="display-cell">
+				<input id="ban_type" type="text" name="ban_type" value="{{ ban_type }}">
 			</span>
 		</div>
 		<div class="display-row">

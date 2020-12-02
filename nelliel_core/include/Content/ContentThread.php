@@ -201,7 +201,7 @@ class ContentThread extends ContentHandler
         $this->database->executePrepared($prepared, [$first_post, $last_post, $this->content_id->threadID()]);
     }
 
-    public function verifyModifyPerms()
+    protected function verifyModifyPerms()
     {
         $post = new ContentPost($this->content_id, $this->domain, $this->archived);
         $post->content_id->changePostID($this->firstPost());

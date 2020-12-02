@@ -127,7 +127,15 @@ class Snacks
             }
         }
 
-        $bans_ip = $this->bans_access->getBansByIP($this->ip_address);
+        if (nel_site_domain()->setting('store_unhashed_ip'))
+        {
+            $bans_ip = $this->bans_access->getBansByIP($this->ip_address);
+        }
+        else
+        {
+            $bans_ip = array();
+        }
+
         $bans_hashed = $this->bans_access->getBansByHashedIP($this->hashed_ip_address);
         $bans = array_merge($bans_ip, $bans_hashed);
         $ban_info = null;

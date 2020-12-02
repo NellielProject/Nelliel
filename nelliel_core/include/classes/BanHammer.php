@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use IPTools\Range;
 use PDO;
 
 class BanHammer
@@ -33,8 +34,9 @@ class BanHammer
     {
         $this->ban_data['ban_id'] = $_POST['ban_id'] ?? null;
         $this->ban_data['board'] = $_POST['ban_board'] ?? null;
+        $all_boards = $_POST['ban_all_boards'] ?? 0;
 
-        if (isset($_POST['ban_all_boards']) && is_array($_POST['ban_all_boards']))
+        if (is_array($all_boards))
         {
             $this->ban_data['all_boards'] = nel_form_input_default($_POST['ban_all_boards']);
 
@@ -43,42 +45,53 @@ class BanHammer
                 $this->ban_data['board'] = null;
             }
         }
-        else
-        {
-            $this->ban_data['all_boards'] = 0;
-        }
 
         $this->ban_data['ban_type'] = $_POST['ban_type'] ?? null;
         $this->ban_data['creator'] = $_SESSION['user_id'] ?? null;
-        $this->ban_data['ip_address_start'] = $_POST['ban_ip_start'] ?? null;
-        $this->ban_data['ip_address_end'] = $_POST['ban_ip_end'] ?? null;
-        $this->ban_data['hashed_ip_address'] = $_POST['ban_hashed_ip'] ?? null;
-        $address_type = $_POST['address_type'] ?? null;
+        $ip_address = $_POST['ban_ip'] ?? null;
+        $hashed_ip = $_POST['ban_hashed_ip'] ?? null;
 
-        if (!is_null($address_type))
+        if (nel_site_domain()->setting('store_unhashed_ip'))
         {
-            switch ($address_type)
+            if (filter_var($ip_address, FILTER_VALIDATE_IP) === false)
             {
-                case 'single':
-                    $this->ban_data['ip_address_end'] = null;
-                    $this->ban_data['hashed_ip_address'] = hash('sha256', $this->ban_data['ip_address_start']);
-                    $this->ban_data['ip_type'] = BansAccess::IP;
-                    break;
-
-                case 'range':
-                    $this->ban_data['hashed_ip_address'] = null;
-                    $this->ban_data['ip_type'] = BansAccess::RANGE;
-                    break;
-
-                case 'hash':
-                    $this->ban_data['ip_address_start'] = null;
-                    $this->ban_data['ip_address_end'] = null;
-                    $this->ban_data['ip_type'] = BansAccess::HASHED_IP;
-                    break;
-
-                default:
-                    $this->ban_data['ip_type'] = BansAccess::UNSET;
+                nel_derp(154, _gettext('No IP address given or address was invalid.'));
             }
+
+            $range = Range::parse($ip_address);
+
+            if ((string) $range->getFirstIP() === (string) $range->getLastIP())
+            {
+                $this->ban_data['ip_address_start'] = (string) $range->getFirstIP();
+                $this->ban_data['ip_address_end'] = null;
+                $this->ban_data['ip_type'] = BansAccess::IP;
+            }
+            else
+            {
+                $this->ban_data['ip_address_start'] = (string) $range->getFirstIP();
+                $this->ban_data['ip_address_end'] = (string) $range->getLastIP();
+                $this->ban_data['ip_type'] = BansAccess::RANGE;
+            }
+        }
+        else
+        {
+            if (empty($hashed_ip))
+            {
+                nel_derp(155, _gettext('No IP hash was given.'));
+            }
+
+            $this->ban_data['ip_address_start'] = null;
+            $this->ban_data['ip_address_end'] = null;
+            $this->ban_data['ip_type'] = BansAccess::HASHED_IP;
+        }
+
+        if (empty($hashed_ip))
+        {
+            $this->ban_data['hashed_ip_address'] = hash('sha256', $this->ban_data['ip_address_start']);
+        }
+        else
+        {
+            $this->ban_data['hashed_ip_address'] = $hashed_ip;
         }
 
         $this->ban_data['times']['years'] = $_POST['ban_time_years'] ?? 0;

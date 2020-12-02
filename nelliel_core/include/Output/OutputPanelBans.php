@@ -131,27 +131,14 @@ class OutputPanelBans extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
         $this->render_data['ban_board'] = (!empty($this->domain->id())) ? $this->domain->id() : '';
-        $ip_start = $parameters['ip_start'];
-        $hashed_ip = $parameters['hashed_ip'];
-        $ban_type = $parameters['ban_type'];
+        $this->render_data['ban_ip'] = $parameters['ip_start'];
+        $this->render_data['ban_hashed_ip'] = $parameters['hashed_ip'];
+        $this->render_data['ban_type'] = $parameters['ban_type'];
+        $this->render_data['content_ban'] = $this->render_data['ban_type'] === 'CONTENT';
         $post_param = '';
-
-        if ($ban_type === 'POST' && isset($_GET['content-id']))
-        {
-            $content_id = new ContentID($_GET['content-id']);
-
-            if($content_id->isPost())
-            {
-                $this->render_data['is_post_ban'] = true;
-                $post_param = '&content-id=' . $content_id->getIDString();
-            }
-        }
-
+        $this->render_data['unhashed_ip'] = nel_site_domain()->setting('store_unhashed_ip');
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&actions=add&board_id=' .
                 $this->domain->id() . $post_param;
-        $this->render_data['ban_ip_start'] = $ip_start;
-        $this->render_data['ban_hashed_ip'] = $hashed_ip;
-        $this->render_data['ban_type'] = $ban_type;
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/bans_panel_add',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
@@ -178,8 +165,9 @@ class OutputPanelBans extends OutputCore
         $ban_id = $_GET['ban_id'];
         $ban_hammer = new \Nelliel\BanHammer($this->database);
         $ban_hammer->loadFromID($ban_id);
+        $this->render_data['unhashed_ip'] = nel_site_domain()->setting('store_unhashed_ip');
         $this->render_data['ban_id'] = $ban_hammer->getData('ban_id');
-        $this->render_data['ban_ip_start'] = $ban_hammer->getData('ip_address_start');
+        $this->render_data['ban_ip'] = $ban_hammer->getData('ip_address_start');
         $this->render_data['ban_hashed_ip'] = $ban_hammer->getData('hashed_ip_address');
         $this->render_data['ban_ip_end'] = $ban_hammer->getData('ip_address_end');
         $this->render_data['ban_board'] = $ban_hammer->getData('board_id');

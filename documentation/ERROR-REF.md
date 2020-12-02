@@ -54,6 +54,8 @@ Error 150: Invalid ban ID. (classes/Snacks.php)
 Error 151: Can't appeal range ban. (classes/Snacks.php)  
 Error 152: IP does not match. (classes/Snacks.php)  
 Error 153: Already appealed. (classes/Snacks.php)  
+Error 154: Missing or invalid IP. (classes/BanHammer.php)  
+Error 155: No IP hash. (classes/BanHammer.php)  
 
 Error 200: No user ID. (Account/Login.php)  
 Error 201: No password. (Account/Login.php)  

@@ -210,7 +210,7 @@ class ContentFile extends ContentHandler
     {
     }
 
-    public function verifyModifyPerms()
+    protected function verifyModifyPerms()
     {
         $post = new ContentPost($this->content_id, $this->domain);
         return $post->verifyModifyPerms();

@@ -72,13 +72,13 @@ class BansAccess
         {
             $prepared = $this->database->prepare(
                     'SELECT "ban_id" FROM "' . NEL_BANS_TABLE .
-                    '" WHERE "hashed_ip_address" = ? AND "ip_type" = 1, AND "board_id" = ?');
+                    '" WHERE "hashed_ip_address" = ? AND "ip_type" = 2, AND "board_id" = ?');
             $prepared->bindValue(2, $board_id, PDO::PARAM_STR);
         }
         else
         {
             $prepared = $this->database->prepare(
-                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "hashed_ip_address" = ? AND "ip_type" = 1');
+                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "hashed_ip_address" = ? AND "ip_type" = 2');
         }
 
         $prepared->bindValue(1, nel_prepare_hash_for_storage($hashed_ip), PDO::PARAM_LOB);

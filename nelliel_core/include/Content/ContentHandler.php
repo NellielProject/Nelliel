@@ -27,7 +27,7 @@ abstract class ContentHandler
 
     public abstract function updateCounts();
 
-    public abstract function verifyModifyPerms();
+    protected abstract function verifyModifyPerms();
 
     public function storeMeta(Meta $meta)
     {

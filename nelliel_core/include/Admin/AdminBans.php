@@ -32,7 +32,7 @@ class AdminBans extends AdminHandler
 
     public function creator()
     {
-        $ip_start = $_GET['ban_ip_start'] ?? '';
+        $ip_start = $_GET['ban_ip'] ?? '';
         $hashed_ip = $_GET['ban_hashed_ip'] ?? '';
         $ban_type = $_GET['ban_type'] ?? 'GENERAL';
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
