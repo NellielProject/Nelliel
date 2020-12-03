@@ -32,9 +32,21 @@ class BanHammer
 
     public function collectFromPOST()
     {
-        $this->ban_data['ban_id'] = $_POST['ban_id'] ?? null;
-        $this->ban_data['board'] = $_POST['ban_board'] ?? null;
-        $all_boards = $_POST['ban_all_boards'] ?? 0;
+        $ban_id = $_POST['ban_id'] ?? null;
+        $ban_hash = $_POST['ban_hash'] ?? null;
+        $existing_ban = false;
+
+        if (!is_null($ban_id))
+        {
+            $existing_ban = $this->loadFromID($ban_id);
+        }
+        else if (!is_null($ban_hash))
+        {
+            $existing_ban = $this->loadFromHash($ban_hash);
+        }
+
+        $this->ban_data['board'] = $_POST['ban_board'] ?? $this->ban_data['board'] ?? null;
+        $all_boards = $_POST['ban_all_boards'] ?? null;
 
         if (is_array($all_boards))
         {
@@ -46,16 +58,37 @@ class BanHammer
             }
         }
 
-        $this->ban_data['ban_type'] = $_POST['ban_type'] ?? null;
-        $this->ban_data['creator'] = $_SESSION['user_id'] ?? null;
+        $this->ban_data['ban_type'] = $_POST['ban_type'] ?? $this->ban_data['ban_type'] ?? null;
+        if (empty($this->ban_data['creator']))
+        {
+            $this->ban_data['creator'] = $_SESSION['user_id'];
+        }
+
         $ip_address = $_POST['ban_ip'] ?? null;
         $hashed_ip = $_POST['ban_hashed_ip'] ?? null;
 
-        if (nel_site_domain()->setting('store_unhashed_ip'))
+        if (empty($ip_address))
+        {
+            if (!$existing_ban)
+            {
+                if (empty($hashed_ip))
+                {
+                    nel_derp(155, _gettext('No IP address or hash provided.'));
+                }
+                else
+                {
+                    $this->ban_data['ip_address_start'] = null;
+                    $this->ban_data['ip_address_end'] = null;
+                    $this->ban_data['hashed_ip_address'] = $hashed_ip;
+                    $this->ban_data['ip_type'] = BansAccess::HASHED_IP;
+                }
+            }
+        }
+        else
         {
             if (filter_var($ip_address, FILTER_VALIDATE_IP) === false)
             {
-                nel_derp(154, _gettext('No IP address given or address was invalid.'));
+                nel_derp(154, _gettext('IP address was invalid.'));
             }
 
             $range = Range::parse($ip_address);
@@ -64,49 +97,50 @@ class BanHammer
             {
                 $this->ban_data['ip_address_start'] = (string) $range->getFirstIP();
                 $this->ban_data['ip_address_end'] = null;
+                $this->ban_data['hashed_ip_address'] = hash('sha256', $ip_address);
                 $this->ban_data['ip_type'] = BansAccess::IP;
             }
             else
             {
                 $this->ban_data['ip_address_start'] = (string) $range->getFirstIP();
                 $this->ban_data['ip_address_end'] = (string) $range->getLastIP();
+                $this->ban_data['hashed_ip_address'] = null;
                 $this->ban_data['ip_type'] = BansAccess::RANGE;
             }
         }
-        else
-        {
-            if (empty($hashed_ip))
-            {
-                nel_derp(155, _gettext('No IP hash was given.'));
-            }
 
-            $this->ban_data['ip_address_start'] = null;
-            $this->ban_data['ip_address_end'] = null;
-            $this->ban_data['ip_type'] = BansAccess::HASHED_IP;
-        }
+        $this->ban_data['times']['years'] = $_POST['ban_time_years'] ?? $this->ban_data['times']['years'] ?? 0;
+        $this->ban_data['times']['months'] = $_POST['ban_time_months'] ?? $this->ban_data['times']['months'] ?? 0;
+        $this->ban_data['times']['days'] = $_POST['ban_time_days'] ?? $this->ban_data['times']['days'] ?? 0;
+        $this->ban_data['times']['hours'] = $_POST['ban_time_hours'] ?? $this->ban_data['times']['hours'] ?? 0;
+        $this->ban_data['times']['minutes'] = $_POST['ban_time_minutes'] ?? $this->ban_data['times']['minutes'] ?? 0;
+        $this->ban_data['times']['seconds'] = $_POST['ban_time_seconds'] ?? $this->ban_data['times']['seconds'] ?? 0;
 
-        if (empty($hashed_ip))
+        if (empty($this->ban_data['start_time']) && !isset($_POST['ban_start_time']))
         {
-            $this->ban_data['hashed_ip_address'] = hash('sha256', $this->ban_data['ip_address_start']);
+            $this->ban_data['start_time'] = time();
         }
         else
         {
-            $this->ban_data['hashed_ip_address'] = $hashed_ip;
+            $this->ban_data['start_time'] = $_POST['ban_start_time'] ?? $this->ban_data['start_time'];
         }
 
-        $this->ban_data['times']['years'] = $_POST['ban_time_years'] ?? 0;
-        $this->ban_data['times']['months'] = $_POST['ban_time_months'] ?? 0;
-        $this->ban_data['times']['days'] = $_POST['ban_time_days'] ?? 0;
-        $this->ban_data['times']['hours'] = $_POST['ban_time_hours'] ?? 0;
-        $this->ban_data['times']['minutes'] = $_POST['ban_time_minutes'] ?? 0;
-        $this->ban_data['times']['seconds'] = $_POST['ban_time_seconds'] ?? 0;
-        $this->ban_data['start_time'] = $_POST['ban_start_time'] ?? time();
-        $this->ban_data['reason'] = $_POST['ban_reason'] ?? null;
-        $this->ban_data['appeal'] = $_POST['ban_appeal'] ?? null;
-        $this->ban_data['appeal_response'] = $_POST['ban_appeal_response'] ?? null;
-        $this->ban_data['appeal_status'] = $_POST['ban_appeal_status'] ?? 0;
+        $this->ban_data['reason'] = $_POST['ban_reason'] ?? $this->ban_data['reason'] ?? null;
+        $this->ban_data['appeal'] = $_POST['ban_appeal'] ?? $this->ban_data['appeal'] ?? null;
+        $this->ban_data['appeal_response'] = $_POST['ban_appeal_response'] ?? $this->ban_data['appeal_response'] ?? null;
+        $this->ban_data['appeal_status'] = $_POST['ban_appeal_status'] ?? $this->ban_data['appeal_status'] ?? 0;
+
+        if (empty($this->ban_data['start_time']) && !isset($_POST['ban_start_time']))
+        {
+            $this->ban_data['start_time'] = time();
+        }
+        else
+        {
+            $this->ban_data['start_time'] = $_POST['ban_start_time'] ?? $this->ban_data['start_time'];
+        }
+
         $this->ban_data['length'] = $this->timeArrayToSeconds($this->ban_data['times']);
-        $this->ban_data['ban_hash'] = $_POST['ban_hash'] ?? hash('sha256', random_bytes(8));
+        $this->ban_data['ban_hash'] = $this->ban_data['ban_hash'] ?? hash('sha256', random_bytes(16));
     }
 
     private function secondsToTimeArray($seconds)
@@ -192,10 +226,12 @@ class BanHammer
 
     public function apply()
     {
-        if (is_null($this->ban_data['ban_id']))
+        $ban_id = $this->ban_data['ban_id'] ?? null;
+
+        if (is_null($ban_id))
         {
             $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BANS_TABLE . '" WHERE "ban_id" = ?');
-            $result = $this->database->executePreparedFetchAll($prepared, [$this->ban_data['ban_id']], PDO::FETCH_ASSOC);
+            $result = $this->database->executePreparedFetchAll($prepared, [$ban_id], PDO::FETCH_ASSOC);
 
             if (!$result)
             {

@@ -107,8 +107,16 @@ class OutputPanelBans extends OutputCore
             $this->render_data['ban_list'][] = $ban_data;
         }
 
-        $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&actions=new&board_id=' .
-                $this->domain->id();
+        if($this->domain->id() !== '_site_')
+        {
+            $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&actions=new&board_id=' .
+                    $this->domain->id();
+        }
+        else
+        {
+            $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&actions=new';
+        }
+
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/bans_panel_main',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
@@ -130,7 +138,12 @@ class OutputPanelBans extends OutputCore
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Add Ban')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
-        $this->render_data['ban_board'] = (!empty($this->domain->id())) ? $this->domain->id() : '';
+
+        if($this->domain->id() !== '_site_')
+        {
+            $this->render_data['ban_board'] = $this->domain->id();
+        }
+
         $this->render_data['ban_ip'] = $parameters['ip_start'];
         $this->render_data['ban_hashed_ip'] = $parameters['hashed_ip'];
         $this->render_data['ban_type'] = $parameters['ban_type'];
@@ -154,6 +167,7 @@ class OutputPanelBans extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
         $dotdot = $parameters['dotdot'] ?? '';
+        $user = $parameters['user'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
@@ -163,12 +177,12 @@ class OutputPanelBans extends OutputCore
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&actions=update&board_id=' .
                 $this->domain->id();
         $ban_id = $_GET['ban_id'];
+        $this->render_data['view_unhashed_ip'] = $user->checkPermission($this->domain, 'perm_view_unhashed_ip');
         $ban_hammer = new \Nelliel\BanHammer($this->database);
         $ban_hammer->loadFromID($ban_id);
-        $this->render_data['unhashed_ip'] = nel_site_domain()->setting('store_unhashed_ip');
         $this->render_data['ban_id'] = $ban_hammer->getData('ban_id');
         $this->render_data['ban_ip'] = $ban_hammer->getData('ip_address_start');
-        $this->render_data['ban_hashed_ip'] = $ban_hammer->getData('hashed_ip_address');
+        $this->render_data['hashed_ip'] = $ban_hammer->getData('hashed_ip_address');
         $this->render_data['ban_ip_end'] = $ban_hammer->getData('ip_address_end');
         $this->render_data['ban_board'] = $ban_hammer->getData('board_id');
         $this->render_data['ban_type'] = $ban_hammer->getData('ban_type');
@@ -181,7 +195,7 @@ class OutputPanelBans extends OutputCore
         $this->render_data['minutes'] = $times['minutes'];
         $this->render_data['all_boards'] = ($ban_hammer->getData('all_boards') > 0) ? 'checked' : '';
         $this->render_data['start_time'] = $ban_hammer->getData('start_time');
-        $this->render_data['reason'] = $ban_hammer->getData('reason');
+        $this->render_data['ban_reason'] = $ban_hammer->getData('reason');
         $this->render_data['creator'] = $ban_hammer->getData('creator');
         $this->render_data['appeal'] = $ban_hammer->getData('appeal');
         $this->render_data['appeal_response'] = $ban_hammer->getData('appeal_response');
