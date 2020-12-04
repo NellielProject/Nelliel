@@ -18,8 +18,8 @@ function nel_dispatch_preparation()
 
     if (isset($_GET['about_nelliel']))
     {
-        require_once NEL_INCLUDE_PATH . 'wat/about_nelliel.php';
-        nel_about_page(new \Nelliel\DomainSite(nel_database()));
+        $about_nelliel = new Nelliel\Output\OutputAboutNelliel(nel_site_domain(), false);
+        $about_nelliel->render([], false);
     }
 
     if (isset($_GET['blank']) || isset($_GET['tpilb']))
@@ -57,18 +57,19 @@ function nel_dispatch_preparation()
         $redirect->doRedirect(true);
     }
 
-    if ($inputs['board_id'] === '' || $inputs['domain_id'] === '_site_')
+    // Add more options here if we implement further domain types
+    if (!empty($inputs['board_id']) && empty($inputs['domain_id']))
     {
-        $domain = new \Nelliel\DomainSite(nel_database());
+        $domain = new \Nelliel\DomainBoard($inputs['board_id'], nel_database());
     }
     else
     {
-        $domain = new \Nelliel\DomainBoard($inputs['board_id'], nel_database());
+        $domain = new \Nelliel\DomainSite(nel_database());
     }
 
     $inputs = nel_plugins()->processHook('nel-in-after-dispatch-prep', [$domain], $inputs);
 
-    $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BanHammer(nel_database()));
+    $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BansAccess(nel_database()));
     $snacks->applyBan($domain, $inputs);
     $snacks->checkHoneypot($domain);
 

@@ -184,7 +184,6 @@ class OutputPost extends OutputCore
                 $modmode_headers['lock_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                         '&actions=' . $lock_action . '&content-id=' . $thread_content_id->getIDString() .
                         '&modmode=true&goback=true';
-                $temp_content_id = $thread_content_id;
                 $sticky = ($thread_data['sticky'] == 1);
                 $modmode_headers['sticky_text'] = ($sticky) ? _gettext('Unsticky Thread') : _gettext('Sticky Thread');
                 $sticky_action = ($sticky) ? 'unsticky' : 'sticky';
@@ -194,13 +193,13 @@ class OutputPost extends OutputCore
             }
 
             $modmode_headers['ban_url'] = '?module=admin&section=bans&board_id=' . $this->domain->id() .
-                    '&actions=new&ban_type=POST&content-id=' . $temp_content_id->getIDString() . '&' . $ban_ip_type . '=' .
-                    rawurlencode($ip) . '&modmode=true&goback=false';
+                    '&actions=new&content-id=' . $post_content_id->getIDString() .
+                    '&modmode=true&goback=false';
             $modmode_headers['delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                     '&actions=delete&content-id=' . $temp_content_id->getIDString() . '&modmode=true&goback=true';
             $modmode_headers['ban_delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
-                    '&actions[0]=delete&actions[1]=ban&content-id=' . $temp_content_id->getIDString() . '&ban_type=POST&' .
-                    $ban_ip_type . '=' . rawurlencode($ip) . '&modmode=true&goback=false';
+                    '&actions=bandelete&content-id=' . $post_content_id->getIDString() .
+                    '&modmode=true&goback=false';
             $header_data['modmode_headers'] = $modmode_headers;
         }
 

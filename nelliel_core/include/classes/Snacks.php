@@ -7,17 +7,20 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use IPTools\IP;
+use IPTools\Range;
+
 class Snacks
 {
     private $database;
-    private $ban_hammer;
     private $ip_address;
     private $hashed_ip_address;
+    private $bans_access;
 
-    function __construct(NellielPDO $database, BanHammer $ban_hammer)
+    function __construct(NellielPDO $database, BansAccess $bans_access)
     {
         $this->database = $database;
-        $this->ban_hammer = $ban_hammer;
+        $this->bans_access = $bans_access;
 
         if (nel_site_domain()->setting('store_unhashed_ip'))
         {
@@ -37,15 +40,14 @@ class Snacks
                 !empty($_POST[NEL_BASE_HONEYPOT_FIELD2 . '_' . $domain->id()]) ||
                 !empty($_POST[NEL_BASE_HONEYPOT_FIELD3 . '_' . $domain->id()]))
         {
-            $ban_input['type'] = 'SPAMBOT';
-            $ban_input['ip_address_start'] = $this->ip_address;
-            $ban_input['hashed_ip_address'] = $this->hashed_ip_address;
-            $ban_input['reason'] = 'Ur a spambot. Nobody wants any. GTFO!';
-            $ban_input['start_time'] = time();
-            $ban_input['length'] = 86400 * 9001;
-            $ban_input['all_boards'] = 1;
-            $this->ban_hammer->addBan($ban_input);
-            $this->applyBan($domain);
+            $ban_hammer = new BanHammer($this->database);
+            $ban_hammer->modifyData('ban_type', 'SPAMBOT');
+            $ban_hammer->modifyData('ip_address_start', $this->ip_address);
+            $ban_hammer->modifyData('reason', 'Ur a spambot. Nobody wants any. GTFO!');
+            $ban_hammer->modifyData('start_time', time());
+            $ban_hammer->modifyData('length', 86400 * 9001);
+            $ban_hammer->modifyData('all_boards', 1);
+            $ban_hammer->apply();
         }
     }
 
@@ -62,90 +64,115 @@ class Snacks
         return in_array($file_hash, $banned_hashes[$hash_type]);
     }
 
-    public function banAppeal($board_id, $ban_info)
+    public function banAppeal()
     {
-        $bawww = $_POST['bawww'];
+        $bawww = $_POST['bawww'] ?? null;
+        $ban_hash = $_POST['ban_hash'] ?? null;
 
-        if (empty($bawww))
+        if (empty($bawww) || empty($ban_hash))
         {
             return;
         }
 
-        if ($this->ip_address != @inet_ntop($ban_info['ip_address_start']) &&
-                $this->hashed_ip_address != bin2hex($ban_info['hashed_ip_address']))
+        $ban_hammer = new BanHammer($this->database);
+        $ban_hammer->loadFromHash($ban_hash);
+
+        if (!$ban_hammer->loadFromHash($ban_hash))
         {
-            nel_derp(150, _gettext('Your IP address does not match the one listed in the ban.'));
+            nel_derp(150, _gettext('Invalid ban ID given.'));
         }
 
-        if ($ban_info['appeal_status'] > 0)
+        if ($ban_hammer->getData('ip_type') == BansAccess::RANGE)
         {
-            nel_derp(151, _gettext('You have already appealed your ban.'));
+            nel_derp(151, _gettext('You cannot appeal a range ban.'));
         }
 
-        $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_BANS_TABLE . '" SET "appeal" = ?, "appeal_status" = 1 WHERE "ban_id" = ?');
-        $this->database->executePrepared($prepared, [$bawww, $ban_info['ban_id']]);
+        if ($this->ip_address !== $ban_hammer->getData('ip_address_start') &&
+                $this->hashed_ip_address !== $ban_hammer->getData('hashed_ip_address'))
+        {
+            nel_derp(152, _gettext('Your IP address does not match the one on the ban.'));
+        }
+
+        if (!$ban_hammer->addAppeal($bawww))
+        {
+            nel_derp(153, _gettext('You have already appealed your ban.'));
+        }
     }
 
-    public function applyBan(Domain $domain, array $inputs)
+    public function applyBan(Domain $domain)
     {
-        if ($domain->id() === '_site_')
+        $this->banAppeal();
+        $output_ban_page = new \Nelliel\Output\OutputBanPage($domain, false);
+        $bans_range = $this->bans_access->getBansByType(BansAccess::RANGE);
+
+        foreach ($bans_range as $ban_hammer)
         {
-            return;
-        }
-
-        $bans = $this->ban_hammer->getBansByIp($this->ip_address, $this->hashed_ip_address);
-        $ban_info = null;
-
-        foreach ($bans as $ban)
-        {
-            // TODO: We can probably set up a general clear expired bans method in BanHammer
-            $length = $ban['length'] + $ban['start_time'];
-
-            if (time() >= $length)
+            if ($ban_hammer->expired())
             {
-                $this->ban_hammer->removeBan($domain, $ban['ban_id'], true);
+                $ban_hammer->remove();
                 continue;
             }
 
-            if ($ban['all_boards'] != 0)
+            if ($domain->id() === $ban_hammer->getData('board_id'))
             {
-                if (is_null($ban_info))
+                $range = new Range(new IP($ban_hammer->getData('ip_address_start')),
+                        new IP($ban_hammer->getData('ip_address_end')));
+
+                if ($range->contains(new IP($this->ip_address)))
                 {
-                    $ban_info = $ban;
+                    $output_ban_page->render(['ban_hammer' => $ban_hammer], false);
+                    ;
+                    nel_clean_exit();
+                }
+            }
+        }
+
+        if (nel_site_domain()->setting('store_unhashed_ip'))
+        {
+            $bans_ip = $this->bans_access->getBansByIP($this->ip_address);
+        }
+        else
+        {
+            $bans_ip = array();
+        }
+
+        $bans_hashed = $this->bans_access->getBansByHashedIP($this->hashed_ip_address);
+        $bans = array_merge($bans_ip, $bans_hashed);
+        $ban_info = null;
+        $longest = null;
+
+        foreach ($bans as $ban_hammer)
+        {
+            if ($ban_hammer->expired())
+            {
+                $ban_hammer->remove();
+                continue;
+            }
+
+            if ($domain->id() !== '_site_' && ($domain->id() === $ban_hammer->getData('board_id') || $ban_hammer->getData('all_boards') == 1))
+            {
+                if (empty($longest))
+                {
+                    $longest = $ban_hammer;
+                }
+                else
+                {
+                    if ($ban_hammer->timeToExpiration() > $longest->timeToExpiration())
+                    {
+                        $longest = $ban_hammer;
+                    }
                 }
 
                 continue;
             }
-
-            if (empty($domain->id()))
-            {
-                break;
-            }
-
-            if ($domain->id() === $ban['board_id'])
-            {
-                $ban_info = $ban;
-                continue;
-            }
         }
 
-        if (is_null($ban_info))
+        if (is_null($longest))
         {
             return;
         }
 
-        if (!empty($inputs) && $inputs['module'] === 'ban-page')
-        {
-            if ($inputs['actions'][0] === 'add-appeal')
-            {
-                $this->banAppeal($inputs['board_id'], $ban_info);
-                $ban_info = $this->ban_hammer->getBanById($ban_info['ban_id']);
-            }
-        }
-
-        $output_ban_page = new \Nelliel\Output\OutputBanPage($domain, false);
-        $output_ban_page->render(['ban_info' => $ban_info], false);
+        $output_ban_page->render(['ban_hammer' => $longest], false);
         nel_clean_exit();
     }
 }

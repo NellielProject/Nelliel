@@ -54,6 +54,8 @@ class ContentPost extends ContentHandler
             return false;
         }
 
+        $result['ip_address'] = nel_convert_ip_from_storage($result['ip_address']);
+        $result['hashed_ip_address'] = nel_convert_hash_from_storage($result['hashed_ip_address']);
         $this->content_data = $result;
         $meta = $result['meta'] ?? '';
         $this->getMeta()->storeFromJSON($meta);
@@ -107,8 +109,8 @@ class ContentPost extends ContentHandler
         $prepared->bindValue(':comment', $this->contentDataOrDefault('comment', null), PDO::PARAM_STR);
         $ip_address = $this->contentDataOrDefault('ip_address', null);
         $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($ip_address), PDO::PARAM_LOB);
-        $prepared->bindValue(':hashed_ip_address', nel_prepare_hash_for_storage($this->contentDataOrDefault('hashed_ip_address', null)),
-                PDO::PARAM_LOB);
+        $prepared->bindValue(':hashed_ip_address',
+                nel_prepare_hash_for_storage($this->contentDataOrDefault('hashed_ip_address', null)), PDO::PARAM_LOB);
         $prepared->bindValue(':post_time', $this->contentDataOrDefault('post_time', 0), PDO::PARAM_INT);
         $prepared->bindValue(':post_time_milli', $this->contentDataOrDefault('post_time_milli', 0), PDO::PARAM_INT);
         $prepared->bindValue(':has_content', $this->contentDataOrDefault('has_content', 0), PDO::PARAM_INT);
@@ -128,12 +130,14 @@ class ContentPost extends ContentHandler
         $prepared = $database->prepare(
                 'INSERT INTO "' . $this->posts_table .
                 '" ("post_time", "post_time_milli", "hashed_ip_address") VALUES (?, ?, ?)');
-        $database->executePrepared($prepared, [$post_time, $post_time_milli, nel_prepare_hash_for_storage($hashed_ip_address)]);
+        $database->executePrepared($prepared,
+                [$post_time, $post_time_milli, nel_prepare_hash_for_storage($hashed_ip_address)]);
         $prepared = $database->prepare(
                 'SELECT "post_number" FROM "' . $this->posts_table .
                 '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "hashed_ip_address" = ?');
-        $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli, nel_prepare_hash_for_storage($hashed_ip_address)],
-                PDO::FETCH_COLUMN, true);
+        $result = $database->executePreparedFetch($prepared,
+                [$post_time, $post_time_milli, nel_prepare_hash_for_storage($hashed_ip_address)], PDO::FETCH_COLUMN,
+                true);
         $this->content_id->changeThreadID(
                 ($this->content_id->threadID() == 0) ? $result : $this->content_id->threadID());
         $this->content_data['parent_thread'] = ($this->content_data['parent_thread'] == 0) ? $result : $this->content_data['parent_thread'];
@@ -229,7 +233,7 @@ class ContentPost extends ContentHandler
         $this->database->executePrepared($prepared, [$content_count, $this->content_id->postID()]);
     }
 
-    public function verifyModifyPerms()
+    protected function verifyModifyPerms()
     {
         $session = new \Nelliel\Account\Session();
         $user = $session->sessionUser();
@@ -243,7 +247,7 @@ class ContentPost extends ContentHandler
 
         if ($session->isActive())
         {
-            if ($user->checkPermission($this->domain, 'perm_board_modify_posts'))
+            if ($user->checkPermission($this->domain, 'perm_board_delete_posts'))
             {
                 if (!empty($this->content_data['mod_post_id']) &&
                         $authorization->userExists($this->content_data['mod_post_id']))
@@ -259,10 +263,12 @@ class ContentPost extends ContentHandler
             }
         }
 
+        $update_sekrit = $_POST['update_sekrit'] ?? '';
+
         if (!$flag)
         {
             if (!isset($this->content_data['post_password']) ||
-                    !nel_verify_salted_hash(NEL_POST_PASSWORD_PEPPER . $_POST['update_sekrit'],
+                    !nel_verify_salted_hash(NEL_POST_PASSWORD_PEPPER . $update_sekrit,
                             $this->content_data['post_password']) || !$this->domain->setting('user_delete_own'))
             {
                 nel_derp(50, _gettext('Password is wrong or you are not allowed to delete that.'));

@@ -36,6 +36,15 @@ class OutputDerp extends OutputCore
         $this->render_data['error_data'] = '';
         $session = new \Nelliel\Account\Session();
 
+        if ($this->domain->id() === '_site_')
+        {
+            $return_url = NEL_BASE_WEB_PATH . $this->domain->setting('home_page');
+        }
+        else
+        {
+            $return_url = NEL_BASE_WEB_PATH . $this->domain->reference('board_directory');
+        }
+
         if ($session->inModmode($this->domain))
         {
             if ($this->domain->id() === '_site_')
@@ -48,17 +57,6 @@ class OutputDerp extends OutputCore
                         http_build_query(
                                 ['module' => 'render', 'actions' => 'view-index', 'index' => '0',
                                     'board_id' => $this->domain->id(), 'modmode' => 'true']);
-            }
-        }
-        else
-        {
-            if ($this->domain->id() === '_site_')
-            {
-                $return_url = NEL_BASE_WEB_PATH . $this->domain->setting('home_page');
-            }
-            else
-            {
-                $return_url = NEL_BASE_WEB_PATH . $this->domain->reference('board_directory');
             }
         }
 

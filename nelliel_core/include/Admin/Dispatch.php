@@ -234,6 +234,10 @@ class Dispatch
                     $admin_handler = new \Nelliel\Admin\AdminBans($this->authorization, $this->domain);
                     $admin_handler->creator();
                 }
+                else if ($action === 'bandelete')
+                {
+                    $admin_handler->banDelete();
+                }
                 else if ($action === 'expand')
                 {
                     ; // TODO: Figure this out better

@@ -51,6 +51,10 @@ class ContentFile extends ContentHandler
             return false;
         }
 
+        $result['md5'] = nel_convert_hash_from_storage($result['ip_address']);
+        $result['sha1'] = nel_convert_hash_from_storage($result['ip_address']);
+        $result['sha256'] = nel_convert_hash_from_storage($result['ip_address']);
+        $result['sha512'] = nel_convert_hash_from_storage($result['ip_address']);
         $this->content_data = $result;
         $meta = $result['meta'] ?? '';
         $this->getMeta()->storeFromJSON($meta);
@@ -206,7 +210,7 @@ class ContentFile extends ContentHandler
     {
     }
 
-    public function verifyModifyPerms()
+    protected function verifyModifyPerms()
     {
         $post = new ContentPost($this->content_id, $this->domain);
         return $post->verifyModifyPerms();

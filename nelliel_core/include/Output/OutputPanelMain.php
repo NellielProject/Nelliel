@@ -105,6 +105,8 @@ class OutputPanelMain extends OutputCore
         $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=file-filters';
         $this->render_data['module_board_defaults'] = $user->checkPermission($this->domain, 'perm_board_defaults');
         $this->render_data['board_defaults_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=board-defaults';
+        $this->render_data['module_bans'] = $user->checkPermission($this->domain, 'perm_manage_bans');
+        $this->render_data['bans_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans';
         $this->render_data['module_reports'] = $user->checkPermission($this->domain, 'perm_manage_reports');
         $this->render_data['reports_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=reports';
         $this->render_data['module_templates'] = $user->checkPermission($this->domain, 'perm_manage_templates');

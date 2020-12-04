@@ -7,13 +7,19 @@
 	<p class="bold">{{ ban_reason }}</p>
 	<p>Your current IP is: <span class="bold">{{ ban_ip }}</span></p>
 </div>
-{{^ appealed }}
+{{# appeal_allowed }}
+	{{^ appealed }}
 <form accept-charset="utf-8" name="postingform" action="{{ form_action }}" method="post" enctype="multipart/form-data">
+	<input type="hidden" name="ban_hash" value="{{ ban_hash }}">
 	<p data-i18n="gettext">If you wish, you may appeal this ban. Enter your reason why you should get unbanned in the box below. A staff member will (probably) review it.</p>
 	<textarea name="bawww" cols="30" rows="6"></textarea>
 	<input class="display-block" type="submit" value="Submit Appeal" data-i18n-attributes="gettext|value">
 </form>
-{{/ appealed }}
+	{{/ appealed }}
+{{/ appeal_allowed }}
+{{# is_range }}
+<p data-i18n="gettext">This is part of a range ban. You cannot appeal it.</p>
+{{/ is_range }}
 {{# appealed }}
 	{{# reviewed }}
 <p data-i18n="gettext">You have already appealed this ban but the appeal has not been reviewed yet.</p>

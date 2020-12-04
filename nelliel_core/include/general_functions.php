@@ -134,9 +134,9 @@ function nel_form_input_default(array $input)
     return $value;
 }
 
-function nel_prepare_ip_for_storage(?string $ip_address)
+function nel_prepare_ip_for_storage(?string $ip_address, bool $unhashed_check = true)
 {
-    if (!nel_site_domain()->setting('store_unhashed_ip'))
+    if ($unhashed_check && !nel_site_domain()->setting('store_unhashed_ip'))
     {
         return null;
     }
@@ -153,10 +153,42 @@ function nel_prepare_ip_for_storage(?string $ip_address)
 
 function nel_prepare_hash_for_storage(?string $hash)
 {
-    if(is_null($hash))
+    if (is_null($hash))
     {
         return null;
     }
 
     return hex2bin($hash);
+}
+
+function nel_convert_ip_from_storage(?string $ip_address)
+{
+    if (is_null($ip_address))
+    {
+        return null;
+    }
+
+    $unpacked_ip_address = @inet_ntop($ip_address);
+
+    if ($unpacked_ip_address === false)
+    {
+        return null;
+    }
+
+    return $unpacked_ip_address;
+}
+
+function nel_convert_hash_from_storage(?string $hash)
+{
+    if (is_null($hash))
+    {
+        return null;
+    }
+
+    return bin2hex($hash);
+}
+
+function nel_truncate_hash(string $hash, int $length = 12)
+{
+    return substr($hash, 0, $length);
 }
