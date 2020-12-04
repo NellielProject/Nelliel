@@ -51,7 +51,7 @@ class TableBans extends TableHandler
             creator             VARCHAR(50) NOT NULL,
             ip_type             SMALLINT NOT NULL DEFAULT 0,
             ip_address_start    " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('BINARY', '32') . " NOT NULL,
+            hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('BINARY', '32') . " DEFAULT NULL,
             ip_address_end      " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
             reason              VARCHAR(255) NOT NULL,
             length              BIGINT NOT NULL,

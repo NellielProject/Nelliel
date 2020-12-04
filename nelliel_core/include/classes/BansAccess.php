@@ -114,6 +114,27 @@ class BansAccess
         return array();
     }
 
+    public function getBans(string $board_id = null)
+    {
+        if (!is_null($board_id))
+        {
+            $prepared = $this->database->prepare('SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "board_id" = ?');
+            $ban_ids = $this->database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_COLUMN);
+        }
+        else
+        {
+            $prepared = $this->database->prepare('SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '"');
+            $ban_ids = $this->database->executePreparedFetchAll($prepared, [], PDO::FETCH_COLUMN);
+        }
+
+        if (is_array($ban_ids))
+        {
+            return $this->bansToHammers($ban_ids);
+        }
+
+        return array();
+    }
+
     private function bansToHammers(array $ban_ids)
     {
         $ban_hammers = array();
