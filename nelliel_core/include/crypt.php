@@ -165,3 +165,8 @@ function nel_gen_salt(int $length, bool $bcrypt_base64 = false)
 
     return $salt;
 }
+
+function nel_ip_hash(string $ip_address)
+{
+    return hash('sha256', $ip_address . NEL_IP_ADDRESS_PEPPER);
+}

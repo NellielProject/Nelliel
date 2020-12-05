@@ -38,7 +38,7 @@ class TableUsers extends TableHandler
             user_id         VARCHAR(50) PRIMARY KEY NOT NULL,
             display_name    VARCHAR(255) NOT NULL,
             user_password   VARCHAR(255) NOT NULL,
-            hashed_user_id  " . $this->sql_compatibility->sqlAlternatives('BINARY', '32') . " NOT NULL,
+            hashed_user_id  " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
             active          SMALLINT NOT NULL DEFAULT 0,
             locked          SMALLINT NOT NULL DEFAULT 0,
             owner           SMALLINT NOT NULL DEFAULT 0,

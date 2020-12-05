@@ -37,7 +37,7 @@ function nel_request_ip_address(bool $hashed = false)
     {
         if(!isset($hashed_ip_address))
         {
-            $hashed_ip_address = hash('sha256', $_SERVER['REMOTE_ADDR']);
+            $hashed_ip_address = nel_ip_hash($_SERVER['REMOTE_ADDR']);
         }
 
         return $hashed_ip_address;

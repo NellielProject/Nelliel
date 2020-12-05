@@ -32,7 +32,7 @@ class TableBoardData extends TableHandler
         CREATE TABLE " . $this->table_name . " (
             board_id        VARCHAR(50) PRIMARY KEY NOT NULL,
             board_uri       VARCHAR(50) NOT NULL,
-            hashed_board_id " . $this->sql_compatibility->sqlAlternatives('BINARY', '32') . " NOT NULL,
+            hashed_board_id " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
             db_prefix       VARCHAR(20) NOT NULL UNIQUE,
             locked          SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";

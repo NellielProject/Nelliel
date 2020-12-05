@@ -31,7 +31,7 @@ class Snacks
             $this->ip_address = null;
         }
 
-        $this->hashed_ip_address = hash('sha256', $_SERVER['REMOTE_ADDR']);
+        $this->hashed_ip_address = nel_ip_hash($_SERVER['REMOTE_ADDR']);
     }
 
     public function checkHoneypot(Domain $domain)

@@ -100,7 +100,7 @@ class BanHammer
             {
                 $this->ban_data['ip_address_start'] = (string) $range->getFirstIP();
                 $this->ban_data['ip_address_end'] = null;
-                $this->ban_data['hashed_ip_address'] = hash('sha256', $ip_address);
+                $this->ban_data['hashed_ip_address'] = nel_ip_hash($ip_address);
                 $this->ban_data['ip_type'] = BansAccess::IP;
             }
             else

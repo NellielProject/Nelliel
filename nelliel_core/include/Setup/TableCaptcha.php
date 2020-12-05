@@ -39,7 +39,7 @@ class TableCaptcha extends TableHandler
             domain_id           VARCHAR(50) DEFAULT NULL,
             time_created        BIGINT NOT NULL,
             ip_address          " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('BINARY', '32') . " DEFAULT NULL
+            hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;
