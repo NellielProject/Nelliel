@@ -65,7 +65,7 @@ function nel_set_password_algorithm(string $algorithm)
     }
     else
     {
-        nel_derp(101, _gettext('No acceptable password hashing algorithm has been found. We can\'t function like this.'));
+        nel_derp(101, _gettext("No acceptable password hashing algorithm has been found. We can't function like this."));
     }
 }
 
@@ -106,67 +106,12 @@ function nel_password_needs_rehash(string $hash, int $algorithm, array $options 
     return password_needs_rehash($password, $algorithm);
 }
 
-function nel_password_info(string $hash)
-{
-    $info = password_get_info($hash);
-    return $info;
-}
-
-function nel_salted_hash_info(string $hash)
-{
-    $available = hash_algos();
-    $info = array();
-    $pieces = explode('$', $hash);
-
-    $info['algoName'] = 'unknown';
-    $info['salt'] = '';
-    $info['hash'] = '';
-
-    if (in_array($pieces[1], $available))
-    {
-        $info['algoName'] = $pieces[1];
-        $info['salt'] = $pieces[2];
-        $info['hash'] = $pieces[3];
-    }
-
-    return $info;
-}
-
-function nel_generate_salted_hash(string $algorithm, string $string, $salt = null, int $salt_length = 16)
-{
-    $salt = (!is_null($salt)) ? $salt : nel_gen_salt($salt_length);
-    $hash = hash($algorithm, $salt . $string, false);
-    return '$' . $algorithm . '$' . $salt . '$' . $hash;
-}
-
-function nel_verify_salted_hash(string $string, string $hash)
-{
-    $info = nel_salted_hash_info($hash);
-
-    if ($info['algoName'] === 'unknown')
-    {
-        return false;
-    }
-
-    $new_hash = nel_generate_salted_hash($info['algoName'], $string, $info['salt']);
-    return hash_equals($hash, $new_hash);
-}
-
-function nel_gen_salt(int $length, bool $bcrypt_base64 = false)
-{
-    $salt = random_bytes($length);
-    $base_64 = base64_encode($salt);
-    $salt = rtrim($base_64, '=');
-
-    if($bcrypt_base64)
-    {
-        $salt = strtr($salt, '+', '.');
-    }
-
-    return $salt;
-}
-
 function nel_ip_hash(string $ip_address)
 {
     return hash('sha256', $ip_address . NEL_IP_ADDRESS_PEPPER);
+}
+
+function nel_post_password_hash(string $post_password)
+{
+    return hash('sha256', $post_password . NEL_POST_PASSWORD_PEPPER);
 }

@@ -101,9 +101,7 @@ class NewPost
         if (!is_null($post->data('post_password')))
         {
             $poster_password = $post->data('post_password');
-            $post->changeData('post_password',
-                    nel_generate_salted_hash($site_domain->setting('post_password_algorithm'),
-                            NEL_POST_PASSWORD_PEPPER . $post->data('post_password')));
+            $post->changeData('post_password', nel_post_password_hash($post->data('post_password')));
         }
         else
         {
