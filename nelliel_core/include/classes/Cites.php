@@ -166,4 +166,25 @@ class Cites
 
         return $url;
     }
+
+    public function removeForThread(Domain $domain, ContentID $content_id)
+    {
+        $prepared = $this->database->prepare(
+                'DELETE FROM "' . NEL_CITES_TABLE .
+                '" WHERE ("source_board" = ? AND "source_thread" = ?)
+                    OR ("target_board" = ? AND "target_thread" = ?)');
+        $this->database->executePrepared($prepared,
+                [$domain->id(), $content_id->threadID(), $domain->id(), $content_id->threadID()]);
+    }
+
+    public function removeForPost(Domain $domain, ContentID $content_id)
+    {
+        $prepared = $this->database->prepare(
+                'DELETE FROM "' . NEL_CITES_TABLE .
+                '" WHERE ("source_board" = ? AND "source_thread" = ? AND "source_post" = ?)
+                    OR ("target_board" = ? AND "target_thread" = ? AND "target_post" = ?)');
+        $this->database->executePrepared($prepared,
+                [$domain->id(), $content_id->threadID(), $content_id->postID(), $domain->id(), $content_id->threadID(),
+                    $content_id->postID()]);
+    }
 }

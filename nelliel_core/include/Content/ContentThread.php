@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Cites;
 use Nelliel\Domain;
 use PDO;
 use Nelliel\ArchiveAndPrune;
@@ -73,7 +74,8 @@ class ContentThread extends ContentHandler
             return false;
         }
 
-        $prepared = $this->database->prepare('SELECT "thread_id" FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
+        $prepared = $this->database->prepare(
+                'SELECT "thread_id" FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
 
         if ($result)
@@ -154,9 +156,8 @@ class ContentThread extends ContentHandler
 
         $prepared = $this->database->prepare('DELETE FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$this->content_id->threadID()]);
-        $prepared = $this->database->prepare(
-                'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_thread" = ? OR "target_thread" = ?');
-        $this->database->executePrepared($prepared, [$this->content_id->threadID(), $this->content_id->threadID()]);
+        $cites = new Cites($this->database);
+        $cites->removeForThread($this->domain, $this->content_id);
         return true;
     }
 
@@ -270,7 +271,8 @@ class ContentThread extends ContentHandler
                     '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC');
         }
 
-        $last_post = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
+        $last_post = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
+                PDO::FETCH_COLUMN);
         return intval($last_post);
     }
 

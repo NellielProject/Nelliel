@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Cites;
 use Nelliel\Domain;
 use PDO;
 use Nelliel\ArchiveAndPrune;
@@ -207,9 +208,8 @@ class ContentPost extends ContentHandler
 
         $prepared = $this->database->prepare('DELETE FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$this->content_id->postID()]);
-        $prepared = $this->database->prepare(
-                'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_post" = ? OR "target_post" = ?');
-        $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->postID()]);
+        $cites = new Cites($this->database);
+        $cites->removeForPost($this->domain, $this->content_id);
         return true;
     }
 
