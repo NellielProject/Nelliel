@@ -54,7 +54,7 @@ class CAPTCHA
         $this->generate();
     }
 
-    public function rateLimit()
+    protected function rateLimit()
     {
         if ($this->site_domain->setting('captcha_rate_limit') == 0)
         {
@@ -85,6 +85,7 @@ class CAPTCHA
     public function generate()
     {
         $this->rateLimit();
+        $this->cleanupExpired();
 
         // Pretty basic CAPTCHA
         // We'll leave making a better one to someone who really knows the stuff
@@ -96,7 +97,6 @@ class CAPTCHA
         }
 
         $captcha_text = '';
-        $this->removeForIP($_SERVER['REMOTE_ADDR']);
         $character_set = 'bcdfghjkmnpqrstvwxyz23456789';
         $set_array = utf8_split($character_set);
         $characters_limit = $this->site_domain->setting('captcha_character_count');
@@ -117,8 +117,6 @@ class CAPTCHA
         $captcha_data['captcha_text'] = $captcha_text;
         $captcha_data['domain_id'] = $this->domain->id();
         $captcha_data['time_created'] = time();
-        $captcha_data['ip_address'] = nel_request_ip_address();
-        $hashed_ip_address = nel_request_ip_address(true);
         $this->store($captcha_data);
 
         if (!isset($_GET['no-display']))
@@ -192,27 +190,6 @@ class CAPTCHA
         header('Location: ' . NEL_CAPTCHA_WEB_PATH . $key . '.jpg');
     }
 
-    public function removeForIP(string $ip_address)
-    {
-        $prepared = $this->database->prepare(
-                'SELECT "captcha_key" FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "ip_address" = :ip_address');
-        $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($ip_address), PDO::PARAM_LOB);
-        $result = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
-
-        if ($result !== false)
-        {
-            foreach ($result as $key)
-            {
-                $this->file_handler->eraserGun(NEL_CAPTCHA_WEB_PATH, $key . '.jpg');
-            }
-
-            $prepared = $this->database->prepare(
-                    'DELETE FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "ip_address" = :ip_address');
-            $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($ip_address), PDO::PARAM_LOB);
-            $this->database->executePrepared($prepared);
-        }
-    }
-
     public function keyExists(string $key, bool $check_expired)
     {
         $prepared = $this->database->prepare(
@@ -244,13 +221,12 @@ class CAPTCHA
     {
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_CAPTCHA_TABLE .
-                '" ("captcha_key", "captcha_text", "domain_id", "time_created", "ip_address")
-								VALUES (:captcha_key, :captcha_text, :domain_id, :time_created, :ip_address)');
+                '" ("captcha_key", "captcha_text", "domain_id", "time_created")
+								VALUES (:captcha_key, :captcha_text, :domain_id, :time_created)');
         $prepared->bindValue(':captcha_key', $captcha_data['captcha_key'], PDO::PARAM_STR);
         $prepared->bindValue(':captcha_text', $captcha_data['captcha_text'], PDO::PARAM_STR);
         $prepared->bindValue(':domain_id', $captcha_data['domain_id'], PDO::PARAM_STR);
         $prepared->bindValue(':time_created', $captcha_data['time_created'], PDO::PARAM_INT);
-        $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($captcha_data['ip_address']), PDO::PARAM_LOB);
         $this->database->executePrepared($prepared);
     }
 
