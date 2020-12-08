@@ -43,7 +43,6 @@ class Login
 
         $login_data = array();
         $attempt_time = time();
-        $ip_address = nel_request_ip_address();
         $hashed_ip_address = nel_request_ip_address(true);
         $form_user_id = (isset($_POST['user_id'])) ? strval($_POST['user_id']) : '';
         $session_user_id = (isset($_SESSION['user_id'])) ? strval($_SESSION['user_id']) : '';

@@ -18,6 +18,7 @@ class TableRateLimit extends TableHandler
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_RATE_LIMIT_TABLE;
         $this->columns_data = [
+            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'rate_id' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
             'record' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
@@ -29,7 +30,8 @@ class TableRateLimit extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            rate_id    " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " PRIMARY KEY NOT NULL,
+            entry      " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            rate_id    " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL UNIQUE,
             record     TEXT NOT NULL
         ) " . $options . ";";
 

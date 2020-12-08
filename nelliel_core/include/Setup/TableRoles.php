@@ -18,6 +18,7 @@ class TableRoles extends TableHandler
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_ROLES_TABLE;
         $this->columns_data = [
+            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'role_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
             'role_level' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'role_title' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
@@ -31,7 +32,8 @@ class TableRoles extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            role_id         VARCHAR(50) PRIMARY KEY NOT NULL,
+            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            role_id         VARCHAR(50) NOT NULL UNIQUE,
             role_level      SMALLINT NOT NULL DEFAULT 0,
             role_title      VARCHAR(255) NOT NULL,
             capcode         TEXT DEFAULT NULL

@@ -19,7 +19,6 @@ class TableBans extends TableHandler
         $this->table_name = NEL_BANS_TABLE;
         $this->columns_data = [
             'ban_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'ban_hash' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
             'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'all_boards' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'ban_type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
@@ -43,8 +42,7 @@ class TableBans extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            ban_id              " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            ban_hash            " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
+            ban_id           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             board_id            VARCHAR(50) DEFAULT NULL,
             all_boards          SMALLINT NOT NULL DEFAULT 0,
             ban_type            VARCHAR(50) NOT NULL,

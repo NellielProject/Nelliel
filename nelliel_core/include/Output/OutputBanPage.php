@@ -34,7 +34,7 @@ class OutputBanPage extends OutputCore
         $this->render_data['ban_board'] = ($ban_hammer->getData('all_boards') > 0) ? _gettext('All Boards') : $ban_hammer->getData(
                 'board_id');
         $this->render_data['ban_time'] = date("F jS, Y H:i e", $ban_hammer->getData('start_time'));
-        $this->render_data['ban_hash'] = $ban_hammer->getData('ban_hash');
+        $this->render_data['ban_id'] = $ban_hammer->getData('ban_id');
         $ban_expire = $ban_hammer->getData('length') + $ban_hammer->getData('start_time');
         $dt = new \DateTime();
         $dt->add(new \DateInterval('PT' . ($ban_expire - time()) . 'S'));

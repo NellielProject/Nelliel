@@ -18,6 +18,7 @@ class TableCites extends TableHandler
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_CITES_TABLE;
         $this->columns_data = [
+            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'source_board' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'source_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'source_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
@@ -29,9 +30,11 @@ class TableCites extends TableHandler
 
     public function buildSchema(array $other_tables = null)
     {
+        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
+            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             source_board    VARCHAR(50) NOT NULL,
             source_thread   INTEGER DEFAULT NULL,
             source_post     INTEGER DEFAULT NULL,

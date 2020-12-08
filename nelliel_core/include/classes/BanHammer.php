@@ -34,16 +34,11 @@ class BanHammer
     public function collectFromPOST()
     {
         $ban_id = $_POST['ban_id'] ?? null;
-        $ban_hash = $_POST['ban_hash'] ?? null;
         $existing_ban = false;
 
         if (!is_null($ban_id))
         {
             $existing_ban = $this->loadFromID($ban_id);
-        }
-        else if (!is_null($ban_hash))
-        {
-            $existing_ban = $this->loadFromHash($ban_hash);
         }
 
         $this->ban_data['board'] = $_POST['ban_board'] ?? $this->ban_data['board'] ?? null;
@@ -143,7 +138,6 @@ class BanHammer
         }
 
         $this->ban_data['length'] = $this->timeArrayToSeconds($this->ban_data['times']);
-        $this->ban_data['ban_hash'] = $this->ban_data['ban_hash'] ?? hash('sha256', random_bytes(16));
     }
 
     private function secondsToTimeArray($seconds)
@@ -185,7 +179,6 @@ class BanHammer
         if ($ban_data !== false)
         {
             $ban_data['ip_type'] = intval($ban_data['ip_type']);
-            $ban_data['ban_hash'] = nel_convert_hash_from_storage($ban_data['ban_hash']);
             $ban_data['ip_address_start'] = nel_convert_ip_from_storage($ban_data['ip_address_start']);
             $ban_data['hashed_ip_address'] = nel_convert_hash_from_storage($ban_data['hashed_ip_address']);
             $ban_data['ip_address_end'] = nel_convert_ip_from_storage($ban_data['ip_address_end']);
@@ -195,36 +188,6 @@ class BanHammer
         }
 
         return false;
-    }
-
-    public function loadFromHash(string $ban_hash)
-    {
-        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_BANS_TABLE . '" WHERE "ban_hash" = ?');
-        $prepared->bindValue(1, nel_prepare_hash_for_storage($ban_hash), PDO::PARAM_LOB);
-        $ban_data = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
-
-        if ($ban_data !== false)
-        {
-            $this->ban_data = $ban_data;
-            $ban_data['ip_type'] = intval($ban_data['ip_type']);
-            $ban_data['ban_hash'] = nel_convert_hash_from_storage($ban_data['ban_hash']);
-            $ban_data['ip_address_start'] = nel_convert_ip_from_storage($ban_data['ip_address_start']);
-            $ban_data['hashed_ip_address'] = nel_convert_hash_from_storage($ban_data['hashed_ip_address']);
-            $ban_data['ip_address_end'] = nel_convert_ip_from_storage($ban_data['ip_address_end']);
-            $ban_data['times'] = $this->secondsToTimeArray($ban_data['length']);
-            $this->ban_data = $ban_data;
-            return true;
-        }
-
-        return false;
-    }
-
-    public function getIDFromHash(string $ban_hash)
-    {
-        $prepared = $this->database->prepare('SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "ban_hash" = ?');
-        $prepared->bindValue(1, $ban_hash, PDO::PARAM_LOB);
-        $ban_id = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
-        return $ban_id;
     }
 
     public function apply()
@@ -241,23 +204,22 @@ class BanHammer
             {
                 $prepared = $this->database->prepare(
                         'INSERT INTO "' . NEL_BANS_TABLE .
-                        '" ("ban_hash", "ban_type", "board_id", "all_boards", "ip_type", "creator", "ip_address_start", "hashed_ip_address",
-                 "ip_address_end", "reason", "length", "start_time") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-                $prepared->bindValue(1, nel_prepare_hash_for_storage($this->ban_data['ban_hash']), PDO::PARAM_LOB);
-                $prepared->bindValue(2, $this->ban_data['ban_type'], PDO::PARAM_STR);
-                $prepared->bindValue(3, $this->ban_data['board'], PDO::PARAM_STR);
-                $prepared->bindValue(4, $this->ban_data['all_boards'], PDO::PARAM_INT);
-                $prepared->bindValue(5, $this->ban_data['ip_type'], PDO::PARAM_INT);
-                $prepared->bindValue(6, $this->ban_data['creator'], PDO::PARAM_STR);
-                $prepared->bindValue(7, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'], $unhashed_check),
+                        '" ("ban_type", "board_id", "all_boards", "ip_type", "creator", "ip_address_start", "hashed_ip_address",
+                 "ip_address_end", "reason", "length", "start_time") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+                $prepared->bindValue(1, $this->ban_data['ban_type'], PDO::PARAM_STR);
+                $prepared->bindValue(2, $this->ban_data['board'], PDO::PARAM_STR);
+                $prepared->bindValue(3, $this->ban_data['all_boards'], PDO::PARAM_INT);
+                $prepared->bindValue(4, $this->ban_data['ip_type'], PDO::PARAM_INT);
+                $prepared->bindValue(5, $this->ban_data['creator'], PDO::PARAM_STR);
+                $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'], $unhashed_check),
                         PDO::PARAM_LOB);
-                $prepared->bindValue(8, nel_prepare_hash_for_storage($this->ban_data['hashed_ip_address']),
+                $prepared->bindValue(7, nel_prepare_hash_for_storage($this->ban_data['hashed_ip_address']),
                         PDO::PARAM_LOB);
-                $prepared->bindValue(9, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'], $unhashed_check),
+                $prepared->bindValue(8, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'], $unhashed_check),
                         PDO::PARAM_LOB);
-                $prepared->bindValue(10, $this->ban_data['reason'], PDO::PARAM_STR);
-                $prepared->bindValue(11, $this->ban_data['length'], PDO::PARAM_INT);
-                $prepared->bindValue(12, $this->ban_data['start_time'], PDO::PARAM_INT);
+                $prepared->bindValue(9, $this->ban_data['reason'], PDO::PARAM_STR);
+                $prepared->bindValue(10, $this->ban_data['length'], PDO::PARAM_INT);
+                $prepared->bindValue(11, $this->ban_data['start_time'], PDO::PARAM_INT);
                 $this->database->executePrepared($prepared);
             }
         }
@@ -265,27 +227,26 @@ class BanHammer
         {
             $prepared = $this->database->prepare(
                     'UPDATE "' . NEL_BANS_TABLE .
-                    '" SET "ban_hash" = ?, "ban_type" = ?, "board_id" = ?, "all_boards" = ?, "ip_type" = ?, "creator" = ?,
+                    '" SET "ban_type" = ?, "board_id" = ?, "all_boards" = ?, "ip_type" = ?, "creator" = ?,
                  "ip_address_start" = ?, "hashed_ip_address" = ?, "ip_address_end" = ?,
                  "reason" = ?, "length" = ?, "start_time" = ?, "appeal_response" = ?,
                  "appeal_status" = ? WHERE "ban_id" = ?');
-            $prepared->bindValue(1, nel_prepare_hash_for_storage($this->ban_data['ban_hash']), PDO::PARAM_LOB);
-            $prepared->bindValue(2, $this->ban_data['ban_type'], PDO::PARAM_STR);
-            $prepared->bindValue(3, $this->ban_data['board'], PDO::PARAM_STR);
-            $prepared->bindValue(4, $this->ban_data['all_boards'], PDO::PARAM_INT);
-            $prepared->bindValue(5, $this->ban_data['ip_type'], PDO::PARAM_INT);
-            $prepared->bindValue(6, $this->ban_data['creator'], PDO::PARAM_STR);
-            $prepared->bindValue(7, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'], $unhashed_check),
+            $prepared->bindValue(1, $this->ban_data['ban_type'], PDO::PARAM_STR);
+            $prepared->bindValue(2, $this->ban_data['board'], PDO::PARAM_STR);
+            $prepared->bindValue(3, $this->ban_data['all_boards'], PDO::PARAM_INT);
+            $prepared->bindValue(4, $this->ban_data['ip_type'], PDO::PARAM_INT);
+            $prepared->bindValue(5, $this->ban_data['creator'], PDO::PARAM_STR);
+            $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'], $unhashed_check),
                     PDO::PARAM_LOB);
-            $prepared->bindValue(8, nel_prepare_hash_for_storage($this->ban_data['hashed_ip_address']), PDO::PARAM_LOB);
-            $prepared->bindValue(9, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'], $unhashed_check),
+            $prepared->bindValue(7, nel_prepare_hash_for_storage($this->ban_data['hashed_ip_address']), PDO::PARAM_LOB);
+            $prepared->bindValue(8, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'], $unhashed_check),
                     PDO::PARAM_LOB);
-            $prepared->bindValue(10, $this->ban_data['reason'], PDO::PARAM_STR);
-            $prepared->bindValue(11, $this->ban_data['length'], PDO::PARAM_INT);
-            $prepared->bindValue(12, $this->ban_data['start_time'], PDO::PARAM_INT);
-            $prepared->bindValue(13, $this->ban_data['appeal_response'], PDO::PARAM_STR);
-            $prepared->bindValue(14, $this->ban_data['appeal_status'], PDO::PARAM_INT);
-            $prepared->bindValue(15, $this->ban_data['ban_id'], PDO::PARAM_INT);
+            $prepared->bindValue(9, $this->ban_data['reason'], PDO::PARAM_STR);
+            $prepared->bindValue(10, $this->ban_data['length'], PDO::PARAM_INT);
+            $prepared->bindValue(11, $this->ban_data['start_time'], PDO::PARAM_INT);
+            $prepared->bindValue(12, $this->ban_data['appeal_response'], PDO::PARAM_STR);
+            $prepared->bindValue(13, $this->ban_data['appeal_status'], PDO::PARAM_INT);
+            $prepared->bindValue(14, $this->ban_data['ban_id'], PDO::PARAM_INT);
             $this->database->executePrepared($prepared);
         }
     }

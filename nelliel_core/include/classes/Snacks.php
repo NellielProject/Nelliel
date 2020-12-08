@@ -24,14 +24,14 @@ class Snacks
 
         if (nel_site_domain()->setting('store_unhashed_ip'))
         {
-            $this->ip_address = $_SERVER['REMOTE_ADDR'] ?? null;
+            $this->ip_address = nel_request_ip_address();
         }
         else
         {
             $this->ip_address = null;
         }
 
-        $this->hashed_ip_address = nel_ip_hash($_SERVER['REMOTE_ADDR']);
+        $this->hashed_ip_address = nel_request_ip_address(true);
     }
 
     public function checkHoneypot(Domain $domain)
@@ -67,17 +67,16 @@ class Snacks
     public function banAppeal()
     {
         $bawww = $_POST['bawww'] ?? null;
-        $ban_hash = $_POST['ban_hash'] ?? null;
+        $ban_id = $_POST['ban_id'] ?? null;
 
-        if (empty($bawww) || empty($ban_hash))
+        if (empty($bawww) || empty($ban_id))
         {
             return;
         }
 
         $ban_hammer = new BanHammer($this->database);
-        $ban_hammer->loadFromHash($ban_hash);
 
-        if (!$ban_hammer->loadFromHash($ban_hash))
+        if (!$ban_hammer->loadFromID($ban_id))
         {
             nel_derp(150, _gettext('Invalid ban ID given.'));
         }

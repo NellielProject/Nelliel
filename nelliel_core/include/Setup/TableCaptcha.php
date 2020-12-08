@@ -18,6 +18,7 @@ class TableCaptcha extends TableHandler
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_CAPTCHA_TABLE;
         $this->columns_data = [
+            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'captcha_key' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'captcha_text' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'domain_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
@@ -33,7 +34,8 @@ class TableCaptcha extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            captcha_key     VARCHAR(64) PRIMARY KEY NOT NULL,
+            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            captcha_key     VARCHAR(64) NOT NULL UNIQUE,
             captcha_text    VARCHAR(100) NOT NULL,
             domain_id       VARCHAR(50) DEFAULT NULL,
             time_created    BIGINT NOT NULL,

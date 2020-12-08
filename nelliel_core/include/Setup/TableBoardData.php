@@ -18,6 +18,7 @@ class TableBoardData extends TableHandler
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_BOARD_DATA_TABLE;
         $this->columns_data = [
+            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'db_prefix' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
@@ -30,7 +31,8 @@ class TableBoardData extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            board_id        VARCHAR(50) PRIMARY KEY NOT NULL,
+            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            board_id        VARCHAR(50) NOT NULL UNIQUE,
             board_uri       VARCHAR(50) NOT NULL,
             hashed_board_id " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
             db_prefix       VARCHAR(20) NOT NULL UNIQUE,

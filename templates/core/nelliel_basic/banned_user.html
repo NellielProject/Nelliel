@@ -10,7 +10,7 @@
 {{# appeal_allowed }}
 	{{^ appealed }}
 <form accept-charset="utf-8" name="postingform" action="{{ form_action }}" method="post" enctype="multipart/form-data">
-	<input type="hidden" name="ban_hash" value="{{ ban_hash }}">
+	<input type="hidden" name="ban_id" value="{{ ban_id }}">
 	<p data-i18n="gettext">If you wish, you may appeal this ban. Enter your reason why you should get unbanned in the box below. A staff member will (probably) review it.</p>
 	<textarea name="bawww" cols="30" rows="6"></textarea>
 	<input class="display-block" type="submit" value="Submit Appeal" data-i18n-attributes="gettext|value">
