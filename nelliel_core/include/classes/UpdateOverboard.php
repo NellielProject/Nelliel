@@ -25,27 +25,26 @@ class UpdateOverboard
                 'SELECT * FROM "' . $board_domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $thread_data = $this->database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
         $prepared = $this->database->prepare(
-                'SELECT "ob_key" FROM "' . NEL_OVERBOARD_TABLE . '" WHERE "thread_id" = ? AND "board_id" = ?');
-        $ob_key = $this->database->executePreparedFetch($prepared, [$thread_id, $board_id], PDO::FETCH_COLUMN);
+                'SELECT "entry" FROM "' . NEL_OVERBOARD_TABLE . '" WHERE "thread_id" = ? AND "board_id" = ?');
+        $entry = $this->database->executePreparedFetch($prepared, [$thread_id, $board_id], PDO::FETCH_COLUMN);
 
-        if (!empty($ob_key))
+        if (!empty($entry))
         {
             $prepared = $this->database->prepare(
                     'UPDATE "' . NEL_OVERBOARD_TABLE .
-                    '" SET "last_bump_time" = ?, "last_bump_time_milli" = ? WHERE "ob_key" = ?');
+                    '" SET "last_bump_time" = ?, "last_bump_time_milli" = ? WHERE "entry" = ?');
             $this->database->executePrepared($prepared,
-                    [$thread_data['last_bump_time'], $thread_data['last_bump_time_milli'], $ob_key]);
+                    [$thread_data['last_bump_time'], $thread_data['last_bump_time_milli'], $entry]);
         }
         else
         {
-            $ob_key = hash('sha256', random_bytes(8));
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . NEL_OVERBOARD_TABLE .
-                    '" ("ob_key", "thread_id", "last_bump_time", "last_bump_time_milli", "board_id", "safety_level") VALUES
-                    (?, ?, ?, ?, ?, ?)');
+                    '" ("thread_id", "last_bump_time", "last_bump_time_milli", "board_id", "safety_level") VALUES
+                    (?, ?, ?, ?, ?)');
             $this->database->executePrepared($prepared,
-                    [$ob_key, $thread_id, $thread_data['last_bump_time'], $thread_data['last_bump_time_milli'],
-                        $board_id, $board_domain->setting('safety_level')]);
+                    [$thread_id, $thread_data['last_bump_time'], $thread_data['last_bump_time_milli'], $board_id,
+                        $board_domain->setting('safety_level')]);
         }
     }
 }
