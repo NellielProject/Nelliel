@@ -133,6 +133,12 @@ class OutputIndex extends OutputCore
             $treeline = $this->database->executePreparedFetchAll($prepared, [$thread_data['thread_id']],
                     PDO::FETCH_ASSOC);
 
+            if(empty($treeline))
+            {
+                $threads_done++;
+                continue;
+            }
+
             $output_post = new OutputPost($this->domain, $this->write_mode);
             $json_thread = new \Nelliel\API\JSON\JSONThread($this->domain, $this->file_handler);
             $thread_content_id = ContentID::createIDString(intval($thread_data['thread_id']));

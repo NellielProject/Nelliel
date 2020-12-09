@@ -37,6 +37,22 @@ class OutputThread extends OutputCore
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $thread_data = $this->database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
+
+        if (empty($thread_data))
+        {
+            return;
+        }
+
+        $prepared = $this->database->prepare(
+                'SELECT * FROM "' . $this->domain->reference('posts_table') .
+                '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+        $treeline = $this->database->executePreparedFetchAll($prepared, [$thread_id], PDO::FETCH_ASSOC);
+
+        if (empty($treeline))
+        {
+            return;
+        }
+
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
@@ -52,21 +68,6 @@ class OutputThread extends OutputCore
         {
             $this->render_data['header'] = $output_header->render(
                     ['header_type' => 'board', 'dotdot' => $dotdot], true);
-        }
-
-        if (empty($thread_data))
-        {
-            return;
-        }
-
-        $prepared = $this->database->prepare(
-                'SELECT * FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
-        $treeline = $this->database->executePreparedFetchAll($prepared, [$thread_id], PDO::FETCH_ASSOC);
-
-        if (empty($treeline))
-        {
-            return;
         }
 
         $json_thread = new \Nelliel\API\JSON\JSONThread($this->domain, $this->file_handler);
