@@ -16,13 +16,14 @@ class Session
 {
     protected $domain;
     protected static $initialized = false;
-    protected static $session_active = false;
+    protected static $setup_done = false;
     protected static $user;
     protected static $modmode_requested = false;
     protected $session_name = 'NellielSession';
     protected $authorization;
     protected $database;
     protected $failed = false;
+    protected static $ignore = false;
 
     function __construct()
     {
@@ -50,17 +51,20 @@ class Session
         }
     }
 
-    protected function check()
+    protected function started()
     {
-        if (session_status() === PHP_SESSION_ACTIVE)
+        return session_status() === PHP_SESSION_ACTIVE;
+    }
+
+    protected function init(bool $do_setup)
+    {
+        if (!$this->started())
         {
-            return;
+            session_name($this->session_name);
+            session_start();
         }
 
-        session_name($this->session_name);
-        session_start();
-
-        if (!self::$session_active)
+        if (!self::$setup_done && $do_setup)
         {
             $this->setup();
         }
@@ -68,6 +72,11 @@ class Session
 
     protected function setup()
     {
+        if (self::$setup_done)
+        {
+            return;
+        }
+
         if (NEL_SECURE_SESSION_ONLY && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'))
         {
             $this->terminate();
@@ -75,21 +84,21 @@ class Session
             nel_derp(220, _gettext('Session requires a secure connection.'));
         }
 
-        $empty_session = empty($_SESSION);
-
-        if ($empty_session)
+        if (!empty($_SESSION))
+        {
+            if ($this->isOld())
+            {
+                $this->terminate();
+                $this->failed = true;
+                nel_derp(221, _gettext('Session has expired.'));
+            }
+        }
+        else
         {
             return;
         }
 
-        if (!$empty_session && $this->isOld())
-        {
-            $this->terminate();
-            $this->failed = true;
-            nel_derp(221, _gettext('Session has expired.'));
-        }
-
-        $user = $this->authorization->getUser($_SESSION['user_id']);
+        $user = $this->authorization->getUser($_SESSION['user_id'] ?? '');
 
         if ($user->empty() || !$user->active())
         {
@@ -103,16 +112,16 @@ class Session
         $_SESSION['last_activity'] = time();
         self::$modmode_requested = (isset($_GET['modmode']) && $_GET['modmode'] === 'true') ||
                 isset($_POST['in_modmode']) && $_POST['in_modmode'] === 'true';
-        self::$session_active = true;
+        self::$setup_done = true;
     }
 
     public function logout()
     {
-        $this->check();
+        $this->init(true);
         $this->terminate();
         $log_event = new LogEvent($this->domain);
         $log_event->changeContext('event_id', 'LOGOUT_SUCCESS');
-        $log_event->send(sprintf(_gettext("User %s logged out."), self::$user->id()));
+        $log_event->send(sprintf(_gettext("User %s logged out."), $this->sessionUser()));
         $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
         $output_login->render(['dotdot' => ''], false);
         nel_clean_exit(false);
@@ -120,7 +129,7 @@ class Session
 
     public function login()
     {
-        $this->check();
+        $this->init(true);
         $login = new \Nelliel\Account\Login($this->authorization, $this->domain);
         $login_data = $login->validate();
 
@@ -138,7 +147,6 @@ class Session
         $log_event->send(sprintf(_gettext("User %s logged in."), self::$user->id()));
         $_SESSION['login_time'] = $login_data['login_time'];
         $_SESSION['last_activity'] = $login_data['login_time'];
-        self::$session_active = true;
         session_regenerate_id();
         $this->setCookie();
     }
@@ -146,9 +154,24 @@ class Session
     public function terminate()
     {
         session_unset();
-        session_destroy();
-        self::$session_active = false;
+
+        if ($this->started())
+        {
+            session_destroy();
+        }
+
+        self::$setup_done = false;
         $this->setCookie(time() - 7200);
+    }
+
+    public function ignore(bool $ignore = null)
+    {
+        if (!is_null($ignore))
+        {
+            self::$ignore = $ignore;
+        }
+
+        return self::$ignore;
     }
 
     protected function setCookie($expiry = 0)
@@ -163,32 +186,34 @@ class Session
             return false;
         }
 
-        return (time() - $_SESSION['last_activity']) > $this->domain->setting('session_length');
+        $last_activity = $_SESSION['last_activity'] ?? 0;
+        return (time() - $last_activity) > $this->domain->setting('session_length');
     }
 
     public function sessionUser()
     {
-        $this->check();
+        $this->init(true);
         return self::$user;
     }
 
     public function isActive()
     {
-        $this->check();
-        return self::$session_active;
+        if(!$this->ignore())
+        {
+            $this->init(true);
+        }
+
+        return self::$setup_done;
     }
 
     public function inModmode(Domain $domain)
     {
-        $this->check();
         return $this->isActive() && self::$modmode_requested && self::$user->checkPermission($domain, 'perm_mod_mode');
     }
 
     public function loggedInOrError()
     {
-        $this->check();
-
-        if (is_null(self::$user))
+        if (!$this->isActive() || empty(self::$user))
         {
             $this->failed = true;
             nel_derp(224, _gettext('You must be logged in for this action.'));

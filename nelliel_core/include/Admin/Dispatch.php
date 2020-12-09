@@ -254,7 +254,6 @@ class Dispatch
                 $this->standard($admin_handler, $action);
                 break;
 
-                // TODO: Work on these
             case 'site-main-panel':
                 $session = new \Nelliel\Account\Session();
                 $session->loggedInOrError();

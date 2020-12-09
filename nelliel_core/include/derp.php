@@ -4,6 +4,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Account\Session;
+
 function nel_early_derp(int $error_id, string $error_message, array $error_data = array())
 {
     echo _gettext('oh god how did this get in here');
@@ -32,6 +34,8 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
         nel_early_derp($error_id, $error_message, $error_data);
     }
 
+    $session = new Session();
+    $session->ignore(true);
     $redirect = new \Nelliel\Redirect();
     $redirect->doRedirect(false);
     $backtrace = debug_backtrace();

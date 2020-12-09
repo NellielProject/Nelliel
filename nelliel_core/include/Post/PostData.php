@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domain;
 
@@ -46,6 +47,12 @@ class PostData
         $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
         $post->changeData('post_as_staff',
                 (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false);
+
+        if(!$post->data('post_as_staff'))
+        {
+            $session = new Session();
+            $session->ignore(true);
+        }
 
         if ($post->data('poster_name') !== '')
         {
