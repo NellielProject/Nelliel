@@ -65,7 +65,7 @@ class OutputPanelBoardSettings extends OutputCore
         {
             $table_name = $this->domain->reference('config_table');
             $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')];
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY .
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT .
                     '?module=admin&section=board-settings&actions=update&board_id=' . $this->domain->id();
         }
 
