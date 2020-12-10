@@ -7,10 +7,11 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
 use Nelliel\Domain;
+use Nelliel\Moar;
 use PDO;
-use Nelliel\ArchiveAndPrune;
 
 class ContentThread extends ContentHandler
 {
@@ -48,7 +49,7 @@ class ContentThread extends ContentHandler
         }
 
         $this->archive_prune = new \Nelliel\ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
-        $this->storeMeta(new Meta());
+        $this->storeMoar(new Moar());
     }
 
     public function loadFromDatabase()
@@ -62,8 +63,8 @@ class ContentThread extends ContentHandler
         }
 
         $this->content_data = $result;
-        $meta = $result['meta'] ?? '';
-        $this->getMeta()->storeFromJSON($meta);
+        $moar = $result['moar'] ?? '';
+        $this->getMoar()->storeFromJSON($moar);
         return true;
     }
 

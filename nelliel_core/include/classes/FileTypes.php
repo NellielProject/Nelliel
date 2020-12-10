@@ -45,6 +45,11 @@ class FileTypes
                 $extensions[$base_extension] = $result;
                 $sub_extensions = json_decode($result['sub_extensions'], true);
 
+                if (empty($sub_extensions))
+                {
+                    continue;
+                }
+
                 foreach ($sub_extensions as $sub_extension)
                 {
                     $filetypes['extensions'][$sub_extension] = $base_extension;
@@ -249,7 +254,7 @@ class FileTypes
 
         foreach (self::$extensions as $data)
         {
-            if(!is_array($data))
+            if (!is_array($data))
             {
                 $data = $this->extensionData($data);
             }

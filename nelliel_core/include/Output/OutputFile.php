@@ -68,14 +68,14 @@ class OutputFile extends OutputCore
 
         $this->render_data['file_url'] = $web_paths['thread_src'] . $post_data['post_number'] . '/' .
                 rawurlencode($full_filename);
-        $meta = json_decode($file['meta'], true);
+        $moar = json_decode($file['moar'], true);
         $display_filename = $file['filename'];
         $display_extension = $file['extension'];
 
-        if ($this->domain->setting('display_original_name') && !empty($meta['original_filename']))
+        if ($this->domain->setting('display_original_name') && !empty($moar['original_filename']))
         {
-            $display_filename = $meta['original_filename'] ?? $file['extension'];
-            $display_extension = $meta['original_extension'] ?? $file['filename'];
+            $display_filename = $moar['original_filename'] ?? $file['extension'];
+            $display_extension = $moar['original_extension'] ?? $file['filename'];
         }
 
         if (strlen($display_filename) > 32)

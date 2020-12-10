@@ -7,10 +7,12 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
 use Nelliel\Domain;
+use Nelliel\Moar;
 use PDO;
-use Nelliel\ArchiveAndPrune;
+
 
 class ContentPost extends ContentHandler
 {
@@ -42,7 +44,7 @@ class ContentPost extends ContentHandler
         }
 
         $this->archive_prune = new ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
-        $this->storeMeta(new Meta());
+        $this->storeMoar(new Moar());
     }
 
     public function loadFromDatabase()
@@ -58,8 +60,8 @@ class ContentPost extends ContentHandler
         $result['ip_address'] = nel_convert_ip_from_storage($result['ip_address']);
         $result['hashed_ip_address'] = nel_convert_hash_from_storage($result['hashed_ip_address']);
         $this->content_data = $result;
-        $meta = $result['meta'] ?? '';
-        $this->getMeta()->storeFromJSON($meta);
+        $moar = $result['moar'] ?? '';
+        $this->getMoar()->storeFromJSON($moar);
         return true;
     }
 

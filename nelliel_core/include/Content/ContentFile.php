@@ -8,6 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domain;
+use Nelliel\Moar;
 use PDO;
 
 class ContentFile extends ContentHandler
@@ -36,7 +37,7 @@ class ContentFile extends ContentHandler
             $this->preview_path = $this->domain->reference('preview_path');
         }
 
-        $this->storeMeta(new Meta());
+        $this->storeMoar(new Moar());
     }
 
     public function loadFromDatabase()
@@ -56,8 +57,8 @@ class ContentFile extends ContentHandler
         $result['sha256'] = nel_convert_hash_from_storage($result['ip_address']);
         $result['sha512'] = nel_convert_hash_from_storage($result['ip_address']);
         $this->content_data = $result;
-        $meta = $result['meta'] ?? '';
-        $this->getMeta()->storeFromJSON($meta);
+        $moar = $result['moar'] ?? '';
+        $this->getMoar()->storeFromJSON($moar);
         return true;
     }
 
@@ -84,7 +85,7 @@ class ContentFile extends ContentHandler
                     "display_width" = :display_width, "display_height" = :display_height, "preview_name" = :preview_name,
                     "preview_extension" = :preview_extension, "preview_width" = :preview_width, "preview_height" = :preview_height,
                     "filesize" = :filesize, "md5" = :md5, "sha1" = :sha1, "sha256" = :sha256, "sha512" = :sha512, "embed_url" = :embed_url,
-                    "spoiler" = :spoiler, "deleted" = :deleted, "exif" = :exif, "meta" = :meta
+                    "spoiler" = :spoiler, "deleted" = :deleted, "exif" = :exif, "moar" = :moar
                     WHERE "post_number" = :post_number');
             $prepared->bindValue(':post_number', $this->content_id->postID(), PDO::PARAM_INT);
         }
@@ -94,10 +95,10 @@ class ContentFile extends ContentHandler
                     'INSERT INTO "' . $this->content_table .
                     '" ("parent_thread", "post_ref", "content_order", "type", "format", "mime",
                     "filename", "extension", "display_width", "display_height", "preview_name", "preview_extension", "preview_width", "preview_height",
-                    "filesize", "md5", "sha1", "sha256", "sha512", "embed_url", "spoiler", "deleted", "exif", "meta") VALUES
+                    "filesize", "md5", "sha1", "sha256", "sha512", "embed_url", "spoiler", "deleted", "exif", "moar") VALUES
                     (:parent_thread, :post_ref, :content_order, :type, :format, :mime, :filename, :extension, :display_width, :display_height,
                     :preview_name, :preview_extension, :preview_width, :preview_height, :filesize, :md5, :sha1, :sha256, :sha512, :embed_url, :spoiler,
-                    :deleted, :exif, :meta)');
+                    :deleted, :exif, :moar)');
         }
 
         $prepared->bindValue(':parent_thread', $this->contentDataOrDefault('parent_thread', 0), PDO::PARAM_INT);
@@ -128,7 +129,7 @@ class ContentFile extends ContentHandler
         $prepared->bindValue(':spoiler', $this->contentDataOrDefault('spoiler', 0), PDO::PARAM_INT);
         $prepared->bindValue(':deleted', $this->contentDataOrDefault('deleted', 0), PDO::PARAM_INT);
         $prepared->bindValue(':exif', $this->contentDataOrDefault('exif', null), PDO::PARAM_STR);
-        $prepared->bindValue(':meta', $this->getMeta()->getJSON(), PDO::PARAM_STR);
+        $prepared->bindValue(':moar', $this->getMoar()->getJSON(), PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
         return true;
     }

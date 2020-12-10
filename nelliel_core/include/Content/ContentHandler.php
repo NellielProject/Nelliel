@@ -7,13 +7,15 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Moar;
+
 abstract class ContentHandler
 {
     protected $content_id;
     protected $database;
     protected $domain;
     protected $content_data = array();
-    protected $content_meta;
+    protected $content_moar;
 
     public abstract function loadFromDatabase();
 
@@ -29,14 +31,14 @@ abstract class ContentHandler
 
     protected abstract function verifyModifyPerms();
 
-    public function storeMeta(Meta $meta)
+    public function storeMoar(Moar $moar)
     {
-        $this->content_meta = $meta;
+        $this->content_moar = $moar;
     }
 
-    public function getMeta()
+    public function getMoar()
     {
-        return $this->content_meta;
+        return $this->content_moar;
     }
 
     protected function contentDataOrDefault(string $data_name, $default)

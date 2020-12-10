@@ -91,8 +91,8 @@ class FilesUpload
             }
 
             $this->getPathInfo($file);
-            $file->getMeta()->modify('original_filename', $file->data('filename'));
-            $file->getMeta()->modify('original_extension', $file->data('extension'));
+            $file->getMoar()->modify('original_filename', $file->data('filename'));
+            $file->getMoar()->modify('original_extension', $file->data('extension'));
             $file->changeData('name', $file_handler->filterFilename($file_data['name']));
             $spoiler = $_POST['form_spoiler'];
             $file->changeData('filesize', $file_data['size']);
