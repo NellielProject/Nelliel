@@ -33,7 +33,8 @@ class TableBans extends TableHandler
             'seen' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'appeal' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'appeal_response' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'appeal_status' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'appeal_status' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -43,7 +44,7 @@ class TableBans extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            ban_id           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            ban_id              " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             board_id            VARCHAR(50) DEFAULT NULL,
             all_boards          SMALLINT NOT NULL DEFAULT 0,
             ban_type            VARCHAR(50) NOT NULL,
@@ -59,7 +60,7 @@ class TableBans extends TableHandler
             appeal              VARCHAR(255) DEFAULT NULL,
             appeal_response     VARCHAR(255) DEFAULT NULL,
             appeal_status       SMALLINT NOT NULL DEFAULT 0,
-            moar_info           TEXT DEFAULT NULL
+            moar                TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;

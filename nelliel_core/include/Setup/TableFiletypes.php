@@ -27,7 +27,8 @@ class TableFiletypes extends TableHandler
             'id_regex' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'label' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'type_def' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
-            'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
+            'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -46,7 +47,8 @@ class TableFiletypes extends TableHandler
             id_regex        TEXT DEFAULT NULL,
             label           VARCHAR(255) DEFAULT NULL,
             type_def        SMALLINT NOT NULL DEFAULT 0,
-            enabled         SMALLINT NOT NULL DEFAULT 0
+            enabled         SMALLINT NOT NULL DEFAULT 0,
+            moar            TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;

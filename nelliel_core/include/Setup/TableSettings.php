@@ -27,7 +27,8 @@ class TableSettings extends TableHandler
             'default_value' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'setting_label' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'setting_description' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'input_attributes' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'input_attributes' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -46,7 +47,8 @@ class TableSettings extends TableHandler
             default_value       TEXT NOT NULL,
             setting_label       TEXT NOT NULL,
             setting_description TEXT NOT NULL,
-            input_attributes    TEXT NOT NULL
+            input_attributes    TEXT NOT NULL,
+            moar                TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;

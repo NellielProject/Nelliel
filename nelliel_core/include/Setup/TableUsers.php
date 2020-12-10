@@ -26,7 +26,8 @@ class TableUsers extends TableHandler
             'active' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'owner' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'last_login' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
+            'last_login' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -44,7 +45,8 @@ class TableUsers extends TableHandler
             active          SMALLINT NOT NULL DEFAULT 0,
             locked          SMALLINT NOT NULL DEFAULT 0,
             owner           SMALLINT NOT NULL DEFAULT 0,
-            last_login      BIGINT NOT NULL DEFAULT 0
+            last_login      BIGINT NOT NULL DEFAULT 0,
+            moar            TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;

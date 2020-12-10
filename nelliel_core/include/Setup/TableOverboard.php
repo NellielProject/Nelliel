@@ -23,7 +23,8 @@ class TableOverboard extends TableHandler
             'last_bump_time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'last_bump_time_milli' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'safety_level' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'safety_level' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -39,6 +40,7 @@ class TableOverboard extends TableHandler
             last_bump_time_milli    SMALLINT NOT NULL,
             board_id                VARCHAR(50) NOT NULL,
             safety_level            VARCHAR(20) NOT NULL,
+            moar                    TEXT DEFAULT NULL,
             CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['board_data_table'] . "
             FOREIGN KEY (board_id) REFERENCES " . $other_tables['board_data_table'] . " (board_id)
             ON UPDATE CASCADE

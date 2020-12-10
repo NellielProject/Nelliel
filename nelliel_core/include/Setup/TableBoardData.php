@@ -21,7 +21,8 @@ class TableBoardData extends TableHandler
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'db_prefix' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
+            'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -36,7 +37,8 @@ class TableBoardData extends TableHandler
             board_uri       VARCHAR(50) NOT NULL,
             hashed_board_id " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
             db_prefix       VARCHAR(20) NOT NULL UNIQUE,
-            locked          SMALLINT NOT NULL DEFAULT 0
+            locked          SMALLINT NOT NULL DEFAULT 0,
+            moar            TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;

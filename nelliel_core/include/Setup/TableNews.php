@@ -22,7 +22,8 @@ class TableNews extends TableHandler
             'poster_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'headline' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'text' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'text' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -36,7 +37,8 @@ class TableNews extends TableHandler
             poster_id       VARCHAR(50) NOT NULL,
             time            BIGINT NOT NULL,
             headline        VARCHAR(255) NOT NULL,
-            text            TEXT NOT NULL
+            text            TEXT NOT NULL,
+            moar            TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;

@@ -20,7 +20,8 @@ class TablePermissions extends TableHandler
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'permission' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'description' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'description' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -32,7 +33,8 @@ class TablePermissions extends TableHandler
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             permission      VARCHAR(50) NOT NULL UNIQUE,
-            description     TEXT NOT NULL
+            description     TEXT NOT NULL,
+            moar            TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;

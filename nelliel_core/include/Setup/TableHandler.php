@@ -92,6 +92,11 @@ abstract class TableHandler
                 continue;
             }
 
+            if(!isset($values[$index]))
+            {
+                continue;
+            }
+
             $insert_values[] = $values[$index];
             $insert_columns[] = $column_name;
             $insert_pdo_types[] = $info['pdo_type'];

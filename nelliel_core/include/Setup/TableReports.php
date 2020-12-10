@@ -22,7 +22,8 @@ class TableReports extends TableHandler
             'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'content_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'reporter_ip' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
-            'reason' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'reason' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -38,6 +39,7 @@ class TableReports extends TableHandler
             reporter_ip         " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
             hashed_reporter_ip  " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '32') . " DEFAULT NULL,
             reason              TEXT NOT NULL,
+            moar                TEXT DEFAULT NULL,
             CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['board_data_table'] . "
             FOREIGN KEY (board_id) REFERENCES " . $other_tables['board_data_table'] . " (board_id)
             ON UPDATE CASCADE

@@ -31,8 +31,7 @@ class TableThreads extends TableHandler
             'sticky' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'archive_status' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'meta' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]
-        ];
+            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -57,7 +56,7 @@ class TableThreads extends TableHandler
             sticky                  SMALLINT NOT NULL DEFAULT 0,
             archive_status          SMALLINT NOT NULL DEFAULT 0,
             locked                  SMALLINT NOT NULL DEFAULT 0,
-            meta                    TEXT DEFAULT NULL
+            moar                    TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;
