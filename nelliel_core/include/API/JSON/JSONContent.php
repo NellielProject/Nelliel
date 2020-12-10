@@ -45,7 +45,7 @@ class JSONContent extends JSONOutput
         $content_array['embed_url'] = nel_cast_to_datatype($data['embed_url'], 'string');
         $content_array['spoiler'] = nel_cast_to_datatype($data['spoiler'], 'boolean');
         $content_array['exif'] = nel_cast_to_datatype($data['exif'], 'string');
-        $content_array['meta'] = nel_cast_to_datatype($data['meta'], 'string');
+        $content_array['moar'] = nel_cast_to_datatype($data['moar'], 'string');
         $content_array = nel_plugins()->processHook('nel-json-prepare-content', [$data], $content_array);
         return $content_array;
     }
