@@ -35,13 +35,12 @@ class OutputPanelReports extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
-        $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
+        $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Reports')];
         $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
+                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
 
         if ($this->domain->id() !== '_site_')
         {
@@ -70,8 +69,6 @@ class OutputPanelReports extends OutputCore
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $current_domain = $domains[$report_info['board_id']];
             $content_id = new ContentID($report_info['content_id']);
-            $board_web_path = $dotdot . rawurlencode($current_domain->reference('board_directory')) .
-                    '/';
             $content_url = '';
 
             if ($content_id->isThread())
@@ -101,8 +98,7 @@ class OutputPanelReports extends OutputCore
                         '" WHERE "parent_thread" = ? AND post_ref = ? AND "content_order" = ?');
                 $filename = $this->database->executePreparedFetch($prepared,
                         [$content_id->threadID(), $content_id->postID(), $content_id->orderID()], PDO::FETCH_COLUMN);
-                $src_web_path = $board_web_path . rawurlencode($current_domain->reference('src_dir')) . '/';
-                $report_data['file_url'] = $src_web_path . $content_id->threadID() . '/' . $content_id->postID() . '/' .
+                $report_data['file_url'] = $current_domain->reference('src_web_path') . $content_id->threadID() . '/' . $content_id->postID() . '/' .
                         $filename;
 
                         $content_url = NEL_MAIN_SCRIPT_QUERY .
@@ -127,7 +123,7 @@ class OutputPanelReports extends OutputCore
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/reports_panel',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;

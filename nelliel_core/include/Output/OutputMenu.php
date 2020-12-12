@@ -45,7 +45,6 @@ class OutputMenu extends OutputCore
     {
         $render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $dotdot = $parameters['dotdot'] ?? '';
         $styles = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
                 PDO::FETCH_ASSOC);

@@ -30,10 +30,9 @@ class OutputThread extends OutputCore
         $this->startTimer();
         $session = new \Nelliel\Account\Session();
         $thread_id = ($parameters['thread_id']) ?? 0;
-        $dotdot = ($this->write_mode) ? '../../../' : '';
         $command = ($parameters['command']) ?? 'view-thread';
         $thread_content_id = ContentID::createIDString($thread_id);
-        $this->render_data['form_action'] = $dotdot . NEL_MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=threads&board_id=' . $this->domain->id();
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $thread_data = $this->database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
@@ -54,7 +53,7 @@ class OutputThread extends OutputCore
         }
 
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
+        $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
 
         if ($session->isActive() && !$this->write_mode)
@@ -62,12 +61,12 @@ class OutputThread extends OutputCore
             $manage_headers['header'] = _gettext('Moderator Mode');
             $manage_headers['sub_header'] = _gettext('View Thread');
             $this->render_data['header'] = $output_header->render(
-                    ['header_type' => 'board', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
+                    ['header_type' => 'board', 'manage_headers' => $manage_headers], true);
         }
         else
         {
             $this->render_data['header'] = $output_header->render(
-                    ['header_type' => 'board', 'dotdot' => $dotdot], true);
+                    ['header_type' => 'board'], true);
         }
 
         $json_thread = new \Nelliel\API\JSON\JSONThread($this->domain, $this->file_handler);
@@ -81,7 +80,7 @@ class OutputThread extends OutputCore
         $this->render_data['abbreviate'] = false;
         $output_posting_form = new OutputPostingForm($this->domain, $this->write_mode);
         $this->render_data['posting_form'] = $output_posting_form->render(
-                ['dotdot' => $dotdot, 'response_to' => $thread_id], true);
+                ['response_to' => $thread_id], true);
         $output_post = new OutputPost($this->domain, $this->write_mode);
         $this->render_data['op_post'] = array();
         $this->render_data['thread_posts'] = array();
@@ -95,7 +94,7 @@ class OutputThread extends OutputCore
         {
             $json_post = new \Nelliel\API\JSON\JSONPost($this->domain, $this->file_handler);
             $json_instances['post'] = $json_post;
-            $parameters = ['thread_data' => $thread_data, 'dotdot' => $dotdot, 'post_data' => $post_data,
+            $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data,
                 'gen_data' => $gen_data, 'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
             $post_render = $output_post->render($parameters, true);
 
@@ -115,12 +114,12 @@ class OutputThread extends OutputCore
         $this->render_data['index_navigation'] = true;
         $this->render_data['footer_form'] = true;
         $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
-        $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&actions=get';
-        $this->render_data['captcha_regen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&actions=generate&no-display';
+        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=get';
+        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=generate&no-display';
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot], true);
+        $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('thread/thread_page', $data_only, true);
 
         if ($this->write_mode)

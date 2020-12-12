@@ -49,23 +49,23 @@ class OutputHeader extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
-        $dotdot = $parameters['dotdot'] ?? '';
         $manage_headers = $parameters['manage_headers'] ?? array();
         $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
-        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['head'] = $output_head->render([], true);
         $this->render_data['show_manage_headers'] = $session->isActive() && !empty($manage_headers);
+
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
         if ($this->render_data['show_styles'])
         {
-            $this->render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot], true);
+            $this->render_data['styles'] = $output_menu->render(['menu' => 'styles'], true);
         }
 
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['site_navigation'] = $output_navigation->render(
-                ['navigation' => 'site_links', 'dotdot' => $dotdot], true);
+                ['navigation' => 'site_links'], true);
 
         if (isset($parameters['use_site_titles']) && $parameters['use_site_titles'])
         {
@@ -103,26 +103,25 @@ class OutputHeader extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
-        $dotdot = $parameters['dotdot'] ?? '';
         $manage_headers = $parameters['manage_headers'] ?? array();
         $treeline = $parameters['treeline'] ?? array();
         $index_render = $parameters['index_render'] ?? false;
         $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
+        $this->render_data['head'] = $output_head->render([], true);
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['show_manage_headers'] = $session->isActive() && !empty($manage_headers);
 
         if ($this->render_data['show_styles'])
         {
-            $this->render_data['styles'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot], true);
+            $this->render_data['styles'] = $output_menu->render(['menu' => 'styles'], true);
         }
 
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['site_navigation'] = $output_navigation->render(
-                ['navigation' => 'site_links', 'dotdot' => $dotdot], true);
-        $this->render_data['board_navigation'] = $output_navigation->render(['navigation' => 'board_links', 'dotdot' => $dotdot],
+                ['navigation' => 'site_links'], true);
+        $this->render_data['board_navigation'] = $output_navigation->render(['navigation' => 'board_links'],
                 true);
 
         $this->render_data['name'] = ($this->domain->setting('show_name')) ? $this->domain->setting('name') : '';

@@ -34,7 +34,7 @@ class Dispatch
                 else
                 {
                     $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
-                    $output_login->render(['dotdot' => ''], false);
+                    $output_login->render([], false);
                 }
 
                 break;
@@ -55,7 +55,7 @@ class Dispatch
                 else
                 {
                     $output_login = new \Nelliel\Output\OutputRegisterPage($this->domain, false);
-                    $output_login->render(['dotdot' => '', 'section' => 'register'], false);
+                    $output_login->render(['section' => 'register'], false);
                 }
 
                 break;
@@ -71,7 +71,7 @@ class Dispatch
                 else
                 {
                     $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
-                    $output_login->render(['dotdot' => ''], false);
+                    $output_login->render([], false);
                 }
         }
     }

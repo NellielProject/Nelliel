@@ -27,14 +27,13 @@ class OutputHead extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $session = new \Nelliel\Account\Session();
-        $dotdot = ($parameters['dotdot']) ?? '';
         $this->render_data['main_js_file'] = NEL_ASSETS_CORE_WEB_PATH . 'scripts/nel.js';
         $this->render_data['js_ui_url'] = NEL_ASSETS_CORE_WEB_PATH . 'scripts/ui.js';
         $this->render_data['js_onload'] = 'window.onload = function () {nelliel.setup.doImportantStuff(\'' .
                 $this->domain->id() . '\', \'' . $session->inModmode($this->domain) . '\');};';
         $this->render_data['js_set_style'] = 'setStyle(nelliel.core.getCookie("style-' . $this->domain->id() . '"));';
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
-        $this->render_data['stylesheets'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot], true);
+        $this->render_data['stylesheets'] = $output_menu->render(['menu' => 'styles'], true);
 
         if ($this->domain->setting('use_honeypot'))
         {

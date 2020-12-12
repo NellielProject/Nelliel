@@ -33,7 +33,6 @@ class OutputFile extends OutputCore
         $post_type_class = $post_data['op'] == 1 ? 'op-' : 'reply-';
         $multiple = $post_data['content_count'] > 1;
         $multiple_class = $multiple ? 'multiple-' : '';
-        $dotdot = $parameters['dotdot'] ?? '';
         $json_post = $parameters['json_instances']['post'];
         $json_content = $parameters['json_instances']['content'];
         $json_post->addContentData($json_content->prepareData($file));

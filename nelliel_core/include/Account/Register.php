@@ -102,6 +102,6 @@ class Register
         }
 
         $output_register = new \Nelliel\Output\OutputRegisterPage($this->domain, false);
-        $output_register->render(['dotdot' => '', 'section' => 'registration-done'], false);
+        $output_register->render(['section' => 'registration-done'], false);
     }
 }

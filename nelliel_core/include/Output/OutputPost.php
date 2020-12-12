@@ -30,7 +30,6 @@ class OutputPost extends OutputCore
         $thread_data = $parameters['thread_data'] ?? array();
         $gen_data = $parameters['gen_data'] ?? array();
         $post_id = $parameters['post_id'] ?? 0;
-        $dotdot = $parameters['dotdot'] ?? '';
         $json_post = $parameters['json_instances']['post'];
         $post_data = $parameters['post_data'] ?? $this->getPostFromDatabase($post_id);
         $in_thread_number = $parameters['in_thread_number'] ?? 0;
@@ -71,7 +70,7 @@ class OutputPost extends OutputCore
 
         $this->render_data['post_anchor_id'] = 't' . $post_content_id->threadID() . 'p' . $post_content_id->postID();
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
-                $post_content_id, $web_paths, $gen_data, $in_thread_number, $dotdot);
+                $post_content_id, $web_paths, $gen_data, $in_thread_number);
 
         if ($post_data['has_content'] == 1)
         {
@@ -96,8 +95,7 @@ class OutputPost extends OutputCore
                 $parameters['json_instances']['content'] = $json_content;
                 $file_data = $output_file_info->render(
                         ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
-                            'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances'],
-                            'dotdot' => $dotdot], true);
+                            'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances']], true);
                 $content_row[] = $file_data;
             }
 
@@ -128,7 +126,7 @@ class OutputPost extends OutputCore
     }
 
     private function postHeaders(bool $response, array $thread_data, array $post_data, ContentID $thread_content_id,
-            ContentID $post_content_id, array $web_paths, array $gen_data, int $in_thread_number, string $dotdot)
+            ContentID $post_content_id, array $web_paths, array $gen_data, int $in_thread_number)
     {
         $header_data = array();
         $modmode_headers = array();

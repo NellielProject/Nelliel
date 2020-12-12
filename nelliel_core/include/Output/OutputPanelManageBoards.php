@@ -55,13 +55,12 @@ class OutputPanelManageBoards extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
-        $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
+        $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')];
         $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
+                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT .
                 '?module=admin&section=manage-boards&actions=add&domain=_site_';
         $board_data = $this->database->executeFetchAll(
@@ -107,7 +106,7 @@ class OutputPanelManageBoards extends OutputCore
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/manage_boards_panel',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;
@@ -118,21 +117,20 @@ class OutputPanelManageBoards extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
-        $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
+        $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'),
             'sub_header' => _gettext('Confirm Board Deletion')];
         $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
+                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
         $this->render_data['message'] = $parameters['message'];
         $this->render_data['continue_link_text'] = $parameters['continue_link']['text'];
         $this->render_data['continue_url'] = $parameters['continue_link']['href'];
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('interstitial/board_removal',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;

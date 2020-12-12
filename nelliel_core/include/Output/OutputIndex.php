@@ -30,12 +30,11 @@ class OutputIndex extends OutputCore
         $this->startTimer();
         $session = new \Nelliel\Account\Session();
         $thread_id = $parameters['thread_id'] ?? 0;
-        $dotdot = ($this->write_mode) ? '../' : '';
         $page = 1;
         $site_domain = new \Nelliel\DomainSite($this->database);
         $json_index = new \Nelliel\API\JSON\JSONIndex($this->domain, $this->file_handler);
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
+        $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
 
         if ($session->isActive() && !$this->write_mode)
@@ -43,12 +42,12 @@ class OutputIndex extends OutputCore
             $manage_headers['header'] = _gettext('Moderator Mode');
             $manage_headers['sub_header'] = _gettext('View Index');
             $this->render_data['header'] = $output_header->render(
-                    ['header_type' => 'board', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
+                    ['header_type' => 'board', 'manage_headers' => $manage_headers], true);
         }
         else
         {
             $this->render_data['header'] = $output_header->render(
-                    ['header_type' => 'board', 'dotdot' => $dotdot], true);
+                    ['header_type' => 'board'], true);
         }
 
         $result = $this->database->query(
@@ -59,7 +58,7 @@ class OutputIndex extends OutputCore
         $threads_done = 0;
         $gen_data['index']['thread_count'] = $thread_count;
         $output_posting_form = new OutputPostingForm($this->domain, $this->write_mode);
-        $this->render_data['posting_form'] = $output_posting_form->render(['dotdot' => $dotdot, 'response_to' => 0],
+        $this->render_data['posting_form'] = $output_posting_form->render(['response_to' => 0],
                 true);
 
         if($thread_count === 0)
@@ -80,13 +79,13 @@ class OutputIndex extends OutputCore
             $this->render_data['footer_form'] = true;
             $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
             $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
-            $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&actions=get';
-            $this->render_data['captcha_regen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&actions=generate&no-display';
+            $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=get';
+            $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=generate&no-display';
             $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
             $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
             $output_footer = new OutputFooter($this->domain, $this->write_mode);
             $output_footer = new OutputFooter($this->domain, $this->write_mode);
-            $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => true],
+            $this->render_data['footer'] = $output_footer->render(['show_styles' => true],
                     true);
             $output = $this->output('index/index_page', $data_only, true);
             $index_filename = ($page == 1) ? 'index' . NEL_PAGE_EXT : sprintf($index_format, ($page)) . NEL_PAGE_EXT;
@@ -119,7 +118,7 @@ class OutputIndex extends OutputCore
         }
 
         $gen_data['index_rendering'] = true;
-        $this->render_data['form_action'] = $dotdot . NEL_MAIN_SCRIPT . '?module=threads&board_id=' . $this->domain->id();
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=threads&board_id=' . $this->domain->id();
         $threads_on_page = 0;
         $timer_offset = $this->endTimer(false);
 
@@ -156,7 +155,7 @@ class OutputIndex extends OutputCore
             {
                 $json_post = new \Nelliel\API\JSON\JSONPost($this->domain, $this->file_handler);
                 $json_instances['post'] = $json_post;
-                $parameters = ['thread_data' => $thread_data, 'dotdot' => $dotdot, 'post_data' => $post_data,
+                $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data,
                     'gen_data' => $gen_data, 'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
 
                 if ($post_data['op'] == 1)
@@ -187,12 +186,12 @@ class OutputIndex extends OutputCore
                 $this->render_data['footer_form'] = true;
                 $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
                 $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
-                $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&actions=get';
-                $this->render_data['captcha_regen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&actions=generate&no-display';
+                $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=get';
+                $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=generate&no-display';
                 $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
                 $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
                 $output_footer = new OutputFooter($this->domain, $this->write_mode);
-                $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => true],
+                $this->render_data['footer'] = $output_footer->render(['show_styles' => true],
                         true);
                 $output = $this->output('index/index_page', $data_only, true);
                 $index_filename = ($page == 1) ? 'index' . NEL_PAGE_EXT : sprintf($index_format, ($page)) . NEL_PAGE_EXT;

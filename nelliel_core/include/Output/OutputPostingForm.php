@@ -26,13 +26,12 @@ class OutputPostingForm extends OutputCore
         $render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $session = new \Nelliel\Account\Session();
-        $dotdot = $parameters['dotdot'];
         $response_to = $parameters['response_to'];
         $this->render_data['is_response'] = $response_to > 0;
         $this->render_data['response_to'] = $response_to;
 
         $this->startTimer();
-        $this->render_data['form_action'] = $dotdot . NEL_MAIN_SCRIPT . '?module=threads&actions=new-post&board_id=' .
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=threads&actions=new-post&board_id=' .
                 $this->domain->id();
 
         if ($response_to)
@@ -46,7 +45,7 @@ class OutputPostingForm extends OutputCore
             }
             else
             {
-                $return_url = $dotdot . $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
+                $return_url = $this->domain->reference('board_web_path') . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }
 
             $this->render_data['return_url'] = $return_url;
@@ -82,8 +81,8 @@ class OutputPostingForm extends OutputCore
         $this->render_data['use_fgsfds'] = $this->domain->setting('use_fgsfds');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_post_captcha'] = $this->domain->setting('use_post_captcha');
-        $this->render_data['captcha_gen_url'] = $dotdot . NEL_MAIN_SCRIPT . '?module=captcha&actions=get';
-        $this->render_data['captcha_regen_url'] = $dotdot . NEL_MAIN_SCRIPT .
+        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=get';
+        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_WEB_PATH .
                 '?module=captcha&actions=generate&no-display';
         $this->render_data['use_post_recaptcha'] = $this->domain->setting('use_post_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');

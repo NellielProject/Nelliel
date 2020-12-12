@@ -123,7 +123,7 @@ class Session
         $log_event->changeContext('event_id', 'LOGOUT_SUCCESS');
         $log_event->send(sprintf(_gettext("User %s logged out."), $this->sessionUser()));
         $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
-        $output_login->render(['dotdot' => ''], false);
+        $output_login->render([], false);
         nel_clean_exit(false);
     }
 

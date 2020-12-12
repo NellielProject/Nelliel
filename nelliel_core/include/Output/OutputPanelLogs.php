@@ -38,13 +38,12 @@ class OutputPanelLogs extends OutputCore
         }
 
         $this->startTimer();
-        $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
+        $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Logs')];
         $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
+                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
 
         switch ($log_type)
         {
@@ -101,7 +100,7 @@ class OutputPanelLogs extends OutputCore
         $this->render_data['all_logs_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=logs&log-type=all';
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/logs_panel', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;

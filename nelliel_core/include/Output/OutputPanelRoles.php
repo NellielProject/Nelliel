@@ -55,13 +55,12 @@ class OutputPanelRoles extends OutputCore
         $this->render_data = array();
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $this->startTimer();
-        $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
+        $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Roles')];
         $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
+                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
         $roles = $this->database->executeFetchAll('SELECT * FROM "' . NEL_ROLES_TABLE . '" ORDER BY "role_level" DESC', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
@@ -84,7 +83,7 @@ class OutputPanelRoles extends OutputCore
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/roles_panel_main',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;
@@ -98,13 +97,12 @@ class OutputPanelRoles extends OutputCore
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $role = $authorization->getRole($role_id);
         $this->startTimer();
-        $dotdot = $parameters['dotdot'] ?? '';
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
+        $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit Role')];
         $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'dotdot' => $dotdot, 'manage_headers' => $manage_headers], true);
+                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
 
         if (empty($role_id))
         {
@@ -146,7 +144,7 @@ class OutputPanelRoles extends OutputCore
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/roles_panel_edit',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => false], true);
+        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
         echo $output;
         return $output;

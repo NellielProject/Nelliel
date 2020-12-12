@@ -38,13 +38,12 @@ class OutputOverboard extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->site_domain->locale()); // TODO: Use board locale for each thread
         $this->startTimer();
         $session = new \Nelliel\Account\Session();
-        $dotdot = ($this->write_mode) ? '../' : '';
         $prefix = ($sfw) ? 'sfw_' : '';
         $json_index = new \Nelliel\API\JSON\JSONIndex($this->site_domain, $this->file_handler);
         $output_head = new OutputHead($this->site_domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render(['dotdot' => $dotdot], true);
+        $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->site_domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->render(['header_type' => 'board', 'dotdot' => $dotdot], true);
+        $this->render_data['header'] = $output_header->render(['header_type' => 'board'], true);
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_OVERBOARD_TABLE . '" ORDER BY "last_bump_time" DESC, "last_bump_time_milli" DESC');
         $thread_list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
@@ -63,7 +62,7 @@ class OutputOverboard extends OutputCore
                 $this->render_data['index_navigation'] = false;
                 $this->render_data['footer_form'] = true;
                 $output_footer = new OutputFooter($this->site_domain, $this->write_mode);
-                $this->render_data['footer'] = $output_footer->render(['dotdot' => $dotdot, 'show_styles' => true],
+                $this->render_data['footer'] = $output_footer->render(['show_styles' => true],
                         true);
                 $output = $this->output('index/index_page', $data_only, true);
                 $index_filename = 'index' . NEL_PAGE_EXT;
@@ -125,7 +124,7 @@ class OutputOverboard extends OutputCore
             {
                 $json_post = new \Nelliel\API\JSON\JSONPost($thread_domain, $this->file_handler);
                 $json_instances['post'] = $json_post;
-                $parameters = ['thread_data' => $thread_data, 'dotdot' => $dotdot, 'post_data' => $post_data,
+                $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data,
                     'gen_data' => $gen_data, 'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
 
                 if ($post_data['op'] == 1)
