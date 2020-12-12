@@ -29,7 +29,7 @@ class Setup
         $this->checkDBEngine();
         $this->mainDirWritable();
         $this->coreDirWritable();
-        $this->configDirWritable();
+        //$this->configDirWritable();
 
         $file_handler = new \Nelliel\Utility\FileHandler();
         $generate_files = new \Nelliel\Setup\GenerateFiles($file_handler);
@@ -147,7 +147,7 @@ class Setup
         }
         else
         {
-            echo _gettext('The configutation directory is writable.'), '<br>';
+            echo _gettext('The configuration directory is writable.'), '<br>';
         }
     }
 
