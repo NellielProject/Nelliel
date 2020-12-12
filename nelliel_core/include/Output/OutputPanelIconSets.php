@@ -57,11 +57,11 @@ class OutputPanelIconSets extends OutputCore
             $set_data['name'] = $icon_set_info['name'];
             $set_data['directory'] = $icon_set_info['directory'];
             $set_data['is_default'] = $icon_set['is_default'] == 1;
-            $set_data['default_url'] = NEL_MAIN_SCRIPT_QUERY .
+            $set_data['default_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'icon-sets', 'actions' => 'make-default',
                                 'icon-set-id' => $icon_set['asset_id']]);
-                            $set_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY .
+                            $set_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'icon-sets', 'actions' => 'remove',
                                 'icon-set-id' => $icon_set['asset_id']]);
@@ -83,7 +83,7 @@ class OutputPanelIconSets extends OutputCore
             $set_data['name'] = $icon_set_info['name'];
             $set_data['directory'] = $icon_set_info['directory'];
             $set_data['is_installed'] = in_array($icon_set['id'], $installed_ids);
-            $set_data['install_url'] = NEL_MAIN_SCRIPT_QUERY .
+            $set_data['install_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'icon-sets', 'actions' => 'add',
                                 'icon-set-id' => $icon_set['id']]);

@@ -207,7 +207,7 @@ class OutputPost extends OutputCore
             if ($session->inModmode($this->domain) && !$this->write_mode)
             {
                 $thread_headers['render'] = '-render';
-                $thread_headers['reply_to_url'] = NEL_MAIN_SCRIPT . '?module=render&actions=view-thread&content-id=' .
+                $thread_headers['reply_to_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&actions=view-thread&content-id=' .
                         $thread_content_id->getIDString() . '&thread=' . $thread_content_id->threadID() . '&board_id=' .
                         $this->domain->id() . '&modmode=true';
             }

@@ -66,7 +66,7 @@ class OutputPanelLogs extends OutputCore
 
         $prepared = $this->database->prepare($query);
         $logs = $this->database->executePreparedFetchAll($prepared, [$entries, $row_offset], PDO::FETCH_ASSOC);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY .
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'admin', 'section' => 'file-filters', 'actions' => 'add']);
         $bgclass = 'row1';
         $this->render_data['log_entry_list'] = array();
@@ -87,7 +87,7 @@ class OutputPanelLogs extends OutputCore
             $this->render_data['log_entry_list'][] = $log_data;
         }
 
-        $page_format = NEL_MAIN_SCRIPT . '?module=admin&section=logs&page=%d';
+        $page_format = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=logs&page=%d';
         $page_count = $parameters['page_count'] ?? 1;
         $page = $parameters['page'] ?? 1;
         $pagination_object = new \Nelliel\Pagination();
@@ -95,9 +95,9 @@ class OutputPanelLogs extends OutputCore
         $pagination_object->setNext(_gettext('>>'));
         $pagination_object->setPage('%d', $page_format);
         $this->render_data['pagination'] = $pagination_object->generateNumerical(1, $page_count, $page);
-        $this->render_data['staff_logs_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=logs&log-type=staff';
-        $this->render_data['system_logs_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=logs&log-type=system';
-        $this->render_data['all_logs_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=logs&log-type=all';
+        $this->render_data['staff_logs_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=logs&log-type=staff';
+        $this->render_data['system_logs_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=logs&log-type=system';
+        $this->render_data['all_logs_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=logs&log-type=all';
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/logs_panel', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);

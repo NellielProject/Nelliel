@@ -157,7 +157,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 {
                     if ($session->inModmode($domain))
                     {
-                        $url = NEL_MAIN_SCRIPT_QUERY .
+                        $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                                 http_build_query(
                                         ['module' => 'render', 'action' => 'view-thread',
                                             'thread' => $fgsfds->getCommandData('noko', 'topic'),
@@ -177,7 +177,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     if ($session->inModmode($domain))
                     {
                         $redirect->changeURL(
-                                NEL_MAIN_SCRIPT . '?module=render&action=view-index&index=0&board_id=' .
+                                NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' .
                                 $inputs['board_id'] . '&modmode=true');
                     }
                     else
@@ -201,7 +201,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 if ($session->inModmode($domain))
                 {
                     $redirect->changeURL(
-                            NEL_MAIN_SCRIPT . '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] .
+                            NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] .
                             '&modmode=true');
                 }
                 else
@@ -218,7 +218,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 if ($session->inModmode($domain))
                 {
                     $redirect->changeURL(
-                            NEL_MAIN_SCRIPT . '?module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] .
+                            NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] .
                             '&modmode=true');
                 }
                 else

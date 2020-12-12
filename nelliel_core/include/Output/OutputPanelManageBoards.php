@@ -61,8 +61,8 @@ class OutputPanelManageBoards extends OutputCore
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT .
-                '?module=admin&section=manage-boards&actions=add&domain=_site_';
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=admin&section=manage-boards&actions=add&domain=_site_';
         $board_data = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
@@ -78,7 +78,7 @@ class OutputPanelManageBoards extends OutputCore
 
             if ($board_info['locked'] == 0)
             {
-                $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY .
+                $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         http_build_query(
                                 ['module' => 'admin', 'section' => 'manage-boards',
                                     'board_id' => $board_info['board_id'], 'actions' => 'lock', 'domain_id' => '_site_']);
@@ -87,7 +87,7 @@ class OutputPanelManageBoards extends OutputCore
             }
             else
             {
-                $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY .
+                $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         http_build_query(
                                 ['module' => 'admin', 'section' => 'manage-boards',
                                     'board_id' => $board_info['board_id'], 'actions' => 'unlock', 'domain_id' => '_site_']);
@@ -95,7 +95,7 @@ class OutputPanelManageBoards extends OutputCore
                 $board_data['lock_text'] = _gettext('Unlock Board');
             }
 
-            $board_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY .
+            $board_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'manage-boards', 'board_id' => $board_info['board_id'],
                                 'actions' => 'remove', 'domain_id' => '_site_']);

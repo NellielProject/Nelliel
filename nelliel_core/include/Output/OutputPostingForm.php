@@ -31,14 +31,14 @@ class OutputPostingForm extends OutputCore
         $this->render_data['response_to'] = $response_to;
 
         $this->startTimer();
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=threads&actions=new-post&board_id=' .
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&actions=new-post&board_id=' .
                 $this->domain->id();
 
         if ($response_to)
         {
             if ($session->inModmode($this->domain) && !$this->write_mode)
             {
-                $return_url = NEL_MAIN_SCRIPT_QUERY .
+                $return_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         http_build_query(
                                 ['module' => 'render', 'actions' => 'view-index', 'index' => '0',
                                     'board_id' => $this->domain->id(), 'modmode' => 'true']);
@@ -81,9 +81,9 @@ class OutputPostingForm extends OutputCore
         $this->render_data['use_fgsfds'] = $this->domain->setting('use_fgsfds');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_post_captcha'] = $this->domain->setting('use_post_captcha');
-        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=get';
-        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_WEB_PATH .
-                '?module=captcha&actions=generate&no-display';
+        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=captcha&actions=get';
+        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=captcha&actions=generate&no-display';
         $this->render_data['use_post_recaptcha'] = $this->domain->setting('use_post_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['captcha_label'] = true;

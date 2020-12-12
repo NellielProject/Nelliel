@@ -34,24 +34,24 @@ class OutputPanelBoard extends OutputCore
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
         $this->render_data['module_board_settings'] = $user->checkPermission($this->domain, 'perm_board_config');
-        $this->render_data['board_settings_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=board-settings&board_id=' .
+        $this->render_data['board_settings_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=board-settings&board_id=' .
                 $this->domain->id();
         $this->render_data['module_bans'] = $user->checkPermission($this->domain, 'perm_manage_bans');
-        $this->render_data['bans_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=bans&board_id=' . $this->domain->id();
+        $this->render_data['bans_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&board_id=' . $this->domain->id();
         //$this->render_data['module_threads'] = true;
-        //$this->render_data['threads_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=threads&board_id=' . $this->domain->id();
+        //$this->render_data['threads_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=threads&board_id=' . $this->domain->id();
         $this->render_data['module_modmode'] = $user->checkPermission($this->domain, 'perm_mod_mode');
-        $this->render_data['modmode_url'] = NEL_MAIN_SCRIPT . '?module=render&actions=view-index&index=0&board_id=' .
+        $this->render_data['modmode_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&actions=view-index&index=0&board_id=' .
                 $this->domain->id() . '&modmode=true';
         $this->render_data['module_reports'] = $user->checkPermission($this->domain, 'perm_manage_reports');
-        $this->render_data['reports_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=reports&board_id=' . $this->domain->id();
+        $this->render_data['reports_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=reports&board_id=' . $this->domain->id();
         $this->render_data['module_file_filters'] = $user->checkPermission($this->domain, 'perm_manage_file_filters');
-        $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT . '?module=admin&section=file-filters&board_id=' . $this->domain->id();
+        $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=file-filters&board_id=' . $this->domain->id();
         $this->render_data['regen_board_pages'] = $user->checkPermission($this->domain, 'perm_regen_pages');
-        $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT . '?module=regen&actions=board-all-pages&board_id=' .
+        $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=regen&actions=board-all-pages&board_id=' .
                 $this->domain->id();
         $this->render_data['regen_board_caches'] = $user->checkPermission($this->domain, 'perm_regen_cache');
-        $this->render_data['regen_caches_url'] = NEL_MAIN_SCRIPT . '?module=regen&actions=board-all-caches&board_id=' .
+        $this->render_data['regen_caches_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=regen&actions=board-all-caches&board_id=' .
                 $this->domain->id();
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/board_panel', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);

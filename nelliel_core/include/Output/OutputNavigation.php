@@ -71,16 +71,16 @@ class OutputNavigation extends OutputCore
         $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
         $render_data['session_active'] = $session->isActive() && !$this->write_mode;
-        $render_data['logout_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=account&section=logout';
-        $render_data['main_panel_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=admin&section=site-main-panel';
+        $render_data['logout_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=account&section=logout';
+        $render_data['main_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=site-main-panel';
         $render_data['home_url'] = $site_domain->setting('home_page');
         $render_data['news_url'] = NEL_BASE_WEB_PATH . 'news.html';
-        $render_data['account_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=account';
+        $render_data['account_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=account';
         $render_data['overboard_active'] = $this->site_domain->setting('overboard_active');
         $render_data['overboard_url'] = NEL_BASE_WEB_PATH . $this->site_domain->setting('overboard_uri') . '/';
         $render_data['sfw_overboard_active'] = $this->site_domain->setting('sfw_overboard_active');
         $render_data['sfw_overboard_url'] = NEL_BASE_WEB_PATH . $this->site_domain->setting('sfw_overboard_uri') . '/';
-        $render_data['about_nelliel_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?about_nelliel';
+        $render_data['about_nelliel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'about_nelliel';
         return $render_data;
     }
 }

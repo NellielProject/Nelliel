@@ -64,7 +64,7 @@ class OutputBanPage extends OutputCore
         if ($ban_hammer->getData('appeal_status') == 0 && empty($ban_hammer->getData('ip_address_end')))
         {
             $this->render_data['appeal_allowed'] = true;
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY .
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(['module' => 'ban-page', 'actions' => 'add-appeal']);
 
             if (!empty($ban_hammer->getData('board_id')))

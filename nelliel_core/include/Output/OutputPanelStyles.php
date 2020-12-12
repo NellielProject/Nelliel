@@ -58,11 +58,11 @@ class OutputPanelStyles extends OutputCore
             $style_data['name'] = $style_info['name'];
             $style_data['directory'] = $style_info['directory'];
             $style_data['is_default'] = $style['is_default'] == 1;
-            $style_data['default_url'] = NEL_MAIN_SCRIPT_QUERY .
+            $style_data['default_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'styles', 'actions' => 'make-default',
                                 'style-id' => $style['asset_id'], 'style-type' => $style_info['style_type']]);
-                            $style_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY .
+                            $style_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'styles', 'actions' => 'remove',
                                 'style-id' => $style['asset_id']]);
@@ -84,7 +84,7 @@ class OutputPanelStyles extends OutputCore
             $style_data['name'] = $style['name'];
             $style_data['directory'] = $style['directory'];
             $style_data['is_installed'] = in_array($style['id'], $installed_ids);
-            $style_data['install_url'] = NEL_MAIN_SCRIPT_QUERY .
+            $style_data['install_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'styles', 'actions' => 'add', 'style-id' => $style['id'],
                                 'style-type' => $style['style_type']]);

@@ -43,14 +43,14 @@ class OutputRegisterPage extends OutputCore
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->render(['header_type' => 'general'], true);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY .
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'account', 'section' => 'register', 'actions' => 'submit']);
-                $this->render_data['login_url'] = NEL_MAIN_SCRIPT_QUERY .
+                $this->render_data['login_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'account', 'actions' => 'login']);
         $this->render_data['use_register_captcha'] = $this->domain->setting('use_register_captcha');
-        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=get';
-        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_WEB_PATH .
-                '?module=captcha&actions=generate&no-display';
+        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=captcha&actions=get';
+        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=captcha&actions=generate&no-display';
         $this->render_data['use_register_recaptcha'] = $this->domain->setting('use_register_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('account/register', $this->render_data);
@@ -70,7 +70,7 @@ class OutputRegisterPage extends OutputCore
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->render(['header_type' => 'general'], true);
-        $this->render_data['login_url'] = NEL_MAIN_SCRIPT_QUERY .
+        $this->render_data['login_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'account', 'section' => 'login']);
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('account/registration_complete',
                 $this->render_data);
