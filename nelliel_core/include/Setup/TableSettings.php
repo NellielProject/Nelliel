@@ -111,8 +111,8 @@ class TableSettings extends TableHandler
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_op_multifile', '', '0', 'Allow OP post to have multiple files', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_fgsfds', '', '1', 'Use FGSFDS field for commands (noko, sage, etc)', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_honeypot', '', '1', 'Use honeypot for spambots', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'only_thread_duplicates', '', '1', 'Only check for duplicates in current thread when replying', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'only_op_duplicates', '', '1', 'Only check for duplicates in other op posts when creating new thread', '', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'check_thread_duplicates', '', '1', 'Check for duplicates in current thread when replying', '', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'check_op_duplicates', '', '1', 'Check for duplicates in other op posts when creating new thread', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'name', '', '', 'Board name', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'slogan', '', '', 'Board slogan', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'description', '', '', 'Board description', '', '{"type":"text"}']);

@@ -247,8 +247,9 @@ class FilesUpload
         $db_sha1 = nel_prepare_hash_for_storage($file->data('sha1'));
         $db_sha256 = nel_prepare_hash_for_storage($file->data('sha256'));
         $db_sha512 = nel_prepare_hash_for_storage($file->data('sha512'));
+        $query = '';
 
-        if ($response_to === 0 && $this->domain->setting('only_op_duplicates'))
+        if ($response_to === 0 && $this->domain->setting('check_op_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
                     '" WHERE "parent_thread" = "post_ref" AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
@@ -258,7 +259,8 @@ class FilesUpload
             $prepared->bindValue(3, $db_sha256, PDO::PARAM_LOB);
             $prepared->bindValue(4, $db_sha512, PDO::PARAM_LOB);
         }
-        else if ($response_to > 0 && $this->domain->setting('only_thread_duplicates'))
+
+        if ($response_to > 0 && $this->domain->setting('check_thread_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
                     '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
@@ -269,22 +271,15 @@ class FilesUpload
             $prepared->bindValue(4, $db_sha256, PDO::PARAM_LOB);
             $prepared->bindValue(5, $db_sha512, PDO::PARAM_LOB);
         }
-        else
-        {
-            $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
-                    '" WHERE "md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?';
-            $prepared = $database->prepare($query);
-            $prepared->bindValue(1, $db_md5, PDO::PARAM_LOB);
-            $prepared->bindValue(2, $db_sha1, PDO::PARAM_LOB);
-            $prepared->bindValue(3, $db_sha256, PDO::PARAM_LOB);
-            $prepared->bindValue(4, $db_sha512, PDO::PARAM_LOB);
-        }
 
-        $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
-
-        if ($result)
+        if(!empty($query))
         {
-            nel_derp(21, _gettext('Duplicate file detected.'), $error_data);
+            $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
+
+            if ($result)
+            {
+                nel_derp(21, _gettext('Duplicate file detected.'), $error_data);
+            }
         }
     }
 

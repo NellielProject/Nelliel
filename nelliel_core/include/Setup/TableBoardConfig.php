@@ -58,8 +58,8 @@ class TableBoardConfig extends TableHandler
         $this->insertDefaultRow(['allow_op_multifile', '0', 0]);
         $this->insertDefaultRow(['use_fgsfds', '1', 0]);
         $this->insertDefaultRow(['use_honeypot', '1', 0]);
-        $this->insertDefaultRow(['only_thread_duplicates', '1', 0]);
-        $this->insertDefaultRow(['only_op_duplicates', '1', 0]);
+        $this->insertDefaultRow(['check_thread_duplicates', '1', 0]);
+        $this->insertDefaultRow(['check_op_duplicates', '1', 0]);
         $this->insertDefaultRow(['name', '', 0]);
         $this->insertDefaultRow(['slogan', '', 0]);
         $this->insertDefaultRow(['description', '', 0]);
