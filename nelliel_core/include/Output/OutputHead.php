@@ -28,28 +28,13 @@ class OutputHead extends OutputCore
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
         $session = new \Nelliel\Account\Session();
         $dotdot = ($parameters['dotdot']) ?? '';
-        $this->render_data['main_js_file'] = $dotdot . NEL_ASSETS_CORE_WEB_PATH . 'scripts/nel.js';
-        $this->render_data['js_ui_url'] = $dotdot . NEL_ASSETS_CORE_WEB_PATH . 'scripts/ui.js';
+        $this->render_data['main_js_file'] = NEL_ASSETS_CORE_WEB_PATH . 'scripts/nel.js';
+        $this->render_data['js_ui_url'] = NEL_ASSETS_CORE_WEB_PATH . 'scripts/ui.js';
         $this->render_data['js_onload'] = 'window.onload = function () {nelliel.setup.doImportantStuff(\'' .
                 $this->domain->id() . '\', \'' . $session->inModmode($this->domain) . '\');};';
         $this->render_data['js_set_style'] = 'setStyle(nelliel.core.getCookie("style-' . $this->domain->id() . '"));';
-        $styles = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
-                PDO::FETCH_ASSOC);
-        $style_set = array();
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
-
-        foreach ($styles as $style)
-        {
-            $style_data = array();
-            $info = json_decode($style['info'], true);
-            $style_data['stylesheet'] = ($style['is_default']) ? 'stylesheet' : 'alternate stylesheet';
-            $style_data['style_id'] = $style['asset_id'];
-            $web_path = ($front_end_data->styleIsCore($style['asset_id'])) ? NEL_CORE_STYLES_WEB_PATH : NEL_CUSTOM_STYLES_WEB_PATH;
-            $style_data['stylesheet_url'] = $dotdot . $web_path . $info['directory'] . '/' . $info['main_file'];
-            $style_data['style_name'] = $info['name'];
-            $this->render_data['stylesheets'][] = $style_data;
-        }
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['stylesheets'] = $output_menu->render(['menu' => 'styles', 'dotdot' => $dotdot], true);
 
         if ($this->domain->setting('use_honeypot'))
         {

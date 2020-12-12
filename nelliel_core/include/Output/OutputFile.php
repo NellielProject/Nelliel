@@ -154,7 +154,7 @@ class OutputFile extends OutputCore
                     $front_end_data = new \Nelliel\FrontEndData($this->domain->database());
                     $icon_set = $front_end_data->iconSet($this->domain->setting('icon_set_id'));
                     $web_path = $front_end_data->iconSetIsCore($this->domain->setting('icon_set_id')) ? NEL_CORE_ICON_SETS_WEB_PATH : NEL_CUSTOM_ICON_SETS_WEB_PATH;
-                    $icons_web_path = '//' . $web_paths['base_domain'] . $web_path . $icon_set['directory'] . '/';
+                    $icons_web_path = $web_path . $icon_set['directory'] . '/';
                     $file_path = $front_end_data->iconSetIsCore($this->domain->setting('icon_set_id')) ? NEL_CORE_ICON_SETS_FILES_PATH : NEL_CUSTOM_ICON_SETS_FILES_PATH;
                     $icons_file_path = $file_path . $icon_set['directory'] . '/';
                     $format_icon = utf8_strtolower($file['format']) . '.png';
@@ -185,7 +185,7 @@ class OutputFile extends OutputCore
 
                 if ($file['spoiler'])
                 {
-                    $this->render_data['preview_url'] = '//' . $web_paths['base_domain'] . NEL_CORE_IMAGES_WEB_PATH .
+                    $this->render_data['preview_url'] = NEL_CORE_IMAGES_WEB_PATH .
                             'covers/spoiler_alert.png';
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
@@ -193,7 +193,7 @@ class OutputFile extends OutputCore
 
                 if ($file['deleted'])
                 {
-                    $this->render_data['preview_url'] = '//' . $web_paths['base_domain'] . NEL_CORE_IMAGES_WEB_PATH .
+                    $this->render_data['preview_url'] = NEL_CORE_IMAGES_WEB_PATH .
                             'covers/deleted_file.png';
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';

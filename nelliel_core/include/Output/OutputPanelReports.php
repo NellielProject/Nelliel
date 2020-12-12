@@ -70,8 +70,7 @@ class OutputPanelReports extends OutputCore
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $current_domain = $domains[$report_info['board_id']];
             $content_id = new ContentID($report_info['content_id']);
-            $base_domain = NEL_BASE_DOMAIN . pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
-            $board_web_path = '//' . $base_domain . '/' . rawurlencode($current_domain->reference('board_directory')) .
+            $board_web_path = $dotdot . rawurlencode($current_domain->reference('board_directory')) .
                     '/';
             $content_url = '';
 

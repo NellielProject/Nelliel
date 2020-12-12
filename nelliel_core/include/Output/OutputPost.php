@@ -40,16 +40,11 @@ class OutputPost extends OutputCore
         $thread_content_id = new ContentID(ContentID::createIDString($post_data['parent_thread']));
         $post_content_id = new ContentID(
                 ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
-        $web_paths['base_domain'] = NEL_BASE_DOMAIN . NEL_BASE_WEB_PATH;
-        $web_paths['board'] = '//' . $web_paths['base_domain'] .
-                rawurlencode($this->domain->reference('board_directory')) . '/';
-        $web_paths['pages'] = $web_paths['board'] . rawurlencode($this->domain->reference('page_dir')) . '/';
-        $web_paths['thread_page'] = $web_paths['pages'] . $thread_content_id->threadID() . '/thread-' .
-                $thread_content_id->threadID() . '.html';
-        $web_paths['thread_src'] = $web_paths['board'] . rawurlencode($this->domain->reference('src_dir')) . '/' .
-                $thread_content_id->threadID() . '/';
-        $web_paths['thread_preview'] = $web_paths['board'] . rawurlencode($this->domain->reference('preview_dir')) . '/' .
-                $thread_content_id->threadID() . '/';
+        $web_paths['thread_page'] = $this->domain->reference('page_web_path') . $thread_content_id->threadID() .
+                '/thread-' . $thread_content_id->threadID() . '.html';
+        $web_paths['thread_src'] = $this->domain->reference('src_web_path') . $thread_content_id->threadID() . '/';
+        $web_paths['thread_preview'] = $this->domain->reference('preview_web_path') . $thread_content_id->threadID() .
+                '/';
         $this->render_data['post_corral_id'] = 'post-id-' . $post_content_id->getIDString();
         $this->render_data['post_container_id'] = 'post-container-' . $post_content_id->getIDString();
         $this->render_data['header_id'] = 'header-' . $post_content_id->getIDString();
@@ -76,7 +71,7 @@ class OutputPost extends OutputCore
 
         $this->render_data['post_anchor_id'] = 't' . $post_content_id->threadID() . 'p' . $post_content_id->postID();
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
-                $post_content_id, $web_paths, $gen_data, $in_thread_number);
+                $post_content_id, $web_paths, $gen_data, $in_thread_number, $dotdot);
 
         if ($post_data['has_content'] == 1)
         {
@@ -133,7 +128,7 @@ class OutputPost extends OutputCore
     }
 
     private function postHeaders(bool $response, array $thread_data, array $post_data, ContentID $thread_content_id,
-            ContentID $post_content_id, array $web_paths, array $gen_data, int $in_thread_number)
+            ContentID $post_content_id, array $web_paths, array $gen_data, int $in_thread_number, string $dotdot)
     {
         $header_data = array();
         $modmode_headers = array();
@@ -143,17 +138,6 @@ class OutputPost extends OutputCore
         $user = $session->sessionUser();
         $cites = new \Nelliel\Cites($this->domain->database());
         $header_data['response'] = $response;
-
-        // TODO: Convert to passed $web_paths values
-        $base_domain_path = NEL_BASE_DOMAIN . NEL_BASE_WEB_PATH;
-        $board_web_path = '//' . $base_domain_path . rawurlencode($this->domain->reference('board_directory')) . '/';
-        $pages_web_path = $board_web_path . rawurlencode($this->domain->reference('page_dir')) . '/';
-        $thread_page_web_path = $pages_web_path . $thread_content_id->threadID() . '/thread-' .
-                $thread_content_id->threadID() . '.html';
-        $src_web_path = $board_web_path . rawurlencode($this->domain->reference('src_dir')) . '/';
-        $thread_src_web_path = $src_web_path . $thread_content_id->threadID() . '/';
-        $preview_web_path = $board_web_path . rawurlencode($this->domain->reference('preview_dir')) . '/';
-        $thread_preview_web_path = $preview_web_path . $thread_content_id->threadID() . '/';
 
         if ($session->inModmode($this->domain) && !$this->write_mode)
         {
@@ -193,13 +177,11 @@ class OutputPost extends OutputCore
             }
 
             $modmode_headers['ban_url'] = '?module=admin&section=bans&board_id=' . $this->domain->id() .
-                    '&actions=new&content-id=' . $post_content_id->getIDString() .
-                    '&modmode=true&goback=false';
+                    '&actions=new&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=false';
             $modmode_headers['delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
                     '&actions=delete&content-id=' . $temp_content_id->getIDString() . '&modmode=true&goback=true';
             $modmode_headers['ban_delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
-                    '&actions=bandelete&content-id=' . $post_content_id->getIDString() .
-                    '&modmode=true&goback=false';
+                    '&actions=bandelete&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=false';
             $header_data['modmode_headers'] = $modmode_headers;
         }
 
@@ -297,7 +279,7 @@ class OutputPost extends OutputCore
         $post_headers['capcode'] = $capcode;
         $post_headers['post_time'] = date($this->domain->setting('date_format'), $post_data['post_time']);
         $post_headers['post_number'] = $post_data['post_number'];
-        $post_headers['post_number_url'] = $thread_page_web_path . '#t' . $post_content_id->threadID() . 'p' .
+        $post_headers['post_number_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
                 $post_content_id->postID();
 
         if ($this->domain->setting('display_post_backlinks'))
@@ -345,13 +327,7 @@ class OutputPost extends OutputCore
         $post_type_class = $post_data['op'] == 1 ? 'op-' : 'reply-';
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
         $comment_data['post_contents_class'] = $post_type_class . 'post-contents';
-
         $comment_data['mod_comment'] = $post_data['mod_comment'] ?? null;
-        if (!nel_true_empty($post_data['mod_comment']))
-        {
-            //$comment_data['mod_comment'] = $post_data['mod_comment'];
-        }
-
         $comment_data['post_comment_class'] = $post_type_class . 'post-comment';
 
         if (nel_true_empty($post_data['comment']))

@@ -49,6 +49,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_ASSOC);
         $new_reference = array();
         $board_path = NEL_BASE_PATH . $board_data['board_id'] . '/';
+        $board_web_path = NEL_BASE_WEB_PATH . rawurlencode($board_data['board_id']) . '/';
         $new_reference['board_directory'] = $board_data['board_id'];
         $new_reference['db_prefix'] = $board_data['db_prefix'];
         $new_reference['locked'] = (bool) $board_data['locked'];
@@ -57,9 +58,13 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['page_dir'] = 'threads';
         $new_reference['archive_dir'] = 'archive';
         $new_reference['board_path'] = $board_path;
+        $new_reference['board_web_path'] = $board_web_path;
         $new_reference['src_path'] = $board_path . $new_reference['src_dir'] . '/';
+        $new_reference['src_web_path'] = $board_web_path . rawurlencode($new_reference['src_dir']) . '/';
         $new_reference['preview_path'] = $board_path . $new_reference['preview_dir'] . '/';
+        $new_reference['preview_web_path'] = $board_web_path . rawurlencode($new_reference['preview_dir']) . '/';
         $new_reference['page_path'] = $board_path . $new_reference['page_dir'] . '/';
+        $new_reference['page_web_path'] = $board_web_path . rawurlencode($new_reference['page_dir']) . '/';
         $new_reference['archive_path'] = $board_path . $new_reference['archive_dir'] . '/';
         $new_reference['archive_src_path'] = $board_path . $new_reference['archive_dir'] . '/' .
                 $new_reference['src_dir'] . '/';

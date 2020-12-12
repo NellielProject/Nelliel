@@ -157,10 +157,9 @@ class Cites
 
         if (!empty($cite_data))
         {
-            $base_domain = NEL_BASE_DOMAIN . NEL_BASE_WEB_PATH;
             $target_domain = new DomainBoard($cite_data['target_board'], $this->database);
             $p_anchor = '#t' . $cite_data['target_thread'] . 'p' . $cite_data['target_post'];
-            $url = '//' . $base_domain . $cite_data['target_board'] . '/' . $target_domain->reference('page_dir') . '/' .
+            $url = NEL_BASE_WEB_PATH . $cite_data['target_board'] . '/' . $target_domain->reference('page_dir') . '/' .
                     $cite_data['target_thread'] . '/thread-' . $cite_data['target_thread'] . '.html' . $p_anchor;
         }
 

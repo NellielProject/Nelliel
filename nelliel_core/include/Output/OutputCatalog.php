@@ -34,11 +34,6 @@ class OutputCatalog extends OutputCore
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->render(['header_type' => 'general', 'dotdot' => $dotdot], true);
         $this->render_data['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->id() . '/';
-        $base_domain_path = NEL_BASE_DOMAIN . NEL_BASE_WEB_PATH;
-        $board_web_path = '//' . $base_domain_path . rawurlencode($this->domain->reference('board_directory')) . '/';
-        $pages_web_path = $board_web_path . rawurlencode($this->domain->reference('page_dir')) . '/';
-        $preview_web_path = $board_web_path . rawurlencode($this->domain->reference('preview_dir')) . '/';
-
         $threads = $this->database->executeFetchAll('SELECT * FROM "' . $this->domain->reference('threads_table') . '"',
                 PDO::FETCH_ASSOC);
         $thread_count = 1;
@@ -58,7 +53,7 @@ class OutputCatalog extends OutputCore
 
             $post_content_id = new \Nelliel\Content\ContentId(
                     'cid_' . $thread['thread_id'] . '_' . $first_post['post_number']);
-            $thread_page_web_path = $pages_web_path . $thread['thread_id'] . '/thread-' . $thread['thread_id'] . '.html';
+            $thread_page_web_path = $this->domain->reference('page_web_path') . $thread['thread_id'] . '/thread-' . $thread['thread_id'] . '.html';
             $thread_data['open_url'] = $thread_page_web_path;
 
             if (!empty($first_post['subject']))
@@ -130,7 +125,7 @@ class OutputCatalog extends OutputCore
 
                 $thread_data['preview_width'] = $width;
                 $thread_data['preview_height'] = $height;
-                $thread_preview_web_path = $preview_web_path . $thread['thread_id'] . '/' . $first_post['post_number'] .
+                $thread_preview_web_path = $this->domain->reference('preview_web_path') . $thread['thread_id'] . '/' . $first_post['post_number'] .
                         '/';
                 $thread_data['preview_url'] = $thread_preview_web_path . $first_file['preview_name'] . '.' .
                         $first_file['preview_extension'];
