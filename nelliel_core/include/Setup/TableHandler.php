@@ -94,6 +94,7 @@ abstract class TableHandler
 
             if(!isset($values[$index]))
             {
+                ++$index;
                 continue;
             }
 
