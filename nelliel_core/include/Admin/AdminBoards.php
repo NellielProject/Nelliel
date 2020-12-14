@@ -45,11 +45,16 @@ class AdminBoards extends AdminHandler
         $site_domain = new \Nelliel\DomainSite($this->database);
         $board_id = $_POST['new_board_id'];
 
+        if (nel_true_empty($board_id))
+        {
+            nel_derp(243, _gettext('No board ID provided.'));
+        }
+
         if ($site_domain->setting('only_alphanumeric_board_ids'))
         {
             if (preg_match('/[^a-zA-Z0-9]/', $board_id) === 1)
             {
-                nel_derp(242, _gettext('Board ID contains invalid characters!'));
+                nel_derp(242, _gettext('Board ID contains invalid characters. Must be alphanumeric only.'));
             }
         }
 
