@@ -399,11 +399,11 @@ form {
 }
 
 .op-post-header-options {
-    margin-left: 1em;
+
 }
 
 .op-post-header-info {
-    margin-left: 1em;
+    margin-left: 1.5em;
 }
 
 .op-post {
@@ -475,7 +475,7 @@ form {
 }
 
 .reply-post-header-info {
-
+    margin-left: 1.5em;
 }
 
 .reply-post {

@@ -224,6 +224,7 @@ class OutputPost extends OutputCore
         if ($response)
         {
             $post_headers['header_options_class'] = 'reply-post-header-options';
+            $post_headers['header_info_class'] = 'reply-post-header-info';
             $post_headers['post_select_class'] = 'reply-post-select';
             $post_headers['subject_class'] = 'reply-subject';
             $post_headers['poster_name_class'] = 'reply-poster-name';
@@ -236,6 +237,7 @@ class OutputPost extends OutputCore
         else
         {
             $post_headers['header_options_class'] = 'op-post-header-options';
+            $post_headers['header_info_class'] = 'op-post-header-info';
             $post_headers['post_select_class'] = 'op-post-select';
             $post_headers['subject_class'] = 'op-subject';
             $post_headers['poster_name_class'] = 'op-poster-name';

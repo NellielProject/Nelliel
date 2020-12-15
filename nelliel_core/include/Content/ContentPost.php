@@ -188,7 +188,8 @@ class ContentPost extends ContentHandler
 
         $thread = new ContentThread($this->content_id, $this->domain, $this->archived);
 
-        if ($thread->postCount() <= 0)
+        // TODO: This is a (hopefully) temporary thing to keep normal imageboard function when deleting OP post
+        if ($thread->postCount() <= 0 || $this->content_id->threadID() == $this->content_id->postID())
         {
             $thread->remove(true);
         }
