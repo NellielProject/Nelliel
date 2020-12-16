@@ -45,8 +45,7 @@ class OutputNavigation extends OutputCore
 
     private function boardLinks(array $parameters, bool $data_only)
     {
-        $render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
+        $this->renderSetup();
         $board_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
         $board_count = count($board_data);
         $end = $board_count - 1;
@@ -66,8 +65,7 @@ class OutputNavigation extends OutputCore
 
     private function siteLinks(array $parameters, bool $data_only)
     {
-        $render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
+        $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
         $render_data['session_active'] = $session->isActive() && !$this->write_mode;

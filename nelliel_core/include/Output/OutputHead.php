@@ -24,8 +24,7 @@ class OutputHead extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
+        $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $this->render_data['main_js_file'] = NEL_ASSETS_CORE_WEB_PATH . 'scripts/nel.js';
         $this->render_data['js_ui_url'] = NEL_ASSETS_CORE_WEB_PATH . 'scripts/ui.js';

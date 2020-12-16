@@ -24,9 +24,7 @@ class OutputFooter extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $show_timer = ($parameters['show_timer']) ?? true;
+        $this->renderSetup();
         $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 

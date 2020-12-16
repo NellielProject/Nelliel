@@ -22,9 +22,7 @@ class OutputPanelBoard extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $this->startTimer();
+        $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $user = $session->sessionUser();
         $output_head = new OutputHead($this->domain, $this->write_mode);

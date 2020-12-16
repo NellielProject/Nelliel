@@ -23,14 +23,12 @@ class OutputPostingForm extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
+        $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $response_to = $parameters['response_to'];
         $this->render_data['is_response'] = $response_to > 0;
         $this->render_data['response_to'] = $response_to;
 
-        $this->startTimer();
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&actions=new-post&board_id=' .
                 $this->domain->id();
 

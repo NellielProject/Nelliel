@@ -22,10 +22,8 @@ class OutputBanPage extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
+        $this->renderSetup();
         $ban_hammer = $parameters['ban_hammer'];
-        $this->startTimer();
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);

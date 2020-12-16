@@ -61,9 +61,7 @@ class OutputPanelBans extends OutputCore
 
     private function renderPanel(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $this->startTimer();
+        $this->renderSetup();
         $user = $parameters['user'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -130,9 +128,7 @@ class OutputPanelBans extends OutputCore
 
     private function renderAdd(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $this->startTimer();
+        $this->renderSetup();
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
@@ -164,9 +160,7 @@ class OutputPanelBans extends OutputCore
 
     private function renderModify(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $this->startTimer();
+        $this->renderSetup();
         $user = $parameters['user'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);

@@ -18,13 +18,21 @@ abstract class OutputCore
     protected $file_handler;
     protected $cache_handler;
     protected $output_filter;
-    protected $timer_start;
-    protected $timer_stored;
+    protected $timer_start = 0;
+    protected $timer_end = 0;
     protected $core_id;
     protected $static_output = false;
     protected $write_mode = false;
 
     public abstract function render(array $parameters, bool $data_only);
+
+    // Standard setup when beginning a render
+    protected function renderSetup()
+    {
+        $this->render_data = array();
+        $this->startTimer(); // Begin rendering timer
+        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale()); // Convert underscore notation to hyphen for HTML
+    }
 
     protected function utilitySetup()
     {
@@ -61,20 +69,15 @@ abstract class OutputCore
 
     protected function endTimer(bool $rounded = true, int $precision = 4)
     {
-        if (!isset($this->timer_start))
-        {
-            return 0;
-        }
-
-        $end_time = microtime(true);
+        $this->timer_end = microtime(true);
 
         if ($rounded)
         {
-            return number_format($end_time - $this->timer_start, $precision);
+            return number_format($this->timer_end - $this->timer_start, $precision);
         }
         else
         {
-            return $end_time - $this->timer_start;
+            return $this->timer_end - $this->timer_start;
         }
     }
 

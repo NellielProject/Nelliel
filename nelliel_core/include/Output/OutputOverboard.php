@@ -34,9 +34,7 @@ class OutputOverboard extends OutputCore
             return;
         }
 
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->site_domain->locale()); // TODO: Use board locale for each thread
-        $this->startTimer();
+        $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $prefix = ($sfw) ? 'sfw_' : '';
         $json_index = new \Nelliel\API\JSON\JSONIndex($this->site_domain, $this->file_handler);

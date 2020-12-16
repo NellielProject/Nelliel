@@ -43,8 +43,7 @@ class OutputMenu extends OutputCore
 
     private function styles(array $parameters, bool $data_only)
     {
-        $render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
+        $this->renderSetup();
         $styles = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
                 PDO::FETCH_ASSOC);

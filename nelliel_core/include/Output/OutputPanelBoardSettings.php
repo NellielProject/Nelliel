@@ -31,10 +31,8 @@ class OutputPanelBoardSettings extends OutputCore
             nel_derp(330, _gettext('You are not allowed to access the board settings.'));
         }
 
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
+        $this->renderSetup();
         $defaults = $parameters['defaults'] ?? false;
-        $this->startTimer();
         $filetypes = new \Nelliel\FileTypes($this->database);
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);

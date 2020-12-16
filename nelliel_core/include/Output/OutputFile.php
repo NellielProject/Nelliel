@@ -25,8 +25,7 @@ class OutputFile extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
+        $this->renderSetup();
         $post_data = $parameters['post_data'] ?? array();
         $file = $parameters['file_data'] ?? $this->getFileFromDatabase($post_data['post_number'], $content_order);
         $web_paths = $parameters['web_paths'] ?? array();

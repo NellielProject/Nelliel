@@ -25,9 +25,7 @@ class OutputIndex extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale());
-        $this->startTimer();
+        $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $thread_id = $parameters['thread_id'] ?? 0;
         $page = 1;

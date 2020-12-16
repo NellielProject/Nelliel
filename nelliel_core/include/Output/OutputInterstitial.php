@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domain;
 
-class OutputDerp extends OutputCore
+class OutputInterstitial extends OutputCore
 {
 
     function __construct(Domain $domain, bool $write_mode)
