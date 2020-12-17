@@ -29,7 +29,7 @@ class FilesUpload
     {
         $response_to = $post->data('response_to');
         $data_handler = new PostData($this->domain, $this->authorization);
-        $file_handler = new \Nelliel\Utility\FileHandler();
+        $file_handler = nel_utilities()->fileHandler();
         $error_data = ['delete_files' => true, 'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
         $file_count = count($this->uploaded_files['upload_files']['name']);
 

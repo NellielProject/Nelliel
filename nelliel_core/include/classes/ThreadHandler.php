@@ -26,7 +26,7 @@ class ThreadHandler
     public function processContentDeletes()
     {
         $updates = array();
-        $archive = new ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
+        $archive = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
 
         foreach ($_POST as $name => $value)
         {

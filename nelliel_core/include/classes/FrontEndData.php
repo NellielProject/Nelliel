@@ -8,7 +8,6 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use PDO;
-use Nelliel\Utility\FileHandler;
 
 class FrontEndData
 {
@@ -27,7 +26,7 @@ class FrontEndData
     function __construct(NellielPDO $database)
     {
         $this->database = $database;
-        $this->ini_parser = new \Nelliel\INIParser(new FileHandler());
+        $this->ini_parser = new \Nelliel\INIParser(nel_utilities()->fileHandler());
         $this->core_icon_set_ids = ['icons-nelliel-basic'];
         $this->core_style_ids = ['style-nelliel', 'style-nelliel-b', 'style-futaba', 'style-burichan', 'style-nigra'];
         $this->core_template_ids = ['template-nelliel-basic'];

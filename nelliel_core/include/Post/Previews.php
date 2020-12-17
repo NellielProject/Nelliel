@@ -22,7 +22,7 @@ class Previews
 
     public function generate($files, $preview_path)
     {
-        $file_handler = new \Nelliel\Utility\FileHandler();
+        $file_handler = nel_utilities()->fileHandler();
         $i = 0;
         $files_count = count($files);
 

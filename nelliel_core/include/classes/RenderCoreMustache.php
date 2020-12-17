@@ -17,7 +17,7 @@ class RenderCoreMustache extends RenderCore
     {
         $this->domain = $domain;
         $this->output_filter = new \Nelliel\OutputFilter();
-        $this->file_handler = new \Nelliel\Utility\FileHandler();
+        $this->file_handler = nel_utilities()->fileHandler();
         $this->escaper = new \phpDOMExtend\DOMEscaper();
         $this->template_loaders['file'] = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(),
                 ['extension' => '.html']);

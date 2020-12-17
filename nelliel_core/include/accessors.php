@@ -35,7 +35,7 @@ function nel_request_ip_address(bool $hashed = false)
 
     if ($hashed)
     {
-        if(!isset($hashed_ip_address))
+        if (!isset($hashed_ip_address))
         {
             $hashed_ip_address = nel_ip_hash($_SERVER['REMOTE_ADDR']);
         }
@@ -51,4 +51,16 @@ function nel_request_ip_address(bool $hashed = false)
 
         return $ip_address;
     }
+}
+
+function nel_utilities()
+{
+    static $utilities;
+
+    if (!isset($utilities))
+    {
+        $utilities = new \Nelliel\Utility\Utilities();
+    }
+
+    return $utilities;
 }

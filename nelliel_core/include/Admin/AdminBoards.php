@@ -152,8 +152,7 @@ class AdminBoards extends AdminHandler
             $this->database->executePrepared($prepared, [$domain->reference('log_table')]);
         }
 
-        $file_handler = new \Nelliel\Utility\FileHandler();
-        $file_handler->eraserGun($domain->reference('board_path'));
+        nel_utilities()->fileHandler()->eraserGun($domain->reference('board_path'));
         $domain->deleteCache();
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);

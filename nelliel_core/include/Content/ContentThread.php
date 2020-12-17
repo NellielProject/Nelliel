@@ -48,7 +48,7 @@ class ContentThread extends ContentHandler
             $this->page_path = $this->domain->reference('page_path');
         }
 
-        $this->archive_prune = new \Nelliel\ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
+        $this->archive_prune = new \Nelliel\ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
         $this->storeMoar(new Moar());
     }
 
@@ -121,7 +121,7 @@ class ContentThread extends ContentHandler
 
     public function createDirectories()
     {
-        $file_handler = new \Nelliel\Utility\FileHandler();
+        $file_handler = nel_utilities()->fileHandler();
         $file_handler->createDirectory($this->src_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM);
         $file_handler->createDirectory($this->preview_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM);
         $file_handler->createDirectory($this->page_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM);
@@ -164,7 +164,7 @@ class ContentThread extends ContentHandler
 
     protected function removeFromDisk()
     {
-        $file_handler = new \Nelliel\Utility\FileHandler();
+        $file_handler = nel_utilities()->fileHandler();
         $file_handler->eraserGun($this->src_path . $this->content_id->threadID());
         $file_handler->eraserGun($this->preview_path . $this->content_id->threadID());
         $file_handler->eraserGun($this->page_path . $this->content_id->threadID());

@@ -247,7 +247,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                         }
 
                         $regen->allBoardPages($domain);
-                        $archive = new \Nelliel\ArchiveAndPrune($domain, new \Nelliel\Utility\FileHandler());
+                        $archive = new \Nelliel\ArchiveAndPrune($domain, nel_utilities()->fileHandler());
                         $archive->updateThreads();
                         $forward = 'board';
                         break;

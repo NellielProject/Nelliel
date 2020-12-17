@@ -37,7 +37,7 @@ abstract class OutputCore
     protected function utilitySetup()
     {
         $this->site_domain = new \Nelliel\DomainSite(nel_database());
-        $this->file_handler = new \Nelliel\Utility\FileHandler();
+        $this->file_handler = nel_utilities()->fileHandler();
         $this->output_filter = new \Nelliel\OutputFilter();
     }
 

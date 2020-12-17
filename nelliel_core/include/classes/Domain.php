@@ -35,8 +35,8 @@ abstract class Domain
     protected function utilitySetup()
     {
         $this->front_end_data = new FrontEndData($this->database);
-        $this->file_handler = new \Nelliel\Utility\FileHandler();
-        $this->cache_handler = new \Nelliel\Utility\CacheHandler();
+        $this->file_handler = nel_utilities()->fileHandler();
+        $this->cache_handler = nel_utilities()->cacheHandler();
         $this->translator = new \Nelliel\Language\Translator($this);
         $this->language = new \Nelliel\Language\Language();
     }
@@ -150,10 +150,5 @@ abstract class Domain
         $settings = $this->loadSettingsFromDatabase();
         $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/', 'domain_settings.php',
                 '$domain_settings = ' . var_export($settings, true) . ';');
-    }
-
-    public function cacheHandler()
-    {
-        return $this->cache_handler;
     }
 }

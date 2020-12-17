@@ -52,8 +52,8 @@ class Regen
 
     public function boardList(Domain $domain)
     {
-        $board_json = new \Nelliel\API\JSON\JSONBoard($domain, new \Nelliel\Utility\FileHandler());
-        $board_list_json = new \Nelliel\API\JSON\JSONBoardList($domain, new \Nelliel\Utility\FileHandler());
+        $board_json = new \Nelliel\API\JSON\JSONBoard($domain, nel_utilities()->fileHandler());
+        $board_list_json = new \Nelliel\API\JSON\JSONBoardList($domain, nel_utilities()->fileHandler());
         $board_ids = $domain->database()->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
                 PDO::FETCH_COLUMN);
 

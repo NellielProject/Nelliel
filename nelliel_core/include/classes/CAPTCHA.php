@@ -21,7 +21,7 @@ class CAPTCHA
         $this->domain = $domain;
         $this->database = $domain->database();
         $this->site_domain = new DomainSite($this->database);
-        $this->file_handler = new \Nelliel\Utility\FileHandler();
+        $this->file_handler = nel_utilities()->fileHandler();
     }
 
     public function dispatch(array $inputs)
@@ -61,7 +61,7 @@ class CAPTCHA
             return;
         }
 
-        $rate_limit = new \Nelliel\RateLimit($this->database);
+        $rate_limit = nel_utilities()->rateLimit();
         $hashed_ip_address = nel_request_ip_address(true);
         $attempt_time = time();
 
