@@ -31,7 +31,9 @@ class OutputCatalog extends OutputCore
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->render(['header_type' => 'general'], true);
         $this->render_data['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->id() . '/';
-        $threads = $this->database->executeFetchAll('SELECT * FROM "' . $this->domain->reference('threads_table') . '"',
+        $threads = $this->database->executeFetchAll(
+                'SELECT * FROM "' . $this->domain->reference('threads_table') .
+                '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC',
                 PDO::FETCH_ASSOC);
         $thread_count = 1;
 
@@ -50,7 +52,8 @@ class OutputCatalog extends OutputCore
 
             $post_content_id = new \Nelliel\Content\ContentId(
                     'cid_' . $thread['thread_id'] . '_' . $first_post['post_number']);
-            $thread_page_web_path = $this->domain->reference('page_web_path') . $thread['thread_id'] . '/thread-' . $thread['thread_id'] . '.html';
+            $thread_page_web_path = $this->domain->reference('page_web_path') . $thread['thread_id'] . '/thread-' .
+                    $thread['thread_id'] . '.html';
             $thread_data['open_url'] = $thread_page_web_path;
 
             if (!empty($first_post['subject']))
@@ -122,8 +125,8 @@ class OutputCatalog extends OutputCore
 
                 $thread_data['preview_width'] = $width;
                 $thread_data['preview_height'] = $height;
-                $thread_preview_web_path = $this->domain->reference('preview_web_path') . $thread['thread_id'] . '/' . $first_post['post_number'] .
-                        '/';
+                $thread_preview_web_path = $this->domain->reference('preview_web_path') . $thread['thread_id'] . '/' .
+                        $first_post['post_number'] . '/';
                 $thread_data['preview_url'] = $thread_preview_web_path . $first_file['preview_name'] . '.' .
                         $first_file['preview_extension'];
             }

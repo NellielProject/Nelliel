@@ -24,12 +24,9 @@ class OutputHeader extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        if (!isset($parameters['header_type']))
-        {
-            return;
-        }
+        $header_type = $parameters['header_type'] ?? 'general';
 
-        switch ($parameters['header_type'])
+        switch ($header_type)
         {
             case 'general':
                 $output = $this->general($parameters, $data_only);

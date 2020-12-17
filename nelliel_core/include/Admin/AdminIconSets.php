@@ -39,8 +39,7 @@ class AdminIconSets extends AdminHandler
         }
 
         $icon_set_id = $_GET['icon-set-id'];
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
-        $icon_set_inis = $front_end_data->getIconSetInis();
+        $icon_set_inis = $this->domain->frontEndData()->getIconSetInis();
 
         foreach ($icon_set_inis as $ini)
         {

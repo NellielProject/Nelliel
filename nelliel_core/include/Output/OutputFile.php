@@ -149,11 +149,10 @@ class OutputFile extends OutputCore
                 }
                 else if ($this->domain->setting('use_file_icon'))
                 {
-                    $front_end_data = new \Nelliel\FrontEndData($this->domain->database());
-                    $icon_set = $front_end_data->iconSet($this->domain->setting('icon_set_id'));
-                    $web_path = $front_end_data->iconSetIsCore($this->domain->setting('icon_set_id')) ? NEL_CORE_ICON_SETS_WEB_PATH : NEL_CUSTOM_ICON_SETS_WEB_PATH;
+                    $icon_set = $this->domain->frontEndData()->iconSet($this->domain->setting('icon_set_id'));
+                    $web_path = $this->domain->frontEndData()->iconSetIsCore($this->domain->setting('icon_set_id')) ? NEL_CORE_ICON_SETS_WEB_PATH : NEL_CUSTOM_ICON_SETS_WEB_PATH;
                     $icons_web_path = $web_path . $icon_set['directory'] . '/';
-                    $file_path = $front_end_data->iconSetIsCore($this->domain->setting('icon_set_id')) ? NEL_CORE_ICON_SETS_FILES_PATH : NEL_CUSTOM_ICON_SETS_FILES_PATH;
+                    $file_path = $this->domain->frontEndData()->iconSetIsCore($this->domain->setting('icon_set_id')) ? NEL_CORE_ICON_SETS_FILES_PATH : NEL_CUSTOM_ICON_SETS_FILES_PATH;
                     $icons_file_path = $file_path . $icon_set['directory'] . '/';
                     $format_icon = utf8_strtolower($file['format']) . '.png';
                     $type_icon = utf8_strtolower($file['type']) . '.png';

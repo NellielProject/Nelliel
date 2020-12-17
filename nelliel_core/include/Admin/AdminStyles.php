@@ -39,8 +39,7 @@ class AdminStyles extends AdminHandler
         }
 
         $style_id = $_GET['style-id'];
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
-        $style_inis = $front_end_data->getStyleInis();
+        $style_inis = $this->domain->frontEndData()->getStyleInis();
 
         foreach ($style_inis as $ini)
         {

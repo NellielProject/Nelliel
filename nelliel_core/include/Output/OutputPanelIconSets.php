@@ -68,8 +68,7 @@ class OutputPanelIconSets extends OutputCore
             $this->render_data['installed_list'][] = $set_data;
         }
 
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
-        $icon_set_inis = $front_end_data->getIconSetInis();
+        $icon_set_inis = $this->domain->frontEndData()->getIconSetInis();
         $bgclass = 'row1';
 
         foreach ($icon_set_inis as $icon_set)

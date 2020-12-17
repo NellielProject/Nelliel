@@ -39,8 +39,7 @@ class AdminTemplates extends AdminHandler
         }
 
         $template_id = $_GET['template-id'];
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
-        $template_inis = $front_end_data->getTemplateInis();
+        $template_inis = $this->domain->frontEndData()->getTemplateInis();
         $info = '';
 
         foreach ($template_inis as $ini)

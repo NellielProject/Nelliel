@@ -38,7 +38,6 @@ abstract class OutputCore
     {
         $this->site_domain = new \Nelliel\DomainSite(nel_database());
         $this->file_handler = new \Nelliel\Utility\FileHandler();
-        $this->cache_handler = new \Nelliel\Utility\CacheHandler();
         $this->output_filter = new \Nelliel\OutputFilter();
     }
 

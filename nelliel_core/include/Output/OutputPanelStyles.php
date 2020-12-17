@@ -69,8 +69,7 @@ class OutputPanelStyles extends OutputCore
             $this->render_data['installed_list'][] = $style_data;
         }
 
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
-        $style_inis = $front_end_data->getStyleInis();
+        $style_inis = $this->domain->frontEndData()->getStyleInis();
         $bgclass = 'row1';
 
         foreach ($style_inis as $style)

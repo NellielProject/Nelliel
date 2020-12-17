@@ -151,4 +151,9 @@ abstract class Domain
         $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/', 'domain_settings.php',
                 '$domain_settings = ' . var_export($settings, true) . ';');
     }
+
+    public function cacheHandler()
+    {
+        return $this->cache_handler;
+    }
 }
