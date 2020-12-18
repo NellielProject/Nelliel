@@ -65,7 +65,6 @@ class OutputPanelStyles extends OutputCore
                             ['module' => 'admin', 'section' => 'styles', 'actions' => 'remove',
                                 'style-id' => $style['asset_id']]);
             $style_data['is_core'] = $this->domain->frontEndData()->styleIsCore($style['asset_id']);
-
             $this->render_data['installed_list'][] = $style_data;
         }
 

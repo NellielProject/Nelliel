@@ -63,6 +63,7 @@ class OutputPanelTemplates extends OutputCore
                     http_build_query(
                             ['module' => 'admin', 'section' => 'templates', 'actions' => 'remove',
                                 'template-id' => $template['template_id']]);
+            $template_data['is_core'] = $this->domain->frontEndData()->templateIsCore($template['template_id']);
             $this->render_data['installed_list'][] = $template_data;
         }
 
@@ -83,8 +84,6 @@ class OutputPanelTemplates extends OutputCore
                     http_build_query(
                             ['module' => 'admin', 'section' => 'templates', 'actions' => 'add',
                                 'template-id' => $template['id']]);
-            $template_data['is_core'] = $this->domain->frontEndData()->templateIsCore($template['id']);
-
             $this->render_data['available_list'][] = $template_data;
         }
 

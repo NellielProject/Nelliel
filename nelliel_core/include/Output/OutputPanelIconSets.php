@@ -64,7 +64,6 @@ class OutputPanelIconSets extends OutputCore
                             ['module' => 'admin', 'section' => 'icon-sets', 'actions' => 'remove',
                                 'icon-set-id' => $icon_set['asset_id']]);
             $set_data['is_core'] = $this->domain->frontEndData()->iconSetIsCore($icon_set['asset_id']);
-
             $this->render_data['installed_list'][] = $set_data;
         }
 
