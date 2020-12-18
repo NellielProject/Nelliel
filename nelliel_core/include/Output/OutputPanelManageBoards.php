@@ -42,8 +42,8 @@ class OutputPanelManageBoards extends OutputCore
                 $output = $this->panel($parameters, $data_only);
                 break;
 
-            case 'remove_interstitial':
-                $output = $this->removeInterstitial($parameters, $data_only);
+            case 'remove_warning':
+                $output = $this->removeWarning($parameters, $data_only);
                 break;
         }
 
@@ -88,7 +88,8 @@ class OutputPanelManageBoards extends OutputCore
                 $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         http_build_query(
                                 ['module' => 'admin', 'section' => 'manage-boards',
-                                    'board_id' => $board_info['board_id'], 'actions' => 'unlock', 'domain_id' => '_site_']);
+                                    'board_id' => $board_info['board_id'], 'actions' => 'unlock',
+                                    'domain_id' => '_site_']);
                 $board_data['status'] = _gettext('Locked');
                 $board_data['lock_text'] = _gettext('Unlock Board');
             }
@@ -110,7 +111,7 @@ class OutputPanelManageBoards extends OutputCore
         return $output;
     }
 
-    private function removeInterstitial(array $parameters, bool $data_only)
+    private function removeWarning(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -120,11 +121,13 @@ class OutputPanelManageBoards extends OutputCore
             'sub_header' => _gettext('Confirm Board Deletion')];
         $this->render_data['header'] = $output_header->render(
                 ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
-        $this->render_data['message'] = $parameters['message'];
-        $this->render_data['continue_link_text'] = $parameters['continue_link']['text'];
-        $this->render_data['continue_url'] = $parameters['continue_link']['href'];
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('interstitial/board_removal',
-                $this->render_data);
+        $this->render_data['continue_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                http_build_query(
+                        ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove',
+                            'action-confirmed' => 'true', 'board_id' => $_GET['board_id'], 'domain_id' => '_site_']);
+        $this->render_data['board_id'] = $_GET['board_id'];
+        $this->render_data['body'] = $this->render_core->renderFromTemplateFile(
+                'panels/interstitials/board_remove_warning', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

@@ -125,7 +125,7 @@ class Dispatch
                     }
                     else
                     {
-                        $admin_handler->createInterstitial();
+                        $admin_handler->createInterstitial('remove_warning');
                     }
                 }
                 else if ($action === 'lock')

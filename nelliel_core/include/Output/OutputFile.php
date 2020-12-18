@@ -27,7 +27,7 @@ class OutputFile extends OutputCore
     {
         $this->renderSetup();
         $post_data = $parameters['post_data'] ?? array();
-        $file = $parameters['file_data'] ?? $this->getFileFromDatabase($post_data['post_number'], $content_order);
+        $file = $parameters['file_data'] ?? array();
         $web_paths = $parameters['web_paths'] ?? array();
         $post_type_class = $post_data['op'] == 1 ? 'op-' : 'reply-';
         $multiple = $post_data['content_count'] > 1;
@@ -203,20 +203,5 @@ class OutputFile extends OutputCore
 
         $output = $this->output('thread/file_info', $data_only, true);
         return $output;
-    }
-
-    public function getFileFromDatabase($post_id)
-    {
-        $query = 'SELECT * FROM "' . $domain->reference('content_table') .
-                '" WHERE "post_ref" = ? ORDER BY "content_order" ASC';
-        $prepared = $this->database->prepare($query);
-        $file_data = $this->database->executePreparedFetchAll($prepared, [$post_id], PDO::FETCH_ASSOC);
-
-        if (empty($file_data))
-        {
-            $file_data = array();
-        }
-
-        return $file_data;
     }
 }

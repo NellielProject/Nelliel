@@ -43,7 +43,7 @@ class AdminBoards extends AdminHandler
         }
 
         $site_domain = new \Nelliel\DomainSite($this->database);
-        $board_id = $_POST['new_board_id'];
+        $board_id = trim($_POST['new_board_id']);
 
         if (nel_true_empty($board_id))
         {
@@ -189,19 +189,10 @@ class AdminBoards extends AdminHandler
         $this->outputMain(true);
     }
 
-    public function createInterstitial()
+    public function createInterstitial(string $which)
     {
-        $message = _gettext(
-                'Are you certain you want to delete the board? Everything will be gone and this cannot be undone!');
-        $continue_link['href'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                        ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove',
-                            'action-confirmed' => 'true', 'board_id' => $_GET['board_id'], 'domain_id' => '_site_']);
-        $continue_link['text'] = _gettext('Confirm and delete the board.');
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain, false);
-        $output_panel->render(
-                ['section' => 'remove_interstitial', 'user' => $this->session_user, 'message' => $message,
-                    'continue_link' => $continue_link], false);
+        $output_panel->render(['section' => $which, 'user' => $this->session_user], false);
         $this->outputMain(false);
     }
 
