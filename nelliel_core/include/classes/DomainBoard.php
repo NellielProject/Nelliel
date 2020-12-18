@@ -18,9 +18,9 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();
-        $templates_file_path = ($this->front_end_data->templateIsCore($this->setting('template_id'))) ? NEL_CORE_TEMPLATES_FILES_PATH : NEL_CUSTOM_TEMPLATES_FILES_PATH;
         $this->templatePath(
-                $templates_file_path . $this->front_end_data->template($this->setting('template_id'))['directory']);
+                NEL_TEMPLATES_FILES_PATH .
+                $this->front_end_data->template($this->setting('template_id'))['directory']);
         $this->global_variation = new DomainAllBoards($this->database);
     }
 

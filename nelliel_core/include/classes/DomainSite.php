@@ -21,9 +21,9 @@ class DomainSite extends Domain implements NellielCacheInterface
         $this->settings_cache_file = $this->domain_id . '/' . 'domain_settings.php';
         $this->utilitySetup();
         $this->locale();
-        $templates_file_path = ($this->front_end_data->templateIsCore($this->setting('template_id'))) ? NEL_CORE_TEMPLATES_FILES_PATH : NEL_CUSTOM_TEMPLATES_FILES_PATH;
         $this->templatePath(
-                $templates_file_path . $this->front_end_data->template($this->setting('template_id'))['directory']);
+                NEL_TEMPLATES_FILES_PATH .
+                $this->front_end_data->template($this->setting('template_id'))['directory']);
     }
 
     protected function loadSettings()

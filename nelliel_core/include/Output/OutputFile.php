@@ -150,10 +150,8 @@ class OutputFile extends OutputCore
                 else if ($this->domain->setting('use_file_icon'))
                 {
                     $icon_set = $this->domain->frontEndData()->iconSet($this->domain->setting('icon_set_id'));
-                    $web_path = $this->domain->frontEndData()->iconSetIsCore($this->domain->setting('icon_set_id')) ? NEL_CORE_ICON_SETS_WEB_PATH : NEL_CUSTOM_ICON_SETS_WEB_PATH;
-                    $icons_web_path = $web_path . $icon_set['directory'] . '/';
-                    $file_path = $this->domain->frontEndData()->iconSetIsCore($this->domain->setting('icon_set_id')) ? NEL_CORE_ICON_SETS_FILES_PATH : NEL_CUSTOM_ICON_SETS_FILES_PATH;
-                    $icons_file_path = $file_path . $icon_set['directory'] . '/';
+                    $icons_web_path = NEL_ICON_SETS_WEB_PATH . $icon_set['directory'] . '/';
+                    $icons_file_path = NEL_ICON_SETS_FILES_PATH . $icon_set['directory'] . '/';
                     $format_icon = utf8_strtolower($file['format']) . '.png';
                     $type_icon = utf8_strtolower($file['type']) . '.png';
 
@@ -182,7 +180,7 @@ class OutputFile extends OutputCore
 
                 if ($file['spoiler'])
                 {
-                    $this->render_data['preview_url'] = NEL_CORE_IMAGES_WEB_PATH .
+                    $this->render_data['preview_url'] = NEL_IMAGES_WEB_PATH .
                             'covers/spoiler_alert.png';
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
@@ -190,7 +188,7 @@ class OutputFile extends OutputCore
 
                 if ($file['deleted'])
                 {
-                    $this->render_data['preview_url'] = NEL_CORE_IMAGES_WEB_PATH .
+                    $this->render_data['preview_url'] = NEL_IMAGES_WEB_PATH .
                             'covers/deleted_file.png';
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';

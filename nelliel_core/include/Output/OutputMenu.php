@@ -54,17 +54,7 @@ class OutputMenu extends OutputCore
             $info = json_decode($style['info'], true);
             $style_data['stylesheet'] = ($style['is_default']) ? 'stylesheet' : 'alternate stylesheet';
             $style_data['style_id'] = $style['asset_id'];
-
-            if ($this->domain->frontEndData()->styleIsCore($style['asset_id']))
-            {
-                $style_data['stylesheet_url'] = NEL_CORE_STYLES_WEB_PATH . $info['directory'] . '/' . $info['main_file'];
-            }
-            else
-            {
-                $style_data['stylesheet_url'] = NEL_CUSTOM_STYLES_WEB_PATH . $info['directory'] . '/' .
-                        $info['main_file'];
-            }
-
+            $style_data['stylesheet_url'] = NEL_STYLES_WEB_PATH . $info['directory'] . '/' . $info['main_file'];
             $style_data['style_name'] = $info['name'];
             $render_data[] = $style_data;
         }
