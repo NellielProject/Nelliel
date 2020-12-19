@@ -14,11 +14,7 @@ class OutputPostingForm extends OutputCore
 
     function __construct(Domain $domain, bool $write_mode)
     {
-        $this->domain = $domain;
-        $this->writeMode($write_mode);
-        $this->database = $this->domain->database();
-        $this->selectRenderCore('mustache');
-        $this->utilitySetup();
+        parent::__construct($domain, $write_mode);
     }
 
     public function render(array $parameters, bool $data_only)

@@ -15,11 +15,7 @@ class OutputPanelRoles extends OutputCore
 
     function __construct(Domain $domain, bool $write_mode)
     {
-        $this->domain = $domain;
-        $this->write_mode = $write_mode;
-        $this->database = $this->domain->database();
-        $this->selectRenderCore('mustache');
-        $this->utilitySetup();
+        parent::__construct($domain, $write_mode);
     }
 
     public function main(array $parameters, bool $data_only)

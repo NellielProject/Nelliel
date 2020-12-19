@@ -14,10 +14,7 @@ class OutputPanelBoard extends OutputCore
 
     function __construct(Domain $domain, bool $write_mode)
     {
-        $this->domain = $domain;
-        $this->write_mode = $write_mode;
-        $this->selectRenderCore('mustache');
-        $this->utilitySetup();
+        parent::__construct($domain, $write_mode);
     }
 
     public function render(array $parameters, bool $data_only)

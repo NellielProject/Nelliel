@@ -7,6 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domain;
+
 abstract class OutputCore
 {
     protected $dom;
@@ -16,7 +18,6 @@ abstract class OutputCore
     protected $render_core;
     protected $render_data = array();
     protected $file_handler;
-    protected $cache_handler;
     protected $output_filter;
     protected $timer_start = 0;
     protected $timer_end = 0;
@@ -24,19 +25,23 @@ abstract class OutputCore
     protected $static_output = false;
     protected $write_mode = false;
 
+    function __construct(Domain $domain, bool $write_mode)
+    {
+        $this->domain = $domain;
+        $this->write_mode = $write_mode;
+        $this->database = $domain->database();
+        $this->selectRenderCore('mustache');
+        $this->site_domain = new \Nelliel\DomainSite(nel_database());
+        $this->file_handler = nel_utilities()->fileHandler();
+        $this->output_filter = new \Nelliel\OutputFilter();
+    }
+
     // Standard setup when beginning a render
     protected function renderSetup()
     {
         $this->render_data = array();
         $this->startTimer(); // Begin rendering timer
         $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale()); // Convert underscore notation to hyphen for HTML
-    }
-
-    protected function utilitySetup()
-    {
-        $this->site_domain = new \Nelliel\DomainSite(nel_database());
-        $this->file_handler = nel_utilities()->fileHandler();
-        $this->output_filter = new \Nelliel\OutputFilter();
     }
 
     protected function selectRenderCore(string $core_id)
@@ -111,16 +116,6 @@ abstract class OutputCore
         }
 
         return $output;
-    }
-
-    public function staticOutput(bool $status = null)
-    {
-        if (!is_null($status))
-        {
-            $this->static_output = $status;
-        }
-
-        return $this->static_output;
     }
 
     public function writeMode(bool $status = null)
