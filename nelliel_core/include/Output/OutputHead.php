@@ -32,7 +32,7 @@ class OutputHead extends OutputCore
                 $this->domain->id() . '\', \'' . $session->inModmode($this->domain) . '\');};';
         $this->render_data['js_set_style'] = 'setStyle(nelliel.core.getCookie("style-' . $this->domain->id() . '"));';
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
-        $this->render_data['stylesheets'] = $output_menu->render(['menu' => 'styles'], true);
+        $this->render_data['stylesheets'] = $output_menu->styles([], true);
 
         if ($this->domain->setting('use_honeypot'))
         {

@@ -23,6 +23,7 @@ class AdminStyles extends AdminHandler
 
     public function renderPanel()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelStyles($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
@@ -90,5 +91,13 @@ class AdminStyles extends AdminHandler
                 'UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'style\'');
         $this->database->executePrepared($prepared, [$style_id]);
         $this->outputMain(true);
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_styles'))
+        {
+            nel_derp(440, _gettext('You are not allowed to access the styles panel.'));
+        }
     }
 }

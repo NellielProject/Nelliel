@@ -25,12 +25,6 @@ class OutputPanelBoardSettings extends OutputCore
     public function render(array $parameters, bool $data_only)
     {
         $user = $parameters['user'];
-
-        if (!$user->checkPermission($this->domain, 'perm_board_config'))
-        {
-            nel_derp(330, _gettext('You are not allowed to access the board settings.'));
-        }
-
         $this->renderSetup();
         $defaults = $parameters['defaults'] ?? false;
         $filetypes = new \Nelliel\FileTypes($this->database);
@@ -48,8 +42,7 @@ class OutputPanelBoardSettings extends OutputCore
             $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')];
         }
 
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
 
         if ($defaults)
         {

@@ -41,7 +41,7 @@ class OutputOverboard extends OutputCore
         $output_head = new OutputHead($this->site_domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->site_domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->render(['header_type' => 'board'], true);
+        $this->render_data['header'] = $output_header->general([], true);
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_OVERBOARD_TABLE . '" ORDER BY "last_bump_time" DESC, "last_bump_time_milli" DESC');
         $thread_list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);

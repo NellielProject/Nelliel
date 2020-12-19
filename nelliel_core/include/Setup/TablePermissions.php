@@ -42,36 +42,37 @@ class TablePermissions extends TableHandler
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow(['perm_site_config', 'Access to site configuration']);
-        $this->insertDefaultRow(['perm_manage_permissions', 'Add or remove permissions']);
-        $this->insertDefaultRow(['perm_manage_templates', 'Manage templates']);
-        $this->insertDefaultRow(['perm_manage_styles', 'Manage styles']);
-        $this->insertDefaultRow(['perm_manage_icon_sets', 'Manage icon sets']);
-        $this->insertDefaultRow(['perm_manage_users', 'Manage users']);
-        $this->insertDefaultRow(['perm_manage_roles', 'Manage roles']);
+        $this->insertDefaultRow(['perm_manage_bans', 'Manage bans']);
+        $this->insertDefaultRow(['perm_manage_boards', 'Manage boards']);
+        $this->insertDefaultRow(['perm_manage_board_defaults', 'View and modify board default values']);
         $this->insertDefaultRow(['perm_manage_filetypes', 'Manage filetypes']);
-        $this->insertDefaultRow(['perm_extract_gettext', 'Extract Gettext strings']);
-        $this->insertDefaultRow(['perm_board_defaults', 'View and modify board default values']);
-        $this->insertDefaultRow(['perm_board_config_lock_override', 'Override board config lock']);
-        $this->insertDefaultRow(['perm_manage_news', 'Access to the news']);
         $this->insertDefaultRow(['perm_manage_file_filters', 'Manage file filters']);
-        $this->insertDefaultRow(['perm_regen_cache', 'Regenerate caches']);
-        $this->insertDefaultRow(['perm_regen_pages', 'Regenerate pages']);
-        $this->insertDefaultRow(['perm_assign_role', 'Assign roles to a user']);
+        $this->insertDefaultRow(['perm_manage_icon_sets', 'Manage icon sets']);
+        $this->insertDefaultRow(['perm_manage_logs', 'Access to the logs']);
+        $this->insertDefaultRow(['perm_manage_news', 'Access to the news']);
+        $this->insertDefaultRow(['perm_manage_permissions', 'Add or remove permissions']);
+        $this->insertDefaultRow(['perm_manage_reports', 'Manage reports']);
+        $this->insertDefaultRow(['perm_manage_roles', 'Manage roles']);
+        $this->insertDefaultRow(['perm_manage_site_config', 'Access to site configuration']);
+        $this->insertDefaultRow(['perm_manage_styles', 'Manage styles']);
+        $this->insertDefaultRow(['perm_manage_templates', 'Manage templates']);
+        $this->insertDefaultRow(['perm_manage_users', 'Manage users']);
+        $this->insertDefaultRow(['perm_board_config', 'Access the Board Settings panel']);
+        $this->insertDefaultRow(['perm_board_config_lock_override', 'Override board config lock']);
         $this->insertDefaultRow(['perm_board_create', 'Create a board']);
         $this->insertDefaultRow(['perm_board_delete', 'Delete a board']);
-        $this->insertDefaultRow(['perm_board_transfer', 'Transfer board ownership']);
-        $this->insertDefaultRow(['perm_board_lock', 'Lock a board']);
-        $this->insertDefaultRow(['perm_board_config', 'Access the Board Settings panel']);
-        $this->insertDefaultRow(['perm_manage_bans', 'Manage bans']);
-        $this->insertDefaultRow(['perm_board_sticky_posts', 'Sticky/unsticky posts and threads']);
-        $this->insertDefaultRow(['perm_board_lock_posts', 'Lock/unlock posts and threads']);
-        $this->insertDefaultRow(['perm_board_post_in_locked', 'Post in locked thread']);
-        $this->insertDefaultRow(['perm_board_post_as_staff', 'Post as staff (displays capcode)']);
-        $this->insertDefaultRow(['perm_board_mod_comment', 'Add staff commentary to a post']);
         $this->insertDefaultRow(['perm_board_delete_posts', 'Delete posts and threads']);
-        $this->insertDefaultRow(['perm_manage_reports', 'Manage reports']);
+        $this->insertDefaultRow(['perm_board_lock', 'Lock a board']);
+        $this->insertDefaultRow(['perm_board_lock_posts', 'Lock/unlock posts and threads']);
+        $this->insertDefaultRow(['perm_board_mod_comment', 'Add staff commentary to a post']);
+        $this->insertDefaultRow(['perm_board_mod_mode', 'Access to Moderator Mode']);
+        $this->insertDefaultRow(['perm_board_post_as_staff', 'Post as staff (displays capcode)']);
+        $this->insertDefaultRow(['perm_board_post_in_locked', 'Post in locked thread']);
+        $this->insertDefaultRow(['perm_board_sticky_posts', 'Sticky/unsticky posts and threads']);
+        $this->insertDefaultRow(['perm_board_transfer', 'Transfer board ownership']);
+        $this->insertDefaultRow(['perm_extract_gettext', 'Extract Gettext strings']);
+        $this->insertDefaultRow(['perm_regen_cache', 'Regenerate caches']);
+        $this->insertDefaultRow(['perm_regen_pages', 'Regenerate pages']);
         $this->insertDefaultRow(['perm_view_unhashed_ip', 'View unhashed IP addresses']);
-        $this->insertDefaultRow(['perm_mod_mode', 'Access to Moderator Mode']);
     }
 }

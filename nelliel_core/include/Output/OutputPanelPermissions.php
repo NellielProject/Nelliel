@@ -24,20 +24,12 @@ class OutputPanelPermissions extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $user = $parameters['user'];
-
-        if (!$user->checkPermission($this->domain, 'perm_permissions_access'))
-        {
-            nel_derp(450, _gettext('You are not allowed to manage permissions.'));
-        }
-
         $this->renderSetup();
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Permissions')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $permissions = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_PERMISSIONS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .

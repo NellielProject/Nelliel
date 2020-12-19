@@ -166,4 +166,8 @@ class AdminThreads extends AdminHandler
                     'ban_type' => $ban_type], false);
         $this->outputMain(false);
     }
+
+    private function verifyAccess()
+    {
+    }
 }

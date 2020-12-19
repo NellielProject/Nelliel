@@ -23,6 +23,7 @@ class AdminFileFilters extends AdminHandler
 
     public function renderPanel()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelFileFilters($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
@@ -74,5 +75,13 @@ class AdminFileFilters extends AdminHandler
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_FILES_FILTERS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
         $this->outputMain(true);
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
+        {
+            nel_derp(340, _gettext('You are not allowed to access the file filters.'));
+        }
     }
 }

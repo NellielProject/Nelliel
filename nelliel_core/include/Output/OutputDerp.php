@@ -26,7 +26,7 @@ class OutputDerp extends OutputCore
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->render(['header_type' => 'general'], true);
+        $this->render_data['header'] = $output_header->general([], true);
         $diagnostic = $parameters['diagnostic'];
         $this->render_data['error_id'] = $diagnostic['error_id'];
         $this->render_data['error_message'] = $diagnostic['error_message'];

@@ -24,20 +24,13 @@ class OutputPanelNews extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $user = $parameters['user'];
-
-        if (!$user->checkPermission($this->domain, 'perm_manage_news'))
-        {
-            nel_derp(470, _gettext('You are not allowed to manage news.'));
-        }
-
         $this->renderSetup();
+        $user = $parameters['user'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('News')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $news_entries = $this->database->executeFetchAll('SELECT * FROM "' . NEL_NEWS_TABLE . '" ORDER BY "time" ASC',
                 PDO::FETCH_ASSOC);
         $bgclass = 'row1';

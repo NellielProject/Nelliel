@@ -31,8 +31,7 @@ class OutputAccount extends OutputCore
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('User Account'), 'sub_header' => _gettext('Main')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $this->render_data['user_id'] = $user->id();
         $this->render_data['normal_user'] = true;
         $this->render_data['display_name'] = $user->auth_data['display_name'];

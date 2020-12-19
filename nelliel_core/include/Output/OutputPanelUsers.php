@@ -22,43 +22,14 @@ class OutputPanelUsers extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters, bool $data_only)
-    {
-        if (!isset($parameters['section']))
-        {
-            return;
-        }
-
-        $user = $parameters['user'];
-
-        if (!$user->checkPermission($this->domain, 'perm_manage_users'))
-        {
-            nel_derp(300, _gettext('You are not allowed to manage users.'));
-        }
-
-        switch ($parameters['section'])
-        {
-            case 'panel':
-                $output = $this->renderPanel($parameters, $data_only);
-                break;
-
-            case 'edit':
-                $output = $this->renderEdit($parameters, $data_only);
-                break;
-        }
-
-        return $output;
-    }
-
-    private function renderPanel(array $parameters, bool $data_only)
+    public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Users')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $users = $this->database->executeFetchAll('SELECT * FROM "' . NEL_USERS_TABLE . '"', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
@@ -73,8 +44,10 @@ class OutputPanelUsers extends OutputCore
 
             if ($user_info['owner'] == 0)
             {
-                $user_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=users&actions=edit&user-id=' . $user_info['user_id'];
-                $user_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=users&actions=remove&user-id=' . $user_info['user_id'];
+                $user_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                        'module=admin&section=users&actions=edit&user-id=' . $user_info['user_id'];
+                $user_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                        'module=admin&section=users&actions=remove&user-id=' . $user_info['user_id'];
             }
 
             $this->render_data['users_list'][] = $user_data;
@@ -90,7 +63,12 @@ class OutputPanelUsers extends OutputCore
         return $output;
     }
 
-    private function renderEdit(array $parameters, bool $data_only)
+    public function new(array $parameters, bool $data_only)
+    {
+        $this->edit($parameters, $data_only);
+    }
+
+    public function edit(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $user_id = $parameters['user_id'] ?? '';
@@ -99,8 +77,7 @@ class OutputPanelUsers extends OutputCore
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit User')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
 
         if (empty($user_id))
         {
@@ -111,7 +88,8 @@ class OutputPanelUsers extends OutputCore
             $edit_user = $authorization->getUser($user_id);
             $this->render_data['user_id'] = $edit_user->auth_data['user_id'];
             $this->render_data['display_name'] = $edit_user->auth_data['display_name'];
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=users&actions=update&user-id=' . $user_id;
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    'module=admin&section=users&actions=update&user-id=' . $user_id;
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';
         }
 
@@ -131,7 +109,8 @@ class OutputPanelUsers extends OutputCore
                 $this->render_data['site_role_id'] = $site_role;
             }
 
-            $domain_list = $this->database->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
+            $domain_list = $this->database->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
+                    PDO::FETCH_ASSOC);
             array_unshift($domain_list, ['board_id' => '_site_']); // For site domain
             $query = 'SELECT "role_id", "role_title" FROM "' . NEL_ROLES_TABLE . '"';
             $roles = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
@@ -154,7 +133,7 @@ class OutputPanelUsers extends OutputCore
                     $role_options['option_id'] = $role['role_id'];
                     $role_options['option_name'] = $role['role_title'];
 
-                    if($role['role_id'] === $role_id)
+                    if ($role['role_id'] === $role_id)
                     {
                         $role_options['option_selected'] = 'selected';
                     }

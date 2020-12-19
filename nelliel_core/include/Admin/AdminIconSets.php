@@ -23,6 +23,7 @@ class AdminIconSets extends AdminHandler
 
     public function renderPanel()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelIconSets($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
@@ -90,5 +91,13 @@ class AdminIconSets extends AdminHandler
                 'UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'icon-set\'');
         $this->database->executePrepared($prepared, [$icon_set_id]);
         $this->outputMain(true);
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
+        {
+            nel_derp(460, _gettext('You are not allowed to access the icon sets panel.'));
+        }
     }
 }

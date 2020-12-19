@@ -119,9 +119,14 @@ class Session
     {
         $this->init(true);
         $this->terminate();
-        $log_event = new LogEvent($this->domain);
-        $log_event->changeContext('event_id', 'LOGOUT_SUCCESS');
-        $log_event->send(sprintf(_gettext("User %s logged out."), $this->sessionUser()));
+
+        if(!empty(self::$user))
+        {
+            $log_event = new LogEvent($this->domain);
+            $log_event->changeContext('event_id', 'LOGOUT_SUCCESS');
+            $log_event->send(sprintf(_gettext("User %s logged out."), self::$user->id()));
+        }
+
         $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
         $output_login->render([], false);
         nel_clean_exit(false);
@@ -129,6 +134,7 @@ class Session
 
     public function login()
     {
+        $this->doing_login = true;
         $this->init(true);
         $login = new \Nelliel\Account\Login($this->authorization, $this->domain);
         $login_data = $login->validate();
@@ -149,6 +155,7 @@ class Session
         $_SESSION['last_activity'] = $login_data['login_time'];
         session_regenerate_id();
         $this->setCookie();
+        $this->doing_login = false;
     }
 
     public function terminate()
@@ -208,7 +215,7 @@ class Session
 
     public function inModmode(Domain $domain)
     {
-        return $this->isActive() && self::$modmode_requested && self::$user->checkPermission($domain, 'perm_mod_mode');
+        return $this->isActive() && self::$modmode_requested && self::$user->checkPermission($domain, 'perm_board_mod_mode');
     }
 
     public function loggedInOrError()

@@ -22,28 +22,7 @@ class OutputNavigation extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters, bool $data_only)
-    {
-        if (!isset($parameters['navigation']))
-        {
-            return;
-        }
-
-        switch ($parameters['navigation'])
-        {
-            case 'board_links':
-                $output = $this->boardLinks($parameters, $data_only);
-                break;
-
-            case 'site_links':
-                $output = $this->siteLinks($parameters, $data_only);
-                break;
-        }
-
-        return $output;
-    }
-
-    private function boardLinks(array $parameters, bool $data_only)
+    public function boardLinks(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $board_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
@@ -63,7 +42,7 @@ class OutputNavigation extends OutputCore
         return $render_data;
     }
 
-    private function siteLinks(array $parameters, bool $data_only)
+    public function siteLinks(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();

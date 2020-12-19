@@ -22,43 +22,14 @@ class OutputPanelManageBoards extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters, bool $data_only)
-    {
-        if (!isset($parameters['section']))
-        {
-            return;
-        }
-
-        $user = $parameters['user'];
-
-        if (!$user->checkPermission($this->domain, 'perm_manage_boards'))
-        {
-            nel_derp(370, _gettext('You are not allowed to manage boards.'));
-        }
-
-        switch ($parameters['section'])
-        {
-            case 'panel':
-                $output = $this->panel($parameters, $data_only);
-                break;
-
-            case 'remove_warning':
-                $output = $this->removeWarning($parameters, $data_only);
-                break;
-        }
-
-        return $output;
-    }
-
-    private function panel(array $parameters, bool $data_only)
+    public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 'module=admin&section=manage-boards&actions=add&domain=_site_';
         $board_data = $this->database->executeFetchAll(
@@ -111,7 +82,7 @@ class OutputPanelManageBoards extends OutputCore
         return $output;
     }
 
-    private function removeWarning(array $parameters, bool $data_only)
+    public function removeWarning(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -119,8 +90,7 @@ class OutputPanelManageBoards extends OutputCore
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'),
             'sub_header' => _gettext('Confirm Board Deletion')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $this->render_data['continue_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                         ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove',

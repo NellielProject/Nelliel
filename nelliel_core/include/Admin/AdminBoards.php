@@ -27,8 +27,9 @@ class AdminBoards extends AdminHandler
 
     public function renderPanel()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain, false);
-        $output_panel->render(['section' => 'panel', 'user' => $this->session_user], false);
+        $output_panel->main(['user' => $this->session_user], false);
     }
 
     public function creator()
@@ -191,8 +192,16 @@ class AdminBoards extends AdminHandler
 
     public function createInterstitial(string $which)
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain, false);
-        $output_panel->render(['section' => $which, 'user' => $this->session_user], false);
+
+        switch ($which)
+        {
+            case 'remove_warning':
+                $output_panel->removeWarning(['user' => $this->session_user], false);
+                break;
+        }
+
         $this->outputMain(false);
     }
 
@@ -228,5 +237,13 @@ class AdminBoards extends AdminHandler
         }
 
         return $final_id;
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
+        {
+            nel_derp(370, _gettext('You are not allowed to access the boards panel.'));
+        }
     }
 }

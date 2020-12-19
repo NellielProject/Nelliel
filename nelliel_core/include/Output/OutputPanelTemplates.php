@@ -24,20 +24,13 @@ class OutputPanelTemplates extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $user = $parameters['user'];
-
-        if (!$user->checkPermission($this->domain, 'perm_manage_templates'))
-        {
-            nel_derp(420, _gettext('You are not allowed to manage templates.'));
-        }
-
         $this->renderSetup();
+        $user = $parameters['user'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Templates')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $templates = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_TEMPLATES_TABLE . '" ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
         $installed_ids = array();

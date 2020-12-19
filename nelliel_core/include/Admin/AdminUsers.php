@@ -30,14 +30,16 @@ class AdminUsers extends AdminHandler
 
     public function renderPanel()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
-        $output_panel->render(['section' => 'panel', 'user' => $this->session_user], false);
+        $output_panel->main(['user' => $this->session_user], false);
     }
 
     public function creator()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
-        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
+        $output_panel->new(['user' => $this->session_user, 'user_id' => $this->user_id], false);
         $this->outputMain(false);
     }
 
@@ -55,8 +57,9 @@ class AdminUsers extends AdminHandler
 
     public function editor()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
-        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'user_id' => $this->user_id], false);
+        $output_panel->edit(['user' => $this->session_user, 'user_id' => $this->user_id], false);
         $this->outputMain(false);
     }
 
@@ -68,6 +71,11 @@ class AdminUsers extends AdminHandler
         }
 
         $update_user = $this->authorization->getUser($this->user_id);
+
+        if ($update_user->empty())
+        {
+            $update_user = $this->authorization->newUser($this->user_id);
+        }
 
         foreach ($_POST as $key => $value) // TODO: Improve this
         {
@@ -118,5 +126,13 @@ class AdminUsers extends AdminHandler
 
         $this->authorization->removeUser($this->user_id);
         $this->outputMain(true);
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
+        {
+            nel_derp(300, _gettext('You are not allowed to access the users panel.'));
+        }
     }
 }

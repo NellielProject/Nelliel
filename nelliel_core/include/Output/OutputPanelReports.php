@@ -25,20 +25,13 @@ class OutputPanelReports extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $user = $parameters['user'];
-
-        if (!$user->checkPermission($this->domain, 'perm_manage_reports'))
-        {
-            nel_derp(380, _gettext('You are not allowed to manage reports.'));
-        }
-
         $this->renderSetup();
+        $user = $parameters['user'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Reports')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
 
         if ($this->domain->id() !== '_site_')
         {

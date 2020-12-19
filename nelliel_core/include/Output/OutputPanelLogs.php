@@ -30,18 +30,11 @@ class OutputPanelLogs extends OutputCore
         $page = $parameters['page'] ?? 0;
         $entries = $parameters['entries'] ?? 20;
         $row_offset = $page * $entries;
-
-        if (!$user->checkPermission($this->domain, 'perm_manage_file_filters'))
-        {
-            nel_derp(341, _gettext('You are not allowed to access the File Filters panel.'));
-        }
-
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Logs')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
 
         switch ($log_type)
         {

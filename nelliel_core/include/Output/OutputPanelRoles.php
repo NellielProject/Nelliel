@@ -22,44 +22,16 @@ class OutputPanelRoles extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters, bool $data_only)
-    {
-        if (!isset($parameters['section']))
-        {
-            return;
-        }
-
-        $user = $parameters['user'];
-
-        if (!$user->checkPermission($this->domain, 'perm_manage_roles'))
-        {
-            nel_derp(310, _gettext('You are not allowed to manage roles.'));
-        }
-
-        switch ($parameters['section'])
-        {
-            case 'panel':
-                $output = $this->renderPanel($parameters, $data_only);
-                break;
-
-            case 'edit':
-                $output = $this->renderEdit($parameters, $data_only);
-                break;
-        }
-
-        return $output;
-    }
-
-    private function renderPanel(array $parameters, bool $data_only)
+    public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Roles')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
-        $roles = $this->database->executeFetchAll('SELECT * FROM "' . NEL_ROLES_TABLE . '" ORDER BY "role_level" DESC', PDO::FETCH_ASSOC);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
+        $roles = $this->database->executeFetchAll('SELECT * FROM "' . NEL_ROLES_TABLE . '" ORDER BY "role_level" DESC',
+                PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
         foreach ($roles as $role)
@@ -71,8 +43,10 @@ class OutputPanelRoles extends OutputCore
             $role_data['role_level'] = $role['role_level'];
             $role_data['role_title'] = $role['role_title'];
             $role_data['capcode'] = $role['capcode'];
-            $role_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=edit&role-id=' . $role['role_id'];
-            $role_row_nodes['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=remove&role-id=' . $role['role_id'];
+            $role_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=edit&role-id=' .
+                    $role['role_id'];
+            $role_row_nodes['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    'module=admin&section=roles&actions=remove&role-id=' . $role['role_id'];
             $this->render_data['roles_list'][] = $role_data;
         }
 
@@ -87,7 +61,12 @@ class OutputPanelRoles extends OutputCore
         return $output;
     }
 
-    private function renderEdit(array $parameters, bool $data_only)
+    public function new(array $parameters, bool $data_only)
+    {
+        $this->edit($parameters, $data_only);
+    }
+
+    public function edit(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $role_id = $parameters['role_id'] ?? '';
@@ -97,8 +76,7 @@ class OutputPanelRoles extends OutputCore
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit Role')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
 
         if (empty($role_id))
         {
@@ -106,7 +84,8 @@ class OutputPanelRoles extends OutputCore
         }
         else
         {
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=update&role-id=' . $role_id;
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    'module=admin&section=roles&actions=update&role-id=' . $role_id;
         }
 
         if (!empty($role_id))

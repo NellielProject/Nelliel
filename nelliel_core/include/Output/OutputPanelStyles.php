@@ -24,20 +24,13 @@ class OutputPanelStyles extends OutputCore
 
     public function render(array $parameters, bool $data_only)
     {
-        $user = $parameters['user'];
-
-        if (!$user->checkPermission($this->domain, 'perm_manage_styles'))
-        {
-            nel_derp(440, _gettext('You are not allowed to manage styles.'));
-        }
-
         $this->renderSetup();
+        $user = $parameters['user'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Styles')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $styles = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_ASSETS_TABLE .
                 '" WHERE "type" = \'style\' ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);

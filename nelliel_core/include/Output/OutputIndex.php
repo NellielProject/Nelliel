@@ -39,12 +39,11 @@ class OutputIndex extends OutputCore
         {
             $manage_headers['header'] = _gettext('Moderator Mode');
             $manage_headers['sub_header'] = _gettext('View Index');
-            $this->render_data['header'] = $output_header->render(
-                    ['header_type' => 'board', 'manage_headers' => $manage_headers], true);
+            $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
         }
         else
         {
-            $this->render_data['header'] = $output_header->render(['header_type' => 'board'], true);
+            $this->render_data['header'] = $output_header->board([], true);
         }
 
         $thread_list = $this->database->executeFetchAll(

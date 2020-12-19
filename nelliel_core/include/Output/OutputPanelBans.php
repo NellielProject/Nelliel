@@ -27,39 +27,7 @@ class OutputPanelBans extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters, bool $data_only)
-    {
-        if (!isset($parameters['section']))
-        {
-            return;
-        }
-
-        $user = $parameters['user'];
-
-        if (!$user->checkPermission($this->domain, 'perm_manage_bans'))
-        {
-            nel_derp(320, _gettext('You are not allowed to access the Bans panel.'));
-        }
-
-        switch ($parameters['section'])
-        {
-            case 'panel':
-                $output = $this->renderPanel($parameters, $data_only);
-                break;
-
-            case 'add':
-                $output = $this->renderAdd($parameters, $data_only);
-                break;
-
-            case 'modify':
-                $output = $this->renderModify($parameters, $data_only);
-                break;
-        }
-
-        return $output;
-    }
-
-    private function renderPanel(array $parameters, bool $data_only)
+    public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $user = $parameters['user'];
@@ -67,8 +35,7 @@ class OutputPanelBans extends OutputCore
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Bans')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $this->render_data['can_modify'] = $user->checkPermission($this->domain, 'perm_manage_bans');
         $bans_access = new BansAccess($this->database);
 
@@ -100,17 +67,17 @@ class OutputPanelBans extends OutputCore
             $ban_data['appeal'] = $ban_hammer->getData('appeal');
             $ban_data['appeal_response'] = $ban_hammer->getData('appeal_response');
             $ban_data['appeal_status'] = $ban_hammer->getData('appeal_status');
-            $ban_data['modify_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH. 'module=admin&section=bans&actions=edit&ban_id=' .
+            $ban_data['modify_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&actions=edit&ban_id=' .
                     $ban_hammer->getData('ban_id') . '&board_id=' . $this->domain->id();
-                    $ban_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&actions=remove&ban_id=' .
+            $ban_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&actions=remove&ban_id=' .
                     $ban_hammer->getData('ban_id') . '&board_id=' . $this->domain->id();
             $this->render_data['ban_list'][] = $ban_data;
         }
 
         if ($this->domain->id() !== '_site_')
         {
-            $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&actions=new&board_id=' .
-                    $this->domain->id();
+            $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    'module=admin&section=bans&actions=new&board_id=' . $this->domain->id();
         }
         else
         {
@@ -126,15 +93,14 @@ class OutputPanelBans extends OutputCore
         return $output;
     }
 
-    private function renderAdd(array $parameters, bool $data_only)
+    public function new(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Add Ban')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
 
         if ($this->domain->id() !== '_site_')
         {
@@ -147,8 +113,8 @@ class OutputPanelBans extends OutputCore
         $this->render_data['content_ban'] = $this->render_data['ban_type'] === 'CONTENT';
         $post_param = '';
         $this->render_data['unhashed_ip'] = nel_site_domain()->setting('store_unhashed_ip');
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&actions=add&board_id=' .
-                $this->domain->id() . $post_param;
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=admin&section=bans&actions=add&board_id=' . $this->domain->id() . $post_param;
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/bans_panel_add',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
@@ -158,7 +124,7 @@ class OutputPanelBans extends OutputCore
         return $output;
     }
 
-    private function renderModify(array $parameters, bool $data_only)
+    public function modify(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $user = $parameters['user'];
@@ -166,10 +132,9 @@ class OutputPanelBans extends OutputCore
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Modify Ban')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&actions=update&board_id=' .
-                $this->domain->id();
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=admin&section=bans&actions=update&board_id=' . $this->domain->id();
         $ban_id = $_GET['ban_id'];
         $this->render_data['view_unhashed_ip'] = $user->checkPermission($this->domain, 'perm_view_unhashed_ip');
         $ban_hammer = new \Nelliel\BanHammer($this->database);

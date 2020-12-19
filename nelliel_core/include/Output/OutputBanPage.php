@@ -27,7 +27,7 @@ class OutputBanPage extends OutputCore
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->render(['header_type' => 'general'], true);
+        $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['ban_board'] = ($ban_hammer->getData('all_boards') > 0) ? _gettext('All Boards') : $ban_hammer->getData(
                 'board_id');
         $this->render_data['ban_time'] = date("F jS, Y H:i e", $ban_hammer->getData('start_time'));

@@ -26,11 +26,11 @@ class OutputFooter extends OutputCore
     {
         $this->renderSetup();
         $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
-        $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
         if ($this->render_data['show_styles'])
         {
-            $this->render_data['styles'] = $output_menu->render(['menu' => 'styles'], true);
+            $output_menu = new OutputMenu($this->domain, $this->write_mode);
+            $this->render_data['styles'] = $output_menu->styles([], true);
         }
 
         $this->render_data['nelliel_version'] = NELLIEL_VERSION;

@@ -24,6 +24,7 @@ class AdminNews extends AdminHandler
 
     public function renderPanel()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelNews($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
@@ -78,5 +79,13 @@ class AdminNews extends AdminHandler
     {
         $regen = new \Nelliel\Regen();
         $regen->news($this->domain);
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_news'))
+        {
+            nel_derp(470, _gettext('You are not allowed to access the news panel.'));
+        }
     }
 }

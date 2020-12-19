@@ -31,8 +31,7 @@ class OutputPanelMain extends OutputCore
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Main Panel')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ?');
         $user_roles = $this->database->executePreparedFetchAll($prepared, [$user->id()], PDO::FETCH_ASSOC);
         $boards = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
@@ -96,11 +95,11 @@ class OutputPanelMain extends OutputCore
         $this->render_data['roles_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles';
         $this->render_data['module_permissions'] = $user->checkPermission($this->domain, 'perm_manage_permissions');
         $this->render_data['permissions_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=permissions';
-        $this->render_data['module_site_settings'] = $user->checkPermission($this->domain, 'perm_site_config');
+        $this->render_data['module_site_settings'] = $user->checkPermission($this->domain, 'perm_manage_site_config');
         $this->render_data['site_settings_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=site-settings';
         $this->render_data['module_file_filters'] = $user->checkPermission($this->domain, 'perm_manage_file_filters');
         $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=file-filters';
-        $this->render_data['module_board_defaults'] = $user->checkPermission($this->domain, 'perm_board_defaults');
+        $this->render_data['module_board_defaults'] = $user->checkPermission($this->domain, 'perm_manage_board_defaults');
         $this->render_data['board_defaults_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=board-defaults';
         $this->render_data['module_bans'] = $user->checkPermission($this->domain, 'perm_manage_bans');
         $this->render_data['bans_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans';

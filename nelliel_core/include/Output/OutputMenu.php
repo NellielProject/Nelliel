@@ -22,26 +22,7 @@ class OutputMenu extends OutputCore
         $this->utilitySetup();
     }
 
-    public function render(array $parameters, bool $data_only)
-    {
-        $output = array();
-
-        if (!isset($parameters['menu']))
-        {
-            return;
-        }
-
-        switch ($parameters['menu'])
-        {
-            case 'styles':
-                $output = $this->styles($parameters, $data_only);
-                break;
-        }
-
-        return $output;
-    }
-
-    private function styles(array $parameters, bool $data_only)
+    public function styles(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $styles = $this->database->executeFetchAll(

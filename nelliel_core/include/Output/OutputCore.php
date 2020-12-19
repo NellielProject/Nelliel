@@ -24,8 +24,6 @@ abstract class OutputCore
     protected $static_output = false;
     protected $write_mode = false;
 
-    public abstract function render(array $parameters, bool $data_only);
-
     // Standard setup when beginning a render
     protected function renderSetup()
     {

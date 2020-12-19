@@ -95,4 +95,12 @@ class AdminTemplates extends AdminHandler
         $this->database->executePrepared($prepared, [$template_id]);
         $this->outputMain(true);
     }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
+        {
+            nel_derp(420, _gettext('You are not allowed to access the templates panel.'));
+        }
+    }
 }

@@ -30,14 +30,16 @@ class AdminRoles extends AdminHandler
 
     public function renderPanel()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
-        $output_panel->render(['section' => 'panel', 'user' => $this->session_user], false);
+        $output_panel->main(['section' => 'panel', 'user' => $this->session_user], false);
     }
 
     public function creator()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
-        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
+        $output_panel->new(['user' => $this->session_user, 'role_id' => $this->role_id], false);
         $this->outputMain(false);
     }
 
@@ -50,15 +52,14 @@ class AdminRoles extends AdminHandler
 
         $this->role_id = $_POST['role_id'];
         $this->update();
-        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
-        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
         $this->outputMain(true);
     }
 
     public function editor()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
-        $output_panel->render(['section' => 'edit', 'user' => $this->session_user, 'role_id' => $this->role_id], false);
+        $output_panel->edit(['user' => $this->session_user, 'role_id' => $this->role_id], false);
         $this->outputMain(false);
     }
 
@@ -102,5 +103,13 @@ class AdminRoles extends AdminHandler
 
         $this->authorization->removeRole($this->role_id);
         $this->outputMain(true);
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
+        {
+            nel_derp(310, _gettext('You are not allowed to access the roles panel.'));
+        }
     }
 }

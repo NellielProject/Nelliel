@@ -23,6 +23,7 @@ class AdminSiteSettings extends AdminHandler
 
     public function renderPanel()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelSiteSettings($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
@@ -41,7 +42,7 @@ class AdminSiteSettings extends AdminHandler
 
     public function update()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_site_config'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_site_config'))
         {
             nel_derp(361, _gettext('You are not allowed to modify the site settings.'));
         }
@@ -65,5 +66,13 @@ class AdminSiteSettings extends AdminHandler
 
     public function remove()
     {
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_site_config'))
+        {
+            nel_derp(360, _gettext('You are not allowed to access the site settings.'));
+        }
     }
 }

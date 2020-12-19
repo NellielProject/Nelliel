@@ -50,8 +50,7 @@ class OutputPanelThreads extends OutputCore
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Threads')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $thread_data = $this->database->executeFetchAll(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') .
                 '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC',
@@ -139,8 +138,7 @@ class OutputPanelThreads extends OutputCore
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Expanded Thread')];
-        $this->render_data['header'] = $output_header->render(
-                ['header_type' => 'general', 'manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "parent_thread" = ? ORDER BY "post_time" DESC');

@@ -23,8 +23,9 @@ class AdminPermissions extends AdminHandler
 
     public function renderPanel()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Output\OutputPanelPermissions($this->domain, false);
-        $output_panel->render(['user' => $this->session_user], false);
+        $output_panel->render([], false);
     }
 
     public function creator()
@@ -65,5 +66,13 @@ class AdminPermissions extends AdminHandler
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_PERMISSIONS_TABLE . '" WHERE "permission" = ?');
         $this->database->executePrepared($prepared, [$permission]);
         $this->outputMain(true);
+    }
+
+    private function verifyAccess($user)
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_permissions_access'))
+        {
+            nel_derp(450, _gettext('You are not allowed to access the permissions panel.'));
+        }
     }
 }
