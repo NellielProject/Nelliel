@@ -18,7 +18,7 @@ function nel_dispatch_preparation()
 
     if (isset($_GET['about_nelliel']))
     {
-        $about_nelliel = new Nelliel\Output\OutputAboutNelliel(nel_site_domain(), false);
+        $about_nelliel = new Nelliel\Render\OutputAboutNelliel(nel_site_domain(), false);
         $about_nelliel->render([], false);
     }
 
@@ -106,24 +106,24 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             switch ($inputs['actions'][0])
             {
                 case 'view-index':
-                    $output_index = new \Nelliel\Output\OutputIndex($domain, false);
+                    $output_index = new \Nelliel\Render\OutputIndex($domain, false);
                     $output_index->render(['thread_id' => 0], false);
                     break;
 
                 case 'view-thread':
-                    $output_thread = new \Nelliel\Output\OutputThread($domain, false);
+                    $output_thread = new \Nelliel\Render\OutputThread($domain, false);
                     $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'view-thread'],
                             false);
                     break;
 
                 case 'expand-thread':
-                    $output_thread = new \Nelliel\Output\OutputThread($domain, false);
+                    $output_thread = new \Nelliel\Render\OutputThread($domain, false);
                     $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'expand-thread'],
                             false);
                     break;
 
                 case 'collapse-thread':
-                    $output_thread = new \Nelliel\Output\OutputThread($domain, false);
+                    $output_thread = new \Nelliel\Render\OutputThread($domain, false);
                     $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'collapse-thread'],
                             false);
                     break;
@@ -184,7 +184,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 }
 
                 $redirect->changeURL($url);
-                $output_post = new \Nelliel\Output\OutputPost($domain, true);
+                $output_post = new \Nelliel\Render\OutputPost($domain, true);
                 echo $output_post->postSuccess(['forward_url' => $url], false);
                 nel_clean_exit();
             }
@@ -285,12 +285,12 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             if ($forward === 'site')
             {
-                $output_main_panel = new \Nelliel\Output\OutputPanelMain($domain, false);
+                $output_main_panel = new \Nelliel\Render\OutputPanelMain($domain, false);
                 $output_main_panel->render(['user' => $session->sessionUser()], false);
             }
             else if ($forward === 'board')
             {
-                $output_board_panel = new \Nelliel\Output\OutputPanelBoard($domain, false);
+                $output_board_panel = new \Nelliel\Render\OutputPanelBoard($domain, false);
                 $output_board_panel->render(['user' => $session->sessionUser()], false);
             }
 

@@ -101,7 +101,7 @@ class Snacks
     public function applyBan(Domain $domain)
     {
         $this->banAppeal();
-        $output_ban_page = new \Nelliel\Output\OutputBanPage($domain, false);
+        $output_ban_page = new \Nelliel\Render\OutputBanPage($domain, false);
         $bans_range = $this->bans_access->getBansByType(BansAccess::RANGE);
 
         foreach ($bans_range as $ban_hammer)

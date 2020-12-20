@@ -24,7 +24,7 @@ class AdminStyles extends AdminHandler
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelStyles($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelStyles($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
 

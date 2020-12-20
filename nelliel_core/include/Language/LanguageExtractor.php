@@ -304,7 +304,7 @@ class LanguageExtractor
         $file_handler = nel_utilities()->fileHandler();
         $html_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'nelliel_basic/'); // TODO: Be able to parse custom template sets
         $html_files = array_merge($html_files, $file_handler->recursiveFileList(NEL_INCLUDE_PATH));
-        $render = new \Nelliel\RenderCoreDOM();
+        $render = new \Nelliel\Render\RenderCoreDOM();
 
         foreach ($html_files as $file)
         {

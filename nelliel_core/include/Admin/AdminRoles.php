@@ -31,14 +31,14 @@ class AdminRoles extends AdminHandler
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelRoles($this->domain, false);
         $output_panel->main(['section' => 'panel', 'user' => $this->session_user], false);
     }
 
     public function creator()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelRoles($this->domain, false);
         $output_panel->new(['user' => $this->session_user, 'role_id' => $this->role_id], false);
         $this->outputMain(false);
     }
@@ -58,7 +58,7 @@ class AdminRoles extends AdminHandler
     public function editor()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelRoles($this->domain, false);
         $output_panel->edit(['user' => $this->session_user, 'role_id' => $this->role_id], false);
         $this->outputMain(false);
     }

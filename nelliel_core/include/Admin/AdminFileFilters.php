@@ -24,7 +24,7 @@ class AdminFileFilters extends AdminHandler
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelFileFilters($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelFileFilters($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
 
@@ -42,7 +42,7 @@ class AdminFileFilters extends AdminHandler
         $type = $_POST['hash_type'];
         $notes = $_POST['file_notes'];
         $board_id = $_POST['board_id'];
-        $output_filter = new \Nelliel\OutputFilter();
+        $output_filter = new \Nelliel\Render\Filter();
         $hashes = $output_filter->newlinesToArray($_POST['file_hashes']);
 
         foreach ($hashes as $hash)

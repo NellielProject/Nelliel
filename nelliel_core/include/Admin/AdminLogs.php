@@ -25,7 +25,7 @@ class AdminLogs extends AdminHandler
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelLogs($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelLogs($this->domain, false);
         $log_type = $_GET['log-type'] ?? '';
         $output_panel->render(['user' => $this->session_user, 'log_type' => $log_type], false);
     }

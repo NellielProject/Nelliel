@@ -28,7 +28,7 @@ class AdminBoards extends AdminHandler
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelManageBoards($this->domain, false);
         $output_panel->main(['user' => $this->session_user], false);
     }
 
@@ -193,7 +193,7 @@ class AdminBoards extends AdminHandler
     public function createInterstitial(string $which)
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelManageBoards($this->domain, false);
 
         switch ($which)
         {

@@ -25,7 +25,7 @@ class AdminNews extends AdminHandler
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelNews($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelNews($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
 

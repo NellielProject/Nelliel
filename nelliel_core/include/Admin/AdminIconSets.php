@@ -24,7 +24,7 @@ class AdminIconSets extends AdminHandler
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelIconSets($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelIconSets($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
 

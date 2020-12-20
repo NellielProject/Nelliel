@@ -31,14 +31,14 @@ class AdminUsers extends AdminHandler
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelUsers($this->domain, false);
         $output_panel->main(['user' => $this->session_user], false);
     }
 
     public function creator()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelUsers($this->domain, false);
         $output_panel->new(['user' => $this->session_user, 'user_id' => $this->user_id], false);
         $this->outputMain(false);
     }
@@ -58,7 +58,7 @@ class AdminUsers extends AdminHandler
     public function editor()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelUsers($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelUsers($this->domain, false);
         $output_panel->edit(['user' => $this->session_user, 'user_id' => $this->user_id], false);
         $this->outputMain(false);
     }

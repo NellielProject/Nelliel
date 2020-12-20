@@ -127,7 +127,7 @@ class Session
             $log_event->send(sprintf(_gettext("User %s logged out."), self::$user->id()));
         }
 
-        $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
+        $output_login = new \Nelliel\Render\OutputLoginPage($this->domain, false);
         $output_login->render([], false);
         nel_clean_exit(false);
     }

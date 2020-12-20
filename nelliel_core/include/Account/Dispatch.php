@@ -28,12 +28,12 @@ class Dispatch
                     $session = new \Nelliel\Account\Session();
                     $session->login();
                     $session->loggedInOrError();
-                    $output_account = new \Nelliel\Output\OutputAccount($this->domain, false);
+                    $output_account = new \Nelliel\Render\OutputAccount($this->domain, false);
                     $output_account->render(['user' => $session->sessionUser()], false);
                 }
                 else
                 {
-                    $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
+                    $output_login = new \Nelliel\Render\OutputLoginPage($this->domain, false);
                     $output_login->render([], false);
                 }
 
@@ -54,7 +54,7 @@ class Dispatch
                 }
                 else
                 {
-                    $output_login = new \Nelliel\Output\OutputRegisterPage($this->domain, false);
+                    $output_login = new \Nelliel\Render\OutputRegisterPage($this->domain, false);
                     $output_login->render(['section' => 'register'], false);
                 }
 
@@ -65,12 +65,12 @@ class Dispatch
 
                 if ($session->isActive())
                 {
-                    $output_account = new \Nelliel\Output\OutputAccount($this->domain, false);
+                    $output_account = new \Nelliel\Render\OutputAccount($this->domain, false);
                     $output_account->render(['user' => $session->sessionUser()], false);
                 }
                 else
                 {
-                    $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
+                    $output_login = new \Nelliel\Render\OutputLoginPage($this->domain, false);
                     $output_login->render([], false);
                 }
         }

@@ -257,14 +257,14 @@ class Dispatch
             case 'site-main-panel':
                 $session = new \Nelliel\Account\Session();
                 $session->loggedInOrError();
-                $output_main_panel = new \Nelliel\Output\OutputPanelMain($this->domain, false);
+                $output_main_panel = new \Nelliel\Render\OutputPanelMain($this->domain, false);
                 $output_main_panel->render(['user' => $session->sessionUser()], false);
                 break;
 
             case 'board-main-panel':
                 $session = new \Nelliel\Account\Session();
                 $session->loggedInOrError();
-                $output_board_panel = new \Nelliel\Output\OutputPanelBoard($this->domain, false);
+                $output_board_panel = new \Nelliel\Render\OutputPanelBoard($this->domain, false);
                 $output_board_panel->render(['user' => $session->sessionUser()], false);
         }
 

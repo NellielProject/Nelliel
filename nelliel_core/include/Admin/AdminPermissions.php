@@ -24,7 +24,7 @@ class AdminPermissions extends AdminHandler
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelPermissions($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelPermissions($this->domain, false);
         $output_panel->render([], false);
     }
 

@@ -27,7 +27,7 @@ class AdminBoardSettings extends AdminHandler
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelBoardSettings($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelBoardSettings($this->domain, false);
         $output_panel->render(['user' => $this->session_user, 'defaults' => $this->defaults], false);
     }
 

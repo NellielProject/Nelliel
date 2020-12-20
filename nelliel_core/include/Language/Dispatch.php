@@ -39,7 +39,7 @@ class Dispatch
             }
         }
 
-        $output_main_panel = new \Nelliel\Output\OutputPanelMain($this->domain, false);
+        $output_main_panel = new \Nelliel\Render\OutputPanelMain($this->domain, false);
         $output_main_panel->render(['user' => $session->sessionUser()], false);
     }
 }

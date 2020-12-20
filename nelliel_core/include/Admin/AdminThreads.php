@@ -33,14 +33,14 @@ class AdminThreads extends AdminHandler
         if (isset($_GET['actions']) && $_GET['actions'] === 'expand-thread')
         {
             $content_id = new ContentID($_GET['content-id']);
-            $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain, false);
+            $output_panel = new \Nelliel\Render\OutputPanelThreads($this->domain, false);
             $output_panel->render(
                     ['section' => 'expanded_thread', 'user' => $this->session_user,
                         'thread_id' => $content_id->threadID()], false);
         }
         else
         {
-            $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain, false);
+            $output_panel = new \Nelliel\Render\OutputPanelThreads($this->domain, false);
             $output_panel->render(['section' => 'panel', 'user' => $this->session_user], false);
         }
     }
@@ -160,7 +160,7 @@ class AdminThreads extends AdminHandler
         $ban_type = 'CONTENT';
         $content_instance->remove();
         $this->regenThread($content_id->threadID(), true);
-        $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
         $output_panel->render(
                 ['section' => 'add', 'user' => $this->session_user, 'ip_start' => $ip_start, 'hashed_ip' => $hashed_ip,
                     'ban_type' => $ban_type], false);

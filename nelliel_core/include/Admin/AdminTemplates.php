@@ -23,7 +23,7 @@ class AdminTemplates extends AdminHandler
 
     public function renderPanel()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelTemplates($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelTemplates($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
 

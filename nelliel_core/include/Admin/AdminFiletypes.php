@@ -25,14 +25,14 @@ class AdminFiletypes extends AdminHandler
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelFiletypes($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelFiletypes($this->domain, false);
         $output_panel->main(['user' => $this->session_user], false);
     }
 
     public function creator()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Output\OutputPanelFiletypes($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelFiletypes($this->domain, false);
         $output_panel->edit(['user' => $this->session_user, 'editing' => false], false);
         $this->outputMain(false);
     }
@@ -68,7 +68,7 @@ class AdminFiletypes extends AdminHandler
     {
         $this->verifyAccess();
         $entry = $_GET['filetype-id'] ?? 0;
-        $output_panel = new \Nelliel\Output\OutputPanelFiletypes($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelFiletypes($this->domain, false);
         $output_panel->edit(['user' => $this->session_user, 'editing' => true, 'entry' => $entry], false);
         $this->outputMain(false);
     }
