@@ -45,7 +45,7 @@ class Redirect
                 self::$url = $site_domain->setting('home_page');
             }
 
-            nel_redirect(self::$url, 3);
+            nel_redirect(self::$url, 5);
         }
     }
 }

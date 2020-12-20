@@ -162,31 +162,30 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                                         ['module' => 'render', 'action' => 'view-thread',
                                             'thread' => $fgsfds->getCommandData('noko', 'topic'),
                                             'board_id' => $inputs['board_id'], 'modmode' => 'true']);
-                        $redirect->changeURL($url);
                     }
                     else
                     {
                         $url = $domain->reference('board_directory') . '/' . $domain->reference('page_dir') . '/' .
                                 $fgsfds->getCommandData('noko', 'topic') . '/thread-' .
                                 $fgsfds->getCommandData('noko', 'topic') . '.html';
-                        $redirect->changeURL($url);
                     }
                 }
                 else
                 {
                     if ($session->inModmode($domain))
                     {
-                        $redirect->changeURL(
-                                NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' .
-                                $inputs['board_id'] . '&modmode=true');
+                        $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' .
+                                $inputs['board_id'] . '&modmode=true';
                     }
                     else
                     {
-                        $redirect->changeURL(
-                                $domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT);
+                        $url = $domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
                     }
                 }
 
+                $redirect->changeURL($url);
+                $output_post = new \Nelliel\Output\OutputPost($domain, true);
+                echo $output_post->postSuccess(['forward_url' => $url], false);
                 nel_clean_exit();
             }
 
@@ -201,8 +200,8 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 if ($session->inModmode($domain))
                 {
                     $redirect->changeURL(
-                            NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] .
-                            '&modmode=true');
+                            NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' .
+                            $inputs['board_id'] . '&modmode=true');
                 }
                 else
                 {
@@ -218,8 +217,8 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 if ($session->inModmode($domain))
                 {
                     $redirect->changeURL(
-                            NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' . $inputs['board_id'] .
-                            '&modmode=true');
+                            NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' .
+                            $inputs['board_id'] . '&modmode=true');
                 }
                 else
                 {

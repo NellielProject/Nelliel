@@ -215,7 +215,7 @@ class Session
 
     public function inModmode(Domain $domain)
     {
-        return $this->isActive() && self::$modmode_requested && self::$user->checkPermission($domain, 'perm_board_mod_mode');
+        return $this->isActive() && !$this->ignore() && self::$modmode_requested && self::$user->checkPermission($domain, 'perm_board_mod_mode');
     }
 
     public function loggedInOrError()

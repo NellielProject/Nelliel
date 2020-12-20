@@ -430,4 +430,14 @@ class OutputPost extends OutputCore
 
         return $comment_data;
     }
+
+    public function postSuccess(array $parameters, bool $data_only)
+    {
+        $messages[] = 'Post success!';
+        $messages[] = 'You will be automatically forwarded. Or click the link below.';
+        $link['url'] = $parameters['forward_url'] ?? '';
+        $link['text'] = 'Click to continue...';
+        $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
+        return $output_interstitial->render($parameters, $data_only, $messages, [$link]);
+    }
 }

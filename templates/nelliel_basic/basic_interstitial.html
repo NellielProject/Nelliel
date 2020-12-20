@@ -1,0 +1,11 @@
+{{% FILTERS }}
+<div class="text-center">
+	<p>
+{{# messages }}
+	{{ message }}<br>
+{{/ messages }}
+	</p>
+{{# links }}
+	<a href="{{ url }}">{{ text }}</a><br>
+{{/ links }}
+</div>
