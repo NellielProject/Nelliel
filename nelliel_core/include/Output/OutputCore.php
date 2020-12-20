@@ -24,6 +24,7 @@ abstract class OutputCore
     protected $core_id;
     protected $static_output = false;
     protected $write_mode = false;
+    protected $template_substitutes;
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -34,6 +35,7 @@ abstract class OutputCore
         $this->site_domain = new \Nelliel\DomainSite(nel_database());
         $this->file_handler = nel_utilities()->fileHandler();
         $this->output_filter = new \Nelliel\OutputFilter();
+        $this->template_substitutes = new TemplateSubstitutes();
     }
 
     // Standard setup when beginning a render

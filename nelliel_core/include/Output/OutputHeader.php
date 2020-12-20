@@ -24,17 +24,17 @@ class OutputHeader extends OutputCore
         $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\DomainSite($this->database);
         $manage_headers = $parameters['manage_headers'] ?? array();
-        $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $this->render_data['show_manage_headers'] = $session->isActive() && !empty($manage_headers);
-
+        $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
         if ($this->render_data['show_styles'])
         {
             $this->render_data['styles'] = $output_menu->styles([], true);
+            $this->render_data['menu/styles'] = $this->template_substitutes->getFunction('menu/styles', true);
         }
 
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
@@ -78,16 +78,17 @@ class OutputHeader extends OutputCore
         $manage_headers = $parameters['manage_headers'] ?? array();
         $treeline = $parameters['treeline'] ?? array();
         $index_render = $parameters['index_render'] ?? false;
-        $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
-        $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['show_manage_headers'] = $session->isActive() && !empty($manage_headers);
+        $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
         if ($this->render_data['show_styles'])
         {
             $this->render_data['styles'] = $output_menu->styles([], true);
+            $this->render_data['menu/styles'] = $this->template_substitutes->getFunction('menu/styles', true);
         }
 
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
