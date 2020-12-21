@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 
 function nel_dispatch_preparation()
 {
@@ -60,11 +60,11 @@ function nel_dispatch_preparation()
     // Add more options here if we implement further domain types
     if (!empty($inputs['board_id']) && empty($inputs['domain_id']))
     {
-        $domain = new \Nelliel\DomainBoard($inputs['board_id'], nel_database());
+        $domain = new \Nelliel\Domains\DomainBoard($inputs['board_id'], nel_database());
     }
     else
     {
-        $domain = new \Nelliel\DomainSite(nel_database());
+        $domain = new \Nelliel\Domains\DomainSite(nel_database());
     }
 
     $inputs = nel_plugins()->processHook('nel-in-after-dispatch-prep', [$domain], $inputs);

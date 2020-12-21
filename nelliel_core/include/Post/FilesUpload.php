@@ -8,7 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Auth\Authorization;
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use PDO;
 
 class FilesUpload

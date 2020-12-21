@@ -46,7 +46,7 @@ class Setup
 
         $this->createCoreTables();
         $this->createCoreDirectories();
-        $site_domain = new \Nelliel\DomainSite(nel_database());
+        $site_domain = new \Nelliel\Domains\DomainSite(nel_database());
         $regen = new \Nelliel\Regen();
         $site_domain->regenCache();
         //$regen->news($site_domain);
@@ -231,7 +231,7 @@ class Setup
         $config_table->createTable();
         $config_table->copyFrom(NEL_BOARD_DEFAULTS_TABLE);
 
-        $domain = new \Nelliel\DomainBoard($board_id, nel_database());
+        $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database());
         $references = $domain->reference();
 
         // NOTE: Tables must be created in order of
@@ -253,7 +253,7 @@ class Setup
     public function createBoardDirectories(string $board_id)
     {
         $file_handler = new \Nelliel\Utility\FileHandler();
-        $domain = new \Nelliel\DomainBoard($board_id, nel_database());
+        $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database());
         $references = $domain->reference();
         $file_handler->createDirectory($references['src_path'], NEL_DIRECTORY_PERM, true);
         $file_handler->createDirectory($references['preview_path'], NEL_DIRECTORY_PERM, true);

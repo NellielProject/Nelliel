@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 
 class PostData
 {
@@ -127,7 +127,7 @@ class PostData
 
     public function tripcodes($post)
     {
-        $site_domain = new \Nelliel\DomainSite($this->domain->database());
+        $site_domain = new \Nelliel\Domains\DomainSite($this->domain->database());
         $post->changeData('poster_name', preg_replace("/#+$/", "", $post->data('poster_name')));
         preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post->data('poster_name'), $name_pieces);
         $post->changeData('poster_name', $name_pieces[1]);

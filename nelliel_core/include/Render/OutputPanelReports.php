@@ -8,7 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Content\ContentID;
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use PDO;
 
 class OutputPanelReports extends Output
@@ -48,7 +48,7 @@ class OutputPanelReports extends Output
         {
             if (!isset($domains[$report_info['board_id']]))
             {
-                $domains[$report_info['board_id']] = new \Nelliel\DomainBoard($report_info['board_id'], $this->database);
+                $domains[$report_info['board_id']] = new \Nelliel\Domains\DomainBoard($report_info['board_id'], $this->database);
             }
 
             $report_data = array();

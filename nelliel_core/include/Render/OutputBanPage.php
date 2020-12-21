@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 
 class OutputBanPage extends Output
 {

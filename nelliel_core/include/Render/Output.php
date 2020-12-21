@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 
 abstract class Output
 {
@@ -32,7 +32,7 @@ abstract class Output
         $this->write_mode = $write_mode;
         $this->database = $domain->database();
         $this->selectRenderCore('mustache');
-        $this->site_domain = new \Nelliel\DomainSite(nel_database());
+        $this->site_domain = new \Nelliel\Domains\DomainSite(nel_database());
         $this->file_handler = nel_utilities()->fileHandler();
         $this->output_filter = new Filter();
         $this->template_substitutes = new TemplateSubstitutes();

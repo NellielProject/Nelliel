@@ -7,8 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
-use Nelliel\DomainSite;
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainSite;
 use Nelliel\Auth\Authorization;
 use PDO;
 
@@ -43,7 +43,7 @@ class AdminBoards extends AdminHandler
             nel_derp(371, _gettext('You are not allowed to create boards.'));
         }
 
-        $site_domain = new \Nelliel\DomainSite($this->database);
+        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $board_id = trim($_POST['new_board_id']);
 
         if (nel_true_empty($board_id))
@@ -87,11 +87,11 @@ class AdminBoards extends AdminHandler
         $setup = new \Nelliel\Setup\Setup();
         $setup->createBoardTables($board_id, $db_prefix);
         $setup->createBoardDirectories($board_id);
-        $domain = new \Nelliel\DomainBoard($board_id, $this->database);
+        $domain = new \Nelliel\Domains\DomainBoard($board_id, $this->database);
         $regen = new \Nelliel\Regen();
         $domain->regenCache();
         $regen->allBoardPages($domain);
-        $regen->boardList(new \Nelliel\DomainSite($this->database));
+        $regen->boardList(new \Nelliel\Domains\DomainSite($this->database));
         $this->outputMain(true);
     }
 
@@ -111,7 +111,7 @@ class AdminBoards extends AdminHandler
         }
 
         $board_id = $_GET['board_id'];
-        $domain = new \Nelliel\DomainBoard($board_id, $this->database);
+        $domain = new \Nelliel\Domains\DomainBoard($board_id, $this->database);
 
         if (!$domain->boardExists())
         {
@@ -158,7 +158,7 @@ class AdminBoards extends AdminHandler
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $regen = new \Nelliel\Regen();
-        $regen->boardList(new \Nelliel\DomainSite($this->database));
+        $regen->boardList(new \Nelliel\Domains\DomainSite($this->database));
         $this->outputMain(true);
     }
 

@@ -8,7 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use PDO;
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\Auth\Authorization;
 
 class AdminBoardSettings extends AdminHandler
@@ -165,7 +165,7 @@ class AdminBoardSettings extends AdminHandler
 
         foreach ($board_ids as $board_id)
         {
-            $board_domains[] = new \Nelliel\DomainBoard($board_id, $this->database);
+            $board_domains[] = new \Nelliel\Domains\DomainBoard($board_id, $this->database);
         }
 
         return $board_domains;

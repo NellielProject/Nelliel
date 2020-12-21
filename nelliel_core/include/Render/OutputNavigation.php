@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use PDO;
 
 class OutputNavigation extends Output
@@ -42,7 +42,7 @@ class OutputNavigation extends Output
     {
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
-        $site_domain = new \Nelliel\DomainSite($this->database);
+        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $render_data['session_active'] = $session->isActive() && !$this->write_mode;
         $render_data['logout_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=account&section=logout';
         $render_data['main_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=site-main-panel';

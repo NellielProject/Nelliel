@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 
 class NewPost
 {
@@ -24,7 +24,7 @@ class NewPost
 
     public function processPost()
     {
-        $site_domain = new \Nelliel\DomainSite($this->database);
+        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $error_data = ['board_id' => $this->domain->id()];
         $captcha = new \Nelliel\CAPTCHA($this->domain);
 

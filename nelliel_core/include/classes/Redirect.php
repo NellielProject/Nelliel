@@ -9,6 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 use Nelliel\Content\ContentID;
+use Nelliel\Domains\DomainSite;
 
 class Redirect
 {
@@ -41,7 +42,7 @@ class Redirect
         {
             if(self::$url === '')
             {
-                $site_domain = new \Nelliel\DomainSite(nel_database());
+                $site_domain = new DomainSite(nel_database());
                 self::$url = $site_domain->setting('home_page');
             }
 

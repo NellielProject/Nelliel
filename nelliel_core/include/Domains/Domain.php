@@ -1,11 +1,14 @@
 <?php
 
-namespace Nelliel;
+namespace Nelliel\Domains;
 
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
+
+use Nelliel\FrontEndData;
+use Nelliel\NellielPDO;
 
 abstract class Domain
 {

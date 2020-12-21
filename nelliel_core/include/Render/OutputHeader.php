@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use PDO;
 
 class OutputHeader extends Output
@@ -22,7 +22,7 @@ class OutputHeader extends Output
     {
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
-        $site_domain = new \Nelliel\DomainSite($this->database);
+        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $manage_headers = $parameters['manage_headers'] ?? array();
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -74,7 +74,7 @@ class OutputHeader extends Output
     {
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
-        $site_domain = new \Nelliel\DomainSite($this->database);
+        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $manage_headers = $parameters['manage_headers'] ?? array();
         $treeline = $parameters['treeline'] ?? array();
         $index_render = $parameters['index_render'] ?? false;

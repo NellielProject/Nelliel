@@ -1,12 +1,13 @@
 <?php
 
-namespace Nelliel;
+namespace Nelliel\Domains;
 
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
 
+use Nelliel\NellielPDO;
 use PDO;
 
 class DomainAllBoards extends Domain

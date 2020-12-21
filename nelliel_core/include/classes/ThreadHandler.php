@@ -11,6 +11,8 @@ use Nelliel\Content\ContentID;
 use Nelliel\Content\ContentThread;
 use Nelliel\Content\ContentPost;
 use Nelliel\Content\ContentFile;
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainSite;
 
 class ThreadHandler
 {

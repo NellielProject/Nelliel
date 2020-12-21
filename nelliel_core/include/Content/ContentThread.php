@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\Moar;
 use PDO;
 

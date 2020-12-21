@@ -7,9 +7,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
-use Nelliel\DomainBoard;
-use Nelliel\DomainOverboard;
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainBoard;
+use Nelliel\Domains\DomainOverboard;
 use Nelliel\Content\ContentID;
 use PDO;
 

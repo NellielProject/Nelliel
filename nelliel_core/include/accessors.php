@@ -22,7 +22,7 @@ function nel_site_domain()
 
     if (!isset($site_domain))
     {
-        $site_domain = new \Nelliel\DomainSite(nel_database());
+        $site_domain = new \Nelliel\Domains\DomainSite(nel_database());
     }
 
     return $site_domain;

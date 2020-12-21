@@ -1,12 +1,14 @@
 <?php
 
-namespace Nelliel;
+namespace Nelliel\Domains;
 
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
 
+use Nelliel\NellielCacheInterface;
+use Nelliel\NellielPDO;
 use PDO;
 
 class DomainSite extends Domain implements NellielCacheInterface

@@ -8,7 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Content\ContentID;
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\Auth\Authorization;
 
 class AdminBans extends AdminHandler

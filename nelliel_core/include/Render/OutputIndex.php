@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\Content\ContentID;
 use PDO;
 
@@ -25,7 +25,7 @@ class OutputIndex extends Output
         $session = new \Nelliel\Account\Session();
         $thread_id = $parameters['thread_id'] ?? 0;
         $page = 1;
-        $site_domain = new \Nelliel\DomainSite($this->database);
+        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $json_index = new \Nelliel\API\JSON\JSONIndex($this->domain, $this->file_handler);
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);

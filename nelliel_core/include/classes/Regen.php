@@ -7,6 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainBoard;
 use PDO;
 
 class Regen

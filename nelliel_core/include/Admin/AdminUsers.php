@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\Auth\Authorization;
 
 class AdminUsers extends AdminHandler
@@ -88,11 +88,11 @@ class AdminUsers extends AdminHandler
             {
                 if (strpos($key, '_site_'))
                 {
-                    $domain = new \Nelliel\DomainSite($this->database);
+                    $domain = new \Nelliel\Domains\DomainSite($this->database);
                 }
                 else
                 {
-                    $domain = new \Nelliel\DomainBoard(substr($key, 12), $this->database);
+                    $domain = new \Nelliel\Domains\DomainBoard(substr($key, 12), $this->database);
                 }
 
                 $update_user->modifyRole($domain->id(), $value);

@@ -8,6 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Content\ContentID;
+use Nelliel\Domains\Domain;
 use PDO;
 
 class Report

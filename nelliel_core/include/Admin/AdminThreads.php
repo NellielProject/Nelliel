@@ -7,8 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
-use Nelliel\DomainSite;
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainSite;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\ContentThread;

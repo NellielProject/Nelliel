@@ -12,7 +12,7 @@ use IPTools\Range;
 use Nelliel\BansAccess;
 use Nelliel\BanHammer;
 use Nelliel\Content\ContentID;
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use PDO;
 
 class OutputPanelBans extends Output

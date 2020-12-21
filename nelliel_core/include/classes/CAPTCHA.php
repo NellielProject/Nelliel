@@ -7,6 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainSite;
 use PDO;
 
 class CAPTCHA
