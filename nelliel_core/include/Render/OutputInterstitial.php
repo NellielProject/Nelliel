@@ -20,6 +20,8 @@ class OutputInterstitial extends Output
     public function render(array $parameters, bool $data_only, array $messages, array $links)
     {
         $this->renderSetup();
+        $this->render_data['extra_message_break'] = $parameters['extra_message_break'] ?? false;
+        $this->render_data['extra_url_break'] = $parameters['extra_url_break'] ?? false;
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);

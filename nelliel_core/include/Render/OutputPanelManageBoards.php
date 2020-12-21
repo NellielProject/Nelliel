@@ -80,24 +80,21 @@ class OutputPanelManageBoards extends Output
 
     public function removeWarning(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
-        $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render([], true);
-        $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $manage_headers = ['header' => _gettext('General Management'),
-            'sub_header' => _gettext('Confirm Board Deletion')];
-        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
-        $this->render_data['continue_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+        $board_id = $_GET['board_id'];
+        $messages[] = sprintf(_gettext('You are about to delete the board: %s'), $board_id);
+        $messages[] = _gettext(
+                'This will wipe out all posts, settings, files, everything. There is no undo or recovery.');
+        $messages[] = _gettext('Are you sure?');
+        $link['text'] = _gettext('NOPE. Do not delete the board.');
+        $link['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                http_build_query(['module' => 'admin', 'section' => 'manage-boards', 'domain_id' => '_site_']);
+        $link2['text'] = _gettext('Confirmed. Delete the board.');
+        $link2['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                         ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove',
                             'action-confirmed' => 'true', 'board_id' => $_GET['board_id'], 'domain_id' => '_site_']);
-        $this->render_data['board_id'] = $_GET['board_id'];
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile(
-                'panels/interstitials/board_remove_warning', $this->render_data);
-        $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
-        $output = $this->output('basic_page', $data_only, true);
-        echo $output;
-        return $output;
+        $parameters['extra_url_break'] = true;
+        $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
+        echo $output_interstitial->render($parameters, $data_only, $messages, [$link, $link2]);
     }
 }
