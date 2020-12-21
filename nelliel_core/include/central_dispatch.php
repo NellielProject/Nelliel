@@ -199,14 +199,15 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 if ($session->inModmode($domain))
                 {
-                    $redirect->changeURL(
-                            NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' .
-                            $inputs['board_id'] . '&modmode=true');
+                    $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' .
+                            $inputs['board_id'] . '&modmode=true';
                 }
                 else
                 {
-                    $redirect->changeURL($domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT);
+                    $url = $domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
                 }
+
+                $redirect->changeURL($url);
             }
 
             if (isset($_POST['form_submit_delete']))
@@ -216,14 +217,17 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 if ($session->inModmode($domain))
                 {
-                    $redirect->changeURL(
-                            NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' .
-                            $inputs['board_id'] . '&modmode=true');
+                    $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' .
+                            $inputs['board_id'] . '&modmode=true';
                 }
                 else
                 {
-                    $redirect->changeURL($domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT);
+                    $url = $domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
                 }
+
+                $redirect->changeURL($url);
+                $output_post = new \Nelliel\Render\OutputPost($domain, true);
+                echo $output_post->contentDeleted(['forward_url' => $url], false);
             }
 
             break;

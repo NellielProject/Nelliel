@@ -201,9 +201,9 @@ class OutputPost extends Output
             if ($session->inModmode($this->domain) && !$this->write_mode)
             {
                 $thread_headers['render'] = '-render';
-                $thread_headers['reply_to_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&actions=view-thread&content-id=' .
-                        $thread_content_id->getIDString() . '&thread=' . $thread_content_id->threadID() . '&board_id=' .
-                        $this->domain->id() . '&modmode=true';
+                $thread_headers['reply_to_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                        'module=render&actions=view-thread&content-id=' . $thread_content_id->getIDString() . '&thread=' .
+                        $thread_content_id->threadID() . '&board_id=' . $this->domain->id() . '&modmode=true';
             }
 
             $header_data['thread_headers'] = $thread_headers;
@@ -433,10 +433,18 @@ class OutputPost extends Output
 
     public function postSuccess(array $parameters, bool $data_only)
     {
-        $messages[] = 'Post success!';
-        $messages[] = 'You will be automatically forwarded. Or click the link below.';
+        $messages[] = _gettext('Post success!');
         $link['url'] = $parameters['forward_url'] ?? '';
-        $link['text'] = 'Click to continue...';
+        $link['text'] = _gettext('Click here if you are not automatically redirected');
+        $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
+        return $output_interstitial->render($parameters, $data_only, $messages, [$link]);
+    }
+
+    public function contentDeleted(array $parameters, bool $data_only)
+    {
+        $messages[] = _gettext('The selected items have been deleted!');
+        $link['url'] = $parameters['forward_url'] ?? '';
+        $link['text'] = _gettext('Click here if you are not automatically redirected');
         $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
         return $output_interstitial->render($parameters, $data_only, $messages, [$link]);
     }
