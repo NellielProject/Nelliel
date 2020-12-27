@@ -12,7 +12,7 @@ use Nelliel\Domains\Domain;
 class RenderCoreMustache extends RenderCore
 {
     private $domain;
-    private $mustache_engine;
+    private static $mustache_engine;
     private $escaper;
 
     function __construct(Domain $domain)
@@ -21,22 +21,30 @@ class RenderCoreMustache extends RenderCore
         $this->output_filter = new Filter();
         $this->file_handler = nel_utilities()->fileHandler();
         $this->escaper = new \phpDOMExtend\DOMEscaper();
-        $this->template_loaders['file'] = new \Mustache_Loader_FilesystemLoader($this->domain->templatePath(),
+        $this->template_loaders['file'] = new \Nelliel\Render\FileSystemLoader($this->domain->templatePath(),
                 ['extension' => '.html']);
+
+        if (!isset(self::$mustache_engine))
+        {
+            $this->newMustache();
+        }
+    }
+
+    private function newMustache()
+    {
+        $options = array();
+        $options['pragmas'] = [\Mustache_Engine::PRAGMA_FILTERS];
 
         if (NEL_USE_MUSTACHE_CACHE)
         {
-            $this->mustache_engine = new \Mustache_Engine(
-                    ['loader' => $this->template_loaders['file'], 'partials_loader' => $this->template_loaders['file'],
-                        'cache' => NEL_CACHE_FILES_PATH . 'mustache', 'pragmas' => [Mustache_Engine::PRAGMA_FILTERS]]);
-        }
-        else
-        {
-            $this->mustache_engine = new \Mustache_Engine(
-                    ['loader' => $this->template_loaders['file'], 'partials_loader' => $this->template_loaders['file']]);
+            $options['cache'] = NEL_CACHE_FILES_PATH . 'mustache';
         }
 
-        $this->mustache_engine->addHelper('esc',
+        self::$mustache_engine = new \Mustache_Engine($options);
+        self::$mustache_engine->setLoader($this->template_loaders['file']);
+        self::$mustache_engine->setPartialsLoader($this->template_loaders['file']);
+        self::$mustache_engine->setLoader($this->template_loaders['file']);
+        self::$mustache_engine->addHelper('esc',
                 ['html' => function ($value)
                 {
                     return $this->escapeString($value, 'html');
@@ -57,7 +65,7 @@ class RenderCoreMustache extends RenderCore
 
     public function renderEngine()
     {
-        return $this->mustache_engine;
+        return self::$mustache_engine;
     }
 
     public function loadTemplateFromFile(string $file)
@@ -68,7 +76,7 @@ class RenderCoreMustache extends RenderCore
 
     public function renderFromTemplateFile(string $file, array $render_data)
     {
-        return $this->mustache_engine->render($file, $render_data);
+        return self::$mustache_engine->render($file, $render_data);
     }
 
     public function escapeString(string $string = null, string $type)
