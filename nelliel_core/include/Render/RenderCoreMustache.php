@@ -27,38 +27,32 @@ class RenderCoreMustache extends RenderCore
         if (NEL_USE_MUSTACHE_CACHE)
         {
             $this->mustache_engine = new \Mustache_Engine(
-                    ['loader' => $this->template_loaders['file'],
-                        'partials_loader' => $this->template_loaders['file'], 'cache' => NEL_CACHE_FILES_PATH . 'mustache']);
+                    ['loader' => $this->template_loaders['file'], 'partials_loader' => $this->template_loaders['file'],
+                        'cache' => NEL_CACHE_FILES_PATH . 'mustache', 'pragmas' => [Mustache_Engine::PRAGMA_FILTERS]]);
         }
         else
         {
             $this->mustache_engine = new \Mustache_Engine(
-                    ['loader' => $this->template_loaders['file'],
-                        'partials_loader' => $this->template_loaders['file']]);
+                    ['loader' => $this->template_loaders['file'], 'partials_loader' => $this->template_loaders['file']]);
         }
 
         $this->mustache_engine->addHelper('esc',
-                [
-                    'html' => function ($value)
-                    {
-                        return $this->escapeString($value, 'html');
-                    },
-                    'attr' => function ($value)
-                    {
-                        return $this->escapeString($value, 'attr');
-                    },
-                    'url' => function ($value)
-                    {
-                        return $this->escapeString($value, 'url');
-                    },
-                    'js' => function ($value)
-                    {
-                        return $this->escapeString($value, 'js');
-                    },
-                    'css' => function ($value)
-                    {
-                        return $this->escapeString($value, 'css');
-                    }]);
+                ['html' => function ($value)
+                {
+                    return $this->escapeString($value, 'html');
+                }, 'attr' => function ($value)
+                {
+                    return $this->escapeString($value, 'attr');
+                }, 'url' => function ($value)
+                {
+                    return $this->escapeString($value, 'url');
+                }, 'js' => function ($value)
+                {
+                    return $this->escapeString($value, 'js');
+                }, 'css' => function ($value)
+                {
+                    return $this->escapeString($value, 'css');
+                }]);
     }
 
     public function renderEngine()
