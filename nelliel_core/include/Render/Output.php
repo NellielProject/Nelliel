@@ -16,6 +16,7 @@ abstract class Output
     protected $site_domain;
     protected $database;
     protected $render_core;
+    protected $render_cores = array();
     protected $render_data = array();
     protected $file_handler;
     protected $output_filter;
@@ -48,20 +49,22 @@ abstract class Output
 
     protected function selectRenderCore(string $core_id)
     {
-        $this->core_id = $core_id;
-
         if ($core_id === 'mustache')
         {
-            $this->render_core = new RenderCoreMustache($this->domain);
+            $this->render_cores['mustache'] = $this->render_cores['mustache'] ?? new RenderCoreMustache($this->domain);
+            $this->render_core = $this->render_cores['mustache'];
         }
         else if ($core_id === 'DOM')
         {
-            $this->render_core = new RenderCoreDOM();
+            $this->render_cores['DOM'] = $this->render_cores['DOM'] ?? new RenderCoreDOM();
+            $this->render_core = $this->render_cores['DOM'];
         }
         else
         {
-            ;
+            return;
         }
+
+        $this->core_id = $core_id;
     }
 
     protected function startTimer(int $time_offset = 0)
