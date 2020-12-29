@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 class TemplateSubstitutes
 {
-    private $substitutes = array();
+    protected $substitutes = array();
 
     function __construct()
     {
@@ -25,18 +25,23 @@ class TemplateSubstitutes
         return $this->substitutes[$template] ?? $template;
     }
 
+    public function remove(string $template)
+    {
+        unset($this->substitutes[$template]);
+    }
+
     public function isSubstituted(string $template)
     {
         return $this->get($template) !== $template;
     }
 
-    public function getFunction(string $template, bool $partial = false)
+    public function getAll()
     {
-        $part = $partial ? '>' : '';
+        return $this->substitutes;
+    }
 
-        return function () use ($part, $template)
-        {
-            return '{{' . $part . ' ' . $this->get($template) . ' }}';
-        };
+    public function clear()
+    {
+        $this->substitutes = array();
     }
 }

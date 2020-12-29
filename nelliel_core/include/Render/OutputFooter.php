@@ -27,7 +27,6 @@ class OutputFooter extends Output
         if ($this->render_data['show_styles'])
         {
             $this->render_data['styles'] = $output_menu->styles([], true);
-            $this->render_data['menu/styles'] = $this->template_substitutes->getFunction('menu/styles', true);
         }
 
         $this->render_data['nelliel_version'] = NELLIEL_VERSION;

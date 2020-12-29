@@ -16,7 +16,7 @@ abstract class Output
     protected $site_domain;
     protected $database;
     protected $render_core;
-    protected $render_cores = array();
+    protected static $render_cores = array();
     protected $render_data = array();
     protected $file_handler;
     protected $output_filter;
@@ -51,13 +51,13 @@ abstract class Output
     {
         if ($core_id === 'mustache')
         {
-            $this->render_cores['mustache'] = $this->render_cores['mustache'] ?? new RenderCoreMustache($this->domain);
-            $this->render_core = $this->render_cores['mustache'];
+            self::$render_cores['mustache'] = self::$render_cores['mustache'] ?? new RenderCoreMustache($this->domain);
+            $this->render_core = self::$render_cores['mustache'];
         }
         else if ($core_id === 'DOM')
         {
-            $this->render_cores['DOM'] = $this->render_cores['DOM'] ?? new RenderCoreDOM();
-            $this->render_core = $this->render_cores['DOM'];
+            self::$render_cores['DOM'] = self::$render_cores['DOM'] ?? new RenderCoreDOM();
+            $this->render_core = self::$render_cores['DOM'];
         }
         else
         {
@@ -94,9 +94,12 @@ abstract class Output
         $output = null;
         $render_data = (empty($render_data)) ? $this->render_data : $render_data;
         $dom = (is_null($dom)) ? $this->dom : $dom;
+        $substitutes = $this->template_substitutes->getAll();
 
         if ($this->core_id === 'mustache')
         {
+            $this->render_core->renderEngine()->getLoader()->updateSubstituteTemplates($substitutes);
+
             if ($data_only)
             {
                 $output = $render_data;

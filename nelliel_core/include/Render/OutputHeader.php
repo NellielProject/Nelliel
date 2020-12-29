@@ -34,7 +34,6 @@ class OutputHeader extends Output
         if ($this->render_data['show_styles'])
         {
             $this->render_data['styles'] = $output_menu->styles([], true);
-            $this->render_data['menu/styles'] = $this->template_substitutes->getFunction('menu/styles', true);
         }
 
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
@@ -88,7 +87,6 @@ class OutputHeader extends Output
         if ($this->render_data['show_styles'])
         {
             $this->render_data['styles'] = $output_menu->styles([], true);
-            $this->render_data['menu/styles'] = $this->template_substitutes->getFunction('menu/styles', true);
         }
 
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
