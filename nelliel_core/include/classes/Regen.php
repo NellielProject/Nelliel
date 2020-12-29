@@ -48,8 +48,16 @@ class Regen
     public function overboard(Domain $domain)
     {
         $output_overboard = new \Nelliel\Render\OutputOverboard($domain, true);
-        $output_overboard->render([], false);
-        $output_overboard->render(['sfw' => true], false);
+
+        if ($domain->setting('overboard_active'))
+        {
+            $output_overboard->render([], false);
+        }
+
+        if ($domain->setting('sfw_overboard_active'))
+        {
+            $output_overboard->render(['sfw' => true], false);
+        }
     }
 
     public function boardList(Domain $domain)

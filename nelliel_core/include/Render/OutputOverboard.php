@@ -24,12 +24,6 @@ class OutputOverboard extends Output
     public function render(array $parameters, bool $data_only)
     {
         $sfw = $parameters['sfw'] ?? false;
-
-        if ($sfw && !$this->site_domain->setting('sfw_overboard_active'))
-        {
-            return;
-        }
-
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $prefix = ($sfw) ? 'sfw_' : '';
