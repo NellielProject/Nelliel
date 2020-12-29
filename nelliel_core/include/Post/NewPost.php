@@ -209,7 +209,7 @@ class NewPost
 
         if ($site_domain->setting('overboard_active') || $site_domain->setting('sfw_overboard_active'))
         {
-            $regen->overboard($this->domain);
+            $regen->overboard($site_domain);
         }
 
         return $thread->contentID()->threadID();

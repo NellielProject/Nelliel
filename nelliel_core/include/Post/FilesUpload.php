@@ -56,7 +56,7 @@ class FilesUpload
         $filenames = array();
         $file_duplicate = 1;
 
-        for ($i = 0; $i < $this->domain->setting('max_post_files'); $i ++)
+        for ($i = 0; $i < $file_count; $i ++)
         {
             $file_data = array();
             $file_data['name'] = $this->uploaded_files['upload_files']['name'][$i];
