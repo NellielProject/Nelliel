@@ -7,8 +7,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\Auth\AuthUser;
+use Nelliel\Utility\CacheHandler;
 
 class Language
 {
@@ -48,7 +49,7 @@ class Language
                 '.po';
         $file_id = $locale . '/' . $category_string . '/' . $domain_id . '.po';
         $cache_file = 'language/' . $locale . '/' . $category_string . '/' . $domain_id . '_po.php';
-        $cache_handler = new \Nelliel\Utility\CacheHandler();
+        $cache_handler = new CacheHandler();
         $language_array = array();
         $loaded = false;
         $hash = '';
@@ -94,7 +95,7 @@ class Language
         }
 
         $extractor = new \Nelliel\Language\LanguageExtractor($domain);
-        $file_handler = new \Nelliel\Utility\FileHandler();
+        $file_handler = nel_utilities()->fileHandler();
         $extracted = $extractor->assemblePoString($default_textdomain, $default_category);
 
         foreach ($extracted as $category_str => $domain_output)

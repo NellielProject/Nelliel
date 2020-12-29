@@ -44,11 +44,11 @@ class TableAssets extends TableHandler
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow(['icons-nelliel-basic', 'icon-set', 1, '{"id": "icons-nelliel-basic","directory": "nelliel_basic","name": "Nelliel Basic Icon Set","version": "1.0","description": "The basic icon set for Nelliel."}']);
-        $this->insertDefaultRow(['style-nelliel', 'style', 1, '{"id": "style-nelliel","directory": "nelliel","main_file": "nelliel.css","name": "Nelliel","version": "1.0","description": "Nelliel style","style_type": "css"}']);
-        $this->insertDefaultRow(['style-nelliel-b', 'style', 0, '{"id": "style-nelliel-b","directory": "nelliel_b","main_file": "nelliel_b.css","name": "Nelliel B","version": "1.0","description": "Nelliel B style","style_type": "css"}']);
-        $this->insertDefaultRow(['style-futaba', 'style', 0, '{"id": "style-futaba","directory": "futaba","main_file": "futaba.css","name": "Futaba","version": "1.0","description": "Futaba style","style_type": "css"}']);
-        $this->insertDefaultRow(['style-burichan', 'style', 0, '{"id": "style-burichan","directory": "burichan","main_file": "burichan.css","name": "Burichan","version": "1.0","description": "Burichan style","style_type": "css"}']);
-        $this->insertDefaultRow(['style-nigra', 'style', 0, '{"id": "style-nigra","directory": "nigra","main_file": "nigra.css","name": "Nigra","version": "1.0","description": "Nigra style","style_type": "css"}']);
+        $this->insertDefaultRow(['icons-nelliel-basic', 'icon-set', 1, '{"id": "icons-nelliel-basic","directory": "core/nelliel_basic","name": "Nelliel Basic Icon Set","version": "1.0","description": "The basic icon set for Nelliel."}']);
+        $this->insertDefaultRow(['style-nelliel', 'style', 1, '{"id": "style-nelliel","directory": "core/nelliel","main_file": "nelliel.css","name": "Nelliel","version": "1.0","description": "Nelliel style","style_type": "css"}']);
+        $this->insertDefaultRow(['style-nelliel-b', 'style', 0, '{"id": "style-nelliel-b","directory": "core/nelliel_b","main_file": "nelliel_b.css","name": "Nelliel B","version": "1.0","description": "Nelliel B style","style_type": "css"}']);
+        $this->insertDefaultRow(['style-futaba', 'style', 0, '{"id": "style-futaba","directory": "core/futaba","main_file": "futaba.css","name": "Futaba","version": "1.0","description": "Futaba style","style_type": "css"}']);
+        $this->insertDefaultRow(['style-burichan', 'style', 0, '{"id": "style-burichan","directory": "core/burichan","main_file": "burichan.css","name": "Burichan","version": "1.0","description": "Burichan style","style_type": "css"}']);
+        $this->insertDefaultRow(['style-nigra', 'style', 0, '{"id": "style-nigra","directory": "core/nigra","main_file": "nigra.css","name": "Nigra","version": "1.0","description": "Nigra style","style_type": "css"}']);
     }
 }

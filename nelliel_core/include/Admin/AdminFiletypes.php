@@ -8,7 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use PDO;
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\Auth\Authorization;
 
 class AdminFiletypes extends AdminHandler
@@ -24,13 +24,15 @@ class AdminFiletypes extends AdminHandler
 
     public function renderPanel()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelFiletypes($this->domain, false);
-        $output_panel->render(['user' => $this->session_user], false);
+        $this->verifyAccess();
+        $output_panel = new \Nelliel\Render\OutputPanelFiletypes($this->domain, false);
+        $output_panel->main(['user' => $this->session_user], false);
     }
 
     public function creator()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelFiletypes($this->domain, false);
+        $this->verifyAccess();
+        $output_panel = new \Nelliel\Render\OutputPanelFiletypes($this->domain, false);
         $output_panel->edit(['user' => $this->session_user, 'editing' => false], false);
         $this->outputMain(false);
     }
@@ -64,8 +66,9 @@ class AdminFiletypes extends AdminHandler
 
     public function editor()
     {
+        $this->verifyAccess();
         $entry = $_GET['filetype-id'] ?? 0;
-        $output_panel = new \Nelliel\Output\OutputPanelFiletypes($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelFiletypes($this->domain, false);
         $output_panel->edit(['user' => $this->session_user, 'editing' => true, 'entry' => $entry], false);
         $this->outputMain(false);
     }
@@ -111,21 +114,6 @@ class AdminFiletypes extends AdminHandler
         $this->outputMain(true);
     }
 
-    private function getBoardDomains()
-    {
-        $query = 'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"';
-        $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
-        $board_domains = array();
-
-        foreach ($board_ids as $board_id)
-        {
-            $board_domains[] = new \Nelliel\DomainBoard($board_id, $this->database);
-        }
-
-        return $board_domains;
-    }
-
-    // TODO: combine these
     public function enable()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
@@ -150,5 +138,13 @@ class AdminFiletypes extends AdminHandler
         $prepared = $this->database->prepare('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "enabled" = 0 WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filetype_id]);
         $this->outputMain(true);
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
+        {
+            nel_derp(430, _gettext('You are not allowed to access the filetypes panel.'));
+        }
     }
 }

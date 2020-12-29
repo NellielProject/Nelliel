@@ -60,14 +60,14 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
 
     if(isset($error_data['board_id']) && $error_data['board_id'] !== '_site_')
     {
-        $domain = new \Nelliel\DomainBoard($error_data['board_id'], nel_database());
+        $domain = new \Nelliel\Domains\DomainBoard($error_data['board_id'], nel_database());
     }
     else
     {
-        $domain = new \Nelliel\DomainSite(nel_database());
+        $domain = new \Nelliel\Domains\DomainSite(nel_database());
     }
 
-    $output_derp = new \Nelliel\Output\OutputDerp($domain, false);
+    $output_derp = new \Nelliel\Render\OutputDerp($domain, false);
     echo $output_derp->render(['diagnostic' => $diagnostic], false);
 
     nel_clean_exit(false);

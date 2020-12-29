@@ -7,8 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
-use Nelliel\DomainSite;
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainSite;
 use Nelliel\Auth\Authorization;
 use Nelliel\Admin\AdminHandler;
 
@@ -39,7 +39,7 @@ class Dispatch
             }
         }
 
-        $output_main_panel = new \Nelliel\Output\OutputPanelMain($this->domain, false);
+        $output_main_panel = new \Nelliel\Render\OutputPanelMain($this->domain, false);
         $output_main_panel->render(['user' => $session->sessionUser()], false);
     }
 }

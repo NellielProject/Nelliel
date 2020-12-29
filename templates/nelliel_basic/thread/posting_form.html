@@ -1,0 +1,111 @@
+{{# is_response }}
+<div>
+	[<a href="{{ return_url }}" data-i18n="gettext">Return</a>]
+</div>
+{{/ is_response }}
+<form id="posting-form" class="display-table posting-form" accept-charset="utf-8" name="postingform" action="{{ form_action }}" method="post" enctype="multipart/form-data" data-jsevents="click|change">
+	<input type="hidden" name="new_post[post_info][response_to]" value="{{ response_to }}">
+	{{# in_modmode }}
+	<input type="hidden" name="in_modmode" value="true">
+	{{/ in_modmode }}
+	<div>
+		{{^ force_anonymous }}
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Name</span>
+			<input type="text" class="posting-form-input" name="new_post[post_info][not_anonymous]" size="30" maxlength="{{ not_anonymous_maxlength }}">
+		</label>
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">E-mail</span>
+			<input class="posting-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength="{{ spam_target_maxlength }}">
+		</label>
+		{{/ force_anonymous }}
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Subject</span>
+			<input class="posting-form-input" type="text" name="new_post[post_info][verb]" size="30" maxlength="{{ verb_maxlength }}">
+		</label>
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Comment</span>
+			<textarea id="wordswordswords" class="posting-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6"></textarea>
+		</label>
+		{{# file_uploads }}
+		<span class="posting-form-row">
+			<label class="posting-form-label" for="form-file-upload">
+				<span data-i18n="gettext">File</span>&nbsp;<span>{{ file_number }}</span>
+			</label>
+			<input id="form-file-upload" class="posting-form-input" type="file" name="upload_files[]" {{# allow_multiple }}multiple=""{{/ allow_multiple }}>
+			<br>
+			{{# spoilers_enabled }}
+			<span id="form-spoiler">
+				<input type="hidden" name="form_spoiler" value="0">
+				<input type="checkbox" name="form_spoiler" value="1">
+				<span data-i18n="gettext">Spoiler</span>
+			</span>
+			{{/ spoilers_enabled }}
+		</span>
+		{{/ file_uploads }}
+		{{# use_fgsfds }}
+		<label class="posting-form-row">
+			<span class="posting-form-label">{{ fgsfds_name }}</span>
+			<input class="posting-form-input" type="text" name="new_post[post_info][fgsfds]" size="30">
+		</label>
+		{{/ use_fgsfds }}
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Password</span>
+			<input id="posting-form-sekrit" class="posting-form-input" type="password" name="new_post[post_info][sekrit]" size="12" maxlength="16" value="">&nbsp;&nbsp;
+			<span data-i18n="gettext">(Password used for file deletion)</span>
+		</label>
+		{{# is_staff }}
+		<label class="posting-form-row">
+			<span class="posting-form-label"></span>
+			<input type="hidden" name="post_as_staff" value="0">
+			<input type="checkbox" name="post_as_staff" value="1" title="Post as staff" data-i18n-attributes="gettext|title" checked>
+			<span data-i18n="gettext">Post as staff</span>
+		</label>
+		{{/ is_staff }}
+		{{# use_post_captcha }}
+		<div class="posting-form-row" data-jsevents="click">
+			<span class="posting-form-label" data-i18n="gettext">CAPTCHA</span>
+			{{> pieces/captcha }}
+		</div>
+		{{/ use_post_captcha }}
+		{{# use_post_recaptcha }}
+		<div class="posting-form-row" data-jsevents="click">
+			<span class="posting-form-label" data-i18n="gettext">reCAPTCHA</span>
+			{{> pieces/recaptcha }}
+		</div>
+		{{/ use_post_recaptcha }}
+		{{# use_honeypot }}
+		<label id="form-user-info-1" class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Do not ever check this!</span>
+			<input type="checkbox" name="{{ honeypot_field_name1 }}" value="display" autocomplete="off" tabindex="-1">
+		</label>
+		<label id="form-user-info-2" class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Never put anything in this field!</span>
+			<input type="text" name="{{ honeypot_field_name2 }}" size="30" autocomplete="off" tabindex="-1">
+		</label>
+		{{/ use_honeypot }}
+		<div class="posting-form-row">
+			<span class="display-cell"></span>
+			<input type="submit" value="Submit" data-i18n-attributes="gettext|value">&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="reset" value="Clear form" data-i18n-attributes="gettext|value">
+		</div>
+		<div class="posting-form-row">
+			<span class="display-cell"></span>
+			<span class="posting-form-input">{{ posting_mode }}</span>
+		</div>
+		{{# use_honeypot }}
+		<label id="form-user-info-3" class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Never put anything in this field!</span>
+			<input type="text" placeholder="http://www.mywebsite.com" name="{{ honeypot_field_name3 }}" size="30" autocomplete="off" tabindex="-1">
+		</label>
+		{{/ use_honeypot }}
+	</div>
+	<div class="rules">
+		<ul class="rules-list">
+		{{# rules_list }}
+			<li class="rules-item">{{ rules_text }}</li>
+		{{/ rules_list }}
+		</ul>
+	</div>
+</form>
+<hr class="clear">

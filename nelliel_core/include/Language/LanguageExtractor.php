@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use PDO;
 
 class LanguageExtractor
@@ -118,7 +118,7 @@ class LanguageExtractor
 
     private function parseSiteFiles(array $strings, int $default_category)
     {
-        $file_handler = new \Nelliel\Utility\FileHandler();
+        $file_handler = nel_utilities()->fileHandler();
         $php_files = $file_handler->recursiveFileList(NEL_BASE_PATH, 0);
         $php_files = array_merge($php_files, $file_handler->recursiveFileList(NEL_INCLUDE_PATH));
 
@@ -301,10 +301,10 @@ class LanguageExtractor
 
     private function parseHTMLFiles(array $strings, string $default_category)
     {
-        $file_handler = new \Nelliel\Utility\FileHandler();
-        $html_files = $file_handler->recursiveFileList(NEL_CORE_TEMPLATES_FILES_PATH . 'nelliel_basic/'); // TODO: Be able to parse custom template sets
+        $file_handler = nel_utilities()->fileHandler();
+        $html_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'nelliel_basic/'); // TODO: Be able to parse custom template sets
         $html_files = array_merge($html_files, $file_handler->recursiveFileList(NEL_INCLUDE_PATH));
-        $render = new \Nelliel\RenderCoreDOM();
+        $render = new \Nelliel\Render\RenderCoreDOM();
 
         foreach ($html_files as $file)
         {

@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\NellielPDO;
 use Nelliel\Auth\Authorization;
 use PDO;
@@ -47,7 +47,7 @@ class Login
         $form_user_id = (isset($_POST['user_id'])) ? strval($_POST['user_id']) : '';
         $session_user_id = (isset($_SESSION['user_id'])) ? strval($_SESSION['user_id']) : '';
         $form_password = (isset($_POST['super_sekrit'])) ? strval($_POST['super_sekrit']) : '';
-        $rate_limit = new \Nelliel\RateLimit($this->database);
+        $rate_limit = nel_utilities()->rateLimit();
 
         if ($rate_limit->lastTime($hashed_ip_address, 'login') > $attempt_time - 3)
         {

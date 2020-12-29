@@ -7,6 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainBoard;
 use PDO;
 
 class Regen
@@ -23,7 +25,7 @@ class Regen
 
         while ($i < $threads)
         {
-            $output_thread = new \Nelliel\Output\OutputThread($domain, $write);
+            $output_thread = new \Nelliel\Render\OutputThread($domain, $write);
             $output_thread->render(['thread_id' => $ids[$i]], false);
             ++ $i;
         }
@@ -31,29 +33,29 @@ class Regen
 
     public function news(Domain $domain)
     {
-        $news = new \Nelliel\Output\OutputNews($domain, true);
+        $news = new \Nelliel\Render\OutputNews($domain, true);
         $news->render(array(), false);
     }
 
     public function index(Domain $domain)
     {
-        $output_thread = new \Nelliel\Output\OutputIndex($domain, true);
+        $output_thread = new \Nelliel\Render\OutputIndex($domain, true);
         $output_thread->render(['thread_id' => 0], false);
-        $output_catalog = new \Nelliel\Output\OutputCatalog($domain, true);
+        $output_catalog = new \Nelliel\Render\OutputCatalog($domain, true);
         $output_catalog->render([], false);
     }
 
     public function overboard(Domain $domain)
     {
-        $output_overboard = new \Nelliel\Output\OutputOverboard($domain, true);
+        $output_overboard = new \Nelliel\Render\OutputOverboard($domain, true);
         $output_overboard->render([], false);
         $output_overboard->render(['sfw' => true], false);
     }
 
     public function boardList(Domain $domain)
     {
-        $board_json = new \Nelliel\API\JSON\JSONBoard($domain, new \Nelliel\Utility\FileHandler());
-        $board_list_json = new \Nelliel\API\JSON\JSONBoardList($domain, new \Nelliel\Utility\FileHandler());
+        $board_json = new \Nelliel\API\JSON\JSONBoard($domain, nel_utilities()->fileHandler());
+        $board_list_json = new \Nelliel\API\JSON\JSONBoardList($domain, nel_utilities()->fileHandler());
         $board_ids = $domain->database()->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
                 PDO::FETCH_COLUMN);
 

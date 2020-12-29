@@ -7,8 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
-use Nelliel\DomainSite;
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainSite;
 use Nelliel\Auth\Authorization;
 use PDO;
 
@@ -27,8 +27,9 @@ class AdminBoards extends AdminHandler
 
     public function renderPanel()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain, false);
-        $output_panel->render(['section' => 'panel', 'user' => $this->session_user], false);
+        $this->verifyAccess();
+        $output_panel = new \Nelliel\Render\OutputPanelManageBoards($this->domain, false);
+        $output_panel->main(['user' => $this->session_user], false);
     }
 
     public function creator()
@@ -42,8 +43,8 @@ class AdminBoards extends AdminHandler
             nel_derp(371, _gettext('You are not allowed to create boards.'));
         }
 
-        $site_domain = new \Nelliel\DomainSite($this->database);
-        $board_id = $_POST['new_board_id'];
+        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
+        $board_id = trim($_POST['new_board_id']);
 
         if (nel_true_empty($board_id))
         {
@@ -86,11 +87,11 @@ class AdminBoards extends AdminHandler
         $setup = new \Nelliel\Setup\Setup();
         $setup->createBoardTables($board_id, $db_prefix);
         $setup->createBoardDirectories($board_id);
-        $domain = new \Nelliel\DomainBoard($board_id, $this->database);
+        $domain = new \Nelliel\Domains\DomainBoard($board_id, $this->database);
         $regen = new \Nelliel\Regen();
         $domain->regenCache();
         $regen->allBoardPages($domain);
-        $regen->boardList(new \Nelliel\DomainSite($this->database));
+        $regen->boardList(new \Nelliel\Domains\DomainSite($this->database));
         $this->outputMain(true);
     }
 
@@ -110,7 +111,7 @@ class AdminBoards extends AdminHandler
         }
 
         $board_id = $_GET['board_id'];
-        $domain = new \Nelliel\DomainBoard($board_id, $this->database);
+        $domain = new \Nelliel\Domains\DomainBoard($board_id, $this->database);
 
         if (!$domain->boardExists())
         {
@@ -152,13 +153,12 @@ class AdminBoards extends AdminHandler
             $this->database->executePrepared($prepared, [$domain->reference('log_table')]);
         }
 
-        $file_handler = new \Nelliel\Utility\FileHandler();
-        $file_handler->eraserGun($domain->reference('board_path'));
+        nel_utilities()->fileHandler()->eraserGun($domain->reference('board_path'));
         $domain->deleteCache();
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $regen = new \Nelliel\Regen();
-        $regen->boardList(new \Nelliel\DomainSite($this->database));
+        $regen->boardList(new \Nelliel\Domains\DomainSite($this->database));
         $this->outputMain(true);
     }
 
@@ -190,19 +190,18 @@ class AdminBoards extends AdminHandler
         $this->outputMain(true);
     }
 
-    public function createInterstitial()
+    public function createInterstitial(string $which)
     {
-        $message = _gettext(
-                'Are you certain you want to delete the board? Everything will be gone and this cannot be undone!');
-        $continue_link['href'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                        ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove',
-                            'action-confirmed' => 'true', 'board_id' => $_GET['board_id'], 'domain_id' => '_site_']);
-        $continue_link['text'] = _gettext('Confirm and delete the board.');
-        $output_panel = new \Nelliel\Output\OutputPanelManageBoards($this->domain, false);
-        $output_panel->render(
-                ['section' => 'remove_interstitial', 'user' => $this->session_user, 'message' => $message,
-                    'continue_link' => $continue_link], false);
+        $this->verifyAccess();
+        $output_panel = new \Nelliel\Render\OutputPanelManageBoards($this->domain, false);
+
+        switch ($which)
+        {
+            case 'remove_warning':
+                $output_panel->removeWarning(['user' => $this->session_user], false);
+                break;
+        }
+
         $this->outputMain(false);
     }
 
@@ -238,5 +237,13 @@ class AdminBoards extends AdminHandler
         }
 
         return $final_id;
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
+        {
+            nel_derp(370, _gettext('You are not allowed to access the boards panel.'));
+        }
     }
 }

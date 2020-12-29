@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\Auth\Authorization;
 
 class AdminTemplates extends AdminHandler
@@ -23,7 +23,7 @@ class AdminTemplates extends AdminHandler
 
     public function renderPanel()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelTemplates($this->domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelTemplates($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
 
@@ -39,8 +39,7 @@ class AdminTemplates extends AdminHandler
         }
 
         $template_id = $_GET['template-id'];
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
-        $template_inis = $front_end_data->getTemplateInis();
+        $template_inis = $this->domain->frontEndData()->getTemplateInis();
         $info = '';
 
         foreach ($template_inis as $ini)
@@ -95,5 +94,13 @@ class AdminTemplates extends AdminHandler
         $prepared = $this->database->prepare('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 1 WHERE "id" = ?');
         $this->database->executePrepared($prepared, [$template_id]);
         $this->outputMain(true);
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
+        {
+            nel_derp(420, _gettext('You are not allowed to access the templates panel.'));
+        }
     }
 }

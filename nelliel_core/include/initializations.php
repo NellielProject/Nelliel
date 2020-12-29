@@ -4,102 +4,10 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-define('NEL_OVER_9000', 9001);
-
 if (ini_get('date.timezone') === '')
 {
     date_default_timezone_set('UTC');
 }
-
-define('NEL_ASSETS_DIR', 'assets');
-define('NEL_STYLES_DIR', 'styles');
-define('NEL_ICON_SETS_DIR', 'icons');
-define('NEL_IMAGES_DIR', 'imagez');
-define('NEL_TEMPLATES_DIR', 'templates');
-define('NEL_SCRIPTS_DIR', 'scripts');
-define('NEL_FONTS_DIR', 'fonts');
-define('NEL_CORE_DIR', 'core');
-define('NEL_CUSTOM_DIR', 'custom');
-define('NEL_GENERAL_DIR', '.nelliel');
-define('NEL_CAPTCHA_DIR', 'captchas');
-
-// TODO: Currently unused, possibly remove
-if ($_SERVER['SERVER_PORT'] != 80 && empty($_SERVER['HTTPS']))
-{
-    define('NEL_BASE_DOMAIN', $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT']);
-}
-else
-{
-    define('NEL_BASE_DOMAIN', $_SERVER['SERVER_NAME']);
-}
-
-define('NEL_MAIN_SCRIPT', 'imgboard.php');
-define('NEL_MAIN_SCRIPT_QUERY', 'imgboard.php?');
-define('NEL_MAIN_INDEX', 'index');
-define('NEL_PAGE_EXT', '.html');
-define('NEL_JSON_EXT', '.json');
-
-define('NEL_ASSETS_TABLE', 'nelliel_assets');
-define('NEL_BANS_TABLE', 'nelliel_bans');
-define('NEL_BOARD_DATA_TABLE', 'nelliel_board_data');
-define('NEL_BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults');
-define('NEL_CAPTCHA_TABLE', 'nelliel_captcha');
-define('NEL_CITES_TABLE', 'nelliel_cites');
-define('NEL_FILES_FILTERS_TABLE', 'nelliel_file_filters');
-define('NEL_FILETYPES_TABLE', 'nelliel_filetypes');
-define('NEL_LOGS_TABLE', 'nelliel_logs');
-define('NEL_NEWS_TABLE', 'nelliel_news');
-define('NEL_PERMISSIONS_TABLE', 'nelliel_permissions');
-define('NEL_OVERBOARD_TABLE', 'nelliel_overboard');
-define('NEL_RATE_LIMIT_TABLE', 'nelliel_rate_limit');
-define('NEL_REPORTS_TABLE', 'nelliel_reports');
-define('NEL_ROLE_PERMISSIONS_TABLE', 'nelliel_role_permissions');
-define('NEL_ROLES_TABLE', 'nelliel_roles');
-define('NEL_SETTINGS_TABLE', 'nelliel_settings');
-define('NEL_SITE_CONFIG_TABLE', 'nelliel_site_config');
-define('NEL_TEMPLATES_TABLE', 'nelliel_templates');
-define('NEL_USER_ROLES_TABLE', 'nelliel_user_roles');
-define('NEL_USERS_TABLE', 'nelliel_users');
-define('NEL_VERSIONS_TABLE', 'nelliel_version');
-
-define('NEL_ASSETS_CORE_FILES_PATH', NEL_BASE_PATH . NEL_ASSETS_DIR . '/' . NEL_CORE_DIR . '/');
-define('NEL_ASSETS_CUSTOM_FILES_PATH', NEL_BASE_PATH . NEL_ASSETS_DIR . '/' . NEL_CUSTOM_DIR . '/');
-define('NEL_ASSETS_FILES_PATH', NEL_BASE_PATH . NEL_ASSETS_DIR . '/');
-define('NEL_CONFIG_FILES_PATH', NEL_CORE_PATH . 'configuration/');
-define('NEL_CACHE_FILES_PATH', NEL_CORE_PATH . 'cache/');
-define('NEL_CORE_TEMPLATES_FILES_PATH', NEL_BASE_PATH . NEL_TEMPLATES_DIR . '/' . NEL_CORE_DIR . '/');
-define('NEL_CUSTOM_TEMPLATES_FILES_PATH', NEL_BASE_PATH . NEL_TEMPLATES_DIR . '/' . NEL_CUSTOM_DIR . '/');
-define('NEL_CORE_FONTS_FILES_PATH', NEL_ASSETS_CORE_FILES_PATH . NEL_FONTS_DIR . '/');
-define('NEL_CUSTOM_FONTS_FILES_PATH', NEL_ASSETS_CUSTOM_FILES_PATH . NEL_FONTS_DIR . '/');
-define('NEL_GENERATED_FILES_PATH', NEL_CORE_PATH . 'generated/');
-define('NEL_PLUGINS_FILES_PATH', NEL_CORE_PATH . 'plugins/');
-define('NEL_LANGUAGES_FILES_PATH', NEL_CORE_PATH . 'languages/');
-define('NEL_LOCALE_FILES_PATH', NEL_LANGUAGES_FILES_PATH . 'locale/');
-define('NEL_CORE_STYLES_FILES_PATH', NEL_ASSETS_CORE_FILES_PATH . NEL_STYLES_DIR . '/');
-define('NEL_CUSTOM_STYLES_FILES_PATH', NEL_ASSETS_CUSTOM_FILES_PATH . NEL_STYLES_DIR . '/');
-define('NEL_CORE_ICON_SETS_FILES_PATH', NEL_ASSETS_CORE_FILES_PATH . NEL_ICON_SETS_DIR . '/');
-define('NEL_CUSTOM_ICON_SETS_FILES_PATH', NEL_ASSETS_CUSTOM_FILES_PATH . NEL_ICON_SETS_DIR . '/');
-define('NEL_WAT_FILES_PATH', NEL_INCLUDE_PATH . 'wat/');
-define('NEL_GENERAL_FILES_PATH', NEL_BASE_PATH . NEL_GENERAL_DIR . '/');
-define('NEL_CAPTCHA_FILES_PATH', NEL_GENERAL_FILES_PATH . NEL_CAPTCHA_DIR . '/');
-
-define('NEL_BASE_WEB_PATH', pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME) . '/');
-define('NEL_ASSETS_CORE_WEB_PATH', NEL_BASE_WEB_PATH . NEL_ASSETS_DIR . '/' . NEL_CORE_DIR . '/');
-define('NEL_ASSETS_CUSTOM_WEB_PATH', NEL_BASE_WEB_PATH . NEL_ASSETS_DIR . '/' . NEL_CUSTOM_DIR . '/');
-define('NEL_CORE_SCRIPTS_WEB_PATH', NEL_ASSETS_CORE_WEB_PATH . NEL_SCRIPTS_DIR . '/');
-define('NEL_CUSTOM_SCRIPTS_WEB_PATH', NEL_ASSETS_CUSTOM_WEB_PATH . NEL_SCRIPTS_DIR . '/');
-define('NEL_CORE_IMAGES_WEB_PATH', NEL_ASSETS_CORE_WEB_PATH . NEL_IMAGES_DIR . '/');
-define('NEL_CUSTOM_IMAGES_WEB_PATH', NEL_ASSETS_CUSTOM_WEB_PATH . NEL_IMAGES_DIR . '/');
-define('NEL_CORE_STYLES_WEB_PATH', NEL_ASSETS_CORE_WEB_PATH . NEL_STYLES_DIR . '/');
-define('NEL_CUSTOM_STYLES_WEB_PATH', NEL_ASSETS_CUSTOM_WEB_PATH . NEL_STYLES_DIR . '/');
-define('NEL_CORE_ICON_SETS_WEB_PATH', NEL_ASSETS_CORE_WEB_PATH . NEL_ICON_SETS_DIR . '/');
-define('NEL_CUSTOM_ICON_SETS_WEB_PATH', NEL_ASSETS_CUSTOM_WEB_PATH . NEL_ICON_SETS_DIR . '/');
-define('NEL_MAIN_SCRIPT_WEB_PATH', NEL_BASE_WEB_PATH . NEL_MAIN_SCRIPT);
-define('NEL_MAIN_SCRIPT_QUERY_WEB_PATH', NEL_BASE_WEB_PATH . NEL_MAIN_SCRIPT_QUERY);
-define('NEL_GENERAL_WEB_PATH', NEL_GENERAL_DIR . '/');
-define('NEL_CAPTCHA_WEB_PATH', NEL_GENERAL_WEB_PATH . NEL_CAPTCHA_DIR . '/');
-
-define('NEL_SQLITE_DB_DEFAULT_PATH', '../');
 
 define('NEL_BASE_HONEYPOT_FIELD1', 'display_signature'); // Honeypot field name
 define('NEL_BASE_HONEYPOT_FIELD2', 'signature'); // Honeypot field name

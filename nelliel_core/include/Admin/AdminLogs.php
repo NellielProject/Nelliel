@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\Auth\Authorization;
 
 class AdminLogs extends AdminHandler
@@ -24,7 +24,8 @@ class AdminLogs extends AdminHandler
 
     public function renderPanel()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelLogs($this->domain, false);
+        $this->verifyAccess();
+        $output_panel = new \Nelliel\Render\OutputPanelLogs($this->domain, false);
         $log_type = $_GET['log-type'] ?? '';
         $output_panel->render(['user' => $this->session_user, 'log_type' => $log_type], false);
     }
@@ -47,5 +48,13 @@ class AdminLogs extends AdminHandler
 
     public function remove()
     {
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_logs'))
+        {
+            nel_derp(341, _gettext('You are not allowed to access the logs panel.'));
+        }
     }
 }

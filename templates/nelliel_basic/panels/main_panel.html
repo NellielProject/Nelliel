@@ -1,0 +1,67 @@
+<div><span>Boards you own or moderate:</span></div>
+<div>
+	{{# board_list }}
+	<div><a href="{{ board_url }}">{{ board_id }}</a> - <span>Role:</span>&nbsp;<span>{{ board_role }}</span></div>
+	{{/ board_list }}
+</div>
+<hr>
+<div>
+	{{# module_manage_boards }}
+	<div><a href="{{ manage_boards_url }}" data-i18n="gettext">Manage Boards</a></div>
+	{{/ module_manage_boards }}
+	{{# module_users }}
+	<div><a href="{{ users_url }}" data-i18n="gettext">Users</a></div>
+	{{/ module_users }}
+	{{# module_roles }}
+	<div><a href="{{ roles_url }}" data-i18n="gettext">Roles</a></div>
+	{{/ module_roles }}
+	{{# module_site_settings }}
+	<div><a href="{{ site_settings_url }}" data-i18n="gettext">Site Settings</a></div>
+	{{/ module_site_settings }}
+	{{# module_file_filters }}
+	<div><a href="{{ file_filters_url }}" data-i18n="gettext">File Filters</a></div>
+	{{/ module_file_filters }}
+	{{# module_board_defaults }}
+	<div><a href="{{ board_defaults_url }}" data-i18n="gettext">New Board Defaults</a></div>
+	{{/ module_board_defaults }}
+	{{# module_bans }}
+		<div><a href="{{ bans_url }}" data-i18n="gettext">Ban Controls</a></div>
+	{{/ module_bans }}
+	{{# module_reports }}
+	<div><a href="{{ reports_url }}" data-i18n="gettext">Reports</a></div>
+	{{/ module_reports }}
+	{{# module_templates }}
+	<div><a href="{{ templates_url }}" data-i18n="gettext">Templates</a></div>
+	{{/ module_templates }}
+	{{# module_filetypes }}
+	<div><a href="{{ filetypes_url }}" data-i18n="gettext">Filetypes</a></div>
+	{{/ module_filetypes }}
+	{{# module_styles }}
+	<div><a href="{{ styles_url }}" data-i18n="gettext">Styles</a></div>
+	{{/ module_styles }}
+	{{# module_permissions }}
+	<div><a href="{{ permissions_url }}" data-i18n="gettext">Permissions</a></div>
+	{{/ module_permissions }}
+	{{# module_icon_sets }}
+	<div><a href="{{ icon_sets_url }}" data-i18n="gettext">Icon Sets</a></div>
+	{{/ module_icon_sets }}
+	{{# module_news }}
+	<div><a href="{{ news_url }}" data-i18n="gettext">News</a></div>
+	{{/ module_news }}
+	<hr>
+	{{# regen_overboard_pages }}
+	<div>
+		<a href="{{ regen_pages_url }}" data-i18n="gettext">Regenerate Overboard Pages</a>
+		<span data-i18n="gettext">Regenerates all posts and threads for the overboards.</span>
+	</div>
+	{{/ regen_overboard_pages }}
+	{{# regen_site_caches }}
+	<div>
+		<a href="{{ regen_caches_url }}" data-i18n="gettext">Regenerate Site Caches</a>
+		<span data-i18n="gettext">Regenerates all internal cache files for the main site.</span>
+	</div>
+	{{/ regen_site_caches }}
+		{{# module_extract_gettext }}
+		<div><a href="{{ extract_gettext_url }}" data-i18n="gettext">Extract Gettext Strings</a></div>
+		{{/ module_extract_gettext }}
+</div>

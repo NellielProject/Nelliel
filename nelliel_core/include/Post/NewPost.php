@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 
 class NewPost
 {
@@ -24,7 +24,7 @@ class NewPost
 
     public function processPost()
     {
-        $site_domain = new \Nelliel\DomainSite($this->database);
+        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $error_data = ['board_id' => $this->domain->id()];
         $captcha = new \Nelliel\CAPTCHA($this->domain);
 
@@ -46,8 +46,8 @@ class NewPost
         }
 
         $authorization = new \Nelliel\Auth\Authorization($this->database);
-        $archive = new \Nelliel\ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
-        $file_handler = new \Nelliel\Utility\FileHandler();
+        $archive = new \Nelliel\ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
+        $file_handler = nel_utilities()->fileHandler();
         $file_upload = new FilesUpload($this->domain, $_FILES, $authorization);
         $data_handler = new PostData($this->domain, $authorization);
         $post = new \Nelliel\Content\ContentPost(new \Nelliel\Content\ContentID(), $this->domain);

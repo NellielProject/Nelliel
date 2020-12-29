@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\Auth\Authorization;
 
 class AdminStyles extends AdminHandler
@@ -23,7 +23,8 @@ class AdminStyles extends AdminHandler
 
     public function renderPanel()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelStyles($this->domain, false);
+        $this->verifyAccess();
+        $output_panel = new \Nelliel\Render\OutputPanelStyles($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
 
@@ -39,8 +40,7 @@ class AdminStyles extends AdminHandler
         }
 
         $style_id = $_GET['style-id'];
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
-        $style_inis = $front_end_data->getStyleInis();
+        $style_inis = $this->domain->frontEndData()->getStyleInis();
 
         foreach ($style_inis as $ini)
         {
@@ -91,5 +91,13 @@ class AdminStyles extends AdminHandler
                 'UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'style\'');
         $this->database->executePrepared($prepared, [$style_id]);
         $this->outputMain(true);
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_styles'))
+        {
+            nel_derp(440, _gettext('You are not allowed to access the styles panel.'));
+        }
     }
 }

@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\Auth\Authorization;
 
 class AdminIconSets extends AdminHandler
@@ -23,7 +23,8 @@ class AdminIconSets extends AdminHandler
 
     public function renderPanel()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelIconSets($this->domain, false);
+        $this->verifyAccess();
+        $output_panel = new \Nelliel\Render\OutputPanelIconSets($this->domain, false);
         $output_panel->render(['user' => $this->session_user], false);
     }
 
@@ -39,8 +40,7 @@ class AdminIconSets extends AdminHandler
         }
 
         $icon_set_id = $_GET['icon-set-id'];
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
-        $icon_set_inis = $front_end_data->getIconSetInis();
+        $icon_set_inis = $this->domain->frontEndData()->getIconSetInis();
 
         foreach ($icon_set_inis as $ini)
         {
@@ -91,5 +91,13 @@ class AdminIconSets extends AdminHandler
                 'UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'icon-set\'');
         $this->database->executePrepared($prepared, [$icon_set_id]);
         $this->outputMain(true);
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
+        {
+            nel_derp(460, _gettext('You are not allowed to access the icon sets panel.'));
+        }
     }
 }

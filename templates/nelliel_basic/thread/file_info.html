@@ -1,0 +1,28 @@
+<div id="{{ file_info_id }}" class="{{ file_info_class }}">
+	{{# in_modmode }}
+	<div>
+		<span>[<a href="{{ delete_url }}" data-i18n="gettext">Delete</a>]</span>
+	</div>
+	{{/ in_modmode }}
+	<div>
+		<input type="checkbox" name="{{ file_content_id }}" value="action" class="{{ file_select_class }}">
+		<a href="{{ file_url }}" target="_blank">{{ display_filename }}</a>
+	</div>
+	<div>{{ display_image_dimensions }}{{ display_filesize}}</div>
+	<div>[<a id="{{ show_file_meta_id }}" href="#" data-i18n="gettext" data-command="show-file-meta" data-content-id="{{ file_content_id }}" data-alt-visual="Less file info" data-i18n-attributes="data-alt-visual">More file info</a>]</div>
+	<div id="{{ file_meta_id }}" class="file-meta hidden">
+	{{# file_metadata }}
+		<div class="{{ metadata_class }}">{{ metadata }}</div>
+	{{/ file_metadata }}
+	</div>
+	{{# video_preview }}
+	<video preload="metadata" width="{{ video_width }}" controls>
+		<source src="{{ video_url }}" type="{{ mime_type }}">
+	</video>
+	{{/ video_preview }}
+	{{# image_preview }}
+	<a href="{{ file_url }}" target="_blank" class="preview-link">
+	<img src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}" data-command="inline-expand" data-other-dims="{{ other_dims }}" data-other-loc="{{ other_loc }}">
+	</a>
+	{{/ image_preview }}
+</div>

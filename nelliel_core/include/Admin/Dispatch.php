@@ -7,8 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
-use Nelliel\DomainSite;
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainSite;
 use Nelliel\Auth\Authorization;
 use Nelliel\Admin\AdminHandler;
 
@@ -125,7 +125,7 @@ class Dispatch
                     }
                     else
                     {
-                        $admin_handler->createInterstitial();
+                        $admin_handler->createInterstitial('remove_warning');
                     }
                 }
                 else if ($action === 'lock')
@@ -257,14 +257,14 @@ class Dispatch
             case 'site-main-panel':
                 $session = new \Nelliel\Account\Session();
                 $session->loggedInOrError();
-                $output_main_panel = new \Nelliel\Output\OutputPanelMain($this->domain, false);
+                $output_main_panel = new \Nelliel\Render\OutputPanelMain($this->domain, false);
                 $output_main_panel->render(['user' => $session->sessionUser()], false);
                 break;
 
             case 'board-main-panel':
                 $session = new \Nelliel\Account\Session();
                 $session->loggedInOrError();
-                $output_board_panel = new \Nelliel\Output\OutputPanelBoard($this->domain, false);
+                $output_board_panel = new \Nelliel\Render\OutputPanelBoard($this->domain, false);
                 $output_board_panel->render(['user' => $session->sessionUser()], false);
         }
 

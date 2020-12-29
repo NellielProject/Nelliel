@@ -6,7 +6,7 @@ if (!defined('NELLIEL_VERSION'))
 
 function nel_clean_exit()
 {
-    $site_domain = new \Nelliel\DomainSite(nel_database());
+    $site_domain = new \Nelliel\Domains\DomainSite(nel_database());
     $authorization = new \Nelliel\Auth\Authorization(nel_database());
     $authorization->saveUsers();
     $authorization->saveRoles();

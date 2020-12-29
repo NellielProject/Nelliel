@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\Moar;
 use PDO;
 
@@ -43,7 +43,7 @@ class ContentPost extends ContentHandler
             $this->preview_path = $this->domain->reference('preview_path');
         }
 
-        $this->archive_prune = new ArchiveAndPrune($this->domain, new \Nelliel\Utility\FileHandler());
+        $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
         $this->storeMoar(new Moar());
     }
 
@@ -149,7 +149,7 @@ class ContentPost extends ContentHandler
 
     public function createDirectories()
     {
-        $file_handler = new \Nelliel\Utility\FileHandler();
+        $file_handler = nel_utilities()->fileHandler();
         $file_handler->createDirectory(
                 $this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(), NEL_DIRECTORY_PERM);
         $file_handler->createDirectory(
@@ -218,7 +218,7 @@ class ContentPost extends ContentHandler
 
     protected function removeFromDisk()
     {
-        $file_handler = new \Nelliel\Utility\FileHandler();
+        $file_handler = nel_utilities()->fileHandler();
         $file_handler->eraserGun($this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID());
         $file_handler->eraserGun(
                 $this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID());
@@ -297,7 +297,7 @@ class ContentPost extends ContentHandler
         $new_thread->content_data['last_update_milli'] = $time['milli'];
         $new_thread->writeToDatabase();
         $new_thread->loadFromDatabase();
-        $file_handler = new \Nelliel\Utility\FileHandler();
+        $file_handler = nel_utilities()->fileHandler();
         $new_thread->createDirectories();
         $file_handler->moveDirectory(
                 $this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(),

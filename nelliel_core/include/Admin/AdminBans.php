@@ -8,7 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Content\ContentID;
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\Auth\Authorization;
 
 class AdminBans extends AdminHandler
@@ -26,18 +26,20 @@ class AdminBans extends AdminHandler
 
     public function renderPanel()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
-        $output_panel->render(['section' => 'panel', 'user' => $this->session_user], false);
+        $this->verifyAccess();
+        $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
+        $output_panel->main(['user' => $this->session_user], false);
     }
 
     public function creator()
     {
+        $this->verifyAccess();
         $ip_start = $_GET['ban_ip'] ?? '';
         $hashed_ip = $_GET['ban_hashed_ip'] ?? '';
         $ban_type = $_GET['ban_type'] ?? 'GENERAL';
-        $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
-        $output_panel->render(
-                ['section' => 'add', 'user' => $this->session_user, 'ip_start' => $ip_start, 'hashed_ip' => $hashed_ip,
+        $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
+        $output_panel->new(
+                ['user' => $this->session_user, 'ip_start' => $ip_start, 'hashed_ip' => $hashed_ip,
                     'ban_type' => $ban_type], false);
         $this->outputMain(false);
     }
@@ -57,7 +59,7 @@ class AdminBans extends AdminHandler
             $content_id = new ContentID($_GET['content-id']);
             $mod_post_comment = $_POST['mod_post_comment'] ?? null;
 
-            if($content_id->isPost() && !is_null($mod_post_comment))
+            if ($content_id->isPost() && !is_null($mod_post_comment))
             {
                 $content_post = $content_id->getInstanceFromID($this->domain);
                 $content_post->loadFromDatabase();
@@ -75,8 +77,9 @@ class AdminBans extends AdminHandler
 
     public function editor()
     {
-        $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
-        $output_panel->render(['section' => 'modify', 'user' => $this->session_user], false);
+        $this->verifyAccess();
+        $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
+        $output_panel->modify(['user' => $this->session_user], false);
         $this->outputMain(false);
     }
 
@@ -111,5 +114,13 @@ class AdminBans extends AdminHandler
         $this->ban_hammer->loadFromID($ban_id);
         $this->ban_hammer->remove();
         $this->outputMain(true);
+    }
+
+    private function verifyAccess()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
+        {
+            nel_derp(320, _gettext('You are not allowed to access the bans panel.'));
+        }
     }
 }

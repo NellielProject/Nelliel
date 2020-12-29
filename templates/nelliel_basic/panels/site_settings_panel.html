@@ -1,0 +1,125 @@
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
+<div class="display-table">
+	<div class="display-row">
+		<b>Basic settings</b>
+	</div>
+	{{# home_page }}
+		{{> panels/pieces/settings_text }}
+	{{/ home_page }}
+	{{# index_filename_format }}
+		{{> panels/pieces/settings_text }}
+	{{/ index_filename_format }}
+	{{# thread_filename_format }}
+		{{> panels/pieces/settings_text }}
+	{{/ thread_filename_format }}
+	<div class="display-row">
+		<b>Hashing and Passwords</b>
+	</div>
+	{{# post_password_algorithm }}
+		{{> panels/pieces/settings_text }}
+	{{/ post_password_algorithm }}
+	{{# secure_tripcode_algorithm }}
+		{{> panels/pieces/settings_text }}
+	{{/ secure_tripcode_algorithm }}
+	{{# do_password_rehash }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ do_password_rehash }}
+	{{# template_id }}
+		{{> panels/pieces/settings_text }}
+	{{/ template_id }}
+	{{# locale }}
+		{{> panels/pieces/settings_text }}
+	{{/ locale }}
+	{{# recaptcha_site_key }}
+		{{> panels/pieces/settings_text }}
+	{{/ recaptcha_site_key }}
+	{{# recaptcha_sekrit_key }}
+		{{> panels/pieces/settings_text }}
+	{{/ recaptcha_sekrit_key }}
+	{{# recaptcha_type }}
+		{{> panels/pieces/settings_select }}
+	{{/ recaptcha_type }}
+	{{# name }}
+		{{> panels/pieces/settings_text }}
+	{{/ name }}
+	{{# slogan }}
+		{{> panels/pieces/settings_text }}
+	{{/ slogan }}
+	{{# favicon }}
+		{{> panels/pieces/settings_text }}
+	{{/ favicon }}
+	{{# banner }}
+		{{> panels/pieces/settings_text }}
+	{{/ banner }}
+	{{# display_render_timer }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ display_render_timer }}
+	{{# use_login_captcha }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ use_login_captcha }}
+	{{# use_login_recaptcha }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ use_login_recaptcha }}
+	{{# use_register_captcha }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ use_register_captcha }}
+	{{# use_register_recaptcha }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ use_register_recaptcha }}
+	{{# captcha_timeout }}
+		{{> panels/pieces/settings_number }}
+	{{/ captcha_timeout }}
+	{{# captcha_rate_limit }}
+		{{> panels/pieces/settings_number }}
+	{{/ captcha_rate_limit }}
+	{{# captcha_width }}
+		{{> panels/pieces/settings_number }}
+	{{/ captcha_width }}
+	{{# captcha_height }}
+		{{> panels/pieces/settings_number }}
+	{{/ captcha_height }}
+	{{# captcha_character_count }}
+		{{> panels/pieces/settings_number }}
+	{{/ captcha_character_count }}
+	{{# login_delay }}
+		{{> panels/pieces/settings_number }}
+	{{/ login_delay }}
+	{{# session_length }}
+		{{> panels/pieces/settings_number }}
+	{{/ session_length }}
+	{{# overboard_active }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ overboard_active }}
+	{{# overboard_uri }}
+		{{> panels/pieces/settings_text }}
+	{{/ overboard_uri }}
+	{{# overboard_threads }}
+		{{> panels/pieces/settings_number }}
+	{{/ overboard_threads }}
+	{{# sfw_overboard_active }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ sfw_overboard_active }}
+	{{# sfw_overboard_uri }}
+		{{> panels/pieces/settings_text }}
+	{{/ sfw_overboard_uri }}
+	{{# sfw_overboard_threads }}
+		{{> panels/pieces/settings_number }}
+	{{/ sfw_overboard_threads }}
+	{{# only_alphanumeric_board_ids }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ only_alphanumeric_board_ids }}
+	{{# graphics_handler }}
+		{{> panels/pieces/settings_select }}
+	{{/ graphics_handler }}
+	{{# store_unhashed_ip }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ store_unhashed_ip }}
+	{{# content_disclaimer }}
+		{{> panels/pieces/settings_text }}
+	{{/ content_disclaimer }}
+
+	<div class="display-row">
+		<input type="submit" value="Update Settings" data-i18n-attributes="gettext|value">
+	</div>
+</div>
+</form>

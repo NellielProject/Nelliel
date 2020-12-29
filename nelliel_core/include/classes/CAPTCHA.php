@@ -7,6 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainSite;
 use PDO;
 
 class CAPTCHA
@@ -21,7 +23,7 @@ class CAPTCHA
         $this->domain = $domain;
         $this->database = $domain->database();
         $this->site_domain = new DomainSite($this->database);
-        $this->file_handler = new \Nelliel\Utility\FileHandler();
+        $this->file_handler = nel_utilities()->fileHandler();
     }
 
     public function dispatch(array $inputs)
@@ -61,7 +63,7 @@ class CAPTCHA
             return;
         }
 
-        $rate_limit = new \Nelliel\RateLimit($this->database);
+        $rate_limit = nel_utilities()->rateLimit();
         $hashed_ip_address = nel_request_ip_address(true);
         $attempt_time = time();
 
@@ -135,7 +137,7 @@ class CAPTCHA
         }
 
         $character_count = utf8_strlen($captcha_text);
-        $font_file = NEL_CORE_FONTS_FILES_PATH . 'Halogen.ttf';
+        $font_file = NEL_FONTS_FILES_PATH . 'Halogen.ttf';
         $image_width = $this->site_domain->setting('captcha_width');
         $image_height = $this->site_domain->setting('captcha_height');
         $font_size = $image_height * 0.5;

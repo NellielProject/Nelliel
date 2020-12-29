@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
 use Nelliel\NellielPDO;
 use Nelliel\Auth\Authorization;
 
@@ -101,7 +101,7 @@ class Register
             unlink(NEL_GENERATED_FILES_PATH . 'create_owner.php');
         }
 
-        $output_register = new \Nelliel\Output\OutputRegisterPage($this->domain, false);
+        $output_register = new \Nelliel\Render\OutputRegisterPage($this->domain, false);
         $output_register->render(['section' => 'registration-done'], false);
     }
 }

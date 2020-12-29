@@ -10,6 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 use PDO;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\ContentThread;
+use Nelliel\Domains\Domain;
 
 class ArchiveAndPrune
 {

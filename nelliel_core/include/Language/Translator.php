@@ -7,7 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domain;
+use Nelliel\Domains\Domain;
+use Nelliel\Render\RenderCoreDOM;
 
 class Translator
 {
@@ -16,7 +17,7 @@ class Translator
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
-        $this->dom_render_core = new \Nelliel\RenderCoreDOM();
+        $this->dom_render_core = new RenderCoreDOM();
     }
 
     public function translateHTML(string $html, bool $return_dom = false)

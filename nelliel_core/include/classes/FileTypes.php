@@ -20,7 +20,7 @@ class FileTypes
 
     function __construct(NellielPDO $database)
     {
-        $this->cache_handler = new \Nelliel\Utility\CacheHandler();
+        $this->cache_handler = nel_utilities()->cacheHandler();
         $this->database = $database;
     }
 

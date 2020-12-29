@@ -8,7 +8,6 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use PDO;
-use Nelliel\Utility\FileHandler;
 
 class FrontEndData
 {
@@ -27,7 +26,7 @@ class FrontEndData
     function __construct(NellielPDO $database)
     {
         $this->database = $database;
-        $this->ini_parser = new \Nelliel\INIParser(new FileHandler());
+        $this->ini_parser = new INIParser(nel_utilities()->fileHandler());
         $this->core_icon_set_ids = ['icons-nelliel-basic'];
         $this->core_style_ids = ['style-nelliel', 'style-nelliel-b', 'style-futaba', 'style-burichan', 'style-nigra'];
         $this->core_template_ids = ['template-nelliel-basic'];
@@ -119,9 +118,7 @@ class FrontEndData
 
     public function getStyleInis()
     {
-        $core_style_inis = $this->ini_parser->parseDirectories(NEL_CORE_STYLES_FILES_PATH, 'style_info.ini');
-        $custom_style_inis = $this->ini_parser->parseDirectories(NEL_CUSTOM_STYLES_FILES_PATH, 'style_info.ini');
-        return array_merge($custom_style_inis, $core_style_inis);
+        return $this->ini_parser->parseDirectories(NEL_STYLES_FILES_PATH, 'style_info.ini');
     }
 
     public function template($template = null, bool $return_default = true)
@@ -151,9 +148,7 @@ class FrontEndData
 
     public function getTemplateInis()
     {
-        $core_template_inis = $this->ini_parser->parseDirectories(NEL_CORE_TEMPLATES_FILES_PATH, 'template_info.ini');
-        $custom_template_inis = $this->ini_parser->parseDirectories(NEL_CUSTOM_TEMPLATES_FILES_PATH, 'template_info.ini');
-        return array_merge($custom_template_inis, $core_template_inis);
+        return $this->ini_parser->parseDirectories(NEL_TEMPLATES_FILES_PATH, 'template_info.ini');
     }
 
     public function iconSet($set = null, bool $return_default = true)
@@ -183,8 +178,6 @@ class FrontEndData
 
     public function getIconSetInis()
     {
-        $core_icon_set_inis = $this->ini_parser->parseDirectories(NEL_CORE_ICON_SETS_FILES_PATH, 'icons_info.ini');
-        $custom_icon_set_inis = $this->ini_parser->parseDirectories(NEL_CUSTOM_ICON_SETS_FILES_PATH, 'icons_info.ini');
-        return array_merge($custom_icon_set_inis, $core_icon_set_inis);
+        return $this->ini_parser->parseDirectories(NEL_ICON_SETS_FILES_PATH, 'icons_info.ini');
     }
 }
