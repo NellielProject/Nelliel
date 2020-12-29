@@ -25,7 +25,7 @@ class OutputPostingForm extends Output
         $this->render_data['is_response'] = $response_to > 0;
         $this->render_data['response_to'] = $response_to;
 
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&actions=new-post&board_id=' .
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&actions=new-post&board-id=' .
                 $this->domain->id();
 
         if ($response_to)
@@ -35,7 +35,7 @@ class OutputPostingForm extends Output
                 $return_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         http_build_query(
                                 ['module' => 'render', 'actions' => 'view-index', 'index' => '0',
-                                    'board_id' => $this->domain->id(), 'modmode' => 'true']);
+                                    'board-id' => $this->domain->id(), 'modmode' => 'true']);
             }
             else
             {

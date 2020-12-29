@@ -44,7 +44,7 @@ function nel_dispatch_preparation()
     $inputs['section'] = $_GET['section'] ?? '';
     $inputs['subsection'] = $_GET['subsection'] ?? '';
     $inputs['domain_id'] = $_GET['domain_id'] ?? '';
-    $inputs['board_id'] = $_GET['board_id'] ?? '';
+    $inputs['board_id'] = $_GET['board-id'] ?? '';
     $inputs['content_id'] = $_GET['content-id'] ?? '';
     $inputs['modmode'] = isset($_GET['modmode']) ? true : false;
     $inputs['action-confirmed'] = isset($_GET['action-confirmed']) ? true : false;
@@ -58,7 +58,7 @@ function nel_dispatch_preparation()
     }
 
     // Add more options here if we implement further domain types
-    if (!empty($inputs['board_id']) && empty($inputs['domain_id']))
+    if (!empty($inputs['board_id']) && empty($inputs['domain_id']) && $inputs['module'] !== 'admin')
     {
         $domain = new \Nelliel\Domains\DomainBoard($inputs['board_id'], nel_database());
     }
@@ -70,7 +70,7 @@ function nel_dispatch_preparation()
     $inputs = nel_plugins()->processHook('nel-in-after-dispatch-prep', [$domain], $inputs);
 
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BansAccess(nel_database()));
-    $snacks->applyBan($domain, $inputs);
+    $snacks->applyBan($domain);
     $snacks->checkHoneypot($domain);
 
     $inputs = nel_module_dispatch($inputs, $domain);
@@ -238,6 +238,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $session->loggedInOrError();
             $user = $session->sessionUser();
             $forward = 'site';
+            $board_id = $_GET['board-id'] ?? '';
 
             foreach ($inputs['actions'] as $action)
             {
@@ -295,7 +296,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             else if ($forward === 'board')
             {
                 $output_board_panel = new \Nelliel\Render\OutputPanelBoard($domain, false);
-                $output_board_panel->render(['user' => $session->sessionUser()], false);
+                $output_board_panel->render(['user' => $session->sessionUser(), 'board_id' => $board_id], false);
             }
 
             break;

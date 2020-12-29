@@ -54,6 +54,7 @@ class Dispatch
     private function sections(array $inputs, string $action)
     {
         $admin_handler = null;
+        $board_id = $_GET['board-id'] ?? '';
 
         switch ($inputs['section'])
         {
@@ -265,7 +266,7 @@ class Dispatch
                 $session = new \Nelliel\Account\Session();
                 $session->loggedInOrError();
                 $output_board_panel = new \Nelliel\Render\OutputPanelBoard($this->domain, false);
-                $output_board_panel->render(['user' => $session->sessionUser()], false);
+                $output_board_panel->render(['user' => $session->sessionUser(), 'board_id' => $board_id], false);
         }
 
         return $admin_handler;

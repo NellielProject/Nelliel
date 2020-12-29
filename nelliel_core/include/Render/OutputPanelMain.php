@@ -67,7 +67,7 @@ class OutputPanelMain extends Output
                     continue;
                 }
 
-                $board_data['board_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=board-main-panel&board_id=' . $board['board_id'];
+                $board_data['board_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=board-main-panel&board-id=' . $board['board_id'];
                 $board_data['board_id'] = '/' . $board['board_id'] . '/';
 
                 if ($user->isSiteOwner())
