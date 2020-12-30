@@ -42,8 +42,6 @@ class TableThreads extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             thread_id               INTEGER PRIMARY KEY NOT NULL,
-            ip_address              " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            hashed_ip_address       " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
             first_post              INTEGER DEFAULT NULL,
             last_post               INTEGER DEFAULT NULL,
             last_bump_time          BIGINT NOT NULL,
