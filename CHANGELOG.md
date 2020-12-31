@@ -1,4 +1,66 @@
 # Nelliel Changelog
+## v0.9.22 (2020/12/30)
+### Breaking
+ - Database
+ - Templates
+
+### Added
+ - Support for hashed IP addresses
+ - Option to not store individual IP addresses
+ - Log tables for each board
+ - Optional disclaimer at bottom of posts
+ - IPTools library
+ - Input and handling of range bans
+ - Additional `moar` fields in tables for extra data
+ - Interstitial messages
+ - Success message for posts
+ - Domains module
+ - Template substitutions for later use by plugins
+
+### Changed
+ - Improved deletion and archive updating
+ - Better handling of IP addresses and hashes when storing in database
+ - More menus instead of text fields in control panels
+ - Logger improvements
+ - Redo BanHammer class and improve ban handling
+ - Cleanup `crypt.php`
+ - Table cleanup
+ - Session fixes and improvements
+ - Replace `ob_key` column for overboard table
+ - Change `meta` to `moar`
+ - Update main script web paths
+ - Duplicate file checks are now opt-in style
+ - Cleanup of output redundancies
+ - Rearrange thread and post headers
+ - Improve utility access a bit
+ - Update board removal warning
+ - Simplify core/custom layout for assets
+ - Output module is now Render module and contains render cores and all related rendering classes
+ - Set `FILTERS` pragma at engine init instead of putting line in every template
+ - Output now retains the render core instance instead of making a new one every time
+
+### Fixed
+ - User auth and creation
+ - Board creation
+ - Filetype sub extension handling
+ - Setting locks
+ - Content classes
+ - Mod comments
+ - Thread removal and cites
+ - Board settings panel
+ - Relative URLs
+ - Default row insert
+ - Creating board with blank ID
+ - Multiple files upload correctly again
+ - Don't render thread if it has no posts
+ - Don't render overboard pages if not enabled
+ - Board ID/domain handling
+
+### Removed
+ - Separate checkbox for thread
+ - `$dotdot`
+ - IP columns from thread table
+
 ## v0.9.21 (2020/11/13)
 ### Breaking
  - Database
@@ -32,7 +94,7 @@
  - LC_MESSAGES defining
  - Preferred filename setting
  - Various small bugs
- 
+
 ### Removed
   - `module_dispatch.php`
 
