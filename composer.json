@@ -13,5 +13,19 @@
 		"imageboard",
 		"nelliel",
 		"futallaby"
-	]
+	],
+	"autoload" : {
+		"psr-4" : {
+			"Nelliel" : [
+				"nelliel_core/include",
+				"nelliel_core/include/classes"
+			],
+			"IPTools" : "nelliel_core/libraries/IPTools/src",
+			"Psr\\Log" : "nelliel_core/libraries/PSRLog/Psr/Log",
+			"SmallPHPGettext" : "nelliel_core/libraries/SmallPHPGettext/src",
+			"phpDOMExtend" : "nelliel_core/libraries/phpDOMExtend",
+			"NellielTemplates" : "nelliel_core/libraries/NellielTemplates",
+			"" : "nelliel_core"
+		}
+	}
 }
