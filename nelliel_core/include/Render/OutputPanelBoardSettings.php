@@ -52,7 +52,7 @@ class OutputPanelBoardSettings extends Output
             $table_name = $this->domain->reference('config_table');
             $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')];
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=board-settings&actions=update&board_id=' . $this->domain->id();
+                    'module=admin&section=board-settings&actions=update&board-id=' . $this->domain->id();
         }
 
         $user_lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');

@@ -10,6 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 use PDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
+use Nelliel\Domains\DomainSite;
 use Nelliel\Auth\Authorization;
 
 class AdminBoardSettings extends AdminHandler
@@ -19,19 +20,19 @@ class AdminBoardSettings extends AdminHandler
 
     function __construct(Authorization $authorization, Domain $domain)
     {
-        $this->database = $domain->database();
-        $this->authorization = $authorization;
-        $this->domain = $domain;
+        // TODO: Something better should be possible
         $this->board_id = $_GET['board-id'] ?? '';
         $this->defaults = empty($this->board_id) ? true : false;
+        $this->database = $domain->database();
+        $this->domain = ($this->defaults) ? new DomainSite($this->database) : new DomainBoard($this->board_id, $this->database);
+        $this->authorization = $authorization;
         $this->validateUser();
     }
 
     public function renderPanel()
     {
-        $domain = ($this->defaults) ? $this->domain : new DomainBoard($this->board_id, $this->database);
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Render\OutputPanelBoardSettings($domain, false);
+        $output_panel = new \Nelliel\Render\OutputPanelBoardSettings($this->domain, false);
         $output_panel->render(['user' => $this->session_user, 'defaults' => $this->defaults], false);
     }
 
