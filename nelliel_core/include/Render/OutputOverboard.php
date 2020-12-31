@@ -9,7 +9,6 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
-use Nelliel\Domains\DomainOverboard;
 use Nelliel\Content\ContentID;
 use PDO;
 

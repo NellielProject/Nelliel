@@ -118,7 +118,12 @@ abstract class Output
 
                 if ($translate)
                 {
+                    $start = microtime(true);
                     $output = $this->domain->translator()->translateHTML($output);
+                    $translate_time = microtime(true) - $start;
+                    var_dump($translate_time);
+                    var_dump($this->endTimer());
+                    var_dump(number_format(($translate_time / $this->endTimer()) * 100, 3) . "%");
                 }
             }
         }
