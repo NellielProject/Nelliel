@@ -4,18 +4,18 @@ namespace SmallPHPGettext;
 
 class ParsePo
 {
-	private $helpers;
+    private $helpers;
 
-	function __construct()
-	{
-		$this->helpers = new Helpers();
-	}
+    function __construct()
+    {
+        $this->helpers = new Helpers();
+    }
 
     public function parseFile(string $file, string $domain = 'messages')
     {
         $string = '';
 
-        if(file_exists($file))
+        if (file_exists($file))
         {
             $string = file_get_contents($file);
         }
@@ -29,22 +29,25 @@ class ParsePo
         $asploded = explode("\n", $string);
         $translation = array();
         $entry = array();
+        // Mark headers as processed once they're done so normal lines aren't assumed to be a header
+        $headers_started = false;
+        $headers_done = false;
 
         foreach ($asploded as $line)
         {
             $line = trim($line);
-            $first_character = substr($line, 0,1);
+            $first_character = substr($line, 0, 1);
 
             // Empty lines usually occur between info blocks
-            if(empty($line))
+            if (empty($line))
             {
-                if(!empty($entry))
+                if (!empty($entry))
                 {
                     $translation = $this->parseMessage($entry, $translation);
                 }
 
                 // If there is a valid translation in progress, store it
-                if(!empty($translation) && isset($translation['msgid']))
+                if (!empty($translation) && isset($translation['msgid']))
                 {
                     $domain_array = $this->storeTranslation($translation, $domain_array);
                 }
@@ -54,31 +57,36 @@ class ParsePo
                 continue;
             }
 
-            $split_line = preg_split('/\s+/u', $line, 2, PREG_SPLIT_NO_EMPTY);
-            $split_line[0] = (!empty($split_line[0])) ? $this->helpers->unquoteLine(trim($split_line[0])) : '';
-            $split_line[1] = (!empty($split_line[1])) ? $this->helpers->unquoteLine(trim($split_line[1])) : '';
-
-            if($first_character === '"') // Check for header lines or partial strings
+            if ($first_character === '"') // Check for header lines or partial strings
             {
-                if (preg_match('/^[^:]*:/u', $split_line[0]) === 1)
+                if (!$headers_done && preg_match('/^[^:]*:/u', $line) === 1)
                 {
+                    $headers_started = (!$headers_started) ? true : false;
+                    $split_line = $this->splitLine($line);
                     $domain_array = $this->parseHeaders($split_line, $domain_array);
                 }
                 else
                 {
-                    $entry[1] .= $split_line[0];
+                    $entry[1] .= $this->helpers->unquoteLine(trim($line));
                 }
             }
             else
             {
-                if($first_character === '#') // Check for comment lines
+                if (!$headers_done)
+                {
+                    $headers_done = ($headers_started) ? true : false;
+                }
+
+                $split_line = $this->splitLine($line);
+
+                if ($first_character === '#') // Check for comment lines
                 {
                     $translation = $this->parseComment($split_line, $translation);
                 }
-                else if($first_character === 'm') // Check for the start of msg lines
+                else if ($first_character === 'm') // Check for the start of msg lines
                 {
                     // We have finished combining the message line and store it before starting a new one
-                    if(!empty($entry))
+                    if (!empty($entry))
                     {
                         $translation = $this->parseMessage($entry, $translation);
                     }
@@ -120,7 +128,7 @@ class ParsePo
                     preg_match('#\[(\d+)\]#u', $split_line[0], $match);
                     $index = intval($match[1]);
 
-                    if($index === 0)
+                    if ($index === 0)
                     {
                         $translation['msgstr'] = $message;
                     }
@@ -173,12 +181,12 @@ class ParsePo
     {
         $id = $translation['msgid'];
 
-        if(isset($translation['msgctxt']))
+        if (isset($translation['msgctxt']))
         {
             $current_translation = array();
             $new_translation = ['contexts' => [$translation['msgctxt'] => $translation]];
 
-            if(isset($domain_array['translations'][$id]))
+            if (isset($domain_array['translations'][$id]))
             {
                 $current_translation = $domain_array['translations'][$id];
             }
@@ -191,5 +199,13 @@ class ParsePo
         }
 
         return $domain_array;
+    }
+
+    private function splitLine(string $line)
+    {
+        $split_line = preg_split('/\s+/u', $line, 2, PREG_SPLIT_NO_EMPTY);
+        $split_line[0] = (!empty($split_line[0])) ? $this->helpers->unquoteLine(trim($split_line[0])) : '';
+        $split_line[1] = (!empty($split_line[1])) ? $this->helpers->unquoteLine(trim($split_line[1])) : '';
+        return $split_line;
     }
 }

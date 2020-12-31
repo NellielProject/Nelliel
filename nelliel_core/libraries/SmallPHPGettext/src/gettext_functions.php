@@ -4,7 +4,7 @@ function access_small_php_gettext($instance = null)
 {
     static $current_instance;
 
-    if(!empty($instance))
+    if (!empty($instance))
     {
         $current_instance = $instance;
     }

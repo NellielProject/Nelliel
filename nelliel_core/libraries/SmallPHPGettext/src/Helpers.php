@@ -14,7 +14,7 @@ class Helpers
 
     public function categoryToString(int $category)
     {
-        if(isset($this->category_lookups[$category]))
+        if (isset($this->category_lookups[$category]))
         {
             return $this->category_lookups[$category];
         }
@@ -24,7 +24,7 @@ class Helpers
 
     public function categoryFromString(string $category)
     {
-        if(isset($this->category_lookups[$category]))
+        if (isset($this->category_lookups[$category]))
         {
             return $this->category_lookups[$category];
         }
@@ -37,8 +37,7 @@ class Helpers
         $string = preg_replace_callback('/(?<!\\\)(\\\[nrtvef])/u',
                 function ($match)
                 {
-                    $conversions = ['\n' => "\n", '\r' => "\r", '\t' => "\t", '\v' => "\v", '\e' => "\e",
-                        '\f' => "\f"];
+                    $conversions = ['\n' => "\n", '\r' => "\r", '\t' => "\t", '\v' => "\v", '\e' => "\e", '\f' => "\f"];
                     return strtr($match[0], $conversions);
                 }, $string);
         $conversions = ['\\\\' => '\\', '\\' => ''];
