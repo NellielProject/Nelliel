@@ -56,10 +56,17 @@ function nel_dispatch_preparation()
         $redirect->doRedirect(true);
     }
 
-    // Add more options here if we implement further domain types
-    if (!empty($inputs['board_id']) && empty($inputs['domain_id']) && $inputs['module'] !== 'admin')
+    // Add more options here when we implement further domain types
+    if (nel_true_empty($inputs['domain_id']))
     {
-        $domain = new \Nelliel\Domains\DomainBoard($inputs['board_id'], nel_database());
+        if(!nel_true_empty($inputs['board_id']))
+        {
+            $domain = new \Nelliel\Domains\DomainBoard($inputs['board_id'], nel_database());
+        }
+        else
+        {
+            $domain = new \Nelliel\Domains\DomainSite(nel_database());
+        }
     }
     else
     {
