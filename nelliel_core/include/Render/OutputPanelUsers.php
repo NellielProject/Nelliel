@@ -98,7 +98,7 @@ class OutputPanelUsers extends Output
             $this->render_data['is_site_owner'] = false;
             $prepared = $this->database->prepare(
                     'SELECT "role_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
-            $site_role = $this->database->executePreparedFetch($prepared, array($user_id, '_site_'), PDO::FETCH_COLUMN);
+            $site_role = $this->database->executePreparedFetch($prepared, array($user_id, Domain::SITE), PDO::FETCH_COLUMN);
 
             if (!empty($site_role))
             {
@@ -107,7 +107,7 @@ class OutputPanelUsers extends Output
 
             $domain_list = $this->database->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
                     PDO::FETCH_ASSOC);
-            array_unshift($domain_list, ['board_id' => '_site_']); // For site domain
+            array_unshift($domain_list, ['board_id' => Domain::SITE]); // For site domain
             $query = 'SELECT "role_id", "role_title" FROM "' . NEL_ROLES_TABLE . '"';
             $roles = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
 

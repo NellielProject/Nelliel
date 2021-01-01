@@ -149,7 +149,7 @@ class Snacks
                 continue;
             }
 
-            if ($domain->id() !== '_site_' &&
+            if ($domain->id() !== Domain::SITE &&
                     ($domain->id() === $ban_hammer->getData('board_id') || $ban_hammer->getData('all_boards') == 1))
             {
                 if (empty($longest))

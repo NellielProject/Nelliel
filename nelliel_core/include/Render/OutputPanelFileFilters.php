@@ -27,7 +27,7 @@ class OutputPanelFileFilters extends Output
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('File Filters')];
         $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
 
-        if ($this->domain->id() === '' || $this->domain->id() === '_site_')
+        if ($this->domain->id() === Domain::SITE)
         {
             $filters = $this->database->executeFetchAll(
                     'SELECT * FROM "' . NEL_FILES_FILTERS_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);

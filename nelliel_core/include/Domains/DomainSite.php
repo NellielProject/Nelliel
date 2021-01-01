@@ -18,7 +18,7 @@ class DomainSite extends Domain implements NellielCacheInterface
 
     public function __construct(NellielPDO $database)
     {
-        $this->domain_id = '_site_';
+        $this->domain_id = Domain::SITE;
         $this->database = $database;
         $this->settings_cache_file = $this->domain_id . '/' . 'domain_settings.php';
         $this->utilitySetup();

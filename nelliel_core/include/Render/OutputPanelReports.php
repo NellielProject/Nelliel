@@ -28,7 +28,7 @@ class OutputPanelReports extends Output
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Reports')];
         $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
 
-        if ($this->domain->id() !== '_site_')
+        if ($this->domain->id() !== Domain::SITE)
         {
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . NEL_REPORTS_TABLE . '" WHERE "board_id" = ? ORDER BY "report_id" DESC');

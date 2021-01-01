@@ -12,6 +12,9 @@ use Nelliel\NellielPDO;
 
 abstract class Domain
 {
+    const SITE = '_site';
+    const ALL_BOARDS = '_all_boards_';
+    const MULTI_BOARD = '_multi_board_';
     protected $domain_id;
     protected $domain_settings;
     protected $domain_references;

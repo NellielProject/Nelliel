@@ -58,7 +58,7 @@ class OutputHeader extends Output
             $this->render_data['manage_header'] = $manage_headers['header'] ?? '';
             $this->render_data['manage_sub_header'] = $manage_headers['sub_header'] ?? '';
 
-            if ($this->domain->id() !== '_site_')
+            if ($this->domain->id() !== Domain::SITE)
             {
                 $this->render_data['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
             }
@@ -118,7 +118,7 @@ class OutputHeader extends Output
             $this->render_data['manage_header'] = $manage_headers['header'] ?? '';
             $this->render_data['manage_sub_header'] = $manage_headers['sub_header'] ?? '';
 
-            if ($this->domain->id() !== '_site_')
+            if ($this->domain->id() !== Domain::SITE)
             {
                 $this->render_data['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
             }

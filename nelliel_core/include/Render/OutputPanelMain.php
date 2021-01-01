@@ -57,7 +57,7 @@ class OutputPanelMain extends Output
         {
             foreach ($boards as $board)
             {
-                if ($board['board_id'] === '_site_')
+                if ($board['board_id'] === Domain::SITE)
                 {
                     continue;
                 }

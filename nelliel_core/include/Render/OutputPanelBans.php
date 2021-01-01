@@ -31,7 +31,7 @@ class OutputPanelBans extends Output
         $this->render_data['can_modify'] = $user->checkPermission($this->domain, 'perm_manage_bans');
         $bans_access = new BansAccess($this->database);
 
-        if ($this->domain->id() !== '_site_')
+        if ($this->domain->id() !== Domain::SITE)
         {
             $ban_list = $bans_access->getBans($this->domain->id());
         }
@@ -66,7 +66,7 @@ class OutputPanelBans extends Output
             $this->render_data['ban_list'][] = $ban_data;
         }
 
-        if ($this->domain->id() !== '_site_')
+        if ($this->domain->id() !== Domain::SITE)
         {
             $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     'module=admin&section=bans&actions=new&board-id=' . $this->domain->id();
@@ -94,7 +94,7 @@ class OutputPanelBans extends Output
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Add Ban')];
         $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
 
-        if ($this->domain->id() !== '_site_')
+        if ($this->domain->id() !== Domain::SITE)
         {
             $this->render_data['ban_board'] = $this->domain->id();
         }

@@ -30,7 +30,7 @@ class OutputDerp extends Output
         $this->render_data['error_data'] = '';
         $session = new \Nelliel\Account\Session();
 
-        if ($this->domain->id() === '_site_')
+        if ($this->domain->id() === Domain::SITE)
         {
             $return_url = NEL_BASE_WEB_PATH . $this->domain->setting('home_page');
         }
@@ -41,7 +41,7 @@ class OutputDerp extends Output
 
         if ($session->inModmode($this->domain))
         {
-            if ($this->domain->id() === '_site_')
+            if ($this->domain->id() === Domain::SITE)
             {
                 ; // TODO: Figure out this one
             }
