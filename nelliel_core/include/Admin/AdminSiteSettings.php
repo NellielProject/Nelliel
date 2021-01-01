@@ -59,7 +59,6 @@ class AdminSiteSettings extends AdminHandler
             $this->database->executePrepared($prepared, [$value, $key], true);
         }
 
-        $regen = new \Nelliel\Regen();
         $this->domain->regenCache();
         $this->outputMain(true);
     }

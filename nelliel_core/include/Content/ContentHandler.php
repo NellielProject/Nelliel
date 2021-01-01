@@ -16,6 +16,7 @@ abstract class ContentHandler
     protected $domain;
     protected $content_data = array();
     protected $content_moar;
+    protected $authorization;
 
     public abstract function loadFromDatabase();
 
@@ -53,9 +54,9 @@ abstract class ContentHandler
 
     protected function dataLoaded(bool $load = false)
     {
-        if(empty($this->content_data))
+        if (empty($this->content_data))
         {
-            if($load)
+            if ($load)
             {
                 return $this->loadFromDatabase();
             }

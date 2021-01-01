@@ -94,7 +94,7 @@ function nel_password_verify(string $password, string $hash)
     return password_verify($password, $hash);
 }
 
-function nel_password_needs_rehash(string $hash, int $algorithm, array $options = array())
+function nel_password_needs_rehash(string $password, int $algorithm, array $options = array())
 {
     $site_domain = new \Nelliel\Domains\DomainSite(nel_database());
 

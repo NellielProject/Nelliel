@@ -9,10 +9,10 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
-use Nelliel\Domains\Domain;
 use Nelliel\Moar;
+use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
 use PDO;
-
 
 class ContentPost extends ContentHandler
 {
@@ -29,6 +29,7 @@ class ContentPost extends ContentHandler
         $this->content_id = $content_id;
         $this->domain = $domain;
         $this->archived = $archived;
+        $this->authorization = new Authorization($this->database);
         $this->posts_table = $this->domain->reference('posts_table');
         $this->content_table = $this->domain->reference('content_table');
 
@@ -129,7 +130,7 @@ class ContentPost extends ContentHandler
 
     public function reserveDatabaseRow($post_time, $post_time_milli, $hashed_ip_address, $temp_database = null)
     {
-        $parent_thread = $database = (!is_null($temp_database)) ? $temp_database : $this->database;
+        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
                 'INSERT INTO "' . $this->posts_table .
                 '" ("post_time", "post_time_milli", "hashed_ip_address") VALUES (?, ?, ?)');
@@ -174,18 +175,6 @@ class ContentPost extends ContentHandler
 
         $this->removeFromDatabase();
         $this->removeFromDisk();
-
-        $query = 'SELECT "entry" FROM "' . $this->content_table . '" WHERE "post_ref" = ?';
-        $prepared = $this->database->prepare($query);
-        $content_entries = $this->database->executePreparedFetchAll($prepared, [$this->content_id->postID()],
-                PDO::FETCH_COLUMN);
-
-        foreach ($content_entries as $entry)
-        {
-            $content = new ContentFile($this->content_id, $this->domain, $this->archived);
-            $content->remove();
-        }
-
         $thread = new ContentThread($this->content_id, $this->domain, $this->archived);
 
         // TODO: This is a (hopefully) temporary thing to keep normal imageboard function when deleting OP post
@@ -253,10 +242,10 @@ class ContentPost extends ContentHandler
             if ($user->checkPermission($this->domain, 'perm_board_delete_posts'))
             {
                 if (!empty($this->content_data['mod_post_id']) &&
-                        $authorization->userExists($this->content_data['mod_post_id']))
+                        $this->authorization->userExists($this->content_data['mod_post_id']))
                 {
-                    $mod_post_user = $authorization->getUser($this->content_data['mod_post_id']);
-                    $flag = $authorization->roleLevelCheck($user->checkRole($this->domain),
+                    $mod_post_user = $this->authorization->getUser($this->content_data['mod_post_id']);
+                    $flag = $this->authorization->roleLevelCheck($user->checkRole($this->domain),
                             $mod_post_user->checkRole($this->domain));
                 }
                 else
@@ -308,16 +297,9 @@ class ContentPost extends ContentHandler
                 true);
 
         $prepared = $this->database->prepare('SELECT entry FROM "' . $this->content_table . '" WHERE "post_ref" = ?');
-        $files = $this->database->executePreparedFetchAll($prepared, [$this->content_id->postID()], PDO::FETCH_ASSOC);
-
-        foreach ($files as $file)
-        {
-            $prepared = $this->database->prepare(
-                    'UPDATE "' . $this->content_table . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
-            $this->database->executePrepared($prepared,
-                    [$new_thread->content_id->threadID(), $this->content_id->postID()]);
-        }
-
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $this->content_table . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
+        $this->database->executePrepared($prepared, [$new_thread->content_id->threadID(), $this->content_id->postID()]);
         $this->loadFromDatabase();
         $this->content_id->changeThreadID($new_thread->content_id->threadID());
         $this->content_data['parent_thread'] = $new_thread->content_id->threadID();

@@ -71,8 +71,7 @@ class BansAccess
         if (!is_null($board_id))
         {
             $prepared = $this->database->prepare(
-                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE .
-                    '" WHERE "hashed_ip_address" = ? AND "board_id" = ?');
+                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "hashed_ip_address" = ? AND "board_id" = ?');
             $prepared->bindValue(2, $board_id, PDO::PARAM_STR);
         }
         else

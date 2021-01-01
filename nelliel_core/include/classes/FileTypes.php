@@ -50,6 +50,8 @@ class FileTypes
                     continue;
                 }
 
+                $filetypes = array();
+
                 foreach ($sub_extensions as $sub_extension)
                 {
                     $filetypes['extensions'][$sub_extension] = $base_extension;

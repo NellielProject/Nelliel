@@ -27,12 +27,12 @@ class OutputInterstitial extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
 
-        foreach($messages as $message)
+        foreach ($messages as $message)
         {
             $this->render_data['messages'][] = ['message' => $message];
         }
 
-        foreach($links as $link)
+        foreach ($links as $link)
         {
             $this->render_data['links'][] = $link;
         }

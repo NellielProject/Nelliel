@@ -118,7 +118,9 @@ abstract class Output
 
                 if ($translate)
                 {
+                    $start = microtime(true);
                     $output = $this->domain->translator()->translateHTML($output);
+                    $translate_time = microtime(true) - $start;
                 }
             }
         }

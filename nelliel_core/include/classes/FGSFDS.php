@@ -18,7 +18,7 @@ class FGSFDS
         {
             self::$raw_fgsfds = $raw_fgsfds;
 
-            foreach($this->parseRaw($raw_fgsfds) as $command)
+            foreach ($this->parseRaw($raw_fgsfds) as $command)
             {
                 $this->addCommand($command);
             }

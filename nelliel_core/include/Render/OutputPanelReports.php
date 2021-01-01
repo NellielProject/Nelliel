@@ -22,7 +22,6 @@ class OutputPanelReports extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $user = $parameters['user'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
@@ -48,7 +47,8 @@ class OutputPanelReports extends Output
         {
             if (!isset($domains[$report_info['board_id']]))
             {
-                $domains[$report_info['board_id']] = new \Nelliel\Domains\DomainBoard($report_info['board_id'], $this->database);
+                $domains[$report_info['board_id']] = new \Nelliel\Domains\DomainBoard($report_info['board_id'],
+                        $this->database);
             }
 
             $report_data = array();
@@ -85,10 +85,10 @@ class OutputPanelReports extends Output
                         '" WHERE "parent_thread" = ? AND post_ref = ? AND "content_order" = ?');
                 $filename = $this->database->executePreparedFetch($prepared,
                         [$content_id->threadID(), $content_id->postID(), $content_id->orderID()], PDO::FETCH_COLUMN);
-                $report_data['file_url'] = $current_domain->reference('src_web_path') . $content_id->threadID() . '/' . $content_id->postID() . '/' .
-                        $filename;
+                $report_data['file_url'] = $current_domain->reference('src_web_path') . $content_id->threadID() . '/' .
+                        $content_id->postID() . '/' . $filename;
 
-                        $content_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                $content_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         http_build_query(
                                 ['module' => 'render', 'actions' => 'view-thread', 'thread' => $content_id->threadID(),
                                     'content-id' => $content_id->getIDString(), 'board_id' => $report_info['board_id'],
@@ -102,7 +102,7 @@ class OutputPanelReports extends Output
             $report_data['content_id'] = $report_info['content_id'];
             $report_data['reason'] = $report_info['reason'];
             $report_data['reporter_ip'] = @inet_pton($report_info['reporter_ip']);
-            $report_data['dismiss_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=reports&board_id=' .
+            $report_data['dismiss_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=reports&board-id=' .
                     $report_info['board_id'] . '&actions=remove&report_id=' . $report_info['report_id'];
             $this->render_data['reports_list'][] = $report_data;
         }

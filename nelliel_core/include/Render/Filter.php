@@ -16,7 +16,7 @@ class Filter
 
     public function cleanAndEncode(string &$string)
     {
-        if(empty($string))
+        if (empty($string))
         {
             return;
         }
@@ -32,7 +32,7 @@ class Filter
 
     public function clearWhitespace(string &$string)
     {
-        if(empty($string))
+        if (empty($string))
         {
             return;
         }
@@ -51,43 +51,44 @@ class Filter
 
     public function filterUnicodeCombiningCharacters(string $text)
     {
-        $text = preg_replace_callback('#([^[:ascii:]])#Su', function ($matches)
-        {
-            $character = $matches[0];
-            $ordinal = utf8_ord($matches[0]);
+        $text = preg_replace_callback('#([^[:ascii:]])#Su',
+                function ($matches)
+                {
+                    $character = $matches[0];
+                    $ordinal = utf8_ord($matches[0]);
 
-            // Base
-            if($ordinal >= 768 && $ordinal <= 879)
-            {
-                $character = '';
-            }
+                    // Base
+                    if ($ordinal >= 768 && $ordinal <= 879)
+                    {
+                        $character = '';
+                    }
 
-            // Extended
-            if($ordinal >= 6832 && $ordinal <= 6911)
-            {
-                $character = '';
-            }
+                    // Extended
+                    if ($ordinal >= 6832 && $ordinal <= 6911)
+                    {
+                        $character = '';
+                    }
 
-            // Supplement
-            if($ordinal >= 7616 && $ordinal <= 7679)
-            {
-                $character = '';
-            }
+                    // Supplement
+                    if ($ordinal >= 7616 && $ordinal <= 7679)
+                    {
+                        $character = '';
+                    }
 
-            // Symbols
-            if($ordinal >= 8400 && $ordinal <= 8447)
-            {
-                $character = '';
-            }
+                    // Symbols
+                    if ($ordinal >= 8400 && $ordinal <= 8447)
+                    {
+                        $character = '';
+                    }
 
-            // Half Marks
-            if($ordinal >= 65056 && $ordinal <= 65071)
-            {
-                $character = '';
-            }
+                    // Half Marks
+                    if ($ordinal >= 65056 && $ordinal <= 65071)
+                    {
+                        $character = '';
+                    }
 
-            return $character;
-        }, $text);
+                    return $character;
+                }, $text);
 
         return $text;
     }

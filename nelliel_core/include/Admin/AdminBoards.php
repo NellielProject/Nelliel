@@ -210,8 +210,6 @@ class AdminBoards extends AdminHandler
     protected function generateDBPrefix(string $board_id)
     {
         $ascii_id = preg_replace('/[^a-zA-Z0-9_]/', '', $board_id);
-
-        $valid = false;
         $final_id = '';
 
         for ($i = 0; $i <= 10; $i ++)

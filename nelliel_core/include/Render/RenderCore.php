@@ -7,8 +7,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domains\Domain;
-
 abstract class RenderCore
 {
     protected $output_sets;

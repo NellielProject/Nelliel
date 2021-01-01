@@ -7,10 +7,10 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use PDO;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\ContentThread;
 use Nelliel\Domains\Domain;
+use PDO;
 
 class ArchiveAndPrune
 {

@@ -7,10 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domains\Domain;
-use Nelliel\NellielPDO;
 use Nelliel\Auth\Authorization;
-use PDO;
+use Nelliel\Domains\Domain;
 
 class Login
 {

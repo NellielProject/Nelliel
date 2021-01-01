@@ -21,7 +21,6 @@ class OutputPanelTemplates extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $user = $parameters['user'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
@@ -48,7 +47,7 @@ class OutputPanelTemplates extends Output
                     http_build_query(
                             ['module' => 'admin', 'section' => 'templates', 'actions' => 'make-default',
                                 'template-id' => $template['template_id']]);
-                            $template_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+            $template_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'templates', 'actions' => 'remove',
                                 'template-id' => $template['template_id']]);

@@ -41,8 +41,6 @@ class OutputPanelRoles extends Output
             $role_data['capcode'] = $role['capcode'];
             $role_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=edit&role-id=' .
                     $role['role_id'];
-            $role_row_nodes['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=roles&actions=remove&role-id=' . $role['role_id'];
             $this->render_data['roles_list'][] = $role_data;
         }
 

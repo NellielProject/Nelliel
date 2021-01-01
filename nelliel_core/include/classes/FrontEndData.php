@@ -34,8 +34,8 @@ class FrontEndData
 
     private function loadStylesData()
     {
-        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\'',
-                PDO::FETCH_ASSOC);
+        $all_data = $this->database->executeFetchAll(
+                'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\'', PDO::FETCH_ASSOC);
 
         foreach ($all_data as $data)
         {
@@ -54,8 +54,8 @@ class FrontEndData
 
     private function loadIconSetData()
     {
-        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'icon-set\'',
-                PDO::FETCH_ASSOC);
+        $all_data = $this->database->executeFetchAll(
+                'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'icon-set\'', PDO::FETCH_ASSOC);
 
         foreach ($all_data as $data)
         {
@@ -103,7 +103,7 @@ class FrontEndData
             return $this->styles;
         }
 
-        if (!isset($this->styles[$template]) && $return_default)
+        if (!isset($this->styles[$style]) && $return_default)
         {
             return $this->default_css_style;
         }

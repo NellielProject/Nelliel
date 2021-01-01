@@ -40,7 +40,7 @@ class OutputRegisterPage extends Output
         $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'account', 'section' => 'register', 'actions' => 'submit']);
-                $this->render_data['login_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+        $this->render_data['login_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'account', 'actions' => 'login']);
         $this->render_data['use_register_captcha'] = $this->domain->setting('use_register_captcha');
         $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=captcha&actions=get';

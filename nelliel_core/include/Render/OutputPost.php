@@ -74,7 +74,6 @@ class OutputPost extends Output
             $file_list = $this->database->executePreparedFetchAll($prepared, [$post_data['post_number']],
                     PDO::FETCH_ASSOC);
             $output_file_info = new OutputFile($this->domain, $this->write_mode);
-            $content_count = count($file_list);
             $content_row = array();
 
             foreach ($file_list as $file)
@@ -136,12 +135,10 @@ class OutputPost extends Output
             if ($user->checkPermission($this->domain, 'perm_view_unhashed_ip') && !empty($post_data['ip_address']))
             {
                 $ip = @inet_ntop($post_data['ip_address']);
-                $ban_ip_type = 'ban_ip';
             }
             else
             {
                 $ip = bin2hex($post_data['hashed_ip_address']);
-                $ban_ip_type = 'ban_hashed_ip';
             }
 
             $modmode_headers['ip_address'] = $ip;
@@ -157,22 +154,22 @@ class OutputPost extends Output
                 $locked = ($thread_data['locked'] == 1);
                 $modmode_headers['lock_text'] = ($locked) ? _gettext('Unlock Thread') : _gettext('Lock Thread');
                 $lock_action = ($locked) ? 'unlock' : 'lock';
-                $modmode_headers['lock_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
+                $modmode_headers['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=' . $lock_action . '&content-id=' . $thread_content_id->getIDString() .
                         '&modmode=true&goback=true';
                 $sticky = ($thread_data['sticky'] == 1);
                 $modmode_headers['sticky_text'] = ($sticky) ? _gettext('Unsticky Thread') : _gettext('Sticky Thread');
                 $sticky_action = ($sticky) ? 'unsticky' : 'sticky';
-                $modmode_headers['sticky_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
+                $modmode_headers['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=' . $sticky_action . '&content-id=' . $thread_content_id->getIDString() .
                         '&modmode=true&goback=true';
             }
 
-            $modmode_headers['ban_url'] = '?module=admin&section=bans&board_id=' . $this->domain->id() .
+            $modmode_headers['ban_url'] = '?module=admin&section=bans&board-id=' . $this->domain->id() .
                     '&actions=new&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=false';
-            $modmode_headers['delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
+            $modmode_headers['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=delete&content-id=' . $temp_content_id->getIDString() . '&modmode=true&goback=true';
-            $modmode_headers['ban_delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
+            $modmode_headers['ban_delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=bandelete&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=false';
             $header_data['modmode_headers'] = $modmode_headers;
         }
@@ -203,7 +200,7 @@ class OutputPost extends Output
                 $thread_headers['render'] = '-render';
                 $thread_headers['reply_to_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         'module=render&actions=view-thread&content-id=' . $thread_content_id->getIDString() . '&thread=' .
-                        $thread_content_id->threadID() . '&board_id=' . $this->domain->id() . '&modmode=true';
+                        $thread_content_id->threadID() . '&board-id=' . $this->domain->id() . '&modmode=true';
             }
 
             $header_data['thread_headers'] = $thread_headers;

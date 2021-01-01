@@ -7,9 +7,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Auth\Authorization;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
-use Nelliel\Auth\Authorization;
 
 class AdminBans extends AdminHandler
 {

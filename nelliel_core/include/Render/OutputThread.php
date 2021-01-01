@@ -26,7 +26,8 @@ class OutputThread extends Output
         $thread_id = ($parameters['thread_id']) ?? 0;
         $command = ($parameters['command']) ?? 'view-thread';
         $thread_content_id = ContentID::createIDString($thread_id);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board_id=' . $this->domain->id();
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
+                $this->domain->id();
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $thread_data = $this->database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);
@@ -71,8 +72,7 @@ class OutputThread extends Output
         $total_posts = $thread_data['post_count'];
         $this->render_data['abbreviate'] = false;
         $output_posting_form = new OutputPostingForm($this->domain, $this->write_mode);
-        $this->render_data['posting_form'] = $output_posting_form->render(
-                ['response_to' => $thread_id], true);
+        $this->render_data['posting_form'] = $output_posting_form->render(['response_to' => $thread_id], true);
         $output_post = new OutputPost($this->domain, $this->write_mode);
         $this->render_data['op_post'] = array();
         $this->render_data['thread_posts'] = array();
@@ -80,14 +80,13 @@ class OutputThread extends Output
         $this->render_data['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
         $this->render_data['thread_corral_id'] = 'thread-' . $thread_content_id;
         $this->render_data['board_id'] = $this->domain->id();
-        $collapse_start = $total_posts - ($this->domain->setting('abbreviate_thread') - 1);
 
         foreach ($treeline as $post_data)
         {
             $json_post = new \Nelliel\API\JSON\JSONPost($this->domain, $this->file_handler);
             $json_instances['post'] = $json_post;
-            $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data,
-                'gen_data' => $gen_data, 'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
+            $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data, 'gen_data' => $gen_data,
+                'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
             $post_render = $output_post->render($parameters, true);
 
             if ($post_data['op'] == 1)
@@ -107,7 +106,8 @@ class OutputThread extends Output
         $this->render_data['footer_form'] = true;
         $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
         $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=captcha&actions=get';
-        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=captcha&actions=generate&no-display';
+        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=captcha&actions=generate&no-display';
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);

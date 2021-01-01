@@ -21,7 +21,6 @@ class OutputPanelLogs extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $user = $parameters['user'];
         $log_type = $parameters['log_type'] ?? '';
         $page = $parameters['page'] ?? 0;
         $entries = $parameters['entries'] ?? 20;
@@ -35,19 +34,16 @@ class OutputPanelLogs extends Output
         switch ($log_type)
         {
             case 'staff':
-                $query = '(SELECT * FROM "' . NEL_LOGS_TABLE .
-                        '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
+                $query = '(SELECT * FROM "' . NEL_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
 
             case 'system':
-                $query = '(SELECT * FROM "' . NEL_LOGS_TABLE .
-                        '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
+                $query = '(SELECT * FROM "' . NEL_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
 
             default:
                 $query = '(SELECT * FROM "' . NEL_LOGS_TABLE . '")
-                   UNION (SELECT * FROM "' . NEL_LOGS_TABLE .
-                        '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
+                   UNION (SELECT * FROM "' . NEL_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
                 break;
         }
 
@@ -82,8 +78,10 @@ class OutputPanelLogs extends Output
         $pagination_object->setNext(_gettext('>>'));
         $pagination_object->setPage('%d', $page_format);
         $this->render_data['pagination'] = $pagination_object->generateNumerical(1, $page_count, $page);
-        $this->render_data['staff_logs_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=logs&log-type=staff';
-        $this->render_data['system_logs_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=logs&log-type=system';
+        $this->render_data['staff_logs_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=admin&section=logs&log-type=staff';
+        $this->render_data['system_logs_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=admin&section=logs&log-type=system';
         $this->render_data['all_logs_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=logs&log-type=all';
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/logs_panel', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);

@@ -8,7 +8,6 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\NellielPDO;
-use PDO;
 
 class DomainAllBoards extends Domain
 {

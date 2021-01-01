@@ -7,8 +7,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use PDO;
-use Nelliel\Content\ContentID;
 use Nelliel\Domains\DomainSite;
 
 class Redirect
@@ -38,9 +36,9 @@ class Redirect
 
     public function go()
     {
-        if(self::$do_redirect)
+        if (self::$do_redirect)
         {
-            if(self::$url === '')
+            if (self::$url === '')
             {
                 $site_domain = new DomainSite(nel_database());
                 self::$url = $site_domain->setting('home_page');

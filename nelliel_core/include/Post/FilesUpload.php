@@ -71,7 +71,6 @@ class FilesUpload
             }
 
             $file = new \Nelliel\Content\ContentFile(new \Nelliel\Content\ContentID(), $this->domain);
-            $new_file = array();
             $file->changeData('location', $file_data['tmp_name']);
             $file->changeData('name', $file_data['name']);
             $file_data['location'] = $file_data['tmp_name'];
@@ -267,7 +266,7 @@ class FilesUpload
             $prepared->bindValue(5, $db_sha512, PDO::PARAM_LOB);
         }
 
-        if(!empty($query))
+        if (!empty($query))
         {
             $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
 

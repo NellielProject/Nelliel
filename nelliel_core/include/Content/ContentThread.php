@@ -7,7 +7,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
 use Nelliel\Domains\Domain;
 use Nelliel\Moar;
@@ -231,6 +230,7 @@ class ContentThread extends ContentHandler
         }
 
         $this->content_data['sticky'] = 0;
+        $success = $this->writeToDatabase();
         $this->archive_prune->updateThreads();
         return $success;
     }

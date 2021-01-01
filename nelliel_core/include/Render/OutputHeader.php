@@ -8,7 +8,6 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domains\Domain;
-use PDO;
 
 class OutputHeader extends Output
 {
@@ -73,7 +72,6 @@ class OutputHeader extends Output
     {
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
-        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $manage_headers = $parameters['manage_headers'] ?? array();
         $treeline = $parameters['treeline'] ?? array();
         $index_render = $parameters['index_render'] ?? false;

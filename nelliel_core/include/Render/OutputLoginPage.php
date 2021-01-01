@@ -26,11 +26,11 @@ class OutputLoginPage extends Output
         $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'account', 'section' => 'login', 'actions' => 'submit']);
-                $this->render_data['register_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+        $this->render_data['register_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'account', 'section' => 'register']);
         $this->render_data['use_login_captcha'] = $this->domain->setting('use_login_captcha');
-        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH. 'module=captcha&actions=get';
-        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH.
+        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=captcha&actions=get';
+        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 'module=captcha&actions=generate&no-display';
         $this->render_data['use_login_recaptcha'] = $this->domain->setting('use_login_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');

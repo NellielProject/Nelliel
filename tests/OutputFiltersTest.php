@@ -1,4 +1,5 @@
 <?php
+use Nelliel\Render\Filter;
 use \PHPUnit\Framework\TestCase;
 
 require_once 'nelliel_version.php';
@@ -8,7 +9,7 @@ class OutputFiltersTest extends TestCase
 {
     public function testCleanAndEncode()
     {
-        $filter = new \Nelliel\OutputFilter();
+        $filter = new Filter();
         $whitespace_string = " \n\r\t   ";
         $untrimmed_string = "  string ";
         $filter->cleanAndEncode($whitespace_string);
@@ -19,7 +20,7 @@ class OutputFiltersTest extends TestCase
 
     public function testClearWhitespace()
     {
-        $filter = new \Nelliel\OutputFilter();
+        $filter = new Filter();
         $whitespace_string = " \n\r\t   ";
         $filter->clearWhitespace($whitespace_string);
         $this->assertTrue($whitespace_string === '');
@@ -27,7 +28,7 @@ class OutputFiltersTest extends TestCase
 
     public function testNewlinesToArray()
     {
-        $filter = new \Nelliel\OutputFilter();
+        $filter = new Filter();
         $newlines_string = "line1\nline2\nline3";
         $text_array = $filter->newlinesToArray($newlines_string);
         $this->assertCount(3, $text_array);

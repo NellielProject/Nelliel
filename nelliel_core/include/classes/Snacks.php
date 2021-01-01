@@ -7,10 +7,10 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainSite;
 use IPTools\IP;
 use IPTools\Range;
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainSite;
 
 class Snacks
 {
@@ -139,7 +139,6 @@ class Snacks
 
         $bans_hashed = $this->bans_access->getBansByHashedIP($this->hashed_ip_address);
         $bans = array_merge($bans_ip, $bans_hashed);
-        $ban_info = null;
         $longest = null;
 
         foreach ($bans as $ban_hammer)
@@ -150,7 +149,8 @@ class Snacks
                 continue;
             }
 
-            if ($domain->id() !== '_site_' && ($domain->id() === $ban_hammer->getData('board_id') || $ban_hammer->getData('all_boards') == 1))
+            if ($domain->id() !== '_site_' &&
+                    ($domain->id() === $ban_hammer->getData('board_id') || $ban_hammer->getData('all_boards') == 1))
             {
                 if (empty($longest))
                 {

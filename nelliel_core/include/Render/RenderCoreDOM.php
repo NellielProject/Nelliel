@@ -7,8 +7,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domains\Domain;
-
 class RenderCoreDOM extends RenderCore
 {
     private $template_instance;
@@ -37,7 +35,7 @@ class RenderCoreDOM extends RenderCore
 
     public function templatePath($new_path = null)
     {
-        if(!is_null($new_path))
+        if (!is_null($new_path))
         {
             $this->getTemplateInstance()->templatePath($new_path);
         }
@@ -58,7 +56,6 @@ class RenderCoreDOM extends RenderCore
 
     public function loadTemplateFromString(string $template, string $contents)
     {
-
         $this->template_loaders['string']->loadTemplateFromString($template, $contents);
         return $this->template_instance->getTemplate($template, true);
     }

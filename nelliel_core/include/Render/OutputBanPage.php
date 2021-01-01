@@ -64,7 +64,7 @@ class OutputBanPage extends Output
 
             if (!empty($ban_hammer->getData('board_id')))
             {
-                $this->render_data['form_action'] .= '&board_id=' . $ban_hammer->getData('board_id');
+                $this->render_data['form_action'] .= '&board-id=' . $ban_hammer->getData('board_id');
             }
         }
         else

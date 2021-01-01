@@ -47,7 +47,7 @@ class Setup
         $this->createCoreTables();
         $this->createCoreDirectories();
         $site_domain = new \Nelliel\Domains\DomainSite(nel_database());
-        $regen = new \Nelliel\Regen();
+        //$regen = new \Nelliel\Regen();
         $site_domain->regenCache();
         //$regen->news($site_domain);
         $generate_files->installDone(false);
@@ -232,7 +232,6 @@ class Setup
         $config_table->copyFrom(NEL_BOARD_DEFAULTS_TABLE);
 
         $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database());
-        $references = $domain->reference();
 
         // NOTE: Tables must be created in order of
         // threads -> posts -> content

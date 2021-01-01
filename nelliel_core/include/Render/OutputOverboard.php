@@ -9,7 +9,6 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
-use Nelliel\Domains\DomainOverboard;
 use Nelliel\Content\ContentID;
 use PDO;
 
@@ -25,7 +24,6 @@ class OutputOverboard extends Output
     {
         $sfw = $parameters['sfw'] ?? false;
         $this->renderSetup();
-        $session = new \Nelliel\Account\Session();
         $prefix = ($sfw) ? 'sfw_' : '';
         $json_index = new \Nelliel\API\JSON\JSONIndex($this->site_domain, $this->file_handler);
         $output_head = new OutputHead($this->site_domain, $this->write_mode);
@@ -37,9 +35,9 @@ class OutputOverboard extends Output
         $thread_list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
         $thread_count = count($thread_list);
         $threads_done = 0;
+        $gen_data = array();
         $gen_data['index']['thread_count'] = $thread_count;
         $gen_data['index_rendering'] = true;
-        $index_format = $this->site_domain->setting('index_filename_format');
         $threads_on_page = 0;
         $timer_offset = $this->endTimer(false);
 
@@ -50,8 +48,7 @@ class OutputOverboard extends Output
                 $this->render_data['index_navigation'] = false;
                 $this->render_data['footer_form'] = true;
                 $output_footer = new OutputFooter($this->site_domain, $this->write_mode);
-                $this->render_data['footer'] = $output_footer->render(['show_styles' => true],
-                        true);
+                $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
                 $output = $this->output('index/index_page', $data_only, true);
                 $index_filename = 'index' . NEL_PAGE_EXT;
 
@@ -112,8 +109,8 @@ class OutputOverboard extends Output
             {
                 $json_post = new \Nelliel\API\JSON\JSONPost($thread_domain, $this->file_handler);
                 $json_instances['post'] = $json_post;
-                $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data,
-                    'gen_data' => $gen_data, 'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
+                $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data, 'gen_data' => $gen_data,
+                    'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
 
                 if ($post_data['op'] == 1)
                 {

@@ -7,8 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domains\Domain;
 use Nelliel\Content\ContentID;
+use Nelliel\Domains\Domain;
 use PDO;
 
 class OutputIndex extends Output
@@ -23,7 +23,6 @@ class OutputIndex extends Output
     {
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
-        $thread_id = $parameters['thread_id'] ?? 0;
         $page = 1;
         $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $json_index = new \Nelliel\API\JSON\JSONIndex($this->domain, $this->file_handler);
@@ -48,6 +47,7 @@ class OutputIndex extends Output
                 PDO::FETCH_ASSOC);
         $thread_count = count($thread_list);
         $threads_done = 0;
+        $gen_data = array();
         $gen_data['index']['thread_count'] = $thread_count;
         $output_posting_form = new OutputPostingForm($this->domain, $this->write_mode);
         $this->render_data['posting_form'] = $output_posting_form->render(['response_to' => 0], true);
@@ -109,7 +109,7 @@ class OutputIndex extends Output
         }
 
         $gen_data['index_rendering'] = true;
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=threads&board_id=' . $this->domain->id();
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=threads&board-id=' . $this->domain->id();
         $threads_on_page = 0;
         $timer_offset = $this->endTimer(false);
 

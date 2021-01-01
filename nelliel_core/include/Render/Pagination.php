@@ -72,7 +72,8 @@ class Pagination
 
         for ($i = $start; $i <= $end; $i ++)
         {
-            $pagination[] = $this->numericalEntry($start, $end, $current, $link_current, sprintf($this->page_text, $i), $i);
+            $pagination[] = $this->numericalEntry($start, $end, $current, $link_current, sprintf($this->page_text, $i),
+                    $i);
         }
 
         $next = ($current + 1 <= $end) ? $current + 1 : $current;
