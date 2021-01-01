@@ -29,32 +29,23 @@ class OutputPanelBoardSettings extends Output
 
         if ($defaults)
         {
+            $table_name = NEL_BOARD_DEFAULTS_TABLE;
             $manage_headers = ['header' => _gettext('General Management'),
                 'sub_header' => _gettext('Board Default Settings')];
-        }
-        else
-        {
-            $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')];
-        }
-
-        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
-
-        if ($defaults)
-        {
-            $table_name = NEL_BOARD_DEFAULTS_TABLE;
-            $manage_headers = ['header' => _gettext('Board Management'),
-                'sub_header' => _gettext('Default Board Settings')];
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=board-defaults&actions=update';
+                    http_build_query(['module' => 'admin', 'section' => 'board-settings', 'actions' => 'update']);
         }
         else
         {
             $table_name = $this->domain->reference('config_table');
             $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Board Settings')];
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=board-settings&actions=update&board-id=' . $this->domain->id();
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'board-settings', 'actions' => 'update',
+                                'board-id' => $this->domain->id()]);
         }
 
+        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $user_lock_override = $this->session_user->checkPermission($this->domain, 'perm_board_config_lock_override');
         $all_filetypes = $filetypes->allTypeData();
         $all_types = $filetypes->types();

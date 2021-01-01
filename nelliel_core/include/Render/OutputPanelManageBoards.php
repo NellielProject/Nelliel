@@ -26,8 +26,8 @@ class OutputPanelManageBoards extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')];
         $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=admin&section=manage-boards&actions=add&domain=' . Domain::SITE;
+        $board_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                http_build_query(['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'add']);
         $board_data = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC', PDO::FETCH_ASSOC);
         $bgclass = 'row1';

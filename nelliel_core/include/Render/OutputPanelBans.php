@@ -33,10 +33,16 @@ class OutputPanelBans extends Output
         if ($this->domain->id() !== Domain::SITE)
         {
             $ban_list = $bans_access->getBans($this->domain->id());
+            $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'bans', 'actions' => 'new',
+                                'board-id' => $this->domain->id()]);
         }
         else
         {
             $ban_list = $bans_access->getBans();
+            $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    http_build_query(['module' => 'admin', 'section' => 'bans', 'actions' => 'new']);
         }
 
         $bgclass = 'row1';
@@ -58,21 +64,15 @@ class OutputPanelBans extends Output
             $ban_data['appeal'] = $ban_hammer->getData('appeal');
             $ban_data['appeal_response'] = $ban_hammer->getData('appeal_response');
             $ban_data['appeal_status'] = $ban_hammer->getData('appeal_status');
-            $ban_data['modify_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&actions=edit&ban_id=' .
-                    $ban_hammer->getData('ban_id') . '&board-id=' . $this->domain->id();
-            $ban_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&actions=remove&ban_id=' .
-                    $ban_hammer->getData('ban_id') . '&board-id=' . $this->domain->id();
+            $this->render_data['modify_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'bans', 'actions' => 'edit',
+                                'ban_id' => $ban_hammer->getData('ban_id'), 'board-id' => $this->domain->id()]);
+            $this->render_data['modify_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    http_build_query(
+                            ['module' => 'admin', 'section' => 'bans', 'actions' => 'remove',
+                                'ban_id' => $ban_hammer->getData('ban_id'), 'board-id' => $this->domain->id()]);
             $this->render_data['ban_list'][] = $ban_data;
-        }
-
-        if ($this->domain->id() !== Domain::SITE)
-        {
-            $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=bans&actions=new&board-id=' . $this->domain->id();
-        }
-        else
-        {
-            $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&actions=new';
         }
 
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/bans_panel_main',
@@ -102,10 +102,11 @@ class OutputPanelBans extends Output
         $this->render_data['ban_hashed_ip'] = $parameters['hashed_ip'];
         $this->render_data['ban_type'] = $parameters['ban_type'];
         $this->render_data['content_ban'] = $this->render_data['ban_type'] === 'CONTENT';
-        $post_param = '';
         $this->render_data['unhashed_ip'] = nel_site_domain()->setting('store_unhashed_ip');
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=admin&section=bans&actions=add&board-id=' . $this->domain->id() . $post_param;
+                http_build_query(
+                        ['module' => 'admin', 'section' => 'bans', 'actions' => 'add',
+                            'board-id' => $this->domain->id()]);
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/bans_panel_add',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
@@ -124,7 +125,9 @@ class OutputPanelBans extends Output
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Modify Ban')];
         $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=admin&section=bans&actions=update&board-id=' . $this->domain->id();
+                http_build_query(
+                        ['module' => 'admin', 'section' => 'bans', 'actions' => 'update',
+                            'board-id' => $this->domain->id()]);
         $ban_id = $_GET['ban_id'];
         $this->render_data['view_unhashed_ip'] = $this->session_user->checkPermission($this->domain,
                 'perm_view_unhashed_ip');
