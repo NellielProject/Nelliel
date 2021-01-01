@@ -7,10 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainSite;
 use Nelliel\Auth\Authorization;
-use Nelliel\Admin\AdminHandler;
+use Nelliel\Domains\Domain;
 
 class Dispatch
 {
@@ -26,9 +24,8 @@ class Dispatch
     public function dispatch(array $inputs)
     {
         $admin_handler = null;
-        $return = false;
 
-        if(empty($inputs['actions']))
+        if (empty($inputs['actions']))
         {
             $admin_handler = $this->sections($inputs, '');
         }

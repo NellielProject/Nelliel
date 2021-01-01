@@ -65,7 +65,6 @@ class OutputCatalog extends Output
                 {
                     $line_parts = array();
                     $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, null, PREG_SPLIT_DELIM_CAPTURE);
-                    $line_final = '';
 
                     foreach ($segments as $segment)
                     {

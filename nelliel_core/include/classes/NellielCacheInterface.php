@@ -9,6 +9,8 @@ if (!defined('NELLIEL_VERSION'))
 
 interface NellielCacheInterface
 {
+
     public function regenCache();
+
     public function deleteCache();
 }

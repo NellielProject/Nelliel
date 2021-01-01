@@ -24,7 +24,8 @@ class AdminBoardSettings extends AdminHandler
         $this->board_id = $_GET['board-id'] ?? '';
         $this->defaults = empty($this->board_id) ? true : false;
         $this->database = $domain->database();
-        $this->domain = ($this->defaults) ? new DomainSite($this->database) : new DomainBoard($this->board_id, $this->database);
+        $this->domain = ($this->defaults) ? new DomainSite($this->database) : new DomainBoard($this->board_id,
+                $this->database);
         $this->authorization = $authorization;
         $this->validateUser();
     }

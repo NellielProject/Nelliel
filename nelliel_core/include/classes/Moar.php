@@ -28,7 +28,7 @@ class Moar
 
     public function get($index = null)
     {
-        if(is_null($index))
+        if (is_null($index))
         {
             return $this->moar;
         }

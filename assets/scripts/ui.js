@@ -118,7 +118,7 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
     }
 
     if (dynamic) {
-        var url = "imgboard.php?module=render&action=view-thread&content-id=" + content_id.id_string + "&board_id=" + dataBin.board_id + "&thread=" + content_id.thread_id;
+        var url = "imgboard.php?module=render&action=view-thread&content-id=" + content_id.id_string + "&board-id=" + dataBin.board_id + "&thread=" + content_id.thread_id;
 
         if(dataBin.is_modmode) {
             url = url + "&modmode=true";

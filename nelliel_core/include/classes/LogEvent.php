@@ -23,7 +23,7 @@ class LogEvent
         $this->domain = $domain;
         $this->logger = new NellielLogger($domain->database());
 
-        if($init_defaults)
+        if ($init_defaults)
         {
             $this->changeContext('domain', $this->domain);
             $this->changeContext('log_table', $this->domain->reference('log_table'));

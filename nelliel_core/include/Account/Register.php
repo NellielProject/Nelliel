@@ -7,9 +7,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domains\Domain;
-use Nelliel\NellielPDO;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
 
 class Register
 {
@@ -49,6 +48,8 @@ class Register
 
         if ($creating_owner)
         {
+            $install_id  = '';
+
             include NEL_GENERATED_FILES_PATH . 'create_owner.php';
 
             if ($install_id != $_GET['create_owner'])

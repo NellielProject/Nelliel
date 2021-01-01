@@ -48,7 +48,7 @@ class PostData
         $post->changeData('post_as_staff',
                 (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false);
 
-        if(!$post->data('post_as_staff'))
+        if (!$post->data('post_as_staff'))
         {
             $session = new Session();
             $session->ignore(true);
@@ -128,6 +128,7 @@ class PostData
     public function tripcodes($post)
     {
         $site_domain = new \Nelliel\Domains\DomainSite($this->domain->database());
+        $name_pieces = array();
         $post->changeData('poster_name', preg_replace("/#+$/", "", $post->data('poster_name')));
         preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post->data('poster_name'), $name_pieces);
         $post->changeData('poster_name', $name_pieces[1]);

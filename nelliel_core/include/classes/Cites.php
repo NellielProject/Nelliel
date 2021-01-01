@@ -105,6 +105,7 @@ class Cites
             bool $add_cite = false)
     {
         $cite_data = array();
+        $matches = array();
 
         if (preg_match('#^>>([0-9]+)$#', $text_input, $matches) === 1)
         {

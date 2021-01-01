@@ -7,11 +7,11 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use PDO;
 use Nelliel\NellielPDO;
 use Psr\Log\AbstractLogger;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
+use PDO;
 
 class NellielLogger extends AbstractLogger
 {
@@ -26,7 +26,6 @@ class NellielLogger extends AbstractLogger
 
     public function log($level, $message, array $context = array())
     {
-        $nope = 3;
         if (!array_key_exists($level, $this->level_map) || $this->level_map[$level] < 0 || $this->level_map[$level] > 7)
         {
             throw new InvalidArgumentException(_gettext('Invalid log level. Level given: ') . $level);

@@ -9,7 +9,6 @@ use Nelliel\Domains\Domain;
 function nel_dispatch_preparation()
 {
     nel_plugins()->processHook('nel-inb4-dispatch-prep', array());
-    $authorization = new \Nelliel\Auth\Authorization(nel_database());
 
     if (empty($_GET) && empty($_POST))
     {
@@ -174,7 +173,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 {
                     if ($session->inModmode($domain))
                     {
-                        $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' .
+                        $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board-id=' .
                                 $inputs['board_id'] . '&modmode=true';
                     }
                     else
@@ -199,7 +198,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 if ($session->inModmode($domain))
                 {
-                    $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' .
+                    $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board-id=' .
                             $inputs['board_id'] . '&modmode=true';
                 }
                 else
@@ -217,7 +216,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 if ($session->inModmode($domain))
                 {
-                    $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board_id=' .
+                    $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board-id=' .
                             $inputs['board_id'] . '&modmode=true';
                 }
                 else

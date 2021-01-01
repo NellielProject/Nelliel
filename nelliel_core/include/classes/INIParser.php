@@ -2,13 +2,12 @@
 
 namespace Nelliel;
 
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
 
-use \Nelliel\Utility\FileHandler;
+use Nelliel\Utility\FileHandler;
 
 class INIParser
 {

@@ -21,7 +21,6 @@ class OutputPanelStyles extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $user = $parameters['user'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
@@ -49,7 +48,7 @@ class OutputPanelStyles extends Output
                     http_build_query(
                             ['module' => 'admin', 'section' => 'styles', 'actions' => 'make-default',
                                 'style-id' => $style['asset_id'], 'style-type' => $style_info['style_type']]);
-                            $style_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+            $style_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'styles', 'actions' => 'remove',
                                 'style-id' => $style['asset_id']]);

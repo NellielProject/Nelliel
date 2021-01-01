@@ -9,7 +9,6 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
-use PDO;
 
 class OutputFile extends Output
 {
@@ -31,15 +30,12 @@ class OutputFile extends Output
         $json_post = $parameters['json_instances']['post'];
         $json_content = $parameters['json_instances']['content'];
         $json_post->addContentData($json_content->prepareData($file));
-
-        $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $session = new \Nelliel\Account\Session();
         $file_content_id = new ContentID();
         $file_content_id->changeThreadID($post_data['parent_thread']);
         $file_content_id->changePostID($post_data['post_number']);
         $file_content_id->changeOrderID($file['content_order']);
         $full_filename = $file['filename'] . '.' . $file['extension'];
-        $file_id = $post_data['parent_thread'] . '_' . $post_data['post_number'] . '_' . $file['content_order'];
         $this->render_data['file_info_id'] = 'fileinfo-' . $file_content_id->getIDString();
         $this->render_data['file_content_id'] = $file_content_id->getIDString();
         $this->render_data['file_info_class'] = $post_type_class . $multiple_class . 'fileinfo';
@@ -49,7 +45,7 @@ class OutputFile extends Output
         if ($session->inModmode($this->domain))
         {
             $this->render_data['in_modmode'] = true;
-            $this->render_data['delete_url'] = '?module=admin&section=threads&board_id=' . $this->domain->id() .
+            $this->render_data['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true&goback=true';
         }
 
@@ -176,16 +172,14 @@ class OutputFile extends Output
 
                 if ($file['spoiler'])
                 {
-                    $this->render_data['preview_url'] = NEL_IMAGES_WEB_PATH .
-                            'covers/spoiler_alert.png';
+                    $this->render_data['preview_url'] = NEL_IMAGES_WEB_PATH . 'covers/spoiler_alert.png';
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }
 
                 if ($file['deleted'])
                 {
-                    $this->render_data['preview_url'] = NEL_IMAGES_WEB_PATH .
-                            'covers/deleted_file.png';
+                    $this->render_data['preview_url'] = NEL_IMAGES_WEB_PATH . 'covers/deleted_file.png';
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }

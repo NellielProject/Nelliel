@@ -67,7 +67,8 @@ class OutputPanelMain extends Output
                     continue;
                 }
 
-                $board_data['board_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=board-main-panel&board-id=' . $board['board_id'];
+                $board_data['board_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                        'module=admin&section=board-main-panel&board-id=' . $board['board_id'];
                 $board_data['board_id'] = '/' . $board['board_id'] . '/';
 
                 if ($user->isSiteOwner())
@@ -112,11 +113,13 @@ class OutputPanelMain extends Output
         $this->render_data['module_news'] = $user->checkPermission($this->domain, 'perm_manage_news');
         $this->render_data['news_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=news';
         $this->render_data['regen_overboard_pages'] = $user->checkPermission($this->domain, 'perm_regen_pages');
-        $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=regen&actions=overboard-all-pages';
+        $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=regen&actions=overboard-all-pages';
         $this->render_data['regen_site_caches'] = $user->checkPermission($this->domain, 'perm_regen_cache');
         $this->render_data['regen_caches_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=regen&actions=site-all-caches';
         $this->render_data['module_extract_gettext'] = $user->checkPermission($this->domain, 'perm_extract_gettext');
-        $this->render_data['extract_gettext_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=language&actions=extract-gettext';
+        $this->render_data['extract_gettext_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=language&actions=extract-gettext';
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/main_panel', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);

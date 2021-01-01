@@ -20,7 +20,6 @@ class OutputPanelIconSets extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $user = $parameters['user'];
         $this->renderSetup();
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -48,7 +47,7 @@ class OutputPanelIconSets extends Output
                     http_build_query(
                             ['module' => 'admin', 'section' => 'icon-sets', 'actions' => 'make-default',
                                 'icon-set-id' => $icon_set['asset_id']]);
-                            $set_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+            $set_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'icon-sets', 'actions' => 'remove',
                                 'icon-set-id' => $icon_set['asset_id']]);

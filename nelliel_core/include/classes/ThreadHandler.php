@@ -8,9 +8,6 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Content\ContentID;
-use Nelliel\Content\ContentThread;
-use Nelliel\Content\ContentPost;
-use Nelliel\Content\ContentFile;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainSite;
 
@@ -28,7 +25,6 @@ class ThreadHandler
     public function processContentDeletes()
     {
         $updates = array();
-        $archive = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
 
         foreach ($_POST as $name => $value)
         {

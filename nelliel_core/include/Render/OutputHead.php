@@ -8,7 +8,6 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domains\Domain;
-use PDO;
 
 class OutputHead extends Output
 {

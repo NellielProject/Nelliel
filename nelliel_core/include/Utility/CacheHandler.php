@@ -16,7 +16,7 @@ class CacheHandler
     {
         $this->default_header = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}';
 
-        if(!$no_hash_load)
+        if (!$no_hash_load)
         {
             $this->loadHashes();
         }
@@ -47,6 +47,7 @@ class CacheHandler
     {
         if (file_exists(NEL_CACHE_FILES_PATH . 'hashes.php'))
         {
+            $hashes = array();
             include NEL_CACHE_FILES_PATH . 'hashes.php';
             $this->hashes = $hashes;
         }
@@ -58,13 +59,14 @@ class CacheHandler
         $this->writeCacheFile(NEL_CACHE_FILES_PATH, 'hashes.php', '$hashes = ' . var_export($this->hashes, true) . ';');
     }
 
-    public function writeCacheFile($path, string $filename, $content, string $header = '', string $footer = '', $file_perm = NEL_FILES_PERM)
+    public function writeCacheFile($path, string $filename, $content, string $header = '', string $footer = '',
+            $file_perm = NEL_FILES_PERM)
     {
         $file_handler = new FileHandler();
 
         if (!is_writable(NEL_CACHE_FILES_PATH))
         {
-            if(!file_exists(NEL_CACHE_FILES_PATH))
+            if (!file_exists(NEL_CACHE_FILES_PATH))
             {
                 $file_handler->createDirectory(NEL_CACHE_FILES_PATH);
             }

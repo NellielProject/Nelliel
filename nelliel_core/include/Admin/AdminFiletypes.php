@@ -7,7 +7,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use PDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Auth\Authorization;
 
@@ -95,9 +94,10 @@ class AdminFiletypes extends AdminHandler
 
         $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_FILETYPES_TABLE .
-                '" SET "base_extension" = ?, "type" = ?, "format" = ?, "mime" = ?, "sub_extensions" = ?, "id_regex" = ?, "label" = ?, "enabled" = ? WHERE "entry" = ?');
+                '" SET "base_extension" = ?, "type" = ?, "format" = ?, "mime" = ?, "sub_extensions" = ?, "id_regex" = ?, "label" = ?, "type_def" = ?, "enabled" = ? WHERE "entry" = ?');
         $this->database->executePrepared($prepared,
-                [$base_extension, $type, $format, $mime, $sub_extensions, $id_regex, $label, $enabled, $filetype_id]);
+                [$base_extension, $type, $format, $mime, $sub_extensions, $id_regex, $label, $type_def, $enabled,
+                    $filetype_id]);
         $this->outputMain(true);
     }
 

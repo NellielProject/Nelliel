@@ -171,6 +171,8 @@ class LanguageExtractor
                 {
                     if (!$function_found)
                     {
+                        $matches = array();
+
                         if (preg_match('/^_([a-z]*?)gettext$/u', $token[1], $matches))
                         {
                             $entry['file'] = $file_id;
@@ -365,7 +367,8 @@ class LanguageExtractor
     private function parseDatabaseEntries(array $strings, string $default_category)
     {
         $database = $this->domain->database();
-        $filetype_labels = $database->executeFetchAll('SELECT "label" FROM "' . NEL_FILETYPES_TABLE . '"', PDO::FETCH_COLUMN);
+        $filetype_labels = $database->executeFetchAll('SELECT "label" FROM "' . NEL_FILETYPES_TABLE . '"',
+                PDO::FETCH_COLUMN);
 
         foreach ($filetype_labels as $label)
         {
@@ -378,8 +381,8 @@ class LanguageExtractor
             }
         }
 
-        $permission_descriptions = $database->executeFetchAll('SELECT "description" FROM "' . NEL_PERMISSIONS_TABLE . '"',
-                PDO::FETCH_COLUMN);
+        $permission_descriptions = $database->executeFetchAll(
+                'SELECT "description" FROM "' . NEL_PERMISSIONS_TABLE . '"', PDO::FETCH_COLUMN);
 
         foreach ($permission_descriptions as $description)
         {
@@ -392,8 +395,8 @@ class LanguageExtractor
             }
         }
 
-        $setting_descriptions = $database->executeFetchAll('SELECT "setting_description" FROM "' . NEL_SETTINGS_TABLE . '"',
-                PDO::FETCH_COLUMN);
+        $setting_descriptions = $database->executeFetchAll(
+                'SELECT "setting_description" FROM "' . NEL_SETTINGS_TABLE . '"', PDO::FETCH_COLUMN);
 
         foreach ($setting_descriptions as $description)
         {
@@ -402,7 +405,7 @@ class LanguageExtractor
                 $msgid = $description;
                 $strings[$default_category][$msgid]['msgid'] = $description;
                 $strings[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_SETTINGS_TABLE .
-                ' | Column: setting_description'] = '#:';
+                        ' | Column: setting_description'] = '#:';
             }
         }
 
@@ -416,7 +419,7 @@ class LanguageExtractor
                 $msgid = $label;
                 $strings[$default_category][$msgid]['msgid'] = $label;
                 $strings[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_SETTINGS_TABLE .
-                ' | Column: setting_label'] = '#:';
+                        ' | Column: setting_label'] = '#:';
             }
         }
 

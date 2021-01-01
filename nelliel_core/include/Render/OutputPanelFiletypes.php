@@ -9,7 +9,6 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domains\Domain;
 use PDO;
-use Nelliel\Auth\AuthUser;
 
 class OutputPanelFiletypes extends Output
 {
@@ -22,7 +21,6 @@ class OutputPanelFiletypes extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $user = $parameters['user'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
@@ -33,7 +31,7 @@ class OutputPanelFiletypes extends Output
                 PDO::FETCH_ASSOC);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'admin', 'section' => 'filetypes', 'actions' => 'add']);
-                $this->render_data['new_filetype_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+        $this->render_data['new_filetype_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'admin', 'section' => 'filetypes', 'actions' => 'new']);
         $bgclass = 'row1';
 
@@ -107,7 +105,6 @@ class OutputPanelFiletypes extends Output
     public function edit(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $user = $parameters['user'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);

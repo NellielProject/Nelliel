@@ -45,7 +45,8 @@ class OutputPanelBoardSettings extends Output
             $table_name = NEL_BOARD_DEFAULTS_TABLE;
             $manage_headers = ['header' => _gettext('Board Management'),
                 'sub_header' => _gettext('Default Board Settings')];
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=board-defaults&actions=update';
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    'module=admin&section=board-defaults&actions=update';
         }
         else
         {
@@ -58,9 +59,6 @@ class OutputPanelBoardSettings extends Output
         $user_lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');
         $all_filetypes = $filetypes->allTypeData();
         $all_types = $filetypes->types();
-        $type_nodes = array();
-        $filetype_entries_nodes = array();
-        $type_row_count = array();
         $prepared = $this->database->prepare(
                 'SELECT "setting_name","setting_value","edit_lock" FROM "' . $table_name . '" WHERE "setting_name" = ?');
         $enabled_types = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_ASSOC);
@@ -87,7 +85,6 @@ class OutputPanelBoardSettings extends Output
             $type_data['type_select']['value'] = ($type_enabled) ? 'checked' : '';
             $type_data['type_select']['disabled'] = ($types_edit_lock) ? 'disabled' : '';
             $enabled_formats = $enabled_array[$type['type']]['formats'] ?? array();
-            $entry_count = 0;
             $filetype_set = array();
 
             foreach ($all_filetypes as $filetype)

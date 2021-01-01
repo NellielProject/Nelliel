@@ -121,7 +121,8 @@ class SQLCompatibility
 
     public function limitOffset($limit, $offset)
     {
-        if (NEL_SQLTYPE === 'MYSQL' || NEL_SQLTYPE === 'SQLITE' || NEL_SQLTYPE === 'MARIADB' || NEL_SQLTYPE === 'POSTGRESQL')
+        if (NEL_SQLTYPE === 'MYSQL' || NEL_SQLTYPE === 'SQLITE' || NEL_SQLTYPE === 'MARIADB' ||
+                NEL_SQLTYPE === 'POSTGRESQL')
         {
             return 'LIMIT ' . $limit . ' OFFSET ' . $offset;
         }

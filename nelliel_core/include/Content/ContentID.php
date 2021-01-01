@@ -103,15 +103,15 @@ class ContentID
 
     public function getInstanceFromID(Domain $domain, bool $archived = false)
     {
-        if($this->isThread())
+        if ($this->isThread())
         {
             return new ContentThread($this, $domain, $archived);
         }
-        else if($this->isPost())
+        else if ($this->isPost())
         {
             return new ContentPost($this, $domain, $archived);
         }
-        else if($this->isContent())
+        else if ($this->isContent())
         {
             return new ContentFile($this, $domain, $archived);
         }

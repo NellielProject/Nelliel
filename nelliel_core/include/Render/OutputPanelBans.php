@@ -7,13 +7,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use IPTools\IP;
-use IPTools\Range;
-use Nelliel\BansAccess;
 use Nelliel\BanHammer;
-use Nelliel\Content\ContentID;
+use Nelliel\BansAccess;
 use Nelliel\Domains\Domain;
-use PDO;
 
 class OutputPanelBans extends Output
 {
@@ -64,16 +60,16 @@ class OutputPanelBans extends Output
             $ban_data['appeal_response'] = $ban_hammer->getData('appeal_response');
             $ban_data['appeal_status'] = $ban_hammer->getData('appeal_status');
             $ban_data['modify_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&actions=edit&ban_id=' .
-                    $ban_hammer->getData('ban_id') . '&board_id=' . $this->domain->id();
+                    $ban_hammer->getData('ban_id') . '&board-id=' . $this->domain->id();
             $ban_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&actions=remove&ban_id=' .
-                    $ban_hammer->getData('ban_id') . '&board_id=' . $this->domain->id();
+                    $ban_hammer->getData('ban_id') . '&board-id=' . $this->domain->id();
             $this->render_data['ban_list'][] = $ban_data;
         }
 
         if ($this->domain->id() !== '_site_')
         {
             $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=bans&actions=new&board_id=' . $this->domain->id();
+                    'module=admin&section=bans&actions=new&board-id=' . $this->domain->id();
         }
         else
         {
@@ -110,7 +106,7 @@ class OutputPanelBans extends Output
         $post_param = '';
         $this->render_data['unhashed_ip'] = nel_site_domain()->setting('store_unhashed_ip');
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=admin&section=bans&actions=add&board_id=' . $this->domain->id() . $post_param;
+                'module=admin&section=bans&actions=add&board-id=' . $this->domain->id() . $post_param;
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/bans_panel_add',
                 $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
@@ -130,7 +126,7 @@ class OutputPanelBans extends Output
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Modify Ban')];
         $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=admin&section=bans&actions=update&board_id=' . $this->domain->id();
+                'module=admin&section=bans&actions=update&board-id=' . $this->domain->id();
         $ban_id = $_GET['ban_id'];
         $this->render_data['view_unhashed_ip'] = $user->checkPermission($this->domain, 'perm_view_unhashed_ip');
         $ban_hammer = new \Nelliel\BanHammer($this->database);

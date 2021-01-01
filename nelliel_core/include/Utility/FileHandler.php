@@ -120,7 +120,7 @@ class FileHandler
         {
             $success = $this->createDirectory(dirname($destination), $chmod, true);
 
-            if(!$success)
+            if (!$success)
             {
                 return false;
             }

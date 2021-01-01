@@ -24,6 +24,7 @@ class OutputNavigation extends Output
         $board_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
         $board_count = count($board_data);
         $end = $board_count - 1;
+        $render_data = array();
 
         for ($i = 0; $i < $board_count; ++ $i)
         {

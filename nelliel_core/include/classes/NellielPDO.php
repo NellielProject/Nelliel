@@ -66,7 +66,8 @@ class NellielPDO extends PDO
             case 'POSTGRESQL':
                 $prepared = $this->prepare(
                         'SELECT 1 FROM "information_schema"."tables" WHERE "table_schema" = ? AND "table_name" = ?');
-                $result = $this->executePreparedFetch($prepared, [NEL_POSTGRESQL_SCHEMA, $table_name], PDO::FETCH_COLUMN);
+                $result = $this->executePreparedFetch($prepared, [NEL_POSTGRESQL_SCHEMA, $table_name],
+                        PDO::FETCH_COLUMN);
                 break;
 
             case 'SQLITE':
@@ -139,7 +140,7 @@ class NellielPDO extends PDO
 
         for ($i = 0; $i < $count; $i ++)
         {
-            if(is_null($values[$i]))
+            if (is_null($values[$i]))
             {
                 unset($final_columns[$i]);
                 unset($final_values[$i]);
@@ -226,7 +227,8 @@ class NellielPDO extends PDO
         return $result;
     }
 
-    public function executePreparedFetch($prepared, $parameters = null, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE, bool $close_cursor = true)
+    public function executePreparedFetch($prepared, $parameters = null, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE,
+            bool $close_cursor = true)
     {
         $result = $this->executePrepared($prepared, $parameters, false);
 

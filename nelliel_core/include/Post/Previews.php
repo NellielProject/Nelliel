@@ -26,7 +26,7 @@ class Previews
         $i = 0;
         $files_count = count($files);
 
-        for($i  = 0; $i < $files_count; $i++)
+        for ($i = 0; $i < $files_count; $i ++)
         {
             if (!$files[$i]->data('display_width') > 0 || !$files[$i]->data('display_height') > 0)
             {
@@ -97,7 +97,7 @@ class Previews
                 {
                     $preview_made = $this->gd($files[$i], $preview_path);
 
-                    if(!$preview_made)
+                    if (!$preview_made)
                     {
                         $files[$i]->changeData('preview_name', null);
                         $files[$i]->changeData('preview_extension', null);
@@ -127,6 +127,9 @@ class Previews
 
         if (function_exists('exec'))
         {
+            $rescode = null;
+            $out = null;
+
             exec("gm -version 2>&1", $out, $rescode);
 
             if ($rescode === 0)
@@ -179,7 +182,9 @@ class Previews
         $resize_command .= '-strip ';
         $resize_command .= escapeshellarg(
                 $preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'));
-        exec($resize_command, $out, $code);
+        $rescode = null;
+        $out = null;
+        exec($resize_command, $out, $rescode);
         chmod($preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'),
                 octdec(NEL_FILES_PERM));
     }
@@ -248,7 +253,9 @@ class Previews
         $resize_command .= '-strip ';
         $resize_command .= escapeshellarg(
                 $preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'));
-        exec($resize_command, $out, $code);
+        $rescode = null;
+        $out = null;
+        exec($resize_command, $out, $rescode);
         chmod($preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'),
                 octdec(NEL_FILES_PERM));
     }
