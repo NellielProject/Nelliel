@@ -2,6 +2,9 @@
 
 namespace Nelliel\Admin;
 
+use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -14,6 +17,15 @@ abstract class Admin
     protected $domain;
     protected $session_user;
     protected $output_main = true;
+    protected $inputs;
+
+    function __construct(Authorization $authorization, Domain $domain, array $inputs)
+    {
+        $this->database = $domain->database();
+        $this->authorization = $authorization;
+        $this->domain = $domain;
+        $this->validateUser();
+    }
 
     public abstract function renderPanel();
 

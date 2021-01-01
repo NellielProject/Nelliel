@@ -15,10 +15,7 @@ class AdminIconSets extends Admin
 
     function __construct(Authorization $authorization, Domain $domain, array $inputs)
     {
-        $this->database = $domain->database();
-        $this->authorization = $authorization;
-        $this->domain = $domain;
-        $this->validateUser();
+        parent::__construct($authorization, $domain, $inputs);
     }
 
     public function renderPanel()

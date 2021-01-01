@@ -16,10 +16,7 @@ class AdminUsers extends Admin
 
     function __construct(Authorization $authorization, Domain $domain, array $inputs)
     {
-        $this->database = $domain->database();
-        $this->authorization = $authorization;
-        $this->domain = $domain;
-        $this->validateUser();
+        parent::__construct($authorization, $domain, $inputs);
         $this->user_id = $_GET['user-id'] ?? null;
 
         if (!is_null($this->user_id) && !$this->authorization->userExists($this->user_id))

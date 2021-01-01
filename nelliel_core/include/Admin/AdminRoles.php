@@ -16,10 +16,7 @@ class AdminRoles extends Admin
 
     function __construct(Authorization $authorization, Domain $domain, array $inputs)
     {
-        $this->database = $domain->database();
-        $this->authorization = $authorization;
-        $this->domain = $domain;
-        $this->validateUser();
+        parent::__construct($authorization, $domain, $inputs);
         $this->role_id = $_GET['role-id'] ?? null;
 
         if (!is_null($this->role_id) && !$this->authorization->roleExists($this->role_id))

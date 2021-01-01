@@ -12,14 +12,10 @@ use Nelliel\Auth\Authorization;
 
 class AdminLogs extends Admin
 {
-    private $defaults = false;
 
     function __construct(Authorization $authorization, Domain $domain, array $inputs)
     {
-        $this->database = $domain->database();
-        $this->authorization = $authorization;
-        $this->domain = $domain;
-        $this->validateUser();
+        parent::__construct($authorization, $domain, $inputs);
     }
 
     public function renderPanel()

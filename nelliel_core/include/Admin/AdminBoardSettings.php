@@ -23,11 +23,9 @@ class AdminBoardSettings extends Admin
         // TODO: Something better should be possible
         $this->board_id = $_GET['board-id'] ?? '';
         $this->defaults = empty($this->board_id) ? true : false;
-        $this->database = $domain->database();
+        parent::__construct($authorization, $domain, $inputs);
         $this->domain = ($this->defaults) ? new DomainSite($this->database) : new DomainBoard($this->board_id,
                 $this->database);
-        $this->authorization = $authorization;
-        $this->validateUser();
     }
 
     public function renderPanel()

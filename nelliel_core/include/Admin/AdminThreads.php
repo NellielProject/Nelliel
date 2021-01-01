@@ -18,11 +18,8 @@ class AdminThreads extends Admin
 
     function __construct(Authorization $authorization, Domain $domain, array $inputs)
     {
-        $this->database = $domain->database();
-        $this->authorization = $authorization;
-        $this->domain = $domain;
+        parent::__construct($authorization, $domain, $inputs);
         $this->site_domain = new DomainSite($this->database);
-        $this->validateUser();
     }
 
     public function renderPanel()
