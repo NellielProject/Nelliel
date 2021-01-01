@@ -20,7 +20,6 @@ class OutputPanelBoardSettings extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $user = $parameters['user'];
         $this->renderSetup();
         $defaults = $parameters['defaults'] ?? false;
         $filetypes = new \Nelliel\FileTypes($this->database);
@@ -56,7 +55,7 @@ class OutputPanelBoardSettings extends Output
                     'module=admin&section=board-settings&actions=update&board-id=' . $this->domain->id();
         }
 
-        $user_lock_override = $user->checkPermission($this->domain, 'perm_board_config_lock_override');
+        $user_lock_override = $this->session_user->checkPermission($this->domain, 'perm_board_config_lock_override');
         $all_filetypes = $filetypes->allTypeData();
         $all_types = $filetypes->types();
         $prepared = $this->database->prepare(

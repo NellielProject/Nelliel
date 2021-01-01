@@ -22,7 +22,7 @@ class AdminNews extends Admin
     {
         $this->verifyAccess();
         $output_panel = new \Nelliel\Render\OutputPanelNews($this->domain, false);
-        $output_panel->render(['user' => $this->session_user], false);
+        $output_panel->render([], false);
     }
 
     public function creator()

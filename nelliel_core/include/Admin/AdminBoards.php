@@ -26,7 +26,7 @@ class AdminBoards extends Admin
     {
         $this->verifyAccess();
         $output_panel = new \Nelliel\Render\OutputPanelManageBoards($this->domain, false);
-        $output_panel->main(['user' => $this->session_user], false);
+        $output_panel->main([], false);
     }
 
     public function creator()
@@ -195,7 +195,7 @@ class AdminBoards extends Admin
         switch ($which)
         {
             case 'remove_warning':
-                $output_panel->removeWarning(['user' => $this->session_user], false);
+                $output_panel->removeWarning([], false);
                 break;
         }
 

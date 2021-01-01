@@ -98,7 +98,8 @@ class OutputPanelUsers extends Output
             $this->render_data['is_site_owner'] = false;
             $prepared = $this->database->prepare(
                     'SELECT "role_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
-            $site_role = $this->database->executePreparedFetch($prepared, array($user_id, Domain::SITE), PDO::FETCH_COLUMN);
+            $site_role = $this->database->executePreparedFetch($prepared, array($user_id, Domain::SITE),
+                    PDO::FETCH_COLUMN);
 
             if (!empty($site_role))
             {

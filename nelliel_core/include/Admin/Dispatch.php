@@ -256,14 +256,14 @@ class Dispatch
                 $session = new \Nelliel\Account\Session();
                 $session->loggedInOrError();
                 $output_main_panel = new \Nelliel\Render\OutputPanelMain($this->domain, false);
-                $output_main_panel->render(['user' => $session->sessionUser()], false);
+                $output_main_panel->render([], false);
                 break;
 
             case 'board-main-panel':
                 $session = new \Nelliel\Account\Session();
                 $session->loggedInOrError();
                 $output_board_panel = new \Nelliel\Render\OutputPanelBoard($this->domain, false);
-                $output_board_panel->render(['user' => $session->sessionUser(), 'board_id' => $board_id], false);
+                $output_board_panel->render(['board_id' => $board_id], false);
         }
 
         return $admin_handler;

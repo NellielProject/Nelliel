@@ -32,7 +32,7 @@ class AdminBoardSettings extends Admin
     {
         $this->verifyAccess();
         $output_panel = new \Nelliel\Render\OutputPanelBoardSettings($this->domain, false);
-        $output_panel->render(['user' => $this->session_user, 'defaults' => $this->defaults], false);
+        $output_panel->render(['defaults' => $this->defaults], false);
     }
 
     public function creator()

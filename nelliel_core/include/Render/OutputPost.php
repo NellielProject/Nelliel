@@ -126,13 +126,13 @@ class OutputPost extends Output
         $thread_headers = array();
         $authorization = new \Nelliel\Auth\Authorization($this->database);
         $session = new \Nelliel\Account\Session();
-        $user = $session->sessionUser();
         $cites = new \Nelliel\Cites($this->domain->database());
         $header_data['response'] = $response;
 
         if ($session->inModmode($this->domain) && !$this->write_mode)
         {
-            if ($user->checkPermission($this->domain, 'perm_view_unhashed_ip') && !empty($post_data['ip_address']))
+            if ($this->session_user->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
+                    !empty($post_data['ip_address']))
             {
                 $ip = @inet_ntop($post_data['ip_address']);
             }

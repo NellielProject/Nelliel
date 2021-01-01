@@ -25,7 +25,7 @@ class AdminBans extends Admin
     {
         $this->verifyAccess();
         $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
-        $output_panel->main(['user' => $this->session_user], false);
+        $output_panel->main([], false);
     }
 
     public function creator()
@@ -35,9 +35,7 @@ class AdminBans extends Admin
         $hashed_ip = $_GET['ban_hashed_ip'] ?? '';
         $ban_type = $_GET['ban_type'] ?? 'GENERAL';
         $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
-        $output_panel->new(
-                ['user' => $this->session_user, 'ip_start' => $ip_start, 'hashed_ip' => $hashed_ip,
-                    'ban_type' => $ban_type], false);
+        $output_panel->new(['ip_start' => $ip_start, 'hashed_ip' => $hashed_ip, 'ban_type' => $ban_type], false);
         $this->outputMain(false);
     }
 
@@ -76,7 +74,7 @@ class AdminBans extends Admin
     {
         $this->verifyAccess();
         $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
-        $output_panel->modify(['user' => $this->session_user], false);
+        $output_panel->modify([], false);
         $this->outputMain(false);
     }
 

@@ -103,7 +103,8 @@ class OutputPanelThreads extends Output
                     $thread['thread_id'] . '.html';
             $thread_info['op_name'] = $op_post['poster_name'];
 
-            if ($user->checkPermission($this->domain, 'perm_view_unhashed_ip') && !empty($post_data['ip_address']))
+            if ($this->session_user->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
+                    !empty($post_data['ip_address']))
             {
                 $thread_info['op_ip'] = @inet_ntop($op_post['ip_address']);
             }
