@@ -10,10 +10,10 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Domains\Domain;
 use Nelliel\Auth\Authorization;
 
-class AdminFileFilters extends AdminHandler
+class AdminFileFilters extends Admin
 {
 
-    function __construct(Authorization $authorization, Domain $domain)
+    function __construct(Authorization $authorization, Domain $domain, array $inputs)
     {
         $this->database = $domain->database();
         $this->authorization = $authorization;

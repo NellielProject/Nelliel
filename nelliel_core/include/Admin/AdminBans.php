@@ -11,11 +11,11 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 
-class AdminBans extends AdminHandler
+class AdminBans extends Admin
 {
     private $ban_hammer;
 
-    function __construct(Authorization $authorization, Domain $domain)
+    function __construct(Authorization $authorization, Domain $domain, array $inputs)
     {
         $this->database = $domain->database();
         $this->authorization = $authorization;

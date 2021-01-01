@@ -13,12 +13,12 @@ use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Auth\Authorization;
 
-class AdminBoardSettings extends AdminHandler
+class AdminBoardSettings extends Admin
 {
     private $defaults = false;
     private $board_id;
 
-    function __construct(Authorization $authorization, Domain $domain)
+    function __construct(Authorization $authorization, Domain $domain, array $inputs)
     {
         // TODO: Something better should be possible
         $this->board_id = $_GET['board-id'] ?? '';

@@ -12,11 +12,11 @@ use Nelliel\Domains\DomainSite;
 use Nelliel\Auth\Authorization;
 use PDO;
 
-class AdminBoards extends AdminHandler
+class AdminBoards extends Admin
 {
     private $site_domain;
 
-    function __construct(Authorization $authorization, Domain $domain)
+    function __construct(Authorization $authorization, Domain $domain, array $inputs)
     {
         $this->database = $domain->database();
         $this->authorization = $authorization;

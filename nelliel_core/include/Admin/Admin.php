@@ -7,7 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-abstract class AdminHandler
+abstract class Admin
 {
     protected $database;
     protected $authorization;
