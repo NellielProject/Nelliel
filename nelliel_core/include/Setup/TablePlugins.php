@@ -9,19 +9,18 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableAssets extends TableHandler
+class TablePlugins extends TableHandler
 {
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = NEL_ASSETS_TABLE;
+        $this->table_name = NEL_PLUGINS_TABLE;
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'asset_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'is_default' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'plugin_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
             'info' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -32,11 +31,10 @@ class TableAssets extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            asset_id        VARCHAR(50) NOT NULL,
-            type            VARCHAR(50) NOT NULL,
-            is_default      SMALLINT NOT NULL DEFAULT 0,
-            info            TEXT NOT NULL
+            entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            plugin_id   VARCHAR(50) NOT NULL,
+            enabled     SMALLINT NOT NULL DEFAULT 0,
+            info        TEXT NOT NULL
         ) " . $options . ";";
 
         return $schema;

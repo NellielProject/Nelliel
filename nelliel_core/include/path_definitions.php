@@ -44,6 +44,7 @@ define('NEL_FILETYPES_TABLE', 'nelliel_filetypes');
 define('NEL_LOGS_TABLE', 'nelliel_logs');
 define('NEL_NEWS_TABLE', 'nelliel_news');
 define('NEL_PERMISSIONS_TABLE', 'nelliel_permissions');
+define('NEL_PLUGINS_TABLE', 'nelliel_plugins');
 define('NEL_OVERBOARD_TABLE', 'nelliel_overboard');
 define('NEL_RATE_LIMIT_TABLE', 'nelliel_rate_limit');
 define('NEL_REPORTS_TABLE', 'nelliel_reports');

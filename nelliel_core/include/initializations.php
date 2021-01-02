@@ -1,8 +1,12 @@
 <?php
+
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
+
+use Nelliel\SQLCompatibility;
+use Nelliel\Utility\FileHandler;
 
 if (ini_get('date.timezone') === '')
 {
@@ -77,7 +81,7 @@ Mustache_Autoloader::register();
 
 require_once NEL_INCLUDE_PATH . 'database.php';
 require_once NEL_INCLUDE_PATH . 'general_functions.php';
-$setup = new \Nelliel\Setup\Setup(nel_database());
+$setup = new \Nelliel\Setup\Setup(nel_database(), new SQLCompatibility(nel_database()), new FileHandler());
 
 if (isset($_GET['install']))
 {
