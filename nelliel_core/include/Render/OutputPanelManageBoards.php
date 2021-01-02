@@ -28,7 +28,7 @@ class OutputPanelManageBoards extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $board_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'add']);
         $board_data = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC', PDO::FETCH_ASSOC);

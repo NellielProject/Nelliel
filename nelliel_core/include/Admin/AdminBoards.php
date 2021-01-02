@@ -7,9 +7,15 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainSite;
+use Nelliel\Regen;
+use Nelliel\SQLCompatibility;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainBoard;
+use Nelliel\Domains\DomainSite;
+use Nelliel\Render\OutputPanelManageBoards;
+use Nelliel\Setup\Setup;
+use Nelliel\Utility\FileHandler;
 use PDO;
 
 class AdminBoards extends Admin
@@ -40,7 +46,7 @@ class AdminBoards extends Admin
             nel_derp(371, _gettext('You are not allowed to create boards.'));
         }
 
-        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
+        $site_domain = new DomainSite($this->database);
         $board_id = trim($_POST['new_board_id']);
 
         if (nel_true_empty($board_id))
@@ -81,14 +87,14 @@ class AdminBoards extends Admin
         $prepared->bindValue(3, nel_prepare_hash_for_storage($hashed_board_id), PDO::PARAM_LOB);
         $prepared->bindValue(4, $db_prefix, PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
-        $setup = new \Nelliel\Setup\Setup();
+        $setup = new Setup($this->database, new SQLCompatibility($this->database), new FileHandler());
         $setup->createBoardTables($board_id, $db_prefix);
         $setup->createBoardDirectories($board_id);
-        $domain = new \Nelliel\Domains\DomainBoard($board_id, $this->database);
-        $regen = new \Nelliel\Regen();
+        $domain = new DomainBoard($board_id, $this->database);
+        $regen = new Regen();
         $domain->regenCache();
         $regen->allBoardPages($domain);
-        $regen->boardList(new \Nelliel\Domains\DomainSite($this->database));
+        $regen->boardList(new DomainSite($this->database));
         $this->outputMain(true);
     }
 
@@ -108,7 +114,7 @@ class AdminBoards extends Admin
         }
 
         $board_id = $_GET['board_id'];
-        $domain = new \Nelliel\Domains\DomainBoard($board_id, $this->database);
+        $domain = new DomainBoard($board_id, $this->database);
 
         if (!$domain->boardExists())
         {
@@ -154,8 +160,8 @@ class AdminBoards extends Admin
         $domain->deleteCache();
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $regen = new \Nelliel\Regen();
-        $regen->boardList(new \Nelliel\Domains\DomainSite($this->database));
+        $regen = new Regen();
+        $regen->boardList(new DomainSite($this->database));
         $this->outputMain(true);
     }
 
@@ -190,7 +196,7 @@ class AdminBoards extends Admin
     public function createInterstitial(string $which)
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Render\OutputPanelManageBoards($this->domain, false);
+        $output_panel = new OutputPanelManageBoards($this->domain, false);
 
         switch ($which)
         {
