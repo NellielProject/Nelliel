@@ -20,6 +20,7 @@ class OutputPanelBoard extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Main');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $board_id = $parameters['board_id'] ?? '';

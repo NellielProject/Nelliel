@@ -60,21 +60,22 @@ class OutputHeader extends Output
         $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
-        $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render([], true);
         $this->render_data['board_id'] = $this->domain->id();
         $this->render_data['panel'] = $parameters['panel'] ?? '';
         $this->render_data['section'] = $parameters['section'] ?? '';
-        $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
+        $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
+        $this->render_data['is_panel'] = $parameters['is_panel'] ?? false;
+        $output_head = new OutputHead($this->domain, $this->write_mode);
+        $this->render_data['head'] = $output_head->render([], true);
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
         if($this->domain->id() === Domain::SITE)
         {
-            $this->render_data['manage_site'] = true;
+            $this->render_data['area'] = $parameters['area'] ?? _gettext('Site Management');
         }
         else
         {
-            $this->render_data['manage_board'] = true;
+            $this->render_data['area'] = $parameters['area'] ?? _gettext('Board Management');
         }
 
         if ($this->render_data['show_styles'])
@@ -93,7 +94,6 @@ class OutputHeader extends Output
     {
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
-        $manage_headers = $parameters['manage_headers'] ?? array();
         $treeline = $parameters['treeline'] ?? array();
         $index_render = $parameters['index_render'] ?? false;
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;

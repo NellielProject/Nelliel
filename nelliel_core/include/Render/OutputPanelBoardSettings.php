@@ -21,6 +21,7 @@ class OutputPanelBoardSettings extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $parameters['is_panel'] = true;
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $defaults = $parameters['defaults'] ?? false;
         $filetypes = new \Nelliel\FileTypes($this->database);

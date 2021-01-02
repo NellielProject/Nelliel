@@ -21,6 +21,7 @@ class OutputPanelUsers extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);

@@ -21,6 +21,7 @@ class OutputPanelSiteSettings extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Site Settings');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);
