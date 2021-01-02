@@ -65,7 +65,7 @@ class AdminPermissions extends Admin
         $this->outputMain(true);
     }
 
-    private function verifyAccess($user)
+    private function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_permissions_access'))
         {

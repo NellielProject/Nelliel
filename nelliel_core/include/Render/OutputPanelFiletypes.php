@@ -21,11 +21,12 @@ class OutputPanelFiletypes extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Filetypes');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Filetypes')];
-        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
         $filetypes = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" WHERE "base_extension" <> \'\' ORDER BY "entry" ASC',
                 PDO::FETCH_ASSOC);
@@ -97,19 +98,21 @@ class OutputPanelFiletypes extends Output
         return $output;
     }
 
-    public function add(array $parameters, bool $data_only)
+    public function new(array $parameters, bool $data_only)
     {
+        $parameters['section'] = $parameters['section'] ?? _gettext('New');
         return $this->edit($parameters, $data_only);
     }
 
     public function edit(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Filetypes');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Filetypes')];
-        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
         $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/filetypes_panel_edit',
                 $this->render_data);
         $editing = $parameters['editing'] ?? false;

@@ -20,12 +20,13 @@ class OutputPanelBoard extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Main');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $board_id = $parameters['board_id'] ?? '';
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Main Panel')];
-        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
         $this->render_data['module_board_settings'] = $this->session_user->checkPermission($this->domain,
                 'perm_board_config');
         $this->render_data['board_settings_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .

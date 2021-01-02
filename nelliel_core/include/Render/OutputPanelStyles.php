@@ -21,11 +21,12 @@ class OutputPanelStyles extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Styles');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Styles')];
-        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
         $styles = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_ASSETS_TABLE .
                 '" WHERE "type" = \'style\' ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);

@@ -21,11 +21,12 @@ class OutputPanelManageBoards extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Manage Boards');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Manage Boards')];
-        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
         $board_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'add']);
         $board_data = $this->database->executeFetchAll(
@@ -81,6 +82,9 @@ class OutputPanelManageBoards extends Output
 
     public function removeWarning(array $parameters, bool $data_only)
     {
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Manage Boards');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Remove');
+        $parameters['is_manage'] = true;
         $board_id = $_GET['board_id'];
         $messages[] = sprintf(_gettext('You are about to delete the board: %s'), $board_id);
         $messages[] = _gettext(
@@ -93,7 +97,7 @@ class OutputPanelManageBoards extends Output
         $link2['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                         ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove',
-                            'action-confirmed' => 'true', 'board_id' => $_GET['board_id'], 'domain_id' => Domain::SITE]);
+                            'action-confirmed' => 'true', 'board_id' => $board_id, 'domain_id' => Domain::SITE]);
         $parameters['extra_url_break'] = true;
         $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
         echo $output_interstitial->render($parameters, $data_only, $messages, [$link, $link2]);

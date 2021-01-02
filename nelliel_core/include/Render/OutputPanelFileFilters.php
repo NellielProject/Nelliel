@@ -21,11 +21,12 @@ class OutputPanelFileFilters extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('File Filters');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('File Filters')];
-        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
 
         if ($this->domain->id() === Domain::SITE)
         {

@@ -21,11 +21,12 @@ class OutputPanelUsers extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Users')];
-        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
         $users = $this->database->executeFetchAll('SELECT * FROM "' . NEL_USERS_TABLE . '"', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
@@ -61,19 +62,21 @@ class OutputPanelUsers extends Output
 
     public function new(array $parameters, bool $data_only)
     {
-        $this->edit($parameters, $data_only);
+        $parameters['section'] = $parameters['section'] ?? _gettext('New');
+        return $this->edit($parameters, $data_only);
     }
 
     public function edit(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $user_id = $parameters['user_id'] ?? '';
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Edit User')];
-        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
 
         if (empty($user_id))
         {

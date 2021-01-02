@@ -22,12 +22,10 @@ class OutputHeader extends Output
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\Domains\DomainSite($this->database);
-        $manage_headers = $parameters['manage_headers'] ?? array();
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
-        $this->render_data['show_manage_headers'] = $session->isActive() && !empty($manage_headers);
-        $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
+        $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
         if ($this->render_data['show_styles'])
@@ -52,18 +50,41 @@ class OutputHeader extends Output
 
         $this->render_data['is_board_header'] = false;
         $this->render_data['page_title'] = $site_domain->setting('name');
+        $output = $this->output('header', $data_only, true);
+        return $output;
+    }
 
-        if (!empty($manage_headers))
+    public function manage(array $parameters, bool $data_only)
+    {
+        $this->renderSetup();
+        $session = new \Nelliel\Account\Session();
+        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
+        $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
+        $output_head = new OutputHead($this->domain, $this->write_mode);
+        $this->render_data['head'] = $output_head->render([], true);
+        $this->render_data['board_id'] = $this->domain->id();
+        $this->render_data['panel'] = $parameters['panel'] ?? '';
+        $this->render_data['section'] = $parameters['section'] ?? '';
+        $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+
+        if($this->domain->id() === Domain::SITE)
         {
-            $this->render_data['manage_header'] = $manage_headers['header'] ?? '';
-            $this->render_data['manage_sub_header'] = $manage_headers['sub_header'] ?? '';
-
-            if ($this->domain->id() !== Domain::SITE)
-            {
-                $this->render_data['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
-            }
+            $this->render_data['manage_site'] = true;
+        }
+        else
+        {
+            $this->render_data['manage_board'] = true;
         }
 
+        if ($this->render_data['show_styles'])
+        {
+            $this->render_data['styles'] = $output_menu->styles([], true);
+        }
+
+        $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
+        $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
+        $this->render_data['page_title'] = $site_domain->setting('name');
         $output = $this->output('header', $data_only, true);
         return $output;
     }
@@ -78,7 +99,6 @@ class OutputHeader extends Output
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
-        $this->render_data['show_manage_headers'] = $session->isActive() && !empty($manage_headers);
         $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
@@ -111,17 +131,6 @@ class OutputHeader extends Output
         else
         {
             $this->render_data['page_title'] = $this->domain->setting('name');
-        }
-
-        if ($this->render_data['show_manage_headers'])
-        {
-            $this->render_data['manage_header'] = $manage_headers['header'] ?? '';
-            $this->render_data['manage_sub_header'] = $manage_headers['sub_header'] ?? '';
-
-            if ($this->domain->id() !== Domain::SITE)
-            {
-                $this->render_data['manage_board_header'] = _gettext('Current Board:') . ' ' . $this->domain->id();
-            }
         }
 
         $output = $this->output('header', $data_only, true);

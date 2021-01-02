@@ -21,6 +21,8 @@ class OutputPanelLogs extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Logs');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $log_type = $parameters['log_type'] ?? '';
         $page = $parameters['page'] ?? 0;
         $entries = $parameters['entries'] ?? 20;
@@ -28,8 +30,7 @@ class OutputPanelLogs extends Output
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $manage_headers = ['header' => _gettext('General Management'), 'sub_header' => _gettext('Logs')];
-        $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
 
         switch ($log_type)
         {
@@ -73,7 +74,7 @@ class OutputPanelLogs extends Output
         $page_format = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=logs&page=%d';
         $page_count = $parameters['page_count'] ?? 1;
         $page = $parameters['page'] ?? 1;
-        $pagination_object = Pagination();
+        $pagination_object = new Pagination();
         $pagination_object->setPrevious(_gettext('<<'));
         $pagination_object->setNext(_gettext('>>'));
         $pagination_object->setPage('%d', $page_format);

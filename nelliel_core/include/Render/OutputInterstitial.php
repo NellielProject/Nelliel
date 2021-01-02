@@ -22,10 +22,19 @@ class OutputInterstitial extends Output
         $this->renderSetup();
         $this->render_data['extra_message_break'] = $parameters['extra_message_break'] ?? false;
         $this->render_data['extra_url_break'] = $parameters['extra_url_break'] ?? false;
+        $is_manage = $parameters['is_manage'] ?? false;
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->general([], true);
+
+        if ($is_manage)
+        {
+            $this->render_data['header'] = $output_header->manage($parameters, true);
+        }
+        else
+        {
+            $this->render_data['header'] = $output_header->general($parameters, true);
+        }
 
         foreach ($messages as $message)
         {

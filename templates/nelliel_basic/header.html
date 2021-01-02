@@ -24,15 +24,23 @@
 	{{/ banner_url }}
 	{{/ is_board_header }}
 	<hr class="clear">
-	{{# show_manage_headers }}
+	{{# manage_site }}
 	<div class="manage-header">
-		<span>{{ manage_header }}</span>
-	</div>
-	<div class="manage-board-header">
-		<span>{{ manage_board_header }}</span>
+		<span data-i18n="gettext">Site Management</span>
 	</div>
 	<div class="manage-sub-header">
-		<span>{{ manage_sub_header }}</span>
+		<span>{{ panel }}</span> - <span>{{ section }}</span>
 	</div>
-	{{/ show_manage_headers }}
+	{{/ manage_site }}
+	{{# manage_board }}
+	<div class="manage-header">
+		<span data-i18n="gettext">Board Management</span>
+	</div>
+	<div class="manage-header">
+		<span data-i18n="gettext">Board ID</span>: <span>{{ board_id }}</span>
+	</div>
+	<div class="manage-sub-header">
+		<span>{{ panel }}</span> - <span>{{ section }}</span>
+	</div>
+	{{/ manage_board }}
 </header>

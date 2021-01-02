@@ -29,7 +29,7 @@ class AdminFiletypes extends Admin
     {
         $this->verifyAccess();
         $output_panel = new \Nelliel\Render\OutputPanelFiletypes($this->domain, false);
-        $output_panel->edit(['editing' => false], false);
+        $output_panel->new(['editing' => false], false);
         $this->outputMain(false);
     }
 
