@@ -102,7 +102,6 @@ class OutputHeader extends Output
         $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
-        $this->render_data['board_id'] = $this->domain->id();
         $this->render_data['panel'] = $parameters['panel'] ?? '';
         $this->render_data['section'] = $parameters['section'] ?? '';
         $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
@@ -117,6 +116,7 @@ class OutputHeader extends Output
         }
         else
         {
+            $this->render_data['board_id'] = $this->domain->id();
             $this->render_data['area'] = $parameters['area'] ?? _gettext('Board Management');
         }
 

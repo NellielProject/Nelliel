@@ -31,7 +31,7 @@ class AdminBoards extends Admin
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Render\OutputPanelManageBoards($this->domain, false);
+        $output_panel = new OutputPanelManageBoards($this->domain, false);
         $output_panel->main([], false);
     }
 
@@ -60,6 +60,11 @@ class AdminBoards extends Admin
             {
                 nel_derp(242, _gettext('Board ID contains invalid characters. Must be alphanumeric only.'));
             }
+        }
+
+        if ($board_id === Domain::SITE || $board_id === Domain::ALL_BOARDS || $board_id === Domain::MULTI_BOARD)
+        {
+            nel_derp(244, _gettext('Board ID is reserved.'));
         }
 
         $prepared = $this->database->prepare(
@@ -161,7 +166,7 @@ class AdminBoards extends Admin
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $regen = new Regen();
-        $regen->boardList(new DomainSite($this->database));
+        $regen->boardList($this->domain);
         $this->outputMain(true);
     }
 

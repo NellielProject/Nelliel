@@ -5,6 +5,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Account\Session;
+use Nelliel\Domains\Domain;
 
 function nel_early_derp(int $error_id, string $error_message, array $error_data = array())
 {
@@ -58,7 +59,7 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
         }
     }
 
-    if(isset($error_data['board_id']) && $error_data['board_id'] !== '_site_')
+    if(isset($error_data['board_id']) && $error_data['board_id'] !== Domain::SITE)
     {
         $domain = new \Nelliel\Domains\DomainBoard($error_data['board_id'], nel_database());
     }

@@ -7,8 +7,11 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Domains\Domain;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainBoard;
+use Nelliel\Domains\DomainSite;
+use Nelliel\Render\OutputPanelUsers;
 
 class AdminUsers extends Admin
 {
@@ -28,14 +31,14 @@ class AdminUsers extends Admin
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Render\OutputPanelUsers($this->domain, false);
+        $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Render\OutputPanelUsers($this->domain, false);
+        $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->new(['user_id' => $this->user_id], false);
         $this->outputMain(false);
     }
@@ -55,7 +58,7 @@ class AdminUsers extends Admin
     public function editor()
     {
         $this->verifyAccess();
-        $output_panel = new \Nelliel\Render\OutputPanelUsers($this->domain, false);
+        $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->edit(['user_id' => $this->user_id], false);
         $this->outputMain(false);
     }
@@ -83,13 +86,13 @@ class AdminUsers extends Admin
 
             if (strpos($key, 'domain_role') !== false)
             {
-                if (strpos($key, '_site_'))
+                if (strpos($key, Domain::SITE))
                 {
-                    $domain = new \Nelliel\Domains\DomainSite($this->database);
+                    $domain = new DomainSite($this->database);
                 }
                 else
                 {
-                    $domain = new \Nelliel\Domains\DomainBoard(substr($key, 12), $this->database);
+                    $domain = new DomainBoard(substr($key, 12), $this->database);
                 }
 
                 $update_user->modifyRole($domain->id(), $value);

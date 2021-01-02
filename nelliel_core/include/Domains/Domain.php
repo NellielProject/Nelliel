@@ -12,7 +12,7 @@ use Nelliel\NellielPDO;
 
 abstract class Domain
 {
-    const SITE = '_site';
+    const SITE = '_site_';
     const ALL_BOARDS = '_all_boards_';
     const MULTI_BOARD = '_multi_board_';
     protected $domain_id;

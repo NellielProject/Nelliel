@@ -48,8 +48,7 @@ class OutputPanelManageBoards extends Output
                 $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         http_build_query(
                                 ['module' => 'admin', 'section' => 'manage-boards',
-                                    'board_id' => $board_info['board_id'], 'actions' => 'lock',
-                                    'domain_id' => Domain::SITE]);
+                                    'board_id' => $board_info['board_id'], 'actions' => 'lock']);
                 $board_data['status'] = _gettext('Active');
                 $board_data['lock_text'] = _gettext('Lock Board');
             }
@@ -58,8 +57,7 @@ class OutputPanelManageBoards extends Output
                 $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         http_build_query(
                                 ['module' => 'admin', 'section' => 'manage-boards',
-                                    'board_id' => $board_info['board_id'], 'actions' => 'unlock',
-                                    'domain_id' => Domain::SITE]);
+                                    'board_id' => $board_info['board_id'], 'actions' => 'unlock']);
                 $board_data['status'] = _gettext('Locked');
                 $board_data['lock_text'] = _gettext('Unlock Board');
             }
@@ -67,7 +65,7 @@ class OutputPanelManageBoards extends Output
             $board_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'manage-boards', 'board_id' => $board_info['board_id'],
-                                'actions' => 'remove', 'domain_id' => Domain::SITE]);
+                                'actions' => 'remove']);
             $this->render_data['board_list'][] = $board_data;
         }
 
@@ -93,12 +91,12 @@ class OutputPanelManageBoards extends Output
         $messages[] = _gettext('Are you sure?');
         $link['text'] = _gettext('NOPE. Do not delete the board.');
         $link['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'manage-boards', 'domain_id' => Domain::SITE]);
+                http_build_query(['module' => 'admin', 'section' => 'manage-boards']);
         $link2['text'] = _gettext('Confirmed. Delete the board.');
         $link2['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                         ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove',
-                            'action-confirmed' => 'true', 'board_id' => $board_id, 'domain_id' => Domain::SITE]);
+                            'action-confirmed' => 'true', 'board_id' => $board_id]);
         $parameters['extra_url_break'] = true;
         $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
         echo $output_interstitial->render($parameters, $data_only, $messages, [$link, $link2]);
