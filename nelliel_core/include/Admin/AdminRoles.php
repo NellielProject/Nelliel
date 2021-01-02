@@ -29,7 +29,7 @@ class AdminRoles extends Admin
     {
         $this->verifyAccess();
         $output_panel = new \Nelliel\Render\OutputPanelRoles($this->domain, false);
-        $output_panel->main(['section' => 'panel'], false);
+        $output_panel->main([], false);
     }
 
     public function creator()

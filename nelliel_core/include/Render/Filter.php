@@ -16,7 +16,7 @@ class Filter
 
     public function cleanAndEncode(string &$string)
     {
-        if (empty($string))
+        if (nel_true_empty($string))
         {
             return;
         }
@@ -32,7 +32,7 @@ class Filter
 
     public function clearWhitespace(string &$string)
     {
-        if (empty($string))
+        if (nel_true_empty($string))
         {
             return;
         }

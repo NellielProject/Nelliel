@@ -7,7 +7,11 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Render\OutputLoginPage;
+use Nelliel\Render\OutputAccount;
+use Nelliel\Render\OutputRegisterPage;
 
 class Dispatch
 {
@@ -25,52 +29,52 @@ class Dispatch
             case 'login':
                 if ($inputs['actions'][0] === 'submit')
                 {
-                    $session = new \Nelliel\Account\Session();
+                    $session = new Session();
                     $session->login();
                     $session->loggedInOrError();
-                    $output_account = new \Nelliel\Render\OutputAccount($this->domain, false);
-                    $output_account->render(['user' => $session->sessionUser()], false);
+                    $output_account = new OutputAccount($this->domain, false);
+                    $output_account->render([], false);
                 }
                 else
                 {
-                    $output_login = new \Nelliel\Render\OutputLoginPage($this->domain, false);
+                    $output_login = new OutputLoginPage($this->domain, false);
                     $output_login->render([], false);
                 }
 
                 break;
 
             case 'logout':
-                $session = new \Nelliel\Account\Session();
+                $session = new Session();
                 $session->logout();
                 break;
 
             case 'register':
-                $authorization = new \Nelliel\Auth\Authorization(nel_database());
+                $authorization = new Authorization(nel_database());
 
                 if ($inputs['actions'][0] === 'submit')
                 {
-                    $register = new \Nelliel\Account\Register($authorization, $this->domain);
+                    $register = new Register($authorization, $this->domain);
                     $register->new();
                 }
                 else
                 {
-                    $output_login = new \Nelliel\Render\OutputRegisterPage($this->domain, false);
+                    $output_login = new OutputRegisterPage($this->domain, false);
                     $output_login->render(['section' => 'register'], false);
                 }
 
                 break;
 
             default:
-                $session = new \Nelliel\Account\Session();
+                $session = new Session();
 
                 if ($session->isActive())
                 {
-                    $output_account = new \Nelliel\Render\OutputAccount($this->domain, false);
-                    $output_account->render(['user' => $session->sessionUser()], false);
+                    $output_account = new OutputAccount($this->domain, false);
+                    $output_account->render([], false);
                 }
                 else
                 {
-                    $output_login = new \Nelliel\Render\OutputLoginPage($this->domain, false);
+                    $output_login = new OutputLoginPage($this->domain, false);
                     $output_login->render([], false);
                 }
         }

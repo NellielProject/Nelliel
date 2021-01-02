@@ -22,8 +22,8 @@ class OutputOverboard extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $sfw = $parameters['sfw'] ?? false;
         $this->renderSetup();
+        $sfw = $parameters['sfw'] ?? false;
         $prefix = ($sfw) ? 'sfw_' : '';
         $json_index = new \Nelliel\API\JSON\JSONIndex($this->site_domain, $this->file_handler);
         $output_head = new OutputHead($this->site_domain, $this->write_mode);
