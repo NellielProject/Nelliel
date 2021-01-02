@@ -35,25 +35,8 @@ class OutputHead extends Output
             $this->render_data['use_honeypot'] = true;
         }
 
-        $this->render_data['show_favicon'] = false;
-
-        if ($this->domain->setting('show_favicon'))
-        {
-            if (!empty($this->domain->setting('favicon')))
-            {
-                $this->render_data['favicon_url'] = $this->domain->setting('favicon');
-                $this->render_data['show_favicon'] = true;
-            }
-            else
-            {
-                if ($this->site_domain->setting('show_favicon') && !empty($this->site_domain->setting('favicon')))
-                {
-                    $this->render_data['favicon_url'] = $this->site_domain->setting('favicon');
-                    $this->render_data['show_favicon'] = true;
-                }
-            }
-        }
-
+        $this->render_data['show_favicon'] = $this->domain->setting('show_favicon');
+        $this->render_data['favicon_url'] = $this->domain->setting('favicon') ?? '';
         $this->render_data['page_title'] = $parameters['page_title'] ?? 'Nelliel Imageboard';
         return $this->output('head', $data_only, true);
     }
