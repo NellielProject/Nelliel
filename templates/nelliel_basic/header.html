@@ -8,20 +8,12 @@
 	{{> navigation/site_links }}
 {{/ site_navigation }}
 <header>
-	{{# is_site_header }}
-	<h1 class="site-name">{{ name }}</h1>
-	<h2 class="site-slogan">{{ slogan }}</h2>
-	<div class="site-banner"><img src="{{ banner_url }}"></div>
-	{{/ is_site_header }}
-	{{# is_board_header }}
-	<h1 class="board-name">{{ name }}</h1>
-	{{# slogan }}
-	<h2 class="board-slogan">{{ slogan }}</h2>
-	{{/ slogan }}
-	{{# banner_url }}
-	<div class="board-banner"><img src="{{ banner_url }}"></div>
-	{{/ banner_url }}
-	{{/ is_board_header }}
+	{{# use_site_header }}
+		{{> headers/site }}
+	{{/ use_site_header }}
+	{{# use_board_header }}
+		{{> headers/board }}
+	{{/ use_board_header }}
 	<hr class="clear">
 	{{# is_panel }}
 		{{> headers/panel }}
