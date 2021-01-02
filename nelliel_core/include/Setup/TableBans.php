@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableBans extends TableHandler
+class TableBans extends Table
 {
 
     function __construct($database, $sql_compatibility)
@@ -18,7 +18,7 @@ class TableBans extends TableHandler
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_BANS_TABLE;
         $this->columns_data = [
-            'ban_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
+            'ban_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => true],
             'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'all_boards' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'ban_type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
@@ -68,6 +68,5 @@ class TableBans extends TableHandler
 
     public function insertDefaults()
     {
-        ;
     }
 }

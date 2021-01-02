@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableUsers extends TableHandler
+class TableUsers extends Table
 {
 
     function __construct($database, $sql_compatibility)

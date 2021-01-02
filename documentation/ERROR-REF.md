@@ -42,7 +42,7 @@ Error 60: Filename purged by filter. (classes/FileHandler.php)
 
 Error 101: No acceptable password hashing. (crypt.php)  
 Error 102: InnoDB engine unavailable. (Setup/Setup.php)  
-Error 103: Failed to create database table. (classes/TableHandler.php)  
+Error 103: Failed to create database table. (classes/Table.php)  
 Error 104: nelliel_core not writable. (Setup/Setup.php)  
 Error 105: Main directory not writable. (Setup/Setup.php)  
 Error 106: Config directory not writable. (Setup/Setup.php)  

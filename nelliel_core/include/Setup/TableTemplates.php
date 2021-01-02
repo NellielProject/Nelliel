@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableTemplates extends TableHandler
+class TableTemplates extends Table
 {
 
     function __construct($database, $sql_compatibility)

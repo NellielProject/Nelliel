@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableReports extends TableHandler
+class TableReports extends Table
 {
 
     function __construct($database, $sql_compatibility)
@@ -51,6 +51,5 @@ class TableReports extends TableHandler
 
     public function insertDefaults()
     {
-        ;
     }
 }

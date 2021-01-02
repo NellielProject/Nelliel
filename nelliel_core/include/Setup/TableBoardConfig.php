@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableBoardConfig extends TableHandler
+class TableBoardConfig extends Table
 {
 
     function __construct($database, $sql_compatibility)
@@ -32,7 +32,7 @@ class TableBoardConfig extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            setting_name    VARCHAR(50) NOT NULL,
+            setting_name    VARCHAR(50) NOT NULL UNIQUE,
             setting_value   TEXT NOT NULL,
             edit_lock       SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";

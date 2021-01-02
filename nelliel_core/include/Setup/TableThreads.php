@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableThreads extends TableHandler
+class TableThreads extends Table
 {
 
     function __construct($database, $sql_compatibility)
@@ -18,7 +18,7 @@ class TableThreads extends TableHandler
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = '_threads';
         $this->columns_data = [
-            'thread_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'thread_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
             'first_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'last_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'last_bump_time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
@@ -62,6 +62,5 @@ class TableThreads extends TableHandler
 
     public function insertDefaults()
     {
-        ;
     }
 }

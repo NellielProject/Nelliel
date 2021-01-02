@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TablePosts extends TableHandler
+class TablePosts extends Table
 {
 
     function __construct($database, $sql_compatibility)
@@ -18,8 +18,8 @@ class TablePosts extends TableHandler
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = '_posts';
         $this->columns_data = [
-            'post_number' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'parent_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'post_number' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => true],
+            'parent_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
             'reply_to' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'poster_name' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'post_password' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
@@ -80,6 +80,5 @@ class TablePosts extends TableHandler
 
     public function insertDefaults()
     {
-        ;
     }
 }

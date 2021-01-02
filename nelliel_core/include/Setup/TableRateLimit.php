@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableRateLimit extends TableHandler
+class TableRateLimit extends Table
 {
 
     function __construct($database, $sql_compatibility)
@@ -19,7 +19,7 @@ class TableRateLimit extends TableHandler
         $this->table_name = NEL_RATE_LIMIT_TABLE;
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'rate_id' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
+            'rate_id' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => true, 'auto_inc' => false],
             'record' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }

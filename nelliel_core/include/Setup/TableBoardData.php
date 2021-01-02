@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableBoardData extends TableHandler
+class TableBoardData extends Table
 {
 
     function __construct($database, $sql_compatibility)
@@ -19,7 +19,7 @@ class TableBoardData extends TableHandler
         $this->table_name = NEL_BOARD_DATA_TABLE;
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
             'db_prefix' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
@@ -46,6 +46,5 @@ class TableBoardData extends TableHandler
 
     public function insertDefaults()
     {
-        ;
     }
 }

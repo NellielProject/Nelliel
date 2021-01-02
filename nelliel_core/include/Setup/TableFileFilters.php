@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableFileFilters extends TableHandler
+class TableFileFilters extends Table
 {
 
     function __construct($database, $sql_compatibility)
@@ -50,6 +50,5 @@ class TableFileFilters extends TableHandler
 
     public function insertDefaults()
     {
-        ;
     }
 }

@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableRolePermissions extends TableHandler
+class TableRolePermissions extends Table
 {
 
     function __construct($database, $sql_compatibility)

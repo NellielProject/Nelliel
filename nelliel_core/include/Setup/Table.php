@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-abstract class TableHandler
+abstract class Table
 {
     protected $database;
     protected $sql_compatibility;

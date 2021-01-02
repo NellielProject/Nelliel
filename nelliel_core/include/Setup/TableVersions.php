@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableVersions extends TableHandler
+class TableVersions extends Table
 {
 
     function __construct($database, $sql_compatibility)

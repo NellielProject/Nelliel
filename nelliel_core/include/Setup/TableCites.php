@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use PDO;
 
-class TableCites extends TableHandler
+class TableCites extends Table
 {
 
     function __construct($database, $sql_compatibility)
@@ -19,12 +19,12 @@ class TableCites extends TableHandler
         $this->table_name = NEL_CITES_TABLE;
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'source_board' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'source_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'source_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'target_board' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'target_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'target_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
+            'source_board' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'source_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
+            'source_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
+            'target_board' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'target_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
+            'target_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -56,6 +56,5 @@ class TableCites extends TableHandler
 
     public function insertDefaults()
     {
-        ;
     }
 }
