@@ -8,13 +8,16 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use PDO;
+use Nelliel\NellielPDO;
 use Nelliel\SQLCompatibility;
 
 class Setup
 {
+    protected $database;
 
-    function __construct()
+    function __construct(NellielPDO $database)
     {
+        $this->database = $database;
     }
 
     public function install()
@@ -46,19 +49,22 @@ class Setup
 
         $this->createCoreTables();
         $this->createCoreDirectories();
+        $this->installCoreTemplates();
+        $this->installCoreStyles();
+        $this->installCoreIconSets();
         $site_domain = new \Nelliel\Domains\DomainSite(nel_database());
         //$regen = new \Nelliel\Regen();
         $site_domain->regenCache();
         //$regen->news($site_domain);
         $generate_files->installDone(false);
 
-
         if ($this->ownerCreated())
         {
             echo _gettext('Site owner account already created.'), '<br>';
             echo _gettext(
                     'Install has finished with no apparent problems! When you\'re ready to continue, follow this link to the login page: '), '<br>';
-            echo '<a href="' . NEL_BASE_WEB_PATH . 'imgboard.php?module=account&amp;actions=login">' . _gettext('Login page') . '</a>';
+            echo '<a href="' . NEL_BASE_WEB_PATH . 'imgboard.php?module=account&amp;actions=login">' .
+                    _gettext('Login page') . '</a>';
             echo '</body></html>';
             die();
         }
@@ -68,7 +74,8 @@ class Setup
             echo _gettext(
                     'No problems so far! To complete setup, a site owner account needs to be created. This account will have all permissions by default. It is also necessary to use the site settings control panel.');
             echo '</p>';
-            echo '<form accept-charset="utf-8" action="imgboard.php?module=account&amp;section=register&amp;actions=submit&amp;create_owner=' . rawurlencode($install_id) . '" method="post">';
+            echo '<form accept-charset="utf-8" action="imgboard.php?module=account&amp;section=register&amp;actions=submit&amp;create_owner=' .
+                    rawurlencode($install_id) . '" method="post">';
             echo '
 <div>
     <span data-i18n="gettext">User ID: </span><input type="text" name="register_user_id" size="25" maxlength="255">
@@ -201,7 +208,8 @@ class Setup
         $permissions_table = new TablePermissions($database, $sql_compatibility);
         $permissions_table->createTable();
         $role_permissions_table = new TableRolePermissions($database, $sql_compatibility);
-        $role_permissions_table->createTable(['roles_table' => NEL_ROLES_TABLE, 'permissions_table' => NEL_PERMISSIONS_TABLE]);
+        $role_permissions_table->createTable(
+                ['roles_table' => NEL_ROLES_TABLE, 'permissions_table' => NEL_PERMISSIONS_TABLE]);
         $users_table = new TableUsers($database, $sql_compatibility);
         $users_table->createTable();
         $user_roles_table = new TableUserRoles($database, $sql_compatibility);
@@ -261,6 +269,80 @@ class Setup
         $file_handler->createDirectory($references['archive_src_path'], NEL_DIRECTORY_PERM, true);
         $file_handler->createDirectory($references['archive_preview_path'], NEL_DIRECTORY_PERM, true);
         $file_handler->createDirectory($references['archive_page_path'], NEL_DIRECTORY_PERM, true);
+    }
+
+    public function installCoreTemplates()
+    {
+        $front_end_data = new \Nelliel\FrontEndData($this->database);
+        $template_inis = $front_end_data->getTemplateInis();
+
+        foreach ($template_inis as $ini)
+        {
+            $template_id = $ini['id'];
+
+            if (!$front_end_data->templateIsCore($template_id))
+            {
+                continue;
+            }
+
+            $info = json_encode($ini);
+            $default = ($template_id === 'template-nelliel-basic') ? 1 : 0;
+            $prepared = $this->database->prepare(
+                    'INSERT INTO "' . NEL_TEMPLATES_TABLE . '" ("template_id", "is_default", "info") VALUES (?, ?, ?)');
+            $this->database->executePrepared($prepared, [$template_id, $default, $info]);
+        }
+
+        echo _gettext('Core templates installed.'), '<br>';
+    }
+
+    public function installCoreStyles()
+    {
+        $front_end_data = new \Nelliel\FrontEndData($this->database);
+        $style_inis = $front_end_data->getStyleInis();
+
+        foreach ($style_inis as $ini)
+        {
+            $style_id = $ini['id'];
+
+            if (!$front_end_data->styleIsCore($style_id))
+            {
+                continue;
+            }
+
+            $info = json_encode($ini);
+            $default = ($style_id === 'style-nelliel') ? 1 : 0;
+            $prepared = $this->database->prepare(
+                    'INSERT INTO "' . NEL_ASSETS_TABLE .
+                    '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
+            $this->database->executePrepared($prepared, [$style_id, "style", $default, $info]);
+        }
+
+        echo _gettext('Core styles installed.'), '<br>';
+    }
+
+    public function installCoreIconSets()
+    {
+        $front_end_data = new \Nelliel\FrontEndData($this->database);
+        $icon_set_inis = $front_end_data->getIconSetInis();
+
+        foreach ($icon_set_inis as $ini)
+        {
+            $icon_set_id = $ini['id'];
+
+            if (!$front_end_data->iconSetIsCore($icon_set_id))
+            {
+                continue;
+            }
+
+            $info = json_encode($ini);
+            $default = ($icon_set_id === 'icons-nelliel-basic') ? 1 : 0;
+            $prepared = $this->database->prepare(
+                    'INSERT INTO "' . NEL_ASSETS_TABLE .
+                    '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
+            $this->database->executePrepared($prepared, [$icon_set_id, "icon-set", $default, $info]);
+        }
+
+        echo _gettext('Core icon sets installed.'), '<br>';
     }
 
     private function checkForInnoDB()

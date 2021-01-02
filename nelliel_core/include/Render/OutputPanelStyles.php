@@ -29,7 +29,7 @@ class OutputPanelStyles extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $styles = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_ASSETS_TABLE .
-                '" WHERE "type" = \'style\' ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
+                '" WHERE "type" = \'style\' ORDER BY "is_default" DESC, "asset_id" ASC', PDO::FETCH_ASSOC);
         $installed_ids = array();
         $bgclass = 'row1';
 

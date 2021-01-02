@@ -77,7 +77,7 @@ Mustache_Autoloader::register();
 
 require_once NEL_INCLUDE_PATH . 'database.php';
 require_once NEL_INCLUDE_PATH . 'general_functions.php';
-$setup = new \Nelliel\Setup\Setup();
+$setup = new \Nelliel\Setup\Setup(nel_database());
 
 if (isset($_GET['install']))
 {

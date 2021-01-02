@@ -50,7 +50,7 @@ class AdminTemplates extends Admin
         if ($info !== '')
         {
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_TEMPLATES_TABLE . '" ("id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
+                    'INSERT INTO "' . NEL_TEMPLATES_TABLE . '" ("template_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
             $this->database->executePrepared($prepared, [$template_id, 'template', 0, $info]);
         }
 
@@ -74,7 +74,7 @@ class AdminTemplates extends Admin
 
         $template_id = $_GET['template-id'];
         $prepared = $this->database->prepare(
-                'DELETE FROM "' . NEL_TEMPLATES_TABLE . '" WHERE "id" = ? AND "type" = \'template\'');
+                'DELETE FROM "' . NEL_TEMPLATES_TABLE . '" WHERE "template_id" = ? AND "type" = \'template\'');
         $this->database->executePrepared($prepared, [$template_id]);
         $this->outputMain(true);
     }
@@ -88,7 +88,7 @@ class AdminTemplates extends Admin
 
         $template_id = $_GET['template-id'];
         $this->database->exec('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 0');
-        $prepared = $this->database->prepare('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 1 WHERE "id" = ?');
+        $prepared = $this->database->prepare('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 1 WHERE "template_id" = ?');
         $this->database->executePrepared($prepared, [$template_id]);
         $this->outputMain(true);
     }

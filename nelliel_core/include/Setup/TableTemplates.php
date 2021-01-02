@@ -31,7 +31,8 @@ class TableTemplates extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] .
+                " NOT NULL,
             template_id     VARCHAR(255) NOT NULL,
             is_default      SMALLINT NOT NULL DEFAULT 0,
             info            TEXT NOT NULL
@@ -42,6 +43,5 @@ class TableTemplates extends TableHandler
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow(['template-nelliel-basic', 1, '{"id": "template-nelliel-basic","directory": "nelliel_basic","name": "Nelliel Basic Template","version": "1.0","description": "The basic template for Nelliel.","output_type": "html"}']);
     }
 }

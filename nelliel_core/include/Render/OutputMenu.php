@@ -22,7 +22,7 @@ class OutputMenu extends Output
     {
         $this->renderSetup();
         $styles = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "entry", "is_default" DESC',
+                'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "asset_id" ASC',
                 PDO::FETCH_ASSOC);
 
         foreach ($styles as $style)
