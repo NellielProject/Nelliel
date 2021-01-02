@@ -20,7 +20,7 @@ class TablePlugins extends TableHandler
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'plugin_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
+            'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'info' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -32,7 +32,7 @@ class TablePlugins extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            plugin_id   VARCHAR(50) NOT NULL,
+            plugin_id   VARCHAR(100) NOT NULL UNIQUE,
             enabled     SMALLINT NOT NULL DEFAULT 0,
             info        TEXT NOT NULL
         ) " . $options . ";";

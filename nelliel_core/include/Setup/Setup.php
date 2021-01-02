@@ -297,6 +297,11 @@ class Setup
                 continue;
             }
 
+            if ($this->database->rowExists(NEL_TEMPLATES_TABLE, ['template_id'], [$template_id], [PDO::PARAM_STR]))
+            {
+                continue;
+            }
+
             $info = json_encode($ini);
             $default = ($template_id === 'template-nelliel-basic') ? 1 : 0;
             $prepared = $this->database->prepare(
@@ -317,6 +322,12 @@ class Setup
             $style_id = $ini['id'];
 
             if (!$front_end_data->styleIsCore($style_id))
+            {
+                continue;
+            }
+
+            if ($this->database->rowExists(NEL_ASSETS_TABLE, ['asset_id', 'type'], [$style_id, 'style'],
+                    [PDO::PARAM_STR, PDO::PARAM_STR]))
             {
                 continue;
             }
@@ -342,6 +353,12 @@ class Setup
             $icon_set_id = $ini['id'];
 
             if (!$front_end_data->iconSetIsCore($icon_set_id))
+            {
+                continue;
+            }
+
+            if ($this->database->rowExists(NEL_ASSETS_TABLE, ['asset_id', 'type'], [$icon_set_id, 'icon-set'],
+                    [PDO::PARAM_STR, PDO::PARAM_STR]))
             {
                 continue;
             }

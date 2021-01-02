@@ -33,7 +33,7 @@ class TableAssets extends TableHandler
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            asset_id        VARCHAR(50) NOT NULL,
+            asset_id        VARCHAR(100) NOT NULL,
             type            VARCHAR(50) NOT NULL,
             is_default      SMALLINT NOT NULL DEFAULT 0,
             info            TEXT NOT NULL

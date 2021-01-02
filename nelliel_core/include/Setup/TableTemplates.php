@@ -31,9 +31,8 @@ class TableTemplates extends TableHandler
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] .
-                " NOT NULL,
-            template_id     VARCHAR(255) NOT NULL,
+            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            template_id     VARCHAR(100) NOT NULL UNIQUE,
             is_default      SMALLINT NOT NULL DEFAULT 0,
             info            TEXT NOT NULL
         ) " . $options . ";";
