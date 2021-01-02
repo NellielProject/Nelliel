@@ -52,8 +52,13 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['locale', 'en_US', 0]);
         $this->insertDefaultRow(['name', '', 0]);
         $this->insertDefaultRow(['slogan', '', 0]);
+        $this->insertDefaultRow(['description', '', 0]);
         $this->insertDefaultRow(['favicon', '', 0]);
         $this->insertDefaultRow(['banner', '', 0]);
+        $this->insertDefaultRow(['show_name', '1', 0]);
+        $this->insertDefaultRow(['show_slogan', '1', 0]);
+        $this->insertDefaultRow(['show_favicon', '0', 0]);
+        $this->insertDefaultRow(['show_banner', '0', 0]);
         $this->insertDefaultRow(['recaptcha_site_key', '', 0]);
         $this->insertDefaultRow(['recaptcha_sekrit_key', '', 0]);
         $this->insertDefaultRow(['recaptcha_type', 'CHECKBOX', 0]);

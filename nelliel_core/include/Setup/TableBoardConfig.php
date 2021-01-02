@@ -44,6 +44,11 @@ class TableBoardConfig extends Table
     {
         $this->insertDefaultRow(['allow_tripkeys', '1', 0]);
         $this->insertDefaultRow(['force_anonymous', '0', 0]);
+        $this->insertDefaultRow(['name', '', 0]);
+        $this->insertDefaultRow(['slogan', '', 0]);
+        $this->insertDefaultRow(['description', '', 0]);
+        $this->insertDefaultRow(['favicon', '', 0]);
+        $this->insertDefaultRow(['banner', '', 0]);
         $this->insertDefaultRow(['show_name', '1', 0]);
         $this->insertDefaultRow(['show_slogan', '1', 0]);
         $this->insertDefaultRow(['show_favicon', '0', 0]);
@@ -60,11 +65,6 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['use_honeypot', '1', 0]);
         $this->insertDefaultRow(['check_thread_duplicates', '1', 0]);
         $this->insertDefaultRow(['check_op_duplicates', '1', 0]);
-        $this->insertDefaultRow(['name', '', 0]);
-        $this->insertDefaultRow(['slogan', '', 0]);
-        $this->insertDefaultRow(['description', '', 0]);
-        $this->insertDefaultRow(['favicon', '', 0]);
-        $this->insertDefaultRow(['banner', '', 0]);
         $this->insertDefaultRow(['locale', 'en_US', 0]);
         $this->insertDefaultRow(['thread_cooldown', '120', 0]);
         $this->insertDefaultRow(['reply_cooldown', '60', 0]);
