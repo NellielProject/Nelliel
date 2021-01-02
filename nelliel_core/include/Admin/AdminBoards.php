@@ -112,7 +112,7 @@ class AdminBoards extends Admin
 
         if (!$domain->boardExists())
         {
-            nel_derp(109, _gettext('Board does not appear to exist.'));
+            nel_derp(160, _gettext('Board does not appear to exist.'));
         }
 
         if ($this->database->tableExists($domain->reference('config_table')) . '"')

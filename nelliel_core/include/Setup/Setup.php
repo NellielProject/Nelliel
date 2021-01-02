@@ -29,6 +29,7 @@ class Setup
             nel_derp(108, _gettext('Installation has already been completed!'));
         }
 
+        $this->checkPHP();
         $this->checkDBEngine();
         $this->mainDirWritable();
         $this->coreDirWritable();
@@ -98,6 +99,18 @@ class Setup
         }
     }
 
+    public function checkPHP()
+    {
+        $minimum_version = '7.1.0';
+        echo _gettext('Minimum PHP version required: ' . $minimum_version), '<br>';
+        echo _gettext('PHP version detected: ' . PHP_VERSION), '<br>';
+
+        if (version_compare(PHP_VERSION, $minimum_version, '<='))
+        {
+            nel_derp(109, _gettext('This version of PHP is too old! Upgrade to a version supported by Nelliel.'));
+        }
+    }
+
     public function ownerCreated()
     {
         return file_exists(NEL_GENERATED_FILES_PATH . 'create_owner.php');
@@ -113,8 +126,7 @@ class Setup
         if ((NEL_SQLTYPE === 'MYSQL' || NEL_SQLTYPE === 'MARIADB') && !$this->checkForInnoDB())
         {
             nel_derp(102,
-                    _gettext(
-                            'InnoDB engine is required for MySQL or MariaDB support. However the engine is not available for some reason.'));
+                    _gettext('InnoDB engine is required for MySQL or MariaDB support but that engine is not available.'));
         }
         else
         {
