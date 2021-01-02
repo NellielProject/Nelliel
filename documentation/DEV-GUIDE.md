@@ -16,13 +16,13 @@ In addition:
  - Constants must be ALL CAPS and prefixed with `NEL_` or `NELLIEL_`.
 
 ## Functions, Classes and Structure
- - Procedural is not evil. OOP is not the Holy Grail. Use what makes sense for a given situation.
+ - Procedural is not evil. OOP is not the Holy Grail. Functional is fine too. Use what makes sense for a given situation.
  - Function names should be prefixed with `nel_`
  - Classes should be within the `Nelliel` namespace.
  - If a class instance or mutable variable needs to be accessible in a global scope it must be encapsulated inside a function.
  
 ## SQL and Queries
-All schemas and queries should follow SQL standard (ANSI) when reasonably possible. When something is not covered in the standard then a commonly implemented alternative can be used. If there is none widely used, a RDBMNS-specific option may be added to the `SQLCompatibility` class.
+All schemas and queries should follow SQL standard (ANSI) when reasonably possible. When something is not covered in the standard then a commonly implemented alternative can be used. If there is none widely used, a RDBMS-specific option may be added to the `SQLCompatibility` class.
 
 In cases where a data type is not fully cross-compatible or has a differing name (e.g. the BINARY equivalent in PostgreSQL is BYTEA), an equivalent may be used for the specific RDBMS so long as the behavior is indistinguishable.
 
