@@ -101,7 +101,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'store_unhashed_ip', '', '1', 'Store unhashed IP addresses; hashed IP will always be stored', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'content_disclaimer', '', '', 'Disclaimer added to the bottom of posts', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_tripkeys', '', '1', 'Allow use of tripcodes', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'force_anonymous', '', '0', 'Force anonymous posting', '', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'forced_anonymous', '', '0', 'Force anonymous posting', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'name', '', '', 'Board name', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'slogan', '', '', 'Board slogan', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'description', '', '', 'Board description', '', '{"type":"text"}']);

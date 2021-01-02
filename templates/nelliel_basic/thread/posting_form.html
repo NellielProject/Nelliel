@@ -9,7 +9,7 @@
 	<input type="hidden" name="in_modmode" value="true">
 	{{/ in_modmode }}
 	<div>
-		{{^ force_anonymous }}
+		{{^ forced_anonymous }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-i18n="gettext">Name</span>
 			<input type="text" class="posting-form-input" name="new_post[post_info][not_anonymous]" size="30" maxlength="{{ not_anonymous_maxlength }}">
@@ -18,7 +18,7 @@
 			<span class="posting-form-label" data-i18n="gettext">E-mail</span>
 			<input class="posting-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength="{{ spam_target_maxlength }}">
 		</label>
-		{{/ force_anonymous }}
+		{{/ forced_anonymous }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-i18n="gettext">Subject</span>
 			<input class="posting-form-input" type="text" name="new_post[post_info][verb]" size="30" maxlength="{{ verb_maxlength }}">

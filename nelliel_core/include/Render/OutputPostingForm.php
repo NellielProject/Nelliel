@@ -50,7 +50,7 @@ class OutputPostingForm extends Output
         $this->render_data['not_anonymous_maxlength'] = $this->domain->setting('max_name_length');
         $this->render_data['spam_target_maxlength'] = $this->domain->setting('max_email_length');
         $this->render_data['verb_maxlength'] = $this->domain->setting('max_subject_length');
-        $this->render_data['force_anonymous'] = $this->domain->setting('force_anonymous');
+        $this->render_data['forced_anonymous'] = $this->domain->setting('forced_anonymous');
         $uploads_data = array();
         $uploads_data['allow_multiple'] = false;
 

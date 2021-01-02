@@ -138,12 +138,12 @@ Contains the information about a file or other content.
 |`preview_extension`|`string` |text                    |Preview extension.|
 |`preview_width`    |`integer`|1-32767                 |Display width of preview.|
 |`preview_height`   |`integer`|1-32767                 |Display height of preview.|
-|`filesize`         |`integer`|0-2147483647            |File size.|
+|`filesize`         |`integer`|0-2147483647            |File size in bytes.|
 |`md5`              |`string` |32-character hex string |MDS hash of content.|
 |`sha1`             |`string` |40-character hex string |SHA1 hash of content.|
 |`sha256`           |`string` |64-character hex string |SHA256 hash of content.|
 |`sha512`           |`string` |128-character hex string|SHA512 hash of content.|
 |`embed_url`        |`string` |text                    |URL (mostly for embeds).|
 |`spoiler`          |`boolean`|true or false           |Is marked as a spoiler.|
+|`deleted`          |`boolean`|true or false           |Has been deleted.|
 |`exif`             |`string` |text                    |EXIF data.|
-|`meta`             |`string` |text                    |Other metadata.|

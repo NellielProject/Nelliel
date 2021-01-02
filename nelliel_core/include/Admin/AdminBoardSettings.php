@@ -7,11 +7,12 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use PDO;
+use Nelliel\Regen;
+use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
-use Nelliel\Auth\Authorization;
+use PDO;
 
 class AdminBoardSettings extends Admin
 {
@@ -127,8 +128,9 @@ class AdminBoardSettings extends Admin
         if (!$this->defaults)
         {
             $this->domain->regenCache();
-            $regen = new \Nelliel\Regen();
+            $regen = new Regen();
             $regen->allBoardPages($this->domain);
+            $regen->boardList(new DomainSite($this->database));
         }
 
         $this->outputMain(true);

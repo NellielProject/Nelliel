@@ -64,7 +64,7 @@ class PostData
             $post->changeData('poster_name', _gettext('Anonymous'));
         }
 
-        if ($this->domain->setting('force_anonymous'))
+        if ($this->domain->setting('forced_anonymous'))
         {
             $post->changeData('poster_name', _gettext('Anonymous'));
             $post->changeData('email', '');

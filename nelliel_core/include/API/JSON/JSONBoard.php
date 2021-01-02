@@ -28,7 +28,7 @@ class JSONBoard extends JSONOutput
         $boards_array['slogan'] = nel_cast_to_datatype($data['slogan'], 'string');
         $boards_array['description'] = nel_cast_to_datatype($data['description'], 'string');
         $boards_array['locale'] = nel_cast_to_datatype($data['locale'], 'string');
-        $boards_array['forced_anonymous'] = nel_cast_to_datatype($data['force_anonymous'], 'boolean');
+        $boards_array['forced_anonymous'] = nel_cast_to_datatype($data['forced_anonymous'], 'boolean');
         $boards_array['threads_per_page'] = nel_cast_to_datatype($data['threads_per_page'], 'integer');
         $boards_array['page_limit'] = nel_cast_to_datatype($data['page_limit'], 'integer');
         $boards_array['max_bumps'] = nel_cast_to_datatype($data['max_bumps'], 'integer');

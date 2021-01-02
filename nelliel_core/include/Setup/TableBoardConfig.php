@@ -43,7 +43,7 @@ class TableBoardConfig extends Table
     public function insertDefaults()
     {
         $this->insertDefaultRow(['allow_tripkeys', '1', 0]);
-        $this->insertDefaultRow(['force_anonymous', '0', 0]);
+        $this->insertDefaultRow(['forced_anonymous', '0', 0]);
         $this->insertDefaultRow(['name', '', 0]);
         $this->insertDefaultRow(['slogan', '', 0]);
         $this->insertDefaultRow(['description', '', 0]);

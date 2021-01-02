@@ -7,8 +7,12 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\API\JSON\JSONIndex;
+use Nelliel\API\JSON\JSONPost;
+use Nelliel\API\JSON\JSONThread;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainSite;
 use PDO;
 
 class OutputIndex extends Output
@@ -24,8 +28,8 @@ class OutputIndex extends Output
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $page = 1;
-        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
-        $json_index = new \Nelliel\API\JSON\JSONIndex($this->domain, $this->file_handler);
+        $site_domain = new DomainSite($this->database);
+        $json_index = new JSONIndex($this->domain, $this->file_handler);
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
@@ -130,7 +134,7 @@ class OutputIndex extends Output
             }
 
             $output_post = new OutputPost($this->domain, $this->write_mode);
-            $json_thread = new \Nelliel\API\JSON\JSONThread($this->domain, $this->file_handler);
+            $json_thread = new JSONThread($this->domain, $this->file_handler);
             $thread_content_id = ContentID::createIDString(intval($thread_data['thread_id']));
             $thread_input = array();
             $thread_input['thread_id'] = $thread_content_id;
@@ -144,7 +148,7 @@ class OutputIndex extends Output
 
             foreach ($treeline as $post_data)
             {
-                $json_post = new \Nelliel\API\JSON\JSONPost($this->domain, $this->file_handler);
+                $json_post = new JSONPost($this->domain, $this->file_handler);
                 $json_instances['post'] = $json_post;
                 $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data, 'gen_data' => $gen_data,
                     'json_instances' => $json_instances, 'in_thread_number' => $post_counter];

@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Utility\FileHandler;
 
@@ -22,7 +23,7 @@ class JSONPost extends JSONOutput
 
     public function prepareData(array $data)
     {
-        $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
+        $authorization = new Authorization($this->domain->database());
         $post_array = array();
         $post_array['post_number'] = nel_cast_to_datatype($data['post_number'], 'integer');
         $post_array['parent_thread'] = nel_cast_to_datatype($data['parent_thread'], 'integer');
