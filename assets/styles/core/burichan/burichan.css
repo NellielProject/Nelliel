@@ -37,8 +37,8 @@
 	--mod-comment-color: #FF0000;
 	--omitted-background-color: inherit;
 	--omitted-color: #070707;
-	--quote-background-color: #C4C2EE;
-	--quote-color: #FFFFFF;
+	--greentext-background-color: #C4C2EE;
+	--greentext-color: #FFFFFF;
 }
 
 a {

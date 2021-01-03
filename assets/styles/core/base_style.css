@@ -46,17 +46,18 @@ form {
 /* Menu */
 .styles {
     float: left;
+    padding: 0.15em;
 }
 
 /* Header */
 .board-navigation {
     text-align: center;
+    padding: 0.15em;
 }
 
 .site-nav-menu {
     float: right;
-    padding-top: 6px;
-    padding-bottom: 6px;
+    padding: 0.15em;
 }
 
 /* Footer */
@@ -176,7 +177,7 @@ form {
 }
 
 .rules {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-family: sans-serif;
 }
 
@@ -263,18 +264,13 @@ form {
     font-weight: bold;
 }
 
-.post-quote {
-	background-color: var(--quote-background-color);
-    color: var(--quote-color);
-}
-
 .post-backlink {
     font-size: 0.8rem;
     padding-left: 2px;
     padding-right: 2px;
 }
 
-.post-quote-popup {
+.post-cite-popup {
     height: auto;
     position: absolute;
     display: block;
@@ -288,6 +284,11 @@ form {
 	letter-spacing: 0.125rem;
 	text-shadow: -1px -1px 0 #333, 1px -1px 0 #333, -1px 1px 0 #333, 1px 1px 0 #333;
 	border-radius: 4px;
+}
+
+.greentext {
+	background-color: var(--greentext-background-color);
+    color: var(--greentext-color);
 }
 
 /* OP post formatting */

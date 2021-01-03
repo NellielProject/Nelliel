@@ -30,19 +30,6 @@ class Filter
         $string = htmlspecialchars($string, ENT_COMPAT, 'UTF-8');
     }
 
-    public function clearWhitespace(string &$string)
-    {
-        if (nel_true_empty($string))
-        {
-            return;
-        }
-
-        if (ctype_space($string))
-        {
-            $string = '';
-        }
-    }
-
     public function newlinesToArray(string $string)
     {
         $text_array = preg_split('#\r\n?|\n#', $string);

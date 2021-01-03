@@ -59,7 +59,7 @@ class OutputCatalog extends Output
 
             if (!empty($first_post['comment']))
             {
-                $this->output_filter->clearWhitespace($first_post['comment']);
+                $first_post['comment'] = trim($first_post['comment']);
 
                 foreach ($this->output_filter->newlinesToArray($first_post['comment']) as $line)
                 {

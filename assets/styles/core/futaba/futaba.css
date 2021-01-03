@@ -37,8 +37,8 @@
 	--mod-comment-color: #FF0000;
 	--omitted-background-color: inherit;
 	--omitted-color: #070707;
-	--quote-background-color: inherit;
-	--quote-color: #789922;
+	--greentext-background-color: inherit;
+	--greentext-color: #789922;
 }
 
 .rules {
@@ -55,8 +55,4 @@
 
 .reply-subject {
 	font-size: 1.2rem;
-}
-
-.footer {
-    font-size: 0.8rem;
 }

@@ -1,7 +1,12 @@
 <p class="{{ post_contents_class }}">
 {{# comment_lines }}
-	<span class="{{ post_comment_class }}">
-	{{# line }}{{# link }}<a href="{{ link_url }}" class="post-link" data-command="show-linked-post">{{ link_text }}</a>{{/ link }}{{ text }}{{/ line }}</span><br>
+	{{# line_parts }}
+	{{# cite }}<a href="{{ cite_url }}" class="post-cite" data-command="show-linked-post">{{ text }}</a>{{/ cite }}
+	{{# link }}<a href="{{ link_url }}" class="external-link">{{ text }}</a>{{/ link }}
+	{{# styled }}<span class="{{ class }}">{{ text }}</span>{{/ styled }}
+	{{# plain }}{{ text }}{{/ plain }}
+	{{#line_break }}<br>{{/ line_break }}
+	{{/ line_parts }}
 {{/ comment_lines }}
 {{# mod_comment }}
 	<span class="mod-comment">{{ mod_comment }}</span>
