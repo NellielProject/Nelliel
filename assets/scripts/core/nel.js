@@ -275,9 +275,9 @@ function setStyle(style, update_cookie = false) {
     var allstyles = document.getElementsByTagName("link");
 
     for (i = 0; i < allstyles.length; i++) {
-        allstyles[i].disabled = true;
-
         if (allstyles[i].getAttribute("data-style-type") == "style-board") {
+            allstyles[i].disabled = true;
+
             if (allstyles[i].getAttribute("data-id") == style) {
                 allstyles[i].disabled = false;
             }
