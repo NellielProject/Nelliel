@@ -1,16 +1,17 @@
-<p class="{{ post_contents_class }}">
+<p class="{{ post_comments_class }}">
 {{# comment_lines }}
-	{{# line_parts }}
-	{{# cite }}<a href="{{ cite_url }}" class="post-cite" data-command="show-linked-post">{{ text }}</a>{{/ cite }}
-	{{# link }}<a href="{{ link_url }}" class="external-link">{{ text }}</a>{{/ link }}
-	{{# styled }}<span class="{{ class }}">{{ text }}</span>{{/ styled }}
-	{{# plain }}{{ text }}{{/ plain }}
-	{{#line_break }}<br>{{/ line_break }}
-	{{/ line_parts }}
+	{{# line_parts }}{{> thread/pieces/comment_line }}{{/ line_parts }}
 {{/ comment_lines }}
+</p>
+<p class="{{ post_disclaimer_class }}">
+	{{ content_disclaimer }}
+</p>
+<p class="mod-comment">
 {{# mod_comment }}
-	<span class="mod-comment">{{ mod_comment }}</span>
+	{{ mod_comment }}
 {{/ mod_comment }}
+</p>
+<p>
 {{# index_render }}
 	<span data-i18n="gettext">This is a long comment.</span>&nbsp;<a href="{{ post_url }}" data-i18n="gettext">Click here for the full text</a>
 {{/ index_render }}

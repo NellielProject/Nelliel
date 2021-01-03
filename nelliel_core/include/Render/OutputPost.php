@@ -317,9 +317,8 @@ class OutputPost extends Output
         $comment_data = array();
         $post_type_class = $post_data['op'] == 1 ? 'op-' : 'reply-';
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
-        $comment_data['post_contents_class'] = $post_type_class . 'post-contents';
+        $comment_data['post_comments_class'] = $post_type_class . 'post-comments';
         $comment_data['mod_comment'] = $post_data['mod_comment'] ?? null;
-        $comment_data['post_comment_class'] = $post_type_class . 'post-comment';
 
         if (nel_true_empty($post_data['comment']))
         {
@@ -345,8 +344,9 @@ class OutputPost extends Output
 
             for (; $i < $line_count; $i ++)
             {
+
                 $line = $comment_lines[$i];
-                $line_break = $i < $last_i;
+                $line_break = $i !== $last_i;
 
                 if ($gen_data['index_rendering'] && $line_count > $this->domain->setting('comment_display_lines'))
                 {
