@@ -38,7 +38,7 @@ class OutputPost extends Output
         $web_paths['thread_src'] = $this->domain->reference('src_web_path') . $thread_content_id->threadID() . '/';
         $web_paths['thread_preview'] = $this->domain->reference('preview_web_path') . $thread_content_id->threadID() .
                 '/';
-        $this->render_data['post_corral_id'] = 'post-id-' . $post_content_id->getIDString();
+        $this->render_data['post_corral_id'] = 'post-corral-' . $post_content_id->getIDString();
         $this->render_data['post_container_id'] = 'post-container-' . $post_content_id->getIDString();
         $this->render_data['header_id'] = 'header-' . $post_content_id->getIDString();
         $this->render_data['content_container_id'] = 'content-' . $post_content_id->getIDString();
@@ -46,22 +46,20 @@ class OutputPost extends Output
 
         if ($response)
         {
+            $class_prefix = 'reply-';
             $this->render_data['indents_marker'] = $this->domain->setting('indent_marker');
-            $this->render_data['post_container_class'] = 'reply-post';
-            $this->render_data['header_class'] = 'reply-post-header';
-            $this->render_data['content_container_class'] = 'reply-content-container';
-            $this->render_data['comments_class'] = 'reply-post-comments';
-            $this->render_data['post_disclaimer_class'] = 'reply-post-disclaimer';
         }
         else
         {
+            $class_prefix = 'op-';
             $this->render_data['indents_marker'] = '';
-            $this->render_data['post_container_class'] = 'op-post';
-            $this->render_data['header_class'] = 'op-post-header';
-            $this->render_data['content_container_class'] = 'op-content-container';
-            $this->render_data['post_disclaimer_class'] = 'op-post-disclaimer';
         }
 
+        $this->render_data['post_container_class'] = $class_prefix . 'post';
+        $this->render_data['post_header_options_class'] = $class_prefix . 'post-header-options';
+        $this->render_data['post_header_info_class'] = $class_prefix . 'post-header-info';
+        $this->render_data['content_container_class'] = $class_prefix . 'content-container';
+        $this->render_data['post_disclaimer_class'] = $class_prefix . 'post-disclaimer';
         $this->render_data['post_anchor_id'] = 't' . $post_content_id->threadID() . 'p' . $post_content_id->postID();
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
                 $post_content_id, $web_paths, $gen_data, $in_thread_number);
@@ -174,9 +172,9 @@ class OutputPost extends Output
             $header_data['modmode_headers'] = $modmode_headers;
         }
 
-        // If we're working with op post, generate the thread headers
         if (!$response)
         {
+            $class_prefix = 'op-';
             $thread_headers['hide_thread_id'] = 'hide-thread-' . $thread_content_id->getIDString();
             $thread_headers['thread_content_id'] = $thread_content_id->getIDString();
             $thread_headers['post_content_id'] = $post_content_id->getIDString();
@@ -205,39 +203,21 @@ class OutputPost extends Output
 
             $header_data['thread_headers'] = $thread_headers;
         }
+        else
+        {
+            $class_prefix = 'reply-';
+        }
 
         $post_headers['in_thread_number'] = $in_thread_number;
         $post_headers['post_content_id'] = $post_content_id->getIDString();
         $post_headers['hide_post_id'] = 'hide-post-' . $post_content_id->getIDString();
         $post_headers['post_header_info_id'] = 'post-header-info-' . $post_content_id->getIDString();
         $post_headers['post_header_options_id'] = 'post-header-options-' . $post_content_id->getIDString();
-
-        if ($response)
-        {
-            $post_headers['header_options_class'] = 'reply-post-header-options';
-            $post_headers['header_info_class'] = 'reply-post-header-info';
-            $post_headers['post_select_class'] = 'reply-post-select';
-            $post_headers['subject_class'] = 'reply-subject';
-            $post_headers['poster_name_class'] = 'reply-poster-name';
-            $post_headers['mailto_class'] = 'reply-mailto';
-            $post_headers['tripline_class'] = 'reply-trip-line';
-            $post_headers['post_time_class'] = 'reply-post-time';
-            $post_headers['post_link_class'] = 'reply-post-link';
-            $post_headers['post_number_class'] = 'reply-post-number-link';
-        }
-        else
-        {
-            $post_headers['header_options_class'] = 'op-post-header-options';
-            $post_headers['header_info_class'] = 'op-post-header-info';
-            $post_headers['post_select_class'] = 'op-post-select';
-            $post_headers['subject_class'] = 'op-subject';
-            $post_headers['poster_name_class'] = 'op-poster-name';
-            $post_headers['mailto_class'] = 'op-mailto';
-            $post_headers['tripline_class'] = 'op-trip-line';
-            $post_headers['post_time_class'] = 'op-post-time';
-            $post_headers['post_link_class'] = 'op-post-link';
-            $post_headers['post_number_class'] = 'op-post-number-link';
-        }
+        $post_headers['header_info_class'] = $class_prefix . 'post-header-info';
+        $post_headers['subject_class'] = $class_prefix . 'subject';
+        $post_headers['poster_name_class'] = $class_prefix . 'poster-name';
+        $post_headers['tripline_class'] = $class_prefix . 'trip-line';
+        $post_headers['post_link_class'] = $class_prefix . 'post-link';
 
         if (!nel_true_empty($post_data['email']))
         {
@@ -310,7 +290,7 @@ class OutputPost extends Output
     private function postComments(array $post_data, ContentID $post_content_id, array $gen_data, array $web_paths)
     {
         $cite_match_regex = '#^\s*>>#';
-        $greentext_regex= '#^\s*>[^>]#';
+        $greentext_regex = '#^\s*>[^>]#';
         $url_protocols = $this->domain->setting('url_protocols');
         $url_split_regex = '#(' . $url_protocols . ')(:\/\/)#';
         $line_split_regex = '#(>>[0-9]+)|(>>>\/.+\/[0-9]+)|(\s)#';
@@ -387,7 +367,7 @@ class OutputPost extends Output
                         $entry['url'] = $chunk;
                         $entry['text'] = $chunk;
                     }
-                    else if(preg_match($greentext_regex, $chunk) === 1)
+                    else if (preg_match($greentext_regex, $chunk) === 1)
                     {
                         $entry['styled'] = true;
                         $entry['text'] = $chunk;

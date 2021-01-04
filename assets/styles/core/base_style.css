@@ -43,21 +43,20 @@ form {
 	border-spacing: 2px;
 }
 
-/* Menu */
+/* Top navigation */
+.boards-navigation {
+    text-align: center;
+    masrgin: 0.1em;
+}
+
 .styles {
     float: left;
     padding: 0.15em;
 }
 
-/* Header */
-.board-navigation {
-    text-align: center;
-    padding: 0.15em;
-}
-
-.site-nav-menu {
+.site-navigation {
     float: right;
-    padding: 0.15em;
+    padding: 0.1em;
 }
 
 /* Footer */
@@ -181,74 +180,22 @@ form {
     font-family: sans-serif;
 }
 
-/* Files */
-.op-content-container {
-	float: left;
-}
-
-.op-multiple-content-container {
-	float: left;
-}
-
-.reply-content-container {
-	float: left;
-}
-
-.reply-multiple-content-container {
-	float: left;
-}
-
-.op-fileinfo {
+.fileinfo {
     float: left;
-    white-space: nowrap;
-    padding-left: 5px;
-    padding-right: 5px;
-    margin: 3px;
+    margin: 0.15em 0.75em 0.15em 0.75em;
 }
 
-.op-multiple-fileinfo {
+.multiple-fileinfo {
     float: left;
-    white-space: nowrap;
-    padding-left: 5px;
-    padding-right: 5px;
-    margin: 3px;
-}
-
-.reply-fileinfo {
-    float: left;
-    white-space: nowrap;
-    padding-left: 5px;
-    padding-right: 5px;
-    margin: 3px;
-}
-
-.reply-multiple-fileinfo {
-    float: left;
-    white-space: nowrap;
-    padding-left: 5px;
-    padding-right: 5px;
-    margin: 3px;
-}
-
-.file-meta {
-    white-space:normal;
-    word-wrap: break-word;
-}
-
-.file-source {
-    padding-left: 2px;
-}
-
-.file-license {
-    padding-left: 2px;
+    margin: 0.15em 0.25em 0.15em 0.25em;
 }
 
 .file-hash {
-    padding-left: 2px;
+    padding-left: 0.1em;
 }
 
 .preview-link {
-    display: block;
+    /*display: block;*/
 }
 
 /* General post formatting */
@@ -266,8 +213,6 @@ form {
 
 .post-backlink {
     font-size: 0.8rem;
-    padding-left: 2px;
-    padding-right: 2px;
 }
 
 .post-cite-popup {
@@ -291,6 +236,10 @@ form {
     color: var(--greentext-color);
 }
 
+.post-number-link {
+	text-decoration: none;
+}
+
 /* OP post formatting */
 .op-post-header-info {
     margin-left: 1.5em;
@@ -299,14 +248,10 @@ form {
 .op-post {
 	background-color: var(--op-background-color);
 	border: var(--op-border);
-    min-width: 15em;
+	padding: 0.2em;
+    min-width: 20em;
     height: 100%;
-    padding-bottom: 6px;
-    padding-left: 20px;
-}
-
-.op-post-number-link {
-	text-decoration: none;
+    margin: 0.2em;
 }
 
 .op-post.post-highlight {
@@ -335,15 +280,11 @@ form {
 .reply-post {
     background-color: var(--reply-background-color);
     border: var(--reply-border);
-    padding: 5px;
-    min-width: 15em;
+    padding: 0.2em;
+    min-width: 20em;
     height: 100%;
-    margin: 5px;
+    margin: 0.2em;
     display: inline-block;
-}
-
-.reply-post-number-link {
-	text-decoration: none;
 }
 
 .reply-post.post-highlight {
@@ -392,14 +333,6 @@ form {
     font-size: 1.2rem;
 }
 
-.news-poster {
-    font-size: 1.0rem;
-}
-
-.news-time {
-    font-size: 1.0rem;
-}
-
 .news-text {
     padding: 3px;
     text-align: left;
@@ -413,22 +346,6 @@ form {
 
 .clear {
     clear: both;
-}
-
-.clear-left {
-    clear: left;
-}
-
-.clear-right {
-    clear: right;
-}
-
-.float-left {
-    float: left;
-}
-
-.float-right {
-    float: right;
 }
 
 .text-center {
@@ -470,7 +387,7 @@ form {
 }
 
 .render_stats {
-	margin: 3px;
+	margin: 0.15em;
 	text-align: center;
 	font-size: 0.85rem;
 }

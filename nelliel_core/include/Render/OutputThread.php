@@ -69,7 +69,6 @@ class OutputThread extends Output
         $post_counter = 1;
         $gen_data['index_rendering'] = false;
         $gen_data['abbreviate'] = false;
-        $total_posts = $thread_data['post_count'];
         $this->render_data['abbreviate'] = false;
         $output_posting_form = new OutputPostingForm($this->domain, $this->write_mode);
         $this->render_data['posting_form'] = $output_posting_form->render(['response_to' => $thread_id], true);
@@ -78,7 +77,9 @@ class OutputThread extends Output
         $this->render_data['thread_posts'] = array();
         $this->render_data['thread_id'] = $thread_content_id;
         $this->render_data['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
-        $this->render_data['thread_corral_id'] = 'thread-' . $thread_content_id;
+        $this->render_data['thread_corral_id'] = 'thread-corral-' . $thread_content_id;
+        $this->render_data['thread_info_id'] = 'thread-header-info-' . $thread_content_id;
+        $this->render_data['thread_options_id'] = 'thread-header-options-' . $thread_content_id;
         $this->render_data['board_id'] = $this->domain->id();
 
         foreach ($treeline as $post_data)

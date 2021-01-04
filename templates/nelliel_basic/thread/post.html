@@ -2,11 +2,18 @@
 	<a id="{{ post_anchor_id }}"></a>
 	<div class="indents">{{ indents_marker }}</div>
 	<div id="{{ post_container_id }}" class="{{ post_container_class }}">
-		<div id="{{ header_id }}" class="{{ header_class }}">
-		{{# headers }}
-			{{> thread/post_headers }}
-		{{/ headers }}
+	{{# headers }}
+		{{> thread/headers/modmode }}
+		<div>
+			<input type="checkbox" name="{{ post_content_id }}" value="action">
+		{{> thread/headers/post_options }}
+		{{> thread/headers/thread_options }}
+		{{> thread/headers/thread_info }}
 		</div>
+		<div id="{{ post_header_info_id }}" class="{{ header_info_class }}">
+		{{> thread/headers/post_info }}
+		</div>
+	{{/ headers }}
 		<div id="{{ content_container_id }}" class="{{ content_container_class }}">
 	{{# content_rows }}
 		{{# row }}
