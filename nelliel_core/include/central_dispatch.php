@@ -4,6 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Account\Session;
 use Nelliel\Domains\Domain;
 
 function nel_dispatch_preparation()
@@ -78,7 +79,6 @@ function nel_dispatch_preparation()
     $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BansAccess(nel_database()));
     $snacks->applyBan($domain);
     $snacks->checkHoneypot($domain);
-
     $inputs = nel_module_dispatch($inputs, $domain);
 }
 
@@ -86,6 +86,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 {
     $inputs = nel_plugins()->processHook('nel-inb4-module-dispatch', [$domain], $inputs);
     $authorization = new \Nelliel\Auth\Authorization($domain->database());
+    $session = new Session();
 
     switch ($inputs['module'])
     {
@@ -107,7 +108,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'render':
             $inputs['index'] = $_GET['index'] ?? null;
             $inputs['thread'] = $_GET['thread'] ?? null;
-            $session = new \Nelliel\Account\Session();
 
             switch ($inputs['actions'][0])
             {
@@ -149,7 +149,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'threads':
             $content_id = new \Nelliel\Content\ContentID($inputs['content_id']);
             $fgsfds = new \Nelliel\FGSFDS();
-            $session = new \Nelliel\Account\Session();
 
             if ($inputs['actions'][0] === 'new-post')
             {
@@ -240,7 +239,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
         case 'regen':
             $regen = new \Nelliel\Regen();
-            $session = new \Nelliel\Account\Session();
             $session->loggedInOrError();
             $user = $session->sessionUser();
             $forward = 'site';

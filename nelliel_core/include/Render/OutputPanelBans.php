@@ -29,7 +29,7 @@ class OutputPanelBans extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['can_modify'] = $this->session_user->checkPermission($this->domain, 'perm_manage_bans');
+        $this->render_data['can_modify'] = $this->session->sessionUser()->checkPermission($this->domain, 'perm_manage_bans');
         $bans_access = new BansAccess($this->database);
 
         if ($this->domain->id() !== Domain::SITE)
@@ -133,7 +133,7 @@ class OutputPanelBans extends Output
                         ['module' => 'admin', 'section' => 'bans', 'actions' => 'update',
                             'board-id' => $this->domain->id()]);
         $ban_id = $_GET['ban_id'];
-        $this->render_data['view_unhashed_ip'] = $this->session_user->checkPermission($this->domain,
+        $this->render_data['view_unhashed_ip'] = $this->session->sessionUser()->checkPermission($this->domain,
                 'perm_view_unhashed_ip');
         $ban_hammer = new \Nelliel\BanHammer($this->database);
         $ban_hammer->loadFromID($ban_id);
