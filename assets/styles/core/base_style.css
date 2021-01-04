@@ -107,7 +107,6 @@ form {
 .data-table-header {
     background-color: var(--data-table-header-background-color);
     color: var(--data-table-header-color);
-    width: 100%;
 }
 
 .row1 {
