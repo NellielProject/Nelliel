@@ -108,6 +108,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['use_report_captcha', '0', 0]);
         $this->insertDefaultRow(['use_report_recaptcha', '0', 0]);
         $this->insertDefaultRow(['poster_id_colors', '1', 0]);
+        $this->insertDefaultRow(['poster_id_length', '6', 0]);
         $this->insertDefaultRow(['display_render_timer', '1', 0]);
         $this->insertDefaultRow(['no_comment_text', '(no comment)', 0]);
         $this->insertDefaultRow(['display_post_backlinks', '1', 0]);

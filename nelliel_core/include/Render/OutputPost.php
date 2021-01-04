@@ -241,7 +241,9 @@ class OutputPost extends Output
                     NEL_POSTER_ID_PEPPER . @inet_ntop($post_data['ip_address']) . $this->domain->id() .
                     $thread_data['thread_id']);
             $poster_id = substr($raw_poster_id, 0, $this->domain->setting('poster_id_length'));
+            $post_headers['id_color_code'] = '#' . substr($raw_poster_id, 0, 6);
             $post_headers['poster_id'] = $poster_id;
+            $post_headers['show_poster_id'] = true;
 
             if ($this->domain->setting('poster_id_colors'))
             {

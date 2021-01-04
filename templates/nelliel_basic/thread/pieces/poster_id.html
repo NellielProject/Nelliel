@@ -1,4 +1,6 @@
-{{# poster_id }}
-<span class="poster-id"><span data-i18n="gettext">ID: </span>
-<span{{# id_colors }} class="poster-id-color" style="background-color: #{{ poster_id }}"{{/ id_colors }}>{{ poster_id }}</span></span>
-{{/ poster_id }}
+{{# show_poster_id }}
+<span class="poster-id">
+	<span data-i18n="gettext">ID:</span>
+	<span {{# id_colors }} class="poster-id-color" style="background-color: {{ id_color_code }}"{{/ id_colors }}>{{ poster_id }}</span>
+</span>
+{{/ show_poster_id }}
