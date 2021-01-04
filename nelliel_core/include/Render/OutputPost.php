@@ -73,24 +73,32 @@ class OutputPost extends Output
                     PDO::FETCH_ASSOC);
             $output_file_info = new OutputFile($this->domain, $this->write_mode);
             $content_row = array();
+            $this->render_data['multi_file'] = count($file_list) > 1;
 
             foreach ($file_list as $file)
             {
-                if (count($content_row) >= $this->domain->setting('max_files_row'))
-                {
-                    $this->render_data['content_rows'][]['row'] = $content_row;
-                    $content_row = array();
-                }
-
                 $json_content = new \Nelliel\API\JSON\JSONContent($this->domain, $this->file_handler);
                 $parameters['json_instances']['content'] = $json_content;
                 $file_data = $output_file_info->render(
                         ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
                             'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances']], true);
-                $content_row[] = $file_data;
+                $content_row[]['content_data'] = $file_data;
+
+                if ($this->render_data['multi_file'])
+                {
+                    if (count($content_row) == $this->domain->setting('max_files_row'))
+                    {
+                        $this->render_data['content_rows'][]['row'] = $content_row;
+                        $content_row = array();
+                    }
+                }
+                else
+                {
+                    $this->render_data['content_data'] = $file_data;
+                }
             }
 
-            if (!empty($content_row))
+            if ($this->render_data['multi_file'] && !empty($content_row))
             {
                 $this->render_data['content_rows'][]['row'] = $content_row;
             }
@@ -297,7 +305,7 @@ class OutputPost extends Output
         $comment_data = array();
         $post_type_class = $post_data['op'] == 1 ? 'op-' : 'reply-';
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
-        $comment_data['post_comments_class'] = $post_type_class . 'post-comments';
+        $comment_data['comments_class'] = $post_type_class . 'post-comments';
         $comment_data['mod_comment'] = $post_data['mod_comment'] ?? null;
 
         if (nel_true_empty($post_data['comment']))

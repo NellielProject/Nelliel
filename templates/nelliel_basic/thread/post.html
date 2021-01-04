@@ -15,11 +15,12 @@
 		</div>
 	{{/ headers }}
 		<div id="{{ content_container_id }}" class="{{ content_container_class }}">
-	{{# content_rows }}
-		{{# row }}
-			{{> thread/file_info }}
-		{{/ row }}
-	{{/ content_rows }}
+	{{# multi_file }}
+		{{> thread/multi_file }}
+	{{/ multi_file }}
+	{{^ multi_file }}
+		{{> thread/file_info }}
+	{{/ multi_file }}
 		</div>
 		<div id="{{ comments_id }}" class="{{ comments_class }}">
 	{{# post_comments }}

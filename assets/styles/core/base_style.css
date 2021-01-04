@@ -149,7 +149,7 @@ form {
     font-weight: bold;
 }
 
-/* Posting form formatting */
+/* Posting form */
 .posting-form {
     border-spacing: 2px;
     margin-right: auto;
@@ -180,6 +180,7 @@ form {
     font-family: sans-serif;
 }
 
+/* Files */
 .fileinfo {
     float: left;
     margin: 0.15em 0.75em 0.15em 0.75em;
@@ -187,6 +188,7 @@ form {
 
 .multiple-fileinfo {
     float: left;
+    font-size: 0.9em;
     margin: 0.15em 0.25em 0.15em 0.25em;
 }
 
@@ -198,7 +200,7 @@ form {
     /*display: block;*/
 }
 
-/* General post formatting */
+/* General post */
 .mod-comment {
 	background-color: var(--mod-comment-background-color);
     color: var(--mod-comment-color, #FF0000);
