@@ -22,6 +22,7 @@ class OutputThread extends Output
     public function render(array $parameters = array(), bool $data_only = false)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('thread/thread');
         $session = new \Nelliel\Account\Session();
         $thread_id = ($parameters['thread_id']) ?? 0;
         $command = ($parameters['command']) ?? 'view-thread';
@@ -51,6 +52,20 @@ class OutputThread extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
 
+        if ($session->inModmode($this->domain) && !$this->write_mode)
+        {
+            $return_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+            http_build_query(
+                    ['module' => 'render', 'actions' => 'view-index', 'index' => '0',
+                    'board-id' => $this->domain->id(), 'modmode' => 'true']);
+        }
+        else
+        {
+            $return_url = $this->domain->reference('board_web_path') . NEL_MAIN_INDEX . NEL_PAGE_EXT;
+        }
+
+        $this->render_data['return_url'] = $return_url;
+
         if ($session->isActive() && !$this->write_mode)
         {
             $manage_headers['header'] = _gettext('Moderator Mode');
@@ -69,7 +84,6 @@ class OutputThread extends Output
         $post_counter = 1;
         $gen_data['index_rendering'] = false;
         $gen_data['abbreviate'] = false;
-        $total_posts = $thread_data['post_count'];
         $this->render_data['abbreviate'] = false;
         $output_posting_form = new OutputPostingForm($this->domain, $this->write_mode);
         $this->render_data['posting_form'] = $output_posting_form->render(['response_to' => $thread_id], true);
@@ -78,7 +92,9 @@ class OutputThread extends Output
         $this->render_data['thread_posts'] = array();
         $this->render_data['thread_id'] = $thread_content_id;
         $this->render_data['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
-        $this->render_data['thread_corral_id'] = 'thread-' . $thread_content_id;
+        $this->render_data['thread_corral_id'] = 'thread-corral-' . $thread_content_id;
+        $this->render_data['thread_info_id'] = 'thread-header-info-' . $thread_content_id;
+        $this->render_data['thread_options_id'] = 'thread-header-options-' . $thread_content_id;
         $this->render_data['board_id'] = $this->domain->id();
 
         foreach ($treeline as $post_data)
@@ -112,7 +128,7 @@ class OutputThread extends Output
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
-        $output = $this->output('thread/thread_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true);
 
         if ($this->write_mode)
         {

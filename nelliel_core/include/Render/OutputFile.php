@@ -38,8 +38,7 @@ class OutputFile extends Output
         $full_filename = $file['filename'] . '.' . $file['extension'];
         $this->render_data['file_info_id'] = 'fileinfo-' . $file_content_id->getIDString();
         $this->render_data['file_content_id'] = $file_content_id->getIDString();
-        $this->render_data['file_info_class'] = $post_type_class . $multiple_class . 'fileinfo';
-        $this->render_data['file_select_class'] = $multiple_class . 'content-select';
+        $this->render_data['file_info_class'] = $multiple_class . 'fileinfo';
         $this->render_data['file_preview_class'] = $post_type_class . $multiple_class . 'post-preview';
 
         if ($session->inModmode($this->domain))

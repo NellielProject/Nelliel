@@ -18,14 +18,6 @@ class OutputFiltersTest extends TestCase
         $this->assertTrue($untrimmed_string === 'string');
     }
 
-    public function testClearWhitespace()
-    {
-        $filter = new Filter();
-        $whitespace_string = " \n\r\t   ";
-        $filter->clearWhitespace($whitespace_string);
-        $this->assertTrue($whitespace_string === '');
-    }
-
     public function testNewlinesToArray()
     {
         $filter = new Filter();

@@ -199,15 +199,15 @@ nelliel.ui.showLinkedPost = function(element, event) {
     var anchor_matches = href.match(/#t([0-9]+)p([0-9]+)/);
     var post_id = "cid_" + anchor_matches[1] + "_" + anchor_matches[2] + "_0";
 
-    if (document.getElementById("post-quote-popup-" + post_id) !== null) {
+    if (document.getElementById("post-cite-popup-" + post_id) !== null) {
         return;
     }
 
     var offsetY = window.pageYOffset || document.documentElement.scrollTop;
     var offsetX = window.pageXOffset || document.documentElement.scrollLeft;
     var popup_div = document.createElement("div");
-    popup_div.id = "post-quote-popup-" + post_id;
-    popup_div.setAttribute("class", "post-quote-popup");
+    popup_div.id = "post-cite-popup-" + post_id;
+    popup_div.setAttribute("class", "post-cite-popup");
     var element_rect = element.getBoundingClientRect();
     nelliel.ui.addBoundingClientRectProperties(element_rect);
 
@@ -239,7 +239,7 @@ nelliel.ui.hideLinkedPost = function(element, event) {
     var href = element.getAttribute("href");
     var anchor_matches = href.match(/#t([0-9]+)p([0-9]+)/);
     var post_id = "cid_" + anchor_matches[1] + "_" + anchor_matches[2] + "_0";
-    var target_popup = document.getElementById("post-quote-popup-" + post_id);
+    var target_popup = document.getElementById("post-cite-popup-" + post_id);
 
     if (target_popup !== null) {
         target_popup.remove();

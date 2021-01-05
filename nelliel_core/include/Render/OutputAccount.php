@@ -20,16 +20,15 @@ class OutputAccount extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('account/account_main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general($parameters, true);
-        $this->render_data['user_id'] = $this->session_user->id();
+        $this->render_data['user_id'] = $this->session->sessionUser()->id();
         $this->render_data['normal_user'] = true;
-        $this->render_data['display_name'] = $this->session_user->auth_data['display_name'];
-        $this->render_data['last_login'] = $this->session_user->auth_data['last_login'];
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('account/account_main',
-                $this->render_data);
+        $this->render_data['display_name'] = $this->session->sessionUser()->auth_data['display_name'];
+        $this->render_data['last_login'] = $this->session->sessionUser()->auth_data['last_login'];
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

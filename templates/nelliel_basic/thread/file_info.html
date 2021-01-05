@@ -1,3 +1,4 @@
+{{# content_data }}
 <div id="{{ file_info_id }}" class="{{ file_info_class }}">
 	{{# in_modmode }}
 	<div>
@@ -5,7 +6,7 @@
 	</div>
 	{{/ in_modmode }}
 	<div>
-		<input type="checkbox" name="{{ file_content_id }}" value="action" class="{{ file_select_class }}">
+		<input type="checkbox" name="{{ file_content_id }}" value="action">
 		<a href="{{ file_url }}" target="_blank">{{ display_filename }}</a>
 	</div>
 	<div>{{ display_image_dimensions }}{{ display_filesize}}</div>
@@ -26,3 +27,4 @@
 	</a>
 	{{/ image_preview }}
 </div>
+{{/ content_data }}

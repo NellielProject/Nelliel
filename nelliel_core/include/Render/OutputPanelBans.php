@@ -22,6 +22,7 @@ class OutputPanelBans extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/bans_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -29,7 +30,7 @@ class OutputPanelBans extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['can_modify'] = $this->session_user->checkPermission($this->domain, 'perm_manage_bans');
+        $this->render_data['can_modify'] = $this->session->sessionUser()->checkPermission($this->domain, 'perm_manage_bans');
         $bans_access = new BansAccess($this->database);
 
         if ($this->domain->id() !== Domain::SITE)
@@ -77,8 +78,6 @@ class OutputPanelBans extends Output
             $this->render_data['ban_list'][] = $ban_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/bans_panel_main',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
@@ -89,6 +88,7 @@ class OutputPanelBans extends Output
     public function new(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/bans_add');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('New Ban');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -110,8 +110,6 @@ class OutputPanelBans extends Output
                 http_build_query(
                         ['module' => 'admin', 'section' => 'bans', 'actions' => 'add',
                             'board-id' => $this->domain->id()]);
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/bans_panel_add',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
@@ -122,6 +120,7 @@ class OutputPanelBans extends Output
     public function modify(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/bans_modify');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('Modify Ban');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -133,7 +132,7 @@ class OutputPanelBans extends Output
                         ['module' => 'admin', 'section' => 'bans', 'actions' => 'update',
                             'board-id' => $this->domain->id()]);
         $ban_id = $_GET['ban_id'];
-        $this->render_data['view_unhashed_ip'] = $this->session_user->checkPermission($this->domain,
+        $this->render_data['view_unhashed_ip'] = $this->session->sessionUser()->checkPermission($this->domain,
                 'perm_view_unhashed_ip');
         $ban_hammer = new \Nelliel\BanHammer($this->database);
         $ban_hammer->loadFromID($ban_id);
@@ -157,8 +156,6 @@ class OutputPanelBans extends Output
         $this->render_data['appeal'] = $ban_hammer->getData('appeal');
         $this->render_data['appeal_response'] = $ban_hammer->getData('appeal_response');
         $this->render_data['appeal_status_' . $ban_hammer->getData('appeal_status')] = 'selected';
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/bans_panel_modify',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

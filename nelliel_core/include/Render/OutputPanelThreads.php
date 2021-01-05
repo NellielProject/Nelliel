@@ -42,6 +42,7 @@ class OutputPanelThreads extends Output
     private function renderPanel(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/thread');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -105,7 +106,7 @@ class OutputPanelThreads extends Output
                     $thread['thread_id'] . '.html';
             $thread_info['op_name'] = $op_post['poster_name'];
 
-            if ($this->session_user->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
+            if ($this->session->sessionUser()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
                     !empty($post_data['ip_address']))
             {
                 $thread_info['op_ip'] = @inet_ntop($op_post['ip_address']);
@@ -120,8 +121,6 @@ class OutputPanelThreads extends Output
             $this->render_data['threads'][] = $thread_info;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/thread_panel',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
@@ -132,6 +131,7 @@ class OutputPanelThreads extends Output
     private function renderExpandedThread(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/thread_expand');
         $thread_id = $parameters['thread_id'] ?? 0;
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -169,8 +169,6 @@ class OutputPanelThreads extends Output
             $this->render_data['posts'][] = $post_info;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/thread_panel_expand',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

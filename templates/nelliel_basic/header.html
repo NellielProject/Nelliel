@@ -1,3 +1,4 @@
+<header>
 {{# board_navigation }}
 	{{> navigation/board_links }}
 {{/ board_navigation }}
@@ -7,15 +8,14 @@
 {{# site_navigation }}
 	{{> navigation/site_links }}
 {{/ site_navigation }}
-<header>
-	{{# use_site_header }}
-		{{> headers/site }}
-	{{/ use_site_header }}
-	{{# use_board_header }}
-		{{> headers/board }}
-	{{/ use_board_header }}
-	<hr class="clear">
-	{{# is_panel }}
-		{{> headers/panel }}
-	{{/ is_panel }}
+{{# use_site_header }}
+	{{> headers/site }}
+{{/ use_site_header }}
+{{# use_board_header }}
+	{{> headers/board }}
+{{/ use_board_header }}
+{{# is_panel }}
+	{{> headers/panel }}
+{{/ is_panel }}
 </header>
+<hr class="clear">

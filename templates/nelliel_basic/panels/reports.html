@@ -1,0 +1,32 @@
+<table class="data-table">
+	<caption class="data-table-caption" data-i18n="gettext">List of reports</caption>
+	<thead class="data-table-header">
+		<tr>
+			<th data-i18n="gettext">Report ID</th>
+			<th data-i18n="gettext">Board ID</th>
+			<th data-i18n="gettext">Content ID</th>
+			<th data-i18n="gettext">Reason</th>
+			<th data-i18n="gettext">Reporter IP</th>
+			<th data-i18n="gettext">Dismiss Report</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# reports_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ report_id }}</td>
+			<td>{{ board_id }}</td>
+			<td>
+				<a href="{{ content_url }}">{{ content_id }}</a>
+	{{# is_content }}
+				<a href="{{ file_url }}" data-i18n="gettext"> [File Link]</a>
+	{{/ is_content }}
+			</td>
+			<td>{{ reason }}</td>
+			<td>{{ reporter_ip }}</td>
+			<td>
+				<a href="{{ dismiss_url }}" data-i18n="gettext">Dismiss Report</a>
+			</td>
+		</tr>
+{{/ reports_list }}
+	</tbody>
+</table>

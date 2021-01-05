@@ -49,7 +49,7 @@ class OutputOverboard extends Output
                 $this->render_data['footer_form'] = true;
                 $output_footer = new OutputFooter($this->site_domain, $this->write_mode);
                 $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
-                $output = $this->output('index/index_page', $data_only, true);
+                $output = $this->output('overboard', $data_only, true);
                 $index_filename = 'index' . NEL_PAGE_EXT;
 
                 if ($this->write_mode)
@@ -98,7 +98,7 @@ class OutputOverboard extends Output
             $thread_input = array();
             $thread_input['thread_id'] = $thread_content_id;
             $thread_input['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
-            $thread_input['thread_corral_id'] = 'thread-' . $thread_content_id;
+            $thread_input['thread_corral_id'] = 'thread-corral-' . $thread_content_id;
             $thread_input['omitted_count'] = $thread_data['post_count'] - 5;
             $gen_data['abbreviate'] = $thread_data['post_count'] > 5;
             $thread_input['abbreviate'] = $gen_data['abbreviate'];

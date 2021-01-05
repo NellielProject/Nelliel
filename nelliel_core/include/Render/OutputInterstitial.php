@@ -20,6 +20,7 @@ class OutputInterstitial extends Output
     public function render(array $parameters, bool $data_only, array $messages, array $links)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('basic_interstitial');
         $this->render_data['extra_message_break'] = $parameters['extra_message_break'] ?? false;
         $this->render_data['extra_url_break'] = $parameters['extra_url_break'] ?? false;
         $is_manage = $parameters['is_manage'] ?? false;
@@ -46,7 +47,6 @@ class OutputInterstitial extends Output
             $this->render_data['links'][] = $link;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('basic_interstitial', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
