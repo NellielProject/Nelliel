@@ -21,7 +21,7 @@ class OutputPanelRoles extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/roles_panel_main');
+        $this->setBodyTemplate('panels/roles_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Roles');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -64,7 +64,7 @@ class OutputPanelRoles extends Output
     public function edit(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/roles_panel_edit');
+        $this->setBodyTemplate('panels/roles_edit');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Roles');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $role_id = $parameters['role_id'] ?? '';

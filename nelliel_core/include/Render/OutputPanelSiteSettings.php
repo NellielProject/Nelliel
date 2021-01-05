@@ -21,7 +21,7 @@ class OutputPanelSiteSettings extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/site_settings_panel');
+        $this->setBodyTemplate('panels/site_settings');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Site Settings');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');

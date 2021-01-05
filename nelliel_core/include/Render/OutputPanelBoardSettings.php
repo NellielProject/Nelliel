@@ -21,7 +21,7 @@ class OutputPanelBoardSettings extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/board_settings_panel');
+        $this->setBodyTemplate('panels/board_settings');
         $parameters['is_panel'] = true;
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $defaults = $parameters['defaults'] ?? false;

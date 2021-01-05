@@ -21,7 +21,7 @@ class OutputPanelIconSets extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/icon_sets_panel');
+        $this->setBodyTemplate('panels/icon_sets');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Icon Sets');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

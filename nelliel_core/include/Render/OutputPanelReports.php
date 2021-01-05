@@ -22,7 +22,7 @@ class OutputPanelReports extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/reports_panel');
+        $this->setBodyTemplate('panels/reports');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Reports');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

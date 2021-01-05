@@ -21,7 +21,7 @@ class OutputPanelLogs extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/logs_panel');
+        $this->setBodyTemplate('panels/logs');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Logs');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

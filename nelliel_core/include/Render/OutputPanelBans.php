@@ -22,7 +22,7 @@ class OutputPanelBans extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/bans_panel_main');
+        $this->setBodyTemplate('panels/bans_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -88,7 +88,7 @@ class OutputPanelBans extends Output
     public function new(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/bans_panel_add');
+        $this->setBodyTemplate('panels/bans_add');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('New Ban');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -120,7 +120,7 @@ class OutputPanelBans extends Output
     public function modify(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/bans_panel_modify');
+        $this->setBodyTemplate('panels/bans_modify');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('Modify Ban');
         $output_head = new OutputHead($this->domain, $this->write_mode);

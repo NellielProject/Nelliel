@@ -21,7 +21,7 @@ class OutputPanelStyles extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/styles_panel');
+        $this->setBodyTemplate('panels/styles');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Styles');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

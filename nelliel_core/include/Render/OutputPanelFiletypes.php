@@ -21,7 +21,7 @@ class OutputPanelFiletypes extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/filetypes_panel_main');
+        $this->setBodyTemplate('panels/filetypes_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Filetypes');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -107,15 +107,13 @@ class OutputPanelFiletypes extends Output
     public function edit(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/filetypes_panel_edit');
+        $this->setBodyTemplate('panels/filetypes_edit');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Filetypes');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/filetypes_panel_edit',
-                $this->render_data);
         $editing = $parameters['editing'] ?? false;
 
         if ($editing)

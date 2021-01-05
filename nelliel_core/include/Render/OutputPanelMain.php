@@ -21,7 +21,7 @@ class OutputPanelMain extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/main_panel');
+        $this->setBodyTemplate('panels/main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Main');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

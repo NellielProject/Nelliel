@@ -21,7 +21,7 @@ class OutputPanelUsers extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/users_panel_main');
+        $this->setBodyTemplate('panels/users_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -69,7 +69,7 @@ class OutputPanelUsers extends Output
     public function edit(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/users_panel_edit');
+        $this->setBodyTemplate('panels/users_edit');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $user_id = $parameters['user_id'] ?? '';

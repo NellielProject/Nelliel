@@ -21,7 +21,7 @@ class OutputPanelPermissions extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('panels/permissions_panel');
+        $this->setBodyTemplate('panels/permissions');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Permissions');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
