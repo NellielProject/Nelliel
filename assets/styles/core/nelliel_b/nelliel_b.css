@@ -1,5 +1,5 @@
 :root {
-	--main-background-color: #88BED0;
+	--main-background-color: #8DD3EA;
 	--main-color: #162F00;
 	--base-font-family: serif;
 	--base-font-size: 100%;
@@ -28,8 +28,8 @@
 	--op-highlight-color: #AADFF2;
 	--op-name-color: #CC0077;
 	--op-subject-color: #6611BB;
-	--reply-background-color: #7FDA8F;
-	--reply-border: 1px solid #5DB86D;
+	--reply-background-color: #7BE89B;
+	--reply-border: 1px solid #6AD79B;
 	--reply-highlight-color: #AADFF2;
 	--reply-name-color: #CC0077;
 	--reply-subject-color: #6611BB;

@@ -2,7 +2,7 @@
 body {
 	background-color: var(--main-background-color);
 	color: var(--main-color);
-	font-family: var(--base-font-family);
+	font-family: var(--base-font-family, serif);
 	font-size: var(--base-font-size, 100%)
 }
 
@@ -142,12 +142,6 @@ form {
 	margin-bottom: 3px;
 }
 
-.catalog-subject {
-	text-align: center;
-    color: #6611BB;
-    font-weight: bold;
-}
-
 /* Posting form */
 .posting-form {
     border-spacing: 2px;
@@ -224,12 +218,12 @@ form {
 
 .poster-id-color {
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 0.9rem;
-	padding: 0.05rem 0.25rem;
+	font-size: 0.9em;
+	padding: 0.05em 0.15em;
 	color: white;
-	letter-spacing: 0.125rem;
-	text-shadow: -1px -1px 0 #333, 1px -1px 0 #333, -1px 1px 0 #333, 1px 1px 0 #333;
-	border-radius: 4px;
+	letter-spacing: 0.1em;
+	text-shadow: 1px 0px 1px #222222, 0px 1px 1px #222222, -1px 0px 1px #222222, 0px -1px 1px #222222;
+	border-radius: 3px;
 }
 
 .greentext {
@@ -316,28 +310,29 @@ form {
 .news-page {
     margin: auto;
     max-width: 60rem;
-    text-align: left;
-    border: 2px solid #1188CC;
 }
 
-.news-entry {
-	border-bottom: 1px solid;
+.news-article {
+	background: var(--news-article-background, inherit);
+	border: 2px solid;
+	margin: 0.5em;
 }
 
-.news-headline-bar {
-	padding: 3px;
-	background-color: #33AAEE;
+.news-article-header {
+	background: var(--news-article-header-background, inherit);
+	padding: 0.15em;
 }
 
 .news-headline {
-	font-weight: bold;
-    font-size: 1.2rem;
+	color: var(--news-headline-color, inherit);
+	font-size: 1.25rem;
+	text-align: left;
 }
 
-.news-text {
+.news-paragraph {
     padding: 3px;
     text-align: left;
-    background-color: #88BED0;
+    color: var(--news-paragraph-color, inherit);
 }
 
 /* Other */

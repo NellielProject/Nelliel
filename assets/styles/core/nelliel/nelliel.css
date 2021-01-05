@@ -1,5 +1,5 @@
 :root {
-	--main-background-color: #7FDA8F;
+	--main-background-color: #7BE89B;
 	--main-color: #16006F;
 	--base-font-family: serif;
 	--base-font-size: 100%;
@@ -28,8 +28,8 @@
 	--op-highlight-color: #AABBFF;
 	--op-name-color: #B92050;
 	--op-subject-color: #6611BB;
-	--reply-background-color: #88BED0;
-	--reply-border: 1px solid #669CB0;
+	--reply-background-color: #93D6EC;
+	--reply-border: 1px solid #82C5EC;
 	--reply-highlight-color: #CF9ACA;
 	--reply-name-color: #B92050;
 	--reply-subject-color: #6611BB;
@@ -39,4 +39,8 @@
 	--omitted-color: #5500CC;
 	--greentext-background-color: inherit;
 	--greentext-color: #992244;
+	--news-article-background: #93D6EC;
+	--news-article-header-background: #33AAFF;
+	--news-headline-color: inherit;
+	--news-paragraph-color: inherit;
 }

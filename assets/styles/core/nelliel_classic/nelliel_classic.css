@@ -18,9 +18,9 @@
 	--data-table-row2-background-color: #FFFFFF;
 	--data-table-row2-color: inherit;
 	--manage-header-background-color: #33AAFF;
-	--manage-header-color: #FFFFFF;
+	--manage-header-color: inherit;
 	--manage-subheader-background-color: #55BBFF;
-	--manage-subheader-color: #FFFFFF;
+	--manage-subheader-color: inherit;
 	--posting-form-label-background-color: #33AAFF;
 	--posting-form-label-border: none;
 	--op-background-color: inherit;
@@ -37,6 +37,6 @@
 	--mod-comment-color: #FF0000;
 	--omitted-background-color: inherit;
 	--omitted-color: #070707;
-	--greentext-background-color: #C4C2EE;
-	--greentext-color: #FFFFFF;
+	--greentext-background-color: inherit;
+	--greentext-color: #992244FFFF;
 }
