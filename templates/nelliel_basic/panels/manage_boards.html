@@ -1,26 +1,31 @@
 <table class="data-table">
-	<tr class="data-table-header">
-		<th data-i18n="gettext">Board ID</th>
-		<th data-i18n="gettext">Board URI</th>
-		<th data-i18n="gettext">DB Prefix</th>
-		<th data-i18n="gettext">Status</th>
-		<th data-i18n="gettext">Lock/Unlock</th>
-		<th data-i18n="gettext">Remove</th>
-	</tr>
-	{{# board_list }}
-	<tr class="{{ bgclass }}">
-		<td>{{ board_id }}</td>
-		<td>{{ board_uri }}</td>
-		<td>{{ db_prefix }}</td>
-		<td>{{ status }}</td>
-		<td>
-			<a href="{{ lock_url }}">{{ lock_text }}</a>
-		</td>
-		<td>
-			<a href="{{ remove_url }}">Delete Board</a>
-		</td>
-	</tr>
-	{{/ board_list }}
+	<caption class="data-table-caption" data-i18n="gettext">List of boards</caption>
+	<thead class="data-table-header">
+		<tr>
+			<th data-i18n="gettext">Board ID</th>
+			<th data-i18n="gettext">Board URI</th>
+			<th data-i18n="gettext">DB Prefix</th>
+			<th data-i18n="gettext">Status</th>
+			<th data-i18n="gettext">Lock/Unlock</th>
+			<th data-i18n="gettext">Remove</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# board_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ board_id }}</td>
+			<td>{{ board_uri }}</td>
+			<td>{{ db_prefix }}</td>
+			<td>{{ status }}</td>
+			<td>
+				<a href="{{ lock_url }}">{{ lock_text }}</a>
+			</td>
+			<td>
+				<a href="{{ remove_url }}">Delete Board</a>
+			</td>
+		</tr>
+{{/ board_list }}
+	</tbody>
 </table>
 <hr>
 <form action="{{ form_action }}" method="post" enctype="multipart/form-data">

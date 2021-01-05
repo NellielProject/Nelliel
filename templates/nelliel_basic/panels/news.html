@@ -15,18 +15,23 @@
 </form>
 <hr>
 <table class="data-table">
-	<tr class="data-table-header">
-		<th data-i18n="gettext">Headline</th>
-		<th data-i18n="gettext">Date</th>
-		<th data-i18n="gettext">Actions</th>
-	</tr>
-	{{# news_entry }}
-	<tr class="{{ bgclass }}">
-		<td>{{ headline }}</td>
-		<td>{{ time }}</td>
-		<td>
-			<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove</a>
-		</td>
-	</tr>
-	{{/ news_entry }}
+	<caption class="data-table-caption" data-i18n="gettext">List of news articles</caption>
+	<thead class="data-table-header">
+		<tr>
+			<th data-i18n="gettext">Headline</th>
+			<th data-i18n="gettext">Date</th>
+			<th data-i18n="gettext">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# news_entry }}
+		<tr class="{{ bgclass }}">
+			<td>{{ headline }}</td>
+			<td>{{ time }}</td>
+			<td>
+				<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove</a>
+			</td>
+		</tr>
+{{/ news_entry }}
+	</tbody>
 </table>

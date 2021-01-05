@@ -1,23 +1,28 @@
 <table class="data-table">
-	<tr class="data-table-header">
-		<th data-i18n="gettext">Role ID</th>
-		<th data-i18n="gettext">Level</th>
-		<th data-i18n="gettext">Title</th>
-		<th data-i18n="gettext">Capcode Text</th>
-		<th data-i18n="gettext">Actions</th>
-	</tr>
-	{{# roles_list }}
-	<tr class="{{ bgclass }}">
-		<td>{{ role_id }}</td>
-		<td>{{ role_level }}</td>
-		<td>{{ role_title }}</td>
-		<td>{{ capcode }}</td>
-		<td>
-			<span>[<a href="{{ edit_url }}" data-i18n="gettext">Edit</a>]</span>
-			<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>
-		</td>
-	</tr>
-	{{/ roles_list }}
+	<caption class="data-table-caption" data-i18n="gettext">List of roles</caption>
+	<thead class="data-table-header">
+		<tr>
+			<th data-i18n="gettext">Role ID</th>
+			<th data-i18n="gettext">Level</th>
+			<th data-i18n="gettext">Title</th>
+			<th data-i18n="gettext">Capcode Text</th>
+			<th data-i18n="gettext">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# roles_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ role_id }}</td>
+			<td>{{ role_level }}</td>
+			<td>{{ role_title }}</td>
+			<td>{{ capcode }}</td>
+			<td>
+				<span>[<a href="{{ edit_url }}" data-i18n="gettext">Edit</a>]</span>
+				<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>
+			</td>
+		</tr>
+{{/ roles_list }}
+	</tbody>
 </table>
 <hr>
 <div>

@@ -1,35 +1,40 @@
 <table class="data-table">
-	<tr class="data-table-header">
-		<th data-i18n="gettext">Ban ID</th>
-		<th data-i18n="gettext">Type</th>
-		<th data-i18n="gettext">IP</th>
-		<th data-i18n="gettext">Board</th>
-		<th data-i18n="gettext">All Boards</th>
-		<th data-i18n="gettext">Reason</th>
-		<th data-i18n="gettext">Expiration</th>
-		<th data-i18n="gettext">Appeal</th>
-		<th data-i18n="gettext">Response</th>
-		<th data-i18n="gettext">Status</th>
-		<th data-i18n="gettext">Actions</th>
-	</tr>
-	{{# ban_list }}
-	<tr class="row1">
-		<td>{{ ban_id }}</td>
-		<td>{{ ban_type }}</td>
-		<td>{{ ip_address }}</td>
-		<td>{{ board_id }}</td>
-		<td>{{ all_boards }}</td>
-		<td>{{ reason }}</td>
-		<td>{{ expiration }}</td>
-		<td>{{ appeal }}</td>
-		<td>{{ appeal_response }}</td>
-		<td>{{ appeal_status }}</td>
-		<td>
-			{{# modify_url }}<span>[<a href="{{ modify_url }}" data-i18n="gettext">Modify</a>]</span>{{/ modify_url }}
-			{{# remove_url }}<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>{{/ remove_url }}
-		</td>
-	</tr>
-	{{/ ban_list }}
+	<caption class="data-table-caption" data-i18n="gettext">List of bans</caption>
+	<thead class="data-table-header">
+		<tr>
+			<th data-i18n="gettext">Ban ID</th>
+			<th data-i18n="gettext">Type</th>
+			<th data-i18n="gettext">IP</th>
+			<th data-i18n="gettext">Board</th>
+			<th data-i18n="gettext">All Boards</th>
+			<th data-i18n="gettext">Reason</th>
+			<th data-i18n="gettext">Expiration</th>
+			<th data-i18n="gettext">Appeal</th>
+			<th data-i18n="gettext">Response</th>
+			<th data-i18n="gettext">Status</th>
+			<th data-i18n="gettext">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# ban_list }}
+		<tr class="row1">
+			<td>{{ ban_id }}</td>
+			<td>{{ ban_type }}</td>
+			<td>{{ ip_address }}</td>
+			<td>{{ board_id }}</td>
+			<td>{{ all_boards }}</td>
+			<td>{{ reason }}</td>
+			<td>{{ expiration }}</td>
+			<td>{{ appeal }}</td>
+			<td>{{ appeal_response }}</td>
+			<td>{{ appeal_status }}</td>
+			<td>
+	{{# modify_url }}<span>[<a href="{{ modify_url }}" data-i18n="gettext">Modify</a>]</span>{{/ modify_url }}
+	{{# remove_url }}<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>{{/ remove_url }}
+			</td>
+		</tr>
+{{/ ban_list }}
+	</tbody>
 </table>
 <hr>
 <div>

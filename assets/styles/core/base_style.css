@@ -83,7 +83,8 @@ form {
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
-    padding: 3px;
+    line-height: 1.5rem;
+    clear: both;
 }
 
 .manage-sub-header {
@@ -92,20 +93,29 @@ form {
     font-family: sans-serif;
     font-weight: bold;
     text-align: center;
-    padding: 3px;
+    line-height: 1.5rem;
+    clear: both;
 }
 
 .manage-section-header {
 	font-size: 1.4rem;
 	font-weight: bold;
     text-align: center;
-    padding: 5px;
+    line-height: 1.5rem;
+    clear: both;
 }
 
+/* Data tables */
 .data-table {
     background: var(--data-table-background);
     color: var(--data-table-color);
     width: 100%;
+}
+
+.data-table-caption {
+	font-size: 1.25rem;
+	font-weight: bold;
+	line-height: 1.75rem;
 }
 
 .data-table-header {

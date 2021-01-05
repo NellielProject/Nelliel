@@ -1,21 +1,30 @@
 <table class="data-table">
-	<tr class="data-table-header">
-		<th data-i18n="gettext">User ID</th>
-		<th data-i18n="gettext">Display Name</th>
-		<th data-i18n="gettext">Active</th>
-		<th data-i18n="gettext">Actions</th>
-	</tr>
-	{{# users_list }}
-	<tr class="{{ bgclass }}">
-		<td>{{ user_id }}</td>
-		<td>{{ display_name }}</td>
-		<td>{{ active }}</td>
-		<td>
-			{{# edit_url }}<span>[<a href="{{ edit_url }}" data-i18n="gettext">Edit</a>]</span>{{/ edit_url }}
-			{{# remove_url }}<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>{{/ remove_url }}
-		</td>
-	</tr>
-	{{/ users_list }}
+	<caption class="data-table-caption" data-i18n="gettext">List of users</caption>
+	<thead class="data-table-header">
+		<tr>
+			<th data-i18n="gettext">User ID</th>
+			<th data-i18n="gettext">Display Name</th>
+			<th data-i18n="gettext">Active</th>
+			<th data-i18n="gettext">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# users_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ user_id }}</td>
+			<td>{{ display_name }}</td>
+			<td>{{ active }}</td>
+			<td>
+	{{# edit_url }}
+				<span>[<a href="{{ edit_url }}" data-i18n="gettext">Edit</a>]</span>
+	{{/ edit_url }}
+	{{# remove_url }}
+				<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>
+	{{/ remove_url }}
+			</td>
+		</tr>
+{{/ users_list }}
+	</tbody>
 </table>
 <hr>
 <div>

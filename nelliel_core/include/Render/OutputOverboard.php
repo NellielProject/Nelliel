@@ -49,7 +49,7 @@ class OutputOverboard extends Output
                 $this->render_data['footer_form'] = true;
                 $output_footer = new OutputFooter($this->site_domain, $this->write_mode);
                 $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
-                $output = $this->output('index/index_page', $data_only, true);
+                $output = $this->output('overboard', $data_only, true);
                 $index_filename = 'index' . NEL_PAGE_EXT;
 
                 if ($this->write_mode)
