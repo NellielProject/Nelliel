@@ -39,4 +39,8 @@
 	--omitted-color: #5500CC;
 	--greentext-background: inherit;
 	--greentext-color: #992244;
+	--news-article-background: #7BE89B;
+	--news-article-header-background: #33DDAA;
+	--news-headline-color: inherit;
+	--news-paragraph-color: inherit;
 }
