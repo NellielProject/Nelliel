@@ -309,6 +309,7 @@ class OutputPost extends Output
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
         $comment_data['comments_class'] = $post_type_class . 'post-comments';
         $comment_data['mod_comment'] = $post_data['mod_comment'] ?? null;
+        $comment_data['noreferrer_nofollow'] = $this->site_domain->setting('noreferrer_nofollow');
 
         if (nel_true_empty($post_data['comment']))
         {
@@ -357,12 +358,12 @@ class OutputPost extends Output
 
                     if ($cite_total <= $cite_link_max && preg_match($cite_match_regex, $chunk) === 1)
                     {
-                        $link_url = $cites->createPostLinkURL($this->domain, $post_content_id, $chunk, true);
+                        $cite_url = $cites->createPostLinkURL($this->domain, $post_content_id, $chunk, true);
 
-                        if (!empty($link_url))
+                        if (!empty($cite_url))
                         {
                             $entry['cite'] = true;
-                            $entry['url'] = $link_url;
+                            $entry['url'] = $cite_url;
                             $entry['text'] = $chunk;
                             ++ $cite_total;
                         }
