@@ -20,7 +20,7 @@ class OutputBanPage extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setBodyTemplate('banned_user');
+        $this->setBodyTemplate('banned');
         $ban_hammer = $parameters['ban_hammer'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -71,28 +71,11 @@ class OutputBanPage extends Output
         else
         {
             $this->render_data['appeal_allowed'] = false;
-
-            if ($ban_hammer->getData('appeal_status') == 2)
-            {
-                $this->render_data['what_done'] = _gettext(
-                        'You appeal has been reviewed and denied. You cannot appeal again.');
-            }
-
-            if ($ban_hammer->getData('appeal_status') == 3)
-            {
-                $this->render_data['what_done'] = _gettext(
-                        'Your appeal has been reviewed and the ban has been altered.');
-            }
-
-            if ($ban_hammer->getData('appeal_response') != '')
-            {
-                $this->render_data['appeal_response'] = $ban_hammer->getData('appeal_response');
-            }
-
-            if (!empty($ban_hammer->getData('ip_address_end')))
-            {
-                $this->render_data['is_range'] = true;
-            }
+            $this->render_data['appeal_denied'] = $ban_hammer->getData('appeal_status') == 2;
+            $this->render_data['appeal_modified'] = $ban_hammer->getData('appeal_status') == 3;
+            $this->render_data['show_response'] = $ban_hammer->getData('appeal_response') != '';
+            $this->render_data['appeal_response'] = $ban_hammer->getData('appeal_response');
+            $this->render_data['is_range'] = !empty($ban_hammer->getData('ip_address_end'));
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
