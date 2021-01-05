@@ -21,6 +21,7 @@ class OutputPanelPermissions extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/permissions_panel');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Permissions');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -48,8 +49,6 @@ class OutputPanelPermissions extends Output
             $this->render_data['permission_list'][] = $permission_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/permissions_panel',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

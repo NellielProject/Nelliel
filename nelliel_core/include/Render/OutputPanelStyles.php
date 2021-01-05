@@ -21,6 +21,7 @@ class OutputPanelStyles extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/styles_panel');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Styles');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -77,8 +78,6 @@ class OutputPanelStyles extends Output
             $this->render_data['available_list'][] = $style_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/styles_panel',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

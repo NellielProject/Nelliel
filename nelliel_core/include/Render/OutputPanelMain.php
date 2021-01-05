@@ -21,6 +21,7 @@ class OutputPanelMain extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/main_panel');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Main');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -130,7 +131,6 @@ class OutputPanelMain extends Output
                 'perm_extract_gettext');
         $this->render_data['extract_gettext_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 'module=language&actions=extract-gettext';
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/main_panel', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

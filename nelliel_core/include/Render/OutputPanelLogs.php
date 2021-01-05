@@ -21,6 +21,7 @@ class OutputPanelLogs extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/logs_panel');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Logs');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -85,7 +86,6 @@ class OutputPanelLogs extends Output
         $this->render_data['system_logs_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 'module=admin&section=logs&log-type=system';
         $this->render_data['all_logs_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=logs&log-type=all';
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/logs_panel', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

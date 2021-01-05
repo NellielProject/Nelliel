@@ -21,6 +21,7 @@ class OutputPanelNews extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/news_panel');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('News');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -48,7 +49,6 @@ class OutputPanelNews extends Output
             $this->render_data['news_entry'][] = $entry_info;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/news_panel', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

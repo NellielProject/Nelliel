@@ -39,9 +39,13 @@
 	--omitted-color: #070707;
 	--greentext-background: inherit;
 	--greentext-color: #789922;
+	--news-article-background: #F0E0D6;
+	--news-article-header-background: #EEAA88;
+	--news-headline-color: inherit;
+	--news-paragraph-color: inherit;
 }
 
-.rules {
+.posting-rules-list {
     font-size: 0.65rem;
 }
 

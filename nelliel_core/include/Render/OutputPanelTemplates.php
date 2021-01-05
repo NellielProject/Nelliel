@@ -21,6 +21,7 @@ class OutputPanelTemplates extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/templates_panel');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Templates');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -77,8 +78,6 @@ class OutputPanelTemplates extends Output
             $this->render_data['available_list'][] = $template_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/templates_panel',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

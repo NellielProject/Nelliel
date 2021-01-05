@@ -21,6 +21,7 @@ class OutputPanelManageBoards extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/manage_boards_panel');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Manage Boards');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -70,8 +71,6 @@ class OutputPanelManageBoards extends Output
         }
 
         $this->render_data['alphanumeric_only'] = $this->domain->setting('only_alphanumeric_board_ids');
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/manage_boards_panel',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

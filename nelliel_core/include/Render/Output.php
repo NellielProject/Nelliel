@@ -27,6 +27,7 @@ abstract class Output
     protected $write_mode = false;
     protected $template_substitutes;
     protected $session;
+    protected $default_body_template = 'empty_body';
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -136,5 +137,10 @@ abstract class Output
         }
 
         return $this->write_mode;
+    }
+
+    protected function setBodyTemplate(string $template)
+    {
+        $this->template_substitutes->add($this->default_body_template, $template);
     }
 }

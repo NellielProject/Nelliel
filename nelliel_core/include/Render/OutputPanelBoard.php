@@ -20,6 +20,7 @@ class OutputPanelBoard extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/board_panel');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Main');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -54,7 +55,6 @@ class OutputPanelBoard extends Output
                 'perm_regen_cache');
         $this->render_data['regen_caches_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 'module=regen&actions=board-all-caches&board-id=' . $board_id;
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/board_panel', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

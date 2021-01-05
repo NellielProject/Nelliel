@@ -21,6 +21,7 @@ class OutputPanelRoles extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/roles_panel_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Roles');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -47,9 +48,6 @@ class OutputPanelRoles extends Output
         }
 
         $this->render_data['new_role_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=new';
-
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/roles_panel_main',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
@@ -66,6 +64,7 @@ class OutputPanelRoles extends Output
     public function edit(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/roles_panel_edit');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Roles');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $role_id = $parameters['role_id'] ?? '';
@@ -114,8 +113,6 @@ class OutputPanelRoles extends Output
             $this->render_data['permissions_list'][] = $permission_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/roles_panel_edit',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

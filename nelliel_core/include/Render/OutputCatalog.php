@@ -21,6 +21,7 @@ class OutputCatalog extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('catalog');
         $cites = new \Nelliel\Cites($this->database);
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -135,7 +136,6 @@ class OutputCatalog extends Output
             $this->render_data['catalog_entries'][] = $thread_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('catalog', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

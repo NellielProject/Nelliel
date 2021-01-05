@@ -21,6 +21,7 @@ class OutputPanelUsers extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/users_panel_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -52,8 +53,6 @@ class OutputPanelUsers extends Output
         }
 
         $this->render_data['new_user_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=users&actions=new';
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/users_panel_main',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
@@ -70,6 +69,7 @@ class OutputPanelUsers extends Output
     public function edit(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/users_panel_edit');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $user_id = $parameters['user_id'] ?? '';
@@ -146,8 +146,6 @@ class OutputPanelUsers extends Output
             }
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/users_panel_edit',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

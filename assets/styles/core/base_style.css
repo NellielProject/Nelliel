@@ -24,19 +24,14 @@ a:hover {
 
 h1 {
 	color: var(--h1-color);
-	margin: var(--h1-margin, 0px);
-	text-align: var(--h1-text-align, center);
+	margin: auto;
+	text-align: center;
 }
 
 h2 {
 	color: var(--h2-color);
-	margin: var(--h2-margin, 0px);
-	text-align: var(--h2-text-align, center);
-}
-
-header {
-	text-align: var(--header-text-align, center);
-	clear: var(--header-clear, both);
+	margin: auto;
+	text-align: center;
 }
 
 form {
@@ -46,7 +41,7 @@ form {
 /* Top navigation */
 .boards-navigation {
     text-align: center;
-    masrgin: 0.1em;
+    margin: 0.1em;
 }
 
 .styles {
@@ -57,6 +52,15 @@ form {
 .site-navigation {
     float: right;
     padding: 0.1em;
+}
+
+/* Header */
+.header-name {
+	clear: both;
+}
+
+.header-slogan {
+	clear: both;
 }
 
 /* Footer */
@@ -144,9 +148,7 @@ form {
 
 /* Posting form */
 .posting-form {
-    border-spacing: 2px;
-    margin-right: auto;
-    margin-left: auto;
+    margin: auto;
 }
 
 .posting-form-row {
@@ -168,7 +170,7 @@ form {
     padding: 5px;
 }
 
-.rules {
+.posting-rules-list {
     font-size: 0.8rem;
     font-family: sans-serif;
 }
@@ -187,10 +189,6 @@ form {
 
 .file-hash {
     padding-left: 0.1em;
-}
-
-.preview-link {
-    /*display: block;*/
 }
 
 /* General post */
@@ -235,7 +233,7 @@ form {
 	text-decoration: none;
 }
 
-/* OP post formatting */
+/* OP post */
 .op-post-header-info {
     margin-left: 1.5em;
 }
@@ -267,7 +265,7 @@ form {
     word-wrap: break-word;
 }
 
-/* Reply post formatting */
+/* Reply post */
 .reply-post-header-info {
     margin-left: 1.5em;
 }

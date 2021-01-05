@@ -20,6 +20,7 @@ class OutputBanPage extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('banned_user');
         $ban_hammer = $parameters['ban_hammer'];
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -94,7 +95,6 @@ class OutputBanPage extends Output
             }
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('banned_user', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

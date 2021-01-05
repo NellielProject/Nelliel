@@ -26,6 +26,7 @@ class OutputIndex extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('index/index_page');
         $session = new \Nelliel\Account\Session();
         $page = 1;
         $site_domain = new DomainSite($this->database);
@@ -82,7 +83,7 @@ class OutputIndex extends Output
             $output_footer = new OutputFooter($this->domain, $this->write_mode);
             $output_footer = new OutputFooter($this->domain, $this->write_mode);
             $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
-            $output = $this->output('index/index_page', $data_only, true);
+            $output = $this->output('pasic_page', $data_only, true);
             $index_filename = ($page == 1) ? 'index' . NEL_PAGE_EXT : sprintf($index_format, ($page)) . NEL_PAGE_EXT;
 
             if ($this->write_mode)
@@ -188,7 +189,7 @@ class OutputIndex extends Output
                 $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
                 $output_footer = new OutputFooter($this->domain, $this->write_mode);
                 $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
-                $output = $this->output('index/index_page', $data_only, true);
+                $output = $this->output('basic_page', $data_only, true);
                 $index_filename = ($page == 1) ? 'index' . NEL_PAGE_EXT : sprintf($index_format, ($page)) . NEL_PAGE_EXT;
 
                 if ($this->write_mode)

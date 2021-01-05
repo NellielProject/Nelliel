@@ -21,6 +21,7 @@ class OutputPanelBoardSettings extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/board_settings_panel');
         $parameters['is_panel'] = true;
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $defaults = $parameters['defaults'] ?? false;
@@ -196,8 +197,6 @@ class OutputPanelBoardSettings extends Output
             $this->render_data[$setting['setting_name']] = $setting_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/board_settings_panel',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

@@ -21,6 +21,7 @@ class OutputPanelFileFilters extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/file_filters_panel');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('File Filters');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -62,8 +63,6 @@ class OutputPanelFileFilters extends Output
             $this->render_data['filter_list'][] = $filter_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/file_filters_panel',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

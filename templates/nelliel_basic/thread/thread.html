@@ -1,3 +1,10 @@
+<div>
+	[<a href="{{ return_url }}" data-i18n="gettext">Return</a>]
+</div>
+{{# posting_form }}
+	{{> thread/posting_form }}
+{{/ posting_form }}
+<hr class="clear">
 <form class="content-page" accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div id="{{ thread_corral_id }}" class="thread-corral" data-jsevents="click|mouseover|mouseout">
 	{{# op_post }}

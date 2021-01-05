@@ -21,6 +21,7 @@ class OutputPanelFiletypes extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/filetypes_panel_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Filetypes');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -90,8 +91,6 @@ class OutputPanelFiletypes extends Output
             $this->render_data['filetype_list'][] = $filetype_data;
         }
 
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/filetypes_panel_main',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
@@ -108,6 +107,7 @@ class OutputPanelFiletypes extends Output
     public function edit(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('panels/filetypes_panel_edit');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Filetypes');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -158,8 +158,6 @@ class OutputPanelFiletypes extends Output
         }
 
         $this->render_data['form_action'] = $form_action;
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('panels/filetypes_panel_edit',
-                $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
