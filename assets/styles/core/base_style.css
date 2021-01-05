@@ -1,6 +1,6 @@
 /* Elements formatting */
 body {
-	background-color: var(--main-background-color);
+	background: var(--main-background);
 	color: var(--main-color);
 	font-family: var(--base-font-family, serif);
 	font-size: var(--base-font-size, 100%)
@@ -74,7 +74,7 @@ form {
 
 /* Management */
 .manage-header {
-    background-color: var(--manage-header-background-color);
+    background: var(--manage-header-background);
     color: var(--manage-header-color);
     font-family: sans-serif;
     font-weight: bold;
@@ -83,7 +83,7 @@ form {
 }
 
 .manage-sub-header {
-    background-color: var(--manage-subheader-background-color);
+    background: var(--manage-subheader-background);
     color: var(--manage-subheader-color);
     font-family: sans-serif;
     font-weight: bold;
@@ -99,24 +99,24 @@ form {
 }
 
 .data-table {
-    background-color: var(--data-table-background-color);
+    background: var(--data-table-background);
     color: var(--data-table-color);
     width: 100%;
 }
 
 .data-table-header {
-    background-color: var(--data-table-header-background-color);
+    background: var(--data-table-header-background);
     color: var(--data-table-header-color);
 }
 
 .row1 {
-    background-color: var(--data-table-row1-background-color);
+    background: var(--data-table-row1-background);
     color: var(--data-table-row1-color);
     font-family: sans-serif;
 }
 
 .row2 {
-	background-color: var(--data-table-row2-background-color);
+	background: var(--data-table-row2-background);
 	color: var(--data-table-row2-color);
     font-family: sans-serif;
 }
@@ -124,7 +124,7 @@ form {
 /* Catalog */
 .catalog-entry {
 	float: left;
-	background-color: var(--reply-background-color);
+	background: var(--reply-background);
     border: var(--reply-border);
 	margin: 3px;
 	padding: 3px;
@@ -155,7 +155,7 @@ form {
 
 .posting-form-label {
 	display: table-cell;
-    background-color: var(--posting-form-label-background-color);
+    background: var(--posting-form-label-background);
     font-weight: bold;
     padding: 3px 5px 3px 5px;
     background-clip: padding-box;
@@ -195,13 +195,13 @@ form {
 
 /* General post */
 .mod-comment {
-	background-color: var(--mod-comment-background-color);
+	background: var(--mod-comment-background);
     color: var(--mod-comment-color, #FF0000);
     font-weight: bold;
 }
 
 .omitted-posts {
-	background-color: var(--omitted-background-color);
+	background: var(--omitted-background);
 	color: var(--omitted-color);
     font-weight: bold;
 }
@@ -227,7 +227,7 @@ form {
 }
 
 .greentext {
-	background-color: var(--greentext-background-color);
+	background: var(--greentext-background);
     color: var(--greentext-color);
 }
 
@@ -241,7 +241,7 @@ form {
 }
 
 .op-post {
-	background-color: var(--op-background-color);
+	background: var(--op-background);
 	border: var(--op-border);
 	padding: 0.2em;
     min-width: 20em;
@@ -250,7 +250,7 @@ form {
 }
 
 .op-post.post-highlight {
-    background-color: var(--op-highlight-color);
+    background: var(--op-highlight-color);
 }
 
 .op-poster-name {
@@ -273,7 +273,7 @@ form {
 }
 
 .reply-post {
-    background-color: var(--reply-background-color);
+    background: var(--reply-background);
     border: var(--reply-border);
     padding: 0.2em;
     min-width: 20em;
@@ -283,7 +283,7 @@ form {
 }
 
 .reply-post.post-highlight {
-    background-color: var(--reply-highlight-color);
+    background: var(--reply-highlight-color);
 }
 
 .reply-poster-name {

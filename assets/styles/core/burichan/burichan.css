@@ -1,5 +1,5 @@
 :root {
-	--main-background-color: #EEF2FF;
+	--main-background: #EEF2FF;
 	--main-color: #000000;
 	--base-font-family: sans-serif;
 	--base-font-size: 100%;
@@ -9,35 +9,35 @@
 	--link-hover-color: #DD0000;
 	--h1-color: #AF0A0F;
 	--h2-color: #AF0A0F;
-	--data-table-background-color: #FFFFFF;
+	--data-table-background: #FFFFFF;
 	--data-table-color: inherit;
-	--data-table-header-background-color: #0F8FE1;
+	--data-table-header-background: #0F8FE1;
 	--data-table-header-color: inherit;
-	--data-table-row1-background-color: #9AD2F6;
+	--data-table-row1-background: #9AD2F6;
 	--data-table-row1-color: inherit;
-	--data-table-row2-background-color: #FFFFFF;
+	--data-table-row2-background: #FFFFFF;
 	--data-table-row2-color: inherit;
-	--manage-header-background-color: #9988EE;
+	--manage-header-background: #9988EE;
 	--manage-header-color: #FFFFFF;
-	--manage-subheader-background-color: #BBAAFF;
+	--manage-subheader-background: #BBAAFF;
 	--manage-subheader-color: #FFFFFF;
-	--posting-form-label-background-color: #9988EE;
+	--posting-form-label-background: #9988EE;
 	--posting-form-label-border: 1px solid #7766EE;
-	--op-background-color: inherit;
+	--op-background: inherit;
 	--op-border: none;
 	--op-highlight-color: #AABBFF;
 	--op-name-color: #117743;
 	--op-subject-color: #0F0C5D;
-	--reply-background-color: #D6DAF0;
+	--reply-background: #D6DAF0;
 	--reply-border: 1px solid #B4B8F0;
 	--reply-highlight-color: #AABBFF;
 	--reply-name-color: #117743;
 	--reply-subject-color: #0F0C5D;
-	--mod-comment-background-color: inherit;
+	--mod-comment-background: inherit;
 	--mod-comment-color: #FF0000;
-	--omitted-background-color: inherit;
+	--omitted-background: inherit;
 	--omitted-color: #070707;
-	--greentext-background-color: #C4C2EE;
+	--greentext-background: #C4C2EE;
 	--greentext-color: #FFFFFF;
 }
 
