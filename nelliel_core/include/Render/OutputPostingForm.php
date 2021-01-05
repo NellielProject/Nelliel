@@ -22,29 +22,9 @@ class OutputPostingForm extends Output
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $response_to = $parameters['response_to'];
-        $this->render_data['is_response'] = $response_to > 0;
         $this->render_data['response_to'] = $response_to;
-
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&actions=new-post&board-id=' .
                 $this->domain->id();
-
-        if ($response_to)
-        {
-            if ($session->inModmode($this->domain) && !$this->write_mode)
-            {
-                $return_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                        http_build_query(
-                                ['module' => 'render', 'actions' => 'view-index', 'index' => '0',
-                                    'board-id' => $this->domain->id(), 'modmode' => 'true']);
-            }
-            else
-            {
-                $return_url = $this->domain->reference('board_web_path') . NEL_MAIN_INDEX . NEL_PAGE_EXT;
-            }
-
-            $this->render_data['return_url'] = $return_url;
-        }
-
         $this->render_data['in_modmode'] = $session->inModmode($this->domain) && !$this->write_mode;
         $this->render_data['is_staff'] = $session->inModmode($this->domain) && !$this->write_mode;
         $this->render_data['not_anonymous_maxlength'] = $this->domain->setting('max_name_length');
@@ -54,19 +34,13 @@ class OutputPostingForm extends Output
         $uploads_data = array();
         $uploads_data['allow_multiple'] = false;
 
-        if ($this->domain->setting('allow_multifile'))
+        if ($response_to)
         {
-            if ($response_to)
-            {
-                $uploads_data['allow_multiple'] = $this->domain->setting('max_post_files');
-            }
-            else
-            {
-                if ($this->domain->setting('allow_op_multifile'))
-                {
-                    $uploads_data['allow_multiple'] = $this->domain->setting('max_post_files');
-                }
-            }
+            $uploads_data['allow_multiple'] = $this->domain->setting('allow_multifile');
+        }
+        else
+        {
+            $uploads_data['allow_multiple'] = $this->domain->setting('allow_op_multifile');
         }
 
         $uploads_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
@@ -112,12 +86,12 @@ class OutputPostingForm extends Output
             }
 
             $supported_types .= $supported_formats;
-            $this->render_data['rules_list'][]['rules_text'] = substr($supported_types, 0, -2);
+            $this->render_data['posting_rules_items'][]['rules_text'] = substr($supported_types, 0, -2);
         }
 
-        $this->render_data['rules_list'][]['rules_text'] = sprintf(_gettext('Maximum file size allowed is %dKB'),
-                $this->domain->setting('max_filesize'));
-        $this->render_data['rules_list'][]['rules_text'] = sprintf(
+        $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
+                _gettext('Maximum file size allowed is %dKB'), $this->domain->setting('max_filesize'));
+        $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
                 _gettext('Images greater than %d x %d pixels will be thumbnailed.'), $this->domain->setting('max_width'),
                 $this->domain->setting('max_height'));
     }

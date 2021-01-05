@@ -26,7 +26,8 @@ abstract class Output
     protected $static_output = false;
     protected $write_mode = false;
     protected $template_substitutes;
-    protected $session_user;
+    protected $session;
+    protected $default_body_template = 'empty_body';
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -38,8 +39,7 @@ abstract class Output
         $this->file_handler = nel_utilities()->fileHandler();
         $this->output_filter = new Filter();
         $this->template_substitutes = new TemplateSubstitutes();
-        $session = new \Nelliel\Account\Session();
-        $this->session_user = $session->sessionUser();
+        $this->session = new \Nelliel\Account\Session();
     }
 
     // Standard setup when beginning a render
@@ -137,5 +137,10 @@ abstract class Output
         }
 
         return $this->write_mode;
+    }
+
+    protected function setBodyTemplate(string $template)
+    {
+        $this->template_substitutes->add($this->default_body_template, $template);
     }
 }

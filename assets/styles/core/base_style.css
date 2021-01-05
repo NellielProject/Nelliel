@@ -1,0 +1,397 @@
+/* Elements formatting */
+body {
+	background: var(--main-background);
+	color: var(--main-color);
+	font-family: var(--base-font-family, serif);
+	font-size: var(--base-font-size, 100%)
+}
+
+hr {
+    color: var(--hr-color)
+}
+
+a {
+	color: var(--link-color);
+}
+
+a:visited {
+	color: var(--link-visited-color);
+}
+
+a:hover {
+	color: var(--link-hover-color);
+}
+
+h1 {
+	color: var(--h1-color);
+	margin: auto;
+	text-align: center;
+}
+
+h2 {
+	color: var(--h2-color);
+	margin: auto;
+	text-align: center;
+}
+
+form {
+	border-spacing: 2px;
+}
+
+/* Top navigation */
+.boards-navigation {
+    text-align: center;
+    margin: 0.1em;
+}
+
+.styles {
+    float: left;
+    padding: 0.15em;
+}
+
+.site-navigation {
+    float: right;
+    padding: 0.1em;
+}
+
+/* Header */
+.header-name {
+	clear: both;
+}
+
+.header-slogan {
+	clear: both;
+}
+
+/* Footer */
+.footer {
+    clear: both;
+    text-align: center;
+    font-size: 0.8rem;
+    padding-top: 5px;
+}
+
+.footer-form {
+    float: right;
+    text-align: left;
+}
+
+/* Management */
+.manage-header {
+    background: var(--manage-header-background);
+    color: var(--manage-header-color);
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.5rem;
+    clear: both;
+}
+
+.manage-sub-header {
+    background: var(--manage-subheader-background);
+    color: var(--manage-subheader-color);
+    font-family: sans-serif;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.5rem;
+    clear: both;
+}
+
+.manage-section-header {
+	font-size: 1.4rem;
+	font-weight: bold;
+    text-align: center;
+    line-height: 1.5rem;
+    clear: both;
+}
+
+/* Data tables */
+.data-table {
+    background: var(--data-table-background);
+    color: var(--data-table-color);
+    width: 100%;
+}
+
+.data-table-caption {
+	font-size: 1.25rem;
+	font-weight: bold;
+	line-height: 1.75rem;
+}
+
+.data-table-header {
+    background: var(--data-table-header-background);
+    color: var(--data-table-header-color);
+}
+
+.row1 {
+    background: var(--data-table-row1-background);
+    color: var(--data-table-row1-color);
+    font-family: sans-serif;
+}
+
+.row2 {
+	background: var(--data-table-row2-background);
+	color: var(--data-table-row2-color);
+    font-family: sans-serif;
+}
+
+/* Catalog */
+.catalog-entry {
+	float: left;
+	background: var(--reply-background);
+    border: var(--reply-border);
+	margin: 3px;
+	padding: 3px;
+	width: 14rem;
+	height: 14rem;
+}
+
+.catalog-open-link {
+	text-align: center;
+}
+
+.catalog-thread-info {
+	text-align: center;
+	font-weight: bold;
+	margin-bottom: 3px;
+}
+
+/* Posting form */
+.posting-form {
+    margin: auto;
+}
+
+.posting-form-row {
+	display: table-row;
+}
+
+.posting-form-label {
+	display: table-cell;
+    background: var(--posting-form-label-background);
+    font-weight: bold;
+    padding: 3px 5px 3px 5px;
+    background-clip: padding-box;
+    border: var(--posting-form-label-border);
+    vertical-align: middle;
+}
+
+.posting-form-input {
+	display: table-cell;
+    padding: 5px;
+}
+
+.posting-rules-list {
+    font-size: 0.8rem;
+    font-family: sans-serif;
+}
+
+/* Files */
+.fileinfo {
+    float: left;
+    margin: 0.15em 0.75em 0.15em 0.75em;
+}
+
+.multiple-fileinfo {
+    float: left;
+    font-size: 0.9em;
+    margin: 0.15em 0.25em 0.15em 0.25em;
+}
+
+.file-hash {
+    padding-left: 0.1em;
+}
+
+/* General post */
+.mod-comment {
+	background: var(--mod-comment-background);
+    color: var(--mod-comment-color, #FF0000);
+    font-weight: bold;
+}
+
+.omitted-posts {
+	background: var(--omitted-background);
+	color: var(--omitted-color);
+    font-weight: bold;
+}
+
+.post-backlink {
+    font-size: 0.8rem;
+}
+
+.post-cite-popup {
+    height: auto;
+    position: absolute;
+    display: block;
+}
+
+.poster-id-color {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 0.9em;
+	padding: 0.05em 0.15em;
+	color: white;
+	letter-spacing: 0.1em;
+	text-shadow: 1px 0px 1px #222222, 0px 1px 1px #222222, -1px 0px 1px #222222, 0px -1px 1px #222222;
+	border-radius: 3px;
+}
+
+.greentext {
+	background: var(--greentext-background);
+    color: var(--greentext-color);
+}
+
+.post-number-link {
+	text-decoration: none;
+}
+
+/* OP post */
+.op-post-header-info {
+    margin-left: 1.5em;
+}
+
+.op-post {
+	background: var(--op-background);
+	border: var(--op-border);
+	padding: 0.2em;
+    min-width: 20em;
+    height: 100%;
+    margin: 0.2em;
+}
+
+.op-post.post-highlight {
+    background: var(--op-highlight-color);
+}
+
+.op-poster-name {
+    color: var(--op-name-color);
+    font-weight: bold;
+}
+
+.op-subject {
+	color: var(--op-subject-color);
+	font-weight: bold;
+}
+
+.op-post-comments {
+    word-wrap: break-word;
+}
+
+/* Reply post */
+.reply-post-header-info {
+    margin-left: 1.5em;
+}
+
+.reply-post {
+    background: var(--reply-background);
+    border: var(--reply-border);
+    padding: 0.2em;
+    min-width: 20em;
+    height: 100%;
+    margin: 0.2em;
+    display: inline-block;
+}
+
+.reply-post.post-highlight {
+    background: var(--reply-highlight-color);
+}
+
+.reply-poster-name {
+	color: var(--reply-name-color);
+	font-weight: bold;
+}
+
+.reply-subject {
+	color: var(--reply-subject-color);
+	font-weight: bold;
+}
+
+.reply-post-comments {
+    word-wrap: break-word;
+}
+
+.indents {
+    padding: 1px;
+    float: left;
+}
+
+/* News */
+
+.news-page {
+    margin: auto;
+    max-width: 60rem;
+}
+
+.news-article {
+	background: var(--news-article-background, inherit);
+	border: 2px solid;
+	margin: 0.5em;
+}
+
+.news-article-header {
+	background: var(--news-article-header-background, inherit);
+	padding: 0.15em;
+}
+
+.news-headline {
+	color: var(--news-headline-color, inherit);
+	font-size: 1.25rem;
+	text-align: left;
+}
+
+.news-paragraph {
+    padding: 3px;
+    text-align: left;
+    color: var(--news-paragraph-color, inherit);
+}
+
+/* Other */
+.bold {
+    font-weight: bold;
+}
+
+.clear {
+    clear: both;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.nelliel-license-div {
+    text-align: left;
+    margin: auto;
+    max-width: 60em;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.display-block {
+    display: block;
+}
+
+.display-table {
+	display: table;
+}
+
+.display-row {
+	display: table-row;
+}
+
+.display-cell {
+    display: table-cell;
+}
+
+.render_stats {
+	margin: 0.15em;
+	text-align: center;
+	font-size: 0.85rem;
+}

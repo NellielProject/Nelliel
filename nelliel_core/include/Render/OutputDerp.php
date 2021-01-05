@@ -20,6 +20,7 @@ class OutputDerp extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('derp');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
@@ -55,7 +56,6 @@ class OutputDerp extends Output
         }
 
         $this->render_data['return_url'] = $return_url;
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('derp', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);

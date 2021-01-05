@@ -1,0 +1,14 @@
+{{# post_headers }}
+<span id="{{ post_header_info_id }}" class="{{ post_header_info_class }}">
+	<span class="{{ subject_class }}">{{ subject }}</span>
+	{{> thread/pieces/mailto }}
+	<span class="{{ tripline_class }}">{{ tripline }}</span>
+	<span class="capcode">{{ capcode }}</span>
+	<span class="post-time">{{ post_time }}</span>
+	{{> thread/pieces/poster_id }}
+	<span data-i18n="gettext">No.</span>
+	<a href="{{ post_number_url }}" class="post-number-link">{{ post_number }}</a>
+	<span>({{ in_thread_number }})</span>
+	{{> thread/pieces/backlink }}
+</span>
+{{/ post_headers }}

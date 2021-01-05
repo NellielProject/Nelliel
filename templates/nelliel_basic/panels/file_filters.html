@@ -23,24 +23,29 @@
 </form>
 <hr>
 <table class="data-table">
-	<tr class="manage-header">
-		<th data-i18n="gettext">Filter ID</th>
-		<th data-i18n="gettext">Hash type</th>
-		<th data-i18n="gettext">File hash</th>
-		<th data-i18n="gettext">File notes</th>
-		<th data-i18n="gettext">Board ID</th>
-		<th data-i18n="gettext">Remove</th>
-	</tr>
-	{{# filter_list }}
-	<tr class="{{ bgclass }}">
-		<td>{{ filter_id }}</td>
-		<td>{{ hash_type }}</td>
-		<td>{{ file_hash }}</td>
-		<td>{{ file_notes }}</td>
-		<td>{{ board_id }}</td>
-		<td>
-			<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Filter</a>
-		</td>
-	</tr>
-	{{/ filter_list }}
+	<caption class="data-table-caption" data-i18n="gettext">List of file filters</caption>
+	<thead class="data-table-header">
+		<tr>
+			<th data-i18n="gettext">Filter ID</th>
+			<th data-i18n="gettext">Hash type</th>
+			<th data-i18n="gettext">File hash</th>
+			<th data-i18n="gettext">File notes</th>
+			<th data-i18n="gettext">Board ID</th>
+			<th data-i18n="gettext">Remove</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# filter_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ filter_id }}</td>
+			<td>{{ hash_type }}</td>
+			<td>{{ file_hash }}</td>
+			<td>{{ file_notes }}</td>
+			<td>{{ board_id }}</td>
+			<td>
+				<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Filter</a>
+			</td>
+		</tr>
+{{/ filter_list }}
+	</tbody>
 </table>

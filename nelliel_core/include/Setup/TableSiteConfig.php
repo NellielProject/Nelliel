@@ -78,6 +78,7 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['sfw_overboard_active', '0', 0]);
         $this->insertDefaultRow(['sfw_overboard_uri', 'sfwoverboard', 0]);
         $this->insertDefaultRow(['sfw_overboard_threads', '20', 0]);
+        $this->insertDefaultRow(['noreferrer_nofollow', '0', 0]);
         $this->insertDefaultRow(['user_board_creation', '0', 0]);
         $this->insertDefaultRow(['max_boards_per_user', '1', 0]);
         $this->insertDefaultRow(['display_render_timer', '1', 0]);

@@ -38,7 +38,7 @@ class OutputPost extends Output
         $web_paths['thread_src'] = $this->domain->reference('src_web_path') . $thread_content_id->threadID() . '/';
         $web_paths['thread_preview'] = $this->domain->reference('preview_web_path') . $thread_content_id->threadID() .
                 '/';
-        $this->render_data['post_corral_id'] = 'post-id-' . $post_content_id->getIDString();
+        $this->render_data['post_corral_id'] = 'post-corral-' . $post_content_id->getIDString();
         $this->render_data['post_container_id'] = 'post-container-' . $post_content_id->getIDString();
         $this->render_data['header_id'] = 'header-' . $post_content_id->getIDString();
         $this->render_data['content_container_id'] = 'content-' . $post_content_id->getIDString();
@@ -46,22 +46,20 @@ class OutputPost extends Output
 
         if ($response)
         {
+            $class_prefix = 'reply-';
             $this->render_data['indents_marker'] = $this->domain->setting('indent_marker');
-            $this->render_data['post_container_class'] = 'reply-post';
-            $this->render_data['header_class'] = 'reply-post-header';
-            $this->render_data['content_container_class'] = 'reply-content-container';
-            $this->render_data['comments_class'] = 'reply-post-comments';
-            $this->render_data['post_disclaimer_class'] = 'reply-post-disclaimer';
         }
         else
         {
+            $class_prefix = 'op-';
             $this->render_data['indents_marker'] = '';
-            $this->render_data['post_container_class'] = 'op-post';
-            $this->render_data['header_class'] = 'op-post-header';
-            $this->render_data['content_container_class'] = 'op-content-container';
-            $this->render_data['post_disclaimer_class'] = 'op-post-disclaimer';
         }
 
+        $this->render_data['post_container_class'] = $class_prefix . 'post';
+        $this->render_data['post_header_options_class'] = $class_prefix . 'post-header-options';
+        $this->render_data['post_header_info_class'] = $class_prefix . 'post-header-info';
+        $this->render_data['content_container_class'] = $class_prefix . 'content-container';
+        $this->render_data['post_disclaimer_class'] = $class_prefix . 'post-disclaimer';
         $this->render_data['post_anchor_id'] = 't' . $post_content_id->threadID() . 'p' . $post_content_id->postID();
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
                 $post_content_id, $web_paths, $gen_data, $in_thread_number);
@@ -75,24 +73,32 @@ class OutputPost extends Output
                     PDO::FETCH_ASSOC);
             $output_file_info = new OutputFile($this->domain, $this->write_mode);
             $content_row = array();
+            $this->render_data['multi_file'] = count($file_list) > 1;
 
             foreach ($file_list as $file)
             {
-                if (count($content_row) >= $this->domain->setting('max_files_row'))
-                {
-                    $this->render_data['content_rows'][]['row'] = $content_row;
-                    $content_row = array();
-                }
-
                 $json_content = new \Nelliel\API\JSON\JSONContent($this->domain, $this->file_handler);
                 $parameters['json_instances']['content'] = $json_content;
                 $file_data = $output_file_info->render(
                         ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
                             'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances']], true);
-                $content_row[] = $file_data;
+                $content_row[]['content_data'] = $file_data;
+
+                if ($this->render_data['multi_file'])
+                {
+                    if (count($content_row) == $this->domain->setting('max_files_row'))
+                    {
+                        $this->render_data['content_rows'][]['row'] = $content_row;
+                        $content_row = array();
+                    }
+                }
+                else
+                {
+                    $this->render_data['content_data'] = $file_data;
+                }
             }
 
-            if (!empty($content_row))
+            if ($this->render_data['multi_file'] && !empty($content_row))
             {
                 $this->render_data['content_rows'][]['row'] = $content_row;
             }
@@ -131,7 +137,7 @@ class OutputPost extends Output
 
         if ($session->inModmode($this->domain) && !$this->write_mode)
         {
-            if ($this->session_user->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
+            if ($this->session->sessionUser()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
                     !empty($post_data['ip_address']))
             {
                 $ip = @inet_ntop($post_data['ip_address']);
@@ -174,9 +180,9 @@ class OutputPost extends Output
             $header_data['modmode_headers'] = $modmode_headers;
         }
 
-        // If we're working with op post, generate the thread headers
         if (!$response)
         {
+            $class_prefix = 'op-';
             $thread_headers['hide_thread_id'] = 'hide-thread-' . $thread_content_id->getIDString();
             $thread_headers['thread_content_id'] = $thread_content_id->getIDString();
             $thread_headers['post_content_id'] = $post_content_id->getIDString();
@@ -205,39 +211,21 @@ class OutputPost extends Output
 
             $header_data['thread_headers'] = $thread_headers;
         }
+        else
+        {
+            $class_prefix = 'reply-';
+        }
 
         $post_headers['in_thread_number'] = $in_thread_number;
         $post_headers['post_content_id'] = $post_content_id->getIDString();
         $post_headers['hide_post_id'] = 'hide-post-' . $post_content_id->getIDString();
         $post_headers['post_header_info_id'] = 'post-header-info-' . $post_content_id->getIDString();
         $post_headers['post_header_options_id'] = 'post-header-options-' . $post_content_id->getIDString();
-
-        if ($response)
-        {
-            $post_headers['header_options_class'] = 'reply-post-header-options';
-            $post_headers['header_info_class'] = 'reply-post-header-info';
-            $post_headers['post_select_class'] = 'reply-post-select';
-            $post_headers['subject_class'] = 'reply-subject';
-            $post_headers['poster_name_class'] = 'reply-poster-name';
-            $post_headers['mailto_class'] = 'reply-mailto';
-            $post_headers['tripline_class'] = 'reply-trip-line';
-            $post_headers['post_time_class'] = 'reply-post-time';
-            $post_headers['post_link_class'] = 'reply-post-link';
-            $post_headers['post_number_class'] = 'reply-post-number-link';
-        }
-        else
-        {
-            $post_headers['header_options_class'] = 'op-post-header-options';
-            $post_headers['header_info_class'] = 'op-post-header-info';
-            $post_headers['post_select_class'] = 'op-post-select';
-            $post_headers['subject_class'] = 'op-subject';
-            $post_headers['poster_name_class'] = 'op-poster-name';
-            $post_headers['mailto_class'] = 'op-mailto';
-            $post_headers['tripline_class'] = 'op-trip-line';
-            $post_headers['post_time_class'] = 'op-post-time';
-            $post_headers['post_link_class'] = 'op-post-link';
-            $post_headers['post_number_class'] = 'op-post-number-link';
-        }
+        $post_headers['header_info_class'] = $class_prefix . 'post-header-info';
+        $post_headers['subject_class'] = $class_prefix . 'subject';
+        $post_headers['poster_name_class'] = $class_prefix . 'poster-name';
+        $post_headers['tripline_class'] = $class_prefix . 'trip-line';
+        $post_headers['post_link_class'] = $class_prefix . 'post-link';
 
         if (!nel_true_empty($post_data['email']))
         {
@@ -253,7 +241,9 @@ class OutputPost extends Output
                     NEL_POSTER_ID_PEPPER . @inet_ntop($post_data['ip_address']) . $this->domain->id() .
                     $thread_data['thread_id']);
             $poster_id = substr($raw_poster_id, 0, $this->domain->setting('poster_id_length'));
+            $post_headers['id_color_code'] = '#' . substr($raw_poster_id, 0, 6);
             $post_headers['poster_id'] = $poster_id;
+            $post_headers['show_poster_id'] = true;
 
             if ($this->domain->setting('poster_id_colors'))
             {
@@ -309,17 +299,17 @@ class OutputPost extends Output
 
     private function postComments(array $post_data, ContentID $post_content_id, array $gen_data, array $web_paths)
     {
+        $cite_match_regex = '#^\s*>>#';
+        $greentext_regex = '#^\s*>[^>]#';
         $url_protocols = $this->domain->setting('url_protocols');
-        $url_split_regex = '#(' . $url_protocols . ')(:\/\/)[^s>]*?#';
-        $url_match_regex = '#((' . $url_protocols . '):\/\/[^\s].*?)(?=(' . $url_protocols . ')|$)#';
-        $url_protocol_array = explode('|', $url_protocols);
-        $cites = new \Nelliel\Cites($this->domain->database());
+        $url_split_regex = '#(' . $url_protocols . ')(:\/\/)#';
+        $line_split_regex = '#(>>[0-9]+)|(>>>\/.+\/[0-9]+)|(\s)#';
         $comment_data = array();
         $post_type_class = $post_data['op'] == 1 ? 'op-' : 'reply-';
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
-        $comment_data['post_contents_class'] = $post_type_class . 'post-contents';
+        $comment_data['comments_class'] = $post_type_class . 'post-comments';
         $comment_data['mod_comment'] = $post_data['mod_comment'] ?? null;
-        $comment_data['post_comment_class'] = $post_type_class . 'post-comment';
+        $comment_data['noreferrer_nofollow'] = $this->site_domain->setting('noreferrer_nofollow');
 
         if (nel_true_empty($post_data['comment']))
         {
@@ -327,101 +317,91 @@ class OutputPost extends Output
         }
         else
         {
-            $this->output_filter->clearWhitespace($post_data['comment']);
+            $cites = new \Nelliel\Cites($this->database);
+            $post_data['comment'] = trim($post_data['comment']);
 
             if ($this->domain->setting('filter_combining_characters'))
             {
                 $post_data['comment'] = $this->output_filter->filterUnicodeCombiningCharacters($post_data['comment']);
             }
 
-            $line_count = 0;
             $cite_total = 0;
             $cite_link_max = $this->domain->setting('max_cite_links');
+            $create_url_links = $this->domain->setting('create_url_links');
+            $comment_lines = $this->output_filter->newlinesToArray($post_data['comment']);
+            $line_count = count($comment_lines);
+            $last_i = $line_count - 1;
+            $i = 0;
 
-            foreach ($this->output_filter->newlinesToArray($post_data['comment']) as $line)
+            for (; $i < $line_count; $i ++)
             {
-                $line_parts = array();
 
-                if ($gen_data['index_rendering'] && $line_count == $this->domain->setting('comment_display_lines'))
+                $line = $comment_lines[$i];
+                $line_break = $i !== $last_i;
+
+                if ($gen_data['index_rendering'] && $line_count > $this->domain->setting('comment_display_lines'))
                 {
                     $comment_data['post_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
                             $post_content_id->postID();
                     break;
                 }
 
-                $word_segments = explode(' ', $line);
+                // Split the line on spaces or embedded post cites, preserving the delimiters
+                $segment_chunks = preg_split($line_split_regex, $line, null,
+                        PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+                $line_parts = array();
+                $plaintext_chunk = ''; // Plain text chunks can be recombined, only special cases need be separate
 
-                foreach ($word_segments as $segment)
+                foreach ($segment_chunks as $chunk)
                 {
-                    $segment_chunks = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $segment, null,
-                            PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+                    $entry = array();
 
-                    foreach ($segment_chunks as $chunk)
+                    if ($cite_total <= $cite_link_max && preg_match($cite_match_regex, $chunk) === 1)
                     {
-                        if (preg_match('#^\s*>#', $chunk) === 1)
+                        $cite_url = $cites->createPostLinkURL($this->domain, $post_content_id, $chunk, true);
+
+                        if (!empty($cite_url))
                         {
-                            if ($cite_total <= $cite_link_max)
-                            {
-                                $link_url = $cites->createPostLinkURL($this->domain, $post_content_id, $chunk, true);
-
-                                if (!empty($link_url))
-                                {
-                                    $link = array();
-                                    $link['link_url'] = $link_url;
-                                    $link['link_text'] = $chunk;
-                                    $line_parts[]['link'] = $link;
-                                }
-                                else
-                                {
-                                    $line_parts[]['text'] = $chunk;
-                                }
-
-                                ++ $cite_total;
-                            }
-                            else
-                            {
-                                $line_parts[]['text'] = $chunk;
-                            }
-
-                            continue;
+                            $entry['cite'] = true;
+                            $entry['url'] = $cite_url;
+                            $entry['text'] = $chunk;
+                            ++ $cite_total;
                         }
-
-                        if (!$this->domain->setting('create_url_links'))
+                        else
                         {
-                            $line_parts[]['text'] = $chunk;
-                            continue;
-                        }
-
-                        $subchunks = preg_split($url_split_regex, $chunk, null,
-                                PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-                        $subchunk_count = count($subchunks);
-
-                        for ($i = 0; $i < $subchunk_count; ++ $i)
-                        {
-                            $current_subchunk = $subchunks[$i];
-                            $next_subchunk = $subchunks[$i + 1] ?? '';
-                            $second_subchunk = $subchunks[$i + 2] ?? '';
-
-                            if (in_array($current_subchunk, $url_protocol_array) && $next_subchunk === '://' &&
-                                    !in_array($second_subchunk, $url_protocol_array))
-                            {
-                                $link = array();
-                                $link_url = $current_subchunk . $next_subchunk . $second_subchunk;
-                                $link['link_url'] = $link_url;
-                                $link['link_text'] = $link_url;
-                                $line_parts[]['link'] = $link;
-                                $i += 2;
-                            }
-                            else
-                            {
-                                $line_parts[]['text'] = $current_subchunk;
-                            }
+                            $plaintext_chunk .= $chunk;
                         }
                     }
+                    else if ($create_url_links && preg_match($url_split_regex, $chunk) === 1)
+                    {
+                        $entry['link'] = true;
+                        $entry['url'] = $chunk;
+                        $entry['text'] = $chunk;
+                    }
+                    else if (preg_match($greentext_regex, $chunk) === 1)
+                    {
+                        $entry['styled'] = true;
+                        $entry['text'] = $chunk;
+                        $entry['class'] = 'greentext';
+                    }
+                    else
+                    {
+                        $plaintext_chunk .= $chunk;
+                        continue;
+                    }
+
+                    $line_parts[] = array('plain' => true, 'text' => $plaintext_chunk);
+                    $line_parts[] = $entry;
+                    $plaintext_chunk = '';
                 }
 
-                $comment_data['comment_lines'][]['line'] = $line_parts;
-                ++ $line_count;
+                if (!nel_true_empty($plaintext_chunk))
+                {
+                    $line_parts[] = array('plain' => true, 'text' => $plaintext_chunk);
+                }
+
+                $line_parts[] = array('line_break' => $line_break);
+                $comment_data['comment_lines'][]['line_parts'] = $line_parts;
             }
         }
 

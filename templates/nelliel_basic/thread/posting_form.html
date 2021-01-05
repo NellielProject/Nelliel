@@ -1,8 +1,3 @@
-{{# is_response }}
-<div>
-	[<a href="{{ return_url }}" data-i18n="gettext">Return</a>]
-</div>
-{{/ is_response }}
 <form id="posting-form" class="display-table posting-form" accept-charset="utf-8" name="postingform" action="{{ form_action }}" method="post" enctype="multipart/form-data" data-jsevents="click|change">
 	<input type="hidden" name="new_post[post_info][response_to]" value="{{ response_to }}">
 	{{# in_modmode }}
@@ -32,7 +27,7 @@
 			<label class="posting-form-label" for="form-file-upload">
 				<span data-i18n="gettext">File</span>&nbsp;<span>{{ file_number }}</span>
 			</label>
-			<input id="form-file-upload" class="posting-form-input" type="file" name="upload_files[]" {{# allow_multiple }}multiple=""{{/ allow_multiple }}>
+			<input id="form-file-upload" class="posting-form-input" type="file" name="upload_files[]" {{# allow_multiple }}multiple{{/ allow_multiple }}>
 			<br>
 			{{# spoilers_enabled }}
 			<span id="form-spoiler">
@@ -100,12 +95,9 @@
 		</label>
 		{{/ use_honeypot }}
 	</div>
-	<div class="rules">
-		<ul class="rules-list">
-		{{# rules_list }}
-			<li class="rules-item">{{ rules_text }}</li>
-		{{/ rules_list }}
-		</ul>
-	</div>
+	<ul class="posting-rules-list">
+	{{# posting_rules_items }}
+		<li class="posting-rules-item">{{ rules_text }}</li>
+	{{/ posting_rules_items }}
+	</ul>
 </form>
-<hr class="clear">

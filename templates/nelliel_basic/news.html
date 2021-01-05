@@ -1,14 +1,15 @@
-<div class="news-page">
+<main class="news-page">
 	{{# news_entries }}
-	<div class="news-entry">
-		<div class="news-headline-bar">
-			<span class="news-headline">{{ headline }}</span>
-			<span class="news-poster">{{ poster }}</span>
-			<span class="news-time">{{ time }}</span>
-		</div>
+	<article class="news-article">
+		<header class="news-article-header">
+			<h2 class="news-headline">{{ headline }}
+				<span>{{ poster }}</span>
+				<span>{{ time }}</span>
+			</h2>
+		</header>
 		{{# news_lines }}
-		<div class="news-text">{{{ news_line }}}</div>
+		<p class="news-paragraph">{{{ news_line }}}</p>
 		{{/ news_lines }}
-	</div>
+	</article>
 	{{/ news_entries }}
-</div>
+</main>

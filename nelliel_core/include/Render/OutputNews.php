@@ -21,12 +21,12 @@ class OutputNews extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setBodyTemplate('news');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['news_entries'] = $this->newsList();
-        $this->render_data['body'] = $this->render_core->renderFromTemplateFile('news', $this->render_data);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
         $output = $this->output('basic_page', $data_only, true);
@@ -53,7 +53,7 @@ class OutputNews extends Output
             $news_info['headline'] = $news_entry['headline'];
             $poster_name = $authorization->getUser($news_entry['poster_id'])->auth_data['display_name'];
             $news_info['poster'] = ' by ' . $poster_name;
-            $news_info['time'] = ' - ' . date('Y/m/d (D) H:i:s', $news_entry['time']);
+            $news_info['time'] = ' - ' . date('Y/m/d l H:i', $news_entry['time']);
             $news_info['news_lines'] = array();
 
             foreach ($this->output_filter->newlinesToArray($news_entry['text']) as $line)
